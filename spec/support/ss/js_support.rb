@@ -819,6 +819,48 @@ module SS
       end
     end
 
+    def ss_select_file(file, addon: "#addon-cms-agents-addons-file")
+      if SS.file_upload_dialog == :v1
+        ss_select_file_v1(file, addon: addon)
+      else
+        ss_select_file_v2(file, addon: addon)
+      end
+    end
+
+    def ss_select_file_v1(file, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_cbox do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+        wait_for_cbox_closed do
+          click_on file.name
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+      end
+    end
+
+    def ss_select_file_v2(file, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on "一覧から選択"
+        end
+      end
+      within_dialog do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+        wait_for_cbox_closed do
+          click_on file.name
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+      end
+    end
+
     def ss_drop_file(locator, file_path)
       file_input = unique_id
       page.execute_script <<~SCRIPT
