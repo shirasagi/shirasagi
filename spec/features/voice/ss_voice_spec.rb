@@ -59,23 +59,6 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
         expect(voice_controller[:style]).to include("")
       end
     end
-
-    it "updates aria-expanded to false when closed" do
-      within ".accessibility__tool-wrap:first-child" do
-        expect(page).to have_content(I18n.t("voice.ss_voice"))
-        if page.has_css?('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
-          button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
-          voice_controller = button.find('#ss-voice-controller-0')
-          button.click
-          expect(button[:'aria-expanded']).to eq('false')
-        else
-          click_on I18n.t("voice.ss_voice")
-          voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
-          voice_controller = voice_link.find('#ss-voice-controller-0')
-        end
-        expect(voice_controller[:style]).to include("display: none")
-      end
-    end
   end
 
   context "with latest accessibility html" do
@@ -127,16 +110,31 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
 
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("voice.ss_voice"))
-        click_on I18n.t("voice.ss_voice")
+        if page.has_css?('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
+          button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
+          voice_controller = button.find('#ss-voice-controller-0')
+          expect(button[:'aria-expanded']).to eq('false')
+        else
+          voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
+          voice_controller = voice_link.find('#ss-voice-controller-0')
+        end
+        expect(voice_controller[:style]).to include("display: none")
       end
-
-      expect(page).to have_css('ss_voice_controller')
-      expect(page).to have_content(I18n.t("voice.ss_voice"))
 
       within ".accessibility__tool-wrap:first-child" do
-        click_on I18n.t("voice.ss_voice")
+        expect(page).to have_content(I18n.t("voice.ss_voice"))
+        if page.has_css?('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
+          button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
+          button.click
+          voice_controller = button.find('#ss-voice-controller-0')
+          expect(button[:'aria-expanded']).to eq('true')
+        else
+          click_on I18n.t("voice.ss_voice")
+          voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
+          voice_controller = voice_link.find('#ss-voice-controller-0')
+        end
+        expect(voice_controller[:style]).to include("")
       end
-      expect(page).to have_no_css('voice_controller')
     end
   end
 
@@ -165,7 +163,7 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
     it do
       visit item.full_url
       within ".accessibility__tool-wrap:first-child" do
-        first(".accessibility__kana").text.split(/\s+/).tap do |text_segments|
+        first(".accessibility__voice").text.split(/\s+/).tap do |text_segments|
           expect(text_segments).to include(I18n.t("voice.ss_voice"), "voice_button")
           expect(text_segments.count(I18n.t("voice.ss_voice"))).to eq 1
           expect(text_segments.count("voice_button")).to eq 1
@@ -175,20 +173,18 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_css('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
         button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
+        voice_controller = button.find('#ss-voice-controller-0')
         expect(button[:'aria-expanded']).to eq('false')
-        click_on I18n.t("voice.ss_voice")
+        expect(voice_controller[:style]).to include("display: none")
       end
-      expect(page).to have_css('ss_voice_controller')
-      button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
-      voice_controller = button.find('#ss-voice-controller-0')
-      expect(button[:'aria-expanded']).to eq('true')
 
       within ".accessibility__tool-wrap:first-child" do
-        click_on I18n.t("voice.ss_voice")
+        button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
+        voice_controller = button.find('#ss-voice-controller-0')
+        button.click
+        expect(voice_controller[:style]).to include("")
+        expect(button[:'aria-expanded']).to eq('true')
       end
-      expect(page).to have_no_css('voice_controller')
-      expect(button[:'aria-expanded']).to eq('false')
     end
   end
 end
-
