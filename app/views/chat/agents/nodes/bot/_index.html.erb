@@ -1,11 +1,20 @@
-<% chat_node ||= @cur_node %>
+<%
+  chat_node ||= @cur_node
+  if @preview
+    url = cms_preview_path(@cur_site, path: ::File.join(chat_node.filename, 'index.json'))
+  elsif @translate_target
+    url = ::File.join(@cur_site.translate_location, @translate_target.code, chat_node.url, 'index.json')
+  else
+    url = ::File.join(chat_node.url, 'index.json')
+  end
+%>
 
 <div id="chat-<%= chat_node.id %>" class="chat-part">
   <div class="chat-items">
     <%= content_tag :div, @result.html_safe, class: 'chat-item sys' if @result.present? %>
     <% chat_node.first_suggest.each do |suggest| %>
       <%= content_tag :div, class: 'chat-item suggest' do %>
-        <%= link_to suggest, File.join(chat_node.url, 'index.html'), class: 'chat-suggest' %>
+        <%= link_to suggest, File.join(chat_node.url, 'index.html'), class: 'chat-suggest', "data-value": suggest %>
       <% end %>
     <% end %>
   </div>
@@ -17,5 +26,5 @@
 </div>
 
 <%= jquery do %>
-  var bot = new Chat_Bot("#chat-<%= chat_node.id %>", "<%= @preview ? cms_preview_path(@cur_site, path: File.join(chat_node.filename, 'index.json')) : File.join(chat_node.url, 'index.json') %>");
+  var bot = new Chat_Bot("#chat-<%= chat_node.id %>", "<%= url %>");
 <% end %>
