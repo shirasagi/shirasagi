@@ -127,6 +127,8 @@ this.SS_Kana = (function () {
         } else {
           const kanaButton = kanaElement.querySelector('button');
           const currentValue = (cssClass === 'on') ? 'false' : 'true';
+          kanaButton.setAttribute('name', 'kana');
+          kanaButton.setAttribute('type', 'button');
           kanaButton.setAttribute('aria-pressed', currentValue);
 
           kanaButton.addEventListener('click', function(ev){
