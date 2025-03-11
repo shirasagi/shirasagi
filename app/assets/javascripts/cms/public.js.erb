@@ -387,7 +387,6 @@ function SS_Voice() {
 SS_Voice.prototype.render = function ($voiceTag, index_1)  {
   const self = this;
   const index = index_1;
-  self.expand = false;
   self.url = self.requestUrl();
 
   if ($voiceTag.is('[data-tool="ss-voice"]')) {
