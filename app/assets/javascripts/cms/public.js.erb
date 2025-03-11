@@ -158,14 +158,17 @@ this.SS_Kana = (function () {
   };
 
   SS_Kana.loadPage = function (elem) {
-    const href = elem.getAttribute("href");
-    fetch(href)
-      .then(response => response.text())
-      .then(data => {
-        document.body.dataset.kana = elem.classList.contains("on") ? "true" : "";
-        const replaced = data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1");
-        document.body.innerHTML = replaced;
-      });
+    $.ajax({
+      type: "GET",
+      url: elem.attr("href"),
+      dataType: "html",
+      success: function (data) {
+        var body;
+        body = $("body");
+        body.data("kana", elem.hasClass("on"));
+        return body.html(data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1"));
+      }
+    });
     return false;
   };
 
