@@ -227,7 +227,7 @@ export default class extends Controller {
       }
     }
 
-    dispatchEvent(this.fileUploadWaitingListTarget, "change");
+    dispatchEvent(this.fileUploadWaitingListTarget, "ss:tempFile:addedWaitingList");
   }
 
   async #uploadAllWaitingItems() {

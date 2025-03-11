@@ -773,39 +773,41 @@ module SS
       expect(result).to be_truthy
     end
 
-    def ss_upload_file(file_path, addon: "#addon-cms-agents-addons-file")
+    def ss_upload_file(*file_paths, addon: "#addon-cms-agents-addons-file")
       if SS.file_upload_dialog == :v1
-        ss_upload_file_v1(file_path, addon: addon)
+        ss_upload_file_v1(*file_paths, addon: addon)
       else
-        ss_upload_file_v2(file_path, addon: addon)
+        ss_upload_file_v2(*file_paths, addon: addon)
       end
     end
 
-    def ss_upload_file_v1(file_path, addon: "#addon-cms-agents-addons-file")
+    def ss_upload_file_v1(*file_paths, addon: "#addon-cms-agents-addons-file")
       within addon do
         wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end
       within_cbox do
-        attach_file "item[in_files][]", file_path
+        attach_file "item[in_files][]", file_paths
         wait_for_cbox_closed do
           click_on I18n.t("ss.buttons.attach")
         end
       end
       within addon do
-        expect(page).to have_css(".file-view", text: ::File.basename(file_path))
+        expect(page).to have_css(".file-view", text: ::File.basename(file_paths.first))
       end
     end
 
-    def ss_upload_file_v2(file_path, addon: "#addon-cms-agents-addons-file")
+    def ss_upload_file_v2(*file_paths, addon: "#addon-cms-agents-addons-file")
       within addon do
         wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
       end
       within_dialog do
-        attach_file "in_files", file_path
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", file_paths
+        end
       end
       wait_for_cbox_closed do
         within_dialog do
@@ -815,7 +817,7 @@ module SS
         end
       end
       within addon do
-        expect(page).to have_css(".file-view", text: ::File.basename(file_path))
+        expect(page).to have_css(".file-view", text: ::File.basename(file_paths.first))
       end
     end
 
