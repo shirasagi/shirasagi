@@ -74,6 +74,11 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
 
   def select
     set_item
+    if !@item.is_a?(SS::TempFile) && !@item.is_a?(Cms::TempFile)
+      @item = @item.copy(
+        cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node
+      )
+    end
     render layout: false
   end
 end
