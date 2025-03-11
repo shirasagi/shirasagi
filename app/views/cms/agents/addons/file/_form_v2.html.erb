@@ -48,7 +48,7 @@
 
       <div id="selected-files" class="cms-file-upload-files" data-ss--file-select-box-target="result">
         <% SS::File.each_file(@item.file_ids) do |file| %>
-          <%= render "ss/crud/ajax_files/file_view", file: file %>
+          <%= render "ss/crud/ajax_files/file_view", file: file, file_open_action: "ss--file-select-box#openFile" %>
         <% end %>
       </div>
     </div>

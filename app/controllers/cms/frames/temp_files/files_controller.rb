@@ -74,6 +74,6 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
 
   def select
     set_item
-    render template: "ss/crud/ajax_files/select", layout: false
+    render layout: false
   end
 end

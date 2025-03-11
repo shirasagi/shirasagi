@@ -1,0 +1,13 @@
+<%
+  opts = {}
+  opts[:file] = @item
+  opts[:file_open_action] = "ss--file-select-box#openFile"
+  if params[:select_actions].present?
+    actions = params[:select_actions].to_a
+    opts[:show_properties] = actions.include?("show_properties")
+    opts[:show_attach] = actions.include?("show_attach")
+    opts[:show_delete] = actions.include?("show_delete")
+    opts[:show_copy_url] = actions.include?("show_copy_url")
+  end
+%>
+<%= render "ss/crud/ajax_files/file_view", opts %>

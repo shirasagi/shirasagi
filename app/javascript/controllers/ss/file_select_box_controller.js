@@ -53,6 +53,10 @@ export default class extends SelectBoxController {
     super.openDialog();
   }
 
+  openFile(ev) {
+    SS_FileView.open(ev, { viewPath: this.viewApiValue });
+  }
+
   attachFile(ev) {
     SS_FileView.pasteFile(ev, this.#fileViewOptions());
   }

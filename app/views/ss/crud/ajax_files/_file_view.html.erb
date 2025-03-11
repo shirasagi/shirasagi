@@ -1,5 +1,6 @@
 <%
   url = local_assigns.fetch(:file_url, nil).try { |p| p.call(file) } || file.url
+  file_open_action = local_assigns.fetch(:file_open_action, nil)
 %>
 <% if SS.file_upload_dialog == :v1 %>
   <%= jquery do %>
@@ -14,7 +15,7 @@
 
 <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>" data-name="<%= file.name %>" data-humanized-name="<%= file.humanized_name %>" data-url="<%= file.url %>" data-thumb-url="<%= file.thumb_url %>" data-extname="<%= file.extname %>">
   <%= sanitizer_status(file) %>
-  <%= link_to url, class: :thumb, target: "_blank", rel: "noopener" do %>
+  <%= link_to url, class: :thumb, target: "_blank", rel: "noopener", data: { action: file_open_action } do %>
     <% if file.image? %>
       <%= image_tag file.thumb_no_cache_url, alt: file.name %>
     <% else %>
