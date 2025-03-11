@@ -15,10 +15,12 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
   let!(:chat_bot_node) { create :chat_node_bot, first_suggest: [suggest1] }
   let!(:site_search_node) { create :cms_node_site_search, cur_site: site }
   let!(:chat_intent1) do
-    create(:chat_intent, site_id: site.id, node_id: chat_bot_node.id, phrase: [suggest1], suggest: [suggest2], response: response1)
+    create(:chat_intent, site_id: site.id, node_id: chat_bot_node.id,
+      phrase: [suggest1], suggest: [suggest2], response: response1)
   end
   let!(:chat_intent2) do
-    create(:chat_intent, site_id: site.id, node_id: chat_bot_node.id, phrase: [suggest2], response: response2, site_search: "enabled")
+    create(:chat_intent, site_id: site.id, node_id: chat_bot_node.id,
+      phrase: [suggest2], response: response2, site_search: "enabled")
   end
 
   let!(:part2) { create :chat_part_bot, cur_node: chat_bot_node }
