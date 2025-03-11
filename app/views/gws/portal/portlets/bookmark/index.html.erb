@@ -5,33 +5,35 @@
 <div class="main-box">
   <div class="portlet-title"><%= @portlet.name %></div>
 
-  <ul class="list-items">
-    <% items.each do |item| %>
-      <li class="list-item">
-        <div class="info">
-          <%= link_to item.name, item.url, class: 'title' %>
-          <div class="meta">
-            <span class="datetime"><%= ss_time_tag item.updated %></span>
-            <% if @portlet.bookmark_model.blank? %>
-              <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
-            <% end %>
+  <% if Gws.module_usable?(:bookmark, @cur_site, @cur_user) %>
+    <ul class="list-items">
+      <% items.each do |item| %>
+        <li class="list-item">
+          <div class="info">
+            <%= link_to item.name, item.url, class: 'title' %>
+            <div class="meta">
+              <span class="datetime"><%= ss_time_tag item.updated %></span>
+              <% if @portlet.bookmark_model.blank? %>
+                <span class="bookmark_model"><%= item.label(:bookmark_model) %></span>
+              <% end %>
+            </div>
           </div>
-        </div>
-        <div class="links">
-          <div class="dropdown dropdown-toggle">
-            <a class="more-btn">
-              <%= md_icons.filled "more_vert", tag: :i, class: "md-dark" %>
-            </a>
-            <ul class="dropdown-menu dropdown-menu--top-right dropdown-menu--white">
-              <li><%= link_to t('ss.links.show'), gws_bookmark_item_path(id: item), class: 'dropdown-menu-item' %></li>
-            </ul>
+          <div class="links">
+            <div class="dropdown dropdown-toggle">
+              <a class="more-btn">
+                <%= md_icons.filled "more_vert", tag: :i, class: "md-dark" %>
+              </a>
+              <ul class="dropdown-menu dropdown-menu--top-right dropdown-menu--white">
+                <li><%= link_to t('ss.links.show'), gws_bookmark_item_path(id: item), class: 'dropdown-menu-item' %></li>
+              </ul>
+            </div>
           </div>
-        </div>
-      </li>
-    <% end %>
-  </ul>
+        </li>
+      <% end %>
+    </ul>
 
-  <% if items.next_page && @portal.my_portal? %>
-  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_bookmark_items_path %></div>
+    <% if items.next_page && @portal.my_portal? %>
+      <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_bookmark_items_path %></div>
+    <% end %>
   <% end %>
 </div>
