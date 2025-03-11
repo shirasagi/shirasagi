@@ -77,8 +77,8 @@ class SS::TempFilePreview
     return if size <= limit_size
 
     message = I18n.t("errors.messages.too_large_file", filename: filename,
-      size: number_to_human_size(size),
-      limit: number_to_human_size(limit_size)
+      size: size.to_fs(:human_size),
+      limit: limit_size.to_fs(:human_size)
     )
     errors.add :base, message
   end
