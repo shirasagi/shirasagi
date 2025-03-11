@@ -150,6 +150,7 @@ ja:
     edit_gws_personal_addresses: 個人アドレス帳の利用
     edit_gws_user_profile: プロフィールの編集
     edit_password_gws_user_profile: プロフィールのパスワード変更
+    edit_gws_memo_notice_user_setting: プロフィールの通知設定の利用
 
   modules:
     gws: 標準機能
