@@ -83,9 +83,9 @@ this.Chat_Bot = (function () {
     }
 
     var $chatItems = _this.$el.find('.chat-items');
-    $chatItems
-      .append($('<div class="chat-item user"></div>').append(text))
-      .animate({ scrollTop: $chatItems[0].scrollHeight });
+    $chatItems.append($('<div class="chat-item user"></div>').append(text));
+    $chatItems.append($('<div class="chat-item in-progress">' + SS.loading + '</div>'));
+    $chatItems.animate({ scrollTop: $chatItems[0].scrollHeight });
     $.ajax({
       type: "GET",
       url: _this.url,
@@ -96,11 +96,14 @@ this.Chat_Bot = (function () {
         click_suggest: options && options.clickSuggest
       },
       success: function (res, _status) {
+        $chatItems.find(".in-progress").remove();
         _this.renderChatResponse(res);
       },
       error: function (_xhr, _status, _error) {
+        $chatItems.find(".in-progress").remove();
       },
       complete: function(_xhr, _status) {
+        $chatItems.find(".in-progress").remove();
         _this.inProgress = false;
       }
     });
