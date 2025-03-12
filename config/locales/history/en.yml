@@ -70,6 +70,10 @@ en:
     models:
       history/log: Operation history
       history/trash: Trash
+    errors:
+      models:
+        history/backup:
+          unable_to_restore_branch_page_history: unable to restore histories of branch page.
     attributes:
       history/log:
         session_id: Session ID

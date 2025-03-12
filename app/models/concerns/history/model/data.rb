@@ -6,7 +6,7 @@ module History::Model::Data
   included do
     store_in_repl_master
     index({ created: -1 })
-    index({ ref_coll: 1, "data._id" => 1, created: -1 })
+    index({ ref_coll: 1, ref_id: 1, created: -1 })
 
     cattr_reader(:max_age) { SS.config.ss.history_max_age || 20 }
 
@@ -19,6 +19,7 @@ module History::Model::Data
 
     field :version, type: String, default: SS.version
     field :ref_coll, type: String
+    field :ref_id, type: Object
     field :ref_class, type: String
     field :data, type: Hash
     field :state, type: String

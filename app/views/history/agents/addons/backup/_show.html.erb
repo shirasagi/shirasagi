@@ -8,6 +8,9 @@
     <thead class="list-head">
       <tr>
         <th class="created"><%= @model.t :updated %></th>
+        <% if @item.is_a?(Cms::Model::Page) %>
+          <th class="branch"></th>
+        <% end %>
         <th class="name"><%= t("history.editor_name") %></th>
         <th class="links"></th>
       </tr>
@@ -31,6 +34,15 @@
             time_tag
           %>
         </td>
+        <% if @item.is_a?(Cms::Model::Page) %>
+          <td class="branch">
+            <%=
+              if backup.ref_id != backup.data["_id"]
+                "#{t("workflow.branch_page")}(#{backup.data["_id"]})"
+              end
+            %>
+          </td>
+        <% end %>
         <td class="name">
           <%=
             if backup.action == 'replace_urls'
