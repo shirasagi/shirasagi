@@ -401,7 +401,10 @@ SS_Voice.prototype.render = function ($voiceTag, index_1)  {
     $voiceTag.empty().append(voiceButton);
     self.$voiceTag = voiceButton;
   } else {
-    const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
+    const anchor = $('<a rel="nofollow"/>')
+      .attr('href', "#/voice/")
+      .attr('role', 'button')
+      .html($voiceTag.html());
     $voiceTag.html('');
     anchor.appendTo($voiceTag);
     self.$voiceTag = anchor;
