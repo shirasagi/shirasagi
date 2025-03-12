@@ -684,6 +684,11 @@ en:
         new_password: New Password
         new_password_again: New Password (Confirm)
         old_password: Current Password
+      ss/temp_file_creator:
+        in_file: File
+        name: File name
+        filename: File name (alphanumeric)
+        resizing: Resize
 
   mongoid:
     models:

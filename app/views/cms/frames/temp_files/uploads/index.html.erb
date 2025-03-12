@@ -16,7 +16,7 @@
     <%==
       {
         previewApi: url_for(action: :preview),
-        createUrl: cur_node.present? ? cms_apis_node_temp_files_path(cid: cur_node, format: :json) : cms_apis_temp_files_path(format: :json),
+        createUrl: url_for(action: :create),
       }.to_json
     %>
   </script>

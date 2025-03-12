@@ -41,4 +41,28 @@ class Cms::Frames::TempFiles::UploadsController < ApplicationController
 
     render json: previews.map(&:to_h)
   end
+
+  def create
+    item_validator = SS::TempFileCreator.new(cur_site: @cur_site, cur_user: @cur_user)
+    if self.class.try(:only_image)
+      item_validator.only_image = true
+    end
+
+    item_validator.attributes = params.require(:item).permit(:name, :filename, :resizing, :quality, :image_resizes_disabled, :in_file)
+    if item_validator.invalid?
+      json_data = item_validator.errors.full_messages
+      render json: json_data, status: :unprocessable_entity, content_type: json_content_type
+      return
+    end
+
+    result = item_validator.save
+    unless result
+      json_data = item_validator.errors.full_messages
+      render json: json_data, status: :unprocessable_entity, content_type: json_content_type
+      return
+    end
+
+    json_data = item_validator.work_item.to_json({ methods: %i[humanized_name image? basename extname url thumb_url] })
+    render json: json_data, status: :created, content_type: json_content_type
+  end
 end

@@ -4,7 +4,7 @@ import {prependChildren, csrfToken, dispatchEvent, LOADING} from "../../ss/tool"
 
 const NUM_RETRY = 5;
 
-function createError(errors, { id = undefined, cssClass = undefined, header = undefined, body = undefined }) {
+function createError(errors, options) {
   // <div id="errorExplanation" class="errorExplanation">
   //   <h2>登録内容を確認してください。</h2>
   //   <p>次の項目を確認してください。</p>
@@ -14,15 +14,15 @@ function createError(errors, { id = undefined, cssClass = undefined, header = un
   //   </ul>
   // </div>
   const errorExplanationElement = document.createElement("div");
-  errorExplanationElement.id = id || "errorExplanation";
-  errorExplanationElement.classList.add(cssClass || "errorExplanation");
+  errorExplanationElement.id = options?.id || "errorExplanation";
+  errorExplanationElement.classList.add(options?.cssClass || "errorExplanation");
 
   const headerElement = document.createElement("h2");
-  headerElement.textContent = header || i18next.t("errors.template.header.one");
+  headerElement.textContent = options?.header || i18next.t("errors.template.header.one");
   errorExplanationElement.appendChild(headerElement);
 
   const bodyElement = document.createElement("p");
-  bodyElement.textContent = body || i18next.t("errors.template.body");
+  bodyElement.textContent = options?.body || i18next.t("errors.template.body");
   errorExplanationElement.appendChild(bodyElement);
 
   const errorListElement = document.createElement("ul");
@@ -301,7 +301,7 @@ export default class extends Controller {
     if (imageResizesDisabled) {
       createParams.append("item[image_resizes_disabled]", imageResizesDisabled);
     }
-    createParams.append("item[in_files][]", file);
+    createParams.append("item[in_file]", file);
 
     let lastResponse = undefined;
     for (let i = 0; i < NUM_RETRY; i++) {
@@ -316,12 +316,16 @@ export default class extends Controller {
       }
     }
     if (!lastResponse.ok) {
-      this.#showError(item, [ "failed to upload" ]);
+      try {
+        const errorResult = await lastResponse.json();
+        this.#showError(item, errorResult);
+      } catch(_ex) {
+        this.#showError(item, ["failed to upload"]);
+      }
       return false;
     }
 
-    const createResults = await lastResponse.json();
-    const createResult = createResults[0];
+    const createResult = await lastResponse.json();
 
     item.dataset.id = createResult['_id'];
     item.dataset.name = createResult['name'];

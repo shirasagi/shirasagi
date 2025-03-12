@@ -684,6 +684,11 @@ ja:
         new_password: 新しいパスワード
         new_password_again: 新しいパスワード（入力確認）
         old_password: 現在のパスワード
+      ss/temp_file_creator:
+        in_file: ファイル
+        name: ファイル名
+        filename: ファイル名（英数）
+        resizing: リサイズ
 
   mongoid:
     models:
