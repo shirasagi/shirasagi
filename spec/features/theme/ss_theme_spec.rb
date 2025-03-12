@@ -20,52 +20,51 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     it "index" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
-        whiteButton = find('.white')
-        blueButton = find('.blue')
-        blackButton = find('.black')
-
-        expect(whiteButton[:'aria-pressed']).to eq('true')
-        expect(blueButton[:'aria-pressed']).to eq('false')
-        expect(blackButton[:'aria-pressed']).to eq('false')
+        white_button = find('.white')
+        blue_button = find('.blue')
+        black_button = find('.black')
+        expect(white_button[:'aria-pressed']).to eq('true')
+        expect(blue_button[:'aria-pressed']).to eq('false')
+        expect(black_button[:'aria-pressed']).to eq('false')
       end
     end
 
     it "click blue button" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
-        whiteButton = find('.accessibility__theme button.white')
-        blueButton = find('.blue')
-        blackButton = find('.black')
-        blueButton.click
-        expect(whiteButton[:'aria-pressed']).to eq('false')
-        expect(blueButton[:'aria-pressed']).to eq('true')
-        expect(blackButton[:'aria-pressed']).to eq('false')
+        white_button = find('.accessibility__theme button.white')
+        blue_button = find('.blue')
+        black_button = find('.black')
+        blue_button.click
+        expect(white_button[:'aria-pressed']).to eq('false')
+        expect(blue_button[:'aria-pressed']).to eq('true')
+        expect(black_button[:'aria-pressed']).to eq('false')
       end
     end
 
     it "click black button" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
-        whiteButton = find('.accessibility__theme button.white')
-        blueButton = find('.blue')
-        blackButton = find('.black')
-        blackButton.click
-        expect(whiteButton[:'aria-pressed']).to eq('false')
-        expect(blueButton[:'aria-pressed']).to eq('false')
-        expect(blackButton[:'aria-pressed']).to eq('true')
+        white_button = find('.accessibility__theme button.white')
+        blue_button = find('.blue')
+        black_button = find('.black')
+        black_button.click
+        expect(white_button[:'aria-pressed']).to eq('false')
+        expect(blue_button[:'aria-pressed']).to eq('false')
+        expect(black_button[:'aria-pressed']).to eq('true')
       end
     end
 
     it "click white button" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
-        whiteButton = find('.accessibility__theme button.white')
-        blueButton = find('.blue')
-        blackButton = find('.black')
-        whiteButton.click
-        expect(whiteButton[:'aria-pressed']).to eq('false')
-        expect(blueButton[:'aria-pressed']).to eq('false')
-        expect(blackButton[:'aria-pressed']).to eq('true')
+        white_button = find('.accessibility__theme button.white')
+        blue_button = find('.blue')
+        black_button = find('.black')
+        white_button.click
+        expect(white_button[:'aria-pressed']).to eq('false')
+        expect(blue_button[:'aria-pressed']).to eq('false')
+        expect(black_button[:'aria-pressed']).to eq('true')
       end
     end
   end
