@@ -60,46 +60,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       end
     end
-
-    # context "save and click" do
-    #   it do
-    #     within "#ajax-box" do
-    #       attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-    #       click_button I18n.t("ss.buttons.save")
-    #       expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-    #       wait_for_cbox_closed do
-    #         wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
-    #           click_on 'keyvisual.jpg'
-    #         end
-    #       end
-    #     end
-    #
-    #     within "#item-form #addon-cms-agents-addons-file" do
-    #       within '#selected-files' do
-    #         expect(page).to have_css('.name', text: 'keyvisual.jpg')
-    #       end
-    #     end
-    #   end
-    # end
-
-    # context "attach" do
-    #   it do
-    #     within "#ajax-box" do
-    #       attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-    #       wait_for_cbox_closed do
-    #         wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
-    #           click_button I18n.t("ss.buttons.attach")
-    #         end
-    #       end
-    #     end
-    #
-    #     within "#item-form #addon-cms-agents-addons-file" do
-    #       within '#selected-files' do
-    #         expect(page).to have_css('.name', text: 'keyvisual.jpg')
-    #       end
-    #     end
-    #   end
-    # end
   end
 
   shared_examples "select a file from file dialog" do
@@ -130,18 +90,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     context "default" do
       it_behaves_like "file dialog is"
     end
-
-    # context "after file is saved" do
-    #   before do
-    #     within_dialog do
-    #       attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-    #       click_button I18n.t("ss.buttons.save")
-    #       expect(page).to have_css('.file-view', text: 'logo.png')
-    #     end
-    #   end
-    #
-    #   it_behaves_like "file dialog is"
-    # end
 
     context "after edit dialog is canceled" do
       before do
@@ -251,7 +199,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   end
 
   context "upload file dialog" do
-    context "via ファイル選択" do
+    context "via file input" do
       it do
         visit article_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
@@ -329,6 +277,86 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
       within "#item-form #addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", text: "logo.png")
+      end
+    end
+  end
+
+  context "reorder" do
+    let(:now) { Time.zone.now.change(usec: 0) }
+    let!(:file1) do
+      Timecop.freeze(now - 5.minutes) do
+        tmp_ss_file(
+          Cms::TempFile, user: cms_user, site: site, node: node, basename: "logo-1.png",
+          contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+        )
+      end
+    end
+    let!(:file2) do
+      Timecop.freeze(now - 4.minutes) do
+        tmp_ss_file(
+          Cms::TempFile, user: cms_user, site: site, node: node, basename: "logo-2.png",
+          contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+        )
+      end
+    end
+    let!(:file3) do
+      Timecop.freeze(now - 3.minutes) do
+        tmp_ss_file(
+          Cms::TempFile, user: cms_user, site: site, node: node, basename: "logo-3.png",
+          contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+        )
+      end
+    end
+    let!(:item) do
+      create :article_page, cur_site: site, cur_user: cms_user, cur_node: node, file_ids: [ file1.id, file2.id, file3.id ]
+    end
+
+    it do
+      visit article_pages_path(site: site, cid: node)
+
+      click_on item.name
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
+      click_on I18n.t("ss.links.edit")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
+      # 初期状態は「アップロード順」
+      within "#item-form #addon-cms-agents-addons-file" do
+        expect(page).to have_css(".file-view", count: 3)
+        file_views = all(".file-view")
+        expect(file_views[0]).to have_css(".name", text: file3.name)
+        expect(file_views[1]).to have_css(".name", text: file2.name)
+        expect(file_views[2]).to have_css(".name", text: file1.name)
+      end
+
+      # 名前順
+      within "#item-form #addon-cms-agents-addons-file" do
+        wait_for_event_fired "change" do
+          click_on I18n.t('ss.buttons.file_name_order')
+        end
+      end
+      within "#item-form #addon-cms-agents-addons-file" do
+        expect(page).to have_css(".file-view", count: 3)
+        file_views = all(".file-view")
+        expect(file_views[0]).to have_css(".name", text: file1.name)
+        expect(file_views[1]).to have_css(".name", text: file2.name)
+        expect(file_views[2]).to have_css(".name", text: file3.name)
+      end
+
+      # アップロード順
+      within "#item-form #addon-cms-agents-addons-file" do
+        wait_for_event_fired "change" do
+          click_on I18n.t('ss.buttons.file_upload_order')
+        end
+      end
+      within "#item-form #addon-cms-agents-addons-file" do
+        expect(page).to have_css(".file-view", count: 3)
+        file_views = all(".file-view")
+        expect(file_views[0]).to have_css(".name", text: file3.name)
+        expect(file_views[1]).to have_css(".name", text: file2.name)
+        expect(file_views[2]).to have_css(".name", text: file1.name)
       end
     end
   end

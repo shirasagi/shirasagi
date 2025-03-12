@@ -2,6 +2,33 @@ import SelectBoxController from "./select_box_controller";
 import {dispatchEvent, prependChildren, replaceChildren} from "../../ss/tool";
 import i18next from 'i18next'
 
+// アップロード順
+// ※アップロード順とは、ID順のこと
+function idComparator(lhs, rhs) {
+  const lhsId = lhs.dataset.fileId;
+  const rhsId = rhs.dataset.fileId;
+  if (lhsId > rhsId) {
+    return -1;
+  } else if (lhsId < rhsId) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+function nameComparator(lhs, rhs) {
+  const lhsName = lhs.dataset.name?.toLowerCase() || "";
+  const rhsName = rhs.dataset.name?.toLowerCase() || "";
+
+  if (lhsName < rhsName) {
+    return -1;
+  } else if (lhsName > rhsName) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
 // ファイル選択の選択結果はとてもじゃないけど ejs でレンダリングするのは無理。
 // 選択したファイルをサーバーへポストバックしてレンダリングしてもらう。
 export default class extends SelectBoxController {
@@ -12,6 +39,7 @@ export default class extends SelectBoxController {
     viewApi: String
   }
   static targets = [
+    "option",
     "fileUploadDropArea"
   ];
 
@@ -43,6 +71,13 @@ export default class extends SelectBoxController {
     }
   }
 
+  optionTargetConnected(element) {
+    const option = JSON.parse(element.innerHTML);
+    for (const key in option) {
+      this[`${key}Value`] = option[key];
+    }
+  }
+
   openDialog(ev) {
     if (ev.target.name === "upload") {
       this.apiValue = this.uploadApiValue;
@@ -55,6 +90,22 @@ export default class extends SelectBoxController {
 
   openFile(ev) {
     SS_FileView.open(ev, { viewPath: this.viewApiValue });
+  }
+
+  reorderSelectedFiles(ev) {
+    const comparator = ev.target.value === "name" ? nameComparator : idComparator
+    const fileViewElements = Array.from(this.resultTarget.querySelectorAll(".file-view"));
+    fileViewElements.sort(comparator);
+    fileViewElements.forEach((fileViewElement) => this.resultTarget.appendChild(fileViewElement))
+    dispatchEvent(this.resultTarget, "change");
+
+    this.element.querySelectorAll(".file-order-btn").forEach((buttonElement) => {
+      if (buttonElement === ev.target) {
+        buttonElement.setAttribute("aria-pressed", true);
+      } else {
+        buttonElement.setAttribute("aria-pressed", false);
+      }
+    });
   }
 
   attachFile(ev) {

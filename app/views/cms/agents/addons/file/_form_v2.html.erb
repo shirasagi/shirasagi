@@ -19,7 +19,20 @@
 
 <dl class="see">
   <dd class="wide">
-    <div class="cms-file-upload" data-controller="ss--file-select-box" data-ss--file-select-box-upload-api-value="<%= upload_api_path %>" data-ss--file-select-box-file-api-value="<%= file_api_path %>" data-ss--file-select-box-select-api-value="<%= select_api_path %>" data-ss--file-select-box-view-api-value="<%= view_api_path %>" data-ss--file-select-box-dialog-type-value="ss" data-ss--file-select-box-selection-type-value="append">
+    <div class="cms-file-upload" data-controller="ss--file-select-box">
+      <script type="application/json" data-ss--file-select-box-target="option">
+        <%==
+          {
+            "uploadApi" => upload_api_path,
+            "fileApi" => file_api_path,
+            "selectApi" => select_api_path,
+            "viewApi" => view_api_path,
+            "dialogType" => "ss",
+            "selectionType" => "append"
+          }.to_json
+        %>
+      </script>
+
       <%= f.hidden_field "file_ids[]", value: "", id: nil %>
 
       <div class="cms-file-upload-menu-new">
@@ -35,14 +48,16 @@
 
       <div class="cms-file-upload-file-order">
         <div class="ss-btn-group" role="group" aria-label="並び順">
-          <%= button_tag t('ss.buttons.file_name_order'), { type: :button, class: "btn file-order-btn", value: "name" } %>
-          <%= button_tag t('ss.buttons.file_upload_order'), { type: :button, class: "btn file-order-btn", value: "upload" } %>
+          <%= button_tag t('ss.buttons.file_name_order'), type: :button, name: "by-name", class: "btn file-order-btn", value: "name", aria: { pressed: false }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
+          <%= button_tag t('ss.buttons.file_upload_order'), type: :button, name: "by-upload", class: "btn file-order-btn", value: "upload", aria: { pressed: true }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
         </div>
         <%= @model.tt :file_order %>
       </div>
 
       <div id="selected-files" class="cms-file-upload-files" data-ss--file-select-box-target="result">
-        <% SS::File.each_file(@item.file_ids) do |file| %>
+        <%# アップロード順とは、ID順のこと %>
+        <% @item.files.reorder(id: -1).each do |file| %>
+          <% file = file.becomes_with_model %>
           <%=
             component = SS::FileViewV2Component.new(
               cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item, file: file)
