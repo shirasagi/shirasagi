@@ -54,6 +54,8 @@ Opendata_Graph.prototype.datasetsMinWidth = function() {
 };
 
 Opendata_Graph.prototype.drawBar = function() {
+  var self = this;
+
   this.resizeContainer(this.datasetsMinWidth());
   this.chart = new Chart(this.$canvas, {
     type: 'bar',
@@ -95,14 +97,18 @@ Opendata_Graph.prototype.drawBar = function() {
           }
         }
       },
-      //animation: {
-      //  onComplete: function () {}
-      //}
+      animation: {
+        onComplete: function() {
+          self.$container.addClass("loaded");
+        }
+      }
     }
   });
 };
 
 Opendata_Graph.prototype.drawLine = function() {
+  var self = this;
+
   this.resizeContainer(this.datasetsMinWidth());
   this.chart = new Chart(this.$canvas, {
     type: 'line',
@@ -144,14 +150,18 @@ Opendata_Graph.prototype.drawLine = function() {
           }
         }
       },
-      //animation: {
-      //  onComplete: function () {}
-      //}
+      animation: {
+        onComplete: function() {
+          self.$container.addClass("loaded");
+        }
+      }
     }
   });
 };
 
 Opendata_Graph.prototype.drawPie = function() {
+  var self = this;
+
   this.resizeContainer(0);
   this.chart = new Chart(this.$canvas, {
     type: 'pie',
@@ -196,9 +206,11 @@ Opendata_Graph.prototype.drawPie = function() {
         x: { display: false },
         y: { display: false }
       },
-      //animation: {
-      //  onComplete: function () {}
-      //}
+      animation: {
+        onComplete: function() {
+          self.$container.addClass("loaded");
+        }
+      }
     }
   });
 };
