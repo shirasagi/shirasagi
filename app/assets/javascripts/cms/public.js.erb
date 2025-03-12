@@ -207,10 +207,8 @@ this.SS_Theme = (function () {
         const theme = SS.config["theme"];
         let inlineStyle = '';
         for (cls in theme) {
-          const $btn = $theme.find("button." + $.escapeSelector(cls));
-          if (!$btn[0]) {
-            continue;
-          }
+          let $btn = $theme.find("button." + $.escapeSelector(cls) + ", a." + $.escapeSelector(cls));
+          if (!$btn.length) continue;
 
           const btnId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
           $btn.attr("id", btnId); // Assign the unique ID to the anchor
