@@ -42,6 +42,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect(item.master?).to be_truthy
       expect(item.branch?).to be_falsey
       expect(item.branches.count).to eq 1
+      expect(item.backups.count).to eq 1
 
       branch = item.branches.first
       expect(branch.name).to eq item.name
@@ -49,6 +50,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect(branch.state).to eq "closed"
       expect(branch.master?).to be_falsey
       expect(branch.branch?).to be_truthy
+      expect(branch.backups.count).to eq 1
 
       if item.class.fields.key?("file_ids")
         expect(branch.files.count).to eq item.files.count
@@ -58,6 +60,11 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         expect(branch.html).to include(branch.files.first.url)
         expect(branch.html).to include(item.files.first.url)
         expect(branch.html).to eq item.html
+      end
+
+      History::Log.unscoped.where(controller: "workflow/frames/branches", action: "create").first.tap do |history_log|
+        expect(history_log.target_class).to eq branch.class.name
+        expect(history_log.target_id).to eq branch.id.to_s
       end
 
       # draft save
@@ -75,6 +82,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       branch.reload
 
       expect(item.state).to eq "public"
+      expect(item.backups.count).to eq 1
       expect(branch.name).not_to eq item.name
       expect(branch.name).to eq new_name
       if !item.is_a?(ImageMap::Page)
@@ -82,6 +90,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         expect(branch.index_name).to be_blank
       end
       expect(branch.state).to eq "closed"
+      expect(branch.backups.count).to eq 2
       expect(item.branches.first.id).to eq(branch.id)
 
       # publish_branch
@@ -128,6 +137,8 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       if item.class.fields.key?("file_ids")
         expect(item.file_ids).to eq branch.file_ids
       end
+      expect(item.backups.count).to eq 4
+      expect(item.backups.where("data._id" => branch.id).count).to eq 2
       expect(item.class.all.size).to eq 1
 
       if item.route == "cms/page"

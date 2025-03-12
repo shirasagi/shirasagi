@@ -186,13 +186,13 @@ describe "cms_page_pages", type: :feature, dbscope: :example, js: true do
       expect(page2.state).to eq "public"
       expect(page2.html).to eq "<s>copy2</s>"
 
-      expect(page1.backups.size).to eq 2
+      expect(page1.backups.size).to eq 3
       page1.backups.to_a.tap do |backups|
         expect(backups[0].created.in_time_zone).to eq now - 1.hour
         expect(backups[0].user_id).to eq user.id
         expect(backups[0].data[:state]).to eq "public"
       end
-      expect(page2.backups.size).to eq 2
+      expect(page2.backups.size).to eq 3
       page2.backups.to_a.tap do |backups|
         expect(backups[0].created.in_time_zone).to eq now - 1.hour
         expect(backups[0].user_id).to eq user.id
