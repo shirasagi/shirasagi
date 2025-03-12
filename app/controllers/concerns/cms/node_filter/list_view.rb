@@ -4,7 +4,8 @@ module Cms::NodeFilter::ListView
   include Cms::PublicFilter::Node
 
   included do
-
+    cattr_accessor :generates_rss, instance_accessor: false
+    self.generates_rss = true
     before_action :prepend_current_view_path, only: [:generate]
     helper Cms::ListHelper
   end
@@ -27,6 +28,13 @@ module Cms::NodeFilter::ListView
       break unless Fs.exist?(file)
       Fs.rm_rf file
     end
+  end
+
+  def cleanup_rss_file
+    basename = "rss.xml"
+    file = "#{@cur_node.path}/#{basename}"
+    return unless Fs.exist?(file)
+    Fs.rm_rf file
   end
 
   def _render_with_pagination(items)
@@ -63,11 +71,17 @@ module Cms::NodeFilter::ListView
       @task.log "#{@cur_node.url}#{basename}" if @task
     end
 
-    basename = "rss.xml"
-    rss = _render_rss(@cur_node, [])
-    if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
-      @task.log "#{@cur_node.url}#{basename}" if @task
+    if self.class.generates_rss
+      basename = "rss.xml"
+      rss = _render_rss(@cur_node, [])
+      if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
+        @task.log "#{@cur_node.url}#{basename}" if @task
+      end
     end
+  end
+
+  def all_pages
+    @all_pages ||= SS::SortEmulator.new(pages, @cur_node.sort_hash)
   end
 
   public
@@ -106,13 +120,14 @@ module Cms::NodeFilter::ListView
   def generate
     if index_page_exist? || !@cur_node.serve_static_file?
       cleanup_index_files(1)
+      cleanup_rss_file
       return true
     end
 
-    all_pages = SS::SortEmulator.new(pages, @cur_node.sort_hash)
     if all_pages.blank?
       generate_empty_files
       cleanup_index_files(1)
+      cleanup_rss_file unless self.class.generates_rss
       return true
     end
 
@@ -134,7 +149,7 @@ module Cms::NodeFilter::ListView
         @task.log "#{@cur_node.url}#{basename}" if @task
       end
 
-      if page_index == 0
+      if page_index == 0 && self.class.generates_rss
         basename = "rss.xml"
         rss = _render_rss(@cur_node, pages)
         if Fs.write_data_if_modified("#{@cur_node.path}/#{basename}", rss.to_xml)
@@ -146,6 +161,7 @@ module Cms::NodeFilter::ListView
     end
 
     cleanup_index_files(next_page_index)
+    cleanup_rss_file unless self.class.generates_rss
     true
   ensure
     head :no_content
