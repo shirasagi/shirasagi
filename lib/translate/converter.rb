@@ -40,7 +40,6 @@ class Translate::Converter
       doc.css('body a,body form').each do |node|
         href = node.attributes["href"].try(:value)
         action = node.attributes["action"].try(:value)
-        data_href = node.attributes["data-href"].try(:value)
         next if node.instance_variable_get(:@link_replaced)
 
         if href.present? && href.match?(regexp)
@@ -51,10 +50,6 @@ class Translate::Converter
           node.attributes["action"].value = gsub_uri_path(action, regexp, location)
           node.instance_variable_set(:@link_replaced, true)
         end
-        #if data_href.present? && data_href.match?(regexp)
-        #  node.attributes["data-href"].value = gsub_uri_path(data_href, regexp, location)
-        #  node.instance_variable_set(:@link_replaced, true)
-        #end
       end
     end
 
