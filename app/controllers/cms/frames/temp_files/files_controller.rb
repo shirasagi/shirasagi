@@ -79,6 +79,10 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
         cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node
       )
     end
-    render layout: false
+
+    component = SS::FileViewV2Component.new(
+      cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, file: @item)
+    component.animated = "animate__animated animate__bounceIn"
+    render component, layout: false
   end
 end

@@ -96,7 +96,16 @@ export default class extends SelectBoxController {
     const comparator = ev.target.value === "name" ? nameComparator : idComparator
     const fileViewElements = Array.from(this.resultTarget.querySelectorAll(".file-view"));
     fileViewElements.sort(comparator);
-    fileViewElements.forEach((fileViewElement) => this.resultTarget.appendChild(fileViewElement))
+    fileViewElements.forEach((fileViewElement) => {
+      const removeClassList = []
+      fileViewElement.classList.forEach((cssClass) => {
+        if (cssClass.startsWith("animate__")) {
+          removeClassList.push(cssClass);
+        }
+      });
+      fileViewElement.classList.remove(...removeClassList);
+      this.resultTarget.appendChild(fileViewElement);
+    })
     dispatchEvent(this.resultTarget, "change");
 
     this.element.querySelectorAll(".file-order-btn").forEach((buttonElement) => {

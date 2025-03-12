@@ -1,6 +1,12 @@
 #frozen_string_literal: true
 
 class SS::FileViewV2Component < SS::FileViewComponent
+  attr_accessor :animated
+
+  def file_view_tag_css_class
+    [ "file-view", animated ]
+  end
+
   def file_link_tag(&block)
     data = { action: "ss--file-select-box#openFile" }
     link_to(file.url, class: "thumb", target: "_blank", rel: "noopener", data: data, &block)
