@@ -60,15 +60,9 @@
               <td class="options">
                 <%% if (selectedItem.is_image) { %>
                   <%=
-                    file_resizing_options = @model.resizing_options(user: @cur_user, node: cur_node)
+                    file_resizing_options = Cms.file_resizing_options(@cur_user, site: @cur_site, node: cur_node)
                     if file_resizing_options.present?
-                      file_resizing_options = options_for_select(file_resizing_options)
-                      if (site_file_resizing = @cur_site.file_resizing).present?
-                        file_resizing_options += tag.option(@cur_site.t(:file_resizing_label, size: site_file_resizing.join("x")), value: site_file_resizing.join(","), selected: true)
-                      end
-                    end
-                    if file_resizing_options.present?
-                      select_tag "item[files][][resizing]", file_resizing_options, include_blank: t("ss.resize_image_auto"), class: "image-size", id: nil
+                      select_tag "item[files][][resizing]", options_for_select(file_resizing_options), include_blank: t("ss.resize_image_auto"), class: "image-size", id: nil
                     end
                   %>
                   <%=

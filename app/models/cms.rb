@@ -367,4 +367,46 @@ module Cms
   def self.unescape_html_entities(text)
     Nokogiri::HTML5.fragment(text).text
   end
+
+  def self.file_resizing_options(user, site:, node: nil)
+    options = SS::File.resizing_options(user: user, node: node)
+    options = [] if options.blank?
+
+    site_resizing = site.file_resizing
+    if site_resizing.present?
+      site_resizing_label = site.t(:file_resizing_label, size: site_resizing.join("x"))
+      site_resizing_value = site_resizing.join(",")
+      site_resizing_option = options.find { |_label, value| value == site_resizing_value }
+      if site_resizing_option
+        site_resizing_option[0] = site_resizing_label
+        site_resizing_option[2] ||= {}
+        site_resizing_option[2][:selected] = true
+      else
+        options << [ site_resizing_label, site_resizing_value, { selected: true } ]
+      end
+
+      options.sort! do |lhs, rhs|
+        _lhs_label, lhs_value, _lhs_options = lhs
+        _rhs_label, rhs_value, _rhs_options = rhs
+
+        lhs_width, lhs_height = lhs_value.split(",", 2).map(&:to_i)
+        rhs_width, rhs_height = rhs_value.split(",", 2).map(&:to_i)
+        lhs_square = lhs_width * lhs_height
+        rhs_square = rhs_width * rhs_height
+
+        # 1. 面積の小さい方が上位
+        diff = lhs_square <=> rhs_square
+        next diff if diff != 0
+
+        # 2. width の大きい方が上位
+        diff = rhs_width <=> lhs_width
+        next diff if diff != 0
+
+        # 3. height の大きい方が上位
+        rhs_height <=> rhs_width
+      end
+    end
+
+    options
+  end
 end
