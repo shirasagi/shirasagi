@@ -1,9 +1,9 @@
 <%
   disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
   disable_image_resizes ||= cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: cur_node) && Cms::ImageResize.site(@cur_site).node(cur_node).where(state: SS::ImageResize::STATE_ENABLED).present?
-  min_size = @model.image_resizes_min_attributes(node: cur_node)['size']
-  min_width = @model.image_resizes_min_attributes(node: cur_node)['max_width']
-  min_height = @model.image_resizes_min_attributes(node: cur_node)['max_height']
+  min_size, min_width, min_height = @model.image_resizes_min_attributes(user: @cur_user, node: cur_node).then do |attr|
+    [ attr['size'], attr['max_width'], attr['max_height'] ]
+  end
 %>
 
 <div class="cms-tabs">
@@ -77,7 +77,7 @@
                   <% if min_size %>
                     <div class="tooltip">?
                       <ul class="tooltip-content">
-                        <% t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_fs(:human_size), width: min_width, height: min_height).each do |tooltip| %>
+                        <% t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_fs(:human_size), width: min_width.to_fs(:delimited), height: min_height.to_fs(:delimited)).each do |tooltip| %>
                           <li><%= tooltip %><br></li>
                         <% end %>
                       </ul>
