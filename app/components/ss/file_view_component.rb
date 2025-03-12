@@ -22,7 +22,6 @@ class SS::FileViewComponent < ApplicationComponent
       return @licenses
     end
 
-
     criteria = Opendata::License.all
     criteria = criteria.in(site_id: cur_node.try(:opendata_site_ids))
     criteria = criteria.and_public
