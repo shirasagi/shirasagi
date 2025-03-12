@@ -9,7 +9,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
   before { login_user user }
 
-  describe "contrast ratio check" do
+  shared_examples "contrast ratio check" do
     context "on show" do
       context "on cms/addon/file" do
         let!(:item) { create :article_page, cur_user: user, cur_site: site, cur_node: node, file_ids: [ file1.id ] }
@@ -320,5 +320,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+  end
+
+  context "with v1 file dialog" do
+    before do
+      @save_file_upload_dialog = SS.file_upload_dialog
+      SS.file_upload_dialog = :v1
+    end
+
+    after do
+      SS.file_upload_dialog = @save_file_upload_dialog
+    end
+
+    it_behaves_like "contrast ratio check"
+  end
+
+  context "with v2 file dialog" do
+    it_behaves_like "contrast ratio check"
   end
 end

@@ -7,9 +7,9 @@
   });
 <% end %>
 
-<div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>" data-name="<%= file.name %>" data-humanized-name="<%= file.humanized_name %>" data-url="<%= file.url %>" data-thumb-url="<%= file.thumb_url %>" data-extname="<%= file.extname %>">
+<%= file_view_tag do %>
   <%= sanitizer_status(file) %>
-  <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
+  <%= file_link_tag do %>
     <% if file.image? %>
       <%= image_tag file.thumb_no_cache_url, alt: file.name %>
     <% else %>
@@ -70,4 +70,4 @@
       </dd>
     </dl>
   <% end %>
-</div>
+<% end %>

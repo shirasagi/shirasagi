@@ -36,6 +36,18 @@ class SS::FileViewComponent < ApplicationComponent
     @name || "item[file_ids][]"
   end
 
+  def file_view_tag(&block)
+    data = {
+      file_id: file.id, name: file.name, humanized_name: file.humanized_name, extname: file.extname,
+      url: file.url, thumb_url: file.thumb_url
+    }
+    tag.div(id: "file-#{file.id}", class: "file-view", data: data, &block)
+  end
+
+  def file_link_tag(&block)
+    link_to(file.url, class: "thumb", target: "_blank", rel: "noopener", &block)
+  end
+
   def show_properties
     return @show_properties if instance_variable_defined?(:@show_properties)
     true

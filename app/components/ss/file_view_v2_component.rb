@@ -1,6 +1,11 @@
 #frozen_string_literal: true
 
 class SS::FileViewV2Component < SS::FileViewComponent
+  def file_link_tag(&block)
+    data = { action: "ss--file-select-box#openFile" }
+    link_to(file.url, class: "thumb", target: "_blank", rel: "noopener", data: data, &block)
+  end
+
   def default_attach_action
     button_tag(
       t("sns.file_attach"), type: :button, name: 'file_attach', class: 'btn',
