@@ -168,9 +168,9 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
         site.save!
 
         item.html = [
-          "<!-- write-kana --><div>上部</div><!-- end-write-kana -->",
-          item.html,
-          "<!-- write-kana --><div>下部</div><!-- end-write-kana -->"
+            "<!-- write-kana --><div>上部</div><!-- end-write-kana -->",
+            item.html,
+            "<!-- write-kana --><div>下部</div><!-- end-write-kana -->"
         ].join
         item.save!
 
@@ -196,9 +196,9 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
         site.save!
 
         item.html = [
-          "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
-          item.html,
-          "<!-- skip-kana --><div>下部</div><!-- end-skip-kana -->"
+            "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
+            item.html,
+            "<!-- skip-kana --><div>下部</div><!-- end-skip-kana -->"
         ].join
         item.save!
 
@@ -224,11 +224,11 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
         site.save!
 
         item.html = [
-          "<!-- write-kana -->",
-          "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
-          item.html,
-          "<!-- end-write-kana -->",
-          "<div>下部</div>"
+            "<!-- write-kana -->",
+            "<!-- skip-kana --><div>上部</div><!-- end-skip-kana -->",
+            item.html,
+            "<!-- end-write-kana -->",
+            "<div>下部</div>"
         ].join
         item.save!
 
