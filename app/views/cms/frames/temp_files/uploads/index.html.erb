@@ -11,7 +11,7 @@
   <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), cms_frames_temp_files_files_path(site: @cur_site, cid: cur_node, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
 </div>
 
-<div class="cms-temp-files" data-controller="ss--temp-file">
+<div class="cms-temp-file" data-controller="ss--temp-file">
   <script type="text/plain" data-ss--temp-file-target="option">
     <%==
       {
@@ -20,16 +20,16 @@
       }.to_json
     %>
   </script>
-  <div class="search-ui-form" data-ss--temp-file-target="fileUploadDropArea">
+  <div class="search-ui-form cms-temp-file-drop-area" data-ss--temp-file-target="fileUploadDropArea">
     <%= file_field_tag :in_files, multiple: true, class: "hide", id: nil, data: { "ss--temp-file-target" => "fileUploadShadow" } %>
     <%= button_tag t("ss.buttons.select_files"), type: :button, name: 'select_file', class: "btn", data: { action: "ss--temp-file#openDialog", "ss--temp-file-target" => "fileUploadReal" } %>
-    <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+    <span class="cms-temp-file-drop-notice"><%= t('ss.notice.file_droppable') %></span>
   </div>
 
-  <%= form_with scope: :item, url: url_for(action: :create), class: "hide", data: { "ss--temp-file-target" => "fileUploadWaitingForm" } do |f| %>
+  <%= form_with scope: :item, url: url_for(action: :create), class: "hide cms-temp-file-waiting-item-form", data: { "ss--temp-file-target" => "fileUploadWaitingForm" } do |f| %>
     <%= error_messages_for :item %>
 
-    <table class="index">
+    <table class="index cms-temp-file-waiting-item-table">
       <tbody data-ss--temp-file-target="fileUploadWaitingList">
       </tbody>
     </table>
@@ -37,7 +37,7 @@
     <script type="text/plain" data-ss--temp-file-target="fileUploadWaitingItemTemplate">
       <%% if (selectedItems.length > 0) { %>
         <%% selectedItems.forEach(function(selectedItem) { %>
-          <tr data-ss--temp-file-target="fileUploadWaitingItem">
+          <tr class="cms-temp-file-waiting-item-row" data-ss--temp-file-target="fileUploadWaitingItem">
             <%% if (selectedItem.errors && selectedItem.errors.length > 0) { %>
               <td class="name">
                 <input type="file" name="item[files][][in_file]" class="hide new-file">
@@ -88,7 +88,7 @@
               <td class="operations">
                 <button name="delete" type="button" class="btn" value="delete" data-action="ss--temp-file#deselect"><%= t("ss.buttons.cancel_upload") %></button>
               </td>
-              <td class="errors"></td>
+              <td class="errors hide"></td>
             <%% } %>
           </tr>
         <%% }); %>

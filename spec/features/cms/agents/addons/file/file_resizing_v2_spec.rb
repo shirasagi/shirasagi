@@ -53,7 +53,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
 
       within "#item-form #addon-cms-agents-addons-file" do
-        within '#selected-files' do
+        within '.cms-addon-file-selected-files' do
           expect(page).to have_css('.name', text: 'keyvisual.jpg')
         end
       end

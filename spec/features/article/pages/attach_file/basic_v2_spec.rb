@@ -56,7 +56,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
-          within '#selected-files' do
+          within '.cms-addon-file-selected-files' do
             expect(page).to have_css('.name', text: 'modify.jpg')
           end
         end
@@ -101,7 +101,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "form#item-form" do
-        within '#selected-files' do
+        within '.cms-addon-file-selected-files' do
           expect(page).to have_css('.name', text: file.name)
         end
         click_on I18n.t("ss.buttons.publish_save")
@@ -165,7 +165,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
 
           within "form#item-form" do
-            within '#selected-files' do
+            within '.cms-addon-file-selected-files' do
               expect(page).to have_css('.name', text: file.name)
             end
 
@@ -266,7 +266,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    xcontext "with entry form" do
+    context "with entry form" do
       it "#edit" do
         login_user(user2)
 

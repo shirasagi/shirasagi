@@ -2,6 +2,7 @@ import { Controller } from "@hotwired/stimulus";
 import ejs from "ejs/ejs";
 import {prependChildren, csrfToken, dispatchEvent, LOADING} from "../../ss/tool";
 import i18next from 'i18next';
+import DropArea from "../../ss/drop_area";
 
 const NUM_RETRY = 5;
 
@@ -58,27 +59,7 @@ export default class extends Controller {
       })
     }
     if (this.hasFileUploadDropAreaTarget) {
-      this.fileUploadDropAreaTarget.addEventListener("dragenter", (ev) => {
-        // In order to have the drop event occur on a div element, you must cancel the ondragenter and ondragover
-        // https://stackoverflow.com/questions/21339924/drop-event-not-firing-in-chrome
-        ev.preventDefault();
-
-        this.#onDragEnter(ev);
-      });
-      this.fileUploadDropAreaTarget.addEventListener("dragleave", (ev) => {
-        this.#onDragLeave(ev);
-      });
-      this.fileUploadDropAreaTarget.addEventListener("dragover", (ev) => {
-        // In order to have the drop event occur on a div element, you must cancel the ondragenter and ondragover
-        // https://stackoverflow.com/questions/21339924/drop-event-not-firing-in-chrome
-        ev.preventDefault();
-
-        this.#onDragOver(ev);
-      });
-      this.fileUploadDropAreaTarget.addEventListener("drop", (ev) => {
-        ev.preventDefault();
-        this.#onDrop(ev);
-      });
+      new DropArea(this.fileUploadDropAreaTarget, (files) => this.#appendFilesToWaitingList(files));
     }
     this.element.addEventListener("ss:tempFile:upload", (ev) => {
       this.#appendFilesToWaitingList(ev.detail.files)
@@ -352,43 +333,30 @@ export default class extends Controller {
     const errorsElement = item.querySelector(".errors");
     if (errorsElement) {
       errorsElement.innerHTML = '';
+      errorsElement.classList.add("hide");
     }
 
     return true;
   }
 
   #showError(item, errorMessages) {
+    const operationsElement = item.querySelector(".operations");
+    if (operationsElement) {
+      const buttonElement = document.createElement("button")
+      buttonElement.type = "button";
+      buttonElement.name = "delete";
+      buttonElement.value = "delete";
+      buttonElement.classList.add("btn");
+      buttonElement.dataset.action = "ss--temp-file#deselect";
+      buttonElement.textContent = i18next.t("ss.buttons.delete");
+
+      operationsElement.replaceChildren(buttonElement);
+    }
+
     const errorsElement = item.querySelector(".errors");
-    if (!errorsElement) {
-      return;
+    if (errorsElement) {
+      errorsElement.replaceChildren(createError(errorMessages));
+      errorsElement.classList.remove("hide");
     }
-
-    errorsElement.replaceChildren(createError(errorMessages));
-  }
-
-  #onDragEnter(_ev) {
-    this.fileUploadDropAreaTarget.classList.add('file-dragenter');
-  }
-
-  #onDragLeave(_ev) {
-    this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
-  }
-
-  #onDragOver(_ev) {
-    if (!this.fileUploadDropAreaTarget.classList.contains('file-dragenter')) {
-      this.fileUploadDropAreaTarget.classList.add('file-dragenter');
-    }
-  }
-
-  #onDrop(ev) {
-    const files = ev.dataTransfer.files;
-    if (!files || files.length === 0) {
-      return;
-    }
-
-    this.fileUploadDropAreaTarget.classList.add('busy');
-    this.#appendFilesToWaitingList(files).then(() => {
-      this.fileUploadDropAreaTarget.classList.remove('file-dragenter', 'busy');
-    });
   }
 }

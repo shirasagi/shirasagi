@@ -1,0 +1,33 @@
+.cms-addon-file {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 5px 10px;
+
+  .cms-addon-file-drop-area {
+    width: 100%;
+    padding: 25px 20px;
+    border-radius: 3px;
+    background-color: $gray1;
+    color: #b30;
+
+    &.file-dragenter {
+      background-color: #fbeee8;
+    }
+  }
+
+  .cms-addon-file-selected-files-wrap {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  * ~ .cms-addon-file-selected-files-wrap {
+    margin-top: 20px;
+  }
+
+  .cms-addon-file-selected-files {
+    display: flex;
+    flex-wrap: wrap;
+  }
+}

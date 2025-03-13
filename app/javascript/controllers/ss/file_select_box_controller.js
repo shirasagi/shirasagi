@@ -1,6 +1,7 @@
 import SelectBoxController from "./select_box_controller";
 import {dispatchEvent, prependChildren, replaceChildren} from "../../ss/tool";
 import i18next from 'i18next'
+import DropArea from "../../ss/drop_area";
 
 // アップロード順
 // ※アップロード順とは、ID順のこと
@@ -47,27 +48,7 @@ export default class extends SelectBoxController {
     super.connect();
 
     if (this.hasFileUploadDropAreaTarget) {
-      this.fileUploadDropAreaTarget.addEventListener("dragenter", (ev) => {
-        // In order to have the drop event occur on a div element, you must cancel the ondragenter and ondragover
-        // https://stackoverflow.com/questions/21339924/drop-event-not-firing-in-chrome
-        ev.preventDefault();
-
-        this.#onDragEnter(ev);
-      });
-      this.fileUploadDropAreaTarget.addEventListener("dragleave", (ev) => {
-        this.#onDragLeave(ev);
-      });
-      this.fileUploadDropAreaTarget.addEventListener("dragover", (ev) => {
-        // In order to have the drop event occur on a div element, you must cancel the ondragenter and ondragover
-        // https://stackoverflow.com/questions/21339924/drop-event-not-firing-in-chrome
-        ev.preventDefault();
-
-        this.#onDragOver(ev);
-      });
-      this.fileUploadDropAreaTarget.addEventListener("drop", (ev) => {
-        ev.preventDefault();
-        this.#onDrop(ev);
-      });
+      new DropArea(this.fileUploadDropAreaTarget, (files) => this.#onDrop(files));
     }
   }
 
@@ -108,8 +89,8 @@ export default class extends SelectBoxController {
     })
     dispatchEvent(this.resultTarget, "change");
 
-    this.element.querySelectorAll(".file-order-btn").forEach((buttonElement) => {
-      if (buttonElement === ev.target) {
+    this.element.querySelectorAll(`[data-action="ss--file-select-box#reorderSelectedFiles"]`).forEach((buttonElement) => {
+      if (buttonElement.value === ev.target.value) {
         buttonElement.setAttribute("aria-pressed", true);
       } else {
         buttonElement.setAttribute("aria-pressed", false);
@@ -196,28 +177,13 @@ export default class extends SelectBoxController {
     return new Set(ids);
   }
 
-  #onDragEnter(_ev) {
-    this.fileUploadDropAreaTarget.classList.add('file-dragenter');
-  }
-
-  #onDragLeave(_ev) {
-    this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
-  }
-
-  #onDragOver(_ev) {
-    if (!this.fileUploadDropAreaTarget.classList.contains('file-dragenter')) {
-      this.fileUploadDropAreaTarget.classList.add('file-dragenter');
-    }
-  }
-
-  #onDrop(ev) {
-    const files = ev.dataTransfer.files;
+  #onDrop(files) {
     if (!files || files.length === 0) {
       return;
     }
 
     document.addEventListener("ss:dialog:opened", (ev) => {
-      const tempFilesElement = ev.target.querySelector(".cms-temp-files");
+      const tempFilesElement = ev.target.querySelector(".cms-temp-file");
       dispatchEvent(tempFilesElement, "ss:tempFile:upload", { files: files });
       this.fileUploadDropAreaTarget.classList.remove('file-dragenter');
     }, { once: true })

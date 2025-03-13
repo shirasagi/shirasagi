@@ -1,0 +1,18 @@
+.ss-btn-group {
+  display: inline-flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .btn {
+    &:not(:last-child) {
+      border-top-right-radius: 0;
+      border-bottom-right-radius: 0;
+    }
+
+    + .btn {
+      margin-left: -1px;
+      border-top-left-radius: 0;
+      border-bottom-left-radius: 0;
+    }
+  }
+}

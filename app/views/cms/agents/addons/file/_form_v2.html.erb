@@ -17,54 +17,52 @@
   view_api_path = view_cms_apis_content_file_path(id: ":id")
 %>
 
-<dl class="see">
-  <dd class="wide">
-    <div class="cms-file-upload" data-controller="ss--file-select-box">
-      <script type="application/json" data-ss--file-select-box-target="option">
-        <%==
-          {
-            "uploadApi" => upload_api_path,
-            "fileApi" => file_api_path,
-            "selectApi" => select_api_path,
-            "viewApi" => view_api_path,
-            "dialogType" => "ss",
-            "selectionType" => "append"
-          }.to_json
-        %>
-      </script>
+<div class="cms-addon-file" data-controller="ss--file-select-box">
+  <script type="application/json" data-ss--file-select-box-target="option">
+    <%==
+      {
+        "uploadApi" => upload_api_path,
+        "fileApi" => file_api_path,
+        "selectApi" => select_api_path,
+        "viewApi" => view_api_path,
+        "dialogType" => "ss",
+        "selectionType" => "append"
+      }.to_json
+    %>
+  </script>
 
-      <%= f.hidden_field "file_ids[]", value: "", id: nil %>
+  <%= f.hidden_field "file_ids[]", value: "", id: nil %>
 
-      <div class="cms-file-upload-menu-new">
-        <div class="ss-btn-group" role="group" aria-label="<%= t('ss.upload_or_select_from_list') %>">
-          <%= button_tag t('ss.buttons.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
-          <%= button_tag t("ss.buttons.select_from_list"), type: :button, name: 'file', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
-        </div>
-      </div>
-
-      <div class="upload-drop-area cms-file-upload-drop-area" data-ss--file-select-box-target="fileUploadDropArea">
-        <span class="upload-drop-notice cms-file-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
-      </div>
-
-      <div class="cms-file-upload-file-order">
-        <div class="ss-btn-group" role="group" aria-label="<%= t("mongoid.attributes.ss/document.sort") %>">
-          <%= button_tag t('ss.buttons.file_name_order'), type: :button, name: "by-name", class: "btn file-order-btn", value: "name", aria: { pressed: false }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
-          <%= button_tag t('ss.buttons.file_upload_order'), type: :button, name: "by-upload", class: "btn file-order-btn", value: "upload", aria: { pressed: true }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
-        </div>
-        <%= @model.tt :file_order %>
-      </div>
-
-      <div id="selected-files" class="cms-file-upload-files" data-ss--file-select-box-target="result">
-        <%# アップロード順とは、ID順のこと %>
-        <% @item.files.reorder(id: -1).each do |file| %>
-          <% file = file.becomes_with_model %>
-          <%=
-            component = SS::FileViewV2Component.new(
-              cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item, file: file)
-            render component
-          %>
-        <% end %>
-      </div>
+  <div class="cms-addon-file-upload-actions">
+    <div class="ss-btn-group" role="group" aria-label="<%= t('ss.upload_or_select_from_list') %>">
+      <%= button_tag t('ss.buttons.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
+      <%= button_tag t("ss.buttons.select_from_list"), type: :button, name: 'file', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
     </div>
-  </dd>
-</dl>
+  </div>
+
+  <div class="cms-addon-file-drop-area" data-ss--file-select-box-target="fileUploadDropArea">
+    <span class="cms-addon-file-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+  </div>
+
+  <div class="cms-addon-file-selected-files-wrap">
+    <div class="cms-addon-file-order">
+      <div class="ss-btn-group" role="group" aria-label="<%= t("mongoid.attributes.ss/document.sort") %>">
+        <%= button_tag t('ss.buttons.file_name_order'), type: :button, name: "by-name", class: "btn", value: "name", aria: { pressed: false }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
+        <%= button_tag t('ss.buttons.file_upload_order'), type: :button, name: "by-upload", class: "btn", value: "upload", aria: { pressed: true }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
+      </div>
+      <%= @model.tt :file_order %>
+    </div>
+
+    <div class="cms-addon-file-selected-files" data-ss--file-select-box-target="result">
+      <%# アップロード順とは、ID順のこと %>
+      <% @item.files.reorder(id: -1).each do |file| %>
+        <% file = file.becomes_with_model %>
+        <%=
+          component = SS::FileViewV2Component.new(
+            cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item, file: file)
+          render component
+        %>
+      <% end %>
+    </div>
+  </div>
+</div>

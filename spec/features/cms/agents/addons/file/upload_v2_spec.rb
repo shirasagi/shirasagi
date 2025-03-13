@@ -20,7 +20,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
 
         within "#item-form #addon-cms-agents-addons-file" do
-          within '#selected-files' do
+          within '.cms-addon-file-selected-files' do
             expect(page).to have_css('.name', text: filename)
           end
         end
@@ -655,7 +655,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       within "#item-form #addon-cms-agents-addons-file" do
         wait_for_cbox_opened do
-          ss_drop_file ".cms-file-upload-drop-area", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          ss_drop_file ".cms-addon-file-drop-area", "#{Rails.root}/spec/fixtures/ss/logo.png"
         end
       end
       wait_for_cbox_closed do
@@ -667,6 +667,15 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
       within "#item-form #addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", text: "logo.png")
+      end
+
+      expect(SS::File.all.count).to eq 1
+      SS::File.all.first.tap do |file|
+        expect(file.model).to eq "ss/temp_file"
+        expect(file.name).to eq "logo.png"
+        expect(file.filename).to eq "logo.png"
+        expect(file.content_type).to eq "image/png"
+        expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
       end
     end
   end

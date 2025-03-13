@@ -3,7 +3,7 @@
   <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), cms_frames_temp_files_files_path(cid: cur_node, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
 </div>
 
-<div class="cms-temp-files" data-controller="ss--temp-file">
+<div class="cms-temp-file" data-controller="ss--temp-file">
   <div class="search-ui-form">
     <%= form_with scope: :s, url: url_for(action: :index), method: :get, class: "search", data: { turbo: true } do |f| %>
       <div>
