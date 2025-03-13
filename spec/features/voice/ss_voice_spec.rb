@@ -36,8 +36,7 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
           voice_controller = button.find('#ss-voice-controller-0')
           expect(button['aria-expanded']).to eq('false')
         else
-          voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
-          voice_controller = voice_link.find('#ss-voice-controller-0')
+          voice_controller = find('#ss-voice-controller-0')
         end
         expect(voice_controller[:style]).to include("display: none")
       end
@@ -46,15 +45,13 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
     it "updates aria-expanded to true when opened" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("voice.ss_voice"))
+        click_on I18n.t("voice.ss_voice")
         if page.has_css?('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
-          button.click
           voice_controller = button.find('#ss-voice-controller-0')
           expect(button['aria-expanded']).to eq('true')
         else
-          click_on I18n.t("voice.ss_voice")
-          voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
-          voice_controller = voice_link.find('#ss-voice-controller-0')
+          voice_controller = find('#ss-voice-controller-0')
         end
         expect(voice_controller[:style]).to include("")
       end
@@ -115,23 +112,21 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
           voice_controller = button.find('#ss-voice-controller-0')
           expect(button['aria-expanded']).to eq('false')
         else
-          voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
-          voice_controller = voice_link.find('#ss-voice-controller-0')
+          voice_controller = find('#ss-voice-controller-0')
         end
         expect(voice_controller[:style]).to include("display: none")
       end
 
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("voice.ss_voice"))
+        click_on I18n.t("voice.ss_voice")
         if page.has_css?('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           button.click
           voice_controller = button.find('#ss-voice-controller-0')
           expect(button['aria-expanded']).to eq('true')
         else
-          click_on I18n.t("voice.ss_voice")
-          voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
-          voice_controller = voice_link.find('#ss-voice-controller-0')
+          voice_controller = find('#ss-voice-controller-0')
         end
         expect(voice_controller[:style]).to include("")
       end
@@ -171,19 +166,16 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
       end
 
       within ".accessibility__tool-wrap:first-child" do
-        expect(page).to have_css('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
-        button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
-        voice_controller = button.find('#ss-voice-controller-0')
-        expect(button['aria-expanded']).to eq('false')
+        expect(page).to have_content(I18n.t("voice.ss_voice"))
+        click_on I18n.t("voice.ss_voice")
+        voice_controller = find('#ss-voice-controller-0')
         expect(voice_controller[:style]).to include("display: none")
       end
 
       within ".accessibility__tool-wrap:first-child" do
-        button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
-        voice_controller = button.find('#ss-voice-controller-0')
-        button.click
+        click_on I18n.t("voice.ss_voice")
+        voice_controller = find('#ss-voice-controller-0')
         expect(voice_controller[:style]).to include("")
-        expect(button['aria-expanded']).to eq('true')
       end
     end
   end

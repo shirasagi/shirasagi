@@ -395,7 +395,7 @@ SS_Voice.prototype.render = function ($voiceTag, index_1)  {
     anchor.appendTo($voiceTag);
     self.$voiceTag = anchor;
   } else {
-    self.$voiceTag = $voiceTag.find('button').first()
+    self.$voiceTag = $voiceTag.find('button').first();
   }
 
   const controllerId = 'ss-voice-controller-' + index;
