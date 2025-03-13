@@ -389,34 +389,19 @@ SS_Voice.prototype.render = function ($voiceTag, index_1)  {
   const index = index_1;
   self.url = self.requestUrl();
 
-  if ($voiceTag.is('[data-tool="ss-voice"]')) {
-    const voiceButton = $("<button />", {
-      type: "button",
-      name: "voice",
-      "aria-controls": null,
-      "aria-expanded": null,
-      "aria-haspopup": "dialog"
-    }).html($voiceTag.html());
-    $voiceTag.html('');
-    $voiceTag.empty().append(voiceButton);
-    self.$voiceTag = voiceButton;
-  } else {
-    const anchor = $('<a rel="nofollow"/>')
-      .attr('href', "#/voice/")
-      .attr('role', 'button')
-      .html($voiceTag.html());
+  if ($voiceTag.find('button').length === 0) {
+    const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
     $voiceTag.html('');
     anchor.appendTo($voiceTag);
     self.$voiceTag = anchor;
+  } else {
+    self.$voiceTag = $voiceTag.find('button').first()
   }
 
   const controllerId = 'ss-voice-controller-' + index;
   const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
-  const isVisible = voice_controller[0].getAttribute("style");
-  const expanded = (isVisible === "display: none;") ? 'false' : 'true';
   self.$voiceTag.attr("aria-controls", controllerId);
   self.$voiceTag.append(voice_controller);
-  self.$voiceTag.attr("aria-expanded", expanded);
   self.voiceController = new SS_VoiceController(voice_controller[0]);
   self.state = null;
   self.cancelLoading = false;
