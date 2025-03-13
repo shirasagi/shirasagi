@@ -168,9 +168,9 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true, meca
         site.save!
 
         item.html = [
-            "<!-- write-kana --><div>上部</div><!-- end-write-kana -->",
-            item.html,
-            "<!-- write-kana --><div>下部</div><!-- end-write-kana -->"
+          "<!-- write-kana --><div>上部</div><!-- end-write-kana -->",
+          item.html,
+          "<!-- write-kana --><div>下部</div><!-- end-write-kana -->"
         ].join
         item.save!
 
