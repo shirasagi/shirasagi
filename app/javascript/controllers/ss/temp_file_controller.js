@@ -1,6 +1,7 @@
-import { Controller } from "@hotwired/stimulus"
+import { Controller } from "@hotwired/stimulus";
 import ejs from "ejs/ejs";
 import {prependChildren, csrfToken, dispatchEvent, LOADING} from "../../ss/tool";
+import i18next from 'i18next';
 
 const NUM_RETRY = 5;
 
@@ -234,7 +235,7 @@ export default class extends Controller {
     for(const item of this.fileUploadWaitingItemTargets) {
       const operationsElement = item.querySelector(".operations");
       if (operationsElement) {
-        operationsElement.textContent = 'アップロードの待機中';
+        operationsElement.textContent = i18next.t("ss.notice.wait_to_upload");
       }
     }
 
@@ -265,7 +266,7 @@ export default class extends Controller {
 
       const operationsElement = item.querySelector(".operations");
       if (operationsElement) {
-        operationsElement.textContent = 'アップロードしています';
+        operationsElement.textContent = i18next.t("ss.notice.uploading");
       }
 
       const result = await this.#uploadOneFile({ item, name, filename, file, resizing, quality, imageResizesDisabled });
@@ -346,7 +347,7 @@ export default class extends Controller {
     }
     const operationsElement = item.querySelector(".operations");
     if (operationsElement) {
-      operationsElement.textContent = 'アップロードしました。';
+      operationsElement.textContent = i18next.t("ss.notice.finished_uploading");
     }
     const errorsElement = item.querySelector(".errors");
     if (errorsElement) {

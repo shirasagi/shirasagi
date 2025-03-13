@@ -71,7 +71,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       within "#item-form #addon-cms-agents-addons-file" do
         wait_for_cbox_opened do
-          click_on "一覧から選択"
+          click_on I18n.t("ss.buttons.select_from_list")
         end
       end
 
@@ -144,7 +144,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         wait_for_event_fired "turbo:frame-load" do
           within_dialog do
             within ".cms-tabs" do
-              click_on I18n.t('ss.links.upload')
+              click_on I18n.t('ss.buttons.upload')
             end
           end
         end
@@ -152,7 +152,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         wait_for_event_fired "turbo:frame-load" do
           within_dialog do
             within ".cms-tabs" do
-              click_on "一覧"
+              click_on I18n.t("ss.buttons.select_from_list")
             end
           end
         end
@@ -169,7 +169,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
-    let(:file_type) { "一時ファイル" }
+    let(:file_type) { I18n.t("mongoid.models.ss/temp_file") }
 
     it_behaves_like "select a file from file dialog"
   end
@@ -181,7 +181,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
-    let(:file_type) { I18n.t("sns.user_file") }
+    let(:file_type) { I18n.t("mongoid.models.ss/user_file") }
 
     it_behaves_like "select a file from file dialog"
   end
@@ -193,7 +193,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
-    let(:file_type) { I18n.t("cms.file") }
+    let(:file_type) { I18n.t("mongoid.models.cms/file") }
 
     it_behaves_like "select a file from file dialog"
   end

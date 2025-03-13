@@ -82,7 +82,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         within "#addon-cms-agents-addons-file" do
           wait_for_cbox_opened do
-            click_on "一覧から選択"
+            click_on I18n.t("ss.buttons.select_from_list")
           end
         end
       end
@@ -146,7 +146,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               wait_for_cbox_opened do
-                click_on "一覧から選択"
+                click_on I18n.t("ss.buttons.select_from_list")
               end
             end
           end
@@ -201,7 +201,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
               wait_for_cbox_opened do
-                click_on "一覧から選択"
+                click_on I18n.t("ss.buttons.select_from_list")
               end
             end
           end

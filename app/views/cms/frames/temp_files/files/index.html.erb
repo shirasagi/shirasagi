@@ -1,19 +1,34 @@
 <div class="cms-tabs">
-  <%= link_to tag.span("アップロード", class: "tab-name"), cms_frames_temp_files_uploads_path(cid: cur_node, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
-  <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path(cid: cur_node, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.upload"), class: "tab-name"), cms_frames_temp_files_uploads_path(cid: cur_node, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), cms_frames_temp_files_files_path(cid: cur_node, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
 </div>
 
 <div class="cms-temp-files" data-controller="ss--temp-file">
   <div class="search-ui-form">
     <%= form_with scope: :s, url: url_for(action: :index), method: :get, class: "search", data: { turbo: true } do |f| %>
       <div>
-        <label><%= check_box_tag "#{f.object_name}[types][]", "temp_file", @s.types && @s.types.include?("temp_file"), id: nil, data: { controller: "ss--submit-on-change" } %> <%= "一時ファイル" %></label>
+        <label>
+          <%= check_box_tag "#{f.object_name}[types][]", "temp_file", @s.types && @s.types.include?("temp_file"), id: nil, data: { controller: "ss--submit-on-change" } %>
+          <%= t("mongoid.models.ss/temp_file") %>
+        </label>
         (
-          <label><%= radio_button_tag "#{f.object_name}[node_bound]", "current", @s.node_bound != "all", id: nil, data: { controller: "ss--submit-on-change" } %> <%= cur_node ? "このフォルダー" : "ルート階層" %></label>
-          <label><%= radio_button_tag "#{f.object_name}[node_bound]", "all", @s.node_bound == "all", id: nil, data: { controller: "ss--submit-on-change" } %> <%= "全体" %></label>
+          <label>
+            <%= radio_button_tag "#{f.object_name}[node_bound]", "current", @s.node_bound != "all", id: nil, data: { controller: "ss--submit-on-change" } %>
+            <%= cur_node ? "#{t("cms.node")}: #{cur_node.name}" : t("cms.root") %>
+          </label>
+          <label>
+            <%= radio_button_tag "#{f.object_name}[node_bound]", "all", @s.node_bound == "all", id: nil, data: { controller: "ss--submit-on-change" } %>
+            <%= t("ss.options.state.all") %>
+          </label>
         )
-        <label><%= check_box_tag "#{f.object_name}[types][]", "user_file", @s.types && @s.types.include?("user_file"), id: nil, data: { controller: "ss--submit-on-change" } %> <%= t("sns.user_file") %></label>
-        <label><%= check_box_tag "#{f.object_name}[types][]", "cms_file", @s.types && @s.types.include?("cms_file"), id: nil, data: { controller: "ss--submit-on-change" } %> <%= t("cms.file") %></label>
+        <label>
+          <%= check_box_tag "#{f.object_name}[types][]", "user_file", @s.types && @s.types.include?("user_file"), id: nil, data: { controller: "ss--submit-on-change" } %>
+          <%= t("mongoid.models.ss/user_file") %>
+        </label>
+        <label>
+          <%= check_box_tag "#{f.object_name}[types][]", "cms_file", @s.types && @s.types.include?("cms_file"), id: nil, data: { controller: "ss--submit-on-change" } %>
+          <%= t("mongoid.models.cms/file") %>
+        </label>
       </div>
       <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
       <%= hidden_field_tag :cid, params[:cid] if params[:cid].present? %>

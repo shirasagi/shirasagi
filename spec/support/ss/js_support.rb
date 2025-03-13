@@ -854,7 +854,7 @@ module SS
     def ss_select_file_v2(file, addon: "#addon-cms-agents-addons-file")
       within addon do
         wait_for_cbox_opened do
-          click_on "一覧から選択"
+          click_on I18n.t("ss.buttons.select_from_list")
         end
       end
       within_dialog do

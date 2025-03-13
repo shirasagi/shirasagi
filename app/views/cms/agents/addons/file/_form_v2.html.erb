@@ -36,9 +36,9 @@
       <%= f.hidden_field "file_ids[]", value: "", id: nil %>
 
       <div class="cms-file-upload-menu-new">
-        <div class="ss-btn-group" role="group" aria-label="ファイル選択">
-          <%= button_tag t('ss.links.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
-          <%= button_tag "一覧から選択", type: :button, name: 'file', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
+        <div class="ss-btn-group" role="group" aria-label="<%= t('ss.upload_or_select_from_list') %>">
+          <%= button_tag t('ss.buttons.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
+          <%= button_tag t("ss.buttons.select_from_list"), type: :button, name: 'file', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
         </div>
       </div>
 
@@ -47,7 +47,7 @@
       </div>
 
       <div class="cms-file-upload-file-order">
-        <div class="ss-btn-group" role="group" aria-label="並び順">
+        <div class="ss-btn-group" role="group" aria-label="<%= t("mongoid.attributes.ss/document.sort") %>">
           <%= button_tag t('ss.buttons.file_name_order'), type: :button, name: "by-name", class: "btn file-order-btn", value: "name", aria: { pressed: false }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
           <%= button_tag t('ss.buttons.file_upload_order'), type: :button, name: "by-upload", class: "btn file-order-btn", value: "upload", aria: { pressed: true }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
         </div>

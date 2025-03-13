@@ -7,8 +7,8 @@
 %>
 
 <div class="cms-tabs">
-  <%= link_to tag.span("アップロード", class: "tab-name"), cms_frames_temp_files_uploads_path(site: @cur_site, cid: cur_node, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
-  <%= link_to tag.span("一覧", class: "tab-name"), cms_frames_temp_files_files_path(site: @cur_site, cid: cur_node, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.upload"), class: "tab-name"), cms_frames_temp_files_uploads_path(site: @cur_site, cid: cur_node, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), cms_frames_temp_files_files_path(site: @cur_site, cid: cur_node, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
 </div>
 
 <div class="cms-temp-files" data-controller="ss--temp-file">
@@ -22,8 +22,8 @@
   </script>
   <div class="search-ui-form" data-ss--temp-file-target="fileUploadDropArea">
     <%= file_field_tag :in_files, multiple: true, class: "hide", id: nil, data: { "ss--temp-file-target" => "fileUploadShadow" } %>
-    <%= button_tag "ファイル選択", type: :button, name: 'select_file', class: "btn", data: { action: "ss--temp-file#openDialog", "ss--temp-file-target" => "fileUploadReal" } %>
-    <span class="upload-drop-notice">ここにファイルをドロップすることでアップロードできます。</span>
+    <%= button_tag t("ss.buttons.select_files"), type: :button, name: 'select_file', class: "btn", data: { action: "ss--temp-file#openDialog", "ss--temp-file-target" => "fileUploadReal" } %>
+    <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
   </div>
 
   <%= form_with scope: :item, url: url_for(action: :create), class: "hide", data: { "ss--temp-file-target" => "fileUploadWaitingForm" } do |f| %>
@@ -46,7 +46,7 @@
               <td class="filename"><%%= selectedItem.filename %></td>
               <td class="options"></td>
               <td class="operations">
-                <button name="delete" type="button" class="btn" value="delete" data-action="ss--temp-file#deselect">削除</button>
+                <button name="delete" type="button" class="btn" value="delete" data-action="ss--temp-file#deselect"><%= t("ss.buttons.delete") %></button>
               </td>
               <td class="errors"><%%= selectedItem.errors.join("\n") %></td>
             <%% } else { %>
@@ -86,7 +86,7 @@
                 <%% } %>
               </td>
               <td class="operations">
-                <button name="delete" type="button" class="btn" value="delete" data-action="ss--temp-file#deselect">アップロード取消</button>
+                <button name="delete" type="button" class="btn" value="delete" data-action="ss--temp-file#deselect"><%= t("ss.buttons.cancel_upload") %></button>
               </td>
               <td class="errors"></td>
             <%% } %>
