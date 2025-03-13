@@ -29,7 +29,10 @@ FactoryBot.define do
                   <span class="sr-only">ふりがなをはずす</span>
                 </span>
               </div>
-              <div data-tool="ss-voice" class="accessibility__voice">読み上げる</div>
+              <div data-tool="ss-voice" class="accessibility__voice">
+                <span class="material-icons-outlined" role="img" aria-hidden="true">voice_button</span>
+                <span class="sr-only">読み上げる</span>
+              </div>
               <div class="accessibility__theme">背景色
                 <span data-tool="ss-theme">
                   <a href="#" class="white">白</a>

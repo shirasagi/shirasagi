@@ -34,7 +34,7 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
         if page.has_css?('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           voice_controller = button.find('#ss-voice-controller-0')
-          expect(button[:'aria-expanded']).to eq('false')
+          expect(button['aria-expanded']).to eq('false')
         else
           voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
           voice_controller = voice_link.find('#ss-voice-controller-0')
@@ -50,7 +50,7 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
           button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           button.click
           voice_controller = button.find('#ss-voice-controller-0')
-          expect(button[:'aria-expanded']).to eq('true')
+          expect(button['aria-expanded']).to eq('true')
         else
           click_on I18n.t("voice.ss_voice")
           voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
@@ -113,7 +113,7 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
         if page.has_css?('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           voice_controller = button.find('#ss-voice-controller-0')
-          expect(button[:'aria-expanded']).to eq('false')
+          expect(button['aria-expanded']).to eq('false')
         else
           voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
           voice_controller = voice_link.find('#ss-voice-controller-0')
@@ -127,7 +127,7 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
           button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
           button.click
           voice_controller = button.find('#ss-voice-controller-0')
-          expect(button[:'aria-expanded']).to eq('true')
+          expect(button['aria-expanded']).to eq('true')
         else
           click_on I18n.t("voice.ss_voice")
           voice_link = find('a[rel="nofollow"]', text: I18n.t("voice.ss_voice"))
@@ -174,7 +174,7 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
         button = find('button[aria-haspopup="dialog"]', text: I18n.t("voice.ss_voice"))
         voice_controller = button.find('#ss-voice-controller-0')
-        expect(button[:'aria-expanded']).to eq('false')
+        expect(button['aria-expanded']).to eq('false')
         expect(voice_controller[:style]).to include("display: none")
       end
 
@@ -183,7 +183,7 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
         voice_controller = button.find('#ss-voice-controller-0')
         button.click
         expect(voice_controller[:style]).to include("")
-        expect(button[:'aria-expanded']).to eq('true')
+        expect(button['aria-expanded']).to eq('true')
       end
     end
   end
