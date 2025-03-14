@@ -147,7 +147,7 @@ this.SS_Kana = (function () {
       bool = null;
     }
     if (bool === null) {
-      bool = document.body.dataset.kana;
+      bool = $("body").data("kana");
     }
     if (bool) {
       url = url.replace(RegExp("^(\\/\\.s\\d+?\\/preview\\d*)?" + this.siteUrl), "$1" + this.kanaUrl);
@@ -163,7 +163,7 @@ this.SS_Kana = (function () {
       url: elem.attr("href"),
       dataType: "html",
       success: function (data) {
-        var body;
+        let body;
         body = $("body");
         body.data("kana", elem.hasClass("on"));
         return body.html(data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1"));
