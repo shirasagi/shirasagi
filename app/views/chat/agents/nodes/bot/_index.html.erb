@@ -3,7 +3,7 @@
   if @preview
     url = cms_preview_path(@cur_site, path: ::File.join(chat_node.filename, 'index.json'))
   elsif @translate_target
-    url = ::File.join(@cur_site.translate_location, @translate_target.code, chat_node.url, 'index.json')
+    url = ::File.join(@cur_site.url, @cur_site.translate_location, @translate_target.code, chat_node.filename, 'index.json')
   else
     url = ::File.join(chat_node.url, 'index.json')
   end
