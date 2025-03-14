@@ -4,9 +4,10 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
   let!(:site) { cms_site }
   let!(:node) { create_once :ads_node_banner, name: "ads" }
   let!(:bindings) { { user: cms_user, site: site, node: node } }
-  let!(:file1) { tmp_ss_file Cms::TempFile, **bindings, contents: "#{Rails.root}/spec/fixtures/ss/logo.png" }
-  let!(:file2) { tmp_ss_file Cms::TempFile, **bindings, contents: "#{Rails.root}/spec/fixtures/ss/logo.png" }
-  let!(:file3) { tmp_ss_file Cms::TempFile, **bindings, contents: "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let(:content_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let!(:file1) { tmp_ss_file Cms::TempFile, contents: content_path, basename: "logo-#{unique_id}.png", **bindings }
+  let!(:file2) { tmp_ss_file Cms::TempFile, contents: content_path, basename: "logo-#{unique_id}.png", **bindings }
+  let!(:file3) { tmp_ss_file Cms::TempFile, contents: content_path, basename: "logo-#{unique_id}.png", **bindings }
   let(:index_path) { ads_banners_path site.id, node }
 
   before { login_cms_user }
@@ -23,53 +24,31 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
 
       # new
       click_on I18n.t("ss.links.new")
-      within first(".ss-file-field") do
-        expect(page).to have_css(".sanitizer-none", visible: false)
-      end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
-      # set wait
-      within first(".ss-file-field") do
-        wait_for_cbox_opened do
-          first(".btn-file-upload").click
+      within "form#item-form" do
+        within "#item_file_id" do
+          expect(page).to have_css(".sanitizer-none", visible: false)
         end
-      end
-      within all(".file-view")[0] do
-        wait_for_cbox_closed do
-          click_on file1.name
-        end
-      end
-      within first(".ss-file-field") do
-        expect(page).to have_css(".sanitizer-wait")
-      end
 
-      # set error
-      within first(".ss-file-field") do
-        wait_for_cbox_opened do
-          first(".btn-file-upload").click
+        # set wait
+        attach_to_ss_file_field "item_file_id", file1
+        within "#item_file_id" do
+          expect(page).to have_css(".sanitizer-wait")
         end
-      end
-      within all(".file-view")[1] do
-        wait_for_cbox_closed do
-          click_on file2.name
-        end
-      end
-      within first(".ss-file-field") do
-        expect(page).to have_css(".sanitizer-error")
-      end
 
-      # set none
-      within first(".ss-file-field") do
-        wait_for_cbox_opened do
-          first(".btn-file-upload").click
+        # set error
+        attach_to_ss_file_field "item_file_id", file2
+        within "#item_file_id" do
+          expect(page).to have_css(".sanitizer-error")
         end
-      end
-      within all(".file-view")[2] do
-        wait_for_cbox_closed do
-          click_on file3.name
+
+        # set none
+        attach_to_ss_file_field "item_file_id", file3
+        within "#item_file_id" do
+          expect(page).to have_css(".sanitizer-none", visible: false)
         end
-      end
-      within first(".ss-file-field") do
-        expect(page).to have_css(".sanitizer-none", visible: false)
       end
     end
   end

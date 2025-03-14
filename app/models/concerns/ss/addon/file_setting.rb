@@ -3,6 +3,9 @@ module SS::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    MIN_FILE_RESIZING = 200
+    MAX_FILE_RESIZING = 5 * 1_024
+
     included do
       attr_accessor :in_file_resizing_width, :in_file_resizing_height, :in_file_fs_access_restriction_basic_auth_password
 
@@ -36,8 +39,10 @@ module SS::Addon
       width = in_file_resizing_width.to_i
       height = in_file_resizing_height.to_i
 
-      width = 200 if width <= 200
-      height = 200 if height <= 200
+      width = MIN_FILE_RESIZING if width < MIN_FILE_RESIZING
+      height = MIN_FILE_RESIZING if height < MIN_FILE_RESIZING
+      width = MAX_FILE_RESIZING if width > MAX_FILE_RESIZING
+      height = MAX_FILE_RESIZING if height > MAX_FILE_RESIZING
 
       self.file_resizing = [ width, height ]
     end

@@ -3903,7 +3903,7 @@ body.ss-ajax-in-iframe {
   }
 }
 
-.ss-file-field {
+.ss-file-field, .ss-file-field-v2 {
   background: #f2f2f2;
 
   .btn-file-upload.cboxElement {
@@ -3935,6 +3935,25 @@ body.ss-ajax-in-iframe {
   .upload-drop-notice {
     margin: 0 !important;
   }
+}
+.ss-file-field-v2 {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .btn-file-delete {
+    display: flex;
+    align-items: center;
+  }
+}
+// 標準の変なCSSを打ち消す
+dl.see > dd {
+  .ss-file-field-v2 {
+    input + button {
+      margin-top: unset;
+    }
+  }
+
 }
 
 .ss-popup {

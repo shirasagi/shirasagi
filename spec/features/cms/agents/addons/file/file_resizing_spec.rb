@@ -8,9 +8,16 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   let(:file_resizing_label) { site.t(:file_resizing_label, size: file_resizing.join("x")) }
 
   before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+
     site.set(file_resizing: file_resizing)
 
     login_cms_user
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
   end
 
   shared_examples "file resizing is" do

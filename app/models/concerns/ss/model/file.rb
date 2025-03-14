@@ -60,22 +60,22 @@ module SS::Model::File
       "#{SS::Application.private_root}/files"
     end
 
-    def image_resizes_min_attributes(opts = {})
-      if opts[:user]
-        disable_image_resizes = SS::ImageResize.allowed?(:disable, opts[:user]) &&
+    def image_resizes_min_attributes(user: nil, node: nil)
+      if user
+        disable_image_resizes = SS::ImageResize.allowed?(:disable, user) &&
                                 SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
-        if opts[:node]
+        if node
           disable_image_resizes ||=
-            Cms::ImageResize.allowed?(:disable, opts[:user], site: opts[:node].site, node: opts[:node]) &&
-            Cms::ImageResize.site(opts[:node].site).node(opts[:node]).where(state: SS::ImageResize::STATE_ENABLED).present?
+            Cms::ImageResize.allowed?(:disable, user, site: node.site, node: node) &&
+            Cms::ImageResize.site(node.site).node(node).where(state: SS::ImageResize::STATE_ENABLED).present?
         end
         return {} if disable_image_resizes
       end
 
       min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
-      if opts[:node]
-        min_attributes << Cms::ImageResize.site(opts[:node].site).
-          node(opts[:node]).
+      if node
+        min_attributes << Cms::ImageResize.site(node.site).
+          node(node).
           where(state: SS::ImageResize::STATE_ENABLED).min_attributes
       end
 
@@ -89,31 +89,35 @@ module SS::Model::File
       end
     end
 
-    def resizing_options(opts = {})
-      options = [
+    def system_resizing_options
+      [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
-      ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
+      ].map { |w, h| [I18n.t("ss.options.resizing.#{w}x#{h}"), "#{w},#{h}"] }
+    end
 
-      return options unless opts[:user]
+    def resizing_options(user: nil, node: nil)
+      options = system_resizing_options
+      return options unless user
 
-      min_width = image_resizes_min_attributes(opts)['max_width']
-      min_height = image_resizes_min_attributes(opts)['max_height']
+      attr = image_resizes_min_attributes(user: user, node: node)
+      min_width = attr['max_width']
+      min_height = attr['max_height']
 
       return options if min_width.blank? || min_height.blank?
 
       options.select do |k, v|
-        size = v.split(',').collect(&:to_i)
-        size[0] <= min_width && size[1] <= min_height
+        width, height = v.split(',', 2).collect(&:to_i)
+        width <= min_width && height <= min_height
       end
     end
 
-    def quality_options(opts = {})
+    def quality_options(user: nil, node: nil)
       options = SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] } rescue []
 
-      return options unless opts[:user]
+      return options unless user
 
-      min_quality = image_resizes_min_attributes(user: opts[:user], node: opts[:node])['quality']
+      min_quality = image_resizes_min_attributes(user: user, node: node)['quality']
 
       return options unless min_quality
 

@@ -1,0 +1,52 @@
+.cms-temp-file {
+  .cms-temp-file-drop-area {
+    //background-color: $gray1;
+    color: #b30;
+
+    &.file-dragenter {
+      background-color: #fbeee8;
+    }
+  }
+
+  .cms-temp-file-waiting-item-table {
+    display: grid;
+    grid-template-columns: 1fr 1fr auto auto;
+    align-items: center;
+    padding: 5px;
+
+    thead, tbody, tfoot, tr {
+      display: contents;
+    }
+
+    tr:hover td {
+      background-color: #f2f2f2;
+    }
+    tr:nth-child(2n) {
+      td {
+        background-color: #f8f8f8;
+      }
+      &:hover td {
+        background-color: #f2f2f2;
+      }
+    }
+
+    td {
+      padding: 5px;
+    }
+
+    input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url], input[type=email], input[type=number], input[type=tel] {
+      width: 100%;
+    }
+
+    .operations {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+    }
+
+    .errors {
+      grid-column: 1 / span 4;
+    }
+  }
+}

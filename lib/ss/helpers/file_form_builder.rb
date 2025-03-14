@@ -3,6 +3,14 @@ module SS::Helpers::FileFormBuilder
   include ActionView::Helpers::FormTagHelper
 
   def ss_file_field(method, options = {})
+    if SS.file_upload_dialog == :v1
+      ss_file_field_v1(method, options)
+    else
+      ss_file_field_v2(method, options)
+    end
+  end
+
+  def ss_file_field_v1(method, options = {})
     ss_mode = @template.instance_variable_get(:@ss_mode)
     # cur_site = @template.instance_variable_get(:@cur_site)
     cur_user = @template.instance_variable_get(:@cur_user)
@@ -56,5 +64,10 @@ module SS::Helpers::FileFormBuilder
         :span, I18n.t("ss.notice.file_droppable"), class: [ "upload-drop-notice", file.blank? ? nil : "hide" ]
       )
     end
+  end
+
+  def ss_file_field_v2(method, options = {})
+    component = SS::FileFieldV2Component.new(item: @object, object_name: @object_name, object_method: method)
+    @template.render component
   end
 end

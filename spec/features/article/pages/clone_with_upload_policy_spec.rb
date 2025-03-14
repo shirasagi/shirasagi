@@ -52,7 +52,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
         end
 
         wait_for_notice I18n.t('ss.notice.saved')
-        expect(page).to have_css('#selected-files .sanitizer-wait')
+        expect(page).to have_css('.file-view .sanitizer-wait')
 
         # restore
         file = SS::File.first
@@ -62,7 +62,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
         visit article_pages_path(site: site, cid: node)
         click_on name
 
-        expect(page).to have_css('#selected-files .sanitizer-complete')
+        expect(page).to have_css('.file-view .sanitizer-complete')
 
         click_on I18n.t('ss.links.copy')
         copy_name = "copy #{name}"
@@ -76,7 +76,7 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
         click_on copy_name
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(page).to have_css('#selected-files .sanitizer-wait')
+        expect(page).to have_css('.file-view .sanitizer-wait')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
     end
