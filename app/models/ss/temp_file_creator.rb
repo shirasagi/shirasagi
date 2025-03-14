@@ -109,13 +109,6 @@ class SS::TempFileCreator
         message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
         errors.add :base, message
       end
-    else
-      safe_filename = SS::FilenameUtils.convert_to_url_safe_japanese(filename)
-      if filename != safe_filename
-        message = I18n.t("errors.messages.invalid")
-        message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
-        errors.add :base, message
-      end
     end
   end
 
