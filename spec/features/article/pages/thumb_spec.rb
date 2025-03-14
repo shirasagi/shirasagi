@@ -8,6 +8,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:item) { create :article_page, cur_node: node }
   let(:edit_path) { edit_article_page_path site.id, node, item }
 
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
+
   context "attach thumb from upload" do
     before { login_cms_user }
 

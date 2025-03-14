@@ -7,7 +7,7 @@ class SS::TempFileCreator
   include ActiveModel::Attributes
   include ActiveModel::Validations::Callbacks
 
-  attr_accessor :cur_site, :cur_user, :cur_node
+  attr_accessor :cur_site, :cur_user
   attr_reader :work_item
 
   attribute :name, :string
@@ -28,10 +28,18 @@ class SS::TempFileCreator
   validate :validate_size
   validate :validate_image
 
+  def model
+    SS::TempFile
+  end
+
+  def new_item
+    model.new(cur_user: cur_user)
+  end
+
   def save
     return false if invalid?
 
-    item = Cms::TempFile.new(cur_site: cur_site, cur_user: cur_user, cur_node: cur_node)
+    item = new_item
     item.name = name
     item.filename = filename
     item.resizing = resizing

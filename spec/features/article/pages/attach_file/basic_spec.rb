@@ -56,7 +56,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within '#selected-files' do
+      within '.file-view' do
         expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
         expect(page).to have_css('.name', text: 'keyvisual.gif')
       end
@@ -88,7 +88,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within '#selected-files' do
+      within '.file-view' do
         expect(page).to have_css('.name', text: 'modify.jpg')
       end
     end
@@ -120,7 +120,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "form#item-form" do
-        within '#selected-files' do
+        within '.file-view' do
           expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
@@ -167,7 +167,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
 
           within "form#item-form" do
-            within '#selected-files' do
+            within '.file-view' do
               expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
               expect(page).to have_css('.name', text: 'keyvisual.gif')
             end

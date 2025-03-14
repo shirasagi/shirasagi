@@ -868,6 +868,96 @@ module SS
       end
     end
 
+    def upload_to_ss_file_field(locator, path)
+      if SS.file_upload_dialog == :v1
+        upload_to_ss_file_field_v1(locator, path)
+      else
+        upload_to_ss_file_field_v2(locator, path)
+      end
+    end
+
+    def upload_to_ss_file_field_v1(element_id, path)
+      within "##{element_id}" do
+        wait_for_cbox_opened do
+          # click_on I18n.t("ss.buttons.upload")
+          first(".btn-file-upload").click
+        end
+      end
+      within_cbox do
+        attach_file "item[in_files][]", path
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
+      end
+      within "##{element_id}" do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(path, ".*"))
+      end
+    end
+
+    def upload_to_ss_file_field_v2(element_id, path)
+      within "##{element_id}" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", path
+        end
+      end
+      wait_for_cbox_closed do
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      within "##{element_id}" do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(path, ".*"))
+      end
+    end
+
+    def attach_to_ss_file_field(element_id, ss_file)
+      if SS.file_upload_dialog == :v1
+        attach_to_ss_file_field_v1(element_id, ss_file)
+      else
+        attach_to_ss_file_field_v2(element_id, ss_file)
+      end
+    end
+
+    def attach_to_ss_file_field_v1(element_id, ss_file)
+      within "##{element_id}" do
+        wait_for_cbox_opened { first(".btn-file-upload").click }
+      end
+      within_cbox do
+        expect(page).to have_css(".file-view", text: ss_file.name)
+        wait_for_cbox_closed { click_on ss_file.name }
+      end
+      within "##{element_id}" do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(ss_file.name, ".*"))
+      end
+    end
+
+    def attach_to_ss_file_field_v2(element_id, ss_file)
+      within "##{element_id}" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within ".cms-tabs" do
+            click_on I18n.t("ss.buttons.select_from_list")
+          end
+        end
+      end
+      within_dialog do
+        expect(page).to have_css(".file-view", text: ss_file.name)
+        wait_for_cbox_closed { click_on ss_file.name }
+      end
+      within "##{element_id}" do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(ss_file.name, ".*"))
+      end
+    end
+
     def ss_drop_file(locator, file_path)
       file_input = unique_id
       page.execute_script <<~SCRIPT

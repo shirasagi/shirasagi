@@ -36,7 +36,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       ensure_addon_opened("#addon-cms-agents-addons-file")
       ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
       within "#addon-cms-agents-addons-file" do
-        within '#selected-files' do
+        within '.file-view' do
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
       end
@@ -49,7 +49,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       expect(page).to have_css("#addon-cms-agents-addons-body")
       within "#addon-cms-agents-addons-file" do
-        within '#selected-files' do
+        within '.file-view' do
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
       end

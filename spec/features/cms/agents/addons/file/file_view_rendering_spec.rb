@@ -34,7 +34,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           logo_file = SS::File.find_by(name: File.basename(logo_path))
           keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
 
-          within "#selected-files" do
+          within "#addon-cms-agents-addons-file" do
             expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
             expect(page).to have_css(".file-view[data-file-id='#{keyvisual_file.id}']", text: keyvisual_file.name)
 
@@ -49,7 +49,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
 
-        within '#selected-files' do
+        within "#addon-cms-agents-addons-file" do
           element = find(".file-view[data-file-id='#{keyvisual_file.id}']")
           expect(element['class']).not_to include('unused')
           expect(page).to have_css(".file-view.unused", text: 'logo.png')
@@ -79,7 +79,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           logo_file = SS::File.find_by(name: File.basename(logo_path))
           keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
 
-          within '#selected-files' do
+          within "#addon-cms-agents-addons-file" do
             expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
             expect(page).to have_css(".file-view[data-file-id='#{keyvisual_file.id}']", text: keyvisual_file.name)
 
@@ -94,7 +94,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
 
-        within '#selected-files' do
+        within "#addon-cms-agents-addons-file" do
           within ".file-view.unused" do
             expect(page).to have_content(I18n.t("ss.unused_file"))
             expect(page).to have_content(I18n.t("ss.buttons.delete"))
@@ -110,7 +110,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
 
-        within '#selected-files' do
+        within "#addon-cms-agents-addons-file" do
           expect(page).to have_no_css(".file-view.unused")
         end
       end

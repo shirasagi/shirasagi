@@ -30,19 +30,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         ss_upload_file(*files)
 
         within "#addon-cms-agents-addons-file" do
-          within '#selected-files' do
-            expect(page).to have_selector('.file-view', count: 3)
-            expect(page).to have_css('.name', text: 'logo.png')
-          end
+          expect(page).to have_selector('.file-view', count: 3)
+          expect(page).to have_css('.name', text: 'logo.png')
         end
 
         ss_upload_file(add_file)
 
         within "#addon-cms-agents-addons-file" do
-          within '#selected-files' do
-            expect(page).to have_selector('.file-view', count: 4)
-            expect(page).to have_css('.name', text: File.basename(add_file))
-          end
+          expect(page).to have_selector('.file-view', count: 4)
+          expect(page).to have_css('.name', text: File.basename(add_file))
         end
 
         within "form#item-form" do
@@ -53,11 +49,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_all_turbo_frames
 
         within "#addon-cms-agents-addons-file" do
-          within "#selected-files" do
-            expect(page).to have_selector('.file-view', count: 4)
-            expect(page).to have_css('.name', text: 'logo.png')
-            expect(page).to have_css('.name', text: File.basename(add_file))
-          end
+          expect(page).to have_selector('.file-view', count: 4)
+          expect(page).to have_css('.name', text: 'logo.png')
+          expect(page).to have_css('.name', text: File.basename(add_file))
         end
       end
     end
@@ -75,19 +69,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         ss_upload_file(*files)
 
         within "#addon-cms-agents-addons-file" do
-          within '#selected-files' do
-            expect(page).to have_selector('.file-view', count: 25)
-            expect(page).to have_css('.name', text: 'logo.png')
-          end
+          expect(page).to have_selector('.file-view', count: 25)
+          expect(page).to have_css('.name', text: 'logo.png')
         end
 
         ss_upload_file(add_file)
 
         within "#addon-cms-agents-addons-file" do
-          within '#selected-files' do
-            expect(page).to have_selector('.file-view', count: 26)
-            expect(page).to have_css('.name', text: 'ロゴ.png')
-          end
+          expect(page).to have_selector('.file-view', count: 26)
+          expect(page).to have_css('.name', text: 'ロゴ.png')
         end
 
         within "form#item-form" do
@@ -98,11 +88,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_all_turbo_frames
 
         within "#addon-cms-agents-addons-file" do
-          within "#selected-files" do
-            expect(page).to have_selector('.file-view', count: 26)
-            expect(page).to have_css('.name', text: 'logo.png')
-            expect(page).to have_css('.name', text: 'ロゴ.png')
-          end
+          expect(page).to have_selector('.file-view', count: 26)
+          expect(page).to have_css('.name', text: 'logo.png')
+          expect(page).to have_css('.name', text: 'ロゴ.png')
         end
       end
     end

@@ -61,6 +61,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
       end
+
+      expect(Cms::TempFile.all.count).to eq 1
+      Cms::TempFile.all.first.tap do |file|
+        expect(file.site_id).to eq site.id
+        expect(file.user_id).to eq cms_user.id
+        expect(file.node_id).to eq node.id
+        expect(file.model).to eq "ss/temp_file"
+        expect(file.name).to eq "modify.jpg"
+        expect(file.filename).to eq "modify.jpg"
+        expect(file.content_type).to eq "image/jpeg"
+        expect(file.size).to be_within(1_000).of(File.size("#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"))
+      end
     end
   end
 

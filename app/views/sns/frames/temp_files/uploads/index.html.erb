@@ -1,14 +1,13 @@
 <%
   disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
-  disable_image_resizes ||= cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: cur_node) && Cms::ImageResize.site(@cur_site).node(cur_node).where(state: SS::ImageResize::STATE_ENABLED).present?
-  min_size, min_width, min_height = @model.image_resizes_min_attributes(user: @cur_user, node: cur_node).then do |attr|
+  min_size, min_width, min_height = @model.image_resizes_min_attributes(user: @cur_user).then do |attr|
     [ attr['size'], attr['max_width'], attr['max_height'] ]
   end
 %>
 
 <div class="cms-tabs">
-  <%= link_to tag.span(t("ss.buttons.upload"), class: "tab-name"), cms_frames_temp_files_uploads_path(s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
-  <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), cms_frames_temp_files_files_path(s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.upload"), class: "tab-name"), sns_frames_temp_files_uploads_path(user: @cur_user, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), sns_frames_temp_files_files_path(user: @cur_user, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
 </div>
 
 <div class="cms-temp-file" data-controller="ss--temp-file">
@@ -60,13 +59,13 @@
               <td class="options">
                 <%% if (selectedItem.is_image) { %>
                   <%=
-                    file_resizing_options = Cms.file_resizing_options(@cur_user, site: @cur_site, node: cur_node)
+                    file_resizing_options = @model.resizing_options(user: @cur_user)
                     if file_resizing_options.present?
                       select_tag "item[files][][resizing]", options_for_select(file_resizing_options), include_blank: t("ss.resize_image_auto"), class: "image-size", id: nil
                     end
                   %>
                   <%=
-                    file_quality_options = @model.quality_options(user: @cur_user, node: cur_node)
+                    file_quality_options = @model.quality_options(user: @cur_user)
                     if file_quality_options.present?
                       select_tag "item[files][][quality]", options_for_select(file_quality_options), include_blank: t("ss.quality"), id: nil
                     end

@@ -19,10 +19,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
 
-        within "#item-form #addon-cms-agents-addons-file" do
-          within '.cms-addon-file-selected-files' do
-            expect(page).to have_css('.name', text: filename)
-          end
+        within "#item-form #addon-cms-agents-addons-thumb" do
+          expect(page).to have_css('.ss-file-field-v2 .humanized-name', text: file.humanized_name)
         end
       end
     end
@@ -62,25 +60,33 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     end
   end
 
-  shared_examples "select a file from file dialog" do
+  shared_examples "several operations on file dialog" do
     before do
       visit article_pages_path(site: site, cid: node)
       click_on I18n.t("ss.links.new")
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
 
-      within "#item-form #addon-cms-agents-addons-file" do
+      within "#item-form #addon-cms-agents-addons-thumb" do
         wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.select_from_list")
+          click_on I18n.t("ss.buttons.upload")
         end
       end
 
-      el = page.find(:checkbox, file_type)
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within ".cms-tabs" do
+            click_on I18n.t("ss.buttons.select_from_list")
+          end
+        end
+      end
+
+      el = page.find(:checkbox, menu_label)
       unless el["checked"]
         wait_for_event_fired "turbo:frame-load" do
           within_dialog do
             within "form.search" do
-              check file_type
+              check menu_label
             end
           end
         end
@@ -138,40 +144,18 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       it_behaves_like "file dialog is"
     end
-
-    context "switch to upload adn back to list" do
-      before do
-        wait_for_event_fired "turbo:frame-load" do
-          within_dialog do
-            within ".cms-tabs" do
-              click_on I18n.t('ss.buttons.upload')
-            end
-          end
-        end
-
-        wait_for_event_fired "turbo:frame-load" do
-          within_dialog do
-            within ".cms-tabs" do
-              click_on I18n.t("ss.buttons.select_from_list")
-            end
-          end
-        end
-      end
-
-      it_behaves_like "file dialog is"
-    end
   end
 
-  context "with cms/temp_file(ss/temp_file)" do
+  context "with cms/temp_file" do
     let!(:file) do
       tmp_ss_file(
         Cms::TempFile, user: cms_user, site: site, node: node, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
-    let(:file_type) { I18n.t("mongoid.models.ss/temp_file") }
+    let(:menu_label) { I18n.t("mongoid.models.ss/temp_file") }
 
-    it_behaves_like "select a file from file dialog"
+    it_behaves_like "several operations on file dialog"
   end
 
   context "with ss/user_file" do
@@ -181,21 +165,21 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
-    let(:file_type) { I18n.t("mongoid.models.ss/user_file") }
+    let(:menu_label) { I18n.t("mongoid.models.ss/user_file") }
 
-    it_behaves_like "select a file from file dialog"
+    it_behaves_like "several operations on file dialog"
   end
 
   context "with cms/file" do
     let!(:file) do
       tmp_ss_file(
         Cms::File, model: "cms/file", user: cms_user, site: site, basename: filename,
-        contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+        contents: "#{Rails.root}/spec/fixtures/ss/logo.png", group_ids: cms_user.group_ids
       )
     end
-    let(:file_type) { I18n.t("mongoid.models.cms/file") }
+    let(:menu_label) { I18n.t("mongoid.models.cms/file") }
 
-    it_behaves_like "select a file from file dialog"
+    it_behaves_like "several operations on file dialog"
   end
 
   context "upload file dialog" do
@@ -210,7 +194,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -230,8 +214,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               end
             end
           end
-          within "#item-form #addon-cms-agents-addons-file" do
-            expect(page).to have_css(".file-view", text: name)
+          within "#item-form #addon-cms-agents-addons-thumb" do
+            expect(page).to have_css('.ss-file-field-v2 .humanized-name', text: File.basename(name, ".*"))
           end
 
           expect(Cms::TempFile.all.count).to eq 1
@@ -258,7 +242,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -278,8 +262,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               end
             end
           end
-          within "#item-form #addon-cms-agents-addons-file" do
-            expect(page).to have_css(".file-view", text: "#{name}.png")
+          within "#item-form #addon-cms-agents-addons-thumb" do
+            expect(page).to have_css('.ss-file-field-v2 .humanized-name', text: name)
           end
 
           expect(Cms::TempFile.all.count).to eq 1
@@ -307,7 +291,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -327,8 +311,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               end
             end
           end
-          within "#item-form #addon-cms-agents-addons-file" do
-            expect(page).to have_css(".file-view", text: "#{name}png")
+          within "#item-form #addon-cms-agents-addons-thumb" do
+            expect(page).to have_css('.ss-file-field-v2 .humanized-name', text: File.basename(name, ".*"))
           end
 
           expect(Cms::TempFile.all.count).to eq 1
@@ -355,7 +339,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -375,8 +359,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               end
             end
           end
-          within "#item-form #addon-cms-agents-addons-file" do
-            expect(page).to have_css(".file-view", text: "#{name}.png")
+          within "#item-form #addon-cms-agents-addons-thumb" do
+            expect(page).to have_css('.ss-file-field-v2 .humanized-name', text: name)
           end
 
           expect(Cms::TempFile.all.count).to eq 1
@@ -403,7 +387,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -446,7 +430,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -490,7 +474,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -538,7 +522,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -586,7 +570,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
-          within "#item-form #addon-cms-agents-addons-file" do
+          within "#item-form #addon-cms-agents-addons-thumb" do
             wait_for_cbox_opened do
               click_on I18n.t('ss.links.upload')
             end
@@ -627,7 +611,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
 
-        within "#item-form #addon-cms-agents-addons-file" do
+        within "#item-form #addon-cms-agents-addons-thumb" do
           wait_for_cbox_opened do
             click_on I18n.t('ss.links.upload')
           end
@@ -642,8 +626,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
         end
-        within "#item-form #addon-cms-agents-addons-file" do
-          expect(page).to have_css(".file-view", text: "logo.png")
+        within "#item-form #addon-cms-agents-addons-thumb" do
+          expect(page).to have_css('.ss-file-field-v2 .humanized-name', text: "logo")
         end
 
         expect(Cms::TempFile.all.count).to eq 1
@@ -668,9 +652,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
 
-      within "#item-form #addon-cms-agents-addons-file" do
+      within "#item-form #addon-cms-agents-addons-thumb" do
         wait_for_cbox_opened do
-          ss_drop_file ".cms-addon-file-drop-area", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          ss_drop_file ".ss-file-field-v2", "#{Rails.root}/spec/fixtures/ss/logo.png"
         end
       end
       wait_for_cbox_closed do
@@ -680,8 +664,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
       end
-      within "#item-form #addon-cms-agents-addons-file" do
-        expect(page).to have_css(".file-view", text: "logo.png")
+      within "#item-form #addon-cms-agents-addons-thumb" do
+        expect(page).to have_css('.ss-file-field-v2 .humanized-name', text: "logo")
       end
 
       expect(Cms::TempFile.all.count).to eq 1
@@ -694,86 +678,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         expect(file.filename).to eq "logo.png"
         expect(file.content_type).to eq "image/png"
         expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
-      end
-    end
-  end
-
-  context "reorder" do
-    let(:now) { Time.zone.now.change(usec: 0) }
-    let!(:file1) do
-      Timecop.freeze(now - 5.minutes) do
-        tmp_ss_file(
-          Cms::TempFile, user: cms_user, site: site, node: node, basename: "logo-1.png",
-          contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
-        )
-      end
-    end
-    let!(:file2) do
-      Timecop.freeze(now - 4.minutes) do
-        tmp_ss_file(
-          Cms::TempFile, user: cms_user, site: site, node: node, basename: "logo-2.png",
-          contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
-        )
-      end
-    end
-    let!(:file3) do
-      Timecop.freeze(now - 3.minutes) do
-        tmp_ss_file(
-          Cms::TempFile, user: cms_user, site: site, node: node, basename: "logo-3.png",
-          contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
-        )
-      end
-    end
-    let!(:item) do
-      create :article_page, cur_site: site, cur_user: cms_user, cur_node: node, file_ids: [ file1.id, file2.id, file3.id ]
-    end
-
-    it do
-      visit article_pages_path(site: site, cid: node)
-
-      click_on item.name
-      wait_for_all_ckeditors_ready
-      wait_for_all_turbo_frames
-
-      click_on I18n.t("ss.links.edit")
-      wait_for_all_ckeditors_ready
-      wait_for_all_turbo_frames
-
-      # 初期状態は「アップロード順」
-      within "#item-form #addon-cms-agents-addons-file" do
-        expect(page).to have_css(".file-view", count: 3)
-        file_views = all(".file-view")
-        expect(file_views[0]).to have_css(".name", text: file3.name)
-        expect(file_views[1]).to have_css(".name", text: file2.name)
-        expect(file_views[2]).to have_css(".name", text: file1.name)
-      end
-
-      # 名前順
-      within "#item-form #addon-cms-agents-addons-file" do
-        wait_for_event_fired "change" do
-          click_on I18n.t('ss.buttons.file_name_order')
-        end
-      end
-      within "#item-form #addon-cms-agents-addons-file" do
-        expect(page).to have_css(".file-view", count: 3)
-        file_views = all(".file-view")
-        expect(file_views[0]).to have_css(".name", text: file1.name)
-        expect(file_views[1]).to have_css(".name", text: file2.name)
-        expect(file_views[2]).to have_css(".name", text: file3.name)
-      end
-
-      # アップロード順
-      within "#item-form #addon-cms-agents-addons-file" do
-        wait_for_event_fired "change" do
-          click_on I18n.t('ss.buttons.file_upload_order')
-        end
-      end
-      within "#item-form #addon-cms-agents-addons-file" do
-        expect(page).to have_css(".file-view", count: 3)
-        file_views = all(".file-view")
-        expect(file_views[0]).to have_css(".name", text: file3.name)
-        expect(file_views[1]).to have_css(".name", text: file2.name)
-        expect(file_views[2]).to have_css(".name", text: file1.name)
       end
     end
   end

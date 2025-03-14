@@ -1,8 +1,8 @@
 #frozen_string_literal: true
 
-class Cms::Frames::TempFiles::FilesController < ApplicationController
-  include Cms::BaseFilter
-  include Cms::CrudFilter
+class Sns::Frames::TempFiles::FilesController < ApplicationController
+  include Sns::BaseFilter
+  include Sns::CrudFilter
 
   model SS::File
 
@@ -10,35 +10,22 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
 
   before_action :set_search_params
 
-  helper_method :cur_node, :items
+  helper_method :items
 
   private
 
   def set_search_params
     @s ||= begin
-      s = Cms::TempFileSearchParam.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node)
+      s = SS::TempFileSearchParam.new(cur_user: @cur_user)
       if params.key?(:s)
-        s.attributes = params[:s].permit(:node, :keyword, :node_bound, types: [])
+        s.attributes = params[:s].permit(:keyword, types: [])
       end
-      if s.types.blank? && s.node_bound.blank?
+      if s.types.blank?
         s.types = %w(temp_file)
-        s.node_bound = "current"
       end
       s.validate
       s
     end
-  end
-
-  def cur_node
-    return @cur_node if instance_variable_defined?(:@cur_node)
-
-    cid = params[:cid].to_s
-    if cid.blank? || cid == "-"
-      @cur_node = nil
-      return @cur_node
-    end
-
-    @cur_node = Cms::Node.site(@cur_site).find(cid)
   end
 
   def base_items
@@ -58,9 +45,6 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
     @item ||= begin
       item = SS::File.find(params[:id])
       item = item.becomes_with_model
-      if item.is_a?(SS::TempFile)
-        item = item.becomes_with(Cms::TempFile)
-      end
       @model = item.class
       item
     end
@@ -75,15 +59,12 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
   def select
     set_item
     if !@item.is_a?(SS::TempFile) && !@item.is_a?(Cms::TempFile)
-      @item = @item.copy(
-        cur_user: @cur_user, cur_site: @cur_site, cur_node: @cur_node
-      )
+      @item = @item.copy(cur_user: @cur_user)
     end
 
     respond_to do |format|
       format.html do
-        component = SS::FileViewV2Component.new(
-          cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, file: @item)
+        component = SS::FileViewV2Component.new(cur_user: @cur_user, file: @item)
         component.animated = "animate__animated animate__bounceIn"
         render component, layout: false
       end

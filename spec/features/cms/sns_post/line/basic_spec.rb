@@ -199,15 +199,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
 
           within "#addon-cms-agents-addons-thumb" do
-            wait_for_cbox_opened do
-              first(".btn-file-upload").click
-            end
-          end
-          within_cbox do
-            expect(page).to have_css(".file-view", text: file.name)
-            wait_for_cbox_closed do
-              click_on file.name
-            end
+            attach_to_ss_file_field "item_thumb_id", file
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
@@ -259,15 +251,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         capture_line_bot_client do |capture|
           visit edit_path
           within "#addon-cms-agents-addons-thumb" do
-            wait_for_cbox_opened do
-              first(".btn-file-upload").click
-            end
-          end
-          within_cbox do
-            expect(page).to have_css(".file-view", text: file.name)
-            wait_for_cbox_closed do
-              click_on file.name
-            end
+            attach_to_ss_file_field "item_thumb_id", file
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
@@ -324,25 +308,31 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
       it "#new" do
         capture_line_bot_client do |capture|
           visit new_path
-          ensure_addon_opened("#addon-cms-agents-addons-file")
-          ss_upload_file attach_file_path
-          within '#selected-files' do
-            click_on I18n.t("sns.image_paste")
-          end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "form#item-form" do
             fill_in "item[name]", with: name
-          end
-          ensure_addon_opened("#addon-cms-agents-addons-line_poster")
-          within "#addon-cms-agents-addons-line_poster" do
-            expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]',
-              text: I18n.t("ss.options.state.expired"))
-            expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]',
-              text: I18n.t("ss.options.state.disabled"))
 
-            select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
-            select I18n.t("cms.options.line_post_format.body_carousel"), from: "item[line_post_format]"
-            fill_in "item[line_text_message]", with: line_text_message
+            ensure_addon_opened("#addon-cms-agents-addons-file")
+            ss_upload_file attach_file_path
+            within "#addon-cms-agents-addons-file" do
+              within ".file-view" do
+                click_on I18n.t("sns.image_paste")
+              end
+            end
+
+            ensure_addon_opened("#addon-cms-agents-addons-line_poster")
+            within "#addon-cms-agents-addons-line_poster" do
+              expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]',
+                text: I18n.t("ss.options.state.expired"))
+              expect(page).to have_css('select[name="item[line_edit_auto_post]"] option[selected]',
+                text: I18n.t("ss.options.state.disabled"))
+
+              select I18n.t("ss.options.state.active"), from: "item[line_auto_post]"
+              select I18n.t("cms.options.line_post_format.body_carousel"), from: "item[line_post_format]"
+              fill_in "item[line_text_message]", with: line_text_message
+            end
           end
 
           perform_enqueued_jobs do
@@ -357,6 +347,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
             wait_for_notice I18n.t('ss.notice.saved')
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
@@ -381,10 +373,14 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
       it "#edit" do
         capture_line_bot_client do |capture|
           visit edit_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-file")
           ss_upload_file attach_file_path
-          within '#selected-files' do
-            click_on I18n.t("sns.image_paste")
+          within "#addon-cms-agents-addons-file" do
+            within ".file-view" do
+              click_on I18n.t("sns.image_paste")
+            end
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
@@ -411,6 +407,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             end
             wait_for_notice I18n.t('ss.notice.saved')
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)

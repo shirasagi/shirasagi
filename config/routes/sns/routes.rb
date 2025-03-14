@@ -45,6 +45,14 @@ Rails.application.routes.draw do
       namespace :user_navigation do
         resource :menu, only: %i[show]
       end
+      namespace :temp_files do
+        resources :uploads, only: %i[index new create] do
+          post :preview, on: :collection
+        end
+        resources :files, only: %i[index edit update destroy] do
+          get :select, on: :member
+        end
+      end
     end
   end
 

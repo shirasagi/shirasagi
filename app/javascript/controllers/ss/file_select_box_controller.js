@@ -168,7 +168,7 @@ export default class extends SelectBoxController {
   }
 
   _selectedIds() {
-    if (!this.resultTarget) {
+    if (!this.hasResultTarget) {
       return;
     }
 

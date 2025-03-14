@@ -170,7 +170,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-file")
           ss_upload_file attach_file_path
-          within '#selected-files' do
+          within '.file-view' do
             click_on I18n.t("sns.image_paste")
           end
 
@@ -210,7 +210,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           ensure_addon_opened("#addon-cms-agents-addons-file")
           ss_upload_file attach_file_path
-          within '#selected-files' do
+          within '.file-view' do
             click_on I18n.t("sns.image_paste")
           end
 

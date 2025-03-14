@@ -1,30 +1,11 @@
 #frozen_string_literal: true
 
-class Cms::Frames::TempFiles::UploadsController < ApplicationController
-  include Cms::BaseFilter
+class Sns::Frames::TempFiles::UploadsController < ApplicationController
+  include Sns::BaseFilter
 
   model SS::File
 
   layout 'ss/item_frame'
-
-  helper_method :cur_node
-
-  private
-
-  def set_node
-    return @cur_node if instance_variable_defined?(:@cur_node)
-
-    cid = params[:cid].to_s
-    if cid.blank? || cid == "-"
-      @cur_node = nil
-      return @cur_node
-    end
-
-    @cur_node = Cms::Node.site(@cur_site).find(cid)
-  end
-  alias cur_node set_node
-
-  public
 
   def index
     render
@@ -34,7 +15,7 @@ class Cms::Frames::TempFiles::UploadsController < ApplicationController
     files = params.require(:item).permit(files: %i[name size content_type])[:files]
     previews = []
     files.each do |file|
-      preview = SS::TempFilePreview.new(cur_site: @cur_site, cur_user: @cur_user)
+      preview = SS::TempFilePreview.new(cur_user: @cur_user)
       preview.attributes = file
       preview.validate
       previews.push(preview)
@@ -44,7 +25,7 @@ class Cms::Frames::TempFiles::UploadsController < ApplicationController
   end
 
   def create
-    item_validator = Cms::TempFileCreator.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node)
+    item_validator = SS::TempFileCreator.new(cur_user: @cur_user)
     if self.class.try(:only_image)
       item_validator.only_image = true
     end

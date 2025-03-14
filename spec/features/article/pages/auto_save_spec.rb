@@ -34,7 +34,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_form_restored
 
         within "form#item-form" do
-          within '#selected-files' do
+          within '.file-view' do
             expect(page).to have_css('.name', text: 'keyvisual.jpg')
           end
           click_on I18n.t('ss.buttons.publish_save')
@@ -74,7 +74,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_form_restored
 
         within "form#item-form" do
-          within '#selected-files' do
+          within '.file-view' do
             expect(page).to have_css('.name', text: 'keyvisual.jpg')
           end
           click_on I18n.t('ss.buttons.publish_save')
