@@ -661,7 +661,6 @@ ja:
       ss/elasticsearch/site_setting: サイト内検索設定
       ss/translate/site_setting: 自動翻訳
       ss/site_usage: 使用量
-      ss/logo_setting: ロゴ設定
       ss/release: 公開設定
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定

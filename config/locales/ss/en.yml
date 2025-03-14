@@ -661,7 +661,6 @@ en:
       ss/elasticsearch/site_setting: Site search settings
       ss/translate/site_setting: Automatic translation
       ss/site_usage: Usage amount
-      ss/logo_setting: Logo settings
       ss/release: Publishing settings
       ss/generate_lock: Stop exporting
       ss/partner_site: Partner site settings
