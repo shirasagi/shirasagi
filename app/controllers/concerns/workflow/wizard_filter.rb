@@ -37,7 +37,7 @@ module Workflow::WizardFilter
 
     if workflow_approver[:state] == 'request' && validate_domain(new_user_id)
       args = {
-        f_uid: @item.workflow_user_id, t_uid: new_user_id, site: @cur_site, page: @item,
+        f_uid: @item.workflow_user_id, m_id: @item.workflow_member_id, t_uid: new_user_id, site: @cur_site, page: @item,
         url: params[:url], comment: @item.workflow_comment
       }
 
