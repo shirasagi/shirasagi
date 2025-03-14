@@ -1,5 +1,6 @@
 ja:
   voice:
+    ss_voice: 読み上げる
     file: 読み上げ音声
     error_file: エラー一覧
     synthesis_fail:
