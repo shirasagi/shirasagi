@@ -229,7 +229,7 @@ this.SS_Theme = (function () {
             inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
           }
           if (v["default_theme"]) {
-            $theme.find('button').removeClass('active');
+            $theme.find("[data-ss-theme]").removeClass('active');
             $btn.addClass('active');
             SS_Theme.switchTheme(cls);
           }
@@ -259,7 +259,7 @@ this.SS_Theme = (function () {
         }
         if (cls) {
           $theme.find('button').removeClass('active').attr('aria-pressed', false);
-          $theme.find('button[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active').attr('aria-pressed', true);
+          $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active').attr('aria-pressed', true);
           SS_Theme.switchTheme(cls);
         }
       });
