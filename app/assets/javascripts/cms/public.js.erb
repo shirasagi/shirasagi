@@ -258,8 +258,8 @@ this.SS_Theme = (function () {
           cls = null;
         }
         if (cls) {
-          $theme.find('button').removeClass('active').attr('aria-pressed', false);
-          $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active').attr('aria-pressed', true);
+          $theme.find('[data-ss-theme]').removeClass('active').attr('aria-pressed', false);
+          $theme.find('[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active').attr('aria-pressed', true);
           SS_Theme.switchTheme(cls);
         }
       });
