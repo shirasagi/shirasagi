@@ -195,28 +195,27 @@ this.SS_Theme = (function () {
   }
 
   SS_Theme.render = function () {
-    var $themes = $('#ss-theme,[data-tool="ss-theme"]');
+    const $themes = $('#ss-theme,[data-tool="ss-theme"]');
     if ($themes.length === 0) {
       return;
     }
 
     $themes.each(function(index) {
-      var $theme = $(this);
+      const $theme = $(this);
       SS.justOnce(this, "ss-theme", function() {
-        var theme = SS.config["theme"];
-        var inlineStyle = '';
-        for (var cls in theme) {
-          var $a = $theme.find("a." + $.escapeSelector(cls));
-          if (!$a[0]) {
-            continue;
-          }
+        let cls;
+        const theme = SS.config["theme"];
+        let inlineStyle = '';
+        for (cls in theme) {
+          let $btn = $theme.find("button." + $.escapeSelector(cls) + ", a." + $.escapeSelector(cls));
+          if (!$btn.length) continue;
 
-          var anchorId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
-          $a.attr("id", anchorId); // Assign the unique ID to the anchor
-          $a.attr("data-ss-theme", cls);
-          var v = theme[cls];
+          const btnId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
+          $btn.attr("id", btnId); // Assign the unique ID to the anchor
+          $btn.attr("data-ss-theme", cls);
+          const v = theme[cls];
           if (v["css_path"]) {
-            var $styleSheetLink = $('<link />', {
+            const $styleSheetLink = $('<link />', {
               rel: "alternate stylesheet",
               type: "text/css",
               title: v["name"],
@@ -230,15 +229,15 @@ this.SS_Theme = (function () {
             inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
           }
           if (v["default_theme"]) {
-            $theme.find('a').removeClass('active');
-            $a.addClass('active');
+            $theme.find("[data-ss-theme]").removeClass('active');
+            $btn.addClass('active');
             SS_Theme.switchTheme(cls);
           }
-          $a.on("click", function () {
-            var $this = $(this);
-            var cls = $this.data("ss-theme");
-            $themes.find("[data-ss-theme]").removeClass('active');
-            $themes.find("[data-ss-theme='" + $.escapeSelector(cls) + "']").addClass('active');
+          $btn.on("click", function () {
+            const $this = $(this);
+            const cls = $this.data("ss-theme");
+            $themes.find("[data-ss-theme]").removeClass('active').attr('aria-pressed', false);
+            $themes.find("[data-ss-theme='" + $.escapeSelector(cls) + "']").addClass('active').attr('aria-pressed', true);
             Cookies.set("ss-theme", cls, {
               expires: 7,
               path: '/'
@@ -249,18 +248,18 @@ this.SS_Theme = (function () {
         }
 
         if (inlineStyle) {
-          var $inlineStyle = $("<style />", { type: "text/css", class: "ss-theme" }).text(inlineStyle);
+          const $inlineStyle = $("<style />", {type: "text/css", class: "ss-theme"}).text(inlineStyle);
           $("head").append($inlineStyle);
         }
 
-        var cls = Cookies.get("ss-theme");
+        cls = Cookies.get("ss-theme");
         if (!theme[cls]) {
           Cookies.remove("ss-theme");
           cls = null;
         }
         if (cls) {
-          $theme.find('a').removeClass('active');
-          $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active');
+          $theme.find('[data-ss-theme]').removeClass('active').attr('aria-pressed', false);
+          $theme.find('[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active').attr('aria-pressed', true);
           SS_Theme.switchTheme(cls);
         }
       });
