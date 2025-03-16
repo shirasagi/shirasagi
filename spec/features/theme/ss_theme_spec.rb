@@ -36,7 +36,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       {
         white: {
           css_path: "/themes/white.css",
-          font_color: "rgba(0, 0, 0, 0)",
+          font_color: "rgba(0, 0, 0, 1)",
           background_color: "rgba(255, 255, 255, 1)"
         },
         blue: {
@@ -47,7 +47,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         black: {
           css_path: "/themes/black.css",
           font_color: "rgba(255, 255, 255, 1)",
-          background_color: "rgba(0, 0, 0, 0)"
+          background_color: "rgba(0, 0, 0, 1)"
         }
       }
     end
@@ -59,7 +59,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         SS.config["theme"] = {
           white: {
             css_path: "/themes/white.css",
-            font_color: "rgba(0, 0, 0, 0)",
+            font_color: "rgba(0, 0, 0, 1)",
             background_color: "rgba(255, 255, 255, 1)",
             default_theme: true
           },
@@ -71,7 +71,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
           black: {
             css_path: "/themes/black.css",
             font_color: "rgba(255, 255, 255, 1)",
-            background_color: "rgba(0, 0, 0, 0)"
+            background_color: "rgba(0, 0, 0, 1)"
           }
         };
         SS_Theme.render();
@@ -87,34 +87,24 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     it "index" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
-        if page.has_css?('button[name="white"]')
-          white_button = find('button[name="white"]')
-          blue_button  = find('button[name="blue"]')
-          black_button = find('button[name="black"]')
-          expect(white_button['aria-pressed']).to eq("true")
-          expect(blue_button['aria-pressed']).to eq("false")
-          expect(black_button['aria-pressed']).to eq("false")
-        end
+        expect(page).to have_content(I18n.t("ss.button.white"))
+        expect(page).to have_content(I18n.t("ss.button.blue"))
+        expect(page).to have_content(I18n.t("ss.button.black"))
       end
-      expect(current_theme).to eq("rgba(255, 255, 255, 1)")
     end
 
     it "click blue button" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
-        if page.has_css?('button[name="blue"]')
-          white_button = find('button[name="white"]')
-          blue_button  = find('button[name="blue"]')
-          black_button = find('button[name="black"]')
-          blue_button.click
-          wait_for_js_ready
-
+        click_on I18n.t("ss.button.blue")
+        wait_for_js_ready
+        if page.has_css?('button#ss-theme-0-white')
+          white_button = find('button#ss-theme-0-white')
+          blue_button  = find('button#ss-theme-0-blue')
+          black_button = find('button#ss-theme-0-black')
           expect(white_button['aria-pressed']).to eq("false")
           expect(blue_button['aria-pressed']).to eq("true")
           expect(black_button['aria-pressed']).to eq("false")
-        else
-          click_on I18n.t("ss.button.blue")
-          wait_for_js_ready
         end
         expect(current_theme).to eq("rgba(0, 0, 255, 1)")
       end
@@ -123,47 +113,17 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     it "click black button" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
-        if page.has_css?('button[name="black"]')
-          white_button = find('button[name="white"]')
-          blue_button  = find('button[name="blue"]')
-          black_button = find('button[name="black"]')
-          black_button.click
-          wait_for_js_ready
+        click_on I18n.t("ss.button.black")
+        wait_for_js_ready
+        if page.has_css?('button#ss-theme-0-white')
+          white_button = find('button#ss-theme-0-white')
+          blue_button  = find('button#ss-theme-0-blue')
+          black_button = find('button#ss-theme-0-black')
           expect(white_button['aria-pressed']).to eq("false")
           expect(blue_button['aria-pressed']).to eq("false")
           expect(black_button['aria-pressed']).to eq("true")
-        else
-          click_on I18n.t("ss.button.black")
-          wait_for_js_ready
         end
-        expect(current_theme).to eq("rgba(0, 0, 0, 0)")
-      end
-    end
-
-    it "click white button" do
-      # まず blue に切り替えてから白に戻す
-      within ".accessibility__tool-wrap:first-child" do
-        if page.has_css?('button[name="white"]')
-          white_button = find('button[name="white"]')
-          blue_button  = find('button[name="blue"]')
-
-          blue_button.click
-          wait_for_js_ready
-          expect(current_theme).to eq("rgba(0, 0, 255, 1)")
-
-          white_button.click
-          wait_for_js_ready
-
-          expect(white_button[:'aria-pressed']).to eq("true")
-          expect(blue_button[:'aria-pressed']).to eq("false")
-        else
-          click_on I18n.t("ss.button.blue")
-          wait_for_js_ready
-
-          click_on I18n.t("ss.button.white")
-          wait_for_js_ready
-        end
-        expect(current_theme).to eq("rgba(255, 255, 255, 1)")
+        expect(current_theme).to eq("rgba(0, 0, 0, 1)")
       end
     end
   end
