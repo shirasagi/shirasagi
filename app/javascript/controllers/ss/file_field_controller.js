@@ -1,6 +1,6 @@
 import SelectBoxController from "./select_box_controller";
 import DropArea from "../../ss/drop_area";
-import {dispatchEvent, replaceChildren} from "../../ss/tool";
+import {dispatchEvent} from "../../ss/tool";
 
 export default class extends SelectBoxController {
   static values = {
@@ -26,7 +26,7 @@ export default class extends SelectBoxController {
     }
   }
 
-  deleteFile(ev) {
+  deleteFile(_ev) {
     this.element.querySelector(".file-id").value = '';
     this.element.querySelector(".humanized-name").textContent = '';
     this.element.querySelector(".sanitizer-status").classList.add("hide");
