@@ -11,21 +11,21 @@ this.SS_Font = (function () {
     }
 
     $('#ss-medium,[data-tool="ss-medium"]').each(function() {
-      var $this = $(this);
+      const $this = $(this);
       SS.justOnce(this, "ss-font", function() {
         SS_Font.embed($this, function () { return SS_Font.set(100); });
       });
     });
 
     $('#ss-small,[data-tool="ss-small"]').each(function() {
-      var $this = $(this);
+      const $this = $(this);
       SS.justOnce(this, "ss-font", function() {
         SS_Font.embed($this, function () { return SS_Font.set(false); });
       });
     });
 
     $('#ss-large,[data-tool="ss-large"]').each(function() {
-      var $this = $(this);
+      const $this = $(this);
       SS.justOnce(this, "ss-font", function() {
         SS_Font.embed($this, function () { return SS_Font.set(true); });
       });
@@ -34,9 +34,9 @@ this.SS_Font = (function () {
 
   SS_Font.embed = function($elements, callback) {
     $elements.each(function() {
-      var $el = $(this);
+      const $el = $(this);
       SS.justOnce(this, "font", function() {
-        var $anchor = $("<a/>", { href: "#" });
+        const $anchor = $("<a/>", {href: "#"});
         $anchor.on("click", callback);
         $anchor.html($el.html());
 
