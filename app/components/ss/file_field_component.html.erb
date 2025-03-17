@@ -1,0 +1,24 @@
+<div class="ss-file-field" id="<%= element_id %>">
+  <span class="dropdown">
+    <%= link_to(I18n.t('ss.links.upload'), temp_files_api_path, class: %w(ajax-box btn btn-file-upload)) %><%= button_tag("▼", name: nil, type: "button", class: %w(btn dropdown-toggle)) %>
+    <div class="dropdown-menu">
+      <%= link_to(I18n.t('ss.links.upload'), temp_files_api_path, class: "dropdown-item") %>
+      <% if ss_mode == :cms %>
+        <%= link_to(I18n.t('sns.user_file'), cms_apis_user_files_path(cid: cur_node || "-"), class: "dropdown-item") %>
+        <%= link_to(I18n.t('cms.file'), cms_apis_files_path(cid: cur_node || "-"), class: "dropdown-item") %>
+      <% else %>
+        <%= link_to(I18n.t('sns.user_file'), sns_apis_user_files_path(user: cur_user), class: "dropdown-item") %>
+      <% end %>
+    </div>
+  </span>
+  <%= tag.span(file.try(:humanized_name), class: "humanized-name") %>
+  <%= sanitizer_status(file) %>
+  <%= hidden_field_tag("#{object_name}[#{object_method}_id]", file.try(:id), id: nil, class: "file-id") %>
+  <a class="btn-file-delete" href="#item_thumb_id">
+    <i class="material-icons" style="font-size: 120%;"></i>
+  </a>
+  <%= link_to("##{element_id}", class: [ 'btn-file-delete', file.blank? ? "hide" : nil ]) do %>
+    <%= tag.i("&#xE872;".html_safe, class: "material-icons", style: "font-size: 120%;") %>
+  <% end %>
+  <%= tag.span(I18n.t("ss.notice.file_droppable"), class: [ "upload-drop-notice", file.blank? ? nil : "hide" ]) %>
+</div>

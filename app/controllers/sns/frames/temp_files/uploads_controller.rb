@@ -30,7 +30,8 @@ class Sns::Frames::TempFiles::UploadsController < ApplicationController
       item_validator.only_image = true
     end
 
-    item_validator.attributes = params.require(:item).permit(:name, :filename, :resizing, :quality, :image_resizes_disabled, :in_file)
+    item_validator.attributes = params.require(:item).permit(
+      :name, :filename, :resizing, :quality, :image_resizes_disabled, :in_file)
     if item_validator.invalid?
       json_data = item_validator.errors.full_messages
       render json: json_data, status: :unprocessable_entity, content_type: json_content_type
