@@ -523,14 +523,10 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
 
-      context "with invalid filename with multibyte_filename_state disabled" do
+      context "with invalid filename" do
         let(:name) { "name-#{unique_id}.png" }
         # '\', '/', ':', '*', '?', '"', '<', '>', '|' は使用禁止
         let(:filename) { "aa||<<:?*?:>>||bb.png" }
-
-        before do
-          site.update!(multibyte_filename_state: 'disabled')
-        end
 
         it do
           visit article_pages_path(site: site, cid: node)
@@ -571,13 +567,13 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
 
-      context "with invalid filename with multibyte_filename_state enabled" do
-        let(:name) { "name-#{unique_id}.png" }
-        # '\', '/', ':', '*', '?', '"', '<', '>', '|' は使用禁止
-        let(:filename) { "aa||<<:?*?:>>||bb.png" }
+      context "with invalid name with multibyte_filename_state disabled (case 1)" do
+        let(:name1) { "セーフ.png" }
+        let(:name2) { "name-#{unique_id}.png" }
+        let(:filename) { "filename-#{unique_id}.png" }
 
         before do
-          site.update!(multibyte_filename_state: 'enabled')
+          site.update!(multibyte_filename_state: 'disabled')
         end
 
         it do
@@ -597,7 +593,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           within_dialog do
             within "form" do
               within first(".index tbody tr") do
-                fill_in "item[files][][name]", with: name
+                fill_in "item[files][][name]", with: name1
                 fill_in "item[files][][filename]", with: filename
               end
 
@@ -608,19 +604,111 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           within_dialog do
             within "form" do
               within first(".index tbody tr") do
-                message = I18n.t("errors.messages.invalid")
-                message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
+                message = I18n.t("errors.messages.invalid_filename")
+                message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
                 expect(page).to have_css(".errors", text: message)
               end
             end
           end
 
           expect(SS::File.all.count).to eq 0
+
+          wait_for_cbox_closed do
+            within_dialog do
+              within "form" do
+                within first(".index tbody tr") do
+                  fill_in "item[files][][name]", with: name2
+                  fill_in "item[files][][filename]", with: filename
+                end
+
+                click_on I18n.t("ss.buttons.upload")
+              end
+            end
+          end
+          within "#item-form #addon-cms-agents-addons-file" do
+            expect(page).to have_css(".file-view", text: name2)
+          end
+
+          expect(Cms::TempFile.all.count).to eq 1
+          Cms::TempFile.all.first.tap do |file|
+            expect(file.site_id).to eq site.id
+            expect(file.user_id).to eq cms_user.id
+            expect(file.node_id).to eq node.id
+            expect(file.model).to eq "ss/temp_file"
+            expect(file.name).to eq name2
+            expect(file.filename).to eq filename
+            expect(file.content_type).to eq "image/png"
+            expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
+          end
+        end
+      end
+
+      context "with invalid name with multibyte_filename_state disabled (case 2)" do
+        let(:name) { "name-#{unique_id}.png" }
+        let(:filename) { "filename-#{unique_id}.png" }
+
+        before do
+          site.update!(multibyte_filename_state: 'disabled')
+        end
+
+        it do
+          visit article_pages_path(site: site, cid: node)
+          click_on I18n.t("ss.links.new")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
+          within "#item-form #addon-cms-agents-addons-file" do
+            wait_for_cbox_opened do
+              click_on I18n.t('ss.links.upload')
+            end
+          end
+          within_dialog do
+            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+          end
+          within_dialog do
+            within "form" do
+              within first(".index tbody tr") do
+                message = I18n.t("errors.messages.invalid_filename")
+                message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
+                expect(page).to have_css(".errors", text: message)
+              end
+            end
+          end
+
+          expect(SS::File.all.count).to eq 0
+
+          wait_for_cbox_closed do
+            within_dialog do
+              within "form" do
+                within first(".index tbody tr") do
+                  fill_in "item[files][][name]", with: name
+                  fill_in "item[files][][filename]", with: filename
+                end
+
+                click_on I18n.t("ss.buttons.upload")
+              end
+            end
+          end
+          within "#item-form #addon-cms-agents-addons-file" do
+            expect(page).to have_css(".file-view", text: name)
+          end
+
+          expect(Cms::TempFile.all.count).to eq 1
+          Cms::TempFile.all.first.tap do |file|
+            expect(file.site_id).to eq site.id
+            expect(file.user_id).to eq cms_user.id
+            expect(file.node_id).to eq node.id
+            expect(file.model).to eq "ss/temp_file"
+            expect(file.name).to eq name
+            expect(file.filename).to eq filename
+            expect(file.content_type).to eq "image/png"
+            expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
+          end
         end
       end
     end
 
-    context "via drop" do
+    context "drop file with valid name" do
       it do
         visit article_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
@@ -659,9 +747,73 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
     end
+
+    context "drop file with invalid name with multibyte_filename_state disabled" do
+      let(:name) { "name-#{unique_id}.png" }
+      let(:filename) { "filename-#{unique_id}.png" }
+
+      before do
+        site.update!(multibyte_filename_state: 'disabled')
+      end
+
+      it do
+        visit article_pages_path(site: site, cid: node)
+        click_on I18n.t("ss.links.new")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        within "#item-form #addon-cms-agents-addons-file" do
+          wait_for_cbox_opened do
+            click_on I18n.t('ss.links.upload')
+          end
+        end
+        within_dialog do
+          ss_drop_file ".search-ui-form", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+        end
+        within_dialog do
+          within "form" do
+            within first(".index tbody tr") do
+              message = I18n.t("errors.messages.invalid_filename")
+              message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
+              expect(page).to have_css(".errors", text: message)
+            end
+          end
+        end
+
+        expect(SS::File.all.count).to eq 0
+
+        wait_for_cbox_closed do
+          within_dialog do
+            within "form" do
+              within first(".index tbody tr") do
+                fill_in "item[files][][name]", with: name
+                fill_in "item[files][][filename]", with: filename
+              end
+
+              click_on I18n.t("ss.buttons.upload")
+            end
+          end
+        end
+        within "#item-form #addon-cms-agents-addons-file" do
+          expect(page).to have_css(".file-view", text: name)
+        end
+
+        expect(Cms::TempFile.all.count).to eq 1
+        Cms::TempFile.all.first.tap do |file|
+          expect(file.site_id).to eq site.id
+          expect(file.user_id).to eq cms_user.id
+          expect(file.node_id).to eq node.id
+          expect(file.model).to eq "ss/temp_file"
+          expect(file.name).to eq name
+          expect(file.filename).to eq filename
+          expect(file.content_type).to eq "image/png"
+          expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
+        end
+      end
+    end
   end
 
-  context "directly drop file" do
+  context "directly drop file with valid name" do
     it do
       visit article_pages_path(site: site, cid: node)
       click_on I18n.t("ss.links.new")
@@ -692,6 +844,67 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         expect(file.model).to eq "ss/temp_file"
         expect(file.name).to eq "logo.png"
         expect(file.filename).to eq "logo.png"
+        expect(file.content_type).to eq "image/png"
+        expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
+      end
+    end
+  end
+
+  context "directly drop file with invalid name with multibyte_filename_state disabled" do
+    let(:name) { "name-#{unique_id}.png" }
+    let(:filename) { "filename-#{unique_id}.png" }
+
+    before do
+      site.update!(multibyte_filename_state: 'disabled')
+    end
+
+    it do
+      visit article_pages_path(site: site, cid: node)
+      click_on I18n.t("ss.links.new")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
+      within "#item-form #addon-cms-agents-addons-file" do
+        wait_for_cbox_opened do
+          ss_drop_file ".cms-addon-file-drop-area", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+        end
+      end
+      within_dialog do
+        within "form" do
+          within first(".index tbody tr") do
+            message = I18n.t("errors.messages.invalid_filename")
+            message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
+            expect(page).to have_css(".errors", text: message)
+          end
+        end
+      end
+
+      expect(SS::File.all.count).to eq 0
+
+      wait_for_cbox_closed do
+        within_dialog do
+          within "form" do
+            within first(".index tbody tr") do
+              fill_in "item[files][][name]", with: name
+              fill_in "item[files][][filename]", with: filename
+            end
+
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      within "#item-form #addon-cms-agents-addons-file" do
+        expect(page).to have_css(".file-view", text: name)
+      end
+
+      expect(Cms::TempFile.all.count).to eq 1
+      Cms::TempFile.all.first.tap do |file|
+        expect(file.site_id).to eq site.id
+        expect(file.user_id).to eq cms_user.id
+        expect(file.node_id).to eq node.id
+        expect(file.model).to eq "ss/temp_file"
+        expect(file.name).to eq name
+        expect(file.filename).to eq filename
         expect(file.content_type).to eq "image/png"
         expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
       end

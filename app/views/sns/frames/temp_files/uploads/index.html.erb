@@ -11,7 +11,7 @@
 </div>
 
 <div class="cms-temp-file" data-controller="ss--temp-file">
-  <script type="text/plain" data-ss--temp-file-target="option">
+  <script type="application/json" data-ss--temp-file-target="option">
     <%==
       {
         previewApi: url_for(action: :preview),
@@ -37,56 +37,57 @@
       <%% if (selectedItems.length > 0) { %>
         <%% selectedItems.forEach(function(selectedItem) { %>
           <tr class="cms-temp-file-waiting-item-row" data-ss--temp-file-target="fileUploadWaitingItem">
+            <td class="name">
+              <input type="file" name="item[files][][in_file]" class="hide new-file">
+              <input type="text" name="item[files][][name]" value="<%%= selectedItem.name %>">
+            </td>
+            <td class="filename">
+              <input type="text" name="item[files][][filename]" value="<%%= selectedItem.filename %>">
+            </td>
+            <td class="options">
+              <%% if (selectedItem.is_image) { %>
+                <%=
+      file_resizing_options = Cms.file_resizing_options(@cur_user, site: @cur_site, node: cur_node)
+      if file_resizing_options.present?
+        select_tag "item[files][][resizing]", options_for_select(file_resizing_options), include_blank: t("ss.resize_image_auto"), class: "image-size", id: nil
+      end
+    %>
+      <%=
+        file_quality_options = @model.quality_options(user: @cur_user, node: cur_node)
+        if file_quality_options.present?
+          select_tag "item[files][][quality]", options_for_select(file_quality_options), include_blank: t("ss.quality"), id: nil
+        end
+      %>
+      <% if disable_image_resizes %>
+        <%= select_tag "item[files][][image_resizes_disabled]", options_for_select(@model.image_resizes_disabled_options), id: nil %>
+      <% end %>
+      <% if min_size %>
+                  <div class="tooltip">?
+                    <ul class="tooltip-content">
+                      <% t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_fs(:human_size), width: min_width.to_fs(:delimited), height: min_height.to_fs(:delimited)).each do |tooltip| %>
+                        <li><%= tooltip %><br></li>
+                      <% end %>
+                    </ul>
+                  </div>
+                <% end %>
+              <%% } %>
+            </td>
+            <td class="operations">
+              <button name="delete" type="button" class="btn" value="delete" data-action="ss--temp-file#deselect"><%= t("ss.buttons.cancel_upload") %></button>
+            </td>
             <%% if (selectedItem.errors && selectedItem.errors.length > 0) { %>
-              <td class="name">
-                <input type="file" name="item[files][][in_file]" class="hide new-file">
-                <%%= selectedItem.name %>
+              <td class="errors">
+                <div id="errorExplanation" class="errorExplanation">
+                  <h2><%= t("errors.template.header.one") %></h2>
+                  <p><%= t("errors.template.body") %></p>
+                  <ul>
+                    <%% selectedItem.errors.forEach(function (value, key) {  %>
+                      <li><%%= value %></li>
+                    <%% }); %>
+                  </ul>
+                </div>
               </td>
-              <td class="filename"><%%= selectedItem.filename %></td>
-              <td class="options"></td>
-              <td class="operations">
-                <button name="delete" type="button" class="btn" value="delete" data-action="ss--temp-file#deselect"><%= t("ss.buttons.delete") %></button>
-              </td>
-              <td class="errors"><%%= selectedItem.errors.join("\n") %></td>
             <%% } else { %>
-              <td class="name">
-                <input type="file" name="item[files][][in_file]" class="hide new-file">
-                <input type="text" name="item[files][][name]" value="<%%= selectedItem.name %>">
-              </td>
-              <td class="filename">
-                <input type="text" name="item[files][][filename]" value="<%%= selectedItem.filename %>">
-              </td>
-              <td class="options">
-                <%% if (selectedItem.is_image) { %>
-                  <%=
-                    file_resizing_options = @model.resizing_options(user: @cur_user)
-                    if file_resizing_options.present?
-                      select_tag "item[files][][resizing]", options_for_select(file_resizing_options), include_blank: t("ss.resize_image_auto"), class: "image-size", id: nil
-                    end
-                  %>
-                  <%=
-                    file_quality_options = @model.quality_options(user: @cur_user)
-                    if file_quality_options.present?
-                      select_tag "item[files][][quality]", options_for_select(file_quality_options), include_blank: t("ss.quality"), id: nil
-                    end
-                  %>
-                  <% if disable_image_resizes %>
-                    <%= select_tag "item[files][][image_resizes_disabled]", options_for_select(@model.image_resizes_disabled_options), id: nil %>
-                  <% end %>
-                  <% if min_size %>
-                    <div class="tooltip">?
-                      <ul class="tooltip-content">
-                        <% t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_fs(:human_size), width: min_width.to_fs(:delimited), height: min_height.to_fs(:delimited)).each do |tooltip| %>
-                          <li><%= tooltip %><br></li>
-                        <% end %>
-                      </ul>
-                    </div>
-                  <% end %>
-                <%% } %>
-              </td>
-              <td class="operations">
-                <button name="delete" type="button" class="btn" value="delete" data-action="ss--temp-file#deselect"><%= t("ss.buttons.cancel_upload") %></button>
-              </td>
               <td class="errors hide"></td>
             <%% } %>
           </tr>

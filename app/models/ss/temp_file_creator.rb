@@ -87,11 +87,19 @@ class SS::TempFileCreator
   def validate_name
     return if name.blank?
 
-    safe_name = SS::FilenameUtils.convert_to_url_safe_japanese(name)
-    if name != safe_name
-      message = I18n.t("errors.messages.invalid")
-      message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
-      errors.add :base, message
+    if multibyte_filename_disabled?
+      if name !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
+        message = I18n.t("errors.messages.invalid_filename")
+        message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
+        errors.add :base, message
+      end
+    else
+      safe_name = SS::FilenameUtils.convert_to_url_safe_japanese(name)
+      if name != safe_name
+        message = I18n.t("errors.messages.invalid")
+        message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
+        errors.add :base, message
+      end
     end
   end
 
@@ -103,12 +111,10 @@ class SS::TempFileCreator
   def validate_filename
     return if filename.blank?
 
-    if multibyte_filename_disabled?
-      if filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
-        message = I18n.t("errors.messages.invalid_filename")
-        message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
-        errors.add :base, message
-      end
+    if filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
+      message = I18n.t("errors.messages.invalid_filename")
+      message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
+      errors.add :base, message
     end
   end
 

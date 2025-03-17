@@ -20,6 +20,7 @@ class SS::TempFilePreview
   validates :name, presence: true
   validates :filename, presence: true
   validates :size, presence: true
+  validate :validate_name
   validate :validate_filename
   validate :validate_size
 
@@ -59,10 +60,20 @@ class SS::TempFilePreview
     cur_site.multibyte_filename_disabled?
   end
 
+  def validate_name
+    return if name.blank?
+
+    if multibyte_filename_disabled? && name !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
+      message = I18n.t("errors.messages.invalid_filename")
+      message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
+      errors.add :base, message
+    end
+  end
+
   def validate_filename
     return if filename.blank?
 
-    if multibyte_filename_disabled? && filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
+    if filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
       message = I18n.t("errors.messages.invalid_filename")
       message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
       errors.add :base, message
