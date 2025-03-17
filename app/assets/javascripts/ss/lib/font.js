@@ -8,6 +8,8 @@ this.SS_Font = (function () {
     this.size = parseInt(Cookies.get("ss-font")) || 100;
     if (this.size !== 100) {
       this.set(this.size);
+    } else {
+      $('[data-tool="ss-medium"] button').attr("aria-pressed", "true");
     }
 
     $('#ss-medium,[data-tool="ss-medium"]').each(function() {
@@ -35,13 +37,20 @@ this.SS_Font = (function () {
   SS_Font.embed = function($elements, callback) {
     $elements.each(function() {
       const $el = $(this);
-      SS.justOnce(this, "font", function() {
-        const $anchor = $("<a/>", {href: "#"});
-        $anchor.on("click", callback);
-        $anchor.html($el.html());
+      if ($el.find("button").length > 0) {
+        const $button = $el.find("button");
+        SS.justOnce(this, "font", function (){
+          $button.on("click", callback);
+        });
+      } else {
+        SS.justOnce(this, "font", function() {
+          const $anchor = $("<a/>", {href: "#"});
+          $anchor.on("click", callback);
+          $anchor.html($el.html());
 
-        $el.replaceWith($anchor);
-      });
+          $el.replaceWith($anchor);
+        });
+      }
     });
   }
 
@@ -63,6 +72,12 @@ this.SS_Font = (function () {
       expires: 7,
       path: '/'
     });
+
+    if (this.size === 100) {
+      $('[data-tool="ss-medium"] button').attr("aria-pressed", "true");
+    } else {
+      $('[data-tool="ss-medium"] button').attr("aria-pressed", "false");
+    }
     return false;
   };
 
