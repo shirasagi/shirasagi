@@ -82,8 +82,19 @@ class Cms::Frames::TempFiles::FilesController < ApplicationController
 
     respond_to do |format|
       format.html do
+        if params.key?(:file_view)
+          file_view_options = params.require(:file_view).permit(
+            :name, :show_properties, :show_attach, :show_delete, :show_copy_url)
+          %i[show_properties show_attach show_delete show_copy_url].each do |boolean_prop|
+            if file_view_options.key?(boolean_prop)
+              file_view_options[boolean_prop] = !%w(0 false).include?(file_view_options[boolean_prop])
+            end
+          end
+        else
+          file_view_options = {}
+        end
         component = SS::FileViewV2Component.new(
-          cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, file: @item)
+          cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, file: @item, **file_view_options)
         component.animated = "animate__animated animate__bounceIn"
         render component, layout: false
       end

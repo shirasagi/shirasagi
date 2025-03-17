@@ -19,6 +19,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     context "new" do
       it do
         visit node_new_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[basename]", with: basename
@@ -32,6 +34,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.new")
         end
         wait_for_form_restored
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "form#item-form" do
           within '.file-view' do
@@ -40,6 +44,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_content(name)
         expect(page).to have_content('keyvisual')
@@ -56,21 +62,28 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     context "edit" do
       it do
         visit node_edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
         end
         ensure_addon_opened("#addon-cms-agents-addons-file")
         ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         click_on I18n.t("ss.links.back_to_show")
-        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         visit node_show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         page.accept_confirm(I18n.t("ss.confirm.resume_editing")) do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_form_restored
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "form#item-form" do
           within '.file-view' do
@@ -79,6 +92,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_content(name)
         expect(page).to have_content('keyvisual')
@@ -106,6 +121,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     context "new" do
       it do
         visit node_new_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[basename]", with: basename
@@ -116,16 +133,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: "keyvisual"
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
           end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: ".column-value-cms-column-fileupload"
         end
         click_on I18n.t("ss.links.back_to_index")
 
@@ -134,12 +143,16 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.new")
         end
         wait_for_form_restored
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "form#item-form" do
           expect(page).to have_content('keyvisual.jpg')
           click_on I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_content(name)
         expect(page).to have_content('keyvisual.jpg')
@@ -161,6 +174,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     context "edit" do
       it do
         visit node_edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
           wait_for_event_fired("ss:formActivated") do
@@ -168,35 +183,36 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
               select form.name, from: 'in_form_id'
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: "keyvisual"
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
           end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: ".column-value-cms-column-fileupload"
         end
         click_on I18n.t("ss.links.back_to_show")
-        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         visit node_show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         page.accept_confirm(I18n.t("ss.confirm.resume_editing")) do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_form_restored
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "form#item-form" do
           expect(page).to have_content('keyvisual.jpg')
           click_on I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_content(name)
         expect(page).to have_content('keyvisual.jpg')

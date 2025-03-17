@@ -148,6 +148,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context "new" do
       it do
         visit article_new_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in "item[index_name]", with: index_name
@@ -156,17 +158,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               select form.name, from: 'in_form_id'
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: ".column-value-cms-column-fileupload"
+
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: "keyvisual"
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
           end
         end
         click_on I18n.t("ss.links.back_to_index")
@@ -176,6 +174,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.new")
         end
         wait_for_form_restored
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "form#item-form" do
           expect(page).to have_content(form.name)
@@ -203,6 +203,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context "edit" do
       it do
         visit article_edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
           wait_for_event_fired("ss:formActivated") do
@@ -210,29 +212,30 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               select form.name, from: 'in_form_id'
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: ".column-value-cms-column-fileupload"
+
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: "keyvisual"
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
           end
         end
         click_on I18n.t("ss.links.back_to_show")
-        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         visit article_show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         page.accept_confirm(I18n.t("ss.confirm.resume_editing")) do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_form_restored
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "form#item-form" do
           expect(page).to have_content(form.name)

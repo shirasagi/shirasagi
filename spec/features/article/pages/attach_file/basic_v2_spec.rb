@@ -299,25 +299,30 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on column1.name
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within ".column-value-cms-column-fileupload" do
           wait_for_cbox_opened do
-            click_on I18n.t("cms.file")
+            click_on I18n.t("ss.buttons.upload")
           end
         end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          click_button I18n.t("ss.buttons.save")
-          expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+        within_dialog do
+          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
+          end
+          within first("form .index tbody tr") do
+            fill_in "item[files][][name]", with: "modify-1.gif"
+            fill_in "item[files][][filename]", with: "modify-1.gif"
+          end
           wait_for_cbox_closed do
-            click_on I18n.t('ss.buttons.attach')
+            within "form" do
+              click_on I18n.t("ss.buttons.upload")
+            end
           end
         end
         within "form#item-form" do
           within ".column-value-cms-column-fileupload" do
-            expect(page).to have_no_css('.column-value-files', text: 'keyvisual.jpg')
-            expect(page).to have_css('.column-value-files', text: 'keyvisual.gif')
+            expect(page).to have_css('.column-value-files', text: 'modify-1.gif')
 
             fill_in "item[column_values][][in_wrap][text]", with: ss_japanese_text
           end
@@ -328,6 +333,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on column2.name
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within ".column-value-cms-column-free" do
           wait_for_cbox_opened do
             click_on I18n.t("cms.file")

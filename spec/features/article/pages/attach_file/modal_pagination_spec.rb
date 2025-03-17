@@ -255,37 +255,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on column1.name
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
-        within ".column-value-cms-column-fileupload" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", files
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file(*files, addon: ".column-value-cms-column-fileupload")
 
         within '.column-value-cms-column-fileupload .column-value-files' do
           expect(page).to have_selector('.file-view', count: 1)
           expect(page).to have_css('.name', text: 'logo.png')
         end
 
-        within ".column-value-cms-column-fileupload" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", add_file
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file(add_file, addon: ".column-value-cms-column-fileupload")
 
         within '.column-value-cms-column-fileupload .column-value-files' do
           expect(page).to have_selector('.file-view', count: 1)
@@ -331,37 +311,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_on column1.name
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
-        within ".column-value-cms-column-fileupload" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", files
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file(*files, addon: ".column-value-cms-column-fileupload")
 
         within '.column-value-cms-column-fileupload .column-value-files' do
           expect(page).to have_selector('.file-view', count: 1)
           expect(page).to have_css('.name', text: 'logo.png')
         end
 
-        within ".column-value-cms-column-fileupload" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", add_file
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file(add_file, addon: ".column-value-cms-column-fileupload")
 
         within '.column-value-cms-column-fileupload .column-value-files' do
           expect(page).to have_selector('.file-view', count: 1)

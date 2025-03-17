@@ -257,20 +257,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             wait_for_all_ckeditors_ready
             wait_for_all_turbo_frames
             within "#addon-cms-agents-addons-form-page" do
-              within ".column-value-cms-column-fileupload" do
-                wait_for_cbox_opened do
-                  click_on I18n.t("ss.buttons.upload")
-                end
-              end
-            end
-            within_cbox do
-              expect(page).to have_css(".file-view[data-file-id='#{file3.id}']", text: file3.name)
-              wait_for_cbox_closed do
-                click_on file3.name
-              end
-            end
-
-            within "#addon-cms-agents-addons-form-page" do
+              ss_select_file file3, addon: ".column-value-cms-column-fileupload"
               expect(page).to have_css(".file-view[data-file-id='#{file3.id}']", text: file3.name)
               wait_for_cbox_opened do
                 first(".file-view[data-file-id='#{file3.id}'] a").click

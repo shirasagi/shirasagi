@@ -131,9 +131,9 @@ export default class extends SelectBoxController {
       return;
     }
 
-    if (this.selectionTypeValue === "replace") {
+    if (this.selectionTypeValue === "replace" || this.selectionTypeValue === "single") {
       const overallHtml = [];
-      for(const selectedItem of selectedItems) {
+      for (const selectedItem of selectedItems) {
         const api = this.selectApiValue.replaceAll(':id', selectedItem.id);
         const response = await fetch(api);
         if (response.ok) {
@@ -141,7 +141,12 @@ export default class extends SelectBoxController {
           overallHtml.push(html);
         }
       }
-      replaceChildren(this.resultTarget, overallHtml.join());
+
+      if (this.selectionTypeValue === "single") {
+        replaceChildren(this.resultTarget, overallHtml[0]);
+      } else {
+        replaceChildren(this.resultTarget, overallHtml.join());
+      }
     } else {
       // append only missing items
       const existedIds = this._selectedIds();
@@ -156,20 +161,12 @@ export default class extends SelectBoxController {
       }
     }
 
-    if (this.hasAjaxTableTarget) {
-      const $table = $(this.ajaxTableTarget);
-      if ($table.find("tbody tr").size() === 0) {
-        $table.hide();
-      } else {
-        $table.show();
-      }
-      $table.trigger("change");
-    }
+    dispatchEvent(this.resultTarget, "change");
   }
 
   _selectedIds() {
     if (!this.hasResultTarget) {
-      return;
+      return new Set();
     }
 
     const idElements = this.resultTarget.querySelectorAll("[data-file-id]");

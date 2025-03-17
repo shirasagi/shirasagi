@@ -272,17 +272,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
         end
-        within_cbox do
-          wait_for_js_ready
-          attach_file "item[in_files][]", before_csv
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file before_csv, addon: ".column-value-cms-column-fileupload"
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
         end
@@ -294,7 +285,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         file = item.class.find(item.id).attached_files.first
 
         # open replace file dialog
-        wait_for_js_ready
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
           wait_for_cbox_opened do
@@ -388,26 +378,21 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".column-value-palette" do
           wait_for_event_fired("ss:columnAdded") do
             click_on column3.name
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
         end
-        within_cbox do
-          wait_for_js_ready
-          attach_file "item[in_files][]", before_image
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file before_image, addon: ".column-value-cms-column-fileupload"
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: ::File.basename(before_image))
         end

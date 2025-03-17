@@ -128,9 +128,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   let!(:item) { create :article_page, cur_node: node, group_ids: [cms_group.id] }
   let!(:edit_path) { edit_article_page_path site.id, node, item }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
-  let!(:column1) do
-    create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", file_type: "video", order: 1)
-  end
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
   let!(:file) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: cms_user, basename: "#{unique_id}.jpg" }
   let(:button_label) { I18n.t("ss.buttons.upload") }
@@ -151,6 +148,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
     end
+    wait_for_all_ckeditors_ready
+    wait_for_all_turbo_frames
 
     within 'form#item-form' do
       within ".column-value-palette" do
@@ -158,6 +157,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           click_on column2.name
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within ".column-value-cms-column-free" do
         wait_for_cbox_opened do
           click_on button_label
@@ -165,11 +166,13 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
     end
 
+    shirasagi_path = "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
+
     within_cbox do
-      attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
+      attach_file 'item[in_files][]', shirasagi_path
       click_button I18n.t("ss.buttons.save")
-      expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
-      click_on 'shirasagi.pdf'
+      expect(page).to have_css('.file-view', text: File.basename(shirasagi_path))
+      click_on File.basename(shirasagi_path)
 
       wait_for_cbox_closed do
         click_on I18n.t('ss.buttons.save')
@@ -184,24 +187,29 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
     end
 
+    logo_path = "#{Rails.root}/spec/fixtures/ss/logo.png"
+
     within_cbox do
-      attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+      attach_file "item[in_files][]", logo_path
       click_button I18n.t("ss.buttons.save")
-      expect(page).to have_css('.file-view', text: 'logo.png')
-      click_on 'logo.png'
+      expect(page).to have_css('.file-view', text: File.basename(logo_path))
+      click_on File.basename(logo_path)
 
       wait_for_cbox_closed do
         click_on I18n.t('ss.buttons.save')
       end
     end
 
+    shirasagi_file = SS::File.find_by(name: File.basename(shirasagi_path))
+    logo_file = SS::File.find_by(name: File.basename(logo_path))
+
     within "form#item-form" do
       within ".column-value-cms-column-free" do
         within '.column-value-files' do
-          expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
-          expect(page).to have_css('.file-view', text: 'logo.png')
+          expect(page).to have_css(".file-view[data-file-id='#{shirasagi_file.id}']", text: shirasagi_file.name)
+          expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
 
-          within ".file-view", text: 'logo.png' do
+          within ".file-view[data-file-id='#{logo_file.id}']" do
             within ".action" do
               find(".btn-file-image-paste").click
             end
