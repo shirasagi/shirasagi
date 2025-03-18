@@ -173,10 +173,10 @@ module Opendata::Dataset::ResourceFilter
   rescue Timeout::Error => e
     @error_message = I18n.t("opendata.errors.messages.resource_preview_timeout")
     Rails.logger.error("#{e.class} (#{e.message}): #{request.path} #{@error_message}")
-    render template: "error_content", layout: 'cms/ajax', status: 404
+    render template: "error_content", layout: 'cms/ajax', status: :not_found over
   rescue => e
     @error_message = I18n.t("opendata.errors.messages.resource_preview_failed")
     Rails.logger.error("#{e.class} (#{e.message}): #{request.path} #{@error_message}")
-    render template: "error_content", layout: 'cms/ajax', status: 404
+    render template: "error_content", layout: 'cms/ajax', status: :not_found over
   end
 end
