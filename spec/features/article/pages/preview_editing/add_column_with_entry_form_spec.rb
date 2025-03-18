@@ -415,14 +415,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             within ".column-value-cms-column-free" do
               fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-              wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
             end
-          end
-          within_cbox do
-            attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
-          end
-          within "#item-form" do
+            ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-free"
             within ".column-value-cms-column-free" do
               expect(page).to have_content("keyvisual.gif")
               wait_for_ckeditor_event "item[column_values][][in_wrap][value]", "afterInsertHtml" do

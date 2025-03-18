@@ -23,6 +23,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:role) { create :cms_role, name: "role", permissions: permissions, cur_site: site }
   let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [cms_group.id], cms_role_ids: [role.id] }
 
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v2
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
+
   context "attach file from upload" do
     before { login_cms_user }
 
@@ -335,25 +344,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
-        within ".column-value-cms-column-free" do
-          wait_for_cbox_opened do
-            click_on I18n.t("cms.file")
-          end
-        end
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
-          click_button I18n.t("ss.buttons.save")
-          expect(page).to have_css('.file-view', text: 'shirasagi.pdf')
-
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_for_cbox_closed do
-            click_on I18n.t('ss.buttons.attach')
-          end
-        end
         within "form#item-form" do
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".column-value-cms-column-free"
           within ".column-value-cms-column-free" do
-            expect(page).to have_no_css('.column-value-files', text: 'shirasagi.pdf')
-            expect(page).to have_css('.column-value-files', text: 'logo.png')
+            expect(page).to have_css('.file-view', text: 'logo.png')
           end
 
           # 定型フォームに動画を添付すると Cms_Form.addSyntaxCheck を呼び出し、アクセシビリティチェックを登録する。
@@ -365,6 +359,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
 

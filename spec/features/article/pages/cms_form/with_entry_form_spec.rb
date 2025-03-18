@@ -665,18 +665,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           wait_for_all_turbo_frames
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.links.upload")
-            end
           end
-        end
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
-          wait_for_cbox_closed do
-            click_on I18n.t('ss.buttons.attach')
-          end
-        end
-        within 'form#item-form' do
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf", addon: ".column-value-cms-column-free"
           within ".column-value-cms-column-free" do
             expect(page).to have_content("shirasagi.pdf")
             click_on I18n.t("sns.file_attach")

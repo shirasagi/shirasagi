@@ -36,19 +36,10 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           click_on column2.name
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
-      within ".column-value-cms-column-free" do
-        wait_for_cbox_opened do
-          click_on I18n.t("cms.file")
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_for_cbox_closed do
-          click_on I18n.t('ss.buttons.attach')
-        end
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: ".column-value-cms-column-free"
       within ".column-value-cms-column-free" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end

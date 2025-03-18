@@ -12,7 +12,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:column1) do
     create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", file_type: "video", order: 1)
   end
-  let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
+  # let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
 
   context "attach file from upload" do
     before { login_cms_user }

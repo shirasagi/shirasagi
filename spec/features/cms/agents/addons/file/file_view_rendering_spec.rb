@@ -130,7 +130,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
   let!(:file) { tmp_ss_file contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: cms_user, basename: "#{unique_id}.jpg" }
-  let(:button_label) { I18n.t("ss.buttons.upload") }
   let(:logo_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
 
   before do
@@ -151,6 +150,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     wait_for_all_ckeditors_ready
     wait_for_all_turbo_frames
 
+    shirasagi_path = "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
+    logo_path = "#{Rails.root}/spec/fixtures/ss/logo.png"
+
     within 'form#item-form' do
       within ".column-value-palette" do
         wait_for_event_fired("ss:columnAdded") do
@@ -161,42 +163,20 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       wait_for_all_turbo_frames
       within ".column-value-cms-column-free" do
         wait_for_cbox_opened do
-          click_on button_label
+          click_on I18n.t("ss.buttons.upload")
         end
       end
     end
-
-    shirasagi_path = "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
-
-    within_cbox do
-      attach_file 'item[in_files][]', shirasagi_path
-      click_button I18n.t("ss.buttons.save")
-      expect(page).to have_css('.file-view', text: File.basename(shirasagi_path))
-      click_on File.basename(shirasagi_path)
-
-      wait_for_cbox_closed do
-        click_on I18n.t('ss.buttons.save')
+    within_dialog do
+      wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        attach_file "in_files", [ shirasagi_path, logo_path ]
       end
     end
-
-    within 'form#item-form' do
-      within ".column-value-cms-column-free" do
-        wait_for_cbox_opened do
-          click_on button_label
+    wait_for_cbox_closed do
+      within_dialog do
+        within "form" do
+          click_on I18n.t("ss.buttons.upload")
         end
-      end
-    end
-
-    logo_path = "#{Rails.root}/spec/fixtures/ss/logo.png"
-
-    within_cbox do
-      attach_file "item[in_files][]", logo_path
-      click_button I18n.t("ss.buttons.save")
-      expect(page).to have_css('.file-view', text: File.basename(logo_path))
-      click_on File.basename(logo_path)
-
-      wait_for_cbox_closed do
-        click_on I18n.t('ss.buttons.save')
       end
     end
 
@@ -205,14 +185,12 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
     within "form#item-form" do
       within ".column-value-cms-column-free" do
-        within '.column-value-files' do
-          expect(page).to have_css(".file-view[data-file-id='#{shirasagi_file.id}']", text: shirasagi_file.name)
-          expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
+        expect(page).to have_css(".file-view[data-file-id='#{shirasagi_file.id}']", text: shirasagi_file.name)
+        expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
 
-          within ".file-view[data-file-id='#{logo_file.id}']" do
-            within ".action" do
-              find(".btn-file-image-paste").click
-            end
+        within ".file-view[data-file-id='#{logo_file.id}']" do
+          within ".action" do
+            click_on I18n.t("sns.image_paste")
           end
         end
       end
@@ -228,37 +206,43 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
     within '#addon-cms-agents-addons-form-page' do
       within ".column-value-cms-column-free" do
-        within '#selected-files' do
-          expect(page).to have_css(".file-view", text: 'logo.png')
-          element = find('.file-view', text: 'logo.png', match: :first)
-          expect(element['class']).not_to include('unused')
-          expect(page).to have_css(".file-view.unused", text: 'shirasagi.pdf')
-          element = find('.file-view', text: 'shirasagi.pdf', match: :first)
-          expect(element['class']).to include('unused')
-          expect(page).to have_content(I18n.t("ss.unused_file"))
+        expect(page).to have_css(".file-view", text: 'logo.png')
+        element = find('.file-view', text: 'logo.png', match: :first)
+        expect(element['class']).not_to include('unused')
+        expect(page).to have_css(".file-view.unused", text: 'shirasagi.pdf')
+        element = find('.file-view', text: 'shirasagi.pdf', match: :first)
+        expect(element['class']).to include('unused')
+        expect(page).to have_content(I18n.t("ss.unused_file"))
 
-          within ".file-view.unused" do
-            expect(page).to have_link(I18n.t("ss.buttons.delete"))
-          end
+        within ".file-view.unused" do
+          expect(page).to have_link(I18n.t("ss.buttons.delete"))
         end
       end
     end
 
-    within '#selected-files' do
-      within ".file-view.unused" do
-        expect(page).to have_link(I18n.t("ss.buttons.delete"))
-        click_link I18n.t("ss.buttons.delete")
+    clear_notice
+
+    within '#addon-cms-agents-addons-form-page' do
+      within ".column-value-cms-column-free" do
+        within ".file-view.unused" do
+          expect(page).to have_link(I18n.t("ss.buttons.delete"))
+          wait_for_cbox_opened { click_link I18n.t("ss.buttons.delete") }
+        end
       end
     end
 
-    within 'form#ajax-form' do
+    within_cbox do
       within "footer.send" do
         click_on I18n.t("ss.buttons.delete")
       end
     end
+    wait_for_notice I18n.t("ss.notice.deleted")
 
-    within '#selected-files' do
-      expect(page).not_to have_css(".file-view.unused", text: 'shirasagi.pdf')
+    within '#addon-cms-agents-addons-form-page' do
+      within ".column-value-cms-column-free" do
+        expect(page).to have_css(".file-view", text: 'logo.png')
+        expect(page).to have_no_css(".file-view", text: 'shirasagi.pdf')
+      end
     end
   end
 end

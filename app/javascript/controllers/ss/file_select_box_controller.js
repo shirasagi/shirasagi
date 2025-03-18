@@ -37,7 +37,8 @@ export default class extends SelectBoxController {
     uploadApi: String,
     fileApi: String,
     selectApi: String,
-    viewApi: String
+    viewApi: String,
+    editorId: String,
   }
   static targets = [
     "option",
@@ -126,6 +127,9 @@ export default class extends SelectBoxController {
       confirmationOnDelete: i18next.t('ss.confirm.delete'),
       inUseConfirmation: i18next.t('ss.confirm.in_use')
     };
+    if (this.hasEditorIdValue) {
+      options.insertContent = (content) => this.#insertContent(content);
+    }
     return options;
   }
 
@@ -193,5 +197,13 @@ export default class extends SelectBoxController {
 
     this.apiValue = this.uploadApiValue;
     super.openDialog();
+  }
+
+  #insertContent(content) {
+    if (typeof tinymce != "undefined") {
+      tinymce.get(this.editorIdValue).execCommand("mceInsertContent", false, content);
+    } else if (typeof CKEDITOR != "undefined") {
+      CKEDITOR.instances[this.editorIdValue].insertHtml(content);
+    }
   }
 }
