@@ -96,6 +96,12 @@ export default class extends SelectBoxController {
         buttonElement.setAttribute("aria-pressed", false);
       }
     });
+
+    if (ev.target.value === "name") {
+      SS.notice(i18next.t("ss.notice.ordered_by_file_name_order"));
+    } else {
+      SS.notice(i18next.t("ss.notice.ordered_by_file_upload_order"));
+    }
   }
 
   attachFile(ev) {

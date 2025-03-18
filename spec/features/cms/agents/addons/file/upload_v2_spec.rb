@@ -974,6 +974,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           click_on I18n.t('ss.buttons.file_name_order')
         end
       end
+      wait_for_notice I18n.t("ss.notice.ordered_by_file_name_order")
+      clear_notice
       within "#item-form #addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", count: 3)
         file_views = all(".file-view")
@@ -988,6 +990,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           click_on I18n.t('ss.buttons.file_upload_order')
         end
       end
+      wait_for_notice I18n.t("ss.notice.ordered_by_file_upload_order")
+      clear_notice
       within "#item-form #addon-cms-agents-addons-file" do
         expect(page).to have_css(".file-view", count: 3)
         file_views = all(".file-view")
