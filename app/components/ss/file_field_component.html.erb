@@ -14,9 +14,6 @@
   <%= tag.span(file.try(:humanized_name), class: "humanized-name") %>
   <%= sanitizer_status(file) %>
   <%= hidden_field_tag("#{object_name}[#{object_method}_id]", file.try(:id), id: nil, class: "file-id") %>
-  <a class="btn-file-delete" href="#item_thumb_id">
-    <i class="material-icons" style="font-size: 120%;"></i>
-  </a>
   <%= link_to("##{element_id}", class: [ 'btn-file-delete', file.blank? ? "hide" : nil ]) do %>
     <%= tag.i("&#xE872;".html_safe, class: "material-icons", style: "font-size: 120%;") %>
   <% end %>
