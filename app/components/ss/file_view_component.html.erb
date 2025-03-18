@@ -1,10 +1,12 @@
-<%= jquery do %>
-  $(".od-resource-file-meta").hide();
-  $("input[name='item[opendata_dataset_state]']").each(function() {
-    if ($(this).prop("checked")) {
-      $(this).trigger('change');
-    }
-  });
+<% if show_opendata %>
+  <%= jquery do %>
+    $(".od-resource-file-meta").hide();
+    $("input[name='item[opendata_dataset_state]']").each(function() {
+      if ($(this).prop("checked")) {
+        $(this).trigger('change');
+      }
+    });
+  <% end %>
 <% end %>
 
 <%= file_view_tag do %>
@@ -29,15 +31,15 @@
         <% end %>
       </div>
     <% end %>
-  <% end %>
 
-  <div class="name">
-    <label>
-      <input type="hidden" name="<%= name %>" value="<%= file.id %>" class="file-id" />
-      <%= file.name %>
-    </label>
-    <%= content %>
-  </div>
+    <div class="name">
+      <label>
+        <input type="hidden" name="<%= name %>" value="<%= file.id %>" class="file-id" />
+        <%= file.name %>
+      </label>
+      <%# content %>
+    </div>
+  <% end %>
   <div class="action">
     <% if show_attach %>
       <%= attach_action %>
@@ -54,20 +56,22 @@
     <% end %>
   </div>
 
-  <% if cur_node && cur_node.try(:opendata_sites).present? && page.respond_to?(:opendata_resources) %>
-    <dl class="od-resource-file-meta">
-      <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
-      <dd>
-        <%= select_tag "item[opendata_resources][#{file.id}][license_ids]", options_for_select(licenses, page.opendata_resources_licenses(file).first.try(:id)), include_blank: true %>
-      </dd>
+  <% if show_opendata %>
+    <% if cur_node && cur_node.try(:opendata_sites).present? && page.respond_to?(:opendata_resources) %>
+      <dl class="od-resource-file-meta">
+        <dt><%= t('cms.opendata_ref/resource.license_id') %></dt>
+        <dd>
+          <%= select_tag "item[opendata_resources][#{file.id}][license_ids]", options_for_select(licenses, page.opendata_resources_licenses(file).first.try(:id)), include_blank: true %>
+        </dd>
 
-      <dt><%= t('cms.opendata_ref/resource.text') %></dt>
-      <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", page.opendata_resources_text(file) %></dd>
+        <dt><%= t('cms.opendata_ref/resource.text') %></dt>
+        <dd><%= text_area_tag "item[opendata_resources][#{file.id}][text]", page.opendata_resources_text(file) %></dd>
 
-      <dt><%= t('cms.opendata_ref/resource.state') %></dt>
-      <dd>
-        <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(page.opendata_resource_state_options, page.opendata_resources_state(file)), class: 'od-resource-file-state', data: { 'file-id' => file.id } %>
-      </dd>
-    </dl>
+        <dt><%= t('cms.opendata_ref/resource.state') %></dt>
+        <dd>
+          <%= select_tag "item[opendata_resources][#{file.id}][state]", options_for_select(page.opendata_resource_state_options, page.opendata_resources_state(file)), class: 'od-resource-file-state', data: { 'file-id' => file.id } %>
+        </dd>
+      </dl>
+    <% end %>
   <% end %>
 <% end %>

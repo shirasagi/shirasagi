@@ -1,45 +1,8 @@
 #frozen_string_literal: true
 
-class SS::FileFieldV2Component < ApplicationComponent
-  include ActiveModel::Model
+class SS::FileFieldV2Component < SS::FileFieldComponent
+  # include ActiveModel::Model
   include SS::MaterialIconsHelper
-
-  attr_accessor :object_name, :object_method
-  attr_writer :ss_mode, :cur_site, :cur_user, :cur_node, :item, :file
-
-  delegate :sanitizer_status, to: :helpers
-
-  def ss_mode
-    @ss_mode || view_context.instance_variable_get(:@ss_mode)
-  end
-
-  def cur_site
-    @cur_site || view_context.instance_variable_get(:@cur_site)
-  end
-
-  def cur_user
-    @cur_user || view_context.instance_variable_get(:@cur_user)
-  end
-
-  def cur_node
-    @cur_node || view_context.instance_variable_get(:@cur_node)
-  end
-
-  def item
-    @item || view_context.instance_variable_get(:"@#{object_name}")
-  end
-
-  def file
-    @file = item.send(object_method)
-  end
-
-  def sanitize_to_id(name)
-    name.to_s.delete("]").tr("^-a-zA-Z0-9:.", "_")
-  end
-
-  def element_id
-    @element_id ||= sanitize_to_id("#{object_name}[#{object_method}_id]")
-  end
 
   def upload_api_path
     @upload_api_path ||= begin

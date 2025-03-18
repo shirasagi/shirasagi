@@ -6,7 +6,7 @@ class SS::FileViewComponent < ApplicationComponent
   include ApplicationHelper
 
   attr_accessor :cur_site, :cur_user, :cur_node, :file, :item
-  attr_writer :page, :name, :show_properties, :show_attach, :show_delete, :show_copy_url
+  attr_writer :page, :name, :show_properties, :show_attach, :show_delete, :show_copy_url, :show_opendata
 
   renders_one :attach_action
   renders_one :image_paste_action
@@ -40,12 +40,15 @@ class SS::FileViewComponent < ApplicationComponent
     "file-view"
   end
 
-  def file_view_tag(&block)
-    data = {
+  def file_view_tag_data
+    {
       file_id: file.id, name: file.name, humanized_name: file.humanized_name, extname: file.extname,
       url: file.url, thumb_url: file.thumb_url
     }
-    tag.div(id: "file-#{file.id}", class: file_view_tag_css_class, data: data, &block)
+  end
+
+  def file_view_tag(&block)
+    tag.div(id: "file-#{file.id}", class: file_view_tag_css_class, data: file_view_tag_data, &block)
   end
 
   def file_link_tag(&block)
@@ -70,6 +73,11 @@ class SS::FileViewComponent < ApplicationComponent
   def show_copy_url
     return @show_copy_url if instance_variable_defined?(:@show_copy_url)
     false
+  end
+
+  def show_opendata
+    return @show_opendata if instance_variable_defined?(:@show_opendata)
+    true
   end
 
   def default_attach_action

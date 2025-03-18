@@ -2,13 +2,25 @@
 
 class SS::TempFileSearchParam
   include ActiveModel::Model
+  include SS::PermitParams
 
-  AVAILABLE_TYPES = %w(temp_file user_file).freeze
+  AVAILABLE_TYPES = %w(temp_file user_file cms_file).freeze
+  AVAILABLE_NODE_BOUNDS = %w(current all).freeze
 
-  attr_accessor :cur_site, :cur_user, :types, :keyword
+  attr_accessor :ss_mode, :cur_site, :cur_user, :cur_node, :types, :node_bound, :keyword
 
+  validates :node_bound, inclusion: { in: AVAILABLE_NODE_BOUNDS, allow_blank: true }
   validate :normalize_types
   validate :validate_types
+
+  permit_params :node_bound, :keyword, types: []
+
+  def set_default
+    if types.blank? && node_bound.blank?
+      self.types = %w(temp_file)
+      self.node_bound = "current"
+    end
+  end
 
   def query(model, base_criteria)
     return base_criteria.none if invalid?
@@ -53,15 +65,36 @@ class SS::TempFileSearchParam
     if types && types.include?("user_file")
       all_ids_set += search_user_file(model, base_criteria)
     end
+    if types && types.include?("cms_file")
+      all_ids_set += search_cms_file(model, base_criteria)
+    end
 
     all_ids_set.to_a
   end
 
   def search_temp_file(_model, _base_criteria)
-    SS::TempFile.all.pluck(:id)
+    case ss_mode
+    when :cms
+      criteria = Cms::TempFile.site(cur_site)
+      if node_bound == "current"
+        if cur_node
+          criteria = criteria.node(cur_node)
+        else
+          criteria = criteria.exists(node_id: false)
+        end
+      end
+    else # :gws
+      criteria = SS::TempFile.all
+    end
+    criteria = criteria.allow(:read, cur_user)
+    criteria.pluck(:id)
   end
 
   def search_user_file(_model, _base_criteria)
     SS::UserFile.user(cur_user).pluck(:id)
+  end
+
+  def search_cms_file(model, base_criteria)
+    Cms::File.site(cur_site).allow(:read, cur_user).pluck(:id)
   end
 end

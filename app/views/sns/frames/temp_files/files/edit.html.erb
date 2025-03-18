@@ -1,6 +1,5 @@
 <%= form_with scope: :item, url: url_for(action: :update, file_size: params[:file_size]), id: "ajax-form", method: :put, data: { turbo: true } do |f| %>
   <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
-  <%= hidden_field_tag :cid, params[:cid] if params[:cid].present? %>
   <% params.dig(:s, :types).tap do |types| %>
     <% if types %>
       <% types.each do |type| %>
@@ -12,10 +11,10 @@
   <%= hidden_field_tag "s[keyword]", params.dig(:s, :keyword) %>
 
   <%= error_messages_for :item %>
-  <%= render 'form', f: f %>
+  <%= render 'sns/frames/temp_files/files/form', f: f %>
 
   <footer class="send">
     <%= f.submit t("ss.buttons.save"), class: "btn-primary save", data: { disable_with: t("ss.buttons.saving") } %>
-    <%= link_to(t("ss.buttons.cancel"), url_for(action: :index, cid: cur_node, s: params[:s].try(:to_unsafe_h)), class: %w(btn-default), data: { turbo: true }) %>
+    <%= link_to(t("ss.buttons.cancel"), url_for(action: :index, s: params[:s].try(:to_unsafe_h)), class: %w(btn-default), data: { turbo: true }) %>
   </footer>
 <% end %>

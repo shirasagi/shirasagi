@@ -7,7 +7,7 @@ class SS::TempFileCreator
   include ActiveModel::Attributes
   include ActiveModel::Validations::Callbacks
 
-  attr_accessor :cur_site, :cur_user
+  attr_accessor :ss_mode, :cur_site, :cur_user, :cur_node
   attr_reader :work_item
 
   attribute :name, :string
@@ -29,11 +29,21 @@ class SS::TempFileCreator
   validate :validate_image
 
   def model
-    SS::TempFile
+    @model ||= begin
+      if ss_mode == :cms
+        Cms::TempFile
+      else
+        SS::TempFile
+      end
+    end
   end
 
   def new_item
-    model.new(cur_user: cur_user)
+    if ss_mode == :cms
+      model.new(cur_site: cur_site, cur_user: cur_user, cur_node: cur_node)
+    else
+      model.new(cur_user: cur_user)
+    end
   end
 
   def save
