@@ -25,7 +25,6 @@ describe "fontsize/public_filter", type: :feature, dbscope: :example, js: true d
 
     before do
       visit item.full_url
-      # # フォントサイズのアクセシビリティ機能を初期化
       page.execute_script("SS_Font.render();")
       wait_for_js_ready
     end
@@ -45,7 +44,7 @@ describe "fontsize/public_filter", type: :feature, dbscope: :example, js: true d
 
     it "clicking 'Large' increases font size to 120% and unpresses standard button" do
       within '.accessibility__fontsize' do
-        click_on "大きく"
+        click_on I18n.t("ss.font_size.large")
       end
       wait_for_js_ready
       expect(body_font_size).to eq("120%")
@@ -57,11 +56,11 @@ describe "fontsize/public_filter", type: :feature, dbscope: :example, js: true d
 
     it "clicking 'Small' after 'Large' resets font size to 100% and presses standard button" do
       within '.accessibility__fontsize' do
-        click_on "大きく"
+        click_on I18n.t("ss.font_size.large")
       end
       wait_for_js_ready
       within '.accessibility__fontsize' do
-        click_on "小さく"
+        click_on I18n.t("ss.font_size.small")
       end
       wait_for_js_ready
       expect(body_font_size).to eq("100%")
@@ -72,13 +71,12 @@ describe "fontsize/public_filter", type: :feature, dbscope: :example, js: true d
     end
 
     it "clicking 'Standard' resets font size to 100% and presses standard button" do
-      # Change state first by clicking 'Large'
       within '.accessibility__fontsize' do
-        click_on "大きく"
+        click_on I18n.t("ss.font_size.large")
       end
       wait_for_js_ready
       within '.accessibility__fontsize' do
-        click_on "標準"
+        click_on I18n.t("ss.font_size.medium")
       end
       wait_for_js_ready
       expect(body_font_size).to eq("100%")
@@ -103,5 +101,4 @@ describe "fontsize/public_filter", type: :feature, dbscope: :example, js: true d
     let!(:part) { create :accessibility_tool_compat2, cur_site: site }
     it_behaves_like "fontsize"
   end
-
 end
