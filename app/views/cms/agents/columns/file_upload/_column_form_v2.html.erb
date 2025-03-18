@@ -7,49 +7,19 @@
   form_options['class'] = [ form_options['class'].presence ].flatten.compact
   form_options['class'] << 'file-id'
 
-  upload_api_path = cms_frames_temp_files_uploads_path(site: @cur_site, cid: @cur_node || "-")
-  file_api_path = cms_frames_temp_files_files_path(site: @cur_site, cid: @cur_node || "-")
+  # upload_api_path = cms_frames_temp_files_uploads_path(site: @cur_site, cid: @cur_node || "-")
+  # file_api_path = cms_frames_temp_files_files_path(site: @cur_site, cid: @cur_node || "-")
   select_api_path = select_cms_frames_temp_files_file_path(site: @cur_site, cid: @cur_node || "-", id: ':id', file_view: { name: "item[column_values][][in_wrap][file_id]", show_attach: false })
-  view_api_path = view_cms_apis_content_file_path(id: ":id")
+  # view_api_path = view_cms_apis_content_file_path(id: ":id")
 %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
-  <div class="cms-addon-file" data-controller="ss--file-select-box">
-    <script type="application/json" data-ss--file-select-box-target="option">
-      <%==
-        {
-          "uploadApi" => upload_api_path,
-          "fileApi" => file_api_path,
-          "selectApi" => select_api_path,
-          "viewApi" => view_api_path,
-          "dialogType" => "ss",
-          "selectionType" => "single"
-        }.to_json
-      %>
-    </script>
-
-    <div class="cms-addon-file-upload-actions">
-      <div class="ss-btn-group" role="group" aria-label="<%= t('ss.upload_or_select_from_list') %>">
-        <%= button_tag t('ss.buttons.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
-        <%= button_tag t("ss.buttons.select_from_list"), type: :button, name: 'file', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
-      </div>
-    </div>
-
-    <div class="cms-addon-file-drop-area" data-ss--file-select-box-target="fileUploadDropArea">
-      <span class="cms-addon-file-drop-notice"><%= t('ss.notice.file_droppable') %></span>
-    </div>
-
-    <div class="column-value-files" data-ss--file-select-box-target="result">
-      <% if file %>
-        <% file = file.becomes_with_model %>
-        <%=
-          component = SS::FileViewV2Component.new(
-            cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item, file: file,
-            name: "item[column_values][][in_wrap][file_id]", show_attach: false)
-          render component
-        %>
-      <% end %>
-    </div>
-  </div>
-
+  <%=
+    component = SS::FileSelectBoxComponent.new(
+      ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item,
+      field_name: "item[column_values][][in_wrap][file_id]", selection_type: "single",
+      files: [ file ].compact, select_api_path: select_api_path, show_attach: false, show_opendata: false
+    )
+    render component
+  %>
   <%= render "cms/agents/columns/file_upload/column_form_v1_#{column.file_type.presence || "image"}", f: f, id: id, column: column, value: value %>
 <% end %>

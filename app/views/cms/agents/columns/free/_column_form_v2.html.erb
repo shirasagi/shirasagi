@@ -4,11 +4,12 @@
   controller ||= false
   source_cleaner_conf = Cms::SourceCleanerTemplate.site(@cur_site).and_public.to_config(site: @cur_site)
   page = @page.presence || @item
+  opendata_assoced = @cur_node && @cur_node.try(:opendata_sites).present? && page.respond_to?(:opendata_resources)
 
-  upload_api_path = cms_frames_temp_files_uploads_path(site: @cur_site, cid: @cur_node || "-")
-  file_api_path = cms_frames_temp_files_files_path(site: @cur_site, cid: @cur_node || "-")
+  # upload_api_path = cms_frames_temp_files_uploads_path(site: @cur_site, cid: @cur_node || "-")
+  # file_api_path = cms_frames_temp_files_files_path(site: @cur_site, cid: @cur_node || "-")
   select_api_path = select_cms_frames_temp_files_file_path(site: @cur_site, cid: @cur_node || "-", id: ':id', file_view: { name: "#{f.object_name}[][in_wrap][file_ids][]" })
-  view_api_path = view_cms_apis_content_file_path(id: ":id")
+  # view_api_path = view_cms_apis_content_file_path(id: ":id")
 %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <% editor_id = "#{id}-html" %>
@@ -47,58 +48,13 @@
   <% end %>
 
   <% @extra_bodies << proc do %>
-    <div class="cms-addon-file" data-controller="ss--file-select-box">
-      <script type="application/json" data-ss--file-select-box-target="option">
-        <%==
-          {
-            "uploadApi" => upload_api_path,
-            "fileApi" => file_api_path,
-            "selectApi" => select_api_path,
-            "viewApi" => view_api_path,
-            "dialogType" => "ss",
-            "selectionType" => "append",
-            "editorId" => editor_id
-          }.to_json
-        %>
-      </script>
-
-      <%# hidden_field_tag("#{f.object_name}[][in_wrap][file_ids][]", "", id: nil)  %>
-
-      <div class="cms-addon-file-upload-actions">
-        <div class="ss-btn-group" role="group" aria-label="<%= t('ss.upload_or_select_from_list') %>">
-          <%= button_tag t('ss.buttons.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
-          <%= button_tag t("ss.buttons.select_from_list"), type: :button, name: 'file', class: "btn", data: { action: "ss--file-select-box#openDialog" } %>
-        </div>
-      </div>
-
-      <div class="cms-addon-file-drop-area" data-ss--file-select-box-target="fileUploadDropArea">
-        <span class="cms-addon-file-drop-notice"><%= t('ss.notice.file_droppable') %></span>
-      </div>
-
-      <div class="cms-addon-file-selected-files-wrap">
-        <div class="cms-addon-file-order">
-          <div class="ss-btn-group" role="group" aria-label="<%= t("mongoid.attributes.ss/document.sort") %>">
-            <%= button_tag t('ss.buttons.file_name_order'), type: :button, name: "by-name", class: "btn", value: "name", aria: { pressed: false }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
-            <%= button_tag t('ss.buttons.file_upload_order'), type: :button, name: "by-upload", class: "btn", value: "upload", aria: { pressed: true }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
-          </div>
-          <%= @model.tt :file_order %>
-        </div>
-
-        <div class="cms-addon-file-selected-files" data-ss--file-select-box-target="result">
-          <%# アップロード順とは、ID順のこと %>
-          <% if files.present? %>
-            <% files.reorder(id: -1).each do |file| %>
-              <% file = file.becomes_with_model %>
-              <%=
-                component = SS::FileViewV2Component.new(
-                  cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item, file: file,
-                  name: "#{f.object_name}[][in_wrap][file_ids][]")
-                render component
-              %>
-            <% end %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+    <%=
+      component = SS::FileSelectBoxComponent.new(
+        ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item,
+        field_name: "#{f.object_name}[][in_wrap][file_ids][]", html_editor_id: editor_id,
+        files: files.try(:reorder, id: -1), select_api_path: select_api_path, show_opendata: opendata_assoced
+      )
+      render component
+    %>
   <% end %>
 <% end %>
