@@ -3,6 +3,8 @@ class Workflow::PagesController < ApplicationController
   include Cms::CrudFilter
 
   before_action :set_item, only: %i[request_update restart_update approve_update pull_up_update remand_update branch_create]
+  after_action :create_history_log, only: %i[request_update restart_update approve_update pull_up_update remand_update
+   request_cancel branch_update]
 
   private
 
@@ -18,6 +20,15 @@ class Workflow::PagesController < ApplicationController
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: false }
+  end
+
+  def create_history_log
+    # レスポンスの status コードが 200 か 422 の場合、操作履歴が作られないので、手動で作成
+    self.class.log_class.create_log!(
+      request, response,
+      controller: params[:controller], action: params[:action],
+      cur_site: @cur_site, cur_user: @cur_user, item: @item
+    ) rescue nil
   end
 
   def request_approval

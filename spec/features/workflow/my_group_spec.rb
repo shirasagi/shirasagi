@@ -99,6 +99,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.body.raw_source).to include(workflow_comment)
         end
 
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq cms_user.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "request_update"
+        end
+
         #
         # user1: approve request
         #
@@ -137,6 +147,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         end
 
         expect(Sys::MailLog.count).to eq 2
+
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq user1.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "approve_update"
+        end
 
         #
         # user2: approve request
@@ -188,6 +208,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(item.name)
+        end
+
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq user2.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "approve_update"
         end
       end
     end
@@ -259,6 +289,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.body.raw_source).to include(workflow_comment)
         end
 
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq cms_user.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "request_update"
+        end
+
         #
         # user1: remand request
         #
@@ -307,6 +347,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
           expect(mail.body.raw_source).to include(remand_comment1)
+        end
+
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq user1.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "remand_update"
         end
       end
     end
@@ -363,6 +413,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
 
         expect(Sys::MailLog.count).to eq 2
 
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq cms_user.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "request_update"
+        end
+
         #
         # user1: approve request
         #
@@ -401,6 +461,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         end
 
         expect(Sys::MailLog.count).to eq 2
+
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq user1.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "approve_update"
+        end
 
         #
         # user2: remand request
@@ -452,6 +522,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
           expect(mail.body.raw_source).to include(remand_comment2)
+        end
+
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq user2.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "remand_update"
         end
       end
     end
@@ -508,6 +588,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
 
         expect(Sys::MailLog.count).to eq 2
 
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq cms_user.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "request_update"
+        end
+
         #
         # admin: cancel request
         #
@@ -544,6 +634,16 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         end
 
         expect(Sys::MailLog.count).to eq 2
+
+        History::Log.unscoped.reorder(_id: -1).first.tap do |log|
+          expect(log.site_id).to eq site.id
+          expect(log.user_id).to eq cms_user.id
+          expect(log.ref_coll).to eq Cms::Page.collection_name.to_s
+          expect(log.target_class).to eq item.class.name
+          expect(log.target_id).to eq item.id.to_s
+          expect(log.controller).to eq "workflow/pages"
+          expect(log.action).to eq "request_cancel"
+        end
       end
     end
   end
