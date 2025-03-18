@@ -19,7 +19,7 @@ FactoryBot.define do
         <div class="accessibility__tool-wrap">
           <nav class="accessibility__tool">
             <div class="accessibility__tool-list">
-              <div data-tool="ss-kana" class="accessibility__kana">
+              <div data-tool="ss-kana" data-tool-type="button" class="accessibility__kana">
                 <span class="on-not-pressed">
                   <span class="material-icons-outlined" role="img" aria-hidden="true">toggle_off</span>
                   <span class="sr-only">ふりがなをつける</span>

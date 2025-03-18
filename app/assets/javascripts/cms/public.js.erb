@@ -106,7 +106,26 @@ this.SS_Kana = (function () {
         }
 
         // legacy：htmlにbuttonが含まれていない　→ a タグを生成
-        if (!kanaElement.querySelector("button")) {
+        if (kanaElement.dataset.toolType === "button") {
+          const buttonId = 'kana_button_' + index;
+          const content = kanaElement.innerHTML;
+          const button = document.createElement('button');
+          button.id = buttonId;
+          button.className = cssClass;
+          button.setAttribute('name', 'kana');
+          button.setAttribute('type', 'button');
+          button.setAttribute('aria-pressed', (cssClass === 'on') ? 'false' : 'true');
+          button.innerHTML = content;
+          kanaElement.innerHTML = '';
+          kanaElement.appendChild(button);
+
+          button.addEventListener('click', function(ev){
+            ev.preventDefault();
+            const expressed = (this.getAttribute('aria-pressed') === 'true') ? 'false' : 'true';
+            this.setAttribute('aria-pressed', expressed);
+            location.href = url;
+          });
+        } else {
           const anchorId = 'kana_a_' + index;
           const content = kanaElement.innerHTML;
           const anchor = document.createElement('a');
@@ -123,19 +142,6 @@ this.SS_Kana = (function () {
             const clickedUrl = this.getAttribute('href').substring(1); // Remove '#'
             location.href = clickedUrl;
             return false;
-          });
-        } else {
-          const kanaButton = kanaElement.querySelector('button');
-          const currentValue = (cssClass === 'on') ? 'false' : 'true';
-          kanaButton.setAttribute('name', 'kana');
-          kanaButton.setAttribute('type', 'button');
-          kanaButton.setAttribute('aria-pressed', currentValue);
-
-          kanaButton.addEventListener('click', function(ev){
-            ev.preventDefault();
-            const expressed = (this.getAttribute('aria-pressed') === 'true') ? 'false' : 'true';
-            this.setAttribute('aria-pressed', expressed);
-            location.href = url;
           });
         }
       });

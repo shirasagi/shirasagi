@@ -268,16 +268,15 @@ module Cms::PublicFilter::Layout
   end
 
   def render_kana_tool(html)
-    return html if html =~ /(material-icons-outlined|material-icons|fa-|fas-|far-|fal-|fab-|ion-|mdi-|icofont-)/
+    replaced = html.gsub(/<div[^>]*data-tool="ss-kana"[^>]*data-tool-type="button"[^>]*>.*?<\/div>/m) do |match|
+      match
+    end
     label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
-    html = html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+    replaced = replaced.gsub(/(<div[^>]+id="ss-kana"(?![^>]*data-tool-type="button")[^>]*>)(.*?)(<\/div>)/m) do
       "#{$1}#{label}#{$3}"
     end
-    html.gsub(/(<.+? data-tool="ss-kana".*?>)(.*?)(<\/.+?>)/m) do
-      outer_start = $1
-      inner_html = $2
-      outer_end = $3
-      "#{outer_start}#{inner_html.strip.empty? || inner_html !~ /<button\b/ ? label : inner_html}#{outer_end}"
+    replaced.gsub(/(<div[^>]+data-tool="ss-kana"(?![^>]*data-tool-type="button")[^>]*>)(.*?)(<\/div>)/m) do
+      "#{$1}#{label}#{$3}"
     end
   end
 
