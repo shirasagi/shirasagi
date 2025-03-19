@@ -28,18 +28,21 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
 
-          ss_upload_file logo_path
-          ss_upload_file keyvisual_path
-
-          logo_file = SS::File.find_by(name: File.basename(logo_path))
-          keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
-
+          ss_upload_file logo_path, keyvisual_path
           within "#addon-cms-agents-addons-file" do
+            expect(page).to have_css(".file-view", count: 2)
+
+            logo_file = SS::File.find_by(name: File.basename(logo_path))
+            keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
             expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
             expect(page).to have_css(".file-view[data-file-id='#{keyvisual_file.id}']", text: keyvisual_file.name)
+          end
 
-            within ".file-view[data-file-id='#{keyvisual_file.id}']" do
-              click_on I18n.t("sns.file_attach")
+          wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+            within "#addon-cms-agents-addons-file" do
+              within ".file-view[data-file-id='#{keyvisual_file.id}']" do
+                click_on I18n.t("sns.file_attach")
+              end
             end
           end
 
@@ -52,10 +55,11 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#addon-cms-agents-addons-file" do
           element = find(".file-view[data-file-id='#{keyvisual_file.id}']")
           expect(element['class']).not_to include('unused')
-          expect(page).to have_css(".file-view.unused", text: 'logo.png')
 
           element = find(".file-view[data-file-id='#{logo_file.id}']")
           expect(element['class']).to include('unused')
+
+          expect(page).to have_css(".file-view.unused", text: logo_file.name)
         end
       end
 
@@ -68,23 +72,29 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
 
+        logo_file = nil
+        keyvisual_file = nil
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
           click_on I18n.t("ss.links.input")
           fill_in "item[basename]", with: "sample"
 
-          ss_upload_file logo_path
-          ss_upload_file keyvisual_path
-
-          logo_file = SS::File.find_by(name: File.basename(logo_path))
-          keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
-
+          ss_upload_file logo_path, keyvisual_path
           within "#addon-cms-agents-addons-file" do
+            expect(page).to have_css(".file-view", count: 2)
+
+            logo_file = SS::File.find_by(name: File.basename(logo_path))
+            keyvisual_file = SS::File.find_by(name: File.basename(keyvisual_path))
+
             expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
             expect(page).to have_css(".file-view[data-file-id='#{keyvisual_file.id}']", text: keyvisual_file.name)
+          end
 
-            within ".file-view[data-file-id='#{keyvisual_file.id}']" do
-              click_on I18n.t("sns.file_attach")
+          wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+            within "#addon-cms-agents-addons-file" do
+              within ".file-view[data-file-id='#{keyvisual_file.id}']" do
+                click_on I18n.t("sns.file_attach")
+              end
             end
           end
 
@@ -153,6 +163,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     shirasagi_path = "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
     logo_path = "#{Rails.root}/spec/fixtures/ss/logo.png"
 
+    shirasagi_file = nil
+    logo_file = nil
+
     within 'form#item-form' do
       within ".column-value-palette" do
         wait_for_event_fired("ss:columnAdded") do
@@ -161,41 +174,27 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
-      within ".column-value-cms-column-free" do
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-    end
-    within_dialog do
-      wait_event_to_fire "ss:tempFile:addedWaitingList" do
-        attach_file "in_files", [ shirasagi_path, logo_path ]
-      end
-    end
-    wait_for_cbox_closed do
-      within_dialog do
-        within "form" do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-    end
 
-    shirasagi_file = SS::File.find_by(name: File.basename(shirasagi_path))
-    logo_file = SS::File.find_by(name: File.basename(logo_path))
-
-    within "form#item-form" do
+      ss_upload_file shirasagi_path, logo_path, addon: ".column-value-cms-column-free"
       within ".column-value-cms-column-free" do
+        expect(page).to have_css(".file-view", count: 2)
+
+        shirasagi_file = SS::File.find_by(name: File.basename(shirasagi_path))
+        logo_file = SS::File.find_by(name: File.basename(logo_path))
         expect(page).to have_css(".file-view[data-file-id='#{shirasagi_file.id}']", text: shirasagi_file.name)
         expect(page).to have_css(".file-view[data-file-id='#{logo_file.id}']", text: logo_file.name)
+      end
 
-        within ".file-view[data-file-id='#{logo_file.id}']" do
-          within ".action" do
-            click_on I18n.t("sns.image_paste")
+      within ".column-value-cms-column-free" do
+        wait_for_ckeditor_event 'item[column_values][][in_wrap][value]', "afterInsertHtml" do
+          within ".file-view[data-file-id='#{logo_file.id}']" do
+            within ".action" do
+              click_on I18n.t("sns.image_paste")
+            end
           end
         end
       end
 
-      wait_for_js_ready
       click_on I18n.t("ss.buttons.publish_save")
     end
 
@@ -207,11 +206,11 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     within '#addon-cms-agents-addons-form-page' do
       within ".column-value-cms-column-free" do
         expect(page).to have_css(".file-view", text: 'logo.png')
-        element = find('.file-view', text: 'logo.png', match: :first)
+        element = find(".file-view[data-file-id='#{logo_file.id}']")
         expect(element['class']).not_to include('unused')
-        expect(page).to have_css(".file-view.unused", text: 'shirasagi.pdf')
-        element = find('.file-view', text: 'shirasagi.pdf', match: :first)
+        element = find(".file-view[data-file-id='#{shirasagi_file.id}']")
         expect(element['class']).to include('unused')
+        expect(page).to have_css(".file-view.unused", text: shirasagi_file.name)
         expect(page).to have_content(I18n.t("ss.unused_file"))
 
         within ".file-view.unused" do

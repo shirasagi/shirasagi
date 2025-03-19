@@ -316,9 +316,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
             ensure_addon_opened("#addon-cms-agents-addons-file")
             ss_upload_file attach_file_path
-            within "#addon-cms-agents-addons-file" do
-              within ".file-view" do
-                click_on I18n.t("sns.image_paste")
+            wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+              within "#addon-cms-agents-addons-file" do
+                within ".file-view" do
+                  click_on I18n.t("sns.image_paste")
+                end
               end
             end
 
@@ -377,9 +379,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-file")
           ss_upload_file attach_file_path
-          within "#addon-cms-agents-addons-file" do
-            within ".file-view" do
-              click_on I18n.t("sns.image_paste")
+          wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+            within "#addon-cms-agents-addons-file" do
+              within ".file-view" do
+                click_on I18n.t("sns.image_paste")
+              end
             end
           end
 

@@ -331,7 +331,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         within "form#item-form" do
           within ".column-value-cms-column-fileupload" do
-            expect(page).to have_css('.column-value-files', text: 'modify-1.gif')
+            expect(page).to have_css('.file-view', text: 'modify-1.gif')
 
             fill_in "item[column_values][][in_wrap][text]", with: ss_japanese_text
           end

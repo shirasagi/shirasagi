@@ -260,14 +260,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ss_upload_file(*files, addon: ".column-value-cms-column-fileupload")
 
-        within '.column-value-cms-column-fileupload .column-value-files' do
+        within '.column-value-cms-column-fileupload' do
           expect(page).to have_selector('.file-view', count: 1)
           expect(page).to have_css('.name', text: 'logo.png')
         end
 
         ss_upload_file(add_file, addon: ".column-value-cms-column-fileupload")
 
-        within '.column-value-cms-column-fileupload .column-value-files' do
+        within '.column-value-cms-column-fileupload' do
           expect(page).to have_selector('.file-view', count: 1)
           expect(page).to have_no_css('.name', text: 'logo.png')
           expect(page).to have_css('.name', text: 'ロゴ.png')
@@ -316,14 +316,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         ss_upload_file(*files, addon: ".column-value-cms-column-fileupload")
 
-        within '.column-value-cms-column-fileupload .column-value-files' do
+        within '.column-value-cms-column-fileupload' do
           expect(page).to have_selector('.file-view', count: 1)
           expect(page).to have_css('.name', text: 'logo.png')
         end
 
         ss_upload_file(add_file, addon: ".column-value-cms-column-fileupload")
 
-        within '.column-value-cms-column-fileupload .column-value-files' do
+        within '.column-value-cms-column-fileupload' do
           expect(page).to have_selector('.file-view', count: 1)
           expect(page).to have_no_css('.name', text: 'logo.png')
           expect(page).to have_css('.name', text: 'ロゴ.png')
