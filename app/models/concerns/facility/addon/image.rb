@@ -2,26 +2,12 @@ module Facility::Addon::Image
   module Model
     extend ActiveSupport::Concern
     extend SS::Translation
+    include SS::Relation::File
+
+    ACCEPTABLE_EXTS = %w(.gif .jpeg .jpg .png .webp).freeze
 
     included do
-      belongs_to :image, class_name: "SS::File"
-      permit_params :image_id
-
-      before_save :save_image
-      after_destroy :destroy_image
-    end
-
-    def save_image
-      image.update(site_id: site_id, model: "facility/file", owner_item: self, state: state) if image
-
-      if image_id_changed? && image_id_was
-        file = SS::File.where(id: image_id_was).first
-        file.destroy if file
-      end
-    end
-
-    def destroy_image
-      image.destroy if image
+      belongs_to_file :image, accepts: ACCEPTABLE_EXTS
     end
   end
 end

@@ -6,7 +6,7 @@ module SS::Relation::File
   DEFAULT_FILE_STATE = 'public'.freeze
 
   module ClassMethods
-    def belongs_to_file(name, class_name: nil, presence: false, static_state: nil, resizing: nil)
+    def belongs_to_file(name, class_name: nil, presence: false, static_state: nil, resizing: nil, accepts: nil)
       class_name ||= DEFAULT_FILE_CLASS_NAME
       class_name = class_name.to_s
 
@@ -25,7 +25,8 @@ module SS::Relation::File
         # relation が nil となる。このようなケースに対応する。
         before_validation { Changes.ensure_to_have_relation(self, name) }
       end
-      validate { Changes.validate_relation(self, name, presence: presence) }
+      accepts = Changes.normalize_accepts(accepts) if accepts.present?
+      validate { Changes.validate_relation(self, name, presence: presence, accepts: accepts) }
       before_save do
         Changes.save_relation_changes(self, name, class_name: class_name, default_resizing: resizing)
       end
@@ -95,12 +96,27 @@ module SS::Relation::File
       item.send("#{name}=", file)
     end
 
-    def validate_relation(item, name, presence:)
+    def normalize_accepts(accepts)
+      return accepts if accepts.blank?
+
+      accepts
+        .map { _1.downcase }
+        .map { _1.start_with?(".") ? _1 : ".#{_1}" }
+    end
+
+    def validate_relation(item, name, presence:, accepts:)
       file = item.send(name)
       if !file && presence
         upload_file = item.send("in_#{name}")
         if !upload_file
           item.errors.add("#{name}_id", :blank)
+        end
+      end
+      if file && accepts.present?
+        ext = ::File.extname(file.filename)
+        ext = ext.downcase if ext.present?
+        unless accepts.include?(ext)
+          item.errors.add("#{name}_id", :unable_to_accept_file, allowed_format_list: accepts.join(" / "))
         end
       end
 
