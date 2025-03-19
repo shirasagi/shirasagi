@@ -294,6 +294,36 @@ module SS
       })(...arguments)
     SCRIPT
 
+    WAIT_ALL_COLOR_PICKERS_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        const waitForColorPickerReady = function(element, resolve) {
+          var ariaBusy = $(element).attr("aria-busy");
+          if (ariaBusy === "false") {
+            console.log("color picker is ready");
+            resolve(true);
+            return;
+          }
+  
+          ckeditor.once("ss:colorPickerReady", function() {
+            console.log("color picker gets ready");
+            setTimeout(function() { resolve(true); }, 0);
+          });
+        };
+
+        const promises = [];
+        document.querySelectorAll(".js-color").forEach((element) => {
+          const promise = new Promise((resolveInner) => waitForColorPickerReady(element, resolveInner));
+          promises.push(promise);
+        });
+        if (promises.length === 0) {
+          resolve(true);
+          return;
+        }
+
+        Promise.all(promises).then(() => resolve(true));
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -746,6 +776,11 @@ module SS
     def wait_for_color_picker_ready(element)
       wait_for_js_ready
       page.evaluate_async_script(WAIT_COLOR_PICKER_READY_SCRIPT, element)
+    end
+
+    def wait_for_all_color_pickers_ready
+      wait_for_js_ready
+      page.evaluate_async_script(WAIT_ALL_COLOR_PICKERS_READY_SCRIPT)
     end
 
     def fill_in_color(locator, with:, visible: :all)
