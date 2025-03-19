@@ -65,6 +65,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
     fill_in "item_text", with: item_text
     check category.name
     click_button I18n.t("ss.buttons.publish_save")
+    wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
     within "table.opendata-datasets" do
       expect(page).to have_content item_name
@@ -84,6 +85,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
     end
 
     click_button I18n.t("ss.buttons.publish_save")
+    wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
     within "table.opendata-dataset" do
       expect(page).to have_content item_name2
@@ -93,6 +95,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
 
     click_link I18n.t('ss.buttons.delete')
     click_button I18n.t('ss.buttons.delete')
+    wait_for_notice I18n.t("ss.notice.deleted"), selector: "#ss-notice"
     expect(current_path).to eq index_url.path
 
     within "table.opendata-datasets" do
@@ -133,6 +136,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
       fill_in "item_text", with: item_text
       check category.name
       click_button I18n.t("ss.buttons.closed_save")
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
       click_link item_name
       click_link I18n.t("opendata.manage_resources")
@@ -143,8 +147,7 @@ describe "opendata_agents_nodes_my_dataset", type: :feature, dbscope: :example, 
       select license.name, from: "item[license_id]"
       fill_in "item[text]", with: resource_text
       click_button I18n.t("ss.buttons.request")
-
-      expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
       visit index_url
       click_link item_name
