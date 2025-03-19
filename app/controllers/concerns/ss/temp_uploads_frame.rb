@@ -6,7 +6,7 @@ module SS::TempUploadsFrame
 
     layout 'ss/item_frame'
 
-    helper_method :cur_node
+    helper_method :cur_node, :accepts
   end
 
   private
@@ -27,6 +27,18 @@ module SS::TempUploadsFrame
     @cur_node = Cms::Node.site(@cur_site).find(cid)
   end
   alias cur_node set_node
+
+  def accepts
+    return @accepts if instance_variable_defined?(:@accepts)
+
+    accepts = params[:accepts]
+    if accepts.blank? || accepts == "-"
+      @accepts = nil
+      return @accepts
+    end
+
+    @accepts = accepts.map(&:strip).select(&:present?).map { _1.downcase }
+  end
 
   public
 
@@ -50,8 +62,8 @@ module SS::TempUploadsFrame
   def create
     item_validator = SS::TempFileCreator.new(
       ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node)
-    if self.class.try(:only_image)
-      item_validator.only_image = true
+    if accepts.present?
+      item_validator.accepts = accepts
     end
 
     item_validator.attributes = params.require(:item).permit(

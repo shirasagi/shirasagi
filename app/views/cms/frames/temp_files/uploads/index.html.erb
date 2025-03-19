@@ -7,26 +7,26 @@
 %>
 
 <div class="cms-tabs">
-  <%= link_to tag.span(t("ss.buttons.upload"), class: "tab-name"), cms_frames_temp_files_uploads_path(s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
-  <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), cms_frames_temp_files_files_path(s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.upload"), class: "tab-name"), cms_frames_temp_files_uploads_path(accepts: accepts, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), cms_frames_temp_files_files_path(accepts: accepts, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
 </div>
 
 <div class="cms-temp-file" data-controller="ss--temp-file">
   <script type="application/json" data-ss--temp-file-target="option">
     <%==
       {
-        previewApi: url_for(action: :preview),
-        createUrl: url_for(action: :create),
+        previewApi: url_for(action: :preview, accepts: accepts),
+        createUrl: url_for(action: :create, accepts: accepts),
       }.to_json
     %>
   </script>
   <div class="search-ui-form cms-temp-file-drop-area" data-ss--temp-file-target="fileUploadDropArea">
-    <%= file_field_tag :in_files, multiple: true, class: "hide", id: nil, data: { "ss--temp-file-target" => "fileUploadShadow" } %>
+    <%= file_field_tag :in_files, multiple: true, class: "hide", id: nil, accept: accepts.try(:join, ","), data: { "ss--temp-file-target" => "fileUploadShadow" } %>
     <%= button_tag t("ss.buttons.select_files"), type: :button, name: 'select_file', class: "btn", data: { action: "ss--temp-file#openDialog", "ss--temp-file-target" => "fileUploadReal" } %>
     <span class="cms-temp-file-drop-notice"><%= t('ss.notice.file_droppable') %></span>
   </div>
 
-  <%= form_with scope: :item, url: url_for(action: :create), class: "hide cms-temp-file-waiting-item-form", data: { "ss--temp-file-target" => "fileUploadWaitingForm" } do |f| %>
+  <%= form_with scope: :item, url: url_for(action: :create, accepts: accepts), class: "hide cms-temp-file-waiting-item-form", data: { "ss--temp-file-target" => "fileUploadWaitingForm" } do |f| %>
     <%= error_messages_for :item %>
 
     <table class="index cms-temp-file-waiting-item-table">

@@ -7,7 +7,7 @@ class SS::TempFileSearchParam
   AVAILABLE_TYPES = %w(temp_file user_file cms_file).freeze
   AVAILABLE_NODE_BOUNDS = %w(current all).freeze
 
-  attr_accessor :ss_mode, :cur_site, :cur_user, :cur_node, :types, :node_bound, :keyword
+  attr_accessor :ss_mode, :cur_site, :cur_user, :cur_node, :accepts, :types, :node_bound, :keyword
 
   validates :node_bound, inclusion: { in: AVAILABLE_NODE_BOUNDS, allow_blank: true }
   validate :normalize_types
@@ -39,6 +39,12 @@ class SS::TempFileSearchParam
       end
 
       criteria = criteria.where("$and" => conditions)
+    end
+    if accepts.present?
+      content_types = accepts
+        .map { SS::MimeType.find(_1, nil) }.compact.uniq
+        .reject { _1 == SS::MimeType::DEFAULT_MIME_TYPE }
+      criteria = criteria.in(content_type: content_types) if content_types.present?
     end
 
     criteria

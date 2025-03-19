@@ -16,7 +16,7 @@ class SS::TempFileCreator
   attribute :quality, :string
   attribute :image_resizes_disabled, :string
   attribute :in_file
-  attribute :only_image, :boolean
+  attribute :accepts
 
   before_validation :normalize_name
   before_validation :normalize_filename
@@ -26,7 +26,7 @@ class SS::TempFileCreator
   validate :validate_name
   validate :validate_filename
   validate :validate_size
-  validate :validate_image
+  validate :validate_accepts
 
   def model
     @model ||= begin
@@ -147,11 +147,16 @@ class SS::TempFileCreator
     errors.add :base, message
   end
 
-  def validate_image
-    return unless only_image
+  def validate_accepts
+    return if accepts.blank?
 
-    unless SS::ImageConverter.image?(in_file)
-      message = I18n.t("errors.messages.image")
+    acceptable_content_types = accepts
+      .map { SS::MimeType.find(_1, nil) }.compact.uniq
+      .reject { _1 == SS::MimeType::DEFAULT_MIME_TYPE }
+
+    content_type = SS::ImageConverter.mime_type_from_head(in_file)
+    unless acceptable_content_types.include?(content_type)
+      message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: accepts.join(" / "))
       message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
 
       errors.add :base, message

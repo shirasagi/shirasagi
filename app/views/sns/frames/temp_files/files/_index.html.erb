@@ -30,6 +30,11 @@
         <% end %>
       </div>
       <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
+      <% if accepts.present? %>
+        <% accepts.each do |accept| %>
+          <%= hidden_field_tag "accepts[]", accept %>
+        <% end %>
+      <% end %>
       <%= f.text_field :keyword %>
       <%= f.submit  t("ss.buttons.search"), class: :btn %>
     <% end %>
@@ -49,10 +54,10 @@
       %>
       <% component.with_delete_action do %>
         <% if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t("ss.buttons.edit"), url_for(action: :edit, id: item, s: params[:s].try(:to_unsafe_h)), class: "btn", data: { turbo: true } %>
+          <%= link_to t("ss.buttons.edit"), url_for(action: :edit, id: item, accepts: accepts, s: params[:s].try(:to_unsafe_h)), class: "btn", data: { turbo: true } %>
         <% end %>
         <% if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-          <%= button_tag t("ss.buttons.delete"), type: :button, name: :delete, class: "btn", data: { href: url_for(action: :destroy, id: item, s: params[:s].try(:to_unsafe_h), format: :json), action: "ss--temp-file#deleteFile" } %>
+          <%= button_tag t("ss.buttons.delete"), type: :button, name: :delete, class: "btn", data: { href: url_for(action: :destroy, id: item, accepts: accepts, s: params[:s].try(:to_unsafe_h), format: :json), action: "ss--temp-file#deleteFile" } %>
         <% end %>
       <% end %>
       <%= render component %>

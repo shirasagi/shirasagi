@@ -8,7 +8,7 @@ module SS::TempFilesFrame
 
     before_action :set_search_params
 
-    helper_method :cur_node, :items
+    helper_method :cur_node, :accepts, :items
   end
 
   private
@@ -29,9 +29,22 @@ module SS::TempFilesFrame
     @cur_node = Cms::Node.site(@cur_site).find(cid)
   end
 
+  def accepts
+    return @accepts if instance_variable_defined?(:@accepts)
+
+    accepts = params[:accepts]
+    if accepts.blank? || accepts == "-"
+      @accepts = nil
+      return @accepts
+    end
+
+    @accepts = accepts.map(&:strip).select(&:present?).map { _1.downcase }
+  end
+
   def set_search_params
     @s ||= begin
-      s = SS::TempFileSearchParam.new(ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node)
+      s = SS::TempFileSearchParam.new(
+        ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node, accepts: accepts)
       if params.key?(:s)
         s.attributes = params[:s].permit(s.class.permitted_fields)
       end
@@ -51,7 +64,7 @@ module SS::TempFilesFrame
   end
 
   def crud_redirect_url
-    url_for(action: :index, cid: cur_node, s: params[:s].try(:to_unsafe_h))
+    url_for(action: :index, cid: cur_node, accepts: accepts, s: params[:s].try(:to_unsafe_h))
   end
 
   def set_item
