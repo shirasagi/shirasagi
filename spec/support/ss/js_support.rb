@@ -303,7 +303,7 @@ module SS
             resolve(true);
             return;
           }
-  
+
           ckeditor.once("ss:colorPickerReady", function() {
             console.log("color picker gets ready");
             setTimeout(function() { resolve(true); }, 0);
