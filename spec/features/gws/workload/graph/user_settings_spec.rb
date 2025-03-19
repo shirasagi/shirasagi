@@ -35,7 +35,7 @@ describe "gws_workload_graph_user_settings", type: :feature, dbscope: :example, 
 
         within "form#item-form" do
           select I18n.t("ss.options.state.hide"), from: "item[graph_state]"
-          fill_in "item[color]", with: "#000000"
+          fill_in_color "item[color]", with: "#000000"
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t('ss.notice.saved')

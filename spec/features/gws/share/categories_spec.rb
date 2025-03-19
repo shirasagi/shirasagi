@@ -21,9 +21,10 @@ describe "gws_share_categories", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t('ss.links.new')
       end
+      wait_for_all_color_pickers_ready
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[color]", with: color + "\n"
+        fill_in_color "item[color]", with: color
         click_button I18n.t('ss.buttons.save')
       end
 
@@ -39,6 +40,7 @@ describe "gws_share_categories", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_link I18n.t('ss.links.edit')
       end
+      wait_for_all_color_pickers_ready
       within "form#item-form" do
         fill_in "item[name]", with: name2
         click_button I18n.t('ss.buttons.save')

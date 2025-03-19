@@ -19,9 +19,10 @@ describe "gws_schedule_categories", type: :feature, dbscope: :example, js: true 
 
     it "#new" do
       visit new_path
+      wait_for_all_color_pickers_ready
       within "form#item-form" do
         fill_in "item[name]", with: "name"
-        fill_in "item[color]", with: "#000000" + "\n"
+        fill_in_color "item[color]", with: "#000000"
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq new_path
@@ -35,9 +36,10 @@ describe "gws_schedule_categories", type: :feature, dbscope: :example, js: true 
 
     it "#edit" do
       visit edit_path
+      wait_for_all_color_pickers_ready
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
-        fill_in "item[color]", with: "#ffffff" + "\n"
+        fill_in_color "item[color]", with: "#ffffff"
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).not_to eq sns_login_path
