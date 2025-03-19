@@ -207,12 +207,26 @@ this.SS_Theme = (function () {
         const theme = SS.config["theme"];
         let inlineStyle = '';
         for (cls in theme) {
-          let $btn = $theme.find("button." + $.escapeSelector(cls) + ", a." + $.escapeSelector(cls));
-          if (!$btn.length) continue;
+          const isButton = $theme.is('[data-tool-type="button"]');
+          let $el = $theme.find(" a." + $.escapeSelector(cls));
+          if (!$el.length) continue;
 
-          const btnId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
-          $btn.attr("id", btnId); // Assign the unique ID to the anchor
-          $btn.attr("data-ss-theme", cls);
+          if (isButton) {
+            $el.each(function () {
+              const $a = $(this);
+              const $btn = $("<button>", {
+                type: "button",
+                class: $a.attr("class"),
+                "data-ss-theme": cls,
+                text: $a.text()
+              });
+              $a.replaceWith($btn);
+            });
+            $el = $theme.find("button." + $.escapeSelector(cls));
+          }
+          const elId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
+          $el.attr("id", elId); // Assign the unique ID to the anchor
+          $el.attr("data-ss-theme", cls);
           const v = theme[cls];
           if (v["css_path"]) {
             const $styleSheetLink = $('<link />', {
@@ -230,10 +244,10 @@ this.SS_Theme = (function () {
           }
           if (v["default_theme"]) {
             $theme.find("[data-ss-theme]").removeClass('active');
-            $btn.addClass('active');
+            $el.addClass('active');
             SS_Theme.switchTheme(cls);
           }
-          $btn.on("click", function () {
+          $el.on("click", function () {
             const $this = $(this);
             const cls = $this.data("ss-theme");
             $themes.find("[data-ss-theme]").removeClass('active').attr('aria-pressed', false);
