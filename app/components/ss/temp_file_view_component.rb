@@ -1,8 +1,10 @@
 #frozen_string_literal: true
 
 class SS::TempFileViewComponent < SS::FileViewComponent
+  FILE_ATTRIBUTES = %i[id name humanized_name extname url image? thumb_url image_dimension].freeze
+
   def file_view_tag_data
-    data_hash = Hash[%i[id name humanized_name extname url image? thumb_url image_dimension].map { |m| [m, (file.send(m) rescue nil)] }]
+    data_hash = FILE_ATTRIBUTES.index_with { file.try(_1) }
     data_hash[:file_id] = file.id
     data_hash[:size] = number_to_human_size(file.size) rescue nil
     data_hash[:updated] = file.updated.to_i rescue nil
