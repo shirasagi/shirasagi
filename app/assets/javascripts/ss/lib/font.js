@@ -37,8 +37,21 @@ this.SS_Font = (function () {
   SS_Font.embed = function($elements, callback) {
     $elements.each(function() {
       const $el = $(this);
-      if ($el.is("button")) {
-        $el.off("click").on("click", callback);
+      if ($el.is('[data-tool-type="button"]')) {
+        SS.justOnce(this, "font", function() {
+          const $btn = $("<button/>", {
+            type: "button",
+            name: "voice",
+            "data-tool": $el.attr("data-tool")
+          });
+          if ($el.attr("data-tool") === "ss-medium") {
+            $btn.attr("aria-pressed", (SS_Font.size === 100 ? "true" : "false"));
+          }
+          $btn.on("click", callback);
+          $btn.html($el.html());
+
+          $el.replaceWith($btn);
+        });
       } else {
         SS.justOnce(this, "font", function() {
           const $anchor = $("<a/>", {href: "#"});
