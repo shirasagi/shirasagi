@@ -25,6 +25,7 @@ describe "gws_schedule_categories", type: :feature, dbscope: :example, js: true 
         fill_in_color "item[color]", with: "#000000"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -42,6 +43,7 @@ describe "gws_schedule_categories", type: :feature, dbscope: :example, js: true 
         fill_in_color "item[color]", with: "#ffffff"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -51,6 +53,7 @@ describe "gws_schedule_categories", type: :feature, dbscope: :example, js: true 
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(current_path).to eq index_path
     end
   end

@@ -27,6 +27,7 @@ describe "gws_circular_categories", type: :feature, dbscope: :example, js: true 
         fill_in "item[order]", with: order
         click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       category = Gws::Circular::Category.site(site).find_by(name: name)
       expect(category.name).to eq name
@@ -46,6 +47,7 @@ describe "gws_circular_categories", type: :feature, dbscope: :example, js: true 
         fill_in "item[name]", with: name2
         click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       category.reload
       expect(category.name).to eq name2
@@ -74,6 +76,7 @@ describe "gws_circular_categories", type: :feature, dbscope: :example, js: true 
       within "form#item-form" do
         click_on I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       category = Gws::Circular::Category.site(site).where(name: name).first
       expect(category).to be_nil
