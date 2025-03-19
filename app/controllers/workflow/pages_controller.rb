@@ -3,8 +3,10 @@ class Workflow::PagesController < ApplicationController
   include Cms::CrudFilter
 
   before_action :set_item, only: %i[request_update restart_update approve_update pull_up_update remand_update branch_create]
-  after_action :create_history_log, only: %i[request_update restart_update approve_update pull_up_update remand_update
-   request_cancel branch_update]
+
+  %i[request_update restart_update approve_update pull_up_update remand_update request_cancel branch_update].tap do |names|
+    after_action :create_history_log, only: names
+  end
 
   private
 
