@@ -52,7 +52,7 @@
       component = SS::FileSelectBoxComponent.new(
         ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item,
         field_name: "#{f.object_name}[][in_wrap][file_ids][]", html_editor_id: editor_id,
-        files: files.try(:reorder, id: -1), select_api_path: select_api_path, show_opendata: opendata_assoced
+        files: files.try(:reorder, id: -1) || [], select_api_path: select_api_path, show_opendata: opendata_assoced
       )
       render component
     %>

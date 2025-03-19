@@ -127,7 +127,7 @@ export default class extends SelectBoxController {
       confirmationOnDelete: i18next.t('ss.confirm.delete'),
       inUseConfirmation: i18next.t('ss.confirm.in_use')
     };
-    if (this.hasEditorIdValue) {
+    if (this.hasEditorIdValue && this.editorIdValue) {
       options.insertContent = (content) => this.#insertContent(content);
     }
     return options;
@@ -171,7 +171,8 @@ export default class extends SelectBoxController {
       }
     }
 
-    dispatchEvent(this.resultTarget, "change");
+    // イベント "ss:change" は、ss/confirm_unloading で補足され、unload 時に確認メッセージが表示される。
+    dispatchEvent(this.resultTarget, "ss:change");
   }
 
   _selectedIds() {

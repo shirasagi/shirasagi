@@ -1,15 +1,16 @@
 <div class="cms-addon-file" data-controller="ss--file-select-box">
   <script type="application/json" data-ss--file-select-box-target="option">
     <%==
-      {
+      option = {
         "uploadApi" => upload_api_path,
         "fileApi" => file_api_path,
         "selectApi" => select_api_path,
         "viewApi" => view_api_path,
         "dialogType" => "ss",
-        "selectionType" => selection_type,
-        "editorId" => html_editor_id
-      }.to_json
+        "selectionType" => selection_type
+      }
+      option["editorId"] = html_editor_id if html_editor_id.present?
+      option.to_json
     %>
   </script>
 
