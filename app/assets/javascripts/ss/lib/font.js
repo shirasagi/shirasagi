@@ -44,6 +44,7 @@ this.SS_Font = (function () {
             name: "voice",
             "data-tool": $el.attr("data-tool")
           });
+          // 「標準」のみ aria-pressed 属性を付与 https://github.com/shirasagi/shirasagi/pull/5572
           if ($el.attr("data-tool") === "ss-medium") {
             $btn.attr("aria-pressed", (SS_Font.size === 100 ? "true" : "false"));
           }
