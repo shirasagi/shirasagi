@@ -206,7 +206,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
           end
           wait_for_cbox_closed do
             within_dialog do
@@ -252,7 +254,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
           end
           wait_for_cbox_closed do
             within_dialog do
@@ -299,7 +303,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
           end
           wait_for_cbox_closed do
             within_dialog do
@@ -345,7 +351,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
           end
           wait_for_cbox_closed do
             within_dialog do
@@ -391,7 +399,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
           end
           within_dialog do
             within "form" do
@@ -433,7 +443,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
           end
           within_dialog do
             within "form" do
@@ -459,7 +471,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
 
-      context "with invalid filename with multibyte_filename_state disabled (case 1)" do
+      context "with invalid name with multibyte_filename_state disabled (case 1)" do
         let(:name1) { "セーフ.png" }
         let(:name2) { "name-#{unique_id}.png" }
 
@@ -479,7 +491,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
           end
           within_dialog do
             within "form" do
@@ -532,7 +546,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
 
-      context "with invalid filename with multibyte_filename_state disabled (case 2)" do
+      context "with invalid name with multibyte_filename_state disabled (case 2)" do
         let(:name) { "name-#{unique_id}.png" }
 
         before do
@@ -551,7 +565,14 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+            end
+          end
+          within_dialog do
+            within "form" do
+              click_on I18n.t("ss.buttons.upload")
+            end
           end
           within_dialog do
             within "form" do
@@ -593,9 +614,45 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
       end
+
+      context "with non image files" do
+        it do
+          visit article_pages_path(site: site, cid: node)
+          click_on I18n.t("ss.links.new")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
+          within "#item-form #addon-cms-agents-addons-thumb" do
+            wait_for_cbox_opened do
+              click_on I18n.t('ss.links.upload')
+            end
+          end
+          within_dialog do
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
+            end
+          end
+          within_dialog do
+            within "form" do
+              click_on I18n.t("ss.buttons.upload")
+            end
+          end
+          within_dialog do
+            within "form" do
+              within first(".index tbody tr") do
+                message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: SS::File::IMAGE_FILE_EXTENSIONS.join(" / "))
+                message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
+                expect(page).to have_css(".errors", text: message)
+              end
+            end
+          end
+
+          expect(Cms::TempFile.all.count).to eq 0
+        end
+      end
     end
 
-    context "via drop file with valid name" do
+    context "drop file with valid name" do
       it do
         visit article_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
@@ -608,7 +665,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
         within_dialog do
-          ss_drop_file ".search-ui-form", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            ss_drop_file ".search-ui-form", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          end
         end
         wait_for_cbox_closed do
           within_dialog do
@@ -635,7 +694,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       end
     end
 
-    context "via drop file with invalid name with multibyte_filename_state disabled" do
+    context "drop file with invalid name with multibyte_filename_state disabled" do
       let(:name) { "name-#{unique_id}.png" }
 
       before do
@@ -654,7 +713,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
         within_dialog do
-          ss_drop_file ".search-ui-form", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            ss_drop_file ".search-ui-form", "#{Rails.root}/spec/fixtures/ss/ロゴ.png"
+          end
         end
         within_dialog do
           within "form" do
@@ -694,6 +755,42 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(file.content_type).to eq "image/png"
           expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
         end
+      end
+    end
+
+    context "drop non image file" do
+      it do
+        visit article_pages_path(site: site, cid: node)
+        click_on I18n.t("ss.links.new")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        within "#item-form #addon-cms-agents-addons-thumb" do
+          wait_for_cbox_opened do
+            click_on I18n.t('ss.links.upload')
+          end
+        end
+        within_dialog do
+          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            ss_drop_file ".search-ui-form", "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
+          end
+        end
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+        within_dialog do
+          within "form" do
+            within first(".index tbody tr") do
+              message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: SS::File::IMAGE_FILE_EXTENSIONS.join(" / "))
+              message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
+              expect(page).to have_css(".errors", text: message)
+            end
+          end
+        end
+
+        expect(Cms::TempFile.all.count).to eq 0
       end
     end
   end
@@ -791,6 +888,43 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         expect(file.content_type).to eq "image/png"
         expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
       end
+    end
+  end
+
+  context "directly drop file with non image file" do
+    let(:name) { "name-#{unique_id}.png" }
+
+    before do
+      site.update!(multibyte_filename_state: 'disabled')
+    end
+
+    it do
+      visit article_pages_path(site: site, cid: node)
+      click_on I18n.t("ss.links.new")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
+      within "#item-form #addon-cms-agents-addons-thumb" do
+        wait_for_cbox_opened do
+          ss_drop_file ".ss-file-field-v2", "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
+        end
+      end
+      within_dialog do
+        within "form" do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        within "form" do
+          within first(".index tbody tr") do
+            message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: SS::File::IMAGE_FILE_EXTENSIONS.join(" / "))
+            message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
+            expect(page).to have_css(".errors", text: message)
+          end
+        end
+      end
+
+      expect(SS::File.all.count).to eq 0
     end
   end
 end

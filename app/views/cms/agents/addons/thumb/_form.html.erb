@@ -1,4 +1,4 @@
 <dl class="see mod-cms-thumb-form">
   <dt><%= @model.t :thumb_id %><%= @model.tt :thumb_id %></dt>
-  <dd><%= f.ss_file_field :thumb %></dd>
+  <dd><%= f.ss_file_field :thumb, accepts: SS::File::IMAGE_FILE_EXTENSIONS %></dd>
 </dl>
