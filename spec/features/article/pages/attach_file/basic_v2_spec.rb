@@ -54,7 +54,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         within first("form .index tbody tr") do
           fill_in "item[files][][name]", with: "modify.jpg"
-          fill_in "item[files][][filename]", with: "modify.jpg"
         end
         wait_for_cbox_closed do
           within "form" do
@@ -321,7 +320,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
           within first("form .index tbody tr") do
             fill_in "item[files][][name]", with: "modify-1.gif"
-            fill_in "item[files][][filename]", with: "modify-1.gif"
           end
           wait_for_cbox_closed do
             within "form" do

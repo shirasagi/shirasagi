@@ -10,7 +10,7 @@
 
   .cms-temp-file-waiting-item-table {
     display: grid;
-    grid-template-columns: 1fr 1fr auto auto;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
     padding: 5px;
 
@@ -46,7 +46,7 @@
     }
 
     .errors {
-      grid-column: 1 / span 4;
+      grid-column: 1 / span 3;
     }
   }
 }

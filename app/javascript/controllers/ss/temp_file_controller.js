@@ -233,14 +233,13 @@ export default class extends Controller {
       }
 
       const nameElement = item.querySelector(`[name="item[files][][name]"]`);
-      const filenameElement = item.querySelector(`[name="item[files][][filename]"]`);
-      if (!nameElement && !filenameElement) {
+      if (!nameElement) {
         continue;
       }
 
       const name = nameElement.value;
-      const filename = filenameElement.value;
 
+      const filename = item.querySelector(`[name="item[files][][filename]"]`)?.value;
       const resizing = item.querySelector(`[name="item[files][][resizing]"]`)?.value;
       const quality = item.querySelector(`[name="item[files][][quality]"]`)?.value;
       const imageResizesDisabled = item.querySelector(`[name="item[files][][image_resizes_disabled]"]`)?.value;

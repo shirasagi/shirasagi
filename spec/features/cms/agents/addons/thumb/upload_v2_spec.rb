@@ -193,7 +193,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     context "via file input" do
       context "usual case" do
         let(:name) { "name-#{unique_id}.png" }
-        let(:filename) { "filename-#{unique_id}.png" }
 
         it do
           visit article_pages_path(site: site, cid: node)
@@ -214,7 +213,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               within "form" do
                 within first(".index tbody tr") do
                   fill_in "item[files][][name]", with: name
-                  fill_in "item[files][][filename]", with: filename
                 end
 
                 click_on I18n.t("ss.buttons.upload")
@@ -232,7 +230,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             expect(file.node_id).to eq node.id
             expect(file.model).to eq "ss/temp_file"
             expect(file.name).to eq name
-            expect(file.filename).to eq filename
+            expect(file.filename).to eq name
             expect(file.content_type).to eq "image/png"
             expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
           end
@@ -241,7 +239,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       context "without ext (case 1)" do
         let(:name) { "name-#{unique_id}" }
-        let(:filename) { "filename-#{unique_id}" }
 
         it do
           visit article_pages_path(site: site, cid: node)
@@ -262,7 +259,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               within "form" do
                 within first(".index tbody tr") do
                   fill_in "item[files][][name]", with: name
-                  fill_in "item[files][][filename]", with: filename
                 end
 
                 click_on I18n.t("ss.buttons.upload")
@@ -280,7 +276,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             expect(file.node_id).to eq node.id
             expect(file.model).to eq "ss/temp_file"
             expect(file.name).to eq "#{name}.png"
-            expect(file.filename).to eq "#{filename}.png"
+            expect(file.filename).to eq "#{name}.png"
             expect(file.content_type).to eq "image/png"
             expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
           end
@@ -290,7 +286,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       # ピリオドで終了するケース
       context "without ext (case 2)" do
         let(:name) { "name-#{unique_id}." }
-        let(:filename) { "filename-#{unique_id}." }
 
         it do
           visit article_pages_path(site: site, cid: node)
@@ -311,7 +306,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               within "form" do
                 within first(".index tbody tr") do
                   fill_in "item[files][][name]", with: name
-                  fill_in "item[files][][filename]", with: filename
                 end
 
                 click_on I18n.t("ss.buttons.upload")
@@ -329,7 +323,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             expect(file.node_id).to eq node.id
             expect(file.model).to eq "ss/temp_file"
             expect(file.name).to eq "#{name}png"
-            expect(file.filename).to eq "#{filename}png"
+            expect(file.filename).to eq "#{name}png"
             expect(file.content_type).to eq "image/png"
             expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
           end
@@ -338,7 +332,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       context "with different ext" do
         let(:name) { "name-#{unique_id}.txt" }
-        let(:filename) { "filename-#{unique_id}.txt" }
 
         it do
           visit article_pages_path(site: site, cid: node)
@@ -359,7 +352,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               within "form" do
                 within first(".index tbody tr") do
                   fill_in "item[files][][name]", with: name
-                  fill_in "item[files][][filename]", with: filename
                 end
 
                 click_on I18n.t("ss.buttons.upload")
@@ -377,7 +369,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             expect(file.node_id).to eq node.id
             expect(file.model).to eq "ss/temp_file"
             expect(file.name).to eq "#{name}.png"
-            expect(file.filename).to eq "#{filename}.png"
+            expect(file.filename).to eq "#{name}.png"
             expect(file.content_type).to eq "image/png"
             expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
           end
@@ -386,7 +378,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       context "with empty name" do
         let(:name) { "" }
-        let(:filename) { "filename-#{unique_id}.png" }
 
         it do
           visit article_pages_path(site: site, cid: node)
@@ -406,7 +397,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             within "form" do
               within first(".index tbody tr") do
                 fill_in "item[files][][name]", with: name
-                fill_in "item[files][][filename]", with: filename
               end
 
               click_on I18n.t("ss.buttons.upload")
@@ -427,53 +417,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
 
-      context "with empty filename" do
-        let(:name) { "name-#{unique_id}.png" }
-        let(:filename) { "" }
-
-        it do
-          visit article_pages_path(site: site, cid: node)
-          click_on I18n.t("ss.links.new")
-          wait_for_all_ckeditors_ready
-          wait_for_all_turbo_frames
-
-          within "#item-form #addon-cms-agents-addons-thumb" do
-            wait_for_cbox_opened do
-              click_on I18n.t('ss.links.upload')
-            end
-          end
-          within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          end
-          within_dialog do
-            within "form" do
-              within first(".index tbody tr") do
-                fill_in "item[files][][name]", with: name
-                fill_in "item[files][][filename]", with: filename
-              end
-
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-
-          within_dialog do
-            within "form" do
-              within first(".index tbody tr") do
-                message = I18n.t("errors.messages.blank")
-                message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
-                expect(page).to have_css(".errors", text: message)
-              end
-            end
-          end
-
-          expect(SS::File.all.count).to eq 0
-        end
-      end
-
       context "with invalid name" do
         # 絵文字など Shift_JIS / CP932 の範囲外にある Unicode は禁止
         let(:name) { "😀.png" }
-        let(:filename) { "filename-#{unique_id}.png" }
 
         it do
           visit article_pages_path(site: site, cid: node)
@@ -493,7 +439,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             within "form" do
               within first(".index tbody tr") do
                 fill_in "item[files][][name]", with: name
-                fill_in "item[files][][filename]", with: filename
               end
 
               click_on I18n.t("ss.buttons.upload")
@@ -514,54 +459,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
       end
 
-      context "with invalid filename" do
-        let(:name) { "name-#{unique_id}.png" }
-        # '\', '/', ':', '*', '?', '"', '<', '>', '|' は使用禁止
-        let(:filename) { "aa||<<:?*?:>>||bb.png" }
-
-        it do
-          visit article_pages_path(site: site, cid: node)
-          click_on I18n.t("ss.links.new")
-          wait_for_all_ckeditors_ready
-          wait_for_all_turbo_frames
-
-          within "#item-form #addon-cms-agents-addons-thumb" do
-            wait_for_cbox_opened do
-              click_on I18n.t('ss.links.upload')
-            end
-          end
-          within_dialog do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          end
-          within_dialog do
-            within "form" do
-              within first(".index tbody tr") do
-                fill_in "item[files][][name]", with: name
-                fill_in "item[files][][filename]", with: filename
-              end
-
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-
-          within_dialog do
-            within "form" do
-              within first(".index tbody tr") do
-                message = I18n.t("errors.messages.invalid_filename")
-                message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
-                expect(page).to have_css(".errors", text: message)
-              end
-            end
-          end
-
-          expect(SS::File.all.count).to eq 0
-        end
-      end
-
       context "with invalid filename with multibyte_filename_state disabled (case 1)" do
         let(:name1) { "セーフ.png" }
         let(:name2) { "name-#{unique_id}.png" }
-        let(:filename) { "filename-#{unique_id}.png" }
 
         before do
           site.update!(multibyte_filename_state: 'disabled')
@@ -585,7 +485,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             within "form" do
               within first(".index tbody tr") do
                 fill_in "item[files][][name]", with: name1
-                fill_in "item[files][][filename]", with: filename
               end
 
               click_on I18n.t("ss.buttons.upload")
@@ -609,7 +508,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               within "form" do
                 within first(".index tbody tr") do
                   fill_in "item[files][][name]", with: name2
-                  fill_in "item[files][][filename]", with: filename
                 end
 
                 click_on I18n.t("ss.buttons.upload")
@@ -627,7 +525,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             expect(file.node_id).to eq node.id
             expect(file.model).to eq "ss/temp_file"
             expect(file.name).to eq name2
-            expect(file.filename).to eq filename
+            expect(file.filename).to eq name2
             expect(file.content_type).to eq "image/png"
             expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
           end
@@ -636,7 +534,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       context "with invalid filename with multibyte_filename_state disabled (case 2)" do
         let(:name) { "name-#{unique_id}.png" }
-        let(:filename) { "filename-#{unique_id}.png" }
 
         before do
           site.update!(multibyte_filename_state: 'disabled')
@@ -673,7 +570,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               within "form" do
                 within first(".index tbody tr") do
                   fill_in "item[files][][name]", with: name
-                  fill_in "item[files][][filename]", with: filename
                 end
 
                 click_on I18n.t("ss.buttons.upload")
@@ -691,7 +587,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             expect(file.node_id).to eq node.id
             expect(file.model).to eq "ss/temp_file"
             expect(file.name).to eq name
-            expect(file.filename).to eq filename
+            expect(file.filename).to eq name
             expect(file.content_type).to eq "image/png"
             expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
           end
@@ -741,7 +637,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
     context "via drop file with invalid name with multibyte_filename_state disabled" do
       let(:name) { "name-#{unique_id}.png" }
-      let(:filename) { "filename-#{unique_id}.png" }
 
       before do
         site.update!(multibyte_filename_state: 'disabled')
@@ -778,7 +673,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             within "form" do
               within first(".index tbody tr") do
                 fill_in "item[files][][name]", with: name
-                fill_in "item[files][][filename]", with: filename
               end
 
               click_on I18n.t("ss.buttons.upload")
@@ -796,7 +690,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           expect(file.node_id).to eq node.id
           expect(file.model).to eq "ss/temp_file"
           expect(file.name).to eq name
-          expect(file.filename).to eq filename
+          expect(file.filename).to eq name
           expect(file.content_type).to eq "image/png"
           expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
         end
@@ -843,7 +737,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
   context "directly drop file with invalid name" do
     let(:name) { "name-#{unique_id}.png" }
-    let(:filename) { "filename-#{unique_id}.png" }
 
     before do
       site.update!(multibyte_filename_state: 'disabled')
@@ -877,7 +770,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           within "form" do
             within first(".index tbody tr") do
               fill_in "item[files][][name]", with: name
-              fill_in "item[files][][filename]", with: filename
             end
 
             click_on I18n.t("ss.buttons.upload")
@@ -895,7 +787,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         expect(file.node_id).to eq node.id
         expect(file.model).to eq "ss/temp_file"
         expect(file.name).to eq name
-        expect(file.filename).to eq filename
+        expect(file.filename).to eq name
         expect(file.content_type).to eq "image/png"
         expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
       end

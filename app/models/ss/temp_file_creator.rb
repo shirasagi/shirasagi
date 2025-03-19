@@ -82,7 +82,12 @@ class SS::TempFileCreator
   end
 
   def normalize_filename
-    return if in_file.blank? || filename.blank?
+    return if in_file.blank?
+
+    if filename.blank?
+      return if name.blank?
+      self.filename = SS::FilenameUtils.convert(name, id: next_sequence)
+    end
 
     # 拡張子が存在しない、または、マッチしない場合、拡張子を追加する
     original_ext = File.extname(in_file.original_filename)
@@ -151,5 +156,11 @@ class SS::TempFileCreator
 
       errors.add :base, message
     end
+  end
+
+  def next_sequence
+    sequence = SS::Sequence.where(id: "ss_files_id").first
+    current_sequence = sequence.try(:value) || 0
+    current_sequence + 1
   end
 end

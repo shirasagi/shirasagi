@@ -222,7 +222,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     context "via file input" do
       context "usual case" do
         let(:name) { "name-#{unique_id}.png" }
-        let(:filename) { "filename-#{unique_id}.png" }
 
         it do
           visit article_pages_path(site: site, cid: node)
@@ -256,7 +255,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               within "form" do
                 within first(".index tbody tr") do
                   fill_in "item[files][][name]", with: name
-                  fill_in "item[files][][filename]", with: filename
                 end
 
                 click_on I18n.t("ss.buttons.upload")
@@ -276,7 +274,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             expect(file.node_id).to eq node.id
             expect(file.model).to eq "ss/temp_file"
             expect(file.name).to eq name
-            expect(file.filename).to eq filename
+            expect(file.filename).to eq name
             expect(file.content_type).to eq "image/png"
             expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
           end
