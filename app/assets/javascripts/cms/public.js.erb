@@ -389,16 +389,21 @@ SS_Voice.prototype.render = function ($voiceTag, index_1)  {
   const index = index_1;
   self.url = self.requestUrl();
 
-  if ($voiceTag.find('button').length === 0) {
+  if ($voiceTag.is('[data-tool-type="button"]')) {
+    const button = $('<button/>', {
+      type: "button",
+      name: "voice",
+      "aria-expanded": "false",
+      "aria-haspopup": "dialog"
+    }).html($voiceTag.html());
+    $voiceTag.html('');
+    button.appendTo($voiceTag);
+    self.$voiceTag = button;
+  } else {
     const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
     $voiceTag.html('');
     anchor.appendTo($voiceTag);
     self.$voiceTag = anchor;
-  } else {
-    self.$voiceTag = $voiceTag.find('button').first();
-    self.$voiceTag.attr("aria-expanded", "false");
-    self.$voiceTag.attr("aria-haspopup", "dialog");
-    self.$voiceTag.attr("aria-controls", null);
   }
 
   const controllerId = 'ss-voice-controller-' + index;
