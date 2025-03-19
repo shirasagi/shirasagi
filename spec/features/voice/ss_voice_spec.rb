@@ -31,12 +31,6 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
     it "renders a button with proper aria attributes" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("voice.ss_voice"))
-        if page.has_css?('button[aria-haspopup="dialog"]')
-          button = find('button[aria-haspopup="dialog"]')
-          expect(button['aria-expanded']).to eq('false')
-        else
-          next
-        end
         voice_controller = find('#ss-voice-controller-0')
         expect(voice_controller[:style]).to include("display: none")
       end
@@ -46,12 +40,6 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("voice.ss_voice"))
         click_on I18n.t("voice.ss_voice")
-        if page.has_css?('button[aria-haspopup="dialog"]')
-          button = find('button[aria-haspopup="dialog"]')
-          expect(button['aria-expanded']).to eq('true')
-        else
-          next
-        end
         voice_controller = find('#ss-voice-controller-0')
         expect(voice_controller[:style]).to include("")
       end
@@ -60,8 +48,50 @@ describe "voice/public_filter", type: :feature, dbscope: :example, js: true do
 
   context "with latest accessibility html" do
     let!(:part) { create :accessibility_tool, cur_site: site }
+    let!(:layout) { create_cms_layout part }
+    let!(:node) { create :article_node_page, cur_site: site, layout_id: layout.id }
+    let(:page_html) do
+      html = []
+      html << '<div id="content">'
+      html << '<span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>'
+      html << '<nav class="ss-adobe-reader">'
+      html << '  <div>PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。'
+      html << '  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。</div>'
+      html << '  <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>'
+      html << '</nav>'
+      html << '</div>'
+      html << '<footer>'
+      html << '  〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号'
+      html << '  <small>Copyright © City of Shirasagi All rights Reserved.</small>'
+      html << '</footer>'
+      html.join("\n")
+    end
+    let!(:item) { create :article_page, cur_site: site, cur_node: node, layout_id: layout.id, name: '&times;×', html: page_html }
 
-    it_behaves_like "voice"
+    before do
+      visit item.full_url
+    end
+
+    it "renders a button with proper aria attributes" do
+      within ".accessibility__tool-wrap:first-child" do
+        expect(page).to have_content(I18n.t("voice.ss_voice"))
+        button = find('button[aria-haspopup="dialog"]')
+        expect(button['aria-expanded']).to eq('false')
+        voice_controller = find('#ss-voice-controller-0')
+        expect(voice_controller[:style]).to include("display: none")
+      end
+    end
+
+    it "updates aria-expanded to true when opened" do
+      within ".accessibility__tool-wrap:first-child" do
+        expect(page).to have_content(I18n.t("voice.ss_voice"))
+        click_on I18n.t("voice.ss_voice")
+        button = find('button[aria-haspopup="dialog"]')
+        expect(button['aria-expanded']).to eq('true')
+        voice_controller = find('#ss-voice-controller-0')
+        expect(voice_controller[:style]).to include("")
+      end
+    end
   end
 
   context "with old accessibility html 1" do
