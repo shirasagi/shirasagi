@@ -278,6 +278,22 @@ module SS
       })(...arguments)
     SCRIPT
 
+    WAIT_COLOR_PICKER_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        var ariaBusy = $(element).attr("aria-busy");
+        if (ariaBusy === "false") {
+          console.log("color picker is ready");
+          resolve(true);
+          return;
+        }
+
+        ckeditor.once("ss:colorPickerReady", function() {
+          console.log("color picker gets ready");
+          setTimeout(function() { resolve(true); }, 0);
+        });
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -725,6 +741,20 @@ module SS
     def wait_for_all_ajax_parts
       result = page.evaluate_async_script(WAIT_FOR_ALL_AJAX_PARTS_SCRIPT)
       expect(result).to be_truthy
+    end
+
+    def wait_for_color_picker_ready(element)
+      wait_for_js_ready
+      page.evaluate_async_script(WAIT_COLOR_PICKER_READY_SCRIPT, element)
+    end
+
+    def fill_in_color(locator, with:, visible: :all)
+      element = find(:fillable_field, locator, visible: visible)
+
+      ret = wait_for_color_picker_ready(element)
+      expect(ret).to be_truthy
+
+      fill_in locator, with: with.to_s + "\n"
     end
   end
 end
