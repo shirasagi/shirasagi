@@ -8,9 +8,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     let(:page_html) do
       <<~HTML
         <html>
-          <head>
-            {{ ss_scripts }}
-          </head>
+          <head><%= render "cms/renderer/ss_scripts" %></head>
           <body>
             <div id="content">
               <span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>
@@ -130,9 +128,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     let(:page_html) do
       <<~HTML
         <html>
-          <head>
-            {{ ss_scripts }}
-          </head>
+          <head><%= render "cms/renderer/ss_scripts" %></head>
           <body>
             <div id="content">
               <span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>
@@ -217,10 +213,11 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     it "click blue button" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
+        expect(page).to have_content(I18n.t("ss.button.blue"))
         click_on I18n.t("ss.button.blue")
-        white_button = find('button#ss-theme-0-white')
-        blue_button  = find('button#ss-theme-0-blue')
-        black_button = find('button#ss-theme-0-black')
+        white_button = find('#ss-theme-0-white')
+        blue_button  = find('#ss-theme-0-blue')
+        black_button = find('#ss-theme-0-black')
         expect(white_button['aria-pressed']).to eq("false")
         expect(blue_button['aria-pressed']).to eq("true")
         expect(black_button['aria-pressed']).to eq("false")
@@ -231,10 +228,11 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     it "click black button" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
+        expect(page).to have_content(I18n.t("ss.button.black"))
         click_on I18n.t("ss.button.black")
-        white_button = find('button#ss-theme-0-white')
-        blue_button  = find('button#ss-theme-0-blue')
-        black_button = find('button#ss-theme-0-black')
+        white_button = find('#ss-theme-0-white')
+        blue_button  = find('#ss-theme-0-blue')
+        black_button = find('#ss-theme-0-black')
         expect(white_button['aria-pressed']).to eq("false")
         expect(blue_button['aria-pressed']).to eq("false")
         expect(black_button['aria-pressed']).to eq("true")
@@ -245,10 +243,11 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     it "click white button" do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
+        expect(page).to have_content(I18n.t("ss.button.black"))
         click_on I18n.t("ss.button.black")
-        white_button = find('button#ss-theme-0-white')
-        blue_button  = find('button#ss-theme-0-blue')
-        black_button = find('button#ss-theme-0-black')
+        white_button = find('#ss-theme-0-white')
+        blue_button  = find('#ss-theme-0-blue')
+        black_button = find('#ss-theme-0-black')
         expect(white_button['aria-pressed']).to eq("false")
         expect(blue_button['aria-pressed']).to eq("false")
         expect(black_button['aria-pressed']).to eq("true")
@@ -256,10 +255,11 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       end
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
+        expect(page).to have_content(I18n.t("ss.button.white"))
         click_on I18n.t("ss.button.white")
-        white_button = find('button#ss-theme-0-white')
-        blue_button  = find('button#ss-theme-0-blue')
-        black_button = find('button#ss-theme-0-black')
+        white_button = find('#ss-theme-0-white')
+        blue_button  = find('#ss-theme-0-blue')
+        black_button = find('#ss-theme-0-black')
         expect(white_button['aria-pressed']).to eq("true")
         expect(blue_button['aria-pressed']).to eq("false")
         expect(black_button['aria-pressed']).to eq("false")
