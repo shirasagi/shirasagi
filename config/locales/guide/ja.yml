@@ -4,6 +4,7 @@ ja:
     question: 質問
     procedure: 手続き
     transition: 選択肢
+    transition_settings: 選択肢の設定
     importer: インポート
     explanation: 説明
     diagnostic: 診断
@@ -39,6 +40,7 @@ ja:
       import_procedures: 手続きのインポート
       import_questions: 質問のインポート
       import_transitions: 選択肢のインポート
+      import_combinations: 統合インポート
       necessary: 必要
       optional_necessary: 任意必要
     views:

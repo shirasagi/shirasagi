@@ -2,6 +2,8 @@ class Guide::Question < Guide::Diagram::Point
   include Cms::SitePermission
   include Guide::Addon::Question
 
+  attr_accessor :row_index # for import
+
   set_permission_name "guide_questions"
 
   seqid :id

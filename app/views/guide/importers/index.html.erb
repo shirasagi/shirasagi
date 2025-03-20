@@ -3,6 +3,12 @@
     <%= t("guide.notice.import_summary") %>
   </div>
   <div class="guide-importer">
+    <h2><%= t("guide.labels.import_combinations") %></h2>
+    <%= link_to t("ss.buttons.download"), { action: :download_combinations } %>
+    |
+    <%= link_to t("ss.buttons.import"), { action: :import_combinations } %>
+  </div>
+  <div class="guide-importer">
     <h2>1. <%= t("guide.labels.import_procedures") %></h2>
     <%= link_to t("ss.buttons.download"), { action: :download_procedures } %>
     |

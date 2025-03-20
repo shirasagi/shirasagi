@@ -46,6 +46,7 @@ class Guide::ImportersController < ApplicationController
 
   def import_questions
     @item = Guide::Importer.new fix_params
+
     if request.get? || request.head?
       render :import
       return
@@ -72,6 +73,25 @@ class Guide::ImportersController < ApplicationController
 
     @item.attributes = get_params
     render_update @item.import_transitions, location: { action: :index }, render: { template: "import" }
+  end
+
+  def download_combinations
+    @item = Guide::Importer.new fix_params
+    filename = "guide#{@cur_node.id}_#{Time.zone.now.to_i}.csv"
+    encoding = "Shift_JIS"
+    send_enum(@item.combinations_enum, type: "text/csv; charset=#{encoding}", filename: filename)
+  end
+
+  def import_combinations
+    @item = Guide::Importer.new fix_params
+
+    if request.get? || request.head?
+      render :import
+      return
+    end
+
+    @item.attributes = get_params
+    render_update @item.import_combinations, location: { action: :index }, render: { template: "import" }
   end
 
   def download_template
