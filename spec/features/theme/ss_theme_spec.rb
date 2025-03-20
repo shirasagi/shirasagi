@@ -57,24 +57,25 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       page.execute_script <<-JS
         SS.config["theme"] = {
           white: {
-            css_path: "/themes/white.css",
-            font_color: "rgba(0, 0, 0, 1)",
-            background_color: "rgba(255, 255, 255, 1)",
+            css_path: "#{expected_themes[:white][:css_path]}",
+            font_color: "#{expected_themes[:white][:font_color]}",
+            background_color: "#{expected_themes[:white][:background_color]}",
             default_theme: true
           },
           blue: {
-            css_path: "/themes/blue.css",
-            font_color: "rgba(255, 255, 255, 1)",
-            background_color: "rgba(0, 0, 255, 1)"
+            css_path: "#{expected_themes[:blue][:css_path]}",
+            font_color: "#{expected_themes[:blue][:font_color]}",
+            background_color: "#{expected_themes[:blue][:background_color]}"
           },
           black: {
-            css_path: "/themes/black.css",
-            font_color: "rgba(255, 255, 255, 1)",
-            background_color: "rgba(0, 0, 0, 1)"
+            css_path: "#{expected_themes[:black][:css_path]}",
+            font_color: "#{expected_themes[:black][:font_color]}",
+            background_color: "#{expected_themes[:black][:background_color]}"
           }
         };
         SS_Theme.render();
       JS
+      wait_for_js_ready
     end
 
     # 対象要素の背景色を取得するヘルパー
@@ -95,7 +96,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
         click_on I18n.t("ss.button.blue")
-        expect(current_theme).to eq("rgba(0, 0, 255, 1)")
+        expect(current_theme).to eq(expected_themes[:blue][:background_color])
       end
     end
 
@@ -103,7 +104,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
         click_on I18n.t("ss.button.black")
-        expect(current_theme).to eq("rgba(0, 0, 0, 1)")
+        expect(current_theme).to eq(expected_themes[:black][:background_color])
       end
     end
 
@@ -111,17 +112,18 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
         click_on I18n.t("ss.button.black")
-        expect(current_theme).to eq("rgba(0, 0, 0, 1)")
+        expect(current_theme).to eq(expected_themes[:black][:background_color])
       end
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
         click_on I18n.t("ss.button.white")
-        expect(current_theme).to eq("rgba(255, 255, 255, 1)")
+        expect(current_theme).to eq(expected_themes[:white][:background_color])
       end
     end
   end
 
   context "with latest accessibility html" do
+    let!(:site) { cms_site }
     let!(:part) { create :accessibility_tool, cur_site: site }
     let!(:layout) { create_cms_layout part }
     let!(:node) { create :article_node_page, cur_site: site, cur_user: cms_user, layout_id: layout.id }
@@ -177,24 +179,25 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       page.execute_script <<-JS
         SS.config["theme"] = {
           white: {
-            css_path: "/themes/white.css",
-            font_color: "rgba(0, 0, 0, 1)",
-            background_color: "rgba(255, 255, 255, 1)",
+            css_path: "#{expected_themes[:white][:css_path]}",
+            font_color: "#{expected_themes[:white][:font_color]}",
+            background_color: "#{expected_themes[:white][:background_color]}",
             default_theme: true
           },
           blue: {
-            css_path: "/themes/blue.css",
-            font_color: "rgba(255, 255, 255, 1)",
-            background_color: "rgba(0, 0, 255, 1)"
+            css_path: "#{expected_themes[:blue][:css_path]}",
+            font_color: "#{expected_themes[:blue][:font_color]}",
+            background_color: "#{expected_themes[:blue][:background_color]}"
           },
           black: {
-            css_path: "/themes/black.css",
-            font_color: "rgba(255, 255, 255, 1)",
-            background_color: "rgba(0, 0, 0, 1)"
+            css_path: "#{expected_themes[:black][:css_path]}",
+            font_color: "#{expected_themes[:black][:font_color]}",
+            background_color: "#{expected_themes[:black][:background_color]}"
           }
         };
         SS_Theme.render();
       JS
+      wait_for_js_ready
     end
 
     # 対象要素の背景色を取得するヘルパー
@@ -221,7 +224,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         expect(white_button['aria-pressed']).to eq("false")
         expect(blue_button['aria-pressed']).to eq("true")
         expect(black_button['aria-pressed']).to eq("false")
-        expect(current_theme).to eq("rgba(0, 0, 255, 1)")
+        expect(current_theme).to eq(expected_themes[:blue][:background_color])
       end
     end
 
@@ -235,7 +238,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         expect(white_button['aria-pressed']).to eq("false")
         expect(blue_button['aria-pressed']).to eq("false")
         expect(black_button['aria-pressed']).to eq("true")
-        expect(current_theme).to eq("rgba(0, 0, 0, 1)")
+        expect(current_theme).to eq(expected_themes[:black][:background_color])
       end
     end
 
@@ -249,7 +252,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         expect(white_button['aria-pressed']).to eq("false")
         expect(blue_button['aria-pressed']).to eq("false")
         expect(black_button['aria-pressed']).to eq("true")
-        expect(current_theme).to eq("rgba(0, 0, 0, 1)")
+        expect(current_theme).to eq(expected_themes[:black][:background_color])
       end
       within ".accessibility__tool-wrap:first-child" do
         expect(page).to have_content(I18n.t("ss.bg_color"))
@@ -260,7 +263,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         expect(white_button['aria-pressed']).to eq("true")
         expect(blue_button['aria-pressed']).to eq("false")
         expect(black_button['aria-pressed']).to eq("false")
-        expect(current_theme).to eq("rgba(255, 255, 255, 1)")
+        expect(current_theme).to eq(expected_themes[:white][:background_color])
       end
     end
   end
