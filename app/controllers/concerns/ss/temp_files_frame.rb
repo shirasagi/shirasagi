@@ -60,7 +60,7 @@ module SS::TempFilesFrame
   end
 
   def items
-    @items ||= base_items.reorder(filename: 1).page(params[:page]).per(20)
+    @items ||= base_items.reorder(filename: 1).page(params[:page]).per(SS.max_files_per_page)
   end
 
   def crud_redirect_url

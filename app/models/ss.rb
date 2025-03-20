@@ -15,6 +15,8 @@ module SS
 
   mattr_accessor(:max_items_per_page) { 50 }
 
+  mattr_accessor(:max_files_per_page) { 20 }
+
   mattr_accessor(:file_upload_dialog) { :v2 }
 
   # 403

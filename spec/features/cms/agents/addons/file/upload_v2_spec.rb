@@ -167,6 +167,60 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       it_behaves_like "file dialog is"
     end
+
+    context "switch to other page and back" do
+      let(:filename) { "111-#{unique_id}.png" }
+
+      before do
+        @save_max_files_per_page = SS.max_files_per_page
+        SS.max_files_per_page = 3
+
+        3.times do |i|
+          tmp_ss_file(
+            Cms::TempFile, user: cms_user, site: site, node: node, basename: "zzz-#{i}-#{unique_id}.png",
+            contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
+          )
+        end
+
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within ".cms-tabs" do
+              click_on I18n.t('ss.buttons.upload')
+            end
+          end
+        end
+
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within ".cms-tabs" do
+              click_on I18n.t("ss.buttons.select_from_list")
+            end
+          end
+        end
+
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within ".pagination" do
+              click_on "2"
+            end
+          end
+        end
+
+        wait_for_event_fired "turbo:frame-load" do
+          within_dialog do
+            within ".pagination" do
+              click_on "1"
+            end
+          end
+        end
+      end
+
+      after do
+        SS.max_files_per_page = @save_max_files_per_page
+      end
+
+      it_behaves_like "file dialog is"
+    end
   end
 
   context "with cms/temp_file(ss/temp_file)" do
