@@ -6,27 +6,20 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     let!(:layout) { create_cms_layout part }
     let!(:node) { create :article_node_page, cur_site: site, cur_user: cms_user, layout_id: layout.id }
     let(:page_html) do
-      <<~HTML
-        <html>
-          <head><%= render "cms/renderer/ss_scripts" %></head>
-          <body>
-            <div id="content">
-              <span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>
-              <nav class="ss-adobe-reader">
-                <div>
-                  PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
-                  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
-                </div>
-                <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
-              </nav>
-            </div>
-            <footer>
-              〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号
-              <small>Copyright © City of Shirasagi All rights Reserved.</small>
-            </footer>
-          </body>
-        </html>
-      HTML
+      html = []
+      html << '<div id="content">'
+      html << '<span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>'
+      html << '<nav class="ss-adobe-reader">'
+      html << '  <div>PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。'
+      html << '  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。</div>'
+      html << '  <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>'
+      html << '</nav>'
+      html << '</div>'
+      html << '<footer>'
+      html << '  〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号'
+      html << '  <small>Copyright © City of Shirasagi All rights Reserved.</small>'
+      html << '</footer>'
+      html.join("\n")
     end
 
     let(:expected_themes) do
@@ -126,27 +119,20 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
     let!(:layout) { create_cms_layout part }
     let!(:node) { create :article_node_page, cur_site: site, cur_user: cms_user, layout_id: layout.id }
     let(:page_html) do
-      <<~HTML
-        <html>
-          <head><%= render "cms/renderer/ss_scripts" %></head>
-          <body>
-            <div id="content">
-              <span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>
-              <nav class="ss-adobe-reader">
-                <div>
-                  PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。
-                  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。
-                </div>
-                <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>
-              </nav>
-            </div>
-            <footer>
-              〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号
-              <small>Copyright © City of Shirasagi All rights Reserved.</small>
-            </footer>
-          </body>
-        </html>
-      HTML
+      html = []
+      html << '<div id="content">'
+      html << '<span class="percent-escaped-url">http%3A%2F%2F127.0.0.1%3A3000</span>'
+      html << '<nav class="ss-adobe-reader">'
+      html << '  <div>PDFファイルをご覧いただくためには、Adobe Readerのプラグイン（無償）が必要となります。'
+      html << '  お持ちでない場合は、お使いの機種とスペックに合わせたプラグインをインストールしてください。</div>'
+      html << '  <a href="http://get.adobe.com/jp/reader/">Adobe Readerをダウンロードする</a>'
+      html << '</nav>'
+      html << '</div>'
+      html << '<footer>'
+      html << '  〒000-0000　大鷺県シラサギ市小鷺町1丁目1番地1号'
+      html << '  <small>Copyright © City of Shirasagi All rights Reserved.</small>'
+      html << '</footer>'
+      html.join("\n")
     end
 
     let(:expected_themes) do
