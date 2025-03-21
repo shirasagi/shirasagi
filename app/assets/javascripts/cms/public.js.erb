@@ -210,7 +210,7 @@ this.SS_Theme = (function () {
         let inlineStyle = '';
         for (cls in theme) {
           const isButton = $theme.is('[data-tool-type="button"]');
-          let $el = $theme.find(" a." + $.escapeSelector(cls));
+          let $el = $theme.find(" a." + $.escapeSelector(cls), " button." + $.escapeSelector(cls));
           if (!$el.length) continue;
 
           if (isButton) {
@@ -218,6 +218,7 @@ this.SS_Theme = (function () {
               const $a = $(this);
               const $btn = $("<button>", {
                 type: "button",
+                name: $a.attr("class"),
                 class: $a.attr("class"),
                 "data-ss-theme": cls,
                 text: $a.text()
