@@ -203,6 +203,8 @@ this.SS_Theme = (function () {
     $themes.each(function(index) {
       const $theme = $(this);
       SS.justOnce(this, "ss-theme", function() {
+        $theme.attr("aria-busy", "true");
+
         let cls;
         const theme = SS.config["theme"];
         let inlineStyle = '';
@@ -276,6 +278,8 @@ this.SS_Theme = (function () {
           $theme.find('[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active').attr('aria-pressed', true);
           SS_Theme.switchTheme(cls);
         }
+
+        $theme.attr("aria-busy", "false").trigger("ss:ready");
       });
     });
   };
