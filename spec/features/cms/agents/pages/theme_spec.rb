@@ -25,7 +25,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
   end
   let!(:theme_black) do
     create(
-      :cms_theme_template, :cms_theme_template_black, cur_site: site, order: 20, state: "public", default_theme: "disabled",
+      :cms_theme_template, :cms_theme_template_black, cur_site: site, order: 20, state: "public", default_theme: "disabled"
     )
   end
 
