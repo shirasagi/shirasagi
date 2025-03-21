@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "kana/public_filter", type: :feature, dbscope: :example, js: true do
+describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:part1) { create :accessibility_tool, cur_site: site }
   let!(:part2) { create :accessibility_tool_compat1, cur_site: site }
