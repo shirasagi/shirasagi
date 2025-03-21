@@ -48,6 +48,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
       Gws::Affair::LeaveFile.site(site).find_by(reason: reason)
     end
@@ -62,6 +63,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
 
         click_on item.name
 
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
@@ -126,22 +128,35 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       within ".gws-attendance" do
         within "table.index" do
           expect(page).to have_link user545.long_name
+          expect(page).to have_no_link user638.long_name
         end
+      end
 
+      within ".gws-attendance" do
         # change group
         within "form" do
           select user638.groups.first.name, from: 'group_id'
           click_on I18n.t('ss.buttons.search')
         end
-        wait_for_js_ready
-
-        within "table.index" do
-          expect(page).to have_link user638.long_name
-          click_on user638.long_name
-        end
-        wait_for_js_ready
       end
 
+      wait_for_js_ready
+
+      within ".gws-attendance" do
+        within "table.index" do
+          expect(page).to have_link user638.long_name
+          expect(page).to have_no_link user545.long_name
+        end
+      end
+      within ".gws-attendance" do
+        within "table.index" do
+          click_on user638.long_name
+        end
+      end
+
+      wait_for_js_ready
+
+      expect(page).to have_css("#addon-basic", text: user638.long_name)
       within ".gws-attendance" do
         # change year month
         within "form" do
@@ -149,8 +164,9 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/attendance.month", count: start_at.month), from: 'month'
           click_on I18n.t('ss.buttons.search')
         end
-        wait_for_js_ready
       end
+
+      wait_for_js_ready
 
       within "#annual-leave-setting" do
         expect(page).to have_css(".leave-dates",
