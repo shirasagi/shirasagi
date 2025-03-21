@@ -15,20 +15,17 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true do
   end
   let!(:theme_white) do
     create(
-      :cms_theme_template, cur_site: site, name: "白", class_name: "white", order: 0, state: "public", default_theme: "enabled",
-      high_contrast_mode: "disabled", font_color: nil, background_color: nil, css_path: nil
+      :cms_theme_template, :cms_theme_template_white, cur_site: site, order: 0, state: "public", default_theme: "enabled"
     )
   end
   let!(:theme_blue) do
     create(
-      :cms_theme_template, cur_site: site, name: "青", class_name: "blue", order: 10, state: "public", default_theme: "disabled",
-      high_contrast_mode: "enabled", font_color: "#fff", background_color: "#06c", css_path: nil
+      :cms_theme_template, :cms_theme_template_blue, cur_site: site, order: 10, state: "public", default_theme: "disabled"
     )
   end
   let!(:theme_black) do
     create(
-      :cms_theme_template, cur_site: site, name: "黒", class_name: "black", order: 20, state: "public", default_theme: "disabled",
-      high_contrast_mode: "disabled", font_color: nil, background_color: nil, css_path: "/css/black.css"
+      :cms_theme_template, :cms_theme_template_black, cur_site: site, order: 20, state: "public", default_theme: "disabled",
     )
   end
 
@@ -36,25 +33,26 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true do
     ::FileUtils.rm_f item.path
 
     visit item.full_url
+    wait_for_all_themes_ready
     expect(page).to have_css(".accessibility__tool-wrap", count: 2)
     expect(page).to have_css("body[data-ss-theme='#{theme_white.class_name}']")
     within all(".accessibility__tool-wrap")[0] do
-      expect(page).to have_css(".white", text: theme_white.name)
-      expect(page).to have_css(".blue", text: theme_blue.name)
-      expect(page).to have_css(".black", text: theme_black.name)
+      expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
+      expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
+      expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
 
-      expect(page).to have_css(".white.active")
-      expect(page).to have_no_css(".blue.active")
-      expect(page).to have_no_css(".black.active")
+      expect(page).to have_css(".#{theme_white.class_name}.active")
+      expect(page).to have_no_css(".#{theme_blue.class_name}.active")
+      expect(page).to have_no_css(".#{theme_black.class_name}.active")
     end
     within all(".accessibility__tool-wrap")[1] do
-      expect(page).to have_css(".white", text: theme_white.name)
-      expect(page).to have_css(".blue", text: theme_blue.name)
-      expect(page).to have_css(".black", text: theme_black.name)
+      expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
+      expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
+      expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
 
-      expect(page).to have_css(".white.active")
-      expect(page).to have_no_css(".blue.active")
-      expect(page).to have_no_css(".black.active")
+      expect(page).to have_css(".#{theme_white.class_name}.active")
+      expect(page).to have_no_css(".#{theme_blue.class_name}.active")
+      expect(page).to have_no_css(".#{theme_black.class_name}.active")
     end
 
     within all(".accessibility__tool-wrap")[0] do
@@ -63,45 +61,46 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true do
 
     expect(page).to have_css("body[data-ss-theme='#{theme_blue.class_name}']")
     within all(".accessibility__tool-wrap")[0] do
-      expect(page).to have_css(".white", text: theme_white.name)
-      expect(page).to have_css(".blue", text: theme_blue.name)
-      expect(page).to have_css(".black", text: theme_black.name)
+      expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
+      expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
+      expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
 
-      expect(page).to have_no_css(".white.active")
-      expect(page).to have_css(".blue.active")
-      expect(page).to have_no_css(".black.active")
+      expect(page).to have_no_css(".#{theme_white.class_name}.active")
+      expect(page).to have_css(".#{theme_blue.class_name}.active")
+      expect(page).to have_no_css(".#{theme_black.class_name}.active")
     end
     within all(".accessibility__tool-wrap")[1] do
-      expect(page).to have_css(".white", text: theme_white.name)
-      expect(page).to have_css(".blue", text: theme_blue.name)
-      expect(page).to have_css(".black", text: theme_black.name)
+      expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
+      expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
+      expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
 
-      expect(page).to have_no_css(".white.active")
-      expect(page).to have_css(".blue.active")
-      expect(page).to have_no_css(".black.active")
+      expect(page).to have_no_css(".#{theme_white.class_name}.active")
+      expect(page).to have_css(".#{theme_blue.class_name}.active")
+      expect(page).to have_no_css(".#{theme_black.class_name}.active")
     end
 
     # reload したり別ページに遷移した場合、セッションから選択が復元されるはず
     visit item.full_url
+    wait_for_all_themes_ready
     expect(page).to have_css(".accessibility__tool-wrap", count: 2)
     expect(page).to have_css("body[data-ss-theme='#{theme_blue.class_name}']")
     within all(".accessibility__tool-wrap")[0] do
-      expect(page).to have_css(".white", text: theme_white.name)
-      expect(page).to have_css(".blue", text: theme_blue.name)
-      expect(page).to have_css(".black", text: theme_black.name)
+      expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
+      expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
+      expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
 
-      expect(page).to have_no_css(".white.active")
-      expect(page).to have_css(".blue.active")
-      expect(page).to have_no_css(".black.active")
+      expect(page).to have_no_css(".#{theme_white.class_name}.active")
+      expect(page).to have_css(".#{theme_blue.class_name}.active")
+      expect(page).to have_no_css(".#{theme_black.class_name}.active")
     end
     within all(".accessibility__tool-wrap")[1] do
-      expect(page).to have_css(".white", text: theme_white.name)
-      expect(page).to have_css(".blue", text: theme_blue.name)
-      expect(page).to have_css(".black", text: theme_black.name)
+      expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
+      expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
+      expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
 
-      expect(page).to have_no_css(".white.active")
-      expect(page).to have_css(".blue.active")
-      expect(page).to have_no_css(".black.active")
+      expect(page).to have_no_css(".#{theme_white.class_name}.active")
+      expect(page).to have_css(".#{theme_blue.class_name}.active")
+      expect(page).to have_no_css(".#{theme_black.class_name}.active")
     end
 
     within all(".accessibility__tool-wrap")[1] do
@@ -110,14 +109,14 @@ describe "kana/public_filter", type: :feature, dbscope: :example, js: true do
 
     expect(page).to have_css("body[data-ss-theme='#{theme_black.class_name}']")
     within all(".accessibility__tool-wrap")[0] do
-      expect(page).to have_no_css(".white.active")
-      expect(page).to have_no_css(".blue.active")
-      expect(page).to have_css(".black.active")
+      expect(page).to have_no_css(".#{theme_white.class_name}.active")
+      expect(page).to have_no_css(".#{theme_blue.class_name}.active")
+      expect(page).to have_css(".#{theme_black.class_name}.active")
     end
     within all(".accessibility__tool-wrap")[1] do
-      expect(page).to have_no_css(".white.active")
-      expect(page).to have_no_css(".blue.active")
-      expect(page).to have_css(".black.active")
+      expect(page).to have_no_css(".#{theme_white.class_name}.active")
+      expect(page).to have_no_css(".#{theme_blue.class_name}.active")
+      expect(page).to have_css(".#{theme_black.class_name}.active")
     end
   end
 end
