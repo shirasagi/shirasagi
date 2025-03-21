@@ -640,7 +640,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           within_dialog do
             within "form" do
               within first(".index tbody tr") do
-                message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: SS::File::IMAGE_FILE_EXTENSIONS.join(" / "))
+                list = SS::File::IMAGE_FILE_EXTENSIONS.join(" / ")
+                message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: list)
                 message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
                 expect(page).to have_css(".errors", text: message)
               end
