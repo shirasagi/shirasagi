@@ -41,7 +41,7 @@ this.SS_Font = (function () {
         SS.justOnce(this, "font", function() {
           const $btn = $("<button/>", {
             type: "button",
-            name: "voice",
+            name: $el.attr("data-tool"),
             "data-tool": $el.attr("data-tool")
           });
           // 「標準」のみ aria-pressed 属性を付与 https://github.com/shirasagi/shirasagi/pull/5572
