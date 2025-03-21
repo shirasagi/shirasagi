@@ -29,6 +29,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
 
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
@@ -48,6 +49,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         item.reload
 
@@ -90,6 +93,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
 
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
@@ -134,6 +138,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         item.reload
 
@@ -157,6 +163,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         # re-open for edit
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
           within "#addon-map-agents-addons-page" do
@@ -242,6 +249,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_cms_page_path(site: site, id: item)
+      wait_for_all_ckeditors_ready
 
       within "#item-form" do
         ensure_addon_opened("#addon-map-agents-addons-page")
@@ -258,6 +266,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_turbo_frame "#workflow-branch-frame"
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       item.reload
 
