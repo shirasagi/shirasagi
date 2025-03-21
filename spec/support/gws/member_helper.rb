@@ -7,7 +7,9 @@ def gws_select_member(user, form_selector: nil, addon_selector: nil)
 
   within form_selector do
     within addon_selector do
-      wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
+      within ".member-users" do
+        wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
+      end
     end
   end
   within_cbox do
@@ -26,7 +28,9 @@ def gws_select_member_group(group, form_selector: nil, addon_selector: nil)
 
   within form_selector do
     within addon_selector do
-      wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
+      within ".member-groups" do
+        wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
+      end
     end
   end
   within_cbox do
@@ -45,7 +49,9 @@ def gws_select_member_custom_group(custom_group, form_selector: nil, addon_selec
 
   within form_selector do
     within addon_selector do
-      wait_for_cbox_opened { click_on I18n.t("gws.apis.custom_groups.index") }
+      within ".member-custom-groups" do
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.custom_groups.index") }
+      end
     end
   end
   within_cbox do
