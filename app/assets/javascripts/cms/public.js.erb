@@ -208,22 +208,22 @@ this.SS_Theme = (function () {
         let cls;
         const theme = SS.config["theme"];
         let inlineStyle = '';
-        for (cls in theme) {
-          const isButton = $theme.is('[data-tool-type="button"]');
-          let $el = $theme.find(" a." + $.escapeSelector(cls), " button." + $.escapeSelector(cls));
+        const isButton = $theme.is('[data-tool-type="button"]');
+        for (const cls in theme) {
+          let $el = $theme.find("." + $.escapeSelector(cls));
           if (!$el.length) continue;
 
           if (isButton) {
             $el.each(function () {
-              const $a = $(this);
+              const $el = $(this);
               const $btn = $("<button>", {
                 type: "button",
-                name: $a.attr("class"),
-                class: $a.attr("class"),
+                name: $el.attr("class"),
+                class: $el.attr("class"),
                 "data-ss-theme": cls,
-                text: $a.text()
+                text: $el.text()
               });
-              $a.replaceWith($btn);
+              $el.replaceWith($btn);
             });
             $el = $theme.find("button." + $.escapeSelector(cls));
           }
