@@ -43,10 +43,6 @@ ja:
     wave_dash: ～
     color: 表示色
     bg_color: 背景色
-    button:
-      white: 白
-      blue: 青
-      black: 黒
     contrast_ratio: コントラスト比
     search_on: "%{name}で検索する"
     replace: 差し替え

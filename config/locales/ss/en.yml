@@ -43,10 +43,6 @@ en:
     wave_dash: ～
     color: Display color
     bg_color: Background color
-    button:
-      white: white
-      blue: blue
-      black: black
     contrast_ratio: Contrast ratio
     search_on: Search in %{name}
     replace: Replace
