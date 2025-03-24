@@ -21,6 +21,7 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::Thumb
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeTwitterPostSetting
     include Cms::Addon::NodeLinePostSetting
@@ -41,6 +42,7 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::Thumb
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeTwitterPostSetting
     include Cms::Addon::NodeLinePostSetting
