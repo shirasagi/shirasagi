@@ -62,10 +62,10 @@ this.SS_ListUI = (function () {
       var $list = $(this);
       return $list.toggleClass("checked", $list.prop("checked"));
     });
-    $el.on("mouseup", ".list-item", function (e) {
+    $el.on("mouseup", ".list-item", function (ev) {
       var $list = $(this);
       var $menu, offset, relX, relY;
-      var $target = $(e.target);
+      var $target = $(ev.target);
       if ($target.is('a') || $target.closest('a,label').length) {
         return;
       }
@@ -75,15 +75,15 @@ this.SS_ListUI = (function () {
       }
       if ($menu.hasClass("tap-menu-relative")) {
         offset = $list.offset();
-        relX = e.pageX - offset.left;
-        relY = e.pageY - offset.top;
+        relX = ev.pageX - offset.left;
+        relY = ev.pageY - offset.top;
       } else {
-        relX = e.pageX;
-        relY = e.pageY;
+        relX = ev.pageX;
+        relY = ev.pageY;
       }
       return $menu.css("left", relX - $menu.width() + 5).css("top", relY).show();
     });
-    $el.on("mouseleave", ".list-item", function (e) {
+    $el.on("mouseleave", ".list-item", function (_ev) {
       return $el.find(".tap-menu").hide();
     });
     $el.find(".list-head .destroy-all").each(function() {
