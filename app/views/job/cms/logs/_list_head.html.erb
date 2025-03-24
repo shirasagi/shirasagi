@@ -11,19 +11,19 @@
   end
 %>
 <div class="list-head">
-  <%= form_tag({ action: :index }, { method: "GET", class: :search }) do %>
+  <%= form_tag({ action: :index }, { method: "GET", class: :search, data: { turbo: true } }) do %>
     <div class="list-head-action">
       <% pressed = origin && now.to_date == origin.to_date %>
-      <%= ss_button_to(t('gws.history.days.today'), url_for(action: :index, ymd: now.strftime('%Y%m%d')), method: "GET", class: "btn", style: 'margin-right: 12px;', aria: { pressed: pressed }, disabled: pressed) %>
-      <%= ss_button_to(t('gws.history.days.prev_day'), url_for(action: :index, ymd: prev_day.strftime('%Y%m%d')), method: "GET", class: "btn") %>
-      <%= ss_date_field_tag("ymd", origin, { min_date: min_updated, max_date: 0 }, { id: nil }) %>
-      <%= ss_button_to(t('gws.history.days.next_day'), url_for(action: :index, ymd: next_day.strftime('%Y%m%d')), method: "GET", class: "btn", disabled: now < next_day) %>
+      <%= ss_button_to(t('gws.history.days.today'), url_for(action: :index, ymd: now.strftime('%Y%m%d')), method: "GET", class: "btn", style: 'margin-right: 12px;', aria: { pressed: pressed }, disabled: pressed, data: { turbo: true }) %>
+      <%= ss_button_to(t('gws.history.days.prev_day'), url_for(action: :index, ymd: prev_day.strftime('%Y%m%d')), method: "GET", class: "btn", data: { turbo: true }) %>
+      <%= ss_date_field_tag("ymd", origin, { min_date: min_updated, max_date: 0 }, { id: nil, data: { controller: "ss--submit-on-change" } }) %>
+      <%= ss_button_to(t('gws.history.days.next_day'), url_for(action: :index, ymd: next_day.strftime('%Y%m%d')), method: "GET", class: "btn", disabled: now < next_day, data: { turbo: true }) %>
     </div>
     <% if class_name_options.present? %>
       <div class="list-head-action" style="margin-left: 18px">
         <%=
           option_tags = render SS::OptionsForSelectComponent.new(options: class_name_options, selected: @s.class_name)
-          select_tag "s[class_name]", option_tags, id: nil, include_blank: true
+          select_tag "s[class_name]", option_tags, id: nil, include_blank: true, data: { controller: "ss--submit-on-change" }
         %>
       </div>
     <% end %>
@@ -33,7 +33,13 @@
 </div>
 
 <%= jquery do %>
+  var handled = false;
   $('.list-head input[name="ymd"]').on('ss:changeDateTime', function(ev, dp, $input) {
+    if (handled) {
+      return;
+    }
+
+    handled = true;
     var ymd = SS_DateTimePicker.momentValue($input);
     if (!ymd) {
       return;
@@ -43,12 +49,18 @@
     var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
     url = url.replace(':ymd', ymd);
     url = url.replace('//', '/')
+    var $anchor = $("<a/>", { href: url });
+    $anchor.attr("data-turbo", true);
 
-    setTimeout(function() {
-      location.href = url;
-    }, 11);
-  });
-  $('.list-head select[name="s[class_name]"]').on("change", function() {
-    $(this).closest("form")[0].requestSubmit();
+    var appendTo;
+    var $turboFrameElement = $input.closest("turbo-frame");
+    if ($turboFrameElement[0]) {
+      appendTo = $turboFrameElement[0];
+    }
+    if (!appendTo) {
+      appendTo = document.body;
+    }
+    $anchor.appendTo(appendTo);
+    $anchor[0].click();
   });
 <% end %>
