@@ -1,10 +1,10 @@
 <% @tap_menu = proc do |item| %>
-  <%= link_to t('ss.links.show'), action: :show, id: item %>
+  <%= link_to t('ss.links.show'), url_for(action: :show, id: item), data: { turbo: false } %>
 <% end %>
 
 <% @index_title = proc do |item| %>
   <% args = item.args.join(",") rescue nil %>
-  <%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", action: :show, id: item) %>
+  <%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", url_for(action: :show, id: item), data: { turbo: false }) %>
 <% end %>
 
 <% @index_meta = proc do |item| %>

@@ -58,34 +58,33 @@ this.SS_ListUI = (function () {
       });
       $(this).trigger("ss:checked-all-list-items");
     });
-    $el.find(".list-item").each(function () {
-      var list;
-      list = $(this);
-      list.find("input:checkbox").on("change", function () {
-        return list.toggleClass("checked", $(this).prop("checked"));
-      });
-      list.on("mouseup", function (e) {
-        var menu, offset, relX, relY;
-        if ($(e.target).is('a') || $(e.target).closest('a,label').length) {
-          return;
-        }
-        menu = list.find(".tap-menu");
-        if (menu.is(':visible')) {
-          return menu.hide();
-        }
-        if (menu.hasClass("tap-menu-relative")) {
-          offset = $(this).offset();
-          relX = e.pageX - offset.left;
-          relY = e.pageY - offset.top;
-        } else {
-          relX = e.pageX;
-          relY = e.pageY;
-        }
-        return menu.css("left", relX - menu.width() + 5).css("top", relY).show();
-      });
-      return list.on("mouseleave", function () {
-        return $el.find(".tap-menu").hide();
-      });
+    $el.on("change", ".list-item input:checkbox", function () {
+      var $list = $(this);
+      return $list.toggleClass("checked", $list.prop("checked"));
+    });
+    $el.on("mouseup", ".list-item", function (e) {
+      var $list = $(this);
+      var $menu, offset, relX, relY;
+      var $target = $(e.target);
+      if ($target.is('a') || $target.closest('a,label').length) {
+        return;
+      }
+      $menu = $list.find(".tap-menu");
+      if ($menu.is(':visible')) {
+        return $menu.hide();
+      }
+      if ($menu.hasClass("tap-menu-relative")) {
+        offset = $list.offset();
+        relX = e.pageX - offset.left;
+        relY = e.pageY - offset.top;
+      } else {
+        relX = e.pageX;
+        relY = e.pageY;
+      }
+      return $menu.css("left", relX - $menu.width() + 5).css("top", relY).show();
+    });
+    $el.on("mouseleave", ".list-item", function (e) {
+      return $el.find(".tap-menu").hide();
     });
     $el.find(".list-head .destroy-all").each(function() {
       if (this.classList.contains("btn-list-head-action")) {
