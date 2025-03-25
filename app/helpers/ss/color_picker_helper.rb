@@ -8,6 +8,7 @@ module SS::ColorPickerHelper
     end
 
     html_options['class'] = Array(html_options['class']) + %w(js-color)
+    html_options['aria-busy'] = true
 
     text_field(object_name, method, html_options)
   end
@@ -21,6 +22,7 @@ module SS::ColorPickerHelper
     end
 
     html_options['class'] = Array(html_options['class']) + %w(js-color)
+    html_options['aria-busy'] = true
 
     text_field_tag(name, value, html_options)
   end

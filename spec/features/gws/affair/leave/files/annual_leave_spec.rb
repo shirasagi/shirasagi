@@ -32,7 +32,9 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/attendance.minute", count: end_at.min), from: 'item[end_at_minute]'
 
           fill_in "item[reason]", with: reason
-          select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
+          wait_for_event_fired "ss:ready" do
+            select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
+          end
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")

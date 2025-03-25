@@ -37,8 +37,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.login")
             end
 
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -91,8 +91,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.login")
             end
 
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -142,8 +142,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             end
 
             # このケースではOTP認証は不要
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to be_blank
@@ -186,8 +186,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.login")
               end
 
-              expect(current_path).to eq sns_cur_user_account_path
               expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+              expect(current_path).to eq sns_cur_user_account_path
 
               SS::User.find(sys_user.id).tap do |user|
                 expect(user.mfa_otp_secret).to eq otp_secret
@@ -240,8 +240,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.login")
               end
 
-              expect(current_path).to eq sns_cur_user_account_path
               expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+              expect(current_path).to eq sns_cur_user_account_path
 
               SS::User.find(sys_user.id).tap do |user|
                 expect(user.mfa_otp_secret).to eq otp_secret
@@ -297,8 +297,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.login")
             end
 
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -345,8 +345,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.login")
             end
 
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -396,8 +396,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             end
 
             # このケースではOTP認証は不要
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -440,8 +440,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.login")
               end
 
-              expect(current_path).to eq sns_cur_user_account_path
               expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+              expect(current_path).to eq sns_cur_user_account_path
 
               SS::User.find(sys_user.id).tap do |user|
                 expect(user.mfa_otp_secret).to eq otp_secret
@@ -488,8 +488,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.login")
               end
 
-              expect(current_path).to eq sns_cur_user_account_path
               expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+              expect(current_path).to eq sns_cur_user_account_path
 
               SS::User.find(sys_user.id).tap do |user|
                 expect(user.mfa_otp_secret).to eq otp_secret
