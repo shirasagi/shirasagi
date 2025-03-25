@@ -185,6 +185,12 @@ module Cms::PublicFilter::Layout
       convert_date
     end
 
+    html.gsub!('#{page_thumb.src}') do
+      thumb_src = ERB::Util.html_escape(Cms::Addon::Body::DEFAULT_IMG_SRC)
+      thumb_src = @cur_item.thumb.url if @cur_item.is_a?(Cms::Addon::Thumb) && @cur_item.thumb
+      thumb_src
+    end
+
     render_conditional_tag(html)
   end
 
