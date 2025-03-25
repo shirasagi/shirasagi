@@ -62,8 +62,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
       expect(item.released).to eq item.first_released
-      # no backups are created while requesting approve
-      expect(item.backups.count).to eq 1
+      expect(item.backups.count).to eq 2
 
       expect(Sys::MailLog.count).to eq 1
       expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -101,7 +100,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         })
       expect(item.released).to eq item.first_released
       # backup is created
-      expect(item.backups.count).to eq 2
+      expect(item.backups.count).to eq 3
 
       expect(Sys::MailLog.count).to eq 2
       expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
