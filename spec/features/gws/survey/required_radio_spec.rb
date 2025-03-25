@@ -13,7 +13,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
   end
 
   context "required radio without other option" do
-    let!(:form) { create :gws_survey_form, cur_site: site, readable_setting_range: "public", readable_group_ids: [], readable_member_ids: [], state: "public" }
+    let!(:form) do
+      create(
+        :gws_survey_form, cur_site: site, state: "public",
+        readable_setting_range: "public", readable_group_ids: [], readable_member_ids: []
+      )
+    end
     let!(:column1) { create :gws_column_radio_button, cur_site: site, form: form, order: 10, required: "required" }
 
     context "without any answers" do
@@ -64,7 +69,12 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
   end
 
   context "required radio with required others" do
-    let!(:form) { create :gws_survey_form, cur_site: site, readable_setting_range: "public", readable_group_ids: [], readable_member_ids: [], state: "public" }
+    let!(:form) do
+      create(
+        :gws_survey_form, cur_site: site, state: "public",
+        readable_setting_range: "public", readable_group_ids: [], readable_member_ids: []
+      )
+    end
     let!(:column1) do
       create(
         :gws_column_radio_button, cur_site: site, form: form, order: 10, required: "required",
