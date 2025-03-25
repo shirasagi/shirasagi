@@ -3,6 +3,7 @@ class Opendata::ResourceDownloadHistory
   include Opendata::Resource::HistoryModel
 
   index({ site_id: 1, downloaded: -1 })
+  index({ site_id: 1, downloaded: 1, resource_id: 1 })
 
   field :downloaded, type: DateTime
   field :downloaded_by, type: String
