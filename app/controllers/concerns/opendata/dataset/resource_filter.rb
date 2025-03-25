@@ -150,6 +150,9 @@ module Opendata::Dataset::ResourceFilter
       @item.create_preview_history(remote_addr, request.user_agent, Time.zone.now)
     end
 
+    raise "no referer" if request.referer.blank?
+    raise "detected bot" if browser.bot?
+
     Timeout.timeout(20) do
       if @item.tsv_present?
         tsv_content
@@ -164,16 +167,16 @@ module Opendata::Dataset::ResourceFilter
       elsif @item.image_present?
         image_content
       else
-        raise "404"
+        raise "no content"
       end
     end
   rescue Timeout::Error => e
-    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     @error_message = I18n.t("opendata.errors.messages.resource_preview_timeout")
-    render template: "error_content", layout: 'cms/ajax'
+    Rails.logger.error("#{e.class} (#{e.message}): #{request.path} #{@error_message}")
+    render template: "error_content", layout: 'cms/ajax', status: :not_found
   rescue => e
-    Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     @error_message = I18n.t("opendata.errors.messages.resource_preview_failed")
-    render template: "error_content", layout: 'cms/ajax'
+    Rails.logger.error("#{e.class} (#{e.message}): #{request.path} #{@error_message}")
+    render template: "error_content", layout: 'cms/ajax', status: :not_found
   end
 end

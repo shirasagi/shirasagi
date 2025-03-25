@@ -11,16 +11,11 @@ class Opendata::Graph::Base
   end
 
   def extract_csv_lines
-    csv_lines = []
+    @csv_lines = []
     SS::Csv.foreach_row(resource.file, headers: false) do |line|
       if line.select(&:present?).present?
-        csv_lines << line
+        @csv_lines << line
       end
-    end
-
-    @csv_lines = []
-    csv_lines.each do |line|
-      @csv_lines << line.map { |v| format_data(v) }
     end
   end
 
@@ -51,12 +46,16 @@ class Opendata::Graph::Base
     @headers = []
   end
 
-  def format_data(data)
-    return "-" if data.blank?
-    return data if data !~ /^(-)?((\d)+,)?((\d)+\.)?+(\d)+$/
+  def format_values(values)
+    values.map { |value| format_value(value) }
+  end
 
-    data = data.delete(",")
-    data = data.to_f.to_s
-    data =~ /\.0$/ ? data.to_i : data.to_f
+  def format_value(value)
+    return "-" if value.blank?
+    return value if value !~ /^(-)?((\d)+,)?((\d)+\.)?+(\d)+$/
+
+    value = value.delete(",")
+    value = value.to_f.to_s
+    value =~ /\.0$/ ? value.to_i : value.to_f
   end
 end
