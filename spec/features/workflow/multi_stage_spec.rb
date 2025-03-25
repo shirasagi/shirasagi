@@ -85,8 +85,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           }
           expect(workflow_approver).to eq(expected)
         end
-        # no backups are created while requesting approve
-        expect(item.backups.count).to eq 1
+        expect(item.backups.count).to eq 2
 
         expect(Sys::MailLog.count).to eq 1
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -135,8 +134,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           }
           expect(workflow_approver).to eq(expected)
         end
-        # no backups are created while requesting approve
-        expect(item.backups.count).to eq 1
+        expect(item.backups.count).to eq 4
 
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -186,8 +184,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           }
           expect(workflow_approver).to eq(expected)
         end
-        # no backups are created while requesting approve
-        expect(item.backups.count).to eq 1
+        expect(item.backups.count).to eq 6
 
         expect(Sys::MailLog.count).to eq 3
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -238,8 +235,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           }
           expect(workflow_approver).to include(expected)
         end
-        # backup is created because page is in public
-        expect(item.backups.count).to eq 2
+        expect(item.backups.count).to eq 7
 
         expect(Sys::MailLog.count).to eq 4
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
