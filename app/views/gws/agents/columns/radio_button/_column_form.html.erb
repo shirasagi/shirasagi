@@ -2,7 +2,7 @@
 <%= render 'gws/agents/columns/main/common_label', column: column %>
 <%
   data = {}
-  data[:controller] = "gws--column--radio" if column.branch_section_ids.compact.reject(&:empty?).present?
+  data[:controller] = "gws--column--radio"
   data[:column_id] = column.id.to_s
 %>
 <%= tag.dd(class: [ @section_id, "radio-button-#{column.id}" ], data: data) do %>

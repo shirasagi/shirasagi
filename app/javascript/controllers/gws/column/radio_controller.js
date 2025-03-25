@@ -14,7 +14,10 @@ export default class extends Controller {
 
     // prepare
     $el.find('input[data-section-id]').each(function () {
-      ids.push($(this).attr('data-section-id'));
+      var sectionId = $(this).attr('data-section-id');
+      if (sectionId && !ids.includes(sectionId)) {
+        ids.push(sectionId);
+      }
     });
 
     // change
@@ -28,14 +31,16 @@ export default class extends Controller {
           $(`.section-${id} *`).prop('disabled', true);
         });
 
-        // set
-        $(`.section-${sectionId}`).removeClass("hide");
-        $(`.section-${sectionId} *`).prop('disabled', false);
+        if (sectionId) {
+          // set
+          $(`.section-${sectionId}`).removeClass("hide");
+          $(`.section-${sectionId} *`).prop('disabled', false);
 
-        if (sectionId === 'other') {
-          $el.find("input[type='text']").prop('disabled', false);
-        } else {
-          $el.find("input[type='text']").prop('disabled', true);
+          if (sectionId === 'other') {
+            $el.find("input[type='text']").prop('disabled', false);
+          } else {
+            $el.find("input[type='text']").prop('disabled', true);
+          }
         }
 
         $this.trigger("column:sectionChanged");
