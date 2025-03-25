@@ -221,15 +221,29 @@ this.SS_Theme = (function () {
                 name: $el.attr("class"),
                 class: $el.attr("class"),
                 "data-ss-theme": cls,
+                "aria-pressed": "false",
                 text: $el.text()
               });
               $el.replaceWith($btn);
             });
             $el = $theme.find("button." + $.escapeSelector(cls));
+          } else {
+            $el.each(function () {
+              const $el = $(this);
+              const $a = $("<a>", {
+                href: "#",
+                name: $el.attr("class"),
+                class: $el.attr("class"),
+                "data-ss-theme": cls,
+                "aria-pressed": "false",
+                text: $el.text()
+              });
+              $el.replaceWith($a);
+            });
+            $el = $theme.find("a." + $.escapeSelector(cls));
           }
           const elId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
           $el.attr("id", elId); // Assign the unique ID to the anchor
-          $el.attr("data-ss-theme", cls);
           const v = theme[cls];
           if (v["css_path"]) {
             const $styleSheetLink = $('<link />', {
@@ -247,7 +261,7 @@ this.SS_Theme = (function () {
           }
           if (v["default_theme"]) {
             $theme.find("[data-ss-theme]").removeClass('active');
-            $el.addClass('active');
+            $el.addClass('active').attr('aria-pressed', true);
             SS_Theme.switchTheme(cls);
           }
           $el.on("click", function () {
