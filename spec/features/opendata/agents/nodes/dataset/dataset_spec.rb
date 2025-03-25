@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
+describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let(:area) { create :opendata_node_area, layout: layout, filename: "opendata_area_1" }
@@ -37,27 +37,25 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
     dataset_resource.save!
 
     Fs.rm_rf page_dataset.path
+
+    Capybara.app_host = "http://#{site.domain}"
   end
 
   it "index, preview" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit index_path
-      expect(current_path).to eq index_path
-      within "article#cms-tab-#{node_dataset.id}-0" do
-        within "div.pages" do
-          click_link page_dataset.name
-        end
+    visit index_path
+    within "article#cms-tab-#{node_dataset.id}-0-view" do
+      within "div.pages" do
+        click_link page_dataset.name
       end
-      expect(status_code).to eq 200
+    end
 
-      within "article#cms-tab-#{node_dataset.id}-0" do
-        within "div.pages" do
-          click_link 'プレビュー'
-        end
+    within "article#cms-tab-#{node_dataset.id}-0-view" do
+      within "div.pages" do
+        wait_for_cbox_opened { click_link 'プレビュー' }
       end
-      expect(status_code).to eq 200
+    end
 
+    within_cbox do
       within "div.resource-content" do
         within "table.cells" do
           expect(page).to have_content('品川')
@@ -68,24 +66,21 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   end
 
   it "index, download" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit index_path
-      expect(current_path).to eq index_path
-      within "article#cms-tab-#{node_dataset.id}-0" do
-        within "div.pages" do
-          click_link page_dataset.name
-        end
+    visit index_path
+    within "article#cms-tab-#{node_dataset.id}-0-view" do
+      within "div.pages" do
+        click_link page_dataset.name
       end
-      expect(status_code).to eq 200
-
-      within "article#cms-tab-#{node_dataset.id}-0" do
-        within "div.pages" do
-          click_link 'ダウンロード'
-        end
-      end
-      expect(status_code).to eq 200
     end
+
+    within "article#cms-tab-#{node_dataset.id}-0-view" do
+      within "div.pages" do
+        click_link 'ダウンロード'
+      end
+    end
+
+    wait_for_download
+    expect(File.size(downloads.first)).to be > 0
   end
 
   it "#rss" do
@@ -105,16 +100,27 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
     HTML
     layout.save!
 
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit rss_path
+    visit rss_path
 
-      visit index_path
-      within ".list-footer" do
-        click_on "RSS"
-      end
+    REXML::Document.new(page.html).tap do |xmldoc|
+      rss = REXML::XPath.first(xmldoc, "//rss")
+      title = REXML::XPath.first(rss, "channel/title/text()").to_s.strip
+      expect(title).to start_with(node_dataset.name)
+      link = REXML::XPath.first(rss, "channel/link/text()").to_s.strip
+      expect(link).to eq node_dataset.full_url
+      items = REXML::XPath.match(rss, "channel/item")
+      expect(items).to have(1).items
+    end
 
-      xmldoc = REXML::Document.new(page.html)
+    visit index_path
+    within ".list-footer" do
+      click_on "RSS"
+    end
+
+    wait_for_download
+    expect(File.size(downloads.first)).to be > 0
+
+    REXML::Document.new(File.read(downloads.first)).tap do |xmldoc|
       title = REXML::XPath.first(xmldoc, "/rss/channel/title/text()").to_s.strip
       expect(title).to start_with(node_dataset.name)
       link = REXML::XPath.first(xmldoc, "/rss/channel/link/text()").to_s.strip
@@ -125,91 +131,61 @@ describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   end
 
   it "#areas" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit areas_path
-      expect(current_path).to eq areas_path
-      expect(page).to have_content(node_area.name)
-    end
+    visit areas_path
+    expect(page).to have_css(".name", text: node_area.name)
   end
 
   it "#tags" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit tags_path
-      expect(current_path).to eq tags_path
-      expect(page).to have_content(page_dataset.tags[0])
-      expect(page).to have_content(page_dataset.tags[1])
-    end
+    visit tags_path
+    expect(page).to have_css(".name", count: 2)
+    expect(page).to have_css(".name", text: page_dataset.tags[0])
+    expect(page).to have_css(".name", text: page_dataset.tags[1])
   end
 
   it "#formats" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit formats_path
-      expect(current_path).to eq formats_path
-      expect(page).to have_content('CSV')
-    end
+    visit formats_path
+    expect(page).to have_css(".name", count: 1)
+    expect(page).to have_css(".name", text: 'CSV')
   end
 
   it "#licenses" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit licenses_path
-      expect(current_path).to eq licenses_path
-      expect(page).to have_content(license.name)
-    end
+    visit licenses_path
+    expect(page).to have_css(".name", count: 1)
+    expect(page).to have_css(".name", text: license.name)
   end
 
   it "#show_point" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit show_point_path
-      expect(current_path).to eq show_point_path
-      expect(page).to have_content('いいね！')
-    end
+    visit show_point_path
+    expect(page).to have_css(".count", text: 'いいね！')
   end
 
   it "#point_members" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit point_members_path
-      expect(current_path).to eq point_members_path
-      expect(page).to have_selector('ul.point-members')
-    end
+    visit point_members_path
+    expect(page).to have_selector('ul.point-members')
   end
 
   it "#show_apps" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit dataset_apps_path
-      expect(current_path).to eq dataset_apps_path
-      within "div.detail" do
-        within "div.dataset-apps" do
-          expect(page).to have_selector('div.apps')
-        end
+    visit dataset_apps_path
+    within "div.detail" do
+      within "div.dataset-apps" do
+        expect(page).to have_selector('div.apps')
       end
     end
   end
 
   it "#show_ideas" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit dataset_ideas_path
-      expect(current_path).to eq dataset_ideas_path
-      within "div.detail" do
-        within "div.dataset-ideas" do
-          expect(page).to have_selector('div.ideas')
-        end
+    visit dataset_ideas_path
+    within "div.detail" do
+      within "div.dataset-ideas" do
+        expect(page).to have_selector('div.ideas')
       end
     end
   end
 
   it "#datasets_search" do
-    page.driver.browser.with_session("public") do |session|
-      session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit datasets_search_path
-      expect(current_path).to eq datasets_search_path
-    end
+    visit datasets_search_path
+    expect(page).to have_css(".search [type='submit']")
+    expect(page).to have_css(".items tr", count: 1)
+    expect(page).to have_css(".items tr[data-id='#{page_dataset.id}']", text: page_dataset.name)
   end
 end
