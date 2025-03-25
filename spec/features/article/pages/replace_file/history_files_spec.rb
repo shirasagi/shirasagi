@@ -17,28 +17,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "restore" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         # original file upload
-        wait_for_js_ready
         within "form#item-form" do
-          within "#addon-cms-agents-addons-file" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
+          ensure_addon_opened "#addon-cms-agents-addons-file"
+          ss_upload_file before_csv
 
-        within_cbox do
-          attach_file "item[in_files][]", before_csv
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
+          within "#addon-cms-agents-addons-file" do
+            expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
           end
+          click_on I18n.t("ss.buttons.publish_save")
         end
-        within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
-        end
-        click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         5.times.each do |index|
           clear_notice
@@ -70,6 +64,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_button I18n.t('ss.buttons.replace_save')
           end
           wait_for_notice I18n.t('ss.notice.replace_saved')
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
         end
 
         replaced_page = item.class.find(item.id)
@@ -112,6 +108,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         wait_for_notice I18n.t('history.notice.restored')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         replaced_page = item.class.find(item.id)
         replaced_file = replaced_page.attached_files.first
@@ -125,29 +123,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "destroy" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         # original file upload
-        wait_for_js_ready
         within "form#item-form" do
-          within "#addon-cms-agents-addons-file" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
+          ensure_addon_opened "#addon-cms-agents-addons-file"
+          ss_upload_file before_csv
 
-        within_cbox do
-          wait_for_js_ready
-          attach_file "item[in_files][]", before_csv
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
+          within "#addon-cms-agents-addons-file" do
+            expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
           end
+          click_on I18n.t("ss.buttons.publish_save")
         end
-        within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
-        end
-        click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         3.times.each do |index|
           wait_for_js_ready
@@ -179,6 +170,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_button I18n.t('ss.buttons.replace_save')
           end
           wait_for_notice I18n.t('ss.notice.replace_saved')
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
         end
 
         # show history files and destroy

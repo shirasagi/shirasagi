@@ -9,7 +9,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
   let!(:edit_path) { edit_article_page_path(site: site, cid: node, id: item) }
 
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
-  let!(:column1) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1) }
+  # let!(:column1) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1) }
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
 
   let(:logs_path) { history_cms_logs_path site.id }
@@ -19,6 +19,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within 'form#item-form' do
         wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
@@ -26,30 +28,25 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           end
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       within ".column-value-palette" do
         wait_for_event_fired("ss:columnAdded") do
           click_on column2.name
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
-      within ".column-value-cms-column-free" do
-        wait_for_cbox_opened do
-          click_on I18n.t("cms.file")
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_for_cbox_closed do
-          click_on I18n.t('ss.buttons.attach')
-        end
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: ".column-value-cms-column-free"
       within ".column-value-cms-column-free" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       item.reload
       expect(item.column_values.count).to eq 1
@@ -125,6 +122,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('.list-item', count: 3)
 
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       wait_for_ckeditor_event "item[column_values][][in_wrap][value]", "afterInsertHtml" do
         within ".column-value-cms-column-free" do
           expect(page).to have_css(".file-view", text: "keyvisual.jpg")
@@ -133,6 +132,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       end
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
         histories[4].tap do |history|
@@ -186,9 +187,13 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('.list-item', count: 6)
 
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       fill_in_ckeditor "item[column_values][][in_wrap][value]", with: ""
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       History::Log.all.reorder(created: 1, id: 1).to_a.tap do |histories|
         histories[7].tap do |history|

@@ -26,6 +26,9 @@
   @include mb {
     margin-top: 10px;
   }
+  &:not(:has(.file-view)) {
+    display: none;
+  }
 }
 
 .column-youtube-right {

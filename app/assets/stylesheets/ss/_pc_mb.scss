@@ -2072,7 +2072,7 @@ footer.send {
   }
   #selected-files {
     margin-top: 10px;
-    @include clear;
+    //@include clear;
     @include mb {
       margin-top: 10px;
     }
@@ -2081,14 +2081,15 @@ footer.send {
 #selected-files, .user-files {
   @include display-flex;
   @include flex-wrap(wrap);
-  clear: both;
+  gap: 20px;
+  //clear: both;
 }
 .file-view {
   position: relative;
   width: 164px;
-  margin: 0 28px 20px 0;
+  //margin: 0 28px 20px 0;
   @include mb {
-    margin: 0 10px 10px 0;
+    //margin: 0 10px 10px 0;
   }
   .sanitizer-status {
     position: absolute;
@@ -2098,7 +2099,7 @@ footer.send {
     min-height: 110px;
     overflow: hidden;
     border: 5px solid $gray4;
-    line-height: 110px;
+    //line-height: 110px;
     text-align: center;
     &:hover {
       background-color: #eee;
@@ -2119,11 +2120,18 @@ footer.send {
       position: absolute;
     }
     img {
-      max-width: 120px;
-      vertical-align: middle;
+      width: 140px;
+      height: 110px;
+      padding: 10px;
+      object-fit: scale-down;
     }
     .ext {
-      display: block;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 140px;
+      height: 110px;
+      padding: 10px;
       overflow: hidden;
       color: $orange;
       font-size: $px32;
@@ -2131,19 +2139,22 @@ footer.send {
     }
   }
   .name {
-    padding: 10px 0;
+    padding: 5px;
     overflow: hidden;
     font-size: 90%;
     @include ellipsis;
-    word-wrap: nowrap;
   }
   .action {
-    display: inline-block;
-    margin-bottom: 5px;
+    display: inline-flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 5px;
     a {
       @include btn;
-      margin-bottom: 5px;
     }
+  }
+  * ~ .action {
+    margin-top: 10px;
   }
 }
 
@@ -3900,40 +3911,6 @@ body.ss-ajax-in-iframe {
   }
   .btn-active {
     @include btn-active;
-  }
-}
-
-.ss-file-field {
-  background: #f2f2f2;
-
-  .btn-file-upload.cboxElement {
-    border-top-right-radius: 0;
-    border-bottom-right-radius: 0;
-  }
-  .btn.dropdown-toggle {
-    margin-left: -1px;
-    padding-right: .5rem;
-    padding-left: .5rem;
-    border-top-left-radius: 0;
-    border-bottom-left-radius: 0;
-  }
-  .dropdown-menu {
-    padding: 4px;
-    border: $border-gray4;
-    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
-    background: $white;
-    white-space: nowrap;
-    a {
-      display: block;
-      padding: 5px 10px;
-      background-image: none;
-    }
-  }
-  .humanized-name {
-    margin-left: .5rem;
-  }
-  .upload-drop-notice {
-    margin: 0 !important;
   }
 }
 
