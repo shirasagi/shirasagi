@@ -44,12 +44,19 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(Job::Log.count).to eq 1
 
       visit article_pages_path(site, article_node)
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
       click_on article_page.name
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       #
       # activate opendata integration
       #
       click_on I18n.t('ss.links.edit')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       ensure_addon_opened('#addon-cms-agents-addons-opendata_ref-dataset')
       within '#addon-cms-agents-addons-opendata_ref-dataset' do
@@ -64,6 +71,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       click_on I18n.t('ss.buttons.publish_save')
       wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       expect(Job::Log.count).to eq 2
       Job::Log.all.each do |log|
@@ -110,7 +119,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       # create a branch page and merge it
       #
       visit article_pages_path(site, article_node)
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
       click_on article_page.name
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within '#addon-workflow-agents-addons-branch' do
         expect do
           wait_for_turbo_frame "#workflow-branch-frame"
@@ -122,12 +136,19 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end.to output(/#{I18n.t("workflow.branch_page")}/).to_stdout
         click_on article_page.name
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       expect do
         click_on I18n.t('ss.links.edit')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t('ss.buttons.publish_save')
         wait_for_notice I18n.t('ss.notice.saved')
       end.to output(/#{I18n.t("workflow.branch_page")}/).to_stdout
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       # file ids remain in same
       save_file_ids = article_page.file_ids.dup
@@ -151,7 +172,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       # create a branch page and merge it, second attempts
       #
       visit article_pages_path(site, article_node)
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
       click_on article_page.name
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
       within '#addon-workflow-agents-addons-branch' do
         expect do
           wait_for_turbo_frame "#workflow-branch-frame"
@@ -165,24 +192,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       click_on I18n.t('ss.links.edit')
-      wait_for_js_ready
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within "#item-form" do
         within "#file-#{article_page.file_ids.first}" do
           page.accept_confirm(I18n.t("ss.confirm.delete")) do
             click_on I18n.t("ss.buttons.delete")
           end
         end
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-      end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/opendata/resource.pdf"
-        wait_for_cbox_closed do
-          click_on I18n.t("ss.buttons.attach")
-        end
+        ss_upload_file "#{Rails.root}/spec/fixtures/opendata/resource.pdf"
       end
       expect do
         within "#item-form" do
@@ -193,6 +211,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t('ss.notice.saved')
       end.to output(/#{I18n.t("workflow.branch_page")}/).to_stdout
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       # file ids are completely changed
       save_file_ids = article_page.file_ids.dup
@@ -213,14 +233,20 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       visit article_pages_path(site, article_node)
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
       click_on article_page.name
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       within '#addon-cms-agents-addons-opendata_ref-resource' do
         select Opendata::License.first.name, from: "item_opendata_resources_#{article_page.file_ids.first}_license_id"
         select I18n.t("cms.options.opendata_resource.same"), from: "item_opendata_resources_#{article_page.file_ids.first}_state"
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_js_ready
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within '#addon-cms-agents-addons-opendata_ref-resource' do
         expect(page).to have_css(".od-resource-file-save-status", text: I18n.t("ss.notice.saved"))
       end

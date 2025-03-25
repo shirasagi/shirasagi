@@ -22,6 +22,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
     it do
       visit new_article_page_path(site: site, cid: node)
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       # create default form page
       within 'form#item-form' do
@@ -32,23 +34,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         fill_in_ckeditor "item[html]", with: html
       end
       ensure_addon_opened("#addon-cms-agents-addons-file")
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
       within "#addon-cms-agents-addons-file" do
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-        wait_for_cbox_closed do
-          click_button I18n.t("ss.buttons.attach")
-        end
-      end
-      within "#addon-cms-agents-addons-file" do
-        within '#selected-files' do
+        within '.file-view' do
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
       end
@@ -56,16 +44,20 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.draft_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       expect(page).to have_css("#addon-cms-agents-addons-body")
       within "#addon-cms-agents-addons-file" do
-        within '#selected-files' do
+        within '.file-view' do
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
       end
 
       # switch entry form
       click_on I18n.t("ss.links.edit")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within 'form#item-form' do
         fill_in 'item[name]', with: name
         wait_for_event_fired("ss:formActivated") do
@@ -83,6 +75,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".column-value-cms-column-textfield", text: column1_value)
       expect(page).to have_no_css("#addon-cms-agents-addons-body")
       expect(page).to have_no_css("#addon-cms-agents-addons-file")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
     end
   end
 end

@@ -4,6 +4,8 @@ class SS::File
   include SS::Liquidization
   include Cms::Lgwan::File
 
+  IMAGE_FILE_EXTENSIONS = %w(.gif .jpeg .jpg .png .webp).freeze
+
   cattr_accessor(:models, instance_accessor: false) { [] }
 
   liquidize do

@@ -19,25 +19,7 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
 
       visit edit_path
       ensure_addon_opened("#addon-cms-agents-addons-file")
-      within "#addon-cms-agents-addons-file" do
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
-
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_for_cbox_closed do
-          click_button I18n.t("ss.buttons.attach")
-        end
-      end
-      within "#addon-cms-agents-addons-file" do
-        expect(page).to have_css(".file-view", text: "keyvisual.jpg")
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
       click_on I18n.t("ss.buttons.save")
 
       wait_for_notice I18n.t('ss.notice.saved')

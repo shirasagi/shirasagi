@@ -1,44 +1,7 @@
-<% addon ||= local_assigns.fetch(:addon, {}) %>
-
-<dl class="see">
-  <dd class="wide">
-    <%= link_to t('ss.links.upload'), facility_apis_temp_files_path(@cur_user), class: "ajax-box" %>
-
-    <div id="selected-files">
-      <%= f.hidden_field "image_id", value: "", id: nil, class: "hidden-ids" %>
-      <% if @item.image.present? %>
-        <div class="file-view" data-file-id="<%= @item.image.id %>">
-          <%= sanitizer_status(@item.image) %>
-          <%= link_to @item.image.url, class: :thumb, target: "_blank", rel: "noopener" do %>
-            <% if @item.image.image? %>
-              <%= image_tag @item.image.thumb_url, alt: @item.image.basename %>
-            <% else %>
-              <span class="ext icon-<%= @item.image.extname %>"><%= @item.image.extname %></span>
-            <% end %>
-          <% end %>
-
-          <div class="name">
-            <input type="hidden" name="item[image_id]" value="<%= @item.image.id %>"/>
-            <%= @item.image.basename %>
-          </div>
-          <div class="action delete">
-            <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent(); return false;" %>
-          </div>
-        </div>
-      <% end %>
-    </div>
-  </dd>
-</dl>
-
-<%= jquery do %>
-  var $el = $("#<%= addon[:id] %>");
-
-  window.deleteContent = function() {
-    $el.find(".file-view").remove();
-  };
-
-  $el.on("click", ".file-view a.thumb", function(ev) {
-    SS_FileView.open(ev, { viewPath: "<%= view_cms_apis_content_file_path(id: ":id") %>" });
-  });
-<% end %>
-
+<%=
+  if SS.file_upload_dialog == :v1
+    render "facility/agents/addons/image_file/form_v1", **local_assigns
+  else
+    render "facility/agents/addons/icon_setting/form_v2", **local_assigns
+  end
+%>

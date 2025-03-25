@@ -13,7 +13,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
   let!(:column1) do
     create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1, file_type: "image")
   end
-  let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
+  # let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
 
   let(:logs_path) { history_cms_logs_path site.id }
 
@@ -22,6 +22,9 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+
       within 'form#item-form' do
         wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
@@ -29,25 +32,18 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
           end
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       within ".column-value-palette" do
         wait_for_event_fired("ss:columnAdded") do
           click_on column1.name
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
-      within ".column-value-cms-column-fileupload" do
-        wait_for_cbox_opened do
-          click_on I18n.t("cms.file")
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_for_cbox_closed do
-          click_on I18n.t('ss.buttons.attach')
-        end
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: ".column-value-cms-column-fileupload"
       within ".column-value-cms-column-fileupload" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
@@ -60,6 +56,8 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.ignore_alert")
       end
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       item.reload
       expect(item.column_values.count).to eq 1

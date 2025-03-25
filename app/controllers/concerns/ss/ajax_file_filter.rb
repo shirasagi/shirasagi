@@ -39,7 +39,7 @@ module SS::AjaxFileFilter
     set_item
     @page = Cms::Page.find_or_initialize_by(id: params[:owner_item_id])
     @page = @page.becomes_with_route(params[:owner_item_type].underscore) if params[:owner_item_type].present?
-    render template: "select", layout: !request.xhr?
+    render template: "select", layout: !request.xhr? && SS.file_upload_dialog == :v1
   end
 
   def selected_files

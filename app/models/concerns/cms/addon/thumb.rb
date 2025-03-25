@@ -7,7 +7,7 @@ module Cms::Addon
     included do
       attr_accessor :in_thumb
 
-      belongs_to_file :thumb
+      belongs_to_file :thumb, accepts: SS::File::IMAGE_FILE_EXTENSIONS
       permit_params :in_thumb
       validate :validate_thumb
 

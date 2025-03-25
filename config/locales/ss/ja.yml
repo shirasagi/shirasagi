@@ -74,6 +74,7 @@ ja:
     mfa_otp_enabled_at: "%{time}に有効化されました。"
     mfa_otp_not_enabled_yet: "有効化されていません。"
     system_operation: "-- システムによる操作 --"
+    upload_or_select_from_list: ファイルアップロードまたは一覧から選択
 
     views:
       login/login:
@@ -269,6 +270,9 @@ ja:
       include_none_of: いずれも含まない
       decide: 決定
       reset_mfa_otp: ワンタイムパスワードの初期化
+      select_from_list: 一覧から選択
+      select_files: ファイル選択
+      cancel_upload: アップロード取消
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
@@ -364,6 +368,8 @@ ja:
       ordered_by_file_name_order: 名前順で並び変えました。
       ordered_by_file_upload_order: アップロード順で並び変えました。
       reset_mfa_otp: ワンタイムパスワードを初期化しました。
+      wait_to_upload: アップロードの待機中。
+      finished_uploading: アップロードしました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -655,7 +661,6 @@ ja:
       ss/elasticsearch/site_setting: サイト内検索設定
       ss/translate/site_setting: 自動翻訳
       ss/site_usage: 使用量
-      ss/logo_setting: ロゴ設定
       ss/release: 公開設定
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定
@@ -684,6 +689,11 @@ ja:
         new_password: 新しいパスワード
         new_password_again: 新しいパスワード（入力確認）
         old_password: 現在のパスワード
+      ss/temp_file_creator:
+        in_file: ファイル
+        name: ファイル名
+        filename: ファイル名（英数）
+        resizing: リサイズ
 
   mongoid:
     models:

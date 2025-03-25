@@ -11,5 +11,5 @@
   <dd><%= f.select :logo_application_link, @item.logo_application_link_options %></dd>
 
   <dt><%= @model.t :logo_application_image_id %><%= @model.tt :logo_application_image_id %></dt>
-  <dd><%= f.ss_file_field :logo_application_image %>
+  <dd><%= f.ss_file_field :logo_application_image, accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
 </dl>

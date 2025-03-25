@@ -117,6 +117,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         # Create empty page
         #
         visit new_article_page_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_selector('#item_body_layout_id')
 
         within 'form#item-form' do
@@ -133,6 +135,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
@@ -149,13 +153,20 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t('ss.links.edit')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within 'form#item-form' do
           within ".column-value-palette" do
             wait_for_event_fired("ss:columnAdded") do
               click_on column1.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value1
           end
@@ -165,6 +176,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column2.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-datefield" do
             fill_in "item[column_values][][in_wrap][date]", with: column2_value1
           end
@@ -174,6 +187,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column3.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-urlfield2" do
             fill_in "item[column_values][][in_wrap][link_label]", with: column3_label1
             fill_in "item[column_values][][in_wrap][link_url]", with: column3_url1
@@ -184,6 +199,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column4.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-textarea" do
             fill_in "item[column_values][][in_wrap][value]", with: column4_value1
           end
@@ -193,6 +210,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column5.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-select" do
             select column5_value1, from: "item[column_values][][in_wrap][value]"
           end
@@ -202,6 +221,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column6.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-radiobutton" do
             first(:field, type: "radio", with: column6_value1).click
           end
@@ -211,6 +232,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column7.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-checkbox" do
             first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value1).click
           end
@@ -220,16 +243,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column8.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
-        end
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
-        end
-        within 'form#item-form' do
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-fileupload"
           within ".column-value-cms-column-fileupload" do
             expect(page).to have_content("keyvisual.gif")
           end
@@ -239,6 +258,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column9.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
           end
@@ -248,6 +269,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column10.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-headline" do
             select column10_head1, from: "item[column_values][][in_wrap][head]"
             fill_in "item[column_values][][in_wrap][text]", with: column10_text1
@@ -258,6 +281,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column11.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-list" do
             fill_in "item[column_values][][in_wrap][lists][]", with: column11_list1
           end
@@ -267,6 +292,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column12.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-table" do
             find("input.height").set(column12_height1)
             find("input.width").set(column12_width1)
@@ -279,6 +306,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column13.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url1
           end
@@ -306,6 +335,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -343,7 +374,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(page).to have_no_selector('#item_body_layout_id', visible: true)
 
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t('ss.links.edit')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within 'form#item-form' do
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value2
@@ -370,14 +406,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
-        end
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
-        end
-        within 'form#item-form' do
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".column-value-cms-column-fileupload"
           within ".column-value-cms-column-fileupload" do
             expect(page).to have_content("logo.png")
           end
@@ -422,6 +452,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -457,8 +489,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t('ss.links.edit')
-        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within 'form#item-form' do
           %w(
             textfield datefield urlfield2 textarea select radiobutton checkbox fileupload
@@ -471,11 +507,15 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             end
             # wait animation finished
             expect(page).to have_no_css(".column-value-cms-column-#{f}")
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -492,6 +532,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         click_on I18n.t('ss.links.delete')
         within 'form' do
           click_on I18n.t('ss.buttons.delete')
@@ -508,6 +550,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         # Create page with full columns
         #
         visit new_article_page_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
@@ -524,6 +568,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column1.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value1
           end
@@ -533,6 +579,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column2.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-datefield" do
             fill_in "item[column_values][][in_wrap][date]", with: column2_value1
           end
@@ -542,6 +590,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column3.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-urlfield2" do
             fill_in "item[column_values][][in_wrap][link_label]", with: column3_label1
             fill_in "item[column_values][][in_wrap][link_url]", with: column3_url1
@@ -552,6 +602,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column4.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-textarea" do
             fill_in "item[column_values][][in_wrap][value]", with: column4_value1
           end
@@ -561,6 +613,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column5.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-select" do
             select column5_value1, from: "item[column_values][][in_wrap][value]"
           end
@@ -570,6 +624,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column6.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-radiobutton" do
             first(:field, type: "radio", with: column6_value1).click
           end
@@ -579,6 +635,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column7.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-checkbox" do
             first(:field, name: "item[column_values][][in_wrap][values][]", with: column7_value1).click
           end
@@ -588,20 +646,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column8.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.links.upload")
-            end
           end
-        end
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_for_cbox_closed do
-            click_on I18n.t('ss.buttons.attach')
-          end
-        end
-        within 'form#item-form' do
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-fileupload"
           within ".column-value-cms-column-fileupload" do
             expect(page).to have_content("keyvisual.gif")
           end
@@ -611,20 +661,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column9.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.links.upload")
-            end
           end
-        end
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
-          wait_for_cbox_closed do
-            click_on I18n.t('ss.buttons.attach')
-          end
-        end
-        within 'form#item-form' do
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf", addon: ".column-value-cms-column-free"
           within ".column-value-cms-column-free" do
             expect(page).to have_content("shirasagi.pdf")
             click_on I18n.t("sns.file_attach")
@@ -635,6 +677,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column10.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-headline" do
             select column10_head1, from: "item[column_values][][in_wrap][head]"
             fill_in "item[column_values][][in_wrap][text]", with: column10_text1
@@ -645,6 +689,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column11.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-list" do
             fill_in "item[column_values][][in_wrap][lists][]", with: column11_list1
           end
@@ -654,6 +700,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column12.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-table" do
             find("input.height").set(column12_height1)
             find("input.width").set(column12_width1)
@@ -666,6 +714,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column13.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url1
           end
@@ -675,6 +725,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               click_on column14.name
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
         end
         within_cbox do
@@ -691,6 +743,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -761,7 +815,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t('ss.links.edit')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within 'form#item-form' do
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value2
@@ -788,14 +847,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text2
-            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
-        end
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
-        end
-        within 'form#item-form' do
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".column-value-cms-column-fileupload"
           within ".column-value-cms-column-fileupload" do
             expect(page).to have_content("logo.png")
           end
@@ -835,6 +888,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -870,8 +925,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t('ss.links.edit')
-        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within 'form#item-form' do
           %w(
             textfield datefield urlfield2 textarea select radiobutton checkbox fileupload
@@ -883,13 +942,16 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               end
             end
             # wait animation finished
-            wait_for_js_ready
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
             expect(page).to have_no_css(".column-value-cms-column-#{f}")
           end
 
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(article_pages.count).to eq 1
@@ -906,6 +968,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         #
         visit article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         click_on I18n.t('ss.links.delete')
         within 'form' do
           click_on I18n.t('ss.buttons.delete')

@@ -18,19 +18,12 @@ describe "faq_pages", type: :feature, dbscope: :example, js: true do
     context "new" do
       it do
         visit event_new_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
-        end
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("cms.file")
-          end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
+          ensure_addon_opened "#addon-cms-agents-addons-file"
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         end
         click_on I18n.t("ss.links.back_to_index")
 
@@ -39,14 +32,18 @@ describe "faq_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.new")
         end
         wait_for_form_restored
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "form#item-form" do
-          within '#selected-files' do
+          within '.file-view' do
             expect(page).to have_css('.name', text: 'keyvisual.jpg')
           end
           click_on I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_content(name)
         expect(page).to have_content('keyvisual')
         expect(Event::Page.count).to eq 1
@@ -61,19 +58,12 @@ describe "faq_pages", type: :feature, dbscope: :example, js: true do
     context "edit" do
       it do
         visit event_edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: name
-        end
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("cms.file")
-          end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
+          ensure_addon_opened "#addon-cms-agents-addons-file"
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         end
         click_on I18n.t("ss.links.back_to_show")
         wait_for_js_ready
@@ -85,9 +75,11 @@ describe "faq_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_form_restored
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "form#item-form" do
-          within '#selected-files' do
+          within '.file-view' do
             expect(page).to have_css('.name', text: 'keyvisual.jpg')
           end
           click_on I18n.t('ss.buttons.publish_save')

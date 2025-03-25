@@ -47,7 +47,7 @@
     <% end %>
   <% end %>
 
-  <div class="index user-files">
+  <div class="user-files">
     <% @items.each do |item| %>
       <%
         data_hash = Hash[%i[id name humanized_name extname url image? thumb_url image_dimension].map { |m| [m, (item.send(m) rescue nil)] }]

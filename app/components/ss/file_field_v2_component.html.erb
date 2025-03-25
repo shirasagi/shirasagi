@@ -1,0 +1,19 @@
+<div class="ss-file-field-v2" id="<%= element_id %>" data-controller="ss--file-field" data-ss--file-field-target="fileUploadDropArea">
+  <script type="application/json" data-ss--file-field-target="option">
+    <%==
+      {
+        "api" => upload_api_path,
+        "selectApi" => select_api_path,
+        "dialogType" => "ss",
+        "selectionType" => "replace"
+      }.to_json
+    %>
+  </script>
+
+  <%= button_tag t('ss.buttons.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-field#openDialog" } %>
+  <span class="humanized-name"><%= file.try(:humanized_name) %></span>
+  <%= sanitizer_status(file) %>
+  <%= hidden_field_tag("#{object_name}[#{object_method}_id]", file.try(:id), id: nil, class: "file-id") %>
+  <%= button_tag md_icons.outlined("delete", size: 13), type: :button, name: "delete", title: t("ss.buttons.delete"), class: [ 'btn', 'btn-red', 'btn-file-delete', file.blank? ? "hide" : nil ], data: { action: "ss--file-field#deleteFile" } %>
+  <%= tag.span I18n.t("ss.notice.file_droppable"), class: [ "upload-drop-notice", file.blank? ? nil : "hide" ] %>
+</div>
