@@ -10,13 +10,11 @@ class Opendata::Graph::Pie < Opendata::Graph::Base
         @labels.shift
         @labels.shift if total_column1?
       else
-        data = line.dup
-        label = data.shift
-        data.shift if total_column1?
-        @datasets << {
-          label: label,
-          data: format_data(data)
-        }
+        values = line.dup
+        label = values.shift
+        values = format_values(values)
+        values.shift if total_column1?
+        @datasets << { label: label, data: values }
       end
     end
   end
