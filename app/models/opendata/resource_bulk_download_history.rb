@@ -4,6 +4,8 @@ class Opendata::ResourceBulkDownloadHistory
   include SS::Document
   include SS::Reference::Site
 
+  index({ site_id: 1, downloaded: 1 })
+
   field :dataset_id, type: Integer
   field :dataset_name, type: String
 
