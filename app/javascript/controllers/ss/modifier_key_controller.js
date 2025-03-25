@@ -18,7 +18,7 @@ function initialize() {
 export default class extends Controller {
   connect() {
     initialize();
-    if (!instances.includes(this)) {
+    if (!instances.has(this)) {
       instances.add(this);
     }
   }

@@ -106,6 +106,11 @@ module SS
 
     WAIT_ALL_CKEDITORS_READY_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
+        if (! ("CKEDITOR" in window)) {
+          resolve(true);
+          return;
+        }
+
         var promises = [];
         Object.values(CKEDITOR.instances).forEach(function(ckeditor) {
           if (ckeditor.status === "ready") {
@@ -239,12 +244,52 @@ module SS
 
     WAIT_FOR_TURBO_FRAME_SCRIPT = <<~SCRIPT.freeze
       (function(element, resolve) {
-        var el = $(element)[0];
-        if (el.hasAttribute("complete")) {
+        const isCompleted = function(el) {
+          return el.hasAttribute("complete");
+        }
+
+        const el = $(element)[0];
+        if (isCompleted(el)) {
           resolve(true);
           return;
         }
         el.addEventListener("turbo:frame-load", () => resolve(true), { once: true });
+      })(...arguments)
+    SCRIPT
+
+    WAIT_FOR_ALL_TURBO_FRAMES_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        const isLazy = function(el) {
+          const loadingAttr = el.getAttribute("loading");
+          return loadingAttr && loadingAttr === "lazy";
+        }
+        const hasSrc = function(el) {
+          return el.hasAttribute("src");
+        }
+        const isCompleted = function(el) {
+          return el.hasAttribute("complete");
+        }
+
+        const promises = [];
+        document.querySelectorAll("turbo-frame").forEach((el) => {
+          if (isLazy(el) || !hasSrc(el) || isCompleted(el)) {
+            return;
+          }
+
+          const promise = new Promise((resolutionFunc, rejectionFunc) => {
+            el.addEventListener("turbo:frame-load", () => resolutionFunc(true), { once: true });
+          });
+          promises.push(promise);
+        });
+
+        if (promises.length === 0) {
+          console.log(`found no frames to wait for load`)
+          resolve(true);
+          return;
+        }
+
+        console.log(`found ${promises.length} frames to wait for load`)
+        Promise.all(promises).then(() => resolve(true));
       })(...arguments)
     SCRIPT
 
@@ -755,6 +800,12 @@ module SS
       expect(result).to be_truthy
     end
 
+    def wait_for_all_turbo_frames
+      wait_for_js_ready
+      result = page.evaluate_async_script(WAIT_FOR_ALL_TURBO_FRAMES_SCRIPT)
+      expect(result).to be_truthy
+    end
+
     def wait_for_tree_render(element)
       result = page.evaluate_async_script(WAIT_FOR_TREE_RENDER_SCRIPT, element)
       expect(result).to be_truthy
@@ -790,6 +841,216 @@ module SS
       expect(ret).to be_truthy
 
       fill_in locator, with: with.to_s + "\n"
+    end
+
+    def ss_upload_file(*file_paths, addon: "#addon-cms-agents-addons-file")
+      if SS.file_upload_dialog == :v1
+        ss_upload_file_v1(*file_paths, addon: addon)
+      else
+        ss_upload_file_v2(*file_paths, addon: addon)
+      end
+    end
+
+    def ss_upload_file_v1(*file_paths, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_cbox do
+        attach_file "item[in_files][]", file_paths
+        wait_for_cbox_closed do
+          click_on I18n.t("ss.buttons.attach")
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view", text: ::File.basename(file_paths.first))
+      end
+    end
+
+    def ss_upload_file_v2(*file_paths, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", file_paths
+        end
+      end
+      wait_for_cbox_closed do
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view", text: ::File.basename(file_paths.first))
+      end
+    end
+
+    def ss_select_file(file, addon: "#addon-cms-agents-addons-file")
+      if SS.file_upload_dialog == :v1
+        ss_select_file_v1(file, addon: addon)
+      else
+        ss_select_file_v2(file, addon: addon)
+      end
+    end
+
+    def ss_select_file_v1(file, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_cbox do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+        wait_for_cbox_closed do
+          click_on file.name
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+      end
+    end
+
+    def ss_select_file_v2(file, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.select_from_list")
+        end
+      end
+      within_dialog do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+        wait_for_cbox_closed do
+          click_on file.name
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+      end
+    end
+
+    def upload_to_ss_file_field(locator, path)
+      if SS.file_upload_dialog == :v1
+        upload_to_ss_file_field_v1(locator, path)
+      else
+        upload_to_ss_file_field_v2(locator, path)
+      end
+    end
+
+    def upload_to_ss_file_field_v1(element_id, path)
+      within "##{element_id}" do
+        wait_for_cbox_opened do
+          # click_on I18n.t("ss.buttons.upload")
+          first(".btn-file-upload").click
+        end
+      end
+      within_cbox do
+        attach_file "item[in_files][]", path
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
+      end
+      within "##{element_id}" do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(path, ".*"))
+      end
+    end
+
+    def upload_to_ss_file_field_v2(element_id, path)
+      within "##{element_id}" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", path
+        end
+      end
+      wait_for_cbox_closed do
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      within "##{element_id}" do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(path, ".*"))
+      end
+    end
+
+    def attach_to_ss_file_field(element_id, ss_file)
+      if SS.file_upload_dialog == :v1
+        attach_to_ss_file_field_v1(element_id, ss_file)
+      else
+        attach_to_ss_file_field_v2(element_id, ss_file)
+      end
+    end
+
+    def attach_to_ss_file_field_v1(element_id, ss_file)
+      within "##{element_id}" do
+        wait_for_cbox_opened { first(".btn-file-upload").click }
+      end
+      within_cbox do
+        expect(page).to have_css(".file-view", text: ss_file.name)
+        wait_for_cbox_closed { click_on ss_file.name }
+      end
+      within "##{element_id}" do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(ss_file.name, ".*"))
+      end
+    end
+
+    def attach_to_ss_file_field_v2(element_id, ss_file)
+      within "##{element_id}" do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within ".cms-tabs" do
+            click_on I18n.t("ss.buttons.select_from_list")
+          end
+        end
+      end
+      within_dialog do
+        expect(page).to have_css(".file-view", text: ss_file.name)
+        wait_for_cbox_closed { click_on ss_file.name }
+      end
+      within "##{element_id}" do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(ss_file.name, ".*"))
+      end
+    end
+
+    def ss_drop_file(locator, file_path)
+      file_input = unique_id
+      page.execute_script <<~SCRIPT
+        (function() {
+          const fileInputElement = document.createElement("input");
+          fileInputElement.name = `#{file_input}`;
+          fileInputElement.type = "file";
+          document.body.appendChild(fileInputElement);
+        })(...arguments)
+      SCRIPT
+
+      element = page.document.first("body")
+      page.within_element(element) do
+        attach_file file_input, file_path
+      end
+
+      script = <<~SCRIPT
+        (function(dropTargetElement) {
+          const fileInputElement = document.querySelector(`[name="#{file_input}"]`);
+
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(fileInputElement.files[0]);
+
+          const dropEvent = new DragEvent("drop", { dataTransfer });
+          dropTargetElement.dispatchEvent(dropEvent);
+        })(...arguments)
+      SCRIPT
+      page.execute_script script, first(locator)
     end
   end
 end

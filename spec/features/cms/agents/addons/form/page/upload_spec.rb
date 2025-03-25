@@ -10,7 +10,14 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   let(:filename) { "#{unique_id}.png" }
 
   before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+
     login_cms_user
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
   end
 
   shared_examples "file dialog is" do

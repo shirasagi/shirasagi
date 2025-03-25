@@ -23,6 +23,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:role) { create :cms_role, name: "role", permissions: permissions, cur_site: site }
   let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [cms_group.id], cms_role_ids: [role.id] }
 
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
+
   context "attach file from upload" do
     before { login_cms_user }
 
@@ -47,7 +56,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within '#selected-files' do
+      within '.file-view' do
         expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
         expect(page).to have_css('.name', text: 'keyvisual.gif')
       end
@@ -79,7 +88,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within '#selected-files' do
+      within '.file-view' do
         expect(page).to have_css('.name', text: 'modify.jpg')
       end
     end
@@ -111,7 +120,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "form#item-form" do
-        within '#selected-files' do
+        within '.file-view' do
           expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
@@ -158,7 +167,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
 
           within "form#item-form" do
-            within '#selected-files' do
+            within '.file-view' do
               expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
               expect(page).to have_css('.name', text: 'keyvisual.gif')
             end

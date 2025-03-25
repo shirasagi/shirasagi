@@ -1,0 +1,51 @@
+.ss-file-field, .ss-file-field-v2 {
+  background: #f2f2f2;
+
+  .btn-file-upload.cboxElement {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  .btn.dropdown-toggle {
+    margin-left: -1px;
+    padding-right: .5rem;
+    padding-left: .5rem;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+  .dropdown-menu {
+    padding: 4px;
+    border: $border-gray4;
+    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+    background: $white;
+    white-space: nowrap;
+    a {
+      display: block;
+      padding: 5px 10px;
+      background-image: none;
+    }
+  }
+  .humanized-name {
+    margin-left: .5rem;
+  }
+  .upload-drop-notice {
+    margin: 0 !important;
+  }
+}
+.ss-file-field-v2 {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+
+  .btn-file-delete {
+    display: flex;
+    align-items: center;
+  }
+}
+// 標準の変なCSSを打ち消す
+dl.see > dd {
+  .ss-file-field-v2 {
+    input + button {
+      margin-top: unset;
+    }
+  }
+}

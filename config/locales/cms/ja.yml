@@ -127,6 +127,7 @@ ja:
     batch_operation: 一括操作
     csv_export_node: 一括エクスポート
     csv_import_node: 一括インポート
+    root: ルート
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'

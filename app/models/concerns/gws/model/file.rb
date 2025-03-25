@@ -55,9 +55,9 @@ module Gws::Model::File
       "#{SS::Application.private_root}/files"
     end
 
-    def image_resizes_min_attributes(opts = {})
-      if opts[:user]
-        disable_image_resizes = SS::ImageResize.allowed?(:disable, opts[:user]) &&
+    def image_resizes_min_attributes(user: nil, node: nil)
+      if user
+        disable_image_resizes = SS::ImageResize.allowed?(:disable, user) &&
                                 SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
         return {} if disable_image_resizes
       end
@@ -74,16 +74,16 @@ module Gws::Model::File
       end
     end
 
-    def resizing_options(opts = {})
+    def resizing_options(user: nil, node: nil)
       options = [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
       ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
 
-      return options unless opts[:user]
+      return options unless user
 
-      min_width = image_resizes_min_attributes(opts)['max_width']
-      min_height = image_resizes_min_attributes(opts)['max_height']
+      min_width = image_resizes_min_attributes(user: user)['max_width']
+      min_height = image_resizes_min_attributes(user: user)['max_height']
 
       return options if min_width.blank? || min_height.blank?
 
@@ -93,12 +93,12 @@ module Gws::Model::File
       end
     end
 
-    def quality_options(opts = {})
+    def quality_options(user:, node: nil)
       options = SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] } rescue []
 
-      return options unless opts[:user]
+      return options unless user
 
-      min_quality = image_resizes_min_attributes(user: opts[:user], node: opts[:node])['quality']
+      min_quality = image_resizes_min_attributes(user: user)['quality']
 
       return options unless min_quality
 

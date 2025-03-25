@@ -169,18 +169,8 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-file")
-          within "#addon-cms-agents-addons-file" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-          within_cbox do
-            attach_file "item[in_files][]", attach_file_path
-            wait_for_cbox_closed do
-              click_button I18n.t("ss.buttons.attach")
-            end
-          end
-          within '#selected-files' do
+          ss_upload_file attach_file_path
+          within '.file-view' do
             click_on I18n.t("sns.image_paste")
           end
 
@@ -219,18 +209,8 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           visit edit_path
 
           ensure_addon_opened("#addon-cms-agents-addons-file")
-          within "#addon-cms-agents-addons-file" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-          within_cbox do
-            attach_file "item[in_files][]", attach_file_path
-            wait_for_cbox_closed do
-              click_button I18n.t("ss.buttons.attach")
-            end
-          end
-          within '#selected-files' do
+          ss_upload_file attach_file_path
+          within '.file-view' do
             click_on I18n.t("sns.image_paste")
           end
 

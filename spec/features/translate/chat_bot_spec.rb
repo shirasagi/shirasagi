@@ -81,6 +81,7 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
         expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
         expect(page).to have_css("#translate-tool-1", text: lang_en.name)
         select lang_en.name, from: "translate-tool-1"
+        wait_for_ajax
 
         within "#chat-1" do
           expect(page).to have_css("a.chat-suggest", text: "[en:#{suggest1}]")

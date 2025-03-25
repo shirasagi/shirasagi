@@ -13,6 +13,7 @@ module Opendata::Resource::ReportModel
 
   included do
     index({ site_id: 1, year_month: 1 })
+    index({ site_id: 1, dataset_id: 1, resource_id: 1 })
 
     set_permission_name "opendata_reports", :read
 

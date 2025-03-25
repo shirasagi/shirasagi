@@ -48,6 +48,7 @@ en:
     replace: Replace
     before_replace: Before replacement
     after_replace: After replacement
+    unused_file: Unused file
     broken_link: Broken link
     auto_reload: Automatic updates
     quality: Quality
@@ -73,6 +74,7 @@ en:
     mfa_otp_enabled_at: "Enabled at %{time}"
     mfa_otp_not_enabled_yet: "Not enabled yet"
     system_operation: "-- System operation --"
+    upload_or_select_from_list: File upload or select file from list
 
     views:
       login/login:
@@ -80,15 +82,15 @@ en:
         password: Password
         organization_uid: Staff number or e-mail address
       index:
-        created: "Created：%{created}"
+        created: "Created: %{created}"
         updated: "Updated: %{updated}"
         released: "Published: %{released}"
         approved: "Approved: %{approved}"
-        reserved: "Reserved：%{time}"
-        delivered: "Delivered：%{time}"
-        term: "Term：%{term}"
-        openrate: "Openrate：%{openrate}"
-        expiration_date: "Expiration date：%{expiration_date}"
+        reserved: "Reserved: %{time}"
+        delivered: "Delivered: %{time}"
+        term: "Term: %{term}"
+        openrate: "Openrate: %{openrate}"
+        expiration_date: "Expiration date: %{expiration_date}"
         close_date: "Publication end date: "
       oauth2/application:
         header:
@@ -268,6 +270,9 @@ en:
       include_none_of: Include none of
       decide: Decide
       reset_mfa_otp: Reset OTP
+      select_from_list: Select from list
+      select_files: Select files
+      cancel_upload: Cancel upload
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?
@@ -363,6 +368,8 @@ en:
       ordered_by_file_name_order: Ordered by name.
       ordered_by_file_upload_order: Ordered by upload order.
       reset_mfa_otp: Reset OTP
+      wait_to_upload: Waiting to upload.
+      finished_uploading: Finished uploading.
 
     info:
       soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.
@@ -629,7 +636,6 @@ en:
       prev_slide_message: "Previous slide"
       next_slide_message: "Next slide"
       pagination_bullet_message: "Go to slide {{index}}"
-    unused_file: "Unused"
 
   modules:
     addons:
@@ -655,7 +661,6 @@ en:
       ss/elasticsearch/site_setting: Site search settings
       ss/translate/site_setting: Automatic translation
       ss/site_usage: Usage amount
-      ss/logo_setting: Logo settings
       ss/release: Publishing settings
       ss/generate_lock: Stop exporting
       ss/partner_site: Partner site settings
@@ -684,6 +689,11 @@ en:
         new_password: New Password
         new_password_again: New Password (Confirm)
         old_password: Current Password
+      ss/temp_file_creator:
+        in_file: File
+        name: File name
+        filename: File name (alphanumeric)
+        resizing: Resize
 
   mongoid:
     models:
@@ -1082,8 +1092,8 @@ en:
         permissions: Permissions
         client_id: Client ID
       ss/oauth2/application/confidential:
-        client_secret: クライアントシークレット
-        redirect_uris: リダイレクトURL
+        client_secret: Client Secret
+        redirect_uris: Redirect URL
       ss/oauth2/application/service:
         public_key_type: Public-key type
         public_key: Public-key
@@ -1391,9 +1401,9 @@ en:
       opengraph_type:
         - Select the Open Graph format.
         - "You can see what it looks like:"
-        - Facebook share debugger：https://developers.facebook.com/tools/debug/sharing/
-        - Twitter Card Validator：https://cards-dev.twitter.com/validator/
-        - LINE Page Poker：https://poker.line.naver.jp/
+        - "Facebook share debugger: https://developers.facebook.com/tools/debug/sharing/"
+        - "Twitter Card Validator: https://cards-dev.twitter.com/validator/"
+        - "LINE Page Poker: https://poker.line.naver.jp/"
       opengraph_defaul_image_url:
         - Set the default image URL.
         - If the page does not contain an image, the URL will be set to “og:image”.
