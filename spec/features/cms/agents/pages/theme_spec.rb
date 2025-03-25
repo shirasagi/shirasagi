@@ -40,31 +40,31 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".accessibility__tool-wrap", count: 3)
       expect(page).to have_css("body[data-ss-theme='#{theme_white.class_name}']")
       within all(".accessibility__tool-wrap")[0] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}.active", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}:not(.active)", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_css(".#{theme_white.class_name}.active")
-        expect(page).to have_no_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='true']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
       within all(".accessibility__tool-wrap")[1] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}.active", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}:not(.active)", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_css(".#{theme_white.class_name}.active")
-        expect(page).to have_no_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='true']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
       within all(".accessibility__tool-wrap")[2] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}.active", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}:not(.active)", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_css(".#{theme_white.class_name}.active")
-        expect(page).to have_no_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='true']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
 
       within all(".accessibility__tool-wrap")[0] do
@@ -73,31 +73,31 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
 
       expect(page).to have_css("body[data-ss-theme='#{theme_blue.class_name}']")
       within all(".accessibility__tool-wrap")[0] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}.active", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='true']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
       within all(".accessibility__tool-wrap")[1] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}.active", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='true']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
       within all(".accessibility__tool-wrap")[2] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}.active", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='true']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
 
       # reload したり別ページに遷移した場合、セッションから選択が復元されるはず
@@ -106,31 +106,31 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".accessibility__tool-wrap", count: 3)
       expect(page).to have_css("body[data-ss-theme='#{theme_blue.class_name}']")
       within all(".accessibility__tool-wrap")[0] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}.active", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='true']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
       within all(".accessibility__tool-wrap")[1] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}.active", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='true']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
       within all(".accessibility__tool-wrap")[2] do
-        expect(page).to have_css(".#{theme_white.class_name}", text: theme_white.name)
-        expect(page).to have_css(".#{theme_blue.class_name}", text: theme_blue.name)
-        expect(page).to have_css(".#{theme_black.class_name}", text: theme_black.name)
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}.active", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
 
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_no_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='true']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
 
       within all(".accessibility__tool-wrap")[1] do
@@ -139,19 +139,31 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
 
       expect(page).to have_css("body[data-ss-theme='#{theme_black.class_name}']")
       within all(".accessibility__tool-wrap")[0] do
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_no_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}:not(.active)", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}.active", text: theme_black.name)
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='true']", text: theme_black.name)
       end
       within all(".accessibility__tool-wrap")[1] do
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_no_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}:not(.active)", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}.active", text: theme_black.name)
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='true']", text: theme_black.name)
       end
       within all(".accessibility__tool-wrap")[2] do
-        expect(page).to have_no_css(".#{theme_white.class_name}.active")
-        expect(page).to have_no_css(".#{theme_blue.class_name}.active")
-        expect(page).to have_css(".#{theme_black.class_name}.active")
+        expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}:not(.active)", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}.active", text: theme_black.name)
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='true']", text: theme_black.name)
       end
     end
   end
@@ -197,11 +209,19 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".#{theme_white.class_name}.active", text: theme_white.name)
         expect(page).to have_css(".#{theme_blue.class_name}:not(.active)", text: theme_blue.name)
         expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='true']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
       within ".on-mobile" do
         expect(page).to have_css(".#{theme_white.class_name}.active [aria-label='#{theme_white.name}']")
         expect(page).to have_css(".#{theme_blue.class_name}:not(.active) [aria-label='#{theme_blue.name}']")
         expect(page).to have_css(".#{theme_black.class_name}:not(.active) [aria-label='#{theme_black.name}']")
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='true'] [aria-label='#{theme_white.name}']")
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false'] [aria-label='#{theme_blue.name}']")
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false'] [aria-label='#{theme_black.name}']")
       end
 
       within ".on-pc" do
@@ -212,11 +232,19 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
         expect(page).to have_css(".#{theme_blue.class_name}.active", text: theme_blue.name)
         expect(page).to have_css(".#{theme_black.class_name}:not(.active)", text: theme_black.name)
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='true']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false']", text: theme_black.name)
       end
       within ".on-mobile" do
         expect(page).to have_css(".#{theme_white.class_name}:not(.active) [aria-label='#{theme_white.name}']")
         expect(page).to have_css(".#{theme_blue.class_name}.active [aria-label='#{theme_blue.name}']")
         expect(page).to have_css(".#{theme_black.class_name}:not(.active) [aria-label='#{theme_black.name}']")
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false'] [aria-label='#{theme_white.name}']")
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='true'] [aria-label='#{theme_blue.name}']")
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false'] [aria-label='#{theme_black.name}']")
       end
 
       within ".on-mobile" do
@@ -227,11 +255,19 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".#{theme_white.class_name}:not(.active)", text: theme_white.name)
         expect(page).to have_css(".#{theme_blue.class_name}:not(.active)", text: theme_blue.name)
         expect(page).to have_css(".#{theme_black.class_name}.active", text: theme_black.name)
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false']", text: theme_white.name)
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false']", text: theme_blue.name)
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='true']", text: theme_black.name)
       end
       within ".on-mobile" do
         expect(page).to have_css(".#{theme_white.class_name}:not(.active) [aria-label='#{theme_white.name}']")
         expect(page).to have_css(".#{theme_blue.class_name}:not(.active) [aria-label='#{theme_blue.name}']")
         expect(page).to have_css(".#{theme_black.class_name}.active [aria-label='#{theme_black.name}']")
+
+        expect(page).to have_css(".#{theme_white.class_name}[aria-pressed='false'] [aria-label='#{theme_white.name}']")
+        expect(page).to have_css(".#{theme_blue.class_name}[aria-pressed='false'] [aria-label='#{theme_blue.name}']")
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='true'] [aria-label='#{theme_black.name}']")
       end
     end
   end
