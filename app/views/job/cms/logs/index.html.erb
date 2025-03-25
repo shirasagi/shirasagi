@@ -1,10 +1,10 @@
 <% @tap_menu = proc do |item| %>
-  <%= link_to t('ss.links.show'), action: :show, id: item %>
+  <%= link_to t('ss.links.show'), url_for(action: :show, id: item), data: { turbo: false } %>
 <% end %>
 
 <% @index_title = proc do |item| %>
   <% args = item.args.join(",") rescue nil %>
-  <%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", action: :show, id: item) %>
+  <%= link_to(t(item.class_name.underscore, scope: "job.models") + "(#{args})", url_for(action: :show, id: item), data: { turbo: false }) %>
 <% end %>
 
 <% @index_meta = proc do |item| %>
@@ -33,8 +33,23 @@
   }
 </style>
 
-<%= render template: "cms/crud/index" %>
+<turbo-frame id="job-logs">
+  <%= render template: "cms/crud/index" %>
 
-<%= jquery do %>
-  SS_Clipboard.renderCopy();
-<% end %>
+  <%= jquery do %>
+    SS_Clipboard.renderCopy();
+
+    <% if request.headers.key?("HTTP_TURBO_FRAME") %>
+      history.pushState(history.state, "", new URL("<%== request.url %>"));
+    <% else %>
+      history.replaceState({ initial: "<%== url_for(action: :index) %>" }, "", new URL("<%== request.url %>"));
+    <% end %>
+
+    window.addEventListener("popstate", function (ev) {
+      if ((typeof ev.state === "object") && ("initial" in ev.state)) {
+        ev.preventDefault();
+        location.reload();
+      }
+    });
+  <% end %>
+</turbo-frame>

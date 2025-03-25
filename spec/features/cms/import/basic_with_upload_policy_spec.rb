@@ -26,6 +26,7 @@ describe "cms_import_with_upload_policy", type: :feature, dbscope: :example, js:
               fill_in 'item[import_date]', with: I18n.l(import_date, format: :long)
               click_button I18n.t('ss.buttons.import')
             end
+            wait_for_notice I18n.t('ss.notice.started_import')
           end
         end
         expectation.to have_enqueued_job(Cms::ImportFilesJob)
@@ -63,6 +64,7 @@ describe "cms_import_with_upload_policy", type: :feature, dbscope: :example, js:
               attach_file "item[in_file]", file
               click_button I18n.t('ss.buttons.import')
             end
+            wait_for_notice I18n.t('ss.notice.started_import')
           end
         end
         expectation.to have_enqueued_job(Cms::ImportFilesJob)

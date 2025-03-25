@@ -24,7 +24,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[start_on]", with: start_on
         fill_in "item[end_on]", with: start_on
-        fill_in "item[color]", with: color + "\n"
+        fill_in_color "item[color]", with: color
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')

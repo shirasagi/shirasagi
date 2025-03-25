@@ -76,6 +76,14 @@ module Job::LogsFilter
 
   def index
     @items = log_criteria.search(@s).order_by(updated: -1).page(params[:page]).per(50)
+
+    render_opts = {}
+    if request.headers.key?("HTTP_TURBO_FRAME")
+      @frame_id = request.headers["HTTP_TURBO_FRAME"]
+      render_opts[:layout] = "ss/item_frame"
+    end
+
+    render template: 'index', **render_opts
   end
 
   def show

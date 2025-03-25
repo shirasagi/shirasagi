@@ -20,6 +20,7 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
           fill_in 'item[import_date]', with: I18n.l(now, format: :long)
           click_button I18n.t('ss.buttons.import')
         end
+        wait_for_notice I18n.t('ss.notice.started_import')
       end
       expectation.to have_enqueued_job.exactly(:once)
 
@@ -28,8 +29,6 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
         expect(enqueued_job[:args]).to be_blank
         expect(enqueued_job[:at]).to eq now.to_f
       end
-
-      wait_for_notice I18n.t('ss.notice.started_import')
 
       expect(Cms::ImportJobFile.all.count).to eq 1
       Cms::ImportJobFile.first.tap do |task|
@@ -55,10 +54,10 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
           fill_in 'item[import_date]', with: I18n.l(Time.zone.now, format: :long)
           click_button I18n.t('ss.buttons.import')
         end
+        wait_for_error error_message
 
         expect(enqueued_jobs.size).to eq 0
         expect(current_path).to eq index_path
-        expect(page).to have_css("#errorExplanation li", text: error_message)
       end
     end
 
@@ -80,10 +79,10 @@ describe "cms_import", type: :feature, dbscope: :example, js: true do
           fill_in 'item[import_date]', with: I18n.l(Time.zone.now, format: :long)
           click_button I18n.t('ss.buttons.import')
         end
+        wait_for_error error_message
 
         expect(enqueued_jobs.size).to eq 0
         expect(current_path).to eq index_path
-        expect(page).to have_css("#errorExplanation li", text: error_message)
       end
     end
   end

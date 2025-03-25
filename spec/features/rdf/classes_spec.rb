@@ -25,6 +25,7 @@ describe "rdf_classes", type: :feature, dbscope: :example do
           fill_in "item[labels][ja]", with: unique_id
           click_button I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
         expect(page).to have_no_css("form#item-form")
@@ -52,6 +53,7 @@ describe "rdf_classes", type: :feature, dbscope: :example do
           fill_in "item[labels][ja]", with: "modify"
           click_button I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(current_path).not_to eq sns_login_path
         expect(page).to have_no_css("form#item-form")
       end
@@ -66,6 +68,7 @@ describe "rdf_classes", type: :feature, dbscope: :example do
         within "form" do
           click_button I18n.t("ss.buttons.delete")
         end
+        wait_for_notice I18n.t("ss.notice.deleted")
         expect(current_path).to eq index_path
       end
     end
@@ -88,13 +91,16 @@ describe "rdf_classes", type: :feature, dbscope: :example do
       end
 
       # select rdf class
-      within "table.rdf-search-classes-class-list" do
-        click_link rdf_class1.preferred_label
+      within_cbox do
+        within "table.rdf-search-classes-class-list" do
+          wait_for_cbox_closed { click_link rdf_class1.preferred_label }
+        end
       end
 
       within "form#item-form" do
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       item.reload
       expect(item.sub_class_id).to eq rdf_class1.id

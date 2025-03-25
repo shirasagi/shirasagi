@@ -68,10 +68,10 @@ var showEffectiveAnnualLeaveMinutes = function() {
     href = href.replace("YMD", ymd);
     href = href.replace("UID", uid);
     $.get(href, function(html) {
-      $(".annual-leave-count").html(html);
+      $(".annual-leave-count").html(html).trigger("ss:ready");
     });
   } else {
-    $(".annual-leave-count").html("");
+    $(".annual-leave-count").html("").trigger("ss:ready");
   }
 };
 $('[name="item[leave_type]"]').on("change", showEffectiveAnnualLeaveMinutes);
@@ -104,11 +104,11 @@ showEffectiveAnnualLeaveMinutes();
 <dl class="see">
   <dt><%= @model.t :start_at %><%= @model.tt :start_at %></dt>
   <dd>
-    <%= f.text_field :start_at_date, class: "date js-date" %>
+    <%= f.ss_date_field :start_at_date %>
     <%= f.select :start_at_hour, @item.start_at_hour_options, include_blank: true %>
     <%= f.select :start_at_minute, @item.start_at_minute_options, include_blank: true %>
     <%= t("ss.wave_dash") %>
-    <%= f.text_field :end_at_date, class: "date js-date" %>
+    <%= f.ss_date_field :end_at_date %>
     <%= f.select :end_at_hour, @item.end_at_hour_options, include_blank: true %>
     <%= f.select :end_at_minute, @item.end_at_minute_options, include_blank: true %>
   </dd>

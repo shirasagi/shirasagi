@@ -80,6 +80,11 @@ jobs:
         run: |
           sudo apt update
           sudo apt -y install imagemagick libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
+      - name: Google Chrome Version
+        run: |
+          which google-chrome
+          /usr/bin/google-chrome --version
+        continue-on-error: true
       - name: Set up Ruby
         uses: ruby/setup-ruby@v1
         with:

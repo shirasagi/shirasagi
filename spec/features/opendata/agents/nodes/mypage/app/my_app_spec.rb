@@ -72,6 +72,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
       within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
       expect(current_path).to eq index_path
 
       click_link "あぷり"
@@ -102,6 +103,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
       within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
       within "table.opendata-app" do
         expect(page).to have_content "あぷり2"
@@ -113,6 +115,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
 
       click_link I18n.t('ss.buttons.delete')
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t("ss.notice.deleted"), selector: "#ss-notice"
       expect(current_path).to eq index_path
 
       within "table.opendata-app" do
@@ -189,7 +192,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         check category.name
         click_on I18n.t("ss.buttons.request")
       end
-      expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
       click_link item_name
       expect(page).to have_css(".name .input", text: item_name)

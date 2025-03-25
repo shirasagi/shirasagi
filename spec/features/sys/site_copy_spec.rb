@@ -60,8 +60,8 @@ describe 'sys_site_copy', type: :feature, dbscope: :example do
 
       click_on I18n.t("ss.buttons.run")
 
-      expect(current_path).to eq index_path
       wait_for_notice I18n.t("sys.site_copy/started_job"), wait: 60
+      expect(current_path).to eq index_path
 
       within '#addon-basic' do
         expect(page).to have_css('.sys-site-copy-show')

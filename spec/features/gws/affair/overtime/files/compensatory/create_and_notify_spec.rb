@@ -68,8 +68,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           within "dd.week-in-compensatory" do
             find("a.open-compensatory").click
           end
-          wait_for_js_ready
+        end
 
+        wait_for_js_ready
+
+        within "form#item-form" do
           if start_at
             fill_in_date "item[week_in_start_at_date]", with: start_at.to_date
             select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[week_in_start_at_hour]'
@@ -107,13 +110,19 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           select minute, from: 'item[week_out_compensatory_minute]'
 
           find('[name="item[overtime_name]"]').click
-          wait_for_js_ready
+        end
 
+        wait_for_js_ready
+
+        within "form#item-form" do
           within "dd.week-out-compensatory" do
             find("a.open-compensatory").click
           end
-          wait_for_js_ready
+        end
 
+        wait_for_js_ready
+
+        within "form#item-form" do
           if start_at
             fill_in_date "item[week_out_start_at_date]", with: start_at.to_date
             select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[week_out_start_at_hour]'
@@ -154,13 +163,19 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
           select minute, from: 'item[holiday_compensatory_minute]'
 
           find('[name="item[overtime_name]"]').click
-          wait_for_js_ready
+        end
 
+        wait_for_js_ready
+
+        within "form#item-form" do
           within "dd.holiday-compensatory" do
             find("a.open-compensatory").click
           end
-          wait_for_js_ready
+        end
 
+        wait_for_js_ready
+
+        within "form#item-form" do
           if start_at
             fill_in_date "item[holiday_compensatory_start_at_date]", with: start_at.to_date
             select I18n.t('gws/attendance.hour', count: start_at.hour), from: 'item[holiday_compensatory_start_at_hour]'
@@ -291,8 +306,11 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         within "#addon-basic" do
           expect(page).to have_link(leave_file.name)
           click_on leave_file.name
-          wait_for_js_ready
+        end
 
+        wait_for_js_ready
+
+        within "#addon-basic" do
           expect(page).to have_link(item.name)
           click_on item.name
         end

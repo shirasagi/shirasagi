@@ -6,7 +6,7 @@
 
 <div class="gws-addon-member">
   <% if @model.member_include_custom_groups? %>
-  <dl class="see">
+  <dl class="see member-custom-groups">
     <dt><%= @model.t :member_custom_group_ids %><%= @model.tt :member_custom_group_ids %></dt>
     <dd>
       <%= f.hidden_field "member_custom_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
@@ -28,7 +28,7 @@
   </dl>
   <% end %>
 
-  <dl class="see">
+  <dl class="see member-groups">
     <dt><%= @model.t :member_group_ids %><%= @model.tt :member_group_ids %></dt>
     <dd>
       <%= f.hidden_field "member_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
@@ -57,7 +57,7 @@
   </dl>
 
   <% if @model.member_include_member_ids? %>
-  <dl class="see">
+  <dl class="see member-users">
     <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
     <dd>
       <%= f.hidden_field "member_ids[]", value: "", id: nil, class: "hidden-ids" %>
