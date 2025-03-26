@@ -8,7 +8,7 @@ module SS::TempFilesFrame
 
     before_action :set_search_params
 
-    helper_method :cur_node, :accepts, :items
+    helper_method :cur_node, :items
   end
 
   private
@@ -29,22 +29,14 @@ module SS::TempFilesFrame
     @cur_node = Cms::Node.site(@cur_site).find(cid)
   end
 
-  def accepts
-    return @accepts if instance_variable_defined?(:@accepts)
-
-    accepts = params[:accepts]
-    if accepts.blank? || accepts == "-"
-      @accepts = nil
-      return @accepts
-    end
-
-    @accepts = accepts.map(&:strip).select(&:present?).map { _1.downcase }
+  def setting
+    @setting ||= SS::TempFileFrameSetting.decode(params[:setting])
   end
 
   def set_search_params
     @s ||= begin
       s = SS::TempFileSearchParam.new(
-        ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node, accepts: accepts)
+        ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node, accepts: setting.accepts)
       if params.key?(:s)
         s.attributes = params[:s].permit(s.class.permitted_fields)
       end
@@ -64,7 +56,7 @@ module SS::TempFilesFrame
   end
 
   def crud_redirect_url
-    url_for(action: :index, cid: cur_node, accepts: accepts, s: params[:s].try(:to_unsafe_h))
+    url_for(action: :index, cid: cur_node, s: params[:s].try(:to_unsafe_h))
   end
 
   def set_item
@@ -102,17 +94,14 @@ module SS::TempFilesFrame
 
     respond_to do |format|
       format.html do
-        if params.key?(:file_view)
-          file_view_options = params.require(:file_view).permit(
-            :name, :show_properties, :show_attach, :show_delete, :show_copy_url)
-          %i[show_properties show_attach show_delete show_copy_url].each do |boolean_prop|
-            if file_view_options.key?(boolean_prop)
-              file_view_options[boolean_prop] = !%w(0 false).include?(file_view_options[boolean_prop])
-            end
-          end
-        else
-          file_view_options = {}
-        end
+        file_view_options = {}
+        file_view_options[:name] = setting.field_name if setting.field_name.present?
+        file_view_options[:show_properties] = setting.show_properties if setting.show_properties.present?
+        file_view_options[:show_attach] = setting.show_attach if setting.show_attach.present?
+        file_view_options[:show_delete] = setting.show_delete if setting.show_delete.present?
+        file_view_options[:show_copy_url] = setting.show_copy_url if setting.show_copy_url.present?
+        file_view_options[:show_opendata] = setting.show_opendata if setting.show_opendata.present?
+
         component = SS::FileViewV2Component.new(cur_user: @cur_user, file: @item, **file_view_options)
         component.animated = "animate__animated animate__bounceIn"
         render component, layout: false

@@ -28,17 +28,11 @@ module SS::TempUploadsFrame
   end
   alias cur_node set_node
 
-  def accepts
-    return @accepts if instance_variable_defined?(:@accepts)
-
-    accepts = params[:accepts]
-    if accepts.blank? || accepts == "-"
-      @accepts = nil
-      return @accepts
-    end
-
-    @accepts = accepts.map(&:strip).select(&:present?).map { _1.downcase }
+  def setting
+    @setting ||= SS::TempFileFrameSetting.decode(params[:setting])
   end
+
+  delegate :accepts, to: :setting
 
   public
 
@@ -52,8 +46,8 @@ module SS::TempUploadsFrame
     files.each do |file|
       preview = SS::TempFilePreview.new(cur_site: @cur_site, cur_user: @cur_user)
       preview.attributes = file
-      if accepts.present?
-        preview.accepts = accepts
+      if setting.accepts.present?
+        preview.accepts = setting.accepts
       end
       preview.validate
       previews.push(preview)
@@ -65,8 +59,8 @@ module SS::TempUploadsFrame
   def create
     item_validator = SS::TempFileCreator.new(
       ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: cur_node)
-    if accepts.present?
-      item_validator.accepts = accepts
+    if setting.accepts.present?
+      item_validator.accepts = setting.accepts
     end
 
     item_validator.attributes = params.require(:item).permit(
