@@ -52,6 +52,9 @@ module SS::TempUploadsFrame
     files.each do |file|
       preview = SS::TempFilePreview.new(cur_site: @cur_site, cur_user: @cur_user)
       preview.attributes = file
+      if accepts.present?
+        preview.accepts = accepts
+      end
       preview.validate
       previews.push(preview)
     end
