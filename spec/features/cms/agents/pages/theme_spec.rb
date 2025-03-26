@@ -248,7 +248,8 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       end
 
       within ".on-mobile" do
-        click_on theme_black.name
+        expect(page).to have_css(".#{theme_black.class_name}[aria-pressed='false'] [aria-label='#{theme_black.name}']")
+        find("button.black").click
       end
 
       within ".on-pc" do
