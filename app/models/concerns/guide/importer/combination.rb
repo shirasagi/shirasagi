@@ -1,6 +1,9 @@
 module Guide::Importer::Combination
   extend ActiveSupport::Concern
 
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/BlockLength
+  # rubocop:disable Metrics/MethodLength
   def combinations_enum
     Enumerator.new do |y|
       headers = [I18n.t("guide.procedure")] # 手続き
@@ -57,10 +60,10 @@ module Guide::Importer::Combination
             value = point.name_with_type
             # applicable or not_applicable
             label = edge.not_applicable_point_ids.include?(point.id) ? I18n.t('guide.labels.not_applicable') : nil
-            value =  value.sub('] ', "][#{label}] ") if label
+            value = value.sub('] ', "][#{label}] ") if label
             # necessary or optional_necessary
             label = edge.optional_necessary_point_ids.include?(point.id) ? I18n.t('guide.labels.optional_necessary') : nil
-            value =  value.sub('] ', "][#{label}] ") if label
+            value = value.sub('] ', "][#{label}] ") if label
             value
           end
           row << edge_list.join("\n")
@@ -70,6 +73,9 @@ module Guide::Importer::Combination
       end
     end
   end
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/BlockLength
+  # rubocop:enable Metrics/MethodLength
 
   def import_combinations
     return false unless validate_import
@@ -196,6 +202,7 @@ module Guide::Importer::Combination
     end
   end
 
+  # rubocop:disable Metrics/PerceivedComplexity
   def save_combination_question_edges(item)
     label_question = I18n.t('guide.question')
     label_procedure = I18n.t('guide.procedure')
@@ -211,11 +218,11 @@ module Guide::Importer::Combination
         if cate.match(label_procedure)
           rel = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: name).first
           edge[:point_ids] << rel.id if rel
-          item.errors.add :base, I18n.t('guide.errors.not_found_procedure', id: name)  unless rel
+          item.errors.add :base, I18n.t('guide.errors.not_found_procedure', id: name) unless rel
         elsif cate.match(label_question)
           rel = Guide::Question.site(cur_site).node(cur_node).where(id_name: name).first
           edge[:point_ids] << rel.id if rel
-          item.errors.add :base, I18n.t('guide.errors.not_found_question', id: name)  unless rel
+          item.errors.add :base, I18n.t('guide.errors.not_found_question', id: name) unless rel
         end
         if rel && cate.match(label_not_applicable)
           edge[:not_applicable_point_ids] << rel.id
@@ -237,4 +244,5 @@ module Guide::Importer::Combination
       false
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 end
