@@ -24,7 +24,10 @@ module SS::TempUploadsFrame
       return @cur_node
     end
 
-    @cur_node = Cms::Node.site(@cur_site).find(cid)
+    cur_node = Cms::Node.site(@cur_site).find(cid)
+    raise "404" unless cur_node.allowed?(:read, @cur_user, site: @cur_site)
+
+    @cur_node = cur_node
   end
   alias cur_node set_node
 
