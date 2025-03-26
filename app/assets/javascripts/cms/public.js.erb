@@ -216,14 +216,24 @@ this.SS_Theme = (function () {
           if (isButton) {
             $el.each(function () {
               const $el = $(this);
+              // 元の要素(または子要素)に aria-label があれば取得
+              let ariaLabel = $el.attr("aria-label");
+              if (!ariaLabel) {
+                const $labelEl = $el.find("[aria-label]").first();
+                if ($labelEl.length > 0) {
+                  ariaLabel = $labelEl.attr("aria-label");
+                }
+              }
               const $btn = $("<button>", {
                 type: "button",
                 name: $el.attr("class"),
                 class: $el.attr("class"),
                 "data-ss-theme": cls,
-                "aria-pressed": "false",
-                text: $el.text()
-              });
+                "aria-pressed": "false"
+              }).html($el.html());
+              if (ariaLabel) {
+                $btn.attr("aria-label", ariaLabel);
+              }
               $el.replaceWith($btn);
             });
             $el = $theme.find("button." + $.escapeSelector(cls));
@@ -235,9 +245,8 @@ this.SS_Theme = (function () {
                 name: $el.attr("class"),
                 class: $el.attr("class"),
                 "data-ss-theme": cls,
-                "aria-pressed": "false",
-                text: $el.text()
-              });
+                "aria-pressed": "false"
+              }).html($el.html());
               $el.replaceWith($a);
             });
             $el = $theme.find("a." + $.escapeSelector(cls));
