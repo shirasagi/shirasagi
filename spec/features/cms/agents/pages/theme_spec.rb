@@ -248,7 +248,7 @@ describe "theme/public_filter", type: :feature, dbscope: :example, js: true do
       end
 
       within ".on-mobile" do
-        click_on theme_black.name
+        first("[aria-label='#{theme_black.name}']").click
       end
 
       within ".on-pc" do
