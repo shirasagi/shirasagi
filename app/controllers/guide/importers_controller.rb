@@ -20,7 +20,7 @@ class Guide::ImportersController < ApplicationController
 
   def download_procedures
     @item = Guide::Importer.new fix_params
-    filename = "procedures_#{Time.zone.now.to_i}.csv"
+    filename = "1_procedures_#{Time.zone.now.to_i}.csv"
     encoding = "Shift_JIS"
     send_enum(@item.procedures_enum, type: "text/csv; charset=#{encoding}", filename: filename)
   end
@@ -39,7 +39,7 @@ class Guide::ImportersController < ApplicationController
 
   def download_questions
     @item = Guide::Importer.new fix_params
-    filename = "questions_#{Time.zone.now.to_i}.csv"
+    filename = "2_questions_#{Time.zone.now.to_i}.csv"
     encoding = "Shift_JIS"
     send_enum(@item.questions_enum, type: "text/csv; charset=#{encoding}", filename: filename)
   end
@@ -58,7 +58,7 @@ class Guide::ImportersController < ApplicationController
 
   def download_transitions
     @item = Guide::Importer.new fix_params
-    filename = "transitions_#{Time.zone.now.to_i}.csv"
+    filename = "3_transitions_#{Time.zone.now.to_i}.csv"
     encoding = "Shift_JIS"
     send_enum(@item.transitions_enum, type: "text/csv; charset=#{encoding}", filename: filename)
   end
@@ -73,6 +73,11 @@ class Guide::ImportersController < ApplicationController
 
     @item.attributes = get_params
     render_update @item.import_transitions, location: { action: :index }, render: { template: "import" }
+  end
+
+  def download_template
+    path = ::File.join(Rails.root, "spec/fixtures/guide/guide_templates.zip")
+    send_file path, disposition: :attachment, x_sendfile: true
   end
 
   def download_combinations
@@ -94,8 +99,8 @@ class Guide::ImportersController < ApplicationController
     render_update @item.import_combinations, location: { action: :index }, render: { template: "import" }
   end
 
-  def download_template
-    path = ::File.join(Rails.root, "spec/fixtures/guide/guide_templates.zip")
+  def download_combination_template
+    path = ::File.join(Rails.root, "spec/fixtures/guide/templates/guide_full_template.csv")
     send_file path, disposition: :attachment, x_sendfile: true
   end
 end

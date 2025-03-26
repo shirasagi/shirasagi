@@ -41,6 +41,7 @@ ja:
       import_questions: 質問のインポート
       import_transitions: 選択肢のインポート
       import_combinations: 統合インポート
+      import_partials: 個別インポート
       necessary: 必要
       optional_necessary: 任意必要
     views:
@@ -53,6 +54,7 @@ ja:
       input_explanation: 説明を入力
     notice:
       import_summary: 以下の順番にインポートを実施してください。
+      import_combination: データが統合された１ファイルを利用します。（列は変更しないで下さい。）
     options:
       question_type:
         yes_no: 'はい・いいえ'

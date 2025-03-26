@@ -34,11 +34,13 @@ Rails.application.routes.draw do
       get :import_transitions, on: :collection
       post :import_transitions, on: :collection
 
+      get :download_template, on: :collection
+
       get :download_combinations, on: :collection
       get :import_combinations, on: :collection
       post :import_combinations, on: :collection
 
-      get :download_template, on: :collection
+      get :download_combination_template, on: :collection
     end
     resource :diagnostic, only: %i[show]
   end

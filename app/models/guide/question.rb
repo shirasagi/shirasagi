@@ -2,7 +2,7 @@ class Guide::Question < Guide::Diagram::Point
   include Cms::SitePermission
   include Guide::Addon::Question
 
-  attr_accessor :row_index # for import
+  attr_accessor :row_index, :tmp_edges # for import
 
   set_permission_name "guide_questions"
 

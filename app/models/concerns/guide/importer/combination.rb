@@ -81,7 +81,6 @@ module Guide::Importer::Combination
       @row = row
       break if save_combination_procedure == false
     end
-
     return false if errors.present?
 
     question_index = nil
@@ -104,12 +103,10 @@ module Guide::Importer::Combination
         break if save_combination_question == false
       end
     end
+    return false if errors.present?
 
     @questions.each do |item|
-      next if item.save
-      message = item.errors.full_messages.join("\n")
-      errors.add :base, "Line #{item.row_index}: #{I18n.t("guide.errors.save_failed", message: message)}"
-      break
+      break if save_combination_question_edges(item) == false
     end
 
     errors.empty?
@@ -168,49 +165,76 @@ module Guide::Importer::Combination
       item.order = @row[4]
       item.question_type = question_types[@row[5]].to_s
       item.check_type = check_types[@row[6]].to_s
-      item.in_edges = []
+
       item.row_index = @row_index
+      item.tmp_edges = []
       @questions << item
+
+      if item.save
+        true
+      else
+        message = item.errors.full_messages.join("\n")
+        errors.add :base, "Line #{@row_index}: #{I18n.t("guide.errors.save_failed", message: message)}"
+        false
+      end
 
     elsif @row[7].present? # 選択肢
       item = @questions.last
-      return unless item
+      return true unless item
 
-      label_question = I18n.t('guide.question')
-      label_procedure = I18n.t('guide.procedure')
-      label_not_applicable = I18n.t('guide.labels.not_applicable')
-      label_optional_necessary = I18n.t('guide.labels.optional_necessary')
-
-      data = {
+      item.tmp_edges ||= []
+      item.tmp_edges << {
         value: @row[7],
         question_type: item.question_type,
         explanation: @row[8],
         point_ids: [],
         not_applicable_point_ids: [],
-        optional_necessary_point_ids: []
+        optional_necessary_point_ids: [],
+        point_names: @row[9].to_s.strip.split("\n")
       }
+      return true
+    end
+  end
 
+  def save_combination_question_edges(item)
+    label_question = I18n.t('guide.question')
+    label_procedure = I18n.t('guide.procedure')
+    label_not_applicable = I18n.t('guide.labels.not_applicable')
+    label_optional_necessary = I18n.t('guide.labels.optional_necessary')
+
+    item.in_edges = item.tmp_edges.to_a.map do |edge|
       # 非該当, 任意必要
-      @row[9].to_s.split("\n").each do |line|
+      edge[:point_names].to_a.each do |line|
         cate, name = line.split(/ /, 2)
         rel = nil
 
         if cate.match(label_procedure)
           rel = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: name).first
-          data[:point_ids] << rel.id if rel
+          edge[:point_ids] << rel.id if rel
+          item.errors.add :base, I18n.t('guide.errors.not_found_procedure', id: name)  unless rel
         elsif cate.match(label_question)
           rel = Guide::Question.site(cur_site).node(cur_node).where(id_name: name).first
-          data[:point_ids] << rel.id if rel
+          edge[:point_ids] << rel.id if rel
+          item.errors.add :base, I18n.t('guide.errors.not_found_question', id: name)  unless rel
         end
         if rel && cate.match(label_not_applicable)
-          data[:not_applicable_point_ids] << rel.id
+          edge[:not_applicable_point_ids] << rel.id
         end
         if rel && cate.match(label_optional_necessary)
-          data[:optional_necessary_point_ids] << rel.id
+          edge[:optional_necessary_point_ids] << rel.id
         end
       end
 
-      item.in_edges << data
+      edge.delete(:point_names)
+      edge
+    end
+
+    if item.errors.empty?
+      item.save
+    else
+      message = item.errors.full_messages.uniq.join("\n")
+      errors.add :base, "Line #{item.row_index}: #{I18n.t("guide.errors.save_failed", message: message)}"
+      false
     end
   end
 end
