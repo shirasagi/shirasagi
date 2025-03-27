@@ -24,11 +24,13 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
     end
 
     describe "#new" do
+      let(:name) { unique_id }
+
       it do
         visit new_path
         within "form#item-form" do
           attach_file "item[in_file]", resource_file_path
-          fill_in "item[name]", with: unique_id
+          fill_in "item[name]", with: name
           select license.name, from: "item_license_id"
           attach_file "item[in_tsv]", resource_tsv_path
           click_button I18n.t('ss.buttons.save')
@@ -36,6 +38,10 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
         expect(page).to have_no_css("form#item-form")
+
+        expect(File.exist?(dataset.path)).to be_truthy
+        html = ::File.read(dataset.path)
+        expect(html).to include(name)
       end
     end
 
@@ -78,6 +84,10 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
           end
           expect(current_path).to eq show_path
           expect(page).to have_no_css("form#item-form")
+
+          expect(File.exist?(dataset.path)).to be_truthy
+          html = ::File.read(dataset.path)
+          expect(html).to include("#{item.name}-modify")
         end
       end
 
@@ -206,6 +216,10 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
           expect(current_path).to eq show_path
           # acquire that tsv file is not saved.
           expect(item.tsv).to be_nil
+
+          expect(File.exist?(dataset.path)).to be_truthy
+          html = ::File.read(dataset.path)
+          expect(html).to include(item.name)
         end
       end
     end
