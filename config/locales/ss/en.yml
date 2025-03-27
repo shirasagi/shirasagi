@@ -38,6 +38,10 @@ en:
     quota: Size
     encoding: Character encoding
     text_zoom: Character size
+    font_size:
+      small: small
+      medium: standard
+      large: large
     default_here_label: "Click here for details⇒"
     dash: ー
     wave_dash: ～

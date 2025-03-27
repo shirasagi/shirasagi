@@ -38,6 +38,10 @@ ja:
     quota: 容量
     encoding: 文字コード
     text_zoom: 文字サイズ
+    font_size:
+      small: 小さく
+      medium: 標準
+      large: 大きく
     default_here_label: "詳細はこちら⇒"
     dash: ー
     wave_dash: ～
