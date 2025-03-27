@@ -6,6 +6,7 @@ class Guide::Importer
   include Guide::Importer::Procedure
   include Guide::Importer::Question
   include Guide::Importer::Transition
+  include Guide::Importer::Combination
 
   set_permission_name "guide_procedures"
 
