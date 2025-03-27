@@ -103,4 +103,52 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       expect(download1_hash).to eq download3_hash
     end
   end
+
+  context "questions_relation" do
+    before { login_cms_user }
+
+    it "#import_combinations" do
+      visit import_combinations_guide_importers_path(site, node)
+      within "form#task-form" do
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/guide/csv/guide000_0000000000.csv"
+        page.accept_confirm(I18n.t("ss.confirm.import")) do
+          click_on I18n.t('ss.buttons.import')
+        end
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      visit download_combinations_guide_importers_path(site, node)
+      wait_for_download
+      download1_file = downloads[0]
+      download1_hash = Digest::SHA256.file(download1_file).hexdigest
+
+      expect(Guide::Procedure.all.size).to eq 2
+      expect(Guide::Question.all.size).to eq 2
+      Guide::Question.all.each_with_index do |item, idx|
+        expect(item.edges[0][:point_ids].count).to eq [2, 2][idx]
+        expect(item.edges[0][:not_applicable_point_ids].count).to eq [2, 2][idx]
+        expect(item.edges[0][:optional_necessary_point_ids].count).to eq [2, 2][idx]
+        expect(item.edges[1][:point_ids].count).to eq [2, 2][idx]
+        expect(item.edges[1][:not_applicable_point_ids].count).to eq [0, 0][idx]
+        expect(item.edges[1][:optional_necessary_point_ids].count).to eq [0, 0][idx]
+      end
+
+      visit import_combinations_guide_importers_path(site, node)
+      within "form#task-form" do
+        attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/guide/csv/guide000_0000000000.csv"
+        page.accept_confirm(I18n.t("ss.confirm.import")) do
+          click_on I18n.t('ss.buttons.import')
+        end
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      visit download_combinations_guide_importers_path(site, node)
+      wait_for_download
+
+      download2_file = downloads[1]
+      download2_hash = Digest::SHA256.file(download1_file).hexdigest
+
+      expect(download1_hash).to eq download2_hash
+    end
+  end
 end
