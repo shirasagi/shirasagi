@@ -116,9 +116,10 @@
       }
     }
     .select-presence-state {
-      width: calc(100% - 3em);
+      margin-left: 3px;
     }
     .editable .presence-state {
+      white-space: nowrap;
       cursor: pointer;
     }
     .no-overflow {
@@ -127,7 +128,9 @@
     }
   }
   td:first-child .no-overflow {
-    white-space: normal;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
   }
   &.group-users {
     .list-head {
