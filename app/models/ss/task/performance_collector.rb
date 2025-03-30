@@ -16,21 +16,42 @@ class SS::Task
       end
 
       PerformanceCollector.current = self
-      self.class.install_mongo_subscriber
+      @mongo_subscriber = self.class.install_mongo_subscriber
     end
 
     class MongoSubscriber
+      attr_accessor :db_access_count, :db_success_count, :db_failed_count
+
+      def initialize
+        self.db_access_count = 0
+        self.db_success_count = 0
+        self.db_failed_count = 0
+      end
+
       def started(event)
+        self.db_access_count += 1
       end
 
       def succeeded(event)
+        self.db_success_count += 1
+
         return if PerformanceCollector.current.blank?
         PerformanceCollector.current.increment_db_stats(event, "succeeded")
       end
 
       def failed(event)
+        self.db_failed_count += 1
+
         return if PerformanceCollector.current.blank?
         PerformanceCollector.current.increment_db_stats(event, "failed")
+      end
+
+      def to_json(*args)
+        {
+          db_access_count: self.db_access_count,
+          db_success_count: self.db_success_count,
+          db_failed_count: self.db_failed_count
+        }.to_json
       end
     end
 
@@ -53,6 +74,11 @@ class SS::Task
 
       if !::File.empty?(@temp_file.path)
         ::FileUtils.cp(@temp_file.path, @task.perf_log_file_path, preserve: true)
+      end
+
+      puts @mongo_subscriber.to_json
+      ::File.open("#{Rails.root}/tmp/mongo_access_count_#{Process.pid}.json", "wt") do |f|
+        f.write(@mongo_subscriber.to_json)
       end
     ensure
       if @subscriber
