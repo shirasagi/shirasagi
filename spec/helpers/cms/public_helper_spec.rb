@@ -38,7 +38,7 @@ describe Cms::PublicHelper, type: :helper, dbscope: :example do
           html = helper.paginate(items)
           html = Nokogiri::HTML.fragment(html)
           expect(html.css(".first a")[0]).to be_present
-          expect(html.css(".first a")[0].attr("href")).to eq "/gyosei/docs"
+          expect(html.css(".first a")[0].attr("href")).to eq "/gyosei/docs/"
           expect(html.css(".first a")[0].text).to eq "«"
 
           expect(html.css(".prev a")[0]).to be_present
@@ -70,7 +70,7 @@ describe Cms::PublicHelper, type: :helper, dbscope: :example do
           html = helper.paginate(items)
           html = Nokogiri::HTML.fragment(html)
           expect(html.css(".first a")[0]).to be_present
-          expect(html.css(".first a")[0].attr("href")).to eq "/gyosei/docs?keyword=test"
+          expect(html.css(".first a")[0].attr("href")).to eq "/gyosei/docs/?keyword=test"
           expect(html.css(".first a")[0].text).to eq "«"
         end
       end
