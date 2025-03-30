@@ -47,8 +47,8 @@ env:
     - LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$HOME/.local/lib
     - LD_RUN_PATH=$LD_RUN_PATH:$HOME/.local/lib
     - TZ=Asia/Tokyo
-    - CAPYBARA_MAX_WAIT_TIME=300
-    - CAPYBARA_AJAX_WAIT_TIME=300
+    - CAPYBARA_MAX_WAIT_TIME=45
+    - CAPYBARA_AJAX_WAIT_TIME=45
     - allow_open_jtalk=1
 
 before_install:
