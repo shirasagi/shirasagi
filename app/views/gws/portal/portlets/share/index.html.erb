@@ -4,28 +4,30 @@
 <div class="main-box">
   <div class="portlet-title"><%= @portlet.name %></div>
 
-  <ul class="list-items">
-    <% items.each do |item| %>
-      <li class="list-item">
-        <div class="info">
-          <%= link_to item.name, gws_share_file_path(id: item.id), class: 'title' %>
-          <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
-          <div class="meta">
-            <span class="datetime"><%= ss_time_tag item.updated %></span>
-            <span class="size"><%= number_to_human_size(item.size) %></span>
-            <span class="gws-share-categories">
-              <% item.categories.compact.each do |category| %>
-                <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
-                            class: "gws-category-label", style: category_label_css(category) %>
-              <% end %>
-            </span>
+  <% if Gws.module_usable?(:share, @cur_site, @cur_user) %>
+    <ul class="list-items">
+      <% items.each do |item| %>
+        <li class="list-item">
+          <div class="info">
+            <%= link_to item.name, gws_share_file_path(id: item.id), class: 'title' %>
+            <% if item.new_flag? %><span class="gws-board-flag-new"></span><% end %>
+            <div class="meta">
+              <span class="datetime"><%= ss_time_tag item.updated %></span>
+              <span class="size"><%= number_to_human_size(item.size) %></span>
+              <span class="gws-share-categories">
+                <% item.categories.compact.each do |category| %>
+                  <%= link_to category.trailing_name, gws_share_files_path(category: category.id),
+                              class: "gws-category-label", style: category_label_css(category) %>
+                <% end %>
+              </span>
+            </div>
           </div>
-        </div>
-      </li>
-    <% end %>
-  </ul>
+        </li>
+      <% end %>
+    </ul>
 
-  <% if items.next_page %>
-  <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_share_files_path %></div>
+    <% if items.next_page %>
+      <div class="list-more"><%= link_to I18n.t("ss.links.more"), gws_share_files_path %></div>
+    <% end %>
   <% end %>
 </div>
