@@ -25,6 +25,9 @@ module Sys::SiteImport::Contents
       def item.generate_file; end
       item.skip_validate_seq_filename = true if item.is_a?(Cms::Page::SequencedFilename)
 
+      if item[:master_id].present?
+        item[:file_ids] = nil
+      end
       item[:lock_owner_id] = nil
       item[:lock_until] = nil
       item[:category_ids] = convert_ids(@cms_nodes_map, item[:category_ids])
@@ -138,6 +141,9 @@ module Sys::SiteImport::Contents
       def item.generate_file; end
 
       item[:master_id] = @cms_pages_map[item[:master_id]]
+      if item.respond_to?(:master) && item.master.present?
+        item[:file_ids] = item.master.file_ids
+      end
       item[:related_page_ids] = convert_ids(@cms_pages_map, item[:related_page_ids])
       item[:dataset_group_ids] = convert_ids(@opendata_dataset_groups_map, item[:dataset_group_ids])
       item[:dataset_ids] = convert_ids(@cms_pages_map, item[:dataset_ids])
