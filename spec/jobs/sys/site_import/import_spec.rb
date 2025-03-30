@@ -37,7 +37,7 @@ describe Sys::SiteImportJob, dbscope: :example do
     def task.log(msg)
     end
 
-    job = ::Sys::SiteImportJob.new
+    job = Sys::SiteImportJob.new
     job.task = task
     job.perform
   end

@@ -32,11 +32,11 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
     site.save!
 
     # gws:es:ingest:init
-    ::Gws::Elasticsearch.init_ingest(site: site)
+    Gws::Elasticsearch.init_ingest(site: site)
     # gws:es:drop
-    ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+    Gws::Elasticsearch.drop_index(site: site) rescue nil
     # gws:es:create_indexes
-    ::Gws::Elasticsearch.create_index(site: site)
+    Gws::Elasticsearch.create_index(site: site)
   end
 
   around do |example|
@@ -108,7 +108,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.destination_treat_state).to eq "untreated"
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         # gws_user
         expect(item.readable?(gws_user, site: site)).to be_truthy
@@ -212,7 +212,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.workflow_agent_id).to eq gws_user.id
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         # gws_user
         expect(item.readable?(gws_user, site: site)).to be_truthy
@@ -336,7 +336,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.workflow_state).to eq 'approve'
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         # gws_user
         expect(item.readable?(gws_user, site: site)).to be_truthy
@@ -548,7 +548,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.destination_treat_state).to eq "untreated"
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         # gws_user
         expect(item.readable?(gws_user, site: site)).to be_truthy
@@ -607,7 +607,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.workflow_agent_id).to be_blank
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         # gws_user
         expect(item.readable?(gws_user, site: site)).to be_truthy

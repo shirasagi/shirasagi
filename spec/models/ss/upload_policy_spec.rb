@@ -35,7 +35,7 @@ describe SS::UploadPolicy, dbscope: :example do
     let(:zip_path) { "#{root_dir}/ss_file_1_1635072302_1000_sanitized.zip" }
 
     before do
-      ::Fs.mkdir_p(root_dir)
+      Fs.mkdir_p(root_dir)
       FileUtils.cp(zip_source, zip_path)
     end
     after { FileUtils.rm(zip_path) }

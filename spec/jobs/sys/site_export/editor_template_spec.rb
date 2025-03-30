@@ -18,8 +18,8 @@ describe Sys::SiteExportJob, dbscope: :example do
     end
 
     it do
-      job = ::Sys::SiteExportJob.new
-      job.task = ::Tasks::Cms.mock_task(
+      job = Sys::SiteExportJob.new
+      job.task = Tasks::Cms.mock_task(
         source_site_id: site.id
       )
       job.perform
