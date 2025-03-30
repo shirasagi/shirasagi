@@ -157,13 +157,91 @@ describe "fontsize/public_filter", type: :feature, dbscope: :example, js: true d
     end
   end
 
-  context "with old accessibility html 1" do
-    let!(:part) { create :accessibility_tool_compat1, cur_site: site }
-    it_behaves_like "fontsize"
-  end
+  context "special case" do
+    let!(:part1) do
+      html = <<~HTML
+        <div class="accessibility__fontsize">
+          <div data-tool="ss-fontsize">
+            <div class="on-pc">
+              <button type="button" data-tool="ss-small" data-tool-type="button">小さく</button>
+              <span class="separator">-</span>
+              <button type="button" data-tool="ss-medium" data-tool-type="button">標準</button>
+              <span class="separator">-</span>
+              <button type="button" data-tool="ss-large" data-tool-type="button">大きく</button>
+            </div>
+            <div class="on-mobile">
+              <button type="button" data-tool="ss-small" data-tool-type="button">
+                <span class="material-icons-outlined" aria-label="小さく" role="img">palette</span>
+              </button>
+              <button type="button" data-tool="ss-medium" data-tool-type="button">
+                <span class="material-icons-outlined" aria-label="標準" role="img">palette</span>
+              </button>
+              <button type="button" data-tool="ss-large" data-tool-type="button">
+                <span class="material-icons-outlined" aria-label="大きく" role="img">palette</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      HTML
+      create :cms_part_free, cur_site: site, html: html
+    end
+    let!(:layout) { create_cms_layout part1 }
+    let!(:item) do
+      page_html = <<~HTML
+        <div id="content">
+          hello
+        </div>
+      HTML
+      create :article_page, cur_site: site, layout: layout, html: page_html
+    end
 
-  context "with old accessibility html 2" do
-    let!(:part) { create :accessibility_tool_compat2, cur_site: site }
-    it_behaves_like "fontsize"
+    it do
+      visit item.full_url
+      expect(page).to have_css(".accessibility__fontsize", count: 1)
+
+      within '.on-pc' do
+        expect(page).to have_css('[data-tool="ss-small"]', text: I18n.t("ss.font_size.small"))
+        expect(page).to have_css('[data-tool="ss-medium"]', text: I18n.t("ss.font_size.medium"))
+        expect(page).to have_css('[data-tool="ss-large"]', text: I18n.t("ss.font_size.large"))
+      end
+
+      within '.on-mobile' do
+        expect(page).to have_css('[data-tool="ss-small"] [aria-label="小さく"]')
+        expect(page).to have_css('[data-tool="ss-medium"] [aria-label="標準"]')
+        expect(page).to have_css('[data-tool="ss-large"] [aria-label="大きく"]')
+      end
+
+      within '.on-pc' do
+        click_on I18n.t("ss.font_size.large")
+      end
+      expect(page).to have_css('body[style="font-size: 120%;"]')
+      within '.on-pc' do
+        expect(page).to have_css('[data-tool="ss-medium"][aria-pressed="false"]', text: I18n.t("ss.font_size.medium"))
+      end
+      within '.on-mobile' do
+        expect(page).to have_css('[data-tool="ss-medium"][aria-pressed="false"] [aria-label="標準"]')
+      end
+
+      within '.on-mobile' do
+        first("[aria-label='小さく']").click
+      end
+      expect(page).to have_css('body[style="font-size: 100%;"]')
+      within '.on-pc' do
+        expect(page).to have_css('[data-tool="ss-medium"][aria-pressed="true"]', text: I18n.t("ss.font_size.medium"))
+      end
+      within '.on-mobile' do
+        expect(page).to have_css('[data-tool="ss-medium"][aria-pressed="true"] [aria-label="標準"]')
+      end
+    end
+
+    context "with old accessibility html 1" do
+      let!(:part) { create :accessibility_tool_compat1, cur_site: site }
+      it_behaves_like "fontsize"
+    end
+
+    context "with old accessibility html 2" do
+      let!(:part) { create :accessibility_tool_compat2, cur_site: site }
+      it_behaves_like "fontsize"
+    end
   end
 end
