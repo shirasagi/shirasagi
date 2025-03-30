@@ -104,6 +104,8 @@ module Inquiry::Addon
 
     def validate_form_select
       return if input_type != 'form_select'
+      return unless node
+
       column = node.columns.where(input_type: 'form_select').first
       if column.present? && column != self
         errors.add :input_type, :exist_form_select, input_type: label(:input_type)
