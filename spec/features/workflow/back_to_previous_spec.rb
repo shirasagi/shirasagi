@@ -45,11 +45,15 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_cms_user
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         within ".mod-workflow-request" do
           select route_name, from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
+        end
+        wait_for_js_ready
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -72,13 +76,19 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user1
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -95,13 +105,20 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user2
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment1)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -119,13 +136,20 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user1
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment1)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -142,13 +166,21 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user2
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment3)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -166,13 +198,23 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user3
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment3)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment4
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment4)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.approve"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment3)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment4)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -195,11 +237,15 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_cms_user
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         within ".mod-workflow-request" do
           select route_name, from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
+        end
+        wait_for_js_ready
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -222,13 +268,18 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user1
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -245,13 +296,21 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user2
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -269,13 +328,18 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user3
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment3
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment3)}/)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -294,13 +358,22 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user2
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment2
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -319,13 +392,23 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user1
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.remand"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         item.reload
         expect(item.workflow_state).to eq "remand"
@@ -353,11 +436,15 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_cms_user
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         within ".mod-workflow-request" do
           select route_name, from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
+        end
+        wait_for_js_ready
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -380,13 +467,19 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user1
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -403,13 +496,20 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user2
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment1)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -427,13 +527,20 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user1
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment1)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -450,13 +557,21 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user2
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment3)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -474,13 +589,23 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user3
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment3)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment4
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment4)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.approve"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment3)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment4)
 
         item.reload
         expect(item.workflow_state).to eq "approve"
@@ -500,6 +625,8 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
       it do
         login_cms_user
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         #
         # admin: send request
@@ -507,7 +634,9 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         within ".mod-workflow-request" do
           select route_name, from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-
+        end
+        wait_for_js_ready
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -536,7 +665,10 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -553,13 +685,21 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user2
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -577,13 +717,22 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user3
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment2)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment3
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment3)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -602,13 +751,22 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user2
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment2
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment2)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         item.reload
         expect(item.workflow_state).to eq "request"
@@ -627,13 +785,23 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         login_user user1
         visit show_path
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
 
-        expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
+        wait_for_all_turbo_frames
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.remand"))
+        expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment1)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment2)
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         item.reload
         expect(item.workflow_state).to eq "remand"

@@ -24,6 +24,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       # Create
       #
       click_on I18n.t("ss.links.new")
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[order]", with: order
@@ -41,6 +42,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       expect(Facility::Image.all.count).to eq 1
       image_page = Facility::Image.all.first
@@ -66,7 +68,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       # Check Facility::Node::Page
       #
       visit facility_pages_path(site: site, cid: facility_node)
-      wait_for_turbo_frame "#cms-nodes-tree-frame"
+      wait_for_all_turbo_frames
       within ".list-items" do
         click_on node.name
       end
@@ -92,6 +94,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       within ".list-items" do
         click_on name
       end
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       click_on I18n.t("ss.links.edit")
       wait_for_js_ready
       expect(page.all("form .addon-head h2").map(&:text).sort).to eq expected_addon_titles
@@ -101,6 +104,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       image_page.reload
       expect(image_page.name).to eq name2
@@ -112,6 +116,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       within ".list-items" do
         click_on name2
       end
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       click_on I18n.t("ss.links.delete")
       within "form" do
         click_on I18n.t("ss.buttons.delete")
