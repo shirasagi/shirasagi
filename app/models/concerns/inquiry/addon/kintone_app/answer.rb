@@ -21,6 +21,12 @@ module Inquiry::Addon
           record[column.kintone_field_code] = { "value" => d.values }
         end
       end
+      if node.kintone_app_remote_addr_field_code.present?
+        record[node.kintone_app_remote_addr_field_code] = { "value" => remote_addr }
+      end
+      if node.kintone_app_user_agent_field_code.present?
+        record[node.kintone_app_user_agent_field_code] = { "value" => user_agent }
+      end
       record
     end
 
