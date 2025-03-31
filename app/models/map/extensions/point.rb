@@ -20,7 +20,9 @@ class Map::Extensions::Point < Hash
   end
 
   def name
-    self["name"].presence || self[:name]
+    value = self["name"].presence || self[:name]
+    return nil if value.nil?
+    value.to_s.gsub(/<script.*?>.*?<\/script>/im, '')
   end
 
   def loc
@@ -34,7 +36,9 @@ class Map::Extensions::Point < Hash
   end
 
   def text
-    self["text"].presence || self[:text]
+    value = self["text"].presence || self[:text]
+    return nil if value.nil?
+    value.to_s.gsub(/<script.*?>.*?<\/script>/im, '')
   end
 
   def zoom_level
