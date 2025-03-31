@@ -309,7 +309,7 @@ this.SS_Theme = (function () {
   };
 
   SS_Theme.cssTemplate = function (cls, color, backgroundColor) {
-    return "body[data-ss-theme=\"" + $.escapeSelector(cls) + "\"] * {\n  border-color: " + color + " !important;\n  background: " + backgroundColor + " !important;\n  color: " + color + " !important;\n}";
+    return "body[data-ss-theme=\"" + $.escapeSelector(cls) + "\"] * {\n  border-color: " + color + " !important;\n  background-color: " + backgroundColor + " !important;\n  color: " + color + " !important;\n}";
   };
 
   SS_Theme.switchTheme = function (cls) {
