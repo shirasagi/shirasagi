@@ -5,10 +5,10 @@
         "uploadApi" => upload_api_path,
         "fileApi" => file_api_path,
         "selectApi" => select_api_path,
-        "viewApi" => view_api_path,
         "dialogType" => "ss",
         "selectionType" => selection_type
       }
+      option["viewApi"] = view_api_path if view_api_path.present?
       option["editorId"] = html_editor_id if html_editor_id.present?
       option.to_json
     %>

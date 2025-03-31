@@ -1,0 +1,9 @@
+<% if @item.in_clone_file %>
+  <%= f.hidden_field "in_clone_file", value: @item.in_clone_file %>
+<% end %>
+<%=
+  component = SS::FileSelectBoxComponent.new(
+    ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item
+  )
+  render component
+%>

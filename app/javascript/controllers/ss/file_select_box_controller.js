@@ -71,7 +71,9 @@ export default class extends SelectBoxController {
   }
 
   openFile(ev) {
-    SS_FileView.open(ev, { viewPath: this.viewApiValue });
+    if (this.viewApiValue) {
+      SS_FileView.open(ev, { viewPath: this.viewApiValue });
+    }
   }
 
   reorderSelectedFiles(ev) {

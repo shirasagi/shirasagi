@@ -31,7 +31,7 @@ class SS::FileSelectBoxComponent < ApplicationComponent
       if @ss_mode == :cms
         view_context.cms_frames_temp_files_uploads_path(site: cur_site, cid: cur_node || "-", setting: setting)
       else
-        view_context.sns_frames_temp_files_uploads_path(user: cur_user, setting: setting)
+        view_context.sns_frames_temp_files_uploads_path(setting: setting)
       end
     end
   end
@@ -41,7 +41,7 @@ class SS::FileSelectBoxComponent < ApplicationComponent
       if @ss_mode == :cms
         view_context.cms_frames_temp_files_files_path(site: cur_site, cid: cur_node || "-", setting: setting)
       else
-        view_context.sns_frames_temp_files_files_path(site: cur_site, cid: cur_node || "-", setting: setting)
+        view_context.sns_frames_temp_files_files_path(setting: setting)
       end
     end
   end
@@ -51,7 +51,7 @@ class SS::FileSelectBoxComponent < ApplicationComponent
       if @ss_mode == :cms
         view_context.select_cms_frames_temp_files_file_path(site: cur_site, cid: cur_node || "-", setting: setting, id: ':id')
       else
-        view_context.sns_cms_frames_temp_files_file_path(site: cur_site, cid: cur_node || "-", setting: setting, id: ':id')
+        view_context.select_sns_frames_temp_files_file_path(setting: setting, id: ':id')
       end
     end
   end

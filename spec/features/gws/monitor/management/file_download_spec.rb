@@ -79,17 +79,10 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       click_on I18n.t("gws/monitor.links.comment")
       within "form#item-form" do
         fill_in "item[text]", with: unique_id
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-      within_cbox do
-        wait_for_cbox_closed do
-          click_on "shirasagi-user1-file1.pdf"
-        end
-      end
-      within "form#item-form" do
+
+        ss_select_file user1_file1, addon: '#addon-gws-agents-addons-file'
         expect(page).to have_css(".file-view", text: "shirasagi-user1-file1.pdf")
+
         page.accept_confirm(I18n.t("gws/monitor.confirm.comment_answer")) do
           click_on I18n.t("gws/monitor.links.comment")
         end
@@ -127,17 +120,9 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       visit gws_monitor_answer_path(site: site, id: topic1)
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-      within_cbox do
-        wait_for_cbox_closed do
-          click_on "shirasagi-user1-file2.pdf"
-        end
-      end
-      within "form#item-form" do
+        ss_select_file user1_file2, addon: '#addon-gws-agents-addons-file'
         expect(page).to have_css(".file-view", text: "shirasagi-user1-file2.pdf")
+
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t("ss.notice.saved")

@@ -9,7 +9,7 @@ class SS::FileViewV2Component < SS::FileViewComponent
 
   def file_link_tag(&block)
     data = { action: "ss--file-select-box#openFile" }
-    link_to(file.url, class: "thumb", target: "_blank", rel: "noopener", data: data, &block)
+    link_to(file.no_cache_url, class: "thumb", target: "_blank", rel: "noopener", data: data, &block)
   end
 
   def default_attach_action
