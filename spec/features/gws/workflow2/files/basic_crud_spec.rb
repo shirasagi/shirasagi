@@ -21,7 +21,16 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true do
     let(:item_text2) { unique_id }
     let(:now) { Time.zone.now.change(sec: 0) }
 
-    before { login_user user }
+    before do
+      @save_file_upload_dialog = SS.file_upload_dialog
+      SS.file_upload_dialog = :v2
+
+      login_user user
+    end
+
+    after do
+      SS.file_upload_dialog = @save_file_upload_dialog
+    end
 
     it do
       #
@@ -37,16 +46,8 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         within "#addon-gws-agents-addons-workflow2-custom_form" do
           fill_in "custom[#{column1.id}]", with: item_text
-          wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
+          attach_to_ss_file_field "custom_#{column2.id}_0", file
         end
-      end
-      within_cbox do
-        within "article.file-view" do
-          wait_for_cbox_closed { click_on file.name }
-        end
-      end
-      within "form#item-form" do
-        expect(page).to have_content(file.name)
         click_on I18n.t("gws/workflow2.buttons.save_and_apply")
       end
       wait_for_notice I18n.t('ss.notice.saved')

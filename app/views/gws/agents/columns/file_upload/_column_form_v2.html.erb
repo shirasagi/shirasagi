@@ -10,8 +10,8 @@
         # f.ss_file_field
         file = files[index] rescue nil
         component = SS::FileFieldV2Component.new(
-          ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user,
-          item: @item, file: file, field_name: "#{object_name}[#{column.id}][]")
+          ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, item: @item, file: file,
+          field_name: "#{object_name}[#{column.id}][]", element_id: "#{object_name}_#{column.id}_#{index}")
         render component
       %>
     </div>
