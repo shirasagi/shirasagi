@@ -10,6 +10,8 @@ module Cms::Addon
       validate :validate_script_tag
     end
 
+    private
+
     def validate_script_tag
       if html.present?
         errors.add(:html, "はscriptタグを含めることはできません。") if html.include?("<script")
