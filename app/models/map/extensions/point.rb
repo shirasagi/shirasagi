@@ -9,12 +9,26 @@ class Map::Extensions::Point < Hash
     export :image
   end
 
+  def []=(key, value)
+    if key.to_s == "name" || key.to_s == "text"
+      value = sanitize_html(value)
+    end
+    super
+  end
+
+  def sanitize(value)
+    return nil if value.nil?
+    value.to_s.gsub(/<[^>]*>/, '')
+  end
+
   # convert to mongoid native type
   def mongoize
     loc = self.loc
     return {} if loc.nil?
 
     ret = { "loc" => loc.mongoize }
+    ret["name"] = sanitize(name) if name.present?
+    ret["text"] = sanitize(text) if text.present?
     ret["zoom_level"] = zoom_level if zoom_level.present?
     ret
   end
@@ -22,7 +36,7 @@ class Map::Extensions::Point < Hash
   def name
     value = self["name"].presence || self[:name]
     return nil if value.nil?
-    value.to_s.gsub(/<script.*?>.*?<\/script>/im, '')
+    value.to_s
   end
 
   def loc
@@ -38,7 +52,7 @@ class Map::Extensions::Point < Hash
   def text
     value = self["text"].presence || self[:text]
     return nil if value.nil?
-    value.to_s.gsub(/<script.*?>.*?<\/script>/im, '')
+    sanitize(value)
   end
 
   def zoom_level
