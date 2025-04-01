@@ -11,7 +11,7 @@ class Map::Extensions::Point < Hash
 
   def []=(key, value)
     if key.to_s == "name" || key.to_s == "text"
-      value = sanitize_html(value)
+      value = sanitize(value)
     end
     super
   end
@@ -36,7 +36,7 @@ class Map::Extensions::Point < Hash
   def name
     value = self["name"].presence || self[:name]
     return nil if value.nil?
-    value.to_s
+    sanitize(value)
   end
 
   def loc
