@@ -32,7 +32,7 @@
   </div>
 
   <div class="cms-addon-file-selected-files-wrap">
-    <% if selection_type != "single" %>
+    <% if selection_type != "single" && show_reorder %>
       <div class="cms-addon-file-order">
         <div class="ss-btn-group" role="group" aria-label="<%= t("mongoid.attributes.ss/document.sort") %>">
           <%= button_tag t('ss.buttons.file_name_order'), type: :button, name: "by-name", class: "btn", value: "name", aria: { pressed: false }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>

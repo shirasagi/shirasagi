@@ -6,7 +6,7 @@ class SS::FileSelectBoxComponent < ApplicationComponent
   attr_accessor :ss_mode, :cur_site, :cur_user, :cur_node, :page, :item, :html_editor_id, :accepts
   attr_writer :field_name, :selection_type, :files, :ref_files,
     :upload_api_path, :file_api_path, :select_api_path, :view_api_path,
-    :show_properties, :show_attach, :show_opendata
+    :show_properties, :show_attach, :show_opendata, :show_reorder
 
   def field_name
     @field_name ||= "item[file_ids][]"
@@ -102,6 +102,11 @@ class SS::FileSelectBoxComponent < ApplicationComponent
 
   def show_opendata
     return @show_opendata if instance_variable_defined?(:@show_opendata)
+    true
+  end
+
+  def show_reorder
+    return @show_reorder if instance_variable_defined?(:@show_reorder)
     true
   end
 end
