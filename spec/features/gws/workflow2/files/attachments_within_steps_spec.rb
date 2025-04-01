@@ -3,9 +3,16 @@ require 'spec_helper'
 describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js: true do
   before do
     ActionMailer::Base.deliveries.clear
+
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v2
   end
 
-  after { ActionMailer::Base.deliveries.clear }
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+
+    ActionMailer::Base.deliveries.clear
+  end
 
   context "attachments with steps" do
     let(:site) { gws_site }
@@ -85,11 +92,11 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq "request"
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
-      expect(item.workflow_approvers).to \
-        include({level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: ''})
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: '' })
       expect(item.workflow_circulations.count).to eq 1
-      expect(item.workflow_circulations).to \
-        include({level: 1, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: ''})
+      expect(item.workflow_circulations).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: '' })
 
       expect(SS::Notification.count).to eq 1
       notification1 = SS::Notification.order_by(id: -1).first
@@ -111,12 +118,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
       within ".mod-workflow-approve" do
         fill_in "item[comment]", with: approve_comment1
-        wait_for_cbox_opened { click_on I18n.t("workflow.links.approver_file_upload") }
       end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".mod-workflow-approve"
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.buttons.approve")
       end
@@ -149,12 +152,12 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq "approve"
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
-      expect(item.workflow_approvers).to \
-        include({level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve',
-                 comment: approve_comment1, file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now)})
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve',
+          comment: approve_comment1, file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_circulations.count).to eq 1
-      expect(item.workflow_circulations).to \
-        include({level: 1, user_type: Gws::User.name, user_id: user2.id, state: 'unseen', comment: ''})
+      expect(item.workflow_circulations).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user2.id, state: 'unseen', comment: '' })
 
       expected_notification_count = admin.notice_workflow_user_setting == "notify" ? 4 : 3
       expect(SS::Notification.count).to eq expected_notification_count
@@ -204,12 +207,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
       within ".mod-workflow-circulation" do
         fill_in "item[comment]", with: circulation_comment2
-        wait_for_cbox_opened { click_on I18n.t("workflow.links.approver_file_upload") }
       end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".mod-workflow-circulation"
       within ".mod-workflow-circulation" do
         click_on I18n.t("workflow.links.set_seen")
       end
@@ -242,13 +241,13 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_state).to eq "approve"
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
-      expect(item.workflow_approvers).to \
-        include({level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve',
-                 comment: approve_comment1, file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now)})
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve',
+          comment: approve_comment1, file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_circulations.count).to eq 1
-      expect(item.workflow_circulations).to \
-        include({level: 1, user_type: Gws::User.name, user_id: user2.id, state: 'seen',
-                 comment: circulation_comment2, file_ids: [file2.id]})
+      expect(item.workflow_circulations).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user2.id, state: 'seen',
+          comment: circulation_comment2, file_ids: [file2.id] })
 
       expected_notification_count += admin.notice_workflow_user_setting == "notify" ? 1 : 0
       expect(SS::Notification.count).to eq expected_notification_count
