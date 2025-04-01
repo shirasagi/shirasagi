@@ -3,7 +3,8 @@
 <% end %>
 <%=
   component = SS::FileSelectBoxComponent.new(
-    ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item
+    ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, item: @item,
+    show_properties: false, show_attach: false, show_opendata: false
   )
   render component
 %>

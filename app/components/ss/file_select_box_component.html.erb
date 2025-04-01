@@ -54,6 +54,18 @@
           %>
         <% end %>
       <% end %>
+      <% if ss_mode != :cms && ref_files.present? %>
+        <%# ref_files は gws と webmail で有効 %>
+        <% ref_files.each do |file| %>
+          <% file = file.becomes_with_model %>
+          <%=
+            component = SS::FileViewV2Component.new(
+              cur_site: cur_site, cur_user: cur_user, cur_node: cur_node, page: page, item: item, file: file,
+              name: ref_file_field_name, show_attach: show_attach, show_opendata: show_opendata)
+            render component
+          %>
+        <% end %>
+      <% end %>
     </div>
   </div>
 </div>
