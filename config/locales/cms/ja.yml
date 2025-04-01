@@ -1122,6 +1122,8 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
+        state: ステータス
+        html_format: HTML種別
       cms/command:
         name: タイトル
         description: 説明
