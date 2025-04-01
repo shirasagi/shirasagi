@@ -3,23 +3,13 @@
   <dd><%= @folder.name %></dd>
 </dl>
 
-<div class="see gws-addon-file">
-  <span class="upload-menu-new">
-    <%= link_to t('ss.links.upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn" %>
-  </span>
-
-  <span class="upload-menu-select">
-    <%= link_to t("sns.user_file"), sns_apis_user_files_path(@cur_user), class: "ajax-box btn" %>
-    <%= link_to t("modules.gws/share"), gws_apis_files_path, class: "ajax-box btn" %>
-  </span>
-
-  <div class="upload-drop-area">
-    <span class="upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
-  </div>
-
-  <div id="selected-files">
-  </div>
-</div>
+<%=
+  if SS.file_upload_dialog == :v1
+    render "gws/share/files/file_upload_v1", **local_assigns
+  else
+    render "gws/share/files/file_upload_v2", **local_assigns
+  end
+%>
 
 <dl class="see">
   <dt><%= Gws::Share::File.t :memo %><%= Gws::Share::File.tt :memo %></dt>

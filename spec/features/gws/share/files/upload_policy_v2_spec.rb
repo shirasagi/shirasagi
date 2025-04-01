@@ -7,7 +7,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
 
   before do
     @save_file_upload_dialog = SS.file_upload_dialog
-    SS.file_upload_dialog = :v1
+    SS.file_upload_dialog = :v2
   end
 
   after do
@@ -44,17 +44,19 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
           wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        end
       end
-      expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-      expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
-
       wait_for_cbox_closed do
-        wait_for_cbox_closed { click_on "keyvisual.jpg" }
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
       end
-      within '#selected-files' do
+      within '.file-view' do
         expect(page).to have_css('.name', text: 'keyvisual.jpg')
         expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
       end
@@ -176,12 +178,34 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
           wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        page.accept_alert(/#{::Regexp.escape(I18n.t("errors.messages.upload_restricted"))}/) do
-          click_on I18n.t("ss.buttons.save")
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         end
       end
+      within_dialog do
+        within "form" do
+          within first(".index tbody tr") do
+            expect(page).to have_css(".errors", text: I18n.t("errors.messages.upload_restricted"))
+          end
+        end
+      end
+      page.execute_script('$(".errors").html("");')
+
+      # エラーが表示されているが、それでもアップロードしてみる。
+      within_dialog do
+        within "form" do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        within "form" do
+          within first(".index tbody tr") do
+            expect(page).to have_css(".errors", text: I18n.t("errors.messages.upload_restricted"))
+          end
+        end
+      end
+
       expect(page).to have_no_css('.file-view')
       expect(Gws::Share::File.all.count).to eq 0
     end
