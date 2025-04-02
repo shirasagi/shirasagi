@@ -18,6 +18,7 @@ class Ads::Banner
   belongs_to_file :file
 
   validates :link_url, presence: true
+  validates :link_url, url: true, if: -> { link_url.present? }
   validate :validate_link_url
   #validates :file_id, presence: true
 
