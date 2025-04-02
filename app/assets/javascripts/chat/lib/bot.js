@@ -19,7 +19,7 @@ this.Chat_Bot = (function () {
     _this.$el.on("click", '.chat-items', function (ev) {
       var $target = $(ev.target);
       if ($target.hasClass('chat-suggest')) {
-        _this.sendChatRequest($(this), { text: $target.text(), clickSuggest: true });
+        _this.sendChatRequest($(this), { text: $target.text(), value: $target.data("value"), clickSuggest: true });
         return false;
       } else if ($target.hasClass('chat-success')) {
         _this.sendFeedback($target, 'success');
@@ -68,12 +68,14 @@ this.Chat_Bot = (function () {
 
     var $chatText = _this.$el.find('.chat-text');
 
-    var text;
+    var text, value;
     if (options) {
       text = options.text;
+      value = options.value ? options.value : text;
     }
     if (!text) {
       text = $chatText.val();
+      value = text;
       $chatText.val('');
     }
     if (!text) {
@@ -81,23 +83,27 @@ this.Chat_Bot = (function () {
     }
 
     var $chatItems = _this.$el.find('.chat-items');
-    $chatItems
-      .append($('<div class="chat-item user"></div>').append(text))
-      .animate({ scrollTop: $chatItems[0].scrollHeight });
+    $chatItems.append($('<div class="chat-item user"></div>').append(text));
+    $chatItems.append($('<div class="chat-item in-progress">' + SS.loading + '</div>'));
+    $chatItems.animate({ scrollTop: $chatItems[0].scrollHeight });
     $.ajax({
       type: "GET",
       url: _this.url,
       cache: false,
       data: {
         text: text,
+        value: value,
         click_suggest: options && options.clickSuggest
       },
       success: function (res, _status) {
+        $chatItems.find(".in-progress").remove();
         _this.renderChatResponse(res);
       },
       error: function (_xhr, _status, _error) {
+        $chatItems.find(".in-progress").remove();
       },
       complete: function(_xhr, _status) {
+        $chatItems.find(".in-progress").remove();
         _this.inProgress = false;
       }
     });
@@ -128,7 +134,7 @@ this.Chat_Bot = (function () {
       if (r.suggests) {
         $chatItems.append($('<div class="chat-item sys"></div>').append(r.response).append(siteSearchParagraph));
         r.suggests.forEach(function (suggest) {
-          var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).append(suggest);
+          var chatSuggest = $('<a class="chat-suggest"></a>').attr('href', _this.url).attr('data-value', suggest.value).append(suggest.text);
           $chatItems.append($('<div class="chat-item suggest"></div>').append(chatSuggest));
         });
       } else if (r.question) {

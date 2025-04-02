@@ -48,7 +48,6 @@ class Sys::SitesController < ApplicationController
         site_id: @item.id,
         name: I18n.t('cms.roles.admin'),
         permissions: Cms::Role.permission_names,
-        permission_level: 3
       }
       role = Cms::Role.find_or_create_by cond
 

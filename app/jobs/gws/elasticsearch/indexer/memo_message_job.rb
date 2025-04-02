@@ -58,13 +58,11 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
       doc[:group_ids] = item.list.groups.pluck(:id)
       doc[:custom_group_ids] = item.list.custom_groups.pluck(:id)
       doc[:user_ids] = item.list.users.pluck(:id)
-      doc[:permission_level] = item.list.permission_level
     else
       doc[:user_name] = item.user_long_name
       # doc[:group_ids] = item.groups.pluck(:id)
       # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
       doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
-      # doc[:permission_level] = item.permission_level
     end
 
     # doc[:readable_group_ids] =
@@ -98,12 +96,10 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
       doc[:group_ids] = item.list.groups.pluck(:id)
       doc[:custom_group_ids] = item.list.custom_groups.pluck(:id)
       doc[:user_ids] = item.list.users.pluck(:id)
-      doc[:permission_level] = item.list.permission_level
     else
       # doc[:group_ids] = item.groups.pluck(:id)
       # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
       doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
-      # doc[:permission_level] = item.permission_level
     end
 
     # doc[:readable_group_ids] =

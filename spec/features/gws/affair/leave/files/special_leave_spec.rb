@@ -21,6 +21,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       Timecop.freeze(start_at) do
         login_user(user638)
         visit new_path
+        wait_for_js_ready
 
         within "form#item-form" do
           fill_in_date "item[start_at_date]", with: start_at.to_date
@@ -36,8 +37,12 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           # end
 
           fill_in "item[reason]", with: reason
-          select I18n.t("gws/affair.options.leave_type.paidleave"), from: 'item[leave_type]'
-
+          wait_for_event_fired "ss:ready" do
+            select I18n.t("gws/affair.options.leave_type.paidleave"), from: 'item[leave_type]'
+          end
+        end
+        wait_for_js_ready
+        within "form#item-form" do
           wait_for_cbox_opened { click_on I18n.t("gws/affair.apis.special_leaves.index") }
         end
         within_cbox do
@@ -48,6 +53,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
       Gws::Affair::LeaveFile.site(site).find_by(reason: reason)
     end
@@ -59,9 +65,10 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       Timecop.freeze(start_at) do
         login_user(user638)
         visit index_path
-
         click_on item.name
+        wait_for_js_ready
 
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
@@ -77,7 +84,6 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
-        wait_for_js_ready
 
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
         within "#addon-basic" do
@@ -102,7 +108,6 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment
           click_on I18n.t("workflow.buttons.approve")
         end
-        wait_for_js_ready
 
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment)}/)
       end
@@ -126,22 +131,35 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       within ".gws-attendance" do
         within "table.index" do
           expect(page).to have_link user545.long_name
+          expect(page).to have_no_link user638.long_name
         end
+      end
 
+      within ".gws-attendance" do
         # change group
         within "form" do
           select user638.groups.first.name, from: 'group_id'
           click_on I18n.t('ss.buttons.search')
         end
-        wait_for_js_ready
-
-        within "table.index" do
-          expect(page).to have_link user638.long_name
-          click_on user638.long_name
-        end
-        wait_for_js_ready
       end
 
+      wait_for_js_ready
+
+      within ".gws-attendance" do
+        within "table.index" do
+          expect(page).to have_link user638.long_name
+          expect(page).to have_no_link user545.long_name
+        end
+      end
+      within ".gws-attendance" do
+        within "table.index" do
+          click_on user638.long_name
+        end
+      end
+
+      wait_for_js_ready
+
+      expect(page).to have_css("#addon-basic", text: user638.long_name)
       within ".gws-attendance" do
         # change year month
         within "form" do
@@ -149,8 +167,9 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/attendance.month", count: start_at.month), from: 'month'
           click_on I18n.t('ss.buttons.search')
         end
-        wait_for_js_ready
       end
+
+      wait_for_js_ready
 
       within "#annual-leave-setting" do
         expect(page).to have_css(".leave-dates",

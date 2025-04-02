@@ -29,7 +29,9 @@ ja:
     max_file_size: 最大ファイルサイズ
     image_resize: 画像リサイズ
     site_copy: サイト複製
-    site_copy/description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
+    site_copy/description: |
+      ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
+      ※ 複製する項目「記事・その他のページ」を選択しなかった場合、カテゴリーフォルダー内のサマリーページの設定は解除されます
     site_copy/started_job: サイト複製を開始しました。
     site_copy/task_status: 実行状況
     roles:

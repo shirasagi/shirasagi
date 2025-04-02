@@ -39,23 +39,25 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
         login_user user
         visit job_sns_logs_path(site: site)
 
-        within ".list-head" do
-          job_name = I18n.t(log1.class_name.underscore, scope: "job.models")
-          basename = ::File.basename(job_name)
-          select basename, from: "s[class_name]"
+        wait_for_event_fired "turbo:frame-load" do
+          within ".list-head" do
+            job_name = I18n.t(log1.class_name.underscore, scope: "job.models")
+            basename = ::File.basename(job_name)
+            select basename, from: "s[class_name]"
+          end
         end
-        wait_for_js_ready
 
         expect(page).to have_css(".list-item", text: I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_css(".list-item", text: I18n.t(log2.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_css(".list-item", text: I18n.t(log3.class_name.underscore, scope: "job.models"))
 
-        within ".list-head" do
-          job_name = I18n.t(log3.class_name.underscore, scope: "job.models")
-          basename = ::File.basename(job_name)
-          select basename, from: "s[class_name]"
+        wait_for_event_fired "turbo:frame-load" do
+          within ".list-head" do
+            job_name = I18n.t(log3.class_name.underscore, scope: "job.models")
+            basename = ::File.basename(job_name)
+            select basename, from: "s[class_name]"
+          end
         end
-        wait_for_js_ready
 
         expect(page).to have_no_css(".list-item", text: I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_css(".list-item", text: I18n.t(log2.class_name.underscore, scope: "job.models"))
@@ -67,25 +69,27 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
       it do
         login_user user
         visit job_sns_logs_path(site: site)
-        within ".list-head" do
-          expect(page).to have_css("option[value='#{log1.class_name}']")
-          expect(page).to have_css("option[value='#{log2.class_name}']")
-          expect(page).to have_css("option[value='#{log3.class_name}']")
+        wait_for_event_fired "turbo:frame-load" do
+          within ".list-head" do
+            expect(page).to have_css("option[value='#{log1.class_name}']")
+            expect(page).to have_css("option[value='#{log2.class_name}']")
+            expect(page).to have_css("option[value='#{log3.class_name}']")
 
-          click_on I18n.t('gws.history.days.today')
+            click_on I18n.t('gws.history.days.today')
+          end
         end
-        wait_for_js_ready
 
-        within ".list-head" do
-          expect(page).to have_no_css("option[value='#{log1.class_name}']")
-          expect(page).to have_no_css("option[value='#{log2.class_name}']")
-          expect(page).to have_css("option[value='#{log3.class_name}']")
+        wait_for_event_fired "turbo:frame-load" do
+          within ".list-head" do
+            expect(page).to have_no_css("option[value='#{log1.class_name}']")
+            expect(page).to have_no_css("option[value='#{log2.class_name}']")
+            expect(page).to have_css("option[value='#{log3.class_name}']")
 
-          job_name = I18n.t(log3.class_name.underscore, scope: "job.models")
-          basename = ::File.basename(job_name)
-          select basename, from: "s[class_name]"
+            job_name = I18n.t(log3.class_name.underscore, scope: "job.models")
+            basename = ::File.basename(job_name)
+            select basename, from: "s[class_name]"
+          end
         end
-        wait_for_js_ready
 
         expect(page).to have_no_css(".list-item", text: I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_css(".list-item", text: I18n.t(log2.class_name.underscore, scope: "job.models"))

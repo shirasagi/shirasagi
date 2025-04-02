@@ -27,15 +27,8 @@ describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
         visit new_path
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
-          wait_for_cbox_opened { first(".btn-file-upload").click }
-        end
-        within_cbox do
-          # click_on file.name
-          expect(page).to have_css(".file-view", text: file.name)
-          wait_for_cbox_closed { click_on file.name }
-        end
-        within "form#item-form" do
-          expect(page).to have_css(".humanized-name", text: file.humanized_name)
+          attach_to_ss_file_field "item_file_id", file
+
           click_button I18n.t('ss.buttons.save')
         end
         wait_for_notice I18n.t("ss.notice.saved")

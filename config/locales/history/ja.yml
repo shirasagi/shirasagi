@@ -70,6 +70,10 @@ ja:
     models:
       history/log: 操作履歴
       history/trash: ゴミ箱
+    errors:
+      models:
+        history/backup:
+          unable_to_restore_branch_page_history: 差し替えページの履歴を復元することはできません。
     attributes:
       history/log:
         session_id: セッションID

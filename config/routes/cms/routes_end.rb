@@ -99,6 +99,16 @@ Rails.application.routes.draw do
       namespace :user_navigation do
         resource :menu, only: %i[show]
       end
+      scope "node:cid" do
+        namespace :temp_files do
+          resources :uploads, only: %i[index new create] do
+            post :preview, on: :collection
+          end
+          resources :files, only: %i[index edit update destroy] do
+            get :select, on: :member
+          end
+        end
+      end
     end
   end
 
@@ -115,7 +125,7 @@ Rails.application.routes.draw do
       match :download_all, on: :collection, via: %i[get post]
       resources :pages, path: ":contact_id/pages", only: %i[index], controller: "group_pages"
     end
-    resources :members, concerns: [:deletion, :download] do
+    resources :members, concerns: [:deletion, :download, :import] do
       get :verify, on: :member
       post :verify, on: :member
     end
@@ -403,6 +413,9 @@ Rails.application.routes.draw do
         post :restore, on: :member
         post :destroy, on: :member
       end
+      resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy] do
+        get :delete, on: :member
+      end
       scope "node:cid/cms", as: "node", cid: /\w+/ do
         resources :temp_files, controller: 'node/temp_files', concerns: [:deletion, :file_api] do
           get :contrast_ratio, on: :collection
@@ -414,6 +427,9 @@ Rails.application.routes.draw do
           get :download, on: :member
           post :restore, on: :member
           post :destroy, on: :member
+        end
+        resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy] do
+          get :delete, on: :member
         end
       end
       namespace "opendata_ref" do

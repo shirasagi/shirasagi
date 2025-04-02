@@ -268,7 +268,7 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
       end
 
       omittable_fields = %i[
-        id mode text categories custom_group_ids permission_level member_ids member_group_ids member_custom_group_ids
+        id mode text categories custom_group_ids member_ids member_group_ids member_custom_group_ids
         readable_member_ids readable_group_ids readable_custom_group_ids
         text_index site_id attachment
       ]

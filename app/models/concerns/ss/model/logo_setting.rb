@@ -10,7 +10,8 @@ module SS::Model::LogoSetting
   included do
     field :logo_application_name, type: String
     field :logo_application_link, type: String, default: "mypage"
-    belongs_to_file :logo_application_image, class_name: "SS::LogoFile", resizing: RESIZING
+    belongs_to_file :logo_application_image, class_name: "SS::LogoFile",
+      resizing: RESIZING, accepts: SS::File::IMAGE_FILE_EXTENSIONS
 
     permit_params :logo_application_name, :logo_application_link
 

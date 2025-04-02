@@ -8,7 +8,6 @@ class Uploader::File
   validates :path, presence: true
   validates :filename, length: { maximum: 2000 }
   validate :validate_filename
-  validate :validate_scss
   validate :validate_coffee
   validate :validate_size
 
@@ -22,7 +21,7 @@ class Uploader::File
       directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
     end
     @saved_path = @path
-    compile_scss if @css
+    compile_scss
     compile_coffee if @js
     return true
   rescue => e
@@ -135,8 +134,8 @@ class Uploader::File
   end
 
   def auto_compile
-    if validate_scss
-      compile_scss
+    if compile_scss
+      # nothing to do because css file is created
     elsif validate_coffee
       compile_coffee
     end
@@ -170,20 +169,23 @@ class Uploader::File
     !saved_path || path != saved_path
   end
 
-  def validate_scss
+  def compile_scss
     return if ext != ".scss"
     return if ::File.basename(@path)[0] == "_"
 
     Rails.logger.tagged(::File.basename(@path)) do
-      load_paths = Rails.application.config.assets.paths.dup
-
-      @css = Cms.compile_scss(@binary.force_encoding("utf-8"), filename: @path, load_paths: load_paths)
+      output_path = output_css_path
+      Cms.compile_scss(@path, output_path, basedir: site.try(:path))
     end
-  rescue SassC::BaseError, Sass::ScriptError => e
+
+    true
+  rescue Cms::ScssScriptError => e
     Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     msg = e.backtrace[0].sub(/.*?\/_\//, "")
     msg = "[#{msg}] #{e}"
     errors.add :scss, msg
+
+    false
   end
 
   def validate_coffee
@@ -203,9 +205,8 @@ class Uploader::File
       limit: ActiveSupport::NumberHelper.number_to_human_size(limit_size)
   end
 
-  def compile_scss
-    path = @saved_path.sub(/(\.css)?\.scss$/, ".css")
-    Fs.binwrite path, @css
+  def output_css_path
+    @output_css_path ||= @saved_path.sub(/(\.css)?\.scss$/, ".css")
   end
 
   def compile_coffee

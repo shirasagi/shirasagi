@@ -12,23 +12,16 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         visit cms_site_path(site: site)
         click_on I18n.t("ss.links.edit")
 
-        # open addon
-        ensure_addon_opened("#addon-cms-agents-addons-logo_setting")
-
-        # fill form
-        within "#addon-cms-agents-addons-logo_setting" do
-          fill_in "item[logo_application_name]", with: logo_application_name
-          wait_for_cbox_opened do
-            # click_on I18n.t("ss.buttons.upload")
-            first(".btn-file-upload").click
-          end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-        end
         within "form#item-form" do
-          expect(page).to have_css(".ss-file-field", text: "keyvisual")
+          # open addon
+          ensure_addon_opened("#addon-cms-agents-addons-logo_setting")
+
+          # fill form
+          within "#addon-cms-agents-addons-logo_setting" do
+            fill_in "item[logo_application_name]", with: logo_application_name
+            upload_to_ss_file_field "item_logo_application_image_id", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          end
+
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
