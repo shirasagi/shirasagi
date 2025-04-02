@@ -369,6 +369,37 @@ module SS
       })(...arguments)
     SCRIPT
 
+    WAIT_FOR_ALL_THEMES_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        const waitForThemeReady = (element, resolve) => {
+          if (element.hasAttribute("aria-busy") && element.getAttribute("aria-busy") === "false") {
+            console.log("theme is ready");
+            resolve(true);
+            return;
+          }
+
+          element.addEventListener("ss:ready", () => {
+            console.log("theme gets ready");
+            resolve(true);
+          })
+        };
+
+        const promises = [];
+        document.querySelectorAll('#ss-theme,[data-tool="ss-theme"]').forEach((element) => {
+          const promise = new Promise((resolveInner) => waitForThemeReady(element, resolveInner));
+          promises.push(promise);
+        });
+
+        if (promises.length === 0) {
+          console.log("there are no themes");
+          resolve(true);
+          return;
+        }
+
+        Promise.all(promises).then(() => resolve(true));
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -1051,6 +1082,11 @@ module SS
         })(...arguments)
       SCRIPT
       page.execute_script script, first(locator)
+    end
+
+    def wait_for_all_themes_ready
+      result = page.evaluate_async_script(WAIT_FOR_ALL_THEMES_READY_SCRIPT)
+      expect(result).to be_truthy
     end
   end
 end

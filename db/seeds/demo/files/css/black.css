@@ -1,5 +1,5 @@
 body[data-ss-theme="black"] * {
   border-color: #fff !important;
-  background: #000 !important;
+  background-color: #000 !important;
   color: #fff !important;
 }

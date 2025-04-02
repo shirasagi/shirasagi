@@ -6,11 +6,12 @@
 %>
 <style id="gws-contrast-style">
   body * {
-    color: <%= contrast.text_color %> !important;
-    border-color: <%= contrast.text_color %> !important;
-    background: <%= contrast.color %> !important;
+    color: <%=contrast.text_color %> !important;
+    border-color: <%=contrast.text_color %> !important;
+    background-color: <%=contrast.color %> !important;
   }
+
   body *:after {
-    background: <%= contrast.color %> !important;
+    background-color: <%=contrast.color %> !important;
   }
 </style>
