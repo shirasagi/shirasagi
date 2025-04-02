@@ -150,6 +150,8 @@ ja:
       less_than_or_equal_to: は%{count}以下の値にしてください。
       not_a_number: は数値で入力してください。
       not_an_integer: は整数で入力してください。
+      not_a_date: は日付で入力してください。
+      not_a_datetime: は日時で入力してください。
       odd: は奇数にしてください。
       record_invalid: バリデーションに失敗しました。 %{errors}
       restrict_dependent_destroy: ! '%{record}が存在しているので削除できません。'

@@ -34,6 +34,11 @@
         <% opt = { value: data } %>
         <% opt.merge!(column.additional_attr_to_h) %>
         <%= f.send(column.input_type, column.id, opt) %>
+      <% elsif column.input_type =~ /date_field|datetime_field/ %>
+        <% opt = { name: "#{f.object_name}[#{column.id}]", value: data } %>
+        <% opt[:type] = (column.input_type == "date_field") ? "date" : "datetime-local" %>
+        <% opt.merge!(column.additional_attr_to_h) %>
+        <%= tag.input(**opt) %>
       <% elsif column.input_type =~ /form_select/ %>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>

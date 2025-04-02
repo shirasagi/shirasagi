@@ -9,6 +9,8 @@ class Inquiry::Column
   INPUT_TYPE_VALIDATION_HANDLERS = [
     [ :email_field, :validate_email_field ].freeze,
     [ :number_field, :validate_number_field ].freeze,
+    [ :date_field, :validate_date_field ].freeze,
+    [ :datetime_field, :validate_datetime_field ].freeze,
     [ :radio_button, :validate_radio_button ].freeze,
     [ :select, :validate_select ].freeze,
     [ :check_box, :validate_check_box ].freeze,
@@ -82,6 +84,19 @@ class Inquiry::Column
       end
     end
   end
+
+  def validate_datetime_field(answer, data)
+    return if data.blank? || data.value.blank?
+    begin
+      DateTime.iso8601(data.value)
+      data.values.map do |value|
+        DateTime.iso8601(value)
+      end
+    rescue => e
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.not_a_datetime')}"
+    end
+  end
+  alias validate_date_field validate_datetime_field
 
   def validate_radio_button(answer, data)
     if data.present? && data.value.present?

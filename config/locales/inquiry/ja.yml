@@ -42,6 +42,8 @@ ja:
         text_area: テキストエリア
         email_field: メールアドレス
         number_field: 数値入力
+        date_field: 日付入力
+        datetime_field: 日時入力
         radio_button: ラジオボタン選択
         select: プルダウン選択
         check_box: チェックボックス選択
