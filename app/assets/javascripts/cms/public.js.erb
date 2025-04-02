@@ -83,17 +83,14 @@ this.SS_Kana = (function () {
       SS_Kana.kanaUrl = SS.config["kana_url"];
     }
 
-    var $kanaElements = $('#ss-kana,[data-tool="ss-kana"]');
-    $kanaElements.each(function (index) {
-      var $kana = $(this);
-      if (!$kana[0]) {
-        return;
-      }
+    const kanaElements = document.querySelectorAll('#ss-kana, [data-tool="ss-kana"]');
+    kanaElements.forEach((kanaElement, index) => {
+      if (!kanaElement) return;
 
-      SS.justOnce($kana[0], "ss-kana", function() {
-        var pathname = location.pathname;
-        var url, cssClass;
-        if ($("body").data("kana")) {
+      SS.justOnce(kanaElement, "ss-kana", function() {
+        const pathname = location.pathname;
+        let url, cssClass;
+        if (document.body.dataset.kana) {
           url = SS_Kana.url(pathname, false);
           url = SS_Translate.url(url);
           cssClass = "off";
@@ -108,18 +105,45 @@ this.SS_Kana = (function () {
           return;
         }
 
-        var html = $kana.html();
-        var anchorId = 'kana_a_' + index;
-        var $anchor = $("<a />", { id: anchorId, class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
-        $kana.html($anchor);
+        // legacy：htmlにbuttonが含まれていない　→ a タグを生成
+        if (kanaElement.dataset.toolType === "button") {
+          const buttonId = 'kana_button_' + index;
+          const content = kanaElement.innerHTML;
+          const button = document.createElement('button');
+          button.id = buttonId;
+          button.className = cssClass;
+          button.setAttribute('name', 'kana');
+          button.setAttribute('type', 'button');
+          button.setAttribute('aria-pressed', (cssClass === 'on') ? 'false' : 'true');
+          button.innerHTML = content;
+          kanaElement.innerHTML = '';
+          kanaElement.appendChild(button);
 
-        $anchor.on("click", function (ev) {
-          ev.preventDefault();
-          var $clickedAnchor = $(this);
-          var clickedUrl = $clickedAnchor.attr('href').substr(1); // Remove '#'
-          location.href = clickedUrl;
-          return false;
-        });
+          button.addEventListener('click', function(ev){
+            ev.preventDefault();
+            const expressed = (this.getAttribute('aria-pressed') === 'true') ? 'false' : 'true';
+            this.setAttribute('aria-pressed', expressed);
+            location.href = url;
+          });
+        } else {
+          const anchorId = 'kana_a_' + index;
+          const content = kanaElement.innerHTML;
+          const anchor = document.createElement('a');
+          anchor.id = anchorId;
+          anchor.className = cssClass;
+          anchor.href = '#' + url;
+          anchor.rel = 'nofollow';
+          anchor.innerHTML = content;
+          kanaElement.innerHTML = '';
+          kanaElement.appendChild(anchor);
+
+          anchor.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            const clickedUrl = this.getAttribute('href').substring(1); // Remove '#'
+            location.href = clickedUrl;
+            return false;
+          });
+        }
       });
     });
   };
@@ -145,7 +169,7 @@ this.SS_Kana = (function () {
       url: elem.attr("href"),
       dataType: "html",
       success: function (data) {
-        var body;
+        let body;
         body = $("body");
         body.data("kana", elem.hasClass("on"));
         return body.html(data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1"));
