@@ -30,7 +30,7 @@
       <% end %>
     <% else %>
       <%= raw column.html %>
-      <% if column.input_type =~ /(text_field|email_field|text_area)/ %>
+      <% if column.input_type =~ /(text_field|email_field|text_area|number_field)/ %>
         <% opt = { value: data } %>
         <% opt.merge!(column.additional_attr_to_h) %>
         <%= f.send(column.input_type, column.id, opt) %>

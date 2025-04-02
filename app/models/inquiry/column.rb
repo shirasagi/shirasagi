@@ -8,6 +8,7 @@ class Inquiry::Column
 
   INPUT_TYPE_VALIDATION_HANDLERS = [
     [ :email_field, :validate_email_field ].freeze,
+    [ :number_field, :validate_number_field ].freeze,
     [ :radio_button, :validate_radio_button ].freeze,
     [ :select, :validate_select ].freeze,
     [ :check_box, :validate_check_box ].freeze,
@@ -70,6 +71,14 @@ class Inquiry::Column
     if data.present? && data.value.present?
       unless Cms::Member::EMAIL_REGEX.match?(data.value)
         answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
+      end
+    end
+  end
+
+  def validate_number_field(answer, data)
+    if data.blank? || data.value.blank?
+      unless data.value.numeric?
+        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.not_a_number')}"
       end
     end
   end

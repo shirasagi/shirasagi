@@ -41,6 +41,7 @@ ja:
         text_field: テキストボックス
         text_area: テキストエリア
         email_field: メールアドレス
+        number_field: 数値入力
         radio_button: ラジオボタン選択
         select: プルダウン選択
         check_box: チェックボックス選択

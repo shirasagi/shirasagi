@@ -110,4 +110,12 @@ FactoryBot.define do
     html { "<p>お名前を入力してください。（重複）</p>" }
     order { 90 }
   end
+
+  factory :inquiry_column_number, class: Inquiry::Column do
+    name { "数値入力" }
+    input_type { "number_field" }
+    required { "optional" }
+    html { "<p>数値で入力してください。" }
+    order { 100 }
+  end
 end
