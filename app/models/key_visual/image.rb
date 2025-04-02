@@ -17,6 +17,7 @@ class KeyVisual::Image
   belongs_to_file :file
 
   validates :file_id, presence: true
+  validates :link_url, url: true, if: -> { link_url.present? }
   validates :display_remarks, inclusion: { in: I18n.t("key_visual.options.display_remarks").keys.map(&:to_s) },
     if: -> { display_remarks.present? }
 
