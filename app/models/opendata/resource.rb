@@ -19,15 +19,14 @@ class Opendata::Resource
 
   permit_params :state, :name, :text, :format, :license_id, :source_url, :order, :in_update_dataset
 
-  validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
-  validates :format, presence: true
-
   before_validation :set_source_url, if: ->{ source_url.present? }
   before_validation :set_filename, if: ->{ in_file.present? }
   before_validation :validate_in_file, if: ->{ in_file.present? }
   before_validation :validate_in_tsv, if: ->{ in_tsv.present? }
   before_validation :set_format
 
+  validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
+  validates :format, presence: true
   validates :source_url, url: true, if: ->{ source_url.present? }
 
   after_save :save_dataset
