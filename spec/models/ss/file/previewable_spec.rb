@@ -449,6 +449,15 @@ describe SS::File, dbscope: :example do
       end
 
       context "with SS::LogoFile" do
+        let(:file_path) do
+          # ロゴは画像のみ可
+          case rand(0..1)
+          when 0
+            "#{Rails.root}/spec/fixtures/ss/logo.png"
+          else
+            "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          end
+        end
         let!(:file) do
           tmp_ss_file(
             SS::LogoFile, user: user1, model: "ss/logo_file", contents: file_path

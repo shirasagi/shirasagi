@@ -60,8 +60,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        # no backups are created while requesting approve
-        expect(item.backups.count).to eq 1
+        expect(item.backups.count).to eq 2
 
         #
         # user1: edit requested page
@@ -83,8 +82,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        # no backups are created while requesting approve
-        expect(item.backups.count).to eq 2
+        expect(item.backups.count).to eq 3
       end
     end
   end

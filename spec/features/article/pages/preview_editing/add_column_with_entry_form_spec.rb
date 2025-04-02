@@ -110,6 +110,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit cms_preview_path(site: site, path: item.preview_path)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         # start preview editing
         wait_for_event_fired "ss:inplaceModeChanged" do
@@ -366,17 +368,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within_frame page.first("#ss-preview-dialog-frame") do
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#item-form" do
             within ".column-value-cms-column-fileupload" do
               fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-              wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
+              # wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
             end
-          end
-          within_cbox do
-            attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
-          end
-          within 'form#item-form' do
+            ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-fileupload"
             within ".column-value-cms-column-fileupload" do
               expect(page).to have_content("keyvisual.gif")
             end
@@ -411,17 +410,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within_frame page.first("#ss-preview-dialog-frame") do
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#item-form" do
             within ".column-value-cms-column-free" do
               fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-              wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
             end
-          end
-          within_cbox do
-            attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
-          end
-          within "#item-form" do
+            ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-free"
             within ".column-value-cms-column-free" do
               expect(page).to have_content("keyvisual.gif")
               wait_for_ckeditor_event "item[column_values][][in_wrap][value]", "afterInsertHtml" do

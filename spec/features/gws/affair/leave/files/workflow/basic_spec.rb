@@ -36,7 +36,9 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           # end
 
           fill_in "item[reason]", with: reason
-          select I18n.t("gws/affair.options.leave_type.paidleave"), from: 'item[leave_type]'
+          wait_for_event_fired "ss:ready" do
+            select I18n.t("gws/affair.options.leave_type.paidleave"), from: 'item[leave_type]'
+          end
 
           wait_for_cbox_opened { click_on I18n.t("gws/affair.apis.special_leaves.index") }
         end

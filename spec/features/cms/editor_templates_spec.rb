@@ -23,16 +23,14 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
       #
       visit index_path
       click_on I18n.t("ss.links.new")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[description]", with: description
         fill_in_code_mirror "item[html]", with: html
-        wait_for_cbox_opened { first(".btn-file-upload").click }
-      end
-      within_cbox do
-        wait_for_cbox_closed { click_on file.name }
-      end
-      within "form#item-form" do
+        attach_to_ss_file_field "item_thumb_id", file
+
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -50,6 +48,8 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
       visit index_path
       click_on item.name
       click_on I18n.t("ss.links.edit")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       within "form#item-form" do
         fill_in "item[name]", with: name2

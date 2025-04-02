@@ -240,12 +240,19 @@ def with_env(hash)
   ret
 end
 
-def wait_for_notice(text, wait: nil)
+def wait_for_notice(text, wait: nil, selector: nil)
   if page.driver.is_a?(Capybara::Selenium::Driver)
     wait_for_js_ready
     options = { text: text }
     options[:wait] = wait if wait
-    expect(page).to have_css('#notice', **options)
+    # CI で次のようなエラーが（たまに）観測される。
+    # unknown error: unhandled inspector error: {"code":-32000,"message":"Node with given id does not belong to the document"}
+    #
+    # おそらく #notice の変化を監視している最中にページ遷移したんだと想像。
+    # このようなエラーが発生した場合にリトライするようにしてみる。
+    Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+      expect(page).to have_css(selector || '#notice', **options)
+    end
     page.execute_script("SS.clearNotice();")
     wait_for_js_ready
   else

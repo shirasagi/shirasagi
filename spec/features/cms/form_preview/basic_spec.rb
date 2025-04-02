@@ -168,6 +168,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         #
         visit new_article_page_path(site: site, cid: node)
         wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within 'form#item-form' do
           fill_in 'item[name]', with: name
 
@@ -184,6 +185,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
           wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within ".column-value-cms-column-textfield" do
             fill_in "item[column_values][][in_wrap][value]", with: column1_value
@@ -208,20 +210,9 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.links.upload")
-            end
           end
-        end
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-fileupload"
 
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_for_cbox_closed do
-            click_on I18n.t('ss.buttons.attach')
-          end
-        end
-
-        within 'form#item-form' do
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value
           end
@@ -271,11 +262,15 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(Article::Page.count).to eq 1
 
         click_on I18n.t('ss.links.edit')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within 'form#item-form' do
           ensure_addon_opened "#addon-cms-agents-addons-form-page"
           page.first("footer.send .preview").click

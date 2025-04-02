@@ -130,6 +130,7 @@ Metrics/ModuleLength:
 # Configuration parameters: Max, CountKeywordArgs.
 Metrics/ParameterLists:
   MaxOptionalParameters: 4
+  CountKeywordArgs: false
 
 # Offense count: 628
 # Configuration parameters: AllowedMethods, AllowedPatterns.

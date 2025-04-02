@@ -33,7 +33,7 @@
   <% end %>
 <% end %>
 
-<div class="index user-files">
+<div class="user-files">
   <% @items.each do |item| %>
   <article class="file-view" id="user-file<%= item.id %>" data-file-id="<%= item.id %>">
     <%= sanitizer_status(item) %>
