@@ -124,6 +124,7 @@ ja:
         inquiry_html: 説明テキスト
         inquiry_sent_html: 送信完了テキスト
         inquiry_results_html: 集計結果テキスト
+        inquiry_show_sent_data: 投稿内容の表示
 
       inquiry/addon/captcha:
         inquiry_captcha: 画像認証
@@ -228,6 +229,8 @@ ja:
         - 送信完了画面に表示される画面の内容を入力します。
       inquiry_results_html:
         - 集計結果画面の上部に表示される内容を入力します。
+      inquiry_show_sent_data:
+        - 送信完了画面に投稿した内容を表示するか選択します。
     inquiry/addon/captcha:
       inquiry_captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。

@@ -94,6 +94,11 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     raise SS::NotFoundError if @page.blank?
   end
 
+  def set_sent_data
+    return if !@cur_node.show_sent_data?
+    @sent_data = Inquiry::SentData.find_by_token(params[:sent_data])
+  end
+
   public
 
   def new
@@ -147,6 +152,11 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @answer.update_kintone_record
     end
 
+    # create sent_data
+    if @cur_node.show_sent_data?
+      @sent_data = Inquiry::SentData.apply(@data)
+    end
+
     query = {}
     if @answer.source_url.present?
       if params[:preview]
@@ -156,15 +166,16 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
     end
     query[:group] = @group.id if @group
-    query = query.to_query
+    query[:sent_data] = @sent_data.token if @sent_data
 
     url = "#{@cur_node.url}sent.html"
-    url = "#{url}?#{query}" if query.present?
+    url = "#{url}?#{query.to_query}" if query.present?
     redirect_to url
   end
 
   def sent
     set_group
+    set_sent_data
     render action: :sent
   end
 
