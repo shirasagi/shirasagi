@@ -14,6 +14,11 @@ class UrlValidator < ActiveModel::EachValidator
     begin
       uri = ::Addressable::URI.parse(value)
 
+      # trusted_urlの検証
+      if options[:trusted_url] && Sys::TrustedUrlValidator.trusted_url?(value)
+        return
+      end
+
       # 絶対パスの場合の検証
       if options[:absolute_path] && uri.scheme.blank? && value.start_with?("/")
         return
