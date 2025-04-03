@@ -413,6 +413,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".errors", text: alert)
         end
       end
+      page.execute_script('$(".errors").html("");')
 
       # エラーが表示されているが、それでもアップロードしてみる。
       within_dialog do

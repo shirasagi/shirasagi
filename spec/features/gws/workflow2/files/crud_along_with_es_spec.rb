@@ -25,6 +25,9 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
   end
 
   before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v2
+
     # enable elastic search
     site.elasticsearch_hosts = SS::EsSupport.es_url
     site.menu_elasticsearch_state = 'show'
@@ -43,6 +46,10 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
     perform_enqueued_jobs do
       example.call
     end
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
   end
 
   context "crud along with elasticsearch" do
@@ -77,16 +84,8 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         within "form#item-form" do
           within "#addon-gws-agents-addons-workflow2-custom_form" do
             fill_in "custom[#{column1.id}]", with: item_text
-            wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
+            attach_to_ss_file_field "custom_#{column2.id}_0", file
           end
-        end
-        within_cbox do
-          within "article.file-view" do
-            wait_for_cbox_closed { click_on file.name }
-          end
-        end
-        within "form#item-form" do
-          expect(page).to have_content(file.name)
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
@@ -516,16 +515,8 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         within "form#item-form" do
           within "#addon-gws-agents-addons-workflow2-custom_form" do
             fill_in "custom[#{column1.id}]", with: item_text
-            wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
+            attach_to_ss_file_field "custom_#{column2.id}_0", file
           end
-        end
-        within_cbox do
-          within "article.file-view" do
-            wait_for_cbox_closed { click_on file.name }
-          end
-        end
-        within "form#item-form" do
-          expect(page).to have_content(file.name)
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t('ss.notice.saved')

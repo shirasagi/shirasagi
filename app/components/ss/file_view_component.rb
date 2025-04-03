@@ -43,7 +43,7 @@ class SS::FileViewComponent < ApplicationComponent
   def file_view_tag_data
     {
       file_id: file.id, name: file.name, humanized_name: file.humanized_name, extname: file.extname,
-      url: file.url, thumb_url: file.thumb_url
+      url: file.url, thumb_url: file.thumb_url, updated_serial: file.updated.to_i
     }
   end
 
@@ -52,7 +52,7 @@ class SS::FileViewComponent < ApplicationComponent
   end
 
   def file_link_tag(&block)
-    link_to(file.url, class: "thumb", target: "_blank", rel: "noopener", &block)
+    link_to(file.no_cache_url, class: "thumb", target: "_blank", rel: "noopener", &block)
   end
 
   def show_properties
