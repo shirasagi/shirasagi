@@ -45,7 +45,7 @@ Rails.application.routes.draw do
       namespace :user_navigation do
         resource :menu, only: %i[show]
       end
-      namespace :temp_files do
+      namespace :temp_files, path: "temp_files/:setting", setting: /-|([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)/ do
         resources :uploads, only: %i[index new create] do
           post :preview, on: :collection
         end

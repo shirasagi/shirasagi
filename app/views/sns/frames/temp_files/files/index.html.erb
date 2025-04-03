@@ -1,6 +1,6 @@
 <div class="cms-tabs">
-  <%= link_to tag.span(t("ss.buttons.upload"), class: "tab-name"), sns_frames_temp_files_uploads_path(user: @cur_user, accepts: accepts, s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
-  <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), sns_frames_temp_files_files_path(user: @cur_user, accepts: accepts, s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.upload"), class: "tab-name"), sns_frames_temp_files_uploads_path(s: params[:s].try(:to_unsafe_h)), data: { turbo: true } %>
+  <%= link_to tag.span(t("ss.buttons.select_from_list"), class: "tab-name"), sns_frames_temp_files_files_path(s: params[:s].try(:to_unsafe_h)), class: "current", data: { turbo: true } %>
 </div>
 
 <%= render "sns/frames/temp_files/files/index" %>
