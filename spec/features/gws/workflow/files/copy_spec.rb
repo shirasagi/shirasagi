@@ -19,18 +19,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
         within "form#item-form" do
           fill_in "item[name]", with: name
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_for_cbox_closed do
-            click_on I18n.t("ss.buttons.attach")
-          end
-        end
-        within "form#item-form" do
+
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: '#addon-gws-agents-addons-file'
           expect(page).to have_content("logo.png")
+
           click_on I18n.t("ss.buttons.save")
         end
 
@@ -85,20 +77,13 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
           within "form#item-form" do
             fill_in "item[name]", with: name
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-          within_cbox do
-            attach_file "item[in_files][]", file_path
-            wait_for_cbox_closed do
-              click_on I18n.t("ss.buttons.attach")
-            end
-          end
-          within "form#item-form" do
+
+            ss_upload_file file_path, addon: '#addon-gws-agents-addons-file'
             expect(page).to have_content(::File.basename(file_path))
             expect(SS::TempFile.count).to eq 1
+
             fill_in "item[text]", with: test_url
+
             click_on I18n.t("ss.buttons.save")
           end
 

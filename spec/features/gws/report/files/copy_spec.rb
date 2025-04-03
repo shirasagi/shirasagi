@@ -28,6 +28,15 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   let!(:column9) { create(:gws_column_file_upload, cur_site: site, form: form, order: 90, required: "optional") }
   let!(:column10) { create(:gws_column_title, cur_site: site, form: form, order: 100) }
 
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v2
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
+
   context "print" do
     let(:name) { unique_id }
     let(:name2) { unique_id }
@@ -68,18 +77,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         select column_value6, from: "custom[#{column6.id}]"
         find("input[name='custom[#{column7.id}]'][value='#{column_value7}']").click
         find("input[name='custom[#{column8.id}][]'][value='#{column_value8}']").click
-        wait_for_cbox_opened do
-          first(".btn-file-upload").click
-        end
-      end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_for_cbox_closed do
-          click_on I18n.t("ss.buttons.attach")
-        end
-      end
-      within "form#item-form" do
-        expect(page).to have_css(".column-#{column9.id}", text: "logo")
+        upload_to_ss_file_field "custom_#{column9.id}_0", "#{Rails.root}/spec/fixtures/ss/logo.png"
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')

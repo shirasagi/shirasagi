@@ -1,0 +1,8 @@
+<%=
+  component = SS::FileSelectBoxComponent.new(
+    ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user,
+    item: @item, files: SS::File.none, field_name: "workflow_file_ids[]",
+    show_properties: false, show_attach: false, show_opendata: false, show_reorder: false
+  )
+  render component
+%>

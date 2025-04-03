@@ -26,23 +26,11 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-      end
 
-      # attach file
-      within "form#item-form" do
-        within "#addon-gws-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-      end
-      within_cbox do
-        attach_file "item[in_files][]", file_path
-        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-      end
+        # attach file
+        ss_upload_file file_path, addon: "#addon-gws-agents-addons-file"
 
-      # choose member
-      within "form#item-form" do
+        # choose member
         within "#addon-gws-agents-addons-member" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
@@ -87,23 +75,11 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-      end
 
-      # attach file
-      within "form#item-form" do
-        within "#addon-gws-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-      end
-      within_cbox do
-        attach_file "item[in_files][]", file_path
-        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-      end
+        # attach file
+        ss_upload_file file_path, addon: "#addon-gws-agents-addons-file"
 
-      # choose member
-      within "form#item-form" do
+        # choose member
         within "#addon-gws-agents-addons-member" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end

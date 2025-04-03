@@ -27,6 +27,7 @@ class SS::TempFileCreator
   validate :validate_filename
   validate :validate_size
   validate :validate_accepts
+  validate :validate_upload_policy
 
   def model
     @model ||= begin
@@ -103,7 +104,7 @@ class SS::TempFileCreator
     return if name.blank?
 
     if multibyte_filename_disabled?
-      if name !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
+      if name !~ /^\/?([\w\-]+\/)*[\w\-]+(\.[\w\-.]+)?$/
         message = I18n.t("errors.messages.invalid_filename")
         message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
         errors.add :base, message
@@ -126,7 +127,7 @@ class SS::TempFileCreator
   def validate_filename
     return if filename.blank?
 
-    if filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
+    if filename !~ /^\/?([\w\-]+\/)*[\w\-]+(\.[\w\-.]+)?$/
       message = I18n.t("errors.messages.invalid_filename")
       message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
       errors.add :base, message
@@ -160,6 +161,12 @@ class SS::TempFileCreator
       message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
 
       errors.add :base, message
+    end
+  end
+
+  def validate_upload_policy
+    if SS::UploadPolicy.upload_policy == 'restricted'
+      errors.add :base, :upload_restricted
     end
   end
 

@@ -23,19 +23,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
-        within "#addon-basic" do
-          wait_for_cbox_opened do
-            click_on I18n.t('ss.buttons.upload')
-          end
-        end
-      end
-      within_cbox do
-        attach_file "item[in_files][]", file_path1
-        wait_for_cbox_closed do
-          click_on I18n.t("ss.buttons.attach")
-        end
-      end
-      within "form#item-form" do
+        ss_upload_file file_path1, addon: "#addon-basic"
         expect(page).to have_content(name1)
         within "footer.send" do
           click_on I18n.t('ss.buttons.upload')

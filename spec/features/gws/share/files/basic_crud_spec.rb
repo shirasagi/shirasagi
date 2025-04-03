@@ -31,15 +31,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
-        within "#addon-basic" do
-          wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
-        end
-      end
-      within_cbox do
-        wait_for_cbox_closed { click_on ss_file.name }
-      end
-      within "form#item-form" do
-        expect(page).to have_css("#addon-basic .file-view", text: ss_file.name)
+        ss_select_file ss_file, addon: "#addon-basic"
         fill_in "item[memo]", with: "new test"
       end
       within "footer.send" do

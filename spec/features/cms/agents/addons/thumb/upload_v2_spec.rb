@@ -642,6 +642,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
               end
             end
           end
+          page.execute_script('$(".errors").html("");')
 
           # エラーが表示されているが、それでもアップロードしてみる。
           within_dialog do
@@ -798,6 +799,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
         end
+        page.execute_script('$(".errors").html("");')
 
         # エラーが表示されているが、それでもアップロードしてみる。
         within_dialog do
@@ -945,6 +947,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
         end
       end
+      page.execute_script('$(".errors").html("");')
 
       # エラーが表示されているが、それでもアップロードしてみる。
       within_dialog do

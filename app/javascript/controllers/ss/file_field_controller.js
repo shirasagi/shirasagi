@@ -46,7 +46,6 @@ export default class extends SelectBoxController {
       const response = await fetch(api);
       if (response.ok) {
         const result = await response.json();
-        console.log(result);
         const fileIdElement = this.element.querySelector(".file-id");
         if (fileIdElement) {
           fileIdElement.value = selectedItem.id;

@@ -99,11 +99,11 @@ module SS::TempFilesFrame
       format.html do
         file_view_options = {}
         file_view_options[:name] = setting.field_name if setting.field_name.present?
-        file_view_options[:show_properties] = setting.show_properties if setting.show_properties.present?
-        file_view_options[:show_attach] = setting.show_attach if setting.show_attach.present?
-        file_view_options[:show_delete] = setting.show_delete if setting.show_delete.present?
-        file_view_options[:show_copy_url] = setting.show_copy_url if setting.show_copy_url.present?
-        file_view_options[:show_opendata] = setting.show_opendata if setting.show_opendata.present?
+        file_view_options[:show_properties] = setting.show_properties
+        file_view_options[:show_attach] = setting.show_attach
+        file_view_options[:show_delete] = setting.show_delete
+        file_view_options[:show_copy_url] = setting.show_copy_url
+        file_view_options[:show_opendata] = setting.show_opendata
 
         component = SS::FileViewV2Component.new(cur_user: @cur_user, file: @item, **file_view_options)
         component.animated = "animate__animated animate__bounceIn"

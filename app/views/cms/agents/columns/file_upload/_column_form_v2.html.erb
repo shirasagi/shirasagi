@@ -3,10 +3,6 @@
   file = value.try(:file)
   controller ||= false
 
-  form_options = column.form_options
-  form_options['class'] = [ form_options['class'].presence ].flatten.compact
-  form_options['class'] << 'file-id'
-
   cid = @cur_node || "-"
   setting = { field_name: "item[column_values][][in_wrap][file_id]", show_attach: false }
   setting = JSON::JWT.new(setting).sign(Rails.application.secret_key_base).to_s

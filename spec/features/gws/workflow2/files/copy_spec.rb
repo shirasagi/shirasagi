@@ -17,7 +17,14 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
   let(:now) { Time.zone.now.change(sec: 0) }
 
   before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v2
+
     login_gws_user
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
   end
 
   context "with standard form" do
@@ -33,19 +40,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
         within "form#item-form" do
           within "#addon-gws-agents-addons-workflow2-custom_form" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
+            upload_to_ss_file_field "custom_#{column2.id}_0", "#{Rails.root}/spec/fixtures/ss/logo.png"
           end
-        end
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_for_cbox_closed do
-            click_on I18n.t("ss.buttons.attach")
-          end
-        end
-        within "form#item-form" do
-          expect(page).to have_content("logo")
           click_on I18n.t("gws/workflow2.buttons.save_and_apply")
         end
         wait_for_notice I18n.t('ss.notice.saved')

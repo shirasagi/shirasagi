@@ -34,6 +34,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
   let(:remand_comment1) { unique_id }
 
   before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v2
+
     site.canonical_scheme = %w(http https).sample
     site.canonical_domain = "#{unique_id}.example.jp"
     site.save!
@@ -46,7 +49,11 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
     ActionMailer::Base.deliveries.clear
   end
 
-  after { ActionMailer::Base.deliveries.clear }
+  after do
+    ActionMailer::Base.deliveries.clear
+
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
 
   context "remand with back_to_previous" do
     let!(:form) do
@@ -82,12 +89,12 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_on_remand).to eq "back_to_previous"
       expect(item.workflow_approvers.count).to eq 3
-      expect(item.workflow_approvers).to \
-        include({level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: ''})
-      expect(item.workflow_approvers).to \
-        include({level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: ''})
-      expect(item.workflow_approvers).to \
-        include({level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: ''})
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'request', comment: '' })
+      expect(item.workflow_approvers).to include(
+        { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'pending', comment: '' })
+      expect(item.workflow_approvers).to include(
+        { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: '' })
 
       expect(SS::Notification.count).to eq 1
       SS::Notification.order_by(id: -1).first.tap do |memo|
@@ -109,12 +116,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       end
       within ".mod-workflow-approve" do
         fill_in "item[comment]", with: approve_comment1
-        wait_for_cbox_opened { click_on I18n.t("workflow.links.approver_file_upload") }
       end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".mod-workflow-approve"
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.buttons.approve")
       end
@@ -150,10 +153,10 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(item.workflow_approvers).to include(
         { level: 1, user_type: Gws::User.name, user_id: user1.id, state: 'approve', comment: approve_comment1,
           file_ids: [file1.id], created: be_within(30.seconds).of(Time.zone.now) })
-      expect(item.workflow_approvers).to \
-        include({level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'request', comment: ''})
-      expect(item.workflow_approvers).to \
-        include({level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: ''})
+      expect(item.workflow_approvers).to include(
+        { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'request', comment: '' })
+      expect(item.workflow_approvers).to include(
+        { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: '' })
 
       expect(SS::Notification.count).to eq 2
       SS::Notification.order_by(id: -1).first.tap do |memo|
@@ -204,9 +207,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           created: be_within(30.seconds).of(Time.zone.now) })
       expect(item.workflow_approvers).to include(
         { level: 2, user_type: Gws::User.name, user_id: user2.id, state: 'remand', comment: remand_comment1,
-          created: be_within(30.seconds).of(Time.zone.now) })
-      expect(item.workflow_approvers).to \
-        include({level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: ''})
+          file_ids: be_blank, created: be_within(30.seconds).of(Time.zone.now) })
+      expect(item.workflow_approvers).to include(
+        { level: 3, user_type: Gws::User.name, user_id: user3.id, state: 'pending', comment: '' })
 
       expect(SS::Notification.count).to eq 3
       SS::Notification.order_by(id: -1).first.tap do |memo|
