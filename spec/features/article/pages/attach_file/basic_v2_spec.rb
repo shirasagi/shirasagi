@@ -406,13 +406,25 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_event_to_fire "ss:tempFile:addedWaitingList" do
           attach_file "in_files", file_path
         end
-
+      end
+      within_dialog do
         within first(".index tbody tr") do
           alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
           expect(page).to have_css(".errors", text: alert)
         end
+      end
 
-        expect(page).to have_no_css('.file-view', text: basename)
+      # エラーが表示されているが、それでもアップロードしてみる。
+      within_dialog do
+        within "form" do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        within first(".index tbody tr") do
+          alert = I18n.t("errors.messages.too_large_file", filename: basename, size: file_size_human, limit: limit_human)
+          expect(page).to have_css(".errors", text: alert)
+        end
       end
     end
   end

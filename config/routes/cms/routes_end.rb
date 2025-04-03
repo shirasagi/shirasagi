@@ -99,7 +99,7 @@ Rails.application.routes.draw do
       namespace :user_navigation do
         resource :menu, only: %i[show]
       end
-      scope "node:cid" do
+      scope "node:cid/:setting", setting: /-|([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)/ do
         namespace :temp_files do
           resources :uploads, only: %i[index new create] do
             post :preview, on: :collection
