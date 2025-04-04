@@ -21,4 +21,101 @@ describe Ads::Banner do
     it { expect(item.private_show_path).to eq show_path }
     it { expect(item.count_url).not_to eq nil }
   end
+
+  describe "validation" do
+    let(:site) { cms_site }
+    let(:node) { create :ads_node_banner, cur_site: site }
+    let(:file) { create :ss_file, site_id: site.id }
+
+    let(:valid_url1) { "http://example.jp/" }
+    let(:valid_url2) { "https://example.jp/" }
+    let(:valid_url3) { "/docs/page1.html" }
+    let(:valid_url4) { "/docs/" }
+
+    let(:invalid_url1) { "http://example.jp /" }
+    let(:invalid_url2) { "https://example.jp /" }
+    let(:invalid_url3) { "javascript:alert('test')" }
+    let(:invalid_url4) { "javascript:void(0)" }
+    let(:invalid_url5) { "#" }
+
+    def build_banner(url)
+      build(
+        :ads_banner, cur_site: site, cur_node: node,
+        file_id: file.id,
+        link_url: url
+      )
+    end
+
+    it "valid_url1" do
+      item = build_banner(valid_url1)
+      expect(item.valid?).to be_truthy
+    end
+
+    it "valid_url2" do
+      item = build_banner(valid_url2)
+      expect(item.valid?).to be_truthy
+    end
+
+    it "valid_url3" do
+      item = build_banner(valid_url3)
+      expect(item.valid?).to be_truthy
+    end
+
+    it "valid_url4" do
+      item = build_banner(valid_url4)
+      expect(item.valid?).to be_truthy
+    end
+
+    it "invalid_url1" do
+      item = build_banner(invalid_url1)
+      expect(item.valid?).to be_falsey
+      expect(item.errors[:link_url]).to be_present
+    end
+
+    it "invalid_url2" do
+      item = build_banner(invalid_url2)
+      expect(item.valid?).to be_falsey
+      expect(item.errors[:link_url]).to be_present
+    end
+
+    it "invalid_url3" do
+      item = build_banner(invalid_url3)
+      expect(item.valid?).to be_falsey
+      expect(item.errors[:link_url]).to be_present
+    end
+
+    it "invalid_url4" do
+      item = build_banner(invalid_url4)
+      expect(item.valid?).to be_falsey
+      expect(item.errors[:link_url]).to be_present
+    end
+
+    it "invalid_url5" do
+      item = build_banner(invalid_url5)
+      expect(item.valid?).to be_falsey
+      expect(item.errors[:link_url]).to be_present
+    end
+
+    context "when file is not present" do
+      it "valid_url1" do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: valid_url1)
+        expect(item.valid?).to be_truthy
+      end
+
+      it "valid_url2" do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: valid_url2)
+        expect(item.valid?).to be_truthy
+      end
+
+      it "valid_url3" do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: valid_url3)
+        expect(item.valid?).to be_truthy
+      end
+
+      it "valid_url4" do
+        item = build(:ads_banner, cur_site: site, cur_node: node, link_url: valid_url4)
+        expect(item.valid?).to be_truthy
+      end
+    end
+  end
 end
