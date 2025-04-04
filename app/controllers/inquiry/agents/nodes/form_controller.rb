@@ -106,13 +106,13 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def confirm
-    if !@answer.valid?
+    if @answer.errors.present? || @answer.invalid?
       render action: :new
     end
   end
 
   def create
-    if !@answer.valid? || params[:submit].blank?
+    if @answer.errors.present? || @answer.invalid? || params[:submit].blank?
       render action: :new
       return
     end
