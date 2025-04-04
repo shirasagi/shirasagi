@@ -12,6 +12,8 @@ module Facility::Addon
       field :related_url, type: String
 
       permit_params :kana, :postcode, :address, :tel, :fax, :related_url
+
+      validates :related_url, url: { absolute_path: true }, if: -> { related_url.present? }
     end
   end
 end
