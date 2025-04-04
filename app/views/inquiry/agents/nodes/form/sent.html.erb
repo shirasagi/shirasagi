@@ -10,11 +10,11 @@
 <div class="inquiry-sent">
 <%= sanitize(@cur_node.inquiry_sent_html) %>
 </div>
-<% if @sent_data.present? %>
+<% if @saved_params.present? %>
   <div class="columns">
     <% @columns.each do |column| %>
       <%= inquiry_column_tag(column, confirm: true) do %>
-        <%=br @sent_data.data[column.id.to_s] %>
+        <%=br @saved_params.data[column.id.to_s] %>
       <% end %>
     <% end %>
   </div>

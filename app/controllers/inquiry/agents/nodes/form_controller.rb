@@ -94,9 +94,13 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     raise SS::NotFoundError if @page.blank?
   end
 
-  def set_sent_data
+  def set_saved_params
     return if !@cur_node.show_sent_data?
-    @sent_data = Inquiry::SentData.find_by_token(params[:sent_data])
+    @saved_params = Inquiry::SavedParams.find_by_token(session[saved_params_key])
+  end
+
+  def saved_params_key
+    "inquiry_saved_params_#{@cur_node.id}"
   end
 
   public
@@ -152,9 +156,22 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @answer.update_kintone_record
     end
 
-    # create sent_data
+    # create saved_params
     if @cur_node.show_sent_data?
-      @sent_data = Inquiry::SentData.apply(@data)
+      data = {}
+      @data.each do |column_id, values|
+        value = values[0]
+        if value.is_a?(String)
+          data[column_id] = value
+        elsif value.is_a?(Hash)
+          data[column_id] = value.values.join("\n")
+        elsif value.respond_to?(:original_filename)
+          data[column_id] = value.original_filename
+        elsif value.respond_to?(:filename)
+          data[column_id] = value.filename
+        end
+      end
+      session[saved_params_key] = Inquiry::SavedParams.apply(data)
     end
 
     query = {}
@@ -166,7 +183,6 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
     end
     query[:group] = @group.id if @group
-    query[:sent_data] = @sent_data.token if @sent_data
 
     url = "#{@cur_node.url}sent.html"
     url = "#{url}?#{query.to_query}" if query.present?
@@ -175,7 +191,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
   def sent
     set_group
-    set_sent_data
+    set_saved_params
     render action: :sent
   end
 

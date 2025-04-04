@@ -124,8 +124,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".fields", text: '123')
       end
 
-      expect(Inquiry::SentData.count).to eq 1
-      sent_data = Inquiry::SentData.first
+      expect(Inquiry::SavedParams.count).to eq 1
+      sent_data = Inquiry::SavedParams.first
       visit "#{current_path}?sent_data=#{sent_data.token}"
       within ".columns" do
         expect(page).to have_css(".fields", text: 'シラサギ太郎')
@@ -139,10 +139,16 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".fields", text: '123')
       end
 
+      Inquiry::DeleteInquiryTempFilesJob.perform_now
+      expect(Inquiry::SavedParams.count).to eq 1
+
       # expiration
       Timecop.travel(1.day.from_now) do
         visit "#{current_path}?sent_data=#{sent_data.token}"
         expect(page).to have_no_css(".columns")
+
+        Inquiry::DeleteInquiryTempFilesJob.perform_now
+        expect(Inquiry::SavedParams.count).to eq 0
       end
     end
   end
