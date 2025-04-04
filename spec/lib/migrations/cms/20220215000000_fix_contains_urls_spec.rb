@@ -42,8 +42,8 @@ RSpec.describe SS::Migration20220215000000, dbscope: :example do
       [
         column1.value_type.new(column: column1, value: "<a href=\" value1 \">value1</a>"),
         column2.value_type.new(column: column2, value: " value2 , value2 "),
-        column3.value_type.new(column: column3, link_url: " value3 "),
-        column4.value_type.new(column: column4, link_url: " value4 ")
+        column3.value_type.new(column: column3, link_url: "https://example.jp/value3"),
+        column4.value_type.new(column: column4, link_url: "https://example.jp/value4")
       ]
     end
     let(:page) { create :article_page, cur_site: site, cur_node: node, form: form, column_values: column_values }
