@@ -95,7 +95,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       [
         column1.value_type.new(column: column1, value: unique_id),
         column2.value_type.new(column: column2, date: Time.zone.now),
-        column3.value_type.new(column: column3, link_url: unique_id),
+        column3.value_type.new(column: column3, link_url: "https://example.jp/#{unique_id}"),
         column4.value_type.new(column: column4, value: unique_id),
         column5.value_type.new(column: column5, value: column5.select_options.sample),
         column6.value_type.new(column: column6, value: column6.select_options.sample),
