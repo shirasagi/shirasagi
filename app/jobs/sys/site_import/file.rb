@@ -59,18 +59,9 @@ module Sys::SiteImport::File
   end
 
   def update_ss_files_url
-    @ss_files_url.each do |src, dst|
-      replace_html_with_url(src, dst)
-    end
-  end
-
-  def replace_html_with_url(src, dst)
-    src_path = /="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
-    dst_path = "=\"#{dst}"
-
+    src_path = ::Regexp.union(@ss_files_url.keys.collect { |src| /="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/ })
     fields = Cms::ApiFilter::Contents::HTML_FIELDS + Cms::ApiFilter::Contents::CONTACT_FIELDS
     cond = { "$or" => fields.map { |field| { field => src_path } } }
-
     criterias = [
       Cms::Page.in(id: @cms_pages_map.values),
       Cms::Part.in(id: @cms_parts_map.values),
@@ -80,12 +71,27 @@ module Sys::SiteImport::File
       items.where(cond).each do |item|
         attr = {}
         fields.each do |field|
-          next if item[field].blank?
-          html = item[field].gsub(src_path, dst_path)
-          attr[field] = html if item[field] != html
+          html = replace_html_with_url(item[field])
+          attr[field] = html if html != item[field]
         end
         item.set(attr) if attr.present?
       end
     end
+  end
+
+  def replace_html_with_url(html)
+    return html if html.blank?
+
+    src_html = dst_html = html
+
+    @ss_files_url.each do |src, dst|
+      src_path = ::Regexp.new(/="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/)
+
+      next unless dst_html.match?(src_path)
+
+      src_html = src_html.gsub(src_path, "=\"#{dst}")
+    end
+    html = src_html if src_html != dst_html
+    html
   end
 end
