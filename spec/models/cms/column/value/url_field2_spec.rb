@@ -68,6 +68,8 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
 
     let(:invalid_url1) { "http://#{domain} /" }
     let(:invalid_url2) { "https://#{domain} /" }
+    let(:invalid_url3) { "javascript:alert('test')" }
+    let(:invalid_url4) { "javascript:void(0)" }
 
     before do
       request = OpenStruct.new(url: "http://#{domain}/#{unique_id}/")
@@ -263,6 +265,24 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     it "invalid_url2" do
       item = build_page(invalid_url2)
       expect(item.valid?).to be_falsey
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
+    end
+
+    it "invalid_url3" do
+      item = build_page(invalid_url3)
+      expect(item.valid?).to be_falsey
+      expect(item.column_values.first.errors[:link_url]).to be_present
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
+    end
+
+    it "invalid_url4" do
+      item = build_page(invalid_url4)
+      expect(item.valid?).to be_falsey
+      expect(item.column_values.first.errors[:link_url]).to be_present
 
       expect(item.column_values.first.link_item_type).to be_nil
       expect(item.column_values.first.link_item_id).to be_nil
