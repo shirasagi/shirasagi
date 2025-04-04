@@ -97,6 +97,15 @@ this.Openlayers_Map_Form = (function () {
     this.resize();
     this.renderEvents();
     this.toggleAddMarker();
+
+    // スクリプトタグの入力を防ぐ
+    $(".marker-name, .marker-text").on("input", function() {
+      var value = $(this).val();
+      if (value.match(/<script/i)) {
+        alert(<%= I18n.t('errors.messages.script_not_allowed').to_json %>);
+        $(this).val(value.replace(/<script[^>]*>.*?<\/script>/gi, ''));
+      }
+    });
   };
 
   Openlayers_Map_Form.prototype.createLayers = function (layerOpts) {
@@ -442,23 +451,20 @@ this.Openlayers_Map_Form = (function () {
       cln.removeClass("active");
       cln.find("input,textarea").val("");
       cln.find(".marker-name").val("");
-      cln.find(".clear-marker").on('click', (function (_this) {
-        return function () {
-          return _this.clearPointForm(cln);
-        };
-      })(this));
-      cln.find(".set-marker").on('click', (function (_this) {
-        return function () {
-          return _this.clickSetMarker(cln);
-        };
-      })(this));
-      cln.find(".marker-name").on('keypress', (function (_this) {
-        return function (e) {
-          if (e.which === SS.KEY_ENTER) {
-            return false;
-          }
-        };
-      })(this));
+      cln.find(".clear-marker").on('click', function () {
+        this.clearPointForm(cln);
+        return false;
+      }.bind(this));
+      cln.find(".set-marker").on('click', function () {
+        this.clickSetMarker(cln);
+        return false;
+      }.bind(this));
+      cln.find(".marker-name, .marker-text").on("input", function() {
+        var value = $(this).val();
+        if (value.match(/<script/i)) {
+          $(this).val(value.replace(/<script[^>]*>.*?<\/script>/gi, ''));
+        }
+      });
       cln.find(".marker-loc-input").on('keypress', function (e) {
         if (e.which === SS.KEY_ENTER) {
           $(e.target).closest("dd.marker").find(".set-marker").trigger("click");

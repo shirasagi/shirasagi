@@ -12,6 +12,7 @@ class Map::Extensions::Point < Hash
   def []=(key, value)
     if key.to_s == "name" || key.to_s == "text"
       value = sanitize(value)
+      validate_script_tags(value, key) if value.present?
     end
     super
   end
@@ -19,6 +20,12 @@ class Map::Extensions::Point < Hash
   def sanitize(value)
     return nil if value.nil?
     value.to_s.gsub(/<[^>]*>/, '')
+  end
+
+  def validate_script_tags(value, key)
+    if value =~ /<script/i
+      errors.add(key, I18n.t("errors.messages.script_not_allowed"))
+    end
   end
 
   # convert to mongoid native type

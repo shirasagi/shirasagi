@@ -224,6 +224,7 @@ ja:
       edit_approved: 承認済みの予約は変更できません。
       disallowed_domains: は %{domains} のみ許可されています。
       unable_to_accept_file: "には許可されていないファイルが選択されています。アップロードできるファイルは %{allowed_format_list} です。"
+      script_not_allowed: "スクリプトタグは使用できません"
     template:
       body: 次の項目を確認してください。
       header:
