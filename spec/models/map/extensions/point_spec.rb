@@ -131,4 +131,54 @@ describe Map::Extensions::Point, dbscope: :example do
       expect(point['zoom_level']).to eq 8
     end
   end
+
+  let(:point) { described_class.new }
+
+  describe "validation" do
+    context "when name contains script tag" do
+      it "raises validation error" do
+        expect do
+          point["name"] = "<script>alert('test')</script>"
+        end.to raise_error(Mongoid::Errors::Validations)
+      end
+    end
+
+    context "when text contains script tag" do
+      it "raises validation error" do
+        expect do
+          point["text"] = "<script>alert('test')</script>"
+        end.to raise_error(Mongoid::Errors::Validations)
+      end
+    end
+
+    context "when name contains valid text" do
+      it "does not raise error" do
+        expect do
+          point["name"] = "テストマーカー"
+        end.not_to raise_error
+      end
+    end
+
+    context "when text contains valid text" do
+      it "does not raise error" do
+        expect do
+          point["text"] = "テスト説明"
+        end.not_to raise_error
+      end
+    end
+
+    context "when name contains HTML tags" do
+      it "removes HTML tags" do
+        point["name"] = "<p>テスト</p>"
+        expect(point["name"]).to eq "テスト"
+      end
+    end
+
+    context "when text contains HTML tags" do
+      it "removes HTML tags" do
+        point["text"] = "<p>テスト</p>"
+        expect(point["text"]).to eq "テスト"
+      end
+    end
+  end
 end
