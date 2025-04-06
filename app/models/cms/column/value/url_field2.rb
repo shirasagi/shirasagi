@@ -11,7 +11,6 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   validates :link_url, url: { absolute_path: true }, if: -> { link_url.present? }
   validate :validate_link_url
-
   validates :link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
 
   before_validation :set_link_item, unless: ->{ @new_clone }

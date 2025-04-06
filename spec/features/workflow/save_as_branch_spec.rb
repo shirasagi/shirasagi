@@ -129,17 +129,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
         before do
           item1.form = form
           item1.column_values = column_values1
-          puts "=== デバッグ情報 ==="
-          puts "item1: #{item1.inspect}"
-          puts "column_values1: #{column_values1.inspect}"
-          puts "form: #{form.inspect}"
-          puts "=== バリデーション前 ==="
-          puts "item1.valid?: #{item1.valid?}"
-          puts "item1.errors.full_messages: #{item1.errors.full_messages}"
           item1.save!
-          puts "=== バリデーション後 ==="
-          puts "item1.valid?: #{item1.valid?}"
-          puts "item1.errors.full_messages: #{item1.errors.full_messages}"
           item1.reload
 
           item2.form = form
