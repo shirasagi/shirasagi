@@ -13,8 +13,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
   context "attendance crud" do
     it do
-      login_user user
-      visit gws_schedule_plan_path(site: site, id: item)
+      login_user user, to: gws_schedule_plan_path(site: site, id: item)
 
       within "#addon-gws-agents-addons-schedule-attendance" do
         wait_for_cbox_opened do
@@ -48,8 +47,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
   context "comment crud" do
     it do
-      login_user user
-      visit gws_schedule_plan_path(site: site, id: item)
+      login_user user, to: gws_schedule_plan_path(site: site, id: item)
 
       #
       # Create

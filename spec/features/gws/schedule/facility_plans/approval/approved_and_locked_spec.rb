@@ -19,8 +19,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it do
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       # create
       within ".gws-schedule-box .calendar-multiple-header" do
@@ -38,8 +37,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_ajax
 
       # approve
-      login_user(user2)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user2, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -57,8 +55,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_notice I18n.t('ss.notice.saved')
 
       # able to edit within user2
-      login_user(user2)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user2, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -80,8 +77,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
 
       # able to edit within user1
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -111,8 +107,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it do
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       # create
       within ".gws-schedule-box .calendar-multiple-header" do
@@ -130,8 +125,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_ajax
 
       # approve
-      login_user(user2)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user2, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -149,8 +143,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_notice I18n.t('ss.notice.saved')
 
       # able to edit within user2
-      login_user(user2)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user2, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -172,8 +165,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
 
       # disable edit within user1
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click

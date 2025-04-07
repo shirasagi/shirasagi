@@ -75,8 +75,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
   context "when master is published all" do
     it do
-      login_user user1
-      visit article_pages_path(site: site, cid: node)
+      login_user user1, to: article_pages_path(site: site, cid: node)
       wait_for_js_ready
       expect(page).to have_css(".list-item[data-id='#{item_master.id}']", text: item_master.name)
       expect(page).to have_css(".list-item[data-id='#{item_branch.id}']", text: item_branch.name)
@@ -130,8 +129,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
   context "when branch is published all" do
     it do
-      login_user user1
-      visit article_pages_path(site: site, cid: node)
+      login_user user1, to: article_pages_path(site: site, cid: node)
       wait_for_js_ready
       expect(page).to have_css(".list-item[data-id='#{item_master.id}']", text: item_master.name)
       expect(page).to have_css(".list-item[data-id='#{item_branch.id}']", text: item_branch.name)

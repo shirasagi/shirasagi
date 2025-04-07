@@ -48,8 +48,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # 申請
         #
-        login_user user1
-        visit gws_workflow2_files_main_path(site: site)
+        login_user user1, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
 
@@ -119,8 +118,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # 承認
         #
-        login_user user2
-        visit gws_workflow2_files_main_path(site: site)
+        login_user user2, to: gws_workflow2_files_main_path(site: site)
         click_on I18n.t("gws/workflow2.navi.approve")
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
@@ -152,8 +150,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
     context "superior user isn't set if group isn't set superior user" do
       it do
-        login_user user1
-        visit gws_workflow2_files_main_path(site: site)
+        login_user user1, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
 

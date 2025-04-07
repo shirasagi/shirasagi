@@ -143,9 +143,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context "with cms addon file" do
       context "when file is attached / saved on the modal dialog" do
         it do
-          login_user(user2)
-
-          visit edit_path
+          login_user(user2, to: edit_path)
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
@@ -201,8 +199,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         it do
-          login_user(user2)
-          visit edit_path
+          login_user(user2, to: edit_path)
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
@@ -267,9 +264,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     context "with entry form" do
       it "#edit" do
-        login_user(user2)
-
-        visit edit_path
+        login_user(user2, to: edit_path)
 
         within 'form#item-form' do
           wait_for_event_fired("ss:formActivated") do

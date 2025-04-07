@@ -16,22 +16,26 @@ def ss_site
   ss_site
 end
 
-def login_user(user, pass: nil, login_path: nil)
+def login_user(user, pass: nil, login_path: nil, to: nil)
   visit login_path.presence || sns_login_path
+  ref = to.presence || '/robots.txt'
   within "form" do
     fill_in "item[email]", with: user.email.presence || user.uid
     fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"
-    set_value_to_hidden_input('input#ref', '/robots.txt')
+    set_value_to_hidden_input('input#ref', ref)
     click_button I18n.t("ss.login", locale: I18n.default_locale)
   end
-  expect(page).to have_content('User-agent')
-  expect(page).to have_no_css('.login-box [name="item[password]"]')
-
   # rubocop:disable Rails/I18nLocaleAssignment
   if user.lang.present?
     I18n.locale = user.lang.to_sym
   end
   # rubocop:enable Rails/I18nLocaleAssignment
+
+  if ref == '/robots.txt'
+    expect(page).to have_content('User-agent')
+  else
+    expect(page).to have_css('#head', text: user.name)
+  end
 end
 
 # set value to hidden input

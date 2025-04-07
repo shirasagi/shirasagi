@@ -35,8 +35,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
   context "move with buttons" do
     it do
-      login_user user
-      visit job_sns_logs_path(site: site)
+      login_user user, to: job_sns_logs_path(site: site)
       wait_for_event_fired "turbo:frame-load" do
         within ".list-head" do
           click_on I18n.t('gws.history.days.today')
@@ -101,8 +100,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
   context "move with directly inputting date value" do
     it do
-      login_user user
-      visit job_sns_logs_path(site: site)
+      login_user user, to: job_sns_logs_path(site: site)
 
       wait_for_event_fired "turbo:frame-load" do
         within ".list-head" do
