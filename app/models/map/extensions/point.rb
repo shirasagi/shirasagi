@@ -1,6 +1,5 @@
 class Map::Extensions::Point < Hash
   include SS::Liquidization
-  include ActionView::Helpers::SanitizeHelper
 
   liquidize do
     export :name
@@ -12,18 +11,9 @@ class Map::Extensions::Point < Hash
 
   def []=(key, value)
     if key.to_s == "name" || key.to_s == "text"
-      value = sanitize(value)
-      validate_script_tags(value, key) if value.present?
+      value = value.to_s.gsub(/<script[^>]*>.*?<\/script>/i, '') if value.present?
     end
     super
-  end
-
-  def sanitize(value)
-    return value if value.blank?
-    # HTMLタグを除去
-    value = value.gsub(/<[^>]*>/, '')
-    # スクリプトタグを除去
-    value.gsub(/<script[^>]*>.*?<\/script>/i, '')
   end
 
   # convert to mongoid native type
