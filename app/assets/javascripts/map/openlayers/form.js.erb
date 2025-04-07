@@ -102,7 +102,6 @@ this.Openlayers_Map_Form = (function () {
     $(".marker-name, .marker-text").on("input", function() {
       var value = $(this).val();
       if (value.match(/<script/i)) {
-        alert(<%= I18n.t('errors.messages.script_not_allowed').to_json %>);
         $(this).val(value.replace(/<script[^>]*>.*?<\/script>/gi, ''));
       }
     });
