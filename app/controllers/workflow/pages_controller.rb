@@ -217,6 +217,8 @@ class Workflow::PagesController < ApplicationController
       guard = ->(&block) do
         task.run_with(rejected: rejected) do
           task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+          task.log "master: #{@item.master.filename}(#{@item.master_id})"
+          task.log "branch: #{@item.filename}(#{@item.id})"
           block.call
         end
       end
@@ -230,8 +232,11 @@ class Workflow::PagesController < ApplicationController
       result = @item.save
     end
 
-    if !result
+    if result
+      task.log "succeeded" if task
+    else
       render json: @item.errors.full_messages, status: :unprocessable_entity
+      task.log "failed\n#{@item.errors.full_messages.join("\n")}" if task
       return
     end
 
