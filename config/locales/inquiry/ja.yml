@@ -195,6 +195,9 @@ ja:
         kintone_app_api_token: APIトークン
         kintone_app_key: アプリID
         kintone_app_guest_space_id: ゲストスペースID
+        kintone_app_field_code: フィールドコード
+        kintone_app_remote_addr_field_code: リモートIP
+        kintone_app_user_agent_field_code: ユーザーエージェント
 
       inquiry/addon/kintone_app/column:
         kintone_field_code: フィールドコード
@@ -345,6 +348,8 @@ ja:
       kintone_app_guest_space_id:
         - kintone アプリのゲストスペースIDを入力します。
         - ゲストスペースのアプリとの連携に必要です。
+      kintone_app_field_code:
+        - 回答データのリモートIPやユーザーエージェントを連携する場合、連携する項目のフィールドコードを入力してください。
 
     inquiry/addon/kintone_app/column:
       kintone_field_code: kintone アプリのフィールドコードを入力します。
