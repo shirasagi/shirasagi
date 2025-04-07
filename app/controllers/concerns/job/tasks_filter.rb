@@ -77,8 +77,9 @@ module Job::TasksFilter
       log_item = SS::Task::LogItem.new(task: @item, log_sequence: nil)
     end
 
-    raise '404' if !::File.exist?(log_item.log_file_path)
-    send_file log_item.log_file_path, type: 'text/plain', filename: "#{@item.id}.log",
+    path = log_item.log_file_path
+    raise '404' if !::File.exist?(path) || !path.start_with?(Rails.root.to_s)
+    send_file path, type: 'text/plain', filename: "#{@item.id}.log",
               disposition: :attachment, x_sendfile: true
   end
 
@@ -91,8 +92,9 @@ module Job::TasksFilter
       log_item = SS::Task::LogItem.new(task: @item, log_sequence: nil)
     end
 
-    raise '404' if !::File.exist?(log_item.perf_log_file_path)
-    send_file log_item.perf_log_file_path, type: 'application/gzip', filename: "#{@item.id}-performance.log.gz",
+    path = log_item.perf_log_file_path
+    raise '404' if !::File.exist?(path) || !path.start_with?(Rails.root.to_s)
+    send_file path, type: 'application/gzip', filename: "#{@item.id}-performance.log.gz",
               disposition: :attachment, x_sendfile: true
   end
 end
