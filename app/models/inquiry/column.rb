@@ -85,6 +85,18 @@ class Inquiry::Column
     end
   end
 
+  def validate_date_field(answer, data)
+    return if data.blank? || data.value.blank?
+    begin
+      DateTime.iso8601(data.value)
+      data.values.map do |value|
+        DateTime.iso8601(value)
+      end
+    rescue => e
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.not_a_date')}"
+    end
+  end
+
   def validate_datetime_field(answer, data)
     return if data.blank? || data.value.blank?
     begin
@@ -96,7 +108,6 @@ class Inquiry::Column
       answer.errors.add :base, "#{name}#{I18n.t('errors.messages.not_a_datetime')}"
     end
   end
-  alias validate_date_field validate_datetime_field
 
   def validate_radio_button(answer, data)
     if data.present? && data.value.present?

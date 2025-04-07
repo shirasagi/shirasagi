@@ -52,6 +52,12 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
           model.find(param)
         end
       end
+      if column.input_type == "date_field" && param.present?
+        param = Date.parse(param).iso8601 rescue nil
+      end
+      if column.input_type == "datetime_field" && param.present?
+        param = DateTime.parse(param).strftime('%FT%H:%M') rescue nil
+      end
       @items << [column, param]
       @data[column.id] = [param]
       if (column.input_type == 'text_field' || column.input_type == 'text_area') && column.transfers.present? && param.present?

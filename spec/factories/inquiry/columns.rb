@@ -115,7 +115,43 @@ FactoryBot.define do
     name { "数値入力" }
     input_type { "number_field" }
     required { "optional" }
-    html { "<p>数値で入力してください。" }
+    html { "<p>数値で入力してください。</p>" }
     order { 100 }
+  end
+
+  factory :inquiry_column_date_local, class: Inquiry::Column do
+    name { "日付入力" }
+    input_type { "date_field" }
+    required { "optional" }
+    html { "<p> 日付を入力してください。</p>" }
+    date_inputter { "local" }
+    order { 110 }
+  end
+
+  factory :inquiry_column_date_picker, class: Inquiry::Column do
+    name { "日付入力" }
+    input_type { "date_field" }
+    required { "optional" }
+    html { "<p> 日付を入力してください。</p>" }
+    date_inputter { "picker" }
+    order { 110 }
+  end
+
+  factory :inquiry_column_datetime_local, class: Inquiry::Column do
+    name { "日時入力" }
+    input_type { "datetime_field" }
+    required { "optional" }
+    html { "<p> 日付を入力してください。</p>" }
+    date_inputter { "local" }
+    order { 110 }
+  end
+
+  factory :inquiry_column_datetime_picker, class: Inquiry::Column do
+    name { "日時入力" }
+    input_type { "datetime_field" }
+    required { "optional" }
+    html { "<p> 日付を入力してください。</p>" }
+    date_inputter { "picker" }
+    order { 110 }
   end
 end

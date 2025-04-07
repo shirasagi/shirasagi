@@ -67,6 +67,9 @@ ja:
       reply_content_state:
         static: 固定メッセージ
         answer: お問い合わせ内容のコピー
+      date_inputter:
+        local: "input タグ"
+        picker: DateTimePicker
     links:
       back_to_page: 元のページに戻る
       faq: FAQを新規作成
@@ -173,6 +176,7 @@ ja:
         question: FAQ引用
         max_upload_file_size: 最大ファイルサイズ設定
         transfers: キーワード
+        date_inputter: 日付・日時の入力形式
 
       inquiry/answer:
         id: id
@@ -312,6 +316,10 @@ ja:
       transfers:
         - 入力形式で「テキストボックス」「テキストエリア」を選択した場合の回答に特定キーワードが含まれた場合、転送するアドレスを入力します。
         - 転送するにはフォルダーの通知設定を有効にする必要があります。
+      date_inputter:
+        - 日付・日時の入力形式を選択します。
+        - inputタグ ... 入力コントロールを '&lt;input type=&quot;date&quot;&gt;' または '&lt;input type=&quot;datetime-local&quot;&gt;' にて表示します。
+        - DateTimePicker ... 入力コントロールを 'jQuery DateTimePicker' にて表示します。
     inquiry/addon/release_plan:
       release_date:
         - 公開を開始する日時を指定します。

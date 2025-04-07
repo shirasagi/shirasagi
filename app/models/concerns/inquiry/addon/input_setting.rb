@@ -13,10 +13,12 @@ module Inquiry::Addon
       field :question, type: String, default: 'disabled'
       field :max_upload_file_size, type: Integer, default: 0
       field :transfers, type: Array
+      field :date_inputter, type: String, default: 'local'
       permit_params :input_type, :required, :additional_attr
       permit_params :select_options, :input_confirm, :question, :max_upload_file_size
       permit_params required_in_select_form: []
       permit_params transfers: [:keyword, :email]
+      permit_params :date_inputter
 
       validates :input_type, presence: true, inclusion: {
         in: %w(text_field text_area email_field number_field date_field datetime_field radio_button select check_box upload_file form_select)
@@ -57,6 +59,13 @@ module Inquiry::Addon
       %w(disabled enabled).map do |v|
         [ I18n.t("ss.options.state.#{v}"), v ]
       end
+    end
+
+    def date_inputter_options
+      [
+        [I18n.t('inquiry.options.date_inputter.local'), 'local'],
+        [I18n.t('inquiry.options.date_inputter.picker'), 'picker'],
+      ]
     end
 
     # def max_upload_file_size_options
