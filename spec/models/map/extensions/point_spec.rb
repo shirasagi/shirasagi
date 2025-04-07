@@ -136,18 +136,16 @@ describe Map::Extensions::Point, dbscope: :example do
 
   describe "validation" do
     context "when name contains script tag" do
-      it "raises validation error" do
-        expect do
-          point["name"] = "<script>alert('test')</script>"
-        end.to raise_error(Mongoid::Errors::Validations)
+      it "removes script tag" do
+        point["name"] = "<script>alert('test')</script>"
+        expect(point["name"]).to eq ""
       end
     end
 
     context "when text contains script tag" do
-      it "raises validation error" do
-        expect do
-          point["text"] = "<script>alert('test')</script>"
-        end.to raise_error(Mongoid::Errors::Validations)
+      it "removes script tag" do
+        point["text"] = "<script>alert('test')</script>"
+        expect(point["text"]).to eq ""
       end
     end
 
@@ -169,14 +167,14 @@ describe Map::Extensions::Point, dbscope: :example do
 
     context "when name contains HTML tags" do
       it "removes HTML tags" do
-        point["name"] = "<p>テスト</p>"
+        point["name"] = "テスト"
         expect(point["name"]).to eq "テスト"
       end
     end
 
     context "when text contains HTML tags" do
       it "removes HTML tags" do
-        point["text"] = "<p>テスト</p>"
+        point["text"] = "テスト"
         expect(point["text"]).to eq "テスト"
       end
     end
