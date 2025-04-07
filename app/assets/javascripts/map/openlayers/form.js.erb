@@ -464,6 +464,13 @@ this.Openlayers_Map_Form = (function () {
           $(this).val(value.replace(/<script[^>]*>.*?<\/script>/gi, ''));
         }
       });
+      cln.find(".marker-name").on('keypress', (function (_this) {
+        return function (e) {
+          if (e.which === SS.KEY_ENTER) {
+            return false;
+          }
+        };
+      })(this));
       cln.find(".marker-loc-input").on('keypress', function (e) {
         if (e.which === SS.KEY_ENTER) {
           $(e.target).closest("dd.marker").find(".set-marker").trigger("click");
