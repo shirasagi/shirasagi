@@ -48,6 +48,20 @@ module History::Addon
       else
         backup.data = attributes
       end
+      backup.host_info = {
+        hostname: Rails.application.hostname,
+        ip_address: Rails.application.ip_address,
+        process_id: Process.pid
+      }
+      if Rails.application.current_request
+        backup.request_info = {
+          session_id: Rails.application.current_session_id,
+          request_id: Rails.application.current_request_id,
+          method: Rails.application.current_request.method,
+          controller: (Rails.application.current_request.params[:controller] rescue nil),
+          action: (Rails.application.current_request.params[:action] rescue nil),
+        }
+      end
 
       backup.state = 'current'
       current.state = 'before' if current
