@@ -110,7 +110,9 @@ module SS::Relation::File
         item.errors.add("#{name}_id", :blank)
       end
       if file && accepts.present? && item.send("rm_#{name}").to_s != "1"
-        filename = (file.try(:filename) || file.try(:original_filename)).to_s
+        filename = ""
+        filename = file.filename if file.respond_to?(:filename)
+        filename = file.original_filename if file.respond_to?(:original_filename)
         ext = ::File.extname(filename).downcase
         if !accepts.include?(ext)
           item.errors.add("#{name}_id", :unable_to_accept_file, allowed_format_list: accepts.join(" / "))
