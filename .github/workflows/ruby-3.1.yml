@@ -153,20 +153,3 @@ jobs:
           # driver: firefox
           # driver: random
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-      - name: Coveralls Parallel
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          path-to-lcov: "./coverage/lcov/lcov.info"
-          flag-name: run-${{ matrix.id }}
-          parallel: true
-
-  finish:
-    needs: test
-    runs-on: ubuntu-22.04
-    steps:
-      - name: Coveralls Finished
-        uses: coverallsapp/github-action@master
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          parallel-finished: true
