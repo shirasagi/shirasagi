@@ -338,4 +338,99 @@ describe SS::Task, dbscope: :example do
       end
     end
   end
+
+  describe "#run_with and #log_items" do
+    let(:state) { described_class::STATE_STOP }
+    subject! { described_class.create!(name: unique_id, state: state) }
+
+    it do
+      expect(subject.log_sequence).to eq 0
+      expect(subject.log_items.length).to eq 0
+
+      subject.run_with { subject.log "log-1" }
+
+      expect(subject.log_sequence).to eq 1
+      expect(subject.log_items.length).to eq 1
+
+      subject.run_with { subject.log "log-2" }
+
+      expect(subject.log_sequence).to eq 2
+      expect(subject.log_items.length).to eq 2
+    end
+  end
+
+  describe "#purge_old_logs" do
+    let(:now) { Time.zone.now.change(usec: 0) }
+    let(:state) { described_class::STATE_STOP }
+    subject! { described_class.create!(name: unique_id, state: state, log_sequence: 500) }
+    let!(:log1) do
+      path = "#{subject.base_dir}/291_#{subject.id}.log"
+      FileUtils.mkdir_p(subject.base_dir)
+      time = now - SS.config.job.keep_logs - 1
+      Timecop.freeze(time) do
+        File.open(path, "wt") do |f|
+          f.puts unique_id
+        end
+
+        FileUtils.touch(path, mtime: time.to_time)
+      end
+      path
+    end
+    let!(:log1_meta) do
+      path = log1.sub(".log", "") + "-meta.json"
+      File.open(path, "wt") do |f|
+        f.puts unique_id
+      end
+      path
+    end
+    let!(:log2) do
+      path = "#{subject.base_dir}/394_#{subject.id}.log"
+      FileUtils.mkdir_p(subject.base_dir)
+      time = now - SS.config.job.keep_logs
+      Timecop.freeze(time) do
+        File.open(path, "wt") do |f|
+          f.puts unique_id
+        end
+
+        FileUtils.touch(path, mtime: time.to_time)
+      end
+      path
+    end
+    let!(:log2_perf) do
+      path = log2.sub(".log", "") + "-performance.log.gz"
+      File.open(path, "wt") do |f|
+        f.puts unique_id
+      end
+      path
+    end
+    let!(:log3) do
+      path = "#{subject.base_dir}/498_#{subject.id}.log"
+      FileUtils.mkdir_p(subject.base_dir)
+      time = now - SS.config.job.keep_logs + 1
+      Timecop.freeze(time) do
+        File.open(path, "wt") do |f|
+          f.puts unique_id
+        end
+
+        FileUtils.touch(path, mtime: time.to_time)
+      end
+      path
+    end
+
+    it do
+      expect(subject.log_items.length).to eq 3
+
+      Timecop.freeze(now) do
+        subject.send(:purge_old_logs)
+
+        expect(File.exist?(log1)).to be_falsey
+        expect(File.exist?(log1_meta)).to be_falsey
+        expect(File.exist?(log2)).to be_falsey
+        expect(File.exist?(log2_perf)).to be_falsey
+        expect(File.size(log3)).to be > 0
+      end
+
+      expect(subject.log_items.length).to eq 1
+    end
+  end
 end
