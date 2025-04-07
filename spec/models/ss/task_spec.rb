@@ -347,12 +347,16 @@ describe SS::Task, dbscope: :example do
       expect(subject.log_sequence).to eq 0
       expect(subject.log_items.length).to eq 0
 
-      subject.run_with { subject.log "log-1" }
+      expect do
+        subject.run_with { subject.log "log-1" }
+      end.to output.to_stdout
 
       expect(subject.log_sequence).to eq 1
       expect(subject.log_items.length).to eq 1
 
-      subject.run_with { subject.log "log-2" }
+      expect do
+        subject.run_with { subject.log "log-2" }
+      end.to output.to_stdout
 
       expect(subject.log_sequence).to eq 2
       expect(subject.log_items.length).to eq 2

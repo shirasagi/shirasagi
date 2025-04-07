@@ -74,6 +74,49 @@ module SS::Model::Task
     end
   end
 
+  class LogItem
+    include ActiveModel::Model
+
+    attr_accessor :task, :log_sequence
+
+    def log_file_path
+      if log_sequence
+        "#{task.base_dir}/#{log_sequence}_#{task.id}.log"
+      else
+        "#{task.base_dir}/#{task.id}.log"
+      end
+    end
+
+    def empty?
+      path = log_file_path
+      return true unless File.exist?(path)
+      File.empty?(path)
+    end
+
+    def head_logs(num_logs)
+      Fs.head_lines(log_file_path, limit: num_logs)
+    end
+
+    def perf_log_file_path
+      return if log_file_path.blank?
+      log_file_path.sub(".log", "") + "-performance.log.gz"
+    end
+
+    def meta_path
+      return if log_file_path.blank?
+      log_file_path.sub(".log", "") + "-meta.json"
+    end
+
+    def meta
+      @meta ||= begin
+        path = meta_path
+        if path && File.exist?(path)
+          JSON.parse(File.read(path))
+        end
+      end
+    end
+  end
+
   module ClassMethods
     def ready(cond, &block)
       task = self.find_or_create_by(cond)
@@ -228,6 +271,7 @@ module SS::Model::Task
 
     ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exist?(log_file_path)
 
+    # 20% の確率で古いログを削除する処理を実行
     if rand(100) < 20
       purge_old_logs
     end
@@ -240,17 +284,18 @@ module SS::Model::Task
 
   def log_file_path
     return if new_record?
-    "#{base_dir}/#{log_sequence}_#{id}.log"
+    LogItem.new(task: self, log_sequence: log_sequence).log_file_path
   end
 
   def perf_log_file_path
-    return if log_file_path.blank?
-    log_file_path.sub(".log", "") + "-performance.log.gz"
+    return if new_record?
+    LogItem.new(task: self, log_sequence: log_sequence).perf_log_file_path
   end
 
   def logs
-    if log_file_path && ::File.exist?(log_file_path)
-      return ::File.readlines(log_file_path, chomp: true) rescue []
+    path = log_file_path
+    if path && ::File.exist?(path)
+      return ::File.readlines(path, chomp: true) rescue []
     end
 
     []
@@ -268,7 +313,7 @@ module SS::Model::Task
   end
 
   def log(msg)
-    if !File.exist?(log_file_path) || File.empty?(log_file_path)
+    if LogItem.new(task: self, log_sequence: log_sequence).empty?
       write_meta
     end
 
@@ -291,43 +336,6 @@ module SS::Model::Task
 
   def performance
     @performance ||= SS::Task::PerformanceCollector.new(self)
-  end
-
-  class LogItem
-    include ActiveModel::Model
-
-    attr_accessor :task, :log_sequence
-
-    def log_file_path
-      if log_sequence
-        "#{task.base_dir}/#{log_sequence}_#{task.id}.log"
-      else
-        "#{task.base_dir}/#{task.id}.log"
-      end
-    end
-
-    def head_logs(num_logs)
-      Fs.head_lines(log_file_path, limit: num_logs)
-    end
-
-    def perf_log_file_path
-      return if log_file_path.blank?
-      log_file_path.sub(".log", "") + "-performance.log.gz"
-    end
-
-    def meta_path
-      return if log_file_path.blank?
-      log_file_path.sub(".log", "") + "-meta.json"
-    end
-
-    def meta
-      @meta ||= begin
-        path = meta_path
-        if path && File.exist?(path)
-          JSON.parse(File.read(path))
-        end
-      end
-    end
   end
 
   def log_items
@@ -401,7 +409,7 @@ module SS::Model::Task
 
     FileUtils.mkdir_p(base_dir)
 
-    meta_path = log_file_path.sub(".log", "") + "-meta.json"
+    meta_path = LogItem.new(task: self, log_sequence: log_sequence).meta_path
     File.open(meta_path, "wt") do |f|
       f.puts meta.to_json
     end
