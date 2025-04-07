@@ -65,6 +65,7 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     let(:valid_url18) { "/docs" }
     let(:valid_url19) { "/docs/" }
     let(:valid_url20) { "/シラサギプロジェクト" }
+    let(:valid_url21) { "//www.example.jp/docs/3481.html" }
 
     let(:invalid_url1) { "http://#{domain} /" }
     let(:invalid_url2) { "https://#{domain} /" }
@@ -248,6 +249,14 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
 
     it "valid_url20" do
       item = build_page(valid_url20)
+      expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
+    end
+
+    it "valid_url21" do
+      item = build_page(valid_url21)
       expect(item.valid?).to be_truthy
 
       expect(item.column_values.first.link_item_type).to be_nil

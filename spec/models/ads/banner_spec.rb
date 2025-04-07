@@ -31,6 +31,7 @@ describe Ads::Banner do
     let(:valid_url2) { "https://example.jp/" }
     let(:valid_url3) { "/docs/page1.html" }
     let(:valid_url4) { "/docs/" }
+    let(:valid_url5) { "//www.example.jp/docs/3481.html" }
 
     let(:invalid_url1) { "http://example.jp /" }
     let(:invalid_url2) { "https://example.jp /" }
@@ -63,6 +64,11 @@ describe Ads::Banner do
 
     it "valid_url4" do
       item = build_banner(valid_url4)
+      expect(item.valid?).to be_truthy
+    end
+
+    it "valid_url5" do
+      item = build_banner(valid_url5)
       expect(item.valid?).to be_truthy
     end
 
