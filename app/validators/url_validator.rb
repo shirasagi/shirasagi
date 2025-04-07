@@ -6,11 +6,6 @@ class UrlValidator < ActiveModel::EachValidator
   def validate_each(record, attribute, value)
     return if value.blank?
 
-    # # 関連するファイルが存在する場合、任意のパスを許可
-    # if record.respond_to?(:file) && record.file.present?
-    #   return if value.start_with?("/")
-    # end
-
     begin
       uri = ::Addressable::URI.parse(value)
 
