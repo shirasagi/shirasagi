@@ -23,8 +23,7 @@ class Map::Extensions::Point < Hash
     # HTMLタグを除去
     value = value.gsub(/<[^>]*>/, '')
     # スクリプトタグを除去
-    value = value.gsub(/<script[^>]*>.*?<\/script>/i, '')
-    value
+    value.gsub(/<script[^>]*>.*?<\/script>/i, '')
   end
 
   # convert to mongoid native type
