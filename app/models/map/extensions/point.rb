@@ -1,5 +1,6 @@
 class Map::Extensions::Point < Hash
   include SS::Liquidization
+  include ActionView::Helpers::SanitizeHelper
 
   liquidize do
     export :name
@@ -18,14 +19,12 @@ class Map::Extensions::Point < Hash
   end
 
   def sanitize(value)
-    return nil if value.nil?
-    value.to_s.gsub(/<[^>]*>/, '')
-  end
-
-  def validate_script_tags(value, key)
-    if value =~ /<script/i
-      errors.add(key, I18n.t("errors.messages.script_not_allowed"))
-    end
+    return value if value.blank?
+    # HTMLタグを除去
+    value = value.gsub(/<[^>]*>/, '')
+    # スクリプトタグを除去
+    value = value.gsub(/<script[^>]*>.*?<\/script>/i, '')
+    value
   end
 
   # convert to mongoid native type
@@ -34,16 +33,14 @@ class Map::Extensions::Point < Hash
     return {} if loc.nil?
 
     ret = { "loc" => loc.mongoize }
-    ret["name"] = sanitize(name) if name.present?
-    ret["text"] = sanitize(text) if text.present?
+    ret["name"] = name if name.present?
+    ret["text"] = text if text.present?
     ret["zoom_level"] = zoom_level if zoom_level.present?
     ret
   end
 
   def name
-    value = self["name"].presence || self[:name]
-    return nil if value.nil?
-    sanitize(value)
+    self["name"].presence || self[:name]
   end
 
   def loc
@@ -57,9 +54,7 @@ class Map::Extensions::Point < Hash
   end
 
   def text
-    value = self["text"].presence || self[:text]
-    return nil if value.nil?
-    sanitize(value)
+    self["text"].presence || self[:text]
   end
 
   def zoom_level
