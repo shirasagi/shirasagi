@@ -64,10 +64,10 @@
           <%= text_field_tag "item[map_points][][loc_]", nil, class: "marker-loc-input loc", placeholder: @item.t(:marker_loc) %>
         </p>
         <p>
-          <%= text_field_tag "item[map_points][][name]", nil, class: "marker-name", placeholder: sanitize(@item.t(:marker_name)) %>
+          <%= text_field_tag "item[map_points][][name]", nil, class: "marker-name", placeholder: @item.t(:marker_name) %>
         </p>
         <p>
-          <%= text_area_tag "item[map_points][][text]", nil, class: "marker-text", placeholder: sanitize(@item.t(:marker_text)) %>
+          <%= text_area_tag "item[map_points][][text]", nil, class: "marker-text", placeholder: @item.t(:marker_text) %>
         </p>
         <p>
           <%= button_tag t("map.buttons.set_marker"), { type: :button, class: "set-marker btn" } %>
