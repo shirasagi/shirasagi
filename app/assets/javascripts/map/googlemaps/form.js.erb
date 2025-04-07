@@ -127,6 +127,11 @@ this.Map_Form = (function () {
           $(this).val("");
         }
       });
+      cln.find(".marker-name").on('keypress', function (e) {
+        if (e.which === SS.KEY_ENTER) {
+          return false;
+        }
+      });
       cln.find(".marker-loc-input").on('keypress', function (e) {
         if (e.which === SS.KEY_ENTER) {
           $(this).closest("dd.marker").find(".set-marker").trigger("click");
