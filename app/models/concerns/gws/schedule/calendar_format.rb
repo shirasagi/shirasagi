@@ -86,7 +86,7 @@ module Gws::Schedule::CalendarFormat
       if cur_user.id != attendance_user_id && facilities.none? { |f| f.manager_ids.include?(cur_user.id) }
         return nil
       end
-      data[:className] += ' fc-event-user-attendance-absence hide'
+      data[:className] += ' hide'
     end
 
     data
