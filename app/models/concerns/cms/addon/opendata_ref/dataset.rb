@@ -32,6 +32,7 @@ module Cms::Addon::OpendataRef::Dataset
 
   def invoke_opendata_job(action)
     return if skip_assoc_opendata.present?
+    return if SS.config.opendata.dig("assoc_job", "disable_invoke")
     return if opendata_dataset_state.blank?
 
     parent = self.parent
