@@ -83,7 +83,7 @@ module Gws::Schedule::CalendarFormat
     data[:className] += " fc-event-user-attendance-#{attendance_state}"
 
     if attendance_state == "absence"
-      if cur_user.id != attendance_user_id && !facilities.any? { |f| f.manager_ids.include?(cur_user.id) }
+      if cur_user.id != attendance_user_id && facilities.any? { |f| f.manager_ids.include?(cur_user.id) }
         return nil
       end
       data[:className] += ' fc-event-user-attendance-absence hide'
