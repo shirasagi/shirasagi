@@ -78,20 +78,26 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # カレンダー画面に移動
       visit gws_schedule_plans_path(site: site)
 
-      # 欠席表示ボタンがオフの状態でも予定が表示されることを確認
-      expect(page).to have_css(".fc-event")
+      # 不参加にした予定が非表示であることを確認
+      expect(page).to have_css(".fc-event.fc-event-user-attendance-absence.hide")
+      # 他の予定は表示されていることを確認
+      expect(page).to have_css(".fc-event:not(.fc-event-user-attendance-absence)")
 
       # 欠席表示ボタンをオンにする
       find(".fc-withAbsence-button").click
 
-      # 予定が表示されていることを確認
-      expect(page).to have_css(".fc-event")
+      # 不参加にした予定が表示されていることを確認
+      expect(page).to have_css(".fc-event.fc-event-user-attendance-absence:not(.hide)")
+      # 他の予定も引き続き表示されていることを確認
+      expect(page).to have_css(".fc-event:not(.fc-event-user-attendance-absence)")
 
       # 欠席表示ボタンをオフにする
       find(".fc-withAbsence-button").click
 
-      # 予定が表示されていることを確認
-      expect(page).to have_css(".fc-event")
+      # 不参加にした予定が再び非表示になったことを確認
+      expect(page).to have_css(".fc-event.fc-event-user-attendance-absence.hide")
+      # 他の予定は引き続き表示されていることを確認
+      expect(page).to have_css(".fc-event:not(.fc-event-user-attendance-absence)")
     end
   end
 
