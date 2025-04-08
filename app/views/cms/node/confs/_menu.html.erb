@@ -20,7 +20,7 @@
       <% end %>
     <% end %>
 
-    <%= link_to t('ss.links.delete'), action: :delete if @item.allowed?(:edit, @cur_user)  %>
+    <%= link_to t('ss.links.delete'), action: :delete if @item.allowed?(:delete, @cur_user)  %>
     <%= link_to t('ss.links.back_to_index'), controller: :nodes %>
   <% end %>
 </nav>
