@@ -33,9 +33,6 @@
   <dt><%= @model.t :segment %></dt>
   <dd><%= @item.segment %></dd>
 
-  <dt><%= @model.t :log_sequence %></dt>
-  <dd><%= @item.log_sequence %></dd>
-
   <dt><%= @model.t :state %></dt>
   <dd>
     <span class="state"><%= @item.state %></span>
@@ -66,27 +63,6 @@
 
   <dt><%= @model.t :current_count %></dt>
   <dd><%= @item.current_count %></dd>
-
-  <% if false %>
-  <dt><%= @model.t :logs %></dt>
-  <dd>
-    <%= t('job.log_notice', count: limit) %>
-    <%= text_area_tag :logs, safe_join(@item.head_logs(limit), "\n"), readonly: true, style: "height: 400px" %>
-    <% if ::File.exist?(@item.log_file_path) %>
-      <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
-    <% end %>
-    <% if ::File.exist?(@item.perf_log_file_path) %>
-      <% link = link_to(t('job.download_perf_log'), { action: :download_perf }, { class: :btn }) rescue nil %>
-      <% if link %>
-        <% if Rails.env.development? %>
-          <%= link %>
-        <% else %>
-          <!--<%= link %>-->
-        <% end %>
-      <% end %>
-    <% end %>
-  </dd>
-  <% end %>
 </dl>
 
 <dl class="see">
@@ -122,26 +98,31 @@
             </details>
           </td>
           <td>
-            <%=
-              if log.meta && log.meta["process_id"]
-                "#{log.meta["process_id"]} @ #{log.meta["hostname"]}(#{log.meta["ip_address"]})"
-              end
-            %>
-            <%=
-              if log.meta && log.meta["session_id"]
-                tag.div do
-                  output_buffer << tag.span(log.meta["session_id"], data: { session_id: log.meta["session_id"] })
-                  output_buffer << tag.br
-                  output_buffer << tag.span(log.meta["request_id"], data: { request_id: log.meta["request_id"] })
-                  if log.meta["method"]
-                    output_buffer << tag.br
-                    controller_action = "#{log.meta["method"]} #{log.meta["controller"]}##{log.meta["action"]}"
-                    output_buffer << tag.span(controller_action, data: { method: log.meta["method"], controller: log.meta["controller"], action: log.meta["action"] })
+            <details<% if index == 0 %> open<% end %>>
+              <summary><%= t("ss.links.show") %></summary>
+              <div>
+                <%=
+                  if log.meta && log.meta["process_id"]
+                    "#{log.meta["process_id"]} @ #{log.meta["hostname"]}(#{log.meta["ip_address"]})"
                   end
-                end
-              end
-            %>
-            <div><%= ss_time_tag ::File.mtime(log.log_file_path).in_time_zone rescue nil %></div>
+                %>
+                <%=
+                  if log.meta && log.meta["session_id"]
+                    tag.div do
+                      output_buffer << tag.span(log.meta["session_id"], data: { session_id: log.meta["session_id"] })
+                      output_buffer << tag.br
+                      output_buffer << tag.span(log.meta["request_id"], data: { request_id: log.meta["request_id"] })
+                      if log.meta["method"]
+                        output_buffer << tag.br
+                        controller_action = "#{log.meta["method"]} #{log.meta["controller"]}##{log.meta["action"]}"
+                        output_buffer << tag.span(controller_action, data: { method: log.meta["method"], controller: log.meta["controller"], action: log.meta["action"] })
+                      end
+                    end
+                  end
+                %>
+                <div><%= ss_time_tag ::File.mtime(log.log_file_path).in_time_zone rescue nil %></div>
+              </div>
+            </details>
           </td>
         </tr>
       <% end %>
