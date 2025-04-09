@@ -5,7 +5,7 @@
     <tr class="parent-row">
       <td class="field"><%= f.label(:in_icon, @model.t(:icon_id)) %></td>
       <td class="input">
-        <%= f.file_field :in_icon %>
+        <%= f.file_field :in_icon, accept: SS::File::IMAGE_FILE_EXTENSIONS.join(",") %>
         <% if @item.icon %>
           <div class="in-icon"><label><%= f.check_box :rm_icon %><%= t "ss.buttons.delete" %> (<%= @item.icon.filename %>)</label></div>
         <% end %>
