@@ -14,7 +14,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       notice_email: 'notice@example.jp',
       from_name: 'admin',
       from_email: 'admin@example.jp',
-      reply_state: 'disabled')
+      reply_state: 'disabled',
+      inquiry_show_sent_data: "enabled")
   end
 
   before do
@@ -27,9 +28,11 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
 
   context "date and datetime (use picker)", js: true do
     let(:date) { Time.zone.today }
+    let(:date_iso8601) { date.iso8601 }
+    let(:date_picker) { I18n.l(date, format: :picker) }
     let(:datetime) { Time.zone.now }
-    let(:date_str) { Time.zone.today.iso8601 }
-    let(:datetime_str) { Time.zone.now.strftime('%FT%H:%M') }
+    let(:datetime_iso8601) { datetime.strftime('%FT%H:%M') }
+    let(:datetime_picker) { I18n.l(datetime, format: :picker) }
 
     before do
       node.columns.create! attributes_for(:inquiry_column_date_picker).reverse_merge({cur_site: site})
@@ -51,22 +54,28 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
 
       within 'div.inquiry-form.confirm' do
         within 'div.columns' do
-          expect(find("[name='item[1]']")['value']).to eq date_str
-          expect(find("[name='item[2]']")['value']).to eq datetime_str
+          expect(find("[name='item[1]']")['value']).to eq date_iso8601
+          expect(find("[name='item[2]']")['value']).to eq datetime_iso8601
+          expect(page).to have_css(".column .fields", text: date_picker)
+          expect(page).to have_css(".column .fields", text: datetime_picker)
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
         end
       end
-      expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
+      expect(page).to have_css(".inquiry-sent")
+      within ".columns" do
+        expect(page).to have_css(".column .fields", text: date_picker)
+        expect(page).to have_css(".column .fields", text: datetime_picker)
+      end
 
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
       expect(answer.node_id).to eq node.id
       expect(answer.data.count).to eq 2
-      expect(answer.data[0].value).to eq date_str
+      expect(answer.data[0].value).to eq date_iso8601
       expect(answer.data[0].confirm).to be_nil
-      expect(answer.data[1].value).to eq datetime_str
+      expect(answer.data[1].value).to eq datetime_iso8601
       expect(answer.data[1].confirm).to be_nil
 
       expect(ActionMailer::Base.deliveries.count).to eq 1
@@ -80,19 +89,21 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
         # inquiry_column_date
         expect(notify_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(notify_mail.body.raw_source).to include(date_str)
+        expect(notify_mail.body.raw_source).to include(date_iso8601)
         # inquiry_column_datetime
         expect(notify_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(notify_mail.body.raw_source).to include(datetime_str)
+        expect(notify_mail.body.raw_source).to include(datetime_iso8601)
       end
     end
   end
 
   context "date and datetime (input tag)" do
     let(:date) { Time.zone.today }
+    let(:date_iso8601) { date.iso8601 }
+    let(:date_picker) { I18n.l(date, format: :picker) }
     let(:datetime) { Time.zone.now }
-    let(:date_str) { Time.zone.today.iso8601 }
-    let(:datetime_str) { Time.zone.now.strftime('%FT%H:%M') }
+    let(:datetime_iso8601) { datetime.strftime('%FT%H:%M') }
+    let(:datetime_picker) { I18n.l(datetime, format: :picker) }
 
     before do
       node.columns.create! attributes_for(:inquiry_column_date_local).reverse_merge({cur_site: site})
@@ -106,30 +117,36 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       visit node.url
       within 'div.inquiry-form' do
         within 'div.columns' do
-          fill_in "item[1]", with: date_str
-          fill_in "item[2]", with: datetime_str
+          fill_in "item[1]", with: date_iso8601
+          fill_in "item[2]", with: datetime_iso8601
         end
         click_button I18n.t('inquiry.confirm')
       end
 
       within 'div.inquiry-form.confirm' do
         within 'div.columns' do
-          expect(find("[name='item[1]']")['value']).to eq date_str
-          expect(find("[name='item[2]']")['value']).to eq datetime_str
+          expect(find("[name='item[1]']")['value']).to eq date_iso8601
+          expect(find("[name='item[2]']")['value']).to eq datetime_iso8601
+          expect(page).to have_css(".column .fields", text: date_picker)
+          expect(page).to have_css(".column .fields", text: datetime_picker)
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
         end
       end
-      expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
+      expect(page).to have_css(".inquiry-sent")
+      within ".columns" do
+        expect(page).to have_css(".column .fields", text: date_picker)
+        expect(page).to have_css(".column .fields", text: datetime_picker)
+      end
 
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
       expect(answer.node_id).to eq node.id
       expect(answer.data.count).to eq 2
-      expect(answer.data[0].value).to eq date_str
+      expect(answer.data[0].value).to eq date_iso8601
       expect(answer.data[0].confirm).to be_nil
-      expect(answer.data[1].value).to eq datetime_str
+      expect(answer.data[1].value).to eq datetime_iso8601
       expect(answer.data[1].confirm).to be_nil
 
       expect(ActionMailer::Base.deliveries.count).to eq 1
@@ -143,10 +160,10 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
         # inquiry_column_date
         expect(notify_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(notify_mail.body.raw_source).to include(date_str)
+        expect(notify_mail.body.raw_source).to include(date_iso8601)
         # inquiry_column_datetime
         expect(notify_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(notify_mail.body.raw_source).to include(datetime_str)
+        expect(notify_mail.body.raw_source).to include(datetime_iso8601)
       end
     end
   end
