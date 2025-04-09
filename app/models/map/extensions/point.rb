@@ -26,6 +26,17 @@ class Map::Extensions::Point < Hash
     super
   end
 
+  def mongoize
+    loc = self.loc
+    return {} if loc.nil?
+
+    ret = { "loc" => loc.mongoize }
+    ret["name"] = name if name.present?
+    ret["text"] = text if text.present?
+    ret["zoom_level"] = zoom_level if zoom_level.present?
+    ret
+  end
+
   def name
     self["name"].presence || self[:name]
   end
@@ -57,17 +68,6 @@ class Map::Extensions::Point < Hash
     loc.blank?
   end
   alias blank? empty?
-
-  def mongoize
-    loc = self.loc
-    return {} if loc.nil?
-
-    ret = { "loc" => loc.mongoize }
-    ret["name"] = name if name.present?
-    ret["text"] = text if text.present?
-    ret["zoom_level"] = zoom_level if zoom_level.present?
-    ret
-  end
 
   private
 
