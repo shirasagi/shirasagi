@@ -34,7 +34,7 @@ production: &production
       parse_command: "timeout 20 ruby bin/extract_pdf_base64.rb"
 
   assoc_job:
-    disable_invoke: false
+    realtime: true
     perform: later
 
   harvest:
