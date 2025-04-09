@@ -29,7 +29,7 @@ class Inquiry::SavedParams
       self.where({ "expired_at" => { "$lte" => date }})
     end
 
-    def find_by_token(token)
+    def get(token)
       self.active.where(token: token).first
     end
   end
