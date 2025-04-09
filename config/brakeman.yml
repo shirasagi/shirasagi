@@ -3,10 +3,6 @@
 #   https://brakemanscanner.org/docs/options/ja.html
 #   https://brakemanscanner.org/docs/brakeman_as_a_library/
 #
-# Commands
-#   brakeman -A
-#   brakeman -c .brakeman.yml
-#
 min_confidence: 1
 run_all_checks: true
 skip_checks:
