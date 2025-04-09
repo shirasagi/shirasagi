@@ -105,17 +105,16 @@ module SS::Relation::File
     end
 
     def validate_relation(item, name, presence:, accepts:)
-      file = item.send(name)
+      file = item.send("in_#{name}") || item.send(name)
       if !file && presence
-        upload_file = item.send("in_#{name}")
-        if !upload_file
-          item.errors.add("#{name}_id", :blank)
-        end
+        item.errors.add("#{name}_id", :blank)
       end
-      if file && accepts.present?
-        ext = ::File.extname(file.filename)
-        ext = ext.downcase if ext.present?
-        unless accepts.include?(ext)
+      if file && accepts.present? && item.send("rm_#{name}").to_s != "1"
+        filename = ""
+        filename = file.filename if file.respond_to?(:filename)
+        filename = file.original_filename if file.respond_to?(:original_filename)
+        ext = ::File.extname(filename).downcase
+        if !accepts.include?(ext)
           item.errors.add("#{name}_id", :unable_to_accept_file, allowed_format_list: accepts.join(" / "))
         end
       end
