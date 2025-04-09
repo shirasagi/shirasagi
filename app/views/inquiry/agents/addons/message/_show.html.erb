@@ -1,4 +1,6 @@
 <dl class="see mod-inquiry-message">
+  <dt><%= @model.t :inquiry_show_sent_data %></dt>
+  <dd><%= @item.label :inquiry_show_sent_data %></dd>
   <dt><%= @model.t :inquiry_html %></dt>
   <dd>
   <% if @item.send(:inquiry_html).present?  %>
