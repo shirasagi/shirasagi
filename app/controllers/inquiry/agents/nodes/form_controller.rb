@@ -102,7 +102,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
   def set_saved_params
     return if !@cur_node.show_sent_data?
-    @saved_params = Inquiry::SavedParams.find_by_token(session[saved_params_key])
+    @saved_params = Inquiry::SavedParams.get(session[saved_params_key])
   end
 
   def saved_params_key
