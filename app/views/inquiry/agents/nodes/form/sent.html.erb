@@ -14,7 +14,15 @@
   <div class="columns">
     <% @columns.each do |column| %>
       <%= inquiry_column_tag(column, confirm: true) do %>
-        <%=br @saved_params.data[column.id.to_s] %>
+        <%
+          data = @saved_params.data[column.id.to_s]
+          if column.input_type =~ /date_field/
+            data = I18n.l(data.to_date, format: :picker) rescue data
+          elsif column.input_type =~ /datetime_field/
+            data = I18n.l(data.to_datetime, format: :picker) rescue data
+          end
+        %>
+        <%=br data %>
       <% end %>
     <% end %>
   </div>

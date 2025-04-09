@@ -22,7 +22,13 @@
             <%= file_data.values[2] %>
           <% end %>
         <% else %>
-          <%= f.hidden_field column.id, value: data, id: nil %><%=br data %>
+          <%= f.hidden_field column.id, value: data, id: nil %>
+            <% if column.input_type =~ /date_field/ %>
+              <% data = I18n.l(data.to_date, format: :picker) rescue data %>
+            <% elsif column.input_type =~ /datetime_field/  %>
+              <% data = I18n.l(data.to_datetime, format: :picker) rescue data %>
+            <% end %>
+            <%=br data %>
           <% if column.input_confirm == "enabled" %>
             <%= f.hidden_field "#{column.id}_confirm", value: confirm_data, id: nil %>
           <% end %>
