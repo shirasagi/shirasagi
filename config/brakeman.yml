@@ -5,20 +5,20 @@
 #
 min_confidence: 1
 run_all_checks: true
-skip_checks:
-  - CheckFileAccess
-  #- CheckLinkToHref
-  - CheckSendFile
-  - CheckWeakHash
-skip_files:
-  - app/views/
-escape_html: true
-faster: true
-ignore_file: ".brakeman.ignore"
-ignore_ifs: true
-pager: true
+#skip_checks:
+#  - CheckFileAccess
+#  #- CheckLinkToHref
+#  - CheckSendFile
+#  - CheckWeakHash
+#skip_files:
+#  - app/views/
+#escape_html: true
+#faster: true
+#ignore_file: ".brakeman.ignore"
+#ignore_ifs: true
+#pager: true
 
-safe_methods:
-  - method_name
-url_safe_methods:
-  - method_name
+#safe_methods:
+#  - method_name
+#url_safe_methods:
+#  - method_name
