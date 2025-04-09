@@ -4,6 +4,8 @@
 <%= html_editor ".mod-inquiry-message .inquiry-results-html", height: "180px", advanced: advanced %>
 
 <dl class="see mod-inquiry-message">
+  <dt><%= @model.t :inquiry_show_sent_data %><%= @model.tt :inquiry_show_sent_data %></dt>
+  <dd><%= f.select :inquiry_show_sent_data, @item.inquiry_show_sent_data_options %></dd>
   <dt><%= @model.t :inquiry_html %><%= @model.tt :inquiry_html %></dt>
   <dd><%= f.text_area :inquiry_html, class: "inquiry-html", style: "height: 180px;" %></dd>
   <dt><%= @model.t :inquiry_sent_html %><%= @model.tt :inquiry_sent_html %></dt>
