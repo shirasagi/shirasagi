@@ -12,7 +12,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
   it do
     visit gws_portal_user_path(site: site, user: user)
 
-    # create TODO portlet.
+    # create to-do portlet.
     click_on I18n.t('gws/portal.links.manage_portlets')
     click_on I18n.t('ss.links.new')
     within '.main-box' do
@@ -27,7 +27,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     expect(page).to have_css('.portlets .portlet-model-todo', text: I18n.t('gws/portal.portlets.todo.name'))
     expect(page).to have_css('.portlets .portlet-model-todo .list-item .title', text: todo.name)
 
-    # hide TODO menu and hide TODO portlet.
+    # hide to-do menu and hide to-do portlet.
     site.menu_todo_state = "hide"
     site.update!
 
@@ -35,7 +35,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     expect(page).to have_no_css('.portlets .portlet-model-todo', text: I18n.t('gws/portal.portlets.todo.name'))
     expect(page).to have_no_css('.portlets .portlet-model-todo .list-item .title', text: todo.name)
 
-    # show TODO menu and show TODO portlet.
+    # show to-do menu and show to-do portlet.
     site.menu_todo_state = "show"
     site.update!
 
