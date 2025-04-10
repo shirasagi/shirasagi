@@ -15,6 +15,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
       expect(current_path).to eq login_path
     end
   end
@@ -27,6 +28,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css('#head', text: user.name)
       expect(current_path).to eq main_path
     end
 
@@ -37,6 +39,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css('#head', text: user.name)
       expect(current_path).to eq main_path
     end
 
@@ -47,6 +50,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css('#head', text: user.name)
       expect(current_path).to eq main_path
       I18n.with_locale(user.lang.to_sym) do
         within ".user-navigation" do
@@ -56,9 +60,11 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
         end
       end
 
+      expect(page).to have_css(".login-box", text: SS.version)
       expect(current_path).to eq login_path
 
       visit main_path
+      expect(page).to have_css(".login-box", text: SS.version)
       expect(current_path).to eq login_path
     end
   end
@@ -72,6 +78,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.login")
       end
 
+      expect(page).to have_css('#head', text: user.name)
       expect(current_path).to eq gws_user_profile_path(site: site)
     end
   end
@@ -88,6 +95,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.login")
       end
 
+      expect(page).to have_css('#head', text: user.name)
       expect(current_path).to eq gws_user_profile_path(site: site)
     end
   end
@@ -112,6 +120,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.login")
       end
 
+      expect(page).to have_css('#head', text: user.name)
       expect(current_path).to eq main_path
     end
   end
