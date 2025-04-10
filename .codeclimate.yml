@@ -20,8 +20,8 @@ plugins:
   stylelint:
     enabled: true
 exclude_patterns:
-- bin/**/*
-- private/**/*
-- public/**/*
-- spec/**/*
-- "**/vendor/**/*"
+  - bin/**/*
+  - private/**/*
+  - public/**/*
+  - spec/**/*
+  - "**/vendor/**/*"
