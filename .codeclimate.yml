@@ -10,8 +10,6 @@ plugins:
       file: .brakeman.yml # not supported
   bundler-audit:
     enabled: true
-  csslint:
-    enabled: true
   duplication:
     enabled: true
     config:
@@ -19,10 +17,8 @@ plugins:
         - ruby
   rubymotion:
     enabled: true
-  scss-lint:
+  stylelint:
     enabled: true
-    config:
-      file: .scss-lint.yml
 exclude_patterns:
 - bin/**/*
 - private/**/*
