@@ -298,17 +298,8 @@ this.Openlayers_Map = (function () {
   };
 
   function renderMarkerExplanation(text) {
-    const $markerExplanation = $("<div/>", { class: "marker-explanation" });
-    text.split(/[\r\n]+/).forEach((line) => {
-      let $element;
-      if (/^https?:\/\//.test(line)) {
-        $element = $("<p/>", { class: "marker-link" }).html($("<a />", { href: line }).text(line));
-      } else {
-        $element = $("<p/>").text(line);
-      }
-      $markerExplanation.append($element);
-    });
-    return $markerExplanation.html();
+    const lines = text.split(/[\r\n]+/);
+    return JST['app/views/map/_marker_explanation']({ lines: lines });
   }
 
   Openlayers_Map.prototype.resize = function () {
