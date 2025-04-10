@@ -22,9 +22,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       it do
         Timecop.freeze(now) do
-          login_user user
-
-          visit gws_schedule_facility_plans_path(site: site, facility: facility)
+          login_user user, to: gws_schedule_facility_plans_path(site: site, facility: facility)
           click_on I18n.t("gws/schedule.links.add_plan")
 
           within "#item-form" do

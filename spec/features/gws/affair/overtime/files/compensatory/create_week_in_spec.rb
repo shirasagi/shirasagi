@@ -29,8 +29,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
       Timecop.travel(start_at) do
         # request
-        login_user(user638)
-        visit new_path
+        login_user(user638, to: new_path)
 
         within "form#item-form" do
           expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)
@@ -85,8 +84,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         wait_for_js_ready
 
         # approve
-        login_user(user545)
-        visit index_path
+        login_user(user545, to: index_path)
         click_on name
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment
@@ -96,8 +94,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         wait_for_js_ready
 
         # input results
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
           wait_for_js_ready
@@ -127,8 +124,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         wait_for_js_ready
 
         # close results
-        login_user(user545)
-        visit index_path
+        login_user(user545, to: index_path)
         click_on name
         within "#addon-gws-agents-addons-affair-overtime_result" do
           wait_for_js_ready

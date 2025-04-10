@@ -52,8 +52,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   end
 
   it do
-    login_user(user638)
-    visit index_path
+    login_user(user638, to: index_path)
 
     within "form select" do
       user638.groups.each do |group|
@@ -64,8 +63,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       end
     end
 
-    login_user(user545)
-    visit index_path
+    login_user(user545, to: index_path)
     within "form select" do
       user638.groups.each do |group|
         expect(page).to have_css("option[value=\"#{group.id}\"]")
@@ -78,32 +76,27 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
   it do
     Timecop.travel(user638_enter) do
-      login_user(user638)
-      visit gws_affair_attendance_main_path(site)
+      login_user(user638, to: gws_affair_attendance_main_path(site))
       punch_enter(user638_enter)
     end
 
     Timecop.travel(user545_enter) do
-      login_user(user545)
-      visit gws_affair_attendance_main_path(site)
+      login_user(user545, to: gws_affair_attendance_main_path(site))
       punch_enter(user545_enter)
     end
 
     Timecop.travel(user638_leave) do
-      login_user(user638)
-      visit gws_affair_attendance_main_path(site)
+      login_user(user638, to: gws_affair_attendance_main_path(site))
       punch_leave(user638_leave)
     end
 
     Timecop.travel(user545_leave) do
-      login_user(user545)
-      visit gws_affair_attendance_main_path(site)
+      login_user(user545, to: gws_affair_attendance_main_path(site))
       punch_leave(user545_leave)
     end
 
     Timecop.travel(user545_leave) do
-      login_user(user638)
-      visit index_path
+      login_user(user638, to: index_path)
       # change group
       within "form" do
         select user638_group.name, from: 'group_id'
@@ -132,8 +125,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
       end
 
-      login_user(user545)
-      visit index_path
+      login_user(user545, to: index_path)
       # change group
       within "form" do
         select user638_group.name, from: 'group_id'

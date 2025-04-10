@@ -14,8 +14,7 @@ describe 'gws_circular_comment_authority', type: :feature, dbscope: :example, js
 
   context 'circular author' do
     before do
-      login_user user1
-      visit circular_show_path
+      login_user user1, to: circular_show_path
     end
 
     it do
@@ -29,8 +28,7 @@ describe 'gws_circular_comment_authority', type: :feature, dbscope: :example, js
 
   context 'commenter' do
     before do
-      login_user user2
-      visit circular_show_path
+      login_user user2, to: circular_show_path
     end
 
     it do
@@ -44,8 +42,7 @@ describe 'gws_circular_comment_authority', type: :feature, dbscope: :example, js
 
   context 'not circular author and not commenter' do
     before do
-      login_user user3
-      visit circular_show_path
+      login_user user3, to: circular_show_path
     end
 
     it do

@@ -62,8 +62,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
     it "allows only one user to save changes" do
       window1 = open_new_window
       within_window window1 do
-        login_user user1
-        visit index_path
+        login_user user1, to: index_path
         wait_for_turbo_frame "#cms-nodes-tree-frame"
         click_link "tune"
         wait_for_ajax
@@ -77,8 +76,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
 
       window2 = open_new_window
       within_window window2 do
-        login_user user2
-        visit index_path
+        login_user user2, to: index_path
         wait_for_turbo_frame "#cms-nodes-tree-frame"
         click_link "tune"
         wait_for_ajax

@@ -19,8 +19,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       reason = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit new_path
+        login_user(user638, to: new_path)
         wait_for_js_ready
 
         within "form#item-form" do
@@ -63,8 +62,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       workflow_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
         click_on item.name
         wait_for_js_ready
 
@@ -99,8 +97,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       approve_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user545)
-        visit index_path
+        login_user(user545, to: index_path)
         click_on item.name
         wait_for_js_ready
 
@@ -125,8 +122,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       item1 = request_file(item1)
       item1 = approve_file(item1)
 
-      login_user(user545)
-      visit details_path
+      login_user(user545, to: details_path)
 
       within ".gws-attendance" do
         within "table.index" do

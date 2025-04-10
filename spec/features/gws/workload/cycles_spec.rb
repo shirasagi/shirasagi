@@ -66,8 +66,7 @@ describe "gws_workload_cycles", type: :feature, dbscope: :example, js: true do
       Timecop.travel(site.fiscal_first_date(year1)) do
         item
 
-        login_gws_user
-        visit download_path
+        login_gws_user to: download_path
         click_on I18n.t("ss.links.download")
         wait_for_download
 
@@ -79,8 +78,7 @@ describe "gws_workload_cycles", type: :feature, dbscope: :example, js: true do
       clear_downloads
 
       Timecop.travel(site.fiscal_first_date(year2)) do
-        login_gws_user
-        visit download_path
+        login_gws_user to: download_path
         click_on I18n.t("ss.links.download")
         wait_for_download
 
@@ -91,8 +89,7 @@ describe "gws_workload_cycles", type: :feature, dbscope: :example, js: true do
 
     it "#import" do
       Timecop.travel(site.fiscal_first_date(year1)) do
-        login_gws_user
-        visit import_path
+        login_gws_user to: import_path
 
         within "form#item-form" do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/workload/cycles.csv"

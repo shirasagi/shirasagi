@@ -13,8 +13,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
   context "have duplicate_private_gws_facility_plans" do
     it do
-      login_user(user)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user, to: gws_schedule_facilities_path(site: site))
 
       # create title1
       within ".gws-schedule-box .calendar-multiple-header" do
@@ -51,8 +50,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
   context "have no duplicate_private_gws_facility_plans" do
     it do
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       # create title1
       within ".gws-schedule-box .calendar-multiple-header" do
@@ -85,8 +83,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it do
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       # create title1
       within ".gws-schedule-box .calendar-multiple-header" do
@@ -104,8 +101,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_ajax
 
       # approve title1
-      login_user(user)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -123,8 +119,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_notice I18n.t('ss.notice.saved')
 
       # create faild title2
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
@@ -141,8 +136,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it do
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       # create title1
       within ".gws-schedule-box .calendar-multiple-header" do
@@ -160,8 +154,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_ajax
 
       # deny title1
-      login_user(user)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -179,8 +172,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_notice I18n.t('ss.notice.saved')
 
       # create title2
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")

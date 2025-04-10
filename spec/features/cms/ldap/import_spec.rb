@@ -42,15 +42,13 @@ describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
       end
 
       it "#index" do
-        login_user(user)
-        visit index_path
+        login_user(user, to: index_path)
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
       end
 
       it "#import" do
-        login_user(user)
-        visit import_confirmation_path
+        login_user(user, to: import_confirmation_path)
         expect(current_path).to eq import_confirmation_path
         within "form#item-form" do
           click_button I18n.t('ss.buttons.import')

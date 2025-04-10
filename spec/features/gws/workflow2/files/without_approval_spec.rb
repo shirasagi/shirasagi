@@ -41,8 +41,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # admin: 申請する（承認なし）
       #
-      login_user admin
-      visit gws_workflow2_file_path(site, item, state: 'all')
+      login_user admin, to: gws_workflow2_file_path(site, item, state: 'all')
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-request" do
         click_on I18n.t("workflow.buttons.request")

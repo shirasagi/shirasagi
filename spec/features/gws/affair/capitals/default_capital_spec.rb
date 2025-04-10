@@ -42,8 +42,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
   context "login with user1" do
     it do
       Timecop.freeze(year1.start_date) do
-        login_user user1
-        visit new_path
+        login_user user1, to: new_path
 
         name = item1.name
         target = user1.name
@@ -53,8 +52,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
     it do
       Timecop.freeze(year2.start_date) do
-        login_user user1
-        visit new_path
+        login_user user1, to: new_path
 
         name = I18n.t("gws/affair.views.not_set_capital")
         target = user1.name
@@ -66,8 +64,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
   context "login with user2" do
     it do
       Timecop.freeze(year1.start_date) do
-        login_user user2
-        visit new_path
+        login_user user2, to: new_path
 
         name = item2.name
         target = user2.name
@@ -77,8 +74,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
     it do
       Timecop.freeze(year2.start_date) do
-        login_user user2
-        visit new_path
+        login_user user2, to: new_path
 
         name = I18n.t("gws/affair.views.not_set_capital")
         target = user2.name
@@ -90,8 +86,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
   context "login with user3" do
     it do
       Timecop.freeze(year1.start_date) do
-        login_user user3
-        visit new_path
+        login_user user3, to: new_path
 
         name = I18n.t("gws/affair.views.not_set_capital")
         target = user3.name
@@ -101,8 +96,7 @@ describe "gws_affair_capitals", type: :feature, dbscope: :example, js: true do
 
     it do
       Timecop.freeze(year2.close_date) do
-        login_user user3
-        visit new_path
+        login_user user3, to: new_path
 
         name = item3.name
         target = user3.name

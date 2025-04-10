@@ -10,6 +10,6 @@ def sys_role
   sys_role
 end
 
-def login_sys_user
-  login_user sys_user
+def login_sys_user(to: nil)
+  login_user sys_user, to: to
 end

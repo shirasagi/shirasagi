@@ -14,6 +14,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
       expect(current_path).to eq login_path
     end
   end
@@ -26,6 +27,9 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
+      end
       expect(current_path).to eq main_path
     end
 
@@ -36,6 +40,9 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
+      end
       expect(current_path).to eq main_path
       within ".user-navigation" do
         wait_for_event_fired("turbo:frame-load") { click_on user.name }
@@ -43,9 +50,11 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
         click_on I18n.t("ss.logout")
       end
 
+      expect(page).to have_css(".login-box", text: SS.version)
       expect(current_path).to eq login_path
 
       visit main_path
+      expect(page).to have_css(".login-box", text: SS.version)
       expect(current_path).to eq login_path
     end
   end
@@ -57,6 +66,9 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
         fill_in "item[email]", with: user.email
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
+      end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
       end
 
       expect(current_path).to eq webmail_addresses_path(group: "-")
@@ -73,6 +85,9 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
         fill_in "item[email]", with: user.email
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
+      end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
       end
 
       expect(current_path).to eq webmail_addresses_path(group: "-")
@@ -97,6 +112,9 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
         fill_in "item[email]", with: user.email
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
+      end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
       end
 
       expect(current_path).to eq main_path

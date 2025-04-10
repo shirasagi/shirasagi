@@ -64,8 +64,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           #
           # admin: 申請書の作成
           #
-          login_user admin
-          visit new_gws_workflow2_form_file_path(site: site, state: "all", form_id: form)
+          login_user admin, to: new_gws_workflow2_form_file_path(site: site, state: "all", form_id: form)
 
           within "form#item-form" do
             fill_in "custom[#{column1.id}]", with: unique_id
@@ -142,8 +141,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           #
           # user2: 申請を承認する
           #
-          login_user user2
-          visit gws_workflow2_files_path(site: site, state: "all")
+          login_user user2, to: gws_workflow2_files_path(site: site, state: "all")
           click_on file.name
           wait_for_turbo_frame "#workflow-approver-frame"
           within ".mod-workflow-view" do
@@ -202,8 +200,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           #
           # user3: 申請を確認する
           #
-          login_user user3
-          visit gws_workflow2_files_path(site: site, state: "all")
+          login_user user3, to: gws_workflow2_files_path(site: site, state: "all")
           click_on file.name
           wait_for_turbo_frame "#workflow-approver-frame"
           within ".mod-workflow-view" do
@@ -270,8 +267,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           #
           # admin: 申請書の作成
           #
-          login_user admin
-          visit new_gws_workflow2_form_file_path(site: site, state: "all", form_id: form)
+          login_user admin, to: new_gws_workflow2_form_file_path(site: site, state: "all", form_id: form)
 
           within "form#item-form" do
             fill_in "custom[#{column1.id}]", with: unique_id
@@ -362,8 +358,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # admin: 申請書の作成
         #
-        login_user admin
-        visit new_gws_workflow2_form_file_path(site: site, state: "all", form_id: form)
+        login_user admin, to: new_gws_workflow2_form_file_path(site: site, state: "all", form_id: form)
 
         within "form#item-form" do
           fill_in "custom[#{column1.id}]", with: unique_id
@@ -433,8 +428,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # user1_superior: 申請を承認する
         #
-        login_user user1_superior
-        visit gws_workflow2_files_path(site: site, state: "all")
+        login_user user1_superior, to: gws_workflow2_files_path(site: site, state: "all")
         click_on file.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-view" do
@@ -513,8 +507,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # admin: 申請書の作成
         #
-        login_user admin
-        visit new_gws_workflow2_form_file_path(site: site, state: "all", form_id: form)
+        login_user admin, to: new_gws_workflow2_form_file_path(site: site, state: "all", form_id: form)
 
         within "form#item-form" do
           fill_in "custom[#{column1.id}]", with: unique_id
@@ -586,8 +579,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # user1_superior: 申請を承認する
         #
-        login_user user1_superior
-        visit gws_workflow2_files_path(site: site, state: "all")
+        login_user user1_superior, to: gws_workflow2_files_path(site: site, state: "all")
         click_on file.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-view" do
@@ -603,8 +595,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # user2: 申請を承認する
         #
-        login_user user2
-        visit gws_workflow2_files_path(site: site, state: "all")
+        login_user user2, to: gws_workflow2_files_path(site: site, state: "all")
         click_on file.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-view" do

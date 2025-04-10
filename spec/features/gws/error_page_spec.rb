@@ -32,8 +32,7 @@ describe "gws_groups", type: :feature, dbscope: :example do
     let(:title) { "403 Forbidden | SHIRASAGI" }
 
     before do
-      login_user user
-      visit gws_groups_path(site: site)
+      login_user user, to: gws_groups_path(site: site)
     end
 
     include_context "shows gws error page"

@@ -30,8 +30,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
     let(:title) { "403 Forbidden | SHIRASAGI" }
 
     before do
-      login_user user
-      visit webmail_users_path
+      login_user user, to: webmail_users_path
     end
 
     include_context "shows webmail error page"

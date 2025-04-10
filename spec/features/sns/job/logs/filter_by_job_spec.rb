@@ -36,8 +36,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
   context "filter by job class name" do
     context "without ymd" do
       it do
-        login_user user
-        visit job_sns_logs_path(site: site)
+        login_user user, to: job_sns_logs_path(site: site)
 
         wait_for_event_fired "turbo:frame-load" do
           within ".list-head" do
@@ -67,8 +66,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
     context "with ymd" do
       it do
-        login_user user
-        visit job_sns_logs_path(site: site)
+        login_user user, to: job_sns_logs_path(site: site)
         wait_for_event_fired "turbo:frame-load" do
           within ".list-head" do
             expect(page).to have_css("option[value='#{log1.class_name}']")

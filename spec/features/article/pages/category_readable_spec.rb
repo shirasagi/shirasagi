@@ -50,8 +50,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(item.category_ids).to include(category_page2.id)
       expect(item.category_ids).not_to include(category_page1.id)
 
-      login_user user1
-      visit article_pages_path(site: site, cid: node)
+      login_user user1, to: article_pages_path(site: site, cid: node)
 
       click_on item.name
       click_on I18n.t("ss.links.edit")

@@ -19,8 +19,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
   context "have no duplicate_private_gws_facility_plans" do
     it do
       # approve by user
-      login_user(user)
-      visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
+      login_user(user, to: gws_schedule_facility_plan_path(site: site, facility: facility, id: item))
 
       within "#addon-basic" do
         expect(page).to have_text(I18n.t("gws/schedule.options.approved_state.request"))
@@ -49,8 +48,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
 
       # reset by user1
-      login_user(user1)
-      visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
+      login_user(user1, to: gws_schedule_facility_plan_path(site: site, facility: facility, id: item))
 
       within "#addon-basic" do
         expect(page).to have_text(I18n.t("gws/schedule.options.approved_state.approve"))
@@ -79,8 +77,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
 
       # approve by user
-      login_user(user)
-      visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
+      login_user(user, to: gws_schedule_facility_plan_path(site: site, facility: facility, id: item))
 
       within "#addon-basic" do
         expect(page).to have_text(I18n.t("gws/schedule.options.approved_state.request"))
@@ -109,8 +106,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
 
       # deny by user1
-      login_user(user1)
-      visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
+      login_user(user1, to: gws_schedule_facility_plan_path(site: site, facility: facility, id: item))
 
       within "#addon-basic" do
         expect(page).to have_text(I18n.t("gws/schedule.options.approved_state.approve"))
@@ -139,8 +135,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
 
       # approve by user1
-      login_user(user1)
-      visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
+      login_user(user1, to: gws_schedule_facility_plan_path(site: site, facility: facility, id: item))
 
       within "#addon-basic" do
         expect(page).to have_text(I18n.t("gws/schedule.options.approved_state.deny"))

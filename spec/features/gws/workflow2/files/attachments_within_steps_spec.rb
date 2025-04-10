@@ -70,8 +70,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # admin: 申請する（承認者 1 段、1 名＋回覧者 1 段、1 名）
       #
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
 
       within ".mod-workflow-request" do
@@ -109,8 +108,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # user1: 申請を承認する
       #
-      login_user user1
-      visit show_path
+      login_user user1, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.request"))
@@ -198,8 +196,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # user2: 申請を確認する
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.approve"))

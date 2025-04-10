@@ -987,9 +987,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       let(:form2) { create :cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id] }
 
       it do
-        login_user(user2)
-
-        visit new_article_page_path(site: site, cid: node)
+        login_user(user2, to: new_article_page_path(site: site, cid: node))
 
         within '#addon-basic' do
           expect(page).to have_no_css('select[name="in_form_id"]')
@@ -1000,9 +998,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         node.st_form_ids = [ form.id, form2.id ]
         node.save!
 
-        login_user(user2)
-
-        visit new_article_page_path(site: site, cid: node)
+        login_user(user2, to: new_article_page_path(site: site, cid: node))
 
         within '#addon-basic' do
           expect(page).to have_css('select[name="in_form_id"]')
@@ -1028,10 +1024,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        login_user(user2)
-
         item = Article::Page.last
-        visit edit_article_page_path(site: site, cid: node, id: item)
+        login_user(user2, to: edit_article_page_path(site: site, cid: node, id: item))
 
         within '#addon-basic' do
           expect(page).to have_css('select[name="in_form_id"][disabled]')

@@ -29,9 +29,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       # user1
       #
-      login_user user1
-
-      visit gws_survey_main_path(site: site)
+      login_user user1, to: gws_survey_main_path(site: site)
       click_on form.name
       expect(page).to have_css(".gws-survey .limit", text: Gws::Survey::Form.t(:due_date))
       within "form#item-form" do
@@ -43,9 +41,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       #  user2
       #
-      login_user user2
-
-      visit gws_survey_main_path(site: site)
+      login_user user2, to: gws_survey_main_path(site: site)
       click_on form.name
       within "form#item-form" do
         fill_in "custom[#{column1.id}]", with: user2_answer

@@ -15,8 +15,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
     let(:user) { create :gws_user, group_ids: [ site.id ] }
 
     it do
-      login_user user
-      visit index_path
+      login_user user, to: index_path
       expect(page).to have_css(".index.gws-boards")
     end
   end

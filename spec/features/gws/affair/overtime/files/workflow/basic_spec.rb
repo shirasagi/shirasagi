@@ -16,8 +16,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       name = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit new_path
+        login_user(user638, to: new_path)
 
         within "form#item-form" do
           expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)
@@ -44,8 +43,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       workflow_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
 
         click_on item.name
         wait_for_js_ready
@@ -82,8 +80,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       item = request_file(item)
 
       Timecop.freeze(start_at) do
-        login_user(user545)
-        visit approve_path
+        login_user(user545, to: approve_path)
 
         within ".list-items" do
           expect(page).to have_link item.name

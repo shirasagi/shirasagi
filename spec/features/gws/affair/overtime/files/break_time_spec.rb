@@ -15,8 +15,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       name = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit new_path
+        login_user(user638, to: new_path)
 
         within "form#item-form" do
           expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)
@@ -42,8 +41,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       workflow_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
 
         click_on item.name
 
@@ -78,8 +76,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       approve_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user545)
-        visit index_path
+        login_user(user545, to: index_path)
         click_on item.name
         wait_for_js_ready
 
@@ -99,8 +96,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       start_at = item.start_at
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
         click_on item.name
         wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -120,8 +116,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       start_at = item.start_at
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
         click_on item.name
         wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -154,8 +149,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       start_at = item.start_at
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
         click_on item.name
         wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -188,8 +182,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       start_at = item.start_at
 
       Timecop.freeze(start_at) do
-        login_user(user545)
-        visit index_path
+        login_user(user545, to: index_path)
         click_on item.name
         wait_for_js_ready
         within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -215,8 +208,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       item1 = input_results(item1)
       item1 = close_results(item1)
 
-      login_user(user545)
-      visit index_path
+      login_user(user545, to: index_path)
       click_on item1.name
       wait_for_js_ready
       within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -242,8 +234,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       item2 = edit_results_break1(item2, break1_start_at, break1_end_at)
       item2 = close_results(item2)
 
-      login_user(user545)
-      visit index_path
+      login_user(user545, to: index_path)
       click_on item2.name
       wait_for_js_ready
       within "#addon-gws-agents-addons-affair-overtime_result" do
@@ -273,8 +264,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       item3 = edit_results_break2(item3, break2_start_at, break2_end_at)
       item3 = close_results(item3)
 
-      login_user(user545)
-      visit index_path
+      login_user(user545, to: index_path)
       click_on item3.name
       wait_for_js_ready
       within "#addon-gws-agents-addons-affair-overtime_result" do

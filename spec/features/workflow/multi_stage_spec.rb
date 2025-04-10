@@ -102,8 +102,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -151,8 +150,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user2: approve request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
@@ -201,8 +199,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user3: approve request, he is the last one
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
@@ -319,8 +316,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -350,8 +346,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user2: approve request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
@@ -392,8 +387,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user3: approve request, he is the last one
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
@@ -501,8 +495,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -549,8 +542,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user2: approve request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
@@ -598,8 +590,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user3: remand request, he is the last one
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment3
@@ -719,8 +710,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -761,8 +751,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # user3: approve request, user2 no needs to approve request
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3

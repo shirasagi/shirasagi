@@ -91,8 +91,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(::File.exist?(master.path)).to be_falsey
 
           # 4. 差し替えページ（2）を公開保存
-          login_cms_user # 時計を進めたのでセッションの期限が切れているはずなので、再ログイン
-          visit edit_article_page_path(site: site, cid: node, id: branch)
+          # 時計を進めたのでセッションの期限が切れているはずなので、再ログイン
+          login_cms_user to: edit_article_page_path(site: site, cid: node, id: branch)
           wait_for_all_ckeditors_ready
           expect do
             within "form#item-form" do
@@ -201,8 +201,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(::File.exist?(master.path)).to be_falsey
 
           # 4. 差し替えページ（2）を承認
-          login_cms_user # 時計を進めたのでセッションの期限が切れているはずなので、再ログイン
-          visit article_page_path(site: site, cid: node, id: branch)
+          # 時計を進めたのでセッションの期限が切れているはずなので、再ログイン
+          login_cms_user to: article_page_path(site: site, cid: node, id: branch)
           wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           within ".mod-workflow-request" do

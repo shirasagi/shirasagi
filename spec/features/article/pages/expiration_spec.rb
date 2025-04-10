@@ -25,9 +25,7 @@ describe "workflow_remind", type: :feature, dbscope: :example, js: true do
       time = page1.updated + SS::Duration.parse(site.page_expiration_before)
       time = time.end_of_day.change(sec: 0)
       Timecop.freeze(time) do
-        login_cms_user
-
-        visit article_pages_path(site: site, cid: node)
+        login_cms_user to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: I18n.t("ss.state.public"))
         expect(page).to have_css(".list-item[data-id='#{page2.id}']", text: I18n.t("ss.state.edit"))
 
@@ -43,9 +41,7 @@ describe "workflow_remind", type: :feature, dbscope: :example, js: true do
       time = page1.updated + SS::Duration.parse(site.page_expiration_before) + 1.day
       time = time.beginning_of_day
       Timecop.freeze(time) do
-        login_cms_user
-
-        visit article_pages_path(site: site, cid: node)
+        login_cms_user to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: I18n.t("ss.state.public"))
         expect(page).to have_css(".list-item[data-id='#{page2.id}']", text: I18n.t("ss.state.edit"))
 
@@ -73,9 +69,7 @@ describe "workflow_remind", type: :feature, dbscope: :example, js: true do
       time = page1.updated + SS::Duration.parse(site.page_expiration_before)
       time = time.end_of_day.change(sec: 0)
       Timecop.freeze(time) do
-        login_cms_user
-
-        visit article_pages_path(site: site, cid: node)
+        login_cms_user to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: I18n.t("ss.state.public"))
         expect(page).to have_css(".list-item[data-id='#{page2.id}']", text: I18n.t("ss.state.edit"))
 
@@ -91,9 +85,7 @@ describe "workflow_remind", type: :feature, dbscope: :example, js: true do
       time = page1.updated + SS::Duration.parse(site.page_expiration_before) + 1.day
       time = time.beginning_of_day
       Timecop.freeze(time) do
-        login_cms_user
-
-        visit article_pages_path(site: site, cid: node)
+        login_cms_user to: article_pages_path(site: site, cid: node)
         "#{I18n.t("ss.state.public")}#{I18n.t("cms.state_expired_suffix")}".tap do |text|
           expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: text)
         end

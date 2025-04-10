@@ -32,9 +32,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         Timecop.freeze(now) do
-          login_cms_user
-
-          visit index_path
+          login_cms_user to: index_path
           within ".list-head" do
             wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
             click_button I18n.t("ss.links.make_them_public")
@@ -73,9 +71,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         Timecop.freeze(now) do
-          login_cms_user
-
-          visit index_path
+          login_cms_user to: index_path
           within ".list-head" do
             wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
             click_button I18n.t('ss.links.make_them_close')

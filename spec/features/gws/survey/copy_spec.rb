@@ -55,8 +55,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t("ss.notice.answered")
 
       # answer by user1
-      login_user user1
-      visit gws_survey_main_path(site: site)
+      login_user user1, to: gws_survey_main_path(site: site)
       click_on form.name
       within "form#item-form" do
         within ".mod-gws-survey-custom_form" do
@@ -145,8 +144,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(Gws::Survey::Form.all.count).to eq 2
 
       # answer by user2
-      login_user user2
-      visit gws_survey_main_path(site: site)
+      login_user user2, to: gws_survey_main_path(site: site)
 
       click_on copy_form.name
       within "form#item-form" do

@@ -65,8 +65,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         #
         # user1: edit requested page
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
         click_on I18n.t("ss.links.edit")
         within "#item-form" do
           fill_in_ckeditor "item[html]", with: unique_id

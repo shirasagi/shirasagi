@@ -23,6 +23,6 @@ def cms_role
   cms_role
 end
 
-def login_cms_user
-  login_user cms_user
+def login_cms_user(to: nil)
+  login_user cms_user, to: to
 end
