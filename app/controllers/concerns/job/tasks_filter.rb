@@ -70,15 +70,31 @@ module Job::TasksFilter
 
   def download
     set_item
-    raise '404' if !::File.exist?(@item.log_file_path)
-    send_file @item.log_file_path, type: 'text/plain', filename: "#{@item.id}.log",
+
+    if params.key?(:log_sequence) && params[:log_sequence].numeric?
+      log_item = SS::Task::LogItem.new(task: @item, log_sequence: params[:log_sequence].to_i)
+    else
+      log_item = SS::Task::LogItem.new(task: @item, log_sequence: nil)
+    end
+
+    path = log_item.log_file_path
+    raise '404' if !::File.exist?(path) || !path.start_with?(Rails.root.to_s)
+    send_file path, type: 'text/plain', filename: "#{@item.id}.log",
               disposition: :attachment, x_sendfile: true
   end
 
   def download_perf
     set_item
-    raise '404' if !::File.exist?(@item.perf_log_file_path)
-    send_file @item.perf_log_file_path, type: 'application/gzip', filename: "#{@item.id}-performance.log.gz",
+
+    if params.key?(:log_sequence) && params[:log_sequence].numeric?
+      log_item = SS::Task::LogItem.new(task: @item, log_sequence: params[:log_sequence].to_i)
+    else
+      log_item = SS::Task::LogItem.new(task: @item, log_sequence: nil)
+    end
+
+    path = log_item.perf_log_file_path
+    raise '404' if !::File.exist?(path) || !path.start_with?(Rails.root.to_s)
+    send_file path, type: 'application/gzip', filename: "#{@item.id}-performance.log.gz",
               disposition: :attachment, x_sendfile: true
   end
 end

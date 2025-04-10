@@ -851,6 +851,7 @@ en:
         current_count: No. of actions
         logs: Log
         segment: Segment
+        log_sequence: Sequence
       ss/model/file:
         in_file: File
         in_files: File

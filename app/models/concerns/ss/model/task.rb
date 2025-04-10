@@ -33,6 +33,7 @@ module SS::Model::Task
     field :total_count, type: Integer, default: 0
     field :current_count, type: Integer, default: 0
     field :segment, type: String
+    field :log_sequence, type: Integer, default: 0
 
     validates :name, presence: true
     validates :state, presence: true
@@ -70,6 +71,49 @@ module SS::Model::Task
 
     def close
       @file.close
+    end
+  end
+
+  class LogItem
+    include ActiveModel::Model
+
+    attr_accessor :task, :log_sequence
+
+    def log_file_path
+      if log_sequence
+        "#{task.base_dir}/#{log_sequence}_#{task.id}.log"
+      else
+        "#{task.base_dir}/#{task.id}.log"
+      end
+    end
+
+    def empty?
+      path = log_file_path
+      return true unless File.exist?(path)
+      File.empty?(path)
+    end
+
+    def head_logs(num_logs)
+      Fs.head_lines(log_file_path, limit: num_logs)
+    end
+
+    def perf_log_file_path
+      return if log_file_path.blank?
+      log_file_path.sub(".log", "") + "-performance.log.gz"
+    end
+
+    def meta_path
+      return if log_file_path.blank?
+      log_file_path.sub(".log", "") + "-meta.json"
+    end
+
+    def meta
+      @meta ||= begin
+        path = meta_path
+        if path && File.exist?(path)
+          JSON.parse(File.read(path))
+        end
+      end
     end
   end
 
@@ -226,6 +270,11 @@ module SS::Model::Task
     self.unset(:logs) if self[:logs].present?
 
     ::FileUtils.rm_f(log_file_path) if log_file_path && ::File.exist?(log_file_path)
+
+    # 20% の確率で古いログを削除する処理を実行
+    if rand(100) < 20
+      purge_old_logs
+    end
   end
 
   def base_dir
@@ -235,17 +284,18 @@ module SS::Model::Task
 
   def log_file_path
     return if new_record?
-    @log_file_path ||= "#{base_dir}/#{id}.log"
+    LogItem.new(task: self, log_sequence: log_sequence).log_file_path
   end
 
   def perf_log_file_path
-    return if log_file_path.blank?
-    log_file_path.sub(".log", "") + "-performance.log.gz"
+    return if new_record?
+    LogItem.new(task: self, log_sequence: log_sequence).perf_log_file_path
   end
 
   def logs
-    if log_file_path && ::File.exist?(log_file_path)
-      return ::File.readlines(log_file_path, chomp: true) rescue []
+    path = log_file_path
+    if path && ::File.exist?(path)
+      return ::File.readlines(path, chomp: true) rescue []
     end
 
     []
@@ -263,6 +313,10 @@ module SS::Model::Task
   end
 
   def log(msg)
+    if LogItem.new(task: self, log_sequence: log_sequence).empty?
+      write_meta
+    end
+
     logger.info msg
     Rails.logger.info msg
   end
@@ -284,6 +338,28 @@ module SS::Model::Task
     @performance ||= SS::Task::PerformanceCollector.new(self)
   end
 
+  def log_items
+    ret = []
+
+    sequence = log_sequence
+    while sequence >= 0
+      path = "#{base_dir}/#{sequence}_#{id}.log"
+      if File.exist?(path)
+        ret << LogItem.new(task: self, log_sequence: sequence)
+      end
+
+      sequence -= 1
+    end
+
+    # backward compatibilities
+    path = "#{base_dir}/#{id}.log"
+    if File.exist?(path)
+      ret << LogItem.new(task: self, log_sequence: nil)
+    end
+
+    ret
+  end
+
   private
 
   def change_state(state, attrs = {})
@@ -298,7 +374,7 @@ module SS::Model::Task
     ]
     updates = {
       state: state, started: attrs[:started].try { |time| time.in_time_zone.utc }, closed: nil, interrupt: nil,
-      total_count: 0, current_count: 0
+      total_count: 0, current_count: 0, log_sequence: log_sequence + 1
     }
 
     criteria = self.class.where(id: id, "$and" => [{ "$or" => cond }])
@@ -309,5 +385,52 @@ module SS::Model::Task
     clear_log
 
     true
+  end
+
+  def write_meta
+    meta = {
+      hostname: Rails.application.hostname,
+      ip_address: Rails.application.ip_address,
+      process_id: Process.pid
+    }
+    if Rails.application.current_request
+      meta[:session_id] = Rails.application.current_session_id
+      meta[:request_id] = Rails.application.current_request_id
+      meta[:method] = Rails.application.current_request.method
+      meta[:controller] = Rails.application.current_request.params[:controller]
+      meta[:action] = Rails.application.current_request.params[:action]
+    end
+    if SS.current_site
+      meta[:site_id] = SS.current_site.id
+    end
+    if SS.current_user
+      meta[:user_id] = SS.current_user.id
+    end
+
+    FileUtils.mkdir_p(base_dir)
+
+    meta_path = LogItem.new(task: self, log_sequence: log_sequence).meta_path
+    File.open(meta_path, "wt") do |f|
+      f.puts meta.to_json
+    end
+  end
+
+  def purge_old_logs(now: nil)
+    keep_logs = ::SS.config.job.keep_logs
+    return if keep_logs.nil? || keep_logs <= 0
+
+    now ||= Time.zone.now
+    modified = now - keep_logs
+
+    Dir.glob("*_#{id}.log", base: base_dir).each do |relative_path|
+      full_path = File.expand_path(relative_path, base_dir)
+      next if File.mtime(full_path).in_time_zone > modified
+
+      sequence, = relative_path.split("_", 2)
+
+      remove_file_paths = Dir.glob("#{sequence}_#{id}*.*", base: base_dir)
+      remove_file_paths.map! { File.expand_path(_1, base_dir) }
+      FileUtils.rm_f(remove_file_paths)
+    end
   end
 end
