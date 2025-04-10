@@ -21,7 +21,7 @@ class Map::Extensions::Point < Hash
 
   def []=(key, value)
     if key.to_s == "name" || key.to_s == "text"
-      value = value.to_s.gsub(/<script[^>]*>.*?<\/script>/i, '') if value.present?
+      value = sanitize_value(value)
     end
     super
   end
@@ -71,12 +71,16 @@ class Map::Extensions::Point < Hash
 
   private
 
+  def sanitize_value(value)
+    return value unless value.present?
+    value.to_s.gsub(/<script[^>]*>.*?<\/script>/i, '')
+  end
+
   def sanitize_existing_data
-    if self["name"].present?
-      self["name"] = self["name"].to_s.gsub(/<script[^>]*>.*?<\/script>/i, '')
-    end
-    if self["text"].present?
-      self["text"] = self["text"].to_s.gsub(/<script[^>]*>.*?<\/script>/i, '')
+    %w[name text].each do |key|
+      if self[key].present?
+        self[key] = sanitize_value(self[key])
+      end
     end
   end
 
