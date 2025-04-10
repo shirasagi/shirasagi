@@ -157,9 +157,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context "with cms addon file" do
       context "when file is attached / saved on the modal dialog" do
         it do
-          login_user(cms_user)
-
-          visit edit_path
+          login_user(cms_user, to: edit_path)
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-file")
@@ -213,8 +211,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       context "when a file uploaded by other user is attached" do
         it do
-          login_user(user2)
-          visit edit_path
+          login_user(user2, to: edit_path)
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-file")
@@ -288,9 +285,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     context "with entry form" do
       it "#edit" do
-        login_user(user2)
-
-        visit edit_path
+        login_user(user2, to: edit_path)
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
 

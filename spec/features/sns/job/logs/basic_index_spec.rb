@@ -37,8 +37,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
   context "basic index" do
     context "with user1" do
       it do
-        login_user user1
-        visit job_sns_logs_path(site: site)
+        login_user user1, to: job_sns_logs_path(site: site)
 
         expect(page).to have_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_content(I18n.t(log2.class_name.underscore, scope: "job.models"))
@@ -60,8 +59,7 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
     context "with user2" do
       it do
-        login_user user2
-        visit job_sns_logs_path(site: site)
+        login_user user2, to: job_sns_logs_path(site: site)
 
         expect(page).to have_no_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_content(I18n.t(log2.class_name.underscore, scope: "job.models"))

@@ -38,8 +38,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
   context "ss-4573" do
     it do
       # create cached file at
-      login_user user0
-      visit gws_monitor_management_admin_path(site: site, id: topic1)
+      login_user user0, to: gws_monitor_management_admin_path(site: site, id: topic1)
       click_on I18n.t("gws/monitor.links.file_download")
 
       wait_for_download
@@ -69,8 +68,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       #
       # 回答する
       #
-      login_user user1
-      visit gws_monitor_topic_path(site: site, id: topic1)
+      login_user user1, to: gws_monitor_topic_path(site: site, id: topic1)
       page.accept_confirm(I18n.t("gws/monitor.confirm.public")) do
         click_on I18n.t("gws/monitor.links.public")
       end
@@ -92,8 +90,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       #
       # 回答で追加されたファイルがダウンロードできるか（キャッシュが更新されるか）確認
       #
-      login_user user0
-      visit gws_monitor_management_admin_path(site: site, id: topic1)
+      login_user user0, to: gws_monitor_management_admin_path(site: site, id: topic1)
       click_on I18n.t("gws/monitor.links.file_download")
 
       wait_for_download
@@ -116,8 +113,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       #
       # 回答を編集する
       #
-      login_user user1
-      visit gws_monitor_answer_path(site: site, id: topic1)
+      login_user user1, to: gws_monitor_answer_path(site: site, id: topic1)
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         ss_select_file user1_file2, addon: '#addon-gws-agents-addons-file'
@@ -130,8 +126,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
       #
       # 回答の編集で追加されたファイルがダウンロードできるか（キャッシュが更新されるか）確認
       #
-      login_user user0
-      visit gws_monitor_management_admin_path(site: site, id: topic1)
+      login_user user0, to: gws_monitor_management_admin_path(site: site, id: topic1)
       click_on I18n.t("gws/monitor.links.file_download")
 
       wait_for_download
@@ -160,8 +155,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example, js:
     end
 
     it do
-      login_user user0
-      visit gws_monitor_management_admin_path(site: site, id: topic1)
+      login_user user0, to: gws_monitor_management_admin_path(site: site, id: topic1)
       click_on I18n.t("gws/monitor.links.file_download")
       wait_for_notice I18n.t("errors.messages.other_task_is_running")
     end

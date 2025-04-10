@@ -204,8 +204,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
@@ -525,8 +524,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # 2. approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name

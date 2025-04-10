@@ -166,8 +166,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       # answer by user1
       #
-      login_user user1
-      visit gws_survey_main_path(site: site)
+      login_user user1, to: gws_survey_main_path(site: site)
       click_on form_name
       wait_for_js_ready
 
@@ -183,8 +182,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       # answer by user2
       #
-      login_user user2
-      visit gws_survey_main_path(site: site)
+      login_user user2, to: gws_survey_main_path(site: site)
       click_on form_name
       wait_for_js_ready
 
@@ -210,8 +208,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       # answer by user3
       #
-      login_user user3
-      visit gws_survey_main_path(site: site)
+      login_user user3, to: gws_survey_main_path(site: site)
       click_on form_name
       wait_for_js_ready
 
@@ -237,8 +234,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       # answer by user4
       #
-      login_user user4
-      visit gws_survey_main_path(site: site)
+      login_user user4, to: gws_survey_main_path(site: site)
       click_on form_name
       wait_for_js_ready
 
