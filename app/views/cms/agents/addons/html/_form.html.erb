@@ -1,35 +1,5 @@
-<% if @item.html_format_liquid? %>
-  <%= render "cms/agents/addons/html_custom/_form", f: f %>
-<% else %>
-  <%= code_editor ".mod-cms-html-form textarea", mode: :html %>
+<%= code_editor ".mod-cms-html-form textarea", mode: :html %>
 
-  <dl class="see mod-cms-html-form">
-    <dd class="wide"><%= f.text_area :html, style: "height: 400px" %></dd>
-  </dl>
-<% end %>
-
-<%= jquery do %>
-  $(document).on("change", "select[name='item[html_format]']", function() {
-    var format = $(this).val();
-    var $htmlFormAddon = $(".addon-view").has(".mod-cms-html-form");
-    var $htmlCustomFormAddon = $(".addon-view").has(".mod-cms-html-custom-form");
-
-    if (format === "liquid") {
-      $htmlFormAddon.hide();
-      $htmlCustomFormAddon.show().find(".addon-body").show();
-    } else {
-      $htmlFormAddon.show().find(".addon-body").show();
-      $htmlCustomFormAddon.hide();
-    }
-  });
-
-  // 初期表示時の制御
-  var initialFormat = $("select[name='item[html_format]']").val();
-  if (initialFormat === "liquid") {
-    $(".addon-view").has(".mod-cms-html-form").hide();
-    $(".addon-view").has(".mod-cms-html-custom-form").show().find(".addon-body").show();
-  } else {
-    $(".addon-view").has(".mod-cms-html-form").show().find(".addon-body").show();
-    $(".addon-view").has(".mod-cms-html-custom-form").hide();
-  }
-<% end %>
+<dl class="see mod-cms-html-form">
+  <dd class="wide"><%= f.text_area :html, style: "height: 400px" %></dd>
+</dl>
