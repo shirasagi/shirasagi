@@ -21,6 +21,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       #
       visit gws_schedule_facility_plans_path(site: site, facility: facility)
       click_on I18n.t("gws/schedule.links.add_plan")
+      wait_for_js_ready
 
       within "form#item-form" do
         fill_in "item[name]", with: name
@@ -43,6 +44,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       #
       visit gws_schedule_facility_plan_path(site: site, facility: facility, id: plan)
       click_on I18n.t("ss.links.edit")
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: name2
         fill_in "item[facility_column_values][#{column1.id}]", with: column_value2

@@ -38,7 +38,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           click_on I18n.t("ss.buttons.save")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       wait_for_ajax
 
       # search
@@ -108,7 +108,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           click_on I18n.t("ss.buttons.save")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       wait_for_ajax
 
       # search
@@ -179,7 +179,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
           click_on I18n.t("ss.buttons.save")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       wait_for_ajax
 
       # search
@@ -249,7 +249,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         fill_in "item[name]", with: name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # search
       within ".gws-schedule-box" do

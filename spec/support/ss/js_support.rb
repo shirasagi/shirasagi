@@ -504,13 +504,6 @@ module SS
       wait_for_js_ready
     end
 
-    def wait_for_error(text)
-      wait_for_js_ready
-      expect(page).to have_css('#errorExplanation', text: text)
-      page.execute_script("SS.clearNotice();")
-      wait_for_js_ready
-    end
-
     def save_full_screenshot(**opts)
       width = page.execute_script(
         "return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, " \

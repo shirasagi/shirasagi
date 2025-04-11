@@ -24,6 +24,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         Timecop.freeze(now) do
           login_user user, to: gws_schedule_facility_plans_path(site: site, facility: facility)
           click_on I18n.t("gws/schedule.links.add_plan")
+          wait_for_js_ready
 
           within "#item-form" do
             fill_in "item[name]", with: plan_name
@@ -31,7 +32,9 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
             fill_in_datetime "item[end_at]", with: end_at
             click_on I18n.t("ss.buttons.save")
           end
-          expect(page).to have_css(css_class, text: message)
+          Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+            expect(page).to have_css(css_class, text: message)
+          end
         end
       end
     end
