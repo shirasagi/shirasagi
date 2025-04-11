@@ -1184,7 +1184,7 @@ ja:
         description: 説明
         order: 並び順
         state: ステータス
-      cms/addon/html:
+      cms/addon/html_custom:
         html_format: HTML種別
       cms/command:
         name: タイトル
