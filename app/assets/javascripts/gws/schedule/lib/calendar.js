@@ -205,9 +205,9 @@ SS.ready(function() {
           attendance = $('.fc .fc-withAbsence-button');
           if (attendance.length) {
             if (attendance.hasClass('fc-state-active')) {
-              $('.fc .fc-event-user-attendance-absence').removeClass('hide').show();
+              $('.fc .fc-event-user-attendance-absence').removeClass('hide');
             } else {
-              $('.fc .fc-event-user-attendance-absence').addClass('hide').hide();
+              $('.fc .fc-event-user-attendance-absence').addClass('hide');
             }
           }
           Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));
