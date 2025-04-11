@@ -5,7 +5,7 @@ class Webmail::PartFile
 
   attr_accessor :webmail_mode, :account, :mail, :part
 
-  delegate :filename, :content_type, :image?, to: :part
+  delegate :filename, :content_type, :image?, :size, to: :part
 
   def id
     "ref-#{part.section}"
@@ -23,10 +23,6 @@ class Webmail::PartFile
 
     ret = ret[1..-1] if ret.start_with?(".")
     ret
-  end
-
-  def size
-    part.size
   end
 
   def url
@@ -61,16 +57,11 @@ class Webmail::PartFile
 
   def read
     effective_part = part
-    case effective_part
-    when Webmail::StoredMailPart
-      effective_part.decoded
-    else # Webmail::MailPart
-      if effective_part.data.blank?
-        effective_part = mail.imap.mails.find_part(mail.uid, part.section)
-      end
-
-      effective_part.decoded
+    if !effective_part.is_a?(Webmail::StoredMailPart) && effective_part.data.blank?
+      effective_part = mail.imap.mails.find_part(mail.uid, part.section)
     end
+
+    effective_part.decoded
   end
 
   def updated
