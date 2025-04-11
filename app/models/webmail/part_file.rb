@@ -24,7 +24,7 @@ class Webmail::PartFile
   end
 
   def size
-    part.part.size
+    part.size
   end
 
   def url
@@ -54,16 +54,21 @@ class Webmail::PartFile
   alias thumb_no_cache_url no_cache_url
 
   def humanized_name
-    "#{::File.basename(part.filename, ".*")} (#{extname.upcase} #{part.part.size.to_fs(:human_size)})"
+    "#{::File.basename(part.filename, ".*")} (#{extname.upcase} #{size.to_fs(:human_size)})"
   end
 
   def read
     effective_part = part
-    if effective_part.data.blank?
-      effective_part = mail.imap.mails.find_part(mail.uid, part.section)
-    end
+    case effective_part
+    when Webmail::StoredMailPart
+      effective_part.decoded
+    else # Webmail::MailPart
+      if effective_part.data.blank?
+        effective_part = mail.imap.mails.find_part(mail.uid, part.section)
+      end
 
-    effective_part.decoded
+      effective_part.decoded
+    end
   end
 
   def updated
