@@ -1,3 +1,5 @@
+# Webmail::MailPart または Webmail::StoredMailPart をラップし、SS::File 類似インターフェースを提供する
+# ファイルに関する共通処理をメールの手ぷファイルでも使用できるようにする。
 class Webmail::PartFile
   include ActiveModel::Model
 
