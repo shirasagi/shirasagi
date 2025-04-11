@@ -1,10 +1,11 @@
 module Cms::Addon
-  module Html
+  module HtmlCustom
     extend ActiveSupport::Concern
     extend SS::Addon
 
     included do
       field :html, type: String
+
       permit_params :html
     end
 
