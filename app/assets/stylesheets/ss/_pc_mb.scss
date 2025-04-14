@@ -3384,6 +3384,7 @@ form .CodeMirror {
   }
 
   .closer {
+    display: block;
     position: absolute;
     top: 10px;
     right: 8px;
@@ -3395,8 +3396,8 @@ form .CodeMirror {
     &:before,
     &:after {
       content: "";
-      position: absolute;
       display: block;
+      position: absolute;
       top: 50%;
       left: 50%;
       width: 8px;
