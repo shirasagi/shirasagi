@@ -329,6 +329,8 @@ common
           .ss-voice-controller {
             position: absolute;
             top: 46px;
+            right: auto;
+            left: 0;
             z-index: 60;
 
             .ss-jp-close {
