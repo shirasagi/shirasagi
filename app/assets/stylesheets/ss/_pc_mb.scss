@@ -3396,9 +3396,9 @@ form .CodeMirror {
     &:after {
       content: "";
       position: absolute;
+      display: block;
       top: 50%;
       left: 50%;
-      display: block;
       width: 8px;
       height: 1px;
       background-color: #000;

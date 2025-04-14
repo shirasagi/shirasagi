@@ -53,9 +53,9 @@
   &:after {
     content: "";
     position: absolute;
+    display: block;
     top: 50%;
     left: 50%;
-    display: block;
     width: 8px;
     height: 1px;
     background-color: #000;
@@ -68,7 +68,6 @@
   &:after {
     transform: translate(-50%, -50%) rotate(-45deg);
   }
-
 }
 
 // markerclusterer
