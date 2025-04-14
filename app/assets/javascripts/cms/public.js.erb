@@ -475,7 +475,7 @@ SS_Voice.prototype.render = function ($voiceTag, index_1)  {
   const controllerId = 'ss-voice-controller-' + index;
   const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
   self.$voiceTag.attr("aria-controls", controllerId);
-  self.$voiceTag.append(voice_controller);
+  self.$voiceTag.after(voice_controller);
   self.voiceController = new SS_VoiceController(voice_controller[0]);
   self.state = null;
   self.cancelLoading = false;
