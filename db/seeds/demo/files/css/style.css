@@ -645,7 +645,7 @@ common
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/shirasagi\/public\/sites\/d\/e\/m\/o\/_\/seed3\/css\/style\.scss}line{font-family:\00003334}}
 .accessibility-inner .accessibility__tool-wrap .accessibility__tool-list .ss-voice-controller .ss-jp-close {
-  color: #686868 !important;
+  color: #000 !important;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/shirasagi\/public\/sites\/d\/e\/m\/o\/_\/seed3\/css\/style\.scss}line{font-family:\00003341}}
 .accessibility-inner .accessibility__tool-wrap .accessibility__tool-list .accessibility__theme span a {
