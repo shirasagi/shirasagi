@@ -3,5 +3,6 @@
 <dl class="see mod-cms-html-custom-form">
   <dt><%= @model.t :html_format %><%= @model.tt :html_format %></dt>
   <dd><%= f.select :html_format, @model.html_format_options %></dd>
+
   <dd class="wide"><%= f.text_area :html, style: "height: 400px" %></dd>
 </dl>

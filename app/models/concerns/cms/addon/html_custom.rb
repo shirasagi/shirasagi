@@ -4,12 +4,10 @@ module Cms::Addon
     extend SS::Addon
 
     included do
-      field :html_format, type: String
-      field :html, type: String
+      field :html_format, type: String, default: "SHIRASAGI"
+      field :html_custom, type: String
 
-      permit_params :html_format, :html
-
-      validates :html_format, inclusion: { in: %w(Shirasagi Liquid), allow_blank: true }
+      permit_params :html_format, :html_custom
     end
 
     class << self

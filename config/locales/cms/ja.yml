@@ -1187,6 +1187,7 @@ ja:
         state: ステータス
       cms/addon/html_custom:
         html_format: HTML種別
+        html: HTML
       cms/command:
         name: タイトル
         description: 説明
