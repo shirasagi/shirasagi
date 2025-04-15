@@ -3,6 +3,7 @@
   group = @group || @custom_group
   send_message = Gws::Memo::Message.allowed?(:edit, @cur_user, site: @cur_site)
 %>
+
 <div class="index presence-users editable-users">
   <div class="list-head">
     <h2 class="list-head-title">
@@ -33,7 +34,7 @@
               </span>
               <%= link_to item.name, "", class: "select-presence-state group-name" %>
             </div>
-          <%== user_presence_state_selector(item) %>
+            <%== user_presence_state_selector(item) %>
           </td>
           <td class="no-overflow">
             <%= render_edit_presence_plan(item) %>
