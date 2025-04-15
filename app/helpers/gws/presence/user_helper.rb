@@ -50,7 +50,8 @@ module Gws::Presence::UserHelper
 
     tag.turbo_frame(id: frame_id, class: "presence-plan", 'data-id': item.id, 'data-src': src) do
       link_to edit_gws_presence_frames_plan_path(frame_id: frame_id, id: item) do
-        tag.span { user_presence.plan } + md_icons.filled("mode_edit", tag: :i, class: "editicon", style: "font-size: inherit").html_safe
+        tag.span { user_presence.plan } +
+          md_icons.filled("mode_edit", tag: :i, class: "editicon", style: "font-size: inherit").html_safe
       end
     end
   end
@@ -62,7 +63,8 @@ module Gws::Presence::UserHelper
 
     tag.turbo_frame(id: frame_id, class: "presence-memo", 'data-id': item.id, 'data-src': src) do
       link_to edit_gws_presence_frames_memo_path(frame_id: frame_id, id: item) do
-        tag.span { user_presence.memo } + md_icons.filled("mode_edit", tag: :i, class: "editicon", style: "font-size: inherit").html_safe
+        tag.span { user_presence.memo } +
+          md_icons.filled("mode_edit", tag: :i, class: "editicon", style: "font-size: inherit").html_safe
       end
     end
   end

@@ -70,6 +70,7 @@ this.Gws_Presence_User = (function () {
     selector.find('[data-value!="' + presence_state + '"] .selected-icon').css('visibility', 'hidden');
   }
 
+  // ajax-text-field
   /*
   Gws_Presence_User.toggleForm = function (ele) {
     var state = $(ele).attr("data-tag-state");
