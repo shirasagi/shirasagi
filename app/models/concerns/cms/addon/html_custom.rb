@@ -9,29 +9,23 @@ module Cms::Addon
 
       permit_params :html_format, :html
 
-      validates :html_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
+      validates :html_format, inclusion: { in: %w(Shirasagi Liquid), allow_blank: true }
     end
 
-    def html_format_options
-      use_html_format.map do |v|
-        [ I18n.t("cms.options.loop_format.#{v}"), v ]
+    class << self
+      def html_format_options
+        %w(SHIRASAGI Liquid).map do |v|
+          [ v, v.downcase ]
+        end
       end
-    end
 
-    def html_format_shirasagi?
-      html_format == "shirasagi"
-    end
+      def html_format_shirasagi?
+        html_format == "shirasagi"
+      end
 
-    def html_format_liquid?
-      html_format == "liquid"
-    end
-
-    def use_html_format
-      %w(shirasagi liquid)
-    end
-
-    def html_format_changed?
-      changed_attributes.key?("html_format")
+      def html_format_liquid?
+        html_format == "liquid"
+      end
     end
   end
 end
