@@ -1,6 +1,7 @@
 class Gws::Presence::Frames::MemosController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
+  include Gws::Presence::Users::AuthFilter
 
   model Gws::UserPresence
 
@@ -25,12 +26,15 @@ class Gws::Presence::Frames::MemosController < ApplicationController
   public
 
   def show
+    raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
   end
 
   def edit
+    raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
   end
 
   def update
+    raise "403" unless editable_user?(@user)
     @item.attributes = get_params
     @item.update
     render :update
