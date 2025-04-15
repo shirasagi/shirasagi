@@ -1,7 +1,8 @@
 <dl class="see">
   <dd class="wide">
     <% if @item.html.present? %>
-      <%= @item.html_format %>
+      <dt><%= @model.t :html_format %></dt>
+      <dd><%= @item.html_format %></dd>
       <%= code_editor "#mod-cms-html", mode: :html, readonly: true %>
       <%= text_area_tag "mod-cms-html", @item.html, style: "height: 400px" %>
     <% end %>
