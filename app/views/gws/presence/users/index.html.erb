@@ -25,29 +25,29 @@
       <tbody>
       <% @editable_users.each do |item| %>
         <% user_presence = item.user_presence(@cur_site) %>
-          <tr class="editable" data-id="<%= item.id %>">
-            <td class="presence-state-toggle">
-              <div class="no-overflow">
-                <span class="presence-state <%= user_presence.state_style %>">
-                  <%= user_presence.label :state %>
-                </span>
-                <%= link_to item.name, "", class: "select-presence-state group-name" %>
-              </div>
-            <%== user_presence_state_selector(item) %>
-            </td>
+        <tr class="editable" data-id="<%= item.id %>">
+          <td class="presence-state-toggle">
+            <div class="no-overflow">
+              <span class="presence-state <%= user_presence.state_style %>">
+                <%= user_presence.label :state %>
+              </span>
+              <%= link_to item.name, "", class: "select-presence-state group-name" %>
+            </div>
+          <%== user_presence_state_selector(item) %>
+          </td>
+          <td class="no-overflow">
+            <%= render_edit_presence_plan(item) %>
+          </td>
+          <td class="no-overflow">
+            <%= render_edit_presence_memo(item) %>
+          </td>
+          <% if send_message %>
             <td class="no-overflow">
-              <%= render_edit_presence_plan(item) %>
+              <%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %>
             </td>
-            <td class="no-overflow">
-              <%= render_edit_presence_memo(item) %>
-            </td>
-            <% if send_message %>
-              <td class="no-overflow">
-                <%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %>
-              </td>
-            <% end %>
-          </tr>
-        <% end %>
+          <% end %>
+        </tr>
+      <% end %>
       </tbody>
     </table>
   </div>
