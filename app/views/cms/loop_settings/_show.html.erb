@@ -9,5 +9,5 @@
   <dd><%= @item.order %></dd>
 
   <dt><%= @model.t :state %></dt>
-  <dd><%= @item.state %></dd>
+  <dd><%= I18n.t("ss.options.state.#{@item.state}") %></dd>
 </dl>
