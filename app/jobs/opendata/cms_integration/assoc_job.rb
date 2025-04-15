@@ -20,7 +20,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
       all_ids.each_slice(20) do |ids|
         Cms::Page.site(@cms_site).node(@cms_node).in(id: ids).each do |page|
           @cur_page = page
-          if @cur_page.opendata_dataset_state.present? && @cur_page.opendata_dataset_state != 'none'
+          if @cur_page.try(:opendata_dataset_state).present? && @cur_page.opendata_dataset_state != 'none'
             create_or_update_associated_dataset
           else
             close_associated_dataset
