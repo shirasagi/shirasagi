@@ -913,6 +913,7 @@ ja:
       cms/node_setting: フォルダー設定
       cms/meta: メタ情報
       cms/html: HTML
+      cms/html_custom: HTMLカスタム
       cms/body: 本文
       cms/body_part: 本文パーツ
       cms/editor_setting: エディタ設定
