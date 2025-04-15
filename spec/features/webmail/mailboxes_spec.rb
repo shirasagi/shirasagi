@@ -60,7 +60,7 @@ describe "webmail_mailboxes", type: :feature, dbscope: :example, imap: true, js:
 
   describe "webmail_mode is group" do
     let(:group) { create :webmail_group }
-    let(:index_path) { webmail_mailboxes_path(account: group.id, webmail_mode: :group) }
+    let(:index_path) { webmail_mailboxes_path(account: "#{group.id}.0", webmail_mode: :group) }
 
     before { user.add_to_set(group_ids: [ group.id ]) }
 
