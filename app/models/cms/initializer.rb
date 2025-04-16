@@ -158,6 +158,9 @@ module Cms
     Cms::Role.permission :edit_cms_user_profile, module_name: 'cms/user_profile'
     Cms::Role.permission :edit_password_cms_user_profile, module_name: 'cms/user_profile'
 
+    Cms::Role.permission :use_cms_transactions
+
+
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File
     SS::File.model "cms/page", SS::File

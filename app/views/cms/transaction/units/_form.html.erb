@@ -1,0 +1,17 @@
+<%
+  @item.load_in_execute
+%>
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :execute_at %></dt>
+  <dd>
+    <%= f.ss_date_field :in_execute_date %>
+    <%= f.select :in_execute_hour, @item.hour_options %>
+    <%= f.select :in_execute_min, @item.min_options %>
+  </dd>
+</dl>

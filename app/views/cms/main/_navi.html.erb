@@ -25,6 +25,10 @@
     <h2><%= link_to t("mongoid.models.inquiry/answer"), inquiry_site_answers_path, class: "icon-conv" %></h2>
   <% end %>
 
+  <% if Cms::Transaction::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to "トランザクション", cms_transaction_plans_path, class: "icon-write" %></h2>
+  <% end %>
+
   <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to t("cms.command"), cms_command_path, class: "icon-write" %></h2>
   <% end %>

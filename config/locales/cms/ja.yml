@@ -598,6 +598,10 @@ ja:
       subject_state:
         disabled: 本文に含めない
         include: 本文に含める
+      transaction_type:
+        generation: 書き出し
+        publisher: ページ公開
+        command: コマンド
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP
@@ -840,6 +844,7 @@ ja:
     edit_cms_ignore_syntax_check: アクセシビリティチェックを無視して保存する
     edit_cms_user_profile: プロフィールの編集
     edit_password_cms_user_profile: プロフィールのパスワード変更
+    use_cms_transactions: トランザクションの利用
 
   modules:
     cms: 標準機能
@@ -943,6 +948,8 @@ ja:
       cms/clipboard_copy: クリップボードへコピー
       cms/logo_setting: ロゴ設定
       cms/print: 印刷ボタンの設定
+      cms/transaction/filename: ファイル名設定
+      cms/transaction/command: コマンド設定
 
   mongoid:
     models:
@@ -1768,6 +1775,19 @@ ja:
         average_sub_total__db: 平均子合計DB処理時間
         average_sub_total_view: 平均子合計ビュー処理時間
         average_sub_total_elapsed: 平均子合計全処理時間
+      cms/transaction/plan:
+        name: タイトル
+        order: 並び順
+        units: 実行単位
+      cms/transaction/unit/base:
+        name: タイトル
+        order: 並び順
+        type: 区分
+        execute_at: 実行日時
+      cms/addon/transaction/filename:
+        filenames: ファイル名
+      cms/addon/transaction/command:
+        command: コマンド
 
   activemodel:
     attributes:
@@ -3139,7 +3159,7 @@ ja:
         - フォルダーの合計容量の上限を入力します。合計容量が設定した上限を超えた場合、警告が表示されます。
         - 初期値は「未設定」で、未設定である場合、警告は表示されません。
         -
-        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。 
+        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。
         - 1. 容量制限が設定されている。
         - 2. フォルダー設定のショートカットが「表示」に設定されている。
         - 3. 自グループが管理権限の管理グループに設定されている。
@@ -3332,6 +3352,12 @@ ja:
         - ボタンに表示するテキストを入力してください。
         - 「印刷する」「帳票出力」など、自由に設定できます。
         - 省略した場合は「パーツ名」が表示されます。
+
+    cms/transaction/plan:
+      name:
+        - タイトルを入力します。
+      order:
+        - 並び順を入力します。
 
   all_content:
     page_id: ページID

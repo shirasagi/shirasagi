@@ -1,0 +1,35 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <% if @item.units.present? %>
+  <dt><%= @model.t :units %></dt>
+  <dd>
+    <table class="index data-table">
+      <tr>
+        <th><%= Cms::Transaction::Unit::Base.t(:order) %></th>
+        <th><%= Cms::Transaction::Unit::Base.t(:type) %></th>
+        <th><%= Cms::Transaction::Unit::Base.t(:name) %></th>
+        <th><%= Cms::Transaction::Unit::Base.t(:execute_at) %></th>
+      </tr>
+      <% @item.units.each do |unit| %>
+        <tr>
+          <td><%= unit.order %></td>
+          <td><%= unit.label :type %></td>
+          <td><%= link_to unit.name, cms_transaction_plan_unit_path(plan_id: @item, id: unit) %></td>
+          <td><%= I18n.l(unit.execute_at, format: :picker) rescue nil %></td>
+        </tr>
+      <% end %>
+    </table>
+  </dd>
+  <% else %>
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <table class="index data-table">
+      <tr>
+        <td>登録されていません。</td>
+      </tr>
+    </table>
+  </dd>
+  <% end %>
+</dl>
