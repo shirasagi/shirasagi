@@ -8,6 +8,12 @@ class UrlValidator < ActiveModel::EachValidator
 
     uri = ::Addressable::URI.parse(value)
 
+    # 絶対パスの場合の検証
+    if options[:absolute_path] && uri.scheme.blank? && value.start_with?("/")
+      return
+    end
+
+    # URLスキームの検証
     allowed_schemes = options[:scheme].try { |scheme| Array[scheme].flatten.map(&:to_s) } || ALLOWED_SCHEMES
     if !allowed_schemes.include?(uri.scheme)
       record.errors.add(attribute, options[:message] || :url)
