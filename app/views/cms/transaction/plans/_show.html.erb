@@ -2,6 +2,9 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.name %></dd>
 
+  <dt><%= @model.t :start_at %></dt>
+  <dd><%= I18n.l(@item.start_at, format: :picker) rescue nil %></dd>
+
   <% if @item.units.present? %>
   <dt><%= @model.t :units %></dt>
   <dd>

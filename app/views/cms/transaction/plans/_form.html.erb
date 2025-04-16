@@ -2,6 +2,9 @@
   <dt><%= @model.t :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
+  <dt><%= @model.t :start_at %></dt>
+  <dd><%= f.ss_datetime_field :start_at %></dd>
+
   <dt><%= @model.t :order %></dt>
   <dd><%= f.number_field :order %></dd>
 </dl>

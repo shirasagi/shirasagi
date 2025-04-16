@@ -1778,6 +1778,7 @@ ja:
       cms/transaction/plan:
         name: タイトル
         order: 並び順
+        start_at: 実行予約時間
         units: 実行単位
       cms/transaction/unit/base:
         name: タイトル

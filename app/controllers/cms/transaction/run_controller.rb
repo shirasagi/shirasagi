@@ -35,4 +35,15 @@ class Cms::Transaction::RunController < ApplicationController
       format.json { render template: "ss/tasks/index", content_type: json_content_type, locals: { item: @item } }
     end
   end
+
+  def run
+    return stop if params[:stop]
+    return reset if params[:reset]
+    return redirect_to({ action: :index }) if @item.running?
+
+    @item.ready
+    job_class.bind(job_bindings).set(wait_until: @plan.start_at).perform_later(job_options)
+
+    redirect_to({ action: :index }, { notice: t("ss.tasks.started") })
+  end
 end

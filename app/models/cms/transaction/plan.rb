@@ -9,10 +9,12 @@ class Cms::Transaction::Plan
   seqid :id
   field :name, type: String
   field :order, type: Integer
+  field :start_at, type: DateTime
   has_many :units, class_name: 'Cms::Transaction::Unit::Base', dependent: :destroy, inverse_of: :plan
 
-  permit_params :name, :order
+  permit_params :name, :order, :start_at
   validates :name, presence: true, length: { maximum: 40 }
+  validates :start_at, presence: true
 
   default_scope -> { order_by(order: 1, name: 1) }
 
