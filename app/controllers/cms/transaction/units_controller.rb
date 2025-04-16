@@ -22,15 +22,14 @@ class Cms::Transaction::UnitsController < ApplicationController
   end
 
   def set_model
-    @type = params[:type].presence
-
-    if @type == "-"
-      @model = Cms::Transaction::Unit::Base
-    else
-      types = I18n.t("cms.options.transaction_type").keys.map(&:to_s)
-      raise "400" if !types.include?(@type)
-      @model = "#{Cms::Transaction::Unit}::#{@type.classify}".constantize
+    types = %w(-) + I18n.t("cms.options.transaction_type").keys.map(&:to_s)
+    @type = types.find do |type|
+      type == params[:type].presence
     end
+    raise "400" if @type.nil?
+
+    @type = nil if @type == "-"
+    @model = @type ? "#{Cms::Transaction::Unit}::#{@type.classify}".constantize : Cms::Transaction::Unit::Base
   end
 
   def fix_params
