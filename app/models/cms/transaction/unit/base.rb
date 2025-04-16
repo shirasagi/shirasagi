@@ -7,8 +7,7 @@ class Cms::Transaction::Unit::Base
   set_permission_name "cms_transactions", :use
   store_in collection: "cms_transaction_units"
 
-  attr_accessor :site, :task
-  attr_accessor :in_execute_date, :in_execute_hour, :in_execute_min
+  attr_accessor :site, :task, :in_execute_date, :in_execute_hour, :in_execute_min
 
   field :name, type: String
   field :order, type: Integer
@@ -77,9 +76,7 @@ class Cms::Transaction::Unit::Base
     task.log "\# #{long_name}"
     if execute_at
       task.log "wait until #{I18n.l(execute_at, format: :picker)}"
-      while (Time.zone.now < execute_at) do
-        sleep 1
-      end
+      sleep 1 while Time.zone.now < execute_at
     end
     execute_main
     task.log ""

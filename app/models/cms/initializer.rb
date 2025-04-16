@@ -160,7 +160,6 @@ module Cms
 
     Cms::Role.permission :use_cms_transactions
 
-
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File
     SS::File.model "cms/page", SS::File

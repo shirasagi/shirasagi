@@ -23,17 +23,17 @@ class Cms::Transaction::UnitsController < ApplicationController
 
   def set_model
     @type = params[:type].presence
-    raise "400" if @type.nil?
 
-    @type = nil if @type == "-"
-    @model = @type ? "#{Cms::Transaction::Unit}::#{@type.classify}".constantize : Cms::Transaction::Unit::Base
+    if @type == "-"
+      @model = Cms::Transaction::Unit::Base
+    else
+      types = I18n.t("cms.options.transaction_type").keys.map(&:to_s)
+      raise "400" if !types.include?(@type)
+      @model = "#{Cms::Transaction::Unit}::#{@type.classify}".constantize
+    end
   end
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, plan: @plan }
   end
-
-  #def crud_redirect_url
-  #  cms_transaction_plan_path(id: @plan)
-  #end
 end

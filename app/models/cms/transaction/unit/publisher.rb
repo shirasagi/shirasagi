@@ -29,7 +29,7 @@ class Cms::Transaction::Unit::Publisher < Cms::Transaction::Unit::Base
   end
 
   def publish_page(page)
-    @task.log (page.try(:branch?) ? page.master.full_url : page.full_url)
+    @task.log page.try(:branch?) ? page.master.full_url : page.full_url
     return if page.public?
 
     page.cur_site = @site
