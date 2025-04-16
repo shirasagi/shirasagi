@@ -5,9 +5,9 @@ module Cms::Addon
 
     included do
       field :html_format, type: String, default: "SHIRASAGI"
-      field :html_custom, type: String
+      field :custom_html, type: String
 
-      permit_params :html_format, :html_custom
+      permit_params :html_format, :custom_html
     end
 
     class << self
