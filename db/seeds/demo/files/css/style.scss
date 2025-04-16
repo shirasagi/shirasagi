@@ -329,10 +329,12 @@ common
           .ss-voice-controller {
             position: absolute;
             top: 46px;
+            right: auto;
+            left: 0;
             z-index: 60;
 
             .ss-jp-close {
-              color: #686868 !important;
+              color: #000 !important;
             }
           }
 
