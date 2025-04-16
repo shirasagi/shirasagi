@@ -144,22 +144,22 @@ this.Googlemaps_Map = (function () {
       if (value['html']) {
         markerHtml = value['html'];
       } else if (value['name'] || value['text']) {
-        markerHtml = '<div class=" marker marker-info">';
+        const $markerContent = $("<div/>", { class: "marker marker-info" });
         if (value['name']) {
-          markerHtml += `<p class="marker-name">${value['name']}</p>`;
+          $markerContent.append($("<p/>", { class: "marker-name" }).text(value['name']));
         }
         if (value['text']) {
-          markerHtml += '<div class="marker-explanation">';
+          const $explanation = $("<div/>", { class: "marker-explanation" });
           value['text'].split(/[\r\n]+/).forEach(line => {
             if (/^https?:\/\//.test(line)) {
-              markerHtml += `<p class="marker-link"><a href="${line}">${line}</a></p>`;
+              $explanation.append($("<p/>", { class: "marker-link" }).html($("<a />", { href: line }).text(line)));
             } else {
-              markerHtml += `<p>${line}</p>`;
+              $explanation.append($("<p/>").text(line));
             }
           });
-          markerHtml += '</div>';
+          $markerContent.append($explanation);
         }
-        markerHtml += '</div>';
+        markerHtml = $markerContent.html();
       }
 
       if (Googlemaps_Map.showGoogleMapsSearch) {

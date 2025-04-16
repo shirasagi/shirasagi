@@ -9,12 +9,30 @@ class Map::Extensions::Point < Hash
     export :image
   end
 
-  # convert to mongoid native type
+  def initialize(*args)
+    super
+    if args.first.is_a?(Hash)
+      args.first.each do |key, value|
+        self[key] = value
+      end
+    end
+    sanitize_existing_data
+  end
+
+  def []=(key, value)
+    if key.to_s == "name" || key.to_s == "text"
+      value = sanitize_value(value)
+    end
+    super
+  end
+
   def mongoize
     loc = self.loc
     return {} if loc.nil?
 
     ret = { "loc" => loc.mongoize }
+    ret["name"] = name if name.present?
+    ret["text"] = text if text.present?
     ret["zoom_level"] = zoom_level if zoom_level.present?
     ret
   end
@@ -50,6 +68,21 @@ class Map::Extensions::Point < Hash
     loc.blank?
   end
   alias blank? empty?
+
+  private
+
+  def sanitize_value(value)
+    return value unless value.present?
+    value.to_s.gsub(/<script[^>]*>.*?<\/script>/i, '')
+  end
+
+  def sanitize_existing_data
+    %w[name text].each do |key|
+      if self[key].present?
+        self[key] = sanitize_value(self[key])
+      end
+    end
+  end
 
   class << self
     # convert mongoid native type to its custom type(this class)
