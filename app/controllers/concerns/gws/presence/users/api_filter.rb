@@ -1,5 +1,6 @@
 module Gws::Presence::Users::ApiFilter
   extend ActiveSupport::Concern
+  include Gws::Presence::Users::AuthFilter
 
   included do
     model Gws::User
@@ -7,10 +8,6 @@ module Gws::Presence::Users::ApiFilter
     prepend_view_path "app/views/gws/presence/apis/users"
 
     skip_before_action :set_item
-
-    before_action :set_groups
-    before_action :set_editable_users
-    before_action :set_manageable_users
   end
 
   private
@@ -32,33 +29,6 @@ module Gws::Presence::Users::ApiFilter
     }
   end
 
-  def set_groups
-    @groups = [ @cur_site.root ] + @cur_site.root.descendants.active.to_a
-  end
-
-  def set_editable_users
-    @editable_user_ids = [@cur_user.id] + @cur_user.presence_title_manageable_users.map(&:id)
-  end
-
-  def set_manageable_users
-    @manage_all = Gws::UserPresence.allowed?(:manage_all, @cur_user, site: @cur_site)
-
-    if Gws::UserPresence.allowed?(:manage_custom_group, @cur_user, site: @cur_site)
-      custom_groups = Gws::CustomGroup.site(@cur_site).member(@cur_user).to_a
-      @custom_group_user_ids = custom_groups.map { |item| item.members.pluck(:id) }.flatten.uniq
-    else
-      @custom_group_user_ids = []
-    end
-
-    if Gws::UserPresence.allowed?(:manage_private, @cur_user, site: @cur_site)
-      @group_user_ids = @cur_user.gws_default_group.users.pluck(:id)
-    else
-      @group_user_ids = []
-    end
-
-    @manageable_user_ids = (@editable_user_ids + @group_user_ids + @custom_group_user_ids).uniq
-  end
-
   def set_user
     @user = @model.active.where(id: params[:id]).in(group_ids: @groups.pluck(:id)).first
   end
@@ -77,16 +47,7 @@ module Gws::Presence::Users::ApiFilter
   def update
     set_user
     raise "404" unless @user
-
-    if @editable_user_ids.include?(@user.id)
-      raise "403" unless Gws::UserPresence.allowed?(:use, @cur_user, site: @cur_site)
-    elsif @group_user_ids.include?(@user.id)
-      raise "403" unless Gws::UserPresence.allowed?(:manage_private, @cur_user, site: @cur_site)
-    elsif @custom_group_user_ids.include?(@user.id)
-      raise "403" unless Gws::UserPresence.allowed?(:manage_custom_group, @cur_user, site: @cur_site)
-    else
-      raise "403" unless Gws::UserPresence.allowed?(:manage_all, @cur_user, site: @cur_site)
-    end
+    raise "403" unless editable_user?(@user)
 
     @item = @user.user_presence(@cur_site)
     @item.cur_site = @cur_site

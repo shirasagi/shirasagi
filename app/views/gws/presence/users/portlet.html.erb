@@ -31,12 +31,10 @@
           <%== user_presence_state_selector(item) %>
         </td>
         <td class="no-overflow">
-          <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-          <%= md_icons.filled "mode_edit", tag: :i, class: "editicon", style: "font-size: inherit" %>
+          <%= render_edit_presence_plan(item) %>
         </td>
         <td class="no-overflow">
-          <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-          <%= md_icons.filled "mode_edit", tag: :i, class: "editicon", style: "font-size: inherit" %>
+          <%= render_edit_presence_memo(item) %>
         </td>
         <% if send_message %>
           <td class="no-overflow">
@@ -60,12 +58,10 @@
             <%== user_presence_state_selector(item) %>
           </td>
           <td class="no-overflow">
-            <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-            <%= md_icons.filled "mode_edit", tag: :i, class: "editicon", style: "font-size: inherit" %>
+            <%= render_edit_presence_plan(item) %>
           </td>
           <td class="no-overflow">
-            <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-            <%= md_icons.filled "mode_edit", tag: :i, class: "editicon", style: "font-size: inherit" %>
+            <%= render_edit_presence_memo(item) %>
           </td>
           <% if send_message %>
             <td class="no-overflow">
