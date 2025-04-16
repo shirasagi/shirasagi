@@ -24,7 +24,7 @@
 <% if params[:action] =~ /show/ %>
 <nav class="nav-menu">
   <div class="dropdown">
-    <%= dropdown_link("実行単位を作成") do %>
+    <%= dropdown_link(t("cms.buttons.add_unit")) do %>
       <% t("cms.options.transaction_type").each do |type, name| %>
         <%= link_to name, new_cms_transaction_plan_unit_path(plan_id: @item, type: type) %>
       <% end %>

@@ -65,11 +65,11 @@ class Cms::Transaction::Unit::Base
   end
 
   def hour_options
-    (0..59).map { |v| ["#{v}時", v] }
+    (0..59).map { |v| ["#{v}#{I18n.t("datetime.prompts.hour")}", v] }
   end
 
   def min_options
-    (0..59).map { |v| ["#{v}分", v] }
+    (0..59).map { |v| ["#{v}#{I18n.t("datetime.prompts.minute")}", v] }
   end
 
   def execute

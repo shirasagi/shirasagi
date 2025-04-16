@@ -26,7 +26,7 @@
   <% end %>
 
   <% if Cms::Transaction::Plan.allowed?(:use, @cur_user, site: @cur_site) %>
-    <h2><%= link_to "トランザクション", cms_transaction_plans_path, class: "icon-write" %></h2>
+    <h2><%= link_to t("cms.transaction"), cms_transaction_plans_path, class: "icon-write" %></h2>
   <% end %>
 
   <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
