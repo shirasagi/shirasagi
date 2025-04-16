@@ -1187,7 +1187,6 @@ ja:
         state: ステータス
       cms/addon/html_custom:
         html_format: HTML種別
-        html: HTML
       cms/command:
         name: タイトル
         description: 説明
@@ -3452,6 +3451,15 @@ ja:
         -
         - "・サイト設定にしたがう: この選択はサイト設定の公開期限にしたがうことを意味します。この選択が既定です。"
         - "・無期限: この選択は公開期限を無期限に設定します。この設定をしたページは公開期限切れ警告が通知または表示されることはありません。"
+    cms/addon/html_custom:
+      html_format:
+        - 設定するHTML種別を選択してください。
+        -
+        - ・SHIRASAGI
+        - 従来のループHTMLを設定します。
+        -
+        - ・Liquid
+        - Liquid形式のHTMLを設定します。
 
   all_content:
     page_id: ページID
