@@ -1,22 +1,9 @@
 require 'spec_helper'
 
-describe KeyVisual::Image, dbscope: :example do
+describe Facility::Addon::Body do
   let(:site) { cms_site }
-  let(:node) { create :key_visual_node_image, cur_site: site }
-  subject { create :key_visual_image, cur_site: site, cur_node: node }
-  let(:show_path) do
-    Rails.application.routes.url_helpers.key_visual_image_path(site: subject.site, cid: subject.parent, id: subject)
-  end
-
-  describe "#attributes" do
-    it { expect(subject.dirname).to eq node.filename }
-    it { expect(subject.basename).not_to eq nil }
-    it { expect(subject.path).not_to eq nil }
-    it { expect(subject.url).not_to eq nil }
-    it { expect(subject.full_url).not_to eq nil }
-    it { expect(subject.parent).to eq node }
-    it { expect(subject.private_show_path).to eq show_path }
-  end
+  let(:node) { create :facility_node_page, cur_site: site }
+  let(:item) { create :facility_node_page, cur_site: site, cur_node: node }
 
   describe "validation" do
     let(:valid_url1) { "http://example.jp/" }
@@ -33,8 +20,8 @@ describe KeyVisual::Image, dbscope: :example do
 
     def build_item(url)
       build(
-        :key_visual_image, cur_site: site, cur_node: node,
-        link_url: url
+        :facility_node_page, cur_site: site, cur_node: node,
+        related_url: url
       )
     end
 
@@ -66,31 +53,31 @@ describe KeyVisual::Image, dbscope: :example do
     it "invalid_url1" do
       item = build_item(invalid_url1)
       expect(item.valid?).to be_falsey
-      expect(item.errors[:link_url]).to be_present
+      expect(item.errors[:related_url]).to be_present
     end
 
     it "invalid_url2" do
       item = build_item(invalid_url2)
       expect(item.valid?).to be_falsey
-      expect(item.errors[:link_url]).to be_present
+      expect(item.errors[:related_url]).to be_present
     end
 
     it "invalid_url3" do
       item = build_item(invalid_url3)
       expect(item.valid?).to be_falsey
-      expect(item.errors[:link_url]).to be_present
+      expect(item.errors[:related_url]).to be_present
     end
 
     it "invalid_url4" do
       item = build_item(invalid_url4)
       expect(item.valid?).to be_falsey
-      expect(item.errors[:link_url]).to be_present
+      expect(item.errors[:related_url]).to be_present
     end
 
     it "invalid_url5" do
       item = build_item(invalid_url5)
       expect(item.valid?).to be_falsey
-      expect(item.errors[:link_url]).to be_present
+      expect(item.errors[:related_url]).to be_present
     end
   end
 end
