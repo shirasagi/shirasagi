@@ -1,0 +1,13 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= link_to(t('ss.links.new'), { action: :new }, class: :new) if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+  <% elsif params[:action] =~ /new|create/ %>
+    <%= link_to t('ss.links.back'), cms_transaction_plan_path(id: @plan), class: "back-to-index" %>
+  <% elsif params[:action] =~ /edit|update|delete/ %>
+    <%= link_to t('ss.links.back'), cms_transaction_plan_path(id: @plan), class: "back-to-index" %>
+  <% else %>
+    <%= link_to t('ss.links.back'), cms_transaction_plan_path(id: @plan), class: "back-to-index" %>
+    <%= link_to(t('ss.links.edit'), { action: :edit, id: @item }, class: :edit) if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <%= link_to(t('ss.links.delete'), { action: :delete, id: @item }, class: :delete) if @model.allowed?(:delete, @cur_user, site: @cur_site) %>
+  <% end %>
+</nav>
