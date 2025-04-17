@@ -9,10 +9,11 @@
     }
   }
   init_options = params[:calendar] || {}
+  portlet_selector = ".portlet-model-schedule[data-id=\"#{@portlet.id}\"]"
 %>
 <%= jquery do %>
   $(document).on("gws:calendarInitialized", function() {
-    Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+    Gws_Schedule_Multiple_Calendar.renderController('<%== portlet_selector %> .calendar-controller', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
     SS_Clipboard.renderCopy();
     Gws_Schedule_Integration.paths.newMemoMessage = <%== new_gws_memo_message_path(folder: "INBOX").to_json %>;
     Gws_Schedule_Integration.paths.newWebmail = <%== new_webmail_mail_path(webmail_mode: "account", account: 0, mailbox: "INBOX").to_json %>;
@@ -25,7 +26,7 @@
 <% end %>
 
 <div class="main-box gws-schedule-box <%= "with-tabs" if @portal.my_portal? %>">
-  <div class="calendar" id="calendar-controller"></div>
+  <div class="calendar calendar-controller"></div>
 
   <% @portlet.find_schedule_members(@portal).each_with_index do |item, idx| %>
     <div class="calendar-multiple-header">
@@ -35,7 +36,7 @@
       <% end %>
       <%= render "gws/schedule/main/calendar_attr", user: item %>
     </div>
-    <div class="calendar multiple" id="cal-<%= item.id %>"></div>
+    <div class="calendar multiple cal-<%= item.id %>"></div>
 
     <%
       calendar_options = {
@@ -58,7 +59,7 @@
     %>
     <%= jquery do %>
       $(document).on("gws:calendarInitialized", function() {
-        Gws_Schedule_Multiple_Calendar.render('#cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+        Gws_Schedule_Multiple_Calendar.render('<%== portlet_selector %> .cal-<%= item.id %>', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
       });
     <% end %>
   <% end %>

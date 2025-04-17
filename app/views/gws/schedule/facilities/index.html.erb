@@ -26,7 +26,7 @@
     <nav><%= render 'gws/schedule/facilities/search' %></nav>
   </header>
 
-  <div class="calendar" id="calendar-controller"></div>
+  <div class="calendar calendar-controller" id="calendar-controller"></div>
 
   <% @items.each_with_index do |item, idx| %>
     <div class="calendar-multiple-header" id="cal-<%= item.id %>-header">
