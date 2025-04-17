@@ -659,7 +659,6 @@ ja:
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
       ss/trash_setting: ゴミ箱設定
-      ss/link_file: ファイル
       ss/notification/reply:
         discussion: 電子会議室
       ss/elasticsearch/site_setting: サイト内検索設定

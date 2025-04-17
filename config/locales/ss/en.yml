@@ -659,7 +659,6 @@ en:
       ss/editor_setting: Editor settings
       ss/mail_setting: E-mail settings
       ss/trash_setting: Trash settings
-      ss/link_file: File
       ss/notification/reply:
         discussion: Electronic meeting room
       ss/elasticsearch/site_setting: Site search settings
