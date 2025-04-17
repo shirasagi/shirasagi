@@ -470,13 +470,6 @@ Lint/EmptyClass:
     - 'app/models/voice/initializer.rb'
 
 # Offense count: 1
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: AutoCorrect, AllowComments.
-Lint/EmptyConditionalBody:
-  Exclude:
-    - 'app/models/concerns/ss/addon/link_file.rb'
-
-# Offense count: 1
 # Configuration parameters: AllowComments.
 Lint/EmptyFile:
   Exclude:
