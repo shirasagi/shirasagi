@@ -11,59 +11,9 @@
   </dd>
 </dl>
 
-<% render_table_row = proc do |index, id, name, url, target, file, state| %>
-  <tr data-index="<%= index %>"<% if id %> data-id="<%= id %>"<% end %> data-ss--increase-decrease-target="item">
-    <td>
-      <%= hidden_field_tag "#{f.object_name}[ad_links][][id]", id, id: nil if id %>
-      <%= text_field_tag "#{f.object_name}[ad_links][][name]", name, id: nil %>
-    </td>
-    <td><%= text_field_tag "#{f.object_name}[ad_links][][url]", url, id: nil %></td>
-    <td><%= select_tag "#{f.object_name}[ad_links][][target]", options_for_select(SS::LinkItem.target_options, selected: target), id: nil %></td>
-    <td>
-      <%=
-        component = SS::FileFieldV2Component.new(
-          ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user,
-          item: @item, file: file, field_name: "#{f.object_name}[ad_links][][file_id]",
-          element_id: nil, accepts: SS::File::IMAGE_FILE_EXTENSIONS)
-        render component
-      %>
-    </td>
-    <td><%= select_tag "#{f.object_name}[ad_links][][state]", options_for_select(SS::LinkItem.state_options, selected: state), id: nil %></td>
-    <td>
-      <%= button_tag md_icons.outlined("add", size: 13), type: "button", name: "add", class: "btn", title: t("ss.buttons.add"), data: { action: "ss--increase-decrease#increase" } %>
-      <%= button_tag md_icons.outlined("remove", size: 13), type: "button", name: "remove", class: "btn", title: t("ss.buttons.delete"), data: { action: "ss--increase-decrease#decrease" } %>
-    </td>
-  </tr>
-<% end %>
-
 <dl class="see">
   <dt class="wide"></dt>
   <dd class="wide">
-    <div data-controller="ss--increase-decrease" data-ss--increase-decrease-max-value="<%= Sys::Ad::MAX_AD_LINK_COUNT %>" data-ss--increase-decrease-attribute-value="<%= @model.t(:ad_links) %>">
-      <table class="index">
-        <thead>
-        <tr>
-          <th><%= SS::LinkItem.t(:name) %></th>
-          <th><%= SS::LinkItem.t(:url) %></th>
-          <th><%= SS::LinkItem.t(:target) %></th>
-          <th><%= SS::LinkItem.t(:file_id) %></th>
-          <th><%= SS::LinkItem.t(:state) %></th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody data-ss--increase-decrease-target="container">
-        <% @item.ad_links.each_with_index do |link, index| %>
-          <% next if link.name.blank? && link.url.blank? && link.file.blank? %>
-          <% render_table_row.call(index, link.id, link.name, link.url, link.target, link.file, link.state) %>
-        <% end %>
-
-        <% render_table_row.call("new", nil, nil, nil, nil, nil, nil) %>
-        </tbody>
-      </table>
-
-      <template data-ss--increase-decrease-target="template">
-        <% render_table_row.call("new", nil, nil, nil, nil, nil, nil) %>
-      </template>
-    </div>
+    <%= render "sys/ads/form_link_items", link_items: @item.ad_links, max_count: Sys::Ad::MAX_AD_LINK_COUNT, attribute_name: @model.t(:ad_links), field_name_prefix: "#{f.object_name}[ad_links][]", accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
   </dd>
 </dl>

@@ -1,0 +1,50 @@
+<% render_table_row = proc do |index, id, name, url, target, file, state| %>
+  <tr data-index="<%= index %>"<% if id %> data-id="<%= id %>"<% end %> data-ss--increase-decrease-target="item">
+    <td>
+      <%= hidden_field_tag "#{field_name_prefix}[id]", id, id: nil if id %>
+      <%= text_field_tag "#{field_name_prefix}[name]", name, id: nil %>
+    </td>
+    <td><%= text_field_tag "#{field_name_prefix}[url]", url, id: nil %></td>
+    <td><%= select_tag "#{field_name_prefix}[target]", options_for_select(SS::LinkItem.target_options, selected: target || "_blank"), id: nil %></td>
+    <td>
+      <%=
+        component = SS::FileFieldV2Component.new(
+          ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user,
+          item: nil, file: file, field_name: "#{field_name_prefix}[file_id]", element_id: nil, accepts: accepts)
+        render component
+      %>
+    </td>
+    <td><%= select_tag "#{field_name_prefix}[state]", options_for_select(SS::LinkItem.state_options, selected: state), id: nil %></td>
+    <td>
+      <%= button_tag md_icons.outlined("add", size: 13), type: "button", name: "add", class: "btn", title: t("ss.buttons.add"), data: { action: "ss--increase-decrease#increase" } %>
+      <%= button_tag md_icons.outlined("remove", size: 13), type: "button", name: "remove", class: "btn", title: t("ss.buttons.delete"), data: { action: "ss--increase-decrease#decrease" } %>
+    </td>
+  </tr>
+<% end %>
+
+<div data-controller="ss--increase-decrease" data-ss--increase-decrease-max-value="<%= max_count %>" data-ss--increase-decrease-attribute-value="<%= attribute_name %>">
+  <table class="index">
+    <thead>
+    <tr>
+      <th><%= SS::LinkItem.t(:name) %></th>
+      <th><%= SS::LinkItem.t(:url) %></th>
+      <th><%= SS::LinkItem.t(:target) %></th>
+      <th><%= SS::LinkItem.t(:file_id) %></th>
+      <th><%= SS::LinkItem.t(:state) %></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody data-ss--increase-decrease-target="container">
+    <% link_items.each_with_index do |link_item, index| %>
+      <% next if link_item.name.blank? && link_item.url.blank? && link_item.file.blank? %>
+      <% render_table_row.call(index, link_item.id, link_item.name, link_item.url, link_item.target, link_item.file, link_item.state) %>
+    <% end %>
+
+    <% render_table_row.call("new", nil, nil, nil, nil, nil, nil) %>
+    </tbody>
+  </table>
+
+  <template data-ss--increase-decrease-target="template">
+    <% render_table_row.call("new", nil, nil, nil, nil, nil, nil) %>
+  </template>
+</div>

@@ -22,28 +22,6 @@
 <dl class="see">
   <dt class="wide"></dt>
   <dd class="wide">
-    <table class="index">
-      <thead>
-      <tr>
-        <th><%= SS::LinkItem.t(:name) %></th>
-        <th><%= SS::LinkItem.t(:url) %></th>
-        <th><%= SS::LinkItem.t(:target) %></th>
-        <th><%= SS::LinkItem.t(:file_id) %></th>
-        <th><%= SS::LinkItem.t(:state) %></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% @item.ad_links.each do |link| %>
-        <% next if link.name.blank? && link.url.blank? && link.file.blank? %>
-        <tr data-id="<%= link.id %>">
-          <td><%= link.name %></td>
-          <td><%= link_to link.url, sns_redirect_path(ref: link.url), target: "_blank" %></td>
-          <td><%= link.label(:target) %></td>
-          <td><%= show_image_info link.file %></td>
-          <td><%= link.label(:state) %></td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
+    <%= render "sys/ads/show_link_items", link_items: @item.ad_links %>
   </dd>
 </dl>
