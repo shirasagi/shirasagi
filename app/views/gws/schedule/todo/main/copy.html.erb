@@ -1,6 +1,6 @@
 <% addons = @addons || @item.try(:addons) || [] %>
 
-<%= form_with scope: :item, url: url_for(action: :copy), method: "post" do |f| %>
+<%= form_with scope: :item, url: url_for(action: :copy), id: "item-form", method: "post" do |f| %>
   <%= error_messages_for :item %>
   <%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
 

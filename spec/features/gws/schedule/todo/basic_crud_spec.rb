@@ -219,4 +219,34 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       expect(SS::Notification.count).to eq 0
     end
   end
+
+  context "copy" do
+    it do
+      #
+      # Create
+      #
+      visit gws_schedule_todo_readables_path gws_site, "-"
+
+      click_on I18n.t("ss.links.new")
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+        fill_in_datetime 'item[end_at]', with: end_at
+        fill_in 'item[text]', with: text
+
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      #
+      # Copy
+      #
+      within "#menu" do
+        click_on I18n.t("ss.links.copy")
+      end
+      within 'form#item-form' do
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+    end
+  end
 end
