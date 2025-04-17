@@ -18,11 +18,17 @@ class Gws::Workflow2::RequestService
 
     item.approved = nil
     if workflow_agent_type.to_s == "agent"
-      item.update_workflow_user(cur_site, Gws::User.site(cur_site).where(id: workflow_user_id).first)
-      item.update_workflow_agent(cur_site, cur_user)
+      wk_user = Gws::User.site(cur_site).where(id: workflow_user_id).first
+      if wk_user.blank?
+        item.errors.add :base, :workflow_user_is_not_selected
+        return false
+      end
+      wk_group = wk_user.gws_main_group(cur_site) rescue nil
+      item.update_workflow_user(cur_site, wk_user, wk_group)
+      item.update_workflow_agent(cur_site, cur_user, cur_group)
     else
-      item.update_workflow_user(cur_site, cur_user)
-      item.update_workflow_agent(cur_site, nil)
+      item.update_workflow_user(cur_site, cur_user, cur_group)
+      item.update_workflow_agent(cur_site, nil, nil)
     end
     item.workflow_state = Gws::Workflow2::File::WORKFLOW_STATE_REQUEST
     item.workflow_comment = workflow_comment
