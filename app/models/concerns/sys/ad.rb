@@ -1,16 +1,25 @@
 module Sys::Ad
   extend ActiveSupport::Concern
   extend SS::Translation
+  include Fs::FilePreviewable
 
   DEFAULT_SLIDE_WIDTH = 360
   DEFAULT_SLIDE_SPEED = 500
   DEFAULT_SLIDE_PAUSE = 5000
 
+  MAX_AD_LINK_COUNT = 100
+
   included do
-    include SS::Addon::LinkFile
     field :time, type: Integer
     field :width, type: Integer
-    permit_params :time, :width
+    embeds_many :ad_links, class_name: "SS::LinkItem", cascade_callbacks: true, validate: true
+
+    permit_params :time, :width, ad_links: %i[id name url file_id target state]
+
+    before_validation :normalize_ad_links
+
+    validates :ad_links, length: { maximum: MAX_AD_LINK_COUNT }
+
     after_save :file_state_update
   end
 
@@ -41,7 +50,24 @@ module Sys::Ad
 
   private
 
+  def normalize_ad_links
+    return if ad_links.blank?
+
+    self.ad_links = ad_links.reject { blank_ad_link?(_1) }
+  end
+
+  def blank_ad_link?(ad_link)
+    ad_link.name.blank? && ad_link.url.blank? && ad_link.file.blank?
+  end
+
   def file_state_update
-    files.each { |file| file.update(state: "public") }
+    SS::File.in(id: ad_links.pluck(:file_id)).set(state: "public")
+  end
+
+  def file_previewable?(file, site:, user:, member:)
+    ad_link = ad_links.where(file_id: file.id).first
+    return false unless ad_link
+
+    ad_link.state == "show"
   end
 end

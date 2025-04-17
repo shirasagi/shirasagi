@@ -723,6 +723,7 @@ en:
       ss/oauth2/application/base: OAuth Application
       ss/oauth2/application/confidential: Client
       ss/oauth2/application/service: Service
+      ss/link_item: Link Item
     errors:
       models:
         ss/model/group:
@@ -1124,6 +1125,13 @@ en:
         maintenance_mode: Maintenance mode
         maint_remark: Notice in maintenance mode
         maint_excluded_user_ids: Excluded users
+      ss/link_item:
+        name: Display name
+        url: URL
+        target: Target
+        file: Image
+        file_id: Image
+        state: State
   tooltip:
     ss/model/site:
       upload_policy:

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe "login_ad", type: :feature, dbscope: :example, js: true do
+# for shirasagi desktop
+describe "login_ad", type: :request, dbscope: :example do
   context "ad_links are existed" do
     let(:ss_file1) do
       tmp_ss_file(
@@ -11,37 +12,41 @@ describe "login_ad", type: :feature, dbscope: :example, js: true do
         basename: "keyvisual-#{unique_id}.jpg", contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg")
     end
 
-    it "display ad" do
+    before do
       setting = Sys::Setting.new
       setting.ad_links.build(url: unique_url, file_id: ss_file1.id, state: "show")
       setting.ad_links.build(url: unique_url, file_id: ss_file2.id, state: "show")
       setting.save!
-      setting.reload
+    end
 
-      visit sns_login_path
-      wait_for_js_ready
-      expect(page).to have_css(".login-image-box")
-      expect(page).to have_css("img[src='#{ss_file1.url}']")
-      expect(page).to have_css("img[src='#{ss_file2.url}']")
+    it do
+      get sns_login_image_path(format: :json)
+      expect(response.status).to eq 200
 
-      visit sns_login_image_path
-      wait_for_js_ready
-      expect(page).to have_css(".login-image-box")
-      expect(page).to have_css("img[src='#{ss_file1.url}']")
-      expect(page).to have_css("img[src='#{ss_file2.url}']")
+      source = JSON.parse(response.body)
+      expect(source["file_ids"]).to have(2).items
+      expect(source["file_ids"]).to include(ss_file1.id, ss_file2.id)
+      expect(source["files"]).to have(2).items
+      expect(source["files"]).to include(
+        include(name: ss_file1.name),
+        include(name: ss_file2.name)
+      )
     end
   end
 
   context "when ad_links are not existed" do
-    it do
+    before do
       setting = Sys::Setting.new
       setting.save!
-      setting.reload
-      visit sns_login_path
-      expect(page).to have_no_css(".login-image-box")
+    end
 
-      visit sns_login_image_path
-      expect(page).to have_no_css(".login-image-box")
+    it do
+      get sns_login_image_path(format: :json)
+      expect(response.status).to eq 200
+
+      source = JSON.parse(response.body)
+      expect(source["file_ids"]).to be_blank
+      expect(source["files"]).to be_blank
     end
   end
 
@@ -55,17 +60,20 @@ describe "login_ad", type: :feature, dbscope: :example, js: true do
         basename: "keyvisual-#{unique_id}.jpg", contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg")
     end
 
-    it do
+    before do
       setting = Sys::Setting.new
       setting.ad_links.build(url: unique_url, file_id: ss_file1.id, state: nil)
       setting.ad_links.build(url: unique_url, file_id: ss_file2.id, state: "hide")
       setting.save!
-      setting.reload
-      visit sns_login_path
-      expect(page).to have_no_css(".login-image-box")
+    end
 
-      visit sns_login_image_path
-      expect(page).to have_no_css(".login-image-box")
+    it do
+      get sns_login_image_path(format: :json)
+      expect(response.status).to eq 200
+
+      source = JSON.parse(response.body)
+      expect(source["file_ids"]).to be_blank
+      expect(source["files"]).to be_blank
     end
   end
 end
