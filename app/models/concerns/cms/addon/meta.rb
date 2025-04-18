@@ -11,17 +11,11 @@ module Cms::Addon
       permit_params :keywords, :description, :summary_html, :description_setting
 
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }
-      before_save :set_description, if: ->{
-        @cur_site &&
-          @cur_site.auto_description_enabled? &&
-          description_setting == 'auto' &&
-          description.blank?
-      }
-      after_save :update_description_from_html, if: ->{
-        @cur_site &&
-          @cur_site.auto_description_enabled? &&
-          description_setting == 'auto' &&
-          saved_change_to_html?
+      before_validation :set_description, if: ->{ 
+        @cur_site && 
+          @cur_site.auto_description_enabled? && 
+          description_setting == 'auto' && 
+          (description.blank? || will_save_change_to_html?)
       }
 
       if respond_to? :template_variable_handler
@@ -73,11 +67,6 @@ module Cms::Addon
       html = self.try(:render_html).presence || self.html
       self.description = ApplicationController.helpers.
         sanitize(html.to_s, tags: []).squish.truncate(60)
-    end
-
-    def update_description_from_html
-      set_description
-      save if changed?
     end
   end
 end

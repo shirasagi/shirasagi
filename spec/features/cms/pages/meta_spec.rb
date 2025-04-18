@@ -153,11 +153,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
-
-        require 'pry'; binding.pry
-        
         item.reload
-        expect(item.description).to eq 'Updated content for testing auto description update.'[0...60]
+        expect(item.description).to eq 'Updated content for testing auto description update.'
       end
     end
   end
