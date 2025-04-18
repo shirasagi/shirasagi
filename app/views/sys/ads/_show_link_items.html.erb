@@ -1,22 +1,22 @@
-<table class="index">
+<table class="index ss-link-item-table ss-link-item-table-show">
   <thead>
   <tr>
-    <th><%= SS::LinkItem.t(:name) %></th>
-    <th><%= SS::LinkItem.t(:url) %></th>
-    <th><%= SS::LinkItem.t(:target) %></th>
-    <th><%= SS::LinkItem.t(:file_id) %></th>
-    <th><%= SS::LinkItem.t(:state) %></th>
+    <th class="ss-link-item-name-cell"><%= SS::LinkItem.t(:name) %></th>
+    <th class="ss-link-item-url-cell"><%= SS::LinkItem.t(:url) %></th>
+    <th class="ss-link-item-file-cell"><%= SS::LinkItem.t(:file_id) %></th>
+    <th class="ss-link-item-target-cell"><%= SS::LinkItem.t(:target) %></th>
+    <th class="ss-link-item-state-cell"><%= SS::LinkItem.t(:state) %></th>
   </tr>
   </thead>
   <tbody>
   <% link_items.each do |link_item| %>
     <% next if link_item.name.blank? && link_item.url.blank? && link_item.file.blank? %>
-    <tr data-id="<%= link_item.id %>">
-      <td><%= link_item.name %></td>
-      <td><%= link_to link_item.url, sns_redirect_path(ref: link_item.url), target: "_blank" %></td>
-      <td><%= link_item.label(:target) %></td>
-      <td><%= show_image_info link_item.file %></td>
-      <td><%= link_item.label(:state) %></td>
+    <tr class="ss-link-item-row" data-id="<%= link_item.id %>">
+      <td class="ss-link-item-name-cell"><div class="ss-link-item-name"><%= link_item.name %></div></td>
+      <td class="ss-link-item-url-cell"><div class="ss-link-item-url"><%= link_to link_item.url, sns_redirect_path(ref: link_item.url, back_to: request.url), target: "_blank", rel: "noopener" %></div></td>
+      <td class="ss-link-item-file-cell"><div class="ss-link-item-file"><%= show_image_info link_item.file %></div></td>
+      <td class="ss-link-item-target-cell"><div class="ss-link-item-target"><%= link_item.label(:target) %></div></td>
+      <td class="ss-link-item-state-cell"><div class="ss-link-item-state"><%= link_item.label(:state) %></div></td>
     </tr>
   <% end %>
   </tbody>

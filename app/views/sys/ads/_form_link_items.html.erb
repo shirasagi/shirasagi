@@ -1,12 +1,11 @@
 <% render_table_row = proc do |index, id, name, url, target, file, state| %>
   <tr data-index="<%= index %>"<% if id %> data-id="<%= id %>"<% end %> data-ss--increase-decrease-target="item">
-    <td>
+    <td class="ss-link-item-name-url-cell">
       <%= hidden_field_tag "#{field_name_prefix}[id]", id, id: nil if id %>
-      <%= text_field_tag "#{field_name_prefix}[name]", name, id: nil %>
+      <%= text_field_tag "#{field_name_prefix}[name]", name, id: nil, placeholder: SS::LinkItem.t(:name) %>
+      <%= text_field_tag "#{field_name_prefix}[url]", url, id: nil, placeholder: SS::LinkItem.t(:url) %>
     </td>
-    <td><%= text_field_tag "#{field_name_prefix}[url]", url, id: nil %></td>
-    <td><%= select_tag "#{field_name_prefix}[target]", options_for_select(SS::LinkItem.target_options, selected: target || "_blank"), id: nil %></td>
-    <td>
+    <td class="ss-link-item-file-cell">
       <%=
         component = SS::FileFieldV2Component.new(
           ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user,
@@ -14,8 +13,11 @@
         render component
       %>
     </td>
-    <td><%= select_tag "#{field_name_prefix}[state]", options_for_select(SS::LinkItem.state_options, selected: state), id: nil %></td>
-    <td>
+    <td class="ss-link-item-target-state-cell">
+      <%= select_tag "#{field_name_prefix}[target]", options_for_select(SS::LinkItem.target_options, selected: target || "_blank"), id: nil %>
+      <%= select_tag "#{field_name_prefix}[state]", options_for_select(SS::LinkItem.state_options, selected: state), id: nil %>
+    </td>
+    <td class="ss-link-item-action-cell">
       <%= button_tag md_icons.outlined("add", size: 13), type: "button", name: "add", class: "btn", title: t("ss.buttons.add"), data: { action: "ss--increase-decrease#increase" } %>
       <%= button_tag md_icons.outlined("remove", size: 13), type: "button", name: "remove", class: "btn", title: t("ss.buttons.delete"), data: { action: "ss--increase-decrease#decrease" } %>
     </td>
@@ -23,15 +25,19 @@
 <% end %>
 
 <div data-controller="ss--increase-decrease" data-ss--increase-decrease-max-value="<%= max_count %>" data-ss--increase-decrease-attribute-value="<%= attribute_name %>">
-  <table class="index">
+  <table class="index ss-link-item-table ss-link-item-table-form">
     <thead>
     <tr>
-      <th><%= SS::LinkItem.t(:name) %></th>
-      <th><%= SS::LinkItem.t(:url) %></th>
-      <th><%= SS::LinkItem.t(:target) %></th>
-      <th><%= SS::LinkItem.t(:file_id) %></th>
-      <th><%= SS::LinkItem.t(:state) %></th>
-      <th></th>
+      <th class="ss-link-item-name-url-cell">
+        <span><%= SS::LinkItem.t(:name) %></span>
+        <span><%= SS::LinkItem.t(:url) %></span>
+      </th>
+      <th class="ss-link-item-file-cell"><%= SS::LinkItem.t(:file_id) %></th>
+      <th class="ss-link-item-target-state-cell">
+        <span><%= SS::LinkItem.t(:target) %></span>
+        <span><%= SS::LinkItem.t(:state) %></span>
+      </th>
+      <th class="ss-link-item-action-cell"></th>
     </tr>
     </thead>
     <tbody data-ss--increase-decrease-target="container">
