@@ -11,11 +11,13 @@ describe "login_ad", type: :request, dbscope: :example do
       tmp_ss_file(
         basename: "keyvisual-#{unique_id}.jpg", contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg")
     end
+    let(:url1) { unique_url }
+    let(:url2) { unique_url }
 
     before do
       setting = Sys::Setting.new
-      setting.ad_links.build(url: unique_url, file_id: ss_file1.id, state: "show")
-      setting.ad_links.build(url: unique_url, file_id: ss_file2.id, state: "show")
+      setting.ad_links.build(url: url1, file_id: ss_file1.id, state: "show")
+      setting.ad_links.build(url: url2, file_id: ss_file2.id, state: "show")
       setting.save!
     end
 
@@ -28,8 +30,8 @@ describe "login_ad", type: :request, dbscope: :example do
       expect(source["file_ids"]).to include(ss_file1.id, ss_file2.id)
       expect(source["files"]).to have(2).items
       expect(source["files"]).to include(
-        include(name: ss_file1.name),
-        include(name: ss_file2.name)
+        include(link_url: url1, name: ss_file1.name, full_url: end_with(ss_file1.url)),
+        include(link_url: url2, name: ss_file2.name, full_url: end_with(ss_file2.url))
       )
     end
   end

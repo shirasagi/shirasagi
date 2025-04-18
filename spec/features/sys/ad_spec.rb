@@ -56,12 +56,14 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
             expect(ad_link.url).to eq url1
             expect(ad_link.target).to eq "_blank"
             expect(ad_link.file).to be_present
-            expect(ad_link.file.id).to eq file1.id
-            expect(ad_link.file.model).to eq setting.class.name.underscore
-            expect(ad_link.file.owner_item_type).to eq setting.class.name
-            expect(ad_link.file.owner_item_id.to_s).to eq setting.id.to_s
-            expect(ad_link.file.state).to eq "public"
             expect(ad_link.state).to eq "show"
+
+            file = ad_link.file
+            expect(file.id).to eq file1.id
+            expect(file.model).to eq setting.class.name.underscore
+            expect(file.owner_item_type).to eq setting.class.name
+            expect(file.owner_item_id.to_s).to eq setting.id.to_s
+            expect(file.state).to eq "public"
           end
         end
       end
@@ -99,12 +101,14 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
             expect(ad_link.url).to eq url2
             expect(ad_link.target).to eq "_self"
             expect(ad_link.file).to be_present
-            expect(ad_link.file.id).to eq file2.id
-            expect(ad_link.file.model).to eq setting.class.name.underscore
-            expect(ad_link.file.owner_item_type).to eq setting.class.name
-            expect(ad_link.file.owner_item_id.to_s).to eq setting.id.to_s
-            expect(ad_link.file.state).to eq "public"
             expect(ad_link.state).to eq "hide"
+
+            file = ad_link.file
+            expect(file.id).to eq file2.id
+            expect(file.model).to eq setting.class.name.underscore
+            expect(file.owner_item_type).to eq setting.class.name
+            expect(file.owner_item_id.to_s).to eq setting.id.to_s
+            expect(file.state).to eq "public"
           end
         end
       end
@@ -138,7 +142,7 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
             expect(ad_link.id).to be_present
             expect(ad_link.name).to be_blank
             expect(ad_link.url).to be_blank
-            expect(ad_link.target).to eq "_self"
+            expect(ad_link.target).to eq "_blank"
             expect(ad_link.file).to be_blank
             expect(ad_link.state).to eq "show"
           end

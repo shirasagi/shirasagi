@@ -8,7 +8,7 @@ class SS::LinkItem
   field :url, type: String
   field :target, type: String
   field :state, type: String
-  belongs_to_file :file, accepts: SS::File::IMAGE_FILE_EXTENSIONS
+  belongs_to_file :file, static_state: SS::Relation::File::DEFAULT_FILE_STATE, accepts: SS::File::IMAGE_FILE_EXTENSIONS
 
   class << self
     def target_options
