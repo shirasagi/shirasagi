@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "sns_apis_user_files", type: :feature, dbscope: :example do
   let(:user) { ss_user }
-  let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, model: 'ss/user_file') }
+  let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", user: user, model: SS::UserFile::FILE_MODEL) }
   let(:index_path) { sns_apis_user_files_path user.id }
   let(:new_path) { new_sns_apis_user_file_path user.id }
   let(:show_path) { sns_apis_user_file_path user.id, item }
