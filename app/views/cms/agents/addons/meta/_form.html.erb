@@ -23,6 +23,7 @@
     <dt><%= t("cms.cms/addon/meta.description_body") %><%= tt("cms/addon/meta.description_body") %></dt>
     <dd>
       <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence" } %>
+      <% opts[:readonly] = @item.description_setting == "auto" %>
       <%= f.text_area :description, opts %>
     </dd>
   </dd>
@@ -34,10 +35,19 @@
 <%= javascript_tag do %>
   $(function() {
     const previousSetting = $('input[name="item[description_setting]"]:checked').val();
+    const descriptionField = $('#item_description');
+
+    // 初期状態のクラス設定
+    if (descriptionField.prop('readonly')) {
+      descriptionField.addClass('readonly');
+    }
 
     $('input[name="item[description_setting]"]').on('change', function() {
       const currentSetting = $(this).val();
-      const descriptionField = $('#item_description');
+
+      // 読み取り専用状態とクラスの切り替え
+      descriptionField.prop('readonly', currentSetting === 'auto');
+      descriptionField.toggleClass('readonly', currentSetting === 'auto');
 
       if (!descriptionField.val()) {
         return;
@@ -48,6 +58,8 @@
           descriptionField.val('');
         } else {
           $('input[value="' + previousSetting + '"]').prop('checked', true);
+          descriptionField.prop('readonly', true);
+          descriptionField.addClass('readonly');
           return;
         }
       }
