@@ -144,7 +144,7 @@ module Cms::Reference::Files
     end
 
     def need_to_clone?(file, owner_item, branch)
-      return false if file.owner_item_id.blank? || file.owner_item.blank?
+      return SS::File::COPY_REQUIRED_MODELS.include?(file.model) if file.owner_item_id.blank? || file.owner_item.blank?
       return false if file.owner_item == owner_item
       return false if branch && file.owner_item == branch
 
