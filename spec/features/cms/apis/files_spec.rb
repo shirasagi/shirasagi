@@ -3,7 +3,10 @@ require 'spec_helper'
 describe "cms_apis_files", type: :feature, dbscope: :example do
   let(:multibyte_filename_state) { 'disabled' }
   let(:site) { cms_site.set(multibyte_filename_state: multibyte_filename_state) }
-  let(:item) { tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: 'cms/file') }
+  let(:item) do
+    tmp_ss_file(
+      Cms::File, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, user: cms_user, model: Cms::File::FILE_MODEL)
+  end
   let(:index_path) { cms_apis_files_path site.id, '-' }
   let(:new_path) { new_cms_apis_file_path site.id, '-' }
   let(:show_path) { cms_apis_file_path site.id, '-', item }

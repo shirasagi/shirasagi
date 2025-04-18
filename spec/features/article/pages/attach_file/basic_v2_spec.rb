@@ -87,7 +87,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   context "attach file from user file" do
     let!(:file) do
       tmp_ss_file(
-        SS::UserFile, model: "ss/user_file", user: cms_user, basename: "logo-#{unique_id}.png",
+        SS::UserFile, model: SS::UserFile::FILE_MODEL, user: cms_user, basename: "logo-#{unique_id}.png",
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
@@ -149,7 +149,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   context "attach file from cms file" do
     let!(:file) do
       tmp_ss_file(
-        Cms::File, model: "cms/file", user: cms_user, site: site, name: "#{unique_id}.png", basename: "logo-#{unique_id}.png",
+        Cms::File, model: Cms::File::FILE_MODEL, user: cms_user, site: site,
+        name: "#{unique_id}.png", basename: "logo-#{unique_id}.png",
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png", group_ids: cms_user.group_ids
       )
     end
