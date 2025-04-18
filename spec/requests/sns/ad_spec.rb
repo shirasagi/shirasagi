@@ -23,7 +23,7 @@ describe "login_ad", type: :request, dbscope: :example do
       get sns_login_image_path(format: :json)
       expect(response.status).to eq 200
 
-      source = JSON.parse(response.body)
+      source = response.parsed_body
       expect(source["file_ids"]).to have(2).items
       expect(source["file_ids"]).to include(ss_file1.id, ss_file2.id)
       expect(source["files"]).to have(2).items
@@ -44,7 +44,7 @@ describe "login_ad", type: :request, dbscope: :example do
       get sns_login_image_path(format: :json)
       expect(response.status).to eq 200
 
-      source = JSON.parse(response.body)
+      source = response.parsed_body
       expect(source["file_ids"]).to be_blank
       expect(source["files"]).to be_blank
     end
@@ -71,7 +71,7 @@ describe "login_ad", type: :request, dbscope: :example do
       get sns_login_image_path(format: :json)
       expect(response.status).to eq 200
 
-      source = JSON.parse(response.body)
+      source = response.parsed_body
       expect(source["file_ids"]).to be_blank
       expect(source["files"]).to be_blank
     end

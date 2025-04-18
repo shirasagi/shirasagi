@@ -43,13 +43,13 @@ class SS::Migration20250417000001
 
   private
 
-  def each_portlet
-    [ Gws::Portal::UserPortlet, Gws::Portal::GroupPortlet ].each do |model|
+  def each_portlet(&block)
+    portlet_models = [ Gws::Portal::UserPortlet, Gws::Portal::GroupPortlet ]
+    portlet_models.each do |model|
       all_ids = model.where(portlet_model: "ad").pluck(:id).sort
       all_ids.each_slice(20) do |ids|
-        model.where(portlet_model: "ad").in(id: ids).to_a.each do |portlet|
-          yield portlet
-        end
+        portlets = model.where(portlet_model: "ad").in(id: ids).to_a
+        portlets.each(&block)
       end
     end
   end
