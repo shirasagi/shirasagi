@@ -10,10 +10,21 @@
     <%= f.text_field :keywords, opts %>
   </dd>
 
-  <dt><%= @model.t :description %><%= @model.tt :description %></dt>
+  <dt><%= @model.t :description %></dt>
   <dd>
-    <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence" } %>
-    <%= f.text_area :description, opts %>
+    <dt><%= @model.t :description_setting %><%= @model.tt :description_setting %></dt>
+    <dd>
+      <%= f.radio_button :description_setting, "manual", checked: @item.description_setting == "manual" %>
+      <%= f.label :description_setting, t("cms.cms/addon/meta.description_setting_manual"), value: "manual" %>
+
+      <%= f.radio_button :description_setting, "auto", checked: @item.description_setting == "auto" %>
+      <%= f.label :description_setting, t("cms.cms/addon/meta.description_setting_auto"), value: "auto" %>
+    </dd>
+    <dt><%= t("cms.cms/addon/meta.description_body") %><%= tt("cms/addon/meta.description_body") %></dt>
+    <dd>
+      <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence" } %>
+      <%= f.text_area :description, opts %>
+    </dd>
   </dd>
 
   <dt><%= @model.t :summary_html %><%= @model.tt :summary_html %></dt>

@@ -7,10 +7,11 @@ module Cms::Addon
       field :keywords, type: SS::Extensions::Words
       field :description, type: String
       field :summary_html, type: String
-      permit_params :keywords, :description, :summary_html
+      field :description_setting, type: String, default: 'manual'
+      permit_params :keywords, :description, :summary_html, :description_setting
 
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }
-      before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? }
+      before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? && description_setting == 'auto' }
 
       if respond_to? :template_variable_handler
         template_variable_handler :summary, :template_variable_handler_name
