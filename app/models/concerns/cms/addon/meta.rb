@@ -14,12 +14,12 @@ module Cms::Addon
 
       if respond_to? :template_variable_handler
         template_variable_handler :summary, :template_variable_handler_name
-        template_variable_handler :description, :template_variable_handler_name
+        template_variable_handler :description, :template_variable_handler_description
       end
       if respond_to? :liquidize
         liquidize do
           export :summary
-          export :description
+          export :template_variable_handler_description, as: description
         end
       end
     end
