@@ -30,3 +30,29 @@
   <dt><%= @model.t :summary_html %><%= @model.tt :summary_html %></dt>
   <dd><%= f.text_area :summary_html %></dd>
 </dl>
+
+<%= javascript_tag do %>
+  $(function() {
+    const previousSetting = $('input[name="item[description_setting]"]:checked').val();
+
+    $('input[name="item[description_setting]"]').on('change', function() {
+      const currentSetting = $(this).val();
+      const descriptionField = $('#item_description');
+
+      if (!descriptionField.val()) {
+        return;
+      }
+
+      if (previousSetting === 'auto' && currentSetting === 'manual') {
+        if (confirm('<%= t("cms.confirm.change_to_manual") %>')) {
+          descriptionField.val('');
+        } else {
+          $('input[value="' + previousSetting + '"]').prop('checked', true);
+          return;
+        }
+      }
+
+      previousSetting = currentSetting;
+    });
+  });
+<% end %>
