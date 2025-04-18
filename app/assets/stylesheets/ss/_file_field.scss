@@ -32,13 +32,49 @@
   }
 }
 .ss-file-field-v2 {
-  display: flex;
+  display: grid;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   gap: 5px;
+  padding: 5px;
+
+  .btn[name='upload'] {
+    width: 9em;
+  }
+
+  .file-view {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+
+    img {
+      max-width: unset;
+      height: 49px;
+      object-fit: scale-down;
+    }
+  }
+
+  .humanized-name {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 30vw;
+  }
 
   .btn-file-delete {
     display: flex;
     align-items: center;
+  }
+
+  .upload-drop-notice {
+    grid-column: span 2;
+  }
+
+  @include mb {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 // 標準の変なCSSを打ち消す

@@ -27,11 +27,32 @@ export default class extends SelectBoxController {
   }
 
   deleteFile(_ev) {
-    this.element.querySelector(".file-id").value = '';
-    this.element.querySelector(".humanized-name").textContent = '';
-    this.element.querySelector(".sanitizer-status").classList.add("hide");
-    this.element.querySelector(".btn-file-delete").classList.add("hide");
-    this.element.querySelector(".upload-drop-notice").classList.remove("hide");
+    const fileIdElement = this.element.querySelector(".file-id");
+    if (fileIdElement) {
+      fileIdElement.value = '';
+    }
+    const humanizedNameElement = this.element.querySelector(".humanized-name");
+    if (humanizedNameElement) {
+      humanizedNameElement.textContent = '';
+    }
+    const thumbnailImageElement = this.element.querySelector("img");
+    if (thumbnailImageElement) {
+      thumbnailImageElement.removeAttribute("src");
+      thumbnailImageElement.removeAttribute("alt");
+      thumbnailImageElement.classList.add("hide");
+    }
+    const dropNoticeElement = this.element.querySelector(".upload-drop-notice");
+    if (dropNoticeElement) {
+      dropNoticeElement.classList.remove("hide");
+    }
+    const fileViewElement = this.element.querySelector(".file-view");
+    if (fileViewElement) {
+      fileViewElement.classList.add("hide");
+    }
+    const fileDeleteElement = this.element.querySelector(".btn-file-delete");
+    if (fileDeleteElement) {
+      fileDeleteElement.classList.add("hide");
+    }
 
     dispatchEvent(this.element, "change");
   }
@@ -42,6 +63,7 @@ export default class extends SelectBoxController {
     }
 
     for(const selectedItem of selectedItems) {
+      console.log(selectedItem);
       const api = this.selectApiValue.replaceAll(':id', selectedItem.id);
       const response = await fetch(api);
       if (response.ok) {
@@ -69,6 +91,18 @@ export default class extends SelectBoxController {
           sanitizerStatusElement.classList.add(`sanitizer-${result["sanitizer_state"]}`);
           sanitizerStatusElement.textContent = result["sanitizer_state_label"];
         }
+        const thumbnailImageElement = this.element.querySelector("img");
+        if (thumbnailImageElement) {
+          if (selectedItem.image_) {
+            thumbnailImageElement.src = selectedItem.thumbUrl;
+            thumbnailImageElement.alt = selectedItem.humanizedName;
+            thumbnailImageElement.classList.remove("hide");
+          } else {
+            thumbnailImageElement.src = "";
+            thumbnailImageElement.alt = "";
+            thumbnailImageElement.classList.add("hide");
+          }
+        }
         const dropNoticeElement = this.element.querySelector(".upload-drop-notice");
         if (dropNoticeElement) {
           dropNoticeElement.classList.add("hide");
@@ -76,6 +110,10 @@ export default class extends SelectBoxController {
         const fileDeleteElement = this.element.querySelector(".btn-file-delete");
         if (fileDeleteElement) {
           fileDeleteElement.classList.remove("hide");
+        }
+        const fileViewElement = this.element.querySelector(".file-view");
+        if (fileViewElement) {
+          fileViewElement.classList.remove("hide");
         }
       }
     }

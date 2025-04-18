@@ -9,6 +9,7 @@
       overflow: hidden;
       -webkit-line-clamp: 3;
       -webkit-box-orient: vertical;
+      text-overflow: ellipsis;
     }
 
     thead, tbody, tfoot, tr {
@@ -89,14 +90,15 @@
     .thumb {
       min-height: unset;
       border: unset;
-
-      img {
-        width: unset;
-        max-height: 49px;
-        padding: unset;
-        object-fit: scale-down;
-      }
     }
+
+    img {
+      width: unset;
+      max-height: 49px;
+      padding: unset;
+      object-fit: scale-down;
+    }
+
     .name {
       display: none;
     }

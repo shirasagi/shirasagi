@@ -11,9 +11,14 @@
   </script>
 
   <%= button_tag t('ss.buttons.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-field#openDialog" } %>
-  <span class="humanized-name"><%= file.try(:humanized_name) %></span>
-  <%= sanitizer_status(file) %>
-  <%= hidden_field_tag(field_name, file.try(:id), id: nil, class: "file-id") %>
+  <%= file_view_tag do %>
+    <%= sanitizer_status(file) %>
+    <%= tag.img src: file.try(:thumb_no_cache_url), alt: file.try(:name) %>
+    <div class="name">
+      <%= hidden_field_tag(field_name, file.try(:id), id: nil, class: "file-id") %>
+      <span class="humanized-name"><%= file.try(:humanized_name) %></span>
+    </div>
+  <% end %>
   <%= button_tag md_icons.outlined("delete", size: 13), type: :button, name: "delete", title: t("ss.buttons.delete"), class: [ 'btn', 'btn-red', 'btn-file-delete', file.blank? ? "hide" : nil ], data: { action: "ss--file-field#deleteFile" } %>
   <%= tag.span I18n.t("ss.notice.file_droppable"), class: [ "upload-drop-notice", file.blank? ? nil : "hide" ] %>
 </div>
