@@ -1,5 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
-import {appendAfter, appendChildren} from "../../ss/tool";
+import {appendAfter} from "../../ss/tool";
 
 export default class extends Controller {
   static values = {
