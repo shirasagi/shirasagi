@@ -19,7 +19,7 @@ module Cms::Addon
       if respond_to? :liquidize
         liquidize do
           export :summary
-          export :template_variable_handler_description, as: description
+          export :template_variable_handler_description, as: :description
         end
       end
     end
