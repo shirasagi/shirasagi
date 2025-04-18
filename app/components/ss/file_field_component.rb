@@ -39,7 +39,8 @@ class SS::FileFieldComponent < ApplicationComponent
   end
 
   def element_id
-    @element_id ||= sanitize_to_id(field_name)
+    return @element_id if instance_variable_defined?(:@element_id)
+    @element_id = sanitize_to_id(field_name)
   end
 
   def temp_files_api_path

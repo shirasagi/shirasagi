@@ -78,7 +78,9 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         select column_value6, from: "custom[#{column6.id}]"
         find("input[name='custom[#{column7.id}]'][value='#{column_value7}']").click
         find("input[name='custom[#{column8.id}][]'][value='#{column_value8}']").click
-        upload_to_ss_file_field "custom_#{column9.id}_0", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        within first("#custom_#{column9.id}_0").first(:xpath, './parent::*', minimum: 0) do
+          upload_to_ss_file_field "custom[#{column9.id}][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+        end
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')

@@ -10,3 +10,10 @@
     <span>px</span>
   </dd>
 </dl>
+
+<dl class="see">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <%= render "sys/ads/form_link_items", link_items: @item.ad_links, max_count: Sys::Ad::MAX_AD_LINK_COUNT, attribute_name: @model.t(:ad_links), field_name_prefix: "#{f.object_name}[ad_links][]", accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
+  </dd>
+</dl>

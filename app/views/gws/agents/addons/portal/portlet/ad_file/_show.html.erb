@@ -1,30 +1,5 @@
-<% return "" if @item.ad_files.blank? %>
+<% return "" if @item.ad_links.blank? %>
 
 <div class="see">
-  <div id="selected-files">
-    <% @item.ad_files.each do |file| %>
-      <% file = file.becomes_with(SS::LinkFile) %>
-      <div id="file-<%= file.id %>" class="file-view" data-file-id="<%= file.id %>">
-        <%= sanitizer_status(file) %>
-        <%= link_to file.url, class: :thumb, target: "_blank", rel: "noopener" do %>
-          <% if file.image? %>
-            <%= image_tag file.thumb_url, alt: file.name %>
-          <% else %>
-            <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
-          <% end %>
-        <% end %>
-
-        <div class="name">
-          <label>
-            <%= file.name %>
-          </label><br />
-          <% if file.link_url %>
-            <label>
-              <%= link_to(file.link_url, sns_redirect_path(ref: file.link_url), target: "_blank", rel: "noopener") %>
-            </label><br />
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-  </div>
+  <%= render "sys/ads/show_link_items", link_items: @item.ad_links %>
 </div>

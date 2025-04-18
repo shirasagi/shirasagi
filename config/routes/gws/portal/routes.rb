@@ -35,9 +35,5 @@ Rails.application.routes.draw do
       resources :users, only: [:index]
       resources :groups, only: [:index]
     end
-
-    namespace "apis" do
-      resources :ad_files, path: 'ads', only: [], concerns: :file_api
-    end
   end
 end

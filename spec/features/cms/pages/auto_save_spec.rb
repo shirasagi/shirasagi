@@ -40,7 +40,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_all_turbo_frames
 
         within "form#item-form" do
-          within '.file-view' do
+          within '#addon-cms-agents-addons-file .file-view' do
             expect(page).to have_css('.name', text: 'keyvisual.jpg')
           end
           click_on I18n.t('ss.buttons.publish_save')
@@ -89,7 +89,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_all_turbo_frames
 
         within "form#item-form" do
-          within '.file-view' do
+          within '#addon-cms-agents-addons-file .file-view' do
             expect(page).to have_css('.name', text: 'keyvisual.jpg')
           end
           click_on I18n.t('ss.buttons.publish_save')

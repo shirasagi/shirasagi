@@ -1,17 +1,32 @@
 module Sys::Ad
   extend ActiveSupport::Concern
   extend SS::Translation
+  include Fs::FilePreviewable
 
   DEFAULT_SLIDE_WIDTH = 360
   DEFAULT_SLIDE_SPEED = 500
   DEFAULT_SLIDE_PAUSE = 5000
 
+  MAX_AD_LINK_COUNT = 100
+
   included do
-    include SS::Addon::LinkFile
     field :time, type: Integer
     field :width, type: Integer
-    permit_params :time, :width
-    after_save :file_state_update
+    embeds_many :ad_links, class_name: "SS::LinkItem", cascade_callbacks: true, validate: true
+
+    permit_params :time, :width, ad_links: %i[id name url file_id target state]
+
+    after_find do
+      if __selected_fields.nil? || __selected_fields.key?("ad_links")
+        @_ad_links_before_change = ad_links.map(&:dup)
+      end
+    end
+
+    before_validation :normalize_ad_links
+
+    validates :ad_links, length: { maximum: MAX_AD_LINK_COUNT }
+
+    before_save :ad_delete_unlinked_files
   end
 
   def ad_effective_width
@@ -39,9 +54,48 @@ module Sys::Ad
     options
   end
 
+  def ad_links_was
+    return [] if new_record?
+    @_ad_links_before_change || []
+  end
+
   private
 
-  def file_state_update
-    files.each { |file| file.update(state: "public") }
+  def normalize_ad_links
+    return if ad_links.blank?
+
+    self.ad_links = ad_links.reject { blank_ad_link?(_1) }
+  end
+
+  def blank_ad_link?(ad_link)
+    ad_link.name.blank? && ad_link.url.blank? && ad_link.file.blank?
+  end
+
+  def file_previewable?(file, site:, user:, member:)
+    ad_link = ad_links.where(file_id: file.id).first
+    return false unless ad_link
+
+    ad_link.state == "show"
+  end
+
+  def ad_delete_unlinked_files
+    return if new_record?
+
+    file_ids_is = []
+    self.ad_links.each do |ad_link|
+      file_ids_is << ad_link.file_id
+    end
+    file_ids_is.compact!
+    file_ids_is.uniq!
+
+    file_ids_was = []
+    self.ad_links_was.each do |ad_link|
+      file_ids_was << ad_link.file_id
+    end
+    file_ids_was.compact!
+    file_ids_was.uniq!
+
+    unlinked_file_ids = file_ids_was - file_ids_is
+    Cms::Reference::Files::Utils.delete_files(self, unlinked_file_ids)
   end
 end

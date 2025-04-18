@@ -27,8 +27,7 @@ FactoryBot.define do
         ::FileUtils.cp(Rails.root.join("spec/fixtures/ss/logo.png"), file.path)
       end
 
-      portlet.ad_file_ids = [ file.id ]
-      portlet.link_urls = { file.id.to_s => "http://#{unique_id}.example.jp/" }
+      portlet.ad_links.build(url: "http://#{unique_id}.example.jp/", file_id: file.id)
     end
   end
 

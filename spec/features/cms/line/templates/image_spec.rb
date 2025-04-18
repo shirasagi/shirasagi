@@ -33,7 +33,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
       expect(page).to have_css(".line-select-message-type")
       within "#addon-cms-agents-addons-line-template-image" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/image"))
-        attach_to_ss_file_field "item_image_id", file1
+        attach_to_ss_file_field "item[image_id]", file1
       end
       within "footer.send" do
         click_on I18n.t("ss.buttons.save")
@@ -55,7 +55,7 @@ describe "cms/line/templates image", type: :feature, dbscope: :example, js: true
       expect(page).to have_no_css(".line-select-message-type")
       within "#addon-cms-agents-addons-line-template-image" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/template/image"))
-        attach_to_ss_file_field "item_image_id", file2
+        attach_to_ss_file_field "item[image_id]", file2
       end
       within "footer.send" do
         click_on I18n.t("ss.buttons.save")
