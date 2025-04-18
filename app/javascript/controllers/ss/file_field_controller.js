@@ -63,7 +63,6 @@ export default class extends SelectBoxController {
     }
 
     for(const selectedItem of selectedItems) {
-      console.log(selectedItem);
       const api = this.selectApiValue.replaceAll(':id', selectedItem.id);
       const response = await fetch(api);
       if (response.ok) {
