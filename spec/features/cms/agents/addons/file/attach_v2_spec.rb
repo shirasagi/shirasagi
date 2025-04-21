@@ -45,10 +45,34 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.name', text: file.name)
         end
-
+      end
+      if SS::File::COPY_REQUIRED_MODELS.include?(file.model)
+        # CMS 共有ファイルや SNS ユーザーファイルを添付した場合、複製が作成されているはず
+        expect(SS::File.ne(id: file.id).count).to eq 1
+        Cms::TempFile.ne(id: file.id).first.tap do |intermediate_file|
+          expect(intermediate_file.id).not_to eq file.id
+          expect(intermediate_file.name).to eq file.name
+          expect(intermediate_file.filename).to eq file.filename
+          expect(intermediate_file.content_type).to eq file.content_type
+          expect(intermediate_file.size).to eq file.size
+          expect(intermediate_file.model).to eq "ss/temp_file"
+          expect(intermediate_file.site_id).to eq site.id
+          expect(intermediate_file.user_id).to eq user.id
+          expect(intermediate_file.node_id).to eq node.id
+          expect(intermediate_file.owner_item_id).to be_blank
+          expect(intermediate_file.owner_item_type).to be_blank
+        end
+      else
+        # 複製は作成されない
+        expect(SS::File.ne(id: file.id).count).to eq 0
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       if SS::File::COPY_REQUIRED_MODELS.include?(file.model)
         SS::File.find(file.id).tap do |after_file|

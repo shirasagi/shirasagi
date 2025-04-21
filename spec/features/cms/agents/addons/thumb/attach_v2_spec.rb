@@ -52,10 +52,16 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#addon-cms-agents-addons-thumb" do
           expect(page).to have_css('.ss-file-field-v2 .humanized-name', text: file.humanized_name)
         end
-
+      end
+      # サムネイルの場合、CMS 共有ファイルや SNS ユーザーファイルを添付しても（この時点では）複製は作成されない
+      expect(SS::File.ne(id: file.id).count).to eq 0
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       if SS::File::COPY_REQUIRED_MODELS.include?(file.model)
         SS::File.find(file.id).tap do |after_file|

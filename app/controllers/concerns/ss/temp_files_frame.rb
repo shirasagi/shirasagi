@@ -92,7 +92,12 @@ module SS::TempFilesFrame
   def select
     set_item
     if needs_copy?(@item)
-      @item = @item.copy(cur_user: @cur_user)
+      copy_opts = { cur_user: @cur_user }
+      if @ss_mode == :cms
+        copy_opts[:cur_site] = @cur_site
+        copy_opts[:cur_node] = cur_node
+      end
+      @item = @item.copy(copy_opts)
     end
 
     respond_to do |format|
