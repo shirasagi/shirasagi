@@ -42,41 +42,36 @@ export default class extends SelectBoxController {
     }
 
     for(const selectedItem of selectedItems) {
-      const api = this.selectApiValue.replaceAll(':id', selectedItem.id);
-      const response = await fetch(api);
-      if (response.ok) {
-        const result = await response.json();
-        const fileIdElement = this.element.querySelector(".file-id");
-        if (fileIdElement) {
-          fileIdElement.value = selectedItem.id;
-        }
-        const humanizedNameElement = this.element.querySelector(".humanized-name");
-        if (humanizedNameElement) {
-          humanizedNameElement.textContent = selectedItem.humanizedName;
-        }
-        const sanitizerStatusElement = this.element.querySelector(".sanitizer-status");
-        if (sanitizerStatusElement) {
-          const removeTargets = [];
-          sanitizerStatusElement.classList.forEach((cssClass) => {
-            if (cssClass.startsWith("sanitizer-") && cssClass !== "sanitizer-status") {
-              removeTargets.push(cssClass);
-            }
-          });
-          if (removeTargets.length > 0) {
-            sanitizerStatusElement.classList.remove(...removeTargets);
+      const fileIdElement = this.element.querySelector(".file-id");
+      if (fileIdElement) {
+        fileIdElement.value = selectedItem.id;
+      }
+      const humanizedNameElement = this.element.querySelector(".humanized-name");
+      if (humanizedNameElement) {
+        humanizedNameElement.textContent = selectedItem.humanizedName;
+      }
+      const sanitizerStatusElement = this.element.querySelector(".sanitizer-status");
+      if (sanitizerStatusElement) {
+        const removeTargets = [];
+        sanitizerStatusElement.classList.forEach((cssClass) => {
+          if (cssClass.startsWith("sanitizer-") && cssClass !== "sanitizer-status") {
+            removeTargets.push(cssClass);
           }
+        });
+        if (removeTargets.length > 0) {
+          sanitizerStatusElement.classList.remove(...removeTargets);
+        }
 
-          sanitizerStatusElement.classList.add(`sanitizer-${result["sanitizer_state"]}`);
-          sanitizerStatusElement.textContent = result["sanitizer_state_label"];
-        }
-        const dropNoticeElement = this.element.querySelector(".upload-drop-notice");
-        if (dropNoticeElement) {
-          dropNoticeElement.classList.add("hide");
-        }
-        const fileDeleteElement = this.element.querySelector(".btn-file-delete");
-        if (fileDeleteElement) {
-          fileDeleteElement.classList.remove("hide");
-        }
+        sanitizerStatusElement.classList.add(`sanitizer-${selectedItem.sanitizerState}`);
+        sanitizerStatusElement.textContent = selectedItem.sanitizerStateLabel;
+      }
+      const dropNoticeElement = this.element.querySelector(".upload-drop-notice");
+      if (dropNoticeElement) {
+        dropNoticeElement.classList.add("hide");
+      }
+      const fileDeleteElement = this.element.querySelector(".btn-file-delete");
+      if (fileDeleteElement) {
+        fileDeleteElement.classList.remove("hide");
       }
     }
 
