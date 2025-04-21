@@ -65,6 +65,7 @@ module Cms::Addon
     def set_description
       return unless respond_to?(:html)
       html = self.try(:render_html).presence || self.html
+      return if html.blank?
       self.description = ApplicationController.helpers.
         sanitize(html.to_s, tags: []).squish.truncate(60)
     end

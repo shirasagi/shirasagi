@@ -31,7 +31,10 @@ describe Article::Page, dbscope: :example do
         create(
           :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
           keywords: nil, description: nil, html: h
-        )
+        ).tap do |page|
+          page.send(:set_description)
+          page.save!
+        end
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -74,7 +77,10 @@ describe Article::Page, dbscope: :example do
         create(
           :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
           keywords: nil, description: nil, html: html
-        )
+        ).tap do |page|
+          page.send(:set_description)
+          page.save!
+        end
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -129,7 +135,10 @@ describe Article::Page, dbscope: :example do
         create(
           :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
           keywords: nil, description: nil, html: h
-        )
+        ).tap do |page|
+          page.send(:set_description)
+          page.save!
+        end
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
