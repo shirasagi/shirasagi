@@ -1,6 +1,7 @@
 class Cms::LayoutsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::SyntaxChecker
 
   model Cms::Layout
 
@@ -31,5 +32,46 @@ class Cms::LayoutsController < ApplicationController
       search(params[:s]).
       order_by(filename: 1).
       page(params[:page]).per(50)
+  end
+
+  def create
+    @item = @model.new get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+
+    # アクセシビリティチェックを実行
+    contents = [{ id: "layout", content: @item.html, resolve: "html" }]
+    result = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
+
+    if result.errors.present?
+      @item.errors.add :base, :syntax_check_error
+      result.errors.each do |error|
+        @item.errors.add :base, error[:msg]
+      end
+      render_create false
+      return
+    end
+
+    render_create @item.save
+  end
+
+  def update
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+
+    # アクセシビリティチェックを実行
+    contents = [{ id: "layout", content: @item.html, resolve: "html" }]
+    result = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
+
+    if result.errors.present?
+      @item.errors.add :base, :syntax_check_error
+      result.errors.each do |error|
+        @item.errors.add :base, error[:msg]
+      end
+      render_update false
+      return
+    end
+
+    render_update @item.update
   end
 end

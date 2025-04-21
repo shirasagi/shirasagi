@@ -1,9 +1,22 @@
 <%= code_editor ".mod-cms-html-form textarea", mode: :html %>
 
+<%= jquery do %>
+this.Cms_Form = (function () {
+  function Cms_Form() {};
+  Cms_Form.options = { check: { syntax: true } };
+  Cms_Form.addonSelector = ".mod-cms-html-form";
+  return Cms_Form;
+})();
+
+Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>;
+Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>;
+Syntax_Checker.render(Cms_Form);
+<% end %>
+
 <dl class="see mod-cms-html-form">
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
-    <%= f.text_area :html, style: "height: 400px" %>
+    <%= f.text_area :html, style: "height: 400px", "data-syntax-check": "editor" %>
 
     <% if example = @item.try(:form_example_layout_html) %>
       <div class="form-example">
@@ -13,3 +26,11 @@
     <% end %>
   </dd>
 </dl>
+
+<dl class="see mod-cms-html-form">
+  <dd class="wide buttons">
+    <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+  </dd>
+</dl>
+
+<div class="inplace-checkers"></div>
