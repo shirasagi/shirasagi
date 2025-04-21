@@ -68,5 +68,9 @@ module Cms::Addon
       self.description = ApplicationController.helpers.
         sanitize(html.to_s, tags: []).squish.truncate(60)
     end
+
+    def template_variable_handler_description
+      description
+    end
   end
 end
