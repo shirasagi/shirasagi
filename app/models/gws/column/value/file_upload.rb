@@ -70,6 +70,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
     owner_item = SS::Model.container_of(self)
     model_name = _parent.class.name
     cur_user = _parent.try(:cur_user) || _parent.try(:user)
+    cur_user ||= SS.current_user
     new_file_ids = []
     SS::File.each_file(file_ids) do |file|
       if file.blank? || file.model == model_name

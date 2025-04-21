@@ -237,8 +237,13 @@ module SS::Relation::File
       # ただし、ブランチが所有している場合を除く
       return file unless Cms::Reference::Files::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
 
+      cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
+      cur_site ||= owner_item.site if owner_item.respond_to?(:site)
+      cur_site ||= SS.current_site
+      cur_site = nil unless cur_site.is_a?(SS::Model::Site)
       cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
-      clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
+      cur_user ||= SS.current_user
+      clone_file = SS::File.clone_file(file, cur_site: cur_site, cur_user: cur_user, owner_item: owner_item)
       Changes.set_relation(item, name, clone_file)
       clone_file
     end
