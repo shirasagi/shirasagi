@@ -30,11 +30,8 @@ describe Article::Page, dbscope: :example do
         h = html + "<img src=\"#{file.url}\">"
         create(
           :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
-          keywords: nil, description: nil, html: h
-        ).tap do |page|
-          page.send(:set_description)
-          page.save!
-        end
+          keywords: nil, description: nil, html: h, description_setting: 'auto'
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -76,11 +73,8 @@ describe Article::Page, dbscope: :example do
       let(:item) do
         create(
           :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
-          keywords: nil, description: nil, html: html
-        ).tap do |page|
-          page.send(:set_description)
-          page.save!
-        end
+          keywords: nil, description: nil, html: html, description_setting: 'auto'
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)
@@ -134,11 +128,8 @@ describe Article::Page, dbscope: :example do
         h = html + "<img src=\"#{file1.url}\"><img src=\"#{file0.url}\">"
         create(
           :article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
-          keywords: nil, description: nil, html: h
-        ).tap do |page|
-          page.send(:set_description)
-          page.save!
-        end
+          keywords: nil, description: nil, html: h, description_setting: 'auto'
+        )
       end
       let(:description) do
         ApplicationController.helpers.sanitize(item.html, tags: []).squish.truncate(200)

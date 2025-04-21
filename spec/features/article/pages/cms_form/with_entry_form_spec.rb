@@ -128,7 +128,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               select form.name, from: 'in_form_id'
             end
           end
-
+          find_by_id('addon-cms-agents-addons-meta').click
+          choose "item_description_setting_auto"
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
           expect(page).to have_no_selector('#item_body_layout_id', visible: true)
           click_on I18n.t('ss.buttons.draft_save')
@@ -141,6 +142,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
           expect(item.name).to eq name
+          expect(item.description_setting).to eq 'auto'
           expect(item.description).to eq form.html
           expect(item.summary).to eq form.html
           expect(item.column_values).to be_blank
@@ -562,6 +564,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
+          find_by_id('addon-cms-agents-addons-meta').click
+          choose "item_description_setting_auto"
 
           within ".column-value-palette" do
             wait_for_event_fired("ss:columnAdded") do
@@ -750,6 +754,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
           expect(item.name).to eq name
+          expect(item.description_setting).to eq 'auto'
           expect(item.description).to eq form.html
           expect(item.summary).to eq form.html
           expect(item.column_values).to have(14).items
