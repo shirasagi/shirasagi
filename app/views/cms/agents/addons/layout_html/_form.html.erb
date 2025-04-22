@@ -1,22 +1,26 @@
 <%= code_editor ".mod-cms-html-form textarea", mode: :html %>
 
 <%= jquery do %>
-this.Cms_Form = (function () {
-  function Cms_Form() {};
-  Cms_Form.options = { check: { syntax: true } };
-  Cms_Form.addonSelector = ".mod-cms-html-form";
-  return Cms_Form;
-})();
+  Cms_Form.render();
 
-Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>;
-Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>;
-Syntax_Checker.render(Cms_Form);
+  Cms_Form.editorId = "item_html";
+  Cms_Form.getEditorHtml = function() {
+    return "<div>" + $("#item_html").val() + "</div>";
+  };
+  Cms_Form.setEditorHtml = function(html) {
+    html = html.replace(/<div>([\s\S]*)<\/div>/m, "$1");
+    $("#item_html").val(html);
+  };
+
+  Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>;
+  Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>;
+  Syntax_Checker.render(Cms_Form);
 <% end %>
 
-<dl class="see mod-cms-html-form">
+<dl class="see mod-cms-body" data-syntax-check="editor">
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
-    <%= f.text_area :html, style: "height: 400px", "data-syntax-check": "editor" %>
+    <%= f.text_area :html, style: "height: 400px" %>
 
     <% if example = @item.try(:form_example_layout_html) %>
       <div class="form-example">
@@ -32,5 +36,3 @@ Syntax_Checker.render(Cms_Form);
     <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
   </dd>
 </dl>
-
-<div class="inplace-checkers"></div>
