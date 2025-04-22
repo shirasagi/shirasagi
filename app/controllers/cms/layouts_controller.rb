@@ -8,6 +8,7 @@ class Cms::LayoutsController < ApplicationController
   navi_view "cms/main/navi"
 
   before_action :set_tree_navi, only: [:index]
+  before_action :syntax_check, only: [:new, :create, :edit, :update]
 
   private
 
@@ -17,6 +18,20 @@ class Cms::LayoutsController < ApplicationController
 
   def fix_params
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: false }
+  end
+
+  def syntax_check
+    contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
+
+    @syntax_check_context = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
+
+    if @syntax_check_context.errors.present?
+      @syntax_check_context.errors.each do |error|
+        @item.errors.add :base, error[:msg]
+      end
+      return false
+    end
+    true
   end
 
   public
@@ -32,5 +47,15 @@ class Cms::LayoutsController < ApplicationController
       search(params[:s]).
       order_by(filename: 1).
       page(params[:page]).per(50)
+  end
+
+  def create
+    @item = @model.new get_params
+    render_create @item.valid? && syntax_check && @item.save
+  end
+
+  def update
+    @item.attributes = get_params
+    render_update @item.valid? && syntax_check && @item.save
   end
 end

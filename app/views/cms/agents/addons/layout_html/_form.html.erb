@@ -15,12 +15,19 @@
   Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>;
   Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>;
   Syntax_Checker.render(Cms_Form);
+
+  <% if @syntax_check_context && @syntax_check_context.errors.present? %>
+  $(function() {
+    Syntax_Checker.errors = <%= raw @syntax_check_context.errors.to_json %>;
+    Syntax_Checker.resultBox.showResult([{ id: "html" }], Syntax_Checker.errors);
+  });
+  <% end %>
 <% end %>
 
 <dl class="see mod-cms-body" data-syntax-check="editor">
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
-    <%= f.text_area :html, style: "height: 400px" %>
+    <%= f.text_area :html, style: "height: 400px", data: { syntax_check: 'editor', syntax_check_name: t("modules.addons.cms/body_layout_html") } %>
 
     <% if example = @item.try(:form_example_layout_html) %>
       <div class="form-example">
