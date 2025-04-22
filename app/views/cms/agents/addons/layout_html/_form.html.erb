@@ -1,108 +1,5 @@
 <%= code_editor ".mod-cms-html-form textarea", mode: :html %>
 
-<%= jquery do %>
-  Cms_Form.render();
-
-  Cms_Form.editorId = "item_html";
-  Cms_Form.getEditorHtml = function() {
-    return "<div>" + $("#item_html").val() + "</div>";
-  };
-  Cms_Form.setEditorHtml = function(html) {
-    html = html.replace(/<div>([\s\S]*)<\/div>/m, "$1");
-    $("#item_html").val(html);
-  };
-
-  Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>;
-  Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>;
-
-  // 自動修正後の再チェック関数
-  function recheckAfterCorrection() {
-
-    // 現在のチェックオブジェクトを取得
-    var check = {
-      id: "html",
-      name: "<%= t("modules.addons.cms/body_layout_html") %>",
-      resolve: "html",
-      type: "string",
-      getContent: function() {
-        return Cms_Form.getEditorHtml();
-      }
-    };
-    
-    // APIに送信するデータを準備
-    var token = $('meta[name="csrf-token"]').attr('content');
-    var content = check.getContent();
-    var param = {
-      id: check.id,
-      content: [content],
-      resolve: check.resolve,
-      type: "array"
-    };
-    
-    // 構文チェックAPIを呼び出し
-    $.ajax({
-      type: "POST",
-      url: Syntax_Checker.url,
-      data: JSON.stringify({ authenticity_token: token, item: { contents: [param] } }),
-      contentType: "application/json",
-      success: function(data, textStatus, xhr) {
-
-        // エラーリストを更新
-        Syntax_Checker.errors = data.errors || [];
-
-        // エラー表示を更新
-        if (Syntax_Checker.errors.length === 0) {
-          Syntax_Checker.resultBox.showMessage("<p>" + "エラーは見つかりませんでした。" + "</p>");
-        } else {
-          Syntax_Checker.resultBox.showResult([check], Syntax_Checker.errors);
-        }
-      }
-    });
-  }
-
-  // 自動修正処理のためのAJAXインターセプター
-  var originalAjax = $.ajax;
-  $.ajax = function(options) {
-    if (options.url === Syntax_Checker.correct_url) {
-
-      // 成功時のコールバックをラップ
-      var originalSuccess = options.success;
-      options.success = function(data, textStatus, xhr) {
-        if (originalSuccess) originalSuccess(data, textStatus, xhr);
-
-        // 少し待ってから再チェックを実行（DOMの更新を待つため）
-        setTimeout(recheckAfterCorrection, 500);
-      };
-    }
-    return originalAjax.apply(this, arguments);
-  };
-
-  // Syntax_Checkerをレンダリング
-  Syntax_Checker.render(Cms_Form);
-
-  <% if @syntax_check_context && @syntax_check_context.errors.present? %>
-  $(function() {
-
-    // EDITORタイプのチェックオブジェクトを作成
-    var check = {
-      id: "html",
-      name: "<%= t("modules.addons.cms/body_layout_html") %>",
-      resolve: "html",
-      type: "string",
-      getContent: function() {
-        return Cms_Form.getEditorHtml();
-      },
-      setContent: function(content) {
-        return Cms_Form.setEditorHtml(content);
-      }
-    };
-
-    Syntax_Checker.errors = <%= raw @syntax_check_context.errors.to_json %>;
-    Syntax_Checker.resultBox.showResult([check], Syntax_Checker.errors);
-  });
-  <% end %>
-<% end %>
-
 <dl class="see mod-cms-body" data-syntax-check="editor">
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
@@ -116,3 +13,82 @@
     <% end %>
   </dd>
 </dl>
+
+<%= jquery do %>
+  Cms_Form.render();
+  Cms_Form.editorId = "item_html";
+  Cms_Form.getEditorHtml = function() {
+    return "<div>" + $("#item_html").val() + "</div>";
+  };
+  Cms_Form.setEditorHtml = function(html) {
+    html = html.replace(/<div>([\s\S]*)<\/div>/m, "$1");
+    $("#item_html").val(html);
+  };
+
+  Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>;
+  Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>;
+
+  // HTMLチェック用オブジェクト
+  function createCheckObject() {
+    return {
+      id: "html",
+      name: "<%= t("modules.addons.cms/body_layout_html") %>",
+      resolve: "html",
+      type: "string",
+      getContent: function() { return Cms_Form.getEditorHtml(); },
+      setContent: function(content) { return Cms_Form.setEditorHtml(content); }
+    };
+  }
+
+  // 自動修正後の再チェック
+  function recheckAfterCorrection() {
+    var check = createCheckObject();
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var param = {
+      id: check.id,
+      content: [check.getContent()],
+      resolve: check.resolve,
+      type: "array"
+    };
+
+    $.ajax({
+      type: "POST",
+      url: Syntax_Checker.url,
+      data: JSON.stringify({ authenticity_token: token, item: { contents: [param] } }),
+      contentType: "application/json",
+      success: function(data) {
+        Syntax_Checker.errors = data.errors || [];
+
+        if (Syntax_Checker.errors.length > 0) {
+          Syntax_Checker.resultBox.showResult([check], Syntax_Checker.errors);
+        } else if (Syntax_Checker.resultBox && Syntax_Checker.resultBox.$el) {
+          Syntax_Checker.resultBox.$el.hide();
+        }
+      }
+    });
+  }
+
+  // 自動修正処理のためのAJAXインターセプター
+  (function() {
+    var originalAjax = $.ajax;
+    $.ajax = function(options) {
+      if (options.url === Syntax_Checker.correct_url) {
+        var originalSuccess = options.success;
+        options.success = function(data, textStatus, xhr) {
+          if (originalSuccess) originalSuccess(data, textStatus, xhr);
+          setTimeout(recheckAfterCorrection, 500);
+        };
+      }
+      return originalAjax.apply(this, arguments);
+    };
+  })();
+
+  Syntax_Checker.render(Cms_Form);
+
+  <% if @syntax_check_context && @syntax_check_context.errors.present? %>
+  $(function() {
+    Syntax_Checker.errors = <%= raw @syntax_check_context.errors.to_json %>;
+    Syntax_Checker.resultBox.showResult([createCheckObject()], Syntax_Checker.errors);
+  });
+  <% end %>
+<% end %>
