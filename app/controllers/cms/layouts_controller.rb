@@ -1,7 +1,7 @@
 class Cms::LayoutsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  # include Cms::MicheckerFilter
+  include Cms::SyntaxChecker
 
   model Cms::Layout
 
