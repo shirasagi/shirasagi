@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: true do
-  context "when mail is forwarded" do
+  context "when mail is edited as new" do
     let(:user) { webmail_imap }
     let(:item_from) { "from-#{unique_id}@example.jp" }
     let(:item_tos) { Array.new(rand(1..10)) { "to-#{unique_id}@example.jp" } }
@@ -9,7 +9,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     let(:item_subject) { "subject-#{unique_id}" }
     let(:item_texts) { Array.new(rand(1..10)) { "message-#{unique_id}" } }
 
-    shared_examples "webmail/mails forward flow" do
+    shared_examples "webmail/mails edit as new flow" do
       let(:attachment1_name) { "logo-#{unique_id}.png" }
       let(:attachment2_name) { "shirasagi-#{unique_id}.pdf" }
       let(:item) do
@@ -42,28 +42,28 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         wait_for_js_ready
         click_link item_subject
         wait_for_js_ready
-        new_window = window_opened_by { click_link I18n.t('webmail.links.forward') }
+        new_window = window_opened_by { click_link I18n.t('webmail.links.edit_as_new') }
         within_window new_window do
           wait_for_document_loading
           wait_for_js_ready
           within "form#item-form" do
-            fill_in "to", with: user.email + "\n"
+            click_on I18n.t('ss.buttons.send')
           end
-          click_button I18n.t('ss.buttons.send')
         end
         wait_for_notice I18n.t('ss.notice.sent')
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
           expect(mail.from.first).to eq address
-          expect(mail.to).to have(1).items
-          expect(mail.to.first).to eq user.email
-          expect(mail.cc).to be_nil
-          expect(mail.subject).to eq "Fw: #{item_subject}"
+          expect(mail.to).to have(item_tos.length + 1).items
+          expect(mail.to).to include(address, *item_tos)
+          expect(mail.cc).to have(item_ccs.length).items
+          expect(mail.cc).to include(*item_ccs)
+          expect(mail.subject).to eq item_subject
           expect(mail.body.multipart?).to be_truthy
           expect(mail.body.parts).to have(3).items
           expect(mail.body.parts[0].content_type).to eq "text/plain; charset=utf-8"
-          expect(mail.body.parts[0].decoded).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
+          expect(mail.body.parts[0].decoded).to eq item_texts.join("\n") + "\n"
           expect(mail.body.parts[1].filename).to eq attachment1_name
           expect(mail.body.parts[1].content_type).to eq "image/png; filename=#{attachment1_name}"
           expect(mail.body.parts[2].filename).to eq attachment2_name
@@ -86,7 +86,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         let(:index_path) { webmail_mails_path(account: 0) }
         let(:address) { user.email }
 
-        it_behaves_like "webmail/mails forward flow"
+        it_behaves_like "webmail/mails edit as new flow"
       end
 
       describe "webmail_mode is group" do
@@ -96,7 +96,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         before { user.add_to_set(group_ids: [ group.id ]) }
 
-        it_behaves_like "webmail/mails forward flow"
+        it_behaves_like "webmail/mails edit as new flow"
       end
     end
 
