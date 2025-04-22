@@ -1,14 +1,13 @@
 class Cms::LayoutsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  include Cms::SyntaxChecker
 
   model Cms::Layout
 
   navi_view "cms/main/navi"
 
   before_action :set_tree_navi, only: [:index]
-  before_action :syntax_check, only: [:new, :create, :edit, :update]
+  before_action :syntax_check, only: [:create, :update]
 
   private
 
