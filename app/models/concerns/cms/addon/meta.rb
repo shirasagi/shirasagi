@@ -7,16 +7,11 @@ module Cms::Addon
       field :keywords, type: SS::Extensions::Words
       field :description, type: String
       field :summary_html, type: String
-      field :description_setting, type: String, default: 'manual'
+      field :description_setting, type: String
       permit_params :keywords, :description, :summary_html, :description_setting
 
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }
-      before_validation :set_description, if: -> {
-        @cur_site &&
-          @cur_site.auto_description_enabled? &&
-          description_setting == 'auto' &&
-          (description.blank? || will_save_change_to_html?)
-      }
+      before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? }
 
       if respond_to? :template_variable_handler
         template_variable_handler :summary, :template_variable_handler_name
@@ -63,15 +58,27 @@ module Cms::Addon
     end
 
     def set_description
+      return if description.present?
       return unless respond_to?(:html)
       html = self.try(:render_html).presence || self.html
-      return if html.blank?
       self.description = ApplicationController.helpers.
         sanitize(html.to_s, tags: []).squish.truncate(60)
     end
 
+    def description_setting_auto?
+      description_setting == 'auto'
+    end
+
+    def description_setting_manual?
+      description_setting == 'manual'
+    end
+
     def template_variable_handler_description
-      description
+      return description unless description_setting_auto?
+      html = self.try(:render_html).presence || self.html
+      return if html.blank?
+      self.description = ApplicationController.helpers.
+        sanitize(html.to_s, tags: []).squish.truncate(60)
     end
   end
 end
