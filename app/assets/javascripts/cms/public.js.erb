@@ -476,7 +476,7 @@ SS_Voice.prototype.render = function ($voiceTag, index_1)  {
   const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
   self.$voiceTag.attr("aria-controls", controllerId);
   self.$voiceTag.after(voice_controller);
-  self.voiceController = new SS_VoiceController(voice_controller[0]);
+  self.voiceController = new SS_VoiceController(voice_controller[0], index);
   self.state = null;
   self.cancelLoading = false;
   self.timerId = null;
@@ -617,8 +617,9 @@ SS_Voice.prototype.normalizeLocation = function (location) {
 
 
 this.SS_VoiceController = (function () {
-  function SS_VoiceController(container) {
+  function SS_VoiceController(container, index) {
     this.status = 'stopped';
+    this.index = index || 0;
     this.container = $(container);
     this.initialized = false;
     this.container.html(this.template());
@@ -709,7 +710,7 @@ this.SS_VoiceController = (function () {
       "    </div>\n" +
       "  </div>\n" +
       "</div>";
-    const timestamp = (new Date).getTime();
+    const timestamp = (new Date).getTime() + "_" + this.index;
 
     template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
     return template;
