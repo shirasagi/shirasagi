@@ -97,7 +97,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         it do
           visit user_portal_path
           within ".portlets .gws-schedule-box" do
-            within "#calendar-controller" do
+            within ".calendar-controller" do
               click_on I18n.t("datetime.prompts.day").downcase
               wait_for_js_ready
 
@@ -121,7 +121,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         it do
           visit user_portal_path
           within ".portlets .gws-schedule-box" do
-            within "#calendar-controller" do
+            within ".calendar-controller" do
               click_on I18n.t("datetime.prompts.day").downcase
               wait_for_js_ready
 
@@ -141,7 +141,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         it do
           visit group_portal_path
           within ".portlets .gws-schedule-box" do
-            within "#calendar-controller" do
+            within ".calendar-controller" do
               click_on I18n.t("datetime.prompts.day").downcase
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"06:00:00\"]")
@@ -163,7 +163,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         it do
           visit group_portal_path
           within ".portlets .gws-schedule-box" do
-            within "#calendar-controller" do
+            within ".calendar-controller" do
               click_on I18n.t("datetime.prompts.day").downcase
               expect(page).to have_no_css(".fc-widget-header[data-date*=\"00:00:00\"]")
               expect(page).to have_css(".fc-widget-header[data-date*=\"06:00:00\"]")
@@ -190,7 +190,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       context "default sunday" do
         it "#index" do
           visit user_portal_path
-          within "#calendar-controller" do
+          within ".calendar-controller" do
             expect(first_wday_header).to include("fc-sun")
             expect(last_wday_header).to include("fc-sat")
           end
@@ -205,7 +205,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
         it "#index" do
           visit user_portal_path
-          within "#calendar-controller" do
+          within ".calendar-controller" do
             expect(first_wday_header).to include("fc-mon")
             expect(last_wday_header).to include("fc-sun")
           end
@@ -220,7 +220,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
         it "#index" do
           visit user_portal_path
-          within "#calendar-controller" do
+          within ".calendar-controller" do
             expect(first_wday_header).to include("fc-sat")
             expect(last_wday_header).to include("fc-fri")
           end
@@ -239,7 +239,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           fc_last = "fc-" + today.advance(days: 6).strftime("%a").downcase
 
           visit user_portal_path
-          within "#calendar-controller" do
+          within ".calendar-controller" do
             expect(first_wday_header).to include(fc_first)
             expect(last_wday_header).to include(fc_last)
           end
@@ -251,7 +251,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       context "default sunday" do
         it "#index" do
           visit group_portal_path
-          within "#calendar-controller" do
+          within ".calendar-controller" do
             expect(first_wday_header).to include("fc-sun")
             expect(last_wday_header).to include("fc-sat")
           end
@@ -266,7 +266,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
         it "#index" do
           visit group_portal_path
-          within "#calendar-controller" do
+          within ".calendar-controller" do
             expect(first_wday_header).to include("fc-mon")
             expect(last_wday_header).to include("fc-sun")
           end
@@ -281,7 +281,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
         it "#index" do
           visit group_portal_path
-          within "#calendar-controller" do
+          within ".calendar-controller" do
             expect(first_wday_header).to include("fc-sat")
             expect(last_wday_header).to include("fc-fri")
           end
@@ -300,7 +300,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
           fc_last = "fc-" + today.advance(days: 6).strftime("%a").downcase
 
           visit group_portal_path
-          within "#calendar-controller" do
+          within ".calendar-controller" do
             expect(first_wday_header).to include(fc_first)
             expect(last_wday_header).to include(fc_last)
           end
