@@ -41,7 +41,7 @@ module Gws::Portal::PortalFilter
 
     raise '403' unless @portal.portal_readable?(@cur_user, site: @cur_site)
 
-    @items = @portal.portlets.presence || @portal.default_portlets
+    @items = (@portal.portlets.presence || @portal.default_portlets).to_a
     @items.select! do |item|
       @cur_site.menu_visible?(item.portlet_model) && Gws.module_usable?(item.portlet_model, @cur_site, @cur_user)
     end
