@@ -18,7 +18,8 @@ module SS::Model::User
 
   # uidの制限をメールアドレスの"@"の左側（dot-atom-text）の仕様（RFC5322）に近づける
   # 具体的にいうと、ALPHA | DIGIT | "-" | "-" が利用でき、"." は一度だけ利用できる
-  UID_MATCHER = /^[\w\-_]+(\.[\w\-_]+)?$/
+  # => "." は複数回利用できるように改修
+  UID_MATCHER = /^[\w\-_\.]+?$/
 
   included do
     attr_accessor :cur_site, :cur_user
