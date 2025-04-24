@@ -12,6 +12,7 @@ module Cms::Addon
 
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }
       before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? }
+      before_save :template_variable_handler_description, if: -> { description_setting_auto? }
 
       if respond_to? :template_variable_handler
         template_variable_handler :summary, :template_variable_handler_name
@@ -74,7 +75,9 @@ module Cms::Addon
     end
 
     def template_variable_handler_description
+      return description if description_setting_manual?
       return description unless description_setting_auto?
+      return description unless respond_to?(:html)
       html = self.try(:render_html).presence || self.html
       return if html.blank?
       self.description = ApplicationController.helpers.

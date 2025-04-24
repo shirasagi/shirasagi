@@ -34,37 +34,19 @@
 
 <%= javascript_tag do %>
   $(function() {
-    const previousSetting = $('input[name="item[description_setting]"]:checked').val();
-    const descriptionField = $('#item_description');
+  const descriptionField = $('#item_description');
 
-    // 初期状態のクラス設定
-    if (descriptionField.prop('readonly')) {
-      descriptionField.addClass('readonly');
-    }
+  // 初期状態のクラス設定
+  if (descriptionField.prop('readonly')) {
+    descriptionField.addClass('readonly');
+  }
 
-    $('input[name="item[description_setting]"]').on('change', function() {
-      const currentSetting = $(this).val();
+  $('input[name="item[description_setting]"]').on('change', function() {
+    const currentSetting = $(this).val();
 
-      // 読み取り専用状態とクラスの切り替え
-      descriptionField.prop('readonly', currentSetting === 'auto');
-      descriptionField.toggleClass('readonly', currentSetting === 'auto');
-
-      if (!descriptionField.val()) {
-        return;
-      }
-
-      if (previousSetting === 'auto' && currentSetting === 'manual') {
-        if (confirm('<%= t("cms.confirm.change_to_manual") %>')) {
-          descriptionField.val('');
-        } else {
-          $('input[value="' + previousSetting + '"]').prop('checked', true);
-          descriptionField.prop('readonly', true);
-          descriptionField.addClass('readonly');
-          return;
-        }
-      }
-
-      previousSetting = currentSetting;
-    });
+    // 読み取り専用状態とクラスの切り替え
+    descriptionField.prop('readonly', currentSetting === 'auto');
+    descriptionField.toggleClass('readonly', currentSetting === 'auto');
   });
+});
 <% end %>
