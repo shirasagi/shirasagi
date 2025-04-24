@@ -126,20 +126,19 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       it "keeps existing description when switching to manual mode" do
         # 最初に自動モードで保存
         item.update!(description_setting: 'auto')
+        auto_description = item.description
 
         visit edit_cms_page_path(site.id, item)
         within "form#item-form" do
           find_by_id('addon-cms-agents-addons-meta').click
-          accept_confirm(I18n.t('cms.confirm.change_to_manual')) do
-            choose "item_description_setting_manual"
-          end
+          choose "item_description_setting_manual"
           click_button I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
         item.reload
         expect(item.description_setting).to eq 'manual'
-        expect(item.description).to be_blank # 手動モードに切り替えた時は説明文がクリアされる
+        expect(item.description).to eq auto_description
       end
 
       it "updates description when html is changed in auto mode" do
@@ -155,6 +154,101 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t("ss.notice.saved")
         item.reload
         expect(item.description).to eq 'Updated content for testing auto description update.'
+      end
+    end
+
+    context "when duplicating a page" do
+      let(:original_html) { "<p>Original content for testing duplication.</p>" }
+      let(:updated_html) { "<p>Updated content after duplication.</p>" }
+      let(:item) { create(:cms_page, site: site, html: original_html) }
+
+      it "updates description when html is changed in duplicated page with auto mode" do
+        # オリジナルページを作成
+        visit edit_cms_page_path(site.id, item)
+
+        within "form#item-form" do
+          fill_in "item[name]", with: "original"
+          find_by_id('addon-cms-agents-addons-meta').click
+          choose "item_description_setting_auto"
+          click_button I18n.t('ss.buttons.publish_save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        original_item = Cms::Page.last
+
+        # 複製
+        visit cms_page_path(site.id, original_item)
+        click_on I18n.t('ss.links.copy')
+        within "form#item-form" do
+          fill_in "item[name]", with: "duplicate"
+          click_button I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        duplicated_item = Cms::Page.last
+        expect(duplicated_item.name).to eq "duplicate"
+        expect(duplicated_item.description_setting).to eq 'auto'
+        expect(duplicated_item.description).to eq 'Original content for testing duplication.'
+
+        # 複製したページを編集
+        visit edit_cms_page_path(site.id, duplicated_item)
+        within "form#item-form" do
+          fill_in_ckeditor "item[html]", with: updated_html
+          click_button I18n.t('ss.buttons.publish_save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        duplicated_item.reload
+
+        expect(duplicated_item.description).to eq 'Updated content after duplication.'
+      end
+    end
+
+    context "when using replace page feature" do
+      let(:original_html) { "<p>Original content of the published page.</p>" }
+      let(:updated_html) { "<p>Updated content for the replacement page.</p>" }
+      let(:item) { create(:cms_page, site: site, html: original_html) }
+      it "updates description in the replacement page with auto mode" do
+        # 公開ページを編集
+        visit edit_cms_page_path(site.id, item)
+
+        within "form#item-form" do
+          fill_in "item[name]", with: "published"
+          find_by_id('addon-cms-agents-addons-meta').click
+          choose "item_description_setting_auto"
+          click_button I18n.t('ss.buttons.publish_save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        published_item = Cms::Page.last
+
+        # 差し替えページを作成
+        visit cms_page_path(site.id, published_item)
+        within "#addon-workflow-agents-addons-branch" do
+          click_on I18n.t('workflow.create_branch')
+          expect(page).to have_content('published')
+          click_on 'published'
+        end
+
+        click_on I18n.t('ss.links.edit')
+        within "form#item-form" do
+          fill_in "item[name]", with: "replacement"
+          fill_in_ckeditor "item[html]", with: updated_html
+          click_button I18n.t('ss.buttons.publish')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        replacement_item = Cms::Page.last
+
+        expect(replacement_item.name).to eq "replacement"
+        expect(replacement_item.description_setting).to eq 'auto'
+        expect(replacement_item.description).to eq 'Updated content for the replacement page.'
+
+        # 公開後、元のページは置き換えられるが、内容自体は新しい内容に変わっているはず
+        published_item.reload
+
+        expect(published_item.html).to include updated_html
+        expect(published_item.description).to eq 'Updated content for the replacement page.'
       end
     end
   end
