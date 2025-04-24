@@ -175,6 +175,9 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t("ss.notice.saved")
 
         original_item = Cms::Page.last
+        expect(original_item.name).to eq 'original'
+        expect(original_item.description_setting).to eq 'auto'
+        expect(original_item.description).to eq 'Original content for testing duplication.'
 
         # 複製
         visit cms_page_path(site.id, original_item)
@@ -201,6 +204,12 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         duplicated_item.reload
 
         expect(duplicated_item.description).to eq 'Updated content after duplication.'
+
+        original_item.reload
+
+        expect(original_item.name).to eq 'original'
+        expect(original_item.description_setting).to eq 'auto'
+        expect(original_item.description).to eq 'Original content for testing duplication.'
       end
     end
 
@@ -221,6 +230,9 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t("ss.notice.saved")
 
         published_item = Cms::Page.last
+        expect(published_item.name).to eq 'published'
+        expect(published_item.description_setting).to eq 'auto'
+        expect(published_item.description).to eq 'Original content of the published page.'
 
         # 差し替えページを作成
         visit cms_page_path(site.id, published_item)
