@@ -1,8 +1,10 @@
 <% render_table_row = proc do |index, id, name, url, target, file, state| %>
   <tr data-index="<%= index %>"<% if id %> data-id="<%= id %>"<% end %> data-ss--increase-decrease-target="item">
-    <td class="ss-link-item-name-url-cell">
+    <td class="ss-link-item-name-cell">
       <%= hidden_field_tag "#{field_name_prefix}[id]", id, id: nil if id %>
       <%= text_field_tag "#{field_name_prefix}[name]", name, id: nil, placeholder: SS::LinkItem.t(:name) %>
+    </td>
+    <td class="ss-link-item-url-cell">
       <%= text_field_tag "#{field_name_prefix}[url]", url, id: nil, placeholder: SS::LinkItem.t(:url) %>
     </td>
     <td class="ss-link-item-file-cell">
@@ -13,8 +15,10 @@
         render component
       %>
     </td>
-    <td class="ss-link-item-target-state-cell">
+    <td class="ss-link-item-target-cell">
       <%= select_tag "#{field_name_prefix}[target]", options_for_select(SS::LinkItem.target_options, selected: target || "_blank"), id: nil %>
+    </td>
+    <td class="ss-link-item-state-cell">
       <%= select_tag "#{field_name_prefix}[state]", options_for_select(SS::LinkItem.state_options, selected: state), id: nil %>
     </td>
     <td class="ss-link-item-action-cell">
@@ -28,15 +32,11 @@
   <table class="index ss-link-item-table ss-link-item-table-form">
     <thead>
     <tr>
-      <th class="ss-link-item-name-url-cell">
-        <span><%= SS::LinkItem.t(:name) %></span>
-        <span><%= SS::LinkItem.t(:url) %></span>
-      </th>
-      <th class="ss-link-item-file-cell"><%= SS::LinkItem.t(:file_id) %></th>
-      <th class="ss-link-item-target-state-cell">
-        <span><%= SS::LinkItem.t(:target) %></span>
-        <span><%= SS::LinkItem.t(:state) %></span>
-      </th>
+      <th class="ss-link-item-name-cell"><span><%= SS::LinkItem.t(:name) %></span></th>
+      <th class="ss-link-item-url-cell"><span><%= SS::LinkItem.t(:url) %></span></th>
+      <th class="ss-link-item-file-cell"><span><%= SS::LinkItem.t(:file_id) %></span></th>
+      <th class="ss-link-item-target-cell"><span><%= SS::LinkItem.t(:target) %></span></th>
+      <th class="ss-link-item-state-cell"><span><%= SS::LinkItem.t(:state) %></span></th>
       <th class="ss-link-item-action-cell"></th>
     </tr>
     </thead>
