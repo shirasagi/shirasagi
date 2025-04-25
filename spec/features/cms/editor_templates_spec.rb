@@ -29,7 +29,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name
         fill_in "item[description]", with: description
         fill_in_code_mirror "item[html]", with: html
-        attach_to_ss_file_field "item_thumb_id", file
+        attach_to_ss_file_field "item[thumb_id]", file
 
         click_button I18n.t('ss.buttons.save')
       end

@@ -33,4 +33,8 @@ class SS::FileFieldV2Component < SS::FileFieldComponent
       end
     end
   end
+
+  def file_view_tag(&block)
+    tag.div(class: [ "file-view", file ? nil : "hide" ], &block)
+  end
 end

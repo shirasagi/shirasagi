@@ -199,7 +199,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           end
 
           within "#addon-cms-agents-addons-thumb" do
-            attach_to_ss_file_field "item_thumb_id", file
+            attach_to_ss_file_field "item[thumb_id]", file
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
@@ -251,7 +251,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
         capture_line_bot_client do |capture|
           visit edit_path
           within "#addon-cms-agents-addons-thumb" do
-            attach_to_ss_file_field "item_thumb_id", file
+            attach_to_ss_file_field "item[thumb_id]", file
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")

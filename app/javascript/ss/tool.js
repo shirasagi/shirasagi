@@ -134,11 +134,11 @@ function _cloneNode(htmlTextOrNode) {
   return dummyElement.content.cloneNode(true);
 }
 
-export function appendChildren(element, htmlTextOrNode) {
-  const dummyElement = _cloneNode(htmlTextOrNode);
-  dummyElement.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
-  element.appendChild(dummyElement);
+function _markScriptAsNew(element) {
+  element.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
+}
 
+function _executeNewScript(element) {
   element.querySelectorAll("script[data-new]").forEach((scriptElement) => {
     const newScriptElement = document.createElement("script");
     delete scriptElement.dataset.new;
@@ -148,16 +148,31 @@ export function appendChildren(element, htmlTextOrNode) {
   });
 }
 
+export function appendChildren(element, htmlTextOrNode) {
+  const dummyElement = _cloneNode(htmlTextOrNode);
+  _markScriptAsNew(dummyElement);
+
+  element.appendChild(dummyElement);
+  _executeNewScript(element);
+}
+
 export function prependChildren(element, htmlTextOrNode) {
   const dummyElement = _cloneNode(htmlTextOrNode);
-  dummyElement.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
-  element.prepend(dummyElement);
+  _markScriptAsNew(dummyElement);
 
-  element.querySelectorAll("script[data-new]").forEach((scriptElement) => {
-    const newScriptElement = document.createElement("script");
-    delete scriptElement.dataset.new;
-    Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
-    newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML));
-    scriptElement.parentElement.replaceChild(newScriptElement, scriptElement);
-  });
+  element.prepend(dummyElement);
+  _executeNewScript(element);
+}
+
+export function appendAfter(element, htmlTextOrNode) {
+  if (!element.nextElementSibling) {
+    appendChildren(element.parentElement, htmlTextOrNode);
+    return;
+  }
+
+  const dummyElement = _cloneNode(htmlTextOrNode);
+  _markScriptAsNew(dummyElement);
+
+  element.parentElement.insertBefore(dummyElement, element.nextElementSibling)
+  _executeNewScript(element);
 }

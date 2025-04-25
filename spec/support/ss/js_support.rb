@@ -965,8 +965,10 @@ module SS
       end
     end
 
-    def upload_to_ss_file_field_v1(element_id, path)
-      within "##{element_id}" do
+    def upload_to_ss_file_field_v1(locator, path)
+      field_element = find(:field, locator, visible: false, type: :hidden)
+      container_element = field_element.ancestor(".ss-file-field")
+      within container_element do
         wait_for_cbox_opened do
           # click_on I18n.t("ss.buttons.upload")
           first(".btn-file-upload").click
@@ -976,13 +978,15 @@ module SS
         attach_file "item[in_files][]", path
         wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
       end
-      within "##{element_id}" do
+      within container_element do
         expect(page).to have_css(".humanized-name", text: ::File.basename(path, ".*"))
       end
     end
 
-    def upload_to_ss_file_field_v2(element_id, path)
-      within "##{element_id}" do
+    def upload_to_ss_file_field_v2(locator, path)
+      field_element = find(:field, locator, visible: false, type: :hidden)
+      container_element = field_element.ancestor(".ss-file-field-v2")
+      within container_element do
         wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
@@ -999,34 +1003,38 @@ module SS
           end
         end
       end
-      within "##{element_id}" do
+      within container_element do
         expect(page).to have_css(".humanized-name", text: ::File.basename(path, ".*"))
       end
     end
 
-    def attach_to_ss_file_field(element_id, ss_file)
+    def attach_to_ss_file_field(locator, ss_file)
       if SS.file_upload_dialog == :v1
-        attach_to_ss_file_field_v1(element_id, ss_file)
+        attach_to_ss_file_field_v1(locator, ss_file)
       else
-        attach_to_ss_file_field_v2(element_id, ss_file)
+        attach_to_ss_file_field_v2(locator, ss_file)
       end
     end
 
-    def attach_to_ss_file_field_v1(element_id, ss_file)
-      within "##{element_id}" do
+    def attach_to_ss_file_field_v1(locator, ss_file)
+      field_element = find(:field, locator, visible: false, type: :hidden)
+      container_element = field_element.ancestor(".ss-file-field")
+      within container_element do
         wait_for_cbox_opened { first(".btn-file-upload").click }
       end
       within_cbox do
         expect(page).to have_css(".file-view", text: ss_file.name)
         wait_for_cbox_closed { click_on ss_file.name }
       end
-      within "##{element_id}" do
+      within container_element do
         expect(page).to have_css(".humanized-name", text: ::File.basename(ss_file.name, ".*"))
       end
     end
 
-    def attach_to_ss_file_field_v2(element_id, ss_file)
-      within "##{element_id}" do
+    def attach_to_ss_file_field_v2(locator, ss_file)
+      field_element = find(:field, locator, visible: false, type: :hidden)
+      container_element = field_element.ancestor(".ss-file-field-v2")
+      within container_element do
         wait_for_cbox_opened do
           click_on I18n.t("ss.buttons.upload")
         end
@@ -1042,7 +1050,7 @@ module SS
         expect(page).to have_css(".file-view", text: ss_file.name)
         wait_for_cbox_closed { click_on ss_file.name }
       end
-      within "##{element_id}" do
+      within container_element do
         expect(page).to have_css(".humanized-name", text: ::File.basename(ss_file.name, ".*"))
       end
     end

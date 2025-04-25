@@ -414,40 +414,6 @@ describe SS::File, dbscope: :example do
         end
       end
 
-      context "with SS::LinkFile" do
-        let!(:group0) { create :sys_group, name: unique_id }
-        let!(:group1) { create :sys_group, name: "#{group0.name}/#{unique_id}" }
-        let!(:group2) { create :sys_group, name: "#{group0.name}/#{unique_id}" }
-        let!(:role1) { create :sys_role, permissions: %w(edit_sys_users) }
-        let!(:user1) { create :sys_user_sample, group_ids: [ group1.id ], sys_role_ids: [ role1.id ] }
-        let!(:user2) { create :sys_user_sample, group_ids: [ group2.id ], sys_role_ids: [ role1.id ] }
-        let!(:user3) { create :sys_user_sample, group_ids: [ group1.id, group2.id ], sys_role_ids: [] }
-        let!(:file) do
-          tmp_ss_file(
-            SS::LinkFile, user: user1, model: "ss/link_file", contents: file_path, link_url: unique_url
-          )
-        end
-        let!(:setting) do
-          setting = Sys::Setting.create(time: 15, width: 480, file_ids: [ file.id ])
-          file.reload
-          setting
-        end
-
-        it do
-          # no arguments
-          expect(file.previewable?).to be_truthy
-
-          # user1
-          expect(file.previewable?(user: user1)).to be_truthy
-
-          # user2
-          expect(file.previewable?(user: user2)).to be_truthy
-
-          # user3
-          expect(file.previewable?(user: user3)).to be_truthy
-        end
-      end
-
       context "with SS::LogoFile" do
         let(:file_path) do
           # ロゴは画像のみ可

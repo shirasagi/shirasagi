@@ -19,7 +19,7 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
           # fill form
           within "#addon-cms-agents-addons-logo_setting" do
             fill_in "item[logo_application_name]", with: logo_application_name
-            upload_to_ss_file_field "item_logo_application_image_id", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+            upload_to_ss_file_field "item[logo_application_image_id]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           end
 
           click_on I18n.t("ss.buttons.save")
