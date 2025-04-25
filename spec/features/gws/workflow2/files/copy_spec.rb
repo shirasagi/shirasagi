@@ -40,7 +40,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
         within "form#item-form" do
           within "#addon-gws-agents-addons-workflow2-custom_form" do
-            upload_to_ss_file_field "custom_#{column2.id}_0", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            within first("#custom_#{column2.id}_0").first(:xpath, './parent::*', minimum: 0) do
+              upload_to_ss_file_field "custom[#{column2.id}][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
           end
           click_on I18n.t("gws/workflow2.buttons.save_and_apply")
         end

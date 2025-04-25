@@ -24,9 +24,6 @@
       background-image: none;
     }
   }
-  .humanized-name {
-    margin-left: .5rem;
-  }
   .upload-drop-notice {
     margin: 0 !important;
   }
@@ -35,10 +32,41 @@
   display: flex;
   align-items: center;
   gap: 5px;
+  padding: 5px;
+
+  .file-view {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    width: fit-content;
+
+    img {
+      max-width: unset;
+      height: 49px;
+      object-fit: scale-down;
+    }
+  }
+
+  .humanized-name {
+    display: inline-block;
+    max-width: 30vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
 
   .btn-file-delete {
     display: flex;
     align-items: center;
+  }
+
+  .upload-drop-notice {
+    grid-column: span 2;
+  }
+
+  @include mb {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
   }
 }
 // 標準の変なCSSを打ち消す
@@ -46,6 +74,14 @@ dl.see > dd {
   .ss-file-field-v2 {
     input + button {
       margin-top: unset;
+    }
+  }
+
+  &.wide {
+    .ss-file-field-v2 {
+      button {
+        margin: 0;
+      }
     }
   }
 }
