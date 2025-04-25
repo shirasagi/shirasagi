@@ -14,6 +14,13 @@
   <dd>
     <dt class="depth-2"><%= @model.t :description_setting %><%= @model.tt :description_setting %></dt>
     <dd>
+      <%
+        initial_setting = @item.description_setting.presence
+        if initial_setting.blank? && @cur_site
+          @item.description_setting = @item.set_default_description_setting
+        end
+      %>
+
       <%= f.radio_button :description_setting, "manual", checked: @item.description_setting == "manual" %>
       <%= f.label :description_setting, t("cms.cms/addon/meta.description_setting_manual"), value: "manual" %>
 
