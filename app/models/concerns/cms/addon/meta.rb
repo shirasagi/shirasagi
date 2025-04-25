@@ -46,11 +46,12 @@ module Cms::Addon
       [keywords, description, summary_html].map(&:present?).any?
     end
 
-    def set_default_description_setting
-      if description_setting.blank?
-        self.description_setting = @cur_site.auto_description_enabled? ? 'auto' : 'manual'
-      end
-      return description_setting
+    def description_setting_manual?
+      description_setting == 'manual'
+    end
+
+    def description_setting_auto?
+      !description_setting_manual?
     end
 
     private
@@ -71,14 +72,6 @@ module Cms::Addon
       html = self.try(:render_html).presence || self.html
       self.description = ApplicationController.helpers.
         sanitize(html.to_s, tags: []).squish.truncate(60)
-    end
-
-    def description_setting_auto?
-      description_setting == 'auto'
-    end
-
-    def description_setting_manual?
-      description_setting == 'manual'
     end
 
     def template_variable_handler_description
