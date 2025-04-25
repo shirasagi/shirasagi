@@ -10,8 +10,6 @@ module Cms::Addon
       field :description_setting, type: String
       permit_params :keywords, :description, :summary_html, :description_setting
 
-      after_validation :set_default_description_setting, if: -> { description_setting.blank? }
-
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }
       before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? }
       before_save :template_variable_handler_description, if: -> { description_setting_auto? }
