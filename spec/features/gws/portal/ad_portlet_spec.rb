@@ -177,4 +177,122 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       expect { save_file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
   end
+
+  context "when ss/user_file is attached" do
+    let(:content) { Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s }
+    let!(:file) do
+      tmp_ss_file(SS::UserFile, model: SS::UserFile::FILE_MODEL, user: user, contents: content)
+    end
+
+    before do
+      @save_file_upload_dialog = SS.file_upload_dialog
+      SS.file_upload_dialog = :v2
+
+      ActionMailer::Base.deliveries.clear
+    end
+
+    after do
+      SS.file_upload_dialog = @save_file_upload_dialog
+
+      ActionMailer::Base.deliveries.clear
+    end
+
+    it do
+      visit gws_portal_user_path(site: site, user: user)
+      click_on I18n.t('gws/portal.links.manage_portlets')
+      click_on I18n.t('ss.links.new')
+      within '.main-box' do
+        click_on I18n.t('gws/portal.portlets.ad.name')
+      end
+      within 'form#item-form' do
+        within "#addon-gws-agents-addons-portal-portlet-ad" do
+          fill_in "item[ad_width]", with: ad_width.to_s
+          fill_in "item[ad_speed]", with: ad_speed.to_s
+          fill_in "item[ad_pause]", with: ad_pause.to_s
+        end
+
+        within "#addon-gws-agents-addons-portal-portlet-ad_file" do
+          within '[data-index="new"]' do
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
+          end
+        end
+      end
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within ".cms-tabs" do
+            click_on I18n.t("ss.buttons.select_from_list")
+          end
+        end
+      end
+      within_dialog do
+        wait_for_event_fired "turbo:frame-load" do
+          within "form.search" do
+            check I18n.t("sns.user_file")
+          end
+        end
+      end
+      within_dialog do
+        expect(page).to have_css('.file-view', text: file.name)
+        wait_for_cbox_closed { click_on file.name }
+      end
+      within "form#item-form" do
+        within '[data-index="new"]' do
+          expect(page).to have_css(".humanized-name", text: file.humanized_name)
+          fill_in "item[ad_links][][url]", with: url
+        end
+
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      expect(Gws::Portal::UserPortlet.all.site(site).user(user).where(name: I18n.t('gws/portal.portlets.ad.name')).count).to eq 1
+      portlet = Gws::Portal::UserPortlet.all.site(site).user(user).where(name: I18n.t('gws/portal.portlets.ad.name')).first
+      expect(portlet.portlet_model).to eq "ad"
+      expect(portlet.ad_width).to eq ad_width
+      expect(portlet.ad_speed).to eq ad_speed
+      expect(portlet.ad_pause).to eq ad_pause
+      expect(portlet.ad_links.count).to eq 1
+      portlet.ad_links.first.tap do |ad_link|
+        expect(ad_link.name).to be_blank
+        expect(ad_link.url).to eq url
+
+        attached_file = ad_link.file
+        expect(attached_file.id).not_to eq file.id
+        expect(attached_file.name).to eq file.name
+        expect(attached_file.filename).to eq file.filename
+        expect(attached_file.site_id).to be_blank
+        expect(attached_file.model).to eq Gws::Portal::UserPortlet.model_name.i18n_key.to_s
+        expect(attached_file.owner_item_id).to eq portlet.id
+        expect(attached_file.owner_item_type).to eq portlet.class.name
+      end
+      SS::File.find(file.id).tap do |after_attached|
+        expect(after_attached.model).to eq file.model
+        expect(after_attached.owner_item_id).to be_blank
+        expect(after_attached.owner_item_type).to be_blank
+      end
+
+      visit gws_portal_user_path(site: site, user: user)
+      click_on I18n.t('gws/portal.links.arrange_portlets')
+      # wait for ajax completion
+      expect(page).to have_css(".portlet-model-ad[data-id='#{portlet.id}']", text: portlet.name)
+      click_on I18n.t('gws/portal.buttons.save_layouts')
+      wait_for_notice I18n.t('ss.notice.saved')
+      portlet.reload
+      portlet.ad_links.first.tap do |ad_link|
+        expect(ad_link.url).to eq url
+
+        attached_file = ad_link.file
+        expect(attached_file.id).not_to eq file.id
+        expect(attached_file.name).to eq file.name
+        expect(attached_file.filename).to eq file.filename
+        expect(attached_file.site_id).to be_blank
+        expect(attached_file.model).to eq Gws::Portal::UserPortlet.model_name.i18n_key.to_s
+        expect(attached_file.owner_item_id).to eq portlet.id
+        expect(attached_file.owner_item_type).to eq portlet.class.name
+      end
+
+      visit gws_portal_user_path(site: site, user: user)
+      expect(page).to have_css('.portlets .portlet-model-ad')
+    end
+  end
 end
