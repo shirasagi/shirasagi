@@ -103,6 +103,10 @@ export default class extends SelectBoxController {
       if (fileDeleteElement) {
         fileDeleteElement.classList.remove("hide");
       }
+      const fileViewElement = this.element.querySelector(".file-view");
+      if (fileViewElement) {
+        fileViewElement.classList.remove("hide");
+      }
     }
 
     dispatchEvent(this.element, "change");
