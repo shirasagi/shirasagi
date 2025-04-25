@@ -6,7 +6,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
   helper Event::EventHelper
 
   before_action :set_range, only: :index
-  before_action :becomes_with_route_node
+  before_action :set_cur_parent
 
   prepend_view_path "app/views/cms/agents/nodes/archive"
 
@@ -17,9 +17,11 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
     case ymd.length
     when 4
       # year is specified
+      @year = ymd.to_i
       from = Time.zone.local(ymd.to_i, 1, 1)
       to = from + 1.year - 1.second
       @range = from..to
+      @range_type = "yearly"
     when 6
       # year/month is specified
       @year = ymd[0..3].to_i
@@ -27,6 +29,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
       from = Time.zone.local(@year, @month, 1)
       to = from + 1.month - 1.second
       @range = from..to
+      @range_type = "monthly"
     when 8
       # year/month/day is specified
       @year = ymd[0..3].to_i
@@ -35,6 +38,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
       from = Time.zone.local(@year, @month, day)
       to = from + 1.day - 1.second
       @range = from..to
+      @range_type = "daily"
     else
       raise SS::NotFoundError
     end
@@ -42,7 +46,7 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
     raise SS::NotFoundError
   end
 
-  def becomes_with_route_node
+  def set_cur_parent
     @cur_parent = @cur_node.parent
   end
 
@@ -57,54 +61,49 @@ class Cms::Agents::Nodes::ArchiveController < ApplicationController
     Cms::Page.site(@cur_site).and_public(@cur_date).where(condition_hash).where(released: @range)
   end
 
-  def set_items
+  public
+
+  def index
+    if @cur_node.archive_view == 'calendar' && @range_type == "monthly"
+      index_calendar
+    else
+      index_list
+    end
+  end
+
+  def index_list
     @items = pages.
       order_by(@cur_node.sort_hash).
       page(params[:page]).
       per(@cur_node.limit)
+
+    render_with_pagination @items
   end
 
-  def set_contents
+  def index_calendar
     @items = {}
-    if @year && @month
-      start_date = Date.new(@year, @month, 1)
-      close_date = start_date.end_of_month
-      (start_date..close_date).each do |d|
-        @items[d] = []
-      end
+    start_date = Date.new(@year, @month, 1)
+    close_date = start_date.end_of_month
+    (start_date..close_date).each do |date|
+      beginning_of_day = date.in_time_zone.beginning_of_day
+      end_of_day = date.in_time_zone.end_of_day
 
-      dates = (start_date..close_date).map { |m| m.mongoize }
-      dates.each do |time|
-        d = time.to_date
-        if contents_sort(time).exists?
-          @items[d] << contents_sort(time)
-        end
-      end
+      monthly_pages = pages.and([
+        { released: { "$gte" => beginning_of_day } },
+        { released: { "$lte" => end_of_day } },
+      ]).to_a
+      @items[date] = monthly_pages
     end
-  end
 
-  def contents_sort(date)
-    pages.where(:released.gte => date.getlocal.beginning_of_day, :released.lte => date.getlocal.end_of_day)
-  end
-
-  public
-
-  def index
-    if @cur_node.archive_view == 'calendar' && params[:ymd].length == 6
-      set_contents
-      render template: 'monthly'
-    else
-      set_items
-      render_with_pagination @items
-    end
+    render template: 'calendar'
   end
 
   def redirect_to_archive_index
-    archive_path = "#{@cur_main_path[1..-1].sub('/index.html', '')}/#{Time.zone.now.strftime('%Y%m')}"
+    archive_path = "#{@cur_main_path[1..-1].sub('/index.html', '')}/#{Time.zone.now.strftime('%Y%m')}/"
     render_url = "#{@cur_site.full_url}#{archive_path}"
 
     if preview_path?
-      render_url = "#{cms_preview_path(site: @cur_site, path: @cur_main_path[1..-1].sub('/index.html', ''))}/#{Time.zone.now.strftime('%Y%m')}"
+      render_url = "#{cms_preview_path(site: @cur_site, path: @cur_main_path[1..-1].sub('/index.html', ''))}/#{Time.zone.now.strftime('%Y%m')}/"
     end
 
     redirect_to render_url
