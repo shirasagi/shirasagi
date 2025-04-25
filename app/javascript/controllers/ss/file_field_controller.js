@@ -80,8 +80,10 @@ export default class extends SelectBoxController {
           sanitizerStatusElement.classList.remove(...removeTargets);
         }
 
-        sanitizerStatusElement.classList.add(`sanitizer-${selectedItem.sanitizerState}`);
-        sanitizerStatusElement.textContent = selectedItem.sanitizerStateLabel;
+        if (selectedItem.sanitizerState) {
+          sanitizerStatusElement.classList.add(`sanitizer-${selectedItem.sanitizerState}`);
+        }
+        sanitizerStatusElement.textContent = selectedItem.sanitizerStateLabel ? selectedItem.sanitizerStateLabel : '';
       }
       const thumbnailImageElement = this.element.querySelector("img");
       if (thumbnailImageElement) {
