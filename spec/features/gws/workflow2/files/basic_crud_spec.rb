@@ -46,7 +46,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         within "#addon-gws-agents-addons-workflow2-custom_form" do
           fill_in "custom[#{column1.id}]", with: item_text
-          attach_to_ss_file_field "custom_#{column2.id}_0", file
+          attach_to_ss_file_field "custom[#{column2.id}][]", file
         end
         click_on I18n.t("gws/workflow2.buttons.save_and_apply")
       end

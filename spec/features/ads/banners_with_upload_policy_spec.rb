@@ -38,19 +38,19 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
         end
 
         # set wait
-        attach_to_ss_file_field "item_file_id", file1
+        attach_to_ss_file_field "item[file_id]", file1
         within "#item_file_id" do
           expect(page).to have_css(".sanitizer-wait")
         end
 
         # set error
-        attach_to_ss_file_field "item_file_id", file2
+        attach_to_ss_file_field "item[file_id]", file2
         within "#item_file_id" do
           expect(page).to have_css(".sanitizer-error")
         end
 
         # set none
-        attach_to_ss_file_field "item_file_id", file3
+        attach_to_ss_file_field "item[file_id]", file3
         within "#item_file_id" do
           expect(page).to have_css(".sanitizer-none", visible: false)
         end

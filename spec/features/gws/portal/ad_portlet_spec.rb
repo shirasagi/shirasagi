@@ -28,19 +28,12 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-gws-agents-addons-portal-portlet-ad_file" do
-          wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
-        end
-      end
-      within_cbox do
-        attach_file "item[in_files][]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
-        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-      end
-      within 'form#item-form' do
-        within "#addon-gws-agents-addons-portal-portlet-ad_file" do
-          within first(".file-view") do
-            first("input[type='text']").send_keys url
+          within '[data-index="new"]' do
+            upload_to_ss_file_field "item[ad_links][][file_id]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
           end
         end
+
+        fill_in "item[ad_links][][url]", with: url
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -52,15 +45,18 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       expect(portlet.ad_width).to eq ad_width
       expect(portlet.ad_speed).to eq ad_speed
       expect(portlet.ad_pause).to eq ad_pause
-      expect(portlet.ad_files.count).to eq 1
-      portlet.ad_files.first.becomes_with(SS::LinkFile).tap do |file|
+      expect(portlet.ad_links.count).to eq 1
+      portlet.ad_links.first.tap do |ad_link|
+        expect(ad_link.name).to be_blank
+        expect(ad_link.url).to eq url
+
+        file = ad_link.file
         expect(file.name).to eq "logo.png"
         expect(file.filename).to eq "logo.png"
         expect(file.site_id).to be_blank
         expect(file.model).to eq Gws::Portal::UserPortlet.model_name.i18n_key.to_s
         expect(file.owner_item_id).to eq portlet.id
         expect(file.owner_item_type).to eq portlet.class.name
-        expect(file.link_url).to eq url
       end
 
       visit gws_portal_user_path(site: site, user: user)
@@ -70,14 +66,16 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.buttons.save_layouts')
       wait_for_notice I18n.t('ss.notice.saved')
       portlet.reload
-      portlet.ad_files.first.becomes_with(SS::LinkFile).tap do |file|
+      portlet.ad_links.first.tap do |ad_link|
+        expect(ad_link.url).to eq url
+
+        file = ad_link.file
         expect(file.name).to eq "logo.png"
         expect(file.filename).to eq "logo.png"
         expect(file.site_id).to be_blank
         expect(file.model).to eq Gws::Portal::UserPortlet.model_name.i18n_key.to_s
         expect(file.owner_item_id).to eq portlet.id
         expect(file.owner_item_type).to eq portlet.class.name
-        expect(file.link_url).to eq url
       end
 
       visit gws_portal_user_path(site: site, user: user)
@@ -90,8 +88,10 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     let!(:portlet) { create :gws_portal_user_portlet, :gws_portal_ad_portlet, cur_user: user, setting: setting }
 
     it do
-      expect(portlet.ad_files.count).to eq 1
-      save_file = portlet.ad_files.first
+      expect(portlet.ad_links.count).to eq 1
+      save_ad_link = portlet.ad_links.first
+      save_file = save_ad_link.file
+      expect(save_file.owner_item_id).to eq portlet.id
 
       visit gws_portal_user_path(site: site, user: user)
       click_on I18n.t('gws/portal.links.manage_portlets')
@@ -114,8 +114,10 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
     let!(:portlet) { create :gws_portal_user_portlet, :gws_portal_ad_portlet, cur_user: user, setting: setting }
 
     it do
-      expect(portlet.ad_files.count).to eq 1
-      save_file = portlet.ad_files.first
+      expect(portlet.ad_links.count).to eq 1
+      save_ad_link = portlet.ad_links.first
+      save_file = save_ad_link.file
+      expect(save_file.owner_item_id).to eq portlet.id
 
       visit gws_portal_user_path(site: site, user: user)
       click_on I18n.t('gws/portal.links.manage_portlets')
@@ -123,8 +125,8 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
       within 'form#item-form' do
         within "#addon-gws-agents-addons-portal-portlet-ad_file" do
-          within first(".file-view") do
-            click_on I18n.t("ss.buttons.delete")
+          within first("[data-index] .ss-file-field-v2") do
+            click_on "delete"
           end
         end
 
@@ -133,7 +135,44 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.saved')
 
       portlet.reload
-      expect(portlet.ad_files.count).to eq 0
+      expect(portlet.ad_links.count).to eq 1
+      ad_link = portlet.ad_links.first
+      expect(ad_link.id).to eq save_ad_link.id
+      expect(ad_link.file).to be_blank
+
+      expect { save_file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+    end
+  end
+
+  context "when only row is deleted" do
+    let!(:setting) { create :gws_portal_user_setting, cur_user: user }
+    let!(:portlet) { create :gws_portal_user_portlet, :gws_portal_ad_portlet, cur_user: user, setting: setting }
+
+    it do
+      expect(portlet.ad_links.count).to eq 1
+      save_ad_link = portlet.ad_links.first
+      save_file = save_ad_link.file
+      expect(save_file.owner_item_id).to eq portlet.id
+
+      visit gws_portal_user_path(site: site, user: user)
+      click_on I18n.t('gws/portal.links.manage_portlets')
+      click_on portlet.name
+      click_on I18n.t("ss.links.edit")
+      within 'form#item-form' do
+        within "#addon-gws-agents-addons-portal-portlet-ad_file" do
+          within first("[data-index]") do
+            click_on "remove"
+          end
+        end
+
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      portlet.reload
+      expect(portlet.ad_links.count).to eq 1
+      ad_link = portlet.ad_links.first
+      expect(ad_link.id).not_to eq save_ad_link.id
 
       expect { save_file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
