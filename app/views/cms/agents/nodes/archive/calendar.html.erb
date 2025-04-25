@@ -24,14 +24,12 @@
     <dd class="holiday"><%= HolidayJapan.name date %></dd>
     <% end %>
 
-    <% if pages.size != 0 %>
-      <% pages.first.each do |page| %>
-      <dd class="page">
-        <header>
-          <h2><%= link_to page.name, page.url %></h2>
-        </header>
-      </dd>
-      <% end %>
+    <% pages.each do |page| %>
+    <dd class="page">
+      <header>
+        <h2><%= link_to page.name, page.url %></h2>
+      </header>
+    </dd>
     <% end %>
   </dl>
   <% end %>
