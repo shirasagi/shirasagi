@@ -76,8 +76,9 @@ module Cms::Addon
 
     def template_variable_handler_description
       return description unless description_setting_auto?
+      return description unless respond_to?(:html)
       html = self.try(:render_html).presence || self.html
-      return if html.blank?
+      return description if html.blank?
       self.description = ApplicationController.helpers.
         sanitize(html.to_s, tags: []).squish.truncate(60)
     end
