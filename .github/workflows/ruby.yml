@@ -148,7 +148,7 @@ jobs:
           LDAP_TEST: enable
           ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
           CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
-          RUBYOPT: "-w -W:deprecated"
+          RUBYOPT: "-W:deprecated"
           logs_on_failure: 0
           CAPYBARA_MAX_WAIT_TIME: 30
           DOWNLOAD_MAX_WAIT_TIME: 10
