@@ -1,6 +1,6 @@
 require 'spec_helper'
-require 'open-uri'
 require 'nokogiri'
+require 'open-uri'
 
 describe "cms/pages", type: :feature, dbscope: :example, js: true do
   subject(:site) { cms_site }
@@ -37,7 +37,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       expect(item.layout_id).to eq layout.id
 
       # メタタグが生成されていることを確認
-      url = URI.open(item.path)
+      url = File.open(item.path)
       doc = Nokogiri::HTML(url)
       description_elements = doc.css("meta[name='description']")
       expect(description_elements).not_to be_empty
@@ -74,7 +74,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(item.layout_id).to eq layout.id
 
         # メタタグが生成されていることを確認
-        url = URI.open(item.path)
+        url = File.open(item.path)
         doc = Nokogiri::HTML(url)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
@@ -114,7 +114,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(item.layout_id).to eq layout.id
 
         # メタタグが生成されていることを確認
-        url = URI.open(item.path)
+        url = File.open(item.path)
         doc = Nokogiri::HTML(url)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
@@ -142,7 +142,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(item.layout_id).to eq layout.id
 
         # メタタグが生成されていることを確認
-        url = URI.open(item.path)
+        url = File.open(item.path)
         doc = Nokogiri::HTML(url)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
@@ -168,7 +168,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(item.description).to eq original_description
 
         # メタタグが生成されていることを確認
-        url = URI.open(item.path)
+        url = File.open(item.path)
         doc = Nokogiri::HTML(url)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
@@ -191,7 +191,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(item.description).to eq updated_description
 
         # メタタグが生成されていることを確認
-        url = URI.open(item.path)
+        url = File.open(item.path)
         doc = Nokogiri::HTML(url)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
@@ -251,7 +251,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(duplicated_item.description).to eq updated_description
 
         # メタタグが生成されていることを確認
-        url = URI.open(duplicated_item.path)
+        url = File.open(duplicated_item.path)
         doc = Nokogiri::HTML(url)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
@@ -265,7 +265,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(original_item.description).to eq original_description
 
         # メタタグが生成されていることを確認
-        url = URI.open(original_item.path)
+        url = File.open(original_item.path)
         doc = Nokogiri::HTML(url)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
@@ -326,7 +326,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(published_item.description).to eq updated_description
 
         # 公開されたページをHTMLとしてチェックする
-        url = URI.open(published_item.path)
+        url = File.open(published_item.path)
         doc = Nokogiri::HTML(url)
         description_elements = doc.css("meta[name='description']")
         expect(description_elements).not_to be_empty
