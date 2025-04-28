@@ -230,7 +230,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def export_cms_files
-    @ss_file_ids += Cms::File.site(@src_site).where(model: "cms/file").pluck(:id)
+    @ss_file_ids += Cms::File.site(@src_site).where(model: Cms::File::FILE_MODEL).pluck(:id)
   end
 
   def export_ss_files

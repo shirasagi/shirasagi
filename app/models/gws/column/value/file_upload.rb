@@ -67,19 +67,33 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
       end
     end
 
+    owner_item = SS::Model.container_of(self)
     model_name = _parent.class.name
-    files.each do |file|
-      next if file.blank?
-      next if file.model == model_name
+    cur_user = _parent.try(:cur_user) || _parent.try(:user)
+    cur_user ||= SS.current_user
+    new_file_ids = []
+    SS::File.each_file(file_ids) do |file|
+      if file.blank? || file.model == model_name
+        new_file_ids << file.id
+        next
+      end
+
+      if Cms::Reference::Files::Utils.need_to_clone?(file, owner_item, nil)
+        file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
+      end
 
       file.model = model_name
-      file.owner_item = SS::Model.container_of(self)
-      file.save!
+      file.owner_item = owner_item
+      file.without_record_timestamps { file.save! }
+      new_file_ids << file.id
     end
+
+    self.file_ids = new_file_ids
   end
 
   def before_save_clone
     ids = {}
+    owner_item = SS::Model.container_of(self)
     files.each do |f|
       attributes = Hash[f.attributes]
       attributes.slice!(*f.fields.keys)
@@ -88,7 +102,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
       file.id = nil
       file.in_file = f.uploaded_file
       file.user_id = @cur_user.id if @cur_user
-      file.owner_item = _parent
+      file.owner_item = owner_item
 
       file.save validate: false
       ids[f.id] = file.id

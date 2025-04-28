@@ -61,7 +61,7 @@ class Cms::Apis::LargeFileUploadController < ApplicationController
   def create_file(filename)
     file = Cms::File.create(
       site_id: @cur_site.id, name: filename, filename: filename,
-      model: "cms/file", user_id: @cur_user.id, group_ids: @cur_user.group_ids
+      model: Cms::File::FILE_MODEL, user_id: @cur_user.id, group_ids: @cur_user.group_ids
     )
 
     dirname = File.dirname(file.path)

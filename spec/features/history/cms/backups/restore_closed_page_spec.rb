@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 describe "history_cms_backups able to restore only closed page", type: :feature, dbscope: :example do
-  let(:site) { cms_site }
-  let(:user) { cms_user }
+  let!(:site) { cms_site }
+  let!(:user) { cms_user }
 
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
-  let(:ss_file1) { create_once :ss_file, user: user }
-  let(:page_item1) do
+  let!(:node) { create :article_node_page, cur_site: site }
+  let!(:page_item1) do
     page_item = create(:article_page, cur_node: node, user: user)
     Timecop.travel(1.day.from_now) do
       page_item.name = "first update"
       page_item.state = "closed"
+      ss_file1 = tmp_ss_file user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       page_item.file_ids = [ss_file1.id]
       page_item.update
     end
@@ -21,12 +21,12 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
     end
     page_item
   end
-  let(:ss_file2) { create_once :ss_file, user: user }
-  let(:page_item2) do
+  let!(:page_item2) do
     page_item = create(:article_page, cur_node: node, user: user)
     Timecop.travel(1.day.from_now) do
       page_item.name = "first update"
       page_item.state = "public"
+      ss_file2 = tmp_ss_file user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       page_item.file_ids = [ss_file2.id]
       page_item.update
     end

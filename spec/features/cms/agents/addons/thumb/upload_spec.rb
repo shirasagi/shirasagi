@@ -199,7 +199,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with ss/user_file" do
     let!(:file) do
       tmp_ss_file(
-        SS::UserFile, model: "ss/user_file", user: cms_user, basename: filename,
+        SS::UserFile, model: SS::UserFile::FILE_MODEL, user: cms_user, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
@@ -211,7 +211,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with cms/file" do
     let!(:file) do
       tmp_ss_file(
-        Cms::File, model: "cms/file", user: cms_user, site: site, basename: filename,
+        Cms::File, model: Cms::File::FILE_MODEL, user: cms_user, site: site, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end

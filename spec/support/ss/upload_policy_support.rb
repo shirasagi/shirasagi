@@ -1,13 +1,15 @@
 def upload_policy_before_settings(value = nil)
   SS.config.replace_value_at(:ss, :upload_policy, value)
+  Fs.rm_rf(SS::UploadPolicy.sanitizer_input_path)
+  Fs.rm_rf(SS::UploadPolicy.sanitizer_output_path)
   Fs.mkdir_p(SS.config.ss.sanitizer_input)
   Fs.mkdir_p(SS.config.ss.sanitizer_output)
 end
 
 def upload_policy_after_settings
   SS.config.replace_value_at(:ss, :upload_policy, nil)
-  Fs.rm_rf(SS.config.ss.sanitizer_input)
-  Fs.rm_rf(SS.config.ss.sanitizer_output)
+  Fs.rm_rf(SS::UploadPolicy.sanitizer_input_path)
+  Fs.rm_rf(SS::UploadPolicy.sanitizer_output_path)
 end
 
 def mock_sanitizer_restore(file, output_path = nil)

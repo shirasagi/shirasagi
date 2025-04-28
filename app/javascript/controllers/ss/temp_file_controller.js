@@ -309,9 +309,24 @@ export default class extends Controller {
     const createResult = await lastResponse.json();
 
     item.dataset.id = createResult['_id'];
+    item.dataset.fileId = createResult['_id'];
     item.dataset.name = createResult['name'];
     item.dataset.humanizedName = createResult['humanized_name'];
     item.dataset.extname = createResult['extname'];
+    item.dataset.url = createResult['url'];
+    item.dataset.image_ = createResult['image?'];
+    item.dataset.thumbUrl = createResult['thumb_url'];
+    item.dataset.imageDimension = createResult['image_dimension'];
+    item.dataset.size = createResult['size'];
+    if (createResult['updated']) {
+      item.dataset.updated = moment(createResult['updated']).format("X");
+    }
+    if (createResult['sanitizer_state']) {
+      item.dataset.sanitizerState = createResult['sanitizer_state'];
+    }
+    if (createResult['sanitizer_state_label']) {
+      item.dataset.sanitizerStateLabel = createResult['sanitizer_state_label'];
+    }
     // item.setAttribute("data-id", createResult['_id']);
     const nameElement = item.querySelector(".name");
     if (nameElement) {

@@ -168,7 +168,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
       let!(:path1) { "#{node.path}/#{name1}" }
       let!(:rel_path1) { path1.delete_prefix("#{Rails.root}/") }
       let!(:error_file) { "#{::Rails.root}/spec/fixtures/ss/file/ss_file_1_1635597955_1000_pdfEncryptReport.txt" }
-      let!(:output_path) { "#{SS.config.ss.sanitizer_output}/ss_uploader_1_1635597955_1000_pdfEncryptReport.txt" }
+      let!(:output_path) { "#{SS::UploadPolicy.sanitizer_output_path}/ss_uploader_1_1635597955_1000_pdfEncryptReport.txt" }
       let!(:error_filename) { "logo.png_sanitize_error.txt" }
 
       it do

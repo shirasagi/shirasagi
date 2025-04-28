@@ -10,7 +10,7 @@
 <% end %>
 
 <%= file_view_tag do %>
-  <%= sanitizer_status(file) %>
+  <%= sanitizer_status(file) if SS::UploadPolicy.upload_policy == 'sanitizer' %>
   <%= file_link_tag do %>
     <% if file.image? %>
       <%= image_tag file.thumb_no_cache_url, alt: file.name %>

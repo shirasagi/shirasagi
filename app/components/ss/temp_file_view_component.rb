@@ -9,9 +9,10 @@ class SS::TempFileViewComponent < SS::FileViewComponent
     data_hash[:size] = number_to_human_size(file.size) rescue nil
     data_hash[:updated] = file.updated.to_i rescue nil
     data_hash[:user_name] = file.user.name if file.user.present?
-    if file.sanitizer_state
-      data_hash[:sanitizer_state] = file.sanitizer_state
-      data_hash[:sanitizer_state_label] = file.label(:sanitizer_state)
+    if SS::UploadPolicy.upload_policy == 'sanitizer'
+      sanitizer_state = file.sanitizer_state.presence || 'none'
+      data_hash[:sanitizer_state] = sanitizer_state
+      data_hash[:sanitizer_state_label] = SS::UploadPolicy.sanitizer_state_label(sanitizer_state)
     end
     data_hash
   end
