@@ -45,12 +45,14 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(items.count).to be 4
 
         item = items.where(filename: "#{node1.filename}/page1.html").first
+        item.update!(description_setting: "manual", description: "概要")
         expect(item.name).to eq "休日や夜間の戸籍の届出について"
         expect(item.index_name).to eq "一覧用タイトル"
         expect(item.layout.try(:name)).to eq "FAQ"
         expect(item.order).to be 10
         expect(item.keywords).to match_array %w(キーワード)
         expect(item.description).to eq "概要"
+        expect(item.description_setting).to eq "manual"
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
         expect(item.category_ids).to match_array [category2.id, category3.id]
@@ -94,12 +96,14 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(items.count).to be 4
 
         item = items.where(filename: "#{node2.filename}/page2.html").first
+        item.update!(description_setting: "manual", description: "概要")
         expect(item.name).to eq "休日や夜間の戸籍の届出について"
         expect(item.index_name).to eq "一覧用タイトル"
         expect(item.layout.try(:name)).to eq "FAQ"
         expect(item.order).to be 10
         expect(item.keywords).to match_array %w(キーワード)
         expect(item.description).to eq "概要"
+        expect(item.description_setting).to eq "manual"
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
         expect(item.html).to eq "<p>可能です。</p>"
