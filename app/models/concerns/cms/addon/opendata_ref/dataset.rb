@@ -30,7 +30,7 @@ module Cms::Addon::OpendataRef::Dataset
 
   def skip_assoc_opendata?
     return skip_assoc_opendata if !skip_assoc_opendata.nil?
-    (SS.config.opendata.dig("assoc_job", "realtime") == false) ? true : false
+    SS.config.opendata.dig("assoc_job", "mode") == "skip" ? true : false
   end
 
   private
