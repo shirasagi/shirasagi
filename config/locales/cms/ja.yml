@@ -128,6 +128,8 @@ ja:
     csv_export_node: 一括エクスポート
     csv_import_node: 一括インポート
     root: ルート
+    yearly_archive: 年別アーカイブ
+    monthly_archive: 月別アーカイブ
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -598,6 +600,10 @@ ja:
       subject_state:
         disabled: 本文に含めない
         include: 本文に含める
+      archive_view:
+        list: リスト（月別）
+        yearly_list: リスト（年別）
+        calendar: カレンダー
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP
@@ -3139,7 +3145,7 @@ ja:
         - フォルダーの合計容量の上限を入力します。合計容量が設定した上限を超えた場合、警告が表示されます。
         - 初期値は「未設定」で、未設定である場合、警告は表示されません。
         -
-        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。 
+        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。
         - 1. 容量制限が設定されている。
         - 2. フォルダー設定のショートカットが「表示」に設定されている。
         - 3. 自グループが管理権限の管理グループに設定されている。
