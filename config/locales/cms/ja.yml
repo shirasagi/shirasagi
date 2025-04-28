@@ -133,6 +133,8 @@ ja:
     csv_export_node: 一括エクスポート
     csv_import_node: 一括インポート
     root: ルート
+    yearly_archive: 年別アーカイブ
+    monthly_archive: 月別アーカイブ
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -610,6 +612,10 @@ ja:
       link_target:
         self: 同じタブで表示
         blank: 別のタブで表示
+      archive_view:
+        list: リスト（月別）
+        yearly_list: リスト（年別）
+        calendar: カレンダー
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
