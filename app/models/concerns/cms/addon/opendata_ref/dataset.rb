@@ -29,15 +29,8 @@ module Cms::Addon::OpendataRef::Dataset
   end
 
   def skip_assoc_opendata?
-    if skip_assoc_opendata.nil?
-      if SS.config.opendata.dig("assoc_job", "realtime").nil?
-        return false
-      else
-        return !SS.config.opendata.dig("assoc_job", "realtime")
-      end
-    end
-
-    skip_assoc_opendata
+    return skip_assoc_opendata if !skip_assoc_opendata.nil?
+    (SS.config.opendata.dig("assoc_job", "realtime") == false) ? true : false
   end
 
   private
