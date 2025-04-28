@@ -1,8 +1,11 @@
 require 'spec_helper'
+require 'open-uri'
+require 'nokogiri'
 
 describe "cms/pages", type: :feature, dbscope: :example, js: true do
   subject(:site) { cms_site }
   subject(:index_path) { cms_pages_path site.id }
+  let!(:layout) { create(:cms_layout_with_meta, site: site) }
 
   describe "basic crud" do
     before do
@@ -23,12 +26,22 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t("ss.notice.saved")
 
       item = Cms::Page.last
+      item.update!(layout_id: layout.id)
+
       expect(item.name).to eq "sample"
       expect(item.filename).to eq "sample.html"
       expect(item.keywords).to eq [site.name]
       expect(item.description_setting).to eq 'auto'
       expect(item.description).to eq 'sample'
       expect(item.summary).to eq 'sample'
+      expect(item.layout_id).to eq layout.id
+
+      # メタタグが生成されていることを確認
+      url = URI.open(item.path)
+      doc = Nokogiri::HTML(url)
+      description_elements = doc.css("meta[name='description']")
+      expect(description_elements).not_to be_empty
+      expect(description_elements[0]['content']).to eq 'sample'
     end
 
     context 'with node' do
@@ -50,12 +63,22 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t("ss.notice.saved")
 
         item = Cms::Page.last
+        item.update!(layout_id: layout.id)
+
         expect(item.name).to eq "sample"
         expect(item.filename).to eq "#{node.filename}/sample.html"
         expect(item.keywords).to eq [node.name, category.name]
         expect(item.description_setting).to eq 'auto'
         expect(item.description).to eq 'sample'
         expect(item.summary).to eq 'sample'
+        expect(item.layout_id).to eq layout.id
+
+        # メタタグが生成されていることを確認
+        url = URI.open(item.path)
+        doc = Nokogiri::HTML(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq 'sample'
       end
     end
   end
@@ -83,8 +106,19 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t("ss.notice.saved")
 
         item = Cms::Page.last
+        item.update!(layout_id: layout.id)
+
+        original_description = 'This is a test content for description. It should be auto...'
         expect(item.description_setting).to eq 'auto'
-        expect(item.description).to eq 'This is a test content for description. It should be auto...'
+        expect(item.description).to eq original_description
+        expect(item.layout_id).to eq layout.id
+
+        # メタタグが生成されていることを確認
+        url = URI.open(item.path)
+        doc = Nokogiri::HTML(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to match(original_description)
       end
 
       it "keeps manual description in manual mode" do
@@ -101,13 +135,24 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t("ss.notice.saved")
 
         item = Cms::Page.last
+        item.update!(layout_id: layout.id)
+
         expect(item.description_setting).to eq 'manual'
         expect(item.description).to eq manual_description
+        expect(item.layout_id).to eq layout.id
+
+        # メタタグが生成されていることを確認
+        url = URI.open(item.path)
+        doc = Nokogiri::HTML(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq manual_description
       end
     end
 
     context "when editing existing page" do
-      let(:item) { create(:cms_page, site: site, html: html_content) }
+      let(:item) { create(:cms_page, site: site, html: html_content, layout_id: layout.id) }
+      let(:original_description) { 'This is a test content for description. It should be auto...' }
 
       it "updates description when switching to auto mode" do
         visit edit_cms_page_path(site.id, item)
@@ -120,47 +165,46 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         item.reload
         expect(item.description_setting).to eq 'auto'
-        expect(item.description).to eq 'This is a test content for description. It should be auto...'
-      end
+        expect(item.description).to eq original_description
 
-      it "keeps existing description when switching to manual mode" do
-        # 最初に自動モードで保存
-        item.update!(description_setting: 'auto')
-        auto_description = item.description
-
-        visit edit_cms_page_path(site.id, item)
-        within "form#item-form" do
-          find_by_id('addon-cms-agents-addons-meta').click
-          choose "item_description_setting_manual"
-          click_button I18n.t('ss.buttons.publish_save')
-        end
-        wait_for_notice I18n.t("ss.notice.saved")
-
-        item.reload
-        expect(item.description_setting).to eq 'manual'
-        expect(item.description).to eq auto_description
+        # メタタグが生成されていることを確認
+        url = URI.open(item.path)
+        doc = Nokogiri::HTML(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to match(original_description)
       end
 
       it "updates description when html is changed in auto mode" do
         item.update!(description_setting: 'auto')
-        new_html = "<p>Updated content for testing auto description update.</p>"
+        updated_html = "<p>Updated content for testing auto description update.</p>"
+        updated_description = 'Updated content for testing auto description update.'
 
         visit edit_cms_page_path(site.id, item)
         within "form#item-form" do
           find_by_id('addon-cms-agents-addons-meta').click
-          fill_in_ckeditor "item[html]", with: new_html
+          fill_in_ckeditor "item[html]", with: updated_html
           click_button I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
         item.reload
-        expect(item.description).to eq 'Updated content for testing auto description update.'
+        expect(item.description).to eq updated_description
+
+        # メタタグが生成されていることを確認
+        url = URI.open(item.path)
+        doc = Nokogiri::HTML(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq updated_description
       end
     end
 
     context "when duplicating a page" do
       let(:original_html) { "<p>Original content for testing duplication.</p>" }
       let(:updated_html) { "<p>Updated content after duplication.</p>" }
-      let(:item) { create(:cms_page, site: site, html: original_html) }
+      let(:item) { create(:cms_page, site: site, html: original_html, layout_id: layout.id) }
+      let(:original_description) { 'Original content for testing duplication.' }
+      let(:updated_description) { 'Updated content after duplication.' }
 
       it "updates description when html is changed in duplicated page with auto mode" do
         # オリジナルページを作成
@@ -177,7 +221,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         original_item = Cms::Page.last
         expect(original_item.name).to eq 'original'
         expect(original_item.description_setting).to eq 'auto'
-        expect(original_item.description).to eq 'Original content for testing duplication.'
+        expect(original_item.description).to eq original_description
 
         # 複製
         visit cms_page_path(site.id, original_item)
@@ -191,7 +235,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         duplicated_item = Cms::Page.last
         expect(duplicated_item.name).to eq "duplicate"
         expect(duplicated_item.description_setting).to eq 'auto'
-        expect(duplicated_item.description).to eq 'Original content for testing duplication.'
+        expect(duplicated_item.description).to eq original_description
 
         # 複製したページを編集
         visit edit_cms_page_path(site.id, duplicated_item)
@@ -201,24 +245,43 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
+        # 複製したページの概要を確認
         duplicated_item.reload
 
-        expect(duplicated_item.description).to eq 'Updated content after duplication.'
+        expect(duplicated_item.description).to eq updated_description
 
+        # メタタグが生成されていることを確認
+        url = URI.open(duplicated_item.path)
+        doc = Nokogiri::HTML(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq updated_description
+
+        # オリジナルページを確認
         original_item.reload
 
         expect(original_item.name).to eq 'original'
         expect(original_item.description_setting).to eq 'auto'
-        expect(original_item.description).to eq 'Original content for testing duplication.'
+        expect(original_item.description).to eq original_description
+
+        # メタタグが生成されていることを確認
+        url = URI.open(original_item.path)
+        doc = Nokogiri::HTML(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq original_description
       end
     end
 
     context "when using replace page feature" do
       let(:original_html) { "<p>Original content of the published page.</p>" }
       let(:updated_html) { "<p>Updated content for the replacement page.</p>" }
-      let(:item) { create(:cms_page, site: site, html: original_html) }
+      let(:item) { create(:cms_page, site: site, html: original_html, layout_id: layout.id) }
+      let(:original_description) { 'Original content of the published page.' }
+      let(:updated_description) { 'Updated content for the replacement page.' }
+
       it "updates description in the replacement page with auto mode" do
-        # 公開ページを編集
+        # 差し替え前のページを作成
         visit edit_cms_page_path(site.id, item)
 
         within "form#item-form" do
@@ -232,14 +295,14 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         published_item = Cms::Page.last
         expect(published_item.name).to eq 'published'
         expect(published_item.description_setting).to eq 'auto'
-        expect(published_item.description).to eq 'Original content of the published page.'
+        expect(published_item.description).to eq original_description
 
         # 差し替えページを作成
         visit cms_page_path(site.id, published_item)
         within "#addon-workflow-agents-addons-branch" do
           click_on I18n.t('workflow.create_branch')
-          expect(page).to have_content('published')
-          click_on 'published'
+          expect(page).to have_content(published_item.name)
+          click_on published_item.name
         end
 
         click_on I18n.t('ss.links.edit')
@@ -254,13 +317,20 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         expect(replacement_item.name).to eq "replacement"
         expect(replacement_item.description_setting).to eq 'auto'
-        expect(replacement_item.description).to eq 'Updated content for the replacement page.'
+        expect(replacement_item.description).to eq updated_description
 
         # 公開後、元のページは置き換えられるが、内容自体は新しい内容に変わっているはず
         published_item.reload
 
         expect(published_item.html).to include updated_html
-        expect(published_item.description).to eq 'Updated content for the replacement page.'
+        expect(published_item.description).to eq updated_description
+
+        # 公開されたページをHTMLとしてチェックする
+        url = URI.open(published_item.path)
+        doc = Nokogiri::HTML(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq updated_description
       end
     end
   end

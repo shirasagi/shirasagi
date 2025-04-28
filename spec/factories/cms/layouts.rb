@@ -12,4 +12,21 @@ FactoryBot.define do
       basename { "lay/out" }
     end
   end
+
+  factory :cms_layout_with_meta, class: Cms::Layout, traits: [:cms_layout] do
+    html do
+      <<~HTML
+        <html>
+        <head>
+          <meta charset="UTF-8" />
+          <title>#{name}</title>
+          <!-- メタタグは自動的に挿入される位置 -->
+        </head>
+        <body>
+          </ yield />
+        </body>
+        </html>
+      HTML
+    end
+  end
 end
