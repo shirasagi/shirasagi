@@ -20,7 +20,6 @@ FactoryBot.define do
         <head>
           <meta charset="UTF-8" />
           <title>#{name}</title>
-          <!-- メタタグは自動的に挿入される位置 -->
         </head>
         <body>
           </ yield />
