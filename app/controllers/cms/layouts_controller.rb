@@ -22,10 +22,10 @@ class Cms::LayoutsController < ApplicationController
   def syntax_check
     contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
 
-    @syntax_check_context = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
+    @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
 
-    if @syntax_check_context.errors.present?
-      @syntax_check_context.errors.each do |error|
+    if @syntax_checker.errors.present?
+      @syntax_checker.errors.each do |error|
         @item.errors.add :base, error[:msg]
       end
       return false
@@ -49,12 +49,24 @@ class Cms::LayoutsController < ApplicationController
   end
 
   def create
+    raise "403" unless @model.allowed?(:create, @cur_user, site: @cur_site, node: @cur_node)
     @item = @model.new get_params
     render_create @item.valid? && syntax_check && @item.save
   end
 
   def update
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
     render_update @item.valid? && syntax_check && @item.save
+  end
+
+  def syntax_check_error
+    html = { id: 'errorSyntaxChecker', class: 'errorExplanation' }
+    I18n.with_options(scope: %i[activerecord errors template]) do |locale|
+      error_messages = @syntax_checker.errors.map do |error|
+        content_tag(:li, error[:msg])
+      end.join.html_safe
+    end
+    render json: { errors: html }
   end
 end

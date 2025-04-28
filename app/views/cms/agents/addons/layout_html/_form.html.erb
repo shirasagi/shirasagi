@@ -1,5 +1,4 @@
 <%= code_editor ".mod-cms-html-form textarea", mode: :html %>
-
 <dl class="see mod-cms-body" data-syntax-check="editor">
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
@@ -14,81 +13,30 @@
   </dd>
 </dl>
 
-<%= jquery do %>
-  Cms_Form.render();
-  Cms_Form.editorId = "item_html";
-  Cms_Form.getEditorHtml = function() {
-    return "<div>" + $("#item_html").val() + "</div>";
-  };
-  Cms_Form.setEditorHtml = function(html) {
-    html = html.replace(/<div>([\s\S]*)<\/div>/m, "$1");
-    $("#item_html").val(html);
-  };
-
-  Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>;
-  Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>;
-
-  // HTMLチェック用オブジェクト
-  function createCheckObject() {
-    return {
-      id: "html",
-      name: "<%= t("modules.addons.cms/body_layout_html") %>",
-      resolve: "html",
-      type: "string",
-      getContent: function() { return Cms_Form.getEditorHtml(); },
-      setContent: function(content) { return Cms_Form.setEditorHtml(content); }
-    };
-  }
-
-  // 自動修正後の再チェック
-  function recheckAfterCorrection() {
-    var check = createCheckObject();
-    var token = $('meta[name="csrf-token"]').attr('content');
-    var param = {
-      id: check.id,
-      content: [check.getContent()],
-      resolve: check.resolve,
-      type: "array"
-    };
-
-    $.ajax({
-      type: "POST",
-      url: Syntax_Checker.url,
-      data: JSON.stringify({ authenticity_token: token, item: { contents: [param] } }),
-      contentType: "application/json",
-      success: function(data) {
-        Syntax_Checker.errors = data.errors || [];
-
-        if (Syntax_Checker.errors.length > 0) {
-          Syntax_Checker.resultBox.showResult([check], Syntax_Checker.errors);
-        } else if (Syntax_Checker.resultBox && Syntax_Checker.resultBox.$el) {
-          Syntax_Checker.resultBox.$el.hide();
-        }
-      }
-    });
-  }
-
-  // 自動修正処理のためのAJAXインターセプター
-  (function() {
-    var originalAjax = $.ajax;
-    $.ajax = function(options) {
-      if (options.url === Syntax_Checker.correct_url) {
-        var originalSuccess = options.success;
-        options.success = function(data, textStatus, xhr) {
-          if (originalSuccess) originalSuccess(data, textStatus, xhr);
-          setTimeout(recheckAfterCorrection, 500);
-        };
-      }
-      return originalAjax.apply(this, arguments);
-    };
-  })();
-
-  Syntax_Checker.render(Cms_Form);
-
-  <% if @syntax_check_context && @syntax_check_context.errors.present? %>
+<% if @syntax_checker && @syntax_checker.errors.present? %>
+<script>
   $(function() {
-    Syntax_Checker.errors = <%= raw @syntax_check_context.errors.to_json %>;
-    Syntax_Checker.resultBox.showResult([createCheckObject()], Syntax_Checker.errors);
+    // 既存のSyntax_Checkerの初期化
+    if (!Syntax_Checker.form) {
+      Syntax_Checker.form = Cms_Form;
+    }
+
+    // ResultBoxの初期化（エラー表示コンテナ）
+    if (!Syntax_Checker.resultBox) {
+      Syntax_Checker.resultBox = new ResultBox(Syntax_Checker.form);
+    }
+
+    // モックチェックオブジェクト作成（エラー表示用）
+    var mockChecks = [{
+      id: "html",
+      name: "<%= t("modules.addons.cms/body_layout_html") %>"
+    }];
+
+    // エラーデータを設定
+    Syntax_Checker.errors = <%= raw @syntax_checker.errors.to_json %>;
+
+    // エラー表示メソッド呼び出し
+    Syntax_Checker.resultBox.showResult(mockChecks, Syntax_Checker.errors);
   });
-  <% end %>
+</script>
 <% end %>
