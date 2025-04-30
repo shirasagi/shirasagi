@@ -13,6 +13,7 @@
     "user_name" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
     "user_ids": { "type": "integer" },
     "group_ids": { "type": "integer" },
+    "group_names": { "type": "keyword" },
     "custom_group_ids": { "type": "integer" },
     "member_ids": { "type": "integer" },
     "member_group_ids": { "type": "integer" },

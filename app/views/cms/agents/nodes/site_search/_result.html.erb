@@ -8,8 +8,62 @@
   end
 %>
 
+<script>
+$(function() {
+  $('.cms-site-search-pages .category-name').on('click', function() {
+    const name = $(this).text();
+    const $input = $('.cms-site-search .site-search-categories input[name="s[category_name]"]');
+
+    let value = $input.val();
+    value = ' ' + value.replace(/[\s\/　]+/, ' ') + ' ';
+
+    if (value.search(` ${name} `) === -1) {
+      $input.val((value + name).trim());
+      $('.cms-site-search form').submit();
+    }
+  });
+});
+</script>
+
+<style>
+.cms-site-search .search-stats {
+  display: flex;
+  justify-content: space-between;
+}
+.cms-site-search .search-result .cms-site-search-pages .item {
+  padding-bottom: 20px;
+  border-bottom: 1px solid #ccc;
+  .summary {
+    display: flex;
+    .image { padding: 10px 15px 0 0; }
+    .image img { max-width: 110px; max-height: 100px; }
+    .text { flex: 1; }
+    .text em { color: #e00; font-style: normal; }
+  }
+  .meta {
+    .url { color: green; }
+    .category-name { color: blue; cursor: pointer; }
+  }
+}
+</style>
+
 <div class="search-stats">
-  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: count, from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
+  <div>
+    <%= I18n.t('gws/elasticsearch.format.search_results_count',
+      count: count, from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
+  </div>
+  <div>
+    <%
+      sort_params = params.permit(:target, s: {})
+      options = %w(score updated).map do |value|
+        name = { score: t('cms.search_sort_options.score'), updated: t('cms.search_sort_options.updated') }[value.to_sym]
+        [name, value, 'data-href': "#{@cur_node.url}?" + url_for(sort_params.merge(sort: value).to_query)]
+      end
+    %>
+    <%= t('cms.search_sort') %>
+    <%= select_tag 'sort', options_for_select(options, selected: params[:sort]), id: nil, "aria-label" => t('cms.search_sort'),
+      onchange: 'location.href = this.children[this.selectedIndex].getAttribute("data-href");' %>
+  </div>
 </div>
 
 <div class="cms-site-search-pages pages">
@@ -22,6 +76,16 @@
           if source.dig('file', 'extname').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
+          image_url = nil
+          image_name = nil
+          if source['image_url']
+            image_url = source['image_url']
+            image_name = source['image_name']
+          end
+          text = source['text'].to_s.truncate(120)
+          if hit.dig('highlight', 'text')
+            text = hit.dig('highlight', 'text')[0].gsub(/[\s\n]+/, ' ').strip
+          end
           date = source['released']
           url = ::Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s
           if source['title'].present?
@@ -31,9 +95,31 @@
           end
         %>
         <h2><%= link_to title, url, class: 'title' %></h2>
+        <div class="summary">
+          <% if image_url %>
+            <div class="image"><%= image_tag image_url, alt: image_name %></div>
+          <% end %>
+          <% if text.present? %>
+            <div class="text"><%== text %></div>
+          <% end %>
+        </div>
         <div class="meta">
-          <span class="url"><%= url %></span>
-          <time datetime="<%= date %>"><%= I18n.l(Time.zone.parse(date), format: :long) %></time>
+          <% if source['page_name'].present? %>
+            <div class="page-name"><%= t('cms.reference_article') %>: <%= link_to source['page_name'], source['page_url'] %></div>
+          <% end %>
+
+          <div class="url"><%= url %></div>
+          <div><time datetime="<%= date %>"><%= Cms::Page.t(:released) %>: <%= I18n.l(Time.zone.parse(date), format: :long) %></time></div>
+
+          <% if source['category_ids'].present? %>
+            <div class="category-list">
+              <%= Cms::Page.t(:category_ids) %>:
+              <% categories = source['category_ids'].map.with_index do |id, idx| %>
+                <%= ' | ' if idx > 0 %>
+                <a class="category-name"><%= source['categories'][idx] %></a>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </header>
     </article>

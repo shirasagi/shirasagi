@@ -82,18 +82,23 @@ ja:
     preview_page2: 画面プレビュー
     preview_pc_page: PCプレビュー
     preview_site: サイトプレビュー
+    reference_article: 参照記事
     role: 権限/ロール
     root_menu: メインメニュー
     search_button: 検索
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
+    search_contents_files: ファイル一覧
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
-    search_contents_files: ファイル一覧
-    search_form: サイト検索フォーム
-    search_target: サイト検索範囲を選択してください
     search_contents_sitemap: サイトマップ
+    search_form: サイト検索フォーム
+    search_target: サイト検索範囲
+    search_sort: 表示順
+    search_sort_options:
+      score: 関連性
+      updated: 更新日
     shortcut: ショートカット
     show_link_to_part: パーツのリンクを表示
     site: サイト
@@ -1342,7 +1347,7 @@ ja:
         lower_html: 下部HTML
       cms/addon/site_search/setting:
         st_article_node_ids: 記事フォルダー
-        site_search_type: 種類
+        site_search_type: 検索種類
       cms/form:
         name: 名前
         order: 並び順

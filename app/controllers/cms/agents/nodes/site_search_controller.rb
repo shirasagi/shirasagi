@@ -38,7 +38,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def permit_fields
-    [:keyword, :target, :type, :category_name, article_node_ids: [], category_names: []]
+    [:sort, :keyword, :target, :type, :category_name, :group_name, article_node_ids: [], category_names: []]
   end
 
   def get_params
@@ -76,6 +76,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
       @s.type = @cur_node.site_search_type
     end
 
+    @s.sort = params[:sort]
     @s.field_name = %w(text_index content title)
     @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
     @result = @s.search

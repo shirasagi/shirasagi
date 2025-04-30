@@ -14,6 +14,8 @@ class Cms::Elasticsearch::PageConverter
   end
 
   def convert_to_doc
+    @html = Fs.exist?(item.path) ? Fs.read(item.path) : item.try(:html)
+
     doc = {}
     doc[:url] = item.url
     doc[:name] = item.name
@@ -21,9 +23,19 @@ class Cms::Elasticsearch::PageConverter
     doc[:filename] = item.path
     doc[:state] = item.state
 
-    doc[:categories] = item.categories.pluck(:name)
+    m = @html.to_s.scan(/<meta property="og:image" content="(.*?)"/im).flatten
+    if image = m[0].presence
+      doc[:image_url] = image
+      doc[:image_name] = 'og:image'
+    elsif file = item.try(:thumb)
+      doc[:image_url] = file.thumb_url
+      doc[:image_name] = file.name
+    end
+
     doc[:category_ids] = item.category_ids
+    doc[:categories] = item.categories.pluck(:name)
     doc[:group_ids] = item.groups.pluck(:id)
+    doc[:group_names] = item.groups.pluck(:name).map {|n| n.split('/') }.flatten.uniq
 
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = item.updated.try(:iso8601)
@@ -42,16 +54,21 @@ class Cms::Elasticsearch::PageConverter
   end
 
   def convert_file_to_doc(file)
+    @html = Fs.exist?(item.path) ? Fs.read(item.path) : item.try(:html)
+
     doc = {}
-    doc[:url] = item.url
-    doc[:name] = file.name
+    doc[:name] = file_name(file) || file.name
+    doc[:path] = file.path
+    doc[:url] = file.url
     doc[:data] = Base64.strict_encode64(::File.binread(file.path))
     doc[:file] = {}
     doc[:file][:extname] = file.extname.upcase
     doc[:file][:size] = file.size
-
-    doc[:path] = item.path
     doc[:state] = item.state
+
+    doc[:page_name] = item.name
+    doc[:page_path] = item.path
+    doc[:page_url] = item.url
 
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = file.updated.try(:iso8601)
@@ -65,19 +82,46 @@ class Cms::Elasticsearch::PageConverter
   end
 
   def item_text
-    if Fs.exist?(item.path)
-      html = Fs.read(item.path)
-    else
-      html = item.html
+    return nil unless @html
+
+    marks = SS.config.cms.elasticsearch['site-search-marks']
+
+    html = @html.gsub(/[\s　]+/, ' ')
+      .gsub(/<\s*head>.*?<\/head>/i, ' ')
+      .gsub(/<\s*script.*?<\/script>/i, ' ')
+      .gsub(/<\s*style.*?<\/style>/i, ' ')
+
+    text = [item.name.gsub(/[<>]/, '')]
+    html = html.gsub(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/) {|m| text << m; '' }
+    html = html.gsub(/<!--[^>]*?\s#{marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{marks[1]}\s[^>]*?-->/) {|m| text << m; '' }
+    text = text.join(' ').gsub(/<.*?>/, ' ').gsub(/  +/, ' ')
+
+    ApplicationController.helpers.sanitize(text.presence || '', tags: [])
+  end
+
+  def file_name(file)
+    return nil unless @html
+
+    if m = @html.match(/<a[^>]*href="#{Regexp.escape(file.url)}".*?>(.*?)<\s*\/a\s*>/im)
+      noko = ::Nokogiri::HTML.parse(m[0])
+      el = noko.xpath("//a")
+      value = el.attr('alt').try(:value) || el.attr('title').try(:value)
+      return value if value.present?
+
+      el = noko.xpath("//img")
+      value = el.attr('alt').try(:value) || el.attr('title').try(:value)
+      return value if value.present?
+      return noko.text.strip.sub(/ \(\w+ \d+\w+\)/i, '').presence
     end
-    config = SS.config.cms.elasticsearch
-    site_search_marks = config['site-search-marks']
-    if html =~ /<!--[^>]*?\s#{site_search_marks[0]}\s[^>]*?-->(.*)<!--[^>]*?\s#{site_search_marks[1]}\s[^>]*?-->/im
-      html = $1
-    elsif html =~ /<\s*body[^>]*>(.*)<\/\s*body\s*>/im
-      html = $1
+
+    files_pattern = "(#{Regexp.escape(file.url)}|#{Regexp.escape(file.thumb_url)})"
+    if m = @html.match(/<img[^>]*src="#{files_pattern}".*?>/im)
+      noko = ::Nokogiri::HTML.parse(m[0])
+      el = noko.xpath("//img")
+      return el.attr('alt').try(:value) || el.attr('title').try(:value)
     end
-    ApplicationController.helpers.sanitize(html.presence || '', tags: [])
+
+    return nil
   end
 
   class << self

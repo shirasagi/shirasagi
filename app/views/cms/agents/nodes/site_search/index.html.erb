@@ -37,26 +37,89 @@
 Cms_Site_Search.render();
 Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.full_url %>");
 <% end %>
+
+<style>
+body.general.body--search .cms-site-search .search-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
+  align-items: start;
+  height: auto;
+  border: 3px solid #97dcf0;
+  padding: 30px;
+  > * {
+    position: relative;
+  }
+  article {
+    margin: 0;
+    padding: 0;
+  }
+  .site-search-keyword {
+    width: 500px;
+  }
+}
+.search-wrap .site-search-history, .cms-site-search .site-search-history {
+  top: auto;
+}
+body.general.body--search .cms-site-search .search-form .send {
+  padding: 6px 10px;
+}
+.site-search-categories {
+  display: block !important;
+}
+body.general.body--search .cms-site-search .search-form .site-search-keyword dt {
+  display: block !important;
+}
+</style>
+
 <div class="cms-site-search">
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
+    <%= hidden_field_tag "sort", params[:sort], id: nil %>
+
     <dl class="site-search-type">
-      <dt><%= f.label(:type, @cur_node.t(:site_search_type)) %></dt>
-      <dd><%= select_tag 's[type]', options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type).presence || @cur_node.site_search_type), "aria-label" => @cur_node.t(:site_search_type) %></dd>
+      <dt><%= @cur_node.t(:site_search_type) %></dt>
+      <dd><%= select_tag 's[type]',
+        options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type).presence || @cur_node.site_search_type),
+        id: nil, "aria-label" => @cur_node.t(:site_search_type) %></dd>
     </dl>
+
+    <dl class="site-search-keyword">
+      <dt><%= t("ss.keyword") %></dt>
+      <dd>
+        <%= f.text_field :keyword, id: nil, size: 30, autocomplete: "off", title: t('ss.keyword'), placeholder: t('ss.keyword')
+        %><input class="send" type="submit" value="<%= t('cms.search_button') %>" />
+      </dd>
+      <dd>
+        <ul class="site-search-history" style="display: none;"></ul>
+      </dd>
+    </dl>
+
+    <% if @cur_site.elasticsearch_outside_enabled? %>
+      <dl class="site-search-target">
+        <dt><%= t("cms.search_target") %></dt>
+        <dd><%= select_tag 'target',
+          options_for_select([
+            [t('ss.search_on', name: @cur_site.name), 'inside'],
+            [t('ss.search_on', name: SS.config.cms.elasticsearch['label']), 'outside']
+          ], selected: params[:target]),
+          id: nil, "aria-label" => t("cms.search_target") %></dd>
+      </dl>
+    <% end %>
 
     <% if @cur_node.ordered_st_article_nodes.present? %>
       <dl class="site-search-article-nodes">
-        <dt><%= f.label(:article_node_ids, t("cms.node")) %></dt>
+        <dt><%= t("cms.node") %></dt>
         <dd>
-          <%= link_to t('facility.submit.change'), "#{@cur_node.url}article_nodes.html", class: "ajax-box article-nodes", style: 'display: block' %>
+          <%= link_to t('facility.submit.change'), "#{@cur_node.url}article_nodes.html", class: "ajax-box article-nodes" %>
+
           <div class="selected-article-nodes">
             <% if @s.article_node_ids.present? %>
               <% @cur_node.st_article_nodes.in(id: @s.article_node_ids).each do |node| %>
                 <article class="selected-item" data-id="<%= node.id %>">
                   <header>
                     <span class="article-node-name"><%= node.name %></span>
-                    <%= f.hidden_field('article_node_ids[]', value: node.id) %>
-                    <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
+                    <%= f.hidden_field 'article_node_ids[]', value: node.id, id: nil %>
+                    <a class="btn deselect">✕</a>
                   </header>
                 </article>
               <% end %>
@@ -67,43 +130,44 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     <% end %>
 
     <dl class="site-search-categories">
-      <dt><%= f.label(:category_name, t("category.node")) %></dt>
+      <dt><%= t("category.node") %></dt>
       <dd>
-        <%= link_to t('facility.submit.change'), "#{@cur_node.url}categories.html", class: "ajax-box categories", style: 'display: block' %>
+        <%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off",
+          title: t('category.node'), placeholder: t('category.node') %>
+        <!--
+        <br>
+        <%= link_to t('facility.submit.change'), "#{@cur_node.url}categories.html", class: "ajax-box" %>
+
         <div class="selected-categories">
           <% if @s.category_names.present? %>
             <% @s.category_names.each do |category_name| %>
               <article class="selected-item" data-name="<%= category_name %>">
                 <header>
                   <span class="category-name"><%= category_name %></span>
-                  <%= f.hidden_field('category_names[]', value: category_name, id: nil) %>
+                  <%= f.hidden_field 'category_names[]', value: category_name, id: nil %>
                   <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
                 </header>
               </article>
             <% end %>
           <% end %>
         </div>
+        -->
       </dd>
     </dl>
 
-    <% if @cur_site.elasticsearch_outside_enabled? %>
-      <dl class="site-search-target">
-        <dt><%= f.label(:target, t("cms.search_target")) %></dt>
-        <dd><%= select_tag 'target', options_for_select([[t('ss.search_on', name: @cur_site.name), 'inside'], [t('ss.search_on', name: SS.config.cms.elasticsearch['label']), 'outside']], selected: params[:target]), "aria-label" => t("cms.search_target") %></dd>
-      </dl>
-    <% end %>
-
-    <dl class="site-search-keyword">
-      <dt><%= f.label(:keyword, t("cms.search_contents")) %></dt>
-      <dd><%= f.text_field :keyword, autocomplete: "off", title: (t "cms.search_contents"), placeholder: (t "cms.search_contents"), size: 40 %></dd>
+    <dl class="site-search-organization">
+      <dt><%= t('ss.organization') %></dt>
       <dd>
-        <ul class="site-search-history" style="display: none;"></ul>
+        <%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off",
+          title: t('ss.organization'), placeholder: t('ss.organization') %>
       </dd>
     </dl>
 
+    <!--
     <div class="send">
       <input type="submit" value="<%= t('cms.search_button') %>" />
     </div>
+    -->
   <% end %>
 
   <% if @result.present? %>
