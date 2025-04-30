@@ -20,6 +20,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
@@ -30,6 +31,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           end
         end
 
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -42,7 +44,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_cur_user_profile_path
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
@@ -52,6 +54,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.logout")
           end
         end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -67,7 +70,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_cur_user_profile_path
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
@@ -77,6 +80,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.logout")
           end
         end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -100,7 +104,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
@@ -110,6 +114,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.logout")
           end
         end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -125,6 +130,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: subject.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
       end
@@ -139,6 +145,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: subject.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
       end
@@ -152,6 +159,9 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[email]", with: subject.organization_uid
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
+        end
+        within ".login-box" do
+          expect(page).to have_css(".error-message", text: I18n.t("service.errors.invalid_login"))
         end
         expect(current_path).not_to eq sns_mypage_path
       end
@@ -205,6 +215,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: password
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css("nav.user .user-name", text: subject.name)
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
     end
@@ -221,6 +232,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: user.in_password
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css("nav.user .user-name", text: user.name)
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
     end

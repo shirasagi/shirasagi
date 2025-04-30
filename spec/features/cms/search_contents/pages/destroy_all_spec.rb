@@ -103,6 +103,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
           click_button I18n.t('ss.buttons.delete')
         end
         click_button I18n.t('ss.buttons.delete')
+        wait_for_notice I18n.t('ss.notice.deleted')
 
         wait_for_cbox_opened do
           click_on I18n.t("cms.apis.categories.index")

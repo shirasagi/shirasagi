@@ -55,7 +55,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
             click_button I18n.t('inquiry.confirm')
-
+          end
+          within_cbox do
             expect(page).to have_css('.file-view.before')
             expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
 

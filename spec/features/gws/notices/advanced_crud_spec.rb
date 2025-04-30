@@ -54,6 +54,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         within '.dd-group .dropdown-container' do
           click_on site.name
         end
+      end
+      within_cbox do
         expect(page).to have_content(editor.name)
         wait_for_cbox_closed { click_on editor.name }
       end
@@ -69,6 +71,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         within '.dd-group .dropdown-container' do
           click_on site.name
         end
+      end
+      within_cbox do
         expect(page).to have_content(reader.name)
         wait_for_cbox_closed { click_on reader.name }
       end
