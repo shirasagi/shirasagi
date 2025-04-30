@@ -10,7 +10,11 @@
         <div class="index">
           <ul class="list-items list-items-grid">
             <% @selected_items.each do |item| %>
-              <%= render "cms/pages/confirm_all", item: item, f: f, permitted: item.allowed?(:release, @cur_user, site: @cur_site), message: message %>
+              <% if @change_state == "closed" %>
+                <%= render "cms/pages/confirm_all", item: item, f: f, permitted: item.allowed?(:close, @cur_user, site: @cur_site), message: message %>
+              <% else %>
+                <%= render "cms/pages/confirm_all", item: item, f: f, permitted: item.allowed?(:release, @cur_user, site: @cur_site), message: message %>
+              <% end %>
             <% end %>
           </ul>
         </div>
