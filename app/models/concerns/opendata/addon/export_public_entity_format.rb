@@ -107,6 +107,7 @@ module Opendata::Addon::ExportPublicEntityFormat
             row << nil
             row << dataset.areas.pluck(:name).join("\n")
             row << dataset.metadata_dataset_target_period
+            row << dataset.metadata_dataset_creator
             row << dataset.metadata_dataset_contact_name
             row << dataset.metadata_dataset_contact_email
             row << dataset.metadata_dataset_contact_tel
@@ -117,6 +118,7 @@ module Opendata::Addon::ExportPublicEntityFormat
             row << resource.name
             row << resource.metadata_file_access_url
             row << resource.metadata_file_download_url
+            row << resource.text
             row << resource.format
             row << resource.license.try(:name)
             row << '配信中'
@@ -128,6 +130,7 @@ module Opendata::Addon::ExportPublicEntityFormat
             row << I18n.locale
             row << resource.metadata_file_follow_standards
             row << dataset.label(:api_state)
+            row << resource.metadata_file_copyright
 
             data << encode_sjis_csv(row)
           end

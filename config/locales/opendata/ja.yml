@@ -118,6 +118,7 @@ ja:
         - データセット_来歴情報
         - データセット_対象地域
         - データセット_対象期間
+        - データセット_作成者
         - データセット_連絡先名称
         - データセット_連絡先メールアドレス
         - データセット_連絡先電話番号
@@ -128,6 +129,7 @@ ja:
         - ファイル_タイトル
         - ファイル_アクセスURL
         - ファイル_ダウンロードURL
+        - ファイル_説明
         - ファイル形式
         - ファイル_ライセンス
         - ファイル_ステータス
@@ -139,6 +141,7 @@ ja:
         - ファイル_言語
         - ファイル_準拠する標準
         - ファイル_API対応有無
+        - ファイル_著作権表記
     download_reports:
       dataset_data: データセット/データ名
     errors:
@@ -991,6 +994,7 @@ ja:
         metadata_dataset_follow_standards: 準拠する標準
         metadata_dataset_related_document: 関連ドキュメント
         metadata_dataset_target_period: 対象期間
+        metadata_dataset_creator: 作成者
         metadata_dataset_contact_name: 連絡先名称
         metadata_dataset_contact_email: 連絡先メールアドレス
         metadata_dataset_contact_tel: 連絡先電話番号
@@ -1006,6 +1010,7 @@ ja:
         metadata_file_terms_of_service: 利用規約
         metadata_file_related_document: 関連ドキュメント
         metadata_file_follow_standards: 準拠する標準
+        metadata_file_copyright: 著作権表記
       opendata/addon/profile_setting:
         edit_profile_state: プロフィールの編集
 

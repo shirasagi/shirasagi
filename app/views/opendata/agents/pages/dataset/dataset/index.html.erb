@@ -155,6 +155,10 @@ SS.renderClipboardCopy();
           <dt class="info-list__title"><%= rs.t :metadata_file_follow_standards %></dt>
           <dd class="info-list__content"><%= rs.metadata_file_follow_standards %></dd>
         <% end %>
+        <% if rs.metadata_file_copyright.present? %>
+          <dt class="info-list__title"><%= rs.t :metadata_file_copyright %></dt>
+          <dd class="info-list__content"><%= rs.metadata_file_copyright %></dd>
+        <% end %>
       </dl>
       <div class="info-detail__access">
         <div class="icons">
@@ -387,6 +391,11 @@ SS.renderClipboardCopy();
           <% if @cur_page.metadata_dataset_target_period.present? %>
             <dt><%= @cur_page.t(:metadata_dataset_target_period) %></dt>
             <dd><%= @cur_page.metadata_dataset_target_period %></dd>
+          <% end %>
+
+          <% if @cur_page.metadata_dataset_creator.present? %>
+            <dt><%= @cur_page.t(:metadata_dataset_creator) %></dt>
+            <dd><%= @cur_page.metadata_dataset_creator %></dd>
           <% end %>
 
           <% if @cur_page.metadata_dataset_remark.present? %>

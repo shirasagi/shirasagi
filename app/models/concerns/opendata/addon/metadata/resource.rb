@@ -23,10 +23,11 @@ module Opendata::Addon::Metadata::Resource
     field :metadata_file_terms_of_service, type: String
     field :metadata_file_related_document, type: String
     field :metadata_file_follow_standards, type: String
+    field :metadata_file_copyright, type: String
 
     permit_params :metadata_file_access_url, :metadata_file_download_url, :metadata_file_released,
       :metadata_file_updated, :metadata_file_terms_of_service, :metadata_file_related_document,
-      :metadata_file_follow_standards
+      :metadata_file_follow_standards, :metadata_file_copyright
 
     before_validation :set_uuid
     before_validation :set_metadata_text_index, if: -> { metadata_imported.present? }
@@ -68,6 +69,7 @@ module Opendata::Addon::Metadata::Resource
     self.metadata_file_terms_of_service = nil
     self.metadata_file_related_document = nil
     self.metadata_file_follow_standards = nil
+    self.metadata_file_copyright = nil
   end
 
   def set_metadata_text_index

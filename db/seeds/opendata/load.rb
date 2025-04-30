@@ -740,6 +740,7 @@ def save_metadata_dataset(idx, data)
       metadata_dataset_follow_standards: attributes['データセット_準拠する標準'],
       metadata_dataset_related_document: attributes['データセット_関連ドキュメント'],
       metadata_dataset_target_period: attributes['データセット_対象期間'],
+      metadata_dataset_creator: attributes['データセット_作成者'],
       metadata_dataset_contact_name: attributes['データセット_連絡先名称'],
       metadata_dataset_contact_email: attributes['データセット_連絡先メールアドレス'],
       metadata_dataset_contact_tel: attributes['データセット_連絡先電話番号'],
@@ -791,7 +792,8 @@ def save_metadata_resource(idx, dataset, report, data)
     metadata_file_updated: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_最終更新日']),
     metadata_file_terms_of_service: data[:metadata_imported_attributes]['ファイル_利用規約'],
     metadata_file_related_document: data[:metadata_imported_attributes]['ファイル_関連ドキュメント'],
-    metadata_file_follow_standards: data[:metadata_imported_attributes]['ファイル_準拠する標準']
+    metadata_file_follow_standards: data[:metadata_imported_attributes]['ファイル_準拠する標準'],
+    metadata_file_copyright: data[:metadata_imported_attributes]['ファイル_著作権表記']
   }
   def resource.set_updated; end
   puts resource.errors.full_messages unless resource.update resource_data
@@ -821,6 +823,7 @@ save_metadata_dataset 0, filename: "dataset/metadata_dataset1.html", route: "ope
     'データセット_来歴情報': "2024年2月11日：3件新規追加",
     'データセット_対象地域': "オオワシ県シラサギ市",
     'データセット_対象期間': "開始年月日/終了年月日 : 2024年2月1日/2024年7月1日",
+    'データセット_作成者': "○○課○○係○○担当",
     'データセット_連絡先名称': "シラサギ市 企画制作部 広報課",
     'データセット_連絡先メールアドレス': "koho@example.jp",
     'データセット_連絡先電話番号': "111-111-1111",
@@ -842,7 +845,8 @@ save_metadata_dataset 0, filename: "dataset/metadata_dataset1.html", route: "ope
     'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
     'ファイル_言語': "ja",
     'ファイル_準拠する標準': "自治体標準オープンデータセット",
-    'ファイル_API対応有無': "有"
+    'ファイル_API対応有無': "有",
+    'ファイル_著作権表記': "株式会社〇〇"
   }.with_indifferent_access
 save_metadata_dataset 1, filename: "dataset/metadata_dataset1.html", route: "opendata/dataset",
   layout_id: layouts["dataset-page"].id,
@@ -867,6 +871,7 @@ save_metadata_dataset 1, filename: "dataset/metadata_dataset1.html", route: "ope
     'データセット_来歴情報': "2024年2月11日：3件新規追加",
     'データセット_対象地域': "オオワシ県シラサギ市",
     'データセット_対象期間': "開始年月日/終了年月日 : 2024年2月1日/2024年7月1日",
+    'データセット_作成者': "○○課○○係○○担当",
     'データセット_連絡先名称': "シラサギ市 企画制作部 広報課",
     'データセット_連絡先メールアドレス': "koho@example.jp",
     'データセット_連絡先電話番号': "111-111-1111",
@@ -888,7 +893,8 @@ save_metadata_dataset 1, filename: "dataset/metadata_dataset1.html", route: "ope
     'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
     'ファイル_言語': "ja",
     'ファイル_準拠する標準': "自治体標準オープンデータセット",
-    'ファイル_API対応有無': "有"
+    'ファイル_API対応有無': "有",
+    'ファイル_著作権表記': "株式会社〇〇"
   }.with_indifferent_access
 save_metadata_dataset 2, filename: "dataset/metadata_dataset2.html", route: "opendata/dataset",
   layout_id: layouts["dataset-page"].id,
@@ -913,6 +919,7 @@ save_metadata_dataset 2, filename: "dataset/metadata_dataset2.html", route: "ope
     'データセット_来歴情報': "2024年7月11日：3件新規追加",
     'データセット_対象地域': "オオワシ県シラサギ市",
     'データセット_対象期間': "開始年月日/終了年月日 : 2024年7月1日/2024年8月1日",
+    'データセット_作成者': "○○課○○係○○担当",
     'データセット_連絡先名称': "シラサギ市 企画政策部 政策課",
     'データセット_連絡先メールアドレス': "seisaku@example.jp",
     'データセット_連絡先電話番号': "111-111-1111",
@@ -934,7 +941,8 @@ save_metadata_dataset 2, filename: "dataset/metadata_dataset2.html", route: "ope
     'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
     'ファイル_言語': "ja",
     'ファイル_準拠する標準': "自治体標準オープンデータセット",
-    'ファイル_API対応有無': "無"
+    'ファイル_API対応有無': "無",
+    'ファイル_著作権表記': "株式会社〇〇"
   }.with_indifferent_access
 save_metadata_dataset 3, filename: "dataset/metadata_dataset3.html", route: "opendata/dataset",
   layout_id: layouts["dataset-page"].id,
@@ -959,6 +967,7 @@ save_metadata_dataset 3, filename: "dataset/metadata_dataset3.html", route: "ope
     'データセット_来歴情報': "2024年8月11日：3件新規追加",
     'データセット_対象地域': "オオワシ県シラサギ市",
     'データセット_対象期間': "開始年月日/終了年月日 : 2024年9月1日/2024年9月1日",
+    'データセット_作成者': "○○課○○係○○担当",
     'データセット_連絡先名称': "シラサギ市 企画政策部 政策課",
     'データセット_連絡先メールアドレス': "seisaku@example.jp",
     'データセット_連絡先電話番号': "111-111-1111",
@@ -980,7 +989,8 @@ save_metadata_dataset 3, filename: "dataset/metadata_dataset3.html", route: "ope
     'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
     'ファイル_言語': "ja",
     'ファイル_準拠する標準': "自治体標準オープンデータセット",
-    'ファイル_API対応有無': "有"
+    'ファイル_API対応有無': "有",
+    'ファイル_著作権表記': "株式会社〇〇"
   }.with_indifferent_access
 
 ## -------------------------------------
