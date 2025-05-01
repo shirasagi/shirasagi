@@ -12,7 +12,7 @@
 
   <%= button_tag t('ss.buttons.upload'), type: :button, name: 'upload', class: "btn", data: { action: "ss--file-field#openDialog" } %>
   <%= file_view_tag do %>
-    <%= sanitizer_status(file) %>
+    <%= sanitizer_status(file) if SS::UploadPolicy.upload_policy == 'sanitizer' %>
     <%= tag.img src: file.try(:thumb_no_cache_url), alt: file.try(:name) %>
     <div class="name">
       <%= hidden_field_tag(field_name, file.try(:id), id: nil, class: "file-id") %>

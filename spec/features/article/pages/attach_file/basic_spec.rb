@@ -192,7 +192,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           # cms/file is created by cms_user
           tmp_ss_file(
             Cms::File,
-            site: site, user: cms_user, model: "cms/file", name: name, basename: file_name,
+            site: site, user: cms_user, model: Cms::File::FILE_MODEL, name: name, basename: file_name,
             contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg",
             group_ids: cms_user.group_ids
           )

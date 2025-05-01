@@ -329,7 +329,8 @@ module SS::Model::File
     end
   end
 
-  COPY_REQUIRED_MODELS = %w(cms/file ss/user_file).freeze
+  # CMSの共有ファイルやSNSのユーザーファイルの場合、複製したものを添付する
+  COPY_REQUIRED_MODELS = [ Cms::File::FILE_MODEL, SS::UserFile::FILE_MODEL ].freeze
 
   def copy_if_necessary(opts = {})
     return self if !COPY_REQUIRED_MODELS.include?(self.model)

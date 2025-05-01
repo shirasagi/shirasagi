@@ -116,7 +116,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       site.reload
 
       file2 = tmp_ss_file(
-        Cms::File, site: site, user: cms_user, model: "cms/file",
+        Cms::File, site: site, user: cms_user, model: Cms::File::FILE_MODEL,
         contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
       )
 
