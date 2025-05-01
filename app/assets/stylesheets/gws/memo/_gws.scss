@@ -185,7 +185,9 @@
   }
   .info {
     @include truncate;
-    @include display-flex;
+    & {
+      @include display-flex;
+    }
     @include mb {
       display: block;
       clear: both;
@@ -303,8 +305,10 @@ table.index.gws-memo-folder {
     text-align: left;
     a {
       @include truncate;
-      padding: 5px 10px;
-      color: $black;
+      & {
+        padding: 5px 10px;
+        color: $black;
+      }
     }
     a:hover {
       background-color: $gray1;
