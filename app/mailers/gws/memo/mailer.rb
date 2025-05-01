@@ -23,8 +23,7 @@ class Gws::Memo::Mailer < ApplicationMailer
 
     mail(from: from, bcc: forward_emails, subject: subject, message_id: Gws.generate_message_id(@cur_site)) do |format|
       # 本文がHTML形式の場合はHTMLメールを、それ以外の場合はテキスト形式のメールを送る
-      case @item.format
-      when "html"
+      if @item.html?
         format.html { render }
       else
         format.text { render }
