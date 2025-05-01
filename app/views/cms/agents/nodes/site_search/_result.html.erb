@@ -25,28 +25,6 @@ $(function() {
 });
 </script>
 
-<style>
-.cms-site-search .search-stats {
-  display: flex;
-  justify-content: space-between;
-}
-.cms-site-search .search-result .cms-site-search-pages .item {
-  padding-bottom: 20px;
-  border-bottom: 1px solid #ccc;
-  .summary {
-    display: flex;
-    .image { padding: 10px 15px 0 0; }
-    .image img { max-width: 110px; max-height: 100px; }
-    .text { flex: 1; }
-    .text em { color: #e00; font-style: normal; }
-  }
-  .meta {
-    .url { color: green; }
-    .category-name { color: blue; cursor: pointer; }
-  }
-}
-</style>
-
 <div class="search-stats">
   <div>
     <%= I18n.t('gws/elasticsearch.format.search_results_count',

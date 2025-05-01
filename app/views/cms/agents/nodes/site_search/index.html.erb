@@ -38,40 +38,6 @@ Cms_Site_Search.render();
 Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.full_url %>");
 <% end %>
 
-<style>
-body.general.body--search .cms-site-search .search-form {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 30px;
-  align-items: start;
-  height: auto;
-  border: 3px solid #97dcf0;
-  padding: 30px;
-  > * {
-    position: relative;
-  }
-  article {
-    margin: 0;
-    padding: 0;
-  }
-  .site-search-keyword {
-    width: 500px;
-  }
-}
-.search-wrap .site-search-history, .cms-site-search .site-search-history {
-  top: auto;
-}
-body.general.body--search .cms-site-search .search-form .send {
-  padding: 6px 10px;
-}
-.site-search-categories {
-  display: block !important;
-}
-body.general.body--search .cms-site-search .search-form .site-search-keyword dt {
-  display: block !important;
-}
-</style>
-
 <div class="cms-site-search">
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
     <%= hidden_field_tag "sort", params[:sort], id: nil %>
@@ -134,24 +100,6 @@ body.general.body--search .cms-site-search .search-form .site-search-keyword dt 
       <dd>
         <%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off",
           title: t('category.node'), placeholder: t('category.node') %>
-        <!--
-        <br>
-        <%= link_to t('facility.submit.change'), "#{@cur_node.url}categories.html", class: "ajax-box" %>
-
-        <div class="selected-categories">
-          <% if @s.category_names.present? %>
-            <% @s.category_names.each do |category_name| %>
-              <article class="selected-item" data-name="<%= category_name %>">
-                <header>
-                  <span class="category-name"><%= category_name %></span>
-                  <%= f.hidden_field 'category_names[]', value: category_name, id: nil %>
-                  <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
-                </header>
-              </article>
-            <% end %>
-          <% end %>
-        </div>
-        -->
       </dd>
     </dl>
 
@@ -162,12 +110,6 @@ body.general.body--search .cms-site-search .search-form .site-search-keyword dt 
           title: t('ss.organization'), placeholder: t('ss.organization') %>
       </dd>
     </dl>
-
-    <!--
-    <div class="send">
-      <input type="submit" value="<%= t('cms.search_button') %>" />
-    </div>
-    -->
   <% end %>
 
   <% if @result.present? %>

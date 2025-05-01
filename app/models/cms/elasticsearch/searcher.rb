@@ -96,7 +96,7 @@ class Cms::Elasticsearch::Searcher
     when 'updated'
       sort = [{ updated: 'desc' }, '_score']
     else
-      sort = [ "_score": "desc" ]
+      sort = [ _score: 'desc' ]
     end
 
     highlight = {
