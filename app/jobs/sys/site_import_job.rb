@@ -65,6 +65,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_translate_langs
     invoke :import_cms_translate_text_caches
     invoke :import_cms_page_search
+    invoke :import_cms_guides
 
     FileUtils.rm_rf(@import_dir)
     @task.log("Completed.")
@@ -460,6 +461,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
       save_document(item)
     end
   end
+
   def import_cms_page_search
     @task.log("- import cms Page Search")
 
@@ -483,6 +485,44 @@ class Sys::SiteImportJob < SS::ApplicationJob
       data.each { |k, v| item[k] = v }
 
       save_document(item)
+    end
+  end
+
+  def import_cms_guides
+    @task.log("- import cms Guide::Diagram::Point")
+
+    @guide_diagram_point_map = {}
+
+    embeded_edges = {}
+    read_json("guide_diagram_point").each do |data|
+      klass = data["_type"].constantize
+      id    = data.delete('_id')
+      edges = data.delete('edges')
+
+      data = convert_data(data)
+      cond = { site_id: @dst_site.id, node_id: data["node_id"], id_name: data["id_name"] }
+      item = klass.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      if save_document(item)
+        embeded_edges[item.id] = edges if edges.present?
+        @guide_diagram_point_map[id] = item.id
+      end
+    end
+
+    embeded_edges.each do |id, values|
+      point = Guide::Diagram::Point.find(id)
+      point.edges = values.map do |data|
+        data.delete('_id')
+        data["point_ids"] = convert_ids(@guide_diagram_point_map, data["point_ids"])
+        data["not_applicable_point_ids"] = convert_ids(@guide_diagram_point_map, data["not_applicable_point_ids"])
+        data["optional_necessary_point_ids"] = convert_ids(@guide_diagram_point_map, data["optional_necessary_point_ids"])
+
+        item = Guide::Diagram::Edge.new
+        data.each { |k, v| item[k] = v }
+        item
+      end
+      save_document(point)
     end
   end
 end

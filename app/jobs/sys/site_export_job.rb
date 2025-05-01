@@ -48,6 +48,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_kana_dictionaries
     invoke :export_opendata_dataset_groups
     invoke :export_opendata_licenses
+    invoke :export_guide_diagram_point
 
     # files
     invoke :export_cms_files
@@ -227,6 +228,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def export_opendata_licenses
     export_documents "opendata_licenses", Opendata::License
+  end
+
+  def export_guide_diagram_point
+    export_documents "guide_diagram_point", Guide::Diagram::Point
   end
 
   def export_cms_files
