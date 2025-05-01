@@ -35,12 +35,12 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       # expect(item.enum_es_docs.to_a[0][1][:created]).to eq cms_page.created.try(:iso8601)
 
       expect(item.enum_es_docs.to_a[1][0]).to eq "file-#{file.id}"
-      expect(item.enum_es_docs.to_a[1][1][:url]).to eq cms_page.url
+      expect(item.enum_es_docs.to_a[1][1][:page_url]).to eq cms_page.url
       expect(item.enum_es_docs.to_a[1][1][:name]).to eq file.name
       expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(::File.binread(file.path))
       expect(item.enum_es_docs.to_a[1][1][:file][:extname]).to eq 'PNG'
       expect(item.enum_es_docs.to_a[1][1][:file][:size]).to eq file.size
-      expect(item.enum_es_docs.to_a[1][1][:path]).to eq cms_page.path
+      expect(item.enum_es_docs.to_a[1][1][:page_path]).to eq cms_page.path
       expect(item.enum_es_docs.to_a[1][1][:state]).to eq 'public'
       # expect(item.enum_es_docs.to_a[1][1][:released]).to eq cms_page.released.try(:iso8601)
       # expect(item.enum_es_docs.to_a[1][1][:updated]).to eq file.updated.try(:iso8601)
@@ -139,24 +139,24 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       # expect(item.enum_es_docs.to_a[0][1][:created]).to eq cms_page.created.try(:iso8601)
 
       expect(item.enum_es_docs.to_a[1][0]).to eq "file-#{file.id}"
-      expect(item.enum_es_docs.to_a[1][1][:url]).to eq cms_page.url
+      expect(item.enum_es_docs.to_a[1][1][:page_url]).to eq cms_page.url
       expect(item.enum_es_docs.to_a[1][1][:name]).to eq file.name
       expect(item.enum_es_docs.to_a[1][1][:data]).to eq Base64.strict_encode64(::File.binread(file.path))
       expect(item.enum_es_docs.to_a[1][1][:file][:extname]).to eq 'PNG'
       expect(item.enum_es_docs.to_a[1][1][:file][:size]).to eq file.size
-      expect(item.enum_es_docs.to_a[1][1][:path]).to eq cms_page.path
+      expect(item.enum_es_docs.to_a[1][1][:page_path]).to eq cms_page.path
       expect(item.enum_es_docs.to_a[1][1][:state]).to eq 'public'
       # expect(item.enum_es_docs.to_a[1][1][:released]).to eq cms_page.released.try(:iso8601)
       # expect(item.enum_es_docs.to_a[1][1][:updated]).to eq file.updated.try(:iso8601)
       # expect(item.enum_es_docs.to_a[1][1][:created]).to eq file.created.try(:iso8601)
 
       expect(item.enum_es_docs.to_a[2][0]).to eq "file-#{file.id}"
-      expect(item.enum_es_docs.to_a[2][1][:url]).to eq cms_page.url
+      expect(item.enum_es_docs.to_a[2][1][:page_url]).to eq cms_page.url
       expect(item.enum_es_docs.to_a[2][1][:name]).to eq file.name
       expect(item.enum_es_docs.to_a[2][1][:data]).to eq Base64.strict_encode64(::File.binread(file.path))
       expect(item.enum_es_docs.to_a[2][1][:file][:extname]).to eq 'PNG'
       expect(item.enum_es_docs.to_a[2][1][:file][:size]).to eq file.size
-      expect(item.enum_es_docs.to_a[2][1][:path]).to eq cms_page.path
+      expect(item.enum_es_docs.to_a[2][1][:page_path]).to eq cms_page.path
       expect(item.enum_es_docs.to_a[2][1][:state]).to eq 'public'
       # expect(item.enum_es_docs.to_a[2][1][:released]).to eq cms_page.released.try(:iso8601)
       # expect(item.enum_es_docs.to_a[2][1][:updated]).to eq file.updated.try(:iso8601)

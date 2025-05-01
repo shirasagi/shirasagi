@@ -101,7 +101,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
         es_docs["hits"]["hits"][1].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq page.url
+          expect(source['page_url']).to eq page.url
         end
       end
 
@@ -265,17 +265,17 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
         es_docs["hits"]["hits"][1].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file1.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq page.url
+          expect(source['page_url']).to eq page.url
         end
         es_docs["hits"]["hits"][2].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file2.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq page.url
+          expect(source['page_url']).to eq page.url
         end
         es_docs["hits"]["hits"][3].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file3.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq page.url
+          expect(source['page_url']).to eq page.url
         end
       end
 
