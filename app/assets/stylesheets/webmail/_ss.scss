@@ -13,8 +13,10 @@
   text-align: left;
   a {
     @include truncate;
-    padding: 5px 10px;
-    color: $black;
+    & {
+      padding: 5px 10px;
+      color: $black;
+    }
   }
   a:hover {
     background-color: $gray1;
@@ -191,8 +193,10 @@ li.webmail-accounts {
   }
   .list-item-head {
     @include mb { display: none; }
-    padding-bottom: 8px;
-    font-weight: bold;
+    & {
+      padding-bottom: 8px;
+      font-weight: bold;
+    }
     .head {
       @include display-flex;
       position: relative;
@@ -213,7 +217,9 @@ li.webmail-accounts {
   }
   .info {
     @include truncate;
-    @include display-flex;
+    & {
+      @include display-flex;
+    }
     @include mb {
       display: block;
     }

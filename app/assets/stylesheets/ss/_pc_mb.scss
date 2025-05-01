@@ -2,11 +2,15 @@
 // base
 
 header, footer, nav, section, article, figure, aside {
-  display: block;
-  margin: 0;
+  & {
+    display: block;
+    margin: 0;
+  }
 }
 * {
-  @include box-sizing(border-box);
+  & {
+    @include box-sizing(border-box);
+  }
 }
 html {
   font-size: 13px;
@@ -698,9 +702,11 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 .site-name {
   @include clear;
   @include truncate;
-  padding: 10px 15px;
-  border-bottom: $border-gray5;
-  font-weight: bold;
+  & {
+    padding: 10px 15px;
+    border-bottom: $border-gray5;
+    font-weight: bold;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -1673,8 +1679,10 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   @include mb { margin: 0 10px 10px; }
   header {
     @include box-head;
-    margin: -15px -10px 15px;
-    border-bottom: $border-gray1;
+    & {
+      margin: -15px -10px 15px;
+      border-bottom: $border-gray1;
+    }
   }
   .main-body {
     margin: -20px 0;
@@ -1958,9 +1966,11 @@ footer.send {
   }
   button.preview {
     @include btn-white;
-    position: relative;
-    margin-top: -2px;
-    padding-left: 36px;
+    & {
+      position: relative;
+      margin-top: -2px;
+      padding-left: 36px;
+    }
 
     &::before {
       content: "pageview";
@@ -2353,7 +2363,9 @@ footer.send {
   }
   .add-marker {
     @include btn-orange;
-    margin: 10px 0 28px;
+    & {
+      margin: 10px 0 28px;
+    }
   }
 }
 #map-canvas {
