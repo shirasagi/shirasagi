@@ -1,0 +1,46 @@
+<div class="body body--html">
+  <div>メッセージが届きました。</div>
+  <div>&nbsp;</div>
+  <div>
+    <table>
+      <tbody>
+      <tr>
+        <th>元メッセージ</th>
+        <td><%= gws_memo_message_url(protocol: @cur_site.canonical_scheme.presence || SS.config.gws.canonical_scheme, host: @cur_site.canonical_domain.presence || SS.config.gws.canonical_domain, site: @cur_site, folder: "REDIRECT", id: @item) %></td>
+      </tr>
+      <tr>
+        <th><%= I18n.t("mongoid.attributes.gws/model/memo/message.subject") %></th>
+        <td><%= @item.name %></td>
+      </tr>
+      <tr>
+        <th><%= I18n.t("mongoid.attributes.gws/model/memo/message.send_date") %></th>
+        <td><%= ss_time_tag @item.send_date %></td>
+      </tr>
+      <tr>
+        <th><%= I18n.t("mongoid.attributes.gws/model/memo/message.from") %></th>
+        <td><%= format_email(@cur_user.name, @cur_user.email) %></td>
+      </tr>
+      <tr>
+        <th>宛先</th>
+        <td><%= @to %></td>
+      </tr>
+      <% if @cc.present? %>
+        <tr>
+          <th>CC</th>
+          <td><%= @cc %></td>
+        </tr>
+      <% end -%>
+      <% if @item.files.present? %>
+        <tr>
+          <th>添付ファイル</th>
+          <td><%= @item.files.pluck(:name).join(", ") %></td>
+        </tr>
+      <% end -%>
+      </tbody>
+    </table>
+  </div>
+  <div>&nbsp;</div>
+  <div class="body body--html">
+    <%= @item.sanitize_html %>
+  </div>
+</div>
