@@ -159,6 +159,10 @@ module Cms::PublicFilter::Layout
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
     end
 
+    html.gsub!('#{description}') do
+      ERB::Util.html_escape(@cur_item.description)
+    end
+
     template = %w(
       #\{
       (?<time>|time\.)
