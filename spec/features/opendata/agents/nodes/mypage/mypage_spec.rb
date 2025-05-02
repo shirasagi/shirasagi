@@ -52,7 +52,7 @@ describe "opendata_agents_nodes_mypage", type: :feature, dbscope: :example do
 
       visit show_notice_url
       expect(status_code).to eq 200
-      expect(page).to have_link(member_notice.commented_count)
+      expect(page).to have_link(member_notice.commented_count.to_s)
 
       visit confirm_notice_url
       expect(status_code).to eq 200

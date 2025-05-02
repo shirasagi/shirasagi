@@ -79,6 +79,7 @@ describe "webmail_groups", type: :feature, dbscope: :example, js: true do
       fill_in "item[from]", with: from2
       click_on I18n.t("ss.buttons.save")
     end
+    wait_for_notice I18n.t('ss.notice.saved')
 
     group.reload
     expect(group).to have(1).imap_settings
@@ -98,6 +99,7 @@ describe "webmail_groups", type: :feature, dbscope: :example, js: true do
     within "form" do
       click_on I18n.t("ss.buttons.delete")
     end
+    wait_for_notice I18n.t('ss.notice.deleted')
 
     group.reload
     expect(group).to have(0).imap_settings

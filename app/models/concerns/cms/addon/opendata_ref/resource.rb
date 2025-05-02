@@ -21,7 +21,7 @@ module Cms::Addon::OpendataRef::Resource
     file_id = file.id.to_s
     self.opendata_resources ||= {}
     self.opendata_resources[file_id] ||= {}
-    self.opendata_resources[file_id][:state] ||= 'none'
+    self.opendata_resources[file_id]['state'] ||= 'none'
   end
 
   def update_opendata_resources!(file_id, key_values)

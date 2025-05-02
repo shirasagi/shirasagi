@@ -124,7 +124,7 @@ module SS
 
     config.paths["config/initializers"] << "#{config.root}/config/after_initializers"
 
-    config.middleware.use Mongoid::QueryCache::Middleware
+    config.middleware.use Mongo::QueryCache::Middleware
     # middelware "ActionDispatch::Executor" で ActiveSupport::CurrentAttributes は reset される。
     # そこで、middelware "ActionDispatch::Executor" の後で Current.env をセットする必要がある
     config.middleware.use CurrentScoping
