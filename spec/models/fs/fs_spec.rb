@@ -1,83 +1,77 @@
 require 'spec_helper'
 
 describe Fs do
-  let(:filesystem) do
-    Class.new do
-      include ::Fs::File
-    end
-  end
-
   let(:data) { ::File.binread("#{Rails.root}/spec/fixtures/ss/logo.png") }
 
   describe '.mode' do
     it do
-      expect(filesystem.mode).to eq :file
+      expect(Fs.mode).to eq :file
     end
   end
 
   describe '.exist?' do
     it do
       # full path
-      expect(filesystem.exist?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
+      expect(Fs.exist?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
       # not exist
-      expect(filesystem.exist?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
+      expect(Fs.exist?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
     end
 
     it do
       # relative path
-      expect(filesystem.exist?("spec/fixtures/ss/logo.png")).to be_truthy
+      expect(Fs.exist?("spec/fixtures/ss/logo.png")).to be_truthy
       # not exist
-      expect(filesystem.exist?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
+      expect(Fs.exist?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
     end
   end
 
   describe '.file?' do
     it do
       # full path
-      expect(filesystem.file?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
+      expect(Fs.file?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_truthy
       # not exist
-      expect(filesystem.file?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
+      expect(Fs.file?("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to be_falsey
     end
 
     it do
       # relative path
-      expect(filesystem.file?("spec/fixtures/ss/logo.png")).to be_truthy
+      expect(Fs.file?("spec/fixtures/ss/logo.png")).to be_truthy
       # not exist
-      expect(filesystem.file?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
+      expect(Fs.file?("spec/fixtures/ss/#{unique_id}.png")).to be_falsey
     end
   end
 
   describe '.directory?' do
     it do
       # full path
-      expect(filesystem.directory?("#{Rails.root}/spec/fixtures/ss")).to be_truthy
-      expect(filesystem.directory?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_falsey
+      expect(Fs.directory?("#{Rails.root}/spec/fixtures/ss")).to be_truthy
+      expect(Fs.directory?("#{Rails.root}/spec/fixtures/ss/logo.png")).to be_falsey
       # not exist
-      expect(filesystem.directory?("#{Rails.root}/spec/fixtures/#{unique_id}")).to be_falsey
+      expect(Fs.directory?("#{Rails.root}/spec/fixtures/#{unique_id}")).to be_falsey
     end
 
     it do
       # relative path
-      expect(filesystem.directory?("spec/fixtures/ss")).to be_truthy
-      expect(filesystem.directory?("spec/fixtures/ss/logo.png")).to be_falsey
+      expect(Fs.directory?("spec/fixtures/ss")).to be_truthy
+      expect(Fs.directory?("spec/fixtures/ss/logo.png")).to be_falsey
       # not exist
-      expect(filesystem.directory?("spec/fixtures/#{unique_id}")).to be_falsey
+      expect(Fs.directory?("spec/fixtures/#{unique_id}")).to be_falsey
     end
   end
 
   describe '.binread' do
     it do
       # full path
-      expect(filesystem.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
+      expect(Fs.binread("#{Rails.root}/spec/fixtures/ss/logo.png").hash).to eq data.hash
       # not exist
-      expect { filesystem.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
+      expect { Fs.binread("#{Rails.root}/spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
     end
 
     it do
       # relative path
-      expect(filesystem.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
+      expect(Fs.binread("spec/fixtures/ss/logo.png").hash).to eq data.hash
       # not exist
-      expect { filesystem.binread("spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
+      expect { Fs.binread("spec/fixtures/#{unique_id}") }.to raise_error Errno::ENOENT
     end
   end
 
@@ -90,50 +84,50 @@ describe Fs do
 
     it do
       # full path
-      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", data)).to eq data.length
+      expect(Fs.binwrite("#{tmpdir}/spec/fs/logo.png", data)).to eq data.length
       # write nil
-      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
+      expect(Fs.binwrite("#{tmpdir}/spec/fs/logo.png", nil)).to eq 0
       # write empty
-      expect(filesystem.binwrite("#{tmpdir}/spec/fs/logo.png", '')).to eq 0
+      expect(Fs.binwrite("#{tmpdir}/spec/fs/logo.png", '')).to eq 0
     end
   end
 
   describe '.size' do
     it do
       # full path
-      expect(filesystem.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data.length
+      expect(Fs.size("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq data.length
       # not exist
-      expect { filesystem.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
+      expect { Fs.size("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
     end
 
     it do
       # relative path
-      expect(filesystem.size("spec/fixtures/ss/logo.png")).to eq data.length
+      expect(Fs.size("spec/fixtures/ss/logo.png")).to eq data.length
       # not exist
-      expect { filesystem.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
+      expect { Fs.size("spec/fixtures/ss/#{unique_id}.png") }.to raise_error Errno::ENOENT
     end
   end
 
   describe '.content_type' do
     it do
       # full path
-      expect(filesystem.content_type("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq 'image/png'
+      expect(Fs.content_type("#{Rails.root}/spec/fixtures/ss/logo.png")).to eq 'image/png'
       # not exist
-      expect(filesystem.content_type("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to eq 'image/png'
+      expect(Fs.content_type("#{Rails.root}/spec/fixtures/ss/#{unique_id}.png")).to eq 'image/png'
     end
 
     it do
       # relative path
-      expect(filesystem.content_type("spec/fixtures/ss/logo.png")).to eq 'image/png'
+      expect(Fs.content_type("spec/fixtures/ss/logo.png")).to eq 'image/png'
       # not exist
-      expect(filesystem.content_type("spec/fixtures/ss/#{unique_id}.png")).to eq 'image/png'
+      expect(Fs.content_type("spec/fixtures/ss/#{unique_id}.png")).to eq 'image/png'
     end
   end
 
   describe '.mkdir_p' do
     it do
       # full path
-      expect(filesystem.mkdir_p("#{tmpdir}/spec/fixtures/#{unique_id}")).to be_truthy
+      expect(Fs.mkdir_p("#{tmpdir}/spec/fixtures/#{unique_id}")).to be_truthy
     end
   end
 
@@ -146,12 +140,12 @@ describe Fs do
     end
 
     it do
-      expect(filesystem.mv("#{tmpdir}/spec/fs/logo.png", "#{tmpdir}/spec/fs/logo1.png")).to eq 0
+      expect(Fs.mv("#{tmpdir}/spec/fs/logo.png", "#{tmpdir}/spec/fs/logo1.png")).to eq 0
       # not exist
-      expect { filesystem.mv("#{tmpdir}/spec/fs/logo2.png", "#{tmpdir}/spec/fs/logo3.png") }.to \
+      expect { Fs.mv("#{tmpdir}/spec/fs/logo2.png", "#{tmpdir}/spec/fs/logo3.png") }.to \
         raise_error Errno::ENOENT
       # move directory
-      expect(filesystem.mv("#{tmpdir}/spec/fs", "#{tmpdir}/spec/fs2")).to eq 0
+      expect(Fs.mv("#{tmpdir}/spec/fs", "#{tmpdir}/spec/fs2")).to eq 0
     end
   end
 
@@ -164,17 +158,17 @@ describe Fs do
     end
 
     it do
-      expect(filesystem.rm_rf("#{tmpdir}/spec/fs/logo.png")).to eq [ "#{tmpdir}/spec/fs/logo.png" ]
+      expect(Fs.rm_rf("#{tmpdir}/spec/fs/logo.png")).to eq [ "#{tmpdir}/spec/fs/logo.png" ]
     end
 
     it do
       # not exist
-      expect(filesystem.rm_rf("#{tmpdir}/spec/fs/logo2.png")).to eq [ "#{tmpdir}/spec/fs/logo2.png" ]
+      expect(Fs.rm_rf("#{tmpdir}/spec/fs/logo2.png")).to eq [ "#{tmpdir}/spec/fs/logo2.png" ]
     end
 
     it do
       # remove directory
-      expect(filesystem.rm_rf("#{tmpdir}/spec/fs")).to eq [ "#{tmpdir}/spec/fs" ]
+      expect(Fs.rm_rf("#{tmpdir}/spec/fs")).to eq [ "#{tmpdir}/spec/fs" ]
     end
   end
 
@@ -187,8 +181,8 @@ describe Fs do
     end
 
     it do
-      expect(filesystem.glob("#{tmpdir}/spec/fs/*")).to eq [ "#{tmpdir}/spec/fs/logo.png" ]
-      expect(filesystem.glob("#{tmpdir}/spec/**/*")).to eq [ "#{tmpdir}/spec/fs", "#{tmpdir}/spec/fs/logo.png" ]
+      expect(Fs.glob("#{tmpdir}/spec/fs/*")).to eq [ "#{tmpdir}/spec/fs/logo.png" ]
+      expect(Fs.glob("#{tmpdir}/spec/**/*")).to eq [ "#{tmpdir}/spec/fs", "#{tmpdir}/spec/fs/logo.png" ]
     end
   end
 
