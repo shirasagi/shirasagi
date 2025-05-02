@@ -129,9 +129,6 @@ module Cms::PublicFilter::Layout
     @window_name = @cur_site.name
     @window_name = "#{@cur_item.window_name} - #{@current_page} #{@cur_site.name}" if @cur_item.filename != 'index.html'
 
-    @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
-    @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
-
     @parts = {}
   end
 
@@ -160,7 +157,7 @@ module Cms::PublicFilter::Layout
     end
 
     html.gsub!('#{description}') do
-      ERB::Util.html_escape(@cur_item.description)
+      ERB::Util.html_escape(@cur_item.template_variable_handler_description)
     end
 
     template = %w(
