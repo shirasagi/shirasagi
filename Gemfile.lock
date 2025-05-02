@@ -375,9 +375,6 @@ GEM
       mongoid (>= 2.0)
     mongoid-geospatial (5.1.0)
       mongoid (>= 4.0.0)
-    mongoid-grid_fs (2.5.0)
-      mime-types (>= 1.0, < 4.0)
-      mongoid (>= 3.0, < 9.0)
     mongoid-rspec (4.2.0)
       mongoid (>= 3.0, < 10.0)
       mongoid-compatibility (>= 0.5.1)
@@ -811,11 +808,11 @@ DEPENDENCIES
   mail-iso-2022-jp
   marcel
   marked-rails
+  mime-types
   mini_magick
   mongo_session_store
   mongoid
   mongoid-geospatial
-  mongoid-grid_fs
   mongoid-rspec
   net-imap
   net-ldap

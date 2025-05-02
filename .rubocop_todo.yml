@@ -566,11 +566,6 @@ Lint/RedundantStringCoercion:
     - 'lib/tasks/ss/file.rake'
 
 # Offense count: 1
-Lint/SelfAssignment:
-  Exclude:
-    - 'app/models/concerns/fs/grid_fs.rb'
-
-# Offense count: 1
 Lint/ShadowedException:
   Exclude:
     - 'app/models/concerns/voice/downloadable.rb'
