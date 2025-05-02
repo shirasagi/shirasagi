@@ -3,7 +3,7 @@
 <% end %>
 
 <dl class="see mod-cms-site-search-setting">
-  <dt><%= t("cms.node_config") %><%= @model.tt :st_article_nodes %></dt>
+  <dt><%= t("cms.node_config") %><%= @model.tt :st_article_node_ids %></dt>
   <dd class="wide" style="line-height: 2.5">
     <%= f.hidden_field "st_article_node_ids[]", value: "", class: "hidden-ids" %>
     <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(model: 'Article::Node::Page'), class: "ajax-box" %>
@@ -27,6 +27,8 @@
     </table>
   </dd>
 
+  <% if false %>
   <dt><%= @model.t :site_search_type %><%= @model.tt :site_search_type %></dt>
   <dd><%= f.select :site_search_type, @item.site_search_type_options %></dd>
+  <% end %>
 </dl>

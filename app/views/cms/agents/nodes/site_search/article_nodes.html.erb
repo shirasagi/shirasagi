@@ -28,7 +28,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
     <tbody class="items">
     <% @items.each do |item| %>
       <% next if params.dig(:s, :keyword).present? && !item.name.include?(params.dig(:s, :keyword)) %>
-      <tr data-name="<%= item.name %>" class="list-item">
+      <tr data-id="<%= item.id %>" class="list-item">
         <td class="checkbox">
           <label for="<%= "ch-d-#{item.id}" %>">
             <input type="checkbox" name="ids[]" value="<%= item.id %>" class="set-article-node" id="<%= "ch-d-#{item.id}" %>"/>
@@ -40,7 +40,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
             <header>
               <span class="article-node-name"><%= item.name %></span>
               <%= hidden_field_tag('s[article_node_ids][]', item.id) %>
-              <%= button_tag t('ss.buttons.delete'), type: 'button', class: %w(btn deselect) %>
+              <a class="btn deselect">✕</a>
             </header>
           </article>
         </td>

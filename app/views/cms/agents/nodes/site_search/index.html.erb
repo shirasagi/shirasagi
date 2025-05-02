@@ -45,14 +45,14 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     <dl class="site-search-type">
       <dt><%= @cur_node.t(:site_search_type) %></dt>
       <dd><%= select_tag 's[type]',
-        options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type).presence || @cur_node.site_search_type),
+        options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type).presence),
         id: nil, "aria-label" => @cur_node.t(:site_search_type) %></dd>
     </dl>
 
     <dl class="site-search-keyword">
       <dt><%= t("ss.keyword") %></dt>
       <dd>
-        <%= f.text_field :keyword, id: nil, size: 30, autocomplete: "off", title: t('ss.keyword'), placeholder: t('ss.keyword')
+        <%= f.text_field :keyword, id: nil, size: 30, autocomplete: "off", title: t('ss.keyword')
         %><input class="send" type="submit" value="<%= t('cms.search_button') %>" />
       </dd>
       <dd>
@@ -98,16 +98,14 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     <dl class="site-search-categories">
       <dt><%= t("category.node") %></dt>
       <dd>
-        <%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off",
-          title: t('category.node'), placeholder: t('category.node') %>
+        <%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off", title: t('category.node') %>
       </dd>
     </dl>
 
     <dl class="site-search-organization">
       <dt><%= t('ss.organization') %></dt>
       <dd>
-        <%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off",
-          title: t('ss.organization'), placeholder: t('ss.organization') %>
+        <%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off", title: t('ss.organization') %>
       </dd>
     </dl>
   <% end %>

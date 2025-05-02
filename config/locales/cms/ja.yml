@@ -3183,7 +3183,7 @@ ja:
 
     cms/addon/site_search/setting:
       st_article_node_ids:
-        - サイト内検索で使用する記事フォルダーを設定します。
+        - サイト内検索の対象となる記事フォルダーを設定します。
 
     cms/line/facility_search/category:
       name:
@@ -3304,9 +3304,9 @@ ja:
         - 配信日時（予約）を入力します。
 
     cms/node/site_search:
-      st_categories:
-        - サイト内検索で使用するカテゴリーを設定します。
-        - 設定されていない場合は全カテゴリーが対象となります。
+      # st_categories:
+      #   - サイト内検索で使用するカテゴリーを設定します。
+      #   - 設定されていない場合は全カテゴリーが対象となります。
 
     cms/syntax_checker/main_setting:
       syntax_check:

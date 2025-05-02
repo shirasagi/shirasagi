@@ -72,9 +72,10 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
       @s.index = [indexes].flatten.join(",")
     end
 
-    if params.dig(:s, :type).blank? && @cur_node.site_search_type.present?
-      @s.type = @cur_node.site_search_type
-    end
+    # if params.dig(:s, :type).blank? && @cur_node.site_search_type.present?
+    #   @s.type = @cur_node.site_search_type
+    # end
+    @s.type = 'page' if params.dig(:s, :type).blank?
 
     @s.sort = params[:sort]
     @s.field_name = %w(text_index content title)
@@ -95,16 +96,16 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
     render layout: 'cms/ajax'
   end
 
-  def categories
-    @s = @item = @model.new(get_params)
+  # def categories
+  #   @s = @item = @model.new(get_params)
 
-    if @cur_node.st_categories.present?
-      @items = @cur_node.st_categories
-    else
-      @aggregate_result = @s.search
-    end
+  #   if @cur_node.st_categories.present?
+  #     @items = @cur_node.st_categories
+  #   else
+  #     @aggregate_result = @s.search
+  #   end
 
-    @cur_node.layout_id = nil
-    render layout: 'cms/ajax'
-  end
+  #   @cur_node.layout_id = nil
+  #   render layout: 'cms/ajax'
+  # end
 end

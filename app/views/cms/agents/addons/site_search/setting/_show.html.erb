@@ -2,6 +2,8 @@
   <dt><%= t("cms.node_config") %></dt>
   <dd><%=br @item.ordered_st_article_nodes.pluck(:name) %></dd>
 
+  <% if false %>
   <dt><%= @model.t :site_search_type %></dt>
   <dd><%= @item.label(:site_search_type) %></dd>
+  <% end %>
 </dl>

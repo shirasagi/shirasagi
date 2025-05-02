@@ -45,7 +45,7 @@ class Cms::Elasticsearch::PageConverter
       .gsub(/<\s*script.*?<\/script>/i, ' ')
       .gsub(/<\s*style.*?<\/style>/i, ' ')
 
-    text = [] # [item.name.gsub(/[<>]/, '')]
+    text = []
     html = html.gsub(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/) do |m|
       text << m
       ''

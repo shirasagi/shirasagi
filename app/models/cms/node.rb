@@ -144,7 +144,7 @@ class Cms::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
     include Cms::Addon::SiteSearch::Setting
-    include Category::Addon::Setting
+    # include Category::Addon::Setting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
