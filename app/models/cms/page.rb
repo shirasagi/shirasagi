@@ -53,5 +53,9 @@ class Cms::Page
         { route: route, module: mod, module_name: I18n.t("modules.#{mod}"), name: I18n.t("mongoid.models.#{route}") }
       end
     end
+
+    def head
+      Cms::PublicFilter::Layout.head
+    end
   end
 end

@@ -10,6 +10,7 @@ module Cms::PublicFilter::Layout
 
   included do
     helper_method :render_layout_parts
+    helper_method :render_template_variables
   end
 
   private
@@ -148,16 +149,13 @@ module Cms::PublicFilter::Layout
   end
 
   def render_template_variables(html)
+    return html unless html.is_a?(String)
     html.gsub!('#{page_name}') do
       ERB::Util.html_escape(@cur_item.name)
     end
 
     html.gsub!('#{parent_name}') do
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
-    end
-
-    html.gsub!('#{description}') do
-      ERB::Util.html_escape(@cur_item.template_variable_handler_description)
     end
 
     template = %w(
@@ -310,6 +308,18 @@ module Cms::PublicFilter::Layout
   end
 
   public
+
+  def head
+    result = []
+    if @cur_item.keywords.present?
+      result << %(<meta name="keywords" content="#{@cur_item.keywords.join(',')}" />)
+    end
+    if @cur_item.description.present?
+      description_text = @cur_item.respond_to?(:template_variable_handler_description) ? @cur_item.template_variable_handler_description : @cur_item.description
+      result << %(<meta name="description" content="#{description_text}" />)
+    end
+    result.join("\n")
+  end
 
   def mobile_path?
     filter_include?(:mobile)

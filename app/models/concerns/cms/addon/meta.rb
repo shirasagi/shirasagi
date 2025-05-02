@@ -66,40 +66,33 @@ module Cms::Addon
     end
 
     def set_description
-      return if description.present?
+      return if description_setting_manual? && description.present?
       return unless respond_to?(:html)
+
       html = self.try(:render_html).presence || self.html
-      self.description = ApplicationController.helpers.
-        sanitize(html.to_s, tags: []).squish.truncate(60)
+      return if html.blank?
+
+      text = ApplicationController.helpers.sanitize(html.to_s, tags: [])
+      return if text.blank?
+
+      text = Cms.unescape_html_entities(text)
+      text = text.squish
+      self.description = text.truncate(60, omission: "...")
     end
 
     def template_variable_handler_description(*_)
-      Rails.logger.debug "=== template_variable_handler_description start ==="
-      Rails.logger.debug "description_setting_auto?: #{description_setting_auto?}"
-      Rails.logger.debug "current description: #{description}"
-
       return description unless description_setting_auto?
-      Rails.logger.debug "auto mode: proceeding with HTML processing"
+      return unless respond_to?(:html)
 
-      html = self.try(:render_html).presence || self.try(:html)
-      Rails.logger.debug "html content: #{html}"
+      html = self.try(:render_html).presence || self.html
       return description if html.blank?
 
-      # HTMLからテキストを抽出し、descriptionを生成
       text = ApplicationController.helpers.sanitize(html.to_s, tags: [])
-      Rails.logger.debug "after sanitize: #{text}"
+      return description if text.blank?
 
       text = Cms.unescape_html_entities(text)
-      Rails.logger.debug "after unescape: #{text}"
-
       text = text.squish
-      Rails.logger.debug "after squish: #{text}"
-
-      result = text.truncate(60)
-      Rails.logger.debug "final result: #{result}"
-      Rails.logger.debug "=== template_variable_handler_description end ==="
-
-      result
+      text.truncate(60, omission: "...")
     end
   end
 end
