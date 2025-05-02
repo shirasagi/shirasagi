@@ -49,8 +49,11 @@ class Cms::Elasticsearch::Searcher
     query[:bool][:must] = []
 
     if keyword.present?
-      #query[:bool][:must] << { simple_query_string: { query: keyword, fields: [field_name].flatten, default_operator: 'AND' } }
-      query[:bool][:must] << { query_string: { query: keyword, default_field: 'text', default_operator: 'AND' } }
+      if field_name.is_a?(String)
+        query[:bool][:must] << { query_string: { query: keyword, default_operator: 'AND', default_field: field_name } }
+      else
+        query[:bool][:must] << { query_string: { query: keyword, default_operator: 'AND', fields: field_name } }
+      end
     end
 
     if type == 'page'
@@ -67,7 +70,7 @@ class Cms::Elasticsearch::Searcher
 
     if group_name.present?
       names = group_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
-      query[:bool][:must] << { terms: { group_names: names } } if names.present?
+      query[:bool][:must] << { terms: { groups: names } } if names.present?
     end
 
     if article_node_ids.present?
@@ -103,8 +106,8 @@ class Cms::Elasticsearch::Searcher
       fragment_size: 140,
       number_of_fragments: 1,
       fields: {
-        text: {},
-      },
+        text_index: {}
+      }
     }
 
     search_params = { index: index, from: from, size: size, body: { query: query, aggs: aggs, sort: sort, highlight: highlight } }

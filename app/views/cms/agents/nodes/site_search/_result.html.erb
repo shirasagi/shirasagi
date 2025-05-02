@@ -61,8 +61,8 @@ $(function() {
             image_name = source['image_name']
           end
           text = source['text'].to_s.truncate(120)
-          if hit.dig('highlight', 'text')
-            text = hit.dig('highlight', 'text')[0].gsub(/[\s\n]+/, ' ').strip
+          if hit.dig('highlight', 'text_index')
+            text = hit.dig('highlight', 'text_index')[0].gsub(/[\s\n]+/, ' ').strip
           end
           date = source['released']
           url = ::Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s

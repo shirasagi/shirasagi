@@ -25,7 +25,7 @@ class Cms::Elasticsearch::PageConverter
     doc[:category_ids] = item.category_ids
     doc[:categories] = item.categories.pluck(:name)
     doc[:group_ids] = item.groups.pluck(:id)
-    doc[:group_names] = item.groups.pluck(:name).map { |n| n.split('/') }.flatten.uniq
+    doc[:groups] = item.groups.pluck(:name).map { |n| n.split('/') }.flatten.uniq
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
@@ -45,7 +45,7 @@ class Cms::Elasticsearch::PageConverter
       .gsub(/<\s*script.*?<\/script>/i, ' ')
       .gsub(/<\s*style.*?<\/style>/i, ' ')
 
-    text = [item.name.gsub(/[<>]/, '')]
+    text = [] # [item.name.gsub(/[<>]/, '')]
     html = html.gsub(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/) do |m|
       text << m
       ''
