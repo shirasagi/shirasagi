@@ -205,7 +205,30 @@ module Cms::CrudFilter
     @change_state = params[:state]
 
     if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
+      entries = @selected_items.entries
+      @items = []
+
+      entries.each do |item|
+        if item.allowed?(:close, @cur_user, site: @cur_site)
+          contains_urls = Cms.contains_urls(item, site: @cur_site)
+          if contains_urls.present?
+            if @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
+              item.state = 'closed'
+              next if item.save
+            else
+              item.errors.add :base, :contains_urls
+            end
+          else
+            item.state = 'closed'
+            next if item.save
+          end
+        else
+          item.errors.add :base, :auth_error
+        end
+        @items << item
+      end
+
+      render_confirmed_all(entries.size != @items.size, location: url_for(action: :index), notice: t("ss.notice.depublished"))
       return
     end
 
