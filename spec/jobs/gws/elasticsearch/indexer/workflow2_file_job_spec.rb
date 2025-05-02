@@ -269,7 +269,7 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
 
       omittable_fields = %i[
         id mode text categories custom_group_ids member_ids member_group_ids member_custom_group_ids
-        readable_member_ids readable_group_ids readable_custom_group_ids group_names
+        readable_member_ids readable_group_ids readable_custom_group_ids groups
         text_index site_id attachment
       ]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
