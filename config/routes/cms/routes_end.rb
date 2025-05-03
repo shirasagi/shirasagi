@@ -326,6 +326,13 @@ Rails.application.routes.draw do
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
     delete "search_contents/:id" => "page_search_contents#destroy_all"
     resource :generate_lock
+    namespace "transaction" do
+      resources :plans, concerns: :deletion do
+        get "run" => "run#index", as: "run"
+        post "run" => "run#run"
+        resources :units, path: "units/:type", defaults: { type: '-' }, concerns: :deletion
+      end
+    end
 
     get "check_links" => redirect { |p, req| "#{req.path}/reports" }, as: :check_links
     namespace "check_links" do
