@@ -33,11 +33,13 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
   <% if form_select.present? %>
   <dt><%= @model.t :required_in_select_form %><%= @model.tt :required_in_select_form %></dt>
   <dd>
-    <% form_select.select_options.each do |option| %>
-      <% if @item.required_in_select_form.present? %>
-        <% checked = @item.required_in_select_form.include?(option) ? 'checked: true' : nil %>
-      <% end %>
-      <label><%= check_box_tag 'item[required_in_select_form][]', option, checked %> <%= option %> </label>
+    <%= hidden_field_tag 'item[required_in_select_form][]', nil, id: nil %>
+    <% form_select.select_options.each do |value| %>
+      <% checked = @item.required_in_select_form.to_a.include?(value) %>
+      <label>
+        <%= check_box_tag 'item[required_in_select_form][]', value, checked: checked %>
+        <%= value %>
+      </label>
     <% end %>
   </dd>
   <% end %>
