@@ -22,6 +22,7 @@ class Gws::Board::Topic
   no_needs_read_permission_to_read
   permission_include_custom_groups
   hide_released_field
+  set_module_to_readable :board
 
   validates :category_ids, presence: true
   after_validation :set_descendants_updated_with_released, if: -> { released.present? && released_changed? }
