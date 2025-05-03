@@ -1,0 +1,18 @@
+<div class="cms-pages pages">
+  <nav class="archive-list">
+    <header><%= t("cms.yearly_archive") %></header>
+    <% if @years.present? %>
+      <div class="years">
+        <% @years.each do |year| %>
+          <%
+            cls = "#{year} #{year == @year ? "current" : ""}"
+          %>
+          <%= link_to "#{year}#{t_date('year')}", "#{@cur_node.url}#{year}/", class: cls %>
+        <% end %>
+      </div>
+    <% end %>
+  </nav>
+  <%= render_page_list %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>
