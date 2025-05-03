@@ -48,7 +48,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       expect(history.model).to eq item.class.model_name.i18n_key.to_s
       expect(history.model_name).to eq I18n.t("mongoid.models.#{item.class.model_name.i18n_key}")
       expect(history.item_id).to eq item.id.to_s
-      expect(::Fs.file?(history.path)).to be_truthy
+      expect(Fs.file?(history.path)).to be_truthy
       expect(history.path).to eq item.histories.last.path
     end
 

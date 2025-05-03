@@ -27,7 +27,7 @@ describe "gws_user_occupations", type: :feature, dbscope: :example do
       end
 
       I18n.with_locale(I18n.default_locale) do
-        csv = ::SS::ChunkReader.new(page.html).to_a.join
+        csv = SS::ChunkReader.new(page.html).to_a.join
         csv.force_encoding("UTF-8")
         csv = csv[1..-1]
         SS::Csv.open(StringIO.new(csv)) do |csv|

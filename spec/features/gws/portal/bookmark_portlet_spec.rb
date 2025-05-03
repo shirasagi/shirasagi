@@ -9,7 +9,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
   end
 
   context "not registered bookmarks" do
-    let(:basename) { ::Gws::Bookmark::Folder.default_root_name }
+    let(:basename) { Gws::Bookmark::Folder.default_root_name }
 
     it do
       visit gws_portal_user_path(site: site, user: user)

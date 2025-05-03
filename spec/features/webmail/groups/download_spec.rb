@@ -11,7 +11,7 @@ describe "webmail_groups", type: :feature, dbscope: :example do
         click_on I18n.t("ss.buttons.download")
       end
 
-      csv = ::SS::ChunkReader.new(page.html).to_a.join
+      csv = SS::ChunkReader.new(page.html).to_a.join
       csv.force_encoding("UTF-8")
       csv = CSV.parse(csv, headers: true)
       expect(csv).to have_at_least(1).items
