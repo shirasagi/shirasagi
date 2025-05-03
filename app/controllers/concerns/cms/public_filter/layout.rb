@@ -315,7 +315,11 @@ module Cms::PublicFilter::Layout
       result << %(<meta name="keywords" content="#{@cur_item.keywords.join(',')}" />)
     end
     if @cur_item.description.present?
-      description_text = @cur_item.respond_to?(:template_variable_handler_description) ? @cur_item.template_variable_handler_description : @cur_item.description
+      description_text = if @cur_item.respond_to?(:template_variable_handler_description)
+                           @cur_item.template_variable_handler_description
+                         else
+                           @cur_item.description
+                         end
       result << %(<meta name="description" content="#{description_text}" />)
     end
     result.join("\n")
