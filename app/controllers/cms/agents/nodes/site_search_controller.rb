@@ -95,17 +95,4 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
     @cur_node.layout_id = nil
     render layout: 'cms/ajax'
   end
-
-  # def categories
-  #   @s = @item = @model.new(get_params)
-
-  #   if @cur_node.st_categories.present?
-  #     @items = @cur_node.st_categories
-  #   else
-  #     @aggregate_result = @s.search
-  #   end
-
-  #   @cur_node.layout_id = nil
-  #   render layout: 'cms/ajax'
-  # end
 end

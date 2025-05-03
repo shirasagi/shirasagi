@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   context "list view" do
     let(:site) { gws_site }
-    let(:now) { Time.zone.now.change(hour: 9) }
+    let(:now) { Time.new(2025, 5, 5, 9) }
 
     let!(:item1) do
       create :gws_schedule_plan, start_at: now, category_id: category1.id, facility_ids: [facility1.id]
@@ -21,7 +21,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     let!(:facility2) { create :gws_facility_item }
     let!(:facility3) { create :gws_facility_item }
 
-    let(:index_path) { gws_schedule_plans_path site }
+    let(:index_path) { gws_schedule_plans_path(site, { 'calendar[date]': now.strftime('%Y-%m-%d') }) }
 
     before { login_gws_user }
 
@@ -51,6 +51,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("gws/schedule.options.interval.weekly").downcase
       end
+
       within ".fc-list-format" do
         expect(page).to have_text(item1.name)
         expect(page).to have_text(category1.name)

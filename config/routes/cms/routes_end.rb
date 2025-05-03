@@ -555,7 +555,6 @@ Rails.application.routes.draw do
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
     get "site_search/article_nodes(.:format)" => "public#article_nodes", cell: "nodes/site_search"
-    # get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
     get "form_search/(index.:format)" => "public#index", cell: "nodes/form_search"
     get "line_hub/(index.:format)" => "public#index", cell: "nodes/line_hub"
     get "line_hub/line" => "public#line", cell: "nodes/line_hub"

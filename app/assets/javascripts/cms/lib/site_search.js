@@ -89,10 +89,6 @@ this.Cms_Site_Search = (function () {
     });
 
     // check selected items in modal
-    // $(".selected-categories .selected-item").each(function () {
-    //   var name = $(this).attr("data-name");
-    //   $(`#colorbox .items [data-name="${name}"] input[type=checkbox]`).prop('checked', true);
-    // });
     $(".selected-article-nodes .selected-item").each(function () {
       var id = $(this).attr("data-id");
       $(`#colorbox .items [data-id="${id}"] input[type=checkbox]`).prop('checked', true);
