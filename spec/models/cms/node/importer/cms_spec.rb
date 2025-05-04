@@ -80,8 +80,6 @@ describe Cms::NodeImporter, dbscope: :example do
         end
 
         # category addon
-        dump row
-        dump node.attributes
         expect(row["カテゴリー設定"]).to eq node.st_categories.map { |cate| "#{cate.name} (#{cate.filename})" }.join("\n").presence
 
         # release addon

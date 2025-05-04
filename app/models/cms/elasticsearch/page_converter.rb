@@ -14,10 +14,13 @@ class Cms::Elasticsearch::PageConverter
   end
 
   def convert_to_doc
+    @site = item.site
     @html = Fs.exist?(item.path) ? Fs.read(item.path) : item.try(:html)
+    @content_html = nil
 
     doc = {}
-    doc[:url] = item.url
+    doc[:site_id] = @site.id
+    doc[:url] = item.full_url
     doc[:name] = item.name
     doc[:text] = item_text
     doc[:filename] = item.path
@@ -30,7 +33,10 @@ class Cms::Elasticsearch::PageConverter
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
 
-    doc = parse_doc_image(doc)
+    if image = item_image
+      doc[:image_url] = image[:full_url]
+      doc[:image_name] = image[:name]
+    end
 
     [ index_item_id, doc ]
   end
@@ -47,6 +53,7 @@ class Cms::Elasticsearch::PageConverter
 
     text = []
     html = html.gsub(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/) do |m|
+      @content_html = ::Nokogiri::HTML.parse(m)
       text << m
       ''
     end
@@ -59,21 +66,32 @@ class Cms::Elasticsearch::PageConverter
     ApplicationController.helpers.sanitize(text.presence || '', tags: [])
   end
 
-  def parse_doc_image(doc)
+  def item_image
     if file = item.try(:thumb)
-      doc[:image_url] = file.thumb_url
-      doc[:image_name] = file.name
-      return doc
+      return { url: file.thumb_url, full_url: "#{@site.full_root_url}#{file.thumb_url[1..-1]}", name: file.name }
     end
 
-    m = @html.to_s.scan(/<meta property="og:image" content="(.*?)"/im).flatten
-    if image = m[0].presence
-      doc[:image_url] = image
-      doc[:image_name] = 'og:image'
-      return doc
-    end
+    @content_html.xpath("//img").each do |el|
+      src = el.attr('src')
+      next unless src.present?
+      alt = el.attr('alt').presence || el.attr('title').presence || 'Image'
 
-    return doc
+      [src.sub(/(\.\w+)$/, '_thumb\\1'), src].each do |path|
+        next unless ::File.exist?("#{@site.root_path}#{path}")
+        return { url: path, full_url: "#{@site.full_root_url}#{path[1..-1]}", name: alt }
+      end
+    end if @content_html
+
+    # m = @html.to_s.scan(/<meta property="og:image" content="(.*?)"/im).flatten
+    # if file = m[0].presence
+    #   return { url: file, name: 'og:image' }
+    # end
+
+    return nil
+  end
+
+  def index_item_id
+    queue.try(:filename) || item.filename
   end
 
   def convert_files_to_docs
@@ -86,30 +104,26 @@ class Cms::Elasticsearch::PageConverter
   end
 
   def convert_file_to_doc(file)
-    # @html
     @file_html = parse_file_html(file)
 
     doc = {}
+    doc[:site_id] = @site.id
     doc[:name] = file_name || file.name
-    doc[:path] = file.path
-    doc[:url] = file.url
+    doc[:path] = file.public_path
+    doc[:url] = file.full_url
     doc[:data] = Base64.strict_encode64(::File.binread(file.path))
     doc[:file] = {}
     doc[:file][:extname] = file.extname.upcase
     doc[:file][:size] = file.size
     doc[:state] = item.state
-    doc[:page_name] = item.name
-    doc[:page_path] = item.path
-    doc[:page_url] = item.url
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = file.updated.try(:iso8601)
     doc[:created] = file.created.try(:iso8601)
+    doc[:page_name] = item.name
+    doc[:page_path] = item.path
+    doc[:page_url] = item.full_url
 
     [ "file-#{file.id}", doc ]
-  end
-
-  def index_item_id
-    queue.try(:filename) || item.filename
   end
 
   def parse_file_html(file)

@@ -50,51 +50,59 @@ $(function() {
       <header>
         <%
           source = hit['_source']
-          title = source['name']
+
+          title = source['title'] || source['name']
+          date = source['timestamp'] || source['released']
+          url = source['url']
+          page_name = source['page_name']
+          page_url = source['page_url']
+
           if source.dig('file', 'extname').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
-          image_url = nil
-          image_name = nil
+
+          image = {}
           if source['image_url']
-            image_url = source['image_url']
-            image_name = source['image_name']
+            image = { url: source['image_url'], name: source['image_name'] }
+          elsif source['site_id'] && site = Cms::Site.where(id: source['site_id']).first
+            image = { url: site.opengraph_defaul_image_url, name: 'og:image' } if site.opengraph_defaul_image_url
           end
+
           text = source['text'].to_s.truncate(120)
           if hit.dig('highlight', 'text_index')
             text = hit.dig('highlight', 'text_index')[0].gsub(/[\s\n]+/, ' ').strip
           end
-          date = source['released']
-          url = ::Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s
-          if source['title'].present?
-            title = source['title']
-            date = source['timestamp']
-            url = source['url']
-          end
+
+          categories = source['categories'].presence || []
         %>
         <h2><%= link_to title, url, class: 'title' %></h2>
         <div class="summary">
-          <% if image_url %>
-            <div class="image"><%= image_tag image_url, alt: image_name %></div>
+          <% if image.present? %>
+            <div class="image"><%= image_tag image[:url], alt: image[:name] %></div>
           <% end %>
           <% if text.present? %>
             <div class="text"><%== text %></div>
           <% end %>
         </div>
         <div class="meta">
-          <% if source['page_name'].present? %>
-            <div class="page-name"><%= t('cms.reference_article') %>: <%= link_to source['page_name'], source['page_url'] %></div>
+          <% if page_name.present? && page_url.present? %>
+            <div class="page-name"><%= t('cms.reference_article') %>: <%= link_to page_name, page_url %></div>
           <% end %>
-
-          <div class="url"><%= url %></div>
-          <div><time datetime="<%= date %>"><%= Cms::Page.t(:released) %>: <%= I18n.l(Time.zone.parse(date), format: :long) %></time></div>
-
-          <% if source['category_ids'].present? %>
+          <% if url.present? %>
+            <div class="url"><%= url %></div>
+          <% end %>
+          <% if date.present? %>
+            <div class="date">
+              <time datetime="<%= date %>">
+                <%= t('cms.release_date') %>: <%= I18n.l(Time.zone.parse(date).to_date, format: :long) rescue nil %>
+              </time>
+            </div>
+          <% end %>
+          <% if categories.present? %>
             <div class="category-list">
               <%= Cms::Page.t(:category_ids) %>:
-              <% categories = source['category_ids'].map.with_index do |id, idx| %>
-                <%= ' | ' if idx > 0 %>
-                <a class="category-name"><%= source['categories'][idx] %></a>
+              <% categories.each_with_index do |name, idx| %>
+                <%= ' | ' if idx > 0 %><a class="category-name"><%= name %></a>
               <% end %>
             </div>
           <% end %>
