@@ -71,16 +71,18 @@ class Cms::Elasticsearch::PageConverter
       return { url: file.thumb_url, full_url: "#{@site.full_root_url}#{file.thumb_url[1..-1]}", name: file.name }
     end
 
-    @content_html.xpath("//img").each do |el|
-      src = el.attr('src')
-      next unless src.present?
-      alt = el.attr('alt').presence || el.attr('title').presence || 'Image'
+    if @content_html
+      @content_html.xpath("//img").each do |el|
+        src = el.attr('src')
+        next unless src.present?
+        alt = el.attr('alt').presence || el.attr('title').presence || 'Image'
 
-      [src.sub(/(\.\w+)$/, '_thumb\\1'), src].each do |path|
-        next unless ::File.exist?("#{@site.root_path}#{path}")
-        return { url: path, full_url: "#{@site.full_root_url}#{path[1..-1]}", name: alt }
+        [src.sub(/(\.\w+)$/, '_thumb\\1'), src].each do |path|
+          next unless ::File.exist?("#{@site.root_path}#{path}")
+          return { url: path, full_url: "#{@site.full_root_url}#{path[1..-1]}", name: alt }
+        end
       end
-    end if @content_html
+    end
 
     # m = @html.to_s.scan(/<meta property="og:image" content="(.*?)"/im).flatten
     # if file = m[0].presence
