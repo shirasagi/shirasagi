@@ -20,7 +20,8 @@ class Cms::Elasticsearch::PageConverter
 
     doc = {}
     doc[:site_id] = @site.id
-    doc[:url] = item.full_url
+    doc[:url] = item.url
+    doc[:full_url] = item.full_url
     doc[:name] = item.name
     doc[:text] = item_text
     doc[:filename] = item.path
@@ -34,7 +35,8 @@ class Cms::Elasticsearch::PageConverter
     doc[:created] = item.created.try(:iso8601)
 
     if image = item_image
-      doc[:image_url] = image[:full_url]
+      doc[:image_url] = image[:url]
+      doc[:image_full_url] = image[:full_url]
       doc[:image_name] = image[:name]
     end
 
@@ -60,6 +62,10 @@ class Cms::Elasticsearch::PageConverter
     html = html.gsub(/<!--[^>]*?\s#{marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{marks[1]}\s[^>]*?-->/) do |m|
       text << m
       ''
+    end
+    if text.empty?
+      @content_html = ::Nokogiri::HTML.parse(html)
+      text << html
     end
     text = text.join(' ').gsub(/<.*?>/, ' ').gsub(/  +/, ' ')
 
@@ -112,7 +118,8 @@ class Cms::Elasticsearch::PageConverter
     doc[:site_id] = @site.id
     doc[:name] = file_name || file.name
     doc[:path] = file.public_path
-    doc[:url] = file.full_url
+    doc[:url] = file.url
+    doc[:full_url] = file.full_url
     doc[:data] = Base64.strict_encode64(::File.binread(file.path))
     doc[:file] = {}
     doc[:file][:extname] = file.extname.upcase
@@ -123,7 +130,8 @@ class Cms::Elasticsearch::PageConverter
     doc[:created] = file.created.try(:iso8601)
     doc[:page_name] = item.name
     doc[:page_path] = item.path
-    doc[:page_url] = item.full_url
+    doc[:page_url] = item.url
+    doc[:page_full_url] = item.full_url
 
     [ "file-#{file.id}", doc ]
   end
