@@ -14,23 +14,23 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   let!(:file1) { create :ss_file, site_id: site.id, user_id: user.id }
   let!(:file2) { create :ss_file, site_id: site.id, user_id: user.id }
 
-  let!(:item1) { create :cms_page, cur_node: node, layout: layout, name: 'name1' }
+  let!(:item1) { create :cms_page, cur_node: node, layout: layout, name: 'page1' }
   let!(:item2) do
-    create :article_page, cur_node: node, layout: layout, name: 'name2',
+    create :article_page, cur_node: node, layout: layout, name: 'page2',
       file_ids: [file1.id], category_ids: [cate1.id], group_ids: [group1.id],
       html: '<img src="' + file1.url + '" alt="alt" title="title">'
   end
 
   let!(:form) do
     create :cms_form, cur_site: site, state: 'public', sub_type: 'static',
-      html: 'bbb{{ values["image"] }}bbb'
+      html: '{{ values["image"] }}'
   end
   let!(:column) do
     create :cms_column_file_upload, cur_site: site, cur_form: form, file_type: 'image',
       name: 'image'
   end
   let!(:item3) do
-    create :article_page, cur_node: node, layout: layout, form: form, name: 'name3',
+    create :article_page, cur_node: node, layout: layout, form: form, name: 'page3',
       file_ids: [file2.id], category_ids: [cate2.id], group_ids: [group2.id],
       column_values: [
         column.value_type.new(column: column, file_id: file2.id, image_html_type: 'image')
@@ -108,7 +108,6 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       within '.search-form' do
         click_button I18n.t('ss.buttons.search')
       end
-
       within '.pages article:nth-child(1)' do
         expect(page).to have_selector("img[alt='og:image']")
       end
