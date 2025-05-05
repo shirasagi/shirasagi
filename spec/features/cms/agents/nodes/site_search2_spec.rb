@@ -46,6 +46,9 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site.id)
       ss_perform_now(job, action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
     end
+    ::Cms::Elasticsearch.refresh_index(site: site)
+    expect(Cms::PageRelease.all.size).to eq 3
+    expect(Cms::PageIndexQueue.all.size).to eq 0
   end
 
   context 'image' do
