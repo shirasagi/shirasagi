@@ -186,7 +186,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         item.reload
-        # expect(item.description).to eq updated_description
+        expect(item.description).to eq updated_description
 
         # メタタグが生成されていることを確認
         url = File.read(item.path)
@@ -246,7 +246,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         # 複製したページの概要を確認
         duplicated_item.reload
 
-        # expect(duplicated_item.description).to eq updated_description
+        expect(duplicated_item.description).to eq updated_description
 
         # メタタグが生成されていることを確認
         url = File.read(duplicated_item.path)
@@ -315,7 +315,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         expect(replacement_item.name).to eq "replacement"
         expect(replacement_item.description_setting).to eq 'auto'
-        # expect(replacement_item.description).to eq updated_description
+        expect(replacement_item.description).to eq updated_description
 
         # 公開後、元のページは置き換えられるが、内容自体は新しい内容に変わっているはず
         published_item.reload
@@ -394,7 +394,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         item.reload
         expect(item.description_setting).to eq 'auto'
-        # expect(item.description).to eq updated_description
+        expect(item.description).to eq updated_description
 
         # メタタグが更新されていることを確認
         url = File.read(item.path)
