@@ -18,6 +18,15 @@ module Cms::Model::Layout
     before_save :set_js_paths
   end
 
+  def head
+    return nil if html !~ /<head>/
+    tags = []
+    tags << %(<meta name="keywords" content="#{ERB::Util.html_escape(keywords)}" />) if keywords.present?
+    tags << %(<meta name="description" content="#{ERB::Util.html_escape(description)}" />) if description.present?
+    tags << self.html.sub(/.*?<head>(.*)<\/head>.*/im, '\\1')
+    tags.join("\n")
+  end
+
   def body
     return html =~ /<body/ ? html.sub(/.*?(<body.*<\/body>).*/im, '\\1') : nil
   end

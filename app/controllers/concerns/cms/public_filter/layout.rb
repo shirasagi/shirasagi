@@ -130,6 +130,9 @@ module Cms::PublicFilter::Layout
     @window_name = @cur_site.name
     @window_name = "#{@cur_item.window_name} - #{@current_page} #{@cur_site.name}" if @cur_item.filename != 'index.html'
 
+    @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
+    @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
+
     @parts = {}
   end
 
@@ -308,22 +311,6 @@ module Cms::PublicFilter::Layout
   end
 
   public
-
-  def head
-    result = []
-    if @cur_item.keywords.present?
-      result << %(<meta name="keywords" content="#{@cur_item.keywords.join(',')}" />)
-    end
-    if @cur_item.description.present?
-      description_text = if @cur_item.respond_to?(:template_variable_handler_description)
-                           @cur_item.template_variable_handler_description
-                         else
-                           @cur_item.description
-                         end
-      result << %(<meta name="description" content="#{description_text}" />)
-    end
-    result.join("\n")
-  end
 
   def mobile_path?
     filter_include?(:mobile)
