@@ -10,6 +10,7 @@ module Cms::PublicFilter::Layout
 
   included do
     helper_method :render_layout_parts
+    helper_method :render_template_variables
   end
 
   private
@@ -151,6 +152,7 @@ module Cms::PublicFilter::Layout
   end
 
   def render_template_variables(html)
+    return html unless html.is_a?(String)
     html.gsub!('#{page_name}') do
       ERB::Util.html_escape(@cur_item.name)
     end
