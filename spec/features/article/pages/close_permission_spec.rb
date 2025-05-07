@@ -88,6 +88,69 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         %w(read_private_cms_nodes read_private_article_pages edit_private_article_pages close_private_article_pages)
       end
 
+      context "when page contains @https link" do
+        let!(:page_with_at_link) do
+          create :article_page, cur_site: site, cur_user: admin, cur_node: node, group_ids: admin.group_ids, state: "public",
+            html: '<p><a href="https://www.example.jp/">https://www.example.jp</a></p>'
+        end
+
+        it "cannot close page in index view when contains @https link" do
+          login_user user1
+          visit article_pages_path(site: site, cid: node)
+          expect(page).to have_css(".list-item[data-id='#{page_with_at_link.id}']", text: page_with_at_link.name)
+
+          within ".list-item[data-id='#{page_with_at_link.id}']" do
+            first("[type='checkbox']").click
+          end
+          within ".list-head" do
+            click_on I18n.t("ss.links.make_them_close")
+          end
+
+          within "form" do
+            expect(page).to have_css("[data-id='#{page_with_at_link.id}'] [type='checkbox']")
+            click_on I18n.t("ss.links.make_them_close")
+          end
+
+          wait_for_notice(I18n.t("ss.notice.unable_to_change", items: page_with_at_link.name))
+
+          Article::Page.find(page_with_at_link.id).tap do |after_page|
+            expect(after_page.state).to eq "public"
+          end
+        end
+      end
+
+      context "when page contains accessibility error" do
+        let!(:page_with_accessibility_error) do
+          create :article_page, cur_site: site, cur_user: admin, cur_node: node, group_ids: admin.group_ids, state: "public",
+            html: "<img src=\"image.jpg\">"
+        end
+
+        it "cannot close page in index view when contains accessibility error" do
+          login_user user1
+          visit article_pages_path(site: site, cid: node)
+          expect(page).to have_css(".list-item[data-id='#{page_with_accessibility_error.id}']",
+text: page_with_accessibility_error.name)
+
+          within ".list-item[data-id='#{page_with_accessibility_error.id}']" do
+            first("[type='checkbox']").click
+          end
+          within ".list-head" do
+            click_on I18n.t("ss.links.make_them_close")
+          end
+
+          within "form" do
+            expect(page).to have_css("[data-id='#{page_with_accessibility_error.id}'] [type='checkbox']")
+            click_on I18n.t("ss.links.make_them_close")
+          end
+
+          wait_for_notice(I18n.t("ss.notice.unable_to_change", items: page_with_accessibility_error.name))
+
+          Article::Page.find(page_with_accessibility_error.id).tap do |after_page|
+            expect(after_page.state).to eq "public"
+          end
+        end
+      end
+
       it "cannot close page in edit view without ignore_alert permission when linked from block" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
@@ -225,6 +288,76 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         Article::Page.find(page1.id).tap do |after_page|
           expect(after_page.state).to eq "closed"
+        end
+      end
+    end
+
+    context "with ignore_syntax_check permission" do
+      let!(:minimum_close_permissions) do
+        %w(read_private_cms_nodes read_private_article_pages edit_private_article_pages close_private_article_pages
+           edit_cms_ignore_syntax_check)
+      end
+
+      context "when page contains @https link" do
+        let!(:page_with_at_link) do
+          create :article_page, cur_site: site, cur_user: admin, cur_node: node, group_ids: admin.group_ids, state: "public",
+            html: '<p><a href="https://www.example.jp/">https://www.example.jp</a></p>'
+        end
+
+        it "can close page in index view when contains @https link with ignore_syntax_check permission" do
+          login_user user1
+          visit article_pages_path(site: site, cid: node)
+          expect(page).to have_css(".list-item[data-id='#{page_with_at_link.id}']", text: page_with_at_link.name)
+
+          within ".list-item[data-id='#{page_with_at_link.id}']" do
+            first("[type='checkbox']").click
+          end
+          within ".list-head" do
+            click_on I18n.t("ss.links.make_them_close")
+          end
+
+          within "form" do
+            expect(page).to have_css("[data-id='#{page_with_at_link.id}'] [type='checkbox']")
+            click_on I18n.t("ss.links.make_them_close")
+          end
+
+          wait_for_notice I18n.t("ss.notice.depublished")
+
+          Article::Page.find(page_with_at_link.id).tap do |after_page|
+            expect(after_page.state).to eq "closed"
+          end
+        end
+      end
+
+      context "when page contains accessibility error" do
+        let!(:page_with_accessibility_error) do
+          create :article_page, cur_site: site, cur_user: admin, cur_node: node, group_ids: admin.group_ids, state: "public",
+            html: '<img src="image.jpg">'
+        end
+
+        it "can close page in index view when contains accessibility error with ignore_syntax_check permission" do
+          login_user user1
+          visit article_pages_path(site: site, cid: node)
+          expect(page).to have_css(".list-item[data-id='#{page_with_accessibility_error.id}']",
+text: page_with_accessibility_error.name)
+
+          within ".list-item[data-id='#{page_with_accessibility_error.id}']" do
+            first("[type='checkbox']").click
+          end
+          within ".list-head" do
+            click_on I18n.t("ss.links.make_them_close")
+          end
+
+          within "form" do
+            expect(page).to have_css("[data-id='#{page_with_accessibility_error.id}'] [type='checkbox']")
+            click_on I18n.t("ss.links.make_them_close")
+          end
+
+          wait_for_notice I18n.t("ss.notice.depublished")
+
+          Article::Page.find(page_with_accessibility_error.id).tap do |after_page|
+            expect(after_page.state).to eq "closed"
+          end
         end
       end
     end
