@@ -310,28 +310,19 @@ module Cms::PublicFilter::Layout
   public
 
   def head
-    Rails.logger.debug "=== headメソッド start ==="
     result = []
+
+    # keywords
     if @cur_item.keywords.present?
-      Rails.logger.debug "keywords: \\#{@cur_item.keywords.inspect}"
       result << %(<meta name="keywords" content="#{@cur_item.keywords.join(',')}" />)
-    else
-      Rails.logger.debug "keywords: なし"
     end
-    if @cur_item.description.present? || @cur_item.description_setting_auto?
-      if @cur_item.description_setting_auto?
-        description_text = @cur_item.template_variable_handler_description
-        Rails.logger.debug "description (template_variable_handler_description): \\#{description_text}"
-      else
-        description_text = @cur_item.description
-        Rails.logger.debug "description: \\#{description_text}"
-      end
+
+    # description
+    description_text = fetch_description(@cur_item)
+    if description_text.present?
       result << %(<meta name="description" content="#{description_text}" />)
-    else
-      Rails.logger.debug "description: なし"
     end
-    Rails.logger.debug "result: \\#{result.join("\\n")}"
-    Rails.logger.debug "=== headメソッド end ==="
+
     result.join("\n")
   end
 
@@ -396,5 +387,14 @@ module Cms::PublicFilter::Layout
   def javascript_config(conf)
     javascript_configs
     @javascript_config.merge!(conf)
+  end
+
+  # description取得の共通ロジック
+  def fetch_description(item)
+    return if item.nil?
+    if item.respond_to?(:description_setting_auto?) && item.description_setting_auto?
+      return item.respond_to?(:template_variable_handler_description) ? item.template_variable_handler_description : nil
+    end
+    item.description if item.respond_to?(:description)
   end
 end
