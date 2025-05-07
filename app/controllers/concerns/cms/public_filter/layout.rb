@@ -310,18 +310,28 @@ module Cms::PublicFilter::Layout
   public
 
   def head
+    Rails.logger.debug "=== headメソッド start ==="
     result = []
     if @cur_item.keywords.present?
+      Rails.logger.debug "keywords: \\#{@cur_item.keywords.inspect}"
       result << %(<meta name="keywords" content="#{@cur_item.keywords.join(',')}" />)
+    else
+      Rails.logger.debug "keywords: なし"
     end
-    if @cur_item.description.present?
-      description_text = if @cur_item.respond_to?(:template_variable_handler_description)
-                           @cur_item.template_variable_handler_description
-                         else
-                           @cur_item.description
-                         end
+    if @cur_item.description.present? || @cur_item.description_setting_auto?
+      if @cur_item.description_setting_auto?
+        description_text = @cur_item.template_variable_handler_description
+        Rails.logger.debug "description (template_variable_handler_description): \\#{description_text}"
+      else
+        description_text = @cur_item.description
+        Rails.logger.debug "description: \\#{description_text}"
+      end
       result << %(<meta name="description" content="#{description_text}" />)
+    else
+      Rails.logger.debug "description: なし"
     end
+    Rails.logger.debug "result: \\#{result.join("\\n")}"
+    Rails.logger.debug "=== headメソッド end ==="
     result.join("\n")
   end
 

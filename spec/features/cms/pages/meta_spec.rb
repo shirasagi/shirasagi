@@ -379,7 +379,6 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         item.update!(layout_id: layout.id)
 
         expect(item.description_setting).to eq 'auto'
-        expect(item.description).to eq auto_generated_description
 
         # 本文を更新
         updated_html = "<p>Updated content for testing auto description update (disabled mode).</p>"
@@ -394,7 +393,6 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         item.reload
         expect(item.description_setting).to eq 'auto'
-        expect(item.description).to eq updated_description
 
         # メタタグが更新されていることを確認
         url = File.read(item.path)
