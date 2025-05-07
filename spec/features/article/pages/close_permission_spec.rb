@@ -153,9 +153,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.make_them_close")
         end
 
-        within_cbox do
-          expect(page).not_to have_content(I18n.t("ss.buttons.ignore_alert"))
-        end
+        wait_for_notice(I18n.t("ss.notice.unable_to_change", items: page1.name))
 
         Article::Page.find(page1.id).tap do |after_page|
           expect(after_page.state).to eq "public"
@@ -206,14 +204,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("ss.links.back_to_index")
 
+        expect(page).to have_current_path(article_pages_path(site: site, cid: node), wait: 10)
+
         within ".list-item[data-id='#{page1.id}']" do
           first("[type='checkbox']").click
         end
 
+        expect(page).to have_content(I18n.t("ss.links.make_them_close"))
+
         within ".list-head" do
           click_on I18n.t("ss.links.make_them_close")
         end
-        click_on I18n.t("ss.links.make_them_close")
+
+        within "form" do
+          expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
+          click_on I18n.t("ss.links.make_them_close")
+        end
 
         wait_for_notice I18n.t("ss.notice.depublished")
 
