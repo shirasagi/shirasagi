@@ -4,10 +4,11 @@ class Cms::Elasticsearch::Searcher
 
   DEFAULT_FIELD_NAME = 'text_index'.freeze
 
-  attr_accessor :setting, :sort, :keyword, :category_name, :group_name, :article_node_ids, :category_names
+  attr_accessor :setting, :sort, :keyword, :article_node_ids, :category_name, :category_names,
+    :group_name, :group_ids
   attr_writer :index, :type, :field_name, :from, :size, :aggregate_size
 
-  permit_params :sort, :keyword, :type, :category_name, :group_name, article_node_ids: [], category_names: []
+  permit_params :sort, :keyword, :type, :category_name, :group_name, article_node_ids: [], category_names: [], group_ids: []
 
   def index
     @index ||= "s#{setting.cur_site.id}"
@@ -85,6 +86,11 @@ class Cms::Elasticsearch::Searcher
 
     if category_names.present?
       query[:bool][:must] << { terms: { categories: category_names } }
+    end
+
+    if group_ids.present?
+      ids = group_ids.reject(&:blank?)
+      query[:bool][:must] << { terms: { group_ids: ids } } if ids.present?
     end
 
     query[:bool][:filter] = {}

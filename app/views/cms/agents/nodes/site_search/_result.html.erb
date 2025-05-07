@@ -12,14 +12,21 @@
 $(function() {
   $('.cms-site-search-pages .category-name').on('click', function() {
     const name = $(this).text();
-    const $input = $('.cms-site-search .site-search-categories input[name="s[category_name]"]');
-
-    let value = $input.val();
-    value = ' ' + value.replace(/[\s\/　]+/, ' ') + ' ';
-
-    if (value.search(` ${name} `) === -1) {
-      $input.val((value + name).trim());
-      $('.cms-site-search form').submit();
+    let $input = $('.cms-site-search .site-search-categories input[name="s[category_name]"]');
+    if ($input.length) {
+      let value = $input.val();
+      value = ' ' + value.replace(/[\s\/　]+/, ' ') + ' ';
+      if (value.search(` ${name} `) === -1) {
+        $input.val((value + name).trim());
+        $('.cms-site-search form').submit();
+      }
+    }
+    const $select = $('.cms-site-search .site-search-categories select[name="s[category_name]"]');
+    if ($select.length) {
+      $select.find('option[value="' + name + '"]').each((el) => {
+        $select.val(name);
+        $('.cms-site-search form').submit();
+      });
     }
   });
 });

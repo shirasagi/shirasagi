@@ -38,7 +38,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def permit_fields
-    [:sort, :keyword, :target, :type, :category_name, :group_name, article_node_ids: [], category_names: []]
+    [:sort, :keyword, :target, :type, :category_name, :group_name, article_node_ids: [], category_names: [], group_ids: []]
   end
 
   def get_params
@@ -81,6 +81,18 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
     @s.field_name = %w(text_index content title)
     @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
     @result = @s.search
+
+    if @cur_node.ordered_st_article_nodes.present?
+      @article_node_items = @cur_node.ordered_st_article_nodes
+    else
+      @article_node_aggregations = @s.search
+    end
+
+    if @cur_node.st_categories.present?
+      @category_items = @cur_node.st_categories
+    else
+      @category_aggregations = @s.search
+    end
   end
 
   def article_nodes
@@ -88,6 +100,19 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
 
     if @cur_node.ordered_st_article_nodes.present?
       @items = @cur_node.ordered_st_article_nodes
+    else
+      @aggregate_result = @s.search
+    end
+
+    @cur_node.layout_id = nil
+    render layout: 'cms/ajax'
+  end
+
+  def categories
+    @s = @item = @model.new(get_params)
+
+    if @cur_node.st_categories.present?
+      @items = @cur_node.st_categories
     else
       @aggregate_result = @s.search
     end

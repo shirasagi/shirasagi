@@ -125,6 +125,10 @@ class Cms::Elasticsearch::PageConverter
     doc[:file][:extname] = file.extname.upcase
     doc[:file][:size] = file.size
     doc[:state] = item.state
+    doc[:category_ids] = item.category_ids
+    doc[:categories] = item.categories.pluck(:name)
+    doc[:group_ids] = item.groups.pluck(:id)
+    doc[:groups] = item.groups.pluck(:name).map { |n| n.split('/') }.flatten.uniq
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = file.updated.try(:iso8601)
     doc[:created] = file.created.try(:iso8601)
