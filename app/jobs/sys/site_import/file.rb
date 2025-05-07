@@ -103,9 +103,10 @@ module Sys::SiteImport::File
       next if item.column_values.blank?
 
       item.column_values.each do |column_value|
-        value = column_value.value
-        next if value.blank?
+        next if !column_value.respond_to?(:value)
+        next if column_value.value.blank?
 
+        value = column_value.value
         new_value = value.gsub(src_path, dst_path)
         column_value.set(value: new_value) if new_value != value
       end
