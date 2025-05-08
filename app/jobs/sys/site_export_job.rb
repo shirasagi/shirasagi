@@ -43,6 +43,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_theme_templates
     invoke :export_cms_source_cleaner_templates
     invoke :export_cms_loop_settings
+    invoke :export_cms_check_links_ignore_urls
     invoke :export_ezine_columns
     invoke :export_inquiry_columns
     invoke :export_kana_dictionaries
@@ -208,6 +209,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def export_cms_loop_settings
     export_documents "cms_loop_settings", Cms::LoopSetting
+  end
+
+  def export_cms_check_links_ignore_urls
+    export_documents "cms_check_links_ignore_urls", Cms::CheckLinks::IgnoreUrl
   end
 
   def export_ezine_columns

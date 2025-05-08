@@ -66,6 +66,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_translate_text_caches
     invoke :import_cms_page_search
     invoke :import_cms_guides
+    invoke :import_cms_check_links_ignore_urls
 
     FileUtils.rm_rf(@import_dir)
     @task.log("Completed.")
@@ -524,5 +525,10 @@ class Sys::SiteImportJob < SS::ApplicationJob
       end
       save_document(point)
     end
+  end
+
+  def import_cms_check_links_ignore_urls
+    @task.log("- import cms_check_links_ignore_urls")
+    @cms_roles_map = import_documents "cms_check_links_ignore_urls", Cms::CheckLinks::IgnoreUrl, %w(site_id name)
   end
 end
