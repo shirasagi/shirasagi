@@ -37,6 +37,21 @@
 Cms_Site_Search.render();
 Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.full_url %>");
 <% end %>
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const form = document.querySelector('.search-form');
+    const target = form.querySelector('select[name="target"]'); // outside or insinde
+    if (!target) return;
+
+    const changeTarget = () => {
+      const input = (target.value === 'outside' || <%== @cur_site.elasticsearch_site_ids.present? %>);
+      form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
+      form.querySelectorAll('.style-input').forEach(el => el.style.display = input ? 'block' : 'none');
+    };
+    changeTarget();
+    form.addEventListener('change', changeTarget);
+  });
+</script>
 
 <div class="cms-site-search">
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
@@ -72,66 +87,59 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       </dl>
     <% end %>
 
-    <% if params[:target] == 'outside' || @cur_site.elasticsearch_site_ids.present? %>
-      <dl class="site-search-categories">
-        <dt><%= t("category.node") %></dt>
+    <% if @cur_node.ordered_st_article_nodes.present? %>
+      <dl class="site-search-article-nodes style-select">
+        <dt><%= t("cms.node") %></dt>
         <dd>
-          <%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off", title: t('category.node') %>
-        </dd>
-      </dl>
-      <dl class="site-search-organization">
-        <dt><%= t('ss.organization') %></dt>
-        <dd>
-          <%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off", title: t('ss.organization') %>
-        </dd>
-      </dl>
-    <% else %>
-      <% if @cur_node.ordered_st_article_nodes.present? %>
-        <dl class="site-search-article-nodes">
-          <dt><%= t("cms.node") %></dt>
-          <dd>
-            <% options = @cur_node.ordered_st_article_nodes.map { |c| [c.name, c.id] } %>
-            <%= select_tag 's[article_node_ids][]',
-              options_for_select(options, selected: params.dig(:s, :article_node_ids).presence),
-              id: nil, "aria-label" => t("cms.node"), include_blank: t('facility.submit.change') %>
-          </dd>
-        </dl>
-      <% end %>
-
-      <%
-        options = []
-        if @cur_node.st_categories.present?
-          options = @cur_node.st_categories.map { |c| [c.name, c.name] }
-        elsif tryb { @aggregate_result['aggregations']['group_by_categories']['buckets'] }.present?
-          options = @s.search['aggregations']['group_by_categories']['buckets'].map { |c| [c['key'], c['key']] }
-        end
-      %>
-      <% if options.size > 0 %>
-        <dl class="site-search-categories">
-          <dt><%= t("category.node") %></dt>
-          <dd>
-            <%= select_tag 's[category_names][]',
-              options_for_select(options, selected: params.dig(:s, :category_names).presence),
-              id: nil, "aria-label" => t("category.node"), include_blank: t('facility.submit.change') %>
-          </dd>
-        </dl>
-      <% end %>
-
-      <dl class="site-search-organization">
-        <dt><%= t("ss.organization") %></dt>
-        <dd>
-          <%
-            options = Cms::Group.site(@cur_site).active.map do |group|
-              indent = '　' * group.depth
-              ["#{indent}#{group.trailing_name}", group.id]
-            end
-          %>
-          <%= select_tag 's[group_ids][]',
-            options_for_select(options, selected: params.dig(:s, :group_ids).presence),
-            id: nil, "aria-label" => t("ss.organization"), include_blank: t('facility.submit.change') %>
+          <% options = @cur_node.ordered_st_article_nodes.map { |c| [c.name, c.id] } %>
+          <%= select_tag 's[article_node_ids][]',
+            options_for_select(options, selected: params.dig(:s, :article_node_ids).presence),
+            id: nil, "aria-label" => t("cms.node"), include_blank: t('facility.submit.change') %>
         </dd>
       </dl>
     <% end %>
+
+    <%
+      options = []
+      if @cur_node.st_categories.present?
+        options = @cur_node.st_categories.map { |c| [c.name, c.name] }
+      elsif tryb { @aggregate_result['aggregations']['group_by_categories']['buckets'] }.present?
+        options = @s.search['aggregations']['group_by_categories']['buckets'].map { |c| [c['key'], c['key']] }
+      end
+    %>
+    <% if options.size > 0 %>
+      <dl class="site-search-categories style-select">
+        <dt><%= t("category.node") %></dt>
+        <dd>
+          <%= select_tag 's[category_names][]',
+            options_for_select(options, selected: params.dig(:s, :category_names).presence),
+            id: nil, "aria-label" => t("category.node"), include_blank: t('facility.submit.change') %>
+        </dd>
+      </dl>
+    <% end %>
+    <dl class="site-search-categories style-input" style="display: none;">
+      <dt><%= t("category.node") %></dt>
+      <dd><%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off", title: t('category.node') %></dd>
+    </dl>
+
+    <dl class="site-search-organization style-select">
+      <dt><%= t("ss.organization") %></dt>
+      <dd>
+        <%
+          options = Cms::Group.site(@cur_site).active.map do |group|
+            indent = '　' * group.depth
+            ["#{indent}#{group.trailing_name}", group.id]
+          end
+        %>
+        <%= select_tag 's[group_ids][]',
+          options_for_select(options, selected: params.dig(:s, :group_ids).presence),
+          id: nil, "aria-label" => t("ss.organization"), include_blank: t('facility.submit.change') %>
+      </dd>
+    </dl>
+    <dl class="site-search-organization style-input" style="display: none;">
+      <dt><%= t('ss.organization') %></dt>
+      <dd><%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off", title: t('ss.organization') %></dd>
+    </dl>
   <% end %>
 
   <% if @result.present? %>

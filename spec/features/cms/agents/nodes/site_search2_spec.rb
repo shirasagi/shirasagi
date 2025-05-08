@@ -195,6 +195,34 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
     end
   end
 
+  context 'elasticsearch_outside' do
+    before do
+      site.update elasticsearch_outside: 'enabled'
+      site_search_node.update st_article_node_ids: [node.id], st_category_ids: [cate1.id]
+    end
+
+    context 'search for target' do
+      it do
+        visit site_search_node.url
+
+        within '.search-form' do
+          expect(page).to have_css('.site-search-article-nodes.style-select', visible: true)
+          expect(page).to have_css('.site-search-categories.style-select', visible: true)
+          expect(page).to have_css('.site-search-organization.style-select', visible: true)
+          expect(page).not_to have_css('.site-search-categories.style-input', visible: true)
+          expect(page).not_to have_css('.site-search-organization.style-input', visible: true)
+
+          find("select[name='target'] option[value='outside']").select_option
+          expect(page).not_to have_css('.site-search-article-nodes.style-select', visible: true)
+          expect(page).not_to have_css('.site-search-categories.style-select', visible: true)
+          expect(page).not_to have_css('.site-search-organization.style-select', visible: true)
+          expect(page).to have_css('.site-search-categories.style-input', visible: true)
+          expect(page).to have_css('.site-search-organization.style-input', visible: true)
+        end
+      end
+    end
+  end
+
   context 'multiple sites' do
     before do
       site.update elasticsearch_site_ids: [site.id, site2.id], elasticsearch_outside: 'enabled'
@@ -216,17 +244,18 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
         visit site_search_node.url
 
         within '.search-form' do
-          find("select[name='target'] option[value='outside']").select_option
-          click_button I18n.t('ss.buttons.search')
-        end
+          expect(page).not_to have_css('.site-search-article-nodes.style-select', visible: true)
+          expect(page).not_to have_css('.site-search-categories.style-select', visible: true)
+          expect(page).not_to have_css('.site-search-organization.style-select', visible: true)
+          expect(page).to have_css('.site-search-categories.style-input', visible: true)
+          expect(page).to have_css('.site-search-organization.style-input', visible: true)
 
-        within '.pages .item:nth-child(2)' do
-          expect(page).to have_css('.title')
-          expect(page).to have_css('.summary .image')
-          expect(page).to have_css('.summary .text')
-          expect(page).to have_css('.meta .url')
-          expect(page).to have_css('.meta .date')
-          expect(page).to have_css('.meta .category-list')
+          find("select[name='target'] option[value='outside']").select_option
+          expect(page).not_to have_css('.site-search-article-nodes.style-select', visible: true)
+          expect(page).not_to have_css('.site-search-categories.style-select', visible: true)
+          expect(page).not_to have_css('.site-search-organization.style-select', visible: true)
+          expect(page).to have_css('.site-search-categories.style-input', visible: true)
+          expect(page).to have_css('.site-search-organization.style-input', visible: true)
         end
       end
     end

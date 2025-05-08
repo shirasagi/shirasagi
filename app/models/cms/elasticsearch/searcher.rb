@@ -74,16 +74,6 @@ class Cms::Elasticsearch::Searcher
       query[:bool][:must] << article_node_query
     end
 
-    if category_name.present?
-      names = category_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
-      query[:bool][:must] << { terms: { categories: names } } if names.present?
-    end
-
-    if group_name.present?
-      names = group_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
-      query[:bool][:must] << { terms: { groups: names } } if names.present?
-    end
-
     if category_names.present?
       names = category_names.reject(&:blank?)
       query[:bool][:must] << { terms: { categories: names } } if names.present?
@@ -92,6 +82,16 @@ class Cms::Elasticsearch::Searcher
     if group_ids.present?
       ids = group_ids.reject(&:blank?)
       query[:bool][:must] << { terms: { group_ids: ids } } if ids.present?
+    end
+
+    if category_name.present?
+      names = category_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
+      query[:bool][:must] << { terms: { categories: names } } if names.present?
+    end
+
+    if group_name.present?
+      names = group_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
+      query[:bool][:must] << { terms: { groups: names } } if names.present?
     end
 
     query[:bool][:filter] = {}
