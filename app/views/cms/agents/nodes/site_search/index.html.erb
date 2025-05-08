@@ -72,70 +72,50 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       </dl>
     <% end %>
 
-    <% if @cur_site.elasticsearch_site_ids.blank? %>
+    <% if params[:target] == 'outside' || @cur_site.elasticsearch_site_ids.present? %>
+      <dl class="site-search-categories">
+        <dt><%= t("category.node") %></dt>
+        <dd>
+          <%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off", title: t('category.node') %>
+        </dd>
+      </dl>
+      <dl class="site-search-organization">
+        <dt><%= t('ss.organization') %></dt>
+        <dd>
+          <%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off", title: t('ss.organization') %>
+        </dd>
+      </dl>
+    <% else %>
       <% if @cur_node.ordered_st_article_nodes.present? %>
         <dl class="site-search-article-nodes">
           <dt><%= t("cms.node") %></dt>
           <dd>
-            <% if @article_node_items %>
-              <% options = @article_node_items.map { |c| [c.name, c.id] } %>
-            <% else %>
-              <% options = @aggregate_result['aggregations']['group_by_categories']['buckets'].map { |c| [c['key'], c['key']] } %>
-            <% end %>
+            <% options = @cur_node.ordered_st_article_nodes.map { |c| [c.name, c.id] } %>
             <%= select_tag 's[article_node_ids][]',
               options_for_select(options, selected: params.dig(:s, :article_node_ids).presence),
               id: nil, "aria-label" => t("cms.node"), include_blank: t('facility.submit.change') %>
-
-            <!--
-            <%= link_to t('facility.submit.change'), "#{@cur_node.url}article_nodes.html", class: "ajax-box article-nodes" %>
-            <div class="selected-article-nodes">
-              <% if @s.article_node_ids.present? %>
-                <% @cur_node.st_article_nodes.in(id: @s.article_node_ids).each do |node| %>
-                  <article class="selected-item" data-id="<%= node.id %>">
-                    <header>
-                      <span class="article-node-name"><%= node.name %></span>
-                      <%= f.hidden_field 'article_node_ids[]', value: node.id, id: nil %>
-                      <%= button_tag '✕', type: 'button', class: %w(btn deselect) %>
-                    </header>
-                  </article>
-                <% end %>
-              <% end %>
-            </div>
-            -->
           </dd>
         </dl>
       <% end %>
 
-      <dl class="site-search-categories">
-        <dt><%= t("category.node") %></dt>
-        <dd>
-          <% if @category_items %>
-            <% options = @category_items.map { |c| [c.name, c.id] } %>
-          <% else %>
-            <% options = @aggregate_result['aggregations']['group_by_categories']['buckets'].map { |c| [c['key'], c['key']] } %>
-          <% end %>
-          <%= select_tag 's[category_name]',
-            options_for_select(options, selected: params.dig(:s, :category_name).presence),
-            id: nil, "aria-label" => t("category.node"), include_blank: t('facility.submit.change') %>
-
-          <!--
-          <%= link_to t('facility.submit.change'), "#{@cur_node.url}categories.html", class: "ajax-box" %>
-          <div class="selected-categories">
-            <% if @s.category_names.present? %>
-              <% @s.category_names.each do |category_name| %>
-                <article class="selected-item" data-name="<%= category_name %>">
-                  <header>
-                    <span class="category-name"><%= category_name %></span>
-                    <%= f.hidden_field 'category_names[]', value: category_name, id: nil %>
-                    <%= button_tag '✕', type: 'button', class: %w(btn deselect) %>
-                  </header>
-                </article>
-              <% end %>
-            <% end %>
-          </div>
-          -->
-        </dd>
-      </dl>
+      <%
+        options = []
+        if @cur_node.st_categories.present?
+          options = @cur_node.st_categories.map { |c| [c.name, c.name] }
+        elsif tryb { @aggregate_result['aggregations']['group_by_categories']['buckets'] }.present?
+          options = @s.search['aggregations']['group_by_categories']['buckets'].map { |c| [c['key'], c['key']] }
+        end
+      %>
+      <% if options.size > 0 %>
+        <dl class="site-search-categories">
+          <dt><%= t("category.node") %></dt>
+          <dd>
+            <%= select_tag 's[category_names][]',
+              options_for_select(options, selected: params.dig(:s, :category_names).presence),
+              id: nil, "aria-label" => t("category.node"), include_blank: t('facility.submit.change') %>
+          </dd>
+        </dl>
+      <% end %>
 
       <dl class="site-search-organization">
         <dt><%= t("ss.organization") %></dt>
@@ -149,37 +129,6 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
           <%= select_tag 's[group_ids][]',
             options_for_select(options, selected: params.dig(:s, :group_ids).presence),
             id: nil, "aria-label" => t("ss.organization"), include_blank: t('facility.submit.change') %>
-
-          <!--
-          <%= link_to t('facility.submit.change'), "#{@cur_node.url}groups.html", class: "ajax-box" %>
-          <div class="selected-groups">
-            <% if @s.group_ids.present? %>
-              <% @cur_site.groups.in(id: @s.group_ids).each do |group| %>
-                <article class="selected-item" data-name="<%= group.id %>">
-                  <header>
-                    <span class="group-name"><%= group.name %></span>
-                    <%= f.hidden_field 'group_ids[]', value: group.id, id: nil %>
-                    <%= button_tag '✕', type: 'button', class: %w(btn deselect) %>
-                  </header>
-                </article>
-              <% end %>
-            <% end %>
-          </div>
-          -->
-        </dd>
-      </dl>
-
-    <% else %>
-      <dl class="site-search-categories">
-        <dt><%= t("category.node") %></dt>
-        <dd>
-          <%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off", title: t('category.node') %>
-        </dd>
-      </dl>
-      <dl class="site-search-organization">
-        <dt><%= t('ss.organization') %></dt>
-        <dd>
-          <%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off", title: t('ss.organization') %>
         </dd>
       </dl>
     <% end %>

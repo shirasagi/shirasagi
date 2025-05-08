@@ -2,9 +2,10 @@ require 'spec_helper'
 
 describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: true, es: true do
   let!(:site) { cms_site }
+  let!(:site2) { create :cms_site_subdir, parent_id: site.id }
   let!(:user) { cms_user }
   let!(:layout) { create_cms_layout }
-  let!(:node) { create :cms_node, layout_id: layout.id, filename: "node" }
+  let!(:node) { create :article_node_page, layout_id: layout.id, filename: "node" }
   let!(:site_search_node) { create :cms_node_site_search, cur_site: site, cur_node: node }
 
   let!(:group1) { create :cms_group, name: "#{cms_group.name}/#{unique_id}" }
@@ -51,7 +52,179 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
     expect(Cms::PageIndexQueue.all.size).to eq 0
   end
 
-  context 'image' do
+  context 'one site with settings' do
+    before do
+      site_search_node.update st_article_node_ids: [node.id], st_category_ids: [cate1.id]
+    end
+
+    it do
+      visit site_search_node.url
+
+      within '.search-form' do
+        expect(page.all("select[name='s[article_node_ids][]'] option").count).to eq 2
+        expect(page.all("select[name='s[category_names][]'] option").count).to eq 2
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages .item:nth-child(1)' do
+        expect(page).not_to have_selector('img')
+      end
+      within '.pages .item:nth-child(2)' do
+        expect(page).to have_css('.title')
+        expect(page).to have_css('.summary .image')
+        expect(page).to have_css('.summary .text')
+        expect(page).to have_css('.meta .url')
+        expect(page).to have_css('.meta .date')
+        expect(page).to have_css('.meta .category-list')
+      end
+      within '.pages .item:nth-child(3)' do
+        expect(page).to have_css('.title')
+        expect(page).to have_css('.summary .image')
+        expect(page).to have_css('.summary .text')
+        expect(page).to have_css('.meta .url')
+        expect(page).to have_css('.meta .date')
+        expect(page).to have_css('.meta .category-list')
+      end
+
+      ## article_node
+      within '.search-form' do
+        find("select[name='s[article_node_ids][]'] option[value='#{node.id}']").select_option
+        find("select[name='s[category_names][]'] option[value='']").select_option
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages' do
+        expect(page.all('.item').count).to eq 3
+      end
+
+      ## category
+      within '.search-form' do
+        find("select[name='s[article_node_ids][]'] option[value='']").select_option
+        find("select[name='s[category_names][]'] option[value='#{cate1.name}']").select_option
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages' do
+        expect(page.all('.item').count).to eq 1
+      end
+    end
+  end
+
+  context 'one site without settings' do
+    it do
+      visit site_search_node.url
+
+      within '.search-form' do
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages .item:nth-child(1)' do
+        expect(page).not_to have_selector('img')
+      end
+      within '.pages .item:nth-child(2)' do
+        expect(page).to have_css('.title')
+        expect(page).to have_css('.summary .image')
+        expect(page).to have_css('.summary .text')
+        expect(page).to have_css('.meta .url')
+        expect(page).to have_css('.meta .date')
+        expect(page).to have_css('.meta .category-list')
+      end
+      within '.pages .item:nth-child(3)' do
+        expect(page).to have_css('.title')
+        expect(page).to have_css('.summary .image')
+        expect(page).to have_css('.summary .text')
+        expect(page).to have_css('.meta .url')
+        expect(page).to have_css('.meta .date')
+        expect(page).to have_css('.meta .category-list')
+      end
+
+      ## category
+      within '.search-form' do
+        find("select[name='s[category_names][]'] option[value='#{cate1.name}']").select_option
+        find("select[name='s[group_ids][]'] option[value='']").select_option
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages' do
+        expect(page.all('.item').count).to eq 1
+      end
+
+      ## group
+      within '.search-form' do
+        find("select[name='s[category_names][]'] option[value='']").select_option
+        find("select[name='s[group_ids][]'] option[value='#{group1.id}']").select_option
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages' do
+        expect(page.all('.item').count).to eq 1
+      end
+    end
+  end
+
+  context 'og:image' do
+    before do
+      server = Capybara.current_session.server
+      site.opengraph_type = 'article'
+      site.opengraph_defaul_image_url = "http://#{server.host}:#{server.port}/assets/img/logo.png"
+      site.save
+    end
+
+    it do
+      visit site_search_node.url
+
+      within '.search-form' do
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages .item:nth-child(1)' do
+        expect(page).to have_selector("img[alt='og:image']")
+      end
+    end
+  end
+
+  context 'search for attachment' do
+    it do
+      visit site_search_node.url
+
+      within '.search-form' do
+        find("select[name='s[type]'] option[value='file']").select_option
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages .item:nth-child(1)' do
+        expect(page).to have_css('.title')
+        expect(page).to have_css('.summary .image')
+        expect(page).to have_css('.meta .page-name')
+        expect(page).to have_css('.meta .url')
+        expect(page).to have_css('.meta .date')
+        expect(page).to have_css('.meta .category-list')
+      end
+    end
+  end
+
+  context 'search for target' do
+    before do
+      site.update elasticsearch_outside: 'enabled'
+      site.update elasticsearch_site_ids: [site.id, site2.id]
+    end
+
+    it do
+      visit site_search_node.url
+
+      within '.search-form' do
+        find("select[name='target'] option[value='outside']").select_option
+        click_button I18n.t('ss.buttons.search')
+      end
+
+      within '.pages .item:nth-child(2)' do
+        expect(page).to have_css('.title')
+        expect(page).to have_css('.summary .image')
+        expect(page).to have_css('.summary .text')
+        expect(page).to have_css('.meta .url')
+        expect(page).to have_css('.meta .date')
+        expect(page).to have_css('.meta .category-list')
+      end
+    end
+  end
+
+  context 'multiple sites' do
+    before do
+      site.update elasticsearch_site_ids: [site.id, site2.id]
+    end
+
     it do
       visit site_search_node.url
 
@@ -93,26 +266,6 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       end
       within '.pages' do
         expect(page.all('.item').count).to eq 1
-      end
-    end
-  end
-
-  context 'og:image' do
-    before do
-      server = Capybara.current_session.server
-      site.opengraph_type = 'article'
-      site.opengraph_defaul_image_url = "http://#{server.host}:#{server.port}/assets/img/logo.png"
-      site.save
-    end
-
-    it do
-      visit site_search_node.url
-
-      within '.search-form' do
-        click_button I18n.t('ss.buttons.search')
-      end
-      within '.pages article:nth-child(1)' do
-        expect(page).to have_selector("img[alt='og:image']")
       end
     end
   end

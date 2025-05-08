@@ -17,7 +17,17 @@ var cboxLoad = function() {
 $("#ajax-box .pagination a").on("click", cboxLoad);
 $("#ajax-box .submitters a").on("click", cboxLoad);
 <% end %>
-
+<!--
+<div class="search-ui-form">
+  <%= form_for :s, url: "#{@cur_node.url}categories.html", html: { method: "GET", class: :search } do |f| %>
+    <%= f.text_field :keyword %>
+    <div class="submitters">
+      <%= f.submit t("ss.buttons.search"), class: :btn %>
+  <%= link_to t("ss.buttons.reset"), "#{@cur_node.url}categories.html", class: :btn %>
+    </div>
+  <% end %>
+</div>
+-->
 <% if @items.present? %>
   <table class="index search-ui">
     <thead class="list-head">

@@ -13,7 +13,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   def set_setting
     @setting ||= begin
       setting_model = Cms::Elasticsearch::Setting::Page
-      setting_model.new(cur_site: @cur_site, cur_node: @cur_node, cur_user: @cur_user)
+      setting_model.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node)
     end
   end
 
@@ -81,43 +81,31 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
     @s.field_name = %w(text_index content title)
     @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
     @result = @s.search
-
-    if @cur_node.ordered_st_article_nodes.present?
-      @article_node_items = @cur_node.ordered_st_article_nodes
-    else
-      @article_node_aggregations = @s.search
-    end
-
-    if @cur_node.st_categories.present?
-      @category_items = @cur_node.st_categories
-    else
-      @category_aggregations = @s.search
-    end
   end
 
-  def article_nodes
-    @s = @item = @model.new(get_params)
+  # def article_nodes
+  #   @s = @item = @model.new(get_params)
 
-    if @cur_node.ordered_st_article_nodes.present?
-      @items = @cur_node.ordered_st_article_nodes
-    else
-      @aggregate_result = @s.search
-    end
+  #   if @cur_node.ordered_st_article_nodes.present?
+  #     @items = @cur_node.ordered_st_article_nodes
+  #   else
+  #     @aggregate_result = @s.search
+  #   end
 
-    @cur_node.layout_id = nil
-    render layout: 'cms/ajax'
-  end
+  #   @cur_node.layout_id = nil
+  #   render layout: 'cms/ajax'
+  # end
 
-  def categories
-    @s = @item = @model.new(get_params)
+  # def categories
+  #   @s = @item = @model.new(get_params)
 
-    if @cur_node.st_categories.present?
-      @items = @cur_node.st_categories
-    else
-      @aggregate_result = @s.search
-    end
+  #   if @cur_node.st_categories.present?
+  #     @items = @cur_node.st_categories
+  #   else
+  #     @aggregate_result = @s.search
+  #   end
 
-    @cur_node.layout_id = nil
-    render layout: 'cms/ajax'
-  end
+  #   @cur_node.layout_id = nil
+  #   render layout: 'cms/ajax'
+  # end
 end

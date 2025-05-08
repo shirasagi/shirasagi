@@ -71,6 +71,8 @@ $(function() {
           image = {}
           if source['image_full_url']
             image = { url: source['image_full_url'], name: source['image_name'] }
+          elsif source.dig('attachment', 'content_type').to_s.start_with?('image/')
+            image = { url: source['full_url'], name: source['name'] }
           elsif source['site_id'] && site = Cms::Site.where(id: source['site_id']).first
             image = { url: site.opengraph_defaul_image_url, name: 'og:image' } if site.opengraph_defaul_image_url
           end

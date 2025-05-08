@@ -64,16 +64,6 @@ class Cms::Elasticsearch::Searcher
       query[:bool][:must] << { exists: { field: 'attachment' } }
     end
 
-    if category_name.present?
-      names = category_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
-      query[:bool][:must] << { terms: { categories: names } } if names.present?
-    end
-
-    if group_name.present?
-      names = group_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
-      query[:bool][:must] << { terms: { groups: names } } if names.present?
-    end
-
     if article_node_ids.present?
       article_node_query = {}
       article_node_query[:bool] = {}
@@ -84,8 +74,19 @@ class Cms::Elasticsearch::Searcher
       query[:bool][:must] << article_node_query
     end
 
+    if category_name.present?
+      names = category_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
+      query[:bool][:must] << { terms: { categories: names } } if names.present?
+    end
+
+    if group_name.present?
+      names = group_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
+      query[:bool][:must] << { terms: { groups: names } } if names.present?
+    end
+
     if category_names.present?
-      query[:bool][:must] << { terms: { categories: category_names } }
+      names = category_names.reject(&:blank?)
+      query[:bool][:must] << { terms: { categories: names } } if names.present?
     end
 
     if group_ids.present?
