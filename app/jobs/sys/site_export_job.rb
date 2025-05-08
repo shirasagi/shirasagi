@@ -43,11 +43,13 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_theme_templates
     invoke :export_cms_source_cleaner_templates
     invoke :export_cms_loop_settings
+    invoke :export_cms_check_links_ignore_urls
     invoke :export_ezine_columns
     invoke :export_inquiry_columns
     invoke :export_kana_dictionaries
     invoke :export_opendata_dataset_groups
     invoke :export_opendata_licenses
+    invoke :export_guide_diagram_point
 
     # files
     invoke :export_cms_files
@@ -209,6 +211,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
     export_documents "cms_loop_settings", Cms::LoopSetting
   end
 
+  def export_cms_check_links_ignore_urls
+    export_documents "cms_check_links_ignore_urls", Cms::CheckLinks::IgnoreUrl
+  end
+
   def export_ezine_columns
     export_documents "ezine_columns", Ezine::Column
   end
@@ -227,6 +233,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def export_opendata_licenses
     export_documents "opendata_licenses", Opendata::License
+  end
+
+  def export_guide_diagram_point
+    export_documents "guide_diagram_point", Guide::Diagram::Point
   end
 
   def export_cms_files

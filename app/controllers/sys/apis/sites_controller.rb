@@ -7,6 +7,6 @@ class Sys::Apis::SitesController < ApplicationController
 
   def index
     @multi = params[:single].blank?
-    @items = @model.search(params[:s])
+    @items = @model.without_deleted.search(params[:s])
   end
 end
