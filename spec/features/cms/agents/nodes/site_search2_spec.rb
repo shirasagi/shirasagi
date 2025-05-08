@@ -195,77 +195,88 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
     end
   end
 
-  context 'search for target' do
-    before do
-      site.update elasticsearch_outside: 'enabled'
-      site.update elasticsearch_site_ids: [site.id, site2.id]
-    end
-
-    it do
-      visit site_search_node.url
-
-      within '.search-form' do
-        find("select[name='target'] option[value='outside']").select_option
-        click_button I18n.t('ss.buttons.search')
-      end
-
-      within '.pages .item:nth-child(2)' do
-        expect(page).to have_css('.title')
-        expect(page).to have_css('.summary .image')
-        expect(page).to have_css('.summary .text')
-        expect(page).to have_css('.meta .url')
-        expect(page).to have_css('.meta .date')
-        expect(page).to have_css('.meta .category-list')
-      end
-    end
-  end
-
   context 'multiple sites' do
     before do
-      site.update elasticsearch_site_ids: [site.id, site2.id]
+      site.update elasticsearch_site_ids: [site.id, site2.id], elasticsearch_outside: 'enabled'
+      site2.update elasticsearch_hosts: es_url
+
+      ::Cms::Elasticsearch.init_ingest(site: site2)
+      ::Cms::Elasticsearch.drop_index(site: site2) rescue nil
+      ::Cms::Elasticsearch.create_index(site: site2)
+
+      Cms::PageIndexQueue.site(site2).each do |item|
+        job = ::Cms::Elasticsearch::Indexer::PageReleaseJob.bind(site_id: site2.id)
+        ss_perform_now(job, action: item.job_action, id: item.page_id.to_s, queue_id: item.id.to_s)
+      end
+      ::Cms::Elasticsearch.refresh_index(site: site2)
     end
 
-    it do
-      visit site_search_node.url
+    context 'search for target' do
+      it do
+        visit site_search_node.url
 
-      within '.search-form' do
-        click_button I18n.t('ss.buttons.search')
-      end
-      within '.pages .item:nth-child(2)' do
-        expect(page).to have_css('.title')
-        expect(page).to have_css('.summary .image')
-        expect(page).to have_css('.summary .text')
-        expect(page).to have_css('.meta .url')
-        expect(page).to have_css('.meta .date')
-        expect(page).to have_css('.meta .category-list')
-      end
-      within '.pages .item:nth-child(3)' do
-        expect(page).to have_css('.title')
-        expect(page).to have_css('.summary .image')
-        expect(page).to have_css('.summary .text')
-        expect(page).to have_css('.meta .url')
-        expect(page).to have_css('.meta .date')
-        expect(page).to have_css('.meta .category-list')
-      end
+        within '.search-form' do
+          find("select[name='target'] option[value='outside']").select_option
+          click_button I18n.t('ss.buttons.search')
+        end
 
-      ## category
-      within '.search-form' do
-        fill_in 's[category_name]', with: "#{cate1.name} etc"
-        fill_in 's[group_name]', with: ''
-        click_button I18n.t('ss.buttons.search')
+        within '.pages .item:nth-child(2)' do
+          expect(page).to have_css('.title')
+          expect(page).to have_css('.summary .image')
+          expect(page).to have_css('.summary .text')
+          expect(page).to have_css('.meta .url')
+          expect(page).to have_css('.meta .date')
+          expect(page).to have_css('.meta .category-list')
+        end
       end
-      within '.pages' do
-        expect(page.all('.item').count).to eq 1
-      end
+    end
 
-      ## group
-      within '.search-form' do
-        fill_in 's[category_name]', with: ''
-        fill_in 's[group_name]', with: "#{group1.name.split('/').last} etc"
-        click_button I18n.t('ss.buttons.search')
-      end
-      within '.pages' do
-        expect(page.all('.item').count).to eq 1
+    context 'text field is placed' do
+      it do
+        visit site_search_node.url
+
+        within '.search-form' do
+          click_button I18n.t('ss.buttons.search')
+        end
+        within '.pages .item:nth-child(1)' do
+          expect(page).not_to have_selector('img')
+        end
+        within '.pages .item:nth-child(2)' do
+          expect(page).to have_css('.title')
+          expect(page).to have_css('.summary .image')
+          expect(page).to have_css('.summary .text')
+          expect(page).to have_css('.meta .url')
+          expect(page).to have_css('.meta .date')
+          expect(page).to have_css('.meta .category-list')
+        end
+        within '.pages .item:nth-child(3)' do
+          expect(page).to have_css('.title')
+          expect(page).to have_css('.summary .image')
+          expect(page).to have_css('.summary .text')
+          expect(page).to have_css('.meta .url')
+          expect(page).to have_css('.meta .date')
+          expect(page).to have_css('.meta .category-list')
+        end
+
+        ## category
+        within '.search-form' do
+          fill_in 's[category_name]', with: "#{cate1.name} etc"
+          fill_in 's[group_name]', with: ''
+          click_button I18n.t('ss.buttons.search')
+        end
+        within '.pages' do
+          expect(page.all('.item').count).to eq 1
+        end
+
+        ## group
+        within '.search-form' do
+          fill_in 's[category_name]', with: ''
+          fill_in 's[group_name]', with: "#{group1.name.split('/').last} etc"
+          click_button I18n.t('ss.buttons.search')
+        end
+        within '.pages' do
+          expect(page.all('.item').count).to eq 1
+        end
       end
     end
   end
