@@ -9,26 +9,28 @@
 %>
 
 <script>
-$(function() {
-  $('.cms-site-search-pages .category-name').on('click', function() {
-    const name = $(this).text();
-    const $input = $('.cms-site-search .site-search-categories input[name="s[category_name]"]');
-    const $select = $('.cms-site-search .site-search-categories select[name="s[category_names]"]');
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.cms-site-search-pages .category-name').forEach(category => {
+    category.addEventListener('click', () => {
+      const name = category.text;
+      const form = document.querySelector('.search-form');
+      const input = document.querySelector('.cms-site-search .site-search-categories input[name="s[category_name]"]');
+      const select = document.querySelector('.cms-site-search .site-search-categories select[name="s[category_names][]"]');
 
-    if ($input.length && $input.is(':visible')) {
-      let value = $input.val();
-      value = ' ' + value.replace(/[\s\/　]+/, ' ') + ' ';
-      if (value.search(` ${name} `) === -1) {
-        $input.val((value + name).trim());
-        $('.cms-site-search form').submit();
+      if (input?.checkVisibility()) {
+        let values = input.value.split(/[\s\/　]+/)
+        if (!values.includes(name)) values = values.concat(name)
+        input.value = values.join(' ');
+        form.submit();
       }
-    }
-    if ($select.length && $select.is(':visible')) {
-      $select.find('option[value="' + name + '"]').each((el) => {
-        $select.val(name);
-        $('.cms-site-search form').submit();
-      });
-    }
+      if (select?.checkVisibility()) {
+        let option = select.querySelector('option[value="' + name + '"]');
+        if (option) {
+          option.selected = true;
+          form.submit();
+        }
+      }
+    });
   });
 });
 </script>
