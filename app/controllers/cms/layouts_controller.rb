@@ -1,6 +1,7 @@
 class Cms::LayoutsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::LayoutsHelper
 
   model Cms::Layout
 
@@ -58,15 +59,5 @@ class Cms::LayoutsController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
     render_update @item.valid? && syntax_check && @item.save
-  end
-
-  def syntax_check_error
-    html = { id: 'errorSyntaxChecker', class: 'errorExplanation' }
-    I18n.with_options(scope: %i[activerecord errors template]) do |locale|
-      error_messages = @syntax_checker.errors.map do |error|
-        content_tag(:li, error[:msg])
-      end.join.html_safe
-    end
-    render json: { errors: html }
   end
 end

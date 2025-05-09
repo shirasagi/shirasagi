@@ -12,31 +12,3 @@
     <% end %>
   </dd>
 </dl>
-
-<% if @syntax_checker && @syntax_checker.errors.present? %>
-<script>
-  $(function() {
-    // 既存のSyntax_Checkerの初期化
-    if (!Syntax_Checker.form) {
-      Syntax_Checker.form = Cms_Form;
-    }
-
-    // ResultBoxの初期化（エラー表示コンテナ）
-    if (!Syntax_Checker.resultBox) {
-      Syntax_Checker.resultBox = new ResultBox(Syntax_Checker.form);
-    }
-
-    // モックチェックオブジェクト作成（エラー表示用）
-    var mockChecks = [{
-      id: "html",
-      name: "<%= t("modules.addons.cms/body_layout_html") %>"
-    }];
-
-    // エラーデータを設定
-    Syntax_Checker.errors = <%= raw @syntax_checker.errors.to_json %>;
-
-    // エラー表示メソッド呼び出し
-    Syntax_Checker.resultBox.showResult(mockChecks, Syntax_Checker.errors);
-  });
-</script>
-<% end %>

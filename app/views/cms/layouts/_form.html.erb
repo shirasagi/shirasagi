@@ -1,3 +1,7 @@
+<% if @syntax_checker && @syntax_checker.errors.present? %>
+  <%= syntax_check_detail_box @syntax_checker %>
+<% end %>
+
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
