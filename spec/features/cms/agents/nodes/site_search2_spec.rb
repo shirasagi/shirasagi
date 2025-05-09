@@ -59,7 +59,6 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
     it do
       visit site_search_node.url
-
       within '.search-form' do
         expect(page.all("select[name='s[article_node_ids][]'] option").count).to eq 2
         expect(page.all("select[name='s[category_names][]'] option").count).to eq 2
@@ -104,6 +103,17 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       within '.pages' do
         expect(page.all('.item').count).to eq 1
       end
+
+      ## click on cateogry in the results
+      visit site_search_node.url
+      within '.search-form' do
+        click_button I18n.t('ss.buttons.search')
+      end
+      within '.pages .item:nth-child(2)' do
+        find('.category-name:nth-child(1)').click
+      end
+      expect(find('.site-search-categories select').value).to eq cate1.name
+      expect(page.all('.item').count).to eq 1
     end
   end
 
@@ -263,7 +273,6 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
     context 'text field is placed' do
       it do
         visit site_search_node.url
-
         within '.search-form' do
           click_button I18n.t('ss.buttons.search')
         end
@@ -306,6 +315,17 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
         within '.pages' do
           expect(page.all('.item').count).to eq 1
         end
+
+        ## click on cateogry in the results
+        visit site_search_node.url
+        within '.search-form' do
+          click_button I18n.t('ss.buttons.search')
+        end
+        within '.pages .item:nth-child(2)' do
+          find('.category-name:nth-child(1)').click
+        end
+        expect(find('.site-search-categories input').value).to eq cate1.name
+        expect(page.all('.item').count).to eq 1
       end
     end
   end

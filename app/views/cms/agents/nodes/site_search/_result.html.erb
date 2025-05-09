@@ -17,13 +17,13 @@ document.addEventListener('DOMContentLoaded', () => {
       const input = document.querySelector('.cms-site-search .site-search-categories input[name="s[category_name]"]');
       const select = document.querySelector('.cms-site-search .site-search-categories select[name="s[category_names][]"]');
 
-      if (input?.checkVisibility()) {
-        let values = input.value.split(/[\s\/　]+/)
+      if (!input.disabled) {
+        let values = input.value.split(/[\s\/　]+/).filter(n => n)
         if (!values.includes(name)) values = values.concat(name)
         input.value = values.join(' ');
         form.submit();
       }
-      if (select?.checkVisibility()) {
+      if (!select.disabled) {
         let option = select.querySelector('option[value="' + name + '"]');
         if (option) {
           option.selected = true;
