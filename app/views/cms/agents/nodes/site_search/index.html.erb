@@ -45,11 +45,13 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
 
     const changeTarget = () => {
       const input = (target.value === 'outside' || <%== @cur_site.elasticsearch_site_ids.present? %>);
-      form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
       form.querySelectorAll('.style-input').forEach(el => el.style.display = input ? 'block' : 'none');
+      form.querySelectorAll('.style-input input').forEach(el => el.disabled = input ? false : true);
+      form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
+      form.querySelectorAll('.style-select select').forEach(el => el.disabled = input ? true : false);
     };
     changeTarget();
-    form.addEventListener('change', changeTarget);
+    target.addEventListener('change', changeTarget);
   });
 </script>
 
