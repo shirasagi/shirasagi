@@ -1,20 +1,4 @@
 module Cms::LayoutsHelper
-  # # error[:msg]用
-  # def syntax_check_msg_box(syntax_checker)
-  #   return unless syntax_checker&.errors.present?
-  #   content_tag(:div, class: "errorExplanation") do
-  #     concat content_tag(:h2, t("ss.errors.syntax_check"))
-  #     concat(content_tag(:p, t("errors.template.body")))
-  #     concat(
-  #       content_tag(:ul) do
-  #         syntax_checker.errors.each do |error|
-  #           concat content_tag(:li, error[:msg].to_s)
-  #         end
-  #       end
-  #     )
-  #   end
-  # end
-
   # error[:detail]用
   def syntax_check_detail_box(syntax_checker)
     return unless syntax_checker&.errors.present?
