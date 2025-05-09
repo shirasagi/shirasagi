@@ -1,0 +1,56 @@
+<%= jquery do %>
+Cms_Site_Search.modal();
+var cboxLoad = function() {
+  var url = $(this).attr("href");
+  $.ajax({
+    url: url,
+    type: "GET",
+    success: function (data) {
+      $("#cboxLoadedContent").html(data);
+    },
+    error: function (data, status) {
+      $("#cboxLoadedContent").html("== Error ==");
+    }
+  });
+  return false;
+};
+$("#ajax-box .pagination a").on("click", cboxLoad);
+$("#ajax-box .submitters a").on("click", cboxLoad);
+<% end %>
+<% if @items.present? %>
+  <table class="index search-ui">
+    <thead class="list-head">
+    <tr>
+      <th class="checkbox"><input type="checkbox"/></th>
+      <th class="name"><%= @cur_node.t :st_article_node_ids %></th>
+    </tr>
+    </thead>
+    <tbody class="items">
+    <% @items.each do |item| %>
+      <% next if params.dig(:s, :keyword).present? && !item.name.include?(params.dig(:s, :keyword)) %>
+      <tr data-id="<%= item.id %>" class="list-item">
+        <td class="checkbox">
+          <label for="<%= "ch-d-#{item.id}" %>">
+            <input type="checkbox" name="ids[]" value="<%= item.id %>" class="set-article-node" id="<%= "ch-d-#{item.id}" %>"/>
+          </label>
+        </td>
+        <td class="name">
+          <span class='select-item'><label for="<%= "ch-d-#{item.id}" %>"><%= item.name %></label></span>
+          <article style="display: none;" class="selected-item" data-id="<%= item.id %>">
+            <header>
+              <span class="article-node-name"><%= item.name %></span>
+              <%= hidden_field_tag('s[article_node_ids][]', item.id) %>
+              <a class="btn deselect">✕</a>
+            </header>
+          </article>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+<% end %>
+<div class="search-ui-select">
+  <%= button_tag t('facility.submit.search'), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

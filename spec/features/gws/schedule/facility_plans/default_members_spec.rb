@@ -12,7 +12,10 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
   let(:new_path) { new_gws_schedule_facility_plan_path site, facility }
   let(:edit_path) { edit_gws_schedule_facility_plan_path site, facility, item }
 
-  before { login_gws_user }
+  before do
+    site.update facility_min_hour: 0, facility_max_hour: 24
+    login_gws_user
+  end
 
   context "no default members" do
     it "#new" do
