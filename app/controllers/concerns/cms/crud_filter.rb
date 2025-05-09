@@ -205,7 +205,47 @@ module Cms::CrudFilter
     @change_state = params[:state]
 
     if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
+      entries = @selected_items.entries
+      @items = []
+
+      Rails.logger.info("一括非公開処理開始: #{entries.size}件のページを処理")
+
+      entries.each do |item|
+        if item.allowed?(:close, @cur_user, site: @cur_site)
+          contains_urls = Cms.contains_urls(item, site: @cur_site)
+          if contains_urls.present?
+            Rails.logger.info("リンクが含まれているページを検出: #{item.name} (ID: #{item.id})")
+            if @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
+              item.state = 'closed'
+              if item.save
+                Rails.logger.info("ページを非公開に変更: #{item.name} (ID: #{item.id})")
+                next
+              else
+                Rails.logger.error("ページの非公開処理に失敗: #{item.name} (ID: #{item.id}) - #{item.errors.full_messages.join(', ')}")
+              end
+            else
+              Rails.logger.warn("権限不足により非公開処理をスキップ: #{item.name} (ID: #{item.id})")
+              item.errors.add :base, t("ss.confirm.not_allowed_to_close")
+            end
+          else
+            item.state = 'closed'
+            if item.save
+              Rails.logger.info("ページを非公開に変更: #{item.name} (ID: #{item.id})")
+              next
+            else
+              Rails.logger.error("ページの非公開処理に失敗: #{item.name} (ID: #{item.id}) - #{item.errors.full_messages.join(', ')}")
+            end
+          end
+        else
+          Rails.logger.warn("権限不足により非公開処理をスキップ: #{item.name} (ID: #{item.id})")
+          item.errors.add :base, :auth_error
+        end
+        @items << item
+      end
+
+      Rails.logger.info("一括非公開処理完了: 成功 #{entries.size - @items.size}件, 失敗 #{@items.size}件")
+      render_confirmed_all(entries.size != @items.size, location: url_for(action: :index), notice: t("ss.notice.depublished"),
+error: t("ss.notice.error"))
       return
     end
 
