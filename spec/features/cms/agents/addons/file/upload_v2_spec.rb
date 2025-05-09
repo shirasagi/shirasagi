@@ -238,7 +238,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with ss/user_file" do
     let!(:file) do
       tmp_ss_file(
-        SS::UserFile, model: "ss/user_file", user: cms_user, basename: filename,
+        SS::UserFile, model: SS::UserFile::FILE_MODEL, user: cms_user, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
@@ -250,7 +250,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with cms/file" do
     let!(:file) do
       tmp_ss_file(
-        Cms::File, model: "cms/file", user: cms_user, site: site, basename: filename,
+        Cms::File, model: Cms::File::FILE_MODEL, user: cms_user, site: site, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
@@ -396,6 +396,49 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             expect(file.filename).to eq "#{name}png"
             expect(file.content_type).to eq "image/png"
             expect(file.size).to eq File.size("#{Rails.root}/spec/fixtures/ss/logo.png")
+          end
+        end
+      end
+
+      # 元々のファイルに拡張子がついていない
+      context "without ext (case 3)" do
+        let(:filepath) { tmpfile { |file| file.write('0123456789') } }
+
+        it do
+          visit article_pages_path(site: site, cid: node)
+          click_on I18n.t("ss.links.new")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
+          within "#item-form #addon-cms-agents-addons-file" do
+            wait_for_cbox_opened do
+              click_on I18n.t('ss.links.upload')
+            end
+          end
+          within_dialog do
+            attach_file "in_files", filepath
+          end
+          wait_for_cbox_closed do
+            within_dialog do
+              within "form" do
+                click_on I18n.t("ss.buttons.upload")
+              end
+            end
+          end
+          within "#item-form #addon-cms-agents-addons-file" do
+            expect(page).to have_css(".file-view", text: File.basename(filepath))
+          end
+
+          expect(Cms::TempFile.all.count).to eq 1
+          Cms::TempFile.all.first.tap do |file|
+            expect(file.site_id).to eq site.id
+            expect(file.user_id).to eq cms_user.id
+            expect(file.node_id).to eq node.id
+            expect(file.model).to eq "ss/temp_file"
+            expect(file.name).to eq File.basename(filepath)
+            expect(file.filename).to eq File.basename(filepath)
+            expect(file.content_type).to eq "application/octet-stream"
+            expect(file.size).to eq File.size(filepath)
           end
         end
       end

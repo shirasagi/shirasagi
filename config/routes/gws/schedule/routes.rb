@@ -71,6 +71,7 @@ Rails.application.routes.draw do
         # post :finish_all, on: :collection
         # post :revert_all, on: :collection
         # post :soft_delete_all, on: :collection
+        post :copy, on: :member
       end
       resources :trashes, concerns: :deletion do
         match :undo_delete, on: :member, via: %i[get post]

@@ -20,6 +20,10 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
+
+    &:not(:has(.file-view)) {
+      display: none;
+    }
   }
 
   * ~ .cms-addon-file-selected-files-wrap {

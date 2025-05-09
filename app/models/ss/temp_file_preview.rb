@@ -12,6 +12,7 @@ class SS::TempFilePreview
   attribute :size, :integer
   attribute :content_type, :string
   attribute :is_image, :boolean
+  attribute :accepts
 
   before_validation :normalize_name
   before_validation :normalize_filename
@@ -23,6 +24,8 @@ class SS::TempFilePreview
   validate :validate_name
   validate :validate_filename
   validate :validate_size
+  validate :validate_accepts
+  validate :validate_upload_policy
 
   def to_h
     { name: name, filename: filename, size: size, content_type: content_type,
@@ -63,7 +66,7 @@ class SS::TempFilePreview
   def validate_name
     return if name.blank?
 
-    if multibyte_filename_disabled? && name !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
+    if multibyte_filename_disabled? && name !~ /^\/?([\w\-]+\/)*[\w\-]+(\.[\w\-.]+)?$/
       message = I18n.t("errors.messages.invalid_filename")
       message = I18n.t("errors.format", attribute: SS::File.t(:name), message: message)
       errors.add :base, message
@@ -73,7 +76,7 @@ class SS::TempFilePreview
   def validate_filename
     return if filename.blank?
 
-    if filename !~ /^\/?([\w\-]+\/)*[\w\-]+\.[\w\-.]+$/
+    if filename !~ /^\/?([\w\-]+\/)*[\w\-]+(\.[\w\-.]+)?$/
       message = I18n.t("errors.messages.invalid_filename")
       message = I18n.t("errors.format", attribute: SS::File.t(:filename), message: message)
       errors.add :base, message
@@ -92,6 +95,28 @@ class SS::TempFilePreview
       limit: limit_size.to_fs(:human_size)
     )
     errors.add :base, message
+  end
+
+  def validate_accepts
+    return if accepts.blank?
+
+    acceptable_content_types = accepts
+      .map { SS::MimeType.find(_1, nil) }
+      .compact.uniq
+      .reject { _1 == SS::MimeType::DEFAULT_MIME_TYPE }
+
+    unless acceptable_content_types.include?(content_type)
+      message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: accepts.join(" / "))
+      message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
+
+      errors.add :base, message
+    end
+  end
+
+  def validate_upload_policy
+    if SS::UploadPolicy.upload_policy == 'restricted'
+      errors.add :base, :upload_restricted
+    end
   end
 
   def next_sequence

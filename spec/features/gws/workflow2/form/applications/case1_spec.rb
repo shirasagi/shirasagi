@@ -26,8 +26,7 @@ describe "gws_workflow2_form_applications", type: :feature, dbscope: :example, j
   let(:memo) { Array.new(2) { "memo-#{unique_id}" } }
 
   it do
-    login_user user1
-    visit gws_workflow2_form_forms_path(site: site)
+    login_user user1, to: gws_workflow2_form_forms_path(site: site)
     within ".nav-menu" do
       click_on I18n.t("ss.links.new")
     end
@@ -45,8 +44,7 @@ describe "gws_workflow2_form_applications", type: :feature, dbscope: :example, j
     expect(form.name).to eq name
     expect(form.default_route_id).to eq route.id.to_s
 
-    login_user user2
-    visit gws_workflow2_form_forms_path(site: site)
+    login_user user2, to: gws_workflow2_form_forms_path(site: site)
     click_on form.name
     within ".nav-menu" do
       click_on I18n.t("ss.links.edit")

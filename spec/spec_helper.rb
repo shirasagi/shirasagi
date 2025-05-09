@@ -260,6 +260,21 @@ def wait_for_notice(text, wait: nil, selector: nil)
   end
 end
 
+def wait_for_error(text, wait: nil, selector: nil)
+  if page.driver.is_a?(Capybara::Selenium::Driver)
+    wait_for_js_ready
+    options = { text: text }
+    options[:wait] = wait if wait
+    Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+      expect(page).to have_css(selector || '#errorExplanation', **options)
+    end
+    page.execute_script("SS.clearNotice();")
+    wait_for_js_ready
+  else
+    expect(page).to have_css('#errorExplanation', text: text)
+  end
+end
+
 # ref.
 #   https://www.relishapp.com/rspec/rspec-expectations/v/2-5/docs/built-in-matchers/be-within-matcher
 #   http://qiita.com/kozy4324/items/9a6530736be7e92954bc

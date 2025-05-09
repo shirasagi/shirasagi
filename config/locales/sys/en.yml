@@ -216,6 +216,7 @@ en:
       sys/ad:
         time: Image switch time
         width: Width
+        ad_links: Advertisement Links
       sys/auth/setting:
         form_auth: Form authentication
         form_key: Key name to activate form authentication

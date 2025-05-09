@@ -1,12 +1,14 @@
-<% @ad = Sys::Setting.first %>
-<% if @ad.try(:files).present? %>
-  <div class="main-box login-image-box">
-    <header>
-      <h2><%= t('sys.login.ad') %></h2>
-    </header>
-    <%=
-      files = @ad.files.shuffle
-      render "ss/slides/swiper_slides", files: files, width: @ad.ad_effective_width, slide_selector: ".ss-swiper-slide", slide_options: @ad.ad_options
-    %>
-  </div>
-<% end %>
+<%
+  @ad = Sys::Setting.first
+  return if @ad.try(:ad_links).blank?
+
+  links = @ad.ad_links.where(state: "show").to_a.shuffle
+  links.select! { _1.file.present? && _1.file.image? }
+  return if links.blank?
+%>
+<div class="main-box login-image-box">
+  <header>
+    <h2><%= t('sys.login.ad') %></h2>
+  </header>
+  <%= render "ss/slides/swiper_slides", links: links, width: @ad.ad_effective_width, slide_selector: ".ss-swiper-slide", slide_options: @ad.ad_options %>
+</div>

@@ -105,7 +105,7 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.initPopup = function () {
-    $("body").append('<div id="marker-popup"><div class="closer"></div><div class="content marker"></div></div>');
+    $("body").append('<div id="marker-popup"><button type="button" class="closer" aria-label="閉じる"></button><div class="content marker"></div></div>');
     this.popup = $('#marker-popup');
     this.popup.hide();
     this.popupOverlay = new ol.Overlay({
@@ -252,22 +252,26 @@ this.Openlayers_Map = (function () {
 
   Openlayers_Map.prototype.renderMarkers = function (markers) {
     markers.forEach(marker => {
-    const iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
-    const style = this.createMarkerStyle(iconSrc);
+      const iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
+      const style = this.createMarkerStyle(iconSrc);
 
-    const name = marker['name'];
-    const text = marker['text'];
-    const html = marker['html'];
-    const pos = [marker['loc'][0], marker['loc'][1]];
+      const name = marker['name'];
+      const text = marker['text'];
+      const html = marker['html'];
+      const pos = [marker['loc'][0], marker['loc'][1]];
 
-    let markerHtml = "";
+      let markerHtml = "";
       if (html) {
         markerHtml = html;
       } else if (name || text) {
-        markerHtml = `
-            ${name ? `<p class="marker-name">${name}</p>` : ''}
-            ${text ? renderMarkerExplanation(text) : ''}
-        `;
+        const $markerContent = $("<div/>");
+        if (name) {
+          $markerContent.append($("<p/>", { class: "marker-name" }).text(name));
+        }
+        if (text) {
+          $markerContent.append(renderMarkerExplanation(text));
+        }
+        markerHtml = $markerContent.html();
       }
       if (this.showGoogleMapsSearch) {
         markerHtml += Googlemaps_Map.getMapsSearchHtml(pos[1], pos[0]);
@@ -294,17 +298,17 @@ this.Openlayers_Map = (function () {
   };
 
   function renderMarkerExplanation(text) {
-    return `
-      <div class="marker-explanation">
-        ${text.split(/[\r\n]+/).map(line => {
-          if (/^https?:\/\//.test(line)) {
-            return `<p class="marker-link"><a href="${line}">${line}</a></p>`;
-          } else {
-            return `<p>${line}</p>`;
-          }
-        }).join('')}
-      </div>
-    `;
+    const $markerExplanation = $("<div/>", { class: "marker-explanation" });
+    text.split(/[\r\n]+/).forEach((line) => {
+      let $element;
+      if (/^https?:\/\//.test(line)) {
+        $element = $("<p/>", { class: "marker-link" }).html($("<a />", { href: line }).text(line));
+      } else {
+        $element = $("<p/>").text(line);
+      }
+      $markerExplanation.append($element);
+    });
+    return $markerExplanation.html();
   }
 
   Openlayers_Map.prototype.resize = function () {

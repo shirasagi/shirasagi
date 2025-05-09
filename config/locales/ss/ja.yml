@@ -38,6 +38,10 @@ ja:
     quota: 容量
     encoding: 文字コード
     text_zoom: 文字サイズ
+    font_size:
+      small: 小さく
+      medium: 標準
+      large: 大きく
     default_here_label: "詳細はこちら⇒"
     dash: ー
     wave_dash: ～
@@ -655,7 +659,6 @@ ja:
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
       ss/trash_setting: ゴミ箱設定
-      ss/link_file: ファイル
       ss/notification/reply:
         discussion: 電子会議室
       ss/elasticsearch/site_setting: サイト内検索設定
@@ -719,6 +722,7 @@ ja:
       ss/oauth2/application/base: OAuthアプリ
       ss/oauth2/application/confidential: クライアント
       ss/oauth2/application/service: サービス
+      ss/link_item: リンク項目
     errors:
       models:
         ss/model/group:
@@ -847,6 +851,7 @@ ja:
         current_count: 処理件数
         logs: ログ
         segment: セグメント
+        log_sequence: シーケンス
       ss/model/file:
         in_file: ファイル
         in_files: ファイル
@@ -1119,6 +1124,13 @@ ja:
         maintenance_mode: メンテナンスモード
         maint_remark: メンテナンスお知らせ
         maint_excluded_user_ids: 除外ユーザー
+      ss/link_item:
+        name: 表示名
+        url: URL
+        target: ターゲット
+        file: 画像
+        file_id: 画像
+        state: 状態
   tooltip:
     ss/model/site:
       upload_policy:

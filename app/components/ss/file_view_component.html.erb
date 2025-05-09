@@ -10,7 +10,7 @@
 <% end %>
 
 <%= file_view_tag do %>
-  <%= sanitizer_status(file) %>
+  <%= sanitizer_status(file) if SS::UploadPolicy.upload_policy == 'sanitizer' %>
   <%= file_link_tag do %>
     <% if file.image? %>
       <%= image_tag file.thumb_no_cache_url, alt: file.name %>
@@ -20,13 +20,17 @@
     <% if show_properties %>
       <div class="properties">
         <span><%= I18n.t("sns.filename") %>: <%= file.name %></span><br>
-        <% if file.image? %>
+        <%# file が Webmail::PartFile のインスタンスの場合、#image_dimension には応答しない %>
+        <% if file.image? && file.respond_to?(:image_dimension) %>
           <% width, height = file.image_dimension %>
-          <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
+          <% if width && height # 念のための nil ガード %>
+            <span><%= t("sns.w_h") %>: <%= width %> x <%= height %></span><br>
+          <% end %>
         <% end %>
         <span><%= t("sns.size") %>: <%= number_to_human_size(file.size) %></span><br>
         <span><%= t("sns.datetime") %>: <%= ss_time_tag file.updated %></span><br>
-        <% if file.user.present? %>
+        <%# file が Webmail::PartFile のインスタンスの場合、#user には応答しない %>
+        <% if file.try(:user).present? %>
           <span><%= t("sns.user") %>: <%= file.user.name %></span><br>
         <% end %>
       </div>

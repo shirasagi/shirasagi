@@ -168,7 +168,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with ss/user_file" do
     let!(:file) do
       tmp_ss_file(
-        SS::UserFile, model: "ss/user_file", user: cms_user, basename: filename,
+        SS::UserFile, model: SS::UserFile::FILE_MODEL, user: cms_user, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
@@ -180,7 +180,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with cms/file" do
     let!(:file) do
       tmp_ss_file(
-        Cms::File, model: "cms/file", user: cms_user, site: site, basename: filename,
+        Cms::File, model: Cms::File::FILE_MODEL, user: cms_user, site: site, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png", group_ids: cms_user.group_ids
       )
     end
@@ -634,6 +634,19 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           end
           within_dialog do
             within "form" do
+              within first(".index tbody tr") do
+                list = SS::File::IMAGE_FILE_EXTENSIONS.join(" / ")
+                message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: list)
+                message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
+                expect(page).to have_css(".errors", text: message)
+              end
+            end
+          end
+          page.execute_script('$(".errors").html("");')
+
+          # エラーが表示されているが、それでもアップロードしてみる。
+          within_dialog do
+            within "form" do
               click_on I18n.t("ss.buttons.upload")
             end
           end
@@ -778,6 +791,19 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         end
         within_dialog do
           within "form" do
+            within first(".index tbody tr") do
+              list = SS::File::IMAGE_FILE_EXTENSIONS.join(" / ")
+              message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: list)
+              message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
+              expect(page).to have_css(".errors", text: message)
+            end
+          end
+        end
+        page.execute_script('$(".errors").html("");')
+
+        # エラーが表示されているが、それでもアップロードしてみる。
+        within_dialog do
+          within "form" do
             click_on I18n.t("ss.buttons.upload")
           end
         end
@@ -911,6 +937,19 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           ss_drop_file ".ss-file-field-v2", "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"
         end
       end
+      within_dialog do
+        within "form" do
+          within first(".index tbody tr") do
+            list = SS::File::IMAGE_FILE_EXTENSIONS.join(" / ")
+            message = I18n.t("errors.messages.unable_to_accept_file", allowed_format_list: list)
+            message = I18n.t("errors.format", attribute: SS::File.t(:in_files), message: message)
+            expect(page).to have_css(".errors", text: message)
+          end
+        end
+      end
+      page.execute_script('$(".errors").html("");')
+
+      # エラーが表示されているが、それでもアップロードしてみる。
       within_dialog do
         within "form" do
           click_on I18n.t("ss.buttons.upload")

@@ -29,8 +29,8 @@ def gws_sys_user
   create_gws_users[:sys_user]
 end
 
-def login_gws_user
-  login_user(gws_user)
+def login_gws_user(to: nil)
+  login_user(gws_user, to: to)
 end
 
 def create_gws_users

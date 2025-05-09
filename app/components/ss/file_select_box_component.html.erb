@@ -5,10 +5,10 @@
         "uploadApi" => upload_api_path,
         "fileApi" => file_api_path,
         "selectApi" => select_api_path,
-        "viewApi" => view_api_path,
         "dialogType" => "ss",
         "selectionType" => selection_type
       }
+      option["viewApi"] = view_api_path if view_api_path.present?
       option["editorId"] = html_editor_id if html_editor_id.present?
       option.to_json
     %>
@@ -32,7 +32,7 @@
   </div>
 
   <div class="cms-addon-file-selected-files-wrap">
-    <% if selection_type != "single" %>
+    <% if selection_type != "single" && show_reorder %>
       <div class="cms-addon-file-order">
         <div class="ss-btn-group" role="group" aria-label="<%= t("mongoid.attributes.ss/document.sort") %>">
           <%= button_tag t('ss.buttons.file_name_order'), type: :button, name: "by-name", class: "btn", value: "name", aria: { pressed: false }, data: { action: "ss--file-select-box#reorderSelectedFiles" } %>
@@ -50,6 +50,18 @@
             component = SS::FileViewV2Component.new(
               cur_site: cur_site, cur_user: cur_user, cur_node: cur_node, page: page, item: item, file: file,
               name: field_name, show_attach: show_attach, show_opendata: show_opendata)
+            render component
+          %>
+        <% end %>
+      <% end %>
+      <% if ss_mode != :cms && ref_files.present? %>
+        <%# ref_files は gws と webmail で有効 %>
+        <% ref_files.each do |file| %>
+          <% file = file.becomes_with_model %>
+          <%=
+            component = SS::FileViewV2Component.new(
+              cur_site: cur_site, cur_user: cur_user, cur_node: cur_node, page: page, item: item, file: file,
+              name: ref_file_field_name, show_attach: show_attach, show_opendata: show_opendata)
             render component
           %>
         <% end %>

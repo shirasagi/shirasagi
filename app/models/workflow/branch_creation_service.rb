@@ -29,6 +29,7 @@ class Workflow::BranchCreationService
       if item.branches.present?
         item.error.add :base, :branch_is_already_existed
         result = false
+        task.log "failed\n#{item.errors.full_messages.join("\n")}"
       else
         copy = item.new_clone
         copy.master = item
@@ -36,8 +37,10 @@ class Workflow::BranchCreationService
 
         if result
           @new_branch = copy
+          task.log "created #{@new_branch.filename}(#{@new_branch.id})"
         elsif copy.errors.any?
           SS::Model.copy_errors(copy, item)
+          task.log "failed\n#{copy.errors.full_messages.join("\n")}"
         end
       end
     end

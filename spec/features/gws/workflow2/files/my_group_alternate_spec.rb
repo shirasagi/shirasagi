@@ -33,8 +33,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
     end
 
     it do
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
 
       #
@@ -83,8 +82,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # user2: 申請を承認する（代理承認者 ）
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.request"))
@@ -153,8 +151,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
     end
 
     it do
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
 
       #
@@ -205,8 +202,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # user3: 申請を承認する（代理承認者 ）
       #
-      login_user user3
-      visit show_path
+      login_user user3, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.request"))

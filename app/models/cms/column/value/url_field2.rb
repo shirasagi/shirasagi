@@ -9,6 +9,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   permit_values :link_url, :link_label, :link_target
 
+  validates :link_url, url: { absolute_path: true, allow_blank: true }
   validate :validate_link_url
   validates :link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
 
@@ -164,7 +165,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
     if link_url.present? && column.link_max_length.present? && column.link_max_length > 0
       if link_url.length > column.link_max_length
-        self.errors.add(:link_url, :too_long, count: column.link_max_length) 
+        self.errors.add(:link_url, :too_long, count: column.link_max_length)
       end
     end
   end

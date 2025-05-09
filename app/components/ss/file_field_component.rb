@@ -4,7 +4,7 @@ class SS::FileFieldComponent < ApplicationComponent
   include ActiveModel::Model
 
   attr_accessor :object_name, :object_method
-  attr_writer :ss_mode, :cur_site, :cur_user, :cur_node, :item, :file, :element_id
+  attr_writer :ss_mode, :cur_site, :cur_user, :cur_node, :item, :file, :field_name, :element_id
 
   delegate :sanitizer_status, to: :helpers
 
@@ -29,11 +29,18 @@ class SS::FileFieldComponent < ApplicationComponent
   end
 
   def file
-    @file ||= item.send(object_method)
+    # file can be nil
+    return @file if instance_variable_defined?(:@file)
+    @file = item.send(object_method)
+  end
+
+  def field_name
+    @field_name ||= "#{object_name}[#{object_method}_id]"
   end
 
   def element_id
-    @element_id ||= sanitize_to_id("#{object_name}[#{object_method}_id]")
+    return @element_id if instance_variable_defined?(:@element_id)
+    @element_id = sanitize_to_id(field_name)
   end
 
   def temp_files_api_path

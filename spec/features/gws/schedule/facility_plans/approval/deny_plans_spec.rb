@@ -13,71 +13,66 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
   context "have duplicate_private_gws_facility_plans" do
     it do
-      login_user(user)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user, to: gws_schedule_facilities_path(site: site))
 
       # create title1
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: title1
+        click_button I18n.t('ss.buttons.save')
       end
-      click_button I18n.t('ss.buttons.save')
-
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within ".gws-schedule-box" do
         expect(page).to have_css(".fc-event-approval-request", text: title1)
       end
-      wait_for_ajax
 
       # create title2
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: title2
+        click_button I18n.t('ss.buttons.save')
       end
-      click_button I18n.t('ss.buttons.save')
-
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within ".gws-schedule-box" do
         expect(page).to have_css(".fc-event-approval-request", text: title1)
         expect(page).to have_css(".fc-event-approval-request", text: title2)
       end
-      wait_for_ajax
     end
   end
 
   context "have no duplicate_private_gws_facility_plans" do
     it do
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       # create title1
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: title1
+        click_button I18n.t('ss.buttons.save')
       end
-      click_button I18n.t('ss.buttons.save')
-
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within ".gws-schedule-box" do
         expect(page).to have_css(".fc-event-approval-request", text: title1)
       end
-      wait_for_ajax
 
       # create faild title2
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: title2
+        click_button I18n.t('ss.buttons.save')
       end
-      click_button I18n.t('ss.buttons.save')
-
       wait_for_cbox do
         expect(page).to have_text(I18n.t("gws/schedule.facility_reservation.exist"))
         click_on I18n.t("ss.buttons.close")
@@ -85,27 +80,24 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it do
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       # create title1
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: title1
+        click_button I18n.t('ss.buttons.save')
       end
-      click_button I18n.t('ss.buttons.save')
-
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within ".gws-schedule-box" do
         expect(page).to have_css(".fc-event-approval-request", text: title1)
       end
-      wait_for_ajax
 
       # approve title1
-      login_user(user)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -123,17 +115,16 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_notice I18n.t('ss.notice.saved')
 
       # create faild title2
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: title2
+        click_button I18n.t('ss.buttons.save')
       end
-      click_button I18n.t('ss.buttons.save')
-
       wait_for_cbox do
         expect(page).to have_text(I18n.t("gws/schedule.facility_reservation.exist"))
         click_on I18n.t("ss.buttons.close")
@@ -141,27 +132,24 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     end
 
     it do
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       # create title1
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: title1
+        click_button I18n.t('ss.buttons.save')
       end
-      click_button I18n.t('ss.buttons.save')
-
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within ".gws-schedule-box" do
         expect(page).to have_css(".fc-event-approval-request", text: title1)
       end
-      wait_for_ajax
 
       # deny title1
-      login_user(user)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user, to: gws_schedule_facilities_path(site: site))
 
       within ".fc-event:not(.fc-holiday)" do
         first(".fc-title").click
@@ -179,23 +167,22 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       wait_for_notice I18n.t('ss.notice.saved')
 
       # create title2
-      login_user(user1)
-      visit gws_schedule_facilities_path(site: site)
+      login_user(user1, to: gws_schedule_facilities_path(site: site))
 
       within ".gws-schedule-box .calendar-multiple-header" do
         click_on I18n.t("gws/schedule.links.add_plan")
       end
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: title2
+        click_button I18n.t('ss.buttons.save')
       end
-      click_button I18n.t('ss.buttons.save')
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       within ".gws-schedule-box" do
         expect(page).to have_no_css(".fc-event-approval-deny", text: title1)
         expect(page).to have_css(".fc-event-approval-request", text: title2)
       end
-      wait_for_ajax
 
       # search denied plan
       within ".gws-schedule-box" do

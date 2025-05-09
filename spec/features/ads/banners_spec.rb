@@ -26,7 +26,7 @@ describe "ads_banners", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[link_url]", with: "http://example.jp"
-        attach_to_ss_file_field "item_file_id", file
+        attach_to_ss_file_field "item[file_id]", file
 
         click_button I18n.t('ss.buttons.save')
       end

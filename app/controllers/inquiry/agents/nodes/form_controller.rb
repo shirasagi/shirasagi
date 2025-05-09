@@ -52,6 +52,12 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
           model.find(param)
         end
       end
+      if column.input_type == "date_field" && param.present?
+        param = Date.parse(param).iso8601 rescue nil
+      end
+      if column.input_type == "datetime_field" && param.present?
+        param = DateTime.parse(param).strftime('%FT%H:%M') rescue nil
+      end
       @items << [column, param]
       @data[column.id] = [param]
       if (column.input_type == 'text_field' || column.input_type == 'text_area') && column.transfers.present? && param.present?
@@ -92,6 +98,15 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
     @page = Cms::Page.site(@cur_site).and_public(@cur_date).where(id: params[:page]).first
     raise SS::NotFoundError if @page.blank?
+  end
+
+  def set_saved_params
+    return if !@cur_node.show_sent_data?
+    @saved_params = Inquiry::SavedParams.get(session[saved_params_key])
+  end
+
+  def saved_params_key
+    "inquiry_saved_params_#{@cur_node.id}"
   end
 
   public
@@ -147,6 +162,24 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @answer.update_kintone_record
     end
 
+    # create saved_params
+    if @cur_node.show_sent_data?
+      data = {}
+      @data.each do |column_id, values|
+        value = values[0]
+        if value.is_a?(String)
+          data[column_id] = value
+        elsif value.is_a?(Hash)
+          data[column_id] = value.values.join("\n")
+        elsif value.respond_to?(:original_filename)
+          data[column_id] = value.original_filename
+        elsif value.respond_to?(:filename)
+          data[column_id] = value.filename
+        end
+      end
+      session[saved_params_key] = Inquiry::SavedParams.apply(data)
+    end
+
     query = {}
     if @answer.source_url.present?
       if params[:preview]
@@ -156,15 +189,15 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
     end
     query[:group] = @group.id if @group
-    query = query.to_query
 
     url = "#{@cur_node.url}sent.html"
-    url = "#{url}?#{query}" if query.present?
+    url = "#{url}?#{query.to_query}" if query.present?
     redirect_to url
   end
 
   def sent
     set_group
+    set_saved_params
     render action: :sent
   end
 

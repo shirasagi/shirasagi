@@ -3384,14 +3384,34 @@ form .CodeMirror {
   }
 
   .closer {
+    display: block;
     position: absolute;
-    top: 2px;
+    top: 10px;
     right: 8px;
+    width: 8px;
+    height: 8px;
     text-decoration: none;
     cursor: pointer;
-  }
-  .closer:after {
-    content: "×";
+
+    &:before,
+    &:after {
+      content: "";
+      display: block;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 8px;
+      height: 1px;
+      background-color: #000;
+    }
+
+    &:before {
+      transform: translate(-50%, -50%) rotate(45deg);
+    }
+
+    &:after {
+      transform: translate(-50%, -50%) rotate(-45deg);
+    }
   }
 
   .post-head {
@@ -3936,13 +3956,6 @@ body.ss-ajax-in-iframe {
   ul li {
     list-style: inherit;
   }
-}
-
-.guide-importer {
-  margin-bottom: 10px;
-}
-.guide-template {
-  margin-top: 20px;
 }
 
 .email-column-not-exists {

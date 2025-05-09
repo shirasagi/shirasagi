@@ -10,8 +10,8 @@
   <script type="application/json" data-ss--temp-file-target="option">
     <%==
       {
-        previewApi: url_for(action: :preview, accepts: accepts),
-        createUrl: url_for(action: :create, accepts: accepts),
+        previewApi: url_for(action: :preview),
+        createUrl: url_for(action: :create),
       }.to_json
     %>
   </script>
@@ -21,7 +21,7 @@
     <span class="cms-temp-file-drop-notice"><%= t('ss.notice.file_droppable') %></span>
   </div>
 
-  <%= form_with scope: :item, url: url_for(action: :create, accepts: accepts), class: "hide cms-temp-file-waiting-item-form", data: { "ss--temp-file-target" => "fileUploadWaitingForm" } do |f| %>
+  <%= form_with scope: :item, url: url_for(action: :create), class: "hide cms-temp-file-waiting-item-form", data: { "ss--temp-file-target" => "fileUploadWaitingForm" } do |f| %>
     <%= error_messages_for :item %>
 
     <table class="index cms-temp-file-waiting-item-table">

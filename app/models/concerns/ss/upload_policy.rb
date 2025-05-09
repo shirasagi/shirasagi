@@ -8,7 +8,7 @@ module SS::UploadPolicy
 
   def sanitizer_input_path
     filename = "#{SS.config.ss.sanitizer_file_prefix}_file_#{id}_#{created.to_i}#{::File.extname(basename)}"
-    "#{Rails.root}/#{SS.config.ss.sanitizer_input}/#{filename}"
+    "#{SS::UploadPolicy.sanitizer_input_path}/#{filename}"
   end
 
   def sanitizer_skip
@@ -92,6 +92,34 @@ module SS::UploadPolicy
       values = [[I18n.t("ss.options.upload_policy.default_#{default}"), nil]]
       values += %w(sanitizer restricted).map { |v| [I18n.t("ss.options.upload_policy.#{v}"), v] }
       values
+    end
+
+    def sanitizer_input_path
+      @sanitizer_input_path ||= begin
+        path = SS.config.ss.sanitizer_input
+        if path.present?
+          path = path[0..-2] while path.end_with?("/")
+          path = File.expand_path(path, Rails.root)
+          raise "invalid sanitizer input" unless path.start_with?(Rails.root.to_s)
+
+          ::FileUtils.mkdir_p(path)
+        end
+        path.freeze
+      end
+    end
+
+    def sanitizer_output_path
+      @sanitizer_output_path ||= begin
+        path = SS.config.ss.sanitizer_output
+        if path.present?
+          path = path[0..-2] while path.end_with?("/")
+          path = File.expand_path(path, Rails.root)
+          raise "invalid sanitizer input" unless path.start_with?(Rails.root.to_s)
+
+          ::FileUtils.mkdir_p(path)
+        end
+        path.freeze
+      end
     end
 
     def sanitizer_restore(output_path)

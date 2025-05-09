@@ -38,6 +38,10 @@ en:
     quota: Size
     encoding: Character encoding
     text_zoom: Character size
+    font_size:
+      small: small
+      medium: standard
+      large: large
     default_here_label: "Click here for details⇒"
     dash: ー
     wave_dash: ～
@@ -655,7 +659,6 @@ en:
       ss/editor_setting: Editor settings
       ss/mail_setting: E-mail settings
       ss/trash_setting: Trash settings
-      ss/link_file: File
       ss/notification/reply:
         discussion: Electronic meeting room
       ss/elasticsearch/site_setting: Site search settings
@@ -719,6 +722,7 @@ en:
       ss/oauth2/application/base: OAuth Application
       ss/oauth2/application/confidential: Client
       ss/oauth2/application/service: Service
+      ss/link_item: Link Item
     errors:
       models:
         ss/model/group:
@@ -847,6 +851,7 @@ en:
         current_count: No. of actions
         logs: Log
         segment: Segment
+        log_sequence: Sequence
       ss/model/file:
         in_file: File
         in_files: File
@@ -1119,6 +1124,13 @@ en:
         maintenance_mode: Maintenance mode
         maint_remark: Notice in maintenance mode
         maint_excluded_user_ids: Excluded users
+      ss/link_item:
+        name: Display name
+        url: URL
+        target: Target
+        file: Image
+        file_id: Image
+        state: State
   tooltip:
     ss/model/site:
       upload_policy:

@@ -143,6 +143,7 @@ $border-white: 1px solid $white;
   color: $black;
   font-size: $px12;
   line-height: 1.4;
+  word-break: keep-all;
   vertical-align: middle;
   cursor: pointer;
   &:hover {

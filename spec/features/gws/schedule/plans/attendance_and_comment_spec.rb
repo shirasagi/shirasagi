@@ -13,8 +13,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
   context "attendance crud" do
     it do
-      login_user user
-      visit gws_schedule_plan_path(site: site, id: item)
+      login_user user, to: gws_schedule_plan_path(site: site, id: item)
 
       within "#addon-gws-agents-addons-schedule-attendance" do
         wait_for_cbox_opened do
@@ -46,10 +45,65 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     end
   end
 
+  context "facility manager attendance" do
+    let!(:facility) { create(:gws_facility_item, cur_user: user) }
+    let!(:plan) do
+      create(:gws_schedule_plan,
+        cur_user: user,
+        member_ids: [user.id],
+        facility_ids: [facility.id],
+        attendance_check_state: "enabled"
+      )
+    end
+
+    it "handles absence display correctly" do
+      login_user user
+      visit gws_schedule_plan_path(site: site, id: plan)
+
+      # 欠席に設定
+      within "#addon-gws-agents-addons-schedule-attendance" do
+        wait_for_cbox_opened do
+          first("span.attendances[data-member-id='#{user.id}'] input[value='absence']").click
+        end
+      end
+
+      within_cbox do
+        within "#ajax-box #item-form" do
+          fill_in "comment[text]", with: "欠席します"
+          click_on I18n.t("ss.buttons.save")
+        end
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      # カレンダー画面に移動
+      visit gws_schedule_plans_path(site: site)
+
+      # 不参加にした予定が非表示であることを確認
+      expect(page).to have_css(".fc-event.fc-event-user-attendance-absence.hide")
+      # 他の予定は表示されていることを確認
+      expect(page).to have_css(".fc-event:not(.fc-event-user-attendance-absence)")
+
+      # 欠席表示ボタンをオンにする
+      find(".fc-withAbsence-button").click
+
+      # 不参加にした予定が表示されていることを確認
+      expect(page).to have_css(".fc-event.fc-event-user-attendance-absence:not(.hide)")
+      # 他の予定も引き続き表示されていることを確認
+      expect(page).to have_css(".fc-event:not(.fc-event-user-attendance-absence)")
+
+      # 欠席表示ボタンをオフにする
+      find(".fc-withAbsence-button").click
+
+      # 不参加にした予定が再び非表示になったことを確認
+      expect(page).to have_css(".fc-event.fc-event-user-attendance-absence.hide")
+      # 他の予定は引き続き表示されていることを確認
+      expect(page).to have_css(".fc-event:not(.fc-event-user-attendance-absence)")
+    end
+  end
+
   context "comment crud" do
     it do
-      login_user user
-      visit gws_schedule_plan_path(site: site, id: item)
+      login_user user, to: gws_schedule_plan_path(site: site, id: item)
 
       #
       # Create

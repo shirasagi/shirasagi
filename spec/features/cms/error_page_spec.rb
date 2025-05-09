@@ -37,8 +37,7 @@ describe "cms_users", type: :feature, dbscope: :example do
     let(:title) { "403 Forbidden | SHIRASAGI" }
 
     before do
-      login_user user
-      visit cms_users_path(site: site)
+      login_user user, to: cms_users_path(site: site)
     end
 
     include_context "shows cms error page"
