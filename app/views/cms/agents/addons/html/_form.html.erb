@@ -8,6 +8,42 @@
   <dd class="wide"><%= f.text_area :html, style: "height: 400px" %></dd>
 </dl>
 
-<script>
-  Syntax_Checker.correct_url = "<%= cms_apis_correct_syntax_check_path(format: :json) %>";
-</script>
+<%= jquery do %>
+  Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>
+  correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("<%= I18n.t('cms.auto_correct.link') %>");
+  correct.on("click", function(ev) {
+    console.log('[DEBUG] btn-auto-correct clicked');
+    ev.preventDefault();
+    var $btn = $(this);
+    $btn.prop("disabled", true);
+
+    var token = $('meta[name="csrf-token"]').attr('content');
+    var content = $btn.data("check-content");
+    var resolve = $btn.data("check-resolve");
+    var collector = $btn.data("collector");
+    var params = $btn.data("collector-params");
+
+    $.ajax({
+      type: "POST",
+      url: Syntax_Checker.correct_url,
+      cache: false,
+      data: {
+        authenticity_token: token,
+        content: { content: content, resolve: resolve, type: "html" },
+        collector: collector,
+        params: params
+      },
+      success: function(data, textStatus, xhr) {
+        $('textarea[name="item[html]"]').val(data["result"]);
+        $('ss.buttons.save').trigger("click");
+      },
+      error: function (xhr, status, error) {
+      },
+      complete: function (xhr, status) {
+        $btn.prop("disabled", false);
+      }
+    });
+    ev.preventDefault();
+    return false;
+  });
+<% end %>

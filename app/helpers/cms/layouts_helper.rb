@@ -38,19 +38,9 @@ module Cms::LayoutsHelper
                           end
                         end
                         # 自動修正ボタン
-                        if error[:correctContent].present?
-                          inner_html += link_to(I18n.t("cms.auto_correct.link"), "#",
-                            class: "correct",
-                            data: { correct_content: error[:correctContent] }
-                          )
-                        end
                         if error[:collector].present?
                           inner_html += content_tag(:button, I18n.t("cms.auto_correct.link"), type: "button",
-                            class: "btn btn-auto-correct",
-                            data: {
-                              collector: error[:collector],
-                              params: error[:collector_params].to_json
-                            }
+                            class: "btn btn-auto-correct"
                           )
                         end
                         inner_html.html_safe

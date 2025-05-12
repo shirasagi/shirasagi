@@ -127,7 +127,6 @@ this.Syntax_Checker = (function () {
             var correctContent = error["correctContent"];
             check.setContent(correctContent(id, { content: check.getContent(), resolve: check.resolve, type: check.type }, error));
             $(self.form.addonSelector).find("button.syntax-check").trigger("click");
-
             return false;
           });
           li.append(correct)
@@ -136,7 +135,6 @@ this.Syntax_Checker = (function () {
           correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("<%= I18n.t('cms.auto_correct.link') %>");
           correct.on("click", function (ev) {
             ev.target.disabled = true;
-
             var token = $('meta[name="csrf-token"]').attr('content');
             $.ajax({
               type: "POST",
@@ -153,13 +151,11 @@ this.Syntax_Checker = (function () {
                 $(self.form.addonSelector).find("button.syntax-check").trigger("click");
               },
               error: function (xhr, status, error) {
-                console.log(error);
               },
               complete: function (xhr, status) {
                 ev.target.disabled = false;
               }
             });
-
             ev.preventDefault();
             return false;
           });
