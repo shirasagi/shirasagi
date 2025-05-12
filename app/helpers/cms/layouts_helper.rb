@@ -2,6 +2,9 @@ module Cms::LayoutsHelper
   # error[:detail]用
   def syntax_check_detail_box(syntax_checker)
     return unless syntax_checker&.errors.present?
+    syntax_checker.errors.each do |error|
+      Rails.logger.debug "[DEBUG] error object in syntax_check_detail_box: #{error.inspect}"
+    end
     content_tag(:div, id: "errorSyntaxChecker", class: "errorExplanation") do
       concat content_tag(:h2, t("cms.syntax_check"))
       concat(
@@ -22,11 +25,37 @@ module Cms::LayoutsHelper
                 # 詳細（例：ファイル名を入力してください。）
                 concat(
                   content_tag(:ul) do
-                    Array(error[:detail]).map do |d|
-                      content_tag(:li) do
-                        content_tag(:span, d.to_s, class: "message detail")
+                    content_tag(:li) do
+                      # メッセージ＋ツールチップをspan内にまとめる
+                      content_tag(:span, class: "message detail") do
+                        inner_html = error[:msg].to_s
+                        if error[:detail].present?
+                          inner_html += content_tag(:div, class: "tooltip") do
+                            "!".html_safe +
+                            content_tag(:ul, class: "tooltip-content") do
+                              Array(error[:detail]).map { |d| content_tag(:li, d.to_s) }.join.html_safe
+                            end
+                          end
+                        end
+                        # 自動修正ボタン
+                        if error[:correctContent].present?
+                          inner_html += link_to(I18n.t("cms.auto_correct.link"), "#",
+                            class: "correct",
+                            data: { correct_content: error[:correctContent] }
+                          )
+                        end
+                        if error[:collector].present?
+                          inner_html += content_tag(:button, I18n.t("cms.auto_correct.link"), type: "button",
+                            class: "btn btn-auto-correct",
+                            data: {
+                              collector: error[:collector],
+                              params: error[:collector_params].to_json
+                            }
+                          )
+                        end
+                        inner_html.html_safe
                       end
-                    end.join.html_safe
+                    end
                   end
                 )
               end
