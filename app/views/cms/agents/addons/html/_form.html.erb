@@ -51,11 +51,17 @@
           // 「修正前の部分HTML」（content）を「修正後の部分HTML」（after）で置換
           if (content && after && html.indexOf(content) !== -1) {
             var newHtml = html.replace(content, after);
-            $textarea.val(newHtml);
-            if (window.CKEDITOR && CKEDITOR.instances['item_html']) {
-              CKEDITOR.instances['item_html'].setData(newHtml);
+            $('textarea[name="item[html]"]').val(newHtml);
+            if (window.Syntax_Checker) {
+              Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>
             }
             console.log('[DEBUG] textarea:', $('textarea[name="item[html]"]').val());
+            if (window.Syntax_Checker && typeof Syntax_Checker.render === "function") {
+              Syntax_Checker.render();
+            }
+            if (window.Syntax_Checker && typeof Syntax_Checker.asyncCheck === "function") {
+              Syntax_Checker.asyncCheck();
+            }
           }
         },
         error: function(xhr, status, error) {
