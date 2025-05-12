@@ -8,42 +8,63 @@
   <dd class="wide"><%= f.text_area :html, style: "height: 400px" %></dd>
 </dl>
 
-<%= jquery do %>
-  Syntax_Checker.correct_url = <%= raw cms_apis_correct_syntax_check_path(format: "json").to_json %>
-  correct = $('<button />', { type: "button", class: "btn btn-auto-correct" }).text("<%= I18n.t('cms.auto_correct.link') %>");
-  correct.on("click", function(ev) {
-    console.log('[DEBUG] btn-auto-correct clicked');
-    ev.preventDefault();
-    var $btn = $(this);
-    $btn.prop("disabled", true);
+<script>
+  $(function() {
+    // 自動修正ボタンのクリックイベント
+    $(document).on("click", ".btn-auto-correct", function(ev) {
+      console.log('[DEBUG] btn-auto-correct clicked');
+      ev.preventDefault();
+      var $btn = $(this);
+      $btn.prop("disabled", true);
 
-    var token = $('meta[name="csrf-token"]').attr('content');
-    var content = $btn.data("check-content");
-    var resolve = $btn.data("check-resolve");
-    var collector = $btn.data("collector");
-    var params = $btn.data("collector-params");
+      var token = $('meta[name="csrf-token"]').attr('content');
+      var content = $btn.data("check-content");
+      var resolve = $btn.data("check-resolve");
+      var type = $btn.data("check-type");
+      var collector = $btn.data("collector");
+      var params = $btn.data("collector-params");
 
-    $.ajax({
-      type: "POST",
-      url: Syntax_Checker.correct_url,
-      cache: false,
-      data: {
-        authenticity_token: token,
-        content: { content: content, resolve: resolve, type: "html" },
+      console.log('[DEBUG] data:', {
+        content: content,
+        resolve: resolve,
+        type: type,
         collector: collector,
         params: params
-      },
-      success: function(data, textStatus, xhr) {
-        $('textarea[name="item[html]"]').val(data["result"]);
-        $('ss.buttons.save').trigger("click");
-      },
-      error: function (xhr, status, error) {
-      },
-      complete: function (xhr, status) {
-        $btn.prop("disabled", false);
-      }
+      });
+
+      $.ajax({
+        type: "POST",
+        url: "<%= cms_apis_correct_syntax_check_path(format: "json") %>",
+        cache: false,
+        data: {
+          authenticity_token: token,
+          content: { content: content, resolve: resolve, type: type },
+          collector: collector,
+          params: params
+        },
+        success: function(data) {
+          console.log('[DEBUG] ajax success:', data);
+          var after = data["result"]; // サーバーから返ってきた修正後の部分HTML
+          var $textarea = $('textarea[name="item[html]"]');
+          var html = $textarea.val();
+
+          // 「修正前の部分HTML」（content）を「修正後の部分HTML」（after）で置換
+          if (content && after && html.indexOf(content) !== -1) {
+            var newHtml = html.replace(content, after);
+            $textarea.val(newHtml);
+            if (window.CKEDITOR && CKEDITOR.instances['item_html']) {
+              CKEDITOR.instances['item_html'].setData(newHtml);
+            }
+            console.log('[DEBUG] textarea:', $('textarea[name="item[html]"]').val());
+          }
+        },
+        error: function(xhr, status, error) {
+          console.log('[DEBUG] ajax error:', status, error, xhr.responseText);
+        },
+        complete: function() {
+          $btn.prop("disabled", false);
+        }
+      });
     });
-    ev.preventDefault();
-    return false;
   });
-<% end %>
+</script>
