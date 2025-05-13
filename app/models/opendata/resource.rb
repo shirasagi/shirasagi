@@ -172,5 +172,6 @@ class Opendata::Resource
 
   def compression_dataset
     dataset.compression_dataset
+    dataset.send(:generate_file)
   end
 end
