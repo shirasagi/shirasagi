@@ -60,7 +60,14 @@ class Cms::PartsController < ApplicationController
       )
 
       next unless corrected.respond_to?(:result)
-      corrected_html = corrected.result.to_s
+      corrected_html = if corrected.result.is_a?(Array)
+                         corrected.result.first.to_s
+                       else
+                         corrected.result.to_s
+                       end
+
+      # タブ・改行・全角スペース・半角スペースを削除
+      corrected_html = corrected_html.gsub(/[\t\r\n　 ]+/, "")
       next unless corrected_html.present? && corrected_html != error[:code]
 
       @item.html = replace_html_fragment(before_html, error[:code], corrected_html)
