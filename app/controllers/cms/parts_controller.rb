@@ -39,19 +39,29 @@ class Cms::PartsController < ApplicationController
   end
 
   def auto_correct
+    Rails.logger.debug("[auto_correct] 開始: @item.html=#{@item.html.inspect}")
     @item.errors.clear
     contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
 
     @syntax_checker.errors.each do |error|
+      Rails.logger.debug("[auto_correct] エラー検出: error=#{error.inspect}")
       next unless error[:collector].present?
       before_html = @item.html
+      Rails.logger.debug("[auto_correct] 修正前HTML: #{before_html.inspect}")
+
+      content_value =
+        if error[:collector] == 'Cms::SyntaxChecker::OrderOfHChecker'
+          @item.html
+        else
+          error[:code]
+        end
 
       corrected = Cms::SyntaxChecker.correct(
         cur_site: @cur_site,
         cur_user: @cur_user,
         content: {
-          "content" => [error[:code]],
+          "content" => [content_value],
           "resolve" => "html",
           "type" => "array"
         },
@@ -59,6 +69,7 @@ class Cms::PartsController < ApplicationController
         params: (error[:collector_params] || {}).transform_keys(&:to_s)
       )
 
+      Rails.logger.debug("[auto_correct] corrected.result: #{corrected.respond_to?(:result) ? corrected.result.inspect : corrected.inspect}")
       next unless corrected.respond_to?(:result)
       corrected_html = if corrected.result.is_a?(Array)
                          corrected.result.first.to_s
@@ -66,12 +77,19 @@ class Cms::PartsController < ApplicationController
                          corrected.result.to_s
                        end
 
-      # タブ・改行・全角スペース・半角スペースを削除
-      corrected_html = corrected_html.gsub(/[\t\r\n　 ]+/, "")
+      Rails.logger.debug("[auto_correct] 修正後HTML(置換前): #{corrected_html.inspect}")
+      corrected_html = corrected_html.gsub(/[	\r\n　 ]+/, "")
+      Rails.logger.debug("[auto_correct] 修正後HTML(空白除去後): #{corrected_html.inspect}")
       next unless corrected_html.present? && corrected_html != error[:code]
 
-      @item.html = replace_html_fragment(before_html, error[:code], corrected_html)
+      if error[:collector] == 'Cms::SyntaxChecker::OrderOfHChecker'
+        @item.html = corrected_html
+      else
+        @item.html = replace_html_fragment(before_html, error[:code], corrected_html)
+      end
+      Rails.logger.debug("[auto_correct] 置換後@item.html: #{@item.html.inspect}")
     end
+    Rails.logger.debug("[auto_correct] 終了: @item.html=#{@item.html.inspect}")
   end
 
   public
@@ -128,6 +146,7 @@ class Cms::PartsController < ApplicationController
 end
 
 def replace_html_fragment(before_html, error_code, corrected_html)
+  Rails.logger.debug("[replace_html_fragment] 呼び出し: before_html=#{before_html.inspect}, error_code=#{error_code.inspect}, corrected_html=#{corrected_html.inspect}")
   require 'nokogiri'
   before_doc = Nokogiri::HTML::DocumentFragment.parse(before_html)
   code_fragment = Nokogiri::HTML::DocumentFragment.parse(error_code.to_s)
@@ -141,11 +160,15 @@ def replace_html_fragment(before_html, error_code, corrected_html)
   before_doc.css(tag_name).each do |node|
     match = attrs.all? { |k, v| node[k] == v }
     inner_html_match = node.inner_html.gsub(/\s+/, "") == target_node.inner_html.gsub(/\s+/, "")
+    Rails.logger.debug("[replace_html_fragment] 比較: node=#{node.to_html.inspect}, match=#{match}, inner_html_match=#{inner_html_match}")
     next unless match && inner_html_match
     node.replace(corrected_fragment)
     replaced = true
+    Rails.logger.debug("[replace_html_fragment] 置換成功: node=#{node.to_html.inspect}")
     break
   end
 
-  replaced ? before_doc.to_html : before_html
+  result_html = replaced ? before_doc.to_html : before_html
+  Rails.logger.debug("[replace_html_fragment] 結果: replaced=#{replaced}, result_html=#{result_html.inspect}")
+  result_html
 end
