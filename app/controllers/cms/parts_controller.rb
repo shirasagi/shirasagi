@@ -43,7 +43,6 @@ class Cms::PartsController < ApplicationController
     contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     Rails.logger.debug "[DEBUG] auto_correctメソッドが呼び出されました。"
-    Rails.logger.debug "[DEBUG] @syntax_checker: #{@syntax_checker.inspect}"
     Rails.logger.debug "[DEBUG] @syntax_checker.errors: #{@syntax_checker.errors.inspect}"
 
     @syntax_checker.errors.each do |error|
@@ -57,31 +56,49 @@ class Cms::PartsController < ApplicationController
       before_html = @item.html
       Rails.logger.debug "[DEBUG] 修正前HTML: #{before_html.inspect}"
 
-      # テーブル部分を修正するために、一時的なHTMLを作成
-      temp_html = "<div>#{error[:code]}</div>"
-      Rails.logger.debug "[DEBUG] 一時的なHTML: #{temp_html.inspect}"
-
       corrected = Cms::SyntaxChecker.correct(
         cur_site: @cur_site,
         cur_user: @cur_user,
         content: {
-          "content" => [temp_html],
-          "resolve" => "html"
+          "content" => [error[:code]],
+          "resolve" => "html",
+          "type" => "array"
         },
         collector: error[:collector],
-        params: error[:collector_params]
+        params: error[:collector_params].transform_keys(&:to_s)
       )
       Rails.logger.debug "[DEBUG] Cms::SyntaxChecker.correctの戻り値: #{corrected.inspect}"
 
       if corrected.respond_to?(:result)
-        content = corrected.result
-        content = content.first if content.is_a?(Array)
-        corrected_html = content.to_s.gsub(/<\/?div>/, '')
-        Rails.logger.debug "[DEBUG] divタグ除去後のテーブル部分: #{corrected_html.inspect}"
+        corrected_html = corrected.result.to_s
 
         if corrected_html.present? && corrected_html != error[:code]
-          # 元のHTML内の該当テーブルを修正後のテーブルで置換
-          new_html = before_html.gsub(error[:code], corrected_html)
+          # Nokogiriでタグ名＋主要属性一致で置換
+          require 'nokogiri'
+          before_doc = Nokogiri::HTML::DocumentFragment.parse(before_html)
+          code_fragment = Nokogiri::HTML::DocumentFragment.parse(error[:code].to_s)
+          corrected_fragment = Nokogiri::HTML::DocumentFragment.parse(corrected_html)
+
+          target_node = code_fragment.children.first
+          tag_name = target_node&.name
+          attrs = target_node&.attribute_nodes&.map { |attr| [attr.name, attr.value] }&.to_h || {}
+
+          replaced = false
+          before_doc.css(tag_name).each do |node|
+            # 主要属性（id, class, name, href, src, alt, etc.）が一致するか判定
+            match = attrs.all? do |k, v|
+              node[k] == v
+            end
+            # inner_htmlも近いかどうか（空白除去で比較）
+            inner_html_match = node.inner_html.gsub(/\s+/, "") == target_node.inner_html.gsub(/\s+/, "")
+
+            next unless match && inner_html_match
+            node.replace(corrected_fragment)
+            replaced = true
+            break
+          end
+
+          new_html = replaced ? before_doc.to_html : before_html
           Rails.logger.debug "[DEBUG] 置換後のHTML: #{new_html.inspect}"
           @item.html = new_html
         else
@@ -115,6 +132,7 @@ class Cms::PartsController < ApplicationController
       auto_correct
       result = syntax_check
       render_create result
+      return
     end
     render_create @item.valid? && syntax_check && @item.save
   end
@@ -130,6 +148,7 @@ class Cms::PartsController < ApplicationController
       result = syntax_check
       Rails.logger.debug "[DEBUG] syntax_checkの結果: #{result.inspect}"
       render_update result
+      return
     else
       render_update @item.valid? && syntax_check && @item.save
     end
