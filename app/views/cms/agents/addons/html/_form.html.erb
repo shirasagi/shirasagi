@@ -10,67 +10,24 @@
 
 <script>
   $(function() {
+    // CodeMirrorの更新処理
+    function updateCodeMirror(content) {
+      var editor = $('.mod-cms-html-form textarea').data('codemirror');
+      if (editor) {
+        editor.setValue(content);
+        editor.refresh();
+      }
+    }
+
     // 自動修正ボタンのクリックイベント
     $(document).on("click", ".btn-auto-correct", function(ev) {
-      console.log('[DEBUG] btn-auto-correct clicked');
       ev.preventDefault();
       var $btn = $(this);
-      $btn.prop("disabled", true);
-
-      var token = $('meta[name="csrf-token"]').attr('content');
-      var content = $btn.data("check-content");
-      var resolve = $btn.data("check-resolve");
-      var type = $btn.data("check-type");
-      var collector = $btn.data("collector");
-      var params = $btn.data("collector-params");
-
-      console.log('[DEBUG] data:', {
-        content: content,
-        resolve: resolve,
-        type: type,
-        collector: collector,
-        params: params
-      });
-
-      $.ajax({
-        type: "POST",
-        url: "<%= cms_apis_correct_syntax_check_path(format: "json") %>",
-        cache: false,
-        data: {
-          authenticity_token: token,
-          content: { content: content, resolve: resolve, type: type },
-          collector: collector,
-          params: params
-        },
-        success: function(data) {
-          console.log('[DEBUG] ajax success:', data);
-          var after = data["result"]; // サーバーから返ってきた修正後の部分HTML
-          var $textarea = $('textarea[name="item[html]"]');
-          var html = $textarea.val();
-
-          // 「修正前の部分HTML」（content）を「修正後の部分HTML」（after）で置換
-          if (content && after && html.indexOf(content) !== -1) {
-            var newHtml = html.replace(content, after);
-            $('textarea[name="item[html]"]').val(newHtml);
-            if (window.Syntax_Checker) {
-              Syntax_Checker.url = <%= raw cms_apis_check_syntax_check_path(format: "json").to_json %>
-            }
-            console.log('[DEBUG] textarea:', $('textarea[name="item[html]"]').val());
-            if (window.Syntax_Checker && typeof Syntax_Checker.render === "function") {
-              Syntax_Checker.render();
-            }
-            if (window.Syntax_Checker && typeof Syntax_Checker.asyncCheck === "function") {
-              Syntax_Checker.asyncCheck();
-            }
-          }
-        },
-        error: function(xhr, status, error) {
-          console.log('[DEBUG] ajax error:', status, error, xhr.responseText);
-        },
-        complete: function() {
-          $btn.prop("disabled", false);
-        }
-      });
+      var $form = $btn.closest('form');
+      // フォームに自動修正フラグを追加
+      $form.append('<input type="hidden" name="auto_correct" value="1">');
+      // フォームを送信
+      $form.submit();
     });
   });
 </script>
