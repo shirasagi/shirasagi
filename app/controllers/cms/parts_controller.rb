@@ -39,6 +39,7 @@ class Cms::PartsController < ApplicationController
   end
 
   def auto_correct
+    @item.errors.clear # エラーメッセージをクリア
     contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     Rails.logger.debug "[DEBUG] auto_correctメソッドが呼び出されました。"
@@ -123,12 +124,11 @@ class Cms::PartsController < ApplicationController
     @item.attributes = get_params
     if params[:auto_correct].present?
       Rails.logger.debug "[DEBUG] auto_correctフラグが存在します。"
-      Rails.logger.debug "[DEBUG] syntax_check実行前の@item.html: #{@item.html.inspect}"
-      result = syntax_check
-      Rails.logger.debug "[DEBUG] syntax_check実行後の@item.html: #{@item.html.inspect}"
-      Rails.logger.debug "[DEBUG] syntax_checkの結果: #{result.inspect}"
+      Rails.logger.debug "[DEBUG] auto_correct実行前の@item.html: #{@item.html.inspect}"
       auto_correct
+      Rails.logger.debug "[DEBUG] auto_correct実行後の@item.html: #{@item.html.inspect}"
       result = syntax_check
+      Rails.logger.debug "[DEBUG] syntax_checkの結果: #{result.inspect}"
       render_update result
     else
       render_update @item.valid? && syntax_check && @item.save
