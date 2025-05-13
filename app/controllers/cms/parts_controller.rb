@@ -39,32 +39,55 @@ class Cms::PartsController < ApplicationController
   end
 
   def auto_correct
+    contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
+    @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     Rails.logger.debug "[DEBUG] auto_correctメソッドが呼び出されました。"
+    Rails.logger.debug "[DEBUG] @syntax_checker: #{@syntax_checker.inspect}"
+    Rails.logger.debug "[DEBUG] @syntax_checker.errors: #{@syntax_checker.errors.inspect}"
+
     @syntax_checker.errors.each do |error|
-      Rails.logger.debug "[DEBUG] error: #{error.inspect}"
+      Rails.logger.debug "[DEBUG] エラー処理開始: #{error.inspect}"
+      Rails.logger.debug "[DEBUG] collector存在確認: #{error[:collector].present?}"
+
       next unless error[:collector].present?
       Rails.logger.debug "[DEBUG] collector: #{error[:collector]}"
       Rails.logger.debug "[DEBUG] collector_params: #{error[:collector_params].inspect}"
       Rails.logger.debug "[DEBUG] code: #{error[:code].inspect}"
       before_html = @item.html
       Rails.logger.debug "[DEBUG] 修正前HTML: #{before_html.inspect}"
-      params = (error[:collector_params] || {}).merge(code: error[:code])
-      Rails.logger.debug "[DEBUG] correct呼び出し: collector=#{error[:collector]}, params=#{params.inspect}"
+
+      # テーブル部分を修正するために、一時的なHTMLを作成
+      temp_html = "<div>#{error[:code]}</div>"
+      Rails.logger.debug "[DEBUG] 一時的なHTML: #{temp_html.inspect}"
+
       corrected = Cms::SyntaxChecker.correct(
         cur_site: @cur_site,
         cur_user: @cur_user,
-        content: error[:code],
+        content: {
+          "content" => [temp_html],
+          "resolve" => "html"
+        },
         collector: error[:collector],
         params: error[:collector_params]
       )
       Rails.logger.debug "[DEBUG] Cms::SyntaxChecker.correctの戻り値: #{corrected.inspect}"
-      html = corrected.respond_to?(:content) ? corrected.content : corrected
-      Rails.logger.debug "[DEBUG] 修正後HTML: #{html.inspect}"
-      if html.present? && html != before_html
-        Rails.logger.debug "[DEBUG] HTMLが修正されました。@item.htmlを更新します。"
-        @item.html = html
+
+      if corrected.respond_to?(:result)
+        content = corrected.result
+        content = content.first if content.is_a?(Array)
+        corrected_html = content.to_s.gsub(/<\/?div>/, '')
+        Rails.logger.debug "[DEBUG] divタグ除去後のテーブル部分: #{corrected_html.inspect}"
+
+        if corrected_html.present? && corrected_html != error[:code]
+          # 元のHTML内の該当テーブルを修正後のテーブルで置換
+          new_html = before_html.gsub(error[:code], corrected_html)
+          Rails.logger.debug "[DEBUG] 置換後のHTML: #{new_html.inspect}"
+          @item.html = new_html
+        else
+          Rails.logger.debug "[DEBUG] HTMLは修正されませんでした。"
+        end
       else
-        Rails.logger.debug "[DEBUG] HTMLは修正されませんでした。"
+        Rails.logger.debug "[DEBUG] 修正結果が不正な形式です: #{corrected.inspect}"
       end
     end
   end
@@ -100,6 +123,10 @@ class Cms::PartsController < ApplicationController
     @item.attributes = get_params
     if params[:auto_correct].present?
       Rails.logger.debug "[DEBUG] auto_correctフラグが存在します。"
+      Rails.logger.debug "[DEBUG] syntax_check実行前の@item.html: #{@item.html.inspect}"
+      result = syntax_check
+      Rails.logger.debug "[DEBUG] syntax_check実行後の@item.html: #{@item.html.inspect}"
+      Rails.logger.debug "[DEBUG] syntax_checkの結果: #{result.inspect}"
       auto_correct
       result = syntax_check
       render_update result

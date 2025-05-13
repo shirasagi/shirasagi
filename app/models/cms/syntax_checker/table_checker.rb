@@ -9,6 +9,7 @@ class Cms::SyntaxChecker::TableChecker
   end
 
   def correct(context)
+    Rails.logger.debug "[DEBUG][TableChecker] correctメソッド呼び出し: params=#{context.params.inspect}, content=#{context.content.inspect}"
     return if context.params.blank?
 
     case context.params['tag']
@@ -65,11 +66,14 @@ class Cms::SyntaxChecker::TableChecker
   end
 
   def correct_caption(context)
+    Rails.logger.debug "[DEBUG][TableChecker] correct_captionメソッド呼び出し: content=#{context.content.inspect}"
     ret = []
 
     Cms::SyntaxChecker::Base.each_html_with_index(context.content) do |html, index|
+      Rails.logger.debug "[DEBUG][TableChecker] each_html_with_index: html=#{html.inspect}, index=#{index}"
       fragment = Nokogiri::HTML5.fragment(html)
       fragment.css('table').each do |table_node|
+        Rails.logger.debug "[DEBUG][TableChecker] table_node(before): #{table_node.to_html}"
         caption = table_node.at_css('caption')
         next if caption && caption.content.present?
 
@@ -79,12 +83,15 @@ class Cms::SyntaxChecker::TableChecker
         end
 
         caption.content = I18n.t('cms.auto_correct.caption')
+        Rails.logger.debug "[DEBUG][TableChecker] table_node(after): #{table_node.to_html}"
       end
 
       ret << Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
+      Rails.logger.debug "[DEBUG][TableChecker] inner_html_within_div: #{ret.last.inspect}"
     end
 
     context.set_result(ret)
+    Rails.logger.debug "[DEBUG][TableChecker] set_result: #{ret.inspect}"
   end
 
   def correct_th_scope(context)
