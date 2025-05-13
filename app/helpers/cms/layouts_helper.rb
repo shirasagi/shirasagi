@@ -14,46 +14,67 @@ module Cms::LayoutsHelper
             content_tag(:ul) do
               syntax_checker.errors.each do |error|
                 next unless error[:detail].present?
-                # カラム名（例：添付ファイル）
-                concat content_tag(:li, error[:id], class: "column-name") if error[:id].present?
-                # コード（例：ファイル名）
-                if error[:code].present?
-                  concat(content_tag(:li, class: "code") do
-                    content_tag(:code, error[:code].to_s)
-                  end)
-                end
-                # 詳細（例：ファイル名を入力してください。）
-                concat(
-                  content_tag(:ul) do
-                    content_tag(:li) do
-                      # メッセージ＋ツールチップをspan内にまとめる
-                      content_tag(:span, class: "message detail") do
-                        inner_html = error[:msg].to_s
-                        if error[:detail].present?
-                          inner_html += content_tag(:div, class: "tooltip") do
-                            "!".html_safe +
-                            content_tag(:ul, class: "tooltip-content") do
-                              Array(error[:detail]).map { |d| content_tag(:li, d.to_s) }.join.html_safe
-                            end
-                          end
-                        end
-                        # 自動修正ボタン
-                        if error[:collector].present?
-                          inner_html += content_tag(:button, I18n.t("cms.auto_correct.link"), type: "submit",
-                            class: "btn btn-auto-correct",
-                            name: "auto_correct"
-                          )
-                        end
-                        inner_html.html_safe
-                      end
-                    end
-                  end
-                )
+                concat render_error_detail(error)
               end
             end
           )
         end
       )
     end
+  end
+
+  private
+
+  def render_error_detail(error)
+    safe_join([
+      render_column_name(error),
+      render_error_code(error),
+      render_error_message(error)
+    ].compact)
+  end
+
+  def render_column_name(error)
+    return unless error[:id].present?
+    content_tag(:li, error[:id], class: "column-name")
+  end
+
+  def render_error_code(error)
+    return unless error[:code].present?
+    content_tag(:li, class: "code") do
+      content_tag(:code, error[:code].to_s)
+    end
+  end
+
+  def render_error_message(error)
+    content_tag(:ul) do
+      content_tag(:li) do
+        content_tag(:span, class: "message detail") do
+          safe_join([
+            error[:msg].to_s,
+            render_tooltip(error[:detail]),
+            render_auto_correct_button(error)
+          ].compact)
+        end
+      end
+    end
+  end
+
+  def render_tooltip(detail)
+    return unless detail.present?
+    content_tag(:div, class: "tooltip") do
+      "!".html_safe +
+        content_tag(:ul, class: "tooltip-content") do
+          Array(detail).map { |d| content_tag(:li, d.to_s) }.join.html_safe
+        end
+    end
+  end
+
+  def render_auto_correct_button(error)
+    return unless error[:collector].present?
+    content_tag(:button, I18n.t("cms.auto_correct.link"),
+      type: "submit",
+      class: "btn btn-auto-correct",
+      name: "auto_correct"
+    )
   end
 end
