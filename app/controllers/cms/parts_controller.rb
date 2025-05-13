@@ -39,22 +39,13 @@ class Cms::PartsController < ApplicationController
   end
 
   def auto_correct
-    @item.errors.clear # エラーメッセージをクリア
+    @item.errors.clear
     contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
-    Rails.logger.debug "[DEBUG] auto_correctメソッドが呼び出されました。"
-    Rails.logger.debug "[DEBUG] @syntax_checker.errors: #{@syntax_checker.errors.inspect}"
 
     @syntax_checker.errors.each do |error|
-      Rails.logger.debug "[DEBUG] エラー処理開始: #{error.inspect}"
-      Rails.logger.debug "[DEBUG] collector存在確認: #{error[:collector].present?}"
-
       next unless error[:collector].present?
-      Rails.logger.debug "[DEBUG] collector: #{error[:collector]}"
-      Rails.logger.debug "[DEBUG] collector_params: #{error[:collector_params].inspect}"
-      Rails.logger.debug "[DEBUG] code: #{error[:code].inspect}"
       before_html = @item.html
-      Rails.logger.debug "[DEBUG] 修正前HTML: #{before_html.inspect}"
 
       corrected = Cms::SyntaxChecker.correct(
         cur_site: @cur_site,
@@ -65,48 +56,14 @@ class Cms::PartsController < ApplicationController
           "type" => "array"
         },
         collector: error[:collector],
-        params: error[:collector_params].transform_keys(&:to_s)
+        params: (error[:collector_params] || {}).transform_keys(&:to_s)
       )
-      Rails.logger.debug "[DEBUG] Cms::SyntaxChecker.correctの戻り値: #{corrected.inspect}"
 
-      if corrected.respond_to?(:result)
-        corrected_html = corrected.result.to_s
+      next unless corrected.respond_to?(:result)
+      corrected_html = corrected.result.to_s
+      next unless corrected_html.present? && corrected_html != error[:code]
 
-        if corrected_html.present? && corrected_html != error[:code]
-          # Nokogiriでタグ名＋主要属性一致で置換
-          require 'nokogiri'
-          before_doc = Nokogiri::HTML::DocumentFragment.parse(before_html)
-          code_fragment = Nokogiri::HTML::DocumentFragment.parse(error[:code].to_s)
-          corrected_fragment = Nokogiri::HTML::DocumentFragment.parse(corrected_html)
-
-          target_node = code_fragment.children.first
-          tag_name = target_node&.name
-          attrs = target_node&.attribute_nodes&.map { |attr| [attr.name, attr.value] }&.to_h || {}
-
-          replaced = false
-          before_doc.css(tag_name).each do |node|
-            # 主要属性（id, class, name, href, src, alt, etc.）が一致するか判定
-            match = attrs.all? do |k, v|
-              node[k] == v
-            end
-            # inner_htmlも近いかどうか（空白除去で比較）
-            inner_html_match = node.inner_html.gsub(/\s+/, "") == target_node.inner_html.gsub(/\s+/, "")
-
-            next unless match && inner_html_match
-            node.replace(corrected_fragment)
-            replaced = true
-            break
-          end
-
-          new_html = replaced ? before_doc.to_html : before_html
-          Rails.logger.debug "[DEBUG] 置換後のHTML: #{new_html.inspect}"
-          @item.html = new_html
-        else
-          Rails.logger.debug "[DEBUG] HTMLは修正されませんでした。"
-        end
-      else
-        Rails.logger.debug "[DEBUG] 修正結果が不正な形式です: #{corrected.inspect}"
-      end
+      @item.html = replace_html_fragment(before_html, error[:code], corrected_html)
     end
   end
 
@@ -141,12 +98,8 @@ class Cms::PartsController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
     if params[:auto_correct].present?
-      Rails.logger.debug "[DEBUG] auto_correctフラグが存在します。"
-      Rails.logger.debug "[DEBUG] auto_correct実行前の@item.html: #{@item.html.inspect}"
       auto_correct
-      Rails.logger.debug "[DEBUG] auto_correct実行後の@item.html: #{@item.html.inspect}"
       result = syntax_check
-      Rails.logger.debug "[DEBUG] syntax_checkの結果: #{result.inspect}"
       render_update result
       return
     else
@@ -165,4 +118,27 @@ class Cms::PartsController < ApplicationController
 
     render template: "cms/nodes/routes", layout: "ss/ajax"
   end
+end
+
+def replace_html_fragment(before_html, error_code, corrected_html)
+  require 'nokogiri'
+  before_doc = Nokogiri::HTML::DocumentFragment.parse(before_html)
+  code_fragment = Nokogiri::HTML::DocumentFragment.parse(error_code.to_s)
+  corrected_fragment = Nokogiri::HTML::DocumentFragment.parse(corrected_html)
+
+  target_node = code_fragment.children.first
+  tag_name = target_node ? target_node.name : nil
+  attrs = target_node ? target_node.attribute_nodes.map { |attr| [attr.name, attr.value] }.to_h : {}
+
+  replaced = false
+  before_doc.css(tag_name).each do |node|
+    match = attrs.all? { |k, v| node[k] == v }
+    inner_html_match = node.inner_html.gsub(/\s+/, "") == target_node.inner_html.gsub(/\s+/, "")
+    next unless match && inner_html_match
+    node.replace(corrected_fragment)
+    replaced = true
+    break
+  end
+
+  replaced ? before_doc.to_html : before_html
 end
