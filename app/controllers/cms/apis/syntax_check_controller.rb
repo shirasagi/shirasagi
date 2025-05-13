@@ -20,7 +20,7 @@ class Cms::Apis::SyntaxCheckController < ApplicationController
     result = Cms::SyntaxChecker.correct(
       cur_site: @cur_site, cur_user: @cur_user, content: content, collector: collector, params: collector_params
     )
-    Rails.logger.debug "[DEBUG] correct result: #{result.result.inspect}"
+
     render json: { result: result.result }
   end
 end
