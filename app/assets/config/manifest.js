@@ -33,7 +33,6 @@
 //= link cms/preview/jquery.js
 //= link cms/preview/main.js
 //= link cms/public.js
-//= link cms/lib/syntax_checker.js
 //= link gws/affair/menu.js
 //= link gws/affair/overtime_file.js
 //= link gws/affair/shift_records.js
