@@ -1,6 +1,6 @@
 class Cms::Agents::Tasks::FormDb::ImportController < ApplicationController
   def import_urls
-    ::Cms::Site.all.pluck(:id).each_slice(20) do |ids|
+    ::Cms::Site.without_deleted.pluck(:id).each_slice(20) do |ids|
       ::Cms::Site.where(:id.in => ids).each do |site|
         import_site_urls(site)
       end
