@@ -80,8 +80,8 @@ class Cms::PartsController < ApplicationController
                        end
 
       Rails.logger.debug("[auto_correct] 修正後HTML(置換前): #{corrected_html.inspect}")
-      # OrderOfHChecker以外のみ空白・改行除去
-      unless error[:collector] == 'Cms::SyntaxChecker::OrderOfHChecker'
+      # OrderOfHChecker・AdjacentAChecker以外のみ空白・改行除去
+      unless ['Cms::SyntaxChecker::OrderOfHChecker', 'Cms::SyntaxChecker::AdjacentAChecker'].include?(error[:collector])
         corrected_html = corrected_html.gsub(/[\t\r\n　 ]+/, "")
         Rails.logger.debug("[auto_correct] 修正後HTML(空白除去後): #{corrected_html.inspect}")
       end
@@ -152,6 +152,15 @@ end
 
 def replace_html_fragment(before_html, error_code, corrected_html)
   Rails.logger.debug("[replace_html_fragment] 呼び出し: before_html=#{before_html.inspect}, error_code=#{error_code.inspect}, corrected_html=#{corrected_html.inspect}")
+
+  # error_codeがbefore_htmlに含まれていれば、直接置換
+  if before_html.include?(error_code.to_s)
+    replaced_text = before_html.gsub(error_code.to_s, corrected_html.to_s)
+    Rails.logger.debug("[replace_html_fragment] テキスト置換: replaced_text=#{replaced_text.inspect}")
+    return replaced_text
+  end
+
+  # それ以外は従来通りNokogiriでタグ一致置換
   require 'nokogiri'
   before_doc = Nokogiri::HTML::DocumentFragment.parse(before_html)
   code_fragment = Nokogiri::HTML::DocumentFragment.parse(error_code.to_s)
@@ -162,15 +171,17 @@ def replace_html_fragment(before_html, error_code, corrected_html)
   attrs = target_node ? target_node.attribute_nodes.map { |attr| [attr.name, attr.value] }.to_h : {}
 
   replaced = false
-  before_doc.css(tag_name).each do |node|
-    match = attrs.all? { |k, v| node[k] == v }
-    inner_html_match = node.inner_html.gsub(/\s+/, "") == target_node.inner_html.gsub(/\s+/, "")
-    Rails.logger.debug("[replace_html_fragment] 比較: node=#{node.to_html.inspect}, match=#{match}, inner_html_match=#{inner_html_match}")
-    next unless match && inner_html_match
-    node.replace(corrected_fragment)
-    replaced = true
-    Rails.logger.debug("[replace_html_fragment] 置換成功: node=#{node.to_html.inspect}")
-    break
+  if tag_name
+    before_doc.css(tag_name).each do |node|
+      match = attrs.all? { |k, v| node[k] == v }
+      inner_html_match = node.inner_html.gsub(/\s+/, "") == target_node.inner_html.gsub(/\s+/, "")
+      Rails.logger.debug("[replace_html_fragment] 比較: node=#{node.to_html.inspect}, match=#{match}, inner_html_match=#{inner_html_match}")
+      next unless match && inner_html_match
+      node.replace(corrected_fragment)
+      replaced = true
+      Rails.logger.debug("[replace_html_fragment] 置換成功: node=#{node.to_html.inspect}")
+      break
+    end
   end
 
   result_html = replaced ? before_doc.to_html : before_html
