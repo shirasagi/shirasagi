@@ -33,21 +33,45 @@ describe Sys::SiteCopyJob, dbscope: :example do
     end
 
     describe "with options" do
-      before do
-        task.copy_contents = "dictionaries"
-        task.save!
+      context "typical case" do
+        before do
+          task.copy_contents = "dictionaries"
+          task.save!
 
-        perform_enqueued_jobs do
-          ss_perform_now Sys::SiteCopyJob
+          perform_enqueued_jobs do
+            ss_perform_now Sys::SiteCopyJob
+          end
+        end
+
+        it do
+          dest_site = Cms::Site.find_by(host: target_host_host)
+          expect(Kana::Dictionary.site(dest_site).count).to eq 1
+          dest_dic = Kana::Dictionary.site(dest_site).first
+          expect(dest_dic.name).to eq dic.name
+          expect(dest_dic.body).to eq dic.body
         end
       end
 
-      it do
-        dest_site = Cms::Site.find_by(host: target_host_host)
-        expect(Kana::Dictionary.site(dest_site).count).to eq 1
-        dest_dic = Kana::Dictionary.site(dest_site).first
-        expect(dest_dic.name).to eq dic.name
-        expect(dest_dic.body).to eq dic.body
+      context "with deprecated attributes like permission_level" do
+        before do
+          # dic.set(permission_level: 3)
+          dic.collection.update_one({ _id: dic.id }, { '$set' => { permission_level: 3 } })
+
+          task.copy_contents = "dictionaries"
+          task.save!
+
+          perform_enqueued_jobs do
+            ss_perform_now Sys::SiteCopyJob
+          end
+        end
+
+        it do
+          dest_site = Cms::Site.find_by(host: target_host_host)
+          expect(Kana::Dictionary.site(dest_site).count).to eq 1
+          dest_dic = Kana::Dictionary.site(dest_site).first
+          expect(dest_dic.name).to eq dic.name
+          expect(dest_dic.body).to eq dic.body
+        end
       end
     end
   end
