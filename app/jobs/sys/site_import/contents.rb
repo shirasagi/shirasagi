@@ -41,12 +41,6 @@ module Sys::SiteImport::Contents
             column_value['file_ids'] = column_value['file_ids'].map do |file_id|
               @ss_files_map[file_id]
             end
-            if column_value.value.present?
-              @ss_files_url.each do |src, dst|
-                src_path = /#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
-                column_value.value = column_value.value.gsub(src_path, dst)
-              end
-            end
           end
           column_value
         end
