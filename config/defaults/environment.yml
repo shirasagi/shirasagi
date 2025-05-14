@@ -4,9 +4,6 @@ RAILS_ENV: production
 # enable csrf protect
 protect_csrf: true
 
-# File storage ('file' or 'grid_fs')
-storage: file
-
 # Upload limit size (Bytes)
 # 104857600 = 100MB(1024*1024*100)
 nginx_client_max_body_size: 100m

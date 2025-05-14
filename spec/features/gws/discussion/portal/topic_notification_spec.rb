@@ -37,6 +37,7 @@ describe "gws_discussion_forum_portal", type: :feature, dbscope: :example, js: t
       fill_in "item[text]", with: topic_texts.join("\n")
       click_button I18n.t('ss.buttons.save')
     end
+    wait_for_notice I18n.t("ss.notice.saved")
 
     expect(SS::Notification.count).to eq 0
   end
@@ -49,6 +50,7 @@ describe "gws_discussion_forum_portal", type: :feature, dbscope: :example, js: t
       fill_in "item[text]", with: topic_texts.join("\n")
       click_button I18n.t('ss.buttons.save')
     end
+    wait_for_notice I18n.t("ss.notice.saved")
 
     forum2.reload
     expect(forum2.forum_descendants.count).to eq 1
@@ -92,6 +94,7 @@ describe "gws_discussion_forum_portal", type: :feature, dbscope: :example, js: t
       fill_in "item[text]", with: topic_texts.join("\n")
       click_button I18n.t('ss.buttons.save')
     end
+    wait_for_notice I18n.t("ss.notice.saved")
 
     expect(SS::Notification.count).to eq 0
   end

@@ -3,8 +3,8 @@ require 'spec_helper'
 describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: true do
   let(:site)   { cms_site }
   let(:layout) { create_cms_layout }
-  let(:node)   { create :sitemap_node_page, layout_id: layout.id, filename: "node" }
-  let(:item) { create :sitemap_page, filename: "node/item", sitemap_page_state: "show" }
+  let(:node)   { create :sitemap_node_page, cur_site: site, layout: layout }
+  let(:item) { create :sitemap_page, cur_site: site, cur_node: node, layout: layout, sitemap_page_state: "show" }
 
   before do
     Capybara.app_host = "http://#{site.domain}"
@@ -18,8 +18,8 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
   end
 
   context "article node and page" do
-    let!(:article_node) { create :article_node_page }
-    let!(:article_page) { create :article_page, cur_site: site, cur_node: article_node }
+    let!(:article_node) { create :article_node_page, cur_site: site, layout: layout }
+    let!(:article_page) { create :article_page, cur_site: site, cur_node: article_node, layout: layout }
 
     let(:node_cls1) { "page--#{article_node.basename}" }
     let(:node_cls2) { "node--#{article_node.basename}" }
@@ -28,6 +28,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
     it "#index" do
       item
       visit node.url
+      wait_for_js_ready
 
       within ".sitemap-body" do
         within "h2.#{node_cls1}" do
@@ -41,9 +42,9 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
   end
 
   context "cms node and redirect page" do
-    let!(:cms_node) { create :cms_node_page }
-    let!(:cms_page1) { create :cms_page, cur_site: site, cur_node: cms_node }
-    let!(:cms_page2) { create :cms_page, cur_site: site, cur_node: cms_node, redirect_link: redirect_link }
+    let!(:cms_node) { create :cms_node_page, cur_site: site, layout: layout }
+    let!(:cms_page1) { create :cms_page, cur_site: site, cur_node: cms_node, layout: layout }
+    let!(:cms_page2) { create :cms_page, cur_site: site, cur_node: cms_node, layout: layout, redirect_link: redirect_link }
     let(:redirect_link) { "https://sample.example.jp" }
 
     let(:node_cls1) { "page--#{cms_node.basename}" }
@@ -54,6 +55,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
     it "#index" do
       item
       visit node.url
+      wait_for_js_ready
 
       within ".sitemap-body" do
         within "h2.#{node_cls1}" do
@@ -70,8 +72,8 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
   end
 
   context "rss node and rss page" do
-    let!(:rss_node) { create :rss_node_page }
-    let!(:rss_page) { create :rss_page, cur_site: site, cur_node: rss_node }
+    let!(:rss_node) { create :rss_node_page, cur_site: site, layout: layout }
+    let!(:rss_page) { create :rss_page, cur_site: site, cur_node: rss_node, layout: layout }
 
     let(:node_cls1) { "page--#{rss_node.basename}" }
     let(:node_cls2) { "node--#{rss_node.basename}" }
@@ -80,6 +82,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example, js: tru
     it "#index" do
       item
       visit node.url
+      wait_for_js_ready
 
       within ".sitemap-body" do
         within "h2.#{node_cls1}" do
