@@ -24,7 +24,6 @@ gem 'unicorn-worker-killer'
 # Database
 gem 'mongoid'
 gem 'mongo_session_store'
-gem 'mongoid-grid_fs'
 
 # Assets
 gem 'autosize-rails'
@@ -59,6 +58,7 @@ gem 'liquid'
 gem 'mail' # must load 'mail' before loading 'mail-iso-2022-jp'
 gem 'mail-iso-2022-jp'
 gem 'marcel'
+gem 'mime-types'
 gem 'mini_magick'
 gem 'mongoid-geospatial'
 gem 'net-ldap'
