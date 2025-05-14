@@ -109,7 +109,7 @@ module Cms::Addon::List
         host, url = url, host if url.blank?
 
         if host.present?
-          site = Cms::Site.where(host: host).first
+          site = Cms::Site.without_deleted.where(host: host).first
           next if site.blank?
 
           # myself

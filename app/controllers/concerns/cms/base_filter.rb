@@ -36,6 +36,8 @@ module Cms::BaseFilter
 
   def set_site
     @cur_site = SS.current_site = Cms::Site.find(params[:site])
+    raise '404' if @cur_site.deleted?
+
     @ss_mode = :cms
     SS.reset_locale_and_timezone # cms and webmail are currently not supported.
 

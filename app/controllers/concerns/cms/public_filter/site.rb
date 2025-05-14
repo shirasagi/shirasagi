@@ -8,6 +8,6 @@ module Cms::PublicFilter::Site
   private
 
   def set_site
-    @cur_site ||= request.env["ss.site"] ||= SS::Site.find_by_domain(request_host, request_path)
+    @cur_site ||= request.env["ss.site"] ||= SS::Site.without_deleted.find_by_domain(request_host, request_path)
   end
 end
