@@ -183,9 +183,10 @@ def replace_html_fragment(before_html, error_code, corrected_html)
   if tag_name
     before_doc.css(tag_name).each do |node|
       match = attrs.all? { |k, v| node[k] == v }
-      inner_html_match = node.inner_html.gsub(/\s+/, "") == target_node.inner_html.gsub(/\s+/, "")
-      Rails.logger.debug("[replace_html_fragment] 比較: node=#{node.to_html.inspect}, match=#{match}, inner_html_match=#{inner_html_match}")
-      next unless match && inner_html_match
+      # テキスト内容で比較
+      text_match = node.text.gsub(/\s+/, "") == target_node.text.gsub(/\s+/, "")
+      Rails.logger.debug("[replace_html_fragment] 比較: node=#{node.to_html.inspect}, match=#{match}, text_match=#{text_match}")
+      next unless match && text_match
       node.replace(corrected_fragment)
       replaced = true
       Rails.logger.debug("[replace_html_fragment] 置換成功: node=#{node.to_html.inspect}")
