@@ -86,63 +86,6 @@ module Tasks
         end
       end
 
-      def remove_site
-        # 1. cms_pages, cms_parts, cms_layouts, cms_nodes, ss_files の順に削除する
-        # 2. 残りを MODULES_BOUND_TO_SITE より削除する
-        # 3. 最後に site と public 配下のファイルを削除する
-        with_site(ENV['site']) do |site|
-          ## basic contents
-          [::Cms::Page, ::Cms::Part, ::Cms::Layout, ::Cms::Node].each do |model|
-            puts "remove #{model}"
-            ids = model.where(site_id: site.id).pluck(:id)
-            ids.each_with_index do |id, idx|
-              item = model.find(id) rescue nil
-              next if item.nil?
-              def item.create_history_trash; end
-              item.destroy
-            end
-          end
-
-          ## ss_files
-          [::SS::File].each do |model|
-            puts "remove #{model}"
-            ids = model.where(site_id: site.id).pluck(:id)
-            ids.each_with_index do |id, idx|
-              item = model.find(id) rescue nil
-              next if item.nil?
-              next if item.owner_item
-              def item.create_history_trash; end
-              item.destroy
-            end
-          end
-
-          ## other contents
-          models = ::Cms::MODULES_BOUND_TO_SITE.map(&:constantize)
-          models = models.select { |model| removable_bound_to_site?(model) }
-          models.each do |model|
-            puts "remove #{model}"
-            ids = model.where(site_id: site.id).pluck(:id)
-            ids.each_with_index do |id, idx|
-              item = model.find(id) rescue nil
-              next if item.nil?
-              item.destroy
-            end
-          end
-
-          ## public files
-          puts "remove #{site.name}"
-          ::Fs.rm_rf site.path
-          site.destroy
-        end
-      end
-
-      def removable_bound_to_site?(model)
-        return false if model.include?(::Cms::Content)
-        return false if model.include?(::SS::Model::File)
-        return false if model.include?(::SS::Model::JobLog)
-        model.include?(::SS::Reference::Site) || model.include?(::Cms::Reference::Site)
-      end
-
       def export_site
         with_site(ENV['site']) do |site|
           job = ::Sys::SiteExportJob.new

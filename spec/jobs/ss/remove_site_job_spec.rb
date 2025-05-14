@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Tasks::Cms, dbscope: :example do
+describe SS::RemoveSiteJob, dbscope: :example do
   # cms_site
   let!(:site) { cms_site }
 
@@ -64,8 +64,7 @@ describe Tasks::Cms, dbscope: :example do
       expect(SS::File.where(site_id: site2_id).count).to eq 2
       expect(Fs.exist?(site2_path)).to be_truthy
 
-      ENV['site'] = site1_host
-      described_class.remove_site
+      described_class.perform_now(site1.id)
 
       expect(SS::Site.all.map(&:host)).to match_array [site.host, site2_host]
 
