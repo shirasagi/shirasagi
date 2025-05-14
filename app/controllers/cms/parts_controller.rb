@@ -80,8 +80,11 @@ class Cms::PartsController < ApplicationController
                        end
 
       Rails.logger.debug("[auto_correct] 修正後HTML(置換前): #{corrected_html.inspect}")
-      corrected_html = corrected_html.gsub(/[	\r\n　 ]+/, "")
-      Rails.logger.debug("[auto_correct] 修正後HTML(空白除去後): #{corrected_html.inspect}")
+      # OrderOfHChecker以外のみ空白・改行除去
+      unless error[:collector] == 'Cms::SyntaxChecker::OrderOfHChecker'
+        corrected_html = corrected_html.gsub(/[\t\r\n　 ]+/, "")
+        Rails.logger.debug("[auto_correct] 修正後HTML(空白除去後): #{corrected_html.inspect}")
+      end
       next unless corrected_html.present? && corrected_html != error[:code]
 
       if error[:collector] == 'Cms::SyntaxChecker::OrderOfHChecker'
