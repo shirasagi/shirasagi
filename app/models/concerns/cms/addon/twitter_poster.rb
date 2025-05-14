@@ -1,7 +1,6 @@
 module Cms::Addon
   module TwitterPoster
     extend ActiveSupport::Concern
-    include Cms::Content
     extend SS::Addon
 
     # media_ids is restricted up to 4

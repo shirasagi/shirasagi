@@ -36,4 +36,9 @@
   <dt><%= @model.t :upload_policy %></dt>
   <dd><%= @item.label :upload_policy %></dd>
   <% end %>
+
+  <% if @item.deleted %>
+  <dt><%= @model.t :deleted %></dt>
+  <dd><%= l(@item.deleted, format: :picker) %></dd>
+  <% end %>
 </dl>

@@ -34,6 +34,7 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
         expect(site.name).to eq name
         expect(site.host).to eq host
         expect(site.domains).to eq [ domain ]
+        expect(site.deleted?).to be_falsey
       end
 
       visit sys_sites_path
@@ -60,7 +61,13 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.deleted")
 
-      expect(SS::Site.all.count).to eq 0
+      expect(SS::Site.all.count).to eq 1
+      SS::Site.all.first.tap do |site|
+        expect(site.name).to eq name2
+        expect(site.host).to eq host
+        expect(site.domains).to eq [ domain ]
+        expect(site.deleted?).to be_truthy
+      end
     end
   end
 
@@ -125,6 +132,69 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
     end
   end
 
+  describe "deleted sites" do
+    let!(:site1) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
+    let!(:site2) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
+
+    before { login_sys_user }
+
+    it do
+      expect(SS::Site.all.count).to eq 2
+      expect(SS::Site.without_deleted.count).to eq 2
+
+      visit sys_sites_path
+      within ".list-items" do
+        expect(page).to have_css(".list-item", text: site1.name)
+        expect(page).to have_css(".list-item", text: site2.name)
+      end
+
+      click_on site1.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
+      wait_for_notice I18n.t("ss.notice.deleted")
+
+      expect(SS::Site.all.count).to eq 2
+      expect(SS::Site.without_deleted.count).to eq 1
+
+      visit sys_sites_path
+      within ".list-items" do
+        expect(page).to have_no_css(".list-item", text: site1.name)
+        expect(page).to have_css(".list-item", text: site2.name)
+      end
+
+      within ".index-search" do
+        select I18n.t('ss.options.state.enabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      within ".list-items" do
+        expect(page).to have_no_css(".list-item", text: site1.name)
+        expect(page).to have_css(".list-item", text: site2.name)
+      end
+
+      within ".index-search" do
+        select I18n.t('ss.options.state.disabled'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      within ".list-items" do
+        expect(page).to have_css(".list-item", text: site1.name)
+        expect(page).to have_no_css(".list-item", text: site2.name)
+      end
+
+      within ".index-search" do
+        select I18n.t('ss.options.state.all'), from: 's[state]'
+        click_button I18n.t("ss.buttons.search")
+      end
+      within ".list-items" do
+        expect(page).to have_css(".list-item", text: site1.name)
+        expect(page).to have_css(".list-item", text: site2.name)
+      end
+    end
+  end
+
   describe "destroy all" do
     let!(:site1) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
     let!(:site2) { create(:sys_site, name: unique_id, host: unique_id, domains: unique_domain) }
@@ -144,7 +214,8 @@ describe "sys_sites", type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.deleted")
 
-      expect(SS::Site.all.count).to eq 0
+      expect(SS::Site.all.count).to eq 2
+      expect(SS::Site.without_deleted.count).to eq 0
     end
   end
 
