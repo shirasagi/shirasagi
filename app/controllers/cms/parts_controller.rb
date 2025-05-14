@@ -97,6 +97,15 @@ class Cms::PartsController < ApplicationController
     Rails.logger.debug("[auto_correct] 終了: @item.html=#{@item.html.inspect}")
   end
 
+  def html_flexible_pattern(str)
+    # タグの間やタグ内の空白・改行を柔軟に許容する正規表現を生成
+    pattern = Regexp.escape(str)
+      .gsub(/\\\s+/, "\\s*") # 連続スペースを柔軟に
+      .gsub(/(>)(<)/, "\\1\\s*\\n*\\2") # タグの間の改行・空白
+      .gsub(/\\n/, "\\s*") # 改行も空白として許容
+    Regexp.new(pattern, Regexp::MULTILINE)
+  end
+
   public
 
   def index
@@ -153,11 +162,11 @@ end
 def replace_html_fragment(before_html, error_code, corrected_html)
   Rails.logger.debug("[replace_html_fragment] 呼び出し: before_html=#{before_html.inspect}, error_code=#{error_code.inspect}, corrected_html=#{corrected_html.inspect}")
 
-  # error_codeがbefore_htmlに含まれていれば、直接置換
-  if before_html.include?(error_code.to_s)
-    replaced_text = before_html.gsub(error_code.to_s, corrected_html.to_s)
-    Rails.logger.debug("[replace_html_fragment] テキスト置換: replaced_text=#{replaced_text.inspect}")
-    return replaced_text
+  if error_code.present?
+    pattern = html_flexible_pattern(error_code.to_s)
+    replaced_text = before_html.gsub(pattern, corrected_html.to_s)
+    Rails.logger.debug("[replace_html_fragment] 柔軟正規表現置換: replaced_text=#{replaced_text.inspect}")
+    return replaced_text if replaced_text != before_html
   end
 
   # それ以外は従来通りNokogiriでタグ一致置換
