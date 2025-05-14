@@ -7,6 +7,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
   # site1
   let!(:site1) { create :cms_site_unique }
   let!(:site1_id) { site1.id }
+  let!(:site1_name) { site1.name }
   let!(:site1_path) { site1.path }
   let!(:site1_host) { site1.host }
 
@@ -65,6 +66,12 @@ describe SS::RemoveSiteJob, dbscope: :example do
       expect(Fs.exist?(site2_path)).to be_truthy
 
       described_class.perform_now(site1.id)
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).to include(/remove #{site1_name}/)
+      end
 
       expect(SS::Site.all.map(&:host)).to match_array [site.host, site2_host]
 
