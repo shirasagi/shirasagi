@@ -223,7 +223,7 @@ module Fs
     return name if name.blank?
 
     if Zip.unicode_names
-      SS::FilenameUtils.convert_to_url_safe_japanese(name)
+      SS::FilenameUtils.convert_to_url_safe_japanese(name, normalize: false)
     else
       name.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
     end
