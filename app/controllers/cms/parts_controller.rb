@@ -39,13 +39,15 @@ class Cms::PartsController < ApplicationController
   end
 
   def auto_correct
-    Rails.logger.debug("[auto_correct] 開始: @item.html=#{@item.html.inspect}")
+    error_index = params[:auto_correct].to_i
+    Rails.logger.debug("[auto_correct] error_index: #{error_index}")
     @item.errors.clear
     contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
 
-    @syntax_checker.errors.each do |error|
-      Rails.logger.debug("[auto_correct] エラー検出: error=#{error.inspect}")
+    @syntax_checker.errors.each_with_index do |error, idx|
+      next unless idx == error_index
+      Rails.logger.debug("[auto_correct] 開始: @item.html=#{@item.html.inspect}")
       next unless error[:collector].present?
       before_html = @item.html
       Rails.logger.debug("[auto_correct] 修正前HTML: #{before_html.inspect}")
@@ -110,7 +112,7 @@ class Cms::PartsController < ApplicationController
   def create
     raise "403" unless @model.allowed?(:create, @cur_user, site: @cur_site, node: @cur_node)
     @item = @model.new get_params
-    if params[:auto_correct].present?
+    if params.key?(:auto_correct)
       auto_correct
       result = syntax_check
       render_create result
@@ -122,7 +124,7 @@ class Cms::PartsController < ApplicationController
   def update
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
-    if params[:auto_correct].present?
+    if params.key?(:auto_correct)
       auto_correct
       result = syntax_check
       render_update result

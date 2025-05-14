@@ -12,9 +12,9 @@ module Cms::LayoutsHelper
           concat content_tag(:p, t("errors.template.body"))
           concat(
             content_tag(:ul) do
-              syntax_checker.errors.each do |error|
+              syntax_checker.errors.each_with_index do |error, idx|
                 next unless error[:detail].present?
-                concat render_error_detail(error)
+                concat render_error_detail(error, idx)
               end
             end
           )
@@ -25,11 +25,11 @@ module Cms::LayoutsHelper
 
   private
 
-  def render_error_detail(error)
+  def render_error_detail(error, idx = nil)
     safe_join([
       render_column_name(error),
       render_error_code(error),
-      render_error_message(error)
+      render_error_message(error, idx)
     ].compact)
   end
 
@@ -45,14 +45,14 @@ module Cms::LayoutsHelper
     end
   end
 
-  def render_error_message(error)
+  def render_error_message(error, idx = nil)
     content_tag(:ul) do
       content_tag(:li) do
         content_tag(:span, class: "message detail") do
           safe_join([
             error[:msg].to_s,
             render_tooltip(error[:detail]),
-            render_auto_correct_button(error)
+            render_auto_correct_button(error, idx)
           ].compact)
         end
       end
@@ -69,12 +69,13 @@ module Cms::LayoutsHelper
     end
   end
 
-  def render_auto_correct_button(error)
+  def render_auto_correct_button(error, idx = nil)
     return unless error[:collector].present?
     content_tag(:button, I18n.t("cms.auto_correct.link"),
       type: "submit",
       class: "btn btn-auto-correct",
-      name: "auto_correct"
+      name: "auto_correct",
+      value: idx
     )
   end
 end

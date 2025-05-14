@@ -10,23 +10,15 @@
 
 <script>
   $(function() {
-    // CodeMirrorの更新処理
-    function updateCodeMirror(content) {
-      var editor = $('.mod-cms-html-form textarea').data('codemirror');
-      if (editor) {
-        editor.setValue(content);
-        editor.refresh();
-      }
-    }
-
     // 自動修正ボタンのクリックイベント
     $(document).on("click", ".btn-auto-correct", function(ev) {
       ev.preventDefault();
       var $btn = $(this);
       var $form = $btn.closest('form');
-      // フォームに自動修正フラグを追加
-      $form.append('<input type="hidden" name="auto_correct" value="1">');
-      // フォームを送信
+      // 既存のauto_correct hiddenを削除（多重送信防止）
+      $form.find('input[name=\"auto_correct\"]').remove();
+      // ボタンのvalue（index）をhiddenで送信
+      $form.append('<input type="hidden" name="auto_correct" value="' + $btn.val() + '">');
       $form.submit();
     });
   });
