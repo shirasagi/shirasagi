@@ -25,6 +25,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
   end
   let!(:file1_1) { create :ss_file, site: site1, state: 'public' }
   let!(:file1_2) { create :ss_file, site: site1, state: 'public' }
+  let!(:template1) { create :cms_editor_template, cur_site: site1 }
 
   # site2
   let!(:site2) { create :cms_site_unique }
@@ -46,6 +47,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
   end
   let!(:file2_1) { create :ss_file, site: site2, state: 'public' }
   let!(:file2_2) { create :ss_file, site: site2, state: 'public' }
+  let!(:template2) { create :cms_editor_template, cur_site: site2 }
 
   context "with site" do
     it do
@@ -56,6 +58,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
       expect(Cms::Layout.where(site_id: site1_id).count).to eq 1
       expect(Cms::Node.where(site_id: site1_id).count).to eq 4
       expect(SS::File.where(site_id: site1_id).count).to eq 2
+      expect(Cms::EditorTemplate.where(site_id: site1_id).count).to eq 1
       expect(Fs.exist?(site1_path)).to be_truthy
 
       expect(Cms::Page.where(site_id: site2_id).count).to eq 2
@@ -63,6 +66,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
       expect(Cms::Layout.where(site_id: site2_id).count).to eq 1
       expect(Cms::Node.where(site_id: site2_id).count).to eq 4
       expect(SS::File.where(site_id: site2_id).count).to eq 2
+      expect(Cms::EditorTemplate.where(site_id: site2_id).count).to eq 1
       expect(Fs.exist?(site2_path)).to be_truthy
 
       described_class.perform_now(site1.id)
@@ -80,6 +84,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
       expect(Cms::Layout.where(site_id: site1_id).count).to eq 0
       expect(Cms::Node.where(site_id: site1_id).count).to eq 0
       expect(SS::File.where(site_id: site1_id).count).to eq 0
+      expect(Cms::EditorTemplate.where(site_id: site1_id).count).to eq 0
       expect(Fs.exist?(site1_path)).to be_falsey
 
       expect(Cms::Page.where(site_id: site2_id).count).to eq 2
@@ -87,6 +92,7 @@ describe SS::RemoveSiteJob, dbscope: :example do
       expect(Cms::Layout.where(site_id: site2_id).count).to eq 1
       expect(Cms::Node.where(site_id: site2_id).count).to eq 4
       expect(SS::File.where(site_id: site2_id).count).to eq 2
+      expect(Cms::EditorTemplate.where(site_id: site2_id).count).to eq 1
       expect(Fs.exist?(site2_path)).to be_truthy
     end
   end
