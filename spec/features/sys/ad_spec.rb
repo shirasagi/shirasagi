@@ -19,8 +19,6 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
     let(:url1) { unique_url }
     let(:url2) { unique_url }
 
-    before { login_sys_user }
-
     it do
       #
       # New
