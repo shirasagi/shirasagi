@@ -10,4 +10,8 @@ namespace :cms do
   task reload_site_usage: :environment do
     ::Tasks::Cms.reload_site_usage
   end
+
+  task remove_site: :environment do
+    ::Tasks::Cms.remove_site
+  end
 end
