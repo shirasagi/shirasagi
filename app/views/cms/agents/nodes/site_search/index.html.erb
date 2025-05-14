@@ -130,7 +130,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
         <%
           options = Cms::Group.site(@cur_site).active.tree_sort.map do |group|
             indent = '　' * group.depth
-            ["#{indent}#{group.trailing_name}", group.id]
+            ["#{indent}#{group.trailing_name}", group.id, { 'aria-label': group.name }]
           end
         %>
         <%= select_tag 's[group_ids][]',
