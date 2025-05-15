@@ -151,6 +151,7 @@ text: page_with_accessibility_error.name)
         end
       end
 
+      # 記事編集画面（被リンクページエラーあり・「警告を無視して非公開保存する」権限なし）で非公開保存できないことを検証
       it "cannot close page in edit view without ignore_alert permission when linked from block" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
@@ -175,6 +176,7 @@ text: page_with_accessibility_error.name)
         end
       end
 
+      # 記事編集画面（被警告を無視して非公開保存する権限なし）で非公開保存できないことを検証
       it "cannot close page in edit view without ignore_alert permission" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
@@ -199,6 +201,7 @@ text: page_with_accessibility_error.name)
         end
       end
 
+      # 一括非公開操作（被リンクページエラーあり・）ができないことを検証
       it "cannot close page in index view" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
@@ -230,6 +233,7 @@ text: page_with_accessibility_error.name)
            edit_cms_ignore_alert)
       end
 
+      # 記事編集画面（「警告を無視して非公開保存する」権限あり）で被リンクページエラーがあっても非公開保存できることを検証
       it "can close page in edit view with ignore_alert permission" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
@@ -256,6 +260,7 @@ text: page_with_accessibility_error.name)
         end
       end
 
+      # 一括非公開操作（index viewでの一括close）が「警告を無視して非公開保存する」権限ありで成功することを検証
       it "can close page in index view with ignore_alert permission" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
