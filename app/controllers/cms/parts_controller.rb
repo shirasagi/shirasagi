@@ -27,7 +27,7 @@ class Cms::PartsController < ApplicationController
   end
 
   def syntax_check
-    contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
+    contents = [{ "id" => "html", "content" => [@item.html.to_s], "resolve" => "html", "type" => "array" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     if @syntax_checker.errors.present?
       @syntax_checker.errors.each do |error|
@@ -42,22 +42,28 @@ class Cms::PartsController < ApplicationController
     error_index = params[:auto_correct].to_i
     Rails.logger.debug("[auto_correct] error_index: #{error_index}")
     @item.errors.clear
-    contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
+
+    # 構文チェックを実行
+    contents = [{ "id" => "html", "content" => [@item.html.to_s], "resolve" => "html", "type" => "array" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
 
+    # 指定されたエラーインデックスのエラーを修正
     @syntax_checker.errors.each_with_index do |error, idx|
       next unless idx == error_index
       Rails.logger.debug("[auto_correct] 開始: @item.html=#{@item.html.inspect}")
+
+      # エラーにcollectorが設定されている場合のみ修正を試みる
       next unless error[:collector].present?
+
       before_html = @item.html
       Rails.logger.debug("[auto_correct] 修正前HTML: #{before_html.inspect}")
 
-      content_value =
-        if error[:collector] == 'Cms::SyntaxChecker::OrderOfHChecker'
-          @item.html
-        else
-          error[:code]
-        end
+      # 修正対象のコンテンツを準備
+      content_value = if error[:collector] == 'Cms::SyntaxChecker::OrderOfHChecker'
+                        @item.html
+                      else
+                        error[:code]
+                      end
 
       corrected = Cms::SyntaxChecker.correct(
         cur_site: @cur_site,
@@ -72,6 +78,8 @@ class Cms::PartsController < ApplicationController
       )
 
       Rails.logger.debug("[auto_correct] corrected.result: #{corrected.respond_to?(:result) ? corrected.result.inspect : corrected.inspect}")
+
+      # 修正結果の処理
       next unless corrected.respond_to?(:result)
       corrected_html = if corrected.result.is_a?(Array)
                          corrected.result.first.to_s
@@ -80,30 +88,96 @@ class Cms::PartsController < ApplicationController
                        end
 
       Rails.logger.debug("[auto_correct] 修正後HTML(置換前): #{corrected_html.inspect}")
-      # OrderOfHChecker・AdjacentAChecker以外のみ空白・改行除去
-      unless ['Cms::SyntaxChecker::OrderOfHChecker', 'Cms::SyntaxChecker::AdjacentAChecker'].include?(error[:collector])
-        corrected_html = corrected_html.gsub(/[\t\r\n　 ]+/, "")
-        Rails.logger.debug("[auto_correct] 修正後HTML(空白除去後): #{corrected_html.inspect}")
-      end
+
+      # 修正結果が有効な場合のみ適用
       next unless corrected_html.present? && corrected_html != error[:code]
 
-      if error[:collector] == 'Cms::SyntaxChecker::OrderOfHChecker'
+      # collectorごとに置換方法を分岐
+      case error[:collector]
+      when 'Cms::SyntaxChecker::OrderOfHChecker'
+        # 全体置換
         @item.html = corrected_html
+      when 'Cms::SyntaxChecker::TableChecker'
+        # 部分置換
+        @item.html = replace_html_fragment_with_nokogiri(before_html, error[:code], corrected_html)
       else
+        # 部分置換
         @item.html = replace_html_fragment(before_html, error[:code], corrected_html)
       end
-      Rails.logger.debug("[auto_correct] 置換後@item.html: #{@item.html.inspect}")
     end
-    Rails.logger.debug("[auto_correct] 終了: @item.html=#{@item.html.inspect}")
   end
 
-  def html_flexible_pattern(str)
-    # タグの間やタグ内の空白・改行を柔軟に許容する正規表現を生成
-    pattern = Regexp.escape(str)
-      .gsub(/\\\s+/, "\\s*") # 連続スペースを柔軟に
-      .gsub(/(>)(<)/, "\\1\\s*\\n*\\2") # タグの間の改行・空白
-      .gsub(/\\n/, "\\s*") # 改行も空白として許容
-    Regexp.new(pattern, Regexp::MULTILINE)
+  def replace_html_fragment(before_html, error_code, corrected_html)
+    Rails.logger.debug("[replace_html_fragment] 呼び出し: before_html=#{before_html.inspect}, error_code=#{error_code.inspect}, corrected_html=#{corrected_html.inspect}")
+
+    # 改行や空白を無視して比較するための正規表現パターンを作成
+    escaped_code = Regexp.escape(error_code)
+    pattern = escaped_code.gsub(/\\r\\n|\\n|\\r/, '\s*') # 改行を任意の空白文字に変換
+    pattern = pattern.gsub(/>\s*</, '>\s*<') # タグ間の空白を許容
+
+    Rails.logger.debug("[replace_html_fragment] 生成されたパターン: #{pattern}")
+
+    # 正規表現を使用して置換
+    replaced_text = before_html.gsub(/#{pattern}/, corrected_html)
+
+    Rails.logger.debug("[replace_html_fragment] 置換後: replaced_text=#{replaced_text.inspect}")
+    return replaced_text
+  end
+
+  def replace_html_fragment_with_nokogiri(before_html, error_code, corrected_html)
+    require 'nokogiri'
+    Rails.logger.debug("[replace_html_fragment_with_nokogiri] 開始: error_code=#{error_code.inspect}, corrected_html=#{corrected_html.inspect}")
+
+    # HTMLのパース
+    before_doc = Nokogiri::HTML::DocumentFragment.parse(before_html)
+    code_fragment = Nokogiri::HTML::DocumentFragment.parse(error_code.to_s)
+    corrected_fragment = Nokogiri::HTML::DocumentFragment.parse(corrected_html)
+
+    Rails.logger.debug("[replace_html_fragment_with_nokogiri] パース結果:")
+    Rails.logger.debug("  before_doc: #{before_doc.to_html}")
+    Rails.logger.debug("  code_fragment: #{code_fragment.to_html}")
+    Rails.logger.debug("  corrected_fragment: #{corrected_fragment.to_html}")
+
+    # 置換対象のノード情報を取得
+    target_node = code_fragment.children.first
+    tag_name = target_node ? target_node.name : nil
+    attrs = target_node ? target_node.attribute_nodes.map { |attr| [attr.name, attr.value] }.to_h : {}
+
+    Rails.logger.debug("[replace_html_fragment_with_nokogiri] 対象ノード情報:")
+    Rails.logger.debug("  tag_name: #{tag_name}")
+    Rails.logger.debug("  attrs: #{attrs}")
+    Rails.logger.debug("  target_node.text: #{target_node&.text}")
+
+    replaced = false
+    if tag_name
+      Rails.logger.debug("[replace_html_fragment_with_nokogiri] 検索開始: tag_name=#{tag_name}")
+      before_doc.css(tag_name).each do |node|
+        Rails.logger.debug("  ノード検出: #{node.to_html}")
+
+        # 属性の比較
+        match = attrs.all? { |k, v| node[k] == v }
+        Rails.logger.debug("  属性比較: match=#{match}, node_attrs=#{node.attribute_nodes.map do |attr|
+          [attr.name, attr.value]
+        end.to_h}")
+
+        # テキスト内容の比較
+        text_match = node.text.gsub(/\s+/, "") == target_node.text.gsub(/\s+/, "")
+        Rails.logger.debug("  テキスト比較: text_match=#{text_match}, node_text=#{node.text}, target_text=#{target_node.text}")
+
+        next unless match && text_match
+        Rails.logger.debug("  置換実行: #{node.to_html} → #{corrected_fragment.to_html}")
+        node.replace(corrected_fragment)
+        replaced = true
+        break
+      end
+    end
+
+    result_html = replaced ? before_doc.to_html : before_html
+    Rails.logger.debug("[replace_html_fragment_with_nokogiri] 結果:")
+    Rails.logger.debug("  replaced: #{replaced}")
+    Rails.logger.debug("  result_html: #{result_html}")
+
+    result_html
   end
 
   public
@@ -157,44 +231,4 @@ class Cms::PartsController < ApplicationController
 
     render template: "cms/nodes/routes", layout: "ss/ajax"
   end
-end
-
-def replace_html_fragment(before_html, error_code, corrected_html)
-  Rails.logger.debug("[replace_html_fragment] 呼び出し: before_html=#{before_html.inspect}, error_code=#{error_code.inspect}, corrected_html=#{corrected_html.inspect}")
-
-  if error_code.present?
-    pattern = html_flexible_pattern(error_code.to_s)
-    replaced_text = before_html.gsub(pattern, corrected_html.to_s)
-    Rails.logger.debug("[replace_html_fragment] 柔軟正規表現置換: replaced_text=#{replaced_text.inspect}")
-    return replaced_text if replaced_text != before_html
-  end
-
-  # それ以外は従来通りNokogiriでタグ一致置換
-  require 'nokogiri'
-  before_doc = Nokogiri::HTML::DocumentFragment.parse(before_html)
-  code_fragment = Nokogiri::HTML::DocumentFragment.parse(error_code.to_s)
-  corrected_fragment = Nokogiri::HTML::DocumentFragment.parse(corrected_html)
-
-  target_node = code_fragment.children.first
-  tag_name = target_node ? target_node.name : nil
-  attrs = target_node ? target_node.attribute_nodes.map { |attr| [attr.name, attr.value] }.to_h : {}
-
-  replaced = false
-  if tag_name
-    before_doc.css(tag_name).each do |node|
-      match = attrs.all? { |k, v| node[k] == v }
-      # テキスト内容で比較
-      text_match = node.text.gsub(/\s+/, "") == target_node.text.gsub(/\s+/, "")
-      Rails.logger.debug("[replace_html_fragment] 比較: node=#{node.to_html.inspect}, match=#{match}, text_match=#{text_match}")
-      next unless match && text_match
-      node.replace(corrected_fragment)
-      replaced = true
-      Rails.logger.debug("[replace_html_fragment] 置換成功: node=#{node.to_html.inspect}")
-      break
-    end
-  end
-
-  result_html = replaced ? before_doc.to_html : before_html
-  Rails.logger.debug("[replace_html_fragment] 結果: replaced=#{replaced}, result_html=#{result_html.inspect}")
-  result_html
 end
