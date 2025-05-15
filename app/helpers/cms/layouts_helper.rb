@@ -13,7 +13,6 @@ module Cms::LayoutsHelper
           concat(
             content_tag(:ul) do
               syntax_checker.errors.each_with_index do |error, idx|
-                next unless error[:detail].present?
                 concat render_error_detail(error, idx)
               end
             end
@@ -46,12 +45,13 @@ module Cms::LayoutsHelper
   end
 
   def render_error_message(error, idx = nil)
+    return unless error[:msg].present?
     content_tag(:ul) do
       content_tag(:li) do
         content_tag(:span, class: "message detail") do
           safe_join([
             error[:msg].to_s,
-            render_tooltip(error[:detail]),
+            error[:detail].present? ? render_tooltip(error[:detail]) : nil,
             render_auto_correct_button(error, idx)
           ].compact)
         end

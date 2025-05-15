@@ -27,7 +27,7 @@ class Cms::PartsController < ApplicationController
   end
 
   def syntax_check
-    contents = [{ "id" => "html", "content" => [@item.html.to_s], "resolve" => "html", "type" => "array" }]
+    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     if @syntax_checker.errors.present?
       @syntax_checker.errors.each do |error|
@@ -107,14 +107,12 @@ class Cms::PartsController < ApplicationController
   def replace_html_fragment(before_html, error_code, corrected_html)
     Rails.logger.debug("[replace_html_fragment] 呼び出し: before_html=#{before_html.inspect}, error_code=#{error_code.inspect}, corrected_html=#{corrected_html.inspect}")
 
-    # 改行や空白を無視して比較するための正規表現パターンを作成
     escaped_code = Regexp.escape(error_code)
     pattern = escaped_code.gsub(/\\r\\n|\\n|\\r/, '\s*') # 改行を任意の空白文字に変換
     pattern = pattern.gsub(/>\s*</, '>\s*<') # タグ間の空白を許容
 
     Rails.logger.debug("[replace_html_fragment] 生成されたパターン: #{pattern}")
 
-    # 正規表現を使用して置換
     replaced_text = before_html.gsub(/#{pattern}/, corrected_html)
 
     Rails.logger.debug("[replace_html_fragment] 置換後: replaced_text=#{replaced_text.inspect}")
