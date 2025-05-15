@@ -14,5 +14,13 @@
 
     <dt><%= @model.t :list_origin %></dt>
     <dd><%= @item.label(:list_origin) || t("cms.options.list_origin.deployment") %></dd>
+
+    <% if @item.list_origin_content? %>
+      <dt class="depth-2 list_origin-content"><%= @model.t :origin_of_page %></dt>
+      <dd class="depth-2 list_origin-content"><%= @item.label :origin_of_page %></dd>
+
+      <dt class="depth-2 list_origin-content"><%= @model.t :origin_of_node %></dt>
+      <dd class="depth-2 list_origin-content"><%= @item.label :origin_of_node %></dd>
+    <% end %>
   </dl>
 <% end %>
