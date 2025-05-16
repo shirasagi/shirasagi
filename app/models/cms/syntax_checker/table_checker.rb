@@ -47,7 +47,6 @@ class Cms::SyntaxChecker::TableChecker
     return if unscoped_nodes.blank?
 
     code = unscoped_nodes.map { |node| Cms::SyntaxChecker::Base.outer_html_summary(node) }.join(",")
-    Rails.logger.debug("[check_unscoped_th] code(table_html)=#{code.inspect}")
     context.errors << {
       id: id,
       idx: idx,
