@@ -20,7 +20,6 @@ class Cms::Apis::SyntaxCheckController < ApplicationController
     result = Cms::SyntaxChecker.correct(
       cur_site: @cur_site, cur_user: @cur_user, content: content, collector: collector, params: collector_params
     )
-
     render json: { result: result.result }
   end
 end
