@@ -45,17 +45,25 @@ class Cms::PartsController < ApplicationController
     contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
 
+    before_html = @item.html
     @syntax_checker.errors.each_with_index do |error, idx|
       next unless idx == error_index
       next unless error[:collector].present?
 
-      Rails.logger.debug("[auto_correct] 修正前HTML: #{@item.html.inspect}")
+      Rails.logger.debug("[auto_correct] 修正前HTML: #{before_html.inspect}")
+
+      case error[:collector]
+      when "Cms::SyntaxChecker::InterwordSpaceChecker"
+        content_html = error[:code]
+      else
+        content_html = @item.html
+      end
 
       corrected = Cms::SyntaxChecker.correct(
         cur_site: @cur_site,
         cur_user: @cur_user,
         content: {
-          "content" => @item.html,
+          "content" => content_html,
           "resolve" => "html",
           "type" => "scalar"
         },
@@ -67,8 +75,20 @@ class Cms::PartsController < ApplicationController
       corrected_html = corrected.result
 
       Rails.logger.debug("[auto_correct] 修正後HTML: #{corrected_html.inspect}")
-      @item.html = corrected_html
+
+      case error[:collector]
+      when "Cms::SyntaxChecker::InterwordSpaceChecker"
+        @item.html = replace_html(before_html, error[:code], corrected_html)
+      else
+        @item.html = corrected_html
+      end
     end
+  end
+
+  def replace_html(before_html, error_code, corrected_html)
+    pattern = Regexp.new(Regexp.escape(error_code))
+    replaced_text = before_html.gsub(/#{pattern}/, corrected_html)
+    replaced_text
   end
 
   public
