@@ -80,4 +80,26 @@ RSpec.describe Cms::SyntaxCheckDetailBoxComponent, type: :component do
     expect(btn[:name]).to eq 'auto_correct'
     expect(btn[:value]).to eq '0'
   end
+
+  # エラーメッセージに対してツールチップが表示されることを確認するテスト
+  it 'displays tooltip for error messages' do
+    render_inline described_class.new(syntax_checker: syntax_checker)
+    expect(page).to have_css('.tooltip')
+    expect(page).to have_css('.tooltip', count: 1) # エラー数分のツールチップが存在することを確認
+  end
+
+  # ツールチップ内にエラーの詳細情報が正しく表示されることを確認するテスト
+  it 'shows error details in tooltip' do
+    render_inline described_class.new(syntax_checker: syntax_checker)
+    tooltips = page.all('.tooltip')
+
+    # 最初のエラーのツールチップ内容を確認
+    first_tooltip = tooltips.first
+    expect(first_tooltip.find('.tooltip-content')).to have_content(I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h'))
+    expect(first_tooltip.find('.tooltip-content')).to have_content('詳細2')
+
+    # 2番目のエラーにはツールチップが表示されないことを確認（detailがないため）
+    expect(page).to have_content(I18n.t('errors.messages.invalid_kana_character'))
+    expect(page).not_to have_css('.tooltip', count: 2)
+  end
 end
