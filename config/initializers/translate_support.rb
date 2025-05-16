@@ -39,7 +39,7 @@ module SS
   module TranslateRedirecting
     extend ActiveSupport::Concern
 
-    def redirect_to(options = {}, response_status = {})
+    def redirect_to(*)
       super
       if SS::TranslateSupport.translate?(request)
         save_location = self.location

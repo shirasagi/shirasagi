@@ -37,7 +37,7 @@ module SS
   module MobileRedirecting
     extend ActiveSupport::Concern
 
-    def redirect_to(options = {}, response_status = {})
+    def redirect_to(*)
       super
       if SS::MobileSupport.mobile?(request)
         save_location = self.location
