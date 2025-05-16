@@ -87,13 +87,13 @@ class Cms::SyntaxCheckDetailBoxComponent < ApplicationComponent
     end
   end
 
-  def render_auto_correct_button(error, idx = nil)
+  def render_auto_correct_button(error, error_index = nil)
     return unless error[:collector].present?
     tag.button(I18n.t("cms.auto_correct.link"),
       type: "submit",
       class: "btn btn-auto-correct",
       name: "auto_correct",
-      value: idx
+      value: error_index
     )
   end
 end

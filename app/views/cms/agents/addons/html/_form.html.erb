@@ -7,19 +7,3 @@
 <dl class="see mod-cms-html-form">
   <dd class="wide"><%= f.text_area :html, style: "height: 400px" %></dd>
 </dl>
-
-<script>
-  $(function() {
-    // 自動修正ボタンのクリックイベント
-    $(document).on("click", ".btn-auto-correct", function(ev) {
-      ev.preventDefault();
-      var $btn = $(this);
-      var $form = $btn.closest('form');
-      // 既存のauto_correct hiddenを削除（多重送信防止）
-      $form.find('input[name=\"auto_correct\"]').remove();
-      // ボタンのvalue（index）をhiddenで送信
-      $form.append('<input type="hidden" name="auto_correct" value="' + $btn.val() + '">');
-      $form.submit();
-    });
-  });
-</script>
