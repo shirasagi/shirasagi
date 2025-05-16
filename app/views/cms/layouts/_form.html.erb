@@ -1,5 +1,5 @@
 <% if @syntax_checker && @syntax_checker.errors.present? %>
-  <%= syntax_check_detail_box @syntax_checker %>
+  <%= render Cms::SyntaxCheckDetailBoxComponent.new(syntax_checker: @syntax_checker) %>
 <% end %>
 
 <dl class="see">

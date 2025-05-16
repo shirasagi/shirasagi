@@ -3,8 +3,6 @@ class Cms::PartsController < ApplicationController
   include Cms::PartFilter
   include Cms::SyntaxCheckable
 
-  helper Cms::LayoutsHelper
-
   model Cms::Part
 
   navi_view "cms/main/navi"

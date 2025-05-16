@@ -3,8 +3,6 @@ class Cms::LayoutsController < ApplicationController
   include Cms::CrudFilter
   include Cms::SyntaxCheckable
 
-  helper Cms::LayoutsHelper
-
   model Cms::Layout
 
   navi_view "cms/main/navi"
