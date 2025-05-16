@@ -22,7 +22,7 @@ RSpec.describe Cms::SyntaxCheckDetailBoxComponent, type: :component do
   let(:syntax_checker) { double('SyntaxChecker', errors: errors) }
   let(:empty_syntax_checker) { double('SyntaxChecker', errors: []) }
 
-  it 'エラーがある場合に表示される' do
+  it 'displays when errors are present' do
     render_inline described_class.new(syntax_checker: syntax_checker)
     expect(page).to have_css('#errorSyntaxChecker')
     expect(page).to have_content(I18n.t('errors.messages.invalid_order_of_h'))
@@ -30,35 +30,35 @@ RSpec.describe Cms::SyntaxCheckDetailBoxComponent, type: :component do
     expect(page).to have_css('.btn-auto-correct', count: 1)
   end
 
-  it 'エラーがない場合は表示されない' do
+  it 'does not display when there are no errors' do
     render_inline described_class.new(syntax_checker: empty_syntax_checker)
     expect(page).not_to have_css('#errorSyntaxChecker')
   end
 
-  it '詳細が表示される' do
+  it 'shows details' do
     render_inline described_class.new(syntax_checker: syntax_checker)
     expect(page).to have_content(I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h'))
     expect(page).to have_content('詳細2')
   end
 
-  it '自動修正ボタンがcollectorがある場合のみ表示される' do
+  it 'shows auto-correct button only when collector is present' do
     render_inline described_class.new(syntax_checker: syntax_checker)
     expect(page).to have_css('.btn-auto-correct', count: 1)
   end
 
-  it 'エラーコードが<code>タグで表示される' do
+  it 'displays error code in <code> tag' do
     render_inline described_class.new(syntax_checker: syntax_checker)
     expect(page).to have_css('code', text: 'E001')
     expect(page).to have_css('code', text: 'E002')
   end
 
-  it 'idが.column-nameクラスで表示される' do
+  it 'displays id with .column-name class' do
     render_inline described_class.new(syntax_checker: syntax_checker)
     expect(page).to have_css('.column-name', text: 'html')
     expect(page).to have_css('.column-name', text: 'body')
   end
 
-  it 'detailが文字列でも表示される' do
+  it 'shows detail even if it is a string' do
     errors = [
       {
         id: 'html',
@@ -73,7 +73,7 @@ RSpec.describe Cms::SyntaxCheckDetailBoxComponent, type: :component do
     expect(page).to have_css('li', text: Array(I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')).first)
   end
 
-  it '自動修正ボタンの属性が正しい' do
+  it 'auto-correct button has correct attributes' do
     render_inline described_class.new(syntax_checker: syntax_checker)
     btn = page.find('.btn-auto-correct')
     expect(btn[:type]).to eq 'submit'
