@@ -103,7 +103,9 @@ RSpec.describe Cms::SyntaxCheckDetailBoxComponent, type: :component do
 
     # 最初のエラーのツールチップ内容を確認
     first_tooltip = tooltips.first
-    expect(first_tooltip.find('.tooltip-content')).to have_content(I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h'))
+    expect(first_tooltip.find('.tooltip-content')).to have_content(
+      I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+    )
     expect(first_tooltip.find('.tooltip-content')).to have_content('詳細2')
 
     # 2番目のエラーにはツールチップが表示されないことを確認（detailがないため）
