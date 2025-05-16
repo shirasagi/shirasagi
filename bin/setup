@@ -3,6 +3,7 @@ require "fileutils"
 
 # path to your application root.
 APP_ROOT = File.expand_path("..", __dir__)
+APP_NAME = "ss"
 DEFAULT_PORT = "3000"
 PORT = ENV.fetch("PORT", DEFAULT_PORT)
 
@@ -111,4 +112,8 @@ FileUtils.chdir APP_ROOT do
 
   puts "\n== Restarting application server =="
   system! "bundle exec rails restart"
+
+  # puts "\n== Configuring puma-dev =="
+  # system "ln -nfs #{APP_ROOT} ~/.puma-dev/#{APP_NAME}"
+  # system "curl -Is https://#{APP_NAME}.test/up | head -n 1"
 end
