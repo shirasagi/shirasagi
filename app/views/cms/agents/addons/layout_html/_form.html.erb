@@ -1,8 +1,9 @@
 <%= code_editor ".mod-cms-html-form textarea", mode: :html %>
-<dl class="see mod-cms-body" data-syntax-check="editor">
+
+<dl class="see mod-cms-html-form">
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
-    <%= f.text_area :html, style: "height: 400px", data: { syntax_check: 'editor', syntax_check_name: t("modules.addons.cms/body_layout_html") } %>
+    <%= f.text_area :html, style: "height: 400px" %>
 
     <% if example = @item.try(:form_example_layout_html) %>
       <div class="form-example">
