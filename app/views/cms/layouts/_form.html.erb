@@ -1,6 +1,4 @@
-<% if @syntax_checker && @syntax_checker.errors.present? %>
-  <%= render Cms::SyntaxCheckDetailBoxComponent.new(syntax_checker: @syntax_checker) %>
-<% end %>
+<%= render Cms::SyntaxCheckDetailBoxComponent.new(syntax_checker: @syntax_checker) %>
 
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
