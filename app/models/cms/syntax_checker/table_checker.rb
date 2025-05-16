@@ -39,11 +39,8 @@ class Cms::SyntaxChecker::TableChecker
   end
 
   def check_unscoped_th(context, id, idx, table_node)
-    Rails.logger.debug("[check_unscoped_th] 呼び出し: table_node=#{table_node.to_html.inspect}")
     tr_nodes = table_node.css('tr').to_a
-    Rails.logger.debug("[check_unscoped_th] tr_nodes=#{tr_nodes.map(&:to_html).inspect}")
     unscoped_nodes = tr_nodes.select { |tr_node| include_unscoped_th?(tr_node) }
-    Rails.logger.debug("[check_unscoped_th] unscoped_nodes=#{unscoped_nodes.map(&:to_html).inspect}")
     return if unscoped_nodes.blank?
 
     code = unscoped_nodes.map { |node| Cms::SyntaxChecker::Base.outer_html_summary(node) }.join(",")
@@ -110,8 +107,7 @@ class Cms::SyntaxChecker::TableChecker
         end
       end
 
-      result_html = Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
-      ret << result_html
+      ret << Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
     end
 
     context.set_result(ret)
