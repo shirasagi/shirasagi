@@ -46,12 +46,12 @@ class Cms::SyntaxChecker::TableChecker
     Rails.logger.debug("[check_unscoped_th] unscoped_nodes=#{unscoped_nodes.map(&:to_html).inspect}")
     return if unscoped_nodes.blank?
 
-    table_html = table_node.to_html
-    Rails.logger.debug("[check_unscoped_th] code(table_html)=#{table_html.inspect}")
+    code = unscoped_nodes.map { |node| Cms::SyntaxChecker::Base.outer_html_summary(node) }.join(",")
+    Rails.logger.debug("[check_unscoped_th] code(table_html)=#{code.inspect}")
     context.errors << {
       id: id,
       idx: idx,
-      code: table_html,
+      code: code,
       msg: I18n.t('errors.messages.set_th_scope'),
       detail: I18n.t('errors.messages.syntax_check_detail.set_th_scope'),
       collector: self.class.name,
@@ -92,37 +92,29 @@ class Cms::SyntaxChecker::TableChecker
   end
 
   def correct_th_scope(context)
-    Rails.logger.debug("[correct_th_scope] 呼び出し: context.content=#{context.content.inspect}")
     ret = []
 
     Cms::SyntaxChecker::Base.each_html_with_index(context.content) do |html, index|
-      Rails.logger.debug("[correct_th_scope] index=#{index}, html=#{html.inspect}")
       fragment = Nokogiri::HTML5.fragment(html)
       fragment.css('table').each do |table_node|
-        Rails.logger.debug("[correct_th_scope] table_node(before)=#{table_node.to_html.inspect}")
         scope = table_node.css("tr:first th").count == 1 ? "row" : "col"
 
         table_node.css("tr:first th").each do |th_node|
           if th_node["scope"].blank?
             th_node["scope"] = scope
-            Rails.logger.debug("[correct_th_scope] 1行目thにscope追加: th_node=#{th_node.to_html.inspect}, scope=#{scope}")
           end
         end
         table_node.css("tr:not(:first) th").each do |th_node|
           if th_node["scope"].blank?
             th_node["scope"] = "row"
-            Rails.logger.debug("[correct_th_scope] 2行目以降thにscope追加: th_node=#{th_node.to_html.inspect}")
           end
         end
-        Rails.logger.debug("[correct_th_scope] table_node(after)=#{table_node.to_html.inspect}")
       end
 
       result_html = Cms::SyntaxChecker::Base.inner_html_within_div(fragment)
-      Rails.logger.debug("[correct_th_scope] result_html=#{result_html.inspect}")
       ret << result_html
     end
 
     context.set_result(ret)
-    Rails.logger.debug("[correct_th_scope] context.result=#{context.result.inspect}")
   end
 end

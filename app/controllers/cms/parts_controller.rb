@@ -26,7 +26,7 @@ class Cms::PartsController < ApplicationController
   end
 
   def syntax_check
-    contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
+    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     if @syntax_checker.errors.present?
       @syntax_checker.errors.each do |error|
@@ -42,7 +42,7 @@ class Cms::PartsController < ApplicationController
     @item.errors.clear
 
     # 構文チェックを実行
-    contents = [{ "id" => "html", "content" => [@item.html], "resolve" => "html", "type" => "array" }]
+    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
 
     @syntax_checker.errors.each_with_index do |error, idx|
@@ -55,21 +55,16 @@ class Cms::PartsController < ApplicationController
         cur_site: @cur_site,
         cur_user: @cur_user,
         content: {
-          "content" => [@item.html],
+          "content" => @item.html,
           "resolve" => "html",
-          "type" => "array"
+          "type" => "scalar"
         },
         collector: error[:collector],
         params: (error[:collector_params] || {}).transform_keys(&:to_s)
       )
 
       next unless corrected.respond_to?(:result)
-      corrected_html =
-        if corrected.result.is_a?(Array)
-          corrected.result.first.to_s
-        else
-          corrected.result.to_s
-        end
+      corrected_html = corrected.result
 
       Rails.logger.debug("[auto_correct] 修正後HTML: #{corrected_html.inspect}")
       @item.html = corrected_html
