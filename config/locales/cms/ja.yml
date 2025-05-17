@@ -86,7 +86,6 @@ ja:
     release_date: 公開日
     role: 権限/ロール
     root_menu: メインメニュー
-    search_button: 検索
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
@@ -99,7 +98,7 @@ ja:
     search_sort: 表示順
     search_sort_options:
       score: 関連性
-      updated: 更新日
+      released: 公開日
     shortcut: ショートカット
     show_link_to_part: パーツのリンクを表示
     site: サイト
@@ -608,6 +607,9 @@ ja:
         page: ウェブページ
         file: 添付ファイル
         all: 全て
+      link_target:
+        self: 同じタブで表示
+        blank: 別のタブで表示
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP
@@ -1347,6 +1349,7 @@ ja:
         upper_html: 上部HTML
         lower_html: 下部HTML
       cms/addon/site_search/setting:
+        link_target: リンク表示
         st_article_node_ids: 記事フォルダー
         site_search_type: 検索種類
       cms/form:
@@ -3183,6 +3186,8 @@ ja:
         - 下部HTMLを入力します。
 
     cms/addon/site_search/setting:
+      link_target:
+        - リンクの表示形式を設定します。
       st_article_node_ids:
         - サイト内検索の対象となる記事フォルダーを設定します。
 

@@ -103,8 +103,8 @@ class Cms::Elasticsearch::Searcher
     aggs[:group_by_categories] = { terms: { field: 'categories', size: aggregate_size } }
 
     case sort
-    when 'updated'
-      sort = [{ updated: 'desc' }, '_score']
+    when 'released'
+      sort = [{ released: 'desc' }, '_score']
     else
       sort = [ _score: 'desc' ]
     end

@@ -43,8 +43,8 @@ document.addEventListener('DOMContentLoaded', () => {
   <div>
     <%
       sort_params = params.permit(:target, s: {})
-      options = %w(score updated).map do |value|
-        name = { score: t('cms.search_sort_options.score'), updated: t('cms.search_sort_options.updated') }[value.to_sym]
+      options = %w(score released).map do |value|
+        name = t("cms.search_sort_options.#{value}")
         [name, value, 'data-href': "#{@cur_node.url}?" + url_for(sort_params.merge(sort: value).to_query)]
       end
     %>
@@ -67,6 +67,8 @@ document.addEventListener('DOMContentLoaded', () => {
           page_name = source['page_name']
           page_url = source['page_url']
 
+          link_target = (@cur_node.link_target == 'blank') ? '_blank' : nil
+
           if source.dig('file', 'extname').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
@@ -87,7 +89,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           categories = source['categories'].presence || []
         %>
-        <h2><%= link_to title, url, class: 'title' %></h2>
+        <h2><%= link_to title, url, class: 'title', target: link_target %></h2>
         <div class="summary">
           <% if image.present? %>
             <div class="image"><%= image_tag image[:url], alt: image[:name] %></div>
