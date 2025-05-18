@@ -35,7 +35,7 @@ class Cms::LayoutsController < ApplicationController
   end
 
   def create
-    raise "403" unless @model.allowed?(:create, @cur_user, site: @cur_site, node: @cur_node)
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item = @model.new get_params
     if params.key?(:auto_correct)
       auto_correct
