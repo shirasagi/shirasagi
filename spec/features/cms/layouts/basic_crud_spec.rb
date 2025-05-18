@@ -2,11 +2,23 @@ require 'spec_helper'
 
 describe "cms_layouts", type: :feature, js: true do
   let!(:site) { cms_site }
-  let!(:part) { create :cms_part_free, html: '<span id="test-part"></span>' }
+  let!(:admin) { cms_user }
+  let(:layout_permissions) do
+    %w(
+      read_private_cms_layouts edit_private_cms_layouts delete_private_cms_layouts
+      read_other_cms_layouts edit_other_cms_layouts delete_other_cms_layouts
+      edit_cms_ignore_syntax_check
+    )
+  end
+  let!(:role) do
+    create :cms_role, cur_site: site, name: "role-#{unique_id}", permissions: layout_permissions
+  end
+  let(:user) { create :cms_test_user, group_ids: admin.group_ids, cms_role_ids: role.id }
+  let!(:part) { create :cms_part_free, html: '<main><span id="test-part"></span></main>' }
   let!(:part_name) { part.filename.sub(/\..*/, '') }
 
   context "with auth" do
-    before { login_cms_user }
+    before { login_user user }
 
     it "#crud" do
       # new
