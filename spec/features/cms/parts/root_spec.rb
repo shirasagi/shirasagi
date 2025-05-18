@@ -110,8 +110,13 @@ describe "cms_parts", type: :feature, dbscope: :example, js: true do
   end
 
   context "with user1" do
-    let(:permissions) { cms_role.permissions.select { |item| item =~ /_private_/ } }
-    let(:role) { create :cms_role, name: "role", permissions: permissions }
+    let(:role) do
+      create(:cms_role, name: "role", permissions: %w(
+        read_private_cms_nodes read_private_cms_parts
+        edit_private_cms_nodes edit_private_cms_parts
+        delete_private_cms_nodes delete_private_cms_parts
+      ))
+    end
     let!(:user1) do
       create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [group1.id], cms_role_ids: [role.id])
     end
