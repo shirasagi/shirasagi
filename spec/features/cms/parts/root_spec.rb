@@ -115,6 +115,7 @@ describe "cms_parts", type: :feature, dbscope: :example, js: true do
         read_private_cms_nodes read_private_cms_parts
         edit_private_cms_nodes edit_private_cms_parts
         delete_private_cms_nodes delete_private_cms_parts
+        read_private_cms_layouts edit_cms_ignore_syntax_check
       ))
     end
     let!(:user1) do
