@@ -1848,6 +1848,7 @@ ja:
       check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: リンクのテキストを確認してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      set_iframe_title: iframe要素にtitle属性を設定してください。
       replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
@@ -1892,6 +1893,8 @@ ja:
           - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
+        set_iframe_title:
+          - iframe要素には、アクセシビリティのためにtitle属性を設定する必要があります。
         alt_is_included_in_filename:
           - 代替テキストの一部もしくは全部がファイル名に含まれています。
           - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
