@@ -1,0 +1,1362 @@
+// @use "scss/_reset";
+@use "scss/_variable" as var;
+@use "scss/_mixin" as mix;
+@use "scss/_base";
+
+
+// ▽▽▽共通styleシートでバッティングするcssを調整▽▽▽
+
+//不要な装飾削除
+.under #ttlArea .inner{display: none;}
+.under #ttlArea:after{ display: none; }
+.breadCrumbs{
+  @include mix.mq(under-lg2) {
+    display: none;
+  }
+}
+.main h1{
+  font-weight: bold;
+}
+.main h2{
+  font-weight: bold;
+  font-size: 2.4rem!important;
+  line-height: 3.4rem;
+}
+#sec02{
+  margin-top: 0px!important;
+  padding-top: 0px!important;
+}
+//下部のフロートボタン削除
+.float-button{display: none!important;}
+
+// ファーストビューの上部余白削除
+.medical #ttlArea{height: auto;}
+nav.inner{margin: 2% auto 0 auto;}
+
+// ヘッダーの不要部分は非表示、表示させる部分はblock
+@media only screen and (max-width: 1023px){
+    header {
+      display: block;
+  }
+
+  .headerMain{display: none;}
+
+  .heade-main-menu{
+      display: none!important;
+      .inner{
+        display: none;
+        nav{
+          display: none!important;
+        }
+      }
+    }
+    .header_text,
+    .header_info_position,
+    nav {
+      display:none;
+  }
+
+  // フッターのマークサイズ
+  #mark ul li img{
+    width: auto;
+  }
+}
+
+// △△△共通styleシートでバッティングするcssを調整△△△
+
+/*--------追従ボタン-----------*/
+.fixed_btn
+{
+  position: fixed;
+	z-index: 99999;
+  bottom: 0%; 
+  right: 0%;
+  width: 230px;
+	border: none;
+  border-radius: 20px 0 0 0;
+  box-shadow: 2px 2px 5px rgba(167, 167, 167, 0.677);
+  background-color: #fff;
+  font-size: clamp(1.1rem, calc(0.25vw + 1.1rem), 1.7rem);
+  text-align: center;
+  letter-spacing: 0;
+	font-weight: bold;
+	display: block;
+	cursor: pointer;
+  transition: .3s;
+  /*デフォルトで非表示にする*/
+  opacity: 0;
+  visibility: hidden;
+  @include mix.hoverstyle2;
+  transition: all 1s;
+  button{
+    border: none;
+    box-shadow: 0 0 8px rgb(215, 215, 215);
+  }  
+  
+  
+  .fixed_btn button{
+    background: #fff!important;
+  }
+
+
+  
+  @include mix.mq(under-lg2) {
+    border-radius: 25px 25px 0 0;
+    width: 100%;
+    right: 0;
+    left: 0;
+    bottom: -1%;
+    margin: 0 auto;
+  }
+  img{
+    width: 88%;
+    display: inline-block;
+    border: none;
+    @include mix.mq(under-lg2) {
+      width: 100%;
+    }
+  }
+  // 閉じるボタン
+  .close {
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    cursor: pointer;
+    font-size: 18px;
+    color: #646464;
+    border: 1px solid #ccc; /* 境界線を設定 */
+    border-radius: 50%; /* 角を丸くする */
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 22px;
+    z-index: 10; /* 閉じるボタンを前面に表示 */
+    pointer-events: auto; /* 閉じるボタンにイベントを適用 */
+    // タブレット以下では閉じるの位置を位置変更、大きく
+    @include mix.mq(under-lg2) {
+      position: absolute;
+      font-size: 1.6rem;
+      top: -8%!important;
+      right: 2%!important;
+      border: none;
+    }
+  }
+}
+
+/*このクラスが付与されると表示する*/
+.active{
+  opacity: 1;/* スクロール時に表示 */
+  visibility: visible;
+}
+
+
+
+
+img {
+  width: 100%;
+  // vertical-align: bottom;
+  vertical-align: middle;
+}
+.title {
+  text-align: center;
+  line-height: 2.6rem;
+  letter-spacing: 0.1rem;
+  font-size: var.$font-size-pc-xxl;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-xxl;
+  }
+  @include mix.mq(under-sm) {
+    font-size: var.$font-size-sp-xl;
+  }
+}
+.subtitle {
+  text-align: center;
+  line-height: 2.3rem;
+  font-size: var.$font-size-pc-xl;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-xl;
+  }
+}
+
+// タイトルの上の吹き出し
+.title_catch1{
+  width: 230px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: var.$font-size-pc-xl;
+  background: var.$color-main1;
+  color: #fff;
+  border-radius: 60px;
+  position: relative;
+  display: inline-block;
+  &::before{
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -8px;
+    left: 0;
+    width: 0px;
+    height: 0px;
+    margin: auto;
+  }
+}
+
+// 下線
+.underline{
+  border-bottom: solid 5px var.$color-main1;
+  width: 95px;
+  margin: 0 auto;
+  max-width: 100%;
+  text-align: center;
+  @include mix.mq(under-sm) {
+    width: 16%;
+    border-bottom: solid 3.5px var.$color-main1;
+  }
+}
+
+//三角形
+.triangle{
+  content: "";
+  right: 0;
+  left: 0;
+  width: 0px;
+  height: 0px;
+  margin: auto;
+  border-style: solid;
+  border-color: var.$color-main1 transparent transparent transparent;
+  border-width: 10px 20px 0 20px;
+}
+
+// テキストの強調部分の色変更
+.pointcolor{
+  color: var.$color-main1;
+  font-weight: bold;
+  // &.-function1{
+  //   color: var.$color-function1;
+  // }
+  // &.-function2{
+  //   color: var.$color-function2;
+  // }
+  // &.-function3{
+  //   color: var.$color-function3;
+  // }
+}
+
+.text {
+  font-size: var.$font-size-pc-lg;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-lg;
+  }
+  &.-size-l {
+    font-weight: bold;
+  }
+}
+
+// テキストの大きさ調整
+.txt_size{
+  // font-size: var.$font-size-pc-base;
+  //極大サイズ PC
+  // &.-big{
+  //   font-size: var.$font-size-pc-xxxl;
+  //   @include mix.mq(under-sm) { 
+  //     font-size: var.$font-size-pc-xl2;
+  //   }
+  // }
+  //大サイズ PC
+  // &.-large{
+  //   font-size: var.$font-size-pc-xxl;
+  // }
+  //小さいサイズ PC
+  // &.-mini{
+  //   font-size:1.55rem;
+  // }
+  //極小サイズ PC
+  // &.-micro{
+  //   font-size: var.$font-size-pc-xs;
+  // }
+}
+
+
+//画像のパターン背景
+.img-back{
+  background-image: url(img/top/mark.png);
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: right bottom;
+
+  @include mix.mq(under-md) {     
+    background-image:none;
+    background-color: #fff;
+  }
+}
+
+//マーカー
+.maker {
+  background: linear-gradient(transparent 75%, #F7931E 75%);
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  
+  // &.-color-coral {
+  //   background: linear-gradient(transparent 60%, var.$color-coral-10 60%);
+  //   color: var.$color-coral-60;
+  // }
+}
+
+//テキストの下にアンダーライン
+.txt_underline{
+  border-bottom: 8px solid var.$color-main1;
+  &.-color2{
+    border-bottom: 4px solid #FFD400;
+  }
+}
+
+// 丸いボタン装飾
+.roundbutton{
+  background: var.$button-color-1;
+  width: 320px;
+  padding: 1rem 1rem;
+  border-radius: 100px;
+  border: 3px solid #fff;
+  display: inline-block;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.2); 
+  text-align: center;
+  font-size: 1.5rem;
+  font-weight: bold;
+  letter-spacing: 0rem;
+  color: white;
+  text-shadow: 0px 2px 3px #22222269;
+  @include mix.mq(under-lg2) {
+    padding: 0.8rem 0.5rem;
+    font-size: 1.1rem;
+    width: 60%;
+    }
+  &.-color2 {
+    background: var.$button-color-2;
+  }
+  
+  // ボタン内テキスト画像
+  .imgbox2{
+    width: 55%;
+    margin: 0 auto;
+    @include mix.mq(under-lg2) {
+      width: 90%;
+      img{
+        width: 100%;
+      }
+    }
+    img{
+      width: 100%;
+      vertical-align: middle;
+    }
+  }
+}
+
+
+//横並び
+.flex-box_lp {
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  flex-basis: auto;
+  gap: 1rem;
+  @include mix.mq(under-md) {
+    gap: 0.7rem;
+    // flex-direction: column;
+  }
+}
+
+// ふわっと出現させる
+/*----------------------------
+/* fadeUp ｜下から上へ出現
+----------------------------*/
+.fadeUp{
+  animation-name:fadeUpAnime;
+  animation-duration:0.8s;
+  animation-fill-mode:forwards;
+  opacity:0;
+  @keyframes fadeUpAnime{
+    from {
+      opacity: 0;
+    transform: translateY(100px);
+    }
+    to {
+      opacity: 1;
+    transform: translateY(0);
+    }
+  }
+  
+  /* スクロールをしたら出現する要素にはじめに透過0を指定　*/
+  .fadeUpTrigger{
+      opacity: 0;
+      &.-time02{transition-delay: .18s;}
+      &.-time03{transition-delay: .36s;}
+      &.-time04{transition-delay: .72s;}
+  }
+  }
+
+// -------
+// セクション別
+// -------
+// ヘッダー
+.header-section {
+  background: var.$primary-color;
+  color: #fff;
+  font-size: var.$font-size-pc-xl;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-xl;
+  }
+  .--logo {
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    width: 200px;
+    @include mix.mq(under-md) {
+      padding: 40px 0;
+    }
+    img {
+      width: 410px;
+      @include mix.mq(under-md) {
+        width: 70%;
+      }
+    }
+  }
+}
+
+
+// heroセクション top
+.hero-section {
+  // 背景を画像にする
+  @include mix.backgroundimg;
+  background-image: url(img/top/topbackimg.png);
+  color: #000;
+  .container{
+      position: relative;
+      padding: 0;
+      height: 440px;
+      .wrapper_lp{
+        width: 60%;
+        max-width: 1300px;
+        min-width: 980px;
+        margin: 0 auto;
+        .inner_lp{
+          position: relative;//ボタンエリアの絶対位置
+          .top-col{
+            .toptxt{
+              text-align: left;
+              width: 100%;
+              margin: 0 auto;
+              //カナミック以外の介護ソフトも無料で自動連携
+              .top-catch{
+                font-style: italic;//斜体に
+                font-family: Times New Roman, "ＭＳ Ｐゴシック";
+                font-size: 1.9rem;
+                letter-spacing: 0.02rem;
+                font-weight: bold;
+                color: #315163;
+                .point1{
+                  color: #FF5D31;
+                }
+              }
+              //チーム連携はカナミックにおまかせ
+              .top-title{
+                position: relative;
+                margin-top: 0.2rem;
+                font-size: 3rem;
+                letter-spacing: -0.1rem;
+                line-height: 3.8rem;
+                font-weight: bold;
+                font-style: italic;//斜体に
+                font-family: Times New Roman, "ＭＳ Ｐゴシック";
+              }
+            }
+            .imgbox{
+              position: relative;
+              // margin-top: 1rem;
+              // margin-left: 1rem;
+              width: 580px;
+              height: 180px;
+              background-image: url(img/top/mark_01.png);
+              background-repeat: no-repeat;
+              background-size: contain;
+              background-position: left;
+              //PCキャラ画像を擬似要素で配置
+              &::after{
+                z-index:2;
+                position: absolute;
+                right: -138%;
+                top: -40%;
+                transform: translate(-50%, -50%);
+                content:'';
+                display: inline-block;
+                width: 590px;/*画像の幅*/
+                height: 590px;/*画像の高さ*/
+                background-image: url(img/icon/icon_img.svg),url(img/top/toppcimg.png);
+                background-size: contain,contain;
+                background-repeat: no-repeat,no-repeat;
+                background-position: right bottom;
+              }
+            }
+            //注釈
+            .smalltxt{
+              width: 500px;
+              font-size: 0.62rem;
+              margin-top: 0.2rem;
+            }
+          }
+          
+      }
+    } 
+}
+}
+
+
+// PCトップボタンセクション
+.topbutton-section {
+  // 背景を画像にする
+  @include mix.backgroundimg;
+  z-index: 5;
+  background-color: var.$color-back1;
+  position: relative;
+  .container{
+    text-align:center;
+    //トップボタンは１つ
+    .top_button_flame{
+      .roundbutton{
+        z-index: 999;
+        // ホバーで大きく
+        @include mix.hoverstyle;
+        //ボタン共有の装飾はこのシート上部で指定
+      }
+      // トップのボタンのみ横幅サイズ調整
+      .roundbuttontop{
+        position: relative;
+        width: 30%;
+        max-width: 600px;
+        padding: 0 2%;
+        @include mix.mq(under-lg2) {
+          width: 80%;
+          padding: 0;
+        }
+        //ボタンにキャラの画像配置
+        &::before{
+          position: absolute;
+          left: -18%;
+          top: -40%;
+          content: '';
+          display: block;
+          width: 110px;/*画像の幅*/
+          height: 110px;/*画像の高さ*/
+          background-image: url(img/case/caseicon1.png);
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: left top;
+          @include mix.mq(under-lg2) {
+            display: none;
+          }
+        }
+        //資料請求ボタンに資料の画像配置
+        &::after{
+          position: absolute;
+          right: -12%;
+          top: 3%;
+          content: '';
+          display: block;
+          width: 130px;/*画像の幅*/
+          height: 130px;/*画像の高さ*/
+          background-image: url(img/cta/sampleimg.png);
+          background-size: contain;
+          background-repeat: no-repeat;
+          background-position: left top;
+          @include mix.mq(under-lg2) {
+            display: none;
+          }
+        }
+        //ボタンにリンク
+        a{
+          position: absolute;
+          width: 100%;
+          height: 100%;
+          top: 0;
+          left: 0;
+        }
+        // 資料請求はこちらの文字画像のサイズ
+        .imgbox{
+          width: 68%;
+          margin: 2.5% auto 3.5% auto;
+        }
+      }
+    }
+  } 
+}
+
+//称号表記の説明文
+.txt-section{
+  background: #fff;
+  .imgbox{
+    width: 80%;
+    margin: 0 auto;
+  }
+}
+
+// Informationセクション
+//これからの地域包括ケアはデータ連携が主流になります。
+.information-section {
+  background-color: var.$color-back3;
+  position: relative;
+  .container{
+    padding: 1rem 0 0 0;
+    @include mix.mq(under-lg2) {
+      padding: 0 0 2.8rem 0;
+    }
+    .wrapper_lp{
+      margin-top: 0;
+      padding: 5rem 0 0 0;
+      text-align: center;
+      @include mix.mq(under-lg2) {
+        padding: 4rem 0 0 0;
+      }
+      .inner_lp{
+        // タイトル枠
+        .section_title{
+          text-align: center;
+          font-weight: bold;
+          // これからの地域包括ケアは
+            h2.section_main_title{
+              font-weight: bold!important;
+              position: relative;
+              margin-top: 0.2rem;
+              margin-bottom: 1rem;
+              font-size:1.9rem;
+              letter-spacing: 0.16rem;
+              @include mix.mq(under-lg2) {
+                width: 90%;
+                margin: 0 auto;
+                font-size:1.95rem!important;
+                line-height: 3.1rem!important;
+                letter-spacing: 0.03rem;
+                margin-bottom: 1.6rem;
+              }
+              br{
+                @include mix.mq(under-lg2) {
+                  display: none;
+                }
+              }
+              .point1{
+              color: var.$point-color2;
+              }
+              .point2{
+              color: var.$point-color1;
+              }
+            }
+            //小さい文字
+            //説明文
+            .section_sub_title{
+              font-size:1.35rem;
+              @include mix.mq(under-lg2) {
+                width: 90%;
+                margin: 0 auto;
+                font-size:1rem;
+                line-height: 2rem;
+                letter-spacing: 0rem;
+                margin-bottom: 10%;
+                font-weight: lighter;
+              }
+              //色変更
+              //デジタル技術を活用し
+              span{
+                color: var.$point-color1;
+              }
+              //改行なし
+              br{
+                @include mix.mq(under-lg2) {
+                  display: none;
+                }
+              }
+            }
+        }
+        //画像
+        .imgbox{
+          width: 60%;
+          margin: 20px auto 0 auto;
+          padding-bottom: 80px;
+          @include mix.mq(under-lg2) {
+            width: 100%;
+          }
+          img{
+            width: 100%;
+          }
+        }
+        .sp-none{
+          display: block;
+          @include mix.mq(under-lg2) {
+            display: none;
+          }
+        }
+        .pc-none{
+          display: none;
+          @include mix.mq(under-lg2) {
+            display: block;
+          }
+        }
+      }
+    }
+  } 
+}
+
+
+// solutionセクション
+//無料で自動連携が可能です
+.solution-section{
+  background-color: var.$color-back4;
+  .container{
+    padding: 2% 0 0 0;
+    @include mix.mq(under-lg2) {
+      padding: 6% 0 0 0;
+    }
+    //三角形を擬似要素で配置
+    &::before{
+      position: absolute;
+      content: '';
+      top: 0;
+      right: 0;
+      left: 0;
+      margin: 0 auto;
+      display: inline-block;
+      width: 500px;/*画像の幅*/
+      height: 500px;/*画像の高さ*/
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-right: 100px solid transparent;
+      border-left: 100px solid transparent;
+      border-top: 45px solid #fff;
+      border-bottom: 0;
+    }
+    .wrapper_lp{
+      .inner_lp {
+          // 多職種画像
+          .imgbox{
+            width: 100%;
+            margin: 0 auto;
+            img{
+              width: 100%;
+            }
+          }
+      }
+    }
+  }
+}
+
+
+// section_cta section_cta1セクション
+//カナミッククラウドでチーム連携をスムーズにしませんか？
+.section_cta{
+  // 背景を画像にする
+  @include mix.backgroundimg;
+  .container{
+    padding: 5.5rem 0 0 0;
+    position: relative;
+    @include mix.mq(under-lg2) {
+      padding: 4.5rem 0 2.5rem 0;
+    }
+    .wrapper_lp{
+      .inner_lp {
+        .cta-flex{
+          display: flex;
+          justify-content: space-between;
+          @include mix.mq(under-lg2) {
+            display: block;
+          }
+          .cta-flame1{
+            width: 47%;
+            @include mix.mq(under-lg2) {
+              width: 100%;
+              margin: 0 auto;
+              text-align: center;
+            }
+            //タイトルとボタンの枠
+            .section_title{
+              width: 90%;
+              margin: 0 auto;
+              text-align: left;
+              font-size:2.3rem;
+              letter-spacing: 0.08rem;
+              font-weight: bold;
+              color: #fff;
+              @include mix.mq(under-lg2) {
+                width: 92%;
+                text-align: center;
+              }
+              // タイトル
+              h2.section_main_title{
+                position: relative;
+                font-size: 1.5rem;
+                @include mix.mq(under-lg2) {
+                  font-size: 1.8rem!important;
+                  line-height: 2.6rem;
+                  margin-bottom: 8%;
+                }
+                br{
+                  @include mix.mq(under-lg2) {
+                    display: none;
+                  }
+                }
+              }
+              //スマホのみの写真画像
+              .pc-none{
+                display: none;
+                @include mix.mq(under-lg2) {
+                  display: block;
+                  width: 90%;
+                  margin: 0 auto;
+                }
+              }
+              // ボタン全体の枠
+              .button_flame_cta{
+                // border: 2px solid #000;
+                margin-top: 30px;
+                width: 480px;
+                @include mix.mq(under-lg2) {
+                  width: 100%;
+                  margin: 0 auto;
+                }
+                .button_flame_ctabox{
+                  margin-bottom: 45px;
+                  .roundbutton{
+                    width: 100%;
+                    box-sizing: border-box;
+                    // z-index: 999;
+                    // ホバーで大きく
+                    @include mix.hoverstyle;
+                    //装飾はこのシート上部の共通で指定
+                    &.roundbutton1{
+                      position: relative;
+                      //ボタンにリンク
+                      a{
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        top: 0;
+                        left: 0;
+                        text-indent: 100%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                      }
+                    }
+                    &.roundbutton2{
+                      margin-top: 25px;
+                      position: relative;
+                      //ボタンにリンク
+                      a{
+                        position: absolute;
+                        width: 100%;
+                        height: 100%;
+                        top: 0;
+                        left: 0;
+                        text-indent: 100%;
+                        white-space: nowrap;
+                        overflow: hidden;
+                      }
+                      @include mix.mq(under-lg2) {
+                        // ボタンとボタンの間の余白
+                        margin-top: 8%;
+                      }
+                    } 
+                    // ボタン内文字画像サイズ
+                    .imgbox2{
+                      width: 48%;
+                      margin: 0 auto;
+                      @include mix.mq(under-lg2) {
+                        width: 50%;
+                      }
+                      img{
+                        width: 100%;
+                      }
+                    }
+                  }
+                }
+              }
+            }
+              }
+          .cta-flame2{
+            width: 47%;
+            position: relative;
+            // CTAにPC画像配置用
+            &::before{
+              position: absolute;
+              bottom: 12%;
+              right: 10%;
+              content: '';
+              width: 510px;
+              height: 510px;
+              background-image: url(img/icon/icon_img.svg), url(img/top/toppcimg.png);
+              background-size: contain;
+              background-repeat: no-repeat;
+              background-position: right bottom;
+              @include mix.mq(under-lg2) {
+                display: none;
+              }
+            }
+          }
+        }
+
+        }
+      }
+    }
+  }
+
+
+.list-back-img{
+    // 背景を画像にする
+    // @include mix.backgroundimg;
+    // background-image: url(img/function/listback.png);
+    background-color: var.$color-back3;
+    //カナミックの機能の一例
+    .section_function{
+      .container{  
+        padding: 10rem  0 6rem 0;
+        @include mix.mq(under-lg2) {
+          padding: 4rem 0;
+        }
+        .inner_lp{
+          //タイトル枠
+          .section_title{
+            // オレンジの帯の装飾mixin
+            @include mix.titleline;
+            @include mix.mq(under-lg2) {
+              width: 92%;
+            }
+            &::before{
+              @include mix.mq(under-lg2) {
+                display: none;
+              }
+            }
+            // キャラ画像配置用の基準
+            // 擬似要素で人物画像を配置する基準点を作る親要素
+              position: relative;
+            //カナミック介護ソフトの機能一覧
+            h2.section_main_title{
+              // @include mix.txticon2;
+              font-size: 2rem!important;
+              padding: 1.5% 0 0.8% 0;
+              border-radius: 8px;
+              background-color: var.$color-back1;
+              color: #fff;
+            }
+          }
+          // 機能一例のボックスの枠
+          .listbox{
+            width: 980px;
+            margin: 3.5% auto 0 auto;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            @include mix.mq(under-lg2) {
+              width: 92%;
+              display: block;
+            }
+            .list-in-box{
+              z-index: 1;
+              box-sizing: border-box;
+              width: 48%;
+              padding: 2% 3% 3% 3%;
+              // background-color: var.$color-back3;
+              background-color: #fff;
+
+              text-align: center;
+              border-radius: 20px;
+              @include mix.mq(under-lg2) {
+                width: 100%;
+                margin-bottom: 5%;
+                padding: 3% 3% 8% 3%;
+              }
+              &.-list-in-box1,
+              &.-list-in-box2{
+                margin-bottom: 2%;
+                @include mix.mq(under-lg2) {
+                  margin-bottom: 5%;
+                }
+              }
+              h3{
+                font-size: 1.5rem;
+                font-weight: bold;
+                line-height: 1.8rem;
+                @include mix.mq(under-lg2) {
+                  font-size: 1.3rem;
+                  line-height: 1.6rem;
+                }
+                span{
+                  font-size: 0.95rem;
+                  @include mix.mq(under-lg2) {
+                    font-size: 1rem;
+                  }
+                }
+              }
+              .imgbox{
+                width: 60%;
+                margin: 0 auto 6px auto;
+                @include mix.mq(under-lg2) {
+                  width: 45%;
+                }
+                img{
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    //カナミックのセキュリティ対策
+    .section_security{
+      .container{  
+        padding: 6rem  0;
+        @include mix.mq(under-lg2) {
+          padding: 4rem 0;
+        }
+        .inner_lp{
+          //タイトル枠
+          .section_title{
+            // オレンジの帯の装飾mixin
+            @include mix.titleline2;
+            @include mix.mq(under-lg2) {
+              width: 92%;
+            }
+            &::after{
+              @include mix.mq(under-lg2) {
+                display: none;
+              }
+            }
+            //カナミックのセキュリティ対策文字
+            h2.section_main_title{
+              font-size: 2rem!important;
+              padding: 1.5% 0 0.8% 0;
+              border-radius: 8px;
+              color: #fff;
+              padding: 0.8% 0;
+              background-color: var.$color-back1;
+              .sp-none{
+                display: block;
+                img{
+                  width: 80%;
+                  margin: 0 auto;
+                  @include mix.mq(under-lg2) {
+                    display: none;
+                  }
+                }
+              }
+              .pc-none{
+                img{
+                  display: none;
+                  @include mix.mq(under-lg2) {
+                    display: block;
+                    width: 100%;
+                  }
+                }
+              }
+            }
+          }
+          // 一覧のボックスの枠
+          .listbox{
+            width: 980px;
+            margin: 3.5% auto 0 auto;
+            display: flex;
+            justify-content: space-between;
+            @include mix.mq(under-lg2) {
+              width: 92%;
+              display: block;
+            }
+            .list-in-box{
+              z-index: 1;
+              box-sizing: border-box;
+              width: 32%;
+              padding: 4% 3% 2.5% 3%;
+              // background-color: var.$color-back4;
+              background-color: #fff;
+              
+              text-align: center;
+              border-radius: 20px;
+              @include mix.mq(under-lg2) {
+                width: 100%;
+                margin: 0 auto 5% auto;
+                padding: 3.5% 3% 4.5% 3%;
+              }
+              h3{
+                font-size: 1.5rem;
+                font-weight: bold;
+                line-height: 1.8rem;
+                @include mix.mq(under-lg2) {
+                  font-size: 1.3rem;
+                  letter-spacing: -0.01rem;
+                  line-height: 1.6rem;
+                }
+                span{
+                  font-size: 0.95rem;
+                  @include mix.mq(under-lg2) {
+                    font-size: 0.9rem;
+                  }
+                }
+              }
+              .imgbox{
+                width: 90%;
+                margin: 5px auto 0 auto;
+                @include mix.mq(under-lg2) {
+                  width: 55%;
+                }
+                img{
+                  width: 100%;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+
+    //カナミックの導入事例
+    .section_case{
+      // 背景色
+      // background-color: var.$color-back2;
+      .container{  
+        padding: 6rem  0;
+        @include mix.mq(under-lg2) {
+          padding: 4rem 0;
+        }
+        .inner_lp{
+          //タイトル枠
+          .section_title{
+            // オレンジの帯の装飾mixin
+            @include mix.titleline;
+            // mix.titlelineの左側の人物画像のみ差し替え
+            &::before{
+              // background-image: url(img/icon/icon_img03.png);}
+              background-image: url(img/icon/icon_img03.svg);}
+            @include mix.mq(under-lg2) {
+              width: 92%;
+            }
+            &::before{
+              @include mix.mq(under-lg2) {
+                display: none;
+              }
+            }
+            //カナミックの導入事例文字
+            h2.section_main_title{
+              font-size: 2rem!important;
+              padding: 1.5% 0 0.8% 0;
+              border-radius: 8px;
+              color: #fff;
+              padding: 0.8% 0;
+              background-color: var.$color-back1;
+            }
+          }
+          // 一覧のボックスの枠
+          .listbox{
+            width: 1100px;
+            margin: 3.5% auto 0 auto;
+            display: flex;
+            justify-content: space-between;
+            @include mix.mq(under-lg2) {
+              width: 92%;
+              display: block;
+            }
+            .list-in-box{
+              z-index: 1;
+              box-sizing: border-box;
+              width: 49%;
+              padding: 4% 3% 4.2% 3%;
+              // background-color: var.$color-back3;
+              background-color: #fff;
+
+              text-align: center;
+              border-radius: 20px;
+              @include mix.mq(under-lg2) {
+                width: 100%;
+                margin: 0 auto 5% auto;
+                padding: 10% 6% 11% 6%;
+              }
+              position: relative;
+              // キャラクター画像配置用
+              &::before{
+                z-index: 3;
+                position: absolute;
+                right: -2%;
+                bottom: 0%;
+                content: '';
+                width: 110px;
+                height: 110px;
+                background-image: url(img/case/caseicon1.png);
+                background-size: contain;
+                background-repeat: no-repeat;
+                background-position: right bottom;
+                @include mix.mq(under-lg2) {
+                  display: none;
+                }
+              }
+              &.list-in-box2{
+                &::before{
+                  background-image: url(img/case/caseicon2.png);
+                }
+              }
+
+              h3{
+                font-size: 1.59rem;
+                letter-spacing: -0.01rem;
+                font-weight: bold;
+                @include mix.mq(under-lg2) {
+                  font-size: 1.45rem;
+                }
+              }
+              // 事例の詳細文章
+              .pbox{
+                width: 98%;
+                margin: 0 auto;
+                @include mix.mq(under-lg2) {
+                  width: 92%;
+                }
+                p{
+                  padding-top: 10px;
+                  padding-bottom: 10px;
+                  color:var.$point-color1;
+                  font-size: 1.09rem;
+                  line-height: 1.6rem;
+                  font-weight: bold;
+                  @include mix.mq(under-lg2) {
+                    padding-top: 12px;
+                    font-size: 0.85rem;
+                    letter-spacing: 0.01rem;
+                  }
+                  br{
+                    @include mix.mq(under-lg2) {
+                      display: none;
+                    }
+                  }
+                }
+              }
+              a{
+                .imgbox{
+                  width: 80%;
+                  margin: 0 auto;
+                  // hover拡大ではみ出した部分を非表示
+                  overflow: hidden;
+                  img{
+                     transition:1s all;
+                    &:hover{
+                        @include mix.hoverstyle;
+                    }
+                  }
+                  @include mix.mq(under-lg2) {
+                    width: 90%;
+                    margin: 45px auto 0 auto;
+                  }
+                  
+
+                }
+              }
+              .moviebottom{
+              //  画像下のテキスト
+                p{
+                  margin: 0 auto;
+                  margin-top: 15px;
+                  padding: 1rem 0;
+                  font-size: 1.1rem;
+                  font-weight: bold;
+                  background: #fff;
+                  background-color: var.$color-back1;
+                  color: #fff;
+                  width: 70%;
+                  border-radius: 60px;
+                  @include mix.mq(under-lg2) {
+                    width: 90%;
+                    margin-top: 20px;
+                    padding: 0.5rem 0;
+                    font-size: 0.8rem;
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+  }
+
+
+
+
+ //primeセクション prime上場企業です
+.prime-section{
+  padding: 3.5rem 0;
+  text-align: center;
+  font-weight: bold;
+  color: #B17E10;
+  @include mix.mq(under-lg2) {
+    width: 92%;
+    margin: 0 auto;
+    padding: 4.5rem 0 2rem 0;
+  }
+  .primemark{
+    display: block;
+    width: 60px;
+    margin: 0 auto;
+    @include mix.mq(under-lg2) {
+      width: 100px;
+    }
+  }
+  p{
+    margin-top: 20px;
+    @include mix.mq(under-lg2) {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+    }
+    br{
+      display: none;
+      @include mix.mq(under-lg2) {
+       display: block;
+      }
+    }
+  }
+  .chara{
+    width: 42%;
+    margin: 4% auto 0 auto;
+    @include mix.mq(under-lg2) {
+      width: 90%;
+      margin: 5% auto 0 auto;
+    }
+  }
+}
+
+
+// フッター
+.footer-section {
+  font-size: var.$font-size-pc-xl;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-xl;
+  }
+  .--logo {
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    width: 200px;
+    @include mix.mq(under-md) {
+      max-width: 400px;
+      width: 90%;
+      padding: 40px 0;
+    }
+    img {
+      width: 410px;
+      @include mix.mq(under-md) {
+        width: 70%;
+      }
+    }
+  }
+  .--copyright {
+    font-size: var.$font-size-pc-md;
+    @include mix.mq(under-md) {
+      font-size: var.$font-size-sp-md;
+    }
+  }
+}

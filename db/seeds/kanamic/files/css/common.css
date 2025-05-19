@@ -1,0 +1,249 @@
+@charset "utf-8";
+
+/*=====================================================
+*
+*	common.css
+*	Since    2008.6.11
+*	Editor Norihiro Kamatani
+*
+*	Last Modified 2009.4.9
+*	Editor Norihiro Kamatani
+*
+========================================================*/
+
+
+
+/* heightLine */
+.heightLine-group1 {}
+.heightLineParent {}
+
+
+
+/* jquery roll over */
+.btn {} /* roll over image setting */
+
+
+
+/* clearfix */
+.pkg:after {
+	content: ".";
+	display: block;
+	height: 0;
+	clear: both;
+	visibility: hidden;
+	}
+.pkg { display: inline-block; }
+/* Hides from IE-mac \*/
+* html .pkg { height: 1%; }
+.pkg { display: block; }
+/* End hide from IE-mac */
+
+
+
+/* float and clear */
+.fl { float: left; }
+.fr { float: right; }
+
+.cb { clear: both !important; }
+.cl { clear: left !important; }
+.cr { clear: right !important; }
+
+
+
+/* font-size setting */
+.fs10 { font-size: 77% !important; }
+.fs14 { font-size: 108% !important; }
+.fs15 { font-size: 116% !important; }
+.fs16 { font-size: 124% !important; }
+
+
+/* notice */
+.notice  { text-indent: -1em; padding-left: 1em; }
+.notice15  { text-indent: -1.5em; padding-left: 1.5em; }
+.notice2 { text-indent: -2em; padding-left: 2em; }
+
+
+/* text-align setting */
+.tl { text-align: left !important; }
+.tr { text-align: right !important; }
+.tc { text-align: center !important; }
+
+
+
+/* line-height setting */
+.lh13 { line-height: 1.3 !important; }
+.lh14 { line-height: 1.4 !important; }
+.lh15 { line-height: 1.5 !important; }
+
+
+
+/* margin setting */
+.mt0  { margin-top: 0 !important; }
+.mt3  { margin-top: 3px !important; }
+.mt5  { margin-top: 5px !important; }
+.mt10 { margin-top: 10px !important; }
+.mt13 { margin-top: 13px !important; } /* 2008.4.7 post */
+.mt15 { margin-top: 15px !important; }
+.mt20 { margin-top: 20px !important; }
+.mt50 { margin-top: 50px !important; } /* 2008.12.26 post */
+
+.mt03em { margin-top: 0.3em !important; }
+.mt05em { margin-top: 0.5em !important; }
+.mt08em { margin-top: 0.8em !important; }
+.mt10em { margin-top: 1.0em !important; }
+.mt15em { margin-top: 1.5em !important; }
+.mt20em { margin-top: 2.0em !important; }
+
+.mr0  { margin-right: 0 !important; }
+.mr5  { margin-right: 5px !important; }
+.mr10 { margin-right: 10px !important; }
+.mr15 { margin-right: 15px !important; }
+.mr20 { margin-right: 20px !important; }
+
+.mb0  { margin-bottom: 0 !important; }
+.mb3  { margin-bottom: 3px !important; }
+.mb5  { margin-bottom: 5px !important; }
+.mb10 { margin-bottom: 10px !important; }
+.mb15 { margin-bottom: 15px !important; }
+.mb20 { margin-bottom: 20px !important; }
+.mb50 { margin-bottom: 50px !important; }
+.mb100 { margin-bottom: 100px !important; }
+.mb200 { margin-bottom: 200px !important; }
+
+.mb03em { margin-bottom: 0.3em !important; }
+.mb05em { margin-bottom: 0.5em !important; }
+.mb08em { margin-bottom: 0.8em !important; }
+.mb10em { margin-bottom: 1.0em !important; }
+.mb13em { margin-bottom: 1.3em !important; }
+.mb15em { margin-bottom: 1.5em !important; }
+
+.ml0   { margin-left: 0 !important; }
+.ml3   { margin-left: 3px !important; }
+.ml5   { margin-left: 5px !important; }
+.ml10  { margin-left: 10px !important; }
+.ml15  { margin-left: 15px !important; }
+.ml20  { margin-left: 20px !important; }
+.ml50  { margin-left: 50px !important; }
+.ml116 { margin-left: 116px !important; }
+.ml210 { margin-left: 210px !important; }
+.ml220 { margin-left: 220px !important; }
+.ml230 { margin-left: 230px !important; }
+
+.ml5em  { margin-left: 1.5em !important; }
+.ml18em { margin-left: 1.8em !important; }
+.ml20em { margin-left: 2em !important; }
+
+
+
+/* width setting */
+.wd50  { width: 50px; }
+.wd100 { width: 100px; }
+.wd160 { width: 160px; }
+.wd200 { width: 200px; }
+.wd260 { width: 260px; }
+.wd350 { width: 350px; }
+
+
+/* list style */
+ol.basic1,
+ol.basic2    { margin-bottom: 1em; line-height: 1.3; }
+ol.basic1 li { margin-left: 1.8em; margin-bottom: 0.5em; list-style: upper-roman; }
+ol.basic2 li { margin-left: 1.8em; margin-bottom: 0.5em; list-style: decimal; }
+
+ul.basic1    { margin-bottom: 1em; line-height: 1.3; }
+ul.basic1 li { margin-left: 1.8em; margin-bottom: 0.5em; list-style: disc; }
+
+
+/* inline style */
+.di { display: inline; }
+
+
+/* images border set */
+img.border { border: 1px solid #666; }
+
+
+/* strong */
+strong.basic1 { font-weight: bold; } /* 2009.4.9 post */
+
+
+/* icon set */
+.newCompany { position: absolute; top: 36px; left: 470px; z-index: 10; }
+.newSystem  { position: absolute; top: 36px; left: 555px; z-index: 10; }
+.newCaredo  { position: absolute; top: 36px; left: 642px; z-index: 10; }
+.newLinks   { position: absolute; top: 36px; left: 729px; z-index: 10; }
+
+* html .newCompany,
+* html .newSystem,
+* html .newCaredo,
+* html .newLinks { top: 30px; } /* for ie6 */
+
+*:first-child+html .newCompany,
+*:first-child+html .newSystem,
+*:first-child+html .newCaredo,
+*:first-child+html .newLinks { top: 23px; } /* for ie7 */
+
+
+.noimage  { background: none !important; }
+.noborder { border: none !important; }
+.styleClear { border: none !important; background: none !important; }
+
+.externalLink {
+	margin-right: 5px;
+	padding-right: 16px;
+	background: url(../img/icon_el01.gif) no-repeat right center;
+}
+span.externalLink {
+	padding-right: 16px;
+	background: url(../img/icon_el01.gif) no-repeat right center;
+} /* 2009.4.9 post */
+.mailLink {
+	margin-right: 5px;
+	padding-right: 16px;
+	background: url(../img/icon_mail01.gif) no-repeat right center;
+}
+.pdfLink {
+	padding: 0.2em 18px 0.2em 0;
+	background: url(../img/icon_pdf.gif) no-repeat right center;
+}
+.caution {
+	font-size: 130%;
+	font-weight: bold;
+	color: #FF0000;
+}
+p.catchO {
+	font-size: 130%;
+	font-weight: bold;
+	color: #FF6600;
+}
+p.catch {
+	font-size: 120%;
+	font-weight: bold;
+	color: #333;
+	margin-bottom:0!important;
+}
+p.catch02 {
+	font-size: 110%;
+	font-weight: bold;
+	color: #333;
+	padding-left: 5px;
+	border-left: 5px solid #FFCE84;
+	margin-left: 5px;
+}
+h2.dashLine {
+line-height: 1.4;
+	font-size: 110%;
+	font-weight: bold;
+	color: #333;
+	border-bottom: 1px dashed #FFAC30;
+	border-left: 10px solid #FFAC30;
+	padding-left: 5px;
+}
+.eventhead {
+line-height: 1;
+	font-size: 110%;
+	font-weight: bold;
+	color: #333;
+	border-left: 17px solid #FFAC30;
+	padding-left: 5px;
+	margin-bottom: 5px;
+}

@@ -1,0 +1,665 @@
+@charset "utf-8";
+
+/*=====================================================
+*
+*	module.css
+*	Since 2008.6.11
+*	Editor Norihiro Kamatani
+*
+*	Last Modified 2009.7.24
+*	Editor Norihiro Kamatani
+*
+*	1= header module
+*	2= global navigation module
+*	3= local navigation module
+*	4= supported navigation module
+*	5= footer module
+*	6= primary module
+*
+========================================================*/
+
+/*	1= header module
+-----------------------------------------------------*/
+div#header h1,
+div#header p#siteID { position: absolute; top: 14px; left: 0px; z-index:10; clear:both; }
+div#header p#kLogo2 { position: absolute; top: 10px; left: 300px; z-index:10; clear:both; }
+div#header p#sitemapNav {
+	position: absolute;
+	top: 13px;
+	z-index:10;
+	clear:both;
+	left: 811px;
+}
+div#header p#linksNav {
+	position: absolute;
+	top: 13px;
+	z-index:10;
+	clear:both;
+	left: 740px;
+}
+
+
+
+/*	2= global navigation module
+-----------------------------------------------------*/
+/* ::::: Image Replacement -------------------------*/
+ul#globalNav {
+	position: absolute;
+	top: 19px;
+	left: 178px;
+	z-index:5;
+	text-align: left;
+	clear:both; 
+} 
+ul#globalNav li { display: inline; float: left; }
+ul#globalNav li a { text-indent: -9999em; height: 63px; }
+
+/* indivdual replace */
+/* home */
+
+
+li#navHome a {
+	background: url(../img/bg_global-nav.jpg) no-repeat 0 0;
+	width: 186px;
+	display: block;
+}
+li#navHome a:hover	{ background: url(../img/bg_global-nav.jpg) no-repeat 0 -63px; }
+li#navHome a:active,
+li#navHome a.current,
+li#navHome a.parentsLink { background: url(../img/bg_global-nav.jpg) no-repeat 0 -126px; }
+#topPage li#navHome a,
+#topPage li#navHome a:hover { background: url(../img/bg_global-nav.jpg) no-repeat 0 -126px; }
+/* system */
+li#navSystem a {
+	background: url(../img/bg_global-nav.jpg) no-repeat -186px 0;
+	width: 140px;
+	display: block;
+}
+li#navSystem a:hover { background: url(../img/bg_global-nav.jpg) no-repeat -186px -63px; }
+li#navSystem a:active,
+li#navSystem a.current,
+li#navSystem a.parentsLink { background: url(../img/bg_global-nav.jpg) no-repeat -186px -126px; }
+
+
+
+/* company */
+li#navCompany a {
+	background: url(../img/bg_global-nav.jpg) no-repeat -326px 0;
+	width: 137px;
+	display: block;
+}
+li#navCompany a:hover   { background: url(../img/bg_global-nav.jpg) no-repeat -326px -63px; }
+li#navCompany a:active,
+li#navCompany a.current,
+li#navCompany a.parentsLink { background: url(../img/bg_global-nav.jpg) no-repeat -326px -126px; }
+
+/* caredo */
+li#navCaredo a {
+	background: url(../img/bg_global-nav.jpg) no-repeat -463px 0;
+	width: 118px;
+	display: block;
+}
+li#navCaredo a:hover   { background: url(../img/bg_global-nav.jpg) no-repeat -463px -63px; }
+li#navCaredo a:active,
+li#navCaredo a.current,
+li#navCaredo a.parentsLink { background: url(../img/bg_global-nav.jpg) no-repeat -463px -126px; }
+
+
+/* inquary */
+li#navInquiry a {
+	background: url(../img/bg_global-nav.jpg) no-repeat -581px 0;
+	width: 150px;
+	display: block;
+}
+li#navInquiry a:hover   { background: url(../img/bg_global-nav.jpg) no-repeat -581px -63px; }
+li#navInquiry a:active,
+li#navInquiry a.current,
+li#navInquiry a.parentsLink { background: url(../img/bg_global-nav.jpg) no-repeat -581px -126px; }
+
+/* for dropdown navigation */
+/* overwrite */
+ul#globalNav li li {
+	display: block;
+	float: none;
+	height: auto;
+}
+ul#globalNav li li a {
+	font-size:12px;
+	height: auto;
+	width: auto;
+	background: none;
+	text-indent: 0em;
+	color: black;
+	text-decoration: none;
+}
+ul#globalNav li li a:hover { background: none; }
+ul#globalNav li li a.current { background:#FF9933 !important; }
+
+/* dropdown style */
+ul.nav a { display: block; }
+ul.nav ul {
+	display: none;
+	position: absolute;
+	left: 0;
+	margin: 0;
+	padding: 0;
+}
+ul.nav li {
+	float: left;
+	position: relative;
+}
+
+ul.nav ul a { zoom: 1; } /* IE6/7 fix */
+ul.nav ul li { float: none; }
+ul.nav ul ul { top: 0 !important;}
+
+ul.nav ul { width: 180px; }
+ul.nav ul ul { left: 181px !important; }
+
+ul.nav a {}
+ul#globalNav li.hover a { background-color: #5E5A5A; }
+ul#globalNav ul { top: 63px; }
+ul#globalNav ul li a { background-color: #5E5A5A; }
+ul#globalNav ul li a.hover { background-color: #FF9933 !important; }
+ul#globalNav ul a {
+	padding:3px 3px 3px 7px;
+	border-bottom: 1px solid white;
+	border-right: none;
+	opacity: 0.9;
+	filter: alpha(opacity=90);
+	color: #FFF !important;
+}
+
+
+/*	3= local navigation module
+-----------------------------------------------------*/
+dl#localNav {
+	width: 212px;
+	margin-left: 3px;
+	text-align: left;
+	margin-bottom: 15px;
+}
+dl#localNav dd { padding: 5px; background: #f4f4f4; }
+dl#localNav dd li {
+	line-height: 1.3;
+}
+dl#localNav dd li a {
+	margin-bottom: 1px;
+	padding: 3px 5px 4px 21px;
+	vertical-align: bottom;
+	background: url(../img/marker_local-nav.gif) no-repeat 5px 7.8px;
+	color: #666;
+	display: block;
+	text-decoration: none;
+}
+
+dl#localNav dd li a.current,
+dl#localNav dd li a:hover {
+	background: #ffbc58 url(../img/marker_local-nav_on.gif) no-repeat 5px 7.8px;
+	color: #fff;
+	text-decoration: none;
+}
+/*---------------------------------------------------------------
+	localNav　入れ子　リストマーカー変更　更新日：2011 3/4
+---------------------------------------------------------------*/
+dl#localNav dd li li a {
+	margin-bottom: 1px;
+	padding: 3px 5px 4px 21px;
+	vertical-align: bottom;
+	background: url(../img/marker_local-nav02.gif) no-repeat 5px 7.8px;
+	color: #666;
+	display: block;
+	text-decoration: none;
+}
+dl#localNav dd li li a.current,
+dl#localNav dd li li a:hover {
+	background: #ffbc58 url(../img/marker_local-nav02_on.gif) no-repeat 5px 7.8px;
+	color: #fff;
+	text-decoration: none;
+}
+dl#localNav dd li li.lnavHead {
+	margin-bottom: 1px;
+	padding: 3px 5px 4px 0px;
+	color: #666;
+	text-decoration: none;
+	line-height: 1em;
+}
+
+/*---------------------------------------------------------------
+	end
+---------------------------------------------------------------*/
+
+/* second navigation */
+dl#localNav dd li ul   { margin-left: 10px; }
+
+/*return to home 更新20110305*/
+dl#localNav dd li#returnToHome a {
+	color: #666;
+	display: block;
+}
+dl#localNav dd li#returnToHome a:hover {
+	background: none;
+	color: #f46600;
+}
+
+
+/* return to home 更新20110305*/
+/*dl#localNav dd li#returnToHome a {
+	padding: 3px 5px 4px 21px;
+	vertical-align: bottom;
+	background: #fff url(../img/marker_return-home.gif) no-repeat 5px 7px;
+	color: #666;
+	display: block;
+	text-decoration: none;
+}
+dl#localNav dd li#returnToHome a:hover {
+	background: #fff url(../img/marker_return-home_on.gif) no-repeat 5px 7px;
+	color: #f46600;
+}*/
+
+
+/* return to home 旧*/
+/*dl#localNav dd li#returnToHome a {
+	padding: 3px 5px 4px 21px;
+	vertical-align: bottom;
+	background: #fff url(../img/marker_return-home.gif) no-repeat 5px 7px;
+	color: #666;
+	display: block;
+	text-decoration: none;
+}
+dl#localNav dd li#returnToHome a:hover {
+	background: #fff url(../img/marker_return-home_on.gif) no-repeat 5px 7px;
+	color: #f46600;
+}*/
+
+/* ::::: win ie6 bugfix -------------------------*/
+* html dl#localNav dd li li a { text-indent: -0.1em; }
+
+
+
+/*	4= supported navigation module
+-----------------------------------------------------*/
+/* ::::: topic path -------------------------*/
+ul#topicPath {
+	margin-bottom: 1em;
+	padding: 0 0 0.5em;
+}
+ul#topicPath li {
+	margin-right: 8px;
+	display: inline;
+	float: left;
+}
+ul#topicPath li a {
+	padding-right: 13px;
+	background: url(../img/marker_topicpath.gif) no-repeat right center;
+	color: #666;
+}
+ul#topicPath li a:hover { text-decoration: none; }
+
+
+/* ::::: return to top -------------------------*/
+p.returnToTop {
+	text-align: right;
+	margin-top: 1em;
+	margin-bottom: 0;
+}
+p.returnToTop a {
+	padding-left: 15px;
+	background: url(../img/marker_return-top.gif) no-repeat left center;
+	color: #666;
+	text-decoration: none;
+}
+p.returnToTop a:hover { color: #f46600; text-decoration: underline; }
+html>/**/body p.returnToTop { margin-bottom: 1em; } /* for not ie7 modern browsers only */
+
+
+/* ::::: pagination -------------------------*/
+div.pagination { padding: 5px; text-align: center; }
+div.pagination a {
+	border: 1px solid #ccc;
+	margin-right: 3px;
+	padding: 5px 8px;
+	text-decoration: none;
+}
+/**:first-child+html div.pagination a { zoom: 1; }*/
+div.pagination a:hover,
+div.pagination a:active,
+div.pagination a.current {
+	border: 1px solid #999;
+	background: url(../img/bg_pagination_on.gif) repeat-x 0 0;
+	color: #fff;
+}
+
+
+
+/*	5= footer module
+-----------------------------------------------------*/
+div#footerNav {
+	font-size: 13px;
+	margin-top: 10px;
+	text-align: center;
+}
+div#footer h2 {
+	margin-bottom: 0.2em;
+	font-weight: bold;
+	color: #fff;
+	font-size: 108%;
+}
+ul.subNav {
+	text-align: center;
+	width: 650px;
+}
+ul.subNav li {
+	margin-right: 5px;
+	display: inline;
+	float: left;
+	line-height: 1.2;
+}
+ul.subNav li a {
+	padding-right: 8px;
+	background: url(../img/marker_division.gif) no-repeat right center;
+	color: #fff;
+	text-decoration: none;
+}
+ul.subNav li a:hover { text-decoration: underline; }
+
+div#footer address {
+	margin-top: 9px; /* 2009.4.9 modified */
+	font-weight: bold;
+	color: #fff;
+	font-size: 13px;
+}
+
+/* ::::: win ie6 bugfix -------------------------*/
+div#footer p#login,
+div#footer p#pMark,
+div#footerNav,
+div#footerLogoBox { display: inline; }
+
+
+
+/*	6= login module
+-----------------------------------------------------*/
+
+.systemNav {
+	background: url(../img/system_bg.gif) repeat-y;
+	width: 200px;
+	margin-right: auto;
+	margin-left: auto;
+	padding: 10px 0px;
+	margin-bottom: 6px;
+	text-align: left;
+}
+
+#loginMain {
+	height: 119px;
+	width: 197px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 20px;
+	background: url(../img/login_bg.gif) no-repeat;
+	padding-top: 7px;
+}
+p.loginNav{
+	text-align: center;
+	margin-bottom: 9px;
+}
+
+p.loginNotice {
+	text-align: center;
+	margin-bottom: 8px;
+}
+.systemNav p	{
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+dl.accordionNav	{
+	padding: 0 5px;
+	margin-bottom: 8px;
+}
+
+dl.accordionNav ul {
+	padding-bottom: 35px;
+}
+dl.accordionNav dt	{
+	background: url(../img/dt_bg.gif) no-repeat;
+	padding-left: 25px;
+	border-style: none;
+	margin-right: auto;
+	margin-left: auto;
+	line-height: 2.3em;
+	font-size: 12px;
+}
+
+dl.accordionNav dd	{
+	padding: 5px 5px 5px 15px;
+}
+
+dl.accordionNav dd li	{
+	background: url(../img/icon.gif) no-repeat 0 7px;
+	padding: 0 0 0 10px;
+}
+dl.accordionNav dd li.systemUc {
+	background-image:none;
+	font-weight: bold;
+	margin-top: 8px;
+	margin-bottom: 3px;
+	padding: 0px;
+	color: #003366;
+}
+
+dl.cic dt,
+dl.ham dt,
+dl.tritrus dt {
+	height: 28px;
+	border-style: none;
+}
+
+dl.ham ul	{
+	background: url(../img/system_bg_ham.gif) no-repeat right bottom;
+}
+dl.cic ul	{
+	background: url(../img/system_bg_cic.gif) no-repeat right bottom;
+}
+dl.tritrus ul	{
+	background: url(../img/system_bg_tritrus.gif) no-repeat right bottom;
+}
+
+.banner {
+	width: 150px;
+	margin-right: auto;
+	margin-left: auto;
+	margin-bottom: 15px;
+	clear: both;
+}
+.banner2 {
+	clear: both;
+	text-align: center;
+	margin-bottom: 15px;
+}
+
+.bannerLine {
+	clear: both;
+	margin-bottom: 15px;
+	text-align: center;
+}
+/*トップPの推薦者の言葉Pバナー
+----------------------------------------------------------- */
+.recoNav {
+	margin-bottom:20px;
+}
+/*トップPの新着情報
+----------------------------------------------------------- */
+
+#main {
+	width:600px;
+	height:30px;
+	background: url(../img/news_h2_bg.gif) no-repeat;
+	position: relative;
+} 
+#main h2{
+	font-size:14px;
+	margin-left: 17px;
+	line-height: 2.2em;
+} 
+#main #btnNews {  
+    text-indent:-9998px;  
+}  
+#main #btnNews a {  
+    background:url(../img/news_bn.gif) no-repeat;  
+    position:absolute;  
+    top:5px;  
+    right:5px;  
+    display:block;  
+    width:121px;  
+    height:21px;  
+} 
+#main #btnNews a:hover	{ background: url(../img/news_bn_on.gif) no-repeat;
+    display:block;  
+    width:121px;  
+    height:21px;  
+	 }
+
+div#pickupnews {
+	padding: 5px 15px 10px;
+	color: #000;
+	margin:-1px 0px 15px;
+	border-top: none;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+	}
+#pickupnews ul {
+	border-style:none;
+	display:block;
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin:0;
+	padding:0;
+	width:auto;
+}
+#pickupnews li {
+	border-style:none;
+	display:block;
+	font-size:90%;
+	list-style-image:none;
+	list-style-position:outside;
+	list-style-type:none;
+	margin:0.3em 0 0;
+	padding:0 0 0 20px;
+	width:auto;
+}
+
+
+p.index-col1 {
+	float:left;
+	line-height:125%;
+	margin:0;
+	padding:0;
+	width:100px;
+}
+p.index-col2 {
+	background:transparent url(../img/arrow01.gif) no-repeat scroll 4px 2px;
+	float:left;
+	line-height:125%;
+	margin:0 0 8px;
+	padding:0 0 0 18px;
+	width:430px;
+}
+.clearleft {
+	clear:left;
+}
+/**html div#news dl dd {
+	background: url(../img/arrow01.gif) no-repeat left 2px;}*/
+	
+/* -----------------------------------------------------------
+	#newsData
+		新着情報
+----------------------------------------------------------- */
+dl#newsData {
+	padding: 5px 15px 10px;
+	color: #000;
+	margin:-1px 0px 15px;
+	border-top: none;
+	border-right: 1px solid #CCCCCC;
+	border-bottom: 1px solid #CCCCCC;
+	border-left: 1px solid #CCCCCC;
+}
+dl#newsData dt,
+dl#newsData dd {
+	float:left;
+	display:inline;
+}
+dl#newsData dt{
+	width:100px;
+	background: url(../img/top/data_icon15px.gif) no-repeat left center;
+	padding-left: 20px;
+	margin-bottom: 5px;
+}
+dl#newsData dd{
+	width:430px;
+	margin-left:10px;
+}
+dl#newsData dd h3{
+	font-size:105%;
+	font-weight:bold;
+	margin-bottom:5px;
+}
+dl#newsData dd h3 a{
+	text-decoration:none;
+	color:#333333;
+}
+dl#newsData dd.separated {
+	width:100%;
+	height:1px;
+	font-size:0;
+	background: url(../img/top/separated.gif) repeat-x left bottom;
+	margin:5px 0 8px;
+	padding:0;
+}
+
+	
+	
+/*トップPの主力コンテンツ紹介
+----------------------------------------------------------- */
+div.topSection {
+	background-color:#fff;
+	width: 600px;
+	margin-left: 0px;
+	margin-bottom: 20px;
+}
+div.topSection h2{
+	margin-bottom:10px;
+}
+div.topNav {
+	width:282px;
+}
+
+div.topNav h2 {
+	margin-bottom:15px;
+}
+
+div.topNav h3 {
+	margin-bottom:3px;
+	font-size: 110%;
+	font-weight: bold;
+	color: #F17830;
+	margin-left: 20px;
+}
+div.topNav p{
+	margin-left: 20px;
+	line-height: 1.5em;
+}
+p.shousai {
+	float:right;
+	font-size:11px;
+	background-image: url(../img/arrow01.gif);
+	background-repeat: no-repeat;
+	width: 65px;
+	margin: 5px 0 0 15px;;
+	padding-left: 15px;
+	line-height: 1.2em!important;
+	
+}

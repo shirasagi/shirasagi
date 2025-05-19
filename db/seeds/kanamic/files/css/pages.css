@@ -1,0 +1,1283 @@
+@charset "utf-8";
+
+/*=====================================================
+*
+*	pages css
+*	Since 2008.6.17
+*	Editor Norihiro Kamatani
+*	
+*	Modified 2009.4.13
+*	Editor Norihiro Kamatani
+*
+*	 1= heading background
+*	 2= common block
+*	 3= top page
+*	 4= topics page
+*	 5= company page
+*	 6= system page
+*	 7= caredo page
+*	 8= link page
+*	 9= sitemap page
+*	10= topics page
+*	11= form page
+*	12= help page
+*      = FLASHȂ[U[pOC
+========================================================*/
+
+/*	1= heading background
+-----------------------------------------------------*/
+
+div#headingBg {
+	height: 88px;
+	margin-top:14px;
+	margin-bottom:10px;
+	margin-right: auto;
+	margin-left: auto;
+}
+h1 {
+	position: absolute;
+}
+
+div.titleBg {
+	width:919px;
+	margin-right: auto;
+	margin-left: auto;
+	height: 89px;
+	position:relative;
+}
+* html div.titleBg {
+	height: 88px;
+}
+
+#company div.titleBg { 	
+background: url(../img/bg_h1_company.jpg) no-repeat 0 0 !important; 
+}
+#company div#headingBg {background: #d2f4fe !important;
+}
+#company h1 { top: 40px; left: 40px; }
+
+/*#system div#headingBg { background: url(../img/bg_h1_system.jpg) no-repeat 0 0; }
+#system h1 img { position: absolute; top: 44px; left: 30px; }
+#system h1 img.longTitle { top: 10px; }*/
+
+#system div.titleBg { background: url(../img/bg_h1_system.jpg) no-repeat 0 0 !important;
+}
+#system div#headingBg { background: #c5e7ff !important;
+}
+
+
+#system h1  { position:absolute; top: 40px; left: 40px; }
+#system h1 .longTitle {  position:absolute; top: -30px; left:10px; }
+
+
+
+
+/*#caredo div#headingBg { background: url(../img/bg_h1_caredo.jpg) no-repeat 0 0; }
+#caredo h1 { top: 44px; left: 30px; }*/
+
+#caredo div.titleBg { 	
+background: url(../img/bg_h1_caredo.jpg) no-repeat 0 0 !important; 
+}
+#caredo div#headingBg { 	background: #ffcb77 !important;
+}
+#caredo h1 { top: 40px; left: 40px; }
+
+
+/*#links div#headingBg,
+#sitemap div#headingBg,
+#topics div#headingBg,
+#help div#headingBg { background: url(../img/bg_h1_1st01.jpg) no-repeat 0 0; }
+#links h1,
+#sitemap h1,
+#topics h1,
+#help h1 { top: 44px; left: 30px; }*/
+
+
+#links div.titleBg,
+#sitemap div.titleBg,
+#topics div.titleBg,
+#help div.titleBg { background: url(../img/bg_h1_1st01.jpg) no-repeat 0 0 !important;  }
+#links div#headingBg,
+#sitemap div#headingBg,
+#topics div#headingBg,
+#help div#headingBg { 	background: #edb5b5 !important;
+}
+#links h1,
+#sitemap h1,
+#topics h1,
+#help h1 { top: 40px; left: 40px; }
+
+
+
+
+
+
+#inquiry div.titleBg { background: url(../img/bg_h1_inquiry.jpg) no-repeat 0 0; }
+#inquiry div#headingBg { 	background: #c3ecaa !important;}
+#inquiry h1 { top: 40px; left: 40px; }
+
+#entry div.titleBg { background: url(../img/bg_h1_inquiry.jpg) no-repeat 0 0; }
+#entry div#headingBg { 	background: #c3ecaa !important;}
+#entry h1 { top: 40px; left: 40px; }
+
+#secret div.titleBg { background: url(../img/bg_h1_1st01.jpg) no-repeat 0 0; }
+#secret div#headingBg { 	background: #edb5b5 !important;}
+#secret h1 { top: 40px; left: 40px; }
+
+
+#events div.titleBg { 	
+background: url(../img/bg_h1_event.jpg) no-repeat 0 0 !important; 
+}
+#events div#headingBg {background: #fef166 !important;
+}
+#events h1 { top: 40px; left: 40px; }
+
+
+
+/*	2= common block
+-----------------------------------------------------*/
+div.section     { margin-bottom: 3em; }
+div.section h2  { margin-bottom: 1em; }
+div.section p {
+	line-height: 1.4;
+	margin-bottom: 1em;
+	text-align: justify;
+}
+div.pd20p p {
+	padding:0 20px 0;
+}
+h3.heading1 {
+	margin-bottom: 0.8em;
+	padding: 0.2em 0 0.2em 8px;
+	border-bottom: 1px solid #f60;
+	border-left: 5px solid #f60;
+	background: #fff0d9;
+	font-size: 108%;
+	font-weight: bold;
+}
+
+h4.heading1 {
+	margin-bottom: 0.8em;
+	padding: 0.2em 8px;
+	background: #fff0d9;
+	font-size: 108%;
+	font-weight: bold;
+}
+h4.heading2 {
+	margin-bottom: 0.8em;
+	font-size: 108%;
+	font-weight: bold;
+}
+
+
+/* no-plugin disable-javascript */
+div.noFlashNoScript {
+width:919px;
+/*background:transparent;*/
+	/*margin-bottom: 0.5em;*/
+	/*padding: 5px;*/
+}
+div.noFlashNoScript dl {
+	padding: 10px;
+	border: 1px solid #ddd;
+	background: #eee;
+	text-align: left;
+}
+div.noFlashNoScript dt {
+	margin-bottom: 0.5em;
+	font-size: 108%;
+	font-weight: bold;
+}
+div.noFlashNoScript dd li { /*display: inline; */margin-left: 5px; }
+div.noFlashNoScript dd    { line-height: 1.4; }
+
+div.formLink {
+	background: url(../img/inquiry/form_link_bg.jpg) no-repeat bottom;
+	padding-bottom: 10px;
+}
+div.formLink h2  {
+	margin-bottom: 1em;
+	background: url(../img/inquiry/form_link_h2.gif) no-repeat;
+	height: 30px;
+	width: 570px;
+	line-height: 2.2em;
+	font-size: 14px;
+	font-weight: bold;
+	padding-left: 30px;
+}
+div.formLink p {
+	line-height: 1.4;
+	margin-bottom: 1em;
+	text-align: justify;
+	padding-left: 20px;
+	padding-right: 20px;
+}
+
+
+div.formLink ul  {
+	margin:10px 50px 0;}
+
+div.formLink li.formTel {float:left;}
+
+div.formLink li.formOnline  {float:right;}
+
+div.demo ul  {
+	margin:10px 50px 10px;}
+
+div.demo li.FlipIn {float:left;}
+
+div.demo li.FlipOut  {float:right;}
+
+div.demo p  {
+	font-size: 80%;
+}
+
+
+
+/*	3= top page
+-----------------------------------------------------*/
+div.topsideMessage {
+	border: 1px solid #333;
+	text-align: left;
+	margin-right: 10px;
+	margin-left: 10px;
+}
+div.topsideMessage p {
+	font-size: 12px;
+	padding: 5px;
+}
+div.topsideMessage p.midashi{
+	background: #CCCCCC;
+	font-weight: bold;
+	text-align:center;
+}
+/* no-plugin disable-javascript */
+#topPage div.noJavascript {
+	padding: 5px 30px;
+	margin-right: auto;
+	margin-left: auto;
+	background: #EEEEEE;
+	width: 630px;
+	text-align: left;
+	margin-top: 60px;
+	border: 1px solid #FF0000;
+}
+#topPage div.noJavascript strong {
+	font-weight: bold;
+	font-size: 120%;
+	line-height: 1.5em;
+}
+
+#topPage div.noFlashNoScript {
+	margin-right: auto;
+	margin-left: auto;
+	width: 650px;
+	margin-top: 10px;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+
+div.hidden {
+visibility:hidden;
+}
+
+div.privacyBox {
+	width:260px;
+	float:right;
+}
+span.topnewsCp {
+	float:left;
+	margin:0 10px 0 0px;
+	padding-bottom:20px;
+}
+span.aboutCpro {
+	font-size:90%;
+}
+span.aboutCpro strong {
+	font-weight: bold;
+}
+
+
+table.impactnewsTable {
+	margin-bottom: 20px;
+	margin-top: 7px;
+	border: 2px solid #f60;
+	width:100%;
+}
+table.impactnewsTable th,
+table.impactnewsTable td {
+	padding: 0.5em 5px;
+	text-align: left;
+	line-height: 1.2;
+}
+table.impactnewsTable th      { 
+	background-color: #f90 ;
+	font-weight: bold; 
+	font-size:100%;
+    border-right: 2px solid #f60;
+	padding-left:10px; 
+	}
+table.impactnewsTable td.tittle      { 
+	font-size:140%;
+	font-weight:bold;
+	padding-left:10px;
+}
+table.vacationTable {
+	margin-bottom: 20px;
+	border: 2px solid rgba(4,162,249,1.00);
+	border-radius: 8px;
+	width:100%;
+}
+table.vacationTable th,
+table.vacationTable td {
+	font-weight:bold;
+	padding: 0.5em 5px;
+	text-align: left;
+	line-height: 1.2;
+}
+table.vacationTable th      { 
+	background-color: rgba(98,243,250,1.00) ;
+	font-weight: bold; 
+	font-size:100%;
+    border-right: 2px solid rgba(4,162,249,1.00);
+	border-top-left-radius: 8px;
+	border-bottom-left-radius: 8px;
+	padding-left:10px; 
+	}
+table.vacation td.tittle      { 
+	font-size:140%;
+	font-weight:bold;
+	padding-left:10px;
+}
+
+
+/*	4= topics page
+-----------------------------------------------------*/
+
+
+/*	5= company page
+-----------------------------------------------------*/
+p.companyHead {
+	height:23px;
+	background: url(../../company/img/h2_left_o.jpg) no-repeat left center;
+	padding-left: 30px;
+	font-size: 16px;
+	font-weight: bold;
+	padding-top: 5px;
+}
+/* ::::: concept -------------------------*/
+div#treeSection {
+	width: 600px;
+	height:400px;
+	background: url(../../company/img/bg_concept01.jpg) no-repeat 0 0;
+	overflow: hidden;
+	position: relative;
+}
+div#treeSection p { color: #eee; }
+div#treeSection div { position: absolute; bottom: 0; left: 10px; width: 380px; font-size:15px; }
+
+
+/* ::::: outline -------------------------*/
+table.companyData {
+	margin-bottom: 0.5em;
+	border-collapse: separate;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+	width: 100%;
+}
+table.companyData th,
+table.companyData td {
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	padding: 0.5em 5px;
+	text-align: left;
+	line-height: 1.2;
+}
+table.companyData th      { background: url(../img/bg_th01.gif) repeat-x 0 0; font-weight: normal; }
+table.companyData td      { /*background: url(../img/bg_td01.gif) repeat-x 0 0;*/ }
+table.companyData caption { display: none; }
+
+dl.companyData dt   {
+	width: 10em;
+	float: left;
+	clear: left;
+	line-height: 1.3;
+}
+dl.companyData dd   { margin-bottom: 0.2em; margin-left: 10em; line-height: 1.3; }
+dl.companyData dd p { margin-bottom: 0.2em ; }
+* html dl.companyData dd { height: 1%; } /* for win ie6 */
+dt.ls1  { letter-spacing: 1em; }
+dt.ls05 { letter-spacing: 0.5em; }
+
+
+/* ::::: recruit -------------------------*/
+ul.collageList li { margin-right: 0.5em; display: inline; text-align: justify; }
+
+
+/* ::::: privacy -------------------------*/
+h3.privacyHeading {
+	margin-bottom: 0.5em;
+	padding: 0.2em 5px;
+	background: #eee;
+	border: 1px solid #ddd;
+	color: #555;
+	font-size: 108%;
+} /* 2008.12.22 modified */
+
+/* ::::: advisory -------------------------*/
+.advisorySection {
+} 
+.advisorySection h2,
+.advisorySection h3{
+	margin-bottom:12px;
+} 
+.advisorySection p{
+	margin:0 1.5em 10px!important;
+} 
+div.adMember {
+	background:url(../../company/img/advisory/member_bg.jpg) no-repeat bottom;
+	margin-bottom:30px;
+	padding-bottom:7px;
+}
+div.adMember dl{margin:0 30px 10px;}
+div.adMember dl dt{
+	margin-bottom:5px;
+	font-weight:bold;
+	font-size:110%;
+}
+div.adMember dl dd{}
+div.member {
+	float:right;
+	width:470px;
+}
+/*	6= system page
+-----------------------------------------------------*/
+/* ::::: concept -------------------------*/
+span.dColor { color: #f00; }
+span.gColor { color: #00f; }
+
+
+/* ::::: lineup -------------------------*/
+div.functionSection p {
+	margin: 0 10px 1em;
+	padding: 0.5em 10px;
+	background: #fff0d9;
+	border: 1px solid #ffbc58;
+}
+ul.capture li { margin-right: 14px;	display: inline; float: left; }
+ul.capture p  { font-weight: bold; line-height: 1.3; text-align: center; }
+
+div.functionCatalogBox {
+	padding: 0.3em 10px;
+	border: 3px solid #ccc;
+	background: #f4f4f4;
+} /* 2008.12.22 modified */
+div.functionCatalogBox dt { margin-bottom: 0.3em; } /* 2008.12.22 modified */
+div.functionCatalogBox dd { margin-bottom: 0.5em; margin-left: 10px; line-height: 1.3; } /* 2008.12.22 modified */
+div.functionCatalogBox dl.leftColumn {
+	width: 280px;
+	float: left;
+} /* 2008.12.22 modified */
+div.functionCatalogBox dl.rightColumn { margin-left: 290px; } /* 2008.12.22 modified */
+
+div.goodPoint {
+	width:600px;
+	height:53px;
+}
+div.pointBg01 { background:url(../../system/img/lineup/goodpoint_01.gif) left no-repeat;}
+div.pointBg02 { background:url(../../system/img/lineup/goodpoint_02.gif) left no-repeat;}
+div.pointBg03 { background:url(../../system/img/lineup/goodpoint_03.gif) left no-repeat;}
+div.pointBg04 { background:url(../../system/img/lineup/goodpoint_04.gif) left no-repeat;}
+div.pointBg05 { background:url(../../system/img/lineup/goodpoint_05.gif) left no-repeat;}
+div.goodPoint h3 {
+	padding-left:80px;
+	font-size:18px;
+	font-weight:bold;
+	line-height:1.3em;
+	color:#555555;
+}
+div.goodPoint h3.line1 { padding-top:16px;}
+div.goodPoint h3.line2 { padding-top:4px;}
+
+
+/* ::::: spec -------------------------*/
+/*dl.specList dt {
+	margin-bottom: 0.4em;
+	width: 8.5em;
+	float: left;
+	clear: left;
+}
+dl.specList dd   { margin-bottom: 0.4em; padding-left: 8.5em; border-bottom: 1px solid #bfbfbf; }*/
+dl.specList dt { margin-bottom: 0.3em; font-weight: bold; font-size: 108%; }
+dl.specList dd {
+	margin-bottom: 0.8em;
+	padding-bottom: 0.2em;
+	padding-left: 25px;
+	border-bottom: 1px solid #bfbfbf;
+}
+
+
+table.priceData {
+	margin-bottom: 1em;
+	border-collapse: separate;
+	border-bottom: 1px solid #999;
+	border-left: 1px solid #999;
+	width: 100%;
+	font-size: 12px;
+}
+table.priceData th,
+table.priceData td {
+	border-top: 1px solid #999;
+	border-right: 1px solid #999;
+	padding: 0.5em 5px;
+	line-height: 1.2;
+}
+table.priceData th {
+	background: url(../img/bg_th_price-head.gif) repeat-x 0 0;
+	text-align: center;
+	color: #fff;
+	vertical-align: middle;
+}
+table.priceData th.cicHead   { background: url(../img/bg_th_cic01.gif) repeat-x 0 0; }
+table.priceData th.hamHead   { background: url(../img/bg_th_ham01.gif) repeat-x 0 0; }
+table.priceData th.tritrusHead   { background: url(../img/bg_th_tritrus01.gif) repeat-x 0 0; }
+table.priceData th.etcHead   { background: url(../img/bg_th_etc01.gif) repeat-x 0 0; }
+table.priceData td span      { font-size: 77%; }
+table.priceData caption      { position: realitive; }
+table.priceData caption span { position: absolute; right: 250px; }
+
+
+/* ::::: result -------------------------*/
+table.resultData {
+	margin-bottom: 0.5em;
+	border-collapse: separate;
+	border-bottom: 1px solid #aaa;
+	border-left: 1px solid #aaa;
+	width: 100%;
+}
+table.resultData th,
+table.resultData td {
+	border-top: 1px solid #aaa;
+	border-right: 1px solid #aaa;
+	padding: 0.5em 5px;
+	text-align: left;
+	line-height: 1.2;
+}
+table.resultData thead th {
+	background: url(../img/bg_th02.gif) repeat-x 0 0;
+	text-align: center;
+	color: #333;
+}
+table.resultData tbody th {
+	background: url(../img/bg_th01.gif) repeat-x 0 0;
+	font-weight: normal;
+	color: #333;
+}
+/*table.resultData td       { background: url(../img/bg_td01.gif) repeat-x 0 0; }*/
+table.resultData caption  { display: none; }
+table.resultData h2 { margin-bottom: 0.3em; font-weight: bold; font-size: 108%; }
+
+
+/* ::::: recommend -------------------------*/
+div.recommendSection01 {
+}
+div.recommendSection dt { margin-bottom: 0.5em; font-size: 108%; font-weight: bold; }
+div.recommendNew {
+	background: url(../../system/img/recommend/new_bg.jpg) no-repeat;
+}
+div.recoOld {
+	background: url(../../system/img/recommend/reco_bg.jpg) no-repeat;
+	}
+div.recommendNew h2 {
+	padding-top: 4px;
+	padding-left: 160px;
+}
+div.recommendNew img.recoNewphoto {
+	float:left;
+	margin:25px 30px;
+}
+div.recoNewsection {
+	width: 400px;
+	float: right;
+	margin-top: 30px;
+	margin-right: 30px;
+	display:inline;
+}
+
+div.recoNewlink {
+	background: #fcfcfc;
+	padding: 10px 20px 3px;
+	margin-bottom: 20px;
+}
+div.recoNewlink02 {
+	background: #fcfcfc;
+	padding: 10px 10px 3px;
+}
+p.recoNewlink span {
+}
+div.recoL {
+	width: 260px;
+	background: #f6f3dd;
+	padding: 10px;
+	float: left;
+	margin-left: 10px;
+	display: inline; 
+}
+div.recoR {
+	width: 260px;
+	background: #f6f3dd;
+	padding: 10px;
+	float: right;
+	margin-right: 10px;
+	display: inline; 
+}
+img.recosecId {
+	margin-top:60px;
+}
+
+div.recoId {
+	width: 225px;
+}
+
+div.recoSection {
+	width: 360px;
+}
+div.recoArea {
+	padding:0 20px 0;
+	border-right: 1px solid #a5a5a5;
+	border-left: 1px solid #a5a5a5;
+}
+
+
+/* ^upCSS */
+@media projection, screen { /* Use class for showing/hiding tab content, so that visibility can be better controlled in different media types... */
+    .ui-tabs-hide {
+        display: none;
+    }
+}
+
+/* Hide useless elements in print layouts... */
+@media print {
+    .ui-tabs-nav {
+        display: none;
+    }
+}
+
+/* Skin */
+div#container-1 {
+	width:600px;
+}
+.ui-tabs-nav, .ui-tabs-panel {
+    font-size: 12px;
+}
+.ui-tabs-nav {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 4px;
+}
+.ui-tabs-nav:after { /* clearing without presentational markup, IE gets extra treatment */
+    display: block;
+    clear: both;
+    content: " ";
+}
+.ui-tabs-nav li {
+    float: left;
+    margin: 0 5px 5px 0;
+}
+.ui-tabs-nav a, .ui-tabs-nav a span {
+	width:240px;
+	height:41px;
+    display: block;
+    background: url(../../system/img/kanamic.gif) no-repeat;
+	line-height:2.7em;
+	font-size: 16px;
+}
+.ui-tabs-nav a {
+    margin: 1px 0 10px; /* position: relative makes opacity fail for disabled tab in IE */
+    padding-left: 0;
+    color: #999999;
+    font-weight: bold;
+    text-align: center;
+    text-decoration: none;
+    white-space: nowrap; /* required in IE 6 */    
+    outline: 0; /* prevent dotted border in Firefox */
+}
+.ui-tabs-nav .ui-tabs-selected a {
+    position: relative;
+    top: 1px;
+    z-index: 2;
+    margin-top: 0;
+    color: #000;
+}
+.ui-tabs-nav a span {
+    width: 100%; /* IE 6 treats width as min-width */
+	padding-right: 0;
+}
+*>.ui-tabs-nav a span { /* hide from IE 6 */
+    width: auto;
+    height: auto;
+}
+.ui-tabs-nav .ui-tabs-selected a span {
+    padding-bottom: 0;
+}
+
+.ui-tabs-nav .ui-tabs-selected a span,
+.ui-tabs-nav a:hover span,
+.ui-tabs-nav a:focus span,
+.ui-tabs-nav a:active span {
+
+    height: 41px; /* IE 6 treats height as min-height */
+   
+    background-position: 0 -41px;
+}
+.ui-tabs-nav a span,
+.ui-tabs-nav .ui-tabs-disabled a:hover span,
+.ui-tabs-nav .ui-tabs-disabled a:focus span,
+.ui-tabs-nav .ui-tabs-disabled a:active span {
+
+    height: 41px; /* IE 6 treats height as min-height */
+   
+    background-position: 0 0;
+}
+.ui-tabs-nav .ui-tabs-selected a:link, .ui-tabs-nav .ui-tabs-selected a:visited, .ui-tabs-nav .ui-tabs-disabled a:link, .ui-tabs-nav .ui-tabs-disabled a:visited { /* @ Opera, use pseudo classes otherwise it confuses cursor... */
+    cursor: text;
+}
+.ui-tabs-nav a:hover, .ui-tabs-nav a:focus, .ui-tabs-nav a:active,
+.ui-tabs-nav .ui-tabs-deselectable a:hover, .ui-tabs-nav .ui-tabs-deselectable a:focus, .ui-tabs-nav .ui-tabs-deselectable a:active { /* @ Opera, we need to be explicit again here now... */
+    cursor: pointer;
+}
+.ui-tabs-disabled {
+    opacity: .4;
+    filter: alpha(opacity=40);
+}
+.ui-tabs-panel {
+	background: #fff;
+	border: 1px solid #999999;
+}
+.ui-tabs-loading em {
+    padding: 0 0 0 20px;
+    background: url(loading.gif) no-repeat 0 50%;
+}
+
+/* Additional IE specific bug fixes... */
+* html .ui-tabs-nav { /* auto clear, @ IE 6 & IE 7 Quirks Mode */
+    display: inline-block;
+}
+*:first-child+html .ui-tabs-nav  { /* @ IE 7 Standards Mode - do not group selectors, otherwise IE 6 will ignore complete rule (because of the unknown + combinator)... */
+    display: inline-block;
+}
+
+
+.ui-tabs-nav a, .ui-tabs-nav a span.systemK {
+	color: #FF7E05;
+}
+.ui-tabs-nav a, .ui-tabs-nav a span.noSystemK {
+	color: #0099FF;
+}
+div#container-1 ul {
+	margin-left:52px;
+}
+/*	7= caredo page
+-----------------------------------------------------*/
+/* ::::: common -------------------------*/
+div#caredoIntro1 { margin-bottom: 1em; background: #fff; }
+div#caredoProf1  { margin-bottom: 1em; padding: 3px; background: #f4f4f4; }
+/*div#caredoIntro1 { border: 1px solid #f60; }*/
+div#caredoProf1  { border: 1px solid #3399FF; }
+
+div#caredoIntro1 h2,
+div#caredoProf1 h3 {
+	margin-bottom: 0.5em;
+	padding: 0.3em 5px;
+	font-weight: bold;
+	font-size: 108%;
+	color: #fff;
+}
+div#caredoIntro1 h2 { background: #f60; }
+div#caredoProf1 h3  { background: #3399FF; }
+
+
+/* ::::: top -------------------------*/
+div#newEntry  { padding: 3px; border: 1px solid #999; background: #f4f4f4; }
+p.supportedBy { font-weight: bold; color: #f60; }
+div.entryBox     { padding: 5px 5px 0; } /* 2008.12.22 modified */
+div#newEntry h3,
+div.entryBox h3  {
+	margin-bottom: 0.3em;
+	font-size: 124%;
+	font-weight: bold;
+	line-height: 1.3;
+} /* 2008.12.22 modified */
+div.entryBox li  {
+	padding-left: 11px;
+	background: url(../img/marker_arrow01.gif) no-repeat 0 0.4em;
+	line-height: 1.4;
+} /* 2008.12.22 modified */
+
+
+
+/* ::::: r-t_talk -------------------------*/
+/* zadankai */
+div#profile { padding: 10px; background: #ccc; }
+div#profile2 { padding: 10px; background: #e5e5e5; } /* 2009.4.13 post */
+div#profile dd,
+div#profile2 dd { line-height: 1.3; text-align: justify; }
+
+div#iryoColumn { border: 1px solid #f60; }
+div#iryoColumn h3 {
+	margin-bottom: 0.8em;
+	padding: 0.2em 8px;
+	background: #f60;
+	color: #fff;
+	font-size: 108%;
+	font-weight: bold;
+}
+div#iryoColumn p { margin: 0 10px 1em; }
+
+span.all,
+span.abe,
+span.suga,
+span.irahara,
+span.okazima, 
+span.tutihashi { margin-right: 1em; font-size: 124%; font-weight: bold; }
+span.suga,
+span.pe1 { color: #090; }
+span.tutihashi,
+span.pe2 { color: #63f; }
+span.irahara,
+span.pe3 { color: #cf6529; }
+span.abe,
+span.pe4 { color: #cc0a0a; }
+span.okazima,
+span.pe4 { color: #d92ba8; } /* 2009.4.13 post span.pe1 - pe4 */
+
+
+/* ::::: interview -------------------------*/
+/* houkatsu */
+div#houkatsuIntro {
+	padding: 10px 10px 0;
+	background: url(../../caredo/interview/img/houkatsu-theme/bg_heading_houkatsu.gif) no-repeat 0 0;
+}
+
+/* kaigo no asu wo kangaeru */
+p.interviewer { color: #39f; }
+
+/* ::::: k-front -------------------------*/
+div.imgArea { border:1px solid #666; }
+
+
+/* ::::: useful -------------------------*/
+h3.bookTitle {
+	line-height: 1.4;
+	font-weight: bold;
+	font-size: 124%;
+}
+span.bookTitleAccent {
+	padding: 0.1em 5px;
+	background: #309;
+	color: #fff;
+	vertical-align: bottom;
+}
+	
+dl.bookData dt {
+	margin-bottom: 0.2em;
+	font-weight: bold;
+	width: 3.5em;
+	line-height: 1.3;
+	float: left;
+	clear: left;
+}
+dl.bookData dd { margin-bottom: 0.2em; margin-left: 4em; line-height: 1.3; }
+div.bookContentBox {
+	padding: 0.3em 5px;
+	border: 1px solid #ffbc58;
+	background: #fff0d9;
+} /* 2008.12.22 modified */
+
+div.bookNavi{
+	padding:5px;
+	background: #FFF3D0;
+	border: 1px solid #FF9900;
+}
+div.bookNavi ul li{
+	margin-bottom:8px;
+}
+/*	8= link page
+-----------------------------------------------------*/
+div#kaigoLinkSection dt {
+	width: 280px;
+	height: 50px;
+	line-height: 50px;
+	float: left;
+	clear: left;
+}
+div#kaigoLinkSection dd { margin-left: 280px; line-height: 50px; }
+div#kaigoLinkSection li { clear: left; border-bottom: 1px dotted #ccc; }
+div.lifeLinkSectionLeft { margin-bottom: 1em; width: 280px; float: left; }
+div.lifeLinkSectionRight { margin-bottom: 1em; margin-left: 300px; }
+
+div#lifeLinkSection h3 {
+	margin-bottom: 0.8em;
+	padding: 0.2em 0 0.2em 8px;
+	border-bottom: 1px solid #f60;
+	border-left: 5px solid #f60;
+	background: #fff0d9;
+	font-size: 108%;
+	font-weight: bold;
+}
+div.lifeLinkSectionLeft h4,
+div.lifeLinkSectionRight h4 { margin-bottom: 0.3em; font-weight: bold; }
+div#lifeLinkSection ul,
+div.lifeLinkSectionLeft ul,
+div.lifeLinkSectionRight ul { margin-left: 10px; line-height: 1.3; }
+
+
+
+/*	9= sitemap page
+-----------------------------------------------------*/
+#sitemap div#primary       { background: url(../img/bg_sitemap.gif) no-repeat right bottom; }
+div.sitemapSection         { width: 280px; float: left; }
+div.sitemapSectionRight    { margin-left: 300px; }
+div.sitemapSection h2,
+div.sitemapSectionRight h2 { margin-bottom: 0.3em; font-size: 108%; font-weight: bold; }
+
+ul.tree    { margin-bottom: 1em; }
+ul.tree li {
+	margin-left: 0.5em;
+	padding-bottom: 0.3em;
+	padding-left: 10px;
+	background: url(../img/bg_tree.gif) no-repeat 0 0;
+}
+ul.tree li.treeEnd { background: url(../img/bg_tree_end.gif) no-repeat 0 -13px; }
+
+
+
+/*	10= topics page
+-----------------------------------------------------*/
+div.topicSection { border-bottom: 1px dotted #ccc; }
+div.topicSection h3 {
+	font-size: 128%;
+	font-weight: bold;
+	margin-bottom: 0.3em;
+}
+div.topicSection dt   { font-size: 108%; }
+div.topicSection dd   { margin-bottom: 1em; line-height: 1.3; }
+div.topicSection dd p { margin-bottom: 0.3em; }
+div#mitaka { padding: 0.5em 5px; border: 5px solid #c8ab7b; }
+
+div#trophy {
+	width: 252px;
+	float: right;
+	margin-left: 30px;
+	text-align: center;
+}
+div#certificate { width: 242px; text-align: center; }
+
+
+
+/*	11= form page
+-----------------------------------------------------*/
+/* ::::: inquiry and recruit -------------------------*/
+div.inquiryScrollBox {
+	padding: 0.5em 10px;
+	height: 160px;
+	overflow: auto;
+	border: 1px solid #ccc;
+}
+div.inquiryScrollBox h3 { margin-bottom: 0.5em; }
+div.inquiryScrollBox ul { margin-bottom: 0.3em; margin-left: 1.5em; }
+div.inquiryScrollBox ol { margin-bottom: 0.3em; margin-left: 1.8em; }
+div.inquiryScrollBox ul li { list-style: disc; }
+
+div.inquiryScrollBox dt { margin-bottom: 0.3em; }
+div.inquiryScrollBox dd { margin-left: 1em; margin-bottom: 0.1em; }
+
+
+table.inquiryTable {
+	margin-bottom: 0.5em;
+	border-collapse: separate;
+	border-bottom: 1px solid #ccc;
+	border-left: 1px solid #ccc;
+}
+table.inquiryTable th,
+table.inquiryTable td {
+	border-top: 1px solid #ccc;
+	border-right: 1px solid #ccc;
+	padding: 0.5em 5px;
+	text-align: left;
+	line-height: 1.2;
+}
+table.inquiryTable th      { background: url(../img/bg_th01.gif) repeat-x 0 0; font-weight: normal; width:115px; }
+/*table.inquiryTable td      { background: url(../img/bg_td01.gif) repeat-x 0 0; }*/
+table.inquiryTable caption { display: none; }
+table.inquiryTable span    { font-size: 77%; }
+table.inquiryTable input   { vertical-align: middle; }
+table.inquiryTable em {
+	margin-bottom: 0.2em;
+	padding: 0.1em 0 0.2em 18px;
+	background: url(../img/marker_error-small.gif) no-repeat left center;
+}
+
+table.confirmData {
+	background: #FFE1C4;
+	border: 1px solid #CCCCCC;
+	margin-top: 10px;
+}
+
+p.nextScreen {
+	padding-top: 0.2em;
+	padding-bottom: 0.2em;
+	background: #FFE1C4;
+	border: 1px solid #ccc;
+}
+p.error {
+	padding-left: 28px;
+	background: url(../img/marker_error-big.gif) no-repeat left center;
+	font-weight: bold;
+	font-size: 124%;
+}
+.redColor {
+	color:#FF0000!important;
+}
+.orangeColor {
+	color:#FF9900!important;
+}
+.inquiryCheck {
+	height:100px;
+	width:400px;
+	overflow-y:scroll;
+	border: 1px solid #666666;
+	padding: 10px;
+}
+
+/* ::::: recruit -------------------------*/
+dl.rowDef dt {
+	width: 4.5em;
+	line-height: 1.2;
+	clear: left;
+	float: left;
+}
+dl.rowDef dd {
+	margin-bottom: 0.2em;
+	margin-left: 4.5em;
+	line-height: 1.2;
+}
+
+
+
+/*	12= help page
+-----------------------------------------------------*/
+div#settingIntro {
+	margin-bottom: 3em;
+	padding: 0.5em 10px;
+	background: #fff0d9;
+	border: 1px solid #ffbc58;
+}
+p.cause { margin-bottom: 0.5em; font-weight: bold; }
+
+h3.headingHelp {
+	margin-bottom: 0.5em;
+	font-weight: bold;
+	font-size: 108%;
+}
+h4.headingToolBar {
+	margin-bottom: 0.3em;
+	font-weight: bold;
+}
+
+ul.arList { margin-bottom: 0.3em; margin-left: 380px; }
+ul.arList li { list-style: disc; line-height: 1.3; }
+
+/*13= FLASHȂ[U[pOC
+-----------------------------------------------------*/
+#loginNoflash {
+	background-color:#3e3e3e;
+}
+
+#loginNav {
+	width:764px;
+	height:341px;
+	position:relative;
+	margin:70px auto 0px;
+	padding: 0px;
+	background: url(../img/login/loginNav_bg.gif) no-repeat;
+}
+#loginNav li {list-style-type: none;}
+#loginNav a	{display: block;}
+
+.houkatsu01,
+.service02,
+.kyotaku03,
+.cm04,
+.iryou05,
+.tritrus06,
+.honsha07,
+.jigyousho08,
+.return09 {position:absolute;}
+
+.houkatsu01 a,
+.houkatsu01 {
+	width:113px;
+	height:112px;
+	left: 62px;
+	top:0;
+}
+.service02 a,
+.service02 {
+	width:113px;
+	height:112px;
+	left: 191px;
+	top:0;
+}
+.kyotaku03 a,
+.kyotaku03 {
+	width:113px;
+	height:112px;
+	top: 111px;
+	left:0;
+}
+.cm04 a,
+.cm04 {
+	width:113px;
+	height:112px;
+	top: 223px;
+	left: 62px;
+}
+.iryou05 a,
+.iryou05 {
+	width:113px;
+	height:112px;
+	left: 191px;
+	top: 223px;
+}
+.tritrus06,
+.tritrus06 a {
+	width:189px;
+	height:91px;
+	left: 288px;
+	top: 120px;
+}
+.honsha07 a,
+.honsha07 {
+	width:112px;
+	height:112px;
+	left: 516px;
+	top:0;
+}
+.jigyousho08 a,
+.jigyousho08 {
+	width:112px;
+	height:112px;
+	top: 223px;
+	left: 516px;
+}
+
+.return09 a,
+.return09 {
+	width:131px;
+	height:41px;
+	right: 0;
+	bottom: 0;
+}
+
+/*  ---------------------IOG PAGE---------------------  */
+div#iogConcontainer {
+	position:relative;
+	margin:0 auto;
+	height:100%;
+}
+div#iogHeader {
+	height:63px;
+	background:url(../img/iog/iog_headerBg.gif) repeat-x;
+}
+div#iogFooter {
+	width:100%;
+	height:78px;
+	position:absolute;
+	left:0px;
+    bottom:0px;
+	background:url(../img/iog/iog_footerBg.gif) repeat-x;
+	text-align:center;
+}
+div#iogFooter ul {
+	margin-top:25px;
+}
+div#iogFooter ul li {	
+	display:inline;
+	margin-left:10px;
+}
+div.loginGuide {
+	height:30px;
+	background-color:#FFFABF;
+	margin-top:25px;
+}
+h2.mt07 {margin-top:7px;}
+p.guide {
+	padding-top:0.4em;
+	font-size:16px;
+}
+a.nextBtn {
+	position:absolute;
+	top:50%;
+	left:50%;
+	margin-left:-121px;
+	margin-top:-43px;
+}
+div.demoBtn {
+	position:absolute;
+	top:60%;
+	left:50%;
+	margin-left:-121px;
+}
+
+/*  --------------------- ETC ---------------------  */
+.fs10 {
+	font-size:10px;
+}
+.mt4 {
+	margin-top:4px;
+}
+.tal {
+	text-align:left;
+}
+
+
+
+/*  --------------------- event ---------------------  */
+h3.eventheading1 {
+	margin-bottom: 0.8em;
+	padding: 0.2em 0 0.2em 8px;
+	border-bottom: 1px solid #f60;
+	border-left: 5px solid #f60;
+	background: #fff0d9;
+	font-size: 108%;
+	font-weight: bold;
+}
+
+.eventcatch {
+	font-size: 120%;
+	font-weight: bold;
+}
+
+.eventTittle {
+	margin-bottom: -1em;
+	border-bottom: 5px solid #f60;
+	font-size: 250%;
+	font-weight: bold;
+}
+.eventTittle2 {
+	margin-bottom: -1em;
+	border-bottom: 5px solid #f60;
+	font-size: 220%;
+	font-weight: bold;
+}
+
+
+
+
+
+
+
+
+

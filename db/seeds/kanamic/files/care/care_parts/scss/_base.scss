@@ -1,0 +1,142 @@
+// @import "_variable";
+// @import "_mixin";
+
+// stack
+@function get-stack-spacing-size($size: m) {
+  @if $size == xs {
+    @return 0.25rem;
+  } @else if $size == s {
+    @return 0.5rem;
+  } @else if $size == m {
+    @return 1rem;
+  } @else if $size == l {
+    @return 2rem;
+  } @else if $size == xl {
+    @return 3rem;
+  } @else if $size == xxl {
+    @return 6rem;
+  } @else {
+    @return 1rem;
+  }
+}
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+
+  & > * {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  & > * + * {
+    margin-top: get-stack-spacing-size();
+  }
+  @each $size in (xs, s, m, l, xl, xxl) {
+    &.-size-#{$size} {
+      & > * + * {
+        margin-top: get-stack-spacing-size($size);
+      }
+    }
+  }
+}
+
+//container
+.container {
+  padding: 2.5rem 0;
+  &.-size-l {
+    padding: 4rem 0;
+  }
+  &.-size-m {
+    padding: 2rem 0;
+  }
+  &.-size-s {
+    padding: 1rem 0;
+  }
+}
+
+// inner_lp
+.inner_lp {
+  // padding: 0 0.1rem;
+  padding: 0;
+  &.-size-l {
+    padding: 0 2rem;
+  }
+
+  &.-size-m {
+    padding: 0 1rem;
+  }
+
+  &.-size-s {
+    padding: 0 0.5rem;
+  }
+
+  &.-size-xs {
+    padding: 0 0.25rem;
+  }
+}
+
+// wrapper_lp
+.wrapper_lp {
+  margin: auto;
+  width: 940px;
+  max-width: 1000px;
+
+  @media screen and (max-width: 1280px) {
+    width: 92%;
+  }
+  @media screen and (max-width: 1181px) {
+    width: 92%;
+  }
+  // @media screen and (max-width: 900px) {
+  //   width: 100%;
+  // }
+
+  &.-size-full {
+    width: 100%;
+  }
+  &.-size-l {
+    width: 1310px;
+    max-width: 1310px;
+    @media screen and (max-width: 1310px) {
+      width: 100%;
+    }
+    @media screen and (max-width: 1181px) {
+      width: 92%;
+    }
+  }
+  &.-size-m {
+    // width: 940px;
+    // position: relative;
+    margin: 0 auto;
+    box-sizing: border-box;
+    zoom: 1;
+    width: 1140px;
+    max-width: 1140px;
+    margin: 0 auto;
+    padding: 0 10px;
+    @media screen and (max-width: 1280px) {
+      width: 90%;
+    }
+    @media screen and (max-width: 1181px) {
+      width: 92%;
+    }
+  }
+  &.-size-s2 {
+    width: 720px;
+    max-width: 720px;
+    @media screen and (max-width: 1280px) {
+      width: 90%;
+    }
+  }
+  &.-size-s {
+    width: 600px;
+    max-width: 600px;
+    @media screen and (max-width: 1280px) {
+      width: 100%;
+    }
+    @media screen and (max-width: 600px) {
+      width: 100%;
+    }
+  }
+}

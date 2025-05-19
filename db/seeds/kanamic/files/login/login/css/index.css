@@ -1,0 +1,569 @@
+/* 公共样式 */
+*{
+    box-sizing: border-box;
+}
+html {
+    min-height: 100%;
+    position: relative;
+  }
+body{
+    font-family:"-apple-system", BlinkMacSystemFont, "Yu Gothic", "游ゴシック", YuGothic, "游ゴシック体", "Noto Sans Japanese", "ヒラギノ角ゴ Pro W3", "メイリオ", "Hiragino Kaku Gothic ProN", "MS PGothic", Osaka, "sans-serif";
+    font-size:16px;
+    color:#343434;
+    overflow-x: hidden;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.w{
+    width:1200px;
+    margin:0 auto;
+}
+
+input {
+	padding: 1px;
+	vertical-align: middle;
+	line-height: normal;
+}
+a{
+    text-decoration:none;
+}
+ul{
+    padding:0;
+}
+ul li{
+    list-style-type:none;
+}
+/* 清除浮动 */
+.clearfix:after {
+	content: '';
+	height: 0;
+	line-height: 0;
+	display: block;
+	visibility: hidden;
+	clear: both;
+}
+.fl{
+    float:left;
+}
+.fr{
+    float:right;
+}
+
+
+/* header css */
+header{
+    width:100%;
+}
+.header{
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 20px;
+    background: #fff;
+    padding-bottom: 20px;
+    padding-top: 30px;
+}
+/* logo css */
+.header h1{
+    text-indent:-9999px;
+}
+.header .logo a{
+    display: block;
+    /* width:384px; */
+    height:60px;
+}
+.header .logo a img{
+    width:100%;
+}
+/* go  btn css */
+.go a{
+    display:block;
+    width:220px;
+    height:66px;
+    border:1px solid #E28000;
+    border-radius:8px;
+    background: url(../images/btn-bg.png);
+}
+.go .btn-logo{
+    margin:18px 10px 0 14px;
+}
+.go span{
+    font-size:14px;
+    font-weight:bold;
+    color:#fff;
+    margin-top:20px;
+}
+.go a:hover{
+    opacity: 0.8;
+}
+/* main css */
+.section{
+    width:100%;
+    background: url(../images/main_bg.png);
+    
+}
+.trans-bg{
+    width:100%;
+    height:100%;
+    background: -webkit-linear-gradient(45deg,#F79B31,#ffd857);
+    background: -moz-linear-gradient(45deg,#F79B31,#ffd857);
+    background: -ms-linear-gradient(45deg,#F79B31,#ffd857);
+    /* background: url(../images/main-bg.png); */
+}
+.main-bg{
+    background: url(../images/main_bg.png);
+}
+/* notice css */
+.notice{
+    flex:1;
+    margin-top:70px;
+    display: none;
+}
+.notice h2{
+    position: relative;
+    width:323px;
+    height:60px;
+    line-height:60px;
+    font-size:32px;
+    text-align:center;
+    color:#fff;
+    background-color: #F01E1E;
+    margin:auto;
+    border-radius:60px;
+    box-shadow:2px 2px 10px rgba(247, 76, 53, 0.5);
+}
+.notice div{
+    margin:-25px 25px 0px;
+    /* width:100%; */
+    /* height:260px; */
+    padding:30px 15px;
+    line-height:28px;
+    font-size:18px;
+    font-weight:500;
+    text-align:left;
+    background-color: #fff;
+    border-radius:10px;
+    box-sizing: border-box;
+}
+.notice div p{
+    margin:0;
+    padding:0;
+}
+pre {
+	white-space: pre-wrap ;
+}
+/* inlet  css */
+/* .inlet{
+    margin-top:60px;
+} */
+/* .inlet ul{
+    display:flex;
+} */
+.inlet ul li{
+    flex:1;
+    justify-content: space-between;
+}
+
+.inlet ul li{
+    text-align: center;
+}
+.inlet ul li a{
+    display:block;
+    width:320px;
+    height:320px;
+    line-height: 400px;
+    background-color: rgba(255,255,255,.5);
+    border-radius:50%;
+    margin: auto;
+    text-align: center;
+}
+
+.inlet ul li p{
+    margin-top:30px;
+    font-size:18px;
+    font-weight:bold;
+    color:#fff;
+    text-align:center;
+}
+/* footer css */
+.fw{
+    margin: 0 auto;
+    width: 100%;
+}
+footer {
+    margin: 0 auto;
+    width: 100%;
+    bottom: 0;
+    position: absolute;
+    background: #fff;
+  }
+footer .info{
+    margin-top:50px;
+    text-align: center;
+    /* display:flex; */
+}
+footer .info a{
+    display:block;
+    width:160px;
+    height:60px;
+    line-height:20px;
+    color:#343434;
+    background: url(../images/bottom-bg.png);
+    border:1px solid #ccc;
+    border-radius:6px;
+    margin:auto;
+    padding-top:10px;
+    box-shadow:2px 2px 5px rgba(0,0,0,0.1);
+    box-sizing: border-box;
+}
+footer .info a:hover{
+    opacity: 0.8;
+}
+footer .info img{
+    margin-top:20px;
+}
+
+.tel-bottom{
+    display: none;
+}
+
+
+/* モーダル　汎用 */
+.modal-wraper {
+    position: relative;
+    padding: 20px;
+  }
+  
+  .modal-wraper.sml {
+    width: 100%;
+    max-width: 380px;
+  }
+  
+  .modal-wraper.mid {
+    width: 100%;
+    max-width: 600px;
+  }
+  
+  .modal-wraper.large {
+    width: 100%;
+    max-width: 900px;
+  
+  }
+  
+  .modal-wraper .modal__close {
+    background: #efefef;
+    font-size: 1rem;
+    padding: 10px 12px;
+    border-radius: 30px;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    box-shadow:0px 0px 5px 0px rgba(0,0,0,0.2);
+    z-index: 2;
+    cursor: pointer;    
+  }
+  
+  .modal-wraper .modal__close:before {
+      content: "\2715";
+  }
+  
+  .modal-wraper .modal__close:hover {
+      opacity: 1;
+  }
+  
+  .modal__container {
+    padding: 0;
+    max-width: initial;
+    max-height: 600px;
+  }
+  
+  
+  .modal__header {
+    padding: 15px;
+    border-bottom: 1px solid #cccccc;
+  }
+  
+  .modal__header h2 {
+    color: #333333;
+    position: relative;
+  }
+  
+  .modal__content {
+    padding: 15px;
+    margin: 0;
+  }
+  
+  .modal_txt {
+    font-size: 1.2rem;
+    margin: 20px;
+    text-align: center;
+  }
+  
+  
+  
+  .modal__footer {
+    padding: 15px;
+    border-top: 1px solid #cccccc;
+  }
+  
+  .modal__footer .btn {
+    display: flex;
+    justify-content:space-between;
+    width: 100%;
+  }
+  
+  
+  /* モーダル　アラートダイアログ */
+  .modal.alert .modal__content {
+    padding: 40px 20px;
+    font-size: 1.2rem;
+    text-align: center;
+  }
+  
+.ciclink{
+    display: flex;
+    flex-flow: wrap;
+    justify-content: space-around;
+    align-items: center;
+    height: 140px;
+}
+/* .ciclink a{
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    text-decoration: none;
+    text-align: center;
+    font-weight: bold;
+    width: 120px;
+    transition: .4s;
+    height: 120px;
+    border-radius: 50%;
+    background: #ff8181;
+    box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.29);
+    border-bottom: solid 3px #bd6565;
+
+height: 80px;
+color: #999;
+border-radius: 10px;
+background: #fff;
+box-shadow: 0px 5px 12px #CAD4E2, -6px -6px 12px #FFF;
+  border-radius: 10px;   
+   border-bottom:none;
+} */
+   .ciclink a{
+    display: -webkit-flex;
+    display: flex;
+    -webkit-align-items: center;
+    align-items: center;
+    -webkit-justify-content: center;
+    justify-content: center;
+    text-decoration: none;
+    text-align: left;
+    font-weight: bold;
+    transition: .4s;
+    height: 100px;
+    border: 2px solid;
+    position: relative;
+    background: #fff;
+    color: #023893;
+    overflow: hidden;
+    border: 2px solid #023893;
+    padding: 1.5rem  1.5rem 1.5rem 5rem;
+    transition: all .3s;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+    .ciclink a:before,
+    .ciclink a:after {
+      content: "";
+      position: absolute;
+      display: block;
+      top: 50%;
+    }
+  
+    .ciclink a:before {
+      width: 7px;
+      height: 7px;
+      left: 1.5rem;
+      border-top: solid 2px #fff;
+      border-right: solid 2px #fff;
+      z-index: 2;
+      transform: translateY(-50%) rotate(45deg);
+      transition: all .3s;
+  
+    }
+  
+    .ciclink a:after {
+  
+      left: -2rem;
+      background: #00449e;
+      z-index: 1;
+      width: 6rem;
+      height: 130%;
+      border-radius: 50%;
+      transform: translateY(-50%);
+  transition: all .5s;
+    }
+  
+    .ciclink a span {
+      transition: all .3s;
+      z-index: 3;
+    }
+
+    .ciclink a:hover span {
+          position: relative;
+          color: #fff;
+    }
+    
+    .ciclink a:hover:after {
+        right: 0;
+        width: 120%;
+        border-radius: 0;
+
+
+    }
+/*電子証明書専用ログイン注意事項ボタン*/
+.login_edge {
+	float: right;
+	position: relative;
+	bottom: 12%;
+	right: 9.5%;
+}
+.login_point {
+  position: relative;
+  display: inline-block;
+  padding: 0.5em;
+  font-weight: bold;
+  text-decoration: none;
+  color: #343434;
+  background: #fff;
+  transition: .4s;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  box-shadow: 0px 0px 5px 2px rgb(131 131 131 / 38%);
+  line-height:1.5em;
+}
+
+.login_point:hover {
+  background: #00bcd4;
+  color: white;
+}
+
+@media only screen and (max-width: 768px) {
+	.login_edge {
+		bottom: 22%;
+		right: 5.5%;
+	}
+}
+@media only screen and (max-width: 480px) {
+	.login_edge {
+		display: none;
+	}
+}
+
+/*電子証明書専用ログイン注意事項ボタン*/
+
+/* スマホ向けのレイアウトの指定：～480px */
+@media only screen and (max-width: 480px) {
+    *{
+        margin:0;
+        padding:0;
+    }
+    header{
+        height:80px;
+    }
+    .header .logo a img{
+        width:80%;
+        /* margin-left:20px; */
+    }
+    .header h1{
+        display: none;
+    }
+    .w{
+        width: 100%;
+        margin: auto;
+    }
+    .go{
+        display: none;
+    }
+    .section{
+        height: auto;
+        padding-bottom:476px;
+    }
+    .notice{
+        position: relative;
+        width: 100%;
+        margin: auto;
+    }
+    .notice div{
+        width:94%;
+        margin-left:3%;
+        margin-top:40px;
+       
+    }
+    .notice p{
+        font-size:17px;
+        
+    }
+    .notice h2 {
+        position: absolute;
+        top: -30px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 24px;
+        width: 180px;
+        height: 46px;
+        padding-bottom: 10px;
+    }
+    .inlet{
+        margin-top:20px;
+    }
+    .inlet ul{
+        flex-direction: column;
+    }
+    .inlet ul li{
+        padding-bottom:15px;
+    }
+    .inlet ul li.one a img{
+        width:60%;
+    }
+    .inlet ul li.two a{
+        line-height: 235px;
+    }
+
+    .inlet ul li a img{
+        width:80%;
+    }
+    .inlet ul li p{
+        margin-top:20px;
+    }
+    .info{
+        display:none;
+    }
+    .tel-bottom{
+        width:220px;
+        height:66px;
+        text-align: center;
+        margin:20px auto;
+        display: block;
+    }
+ .modal__container{
+     height: 246px;
+ }
+}
+
+
+
+
+@media only screen and (max-width: 320px){
+    .section{
+        height: auto;
+        padding-bottom:570px;
+    }
+    .header .logo a img{
+        width:70%;
+    }
+}

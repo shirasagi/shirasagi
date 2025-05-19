@@ -1,0 +1,15 @@
+.siryouseikyu {
+	background: url(img/btn_siryo.png) no-repeat left top;
+	width: 332px;
+	height: 52px;
+	text-indent: 100%;
+	display: block;
+	white-space: nowrap;
+	overflow: hidden;
+	margin: 50px auto;
+}
+
+.kanaerutouch #sec02b{
+	margin-top: -100px;padding-top: 100px;}
+.kanaerutouch #sec02a{
+	margin-top: -100px;padding-top: 100px;}

@@ -1,0 +1,527 @@
+@charset "utf-8";
+@import url("https://fonts.googleapis.com/css?family=Noto+Sans+JP:300,400,500,700&display=swap&subset=japanese");
+/* 汎用 */
+.w010 {width:10%!important;}
+.w020 {width:20%!important;}
+.w030 {width:30%!important;}
+.w040 {width:40%!important;}
+.w050 {width:50%!important;}
+.w060 {width:60%!important;}
+.w070 {width:70%!important;}
+.w080 {width:80%!important;}
+.w090 {width:90%!important;}
+.w100 {width:100%!important;}
+.w120 {width:120%!important;}
+.w150 {width:150%!important;}
+.fb {font-weight:bold!important;}
+.fn {font-weight:normal!important;}
+.mt0 {margin-top:0!important;}
+.mt2 {margin-top:2px!important;}
+.mt3 {margin-top:3px!important;}
+.mt5 {margin-top:5px!important;}
+.mt6 {margin-top:6px!important;}
+.mt10 {margin-top:10px!important;}
+.mt15 {margin-top:15px!important;}
+.mt25 {margin-top:25px!important;}
+.mt30 {margin-top:30px!important;}
+.mt35 {margin-top:35px!important;}
+.mt50 {margin-top:50px!important;}
+.mt100 {margin-top:100px!important;}
+.mt120 {margin-top:120px!important;}
+
+/* ↓ header -------------------------------------------------------------- */
+html{
+    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", sans-serif;
+    color: #333;
+	font-size: 62.5%;    /* ルートのフォントサイズ10px */
+}
+body {
+	font-size: 1.6em;	/* ルートのフォントサイズ1.6em（16pxと同等） */
+}
+.wrapper{
+    overflow: hidden;
+}
+.provisional-navi{width: 100%;}
+
+/* ↓ main -------------------------------------------------------------- */
+main{
+    width: 90%;
+    margin: 0 auto;
+}
+nav{
+    height: 58px;
+    background-image: url(../img/header-sp.png);
+    background-position: cover;
+    background-repeat: no-repeat;
+}
+.top-image{
+    background-image: url(../img/houmonkaigo-mainvisual.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: top 50% left 20%;
+    height:110vw ;
+    width: 100vw;
+    margin: 0 calc(50% - 50vw);
+    margin-top:1rem;}
+h1{
+    color: #F46600;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 12vw;
+    font-weight: 700;
+    letter-spacing: 0.2rem;
+    line-height: 13vw;
+    margin-top: 2rem;
+}
+h1 span{
+    font-size: 6vw;
+    font-weight: 500;
+}
+.top-area h2{
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 5.6vw;
+    font-weight: 300;
+    margin-top: 2.7rem;
+    letter-spacing: 0.1rem;
+}
+.inquiry-btn-container{
+    position: relative;
+    margin-top: 1.5rem;;
+    text-align: center;
+}
+a.inquiry-btn {
+    color: #fff;
+    background-color: #f46600;
+    font-size: 1.8rem;
+    font-weight: 400;
+    line-height: 1.5;
+    display: inline-block;
+    padding: 1.3rem 4rem 1.5rem;
+    text-align: center;
+    vertical-align: middle;
+    letter-spacing: 0.2em;
+    border-radius: 0.3rem;
+    width: 100%;
+    box-shadow: 5px 5px 8px 0 rgba(0, 0, 0, .15);
+    margin-top: 3rem;;
+}
+a.inquiry-btn span {
+    font-size: 1.6rem;
+}
+a .inquiry-btn:hover {
+    color: #fff;
+    background: #fb9a00;
+}
+.reqest-btn-icon{
+    content:"";
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background: url(../img/document-request.svg) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 53%;
+    left: 8%;
+}
+.link-btn-icon{
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background: url(../img/triangle-link.svg) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 48%;
+    right: 8%;
+}
+.kaigokiroku-btn-container{
+    position: relative;
+    margin-top: 1.5rem;
+}
+.kaigokiroku-btn {
+    color: #f46600;
+    background-color: #fff;
+    font-size: 4vw;
+    font-weight: 400;
+    line-height: 1.5;
+    display: inline-block;
+    padding: 1rem;
+    text-align: center;
+    vertical-align: middle;
+    letter-spacing: 0.1em;
+    border-radius: 10rem;
+    border:#f46600 1px solid;
+    width: 100%;
+    box-shadow: 5px 5px 8px 0 rgba(0, 0, 0, .15);
+    margin-top: 3rem;
+}
+.kaigokiroku-btn::after{
+    content: url(../img/triangle-link_orange.svg);
+    width: 20px;
+    height: 20px;
+    position: absolute;
+    top: 55%;
+    right: 3%;
+}
+.kaigokiroku-movie-container{
+    margin-top: 3rem;
+}
+.kanamic-can-do{
+    margin-top: 7rem;
+    text-align: center;
+}
+.kanamic-can-do h2{
+    font-size: 6.5vw;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 500;
+    line-height: 10.5vw;
+    margin-top: 3rem;
+}
+.kanamic-can-do img{
+    width: 85%;
+    margin-top: 4rem;
+}
+.point-area{
+    background-color: #FFF8EF;
+    width: 100vw;
+    margin: 0 calc(50% - 50vw);
+    margin-top: 7rem;    
+    padding:0.1rem 8% 7rem;
+}
+.point-area p{
+    text-align: justify;
+    line-height: 2.8rem;
+    margin-top: 2rem;
+}
+.point-area article{
+    margin-top: 7rem;
+    position: relative;
+}
+.orange-gradation{
+    position:relative;
+    height: 150px;
+    margin-left: -5rem;
+}
+.orange-gradation img{
+    display: block;
+    width: 33%;
+}
+.orange-gradation img:nth-child(1){
+    position: absolute;
+    top: 0px;
+    left: 22px;
+}
+.orange-gradation img:nth-child(2){
+    position: absolute;
+    top: 20px;
+    left: 25px;
+}
+.orange-gradation img:nth-child(3){
+    position: absolute;
+    top: 35px;
+    left: -10px;
+}
+.point-line{
+    background-color:#f46600;
+    height: 5px;
+    width: 100%;
+    margin: 1.5rem auto;
+    position: absolute;
+}
+.point-area .point-number{
+    text-align: center;
+    font-size: 3.4rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    color:#f46600;
+    line-height: 4rem;
+    margin-top: -10rem;
+}
+.point-area .point-number span{
+    font-size: 1.4rem;
+    font-weight: 400;
+}
+.point-area article h2{
+    font-size: 6.5vw;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    line-height: 10.5vw;
+    margin-top: 8rem;
+    font-feature-settings: "palt";
+}
+.point-area article .point-img{
+    background-repeat: no-repeat;
+    background-size: cover;
+    height:95vw ;
+    margin-top:2rem;
+}
+.stripe-shadow{
+    background-size: auto auto;
+    background-color: rgba(255, 248, 239, 1);
+    background-image: repeating-linear-gradient(135deg, transparent, transparent 5px, rgba(249, 141, 35, 0.3) 5px, rgba(249, 141, 35, 0.3) 12px );
+    height:95vw ;
+    width: 90vw;
+    margin: 5% 10% 0 10%;
+}
+.caregiver{
+    background-image: url(../img/caregiver-img.png);
+    background-position: top 50% left 20%;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height:95vw ;
+    margin-top: -100%;
+}
+.record-image{
+    background-image: url(../img/houmonkaigo-record-image.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height:95vw ;
+    margin-top: -100%;
+}
+.clerk-image{
+    background-image: url(../img/clerk.png);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    height:95vw ;
+    margin-top: -100%;
+}
+.relation-image img{
+    width: 100vw;
+    margin: 0 calc(50% - 50vw);
+}
+.strong-point{
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+}
+.strong-point li{
+    width: 45%;
+    padding: 1rem;
+    margin-top: 3rem;
+}
+.strong-point li p{
+    font-size: 1.4rem;
+    line-height: 2rem;
+    margin-top: 1rem;
+}
+.houmonkaigo-flow{
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.houmonkaigo-flow li{
+    width: 90%;
+    padding: 1rem;
+    margin-top: 3rem;
+    text-align: center;
+}
+.houmonkaigo-flow li p{
+    font-size: 1.4rem;
+    line-height: 2rem;
+    margin-top: 1rem;
+}
+.houmonkaigo-flow li img{
+    width: 100%;
+    padding: 1rem;
+    margin-top: 3rem;
+    margin: 0 auto;
+}
+.point-area h3{
+    font-size: 2.1rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    line-height: 3rem;
+}
+.caremanager-cordination{
+    width: 100%;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #fff;
+    border-radius: 1rem;
+}
+.caremanager-cordination img{
+    width: 100%;
+}
+.caremanager-houmonkaigo-img{
+    background-image: url(../img/caremanager-houmonkaigo.png);
+    background-position: center;
+    background-position: top;
+    background-size: 123%!important;
+    background-repeat: no-repeat;
+    height:95vw ;
+    margin-top: -100%;
+}
+.caremanager-cordination li:nth-child(2){
+    margin-top: 7rem;
+}
+.caremanager-cordination li p{
+    font-size: 1.4rem;
+    line-height: 2rem;
+}
+.kanamic-users{
+    width: 90%;
+    margin: 0 auto;
+    margin-top: 7rem;    
+}
+.kanamic-users h2{
+    font-size: 6.5vw;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    line-height: 10.5vw;
+    margin-top: 7rem;
+}
+.kanamic-users h3{
+    font-size: 4.5vw;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 500;
+    line-height: 6.5vw;
+    margin-top: 1rem;
+}
+.kanamic-users h4{
+    font-size: 1.5rem;
+    line-height: 5vw;
+    margin-top: 0.5rem;
+}
+.kanamic-user-img{
+    width: 100%;
+    margin-top:4rem;
+}
+.kanamic-users p{
+    text-align: justify;
+    margin-top: 2rem;
+    font-size:1.6rem;
+    line-height: 2.5rem;
+}
+.kanamic-users-chartGraphBox{
+    margin-top: 4.5rem;
+    position: relative;
+}
+.kanamic-users-chartGraphBox .user-increase-arrow {
+    width: 70%;
+    position: absolute;
+    top:23%;
+    right: 8%;
+}
+
+.inguiry-support{
+    background-color: #F4F6F7;
+    width: 100vw;
+    margin: 0 calc(50% - 50vw);
+    margin-top: 7rem;    
+    padding: 3rem 8% 7rem;
+}
+.inguiry-support h2{
+    font-size: 6.5vw;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    line-height: 10.5vw;
+    margin-top: 3rem;
+}
+.inguiry-support h3{
+    font-size: 4.3vw;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 400;
+    line-height: 8vw;
+    margin-top: 1.5rem;
+}
+.inguiry-support .point-img{
+    background-image: url(../img/inquiry-support.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    height:80vw ;
+    margin-top:1.5rem;
+}
+.inquiry-btn-white-container{
+    position: relative;
+    margin-top: 1.5rem;;
+    text-align: center;
+}
+.inquiry-btn-white {
+    color: #f46600;
+    background-color: #fff;
+    font-size: 5vw;
+    font-weight: 700;
+    line-height: 1.5;
+    display: inline-block;
+    padding: 1.3rem 1rem 1.5rem;
+    text-align: center;
+    vertical-align: middle;
+    letter-spacing: 0.1em;
+    border: #F46600 1px solid;
+    border-radius: 0.3rem;
+    width: 100%;
+    box-shadow: 5px 5px 8px 0 rgba(0, 0, 0, .15);
+    margin-top: 2rem;;
+}
+.inquiry-btn-white span {
+    font-size: 2.1rem;
+    font-weight: 400;
+    letter-spacing: 0;
+}
+.inquiry-btn-white:hover {
+    color: #fff;
+    background: #fb9a00;
+}
+.inquiry-btn-white span {
+    font-size: 4.3vw;
+}
+.mail-icon_orange{
+    content:"";
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background: url(../img/mail-icon_orange.svg) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 48%;
+    left: 6%;
+}
+.tel-icon_orange{
+    content:"";
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background: url(../img/tel-icon_orange.svg) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 38%;
+    left: 5%;
+}
+.link-btn-icon_orange{
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background: url(../img/triangle-link_orange.svg) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 38%;
+    right: 6%;
+}
+.link-btn-icon_orange-mail{
+    display: inline-block;
+    width: 35px;
+    height: 35px;
+    background: url(../img/triangle-link_orange.svg) no-repeat;
+    background-size: contain;
+    position: absolute;
+    top: 48%;
+    right: 6%;
+}
+
+
+/* ↓ footer -------------------------------------------------------------- */
+
+
+
+
+
+
+
+
+
+/* ~767px */
+@media screen and (max-width: 767px) {
+    .pc-only{display:none;}
+    .sp-only{display:block;}
+}
+

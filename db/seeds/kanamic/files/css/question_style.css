@@ -1,0 +1,228 @@
+@charset "UTF-8";
+
+/* 新設質問リストの装飾_2024{0730 */
+/* セクション上下余白 */
+.questionlist_section{
+	padding: 1rem 0 6.5rem 0;
+}
+
+/* -----------------------
+       文字サイズ
+--------------------------*/
+/* よくある質問 */
+.questionlist_section h2,
+body.top .questionlist_section h2{
+	text-align: center;
+	font-size: 2.5rem;
+	font-weight: bold;
+	margin-top: 4.5rem;
+	padding-bottom: 1.8rem;
+
+	/* h2の全体装飾を解除 */
+	background: none;
+	border-bottom: 0;
+	text-indent: 0;
+	height: auto;
+}
+@media screen and (max-width: 1023px) {
+	.questionlist_section h2,
+	body.top .questionlist_section h2{
+		font-size: 8vmin;
+	}
+}
+/* 質問文テキスト */
+.questionlist_section p{
+	font-size: 1.35rem;
+}
+@media screen and (max-width: 1023px) {
+	.questionlist_section p{
+		font-size: 4.5vmin;
+	}
+}
+
+/* 質問リスト共通 */
+.list {
+	padding: 1em 0;
+	border-bottom: 1px solid #ccc;
+}
+@media screen and (max-width: 1023px) {
+	.list {
+		padding: 1em 0 1rem 1.3rem;
+		border-bottom: 1px solid #ccc;
+	}
+}
+  
+.list:nth-of-type(1) {
+	border-top: 1px solid #ccc;
+}
+
+.question {
+	position: relative;
+	cursor: pointer;
+	}
+
+/* ＋マーク */
+.question::before {
+	position: absolute;
+	top: 0.4em;
+	right: 1em;
+	content: "＋";
+	color: #f46600;
+	font-weight: bold;
+	font-size: 2rem;
+}
+@media screen and (max-width: 1023px) {
+	.question::before {
+		top: 0.1em;
+		right:0.5em;
+		font-size: 1.8rem;
+		}
+}
+
+  .question.active::before {
+	content: "－";
+	color: #f46600;
+	font-weight: bold;
+  }
+
+  .question-text,
+  .answer-text {
+	position: relative;
+	padding: 1em 2.8em;
+  }
+
+  .question-text::before,
+  .answer-text::before {
+	position: absolute;
+	top: 0.875em;
+	left: 0;
+	width: 2em;
+	height: 2em;
+	line-height: 2;
+	font-weight: bold;
+	text-align: center;
+	border-radius: 50%;
+  }
+
+  /* Qの装飾 */
+  .question-text::before {
+	content: "Q";
+	color: #fff;
+	background: #fb9a00;
+  }
+
+  .answer-text::before {
+	content: "A";
+	color: #fff;
+	background: #f46600;
+  }
+
+  /* アンサーの関連リンク*/
+  .answer_link{
+	width: 84%;
+	margin: 0.5rem auto 2rem auto;
+  }
+
+  /* アンサーの関連リンク flexbox*/
+  .answer_link_flex{
+	display: flex;
+  }
+  @media screen and (max-width: 1023px) {
+	.answer_link_flex{
+		display: block;
+	  }
+	}
+
+  .answer_link_box{
+	width: 50%;
+  }
+  @media screen and (max-width: 1023px) {
+    .answer_link_box{
+      width: 100%;
+      }
+  }
+
+
+  .answer_link_banner{
+	padding: 0.5rem 0;
+	border-radius: 60px;
+	font-size: 1.1rem;
+	text-decoration: underline;
+	color: #006990;
+	position: relative;
+  }
+  @media screen and (max-width: 1023px) {
+	.answer_link_banner{
+		font-size: 4.5vmin;
+	  }
+	}
+
+  .answer_link_banner a::before,
+  .answer_nolink::before{
+	position: absolute;
+	left: -15px;
+	content: '>';
+	display: block;
+  }
+
+  @media screen and (max-width: 1023px) {
+	.answer_link_banner a::before,
+	.answer_nolink::before{
+		left: -35px;
+	}
+	}
+
+
+  .answer_link_banner a:hover{
+	color: #f46600;
+  }
+
+  /* リンクのないテキスト */
+  .answer_nolink{
+	text-decoration: none;
+	color: #000;
+  }
+
+
+  /* アンサーにバナー画像を入れる場合 */
+  .answer_link_banner_img_flex{
+	display:flex;
+	margin: 2rem auto;
+	width: 100%;
+  }
+
+  @media screen and (max-width: 1023px) {
+	.answer_link_banner_img_flex{
+		display: block;
+	  }
+	}
+
+
+  .answer_link_banner_img{
+	width: 45%;
+	max-width: 350px;
+	padding: 0 2rem;
+  }
+
+  @media screen and (max-width: 1023px) {
+	.answer_link_banner_img{
+		width: 100%;
+		max-width: 450px;
+	  }
+	}
+
+
+  .answer_link_banner_img img{
+	width: 100%;
+	
+  }
+
+  .answer_link_banner_img:hover{
+	opacity: 0.8;
+  }
+  
+  
+  
+  .answer-a {
+	display: none;
+  }

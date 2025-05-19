@@ -1,0 +1,77 @@
+/* ------------------------- */
+/* houmon.htmlのページ */
+/* ------------------------- */
+/* サービス内容途中のバナーエリア全体 */
+.care_banner_area{
+  width: 94%;
+  margin: 0 auto;
+  margin-top: 40px;
+  margin-bottom: 80px;
+  text-align: center;
+}
+@media only screen and (max-width: 1023px){
+  /* バナーエリア見出し */
+  .care_banner_area{
+    width: 80%;
+  }
+}
+
+/* バナーエリア見出し */
+.care_banner_area p{
+  font-size: 1.45rem;
+  margin-bottom: 8px;
+}
+@media only screen and (max-width: 1023px){
+  /* バナーエリア見出し */
+  .care_banner_area p{
+    font-size: 1rem;
+    margin-bottom: 8px;
+  }
+}
+/* バナーエリア内フレックス */
+.banner-flame{
+  display: flex;
+  justify-content: space-around;
+  height: auto;
+  margin: 0 auto;
+}
+@media only screen and (max-width: 1023px){
+  .banner-flame{
+    flex-wrap: wrap;
+  }
+}
+
+.banner-img-box{
+  display: inline-block;
+  width: 220px;
+  margin: auto 8px;
+}
+@media only screen and (max-width: 1023px){
+  .banner-img-box{
+    margin: 0 0.15rem;
+    width: 40%;
+  }
+}
+.banner-img-box img{
+  width: 100%;
+}
+.banner-img-boxp{
+  display: block;
+  width: 30%;
+  /* max-width: 400px; */
+  margin-left: 20px;
+}
+.banner-img-boxp img{
+  max-width: 250px;
+}
+@media only screen and (max-width: 1023px){
+  .banner-img-boxp{
+    width: 80%;
+    max-width: 700px;
+    margin: 40px auto;
+    text-align: center;
+  }
+  .banner-img-boxp img{
+    max-width: 320px;
+  }
+}

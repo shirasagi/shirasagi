@@ -1,0 +1,130 @@
+@charset "utf-8";
+
+/*=====================================================
+*
+*	structure.css
+*	Since 2008.6.11
+*	Editor Norihiro Kamatani
+*
+*	Last Modified 
+*	Editor
+*
+========================================================*/
+	
+div#container {
+	background-attachment: scroll;
+	background-color: transparent;
+	background-image: url(../img/header_bg.jpg);
+	background-repeat: no-repeat;
+	}
+div#containerInner {
+/*	margin:0 auto;
+	position:relative;
+	text-align:left;
+	width: 1016px;*/
+}
+div#header {
+	height:83px;
+	margin:0 auto;
+	position:relative;
+	width:919px;
+	z-index:3;
+}
+
+/*------------------------------------------------*/		
+div#pagebgTop {
+	background:transparent url(../img/pagebody_top_bg.gif) no-repeat scroll 0 0;
+	height:19px;
+	margin-left:auto;
+	margin-right:auto;
+	width:919px;
+}
+	
+div#pageBody {
+	background:transparent url(../img/pagebody_middle_bg.gif) repeat-y scroll 0 0;
+	margin-left:auto;
+	margin-right:auto;
+	width:919px;
+	text-align: left;
+}
+
+#pagebgBottom {
+background:#FFFFFF url(../img/pagebody_bottom_bg.gif) no-repeat scroll left bottom;
+height:20px;
+margin-left:auto;
+margin-right:auto;
+width:919px;
+}
+/*------------------------------------------------*/
+#topPage div#pagebgTop {
+	background:transparent url(../img/pagebody_top_bg.png) no-repeat scroll 0 0;
+}
+	
+#topPage div#pageBody {
+	background:transparent url(../img/pagebody_middle_bg.png) repeat-y scroll 0 0;
+}
+
+#topPage  #pagebgBottom {
+background:#FFFFFF url(../img/pagebody_bottom_bg.png) no-repeat scroll left bottom;
+}
+
+
+
+#topWrap { 
+	margin-right: auto;
+	margin-left: auto;
+	position: relative;
+	z-index: 2;
+	margin-top: -353px;
+}
+*html #topWrap { 
+	margin-top: -353px;
+}
+#topPage div#pageBody { }
+#flash {
+	background-color:#fff;
+	position: relative;
+	z-index: 1;
+	/*	width: 1100px;*/
+	height: 600px;
+	margin:14px auto 0;
+	background-image: url(../img/flash_bg.gif);
+	background-repeat: repeat-x;
+}
+div#flashContent { height: 330px; }
+
+div#nofp2010 {
+height:250px;
+	background-color:#fff;}
+	
+div#primary {
+	display:inline;/* for win ie6 */
+	float:right;
+	margin-right:50px;
+	width:600px;
+}
+				
+
+div#secondary {		
+background:#FFF none repeat scroll 0 0;
+display:inline;
+float:left;
+margin:0 0 0 10px;
+width:216px;
+text-align:center;
+}
+				
+#footer {
+	height: 102px;
+	background: url(../img/bg_footer.gif) repeat-x;
+	text-align: center;
+	margin-top: 10px;
+	width: 100%;
+	padding-top: 15px;
+}
+#footer ul {
+}
+#footer ul li {
+	display:inline;
+	margin-left:10px;
+}

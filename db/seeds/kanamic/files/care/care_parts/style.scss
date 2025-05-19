@@ -1,0 +1,1923 @@
+// @use "scss/_reset";
+@use "scss/_variable" as var;
+@use "scss/_mixin" as mix;
+@use "scss/_base";
+
+
+// ▽▽▽共通styleシートでバッティングするcssを調整▽▽▽
+
+//不要な装飾削除
+.under #ttlArea .inner{display: none;}
+.under #ttlArea:after{ display: none; }
+.main{
+  margin: 0 auto;
+  max-width: 2400px;
+}
+.main h1{
+  font-weight: bold;
+}
+.main h2{
+  font-weight: bold;
+  font-size: 2.4rem!important;
+  @include mix.mq(under-lg2) {
+    font-size: 2rem!important;
+  }
+}
+
+#care-top #sec01,#care-top #sec02{
+  margin-top: 0!important;
+  padding-top: 0!important;
+}
+
+//下部のフロートボタン削除
+.float-button{display: none!important;}
+
+// ファーストビューの上部余白削除
+.care #ttlArea{height: auto;}
+nav.inner{margin: 2% auto 0 auto;}
+
+// ヘッダーの不要部分は非表示、表示させる部分はblock
+@media only screen and (max-width: 1023px){
+    header {
+      display: block;
+  }
+
+  .headerMain{display: none;}
+
+  .heade-main-menu{
+      display: none!important;
+      .inner{
+        display: none;
+        nav{
+          display: none!important;
+        }
+      }
+    }
+    .header_text,
+    .header_info_position,
+    nav {
+      display:none;
+  }
+
+
+  // フッターのマークサイズ
+  #mark ul li img{
+    width: auto;
+  }
+}
+
+// △△△共通styleシートでバッティングするcssを調整△△△
+
+
+/*--------追従ボタン-----------*/
+.fixed_btn
+{
+  position: fixed;
+	z-index: 99999;
+  bottom: 0%; 
+  right: 0%;
+  width: 230px;
+	border: none;
+  border-radius: 20px 0 0 0;
+  box-shadow: 2px 2px 5px rgba(167, 167, 167, 0.677);
+  background-color: #fff;
+  font-size: clamp(1.1rem, calc(0.25vw + 1.1rem), 1.7rem);
+  text-align: center;
+  letter-spacing: 0;
+	font-weight: bold;
+	display: block;
+	cursor: pointer;
+  transition: .3s;
+  /*デフォルトで非表示にする*/
+  opacity: 0;
+  visibility: hidden;
+  @include mix.hoverstyle2;
+  transition: all 1s;
+  button{
+    border: none;
+    box-shadow: 0 0 8px rgb(215, 215, 215);
+  }
+  @include mix.mq(under-lg2) {
+    border-radius: 25px 25px 0 0;
+    width: 100%;
+    right: 0;
+    left: 0;
+    bottom: -1%;
+    margin: 0 auto;
+  }
+  img{
+    width: 88%;
+    display: inline-block;
+    border: none;
+    @include mix.mq(under-lg2) {
+      width: 100%;
+    }
+  }
+  // 閉じるボタン
+  .close {
+    position: absolute;
+    top: 2%;
+    left: 2%;
+    cursor: pointer;
+    font-size: 18px;
+    color: #646464;
+    border: 1px solid #ccc; /* 境界線を設定 */
+    border-radius: 50%; /* 角を丸くする */
+    width: 24px;
+    height: 24px;
+    text-align: center;
+    line-height: 22px;
+    z-index: 10; /* 閉じるボタンを前面に表示 */
+    pointer-events: auto; /* 閉じるボタンにイベントを適用 */
+    // タブレット以下では閉じるの位置を位置変更、大きく
+    @include mix.mq(under-lg2) {
+      position: absolute;
+      font-size: 1.6rem;
+      top: -8%!important;
+      right: 2%!important;
+      border: none;
+    }
+  }
+}
+
+/*このクラスが付与されると表示する*/
+.active{
+  opacity: 1;/* スクロール時に表示 */
+  visibility: visible;
+}
+
+.fixed_btn::before {
+	content: '';
+	position: absolute;
+	top:-92px;
+	right:-60px;
+	width: 170px;
+	height: 170px;
+	background-image: url("../img/button_icon.png");
+	background-size: 100% auto;
+	background-repeat: no-repeat;
+	background-position: center;
+}
+
+
+img {
+  width: 100%;
+  vertical-align: bottom;
+}
+.title {
+  text-align: center;
+  line-height: 2.6rem;
+  letter-spacing: 0.1rem;
+  font-size: var.$font-size-pc-xxl;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-xxl;
+  }
+  @include mix.mq(under-sm) {
+    font-size: var.$font-size-sp-xl;
+  }
+}
+.subtitle {
+  text-align: center;
+  line-height: 2.3rem;
+  font-size: var.$font-size-pc-xl;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-xl;
+  }
+}
+
+// タイトルの上の吹き出し
+.title_catch1{
+  width: 230px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: var.$font-size-pc-xl;
+  background: var.$color-main1;
+  color: #fff;
+  border-radius: 60px;
+  position: relative;
+  display: inline-block;
+  &::before{
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: -8px;
+    left: 0;
+    width: 0px;
+    height: 0px;
+    margin: auto;
+  }
+  // 事例上吹き出し
+  &.-type2{
+    width: 490px;
+    margin: 0 auto;
+    text-align: center;
+    font-size: 1.3rem;
+    letter-spacing: -0.01rem;
+  }
+}
+
+// 下線
+.underline{
+  border-bottom: solid 5px var.$color-main1;
+  width: 95px;
+  margin: 0 auto;
+  max-width: 100%;
+  text-align: center;
+  @include mix.mq(under-sm) {
+    width: 16%;
+    border-bottom: solid 3.5px var.$color-main1;
+  }
+}
+
+//三角形
+.triangle{
+  content: "";
+  right: 0;
+  left: 0;
+  width: 0px;
+  height: 0px;
+  margin: auto;
+  border-style: solid;
+  border-color: var.$color-main1 transparent transparent transparent;
+  border-width: 10px 20px 0 20px;
+}
+
+// テキストの強調部分の色変更
+.pointcolor{
+  color: var.$color-main1;
+  font-weight: bold;
+  &.-function1{
+    color: var.$color-function1;
+  }
+  &.-function2{
+    color: var.$color-function2;
+  }
+  &.-function3{
+    color: var.$color-function3;
+  }
+}
+
+.text {
+  font-size: var.$font-size-pc-lg;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-lg;
+  }
+  &.-size-l {
+    font-weight: bold;
+  }
+}
+
+// テキストの大きさ調整
+.txt_size{
+  font-size: var.$font-size-pc-base;
+  //極大サイズ PC
+  &.-big{
+    font-size: var.$font-size-pc-xxxl;
+    @include mix.mq(under-sm) { 
+      font-size: var.$font-size-pc-xl2;
+    }
+  }
+  //大サイズ PC
+  &.-large{
+    font-size: var.$font-size-pc-xxl;
+  }
+
+  //小さいサイズ PC
+  &.-mini{
+    font-size:1.55rem;
+  }
+  //極小サイズ PC
+  &.-micro{
+    font-size: var.$font-size-pc-xs;
+  }
+}
+
+
+//画像のパターン背景
+.img-back{
+  //雲背景
+  background-color: var.$color-back2;
+  background-image: url(img/read/cloudback.png);
+  background-repeat: repeat;
+  background-size: 670px;
+  background-position: top center;
+  
+  @include mix.mq(under-md) {     
+    background-image:none;
+    background-color: #fff;
+  }
+}
+
+//マーカー
+.maker {
+  background: linear-gradient(transparent 75%, #F7931E 75%);
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+}
+
+//テキストの下にアンダーライン
+// .txt_underline{
+//   border-bottom: 7px solid var.$color-main1;
+// }
+
+// 丸いボタン装飾
+.roundbutton{
+  background: var.$button-color-1;
+  width: 320px;
+  padding: 1rem 1rem;
+  border-radius: 100px;
+  display: inline-block;
+  box-shadow: 0px 4px 15px rgba(0,0,0,0.2); 
+  text-align: center;
+  font-size: 1.34rem;
+  font-weight: bold;
+  letter-spacing: 0rem;
+  color: white;
+  text-shadow: 0px 2px 3px #22222269;
+  &.-color2 {
+    background: var.$button-color-2;
+  }
+  @include mix.mq(under-lg2) {
+    /* 最小1.4rem | SP:1.4rem | TB:1.5rem | PC:1.6rem | 最大1.8rem */
+	  font-size: clamp(1rem, calc(0.25vw + 1rem), 1.8rem);
+    width: 68%;
+  }
+}
+
+// -------
+// セクション別
+// -------
+// ヘッダー
+.header-section {
+  background: var.$primary-color;
+  color: #fff;
+  font-size: var.$font-size-pc-xl;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-xl;
+  }
+  .--logo {
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    width: 200px;
+    @include mix.mq(under-md) {
+      padding: 40px 0;
+    }
+    img {
+      width: 410px;
+      @include mix.mq(under-md) {
+        width: 70%;
+      }
+    }
+  }
+}
+
+.under #ttlArea {
+  @include mix.mq(under-lg2) {
+   padding-top: 58px!important;
+  }
+}
+
+// heroセクション top
+.hero-section {
+  background-image: url(img/top/top_backimg.png);
+  background-size: cover;
+  // background-size: 100%;
+  background-repeat: no-repeat;
+  background-position: center 75%;
+  color: #000;
+  padding-top: 0.03rem;
+  // height: 95vh;
+
+  @media only screen and (min-width: 1350px) {
+    height: 55vh;
+  }
+  @media only screen and (min-width: 1182px) {
+    // height: 95vh;
+    // height: 70vh;
+    height: 61vh;
+    max-height: 55rem;
+  }
+
+    // @include mix.mq(xxl) {
+    //   height: 80vh;
+    //   max-height: 640px;
+    //   background-position: center 65%;
+    // }
+
+  .container{
+      width: 86%;
+      margin: 0 auto;
+      position: relative;
+      padding: 0;
+      // height: 430px;
+      max-width: 1200px;
+      text-align: left;
+
+      .wrapper_lp{
+        width: 38%;
+        display: inline-block;
+        max-width: 1000px;
+        min-width: 800px;
+        .inner_lp{
+          position: relative;//ボタンエリアの絶対位置
+          padding-top: 1rem;
+          .top-col{
+            .toptxt{
+              text-align: center;
+              //経営者向け機能が充実
+              .top-catch{
+                font-size: 1.25rem;
+                letter-spacing: 0.01rem;
+                font-weight: bold;
+                @include mix.slash;
+              }
+              //タイトル
+              .top-title{
+                position: relative;
+                margin-top: 0.5rem;
+                font-size: 3.2rem;
+                letter-spacing: -0.18rem;
+                line-height: 4.5rem;
+                font-weight: bold;
+                font-style: italic;//斜体に
+                font-family: Times New Roman, "ＭＳ Ｐゴシック";
+                color: #000;
+                // -webkit-text-stroke: 0.5px #FFF;
+                // text-stroke: 0.5px #fff;
+                //称号マークを擬似要素で配置
+                &::after{
+                  position: absolute;
+                  right: -62%;
+                  top: -40%;
+                  transform: translate(-50%, -50%);
+                  content:'';
+                  display: inline-block;
+                  width: 350px;/*画像の幅*/
+                  height: 285px;/*画像の高さ*/
+                  background-image: url(img/top/mark.png);
+                  background-size: contain;
+                  background-repeat: no-repeat;
+                  background-position: right bottom;
+                  @include mix.mq(under-xxl2) {
+                    right: -64%;
+                    top: -35%;
+                    // width: 290px;
+                    // height: 290px;
+                  }
+                  @include mix.mq(under-xxl) {
+                    right: -50%;
+                    top: -65%;
+                    width: 280px;
+                  }
+                }
+              }
+            }
+            // 3つのポイント
+            .imgbox{
+              position: relative;
+              margin: 1.2rem auto 1.5rem auto;
+              width: 550px;
+              height: 145px;
+              background-image: url(img/top/point3.png);
+              background-repeat: no-repeat;
+              background-size: contain;
+              background-position: center;
+              //PC画像を擬似要素で配置
+              // &::after{
+              //   position: absolute;
+              //   right: -140%;
+              //   top: 145%;
+              //   transform: translate(-50%, -50%);
+              //   content:'';
+              //   display: inline-block;
+              //   width: 550px;
+              //   height: 550px;
+              //   background-image: url(img/top/pc.png);
+              //   background-size: contain;
+              //   background-repeat: no-repeat;
+              //   background-position: right bottom;
+
+              //   @include mix.mq(xxl) {
+              //     right: -160%;
+              //     top:240%;
+              //   }
+
+              //   @include mix.mq(xxl2) {
+              //     right: -190%;
+              //     top:190%;
+              //   }
+
+              //   @include mix.mq(under-xxl) {
+              //     right: -120%;
+              //     top:145%;
+              //     width: 400px;
+              //     height: 400px;
+              //   }
+              // }
+            }
+            //注釈
+            // .smalltxt{
+            //   margin: 1rem auto 0 auto;
+            //   width: 500px;
+            //   font-size: 0.58rem;
+            // }
+          }
+
+          //トップボタン横並び
+          .top_button_flame{
+            text-align: center;
+            margin-top: 20px;
+            .button_flexbox{
+              // /
+              // display: flex;
+              // justify-content: center;
+              .roundbutton{
+                z-index: 999;
+                // width: 36%;
+                width: 50%;
+                // ホバーで大きく
+                @include mix.hoverstyle;
+                //装飾はこのシート上部の共通で指定
+              }
+              .roundbutton1{
+                position: relative;
+                //資料請求ボタンに資料の画像配置
+                &::before{
+                  position: absolute;
+                  left: -25%;
+                  top: 2%;
+                  content: '';
+                  display: block;
+                  width: 150px;/*画像の幅*/
+                  height: 150px;/*画像の高さ*/
+                  background-image: url(img/cta/sampleimg.png);
+                  background-size: contain;
+                  background-repeat: no-repeat;
+                  background-position: left top;
+                }
+                //ボタンにリンク
+                a{
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                  text-indent: 100%;
+                  white-space: nowrap;
+                  overflow: hidden;
+                }
+              }
+              // .roundbutton2{
+              //   margin-left: 1.2rem;
+              //   position: relative;
+              //   a{
+              //     position: absolute;
+              //     width: 100%;
+              //     height: 100%;
+              //     top: 0;
+              //     left: 0;
+              //     text-indent: 100%;
+              //     white-space: nowrap;
+              //     overflow: hidden;
+              //   }
+              // }
+            }
+        }
+      }
+    } 
+  }
+}
+
+// Informationセクション 導入文
+.information-section {
+  position: relative;
+  .container{
+    padding: 4rem 0 6rem 0;
+    @include mix.mq(under-lg2) {
+      padding: 0;
+    }
+    //スマホ用ボタンエリア
+    .sp-button-area{
+        display: none;
+        @include mix.mq(under-lg2) {
+          display: block;
+          z-index: 100;
+          width: 100%;
+          margin: auto;
+          padding: 2rem 0;
+          background: var.$point-color1;
+        }
+        .top_button_flame{
+          width: 100%;
+          margin: 0 auto;
+          .button_flexbox{
+            display: flex;
+            justify-content: center;
+            .roundbutton{
+              font-size: 0.98rem;
+              position: relative;
+              @include mix.mq(under-lg2) {
+                // font-size: 0.8rem;
+                /* 最小1.4rem | SP:1.4rem | TB:1.5rem | PC:1.6rem | 最大1.8rem */
+	              font-size: clamp(1rem, calc(0.25vw + 1rem), 1.8rem);
+              }
+                //ボタンにリンク
+                a{
+                  position: absolute;
+                  width: 100%;
+                  height: 100%;
+                  top: 0;
+                  left: 0;
+                  text-indent: 100%;
+                  white-space: nowrap;
+                  overflow: hidden;
+                }
+            }
+            .roundbutton2{
+              margin-left: 0.9rem;
+            }
+          }
+        }
+    }
+    // こんなお悩みの全体の白枠横幅
+    .wrapper_lp{
+      margin-top: 0;
+      // padding: 5rem 0 0 0;
+      padding:0;
+      text-align: center;
+      @include mix.mq(under-lg2) {
+        padding: 0;
+      }
+      .inner_lp{
+        @include mix.mq(under-lg2) {
+          padding: 3rem 0 2.5rem 0;
+        }
+        // 称号表記の％の文章
+        .imgbox{
+          width: 65%;
+          margin: 0 auto 4rem auto;
+          @include mix.mq(under-xxl) {
+            margin: 0 0 4rem 0;
+          }
+          @include mix.mq(under-lg2) {
+            display: none;
+          }
+          img{
+            width: 100%;
+          }
+          //PC画像を擬似要素で配置
+          &::after{
+            position: absolute;
+            right: -15%;
+            top: -5%;
+            transform: translate(-50%, -50%);
+            content:'';
+            display: inline-block;
+            width: 550px;
+            height: 550px;
+            background-image: url(img/top/pc.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right bottom;
+            @include mix.mq(under-lg2) {
+              display: none;
+            }
+            @include mix.mq(xxl2) {
+              right: -7%;
+            }
+          }
+        }
+
+        //介護事業経営者のみなさま こんなお悩みありませんか？
+        .section_title{
+          text-align: center;
+          font-weight: bold;
+            // 介護事業経営者のみなさま
+            .section_sub_title{
+              color: var.$point-color3;
+              font-size:1.5rem;
+            }
+            // こんなお悩みありませんか？
+            h2.section_main_title{
+              font-weight: bold!important;
+              position: relative;
+              margin-top: 0.2rem;
+              font-size:2.8rem;
+              letter-spacing: 0.16rem;
+              @include mix.mq(under-lg2) {
+                font-size: 1.7rem;
+                letter-spacing: 0;
+              }
+            }
+        }
+        // 悩み３つ並び
+        .problem-list{
+          display: flex;
+          margin-top: 2.5rem;
+          // 箱それぞれの装飾
+          .listbox{
+            border-right: 4px dotted #CCCCCC;
+            width: 33.3%;
+            @include mix.mq(under-lg2) {
+              border: none;
+            }
+            &.-box3{
+              border-right: none;
+            }
+            p{
+              font-size: 1.3rem;
+              font-weight: bold;
+              @include mix.mq(under-lg2) {
+                font-size: 0.75rem;
+              }
+              .readpoint{
+                color: var.$point-color2;
+              }
+            }
+            .imgbox{
+              width: 60%;
+              margin: 0 auto;
+              @include mix.mq(under-lg2) {
+              width: 82%;
+            }
+            }
+          }
+        }
+      }
+    }
+  } 
+}
+
+// solutionセクション カナミックが解決します
+.solution-section{
+  background-color: var.$color-back1;
+  .container{
+    padding: 7rem 0 0 0;
+    position: relative;
+    @include mix.mq(under-lg2) {
+      padding: 1.5rem 0 0 0;
+    }
+    
+    //三角形を擬似要素で配置
+    &::before{
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      margin: 0 auto;
+      content: '';
+      display: inline-block;
+      width: 500px;/*画像の幅*/
+      height: 500px;/*画像の高さ*/
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-right: 100px solid transparent;
+      border-left: 100px solid transparent;
+      border-top: 45px solid #fff;
+      border-bottom: 0;
+    }
+    .wrapper_lp{
+      .inner_lp {
+        
+         //解決しますタイトル全体
+         .section_title{
+          padding: 1rem 0;
+            text-align: center;
+            font-size:2.5rem;
+            letter-spacing: 0.05rem;
+            font-weight: bold;
+            color: #fff;
+            @include mix.mq(under-lg2) {
+              font-size: 1.65rem;
+            }
+            // タイトル
+            h2.section_main_title{
+              position: relative;
+              font-size: 1.8rem;
+              // 黄色い文字
+              .solutiopoint{
+                color: var.$point-color5;
+              }
+              //そのお悩み吹き出し
+              &::before{
+              position: absolute;
+              top: -280%;
+              left: 18%;
+              content: '';
+              display: inline-block;
+              width: 140px;
+              height: 140px;
+              background-image: url(img/read/voice.png);
+              background-size: contain;
+              background-repeat: no-repeat;
+              background-position: right bottom;
+              @include mix.mq(under-lg2) {
+                top: -250%;
+                width: 160px;
+                height: 160px;
+              }
+              }
+              //３本線
+              &::after{
+              position: absolute;
+              top: -100%;
+              right: 18%;
+              content: '';
+              display: inline-block;
+              width: 70px;/*画像の幅*/
+              height: 70px;/*画像の高さ*/
+              background-image: url(img/read/line-3.png);
+              background-size: contain;
+              background-repeat: no-repeat;
+              background-position: right bottom;
+              }
+            }
+          }
+          .imgbox{
+            position: relative;
+            height: 300px;
+            //人物画像を擬似要素で配置
+            // &::before{
+            //     position: absolute;
+            //     bottom: 0;
+            //     right: -55%;
+            //     content: '';
+            //     width: 460px;
+            //     height: 460px;
+            //     background-image: url(img/read/mikity-solustion.png);
+            //     background-size: contain;
+            //     background-repeat: no-repeat;
+            //     background-position: right bottom;
+            //     @include mix.mq(under-xxl) {
+            //       right: -46%;
+            //       width: 390px;
+            //       height: 390px;
+            //       background-size:90%;
+            //     }
+            //     @media screen and (max-width: 1181px) {
+            //       display: none;
+            //     }
+            //    }
+
+            // 人物からPCに変更
+            &::before{
+              z-index: 2;
+                  position: absolute;
+                  bottom: -12%;
+                  right: -65%;
+                  content: '';
+                  width: 530px;
+                  height: 530px;
+
+                  background-image: url(img/top/pc.png);
+                  background-size: contain;
+                  background-repeat: no-repeat;
+                  background-position: right bottom;
+                  @include mix.mq(under-xxl) {
+                    right: -46%;
+                    width: 390px;
+                    height: 390px;
+                    background-size:90%;
+                  }
+                  @media screen and (max-width: 1181px) {
+                    display: none;
+                  }
+                 }
+
+            //見える化アイコン画像を擬似要素で配置
+            &::after{
+              z-index: 2;
+              position: absolute;
+              left: -30%;
+              top: -150%;
+              content: '';
+              display: inline-block;
+              width: 880px;/*画像の幅*/
+              height: 720px;/*画像の高さ*/
+              background-image: url(img/read/to_visualize.png);
+              background-size: 100%;
+              background-repeat: no-repeat;
+              background-position: right bottom;
+            }
+          }
+      }
+    }
+  }
+}
+
+// reasonセクション 選ばれる理由
+.reason-section {
+  position: relative;
+  background-color: var.$color-back3;
+  .container{
+    background-color: #fff;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 6rem 0 0 0;
+    position: relative;
+    @include mix.mq(under-lg2) {
+      padding: 4rem 0 1rem 0;
+     }
+    //オレンジ三角形を擬似要素で配置
+    &::before{
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      margin: 0 auto;
+      content: '';
+      display: inline-block;
+      width: 500px;/*画像の幅*/
+      height: 500px;/*画像の高さ*/
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-right: 100px solid transparent;
+      border-left: 100px solid transparent;
+      border-top: 45px solid #FF9A02;
+      border-bottom: 0;
+      @include mix.mq(under-lg2) {
+        display: none;
+      }
+    }
+    //クリーム三角形を擬似要素で配置
+    &::after{
+      z-index: 1;
+      position: absolute;
+      top: 0;
+      right: 0;
+      content: '';
+      border-style: solid;
+      border-right: 0;
+      border-left: 300px solid transparent;
+      border-top: 300px solid #FFE8CC;
+      border-bottom: 0;
+      @include mix.mq(under-lg2) {
+        display: none;
+      }
+    }
+    // 選ばれる理由のタイトルの枠横幅
+    .wrapper_lp{
+      // border: 1px solid #000;
+      margin-top: 0;
+      padding:0;
+      text-align: center;
+      .inner_lp{
+        @include mix.mq(under-lg2) {
+         padding: 0;
+        }
+        //カナミックの介護ソフトが選ばれる理由タイトル全体
+        .section_title{
+          text-align: center;
+          font-weight: bold;
+            // カナミックの介護ソフトが
+            .section_sub_title{
+              font-size:1.4rem;
+              @include mix.mq(under-lg2) {
+                font-size: 1.2rem;
+               }
+            }
+            // 選ばれる理由
+            h2.section_main_title{
+              color: var.$point-color3;
+              position: relative;
+              margin-top: 0.05rem;
+              font-size:3.6rem!important;
+              letter-spacing: -0.08rem;
+              @include mix.mq(under-lg2) {
+                font-size: 2.1rem!important;
+                margin-top: 0;
+               }
+            }
+        }
+      }
+    }
+
+    // 選ばれる理由の説明３つの枠
+    .wrapper_lp2{
+      // wrapper_lpと同じ装飾
+      .inner_lp{
+        //カナミックの介護ソフトが選ばれる理由
+        .reason_flame{
+            margin-top: 2.1rem;
+            @include mix.mq(under-lg2) {
+              margin-top: 2rem;
+            }
+            // 選ばれる理由の大枠
+            .reason_box{
+              width: 890px;
+              margin: 0 auto;
+              display: flex;
+              @include mix.mq(under-lg2) {
+                width: 100%;
+                display: block;
+                margin-bottom: 5rem;
+              }
+              
+              .imgbox{
+                // width: 50%;
+                // background: #faf;
+                width: 300px;
+                height: 300px;
+                height: auto;
+                @include mix.mq(under-lg2) {
+                  width: 78%;
+                  height: auto;
+                  margin: 0 auto;
+                }
+                .--image{
+                  width: 97%;
+                  margin: 0 auto;
+                  @include mix.mq(under-lg2) {
+                    width: 78%;
+                    margin: 0 auto 0.6rem auto;
+                  }
+                }
+              }
+              .reasontxt{
+                width: 55%;
+                margin-top: 3rem;
+                @include mix.mq(under-lg2) {
+                  width: 95%;
+                  margin-top: 1.5rem;
+                }
+              }
+            }
+        }
+        
+      }
+    }
+  } 
+}
+
+// meritセクション メリットばかり
+.merit-section {
+  background-color: var.$color-back3;
+  .container{
+    background-color: #fff;
+    padding: 8rem 0 8.5rem 0;
+    max-width: 1500px;
+    margin: 0 auto;
+    position: relative;
+    // background-image: url(img/merit/mikity-merit.png);
+    background-image: url(img/merit/merit_voice.png);
+    background-repeat: no-repeat;
+    // background-size: contain;
+    background-size: 400px;
+    // 大きい画面では画像変更
+    @include mix.mq(xxl) {
+      // background-image: url(img/merit/mikity-merit2.png);
+      background-image: url(img/merit/merit_voice.png);
+      background-size: 220px;
+      background-position:15% 6%;
+    }
+    @include mix.mq(under-xl) {
+      background-size: 380px;
+    }
+    @include mix.mq(under-lg2) {
+      padding: 4rem 0 4rem 0;
+      background: none;
+    }
+    // タイトルの枠横幅
+    .wrapper_lp{
+      margin-top: 0;
+      padding:0;
+      text-align: center;
+      .inner_lp{
+        //カナミックのご導入はメリットばかりタイトル全体
+        .section_title{
+          text-align: center;
+          font-weight: bold;
+            // カナミックのご導入は
+            .section_sub_title{
+              font-size:1.8rem;
+              @include mix.mq(under-lg2) {
+                font-size:1.2rem;
+                letter-spacing: 0;
+              }
+            }
+            // メリットばかり
+            .section_main_title{
+              @include mix.slash;
+              position: relative;
+              margin-top: 0.05rem;
+              font-size:2.8rem;
+              letter-spacing: 0.15rem;
+              @include mix.mq(under-lg2) {
+                font-size:1.9rem;
+                letter-spacing: 0;
+              }
+              .merittxt{
+                color: var.$point-color3;
+              }
+            }
+           }
+        .imgbox{
+          width: 700px;
+          height: 220px;
+          margin: 2.5rem auto 0 auto;
+          background-image: url(img/merit/merit-list.png);
+          background-repeat: no-repeat;
+          background-size: contain;
+          .--image{
+            width: 100%;
+            margin: 0 auto;
+          }
+          @include mix.mq(under-lg2) {
+            width: 82%;
+            // height: 650px;
+            height: auto;
+            margin: 1.8rem auto 0.8rem auto;
+            background-image: url(img/merit/merit-list-sp.png);
+            background-size: 70%;
+            background-position: top center;
+
+            background: none;
+          }
+        }
+      }
+    }
+  } 
+}
+
+// symbolセクション 多くの事業所さまに選ばれているソフトです
+.symbol-section {
+  background-color: var.$color-back3;
+  @include mix.mq(under-lg2) {
+    display: none;
+  }
+  .container{
+    position: relative;
+    background-color: #fff;
+    max-width: 1500px;
+    margin: 0 auto;
+    padding: 6rem 0 2rem 0;
+    //クリーム三角形を擬似要素で配置
+    &::after{
+      z-index:0;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      content: '';
+      display: inline-block;
+      width: 800px;/*画像の幅*/
+      height: 800px;/*画像の高さ*/
+      width: 0;
+      height: 0;
+      border-style: solid;
+      border-right: 0;
+      border-left: 300px solid transparent;
+      border-top: 0;
+      border-bottom: 300px solid #FFE8CC;
+    }
+    // タイトルの枠横幅
+    .wrapper_lp{
+      margin-top: 0;
+      padding:0;
+      text-align: center;
+      .inner_lp{
+        // PCとスマホの画像
+        .--image{
+          position: relative;
+          width: 650px;
+          height: 370px;
+          // background-image: url(img/cta/pc-sp-img.png);
+          // background-repeat: no-repeat;
+          // background-size: contain;
+          //ipad画像を擬似要素で配置
+          &::before{
+            z-index: 9999;
+            position: absolute;
+            right: 0;
+            bottom: -4%;
+            content: '';
+            display: inline-block;
+            width: 650px;/*画像の幅*/
+            height: 650px;/*画像の高さ*/
+            background-image: url(img/cta/ipad-img.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right bottom;
+          }
+          //人物画像を擬似要素で配置
+          &::after{
+            z-index: 999;
+            position: absolute;
+            right: -88%;
+            bottom: 0;
+            content: '';
+            display: inline-block;
+            width: 600px;/*画像の幅*/
+            height: 600px;/*画像の高さ*/
+            // background-image: url(img/cta/mikity-cta.png);
+            background-image: url(img/cta/cta-img01.png);
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: right bottom;
+            @include mix.mq(under-xxl) {
+              right: -78%;
+              width: 550px;
+              height: 550px;
+              background-size:100%;
+            }
+          }
+        }
+      }
+    }
+  } 
+}
+
+//CTAセクション
+.cta-section {
+  background-color: var.$color-back1;
+  &.-cta-section1{
+    @include mix.mq(under-lg2) {
+      display: none;
+    }
+  }
+  .container{
+    position: relative;
+    padding: 2.8rem 0;
+    height: 13rem;
+    @include mix.mq(under-lg2) {
+      position: static;
+      height: auto;
+    }
+    //画像の位置調整用のコンテナ
+    .positioncontainer{
+      position: absolute;
+      right: 0;
+      left: 0;
+      margin: 0 auto;
+      max-width: 1200px;
+      @include mix.mq(under-lg2) {
+        position: static;
+      }
+
+      // 人物画像を擬似要素で配置
+      // &::after{
+      //   position: absolute;
+      //   right: -2%;
+      //   top: -462px;
+      //   content: '';
+      //   display: inline-block;
+      //   width: 420px;/*画像の幅*/
+      //   height: 420px;/*画像の高さ*/
+      //   background-image: url(img/available/mikity-available.png);
+      //   background-size: contain;
+      //   background-repeat: no-repeat;
+      //   background-position: right bottom;
+      //   @include mix.mq(under-xxl) {
+      //     right: 0;
+      //     width: 280px;
+      //   }
+      //   @include mix.mq(under-lg2) {
+      //     display: none;
+      //   }
+      // }
+      &.-img2{
+        &::after{
+          display: none;
+        }
+      }
+    }
+
+    .wrapper_lp{
+      //人物画像より上に配置
+      z-index: 999;
+      position: absolute;
+      top: -6rem;
+      right: 0;
+      left: 0;
+      margin: 0 auto;
+      border: 6px solid #FF9A02;
+      background: #fff;
+      border-radius: 30px;
+      padding: 2rem 1rem;
+      @include mix.mq(under-lg2) {
+        position: static;
+      }
+      }
+      .inner_lp{
+        //資料と電話番号横並び
+        .cta_flame1{
+          .sample_flexbox{
+            display: flex;
+            justify-content: center;
+            @include mix.mq(under-lg2) {
+              display: block;
+            }
+            .sample_img_box{
+              width: 48%;
+              @include mix.mq(under-lg2) {
+                width: 100%;
+              }
+            }
+            .tell_box{
+              width: 50%;
+              margin-right: 5%;
+              @include mix.mq(under-lg2) {
+                width: 100%;
+              }
+              a:hover{
+                text-decoration: none;
+                opacity: 0.75;
+              }
+            }
+            .samplebox{
+              width: 50%;
+              @include mix.mq(under-lg2) {
+                width: 100%;
+              }
+              //カナミックへのお問合せ
+              .tell_txt{
+                font-size: 1.3rem;
+                letter-spacing: 0.03rem;
+                text-align: center;
+                font-weight: bold;
+                @include mix.mq(under-lg2) {
+                  margin-top: 1rem;
+                }
+                .--image{
+                  width: 85%;
+                  margin: 0 auto;
+                }
+              }
+              //電話番号
+              .tell_number{
+                color: var.$point-color1;
+                font-size: 3rem;
+                letter-spacing: -0.15rem;
+                text-align: center;
+                font-weight: bold;
+                @include mix.mq(under-lg2) {
+                  margin-top: 1rem;
+                  font-size: 2.2rem;
+                  font-weight: 2.05rem;
+                  letter-spacing: -0.1rem;
+                }
+                // 電話アイコン
+                &::before {
+                  display: inline-block;
+                  content: '\f095';
+                  font-family: "Font Awesome 5 Free";
+                  font-weight:900;
+                  transform: scaleX(-1);
+                 }
+              }
+              //対応時間
+              .mini_txt{
+                background: var.$color-main2;
+                width: 72%;
+                margin: 0 auto;
+                padding: 0.2rem;
+                text-align: center;
+                font-size: 0.95rem;
+                @include mix.mq(under-lg2) {
+                  background: none;
+                  width: 90%;
+                  margin-bottom: 1.2rem;
+                  padding: 0;
+                  font-size: 0.82rem;
+                  letter-spacing: 0.02rem;
+                  border-bottom: 2px dotted #FF9A02;
+                }
+              }
+            }
+          }
+        }
+
+        //ボタン横並び
+        .cta_flame2{
+          .button_flexbox{
+            margin-top: 1rem;
+            display: flex;
+            justify-content: center;
+            @include mix.mq(under-lg2) {
+              display: block;
+            }
+            .roundbutton{
+              //装飾はこのシート上部の共通で指定
+              position: relative;
+              // ホバーで大きく
+              @include mix.hoverstyle;
+              @include mix.mq(under-lg2) {
+                width: 90%;
+                margin: 0 auto;
+              }
+              //ボタンにリンク
+              a{
+                position: absolute;
+                width: 100%;
+                height: 100%;
+                top: 0;
+                left: 0;
+                text-indent: 100%;
+                white-space: nowrap;
+                overflow: hidden;
+              }
+            }
+            .roundbutton2{
+              margin-left: 1.2rem;
+              @include mix.mq(under-lg2) {
+                margin-left: 0;
+                margin-top: 1.2rem;
+              }
+            }
+          }
+        }
+
+      }
+    }
+  }
+
+//caselistセクション 導入事例
+.caselist-section{
+  background-color: var.$color-back2;
+  position: relative;
+  
+  .container{
+    padding-top: 1rem;
+    // 左に人物画像、白いライン、白い下矢印   
+    background-image: url(img/case/caseline.png),url(img/case/casearrow.png);
+    background-repeat: no-repeat;
+    background-size: 100%,1150px;
+    background-position: top center,top center;
+    @include mix.mq(under-lg2) {
+      background-image: none,none,url(img/case/casearrow.png);
+      background-size: 0,0,1300px;
+    }
+    //カナミック介護ソフトの導入事例
+    .section_title{
+      padding-top: 4.5rem;;
+      text-align: center;
+      font-weight: bold;
+      @include mix.mq(under-lg2) {
+        padding-top: 4rem;
+      }
+        // カナミック介護ソフトの
+        .section_sub_title{
+          color: var.$point-color3;
+          font-size:1.6rem;
+          @include mix.mq(under-lg2) {
+            font-size:1.2rem;
+          }
+        }
+        // 導入事例
+        h2{
+          position: relative;
+          font-size:3.5rem!important;
+          @include mix.mq(under-lg2) {
+            font-size:2.1rem!important;
+          }
+        }
+      }
+
+    .swipe-win-wrapper{ 
+        overflow: hidden;
+        position: relative;
+        .swipeinner_wrapper{ 
+          max-width: 100%;
+          margin-left: auto;
+          margin-right: auto;
+          .swiper{
+              overflow: visible;
+              // 左の余白サイズ
+              padding: 60px 0 20px 250px;
+              @include mix.mq(under-lg2) {
+                padding: 115px 0 80px 112px;
+                padding: 120px 0 60px 40px;
+              }
+              // スライドの枠
+              .swiper-wrapper{
+                padding: 0 0 25px 0;
+                // 各事例のカード
+                .swiper-slide{
+                  //リンク用絶対位置
+                  position: relative;
+                  background-color: #fff;
+                  width: 390px;
+                  height: 480px;
+                  height: auto;
+                  padding: 2px;
+                  border-radius: 30px; 
+                  box-shadow: 0 4px 8px 0 rgba(0, 0, 0, .1);
+                  // display: flex;
+                  align-items: center; 
+                  justify-content: center;
+                  //ホバーで上に移動
+                  @include mix.hoverstyle2;
+                  @include mix.mq(under-lg2) {
+                    width: 450px;
+                  }
+                  //カードのリンク
+                  a{
+                    position: absolute;
+                    width: 100%;
+                    height: 100%;
+                    top: 0;
+                    left: 0;
+                    text-indent: 100%;
+                    white-space: nowrap;
+                    overflow: hidden;
+                  }
+                  // 事業所情報画像とテキスト
+                  .case-profile{
+                    width: 88%;
+                    margin: 20px auto 20px auto;
+                    position: relative;
+                    }
+                    // 事業所写真の枠
+                    .--image{
+                      position: relative;
+                      width: 100%;
+                      height: 200px;
+                      margin: 0 auto 20px auto;
+                      border-radius: 20px 20px 0 0;
+                      background: #288E84;
+                      background-image: url(img/case/yacs01.jpg);
+                      background-repeat: no-repeat;
+                      background-size: cover;
+                      &.-image2{
+                        background-image: url(img/case/riei_02.jpg);
+                      }
+                      &.-image3{
+                        background-image: url(img/case/hitowa_03.jpg);
+                      }
+                      &.-image4{
+                        background-image: url(img/case/kokolife04.jpg);
+                      }
+                      &.-image5{
+                        background-image: url(img/case/aoiito_05.jpg);
+                      }
+                      &.-image6{
+                        background-image: url(img/case/nozominohana_06.jpg);
+                      }
+                      &.-image7{
+                        background-image: url(img/case/maruwa_medical_07.jpg);
+                      }
+                      &.-image8{
+                        background-image: url(img/case/rirestage_08.jpg);
+                      }
+                      &.-image9{
+                        background-image: url(img/case/nursecare_09.jpg);
+                      }
+                      &.-image10{
+                        background-image: url(img/case/cocofump_10.jpg);
+                      }
+                      &.-image11{
+                        background-image: url(img/case/kaedenokaze_11.jpg);
+                      }
+                      &.-image12{
+                        background-image: url(img/case/AccommoCareService\ _12.jpg);
+                      }
+                      //caseのオレンジマーク
+                      .case-number{
+                        position: absolute;
+                        left: -6px;
+                        bottom: -13px;
+                        background: var.$point-color3;
+                        width: 62px;
+                        padding: 0.4rem;
+                        border-radius: 50%;
+                        font-size: 0.8rem;
+                        text-align: center;
+                        font-weight: bold;
+                        color: #fff;
+                        @include mix.mq(under-lg2) {
+                          left: -10px;
+                          width: 64px;
+                          font-size: 0.5rem;
+                        }
+                        // 番号テキスト
+                        .casenumbertxt{
+                          font-size: 1.4rem;
+                          letter-spacing: -0.08rem;
+                          @include mix.mq(under-lg2) {
+                            font-size: 0.6rem;
+                            letter-spacing: -0.1rem;
+                          }
+                        }
+                      }
+                    }
+                    // 事業所名
+                    h3{
+                      text-align: center;
+                      font-size:1.35rem;
+                      line-height: 1.8rem;
+                      margin-bottom: 15px;
+                      letter-spacing: -0.1rem;
+                      font-weight: bold;
+                      @include mix.webfont3;
+                      @include mix.mq(under-lg2) {
+                        font-size: 1rem;
+                        line-height: 1.4rem;
+                      }
+                    }
+                    //コピー
+                    .copy{
+                      font-size: 0.95rem;
+                      line-height: 1.4rem;
+                      margin: 1rem auto;
+                      text-align: center;
+                      @include mix.mq(under-lg2) {
+                        font-size: 0.65rem;
+                        line-height: 1.1rem;
+                      }
+                    }
+                    //従業員数、事業内容
+                    dt{
+                      margin-top: 0.4rem;
+                      text-align: center;
+                      font-size: 0.85rem;
+                      letter-spacing: 0;
+                      @include mix.mq(under-lg2) {
+                        margin-top: 0.5rem;
+                        font-size: 0.8rem;
+                        letter-spacing: 0;
+                      }
+                    }
+                    //人数
+                    .scale{
+                      color: var.$point-color4;
+                      text-align: center;
+                      font-size: 1.5rem;
+                      font-weight: bold;
+                      @include mix.mq(under-lg2) {
+                        font-size: 1.3rem;
+                      }
+                    }
+                    // 関連サービス
+                    .service-list-wrap{
+                      display: flex;
+                      flex-wrap: wrap;
+                      justify-content: center;
+                      align-items:center;
+                      .service-list{
+                        width: 28%;
+                        margin: 0.3rem 0.1rem;
+                        padding: 0.05rem 0.3rem 0 0.3rem;
+                        text-align: center;
+                        font-weight: bold;
+                        font-size: 0.75rem;
+                        color: #288E84;
+                        border: 2px solid #288E84;
+                        border-radius: 60px;
+                        @include mix.mq(under-lg2) {
+                          width: 40%;
+                          margin: 0.2rem 0.2rem;
+                          padding: 0.05rem 0.2rem 0 0.2rem;
+                          font-size: 0.65rem;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+          }
+          // アクティブなページネーションの色変更
+          .swiper-pagination-bullet-active{
+              background-color: #FF9A02;
+          }
+          //非アクティブなページネーションの色変更
+          .swiper-pagination{
+            bottom: -7px!important;
+            @include mix.mq(under-md) { 
+              bottom:-14px;
+            } 
+        }
+      }
+    }
+  }
+
+//functionセクション 機能一覧
+.function-section {
+  background-color: var.$color-back3;
+  .container{  
+    padding: 6rem 0 0 0;
+    @include mix.mq(under-lg2) {
+      padding: 4rem 0 0 0;
+    }
+    .inner_lp{
+      //カナミック介護ソフトの機能一覧
+      .section_title{
+        text-align: center;
+        font-weight: bold;
+          // カナミック介護ソフトの
+          .section_sub_title{
+            color: var.$point-color3;
+            font-size:1.4rem;
+            @include mix.mq(under-lg2) {
+              font-size: 1.1rem;
+            }
+          }
+          //機能一覧
+          .section_main_title{
+            position: relative;
+            margin-top: 0.04rem;
+            font-size:2.8rem;
+            letter-spacing: -0.1rem;
+            @include mix.mq(under-lg2) {
+              margin-top: 0;
+              font-size: 1.9rem;
+            }
+          }
+        }
+      //機能一覧
+      .function-list-flame{
+        margin-top: 2rem;
+        width: 100%;
+        .only-sp{
+          width: 100%;
+        }
+      }
+    }
+  }
+}
+
+//availableセクション 対応サービス一覧
+.available-section{
+  background-color: var.$color-back3;
+  .container{
+    padding: 6rem 0 8rem 0;
+    @include mix.mq(under-lg2) {
+      padding: 4rem 0 3rem 0;
+    }
+    //全体の枠
+    .wrapper_lp{
+    position: relative;
+    padding: 2.5rem 0;
+    @include mix.mq(under-lg2) {
+      padding: 1rem 0 0 0;
+    }
+    .inner_lp{
+      //カナミック介護ソフトの対応サービスの一覧
+      .section_title{
+        text-align: center;
+        font-weight: bold;
+          // カナミック介護ソフトの
+          .section_sub_title{
+            color: var.$point-color3;
+            font-size:1.4rem;
+            @include mix.mq(under-lg2) {
+              font-size: 1.1rem;
+            }
+          }
+          // 対応サービス一覧
+          .section_main_title{
+            position: relative;
+            margin-top: 0.2rem;
+            font-size:2rem;
+            letter-spacing: 0;
+            @include mix.mq(under-lg2) {
+              font-size: 1.55rem;
+              margin-top: 0;
+              margin-bottom: 0.5rem;
+            }
+          }
+        }
+
+        //２列の表
+        .flex-box_2col{
+          display: flex;
+          margin-top: 1rem;
+          .colbox{
+            padding: 1rem 1.4rem;
+	          display: table;
+            @include mix.mq(under-lg2) {
+              padding: 0.8rem 0.5rem;
+              }
+            h3{
+              font-size: 1.1rem;
+              font-weight: bold;
+              display: table-cell;
+	            vertical-align: middle;
+              @include mix.mq(under-lg2) {
+                font-size: 0.9rem;
+                }
+              @include mix.mq(under-sm) {
+                font-size: 0.7rem;
+                letter-spacing: -0.1rem;
+                }
+            }
+            li{
+              font-size: 1.1rem;
+
+              &.newimg::after{
+                @include mix.tikatika;
+                content: "New!";
+                color: rgb(255, 167, 25);
+                font-weight: bold;
+	              font-size: 1rem;
+                margin-left: 1rem;
+              }
+              
+              @include mix.mq(under-lg2) {
+                font-size: 0.9rem;
+                }
+              @include mix.mq(under-sm) {
+                font-size: 0.7rem;
+                }
+              a{
+                text-decoration: underline;
+                &:hover{
+                  // opacity: 0.75;
+                  @include mix.hoverstyle3;
+                }
+              }
+            }
+            &.-col_left{
+              width: 30%;
+              border-radius: 15px 0 0 15px;
+              @include mix.mq(under-sm) {
+                width: 35%;
+                }
+            }
+            &.-col_right{
+              width: 70%;
+              background: #fff;
+              border-radius: 0 15px 15px 0;
+              @include mix.mq(under-sm) {
+                width: 65%;
+                }
+            }
+            &.-colbox1{
+              background: #FBB03B;
+            }
+            &.-colbox3{
+              background: #FCCE59;
+            }
+            &.-colbox5{
+              background: #76CCC2;
+            }
+            &.-colbox7{
+              background: #8AD6B1;
+            }
+          }
+        }
+        }
+      }
+    }
+  }
+
+ //primeセクション prime上場企業です
+.prime-section{
+  padding: 3.5rem 0;
+  text-align: center;
+  font-weight: bold;
+  color: #B17E10;
+  @include mix.mq(under-lg2) {
+    width: 92%;
+    margin: 0 auto;
+    padding: 4rem 0 3rem 0;
+  }
+  img{
+    display: block;
+    width: 60px;
+    margin: 0 auto;
+    @include mix.mq(under-lg2) {
+      width: 100px;
+    }
+  }
+  p{
+    margin-top: 20px;
+    @include mix.mq(under-lg2) {
+      margin-top: 2rem;
+      font-size: 0.8rem;
+    }
+  }
+  }
+
+// フッター
+.footer-section {
+  font-size: var.$font-size-pc-xl;
+  @include mix.mq(under-md) {
+    font-size: var.$font-size-sp-xl;
+  }
+  .--logo {
+    margin: 0;
+    padding: 0;
+    line-height: 0;
+    width: 200px;
+    @include mix.mq(under-md) {
+      max-width: 400px;
+      width: 90%;
+      padding: 40px 0;
+    }
+    img {
+      width: 410px;
+      @include mix.mq(under-md) {
+        width: 70%;
+      }
+    }
+  }
+  .--copyright {
+    font-size: var.$font-size-pc-md;
+    @include mix.mq(under-md) {
+      font-size: var.$font-size-sp-md;
+    }
+  }
+}

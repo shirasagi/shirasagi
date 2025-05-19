@@ -1,0 +1,34 @@
+@charset "utf-8";
+
+/*=====================================================
+*
+*	error.css
+*	Since 2008.7.22
+*	Editor Norihiro Kamatani
+*
+========================================================*/
+
+div#container {
+	margin: 0 auto;
+	width: 800px;
+	height: 100%;
+	background: #e5e5e5 url(http://www.kanamic.net/common/img/bg_error.jpg) repeat-x 0 0;
+	text-align: left;
+}
+
+h1 { margin-left: 20px; padding-top: 120px; }
+dl { margin-bottom: 20px; margin-left: 72px; }
+
+ul.message    { margin-bottom: 10px; margin-left: 82px; }
+ul.message li { list-style: disc; line-height: 1.3; }
+
+p { margin-bottom: 20px; margin-left: 72px; }
+
+ul.nav    { margin-bottom: 40px; margin-left: 72px; }
+ul.nav li {
+	padding-left: 18px;
+	background: url(http://www.kanamic.net/common/img/marker_arrow01.gif) no-repeat left center;
+	line-height: 1.3;
+}
+
+address { margin-left: 72px; }

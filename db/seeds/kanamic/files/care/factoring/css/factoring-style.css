@@ -1,0 +1,243 @@
+@charset "utf-8";
+/* CSS Document */
+
+.factoring-area .factoring-title {
+    width: 100%;
+    display: inline-block;
+    background: #ffe600;
+    text-align: center;
+    color: #333333;
+    font-size: 41px;
+    /*line-height: 1.5em;*/
+    padding: 5px 0 0 0;
+    font-weight: bold;	
+}
+.factoring-area .factoring-triangle {
+    width: 0;
+    height: 0;
+    margin: 0 auto;
+    border-top: 30px solid #ffe600;
+    border-right: 30px solid transparent;
+    border-bottom: 0 solid transparent;
+    border-left: 30px solid transparent;
+	z-index: 5000;
+}
+.factoring-area .yellow-back{
+	background: #ffffe6;
+}
+.factoring-area .factoring-title .red{
+	color: #d22808;
+}
+.factoring-area .small01{
+	font-size: 55%;
+    font-weight: normal;
+}
+.factoring-area .small02{
+	font-size: 80%;
+    font-weight: normal;
+}
+
+body.top .factoring-main {
+	width: 100%;
+    background: -moz-linear-gradient(-150deg, #e86329, #ef7c1c, #e9817f ) fixed;
+    background: -webkit-linear-gradient(-150deg, #e86329, #ef7c1c, #e9817f ) fixed;
+    background: linear-gradient(150deg, #e86329, #ef7c1c, #e9817f 55%) fixed;
+	/*margin-top: 64px;
+    background: url(../img/factoring_main01.png) no-repeat top center;*/
+    /* padding-top: 500px; */
+    /* height: 440px; */
+}
+body.top .factoring-main .inner {
+    padding-top: 145px;
+}
+.factoring-main .factoring-image {
+    display: block;
+    margin: 0 auto;
+}
+
+body.top .factoring-area .factoring-point {
+    padding: 30px 0 80px 0;
+    max-width: 1600px;
+    font-family: "ヒラギノ角ゴ Pro W3", "Hiragino Kaku Gothic Pro", "YuGothic", "Yu Gothic", "メイリオ", Meiryo, Osaka, "ＭＳ Ｐゴシック", "MS PGothic", "sans-serif";
+    margin: 0 auto;
+}
+body.top .factoring-point .innerBox {
+    text-align: center;
+}
+body.top .factoring-area .factoring-point p {
+    font-size: 22px;
+    line-height: 1.7em;
+	margin: 20px auto 0;
+}
+body.top .factoring-area .factoring-point .sub {
+    font-size: 15px;
+    line-height: 1.5em;
+	margin: 15px 0 0 0;
+}
+body.top .factoring-area .factoring-point .nyukin01 {
+    font-size: 18px;
+    line-height: 1.5em;
+    margin: 0px 0 0px 210px;
+    letter-spacing: -0.045em;
+}
+body.top .factoring-area .factoring-point .point-details01 {
+	width: 600px;
+	margin: 40px auto 0;
+	max-width: 100%;
+}
+body.top .factoring-area .factoring-point .point-details02 {
+	width: 764.775px;
+	margin: 40px auto 0;
+	max-width: 100%;
+}
+body.top .factoring-area .factoring-point .point-details03 {
+	width: 800px;
+	margin: 40px auto 0;
+	max-width: 100%;
+}
+body.top .factoring-area .factoring-point .point-details04 {
+	width: 102px;
+	margin: 40px auto 0;
+	max-width: 100%;
+}
+body.top .factoring-area .factoring-point p.subtitle {
+    width: 100%;
+    background: #ffe600;
+    text-align: center;
+    color: #333333;
+    font-size: 25px;
+    line-height: 1em;
+    padding: 10px 0;
+    font-weight: bold;
+}
+ .factoring-area .contactBtn {
+	width: 380px;
+	text-align: center;
+	-moz-box-shadow: 5px 6px 2px 0px #a1a1a1;
+	-webkit-box-shadow: 5px 6px 2px 0px #a1a1a1;
+	box-shadow: 5px 6px 2px 0px #a1a1a1;
+	background-color:#f46725;
+	-moz-border-radius:33px;
+	-webkit-border-radius:33px;
+	border-radius:33px;
+	display:inline-block;
+	cursor:pointer;
+	color:#ffffff;
+	font-family:Arial;
+	font-size: 25px;
+    line-height: 1.5em;
+	letter-spacing: 0.06em;
+    font-weight: bold;
+	padding:10px 30px;
+	text-decoration:none;
+}
+ .factoring-area .contactBtn:hover {
+	background-color:#F49225;
+}
+ .factoring-area .contactBtn:active {
+	position:relative;
+	top:1px;
+}
+ .factoring-area .Btn-area {
+    margin: 40px auto 0;
+    text-align: center;
+}
+ .factoring-area .Btn-area {
+    margin: 40px auto 0;
+    text-align: center;
+}
+.br01 {
+		display: none;
+    }
+
+/* ========================================
+
+	Break Point
+
+======================================== */
+@media screen and (max-width: 960px) {
+	.br01 {
+		display: inherit;
+    }
+	.br-none {
+		display: none;
+    }
+	.factoring-area .factoring-title {
+        line-height: 1.25em;
+		padding: 10px 0;
+    }
+	body.top .factoring-area .factoring-point {
+        padding: 10px 0 100px 0;
+		margin: auto 10px;
+    }
+	body.top .factoring-area .factoring-point p {
+        font-size: 30px;
+        line-height: 1.5em;
+		margin: auto;
+		text-align: left;
+    }
+	body.top .factoring-area .factoring-point .sub {
+        font-size: 27px;
+        line-height: 1.5em;
+        margin: 0 0 0 0;
+    }
+	.factoring-area .contactBtn {
+        width: 500px;
+        font-size: 37px;
+    }
+	body.top .factoring-area .factoring-point .point-details01 {
+        width: 100%;
+		margin: 60px auto 0;
+    }
+	body.top .factoring-area .factoring-point .point-details02 {
+        width: 100%;
+        margin: 60px auto 0;
+    }
+	body.top .factoring-area .factoring-point p.subtitle {
+        font-size: 30px;
+    }
+	body.top .factoring-area .factoring-point .factoring-image {
+        margin: 30px auto auto;
+    }
+	body.top .factoring-area .factoring-point .nyukin01 {
+        font-size: 27px;
+        margin: 0px 0 0px 0;
+        letter-spacing: -0.045em;
+	}
+	.small01 {
+        font-size: 75%;
+    }
+	body.top .factoring-area .factoring-point .point-details04 {
+        width: 200px;
+    }
+	
+}
+/*@media screen and (min-width: 641px) {
+}
+@media screen and (max-width: 1024px) {
+}
+@media screen and (max-width: 768px) {
+}
+@media screen and (max-width: 640px) {
+
+@media screen and (max-width: 414px) {
+
+@media screen and (max-width: 375px) {
+}
+@media screen and (max-width: 320px) {
+}*/
+/* ========================================
+
+ 	finalist.html
+
+======================================== */
+
+
+
+/* ========================================
+
+ 	Module
+
+======================================== */
+
+

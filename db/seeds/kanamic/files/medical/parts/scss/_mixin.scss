@@ -1,0 +1,261 @@
+@use "_variable" as var;
+
+// メディアクエリ用ミックスイン
+// xxl xl lg md sm
+// under-xxl under-xl under-lg under-md under-sm
+@mixin mq($breakpoint: xl) {
+  @media #{map-get(var.$breakpoints, $breakpoint)} {
+    @content;
+  }
+}
+.only-pc{
+  display: block;
+  @include mq(under-lg2) {
+    display: none;
+  }
+}
+.only-sp{
+  display: none;
+  @include mq(under-lg2) {
+    display: block;
+  }
+}
+
+// webフォント使用
+@mixin  webfont {
+  font-family: "Zen Kaku Gothic New", sans-serif;
+  // font-weight: 400;
+  // font-style: normal;
+}
+@mixin  webfont2 {
+  font-family: 'Satisfy', 'Sawarabi Mincho', sans-serif;
+  // font-weight: 400;
+  // font-style: normal;
+}
+@mixin  webfont3 {
+  font-family: "Zen Maru Gothic", serif;
+  font-weight: 700;
+  font-style: normal;
+}
+
+// 擬似要素に矢印
+@mixin arrow{
+  &::after{
+    content:"";
+    position: absolute;
+    top: 55%;
+    right: 10px;
+    left: 130px;
+    left: 80%;
+    height: 10px;
+    width: 10px;
+    margin-top: -7px;
+    border-top: 3px solid #fff;
+    border-right: 3px solid #fff;
+    transform: rotate(45deg);
+    }
+}
+
+// 大きくなる
+@mixin hoverstyle{
+    transition: all 0.2s;
+    &:hover{
+      transform: scale(1.1,1.1);
+    }
+}
+
+// 浮き上がる
+@mixin hoverstyle2{
+    // transition: all 0.01s;
+    transition-duration: 1ms;
+    transition-timing-function: ease-out;
+    &:hover {
+      // transform: translateX(-10px);
+      & img{
+        opacity: 0.6;
+      }
+      & h3{ color: #FF6801;}
+    }
+}
+
+// 薄くなる
+@mixin hoverstyle3{
+    transition: all 0.2s;
+    &:hover {
+      opacity: 0.7;
+      // transition: all 0.3s;
+      text-decoration: none;
+    }
+}
+// 色変更
+@mixin hoverstyle4{
+  transition: all 0.2s;
+  &:hover {
+    background: #FF6801;
+  }
+}
+
+@mixin hide{
+  overflow: hidden;
+    .hide-box{
+    position: absolute; 
+    right: 0;
+    left: 0;
+    bottom: 0;
+    margin: 0 auto;
+    padding: 30px 10px;
+    width: 100%;
+    text-align: center;
+    background: var.$color-main1;
+    color: #fff;
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform .5s;
+    
+    }
+    &:hover{
+      .hide-box{
+        transform: translateY(0); 
+      }
+    }
+}
+
+//左右に斜め線を引く
+@mixin slash{
+  align-items: center; /* 線を上下中央 */
+  display: flex; /* 文字と線を横並び */
+  justify-content: center; /* 文字を中央寄せ */
+  &::before,
+  &::after {
+    background-color:#FF9A02;;
+    border-radius: 5px; /* 線の両端を丸く */
+    content: "";
+    height: 5px; /* 線の高さ */
+    width: 38px; /* 線の長さ */
+  }
+  &::before {
+    margin-right: 15px; /* 文字との余白 */
+    transform: rotate(60deg); /* 傾ける */
+  }
+  &::after {
+    margin-left: 15px; /* 文字との余白 */
+    transform: rotate(-60deg); /* 傾ける */
+  }
+}
+
+// 動画をレスポンシブ対応にする
+@mixin movie{
+    border: #FF6801 4px solid;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    max-width: 660px;
+    display: block;
+    margin: auto;
+    transition: all 0.2s;
+    box-sizing: border-box;
+    @include mq(under-md) {
+      width: 80%;
+    }
+
+    &:hover {
+      opacity: 0.7;
+      // transition: all 0.3s;
+    }
+}
+
+// 背景を画像にする
+@mixin backgroundimg{
+  background-image: url(img/cta/backimg.png);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+}
+
+// リスト用の太い帯タイトル
+@mixin titleline{
+  width: 760px;
+  margin: 0 auto;
+  padding-top: 4px;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
+  // 左側の人物画像
+  &::before{
+    position: absolute;
+    top: -20px;
+    left: 6%;
+    content:'';
+    width: 140px;
+    height: 164px;
+    // background-image: url(img/icon/icon_img01.png);
+    background-image: url(img/icon/icon_img01.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left top;
+  }
+}
+
+// リスト用の太い帯タイトル
+@mixin titleline2{
+  width: 750px;
+  margin: 0 auto;
+  padding-top: 4px;
+  text-align: center;
+  font-weight: bold;
+  position: relative;
+  
+
+  // 右側の人物画像
+  &::after{
+    position: absolute;
+    top: -20px;
+    right: -6%;
+    content:'';
+    width: 140px;
+    height: 164px;
+    // background-image: url(img/icon/icon_img02.png);
+    background-image: url(img/icon/icon_img02.svg);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left top;
+  }
+}
+
+
+// 文字の前に擬似要素で画像
+@mixin txticon{
+  position: relative;
+  &::before{
+    position: absolute;
+    top: 10%;
+    left: 10%;
+    content:'';
+    width: 50px;
+    height: 50px;
+    background-image: url(img/icon/titleicon1.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left top;
+  }
+}
+// 文字の後ろに擬似要素で画像
+@mixin txticon2{
+  position: relative;
+  &::after{
+    position: absolute;
+    top: 10%;
+    right: 10%;
+    content:'';
+    width: 50px;
+    height: 50px;
+    background-image: url(img/icon/titleicon1.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: left top;
+  }
+}
+
+
+
+

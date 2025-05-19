@@ -1,0 +1,226 @@
+/* CSS Document */
+/* CSS Document */
+/* line 5, ../sass/ie7.scss */
+.inner {
+  width: 940px;
+  padding: 0 10px; }
+
+/* line 13, ../sass/ie7.scss */
+header #gNav ul li ul {
+  display: none; }
+  /* line 15, ../sass/ie7.scss */
+  header #gNav ul li ul li {
+    width: 233px;
+    height: 60px; }
+
+/* line 25, ../sass/ie7.scss */
+.top #news {
+  padding-top: 450px !important;
+  height: 490px !important; }
+/* line 32, ../sass/ie7.scss */
+.top #tabNews .tab01 a {
+  background: #F79800 !important; }
+/* line 37, ../sass/ie7.scss */
+.top #tabNews .tab02 a {
+  background: #BCF736 !important; }
+/* line 42, ../sass/ie7.scss */
+.top #tabNews .tab03 a {
+  background: #98E6FE !important; }
+/* line 47, ../sass/ie7.scss */
+.top #tabNews .tab04 a {
+  background: #DCDCDC !important; }
+/* line 54, ../sass/ie7.scss */
+.top .searchTabContent .block {
+  width: 155px; }
+  /* line 56, ../sass/ie7.scss */
+  .top .searchTabContent .block h4 {
+    width: 110px !important; }
+/* line 61, ../sass/ie7.scss */
+.top .section#example .catchCopy .col > div {
+  float: left;
+  width: 480px;
+  color: #333; }
+
+/* line 69, ../sass/ie7.scss */
+#footNav {
+  zoom: 1; }
+  /* line 6, ../sass/_mixin.scss */
+  #footNav:after {
+    content: "";
+    display: block;
+    clear: both; }
+  /* line 71, ../sass/ie7.scss */
+  #footNav .block {
+    float: left;
+    width: 33%; }
+    /* line 72, ../sass/ie7.scss */
+    #footNav .block h2 {
+      font-size: 14px; }
+
+/* line 81, ../sass/ie7.scss */
+.col {
+  zoom: 1; }
+  /* line 6, ../sass/_mixin.scss */
+  .col:after {
+    content: "";
+    display: block;
+    clear: both; }
+  /* line 83, ../sass/ie7.scss */
+  .col .img {
+    float: left;
+    width: 450px !important; }
+  /* line 87, ../sass/ie7.scss */
+  .col .txt {
+    float: left;
+    width: 450px; }
+  /* line 91, ../sass/ie7.scss */
+  .col .left {
+    float: left;
+    width: 455px;
+    padding-right: 0px !important; }
+  /* line 96, ../sass/ie7.scss */
+  .col .right {
+    float: right;
+    width: 455px; }
+  /* line 100, ../sass/ie7.scss */
+  .col .video {
+    float: left;
+    width: 435px; }
+
+/* line 105, ../sass/ie7.scss */
+.col_2 {
+  zoom: 1; }
+  /* line 6, ../sass/_mixin.scss */
+  .col_2:after {
+    content: "";
+    display: block;
+    clear: both; }
+  /* line 107, ../sass/ie7.scss */
+  .col_2 h3 {
+    width: 550px !important; }
+  /* line 113, ../sass/ie7.scss */
+  .col_2 .txt {
+    width: 550px !important; }
+
+/* line 119, ../sass/ie7.scss */
+.case .col .box {
+  zoom: 1; }
+  /* line 6, ../sass/_mixin.scss */
+  .case .col .box:after {
+    content: "";
+    display: block;
+    clear: both; }
+  /* line 121, ../sass/ie7.scss */
+  .case .col .box .img {
+    width: 165px !important;
+    float: left;
+    padding-right: 0px !important; }
+    /* line 125, ../sass/ie7.scss */
+    .case .col .box .img img {
+      width: 135px;
+      height: 96px; }
+  /* line 130, ../sass/ie7.scss */
+  .case .col .box ul {
+    width: 300px !important;
+    float: right; }
+
+/* line 138, ../sass/ie7.scss */
+.col3 {
+  zoom: 1; }
+  /* line 6, ../sass/_mixin.scss */
+  .col3:after {
+    content: "";
+    display: block;
+    clear: both; }
+  /* line 140, ../sass/ie7.scss */
+  .col3 > div {
+    float: left;
+    width: 33%; }
+
+/* line 146, ../sass/ie7.scss */
+.colVideo1 {
+  zoom: 1; }
+  /* line 6, ../sass/_mixin.scss */
+  .colVideo1:after {
+    content: "";
+    display: block;
+    clear: both; }
+  /* line 148, ../sass/ie7.scss */
+  .colVideo1 .video {
+    width: 590px;
+    float: left;
+    padding: 0 !important; }
+  /* line 153, ../sass/ie7.scss */
+  .colVideo1 .txt {
+    width: 340px;
+    float: right; }
+
+/* line 163, ../sass/ie7.scss */
+.company.concept #sec02 .col .img {
+  width: 470px; }
+/* line 166, ../sass/ie7.scss */
+.company.concept #sec02 .col .txt {
+  width: 440px !important; }
+
+/* line 174, ../sass/ie7.scss */
+.formBlock .box {
+  zoom: 1;
+  display: block !important;
+  clear: both; }
+  /* line 6, ../sass/_mixin.scss */
+  .formBlock .box:after {
+    content: "";
+    display: block;
+    clear: both; }
+/* line 179, ../sass/ie7.scss */
+.formBlock .ttl {
+  float: left;
+  width: 195px !important; }
+/* line 183, ../sass/ie7.scss */
+.formBlock .txt {
+  float: left;
+  width: 640px !important; }
+/* line 187, ../sass/ie7.scss */
+.formBlock .input {
+  float: left;
+  width: 640px !important; }
+
+/* line 193, ../sass/ie7.scss */
+.company.officer .block .col3 div {
+  padding-left: 10px; }
+
+/* line 196, ../sass/ie7.scss */
+.company.officer .block .col3 div ul li.normal {
+  font-size: 12px; }
+
+/* line 202, ../sass/ie7.scss */
+.company.access .col .img {
+  float: left;
+  width: 280px !important;
+  padding: 0px !important; }
+  /* line 206, ../sass/ie7.scss */
+  .company.access .col .img img {
+    width: 280px;
+    height: auto; }
+/* line 211, ../sass/ie7.scss */
+.company.access .col .txt {
+  float: right;
+  width: 630px; }
+
+/* line 221, ../sass/ie7.scss */
+.recruit .recruitSelect {
+  zoom: 1; }
+  /* line 6, ../sass/_mixin.scss */
+  .recruit .recruitSelect:after {
+    content: "";
+    display: block;
+    clear: both; }
+  /* line 223, ../sass/ie7.scss */
+  .recruit .recruitSelect > div {
+    width: 470px;
+    float: left;
+    padding: 0 !important; }
+    /* line 227, ../sass/ie7.scss */
+    .recruit .recruitSelect > div img {
+      width: 460px;
+      height: auto; }

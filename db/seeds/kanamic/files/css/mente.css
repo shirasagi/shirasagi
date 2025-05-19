@@ -1,0 +1,33 @@
+@charset "utf-8";
+
+/*=====================================================
+*
+*	error.css
+*	Since 2008.7.22
+*	Editor Norihiro Kamatani
+*
+========================================================*/
+
+div#container {
+	margin: 0 auto;
+	width: 800px;
+	height: 100%;
+	background: #fff1da url(../img/bg_mente.jpg) repeat-x 0 0;
+	text-align: left;
+}
+
+h1 { margin-left: 20px; padding-top: 120px; }
+h2 { margin-bottom: 20px; margin-left: 72px; }
+
+div.main {
+	margin-bottom: 20px;
+	margin-left: 72px;
+	padding: 10px;
+	width: 600px;
+	background-color: #ffd79a;
+}
+
+div.main p { line-height: 1.4; margin-bottom: 0.5em; }
+div.main p strong { font-weight: bold; color: #f00; }
+
+address { margin-left: 72px; }

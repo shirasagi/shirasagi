@@ -1,0 +1,331 @@
+<!doctype html>
+<html>
+  <head>
+<!-- Google Tag Manager -->
+<script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-MZL6ZGP');</script>
+<!-- End Google Tag Manager -->
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="robots" content="noindex, nofollow" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="css/bootstrap-grid.min.css">
+    <link rel="stylesheet" href="css/bootstrap-reboot.min.css">
+    <link rel="stylesheet" href="css/swiper.min.css">
+
+    <!-- アイコン CSS -->
+    <link rel="stylesheet" href="css/fonts.css" type="text/css" />
+    <!-- アニメーション CSS -->
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+
+    <!-- 調整用 CSS -->
+    <link rel="stylesheet" href="css/style.css">
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="js/jquery-3.3.1.min.js"></script>
+    <script src="js/bootstrap.bundle.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+      $(document).ready(function () {
+    AOS.init();
+        });
+    </script>
+<!--
+    <script src="js/swiper.min.js"></script>
+    <script>
+    $(document).ready(function () {
+        var swiper = new Swiper('.swiper-container', {
+          navigation: {
+            nextEl: '.swiper-button-next',
+            prevEl: '.swiper-button-prev',
+          },
+          loop: true,
+          //autoplay: {
+            //delay: 5000,
+            //disableOnInteraction: true
+          //},
+          on: {
+            slideChange: function () {
+              jQuery('.swiper-slide-content').css('opacity', '0');
+              realIndex = this.realIndex + 1;
+              jQuery('.swiper-slide-content-' + realIndex).css('opacity', '1');
+            },
+          },
+        });
+      });
+    </script>
+-->
+
+    <script type="text/javascript">
+      $(function() {
+        var topBtn = $('div.container-fluid.entry');    
+        topBtn.hide();
+        //スクロールが100に達したらボタン表示
+        $(window).scroll(function () {
+
+            if ($(this).scrollTop() < 4000) {
+                topBtn.fadeIn();
+            } else {
+                topBtn.fadeOut();
+            }
+        });
+
+    });
+    </script>
+      <script type="text/javascript">
+        $(document).ready(function () {
+       
+        // 一旦hide()で隠してフェードインさせる
+        $('div.container-fluid.slide').hide().fadeIn('slow');
+       
+      });
+    </script>
+
+    <script>
+      $(document).ready(function () {
+         $(".navbar-nav li a").click(function(event) {
+         $(".navbar-collapse").collapse('hide');
+         });
+      });
+    </script>
+
+    <title>採用情報|株式会社カナミックネットワーク</title>
+  </head>
+  <body data-spy="scroll" data-target="#Navbar" data-offset="100">
+<!-- Google Tag Manager (noscript) -->
+<noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-MZL6ZGP"
+height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+    <div class="container-fluid header">
+      <div class="nav_area">
+        <nav class="navbar navbar-expand-lg navbar-light">
+          <a class="navbar-brand" href="#">
+            <img src="img/KANAMIC_logoRE_cr.png">
+          </a>
+          <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#Navber" aria-controls="Navber" aria-expanded="false" aria-label="ナビゲーションの切替">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="Navber">
+            <ul class="navbar-nav ml-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="#company" data-target="#company">当社について</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#office">拠点一覧</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#president">社長挨拶</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#detail">会社の様子</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="#recruit">エントリー</a>
+              </li>
+            </ul>
+          </div>
+          <!-- /.navbar-collapse -->
+        </nav>
+      </div>
+    </div>
+
+<div class="container-fluid slide clearfix">
+  <div class="main_img">
+    <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-ride="carousel">
+      <!-- スライドさせる画像の設定 -->
+      <div class="carousel-inner">
+        <div class="carousel-item active">
+          <img class="d-block w-100" src="img/pic01.png" alt="第1スライド">
+        </div><!-- /.carousel-item -->
+        <div class="carousel-item">
+          <img class="d-block w-100" src="img/pic02.png" alt="第2スライド">
+        </div><!-- /.carousel-item -->
+        <div class="carousel-item">
+          <img class="d-block w-100" src="img/pic03.png" alt="第3スライド">
+        </div><!-- /.carousel-item -->
+      </div><!-- /.carousel-inner -->
+    </div><!-- /.carousel -->
+  </div>
+
+    <div class="mobile_img">
+        <div id="carouselExampleSlidesOnly" class="carousel slide carousel-fade" data-ride="carousel">
+          <!-- スライドさせる画像の設定 -->
+          <div class="carousel-inner">
+            <div class="carousel-item active">
+              <img class="d-block w-100" src="img/main_img_sp01.png" alt="第1スライド">
+              <div class="carousel-caption sp01">
+                <h5>医療・介護業界専業ＩＴ企業<br>
+唯一の東証一部上場企業。</h5>
+              </div><!-- /.carousel-caption -->
+            </div><!-- /.carousel-item -->
+            <div class="carousel-item">
+              <img class="d-block w-100" src="img/main_img_sp02.png" alt="第2スライド">
+              <div class="carousel-caption sp02">
+                <h5>医療・介護・子育て分野における<br>
+No1のクラウドサービス企業</h5>
+              </div><!-- /.carousel-caption -->
+            </div><!-- /.carousel-item -->
+            <div class="carousel-item">
+              <img class="d-block w-100" src="img/main_img_sp03.png" alt="第3スライド">
+            </div><!-- /.carousel-item -->
+          </div><!-- /.carousel-inner -->
+        </div><!-- /.carousel -->
+    </div>
+    <!--
+    <div class="swiper-container pc">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide">
+          <img src="img/pic01.png" alt="Swiper01">
+          <div class="swiper-slide-content swiper-slide-content-1">医療・介護業界専業ＩＴ企業で<br>
+          唯一の東証一部上場企業。
+          </div>
+        </div>
+        <div class="swiper-slide">
+          <img src="img/pic02.png" alt="Swiper02">
+          <div class="swiper-slide-content swiper-slide-content-2">
+          医療・介護・子育て分野における<br>
+          No1のクラウドサービス企業
+          </div>
+        </div>
+        <div class="swiper-slide"><img src="img/pic03.png" alt="Swiper03"></div>
+      </div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>-->
+</div>
+
+    <h2 class="heading" id="company">当社について</h2>
+
+    <div class="container message" data-aos="fade-up">
+      <p class="punch">カナミックネットワークは、医療・介護・子育てに関わる<br>クラウドサービスを提供する企業です。</p>
+
+<p>私たちが開発・販売する『カナミッククラウドサービス』は、医療従事者や介護従事者が企業間を超えて、患者情報をリアルタイムに共有できるクラウドサービスです。すでに日本国内では業界トップクラスのシェアを誇っています。
+総務省主宰の「IoTサービス創出支援事業」など国の事業への参画や、ICT、IoT、AI、Fintechなど様々な新しい技術開発を進めております。</p>
+    </div>
+
+    <div class="container-fluid message_img clearfix">
+        <div class="container">
+          <div class="row">
+            <div class="col-sm" data-aos="fade-up"><img src="img/topimg001.png">
+              <p><span class=""></span>医療・介護の多職種連携システム</p>
+            </div>
+            <div class="col-sm" data-aos="fade-up"><img src="img/topimg002.png">
+              <p>外国人受け入れを想定し、多言語化<br>された業務システム</p>
+            </div>
+            <div class="col-sm" data-aos="fade-up"><img src="img/topimg003.png">
+              <p>「地域ぐるみの子育て」をサポート<br>するアプリ</p>
+            </div>
+          </div>
+        </div>
+        <div class="cp_link" data-aos="fade-up">
+          <button type="button" class="btn btn-light" formtarget="_blank" onclick="window.open('https://www.kanamic.net/company/outline.html')">
+              詳しい会社概要はこちら
+          </button>
+        </div>
+    </div>
+
+    <h2 class="heading" id="office">拠点一覧</h2>
+    <div class="container-fluid office clearfix" data-aos="fade-up">
+      <!-- スマホ用img -->
+      <div class="mobile_img">
+        <img src="img/office_map_sp.png" data-aos="fade-up">
+        <div class="container">
+            <ul>
+              <li><span class="icon-kanamic"></span>東京本社</li>
+              <li><span class="icon-kanamic"></span>千葉営業所</li>
+              <li><span class="icon-kanamic"></span>名古屋営業所</li>
+              <li><span class="icon-kanamic"></span>大阪営業所</li>
+              <li><span class="icon-kanamic"></span>福岡営業所</li>
+              <li><span class="icon-kanamic"></span>旭川研究室</li>
+              <li><span class="icon-kanamic"></span>康纳美克（大连）科技有限公司</li>
+            </ul>
+          </div>
+          <!-- /スマホ用img -->
+      </div>
+    </div>
+    <h2 class="heading" id="president">社長挨拶</h2>
+    <div class="jumbotron president clearfix">
+      <div class="mobile_img president">
+        <img src="img/bg_president_sp.png" data-aos="fade-up">
+      </div>
+      <div class="container clearfix" data-aos="fade-up">
+        <div class="tab_768 clearfix">
+          <h1 class="display-4">人の生活を支えるヘルスケアＩＴを私たちと一緒に開発しませんか？
+          </h1>
+          <p class="president_comment">日本は世界一の超高齢化国です。これからもまだまだ膨大な潜在需要があり、今後20年以上は需要が増えていく市場です。中国やアジアもこれから高齢化が進んでくるため、カナミックの医療・介護ＩＣＴモデルのアジア展開も視野に入れています。
+          </p>
+          <p class="president_comment">ＩＴ分野は広く様々なサービスがありますが、人々の生活に密着した医療・介護・子育てを支えるヘルスケアＩＴが我々の得意分野です。我々はこの分野のプラットフォーマーとして今後大きく事業展開を進めます。
+          </p>
+          <p class="president_comment">弊社の役員および従業員は、人生の重要な時期において、同じ目標を共有し、同じ方向性、同じ価値観のもと、共に成長しみんなで成功を勝ち取ろうと前に進んでいく運命共同体です。仕事は給料も大事ですが、仲間と一緒に生み出している商品の価値やプロセスそのものを生き甲斐にして欲しいと考えています。
+          </p>
+          <p class="president_comment">当社で株式上場を経験したメンバーは、まさにそんな実感を味わえたと思います。そして、そういう機会をこれからもたくさん作っていきたいと思っています。
+          </p>
+
+          <p class="signature">
+            株式会社カナミックネットワーク<br>
+            代表取締役社長<br>
+            <span>山本拓真</span>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <h2 class="heading" id="detail">会社の様子</h2>
+
+    <div class="container-fluid event clearfix">
+      <div class="container message clearfix" data-aos="fade-up">
+        <p>社内は落ち着いた雰囲気。営業・企画・開発・サポート、それぞれのチームの距離が近いため、常に意見の交換・共有が行いやすく、個々の提案が実現しやすい環境です。年間を通して展示会や、世界的なイベントへ協賛させていただいたり、お誕生日会や社員旅行など、部署を超えた交流が出来るイベントがたくさんある職場環境です。</p>
+      </div>
+      <div class="container photo">
+        <p data-aos="zoom-in-up"><img src="img/photo01.png"></p>
+        <p data-aos="zoom-in-up"><img src="img/photo02.png"></p>
+        <p data-aos="zoom-in-up"><img src="img/photo03.png"></p>
+        <p data-aos="zoom-in-up"><img src="img/photo04.png"></p>
+      </div>
+    </div>
+
+    <h2 class="heading" id="recruit">エントリー</h2>
+
+    <div class="container-fluid recruit clearfix" <p data-aos="fade-up">
+      <div class="container message clearfix">
+        <p class="punch">カナミックネットワークでは様々な職種の人材を募集しております。</p>
+          <p>弊社は日本初の医療・介護・子育て分野に特化したクラウドサービス専業メーカーとして
+          2018年7月に東証一部上場を致しました。<br>
+          当社は国が主導するプロジェクトに参画するなど、公的な役割も担っており、社会的貢献度も高くやりがいを感じられる環境です。</p>
+          <p>
+          会社説明会を実施いたしますので、『会社説明会にエントリーする』 ボタンよりエントリーお待ちしております。</p>
+      </div>
+      <div class="job">
+        <p>募集職種</p>
+        法人営業、カスタマーサポート、事務職（経理・一般事務・営業事務等）、<br>
+        UI/UXデザイナー、システムエンジニア<br>
+<button type="button" class="btn btn-light" formtarget="_blank" onclick="window.open('https://www8.webcas.net/form/pub/kanamic/newgraduates2020')">
+              会社説明会にエントリーする
+            </button>
+      </div>
+
+
+    </div>
+    <div class="container-fluid entry clearfix">
+        <div class="row entry_area">
+            <button type="button" class="btn btn-light" formtarget="_blank" onclick="window.open('https://www8.webcas.net/form/pub/kanamic/newgraduates2020')">
+              会社説明会にエントリーする
+            </button>
+        </div>
+    </div>
+
+    <div class="container-fluid footer clearfix">
+        <p>Copyright © Kanamic Network Co.,LTD All Rights Reserved.</p>
+    </div>
+
+  </body>
+</html>

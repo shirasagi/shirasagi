@@ -1,0 +1,24 @@
+/* ドロップダウンナビゲーション */
+ 
+.nav { display: block; margin: 0; padding: 0; position: relative; }
+.nav li { display: block; list-style: none; margin: 0; padding: 0; float: left; position: relative; }
+.nav a { display: block; }
+.nav ul { display: none; position: absolute; left: 0; margin: 0; padding: 0; }
+  * html .nav ul { line-height: 0; } /* IE6 "fix" */
+.nav ul a { zoom: 1; } /* IE6/7 fix */
+.nav ul li { float: none; }
+.nav ul ul { top: 0; }
+
+.nav ul { width: 130px; }
+.nav ul ul { left: 131px; }
+
+ 
+.nav { background-color: #333; height: 24px; }
+.nav *:hover { background-color: none; }
+.nav a { color: white; font-size: 12px; padding: 6px; line-height: 1; }
+.nav li.hover a { background-color: #5E5A5A; }
+.nav ul { top: 25px; }
+.nav ul li a { background-color: #5E5A5A; }
+.nav ul a.hover { background-color: #30A8C3; }
+.nav ul a { border-bottom: 1px solid white; border-right: none; opacity: 0.9; filter: alpha(opacity=90); }
+

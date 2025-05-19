@@ -1,0 +1,47 @@
+@use "_variable";
+
+html {
+  box-sizing: border-box;
+  font-family: variable.$font-family;
+  line-height: 1.8;
+  word-spacing: 1px;
+  -ms-text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+}
+// *,
+// *:before,
+// *:after {
+//   box-sizing: border-box;
+//   margin: 0;
+// }
+
+body {
+  color: variable.$text-color;
+  word-wrap: break-word;
+  // background: #fff;
+  font-feature-settings: "palt";
+  font-kerning: normal;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  text-decoration: none;
+  color: variable.$text-color;
+  transition: all 0.3s;
+  // &:hover {
+  //   opacity: 0.7;
+  //   transition: all 0.3s;
+  // }
+  // &:hover{
+  //   transform: scale(1.1,1.1);
+  // }
+}
+
+
+
+// 共通styleシートの不要な装飾削除
+.under #ttlArea .inner{display: none;}
+
+.under #ttlArea:after{ display: none; }

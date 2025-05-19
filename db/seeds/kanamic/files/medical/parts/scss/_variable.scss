@@ -1,0 +1,142 @@
+// カラー設定
+
+// ボタンに使用の２色
+// $button-color-1:linear-gradient(180deg, rgb(196, 252, 111) 10%, rgb(77, 200, 43) 90%);
+// $button-color-1:linear-gradient(180deg, rgb(0, 255, 55) 30%, rgb(0, 224, 30) 70%);
+// $button-color-2:linear-gradient(180deg, rgb(255, 181, 10) 20%, rgb(255, 119, 0) 80%);
+
+$button-color-1:#5ACBE5;
+$button-color-2:#FFD400;
+
+
+// ポイント
+$point-color1: #F46600;
+$point-color2: #0071BC;
+
+$point-color3: #FF9A02;
+$point-color4: #288E84;
+$point-color5: #FFD400;
+
+
+$color-back1: #FF9A02;
+$color-back2: #f2a17e;
+$color-back3: #FFE8CC;
+$color-back4: #FFD599;
+
+$color-back5:#FFF9F5;
+$color-back6:#FFF9E8;
+
+
+// メインカラー
+$color-main1:#ff8502; 
+$color-main2:#FFDCAE; 
+
+$color-function1: #6697F6;
+$color-function2: #6697F6;
+$color-function3: #FF9A9A;
+
+$color-yellow: #ffb825;
+$color-cream:#FFFCF1;
+$color-cream2:#FFE1B5;
+$color-cream3:#FFF6DE;
+
+$color-kanamic-orange-60: #ea5d07;
+$color-kanamic-orange-40: #e67e3f;
+$color-kanamic-orange-20: #f7bd9a;
+$color-kanamic-orange-10: #f8d8c5;
+$color-kanamic-orange-5: #feede2;
+
+$color-coral-60: #f45f3d;
+$color-coral-40: #f77d61;
+$color-coral-20: #ffbba2;
+$color-coral-10: #ffd5cc;
+$color-coral-5: #fff2ef;
+$color-sun-60: #eb9209;
+$color-sun-40: #f89d12;
+$color-sun-20: #fbcda3;
+$color-sun-10: #ffe3cf;
+$color-sun-5: #fff3ea;
+$color-sunlight-60: #efac00;
+$color-sunlight-40: #efac00;
+$color-sunlight-20: #ffeca6;
+$color-sunlight-10: #fff4cf;
+$color-sunlight-5: #fffdf7;
+$color-leaf-60: #09a05c;
+$color-leaf-40: #22b573;
+$color-leaf-20: #9ce7c6;
+$color-leaf-10: #ccecde;
+$color-leaf-5: #f1fff9;
+$color-sky-60: #1f91e3;
+$color-sky-40: #3fa9f5;
+$color-sky-20: #9cd1f1;
+$color-sky-10: #d2eeff;
+$color-sky-5: #eaf7ff;
+$color-marin-60: #1888d4;
+$color-marin-40: #3899da;
+$color-marin-20: #abc5ec;
+$color-marin-10: #cedaed;
+$color-marin-5: #ecf3fd;
+$color-amethyst-60: #475dc6;
+$color-amethyst-40: #6175d8;
+$color-amethyst-20: #acbcf3;
+$color-amethyst-10: #ced5ed;
+$color-amethyst-5: #f7f9ff;
+$color-stone-100:#000;
+
+$primary-color: $color-kanamic-orange-60;
+$primary-light-color: $color-kanamic-orange-10;
+$secondary-color: $color-yellow;
+$text-color: $color-stone-100;
+$sub-text-color: $color-amethyst-5;
+$border-color: $color-amethyst-10;
+
+$font-family: "Noto Sans JP", "游ゴシック体", YuGothic, "游ゴシック",
+  "Yu Gothic", "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", "メイリオ",
+  Meiryo, "ＭＳ Ｐゴシック", sans-serif;
+$font-family-en: Montserrat;
+
+$font-size-pc-base: 16px;
+$font-size-pc-xxxl3: 2.6rem;
+$font-size-pc-xxxl: 2.4rem;
+$font-size-pc-xxxl2: 2.1rem; 
+$font-size-pc-xxl: 1.8rem; //25.6px
+$font-size-pc-xl2: 1.7rem;
+$font-size-pc-xl1-5: 1.5rem;
+$font-size-pc-xl: 1.33325rem; //21.332px
+$font-size-pc-lg2: 1.2rem; 
+$font-size-pc-lg: 1.1429rem; //18.2864px
+$font-size-pc-md: 1rem; //16px
+$font-size-pc-sm: 0.8889rem; //14.2224px
+$font-size-pc-xs: 0.8rem; //12.8px
+$font-size-pc-xxs2: 0.7rem; 
+$font-size-pc-xxs: 0.6rem; 
+
+$font-size-sp-base: 16px;
+$font-size-sp-xxl2: 2.8rem; 
+$font-size-sp-xxl-8: 1.7rem; //21.332px
+$font-size-sp-xxl-5: 1.5rem; //21.332px
+$font-size-sp-xxl: 1.33325rem; //21.332px
+$font-size-sp-xl: 1.1429rem; //18.2864px
+$font-size-sp-lg: 1rem; //16px
+$font-size-sp-md: 0.8889rem; //14.2224px
+$font-size-sp-sm: 0.8rem; //12.8px
+$font-size-sp-xs: 0.7273rem; //11.6368px
+$font-size-sp-xxs2: 0.6rem; 
+$font-size-sp-xxs: 0.5rem; 
+
+
+$breakpoints: (
+  "xxl2": "screen and (min-width: 1800px)",
+  "xxl": "screen and (min-width: 1400px)",
+  "xl": "screen and (min-width: 1200px) and (max-width: 1399px)",
+  "lg": "screen and (min-width: 992px) and (max-width: 1199px)",
+  "md": "screen and (min-width: 768px) and (max-width: 991px)",
+  "sm": "screen and (max-width: 576px) and (max-width: 767px)",
+  "under-xxl2": "screen and (max-width: 1499px)",
+  "under-xxl": "screen and (max-width: 1399px)",
+  "under-xl": "screen and (max-width: 1281px)",
+  "under-lg2": "screen and (max-width: 1181px)",
+  "under-lg": "screen and (max-width: 991px)",
+  "under-md": "screen and (max-width: 767px)",
+  "under-sm": "screen and (max-width: 575px)",
+) !default;

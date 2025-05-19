@@ -1,0 +1,132 @@
+@charset "utf-8";
+
+/*=====================================================
+*
+*	base css
+*	Since    2008.6.11
+*	Modified 2009.7.24
+*
+*	1= style reset
+*	2= tags define
+*	3= font family setting and body tag define
+*
+========================================================*/
+
+/*	1= style reset
+-----------------------------------------------------*/
+html,body { margin: 0; padding: 0; height: 100%; }
+
+h1,h2,h3,h4,h5,h6,p,em,strong,address {
+	margin: 0;
+	padding: 0;
+	font-weight: normal;
+	font-style: normal;
+	font-size: 100%;
+}
+
+dl,dt,dd,
+ul,ol,li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-weight: normal;
+}
+
+form,
+fieldset,
+legend   { margin: 0; padding: 0; }
+fieldset { border: none; height: 100%; }
+
+img   { vertical-align: bottom; background: transparent; }
+a img { border: none; }
+
+hr { display: none; }
+
+
+
+/*	2= tags define
+-----------------------------------------------------*/
+/* scroll bar show */
+html>/**/body {
+	overflow-y: scroll;
+	/*overflow:-moz-scrollbars-vertical;*/
+} /* for firefox */
+
+html:first-child body {
+	min-height: 100%;
+	padding-bottom: 1px;
+}	/* for opera */
+
+/* image replace for firefox */
+a {
+	/*\*/
+   overflow: hidden;
+	/**/
+}
+
+a:hover { text-decoration: none; color:#0033FF; }
+
+ol li { list-style: decimal; }
+
+
+label { cursor: pointer; }
+input,textarea { font-size: 100%; }
+
+input[type="text"]:hover,
+textarea:hover { background: #ffc; }
+
+table { empty-cells: show; border-spacing: 0; }
+table caption { text-align: left; }
+
+
+
+/*	3= font family setting and body tag define
+-----------------------------------------------------*/
+body {
+	font-size: 100%;
+	font-family: "ＭＳ Ｐゴシック", sans-serif;
+	color: #333;
+	text-align: center; /* for win ie */
+	background: #FFF;
+	min-width:919px;
+}
+
+* html body {
+	font-size: 82%;
+	font-family: "ＭＳ Ｐゴシック", sans-serif;
+	vertical-align:baseline;
+} /* for win ie6 */
+
+*:first-child+html body { 
+	font-size: 82%;
+	/*font-family: "メイリオ", Meiryo, "ＭＳ Ｐゴシック", sans-serif;*/
+} /* for win ie7 */
+
+
+html>body {
+	font-size: 82%; /* 2009.7.24 modified */
+	/*font-family: "ヒラギノ角ゴ Pro W3", Osaka, sans-serif;*/
+} /* for win ie8 */
+
+html:not(:target) body { /* 2009.7.24 post */
+	font-size: 13px;
+	font-family: Hiragino Kaku Gothic Pro, "ヒラギノ角ゴ Pro W3", Osaka, "ＭＳ Ｐゴシック", sans-serif;
+} /* for modern browser not win ie8 */
+
+table { font-size: inherit; font: 100%; } /* for lte win ie6 */
+
+div.tritrus {
+	width:100%;
+	background: #FFFFFF;
+	margin-top:20px;
+}
+div.tritrus p{
+	font-size:16px;
+	font-weight: bold;
+	color: #333333;
+	text-align:center;
+	padding: 4px;
+}
+div.tritrus p a{
+	font-size:20px;
+}
