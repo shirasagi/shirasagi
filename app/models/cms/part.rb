@@ -18,8 +18,38 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::SyntaxCheckable
 
     default_scope ->{ where(route: "cms/free") }
+
+    before_validation :syntax_check, if: -> { html.present? && html_changed? }
+
+    private
+
+    def syntax_check
+      Rails.logger.debug("[Cms::Part::Free#syntax_check] 開始")
+      Rails.logger.debug("[Cms::Part::Free#syntax_check] html: #{html.inspect}")
+      Rails.logger.debug("[Cms::Part::Free#syntax_check] site: #{try(:site).inspect}")
+      Rails.logger.debug("[Cms::Part::Free#syntax_check] user: #{try(:user).inspect}")
+
+      contents = [{ "id" => "html", "content" => html, "resolve" => "html", "type" => "scalar" }]
+      Rails.logger.debug("[Cms::Part::Free#syntax_check] contents: #{contents.inspect}")
+
+      @syntax_checker = Cms::SyntaxChecker.check(cur_site: try(:site), cur_user: try(:user), contents: contents)
+      Rails.logger.debug("[Cms::Part::Free#syntax_check] syntax_checker: #{@syntax_checker.inspect}")
+
+      if @syntax_checker.errors.present?
+        Rails.logger.debug("[Cms::Part::Free#syntax_check] エラー検出: #{@syntax_checker.errors.inspect}")
+        @syntax_checker.errors.each do |error|
+          errors.add :base, error[:msg]
+        end
+        Rails.logger.debug("[Cms::Part::Free#syntax_check] エラー追加後のerrors: #{errors.full_messages.inspect}")
+        return false
+      end
+
+      Rails.logger.debug("[Cms::Part::Free#syntax_check] 正常終了")
+      true
+    end
   end
 
   class Node
