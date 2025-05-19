@@ -168,7 +168,10 @@ module SS::CrudFilter
   end
 
   def render_confirmed_all(result, opts = {})
-    Rails.logger.debug("[DEBUG] render_confirmed_all: called with result=#{result.inspect}, opts=#{opts.inspect}, params=#{params.inspect}")
+    Rails.logger.debug(
+      "[DEBUG] render_confirmed_all: called with " \
+      "result=#{result.inspect}, opts=#{opts.inspect}, params=#{params.inspect}"
+    )
     action = if %w(close_all change_state_all).include?(params[:action])
                'change'
              else
