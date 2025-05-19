@@ -23,17 +23,6 @@ class Cms::PartsController < ApplicationController
     { route: "cms/free" }
   end
 
-  def build_part(params)
-    route = params[:route] || params["route"]
-    case route
-    when "cms/free"
-      Cms::Part::Free.new(params)
-    # 他のrouteがあればここに追加
-    else
-      Cms::Part.new(params)
-    end
-  end
-
   public
 
   def index
@@ -51,8 +40,11 @@ class Cms::PartsController < ApplicationController
 
   def create
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    @item = build_part(get_params)
-    # ここで@item.classは正しいサブクラスになる
+
+    @item = @model.new get_params
+    change_item_class
+    @item.attributes = get_params
+
     if params.key?(:auto_correct)
       auto_correct
       result = syntax_check
