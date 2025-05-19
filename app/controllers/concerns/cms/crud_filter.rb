@@ -209,49 +209,48 @@ module Cms::CrudFilter
       @items = []
 
       Rails.logger.info("一括非公開処理開始: #{entries.size}件のページを処理")
-
-      entries.each do |item|
-        if item.allowed?(:close, @cur_user, site: @cur_site)
-          contains_urls = Cms.contains_urls(item, site: @cur_site)
-          if contains_urls.present?
-            Rails.logger.info("リンクが含まれているページを検出: #{item.name} (ID: #{item.id})")
-            if @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
-              item.state = 'closed'
-              if item.save
-                Rails.logger.info("ページを非公開に変更: #{item.name} (ID: #{item.id})")
-                next
-              else
-                Rails.logger.error("ページの非公開処理に失敗: #{item.name} (ID: #{item.id}) - #{item.errors.full_messages.join(', ')}")
-              end
-            else
-              Rails.logger.warn("権限不足により非公開処理をスキップ: #{item.name} (ID: #{item.id})")
-              item.errors.add :base, t("ss.confirm.not_allowed_to_close")
-            end
-          else
-            item.state = 'closed'
-            if item.save
-              Rails.logger.info("ページを非公開に変更: #{item.name} (ID: #{item.id})")
-              next
-            else
-              Rails.logger.error("ページの非公開処理に失敗: #{item.name} (ID: #{item.id}) - #{item.errors.full_messages.join(', ')}")
-            end
-          end
-        else
-          Rails.logger.warn("権限不足により非公開処理をスキップ: #{item.name} (ID: #{item.id})")
-          item.errors.add :base, :auth_error
-        end
-        @items << item
-      end
-
+      process_close_all_entries(entries)
       Rails.logger.info("一括非公開処理完了: 成功 #{entries.size - @items.size}件, 失敗 #{@items.size}件")
-      render_confirmed_all(entries.size != @items.size, location: url_for(action: :index), notice: t("ss.notice.depublished"),
-error: t("ss.notice.error"))
+
+      render_confirmed_all(entries.size != @items.size, location: url_for(action: :index),
+        notice: t("ss.notice.depublished"), error: t("ss.notice.error"))
       return
     end
 
     respond_to do |format|
       format.html { render "cms/pages/close_all" }
       format.json { head json: errors }
+    end
+  end
+
+  private
+
+  def process_close_all_entries(entries)
+    entries.each do |item|
+      unless item.allowed?(:close, @cur_user, site: @cur_site)
+        Rails.logger.warn("権限不足により非公開処理をスキップ: #{item.name} (ID: #{item.id})")
+        item.errors.add :base, :auth_error
+        @items << item
+        next
+      end
+
+      if Cms.contains_urls(item, site: @cur_site).present?
+        Rails.logger.info("リンクが含まれているページを検出: #{item.name} (ID: #{item.id})")
+        unless @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
+          Rails.logger.warn("権限不足により非公開処理をスキップ: #{item.name} (ID: #{item.id})")
+          item.errors.add :base, t("ss.confirm.not_allowed_to_close")
+          @items << item
+          next
+        end
+      end
+
+      item.state = 'closed'
+      if item.save
+        Rails.logger.info("ページを非公開に変更: #{item.name} (ID: #{item.id})")
+      else
+        Rails.logger.error("ページの非公開処理に失敗: #{item.name} (ID: #{item.id}) - #{item.errors.full_messages.join(', ')}")
+        @items << item
+      end
     end
   end
 end
