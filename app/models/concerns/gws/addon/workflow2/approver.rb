@@ -41,7 +41,7 @@ module Gws::Addon::Workflow2::Approver
     self.set(workflow_state: WORKFLOW_STATE_CANCELLED)
   end
 
-  def update_workflow_user(site, user)
+  def update_workflow_user(site, user, group = nil)
     if user.blank?
       self.workflow_user = nil
       self.workflow_user_id = nil
@@ -61,7 +61,8 @@ module Gws::Addon::Workflow2::Approver
       custom_data += user_data.column_values.to_a.map { |column_value| { name: column_value.name, value: column_value.value } }
     end
 
-    if group = user.gws_main_group(site)
+    group ||= user.gws_main_group(site)
+    if group
       custom_data += [
         { name: "name", value: group.name },
         { name: "section_name", value: group.section_name },
@@ -71,7 +72,7 @@ module Gws::Addon::Workflow2::Approver
     self.workflow_user_custom_data = custom_data
   end
 
-  def update_workflow_agent(site, user)
+  def update_workflow_agent(site, user, group = nil)
     if user.blank?
       self.workflow_agent = nil
       self.workflow_agent_id = nil
@@ -91,7 +92,8 @@ module Gws::Addon::Workflow2::Approver
       custom_data += user_data.column_values.to_a.map { |column_value| { name: column_value.name, value: column_value.value } }
     end
 
-    if group = user.gws_main_group(site)
+    group ||= user.gws_main_group(site)
+    if group
       custom_data += [
         { name: "name", value: group.name },
         { name: "section_name", value: group.section_name },
