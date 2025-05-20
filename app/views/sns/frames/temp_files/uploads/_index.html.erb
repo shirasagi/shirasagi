@@ -1,7 +1,9 @@
 <%
   disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
   disable_image_resizes ||= cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: cur_node) && Cms::ImageResize.site(@cur_site).node(cur_node).where(state: SS::ImageResize::STATE_ENABLED).present?
-  min_size, min_width, min_height = @model.image_resizes_min_attributes(user: @cur_user, node: cur_node).then do |attr|
+
+  # システム設定やサイト設定の制限値を取得したいので、`image_resizes_min_attributes` を呼び出す際に `@cur_user` は渡さない
+  min_size, min_width, min_height = @model.image_resizes_min_attributes(node: cur_node).then do |attr|
     [ attr['size'], attr['max_width'], attr['max_height'] ]
   end
 %>
