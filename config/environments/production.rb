@@ -41,7 +41,7 @@ Rails.application.configure do
   # config.assets.css_compressor = :sass
 
   # Do not fall back to assets pipeline if a precompiled asset is missed.
-  config.assets.compile = true
+  config.assets.compile = false
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.asset_host = "http://assets.example.com"
@@ -64,13 +64,12 @@ Rails.application.configure do
   # Force all access to the app over SSL, use Strict-Transport-Security, and use secure cookies.
   # config.force_ssl = true
 
+  # Skip http-to-https redirect for the default health check endpoint.
+  # config.ssl_options = { redirect: { exclude: ->(request) { request.path == "/up" } } }
+
   # Log to STDOUT by default
   # config.logger = ActiveSupport::Logger.new(STDOUT)
-  #   .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-  #   .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
   config.logger = ActiveSupport::Logger.new("#{Rails.root}/log/production.log")
-    .tap  { |logger| logger.formatter = ::Logger::Formatter.new }
-    .then { |logger| ActiveSupport::TaggedLogging.new(logger) }
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
@@ -90,6 +89,8 @@ Rails.application.configure do
   config.active_job.queue_adapter = :shirasagi
   # config.active_job.queue_name_prefix = "ss_production"
 
+  # Disable caching for Action Mailer templates even if Action Controller
+  # caching is enabled.
   config.action_mailer.perform_caching = false
 
   # Ignore bad email addresses and do not raise email delivery errors.
@@ -101,7 +102,7 @@ Rails.application.configure do
   config.i18n.fallbacks = [ :en ]
 
   # Don't log any deprecations.
-  config.active_support.report_deprecations = true
+  config.active_support.report_deprecations = false
 
   # Enable DNS rebinding protection and other `Host` header attacks.
   # config.hosts = [

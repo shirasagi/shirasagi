@@ -43,7 +43,7 @@ module SS
   module PreviewRedirecting
     extend ActiveSupport::Concern
 
-    def redirect_to(options = {}, response_status = {})
+    def redirect_to(*)
       super
       if PreviewSupport.preview?(request)
         save_location = self.location
