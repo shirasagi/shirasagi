@@ -62,11 +62,11 @@ module SS::Model::File
 
     def image_resizes_min_attributes(user: nil, node: nil)
       if user
-        disable_image_resizes = SS::ImageResize.allowed?(:disable, user) &&
+        disable_image_resizes = SS::ImageResize.allowed?(:disable, user.ss_user) &&
                                 SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
         if node
           disable_image_resizes ||=
-            Cms::ImageResize.allowed?(:disable, user, site: node.site, node: node) &&
+            Cms::ImageResize.allowed?(:disable, user.cms_user, site: node.site, node: node) &&
             Cms::ImageResize.site(node.site).node(node).where(state: SS::ImageResize::STATE_ENABLED).present?
         end
         return {} if disable_image_resizes
