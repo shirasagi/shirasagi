@@ -31,14 +31,12 @@
     )
   end
 %>
-<%= javascript_include_tag "colorbox", defer: true %>
-<%= stylesheet_link_tag "colorbox", media: 'all' %>
+<%= stylesheet_link_tag "choices", media: 'all' %>
+<%= javascript_include_tag "choices" %>
 <%= jquery do %>
-Cms_Site_Search.render();
+// Cms_Site_Search.render();
 Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.full_url %>");
 <% end %>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
-<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.search-form');
