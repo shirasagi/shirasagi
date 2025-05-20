@@ -60,6 +60,16 @@ module SS::Model::File
       "#{SS::Application.private_root}/files"
     end
 
+    # image_resizes_min_attributes には二つの使い方がある。
+    #
+    # 使い方1:
+    #   image_resizes_min_attributes に user を渡して user の最小サイズ情報を取得する
+    #
+    # 使い方2:
+    #   image_resizes_min_attributes に user nil にして、システム / サイトの最小サイズ情報を取得する。
+    #
+    # 使い方2では、一般的な場合の最小サイズ情報を取得する。
+    # user はサイズ制限を無効にできる権限を持つかもしれない。その場合、使い方1では、nil （無制限）を返す。
     def image_resizes_min_attributes(user: nil, node: nil)
       if user
         disable_image_resizes = SS::ImageResize.allowed?(:disable, user.ss_user) &&
@@ -69,7 +79,7 @@ module SS::Model::File
             Cms::ImageResize.allowed?(:disable, user.cms_user, site: node.site, node: node) &&
             Cms::ImageResize.site(node.site).node(node).where(state: SS::ImageResize::STATE_ENABLED).present?
         end
-        return {} if disable_image_resizes
+        return SS::ImageResize.none.min_attributes if disable_image_resizes
       end
 
       min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
