@@ -59,7 +59,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
 
   def index
     @s = @item = @model.new(get_params)
-    @aggregate_result = @model.new(fix_params).search
+    @aggregation = @model.new(fix_params)
 
     return if search_query.blank? || search_query.values.flatten.reject(&:blank?).blank?
 

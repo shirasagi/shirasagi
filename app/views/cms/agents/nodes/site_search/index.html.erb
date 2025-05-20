@@ -37,21 +37,27 @@
 Cms_Site_Search.render();
 Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.full_url %>");
 <% end %>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+<script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.search-form');
     const target = form.querySelector('select[name="target"]'); // outside or insinde
-    if (!target) return;
+    if (target) {
+      const changeTarget = () => {
+        const input = (target.value === 'outside' || <%== @cur_site.elasticsearch_site_ids.present? %>);
+        form.querySelectorAll('.style-input').forEach(el => el.style.display = input ? 'block' : 'none');
+        form.querySelectorAll('.style-input input').forEach(el => el.disabled = input ? false : true);
+        form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
+        form.querySelectorAll('.style-select select').forEach(el => el.disabled = input ? true : false);
+      };
+      changeTarget();
+      target.addEventListener('change', changeTarget);
+    }
 
-    const changeTarget = () => {
-      const input = (target.value === 'outside' || <%== @cur_site.elasticsearch_site_ids.present? %>);
-      form.querySelectorAll('.style-input').forEach(el => el.style.display = input ? 'block' : 'none');
-      form.querySelectorAll('.style-input input').forEach(el => el.disabled = input ? false : true);
-      form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
-      form.querySelectorAll('.style-select select').forEach(el => el.disabled = input ? true : false);
-    };
-    changeTarget();
-    target.addEventListener('change', changeTarget);
+    form.querySelector('input[type="reset"]').addEventListener('click', () => {
+      location.href = location.pathname;
+    });
   });
 </script>
 
@@ -106,17 +112,29 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       options = []
       if @cur_node.st_categories.present?
         options = @cur_node.st_categories.map { |c| [c.name, c.name] }
-      elsif tryb { @aggregate_result['aggregations']['group_by_categories']['buckets'] }.present?
-        options = @s.search['aggregations']['group_by_categories']['buckets'].map { |c| [c['key'], c['key']] }
+      elsif categories = @aggregation.search_categories.dig('aggregations', 'categories', 'buckets')
+        options = categories.map { |c| [c['key'], c['key']] }
       end
     %>
     <% if options.size > 0 %>
       <dl class="site-search-categories style-select">
         <dt><%= t("category.node") %></dt>
         <dd>
+          <script>
+            document.addEventListener('DOMContentLoaded', () => {
+              new Choices('#choices-categories', {
+                searchResultLimit: 20,
+                removeItemButton: true,
+                noResultsText: '選択候補がありません。',
+                noChoicesText: '選択候補がありません。',
+                itemSelectText: '',
+                maxItemText: (max) => `${max} 個まで選択できます。`,
+              });
+            });
+          </script>
           <%= select_tag 's[category_names][]',
             options_for_select(options, selected: params.dig(:s, :category_names).presence),
-            id: nil, "aria-label" => t("category.node"), include_blank: t('facility.submit.change') %>
+            multiple: true, class: "form-control", id: "choices-categories", include_blank: t('facility.submit.change') %>
         </dd>
       </dl>
     <% end %>
@@ -128,15 +146,26 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     <dl class="site-search-organization style-select">
       <dt><%= t("ss.organization") %></dt>
       <dd>
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            new Choices('#choices-groups', {
+              searchResultLimit: 20,
+              removeItemButton: true,
+              noResultsText: '選択候補がありません。',
+              noChoicesText: '選択候補がありません。',
+              itemSelectText: '',
+              maxItemText: (max) => `${max} 個まで選択できます。`,
+            });
+          });
+        </script>
         <%
           options = Cms::Group.site(@cur_site).active.tree_sort.map do |group|
-            indent = '　' * group.depth
-            ["#{indent}#{group.trailing_name}", group.id, { 'aria-label': group.name }]
+            [group.section_name, group.id, { 'aria-label': group.name }]
           end
         %>
         <%= select_tag 's[group_ids][]',
           options_for_select(options, selected: params.dig(:s, :group_ids).presence),
-          id: nil, "aria-label" => t("ss.organization"), include_blank: t('facility.submit.change') %>
+          multiple: true, class: "form-control", id: "choices-groups", include_blank: t('facility.submit.change') %>
       </dd>
     </dl>
     <dl class="site-search-organization style-input" style="display: none;">

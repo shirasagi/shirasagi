@@ -42,6 +42,11 @@ class Cms::Elasticsearch::Searcher
     @filters ||= setting.search_settings.map { |s| s.build_filter }
   end
 
+  def search_categories
+    aggs = { categories: { terms: { field: 'categories', size: 1_000 }}}
+    client.search({ index: index, body: { aggs: aggs } })
+  end
+
   def search
     return unless client
 
@@ -100,7 +105,7 @@ class Cms::Elasticsearch::Searcher
     query[:bool][:filter][:bool][:should] = filters
 
     aggs = {}
-    aggs[:group_by_categories] = { terms: { field: 'categories', size: aggregate_size } }
+    # aggs[:group_by_categories] = { terms: { field: 'categories', size: aggregate_size } }
 
     case sort
     when 'released'
