@@ -513,7 +513,8 @@ module SS::Model::File
     quality = []
     quality << self.quality.try(:to_i) if self.quality.present?
     max_file_sizes.each do |max_file_size|
-      next if size <= max_file_size.try(:size)
+      next if max_file_size.blank? || max_file_size.size.blank?
+      next if size <= max_file_size.size
       quality << max_file_size.try(:quality)
     end
     quality.reject(&:blank?).min
