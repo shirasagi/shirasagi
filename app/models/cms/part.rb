@@ -18,7 +18,6 @@ class Cms::Part
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
-    include Cms::SyntaxCheckable
 
     default_scope ->{ where(route: "cms/free") }
   end
