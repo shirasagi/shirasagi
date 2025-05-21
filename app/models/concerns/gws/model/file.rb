@@ -55,51 +55,35 @@ module Gws::Model::File
       "#{SS::Application.private_root}/files"
     end
 
-    def image_resizes_min_attributes(user: nil, node: nil)
-      if user
-        disable_image_resizes = SS::ImageResize.allowed?(:disable, user) &&
-                                SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
-        return {} if disable_image_resizes
-      end
-
-      min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
-
-      min_attributes.inject do |a, b|
-        a.merge(b) do |k, v1, v2|
-          next v1 if v2.blank?
-          next v2 if v1.blank?
-
-          [v1, v2].min
-        end
-      end
+    def effective_image_resize(user: nil, request_disable: false, **)
+      SS::ImageResize.effective_resize(user: user, request_disable: request_disable)
     end
 
-    def resizing_options(user: nil, node: nil)
+    def resizing_options(user: nil, **)
       options = [
         [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
         [1024, 768], [768, 1024], [1280, 720], [720, 1280]
       ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
-
       return options unless user
 
-      min_width = image_resizes_min_attributes(user: user)['max_width']
-      min_height = image_resizes_min_attributes(user: user)['max_height']
+      min_width, min_height = effective_image_resize(user: user, request_disable: true).then do |image_resize|
+        [ image_resize.try(:max_width), image_resize.try(:max_height) ]
+      end
+      return options if min_width.blank? && min_height.blank?
 
-      return options if min_width.blank? || min_height.blank?
-
-      options.select do |k, v|
+      options.select do |_k, v|
         size = v.split(',').collect(&:to_i)
-        size[0] <= min_width && size[1] <= min_height
+        next false if min_width && size[0] > min_width
+        next false if min_height && size[1] > min_height
+        true
       end
     end
 
-    def quality_options(user:, node: nil)
+    def quality_options(user:, **)
       options = SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] } rescue []
-
       return options unless user
 
-      min_quality = image_resizes_min_attributes(user: user)['quality']
-
+      min_quality = effective_image_resize(user: user, request_disable: true).try(:quality)
       return options unless min_quality
 
       options.select do |k, v|

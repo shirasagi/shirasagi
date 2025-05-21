@@ -60,43 +60,24 @@ module SS::Model::File
       "#{SS::Application.private_root}/files"
     end
 
-    # image_resizes_min_attributes には二つの使い方がある。
+    # effective_image_resize には二つの使い方がある。
     #
     # 使い方1:
-    #   image_resizes_min_attributes に user を渡して user の最小サイズ情報を取得する
+    #   effective_image_resize に user を渡して user の最小サイズ情報を取得する
     #
     # 使い方2:
-    #   image_resizes_min_attributes に user nil にして、システム / サイトの最小サイズ情報を取得する。
+    #   effective_image_resize に user nil にして、システム / サイトの最小サイズ情報を取得する。
     #
     # 使い方2では、一般的な場合の最小サイズ情報を取得する。
     # user はサイズ制限を無効にできる権限を持つかもしれない。その場合、使い方1では、nil （無制限）を返す。
-    def image_resizes_min_attributes(user: nil, node: nil)
-      if user
-        disable_image_resizes = SS::ImageResize.allowed?(:disable, user.ss_user) &&
-                                SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
-        if node
-          disable_image_resizes ||=
-            Cms::ImageResize.allowed?(:disable, user.cms_user, site: node.site, node: node) &&
-            Cms::ImageResize.site(node.site).node(node).where(state: SS::ImageResize::STATE_ENABLED).present?
-        end
-        return SS::ImageResize.none.min_attributes if disable_image_resizes
-      end
+    def effective_image_resize(user: nil, site: nil, node: nil, request_disable: false)
+      sys_min = SS::ImageResize.effective_resize(user: user, request_disable: request_disable)
+      cms_min = Cms::ImageResize.effective_resize(user: user, site: site, node: node, request_disable: request_disable)
 
-      min_attributes = [SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).min_attributes]
-      if node
-        min_attributes << Cms::ImageResize.site(node.site).
-          node(node).
-          where(state: SS::ImageResize::STATE_ENABLED).min_attributes
-      end
+      return cms_min if sys_min.blank?
+      return sys_min if cms_min.blank?
 
-      min_attributes.inject do |a, b|
-        a.merge(b) do |k, v1, v2|
-          next v1 if v2.blank?
-          next v2 if v1.blank?
-
-          [v1, v2].min
-        end
-      end
+      SS::ImageResize.intersection(sys_min, cms_min)
     end
 
     def system_resizing_options
@@ -110,10 +91,11 @@ module SS::Model::File
       options = system_resizing_options
       return options unless user
 
-      attr = image_resizes_min_attributes(user: user, node: node)
-      min_width = attr['max_width']
-      min_height = attr['max_height']
+      image_resize = effective_image_resize(user: user, node: node, request_disable: true)
+      return options if image_resize.blank?
 
+      min_width = image_resize.max_width
+      min_height = image_resize.max_height
       return options if min_width.blank? || min_height.blank?
 
       options.select do |k, v|
@@ -124,11 +106,9 @@ module SS::Model::File
 
     def quality_options(user: nil, node: nil)
       options = SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] } rescue []
-
       return options unless user
 
-      min_quality = image_resizes_min_attributes(user: user, node: node)['quality']
-
+      min_quality = effective_image_resize(user: user, node: node, request_disable: true).try(:quality)
       return options unless min_quality
 
       options.select do |k, v|
@@ -481,42 +461,37 @@ module SS::Model::File
     remove_public_file if site
   end
 
-  def max_file_sizes
-    max_file_sizes = []
-    if user.blank? || !SS::ImageResize.allowed?(:disable, user) || image_resizes_disabled != 'disabled'
-      max_file_sizes += SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).to_a
-    end
-    if self.class.include?(Cms::Reference::Node) && node.present?
-      cms_image_resizes_enabled = user.blank? ||
-                                  !Cms::ImageResize.allowed?(:disable, user, site: site, node: node) ||
-                                  image_resizes_disabled != 'disabled'
-      if cms_image_resizes_enabled
-        max_file_sizes += Cms::ImageResize.site(site).node(node).where(state: SS::ImageResize::STATE_ENABLED).to_a
-      end
-    end
-    max_file_sizes.reject(&:blank?)
-  end
-
   def resizing_with_max_file_size
     size = resizing || []
-    max_file_sizes.each do |max_file_size|
-      if size.present?
-        max_file_size.max_width = size[0] if max_file_size.max_width > size[0]
-        max_file_size.max_height = size[1] if max_file_size.max_height > size[1]
+    size.map! { _1.numeric? ? _1.to_i : nil }
+
+    image_resize = SS::File.effective_image_resize(user: user, node: try(:node), request_disable: image_resizes_disabled == 'disabled')
+    return size if image_resize.blank?
+
+    if image_resize.max_width.numeric?
+      if size[0].blank? || image_resize.max_width > size[0]
+        size[0] = image_resize.max_width
       end
-      size = [max_file_size.max_width, max_file_size.max_height]
     end
+
+    if image_resize.max_height.numeric?
+      if size[1].blank? || image_resize.max_height > size[1]
+        size[1] = image_resize.max_height
+      end
+    end
+
     size
   end
 
   def quality_with_max_file_size
-    quality = []
-    quality << self.quality.try(:to_i) if self.quality.present?
-    max_file_sizes.each do |max_file_size|
-      next if max_file_size.blank? || max_file_size.size.blank?
-      next if size <= max_file_size.size
-      quality << max_file_size.try(:quality)
+    qualities = []
+    qualities << self.quality if self.quality.numeric?
+
+    image_resize = SS::File.effective_image_resize(user: user, node: try(:node), request_disable: image_resizes_disabled == 'disabled')
+    if image_resize.present? && image_resize.size.numeric? && size > image_resize.size.to_i && image_resize.quality.numeric?
+      qualities << image_resize.quality
     end
-    quality.reject(&:blank?).min
+
+    qualities.select(&:numeric?).map(&:to_i).reject { _1 <= 0 }.min
   end
 end

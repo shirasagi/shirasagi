@@ -413,13 +413,15 @@ module Cms
       end
     end
 
-    attr = SS::File.image_resizes_min_attributes(user: user, node: node)
-    min_width = attr['max_width']
-    min_height = attr['max_height']
+    image_resize = SS::File.effective_image_resize(user: user, site: site, node: node)
+    min_width = image_resize.try(:max_width)
+    min_height = image_resize.try(:max_height)
     if min_width.present? || min_height.present?
       options.select! do |_label, value, _attr|
         width, height = value.split(',', 2).map(&:to_i)
-        width <= min_width && height <= min_height
+        next false if min_width && width > min_width
+        next false if min_height && height > min_height
+        true
       end
     end
 

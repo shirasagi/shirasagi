@@ -6,6 +6,12 @@ describe SS::TempFile, dbscope: :example do
   let!(:user) { create :cms_test_user, cur_site: site, group_ids: cms_user.group_ids, cms_role_ids: [ role.id ] }
   let!(:cms_admin) { cms_user }
   let!(:sys_admin) { sys_user }
+  let!(:super_admin) do
+    # sys でも cms でもスーパーなユーザー
+    user = create :cms_test_user, cur_site: site, group_ids: cms_admin.group_ids, cms_role_ids: cms_admin.cms_role_ids
+    user.update(sys_role_ids: sys_admin.sys_role_ids)
+    Cms::User.find(user.id)
+  end
 
   # 800 x 270 の画像を使う（サイズは大きいほど良い）
   let(:path) { "#{Rails.root}/spec/fixtures/cms/line/richmenu_small1.png" }
@@ -105,6 +111,50 @@ describe SS::TempFile, dbscope: :example do
         width, height = ::FastImage.size(item.path)
         expect(width).to eq width1
         expect(height).to be < height1
+      end
+    end
+
+    context "with super_admin" do
+      context "when image_resizes_disabled is 'disabled'" do
+        it do
+          item = SS::TempFile.new
+          item.cur_user = super_admin
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "disabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          # super_admin は画像サイズ制限を無効化する権限があるので、
+          # 画像サイズ制限を無視するオプション（image_resizes_disabled = "disabled"）を指定すると、
+          # 画像サイズ制限は適用されない。
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq original_width
+          expect(height).to eq original_height
+        end
+      end
+
+      context "when image_resizes_disabled is 'enabled'" do
+        it do
+          item = SS::TempFile.new
+          item.cur_user = super_admin
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "enabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          # super_admin は画像サイズ制限を無効化する権限があるが、
+          # 画像サイズ制限を無視するオプション（image_resizes_disabled = "disabled"）が指定されていないので、
+          # 画像サイズ制限が適用される。
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq width1
+          expect(height).to be < height1
+        end
       end
     end
   end
@@ -214,6 +264,50 @@ describe SS::TempFile, dbscope: :example do
         expect(height).to be < [ height1, height2 ].min
       end
     end
+
+    context "with super_admin" do
+      context "when image_resizes_disabled is 'disabled'" do
+        it do
+          item = SS::TempFile.new
+          item.cur_user = super_admin
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "disabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          # super_admin は画像サイズ制限を無効化する権限があるので、
+          # 画像サイズ制限を無視するオプション（image_resizes_disabled = "disabled"）を指定すると、
+          # 画像サイズ制限は適用されない。
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq original_width
+          expect(height).to eq original_height
+        end
+      end
+
+      context "when image_resizes_disabled is 'enabled'" do
+        it do
+          item = SS::TempFile.new
+          item.cur_user = super_admin
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "enabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          # super_admin は画像サイズ制限を無効化する権限があるが、
+          # 画像サイズ制限を無視するオプション（image_resizes_disabled = "disabled"）が指定されていないので、
+          # 画像サイズ制限が適用される。
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq [ width1, width2 ].min
+          expect(height).to be < [ height1, height2 ].min
+        end
+      end
+    end
   end
 
   context "with cms/image_resize" do
@@ -293,6 +387,48 @@ describe SS::TempFile, dbscope: :example do
           item = Cms::TempFile.new
           item.cur_site = site
           item.cur_user = cms_admin
+          item.cur_node = node
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "enabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq 240
+          expect(height).to be < 240
+        end
+      end
+    end
+
+    context "with super_admin" do
+      context "when image_resizes_disabled is 'disabled'" do
+        it do
+          item = Cms::TempFile.new
+          item.cur_site = site
+          item.cur_user = super_admin
+          item.cur_node = node
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "disabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq original_width
+          expect(height).to eq original_height
+        end
+      end
+
+      context "when image_resizes_disabled is 'enabled'" do
+        it do
+          item = Cms::TempFile.new
+          item.cur_site = site
+          item.cur_user = super_admin
           item.cur_node = node
           # item.resizing = resizing
           # item.quality = quality
@@ -418,6 +554,48 @@ describe SS::TempFile, dbscope: :example do
         end
       end
     end
+
+    context "with super_admin" do
+      context "when image_resizes_disabled is 'disabled'" do
+        it do
+          item = Cms::TempFile.new
+          item.cur_site = site
+          item.cur_user = super_admin
+          item.cur_node = node
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "disabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq original_width
+          expect(height).to eq original_height
+        end
+      end
+
+      context "when image_resizes_disabled is 'enabled'" do
+        it do
+          item = Cms::TempFile.new
+          item.cur_site = site
+          item.cur_user = super_admin
+          item.cur_node = node
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "enabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq [ width1, width2 ].min
+          expect(height).to be < [ height1, height2 ].min
+        end
+      end
+    end
   end
 
   context "ss/image_resize is looser than cms/image_resize" do
@@ -505,6 +683,54 @@ describe SS::TempFile, dbscope: :example do
         expect(height).to be < height1
       end
     end
+
+    context "with super_admin" do
+      context "when image_resizes_disabled is 'disabled'" do
+        it do
+          item = Cms::TempFile.new
+          item.cur_site = site
+          item.cur_user = super_admin
+          item.cur_node = node
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "disabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          # super_admin はシステムの画像サイズ制限を無効化する権限があり、CMSの画像サイズ制限を無効化する権限もある。
+          # 画像サイズ制限を無視するオプション（image_resizes_disabled = "disabled"）を指定すると、
+          # 画像サイズ制限は適用されない。
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq original_width
+          expect(height).to eq original_height
+        end
+      end
+
+      context "when image_resizes_disabled is 'enabled'" do
+        it do
+          item = Cms::TempFile.new
+          item.cur_site = site
+          item.cur_user = super_admin
+          item.cur_node = node
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "enabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          # super_admin はシステムの画像サイズ制限を無効化する権限があり、CMSの画像サイズ制限を無効化する権限もあるが、
+          # 画像サイズ制限を無視するオプション（image_resizes_disabled = "disabled"）が指定されていないので、
+          # 画像サイズ制限が適用される。適用される制限は小さい方。
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq width2
+          expect(height).to be < height2
+        end
+      end
+    end
   end
 
   context "ss/image_resize is tighter than cms/image_resize" do
@@ -590,6 +816,54 @@ describe SS::TempFile, dbscope: :example do
         width, height = ::FastImage.size(item.path)
         expect(width).to eq width1
         expect(height).to be < height1
+      end
+    end
+
+    context "with super_admin" do
+      context "when image_resizes_disabled is 'disabled'" do
+        it do
+          item = Cms::TempFile.new
+          item.cur_site = site
+          item.cur_user = super_admin
+          item.cur_node = node
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "disabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          # super_admin はシステムの画像サイズ制限を無効化する権限があり、CMSの画像サイズ制限を無効化する権限もある。
+          # 画像サイズ制限を無視するオプション（image_resizes_disabled = "disabled"）を指定すると、
+          # 画像サイズ制限は適用されない。
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq original_width
+          expect(height).to eq original_height
+        end
+      end
+
+      context "when image_resizes_disabled is 'enabled'" do
+        it do
+          item = Cms::TempFile.new
+          item.cur_site = site
+          item.cur_user = super_admin
+          item.cur_node = node
+          # item.resizing = resizing
+          # item.quality = quality
+          item.image_resizes_disabled = "enabled"
+          item.in_file = in_file
+
+          result = item.save
+          expect(result).to be_truthy
+
+          # super_admin はシステムの画像サイズ制限を無効化する権限があり、CMSの画像サイズ制限を無効化する権限もあるが、
+          # 画像サイズ制限を無視するオプション（image_resizes_disabled = "disabled"）が指定されていないので、
+          # 画像サイズ制限が適用される。適用される制限は小さい方。
+          width, height = ::FastImage.size(item.path)
+          expect(width).to eq width1
+          expect(height).to be < height1
+        end
       end
     end
   end
