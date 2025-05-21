@@ -56,14 +56,19 @@ class Cms::PartsController < ApplicationController
       render_create result
       return
     end
-    render_create @item.valid? && syntax_check && @item.save
+
+    if @item.respond_to?(:html)
+      render_create @item.valid? && syntax_check && @item.save
+    else
+      render_create @item.valid? && @item.save
+    end
   end
 
   def update
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
     if params.key?(:ignore_syntax_check)
-      render_create @item.valid? && @item.save
+      render_update @item.valid? && @item.save
       return
     end
 
@@ -72,8 +77,12 @@ class Cms::PartsController < ApplicationController
       result = syntax_check
       render_update result
       return
-    else
+    end
+
+    if @item.respond_to?(:html)
       render_update @item.valid? && syntax_check && @item.save
+    else
+      render_update @item.valid? && @item.save
     end
   end
 
