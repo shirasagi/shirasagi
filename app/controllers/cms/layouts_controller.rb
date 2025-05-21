@@ -43,10 +43,9 @@ class Cms::LayoutsController < ApplicationController
       return
     end
 
-    result = syntax_check
-
     if params.key?(:auto_correct)
       auto_correct
+      result = syntax_check
       render_create result
       return
     end
@@ -57,15 +56,13 @@ class Cms::LayoutsController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
     if params.key?(:ignore_syntax_check)
-      # 警告無視で保存
       render_update @item.valid? && @item.save
       return
     end
 
-    result = syntax_check
-
     if params.key?(:auto_correct)
       auto_correct
+      result = syntax_check
       render_update result
       return
     else

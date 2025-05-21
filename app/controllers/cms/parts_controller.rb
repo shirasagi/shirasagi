@@ -50,10 +50,9 @@ class Cms::PartsController < ApplicationController
       return
     end
 
-    result = syntax_check
-
     if params.key?(:auto_correct)
       auto_correct
+      result = syntax_check
       render_create result
       return
     end
@@ -63,16 +62,14 @@ class Cms::PartsController < ApplicationController
   def update
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
-    Rails.logger.info("[DEBUG] @item.class: #{@item.class}, @item.attributes: #{@item.attributes.inspect}")
     if params.key?(:ignore_syntax_check)
       render_create @item.valid? && @item.save
       return
     end
 
-    result = syntax_check
-
     if params.key?(:auto_correct)
       auto_correct
+      result = syntax_check
       render_update result
       return
     else
