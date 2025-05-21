@@ -18,7 +18,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   let!(:item1) { create :cms_page, cur_node: node, layout: layout, name: 'page1' }
   let!(:item2) do
     create :article_page, cur_node: node, layout: layout, name: 'page2',
-      file_ids: [file1.id], category_ids: [cate1.id], group_ids: [group1.id],
+      file_ids: [file1.id], category_ids: [cate1.id], contact_sub_group_ids: [group1.id],
       html: '<img src="' + file1.url + '" alt="alt" title="title">'
   end
 
@@ -32,7 +32,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   end
   let!(:item3) do
     create :article_page, cur_node: node, layout: layout, form: form, name: 'page3',
-      file_ids: [file2.id], category_ids: [cate2.id], group_ids: [group2.id],
+      file_ids: [file2.id], category_ids: [cate2.id], contact_sub_group_ids: [group2.id],
       column_values: [
         column.value_type.new(column: column, file_id: file2.id, image_html_type: 'image')
       ]
@@ -62,6 +62,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       within '.search-form' do
         expect(page.all("select[name='s[article_node_ids][]'] option").count).to eq 2
         expect(page.all("select[name='s[category_names][]'] option").count).to eq 2
+        find("select[name='s[type]'] option[value='page']").select_option
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages .item:nth-child(1)' do
@@ -87,7 +88,6 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       ## article_node
       within '.search-form' do
         find("select[name='s[article_node_ids][]'] option[value='#{node.id}']").select_option
-        find("select[name='s[category_names][]'] option[value='']").select_option
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages' do
@@ -97,7 +97,10 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       ## category
       within '.search-form' do
         find("select[name='s[article_node_ids][]'] option[value='']").select_option
-        find("select[name='s[category_names][]'] option[value='#{cate1.name}']").select_option
+        within '.site-search-categories.style-select' do
+          find('.choices').click
+          find(".choices__item[data-value='#{cate1.name}']").click
+        end
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages' do
@@ -107,13 +110,14 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       ## click on cateogry in the results
       visit site_search_node.url
       within '.search-form' do
+        find("select[name='s[type]'] option[value='page']").select_option
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages .item:nth-child(2)' do
         find('.category-name:nth-child(1)').click
       end
-      expect(find('.site-search-categories select').value).to eq cate1.name
       expect(page.all('.item').count).to eq 1
+      expect(find('.site-search-categories select').value).to eq [cate1.name]
     end
   end
 
@@ -122,6 +126,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       visit site_search_node.url
 
       within '.search-form' do
+        find("select[name='s[type]'] option[value='page']").select_option
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages .item:nth-child(1)' do
@@ -146,8 +151,10 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
       ## category
       within '.search-form' do
-        find("select[name='s[category_names][]'] option[value='#{cate1.name}']").select_option
-        find("select[name='s[group_ids][]'] option[value='']").select_option
+        within '.site-search-categories.style-select' do
+          find('.choices').click
+          find(".choices__item[data-value='#{cate1.name}']").click
+        end
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages' do
@@ -156,8 +163,11 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
       ## group
       within '.search-form' do
-        find("select[name='s[category_names][]'] option[value='']").select_option
-        find("select[name='s[group_ids][]'] option[value='#{group1.id}']").select_option
+        find('.site-search-categories.style-select .choices__button').click
+        within '.site-search-organization.style-select' do
+          find('.choices').click
+          find(".choices__item[data-value='#{group1.id}']").click
+        end
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages' do
@@ -274,6 +284,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       it do
         visit site_search_node.url
         within '.search-form' do
+          find("select[name='s[type]'] option[value='page']").select_option
           click_button I18n.t('ss.buttons.search')
         end
         within '.pages .item:nth-child(1)' do
@@ -317,15 +328,11 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
         end
 
         ## click on cateogry in the results
-        visit site_search_node.url
-        within '.search-form' do
-          click_button I18n.t('ss.buttons.search')
-        end
-        within '.pages .item:nth-child(2)' do
+        within '.pages .item:nth-child(1)' do
           find('.category-name:nth-child(1)').click
         end
-        expect(find('.site-search-categories input').value).to eq cate1.name
         expect(page.all('.item').count).to eq 1
+        expect(find('.site-search-categories.style-input input').value).to eq cate1.name
       end
     end
   end

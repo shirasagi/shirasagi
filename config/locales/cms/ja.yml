@@ -604,9 +604,9 @@ ja:
         disabled: 本文に含めない
         include: 本文に含める
       site_search_type:
+        all: 全て
         page: ウェブページ
         file: 添付ファイル
-        all: 全て
       link_target:
         self: 同じタブで表示
         blank: 別のタブで表示
@@ -1350,6 +1350,10 @@ ja:
         lower_html: 下部HTML
       cms/addon/site_search/setting:
         link_target: リンク表示
+        search_type_state: 検索種類の選択
+        article_node_state: フォルダーの選択
+        category_state: カテゴリーの選択
+        organization_state: 組織の選択
         st_article_node_ids: 記事フォルダー
         site_search_type: 検索種類
       cms/form:
@@ -3187,7 +3191,15 @@ ja:
 
     cms/addon/site_search/setting:
       link_target:
-        - リンクの表示形式を設定します。
+        - 検索結果のリンクの表示形式を設定します。
+      search_type_state:
+        - 検索フォームに検索種類の選択を表示します。
+      article_node_state:
+        - 検索フォームにフォルダーの選択を表示します。
+      category_state:
+        - 検索フォームにカテゴリーの選択を表示します。
+      organization_state:
+        - 検索フォームに組織の選択を表示します。
       st_article_node_ids:
         - サイト内検索の対象となる記事フォルダーを設定します。
 

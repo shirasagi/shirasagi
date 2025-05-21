@@ -72,10 +72,9 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
       @s.index = [indexes].flatten.join(",")
     end
 
-    # if params.dig(:s, :type).blank? && @cur_node.site_search_type.present?
-    #   @s.type = @cur_node.site_search_type
-    # end
-    @s.type = 'page' if params.dig(:s, :type).blank?
+    if params.dig(:s, :type).blank? && @cur_node.site_search_type.present?
+      @s.type = @cur_node.site_search_type
+    end
 
     @s.sort = params[:sort]
     @s.field_name = %w(text_index content title)

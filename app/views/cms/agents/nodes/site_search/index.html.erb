@@ -40,19 +40,6 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const form = document.querySelector('.search-form');
-    const target = form.querySelector('select[name="target"]'); // outside or insinde
-    if (target) {
-      const changeTarget = () => {
-        const input = (target.value === 'outside' || <%== @cur_site.elasticsearch_site_ids.present? %>);
-        form.querySelectorAll('.style-input').forEach(el => el.style.display = input ? 'block' : 'none');
-        form.querySelectorAll('.style-input input').forEach(el => el.disabled = input ? false : true);
-        form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
-        form.querySelectorAll('.style-select select').forEach(el => el.disabled = input ? true : false);
-      };
-      changeTarget();
-      target.addEventListener('change', changeTarget);
-    }
-
     form.querySelector('input[type="reset"]').addEventListener('click', () => {
       location.href = location.pathname;
     });
@@ -63,12 +50,14 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
   <%= form_for :s, url: @cur_node.url, html: { method: :get, class: 'search-form' }, "aria-label" => t("cms.search_form") do |f| %>
     <%= hidden_field_tag "sort", params[:sort], id: nil %>
 
-    <dl class="site-search-type">
-      <dt><%= @cur_node.t(:site_search_type) %></dt>
-      <dd><%= select_tag 's[type]',
-        options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type).presence),
-        id: nil, "aria-label" => @cur_node.t(:site_search_type) %></dd>
-    </dl>
+    <% if @cur_node.search_type_state != 'hide' %>
+      <dl class="site-search-type">
+        <dt><%= @cur_node.t(:site_search_type) %></dt>
+        <dd><%= select_tag 's[type]',
+          options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type).presence), # || @cur_node.site_search_type
+          id: nil, "aria-label" => @cur_node.t(:site_search_type) %></dd>
+      </dl>
+    <% end %>
 
     <dl class="site-search-keyword">
       <dt><%= t("ss.keyword") %></dt>
@@ -94,7 +83,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       </dl>
     <% end %>
 
-    <% if @cur_node.ordered_st_article_nodes.present? %>
+    <% if @cur_node.article_node_state != 'hide' && @cur_node.ordered_st_article_nodes.present? %>
       <dl class="site-search-article-nodes style-select">
         <dt><%= t("cms.node") %></dt>
         <dd>
@@ -106,47 +95,20 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       </dl>
     <% end %>
 
-    <%
-      options = []
-      if @cur_node.st_categories.present?
-        options = @cur_node.st_categories.map { |c| [c.name, c.name] }
-      elsif categories = @aggregation.search_categories.dig('aggregations', 'categories', 'buckets')
-        options = categories.map { |c| [c['key'], c['key']] }
-      end
-    %>
-    <% if options.size > 0 %>
-      <dl class="site-search-categories style-select">
-        <dt><%= t("category.node") %></dt>
-        <dd>
-          <script>
-            document.addEventListener('DOMContentLoaded', () => {
-              new Choices('#choices-categories', {
-                searchResultLimit: 20,
-                removeItemButton: true,
-                noResultsText: '選択候補がありません。',
-                noChoicesText: '選択候補がありません。',
-                itemSelectText: '',
-                maxItemText: (max) => `${max} 個まで選択できます。`,
-              });
-            });
-          </script>
-          <%= select_tag 's[category_names][]',
-            options_for_select(options, selected: params.dig(:s, :category_names).presence),
-            multiple: true, class: "form-control", id: "choices-categories", include_blank: t('facility.submit.change') %>
-        </dd>
-      </dl>
-    <% end %>
-    <dl class="site-search-categories style-input" style="display: none;">
-      <dt><%= t("category.node") %></dt>
-      <dd><%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off", title: t('category.node') %></dd>
-    </dl>
-
-    <dl class="site-search-organization style-select">
-      <dt><%= t("ss.organization") %></dt>
-      <dd>
+    <% if @cur_node.category_state != 'hide' %>
+      <%
+        options = []
+        if @cur_node.st_categories.present?
+          options = @cur_node.st_categories.map { |c| [c.name, c.name] }
+        elsif categories = (@aggregation.search_categories || {}).dig('aggregations', 'categories', 'buckets')
+          options = categories.map { |c| [c['key'], c['key']] }
+        end
+      %>
+      <% if options.size > 0 %>
         <script>
           document.addEventListener('DOMContentLoaded', () => {
-            new Choices('#choices-groups', {
+            new Choices('#choices-categories', {
+              maxItemCount: 10,
               searchResultLimit: 20,
               removeItemButton: true,
               noResultsText: '選択候補がありません。',
@@ -156,21 +118,74 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
             });
           });
         </script>
-        <%
-          options = Cms::Group.site(@cur_site).active.tree_sort.map do |group|
-            [group.section_name, group.id, { 'aria-label': group.name }]
-          end
-        %>
-        <%= select_tag 's[group_ids][]',
-          options_for_select(options, selected: params.dig(:s, :group_ids).presence),
-          multiple: true, class: "form-control", id: "choices-groups", include_blank: t('facility.submit.change') %>
-      </dd>
-    </dl>
-    <dl class="site-search-organization style-input" style="display: none;">
-      <dt><%= t('ss.organization') %></dt>
-      <dd><%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off", title: t('ss.organization') %></dd>
-    </dl>
+        <dl class="site-search-categories style-select">
+          <dt><%= t("category.node") %></dt>
+          <dd>
+            <%= select_tag 's[category_names][]',
+              options_for_select(options, selected: params.dig(:s, :category_names).presence),
+              multiple: true, class: "form-control", id: "choices-categories", include_blank: t('facility.submit.change') %>
+          </dd>
+        </dl>
+      <% end %>
+      <dl class="site-search-categories style-input" style="display: none;">
+        <dt><%= t("category.node") %></dt>
+        <dd><%= f.text_field :category_name, id: nil, size: 20, autocomplete: "off", title: t('category.node') %></dd>
+      </dl>
+    <% end %>
+
+    <% if @cur_node.organization_state != 'hide' %>
+      <script>
+        document.addEventListener('DOMContentLoaded', () => {
+          new Choices('#choices-groups', {
+            maxItemCount: 10,
+            searchResultLimit: 20,
+            removeItemButton: true,
+            noResultsText: '選択候補がありません。',
+            noChoicesText: '選択候補がありません。',
+            itemSelectText: '',
+            maxItemText: (max) => `${max} 個まで選択できます。`,
+          });
+        });
+      </script>
+      <dl class="site-search-organization style-select">
+        <dt><%= t("ss.organization") %></dt>
+        <dd>
+          <%
+            options = Cms::Group.site(@cur_site).active.tree_sort.map do |group|
+              [group.section_name, group.id, { 'aria-label': group.name }]
+            end
+          %>
+          <%= select_tag 's[group_ids][]',
+            options_for_select(options, selected: params.dig(:s, :group_ids).presence),
+            multiple: true, class: "form-control", id: "choices-groups", include_blank: t('facility.submit.change') %>
+        </dd>
+      </dl>
+      <dl class="site-search-organization style-input" style="display: none;">
+        <dt><%= t('ss.organization') %></dt>
+        <dd><%= f.text_field :group_name, id: nil, size: 20, autocomplete: "off", title: t('ss.organization') %></dd>
+      </dl>
+    <% end %>
   <% end %>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const form = document.querySelector('.search-form');
+      const target = form.querySelector('select[name="target"]'); // outside or insinde
+
+      if (target) {
+        const changeTarget = () => {
+          const input = (target.value === 'outside' || <%== @cur_site.elasticsearch_site_ids.present? %>);
+          form.querySelectorAll('.style-input').forEach(el => el.style.display = input ? 'block' : 'none');
+          form.querySelectorAll('.style-input input').forEach(el => el.disabled = input ? false : true);
+          form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
+          form.querySelectorAll('.style-select select').forEach(el => el.disabled = input ? true : false);
+          form.querySelectorAll('.style-select input').forEach(el => el.disabled = input ? true : false);
+        };
+        changeTarget();
+        target.addEventListener('change', changeTarget);
+      }
+    });
+  </script>
 
   <% if @result.present? %>
     <div class="search-result">

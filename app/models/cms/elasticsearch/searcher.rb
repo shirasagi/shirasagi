@@ -43,7 +43,9 @@ class Cms::Elasticsearch::Searcher
   end
 
   def search_categories
-    aggs = { categories: { terms: { field: 'categories', size: 1_000 }}}
+    return unless client
+
+    aggs = { categories: { terms: { field: 'categories', size: aggregate_size }}}
     client.search({ index: index, body: { aggs: aggs } })
   end
 
@@ -96,7 +98,7 @@ class Cms::Elasticsearch::Searcher
 
     if group_name.present?
       names = group_name.split(/[\s\/　]+/).uniq.reject(&:empty?).slice(0, 10)
-      query[:bool][:must] << { terms: { groups: names } } if names.present?
+      query[:bool][:must] << { terms: { group_names: names } } if names.present?
     end
 
     query[:bool][:filter] = {}
@@ -111,7 +113,7 @@ class Cms::Elasticsearch::Searcher
     when 'released'
       sort = [{ released: 'desc' }, '_score']
     else
-      sort = [ _score: 'desc' ]
+      sort = [{ _score: 'desc' }]
     end
 
     highlight = {

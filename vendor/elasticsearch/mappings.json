@@ -14,6 +14,7 @@
     "user_ids": { "type": "integer" },
     "group_ids": { "type": "integer" },
     "groups": { "type": "keyword" },
+    "group_names": { "type": "keyword" },
     "custom_group_ids": { "type": "integer" },
     "member_ids": { "type": "integer" },
     "member_group_ids": { "type": "integer" },

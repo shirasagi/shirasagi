@@ -30,6 +30,7 @@ class Cms::Elasticsearch::PageConverter
     doc[:categories] = item.categories.pluck(:name)
     doc[:group_ids] = item.contact_sub_groups.pluck(:id).push(item.contact_group_id).uniq.compact
     doc[:groups] = item.contact_sub_groups.pluck(:name).push(item.contact_group.try(:name)).uniq.compact
+    doc[:group_names] = doc[:groups].map { |n| n.split('/') }.flatten.uniq
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = item.updated.try(:iso8601)
     doc[:created] = item.created.try(:iso8601)
@@ -129,6 +130,7 @@ class Cms::Elasticsearch::PageConverter
     doc[:categories] = item.categories.pluck(:name)
     doc[:group_ids] = item.contact_sub_groups.pluck(:id).push(item.contact_group_id).uniq.compact
     doc[:groups] = item.contact_sub_groups.pluck(:name).push(item.contact_group.try(:name)).uniq.compact
+    doc[:group_names] = doc[:groups].map { |n| n.split('/') }.flatten.uniq
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = file.updated.try(:iso8601)
     doc[:created] = file.created.try(:iso8601)

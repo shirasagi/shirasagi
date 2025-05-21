@@ -13,7 +13,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
     let(:cms_page) do
       create(
         :cms_page, cur_site: site, name: name, filename: filename, file_ids: [file.id],
-        category_ids: [category.id], state: 'public', group_ids: [group.id],
+        state: 'public', category_ids: [category.id], contact_group_id: group.id, contact_sub_group_ids: [group.id],
         html: '<img src="' + file.url + '" alt="alt" title="title">'
       )
     end
@@ -33,7 +33,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       expect(item.enum_es_docs.to_a[0][1][:categories]).to eq [category.name]
       expect(item.enum_es_docs.to_a[0][1][:category_ids]).to eq [category.id]
       expect(item.enum_es_docs.to_a[0][1][:group_ids]).to eq [group.id]
-      expect(item.enum_es_docs.to_a[0][1][:groups]).to eq group.name.split('/')
+      expect(item.enum_es_docs.to_a[0][1][:groups]).to eq [group.name]
       expect(item.enum_es_docs.to_a[0][1][:image_url]).to eq file.thumb.url
       expect(item.enum_es_docs.to_a[0][1][:image_full_url]).to eq file.thumb.full_url
       expect(item.enum_es_docs.to_a[0][1][:image_name]).to eq 'alt'
@@ -123,7 +123,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
     let(:cms_page) do
       create(
         :cms_page, cur_site: site, name: name, filename: filename, form: form,
-        category_ids: [category.id], state: 'public', group_ids: [group.id]
+        category_ids: [category.id], state: 'public', group_ids: [group.id], contact_sub_group_ids: [group.id],
       )
     end
     let(:item) { described_class.with_route(cms_page, index_item_id: cms_page.filename) }
@@ -185,7 +185,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
     let(:app) do
       create(
         :opendata_app, cur_site: site, cur_node: node, name: name, basename: filename,
-        category_ids: [category.id], state: 'public', group_ids: [group.id]
+        state: 'public', category_ids: [category.id], contact_sub_group_ids: [group.id]
       )
     end
     let(:item) { described_class.with_route(app, index_item_id: app.filename) }
@@ -236,7 +236,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
     let(:dataset) do
       create(
         :opendata_dataset, cur_site: site, cur_node: node, name: name, basename: filename,
-        category_ids: [category.id], state: 'public', group_ids: [group.id]
+        state: 'public', category_ids: [category.id], contact_sub_group_ids: [group.id]
       )
     end
     let(:item) { described_class.with_route(dataset, index_item_id: dataset.filename) }

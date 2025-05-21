@@ -59,6 +59,7 @@ document.addEventListener('DOMContentLoaded', () => {
     <article class="item">
       <header>
         <%
+          score = hit['_score']
           source = hit['_source']
 
           title = source['title'] || source['name']
@@ -69,7 +70,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
           link_target = (@cur_node.link_target == 'blank') ? '_blank' : nil
 
-          if source.dig('file', 'extname').present?
+          if !title.to_s.match('\(') && source.dig('file', 'extname').present? && source.dig('file', 'size').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
 
@@ -102,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
           <% if page_name.present? && page_url.present? %>
             <div class="page-name"><%= t('cms.reference_article') %>: <%= link_to page_name, page_url %></div>
           <% end %>
-          <% if url.present? %>
+          <% if url.present? && page_url.blank? %>
             <div class="url"><%= url %></div>
           <% end %>
           <% if date.present? %>
