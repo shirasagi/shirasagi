@@ -12,6 +12,10 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
   let!(:title2) { unique_id }
   let!(:title3) { unique_id }
 
+  before do
+    site.update facility_min_hour: 0, facility_max_hour: 24
+  end
+
   context "update_approved_state disbaled" do
     let!(:facility) do
       create(:gws_facility_item, user_ids: [ user2.id ],

@@ -8,8 +8,50 @@
   end
 %>
 
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  document.querySelectorAll('.cms-site-search-pages .category-name').forEach(category => {
+    category.addEventListener('click', () => {
+      const name = category.text;
+      const form = document.querySelector('.search-form');
+      const input = document.querySelector('.cms-site-search .site-search-categories input[name="s[category_name]"]');
+      const select = document.querySelector('.cms-site-search .site-search-categories select[name="s[category_names][]"]');
+
+      if (!input.disabled) {
+        let values = input.value.split(/[\s\/　]+/).filter(n => n)
+        if (!values.includes(name)) values = values.concat(name)
+        input.value = values.join(' ');
+        form.submit();
+      }
+      if (!select.disabled) {
+        let option = select.querySelector('option[value="' + name + '"]');
+        if (option) {
+          option.selected = true;
+          form.submit();
+        }
+      }
+    });
+  });
+});
+</script>
+
 <div class="search-stats">
-  <%= I18n.t('gws/elasticsearch.format.search_results_count', count: count, from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
+  <div>
+    <%= I18n.t('gws/elasticsearch.format.search_results_count',
+      count: count, from: @item.from + 1, to: @item.from + @item.size, took: @result['took'] / 1000.0) %>
+  </div>
+  <div>
+    <%
+      sort_params = params.permit(:target, s: {})
+      options = %w(score released).map do |value|
+        name = t("cms.search_sort_options.#{value}")
+        [name, value, 'data-href': "#{@cur_node.url}?" + url_for(sort_params.merge(sort: value).to_query)]
+      end
+    %>
+    <%= t('cms.search_sort') %>
+    <%= select_tag 'sort', options_for_select(options, selected: params[:sort]), id: nil, "aria-label" => t('cms.search_sort'),
+      onchange: 'location.href = this.children[this.selectedIndex].getAttribute("data-href");' %>
+  </div>
 </div>
 
 <div class="cms-site-search-pages pages">
@@ -17,23 +59,68 @@
     <article class="item">
       <header>
         <%
+          score = hit['_score']
           source = hit['_source']
-          title = source['name']
-          if source.dig('file', 'extname').present?
+
+          title = source['title'] || source['name']
+          date = source['timestamp'] || source['released']
+          url = source['full_url'] || source['url']
+          page_name = source['page_name']
+          page_url = source['page_url']
+
+          link_target = (@cur_node.link_target == 'blank') ? '_blank' : nil
+
+          if !title.to_s.match('\(') && source.dig('file', 'extname').present? && source.dig('file', 'size').present?
             title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})"
           end
-          date = source['released']
-          url = ::Addressable::URI.join((Cms::Site.where(id: source['site_id']).first.presence || @cur_site).full_root_url, source['url']).to_s
-          if source['title'].present?
-            title = source['title']
-            date = source['timestamp']
-            url = source['url']
+
+          image = {}
+          if source['image_full_url']
+            image = { url: source['image_full_url'], name: source['image_name'] }
+          elsif source.dig('attachment', 'content_type').to_s.start_with?('image/')
+            image = { url: source['full_url'], name: source['name'] }
+          elsif source['site_id'] && site = Cms::Site.where(id: source['site_id']).first
+            image = { url: site.opengraph_defaul_image_url, name: 'og:image' } if site.opengraph_defaul_image_url
           end
+
+          text = source['text'].to_s.truncate(120)
+          if hit.dig('highlight', 'text_index')
+            text = hit.dig('highlight', 'text_index')[0].gsub(/[\s\n]+/, ' ').strip
+          end
+
+          categories = source['categories'].presence || []
         %>
-        <h2><%= link_to title, url, class: 'title' %></h2>
+        <h2><%= link_to title, url, class: 'title', target: link_target %></h2>
+        <div class="summary">
+          <% if image.present? %>
+            <div class="image"><%= image_tag image[:url], alt: image[:name] %></div>
+          <% end %>
+          <% if text.present? %>
+            <div class="text"><%== text %></div>
+          <% end %>
+        </div>
         <div class="meta">
-          <span class="url"><%= url %></span>
-          <time datetime="<%= date %>"><%= I18n.l(Time.zone.parse(date), format: :long) %></time>
+          <% if page_name.present? && page_url.present? %>
+            <div class="page-name"><%= t('cms.reference_article') %>: <%= link_to page_name, page_url %></div>
+          <% end %>
+          <% if url.present? && page_url.blank? %>
+            <div class="url"><%= url %></div>
+          <% end %>
+          <% if date.present? %>
+            <div class="date">
+              <time datetime="<%= date %>">
+                <%= t('cms.release_date') %>: <%= I18n.l(Time.zone.parse(date).to_date, format: :long) rescue nil %>
+              </time>
+            </div>
+          <% end %>
+          <% if categories.present? %>
+            <div class="category-list">
+              <%= Cms::Page.t(:category_ids) %>:
+              <% categories.each_with_index do |name, idx| %>
+                <%= ' | ' if idx > 0 %><a class="category-name"><%= name %></a>
+              <% end %>
+            </div>
+          <% end %>
         </div>
       </header>
     </article>

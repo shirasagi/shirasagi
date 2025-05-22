@@ -11,6 +11,10 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
   let!(:facility) { create :gws_facility_item, approval_check_state: "enabled", user_ids: [ user.id ] }
 
+  before do
+    site.update facility_min_hour: 0, facility_max_hour: 24
+  end
+
   context "have duplicate_private_gws_facility_plans" do
     it do
       login_user(user, to: gws_schedule_facilities_path(site: site))
