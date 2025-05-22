@@ -154,7 +154,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
         <dd>
           <%
             options = Cms::Group.site(@cur_site).active.tree_sort.map do |group|
-              [group.section_name, group.id, { 'aria-label': group.name }]
+              [group.section_name, group.id]
             end
           %>
           <%= select_tag 's[group_ids][]',
