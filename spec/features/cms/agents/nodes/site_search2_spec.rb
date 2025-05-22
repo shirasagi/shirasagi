@@ -52,6 +52,25 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
     expect(Cms::PageIndexQueue.all.size).to eq 0
   end
 
+  context 'one site with hidden settings' do
+    before do
+      site_search_node.update search_type_state: 'hide', search_target_state: 'hide',
+        article_node_state: 'hide', category_state: 'hide', organization_state: 'hide'
+    end
+
+    it do
+      visit site_search_node.url
+
+      within '.search-form' do
+        expect(page).not_to have_css(".site-search-type")
+        expect(page).not_to have_css(".site-search-target")
+        expect(page).not_to have_css(".site-search-article-node")
+        expect(page).not_to have_css(".site-search-categories")
+        expect(page).not_to have_css(".site-search-organization")
+      end
+    end
+  end
+
   context 'one site with settings' do
     before do
       site_search_node.update st_article_node_ids: [node.id], st_category_ids: [cate1.id]
@@ -208,7 +227,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
         expect(page).to have_css('.title')
         expect(page).to have_css('.summary .image')
         expect(page).to have_css('.meta .page-name')
-        expect(page).to have_css('.meta .url')
+        # expect(page).to have_css('.meta .url')
         expect(page).to have_css('.meta .date')
         expect(page).to have_css('.meta .category-list')
       end

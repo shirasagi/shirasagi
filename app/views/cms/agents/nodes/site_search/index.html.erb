@@ -71,7 +71,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       </dd>
     </dl>
 
-    <% if @cur_site.elasticsearch_outside_enabled? %>
+    <% if @cur_node.search_target_state != 'hide' && @cur_site.elasticsearch_outside_enabled? %>
       <dl class="site-search-target">
         <dt><%= t("cms.search_target") %></dt>
         <dd><%= select_tag 'target',

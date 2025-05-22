@@ -123,7 +123,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
     let(:cms_page) do
       create(
         :cms_page, cur_site: site, name: name, filename: filename, form: form,
-        category_ids: [category.id], state: 'public', group_ids: [group.id], contact_sub_group_ids: [group.id],
+        category_ids: [category.id], state: 'public', group_ids: [group.id], contact_sub_group_ids: [group.id]
       )
     end
     let(:item) { described_class.with_route(cms_page, index_item_id: cms_page.filename) }

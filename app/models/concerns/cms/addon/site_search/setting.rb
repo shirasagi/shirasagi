@@ -6,12 +6,14 @@ module Cms::Addon::SiteSearch
     included do
       field :link_target, type: String
       field :search_type_state, type: String
+      field :search_target_state, type: String
       field :article_node_state, type: String
       field :category_state, type: String
       field :organization_state, type: String
       field :site_search_type, type: String
       embeds_ids :st_article_nodes, class_name: "Article::Node::Page"
-      permit_params :link_target, :search_type_state, :article_node_state, :category_state, :organization_state,
+      permit_params :link_target, :search_type_state, :search_target_state,
+        :article_node_state, :category_state, :organization_state,
         :site_search_type, st_article_node_ids: []
     end
 
@@ -23,6 +25,10 @@ module Cms::Addon::SiteSearch
     end
 
     def search_type_state_options
+      %w(show hide).collect { |k| [I18n.t("ss.options.state.#{k}"), k == 'show' ? nil : k] }
+    end
+
+    def search_target_state_options
       %w(show hide).collect { |k| [I18n.t("ss.options.state.#{k}"), k == 'show' ? nil : k] }
     end
 
