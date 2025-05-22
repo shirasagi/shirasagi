@@ -110,7 +110,9 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
   end
 
   context "with user1" do
-    let(:permissions) { cms_role.permissions.select { |item| item =~ /_private_/ } }
+    let(:permissions) do
+      cms_role.permissions.select { |item| item =~ /_private_/ } + %w[edit_cms_ignore_syntax_check]
+    end
     let(:role) { create :cms_role, name: "role", permissions: permissions }
     let!(:user1) do
       create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [group1.id], cms_role_ids: [role.id])
