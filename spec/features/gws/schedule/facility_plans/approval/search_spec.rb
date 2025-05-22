@@ -7,6 +7,8 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
   let!(:item) { create :gws_schedule_facility_plan, facility_ids: [ facility.id ] }
 
   before do
+    site.update facility_min_hour: 0, facility_max_hour: 24
+
     item.reset_approvals
     item.update
     item.reload

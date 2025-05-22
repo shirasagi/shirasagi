@@ -21,17 +21,7 @@ chiki,cms/node,施設のある地域,,汎用レイアウト（1カラム） (gen
 シラサギ市/危機管理部/管理課
 シラサギ市/危機管理部/防災課",公開
 receiver,cms/line_hub,LINE HUB,,イベントトップ (event-top.layout.html),0,,非表示,標準機能/LINE HUB,,,,,,,,SHIRASAGI,,,,,,,,手動入力,2024/6/1 6:03,,公開
-search,cms/site_search,サイト内検索,,汎用レイアウト（1カラム） (general.layout.html),0,,非表示,,自治体サンプル,,,,,,,SHIRASAGI,,,,,,,"よくある質問 (faq)
-くらしのガイド (guide)
-観光・文化・スポーツ (kanko)
-健康・福祉 (kenko)
-子育て・教育 (kosodate)
-くらし・手続き (kurashi)
-お知らせ (oshirase)
-産業・仕事 (sangyo)
-市政情報 (shisei)
-街の話題 (topics)
-緊急情報 (urgency)",手動入力,2024/6/1 6:01,"シラサギ市
+search,cms/site_search,サイト内検索,,汎用レイアウト（1カラム） (general.layout.html),0,,非表示,,自治体サンプル,,,,,,,SHIRASAGI,,,,,,,,手動入力,2024/6/1 6:01,"シラサギ市
 シラサギ市/企画政策部
 シラサギ市/企画政策部/政策課
 シラサギ市/企画政策部/広報課

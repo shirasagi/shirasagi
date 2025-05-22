@@ -13,6 +13,8 @@
     "user_name" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
     "user_ids": { "type": "integer" },
     "group_ids": { "type": "integer" },
+    "groups": { "type": "keyword" },
+    "group_names": { "type": "keyword" },
     "custom_group_ids": { "type": "integer" },
     "member_ids": { "type": "integer" },
     "member_group_ids": { "type": "integer" },
@@ -22,7 +24,7 @@
     "readable_custom_group_ids": { "type": "integer" },
     "updated": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
     "created": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
-    "text_index" : { "type": "text", "analyzer": "my_ja_analyzer" },
+    "text_index" : { "type": "text", "analyzer": "my_ja_analyzer", "store": "true" },
     "data" : { "type": "text", "index" : "false", "store" : "false" },
     "file" : {
       "properties" : {

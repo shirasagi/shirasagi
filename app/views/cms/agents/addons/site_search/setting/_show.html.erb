@@ -1,0 +1,25 @@
+<dl class="see">
+  <dt><%= @model.t :link_target %></dt>
+  <dd><%= @item.label(:link_target) %></dd>
+
+  <dt><%= @model.t :search_type_state %></dt>
+  <dd><%= @item.label(:search_type_state) %></dd>
+
+  <dt><%= @model.t :search_target_state %></dt>
+  <dd><%= @item.label(:search_target_state) %></dd>
+
+  <dt><%= @model.t :article_node_state %></dt>
+  <dd><%= @item.label(:article_node_state) %></dd>
+
+  <dt><%= @model.t :category_state %></dt>
+  <dd><%= @item.label(:category_state) %></dd>
+
+  <dt><%= @model.t :organization_state %></dt>
+  <dd><%= @item.label(:organization_state) %></dd>
+
+  <dt><%= t("cms.node_config") %></dt>
+  <dd><%=br @item.ordered_st_article_nodes.pluck(:name) %></dd>
+
+  <dt><%= @model.t :site_search_type %></dt>
+  <dd><%= @item.label(:site_search_type) %></dd>
+</dl>

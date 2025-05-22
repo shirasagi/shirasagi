@@ -10,6 +10,6 @@ Cms_Site_Search_History.render(".site-search-history-part", "<%= @node.full_url 
     <input type="text" title=<%= t "cms.search_contents" %> placeholder=<%= t "cms.search_contents" %> class="text" id="s_keyword" size="40" name="s[keyword]" autocomplete="off">
     <ul class="site-search-history notranslate" style="display: none;"></ul>
   </div>
-  <button type="submit" id="search-button"><%= t "cms.search_button" %></button>
+  <button type="submit" id="search-button"><%= t "ss.buttons.search" %></button>
 </form>
 <%== @cur_part.lower_html if @cur_part.lower_html.present? %>

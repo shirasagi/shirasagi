@@ -20,6 +20,7 @@ ja:
     menu: メニュー
     module: モジュール
     operation: 操作
+    organization: 組織
     qr_code: QRコード
     regexp: 正規表現
     resize_image: 画像リサイズ
@@ -1555,6 +1556,7 @@ ja:
       elasticsearch_outside:
         - 外部サイト検索を設定します。
         - 検索フォームにプルダウンが表示され、外部サイト検索ができるようになります。
+        - Fess のインストールが必要です。
 
     ss/addon/source_cleaner/site_setting:
       source_cleaner_unwrap_tag_state:

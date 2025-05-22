@@ -13,7 +13,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   def set_setting
     @setting ||= begin
       setting_model = Cms::Elasticsearch::Setting::Page
-      setting_model.new(cur_site: @cur_site, cur_user: @cur_user)
+      setting_model.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node)
     end
   end
 
@@ -38,7 +38,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
   end
 
   def permit_fields
-    [:keyword, :target, :category_name, category_names: []]
+    [:sort, :keyword, :target, :type, :category_name, :group_name, article_node_ids: [], category_names: [], group_ids: []]
   end
 
   def get_params
@@ -59,7 +59,7 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
 
   def index
     @s = @item = @model.new(get_params)
-    @aggregate_result = @model.new(fix_params).search
+    @aggregation = @model.new(fix_params)
 
     return if search_query.blank? || search_query.values.flatten.reject(&:blank?).blank?
 
@@ -72,21 +72,39 @@ class Cms::Agents::Nodes::SiteSearchController < ApplicationController
       @s.index = [indexes].flatten.join(",")
     end
 
+    if params.dig(:s, :type).blank? && @cur_node.site_search_type.present?
+      @s.type = @cur_node.site_search_type
+    end
+
+    @s.sort = params[:sort]
     @s.field_name = %w(text_index content title)
     @s.from = (params[:page].to_i - 1) * @s.size if params[:page].present?
     @result = @s.search
   end
 
-  def categories
-    @s = @item = @model.new(get_params)
+  # def article_nodes
+  #   @s = @item = @model.new(get_params)
 
-    if @cur_node.st_categories.present?
-      @items = @cur_node.st_categories
-    else
-      @aggregate_result = @s.search
-    end
+  #   if @cur_node.ordered_st_article_nodes.present?
+  #     @items = @cur_node.ordered_st_article_nodes
+  #   else
+  #     @aggregate_result = @s.search
+  #   end
 
-    @cur_node.layout_id = nil
-    render layout: 'cms/ajax'
-  end
+  #   @cur_node.layout_id = nil
+  #   render layout: 'cms/ajax'
+  # end
+
+  # def categories
+  #   @s = @item = @model.new(get_params)
+
+  #   if @cur_node.st_categories.present?
+  #     @items = @cur_node.st_categories
+  #   else
+  #     @aggregate_result = @s.search
+  #   end
+
+  #   @cur_node.layout_id = nil
+  #   render layout: 'cms/ajax'
+  # end
 end

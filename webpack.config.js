@@ -13,6 +13,7 @@ module.exports = {
   devtool: RAILS_ENV === "production" ? "source-map" : "eval-source-map",
   entry: {
     application: "./app/javascript/application.js",
+    choices: "./app/javascript/choices.js",
     colorbox: "./app/javascript/colorbox.js",
     swiper: "./app/javascript/swiper.js",
     jplayer: "./app/javascript/jplayer.js",
