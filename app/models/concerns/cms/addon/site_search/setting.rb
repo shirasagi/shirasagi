@@ -45,7 +45,7 @@ module Cms::Addon::SiteSearch
     end
 
     def site_search_type_options
-      %w(all page file).collect { |k| [I18n.t("cms.options.site_search_type.#{k}"), k] }
+      %w(page file all).collect { |k| [I18n.t("cms.options.site_search_type.#{k}"), k] }
     end
   end
 end

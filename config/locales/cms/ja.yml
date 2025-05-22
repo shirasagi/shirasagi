@@ -604,9 +604,9 @@ ja:
         disabled: 本文に含めない
         include: 本文に含める
       site_search_type:
-        all: 全て
         page: ウェブページ
         file: 添付ファイル
+        all: 全て
       link_target:
         self: 同じタブで表示
         blank: 別のタブで表示

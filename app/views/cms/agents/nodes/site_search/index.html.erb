@@ -54,7 +54,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       <dl class="site-search-type">
         <dt><%= @cur_node.t(:site_search_type) %></dt>
         <dd><%= select_tag 's[type]',
-          options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type).presence), # || @cur_node.site_search_type
+          options_for_select(@cur_node.site_search_type_options, selected: params.dig(:s, :type).presence || @cur_node.site_search_type),
           id: nil, "aria-label" => @cur_node.t(:site_search_type) %></dd>
       </dl>
     <% end %>
