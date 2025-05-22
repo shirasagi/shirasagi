@@ -112,10 +112,10 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
               searchResultLimit: 20,
               removeItemButton: true,
               placeholderValue: '<%= t('facility.submit.change') %>',
-              noResultsText: '選択候補がありません。',
-              noChoicesText: '選択候補がありません。',
+              noResultsText: '<%= t('cms.site_search.no_results') %>',
+              noChoicesText: '<%= t('cms.site_search.no_choices') %>',
               itemSelectText: '',
-              maxItemText: (max) => `${max} 個まで選択できます。`,
+              maxItemText: (max) => `${max} <%= t('cms.site_search.max_item') %>`,
             });
           });
         </script>
@@ -124,7 +124,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
           <dd>
             <%= select_tag 's[category_names][]',
               options_for_select(options, selected: params.dig(:s, :category_names).presence),
-              multiple: true, class: "form-control", id: "choices-categories", include_blank: t('facility.submit.change') %>
+              multiple: true, class: "form-control", id: "choices-categories" %>
           </dd>
         </dl>
       <% end %>
@@ -142,10 +142,10 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
             searchResultLimit: 20,
             removeItemButton: true,
             placeholderValue: '<%= t('facility.submit.change') %>',
-            noResultsText: '選択候補がありません。',
-            noChoicesText: '選択候補がありません。',
+            noResultsText: '<%= t('cms.site_search.no_results') %>',
+            noChoicesText: '<%= t('cms.site_search.no_choices') %>',
             itemSelectText: '',
-            maxItemText: (max) => `${max} 個まで選択できます。`,
+            maxItemText: (max) => `${max} <%= t('cms.site_search.max_item') %>`,
           });
         });
       </script>
@@ -159,7 +159,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
           %>
           <%= select_tag 's[group_ids][]',
             options_for_select(options, selected: params.dig(:s, :group_ids).presence),
-            multiple: true, class: "form-control", id: "choices-groups", include_blank: t('facility.submit.change') %>
+            multiple: true, class: "form-control", id: "choices-groups" %>
         </dd>
       </dl>
       <dl class="site-search-organization style-input" style="display: none;">

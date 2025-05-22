@@ -610,6 +610,10 @@ ja:
       link_target:
         self: 同じタブで表示
         blank: 別のタブで表示
+    site_search:
+      no_results: 選択候補がありません。
+      no_choices: 選択候補がありません。
+      max_item: 個まで選択できます。
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP
