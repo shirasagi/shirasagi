@@ -4,16 +4,19 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   field :width, type: Integer
   field :height, type: Integer
   field :auto_width, type: String, default: -> { "disabled" }
+  field :title, type: String
 
-  permit_values :url, :youtube_id, :width, :height, :auto_width
+  permit_values :url, :youtube_id, :width, :height, :auto_width, :title
 
   before_validation :set_youtube_id
+  after_validation :fetch_youtube_title
 
   liquidize do
     export :youtube_id
     export :width
     export :height
     export :auto_width
+    export :title
   end
 
   class << self
@@ -58,7 +61,8 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       src: youtube_embed_url,
       frameborder: "0",
       allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
-      allowfullscreen: "allowfullscreen"
+      allowfullscreen: "allowfullscreen",
+      title: title.presence || "YouTube: #{youtube_id}"
     }
 
     if auto_width != "enabled"
@@ -116,6 +120,30 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     self.youtube_id = self.class.get_youtube_id(url)
   end
 
+  def fetch_youtube_title
+    return if youtube_id.blank? || title.present? # 既にタイトルがある場合はスキップ
+
+    begin
+      # oEmbed APIを使用してタイトルを取得（同期的に実行）
+      uri = URI.parse("https://www.youtube.com/oembed")
+      uri.query = URI.encode_www_form({url: "https://www.youtube.com/watch?v=#{youtube_id}", format: "json"})
+
+      response = Net::HTTP.get_response(uri)
+      if response.is_a?(Net::HTTPSuccess)
+        data = JSON.parse(response.body)
+        if data["title"].present?
+          self.title = data["title"]
+        else
+          Rails.logger.warn("YouTube oEmbed API returned no title for video: #{youtube_id}")
+        end
+      else
+        Rails.logger.warn("YouTube oEmbed API request failed for video: #{youtube_id}, status: #{response.code}")
+      end
+    rescue => e
+      Rails.logger.error("Failed to fetch YouTube title via oEmbed for video #{youtube_id}: #{e.message}")
+    end
+  end
+
   def validate_value
     return if column.blank? || skip_required?
 
@@ -145,6 +173,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       h = []
       h << %({% if value.youtube_id %})
       h << %(  <iframe src="https://www.youtube.com/embed/{{ value.youtube_id }}")
+      h << %(    title="{{ value.title }}" )
       h << %(    width="{{ value.width }}" )
       h << %(    height="{{ value.height }}")
       h << %(    frameborder="0")
