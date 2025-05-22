@@ -111,7 +111,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
               maxItemCount: 10,
               searchResultLimit: 20,
               removeItemButton: true,
-              placeholderValue: '<%= t('facility.submit.change') %>',
+              // placeholderValue: '<%= t('facility.submit.change') %>',
               noResultsText: '<%= t('cms.site_search.no_results') %>',
               noChoicesText: '<%= t('cms.site_search.no_choices') %>',
               itemSelectText: '',
@@ -124,7 +124,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
           <dd>
             <%= select_tag 's[category_names][]',
               options_for_select(options, selected: params.dig(:s, :category_names).presence),
-              multiple: true, class: "form-control", id: "choices-categories" %>
+              multiple: true, class: "form-control", id: "choices-categories", include_blank: t('facility.submit.change') %>
           </dd>
         </dl>
       <% end %>
@@ -141,7 +141,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
             maxItemCount: 10,
             searchResultLimit: 20,
             removeItemButton: true,
-            placeholderValue: '<%= t('facility.submit.change') %>',
+            // placeholderValue: '<%= t('facility.submit.change') %>',
             noResultsText: '<%= t('cms.site_search.no_results') %>',
             noChoicesText: '<%= t('cms.site_search.no_choices') %>',
             itemSelectText: '',
@@ -159,7 +159,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
           %>
           <%= select_tag 's[group_ids][]',
             options_for_select(options, selected: params.dig(:s, :group_ids).presence),
-            multiple: true, class: "form-control", id: "choices-groups" %>
+            multiple: true, class: "form-control", id: "choices-groups", include_blank: t('facility.submit.change') %>
         </dd>
       </dl>
       <dl class="site-search-organization style-input" style="display: none;">
