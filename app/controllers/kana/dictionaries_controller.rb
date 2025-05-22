@@ -50,6 +50,13 @@ class Kana::DictionariesController < ApplicationController
     raise "403" unless @model.allowed?(:build, @cur_user, site: @cur_site)
 
     put_history_log
+
+    if SS.config.kana.dig("build_kana_dictionary_job", "perform") == 'later'
+      Kana::BuildKanaDictionaryJob.bind(site_id: @cur_site).perform_later(item_ids)
+      redirect_to({ action: :index }, { notice: t("kana.build_start") })
+      return
+    end
+
     begin
       error_message = @model.build_dic(@cur_site.id, item_ids)
       unless error_message
