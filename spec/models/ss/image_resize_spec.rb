@@ -84,10 +84,8 @@ describe SS::ImageResize, type: :model, dbscope: :example do
 
     context "when there are no ss/image_resize items" do
       it do
-        expect(SS::ImageResize.effective_resize).to be_blank
         expect(SS::ImageResize.effective_resize(user: user)).to be_blank
         expect(SS::ImageResize.effective_resize(user: sys_admin)).to be_blank
-        expect(SS::ImageResize.effective_resize(request_disable: true)).to be_blank
         expect(SS::ImageResize.effective_resize(user: user, request_disable: true)).to be_blank
         expect(SS::ImageResize.effective_resize(user: sys_admin, request_disable: true)).to be_blank
       end
@@ -97,14 +95,6 @@ describe SS::ImageResize, type: :model, dbscope: :example do
       let!(:image_resize) { create :ss_image_resize, state: 'enabled' }
 
       it do
-        SS::ImageResize.effective_resize.tap do |effective|
-          expect(effective).to be_a(SS::ImageResize)
-          expect(effective.max_width).to eq image_resize.max_width
-          expect(effective.max_height).to eq image_resize.max_height
-          expect(effective.quality).to eq image_resize.quality
-          expect(effective.size).to eq image_resize.size
-        end
-
         SS::ImageResize.effective_resize(user: user).tap do |effective|
           expect(effective).to be_a(SS::ImageResize)
           expect(effective.max_width).to eq image_resize.max_width
@@ -114,14 +104,6 @@ describe SS::ImageResize, type: :model, dbscope: :example do
         end
 
         SS::ImageResize.effective_resize(user: sys_admin).tap do |effective|
-          expect(effective).to be_a(SS::ImageResize)
-          expect(effective.max_width).to eq image_resize.max_width
-          expect(effective.max_height).to eq image_resize.max_height
-          expect(effective.quality).to eq image_resize.quality
-          expect(effective.size).to eq image_resize.size
-        end
-
-        SS::ImageResize.effective_resize(request_disable: true).tap do |effective|
           expect(effective).to be_a(SS::ImageResize)
           expect(effective.max_width).to eq image_resize.max_width
           expect(effective.max_height).to eq image_resize.max_height
@@ -148,14 +130,6 @@ describe SS::ImageResize, type: :model, dbscope: :example do
       let!(:image_resize2) { create :ss_image_resize, state: 'enabled' }
 
       it do
-        SS::ImageResize.effective_resize.tap do |effective|
-          expect(effective).to be_a(SS::ImageResize)
-          expect(effective.max_width).to eq [ image_resize1.max_width, image_resize2.max_width ].min
-          expect(effective.max_height).to eq [ image_resize1.max_height, image_resize2.max_height ].min
-          expect(effective.quality).to eq [ image_resize1.quality, image_resize2.quality ].min
-          expect(effective.size).to eq [ image_resize1.size, image_resize2.size ].min
-        end
-
         SS::ImageResize.effective_resize(user: user).tap do |effective|
           expect(effective).to be_a(SS::ImageResize)
           expect(effective.max_width).to eq [ image_resize1.max_width, image_resize2.max_width ].min
@@ -165,14 +139,6 @@ describe SS::ImageResize, type: :model, dbscope: :example do
         end
 
         SS::ImageResize.effective_resize(user: sys_admin).tap do |effective|
-          expect(effective).to be_a(SS::ImageResize)
-          expect(effective.max_width).to eq [ image_resize1.max_width, image_resize2.max_width ].min
-          expect(effective.max_height).to eq [ image_resize1.max_height, image_resize2.max_height ].min
-          expect(effective.quality).to eq [ image_resize1.quality, image_resize2.quality ].min
-          expect(effective.size).to eq [ image_resize1.size, image_resize2.size ].min
-        end
-
-        SS::ImageResize.effective_resize(request_disable: true).tap do |effective|
           expect(effective).to be_a(SS::ImageResize)
           expect(effective.max_width).to eq [ image_resize1.max_width, image_resize2.max_width ].min
           expect(effective.max_height).to eq [ image_resize1.max_height, image_resize2.max_height ].min
@@ -199,14 +165,6 @@ describe SS::ImageResize, type: :model, dbscope: :example do
       let!(:image_resize2) { create :ss_image_resize, state: 'disabled' }
 
       it do
-        SS::ImageResize.effective_resize.tap do |effective|
-          expect(effective).to be_a(SS::ImageResize)
-          expect(effective.max_width).to eq image_resize1.max_width
-          expect(effective.max_height).to eq image_resize1.max_height
-          expect(effective.quality).to eq image_resize1.quality
-          expect(effective.size).to eq image_resize1.size
-        end
-
         SS::ImageResize.effective_resize(user: user).tap do |effective|
           expect(effective).to be_a(SS::ImageResize)
           expect(effective.max_width).to eq image_resize1.max_width
@@ -216,14 +174,6 @@ describe SS::ImageResize, type: :model, dbscope: :example do
         end
 
         SS::ImageResize.effective_resize(user: sys_admin).tap do |effective|
-          expect(effective).to be_a(SS::ImageResize)
-          expect(effective.max_width).to eq image_resize1.max_width
-          expect(effective.max_height).to eq image_resize1.max_height
-          expect(effective.quality).to eq image_resize1.quality
-          expect(effective.size).to eq image_resize1.size
-        end
-
-        SS::ImageResize.effective_resize(request_disable: true).tap do |effective|
           expect(effective).to be_a(SS::ImageResize)
           expect(effective.max_width).to eq image_resize1.max_width
           expect(effective.max_height).to eq image_resize1.max_height

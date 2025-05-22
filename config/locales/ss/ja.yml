@@ -23,6 +23,7 @@ ja:
     qr_code: QRコード
     regexp: 正規表現
     resize_image: 画像リサイズ
+    no_resize_image: 画像リサイズしない
     role: ロール
     role_setting: ロール一括設定
     required: 必須入力
@@ -79,6 +80,7 @@ ja:
     mfa_otp_not_enabled_yet: "有効化されていません。"
     system_operation: "-- システムによる操作 --"
     upload_or_select_from_list: ファイルアップロードまたは一覧から選択
+    auto_resizing_label: "%{size}（システム設定）"
 
     views:
       login/login:

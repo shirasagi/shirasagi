@@ -395,36 +395,37 @@ module Cms
     options
   end
 
-  def self.file_resizing_options(user, site:, node: nil)
-    options = SS::File.system_resizing_options
-
-    site_resizing = site.file_resizing
-    if site_resizing.present?
-      site_resizing_label = site.t(:file_resizing_label, size: site_resizing.join("x"))
-      site_resizing_value = site_resizing.join(",")
-      site_resizing_option = options.find { |_label, value, _attr| value == site_resizing_value }
-      if site_resizing_option
-        site_resizing_option[0] = site_resizing_label
-        site_resizing_option[2] ||= {}
-        site_resizing_option[2][:selected] = true
-      else
-        options << [ site_resizing_label, site_resizing_value, { selected: true } ]
-        _sort_file_resizing_options(options)
-      end
-    end
-
-    image_resize = SS::File.effective_image_resize(user: user, site: site, node: node)
-    min_width = image_resize.try(:max_width)
-    min_height = image_resize.try(:max_height)
-    if min_width.present? || min_height.present?
-      options.select! do |_label, value, _attr|
-        width, height = value.split(',', 2).map(&:to_i)
-        next false if min_width && width > min_width
-        next false if min_height && height > min_height
-        true
-      end
-    end
-
-    options
-  end
+  # def self.file_resizing_options(user, site:, node: nil)
+  #   options = SS::File.system_resizing_options.dup
+  #
+  #   additional_options = []
+  #   site_resizing = site.file_resizing
+  #   if site_resizing.present?
+  #     site_resizing_label = site.t(:file_resizing_label, size: site_resizing.join("x"))
+  #     additional_options << {
+  #       width: site_resizing[0], height: site_resizing[1], label: site_resizing_label }
+  #   end
+  #
+  #   system_image_resize = SS::File.effective_image_resize(user: user, site: site, node: node, request_disable: false)
+  #   if system_image_resize.present? && (system_image_resize.max_width || system_image_resize.max_height)
+  #     system_resizing_label = I18n.t("ss.auto_resizing_label", size: "#{system_image_resize.max_width}x#{system_image_resize.max_height}")
+  #     additional_options << {
+  #       width: system_image_resize.max_width, height: system_image_resize.max_height, label: system_resizing_label }
+  #   end
+  #
+  #   if additional_options.present?
+  #     options = SS.add_resizing_options(options, additional_options)
+  #   end
+  #
+  #   user_image_resize = SS::File.effective_image_resize(user: user, site: site, node: node, request_disable: true)
+  #   if user_image_resize
+  #     options = SS.filter_out_resizing_options(options, user_image_resize)
+  #   end
+  #
+  #   if additional_options.present?
+  #     options = SS.set_selected_resizing_options(options, additional_options)
+  #   end
+  #
+  #   options
+  # end
 end

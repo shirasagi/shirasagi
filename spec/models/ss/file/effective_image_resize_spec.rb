@@ -15,18 +15,6 @@ describe SS::File, dbscope: :example do
 
   describe ".effective_image_resize" do
     context "without ss/image_resize" do
-      context "without user" do
-        it do
-          SS::File.effective_image_resize.tap do |min_resize|
-            expect(min_resize).to be_blank
-          end
-
-          SS::File.effective_image_resize(request_disable: true).tap do |min_resize|
-            expect(min_resize).to be_blank
-          end
-        end
-      end
-
       context "with user" do
         it do
           SS::File.effective_image_resize(user: user).tap do |min_resize|
@@ -90,24 +78,6 @@ describe SS::File, dbscope: :example do
       let(:quality1) { 85 }
       let!(:image_resize1) do
         create :ss_image_resize, state: "enabled", max_width: width1, max_height: height1, quality: quality1, size: nil
-      end
-
-      context "without user" do
-        it do
-          SS::File.effective_image_resize.tap do |min_resize|
-            expect(min_resize.max_width).to eq width1
-            expect(min_resize.max_height).to eq height1
-            expect(min_resize.quality).to eq quality1
-            expect(min_resize.size).to be_nil
-          end
-
-          SS::File.effective_image_resize(request_disable: true).tap do |min_resize|
-            expect(min_resize.max_width).to eq width1
-            expect(min_resize.max_height).to eq height1
-            expect(min_resize.quality).to eq quality1
-            expect(min_resize.size).to be_nil
-          end
-        end
       end
 
       context "with user" do
@@ -211,24 +181,6 @@ describe SS::File, dbscope: :example do
         create :ss_image_resize, state: "disabled", max_width: width3, max_height: height3, quality: quality3, size: size3
       end
 
-      context "without user" do
-        it do
-          SS::File.effective_image_resize.tap do |min_resize|
-            expect(min_resize.max_width).to eq [ width1, width2 ].min
-            expect(min_resize.max_height).to eq [ height1, height2 ].min
-            expect(min_resize.quality).to eq [ quality1, quality2 ].min
-            expect(min_resize.size).to eq [ size1, size2 ].min
-          end
-
-          SS::File.effective_image_resize(request_disable: true).tap do |min_resize|
-            expect(min_resize.max_width).to eq [ width1, width2 ].min
-            expect(min_resize.max_height).to eq [ height1, height2 ].min
-            expect(min_resize.quality).to eq [ quality1, quality2 ].min
-            expect(min_resize.size).to eq [ size1, size2 ].min
-          end
-        end
-      end
-
       context "with user" do
         it do
           SS::File.effective_image_resize(user: user).tap do |min_resize|
@@ -316,24 +268,6 @@ describe SS::File, dbscope: :example do
         create(
           :cms_image_resize, cur_site: site, cur_node: node, state: "enabled",
           max_width: width1, max_height: height1, quality: quality1, size: nil)
-      end
-
-      context "without user" do
-        it do
-          SS::File.effective_image_resize(node: node).tap do |min_resize|
-            expect(min_resize.max_width).to eq width1
-            expect(min_resize.max_height).to eq height1
-            expect(min_resize.quality).to eq quality1
-            expect(min_resize.size).to be_nil
-          end
-
-          SS::File.effective_image_resize(node: node, request_disable: true).tap do |min_resize|
-            expect(min_resize.max_width).to eq width1
-            expect(min_resize.max_height).to eq height1
-            expect(min_resize.quality).to eq quality1
-            expect(min_resize.size).to be_nil
-          end
-        end
       end
 
       context "with user" do
@@ -442,24 +376,6 @@ describe SS::File, dbscope: :example do
         create(
           :cms_image_resize, cur_site: site, cur_node: node, state: "disabled",
           max_width: width3, max_height: height3, quality: quality3, size: size3)
-      end
-
-      context "without user" do
-        it do
-          SS::File.effective_image_resize(node: node).tap do |min_resize|
-            expect(min_resize.max_width).to eq [ width1, width2 ].min
-            expect(min_resize.max_height).to eq [ height1, height2 ].min
-            expect(min_resize.quality).to eq [ quality1, quality2 ].min
-            expect(min_resize.size).to eq [ size1, size2 ].min
-          end
-
-          SS::File.effective_image_resize(node: node, request_disable: true).tap do |min_resize|
-            expect(min_resize.max_width).to eq [ width1, width2 ].min
-            expect(min_resize.max_height).to eq [ height1, height2 ].min
-            expect(min_resize.quality).to eq [ quality1, quality2 ].min
-            expect(min_resize.size).to eq [ size1, size2 ].min
-          end
-        end
       end
 
       context "with user" do
@@ -581,24 +497,6 @@ describe SS::File, dbscope: :example do
             max_width: cms_width2, max_height: cms_height2, quality: cms_quality2, size: cms_size2)
         end
 
-        context "without user" do
-          it do
-            SS::File.effective_image_resize(node: node).tap do |min_resize|
-              expect(min_resize.max_width).to eq cms_width1
-              expect(min_resize.max_height).to eq cms_height1
-              expect(min_resize.quality).to eq cms_quality1
-              expect(min_resize.size).to eq cms_size1
-            end
-
-            SS::File.effective_image_resize(node: node, request_disable: true).tap do |min_resize|
-              expect(min_resize.max_width).to eq cms_width1
-              expect(min_resize.max_height).to eq cms_height1
-              expect(min_resize.quality).to eq cms_quality1
-              expect(min_resize.size).to eq cms_size1
-            end
-          end
-        end
-
         context "with user" do
           it do
             SS::File.effective_image_resize(user: user, node: node).tap do |min_resize|
@@ -718,24 +616,6 @@ describe SS::File, dbscope: :example do
           create(
             :cms_image_resize, cur_site: site, cur_node: node, state: "disabled",
             max_width: cms_width2, max_height: cms_height2, quality: cms_quality2, size: cms_size2)
-        end
-
-        context "without user" do
-          it do
-            SS::File.effective_image_resize(node: node).tap do |min_resize|
-              expect(min_resize.max_width).to eq sys_width1
-              expect(min_resize.max_height).to eq sys_height1
-              expect(min_resize.quality).to eq sys_quality1
-              expect(min_resize.size).to eq sys_size1
-            end
-
-            SS::File.effective_image_resize(node: node, request_disable: true).tap do |min_resize|
-              expect(min_resize.max_width).to eq sys_width1
-              expect(min_resize.max_height).to eq sys_height1
-              expect(min_resize.quality).to eq sys_quality1
-              expect(min_resize.size).to eq sys_size1
-            end
-          end
         end
 
         context "with user" do

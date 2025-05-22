@@ -70,7 +70,7 @@ module SS::Model::File
     #
     # 使い方2では、一般的な場合の最小サイズ情報を取得する。
     # user はサイズ制限を無効にできる権限を持つかもしれない。その場合、使い方1では、nil （無制限）を返す。
-    def effective_image_resize(user: nil, site: nil, node: nil, request_disable: false)
+    def effective_image_resize(user:, site: nil, node: nil, request_disable: false)
       sys_min = SS::ImageResize.effective_resize(user: user, request_disable: request_disable)
       cms_min = Cms::ImageResize.effective_resize(user: user, site: site, node: node, request_disable: request_disable)
 
@@ -81,17 +81,21 @@ module SS::Model::File
     end
 
     def system_resizing_options
-      [
-        [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
-        [1024, 768], [768, 1024], [1280, 720], [720, 1280]
-      ].map { |w, h| [I18n.t("ss.options.resizing.#{w}x#{h}"), "#{w},#{h}"] }
+      @system_resizing_options ||= begin
+        options = [
+          [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
+          [1024, 768], [768, 1024], [1280, 720], [720, 1280]
+        ]
+        options.map! { |w, h| [ I18n.t("ss.options.resizing.#{w}x#{h}").freeze, "#{w},#{h}".freeze ] }
+        options.freeze
+      end
     end
 
-    def resizing_options(user: nil, node: nil)
+    def resizing_options(user:, site: nil, node: nil)
       options = system_resizing_options
       return options unless user
 
-      image_resize = effective_image_resize(user: user, node: node, request_disable: true)
+      image_resize = effective_image_resize(user: user, site: site, node: node, request_disable: true)
       return options if image_resize.blank?
 
       min_width = image_resize.max_width
@@ -100,15 +104,32 @@ module SS::Model::File
 
       options.select do |k, v|
         width, height = v.split(',', 2).collect(&:to_i)
-        width <= min_width && height <= min_height
+        next false if min_width && width > min_width
+        next false if min_height && height > min_height
+        true
       end
     end
 
-    def quality_options(user: nil, node: nil)
-      options = SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] } rescue []
+    def system_quality_options
+      @system_quality_options = begin
+        SS.config.ss.quality_options
+          .select { _1['label'].present? && _1['quality'].numeric? }
+          .map { [ _1['label'].freeze, _1['quality'].to_i ] }
+          .select { |_label, quality| quality >= 0 }
+          .freeze
+      rescue
+        [].freeze
+      end
+    end
+
+    def quality_options(user:, site: nil, node: nil)
+      options = system_quality_options
       return options unless user
 
-      min_quality = effective_image_resize(user: user, node: node, request_disable: true).try(:quality)
+      image_resize = effective_image_resize(user: user, site: site, node: node, request_disable: true)
+      return options if image_resize.blank?
+
+      min_quality = image_resize.quality
       return options unless min_quality
 
       options.select do |k, v|

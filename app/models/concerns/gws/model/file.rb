@@ -55,15 +55,12 @@ module Gws::Model::File
       "#{SS::Application.private_root}/files"
     end
 
-    def effective_image_resize(user: nil, request_disable: false, **)
+    def effective_image_resize(user:, request_disable: false, **)
       SS::ImageResize.effective_resize(user: user, request_disable: request_disable)
     end
 
-    def resizing_options(user: nil, **)
-      options = [
-        [320, 240], [240, 320], [640, 480], [480, 640], [800, 600], [600, 800],
-        [1024, 768], [768, 1024], [1280, 720], [720, 1280]
-      ].map { |x, y| [I18n.t("ss.options.resizing.#{x}x#{y}"), "#{x},#{y}"] }
+    def resizing_options(user:, **)
+      options = SS::File.system_resizing_options
       return options unless user
 
       min_width, min_height = effective_image_resize(user: user, request_disable: true).then do |image_resize|
@@ -80,7 +77,7 @@ module Gws::Model::File
     end
 
     def quality_options(user:, **)
-      options = SS.config.ss.quality_options.collect { |v| [ v['label'], v['quality'] ] } rescue []
+      options = SS::File.system_quality_options
       return options unless user
 
       min_quality = effective_image_resize(user: user, request_disable: true).try(:quality)
