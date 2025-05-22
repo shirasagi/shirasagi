@@ -465,7 +465,8 @@ module SS::Model::File
     size = resizing || []
     size.map! { _1.numeric? ? _1.to_i : nil }
 
-    image_resize = SS::File.effective_image_resize(user: user, node: try(:node), request_disable: image_resizes_disabled == 'disabled')
+    request_disable = image_resizes_disabled == 'disabled'
+    image_resize = SS::File.effective_image_resize(user: user, node: try(:node), request_disable: request_disable)
     return size if image_resize.blank?
 
     if image_resize.max_width.numeric?
@@ -487,8 +488,9 @@ module SS::Model::File
     qualities = []
     qualities << self.quality if self.quality.numeric?
 
-    image_resize = SS::File.effective_image_resize(user: user, node: try(:node), request_disable: image_resizes_disabled == 'disabled')
-    if image_resize.present? && image_resize.size.numeric? && size > image_resize.size.to_i && image_resize.quality.numeric?
+    request_disable = image_resizes_disabled == 'disabled'
+    image_resize = SS::File.effective_image_resize(user: user, node: try(:node), request_disable: request_disable)
+    if image_resize.present? && image_resize.size.numeric? && size > image_resize.size && image_resize.quality.numeric?
       qualities << image_resize.quality
     end
 
