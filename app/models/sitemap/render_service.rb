@@ -2,7 +2,7 @@ class Sitemap::RenderService
   include ActiveModel::Model
 
   SITEMAP_XMLNS = "http://www.sitemaps.org/schemas/sitemap/0.9".freeze
-  REQUIRED_FIELDS = %i[id _id route name filename site_id depth order redirect_link rss_link].freeze
+  REQUIRED_FIELDS = %i[id _id route name filename site_id depth order redirect_link rss_link link_url].freeze
   EMPTY_ARRAY = [].freeze
 
   attr_accessor :cur_site, :cur_node, :page
@@ -210,11 +210,27 @@ class Sitemap::RenderService
       filename = filename.sub(extname, ".html") if extname != ".html"
       page = filename_to_page_map[filename]
     end
-    return FakeContent.from_page(page, cur_site: cur_site, url_item: url_item) if page
+    if page
+      entry = begin
+        FakeContent.from_page(page, cur_site: cur_site, url_item: url_item)
+      rescue => e
+        Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+        nil
+      end
+      return entry
+    end
 
     filename = ::File.dirname(filename) if extname.present?
     node = filename_to_node_map[filename]
-    return FakeContent.from_node(node, cur_site: cur_site, url_item: url_item) if node
+    if node
+      entry = begin
+        FakeContent.from_node(node, cur_site: cur_site, url_item: url_item)
+      rescue => e
+        Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+        nil
+      end
+      return entry
+    end
 
     loop do
       prev_filename = filename
@@ -227,7 +243,16 @@ class Sitemap::RenderService
       rest = url_item.filename[filename.length..-1]
       path = "/.s#{cur_site.id}/nodes/#{node.route}#{rest}"
       spec = Rails.application.routes.recognize_path(path, method: "GET") rescue {}
-      return FakeContent.from_node_sub_url(node, cur_site: cur_site, url_item: url_item) if node if spec[:cell]
+
+      if spec[:cell]
+        entry = begin
+          FakeContent.from_node_sub_url(node, cur_site: cur_site, url_item: url_item)
+        rescue => e
+          Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+          nil
+        end
+        return entry
+      end
     end
 
     nil

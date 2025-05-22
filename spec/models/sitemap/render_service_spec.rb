@@ -169,5 +169,19 @@ describe Sitemap::RenderService do
         end
       end
     end
+
+    context 'when banner page given' do
+      let!(:banner_node) { create :ads_node_banner }
+      let!(:banner_page1) { create :ads_banner, cur_node: banner_node }
+      let!(:banner_page2) { create :ads_banner, cur_node: banner_node }
+      let!(:node) { create :sitemap_node_page }
+      let!(:item) { create(:sitemap_page, cur_node: node, sitemap_page_state: 'show') }
+      subject! { Sitemap::RenderService.new(cur_site: cms_site, cur_node: node, page: item) }
+
+      it do
+        expect(subject.load_whole_contents.map(&:url)).to include(banner_page1.url)
+        expect(subject.load_whole_contents.map(&:url)).to include(banner_page2.url)
+      end
+    end
   end
 end
