@@ -82,6 +82,8 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
         self.url = value
       when self.class.t(:youtube_id)
         self.youtube_id = value
+      when self.class.t(:title)
+        self.title = value
       when self.class.t(:width)
         self.width = value
       when self.class.t(:height)
@@ -122,27 +124,22 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   end
 
   def fetch_youtube_title
-    return if youtube_id.blank? || title.present? # 既にタイトルがある場合はスキップ
+    return if youtube_id.blank? || title.present?
 
-    begin
-      # oEmbed APIを使用してタイトルを取得（同期的に実行）
-      uri = URI.parse("https://www.youtube.com/oembed")
-      uri.query = URI.encode_www_form({url: "https://www.youtube.com/watch?v=#{youtube_id}", format: "json"})
+    uri = URI.parse("https://www.youtube.com/oembed")
+    uri.query = URI.encode_www_form({url: "https://www.youtube.com/watch?v=#{youtube_id}", format: "json"})
 
-      response = Net::HTTP.get_response(uri)
-      if response.is_a?(Net::HTTPSuccess)
-        data = JSON.parse(response.body)
-        if data["title"].present?
-          self.title = data["title"]
-        else
-          Rails.logger.warn("YouTube oEmbed API returned no title for video: #{youtube_id}")
-        end
-      else
-        Rails.logger.warn("YouTube oEmbed API request failed for video: #{youtube_id}, status: #{response.code}")
-      end
-    rescue => e
-      Rails.logger.error("Failed to fetch YouTube title via oEmbed for video #{youtube_id}: #{e.message}")
+    response = Net::HTTP.get_response(uri)
+    unless response.is_a?(Net::HTTPSuccess)
+      raise "YouTube oEmbed API request failed for video: #{youtube_id}, status: #{response.code}"
     end
+
+    data = JSON.parse(response.body)
+    unless data["title"].present?
+      raise "YouTube oEmbed API returned no title for video: #{youtube_id}"
+    end
+
+    self.title = data["title"]
   end
 
   def validate_value
