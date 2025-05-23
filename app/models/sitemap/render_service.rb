@@ -50,7 +50,7 @@ class Sitemap::RenderService
 
     attr_accessor :type, :id, :name, :filename, :url, :full_url, :depth, :order
 
-    EXCLUDE_PAGE_MODELS = [Ads::Banner]
+    EXCLUDE_PAGE_MODELS = [Ads::Banner].freeze
 
     class << self
       def from_page(page, cur_site:, url_item: nil)
