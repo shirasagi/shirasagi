@@ -980,8 +980,9 @@ en:
         order: Sort by
         state: Status
       ss/model/image_resize:
-        max_width: Width
-        max_height: Height
+        max_width: Max Width
+        max_height: Max Height
+        size: Number of bytes
         quality: Quality
       ss/model/postal_code:
         code: Postal code
@@ -1518,12 +1519,15 @@ en:
         - Enable or disable restrictions.
     ss/model/image_resize:
       max_width:
-        - The width of the image file can be set.
+        - The max width of the image to be uploaded can be set.
       max_height:
-        - The height of the image file can be set.
+        - The max height of the image to be uploaded can be set.
+      size:
+        - If the number of bytes in the image file is greater than this setting, the image quality is reduced.
+        - Even with reduced image quality, the number of bytes in the image may exceed this setting.
       quality:
         - Image file quality can be set between 0 and 100.
-        - Compresses images based on image quality if the maximum file size is exceeded.
+        - "If the number of bytes of the image file exceeds the value set for “Number of bytes”, the image quality is changed to this setting."
         - The higher the image quality, the less degraded it is.
     ss/model/editor_setting:
       color_button:
