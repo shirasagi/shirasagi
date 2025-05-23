@@ -28,12 +28,13 @@ describe 'article_agents_pages_page', type: :feature, dbscope: :example, js: tru
       context "marker name blank" do
         let!(:loc) { [134.589971, 34.067035] }
         let!(:map_point) { {"name" => "", "loc" => loc, "text" => unique_id} }
-        let!(:link_name) { "#{loc.to_s}(#{I18n.t("map.links.google_maps_search")})" }
+        let!(:link_name) { "#{loc}(#{I18n.t("map.links.google_maps_search")})" }
         let(:item) { create(:article_page, cur_site: site, cur_node: node, layout: layout, map_points: [map_point]) }
 
         it do
           visit item.url
           within "section.map-page" do
+            expect(page).to have_css("h2", text: I18n.t("map.views.header"))
             expect(page).to have_css("#map-canvas")
             within ".map-markers" do
               expect(page).to have_selector("a", count: 1)
@@ -52,6 +53,7 @@ describe 'article_agents_pages_page', type: :feature, dbscope: :example, js: tru
         it do
           visit item.url
           within "section.map-page" do
+            expect(page).to have_css("h2", text: I18n.t("map.views.header"))
             expect(page).to have_css("#map-canvas")
             within ".map-markers" do
               expect(page).to have_selector("a", count: 1)
@@ -77,8 +79,36 @@ describe 'article_agents_pages_page', type: :feature, dbscope: :example, js: tru
       it do
         visit item.url
         within "section.map-page" do
+          expect(page).to have_css("h2", text: I18n.t("map.views.header"))
           expect(page).to have_css("#map-canvas")
           expect(page).to have_no_css(".map-markers")
+        end
+      end
+    end
+
+    context "modify header text" do
+      let!(:loc) { [134.589971, 34.067035] }
+      let!(:map_point) { {"name" => unique_id, "loc" => loc, "text" => unique_id} }
+      let!(:header_text) { unique_id }
+      let!(:link_name) { "#{map_point["name"]}(#{I18n.t("map.links.google_maps_search")})" }
+      let(:item) { create(:article_page, cur_site: site, cur_node: node, layout: layout, map_points: [map_point]) }
+
+      before do
+        Capybara.app_host = "http://#{site.domain}"
+
+        site.map_header_text = header_text
+        site.update!
+      end
+
+      it do
+        visit item.url
+        within "section.map-page" do
+          expect(page).to have_css("h2", text: header_text)
+          expect(page).to have_css("#map-canvas")
+          within ".map-markers" do
+            expect(page).to have_selector("a", count: 1)
+            expect(page).to have_link link_name
+          end
         end
       end
     end
