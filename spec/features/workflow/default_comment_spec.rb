@@ -75,8 +75,6 @@ describe "default_comment", type: :feature, dbscope: :example, js: true do
 
           item.reload
           expect(item.workflow_comment).to eq workflow_comment
-
-          STDIN.gets
         end
       end
     end

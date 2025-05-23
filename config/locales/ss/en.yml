@@ -1109,6 +1109,7 @@ en:
         timezone: Timezone
       ss/addon/workflow_setting:
         workflow_my_group: Display own group
+        workflow_default_comment: Default comments of request
       ss/api_token:
         name: Name
         jwt_id: JWT ID (jti)
@@ -1590,6 +1591,8 @@ en:
     ss/addon/workflow_setting:
       workflow_my_group:
         - Select the display own group
+      workflow_default_comment:
+        - Enter the default comments of request
 
     ss:
       contrast_ratio:
