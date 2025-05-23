@@ -7,12 +7,13 @@ module SS::Addon
       field :map_api, type: String
       field :map_api_key, type: String
       field :map_api_layer, type: String
+      field :map_header_text, type: String
       field :show_google_maps_search, type: String, default: "active"
       field :map_api_mypage, type: String, default: "active"
       field :map_center, type: Map::Extensions::Loc
       field :map_max_number_of_markers, type: Integer
 
-      permit_params :map_api, :map_api_key, :map_api_layer, :show_google_maps_search, :map_api_mypage
+      permit_params :map_api, :map_api_key, :map_api_layer, :map_header_text, :show_google_maps_search, :map_api_mypage
       permit_params :map_max_number_of_markers, map_center: %i[lat lng]
 
       validates :map_max_number_of_markers, numericality: { only_integer: true, greater_than: 0, allow_blank: true }

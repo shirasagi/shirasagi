@@ -909,6 +909,7 @@ en:
         map_api: Map API
         map_api_key: API key
         map_api_layer: Map layer
+        map_header_text: Map header text
         show_google_maps_search: Link to Google Maps
         map_api_mypage: Map type on the admin screen
         map_center: Map center
@@ -1392,6 +1393,8 @@ en:
         - The API key for Google Maps is set in this field.
       map_api_layer:
         - Select the OpenLayers layer to use on the site.
+      map_header_text:
+        - Set the text for the map addon's header on the page view.
       show_google_maps_search:
         - When enabled, the map marker will display a “View on Google Maps” link.
       map_api_mypage:
