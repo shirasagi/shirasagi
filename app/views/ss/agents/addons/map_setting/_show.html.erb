@@ -8,6 +8,9 @@
   <dt><%= @model.t :map_api_layer %></dt>
   <dd><%= @item.label :map_api_layer %></dd>
 
+  <dt><%= @model.t :map_header_text %></dt>
+  <dd><%= @item.map_header_text.presence || t("map.views.header") %></dd>
+
   <dt><%= @model.t :show_google_maps_search %></dt>
   <dd><%= @item.label :show_google_maps_search %></dd>
 

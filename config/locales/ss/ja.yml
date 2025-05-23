@@ -909,6 +909,7 @@ ja:
         map_api: 地図API
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
+        map_header_text: ヘッダーテキスト
         show_google_maps_search: Googleマップへのリンク
         map_api_mypage: 管理画面での地図表示
         map_center: 地図の中心座標
@@ -1392,6 +1393,8 @@ ja:
         - GoogleマップのAPIキーはこの項目に設定します。
       map_api_layer:
         - サイトで使用するOpenLayersのレイヤーを選択します。
+      map_header_text:
+        - ページ詳細画面の地図アドオンのヘッダーのテキストを設定できます。
       show_google_maps_search:
         - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
       map_api_mypage:

@@ -229,4 +229,15 @@ module Map::MapHelper
       SS.config.map.dig("map_marker_images", "googlemaps", "picker")
     end
   end
+
+  ## show googlemaps
+
+  def show_googlemaps_link(map_point)
+    name = map_point["name"].presence || map_point["loc"].to_s
+    name += "(#{t("map.links.google_maps_search")})"
+
+    lat = map_point["loc"][1]
+    lng = map_point["loc"][0]
+    link_to(name, "#{SS.config.map.googlemaps_search_end_point}#{lat},#{lng}")
+  end
 end
