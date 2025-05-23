@@ -136,7 +136,7 @@
 
       <% if @item.workflow_comment.present? %>
         <dt><%= @model.t :workflow_comment %></dt>
-        <dd><%= @item.workflow_comment %></dd>
+        <dd><%=br @item.workflow_comment %></dd>
       <% end %>
 
       <% if @item.workflow_kind.present? %>

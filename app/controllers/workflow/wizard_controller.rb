@@ -44,6 +44,10 @@ class Workflow::WizardController < ApplicationController
   end
 
   def approver_setting
+    if @item.workflow_init_kind.present? && @item.workflow_init_kind != "closed"
+      @item.workflow_comment ||= @cur_site.try(:workflow_default_comment)
+    end
+
     if @route.present?
       if @item.apply_workflow?(@route)
         render template: "approver_setting_multi", layout: false

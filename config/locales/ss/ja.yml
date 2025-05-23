@@ -1109,6 +1109,7 @@ ja:
         timezone: タイムゾーン
       ss/addon/workflow_setting:
         workflow_my_group: 自所属の表示
+        workflow_default_comment: 申請時のコメント
       ss/api_token:
         name: 名前
         jwt_id: JWT ID (jti)
@@ -1591,6 +1592,8 @@ ja:
     ss/addon/workflow_setting:
       workflow_my_group:
         - ページの公開申請時「自所属」を表示するか設定します。
+      workflow_default_comment:
+        - ページ申請時にあらかじめ入力しておくコメントを設定できます。
 
     ss:
       contrast_ratio:
