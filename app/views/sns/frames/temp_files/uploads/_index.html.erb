@@ -1,8 +1,10 @@
 <%
   disable_image_resizes = SS::ImageResize.allowed?(:disable, @cur_user) && SS::ImageResize.where(state: SS::ImageResize::STATE_ENABLED).present?
   disable_image_resizes ||= cur_node.present? && Cms::ImageResize.allowed?(:disable, @cur_user, site: @cur_site, node: cur_node) && Cms::ImageResize.site(@cur_site).node(cur_node).where(state: SS::ImageResize::STATE_ENABLED).present?
-  min_size, min_width, min_height = @model.image_resizes_min_attributes(user: @cur_user, node: cur_node).then do |attr|
-    [ attr['size'], attr['max_width'], attr['max_height'] ]
+
+  # システム設定やサイト設定の制限値を取得したいので、`request_disable: true` を付けて呼び出す
+  min_size, min_width, min_height = @model.effective_image_resize(user: @cur_user, site: @cur_site, node: cur_node, request_disable: false).then do |image_resize|
+    [ image_resize.try(:size), image_resize.try(:max_width), image_resize.try(:max_height) ]
   end
 %>
 
@@ -41,32 +43,21 @@
               <%% if (selectedItem.is_image) { %>
                 <%=
                   if @ss_mode == :cms
-                    file_resizing_options = Cms.file_resizing_options(@cur_user, site: @cur_site, node: cur_node)
+                    render Cms::FileResizingSelectComponent.new(name: "item[files][][resizing]", cur_user: @cur_user, cur_site: @cur_site, cur_node: cur_node)
                   else
-                    file_resizing_options = @model.resizing_options(user: @cur_user)
-                  end
-                  if file_resizing_options.present?
-                    select_tag "item[files][][resizing]", options_for_select(file_resizing_options), include_blank: t("ss.resize_image_auto"), class: "image-size", id: nil
+                    render SS::FileResizingSelectComponent.new(name: "item[files][][resizing]", cur_user: @cur_user)
                   end
                 %>
                 <%=
-                  file_quality_options = @model.quality_options(user: @cur_user, node: cur_node)
+                  if @ss_mode == :cms
+                    file_quality_options = @model.quality_options(user: @cur_user, site: @cur_site, node: cur_node)
+                  else
+                    file_quality_options = @model.quality_options(user: @cur_user)
+                  end
                   if file_quality_options.present?
                     select_tag "item[files][][quality]", options_for_select(file_quality_options), include_blank: t("ss.quality"), id: nil
                   end
                 %>
-                <% if disable_image_resizes %>
-                  <%= select_tag "item[files][][image_resizes_disabled]", options_for_select(@model.image_resizes_disabled_options), id: nil %>
-                <% end %>
-                <% if min_size %>
-                  <div class="tooltip">?
-                    <ul class="tooltip-content">
-                      <% t('tooltip.ss/model/file.image_resizes_disabled', size: min_size.to_fs(:human_size), width: min_width.to_fs(:delimited), height: min_height.to_fs(:delimited)).each do |tooltip| %>
-                        <li><%= tooltip %><br></li>
-                      <% end %>
-                    </ul>
-                  </div>
-                <% end %>
               <%% } %>
             </td>
             <td class="operations">
