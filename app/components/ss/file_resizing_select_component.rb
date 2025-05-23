@@ -19,7 +19,7 @@ class SS::FileResizingSelectComponent < ApplicationComponent
 
   def resizing_options
     @resizing_options ||= begin
-      options = SS::File.system_resizing_options.dup
+      options = system_resizing_options.dup
 
       if additional_options.present?
         options = add_resizing_options(options, additional_options)
@@ -45,6 +45,18 @@ class SS::FileResizingSelectComponent < ApplicationComponent
   end
 
   private
+
+  def system_resizing_options
+    @system_resizing_options ||= begin
+      options = [
+        [ 380, 380 ], # suitable for 3 columns in https://www.digital.go.jp/
+        [ 580, 580 ], # suitable for 2 columns in https://www.digital.go.jp/
+        [ 1200, 1200 ], # suitable for full-width in https://www.digital.go.jp/
+      ]
+      options.map! { |w, h| [ I18n.t("ss.options.resizing.#{w}x#{h}").freeze, "#{w},#{h}".freeze ] }
+      options.freeze
+    end
+  end
 
   def user_image_resize
     return @user_image_resize if instance_variable_defined?(:@user_image_resize)
