@@ -21,7 +21,7 @@
       </label>
     <% end %>
     <div class="info">
-      <% if is_changeable %>
+      <% if is_changeable && !hide_checkbox && !show_unchecked_checkbox %>
         <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
       <% end %>
       <% show_path = url_for(action: :show, id: item) rescue nil %>
@@ -44,7 +44,7 @@
       <%= check_box_tag "ids[]", item.id, false, disabled: true %>
     </label>
     <div class="info">
-      <% if is_changeable %>
+      <% if is_changeable && !hide_checkbox && !show_unchecked_checkbox %>
         <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
       <% end %>
       <% show_path = url_for(action: :show, id: item) rescue nil %>
