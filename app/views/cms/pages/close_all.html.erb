@@ -1,1 +1,4 @@
+<% Rails.logger.debug "=== close_all.html.erb 開始 ===" %>
+<% Rails.logger.debug "@items.size: #{@items.size}" %>
+<% Rails.logger.debug "@selected_items.size: #{@selected_items.size}" %>
 <%= render "cms/pages/change_state", message: t("ss.confirm.not_allowed_to_close") %>
