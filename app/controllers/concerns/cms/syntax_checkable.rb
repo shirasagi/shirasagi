@@ -4,6 +4,8 @@ module Cms::SyntaxCheckable
   private
 
   def syntax_check
+    return true if @item.html.blank?
+
     contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     if @syntax_checker.errors.present?
