@@ -107,16 +107,17 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       <% if options.size > 0 %>
         <script>
           document.addEventListener('DOMContentLoaded', () => {
-            new Choices('#choices-categories', {
+            const choices = new Choices('#choices-categories', {
               maxItemCount: 10,
               searchResultLimit: 20,
               removeItemButton: true,
-              // placeholderValue: '<%= t('facility.submit.change') %>',
+              shouldSort: false,
               noResultsText: '<%= t('cms.site_search.no_results') %>',
               noChoicesText: '<%= t('cms.site_search.no_choices') %>',
               itemSelectText: '',
               maxItemText: (max) => `${max} <%= t('cms.site_search.max_item') %>`,
             });
+            choices.removeChoice('');
           });
         </script>
         <dl class="site-search-categories style-select">
@@ -137,16 +138,17 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     <% if @cur_node.organization_state != 'hide' %>
       <script>
         document.addEventListener('DOMContentLoaded', () => {
-          new Choices('#choices-groups', {
+          const choices = new Choices('#choices-groups', {
             maxItemCount: 10,
             searchResultLimit: 20,
             removeItemButton: true,
-            // placeholderValue: '<%= t('facility.submit.change') %>',
+            shouldSort: false,
             noResultsText: '<%= t('cms.site_search.no_results') %>',
             noChoicesText: '<%= t('cms.site_search.no_choices') %>',
             itemSelectText: '',
             maxItemText: (max) => `${max} <%= t('cms.site_search.max_item') %>`,
           });
+          choices.removeChoice('');
         });
       </script>
       <dl class="site-search-organization style-select">
@@ -173,6 +175,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.querySelector('.search-form');
       const target = form.querySelector('select[name="target"]'); // outside or insinde
+      form.querySelectorAll('.choices__list--dropdown').forEach(el => el.role = 'group');
 
       if (target) {
         const changeTarget = () => {
