@@ -7,6 +7,7 @@ module Cms::CrudFilter
   included do
     menu_view "cms/crud/menu"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+    helper_method :ignore_alert_to_contains_urls?, :ignore_alert_to_syntax_check?
   end
 
   private
@@ -101,7 +102,7 @@ module Cms::CrudFilter
       contains_urls = Cms.contains_urls(item, site: @cur_site)
       next unless contains_urls.present?
       item_errors[item.id] ||= {}
-      if @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
+      if ignore_alert_to_contains_urls?
         item_errors[item.id][:contains_urls_error] = t("ss.confirm.contains_links_in_file_ignoring_alert_close")
       else
         item_errors[item.id][:contains_urls_error] = t("ss.confirm.contains_links_in_file_close")
@@ -265,5 +266,13 @@ module Cms::CrudFilter
       render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
       return
     end
+  end
+
+  def ignore_alert_to_contains_urls?
+    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
+  end
+
+  def ignore_alert_to_syntax_check?
+    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_syntax_check))
   end
 end

@@ -1,12 +1,25 @@
 <%
   action = params[:action]
   is_changeable = permitted && (item.try(:state_changeable?) || action == "destroy_all")
+  errors = @item_errors.present? ? (@item_errors[item.id] || {}) : {}
+  hide_checkbox =
+    (!ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?) ||
+    (!ignore_alert_to_syntax_check? && errors[:syntax_error].present?)
+  show_unchecked_checkbox =
+    (ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?) ||
+    (ignore_alert_to_syntax_check? && errors[:syntax_error].present?)
 %>
 <% if permitted %>
   <li class="list-item" data-id="<%= item.id %>">
-    <label class="check">
-      <%= check_box_tag "ids[]", item.id, true %>
-    </label>
+    <% if show_unchecked_checkbox %>
+      <label class="check">
+        <%= check_box_tag "ids[]", item.id, false %>
+      </label>
+    <% elsif !hide_checkbox %>
+      <label class="check">
+        <%= check_box_tag "ids[]", item.id, true %>
+      </label>
+    <% end %>
     <div class="info">
       <% if is_changeable %>
         <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
