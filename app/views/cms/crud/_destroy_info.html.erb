@@ -1,8 +1,3 @@
-<% Rails.logger.debug "=== _destroy_info.html.erb 開始 ===" %>
-<% Rails.logger.debug "item: #{item.id} (#{item.name})" %>
-<% Rails.logger.debug "item_errors: #{@item_errors.inspect}" %>
-
-<div>DEBUG: destroy_info called</div>
 <% if item.try(:updated) %>
   <span class="datetime"><%= ss_time_tag item.updated %></span>
 <% end %>
@@ -21,10 +16,15 @@
   <span class="">公開設定がないので変更はできません。</span>
 <% end %>
 <% if @item_errors.present? %>
-<% errors = @item_errors[item.id] || [] %>
+  <% errors = @item_errors[item.id] || [] %>
   <ul>
-    <% errors.each do |msg| %>
-      <li><%= msg %></li>
+  <% errors.each do |key, value| %>
+    <% if key == :contains_urls_error %>
+      <li><%= link_to t("ss.confirm.contains_links_in_file"), { action: :contains_urls, id: item },
+          class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %></li>
+    <% else %>
+      <li><%= value %></li>
     <% end %>
+  <% end %>
   </ul>
 <% end %>
