@@ -2,6 +2,7 @@ module Cms::CrudFilter
   extend ActiveSupport::Concern
   include SS::CrudFilter
   include Cms::LockFilter
+  include Cms::SyntaxCheckable
 
   included do
     menu_view "cms/crud/menu"
@@ -77,6 +78,47 @@ module Cms::CrudFilter
       @items << item
     end
     entries.size != @items.size
+  end
+
+  def check_syntax_for_items(items)
+    item_errors = {}
+    items.each do |item|
+      @item = item
+      item_errors[item.id] ||= {}
+      if syntax_check
+        next
+      else
+        item_errors[item.id][:syntax_error] = t("errors.messages.check_html")
+      end
+    end
+    item_errors
+  end
+
+  def check_contains_urls_for_items(items)
+    # 被リンクチェック
+    item_errors = {}
+    items.each do |item|
+      contains_urls = Cms.contains_urls(item, site: @cur_site)
+      next unless contains_urls.present?
+      item_errors[item.id] ||= {}
+      if @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
+        item_errors[item.id][:contains_urls_error] = t("ss.confirm.contains_links_in_file_ignoring_alert_close")
+      else
+        item_errors[item.id][:contains_urls_error] = t("ss.confirm.contains_links_in_file_close")
+      end
+    end
+    item_errors
+  end
+
+  def check_branch_page_for_items(items)
+    # 差し替えページのチェック
+    item_errors = {}
+    items.each do |item|
+      next unless item.branches.present?
+      item_errors[item.id] ||= {}
+      item_errors[item.id][:branch_page_error] = t("ss.confirm.unable_to_delete_due_to_branch_page")
+    end
+    item_errors
   end
 
   public
@@ -205,38 +247,23 @@ module Cms::CrudFilter
     @change_state = params[:state]
     @items = @selected_items.to_a
 
-    @item_errors = {}
-
-    @items.each do |item|
-      errors = []
-
-      # 権限チェック
-      unless item.allowed?(:close, @cur_user, site: @cur_site)
-        errors << t("ss.confirm.not_allowed_to_close")
-      end
-
-      # 被リンクチェック
-      contains_urls = Cms.contains_urls(item, site: @cur_site)
-      if contains_urls.present?
-        if @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
-          errors << t("ss.confirm.contains_links_in_file_ignoring_alert")
-        else
-          errors << t("ss.confirm.contains_links_in_file")
-        end
-      end
-
-      # アクセシビリティエラーのチェック
-      if item.respond_to?(:accessibility_errors) && item.accessibility_errors.present?
-        errors << t("errors.messages.check_html")
-      end
-      @item_errors[item.id] = errors if errors.present?
-    end
+    # アクセシビリティエラーのチェック・通常リンクチェック
+    @item_errors = check_syntax_for_items(@items)
+    # 被リンクチェック
+    @item_errors.deep_merge!(check_contains_urls_for_items(@items))
+    # 差し替えページのチェック
+    @item_errors.deep_merge!(check_branch_page_for_items(@items))
 
     Rails.logger.debug "@item_errors: #{@item_errors.inspect}"
 
     respond_to do |format|
       format.html { render "cms/pages/close_all" }
       format.json { render json: @items.map { |item| { id: item.id, errors: @item_errors[item.id] || [] } } }
+    end
+
+    if params[:change_state_all]
+      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
+      return
     end
   end
 end
