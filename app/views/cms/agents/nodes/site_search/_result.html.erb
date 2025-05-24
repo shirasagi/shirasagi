@@ -14,21 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
     category.addEventListener('click', () => {
       const name = category.text;
       const form = document.querySelector('.search-form');
-      const input = document.querySelector('.cms-site-search .site-search-categories input[name="s[category_name]"]');
-      const select = document.querySelector('.cms-site-search .site-search-categories select[name="s[category_names][]"]');
+      const select = form.querySelector('.site-search-categories select[name="s[category_names][]"]');
+      const input = form.querySelector('.site-search-categories input[name="s[category_name]"]');
 
-      if (!input.disabled) {
-        let values = input.value.split(/[\s\/　]+/).filter(n => n)
-        if (!values.includes(name)) values = values.concat(name)
-        input.value = values.join(' ');
-        form.submit();
-      }
       if (!select.disabled) {
         let option = select.querySelector('option[value="' + name + '"]');
         if (option) {
           option.selected = true;
           form.submit();
         }
+      } else if (!input.disabled) {
+        let values = input.value.split(/[\s\/　]+/).filter(n => n)
+        if (!values.includes(name)) values = values.concat(name)
+        input.value = values.join(' ');
+        form.submit();
       }
     });
   });
@@ -113,7 +112,7 @@ document.addEventListener('DOMContentLoaded', () => {
               </time>
             </div>
           <% end %>
-          <% if categories.present? %>
+          <% if @cur_node.category_state != 'hide' && categories.present? %>
             <div class="category-list">
               <%= Cms::Page.t(:category_ids) %>:
               <% categories.each_with_index do |name, idx| %>
