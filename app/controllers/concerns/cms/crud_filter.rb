@@ -7,6 +7,7 @@ module Cms::CrudFilter
   included do
     menu_view "cms/crud/menu"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+    before_action :set_selected_items, only: [:close_all, :publish_all]
     helper_method :ignore_alert_to_contains_urls?, :ignore_alert_to_syntax_check?
   end
 
@@ -255,16 +256,14 @@ module Cms::CrudFilter
     # 差し替えページのチェック
     @item_errors.deep_merge!(check_branch_page_for_items(@items))
 
-    Rails.logger.debug "@item_errors: #{@item_errors.inspect}"
+    if params[:change_state_all]
+      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
+      return
+    end
 
     respond_to do |format|
       format.html { render "cms/pages/close_all" }
       format.json { render json: @items.map { |item| { id: item.id, errors: @item_errors[item.id] || [] } } }
-    end
-
-    if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
-      return
     end
   end
 
