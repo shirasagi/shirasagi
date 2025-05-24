@@ -17,13 +17,6 @@
       <% else %>
         <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
       <% end %>
-      <% if item.errors.present? %>
-        <div class="error-message">
-          <% item.errors.full_messages.each do |message| %>
-            <p><%= message %></p>
-          <% end %>
-        </div>
-      <% end %>
       <div class="meta">
         <%= render "cms/crud/destroy_info", item: item, action: action %>
         <% if item.try(:tags) %>
@@ -47,11 +40,8 @@
       <% else %>
         <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
       <% end %>
-      <div class="error-message">
-        <p><%= message %></p>
-      </div>
       <div class="meta">
-        <%= render "cms/crud/destroy_info", item: item, action: action %>
+        <%= render "cms/crud/destroy_info", item: item, cur_user: cur_user, cur_site: cur_site, action: action %>
         <% if item.try(:tags) %>
           <span class="tags"><%= item.tags.join(",") %></span>
         <% end %>

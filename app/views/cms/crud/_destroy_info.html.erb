@@ -1,3 +1,8 @@
+<% Rails.logger.debug "=== _destroy_info.html.erb 開始 ===" %>
+<% Rails.logger.debug "item: #{item.id} (#{item.name})" %>
+<% Rails.logger.debug "item_errors: #{@item_errors.inspect}" %>
+
+<div>DEBUG: destroy_info called</div>
 <% if item.try(:updated) %>
   <span class="datetime"><%= ss_time_tag item.updated %></span>
 <% end %>
@@ -14,4 +19,12 @@
 <%= colored_state_label(item) %>
 <% if !item.try(:state_changeable?) && action == "change_state_all" %>
   <span class="">公開設定がないので変更はできません。</span>
+<% end %>
+<% if @item_errors.present? %>
+<% errors = @item_errors[item.id] || [] %>
+  <ul>
+    <% errors.each do |msg| %>
+      <li><%= msg %></li>
+    <% end %>
+  </ul>
 <% end %>
