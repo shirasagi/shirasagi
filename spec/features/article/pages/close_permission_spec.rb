@@ -144,16 +144,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within ".list-item[data-id='#{page1.id}']" do
           first("[type='checkbox']").click
         end
+
+        expect(page).to have_content(I18n.t("ss.links.make_them_close"))
+
         within ".list-head" do
           click_on I18n.t("ss.links.make_them_close")
         end
 
-        within "form" do
-          expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
-          click_on I18n.t("ss.links.make_them_close")
-        end
+        # within "form" do
+        #   expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
+        #   click_on I18n.t("ss.links.make_them_close")
+        # end
 
-        wait_for_notice(I18n.t("ss.notice.unable_to_change", items: page1.name))
+        within_cbox do
+          expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_close"))
+          expect(page).to have_no_css("[type='checkbox']")
+        end
 
         Article::Page.find(page1.id).tap do |after_page|
           expect(after_page.state).to eq "public"
@@ -215,6 +221,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within ".list-head" do
           click_on I18n.t("ss.links.make_them_close")
         end
+
+        wait_for_cbox_opened
 
         within "form" do
           expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
