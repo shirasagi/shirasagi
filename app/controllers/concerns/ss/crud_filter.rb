@@ -168,33 +168,25 @@ module SS::CrudFilter
   end
 
   def render_confirmed_all(result, opts = {})
-    Rails.logger.debug("[DEBUG] render_confirmed_all: called with result=#{result.inspect}, opts=#{opts.inspect}, params=#{params.inspect}")
     action = if %w(close_all change_state_all).include?(params[:action])
                'change'
              else
                'delete'
              end
-    Rails.logger.debug("[DEBUG] render_confirmed_all: action=#{action.inspect}")
 
     location = opts[:location].presence || crud_redirect_url || { action: :index }
-    Rails.logger.debug("[DEBUG] render_confirmed_all: location=#{location.inspect}")
     if result
       notice = { notice: opts[:notice].presence || t("ss.notice.#{action}d") }
-      Rails.logger.debug("[DEBUG] render_confirmed_all: success notice=#{notice.inspect}")
     else
       notice = { notice: t("ss.notice.unable_to_#{action}", items: @items.to_a.map(&:name).join("、")) }
-      Rails.logger.debug("[DEBUG] render_confirmed_all: failure notice=#{notice.inspect}")
     end
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
-    Rails.logger.debug("[DEBUG] render_confirmed_all: errors=#{errors.inspect}")
 
     respond_to do |format|
       format.html do
-        Rails.logger.debug("[DEBUG] render_confirmed_all: redirect_to #{location.inspect} with notice #{notice.inspect}")
         redirect_to location, notice
       end
       format.json do
-        Rails.logger.debug("[DEBUG] render_confirmed_all: render json errors")
         head json: errors
       end
     end

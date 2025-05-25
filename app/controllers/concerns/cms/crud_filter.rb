@@ -7,7 +7,7 @@ module Cms::CrudFilter
   included do
     menu_view "cms/crud/menu"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
-    before_action :set_selected_items, only: [:close_all, :publish_all]
+    before_action :set_selected_items, only: [:close_all, :publish_all, :destroy_all, :disable_all, :change_state_all]
     helper_method :ignore_alert_to_contains_urls?, :ignore_alert_to_syntax_check?
   end
 
