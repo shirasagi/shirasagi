@@ -7,7 +7,7 @@ module Cms::CrudFilter
     menu_view "cms/crud/menu"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
     before_action :set_selected_items, only: [:close_all, :publish_all, :destroy_all, :disable_all, :change_state_all]
-    helper_method :ignore_alert_to_contains_urls?, :ignore_alert_to_syntax_check?
+    helper_method :ignore_alert_to_contains_urls?
   end
 
   private
@@ -103,7 +103,7 @@ module Cms::CrudFilter
     items.each do |item|
       next unless item.branches.present?
       item_errors[item.id] ||= {}
-      item_errors[item.id][:branch_page_error] = t("ss.confirm.unable_to_delete_due_to_branch_page")
+      item_errors[item.id][:branch_page_error] = t("errors.messages.branch_is_already_existed")
     end
     item_errors
   end
