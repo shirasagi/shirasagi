@@ -6,8 +6,8 @@ class SS::FileResizingSelectComponent < ApplicationComponent
   attr_accessor :cur_user
   attr_writer :name, :css_class
 
-  DEFAULT_NAME = "item[files][][resizing]".freeze
-  DEFAULT_CSS_CLASS = "image-size".freeze
+  DEFAULT_NAME = "item[files][][resizing]"
+  DEFAULT_CSS_CLASS = "image-size"
 
   def name
     @name ||= DEFAULT_NAME
@@ -75,7 +75,8 @@ class SS::FileResizingSelectComponent < ApplicationComponent
         size = "#{system_image_resize.max_width}x#{system_image_resize.max_height}"
         system_resizing_label = I18n.t("ss.auto_resizing_label", size: size)
         additional_options << {
-          width: system_image_resize.max_width, height: system_image_resize.max_height, label: system_resizing_label }
+          width: system_image_resize.max_width, height: system_image_resize.max_height, label: system_resizing_label
+        }
       end
       additional_options
     end

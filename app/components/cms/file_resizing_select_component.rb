@@ -33,7 +33,8 @@ class Cms::FileResizingSelectComponent < SS::FileResizingSelectComponent
       if site_resizing.present?
         site_resizing_label = Cms::Site.t(:file_resizing_label, size: site_resizing.join("x"))
         additional_options << {
-          width: site_resizing[0], height: site_resizing[1], label: site_resizing_label }
+          width: site_resizing[0], height: site_resizing[1], label: site_resizing_label
+        }
       end
 
       if system_image_resize.present? && (system_image_resize.max_width || system_image_resize.max_height)
