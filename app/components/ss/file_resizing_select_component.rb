@@ -48,13 +48,18 @@ class SS::FileResizingSelectComponent < ApplicationComponent
 
   def system_resizing_options
     @system_resizing_options ||= begin
-      options = [
-        [ 380, 380 ], # suitable for 3 columns in https://www.digital.go.jp/
-        [ 580, 580 ], # suitable for 2 columns in https://www.digital.go.jp/
-        [ 1200, 1200 ], # suitable for full-width in https://www.digital.go.jp/
-      ]
-      options.map! { |w, h| [ I18n.t("ss.options.resizing.#{w}x#{h}").freeze, "#{w},#{h}".freeze ] }
-      options.freeze
+      case SS.config.ss.resizing_option.try(:[], "type")
+      when "digital_go"
+        options = [
+          [ 380, 380 ], # suitable for 3 columns in https://www.digital.go.jp/
+          [ 580, 580 ], # suitable for 2 columns in https://www.digital.go.jp/
+          [ 1200, 1200 ], # suitable for full-width in https://www.digital.go.jp/
+        ]
+        options.map! { |w, h| [ I18n.t("ss.options.resizing.#{w}x#{h}").freeze, "#{w},#{h}".freeze ] }
+        options.freeze
+      else # legacy
+        SS::File.system_resizing_options.dup
+      end
     end
   end
 

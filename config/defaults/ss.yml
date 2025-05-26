@@ -66,6 +66,12 @@ production: &production
     - label: 最低画質
       quality: 25
 
+  resizing_option:
+    # resizing options in the file upload dialog
+    # - legacy: legacy resizing options
+    # - digital_go: resizing options inspired by https://www.digital.go.jp/
+    type: "digital_go"
+
   markdown:
     help_url: "https://help.github.com/articles/basic-writing-and-formatting-syntax/"
 

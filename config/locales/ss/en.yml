@@ -485,7 +485,7 @@ en:
         720x1280: 720x1280 (HD portrait)
         380x380: 380x380 (Suitable for 3 columns layout)
         580x580: 580x580 (Suitable for 2 columns layout)
-        1200x1200: 1200x1200 (Suitable for full width layout)
+        1200x1200: 1200x1200 (Suitable for general layout)
       text_type:
         plain: Text
         markdown: Markdown
