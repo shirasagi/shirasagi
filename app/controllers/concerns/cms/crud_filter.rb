@@ -2,7 +2,6 @@ module Cms::CrudFilter
   extend ActiveSupport::Concern
   include SS::CrudFilter
   include Cms::LockFilter
-  include Cms::SyntaxCheckable
 
   included do
     menu_view "cms/crud/menu"
@@ -80,20 +79,6 @@ module Cms::CrudFilter
       @items << item
     end
     entries.size != @items.size
-  end
-
-  def check_syntax_for_items(items)
-    item_errors = {}
-    items.each do |item|
-      @item = item
-      item_errors[item.id] ||= {}
-      if syntax_check
-        next
-      else
-        item_errors[item.id][:syntax_error] = t("errors.messages.check_html")
-      end
-    end
-    item_errors
   end
 
   def check_contains_urls_for_items(items)
@@ -249,10 +234,8 @@ module Cms::CrudFilter
     @change_state = params[:state]
     @items = @selected_items.to_a
 
-    # アクセシビリティエラーのチェック・通常リンクチェック
-    @item_errors = check_syntax_for_items(@items)
     # 被リンクチェック
-    @item_errors.deep_merge!(check_contains_urls_for_items(@items))
+    @item_errors = (check_contains_urls_for_items(@items))
     # 差し替えページのチェック
     @item_errors.deep_merge!(check_branch_page_for_items(@items))
 
@@ -269,9 +252,5 @@ module Cms::CrudFilter
 
   def ignore_alert_to_contains_urls?
     @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
-  end
-
-  def ignore_alert_to_syntax_check?
-    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_syntax_check))
   end
 end
