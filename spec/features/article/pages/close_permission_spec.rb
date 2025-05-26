@@ -83,7 +83,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         html: "<a href=\"#{page1.url}\">#{page1.name}</a>"
     end
 
-    context "with minimum close permissions" do
+    context "with minimum close permissions and contains links in file" do
       let!(:minimum_close_permissions) do
         %w(read_private_cms_nodes read_private_article_pages edit_private_article_pages close_private_article_pages)
       end
@@ -148,18 +148,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_content(I18n.t("ss.links.make_them_close"))
 
         within ".list-head" do
-          click_on I18n.t("ss.links.make_them_close")
+          first("button, input[type='button']", text: I18n.t("ss.links.make_them_close")).click
         end
 
-        # within "form" do
-        #   expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
-        #   click_on I18n.t("ss.links.make_them_close")
-        # end
-
-        within_cbox do
+        within "form" do
           expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_close"))
           expect(page).to have_no_css("[type='checkbox']")
         end
+
+        visit article_pages_path(site: site, cid: node)
+        expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         Article::Page.find(page1.id).tap do |after_page|
           expect(after_page.state).to eq "public"
@@ -167,7 +165,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    context "with ignore_alert permission" do
+    context "with ignore_alert permission and contains links in file" do
       let!(:minimum_close_permissions) do
         %w(read_private_cms_nodes read_private_article_pages edit_private_article_pages close_private_article_pages
            edit_cms_ignore_alert)
@@ -204,14 +202,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
-        click_on page1.name
-        wait_for_all_ckeditors_ready
-        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-
-        click_on I18n.t("ss.links.back_to_index")
-
-        expect(page).to have_current_path(article_pages_path(site: site, cid: node), wait: 10)
-
         within ".list-item[data-id='#{page1.id}']" do
           first("[type='checkbox']").click
         end
@@ -219,13 +209,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_content(I18n.t("ss.links.make_them_close"))
 
         within ".list-head" do
-          click_on I18n.t("ss.links.make_them_close")
+          first("button, input[type='button']", text: I18n.t("ss.links.make_them_close")).click
         end
-
-        wait_for_cbox_opened
 
         within "form" do
           expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
+          expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert_close"))
+          first("[type='checkbox']").click
           click_on I18n.t("ss.links.make_them_close")
         end
 
