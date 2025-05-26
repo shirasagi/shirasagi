@@ -24,11 +24,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         click_on page1.name
-        wait_for_all_ckeditors_ready
+        # wait_for_all_ckeditors_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         click_on I18n.t("ss.links.edit")
-        wait_for_all_ckeditors_ready
+        # wait_for_all_ckeditors_ready
         within "form#item-form" do
           wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
         end
@@ -58,6 +58,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           first("[type='checkbox']").click
         end
         within ".list-head" do
+          expect(page).to have_content(I18n.t("ss.links.make_them_close"))
           click_on I18n.t("ss.links.make_them_close")
         end
 
@@ -213,8 +214,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within "form" do
-          expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
           expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert_close"))
+          expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
           first("[type='checkbox']").click
           click_on I18n.t("ss.links.make_them_close")
         end
