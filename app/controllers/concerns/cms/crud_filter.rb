@@ -3,6 +3,7 @@ module Cms::CrudFilter
   include SS::CrudFilter
   include Cms::LockFilter
   include Cms::SyntaxCheckable
+  include Cms::SyntaxChecker
 
   included do
     menu_view "cms/crud/menu"
