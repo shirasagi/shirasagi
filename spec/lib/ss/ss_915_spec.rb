@@ -15,8 +15,8 @@ describe 'ss_915' do
   end
 
   it do
-    Mongoid::QueryCache.clear_cache
-    Mongoid::QueryCache.cache do
+    Mongo::QueryCache.clear
+    Mongo::QueryCache.cache do
       expect(model.all.order_by(released: 1).first.released).to eq Time.zone.at(100)
       expect(model.all.order_by(released: -1).first.released).to eq Time.zone.at(200)
       expect(model.all.order_by(id: 1).first.id).not_to eq model.all.order_by(id: -1).first.id

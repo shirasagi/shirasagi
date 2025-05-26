@@ -360,24 +360,21 @@ GEM
     mini_mime (1.1.5)
     mini_portile2 (2.8.7)
     minitest (5.25.1)
-    mongo (2.20.1)
+    mongo (2.21.1)
+      base64
       bson (>= 4.14.1, < 6.0.0)
     mongo_session_store (3.2.1)
       actionpack (>= 4.0)
       mongo (~> 2.0)
-    mongoid (8.1.5)
-      activemodel (>= 5.1, < 7.2, != 7.0.0)
+    mongoid (9.0.6)
+      activemodel (>= 5.1, < 8.1, != 7.0.0)
       concurrent-ruby (>= 1.0.5, < 2.0)
       mongo (>= 2.18.0, < 3.0.0)
-      ruby2_keywords (~> 0.0.5)
     mongoid-compatibility (1.0.0)
       activesupport
       mongoid (>= 2.0)
     mongoid-geospatial (5.1.0)
       mongoid (>= 4.0.0)
-    mongoid-grid_fs (2.5.0)
-      mime-types (>= 1.0, < 4.0)
-      mongoid (>= 3.0, < 9.0)
     mongoid-rspec (4.2.0)
       mongoid (>= 3.0, < 10.0)
       mongoid-compatibility (>= 0.5.1)
@@ -811,11 +808,11 @@ DEPENDENCIES
   mail-iso-2022-jp
   marcel
   marked-rails
+  mime-types
   mini_magick
   mongo_session_store
   mongoid
   mongoid-geospatial
-  mongoid-grid_fs
   mongoid-rspec
   net-imap
   net-ldap

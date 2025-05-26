@@ -82,18 +82,23 @@ ja:
     preview_page2: 画面プレビュー
     preview_pc_page: PCプレビュー
     preview_site: サイトプレビュー
+    reference_article: 参照記事
+    release_date: 公開日
     role: 権限/ロール
     root_menu: メインメニュー
-    search_button: 検索
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
+    search_contents_files: ファイル一覧
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
-    search_contents_files: ファイル一覧
-    search_form: サイト検索フォーム
-    search_target: サイト検索範囲を選択してください
     search_contents_sitemap: サイトマップ
+    search_form: サイト検索フォーム
+    search_target: サイト検索範囲
+    search_sort: 表示順
+    search_sort_options:
+      score: 関連性
+      released: 公開日
     shortcut: ショートカット
     show_link_to_part: パーツのリンクを表示
     site: サイト
@@ -598,6 +603,17 @@ ja:
       subject_state:
         disabled: 本文に含めない
         include: 本文に含める
+      site_search_type:
+        page: ウェブページ
+        file: 添付ファイル
+        all: 全て
+      link_target:
+        self: 同じタブで表示
+        blank: 別のタブで表示
+    site_search:
+      no_results: 選択候補がありません。
+      no_choices: 選択候補がありません。
+      max_item: 個まで選択できます。
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP
@@ -911,6 +927,7 @@ ja:
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
+      cms/site_search/setting: サイト内検索設定
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/history_list: 閲覧履歴
@@ -1335,6 +1352,15 @@ ja:
         site_search_keywords: 注目ワード
         upper_html: 上部HTML
         lower_html: 下部HTML
+      cms/addon/site_search/setting:
+        link_target: リンク表示
+        search_type_state: 検索種類の選択
+        search_target_state: サイト検索範囲の選択
+        article_node_state: フォルダーの選択
+        category_state: カテゴリーの選択
+        organization_state: 組織の選択
+        st_article_node_ids: 記事フォルダー
+        site_search_type: 検索種類
       cms/form:
         name: 名前
         order: 並び順
@@ -2766,6 +2792,8 @@ ja:
         ページの更新日時が「2015年4月1日」の形式で表示されます。
         #{page_updated.short}
         ページの更新日時が「4/1」の形式で表示されます。
+        #{page_thumb.src}
+        ページやフォルダーに設定しているサムネイル画像が表示されます。
 
         &lt;!-- skip-voice --&gt;&lt;div&gt;読み上げない&lt;/div&gt;&lt;!-- end-skip-voice --&gt;
         コメントアウトで囲われた個所の読み上げをスキップします。
@@ -3139,7 +3167,7 @@ ja:
         - フォルダーの合計容量の上限を入力します。合計容量が設定した上限を超えた場合、警告が表示されます。
         - 初期値は「未設定」で、未設定である場合、警告は表示されません。
         -
-        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。 
+        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。
         - 1. 容量制限が設定されている。
         - 2. フォルダー設定のショートカットが「表示」に設定されている。
         - 3. 自グループが管理権限の管理グループに設定されている。
@@ -3150,7 +3178,17 @@ ja:
 
     cms/check_links/ignore_url:
       name:
-        - 除外URLを入力します。
+        - リンクチェック時に、チェックの対象外にしたいURLを登録します。
+        - URLの記述は、管理画面側より実際にページなどに記述されている書き方で登録してください。
+        - ""
+        - 【記述例】
+        - ・外部リンクなどでドメインから全てURLを記述している場合
+        - https://demo.ss-proj.org/kurashi/
+        - https://demo.ss-proj.org/kurashi/xxxx.html
+        - ""
+        - ・内部リンクでドメインを除いてURLを記述している場合
+        - /kurashi/
+        - /kurashi/xxxx.html
 
     cms/addon/site_search/history:
       upper_html:
@@ -3167,6 +3205,23 @@ ja:
         - 上部HTMLを入力します。
       lower_html:
         - 下部HTMLを入力します。
+
+    cms/addon/site_search/setting:
+      link_target:
+        - 検索結果のリンクの表示形式を設定します。
+      search_type_state:
+        - 検索フォームに検索種類の選択を表示します。
+      search_target_state:
+        - 検索フォームにサイト検索範囲の選択を表示します。
+        - (表示にはサイト設定の外部サイト検索が有効である必要があります。)
+      article_node_state:
+        - 検索フォームにフォルダーの選択を表示します。
+      category_state:
+        - 検索フォームにカテゴリーの選択を表示します。
+      organization_state:
+        - 検索フォームに組織の選択を表示します。
+      st_article_node_ids:
+        - サイト内検索の対象となる記事フォルダーを設定します。
 
     cms/line/facility_search/category:
       name:
