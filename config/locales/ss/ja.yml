@@ -984,6 +984,7 @@ ja:
         max_height: 最大の縦幅
         size: バイト数
         quality: 画質
+        state: 状態
       ss/model/postal_code:
         code: 郵便番号
         prefecture: 都道府県
@@ -1535,6 +1536,8 @@ ja:
         - 画像ファイルの画質を0から100の間で設定します。
         - 画像ファイルのバイト数が「バイト数」に設定した値を超過した場合、この設定の画質に変更します。
         - 画質が高い程劣化が少ないです。
+      state:
+        - 画像リサイズの有効/無効を設定します
     ss/model/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。

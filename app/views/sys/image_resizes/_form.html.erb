@@ -1,10 +1,6 @@
-<% if @item.size == nil then
-      @item.size = 0
-      @item.in_size_mb = @item.size / (1_024 * 1_024)
-   else
-      @item.in_size_mb = @item.size / (1_024 * 1_024)
-   end
- %>
+<%
+  @item.in_size_mb = @item.size / (1_024 * 1_024) if @item.size
+%>
 <dl class="see">
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @item.state_options %></dd>

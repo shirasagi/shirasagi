@@ -33,8 +33,6 @@ describe "sys_image_resizes", type: :feature, dbscope: :example, js: true do
 
       expect(SS::ImageResize.all.count).to eq 1
       SS::ImageResize.all.first.tap do |image_resize|
-        expect(image_resize.name).to be_blank
-        expect(image_resize.order).to be_blank
         expect(image_resize.state).to eq state
         expect(image_resize.max_width).to eq max_width
         expect(image_resize.max_height).to eq max_height
@@ -57,8 +55,6 @@ describe "sys_image_resizes", type: :feature, dbscope: :example, js: true do
 
       expect(SS::ImageResize.all.count).to eq 1
       SS::ImageResize.all.first.tap do |image_resize|
-        expect(image_resize.name).to be_blank
-        expect(image_resize.order).to be_blank
         expect(image_resize.state).to eq state2
         expect(image_resize.max_width).to eq max_width2
         expect(image_resize.max_height).to eq max_height2

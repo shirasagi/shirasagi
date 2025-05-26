@@ -195,4 +195,95 @@ describe SS::ImageResize, type: :model, dbscope: :example do
       end
     end
   end
+
+  context "validities" do
+    describe "#state" do
+      it do
+        item = SS::ImageResize.new
+        expect(item).to be_invalid
+        expect(item.errors[:state]).to be_blank
+      end
+
+      it do
+        item = SS::ImageResize.new
+        item.state = unique_id
+        expect(item).to be_invalid
+        expect(item.errors[:state]).to eq [ I18n.t("errors.messages.inclusion") ]
+      end
+    end
+
+    describe "#max_width" do
+      it do
+        item = SS::ImageResize.new
+        expect(item).to be_invalid
+        expect(item.errors[:max_width]).to eq [ I18n.t("errors.messages.blank") ]
+        expect(item.errors[:max_height]).to eq [ I18n.t("errors.messages.blank") ]
+      end
+
+      it do
+        item = SS::ImageResize.new
+        item.max_width = -1
+        expect(item).to be_invalid
+        expect(item.errors[:max_width]).to eq [ I18n.t("errors.messages.greater_than", count: 0) ]
+      end
+
+      it do
+        item = SS::ImageResize.new
+        item.max_width = 0
+        expect(item).to be_invalid
+        expect(item.errors[:max_width]).to eq [ I18n.t("errors.messages.greater_than", count: 0) ]
+      end
+
+      it do
+        item = SS::ImageResize.new
+        item.max_width = 2_147_483_647 # Integer::MAX
+        expect(item).to be_invalid
+        expect(item.errors[:max_width]).to be_blank
+      end
+    end
+
+    describe "#size" do
+      it do
+        item = SS::ImageResize.new
+        expect(item).to be_invalid
+        expect(item.errors[:size]).to be_blank
+      end
+
+      it do
+        item = SS::ImageResize.new
+        item.size = -1
+        expect(item).to be_invalid
+        expect(item.errors[:size]).to eq [ I18n.t("errors.messages.greater_than", count: 0) ]
+      end
+
+      it do
+        item = SS::ImageResize.new
+        item.size = 0
+        expect(item).to be_invalid
+        expect(item.errors[:size]).to eq [ I18n.t("errors.messages.greater_than", count: 0) ]
+      end
+    end
+
+    describe "#quality" do
+      it do
+        item = SS::ImageResize.new
+        expect(item).to be_invalid
+        expect(item.errors[:quality]).to be_blank
+      end
+
+      it do
+        item = SS::ImageResize.new
+        item.quality = -1
+        expect(item).to be_invalid
+        expect(item.errors[:quality]).to eq [ I18n.t("errors.messages.greater_than_or_equal_to", count: 0) ]
+      end
+
+      it do
+        item = SS::ImageResize.new
+        item.quality = 101
+        expect(item).to be_invalid
+        expect(item.errors[:quality]).to eq [ I18n.t("errors.messages.less_than_or_equal_to", count: 100) ]
+      end
+    end
+  end
 end
