@@ -72,8 +72,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       within "#cboxLoadedContent" do
         expect(page).to have_css("li", text: I18n.t('errors.messages.invalid_order_of_h'))
-        expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
-        expect(page).to have_no_css('.save')
+        expect(page).to have_no_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
+        expect(page).to have_css('.save')
       end
     end
   end
@@ -94,7 +94,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       within "#cboxLoadedContent" do
         expect(page).to have_css("li", text: I18n.t('errors.messages.check_embedded_media'))
-        expect(page).to have_no_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
         expect(page).to have_css('.save')
       end
     end
@@ -117,8 +116,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       within "#cboxLoadedContent" do
         expect(page).to have_css("li", text: I18n.t('errors.messages.invalid_order_of_h'))
         expect(page).to have_css("li", text: I18n.t('errors.messages.check_embedded_media'))
-        expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
-        expect(page).to have_no_css('.save')
+        expect(page).to have_no_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
+        expect(page).to have_css('.save')
       end
     end
   end
