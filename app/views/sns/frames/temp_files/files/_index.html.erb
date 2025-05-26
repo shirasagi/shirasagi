@@ -1,31 +1,33 @@
 <div class="cms-temp-file" data-controller="ss--temp-file">
   <div class="search-ui-form">
     <%= form_with scope: :s, url: url_for(action: :index), method: :get, class: "search", data: { turbo: true } do |f| %>
-      <div>
-        <label>
+      <div class="cms-temp-file-centering cms-temp-file-gap-narrow">
+        <label class="cms-temp-file-centering">
           <%= check_box_tag "#{f.object_name}[types][]", "temp_file", @s.types && @s.types.include?("temp_file"), id: nil, data: { controller: "ss--submit-on-change" } %>
           <%= t("mongoid.models.ss/temp_file") %>
+          <% if @ss_mode == :cms %>
+          (
+            <label class="cms-temp-file-centering">
+              <%= radio_button_tag "#{f.object_name}[node_bound]", "current", @s.node_bound != "all", id: nil, data: { controller: "ss--submit-on-change" } %>
+              <%= cur_node ? "#{t("cms.node")}: #{cur_node.name}" : t("cms.root") %>
+            </label>
+            <label class="cms-temp-file-centering">
+              <%= radio_button_tag "#{f.object_name}[node_bound]", "all", @s.node_bound == "all", id: nil, data: { controller: "ss--submit-on-change" } %>
+              <%= t("ss.options.state.all") %>
+            </label>
+          )
         </label>
-        <% if @ss_mode == :cms %>
-        (
-          <label>
-            <%= radio_button_tag "#{f.object_name}[node_bound]", "current", @s.node_bound != "all", id: nil, data: { controller: "ss--submit-on-change" } %>
-            <%= cur_node ? "#{t("cms.node")}: #{cur_node.name}" : t("cms.root") %>
-          </label>
-          <label>
-            <%= radio_button_tag "#{f.object_name}[node_bound]", "all", @s.node_bound == "all", id: nil, data: { controller: "ss--submit-on-change" } %>
-            <%= t("ss.options.state.all") %>
-          </label>
-        )
         <% end %>
-        <label>
+        <label class="cms-temp-file-centering">
           <%= check_box_tag "#{f.object_name}[types][]", "user_file", @s.types && @s.types.include?("user_file"), id: nil, data: { controller: "ss--submit-on-change" } %>
           <%= t("mongoid.models.ss/user_file") %>
+          <%= tt("ss/model/file.user_file") %>
         </label>
         <% if @ss_mode == :cms %>
-          <label>
+          <label class="cms-temp-file-centering">
             <%= check_box_tag "#{f.object_name}[types][]", "cms_file", @s.types && @s.types.include?("cms_file"), id: nil, data: { controller: "ss--submit-on-change" } %>
             <%= t("mongoid.models.cms/file") %>
+            <%= tt("ss/model/file.cms_file") %>
           </label>
         <% end %>
       </div>

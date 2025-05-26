@@ -1298,6 +1298,10 @@ en:
         - If the size is exceeded, the image quality of the file will be changed to the value set in advance.
         - If the width or height is exceeded, the size will be reduced to fit.
         - If you do not want to auto-resize, after you have the administrator grant you permission, click “Auto-resize enabled” on the left and set it to “Auto-resize disabled”.
+      user_file:
+        - If checked, the per-user file is displayed. The per-user file is the file you registered under Files on My Page.
+      cms_file:
+        - If checked, files shared on the site will be displayed.
     ss/model/user_title:
       code: Enter the job title code.
       name: Enter the job title.
