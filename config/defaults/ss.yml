@@ -54,17 +54,22 @@ production: &production
   # history log saving days
   history_log_saving_days: 90
 
-  quality_options:
-    - label: 最高画質
-      quality: 85
-    - label: 高画質
-      quality: 60
-    - label: 中画質
-      quality: 55
-    - label: 低画質
-      quality: 40
-    - label: 最低画質
-      quality: 25
+  quality_option:
+    # quality options in the file upload dialog
+    # - disable: not to show quality options
+    # - custom: use custom quality options
+    type: "disable"
+    custom_options:
+      - label: 最高画質
+        quality: 85
+      - label: 高画質
+        quality: 60
+      - label: 中画質
+        quality: 55
+      - label: 低画質
+        quality: 40
+      - label: 最低画質
+        quality: 25
 
   resizing_option:
     # resizing options in the file upload dialog

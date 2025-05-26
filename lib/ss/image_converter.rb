@@ -92,7 +92,7 @@ class SS::ImageConverter
     SS::ImageConverter.exif_image_mime_type?(mime_type)
   end
 
-  def apply_defaults!(options)
+  def apply_defaults!(resizing: nil, quality: nil)
     if exif_image?
       case SS.config.env.image_exif_option
       when "auto_orient"
@@ -102,8 +102,8 @@ class SS::ImageConverter
       end
     end
 
-    resize_to_fit!(*options[:resizing]) if options[:resizing].present?
-    quality!(options[:quality]) if options[:quality].present?
+    resize_to_fit!(*resizing) if resizing.is_a?(Array)
+    quality!(quality) if quality.numeric?
 
     self
   end

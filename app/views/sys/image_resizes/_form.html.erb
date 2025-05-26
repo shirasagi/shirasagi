@@ -11,12 +11,14 @@
   <dt><%= @model.t :max_height %><%= @model.tt :max_height %></dt>
   <dd><%= f.number_field :max_height %></dd>
 
-  <dt><%= @model.t :quality %></dt>
-  <dd></dd>
+  <% unless SS::File.system_quality_option_disable? %>
+    <dt><%= @model.t :quality %></dt>
+    <dd></dd>
 
-  <dt class="depth-2"><%= @model.t :size %><%= @model.tt :size %></dt>
-  <dd class="depth-2"><%= f.number_field :in_size_mb %> <%= t "ss.units.mega_byte" %></dd>
+    <dt class="depth-2"><%= @model.t :size %><%= @model.tt :size %></dt>
+    <dd class="depth-2"><%= f.number_field :in_size_mb %> <%= t "ss.units.mega_byte" %></dd>
 
-  <dt class="depth-2"><%= @model.t :quality %><%= @model.tt :quality %></dt>
-  <dd class="depth-2"><%= f.number_field :quality, in: 0..100 %></dd>
+    <dt class="depth-2"><%= @model.t :quality %><%= @model.tt :quality %></dt>
+    <dd class="depth-2"><%= f.number_field :quality, in: 0..100 %></dd>
+  <% end %>
 </dl>

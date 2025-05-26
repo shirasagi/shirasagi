@@ -335,12 +335,22 @@ module Gws::Model::File
   end
 
   def quality_with_max_file_size
-    quality = []
-    quality << self.quality.try(:to_i) if self.quality.present?
+    return if SS::File.system_quality_option_disable?
+
+    qualities = []
+    qualities << self.quality.try(:to_i) if self.quality.present?
     max_file_sizes.each do |max_file_size|
       next if size <= max_file_size.try(:size)
-      quality << max_file_size.try(:quality)
+      qualities << max_file_size.try(:quality)
     end
-    quality.reject(&:blank?).min
+
+    qualities.select!(&:numeric?)
+    return if qualities.blank?
+
+    qualities.map!(&:to_i)
+    qualities.reject! { _1 <= 0 }
+    return if qualities.blank?
+
+    qualities.min
   end
 end

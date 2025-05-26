@@ -110,13 +110,21 @@ module SS::Model::File
       end
     end
 
+    def system_quality_option_disable?
+      SS.config.ss.quality_option.try(:[], 'type') == 'disable'
+    end
+
     def system_quality_options
       @system_quality_options = begin
-        SS.config.ss.quality_options
-          .select { _1['label'].present? && _1['quality'].numeric? }
-          .map { [ _1['label'].freeze, _1['quality'].to_i ] }
-          .select { |_label, quality| quality >= 0 }
-          .freeze
+        if system_quality_option_disable?
+          [].freeze
+        else # 'custom'
+          SS.config.ss.quality_option['custom_options']
+            .select { _1['label'].present? && _1['quality'].numeric? }
+            .map { [ _1['label'].freeze, _1['quality'].to_i ] }
+            .select { |_label, quality| quality >= 0 }
+            .freeze
+        end
       rescue
         [].freeze
       end
@@ -506,6 +514,8 @@ module SS::Model::File
   end
 
   def quality_with_max_file_size
+    return if SS::File.system_quality_option_disable?
+
     qualities = []
     qualities << self.quality if self.quality.numeric?
 
@@ -515,6 +525,13 @@ module SS::Model::File
       qualities << image_resize.quality
     end
 
-    qualities.select(&:numeric?).map(&:to_i).reject { _1 <= 0 }.min
+    qualities.select!(&:numeric?)
+    return if qualities.blank?
+
+    qualities.map!(&:to_i)
+    qualities.reject! { _1 <= 0 }
+    return if qualities.blank?
+
+    qualities.min
   end
 end
