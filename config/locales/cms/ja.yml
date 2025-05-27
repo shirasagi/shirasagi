@@ -248,6 +248,7 @@ ja:
       setting: 設定する
       apply_richmenu: リッチメニューを反映する
       add_template: "テンプレートを追加する（最大5個）"
+      youtube_title: YouTubeからタイトルを取得する
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
@@ -1468,6 +1469,7 @@ ja:
         text: テキスト
       cms/column/value/youtube:
         url: URL
+        title: タイトル
         width: 幅
         height: 高さ
         auto_width: 画面幅に合わせる
@@ -3335,6 +3337,11 @@ ja:
         - ボタンに表示するテキストを入力してください。
         - 「印刷する」「帳票出力」など、自由に設定できます。
         - 省略した場合は「パーツ名」が表示されます。
+    cms/column/value/youtube:
+      title:
+      - "YouTube動画のタイトルを入力してください（アクセシビリティ向上のため必須）。"
+      - "「YouTubeからタイトルを取得」ボタンで自動取得もできます。"
+      - "自動取得後に内容を修正することも可能です。"
 
   all_content:
     page_id: ページID

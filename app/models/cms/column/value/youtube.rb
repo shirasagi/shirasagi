@@ -9,7 +9,6 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   permit_values :url, :youtube_id, :width, :height, :auto_width, :title
 
   before_validation :set_youtube_id
-  after_validation :fetch_youtube_title
 
   liquidize do
     export :youtube_id
@@ -117,12 +116,6 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     (values & [url, youtube_id]).present?
   end
 
-  private
-
-  def set_youtube_id
-    self.youtube_id = self.class.get_youtube_id(url)
-  end
-
   def fetch_youtube_title
     return if youtube_id.blank? || title.present?
 
@@ -140,6 +133,12 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     end
 
     self.title = data["title"]
+  end
+
+  private
+
+  def set_youtube_id
+    self.youtube_id = self.class.get_youtube_id(url)
   end
 
   def validate_value
