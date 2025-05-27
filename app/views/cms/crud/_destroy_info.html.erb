@@ -15,16 +15,3 @@
 <% if !item.try(:state_changeable?) && action == "change_state_all" %>
   <span class="">公開設定がないので変更はできません。</span>
 <% end %>
-<% if @item_errors.present? %>
-  <% errors = @item_errors[item.id] || [] %>
-  <ul>
-  <% errors.each do |key, value| %>
-    <% if key == :contains_urls_error %>
-      <li><%= link_to value, { action: :contains_urls, id: item },
-          class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %></li>
-    <% else %>
-      <li><%= value %></li>
-    <% end %>
-  <% end %>
-  </ul>
-<% end %>
