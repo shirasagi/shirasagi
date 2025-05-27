@@ -394,38 +394,4 @@ module Cms
 
     options
   end
-
-  # def self.file_resizing_options(user, site:, node: nil)
-  #   options = SS::File.system_resizing_options.dup
-  #
-  #   additional_options = []
-  #   site_resizing = site.file_resizing
-  #   if site_resizing.present?
-  #     site_resizing_label = site.t(:file_resizing_label, size: site_resizing.join("x"))
-  #     additional_options << {
-  #       width: site_resizing[0], height: site_resizing[1], label: site_resizing_label }
-  #   end
-  #
-  #   system_image_resize = SS::File.effective_image_resize(user: user, site: site, node: node, request_disable: false)
-  #   if system_image_resize.present? && (system_image_resize.max_width || system_image_resize.max_height)
-  #     system_resizing_label = I18n.t("ss.auto_resizing_label", size: "#{system_image_resize.max_width}x#{system_image_resize.max_height}")
-  #     additional_options << {
-  #       width: system_image_resize.max_width, height: system_image_resize.max_height, label: system_resizing_label }
-  #   end
-  #
-  #   if additional_options.present?
-  #     options = SS.add_resizing_options(options, additional_options)
-  #   end
-  #
-  #   user_image_resize = SS::File.effective_image_resize(user: user, site: site, node: node, request_disable: true)
-  #   if user_image_resize
-  #     options = SS.filter_out_resizing_options(options, user_image_resize)
-  #   end
-  #
-  #   if additional_options.present?
-  #     options = SS.set_selected_resizing_options(options, additional_options)
-  #   end
-  #
-  #   options
-  # end
 end

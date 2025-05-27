@@ -1533,6 +1533,8 @@ en:
         - Image file quality can be set between 0 and 100.
         - "If the number of bytes of the image file exceeds the value set for “Number of bytes”, the image quality is changed to this setting."
         - The higher the image quality, the less degraded it is.
+      state:
+        - Enable or disable the resize image.
     ss/model/editor_setting:
       color_button:
         - Set the display of the text color change button.
