@@ -5,6 +5,22 @@ module Cms::SyntaxCheckable
 
   def syntax_check
     contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
+
+    # ブロック入力（カラム値）もcontentsに追加
+    if @item.respond_to?(:column_values)
+      @item.column_values.each_with_index do |column_value, idx|
+        # in_wrapがあればそれを、なければvalueを使う
+        value = column_value.try(:in_wrap) || column_value.value
+        next if value.blank?
+        contents << {
+          "id" => "column_#{idx}",
+          "content" => value,
+          "resolve" => "html",
+          "type" => "scalar"
+        }
+      end
+    end
+
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     if @syntax_checker.errors.present?
       @syntax_checker.errors.each do |error|

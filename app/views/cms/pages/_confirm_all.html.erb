@@ -3,9 +3,11 @@
   is_changeable = permitted && (item.try(:state_changeable?) || action == "destroy_all")
   errors = @item_errors.present? ? (@item_errors[item.id] || {}) : {}
   hide_checkbox =
-    (!ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?)
+    (!ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?) ||
+    (!ignore_alert_to_syntax_check? && errors[:syntax_error].present? && action == "publish_all")
   show_unchecked_checkbox =
-    (ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?)
+    (ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?) ||
+    (ignore_alert_to_syntax_check? && errors[:syntax_error].present? && action == "publish_all")
 %>
 <% if permitted %>
   <li class="list-item" data-id="<%= item.id %>">
@@ -39,7 +41,7 @@
           <% errors.each do |key, value| %>
             <% if key == :contains_urls_error %>
               <li><%= link_to value, { action: :contains_urls, id: item },
-                  class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %></li>
+                class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %></li>
             <% else %>
               <li><%= value %></li>
             <% end %>
