@@ -23,8 +23,6 @@ comment2 = save_board_post name: "Re:テスト投稿", text: "返信します。
 topic2 = save_board_post name: "タイトル", text: "投稿します。", site_id: @site.id, node_id: node.id,
   poster: "白鷺　太郎", delete_key: 1234
 
-save_node route: "board/anpi_post", filename: "anpi", name: "安否掲示板", layout_id: @layouts["one"].id
-
 user = Cms::User.first
 if user
   file = save_ss_files "ss_files/article/pdf_file.pdf", filename: "file.pdf", model: "board/post", site_id: @site.id
