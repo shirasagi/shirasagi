@@ -102,7 +102,7 @@ class SS::ImageConverter
       end
     end
 
-    resize_to_fit!(*resizing) if resizing.is_a?(Array)
+    resize_to_fit!(*resizing) if resizing.is_a?(Array) && resizing.present?
     quality!(quality) if quality.numeric?
 
     self
