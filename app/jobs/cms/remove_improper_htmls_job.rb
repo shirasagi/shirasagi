@@ -49,6 +49,7 @@ class Cms::RemoveImproperHtmlsJob < Cms::ApplicationJob
     child_dirs = site.children.map(&:path)
 
     ::Dir.glob("#{dir}/**/*.html") do |path|
+      next if path.start_with?("#{site.path}/fs/")
       next if child_dirs.find { |child_dir| (path == child_dir) || path.start_with?(child_dir + "/") }
       yield(path)
     end
