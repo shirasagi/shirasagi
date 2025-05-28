@@ -46,6 +46,28 @@ module Webmail::UserExtension
     Webmail::Imap::Base.new_by_user(self, setting)
   end
 
+  def group_accounts
+    @group_accounts ||= begin
+      accounts = {}
+      groups = self.webmail_user.groups.exists(imap_settings: true)
+      groups.each do |group|
+        accounts[group.id] ||= []
+        imap_settings = group.imap_settings.partition.with_index { |_, i| i == group.imap_default_index }.flatten
+        imap_settings.each do |imap_setting|
+          next if imap_setting.blank? || imap_setting.imap_account.blank? || imap_setting.imap_password.blank?
+          accounts[group.id] << [group, imap_setting]
+        end
+      end
+      accounts
+    end
+  end
+
+  def initialize_group_imap(group_id, account_index)
+    group, imap_setting = group_accounts[group_id][account_index] rescue [nil, nil]
+    return nil if group.nil? || imap_setting.nil?
+    Webmail::Imap::Base.new_by_group(group, imap_setting)
+  end
+
   private
 
   def validate_imap_settings

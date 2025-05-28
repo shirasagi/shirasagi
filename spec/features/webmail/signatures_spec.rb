@@ -25,7 +25,7 @@ describe "webmail_signatures", type: :feature, dbscope: :example do
     let(:imap) { Webmail::Imap::Base.new_by_group(group, imap_setting) }
     let(:account_scope) { imap.account_scope }
     let!(:item) { create :webmail_signature, account_scope.merge(cur_user: webmail_user) }
-    let(:index_path) { webmail_signatures_path(account: group.id, webmail_mode: :group) }
+    let(:index_path) { webmail_signatures_path(account: "#{group.id}.0", webmail_mode: :group) }
 
     before { webmail_user.add_to_set(group_ids: [ group.id ]) }
 
