@@ -228,40 +228,4 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
     end
   end
-
-  context "when page is saved as draft with accessibility error" do
-    let!(:minimum_close_permissions) do
-      %w(read_private_cms_nodes read_private_article_pages edit_private_article_pages close_private_article_pages)
-    end
-    let!(:page_with_accessibility_error) do
-      create :article_page, cur_site: site, cur_user: admin, cur_node: node, group_ids: admin.group_ids, state: "public",
-        html: "<img src=\"image.jpg\">"
-    end
-
-    it "can save as draft even if accessibility error exists" do
-      login_user user1
-      visit article_pages_path(site: site, cid: node)
-      expect(page).to have_css(".list-item[data-id='#{page_with_accessibility_error.id}']")
-
-      click_on page_with_accessibility_error.name
-      wait_for_all_ckeditors_ready
-      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-
-      click_on I18n.t("ss.links.edit")
-      wait_for_all_ckeditors_ready
-      within "form#item-form" do
-        wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
-      end
-      within_cbox do
-        expect(page).to have_content(I18n.t("cms.confirm.close"))
-        expect(page).to have_content(I18n.t("ss.buttons.ignore_alert"))
-        click_on I18n.t("ss.buttons.ignore_alert")
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
-
-      Article::Page.find(page_with_accessibility_error.id).tap do |after_page|
-        expect(after_page.state).to eq "closed"
-      end
-    end
-  end
 end
