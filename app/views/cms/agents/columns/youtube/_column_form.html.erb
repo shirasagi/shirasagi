@@ -17,22 +17,29 @@
 <% end %>
 
 <%= jquery do %>
-  $(".youtube-title-check").on("click", function() {
-    var url = $('input[name*="[in_wrap][url]"]').val();
+  $(document).on("click", ".youtube-title-check", function() {
+    console.log("youtube-title-check_column_form");
+    // ボタンが属するブロック内でURLとタイトルフィールドを取得
+    var $block = $(this).closest('.column-youtube-title');
+    console.log($block);
+    // URLフィールドを同じ親要素内から探す
+    var $urlField = $block.parent().find('input[name*="[in_wrap][url]"]');
+    var url = $urlField.val();
     if (!url) {
-      alert("YouTubeのURLを入力してください");
+      alert("<%= j(I18n.t('cms.errors.input_youtube_url')) %>");
       return;
     }
-    $.get("/cms/apis/youtube_title", { url: url })
+    var $titleField = $block.find('input[name*="[in_wrap][title]"]');
+    $.get("<%= cms_apis_youtube_title_path %>", { url: url })
       .done(function(data) {
         if (data.title) {
-          $("#youtube-title-field").val(data.title);
+          $titleField.val(data.title);
         } else {
-          alert("タイトルの取得に失敗しました: " + (data.error || "不明なエラー"));
+          alert("<%= j(I18n.t('cms.errors.youtube_title_fetch_failed')) %>" + (data.error ? ': ' + data.error : ''));
         }
       })
       .fail(function(xhr) {
-        alert("通信エラーが発生しました");
+        alert("<%= j(I18n.t('cms.errors.network_error')) %>");
       });
   });
 <% end %>

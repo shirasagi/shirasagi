@@ -1851,6 +1851,9 @@ ja:
       check_link_text: リンクのテキストを確認してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
+      input_youtube_url: YouTubeのURLを入力してください。
+      youtube_title_fetch_failed: タイトルの取得に失敗しました。
+      network_error: 通信エラーが発生しました。
       replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
