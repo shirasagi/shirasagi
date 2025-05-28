@@ -4,22 +4,7 @@ module Cms::SyntaxCheckable
   private
 
   def syntax_check
-    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
-
-    # ブロック入力（カラム値）もcontentsに追加
-    if @item.respond_to?(:column_values)
-      @item.column_values.each_with_index do |column_value, idx|
-        # in_wrapがあればそれを、なければvalueを使う
-        value = column_value.try(:in_wrap) || column_value.value
-        next if value.blank?
-        contents << {
-          "id" => "column_#{idx}",
-          "content" => value,
-          "resolve" => "html",
-          "type" => "scalar"
-        }
-      end
-    end
+    contents = build_syntax_check_contents
 
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     if @syntax_checker.errors.present?
@@ -29,6 +14,43 @@ module Cms::SyntaxCheckable
       return false
     end
     true
+  end
+
+  def build_syntax_check_contents
+    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
+
+    # ブロック入力（カラム値）もcontentsに追加
+    if @item.respond_to?(:column_values)
+      @item.column_values.each_with_index do |column_value, idx|
+        value =
+          if column_value.respond_to?(:in_wrap) && column_value.in_wrap.present?
+            column_value.in_wrap
+          elsif column_value.respond_to?(:value)
+            column_value.value
+          elsif column_value.respond_to?(:file_label)
+            column_value.file_label
+          else
+            nil
+          end
+        next if value.blank?
+        contents << {
+          "id" => "column_#{idx}",
+          "content" => value,
+          "resolve" => "html",
+          "type" => "scalar"
+        }
+        # 添付ファイル用のHTML断片も同様に追加
+        next unless column_value.respond_to?(:file_label) && column_value.file_label.present?
+        html = "<a href=\"#{column_value.try(:file_url)}\">#{column_value.file_label}</a>"
+        contents << {
+          "id" => "column_file_#{idx}",
+          "content" => html,
+          "resolve" => "html",
+          "type" => "scalar"
+        }
+      end
+    end
+    contents
   end
 
   def auto_correct
