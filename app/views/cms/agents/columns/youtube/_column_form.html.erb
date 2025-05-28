@@ -17,6 +17,14 @@
 <% end %>
 
 <%= jquery do %>
+  $(function() {
+    Cms_Column_Youtube.render($("body"));
+  });
+<% end %>
+
+<%
+=begin%>
+ <%= jquery do %>
   $(document).on("click", ".youtube-title-check", function() {
     console.log("youtube-title-check_column_form");
     // ボタンが属するブロック内でURLとタイトルフィールドを取得
@@ -42,4 +50,6 @@
         alert("<%= j(I18n.t('cms.errors.network_error')) %>");
       });
   });
-<% end %>
+<% end %> 
+<%
+=end%>
