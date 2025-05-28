@@ -3,16 +3,7 @@ class Cms::Agents::Parts::Node2Controller < ApplicationController
   helper Cms::ListHelper
 
   def index
-    case @cur_part.list_origin
-    when "content"
-      if @cur_page
-        origin_content = @cur_page.parent
-      elsif @cur_node
-        origin_content = @cur_node.parent
-      end
-    else # "deployment"
-      origin_content = @cur_part.parent
-    end
+    origin_content = @cur_part.select_list_origin(@cur_page, @cur_node)
 
     if origin_content
       @origin = origin_content
