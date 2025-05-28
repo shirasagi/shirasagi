@@ -304,7 +304,9 @@ en:
       delete_file_histories: Are you sure you want to delete your file history?
       contains_url_expect: "There is a page linking to this page, so the process will be suspended. Remove all the links you have added before continuing."
       contains_links_in_file: This page cannot be deleted because there are other pages linking to it.
+      contains_links_in_file_close: "This page cannot be closed because there are other pages linking to it. Please remove the links before deleting this page."
       contains_links_in_file_ignoring_alert: "After confirming the backlinks, click the checkbox to delete it."
+      contains_links_in_file_ignoring_alert_close: "This page cannot be closed because there are other pages linking to it. Please remove the links before closing this page."
       not_contains_links_in_file: "There are no backlinks, so you can delete it."
       target_to_delete: Check what to delete
       target_to_public: Check what to make public

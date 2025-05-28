@@ -1,31 +1,78 @@
 <%
   action = params[:action]
   is_changeable = permitted && (item.try(:state_changeable?) || action == "destroy_all")
+  errors = @item_errors.present? ? (@item_errors[item.id] || {}) : {}
+  hide_checkbox =
+    (!ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?)
+  show_unchecked_checkbox =
+    (ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?)
 %>
-<li class="list-item" data-id="<%= item.id %>">
-  <% if is_changeable %>
-    <label class="check">
-      <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
-    </label>
-  <% end %>
-  <div class="info">
-    <% if is_changeable %>
-      <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
+<% if permitted %>
+  <li class="list-item" data-id="<%= item.id %>">
+    <% if show_unchecked_checkbox %>
+      <label class="check">
+        <%= check_box_tag "ids[]", item.id, false %>
+      </label>
+    <% elsif !hide_checkbox %>
+      <label class="check">
+        <%= check_box_tag "ids[]", item.id, true %>
+      </label>
     <% end %>
-    <% show_path = url_for(action: :show, id: item) rescue nil %>
-    <% if show_path %>
-      <%= link_to item.try(:name), show_path, class: "title", target: "_blank", rel: "noopener" %>
-    <% else %>
-      <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
-    <% end %>
-    <div class="meta">
-      <%= render "cms/crud/destroy_info", item: item, action: action %>
-      <% if item.try(:tags) %>
-        <span class="tags"><%= item.tags.join(",") %></span>
+    <div class="info">
+      <% if is_changeable && !hide_checkbox && !show_unchecked_checkbox %>
+        <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
       <% end %>
-      <% unless permitted %>
-        <%= message %>
+      <% show_path = url_for(action: :show, id: item) rescue nil %>
+      <% if show_path %>
+        <%= link_to item.try(:name), show_path, class: "title", target: "_blank", rel: "noopener" %>
+      <% else %>
+        <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
       <% end %>
+      <div class="meta">
+        <%= render "cms/crud/destroy_info", item: item, action: action %>
+        <% if item.try(:tags) %>
+          <span class="tags"><%= item.tags.join(",") %></span>
+        <% end %>
+        <% if @item_errors.present? %>
+          <% errors = @item_errors[item.id] || [] %>
+          <ul class="d-inline-block">
+          <% errors.each do |key, value| %>
+            <% if key == :contains_urls_error %>
+              <li><%= link_to value, { action: :contains_urls, id: item },
+                  class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %></li>
+            <% else %>
+              <li><%= value %></li>
+            <% end %>
+          <% end %>
+          </ul>
+        <% end %>
+      </div>
     </div>
-  </div>
-</li>
+  </li>
+<% else %>
+  <li class="list-item" data-id="<%= item.id %>">
+    <label class="check">
+      <%= check_box_tag "ids[]", item.id, false, disabled: true %>
+    </label>
+    <div class="info">
+      <% if is_changeable && !hide_checkbox && !show_unchecked_checkbox %>
+        <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
+      <% end %>
+      <% show_path = url_for(action: :show, id: item) rescue nil %>
+      <% if show_path %>
+        <%= link_to item.try(:name), show_path, class: "title", target: "_blank", rel: "noopener" %>
+      <% else %>
+        <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
+      <% end %>
+      <div class="meta">
+        <%= render "cms/crud/destroy_info", item: item, action: action %>
+        <% if item.try(:tags) %>
+          <span class="tags"><%= item.tags.join(",") %></span>
+        <% end %>
+        <% unless permitted %>
+          <%= message %>
+        <% end %>
+      </div>
+    </div>
+  </li>
+<% end %>

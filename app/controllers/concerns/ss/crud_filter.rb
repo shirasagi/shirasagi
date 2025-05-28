@@ -168,7 +168,11 @@ module SS::CrudFilter
   end
 
   def render_confirmed_all(result, opts = {})
-    action = params[:action].match?(/change/) ? 'change' : 'delete'
+    action = if %w(close_all change_state_all).include?(params[:action])
+               'change'
+             else
+               'delete'
+             end
 
     location = opts[:location].presence || crud_redirect_url || { action: :index }
     if result
@@ -179,8 +183,12 @@ module SS::CrudFilter
     errors = @items.map { |item| [item.id, item.errors.full_messages] }
 
     respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { head json: errors }
+      format.html do
+        redirect_to location, notice
+      end
+      format.json do
+        head json: errors
+      end
     end
   end
 
