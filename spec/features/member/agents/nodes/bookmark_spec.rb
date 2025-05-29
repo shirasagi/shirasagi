@@ -32,8 +32,8 @@ describe 'members/agents/nodes/bookmark', type: :feature, dbscope: :example, js:
         fill_in 'item[password]', with: member.in_password
         click_button I18n.t("ss.login")
       end
-      expect(current_path).to eq article_page.url
       expect(page).to have_css(".favorite", text: I18n.t("member.links.register_bookmark"))
+      expect(current_path).to eq article_page.url
       logout_member(site, login_node)
     end
   end

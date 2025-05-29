@@ -48,7 +48,7 @@ class SS::FileSelectBoxComponent < ApplicationComponent
         field_name: field_name, show_properties: show_properties, show_attach: show_attach,
         show_opendata: show_opendata, accepts: accepts
       }
-      JSON::JWT.new(setting).sign(Rails.application.secret_key_base).to_s
+      JSON::JWT.new(setting).sign(SS::Crypto.salt).to_s
     end
   end
 
