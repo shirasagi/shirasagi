@@ -54,8 +54,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column13_2_title) { "PSY - GANGNAM STYLE" }
   let(:column13_3_youtube_id) { "e-ORhEE9VVg" }
   let(:column13_3_url) { "https://www.youtube.com/watch?v=#{column13_3_youtube_id}" }
-  let(:column13_3_title) { "Adele - Hello" }
+  let(:column13_3_title) { "Taylor Swift|Blank" }
   let!(:body_layout) { create(:cms_body_layout) }
+  let(:column13_1_expected_title) { /Rick Astley|Never Gonna Give You Up/i }
+  let(:column13_2_expected_title) { /GANGNAM STYLE|PSY/i }
+  let(:column13_3_expected_title) { /Taylor Swift|Blank Space/i }
 
   def article_pages
     Article::Page.where(filename: /^#{node.filename}\//)
@@ -129,8 +132,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
             # YouTubeのURLを入力
             fill_in "item[column_values][][in_wrap][url]", with: column13_1_url
             find('.youtube-title-check').click
-            expect(page).to have_field('item[column_values][][in_wrap][title]', with: /Rick Astley|Never Gonna Give You Up/i,
-wait: 10)
+            expect(page).to have_field('item[column_values][][in_wrap][title]', with: column13_1_expected_title, wait: 10)
           end
         end
         within 'form#item-form' do
@@ -166,7 +168,7 @@ wait: 10)
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_2_url
             find('.youtube-title-check').click
-            expect(page).to have_field('item[column_values][][in_wrap][title]', with: /GANGNAM STYLE|PSY/i, wait: 10)
+            expect(page).to have_field('item[column_values][][in_wrap][title]', with: column13_2_expected_title, wait: 10)
           end
         end
         within 'form#item-form' do
@@ -234,22 +236,21 @@ wait: 10)
         within all('.column-value-cms-column-youtube')[0] do
           fill_in "item[column_values][][in_wrap][url]", with: column13_1_url
           find('.youtube-title-check').click
-          expect(page).to have_field('item[column_values][][in_wrap][title]', with: /Rick Astley|Never Gonna Give You Up/i,
-wait: 10)
+          expect(page).to have_field('item[column_values][][in_wrap][title]', with: column13_1_expected_title, wait: 10)
         end
 
         # 2つ目のカラムでタイトル取得
         within all('.column-value-cms-column-youtube')[1] do
           fill_in "item[column_values][][in_wrap][url]", with: column13_2_url
           find('.youtube-title-check').click
-          expect(page).to have_field('item[column_values][][in_wrap][title]', with: /GANGNAM STYLE|PSY/i, wait: 10)
+          expect(page).to have_field('item[column_values][][in_wrap][title]', with: column13_2_expected_title, wait: 10)
         end
 
         # 3つ目のカラムでタイトル取得
         within all('.column-value-cms-column-youtube')[2] do
           fill_in "item[column_values][][in_wrap][url]", with: column13_3_url
           find('.youtube-title-check').click
-          expect(page).to have_field('item[column_values][][in_wrap][title]', with: /Taylor Swift|Blank Space/i, wait: 10)
+          expect(page).to have_field('item[column_values][][in_wrap][title]', with: column13_3_expected_title, wait: 10)
         end
 
         # JSの完了を待って公開保存
@@ -268,6 +269,9 @@ wait: 10)
           expect(item.column_values.find_by(column_id: column13.id, youtube_id: column13_1_youtube_id)).to be_present
           expect(item.column_values.find_by(column_id: column13.id, youtube_id: column13_2_youtube_id)).to be_present
           expect(item.column_values.find_by(column_id: column13.id, youtube_id: column13_3_youtube_id)).to be_present
+          expect(item.column_values.find_by(column_id: column13.id, title: column13_1_expected_title)).to be_present
+          expect(item.column_values.find_by(column_id: column13.id, title: column13_2_expected_title)).to be_present
+          expect(item.column_values.find_by(column_id: column13.id, title: column13_3_expected_title)).to be_present
           expect(item.backups.count).to eq 1
         end
       end
