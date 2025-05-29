@@ -16,9 +16,10 @@
   </div>
 
   <%= jquery do %>
-    $(document).off("click", ".youtube-title-check");
-    $(document).on("click", ".youtube-title-check", function() {
-      console.log("youtube-title-check_column_form");
+    var $youtubeTitleCheck = $(".youtube-title-check");
+    $youtubeTitleCheck.off("click");
+    $youtubeTitleCheck.on("click", function() {
+      console.log("youtube-title-check_column_form22");
       var $block = $(this).closest('.column-value');
       var $urlField = $block.find('input[name*="[in_wrap][url]"]');
       var url = $urlField.val();
