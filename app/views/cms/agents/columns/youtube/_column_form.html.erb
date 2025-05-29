@@ -14,42 +14,29 @@
     <%= Cms::Column::Value::Youtube.t("width") %><%= text_field_tag("#{f.object_name}[][in_wrap][width]", (value.try(:width) || 640), column.form_options.merge(id: nil, style: "width: 10%;")) %>
     <%= Cms::Column::Value::Youtube.t("height") %><%= text_field_tag("#{f.object_name}[][in_wrap][height]", (value.try(:height) || 360), column.form_options.merge(id: nil, style: "width: 10%;")) %>
   </div>
-<% end %>
 
-<%= jquery do %>
-  $(function() {
-    Cms_Column_Youtube.render($("body"));
-  });
+  <%= jquery do %>
+    $(document).on("click", ".youtube-title-check", function() {
+      console.log("youtube-title-check_column_form");
+      var $block = $(this).closest('.column-value');
+      var $urlField = $block.find('input[name*="[in_wrap][url]"]');
+      var url = $urlField.val();
+      if (!url) {
+        alert("<%= (I18n.t('cms.errors.messages.input_youtube_url')) %>");
+        return;
+      }
+      var $titleField = $block.find('input[name*="[in_wrap][title]"]');
+      $.get("<%= cms_apis_youtube_title_path %>", { url: url })
+        .done(function(data) {
+          if (data.title) {
+            $titleField.val(data.title);
+          } else {
+            alert("<%= (I18n.t('cms.errors.messages.youtube_title_fetch_failed')) %>" + (data.error ? ': ' + data.error : ''));
+          }
+        })
+        .fail(function(xhr) {
+          alert("<%= (I18n.t('cms.errors.messages.network_error')) %>");
+        });
+    });
+  <% end %>
 <% end %>
-
-<%
-=begin%>
- <%= jquery do %>
-  $(document).on("click", ".youtube-title-check", function() {
-    console.log("youtube-title-check_column_form");
-    // ボタンが属するブロック内でURLとタイトルフィールドを取得
-    var $block = $(this).closest('.column-youtube-title');
-    console.log($block);
-    // URLフィールドを同じ親要素内から探す
-    var $urlField = $block.parent().find('input[name*="[in_wrap][url]"]');
-    var url = $urlField.val();
-    if (!url) {
-      alert("<%= j(I18n.t('cms.errors.input_youtube_url')) %>");
-      return;
-    }
-    var $titleField = $block.find('input[name*="[in_wrap][title]"]');
-    $.get("<%= cms_apis_youtube_title_path %>", { url: url })
-      .done(function(data) {
-        if (data.title) {
-          $titleField.val(data.title);
-        } else {
-          alert("<%= j(I18n.t('cms.errors.youtube_title_fetch_failed')) %>" + (data.error ? ': ' + data.error : ''));
-        }
-      })
-      .fail(function(xhr) {
-        alert("<%= j(I18n.t('cms.errors.network_error')) %>");
-      });
-  });
-<% end %> 
-<%
-=end%>
