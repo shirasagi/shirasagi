@@ -35,13 +35,16 @@ this.Cms_Source_Cleaner = (function (superClass) {
       options = {};
     }
 
-    $(el).on("click", function () {
+    var $el = $(el);
+    $el.on("click", function () {
       if (!confirm(Cms_Source_Cleaner.confirms.clean)) {
         return;
       }
       var html = Cms_Source_Cleaner.getEditorHtml(options.editor);
       html = Cms_Source_Cleaner.cleanUp(html);
-      return Cms_Source_Cleaner.setEditorHtml(html, { id: options.editor });
+      Cms_Source_Cleaner.setEditorHtml(html, { id: options.editor });
+
+      $el.trigger("ss:sourceCleanerFinished")
     });
   };
 

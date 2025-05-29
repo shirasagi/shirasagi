@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 7.1.0'
+gem 'rails', '~> 7.2.0'
 gem 'sprockets'
 gem 'jsbundling-rails'
 gem 'sprockets-rails' # Rails 7.1 以降では明示的な組み込みが必要

@@ -5,6 +5,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
   let(:node) { create :guide_node_guide, filename: "guide" }
 
   context "basic crud" do
+    let(:download1_file) { tmpfile(extname: ".csv") }
+    let(:download2_file) { tmpfile(extname: ".csv") }
+    let(:download3_file) { tmpfile(extname: ".csv") }
+
     before { login_cms_user }
 
     it "#index" do
@@ -57,9 +61,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
 
       ## upload 1 file
 
+      clear_downloads
       visit download_combinations_guide_importers_path(site, node)
       wait_for_download
-      download1_file = downloads[0]
+      ::FileUtils.cp(downloads[0], download1_file)
       download1_hash = Digest::SHA256.file(download1_file).hexdigest
 
       visit import_combinations_guide_importers_path(site, node)
@@ -71,8 +76,11 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
+      clear_downloads
       visit download_combinations_guide_importers_path(site, node)
       wait_for_download
+      ::FileUtils.cp(downloads[0], download2_file)
+      download2_hash = Digest::SHA256.file(download2_file).hexdigest
 
       ## upload 1 file
 
@@ -90,13 +98,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
+      clear_downloads
       visit download_combinations_guide_importers_path(site, node)
       wait_for_download
-      sleep(1)
-
-      download2_file = downloads[1]
-      download2_hash = Digest::SHA256.file(download2_file).hexdigest
-      download3_file = downloads[2]
+      ::FileUtils.cp(downloads[0], download3_file)
       download3_hash = Digest::SHA256.file(download3_file).hexdigest
 
       expect(download1_hash).to eq download2_hash
@@ -105,6 +110,9 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
   end
 
   context "questions_relation" do
+    let(:download1_file) { tmpfile(extname: ".csv") }
+    let(:download2_file) { tmpfile(extname: ".csv") }
+
     before { login_cms_user }
 
     it "#import_combinations" do
@@ -117,9 +125,10 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
+      clear_downloads
       visit download_combinations_guide_importers_path(site, node)
       wait_for_download
-      download1_file = downloads[0]
+      ::FileUtils.cp(downloads[0], download1_file)
       download1_hash = Digest::SHA256.file(download1_file).hexdigest
 
       expect(Guide::Procedure.all.size).to eq 2
@@ -142,11 +151,11 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
+      clear_downloads
       visit download_combinations_guide_importers_path(site, node)
       wait_for_download
-
-      download2_file = downloads[1]
-      download2_hash = Digest::SHA256.file(download1_file).hexdigest
+      ::FileUtils.cp(downloads[0], download2_file)
+      download2_hash = Digest::SHA256.file(download2_file).hexdigest
 
       expect(download1_hash).to eq download2_hash
     end
