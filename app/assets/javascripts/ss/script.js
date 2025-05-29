@@ -85,7 +85,6 @@
 //= require cms/lib/column_radio_button
 //= require cms/lib/column_select
 //= require cms/lib/column_select_page
-//= require cms/lib/column_youtube
 //= require cms/lib/file_highlighter
 //= require cms/lib/move
 //= require cms/lib/line

@@ -16,13 +16,14 @@
   </div>
 
   <%= jquery do %>
+    $(document).off("click", ".youtube-title-check");
     $(document).on("click", ".youtube-title-check", function() {
       console.log("youtube-title-check_column_form");
       var $block = $(this).closest('.column-value');
       var $urlField = $block.find('input[name*="[in_wrap][url]"]');
       var url = $urlField.val();
       if (!url) {
-        alert("<%= (I18n.t('cms.errors.messages.input_youtube_url')) %>");
+        alert("<%= (I18n.t('errors.messages.input_youtube_url')) %>");
         return;
       }
       var $titleField = $block.find('input[name*="[in_wrap][title]"]');
@@ -31,11 +32,11 @@
           if (data.title) {
             $titleField.val(data.title);
           } else {
-            alert("<%= (I18n.t('cms.errors.messages.youtube_title_fetch_failed')) %>" + (data.error ? ': ' + data.error : ''));
+            alert("<%= (I18n.t('errors.messages.youtube_title_fetch_failed')) %>" + (data.error ? ': ' + data.error : ''));
           }
         })
-        .fail(function(xhr) {
-          alert("<%= (I18n.t('cms.errors.messages.network_error')) %>");
+        .fail(function() {
+          alert("<%= (I18n.t('errors.messages.network_error')) %>");
         });
     });
   <% end %>
