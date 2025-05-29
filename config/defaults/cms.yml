@@ -198,6 +198,8 @@ production: &production
   nodes:
     board/anpi_post:
       disable: true
+    board/post:
+      disable: true
 
   # column name validation type
   #
