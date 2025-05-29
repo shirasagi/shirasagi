@@ -278,6 +278,7 @@ ja:
       select_from_list: 一覧から選択
       select_files: ファイル選択
       cancel_upload: アップロード取消
+      do_access_to_unreliable_site: 外部サイトへ進む
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
