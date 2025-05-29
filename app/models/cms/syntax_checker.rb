@@ -72,15 +72,13 @@ module Cms::SyntaxChecker
       end
     end
 
-    # 構文エラーがある場合のみ、権限チェックを行う
     if context.errors.present?
       if !cur_user.cms_role_permit_any?(cur_site, "edit_cms_ignore_syntax_check")
-        context.errors << {
-          msg: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check')
-        }
+        context.errors.unshift({
+                                 msg: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check')
+                               })
       end
     end
-
     context
   end
 
