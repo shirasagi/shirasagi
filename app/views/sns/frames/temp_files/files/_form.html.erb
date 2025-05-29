@@ -30,7 +30,7 @@
 
       <div class="btn-group">
         <div class="input-group">
-          <%= select_tag('size', options_for_select(@model.resizing_options(user: @cur_user, node: cur_node)), include_blank: true) %>
+          <%= select_tag('size', options_for_select(@model.resizing_options(user: @cur_user, site: @cur_site.is_a?(SS::Model::Site) ? @cur_site : nil, node: cur_node)), include_blank: true) %>
         </div>
       </div>
 

@@ -24,6 +24,7 @@ en:
     qr_code: QR Code
     regexp: Regular expression
     resize_image: Resize image
+    no_resize_image: No resize image
     role: Role
     role_setting: Role batch settings
     required: Required field
@@ -80,6 +81,7 @@ en:
     mfa_otp_not_enabled_yet: "Not enabled yet"
     system_operation: "-- System operation --"
     upload_or_select_from_list: File upload or select file from list
+    auto_resizing_label: "%{size} (System setting)"
 
     views:
       login/login:
@@ -485,6 +487,9 @@ en:
         768x1024: 768x1024 (XGA portrait)
         1280x720: 1280x720 (HD landscape)
         720x1280: 720x1280 (HD portrait)
+        380x380: 380x380 (Suitable for 3 columns layout)
+        580x580: 580x580 (Suitable for 2 columns layout)
+        1200x1200: 1200x1200 (Suitable for general layout)
       text_type:
         plain: Text
         markdown: Markdown
@@ -948,7 +953,7 @@ en:
         file_resizing: Resize attached file
         file_resizing_width: Width
         file_resizing_height: Height
-        file_resizing_label: ! '%{size} (Site settings)'
+        file_resizing_label: ! '%{size} (Site setting)'
         multibyte_filename_state: Japanese-language file name
         file_fs_access_restriction_state: /fs access restrictions
         file_fs_access_restriction_allowed_ip_addresses: Allowed IP addresses
@@ -979,8 +984,9 @@ en:
         order: Sort by
         state: Status
       ss/model/image_resize:
-        max_width: Width
-        max_height: Height
+        max_width: Max Width
+        max_height: Max Height
+        size: Number of bytes
         quality: Quality
       ss/model/postal_code:
         code: Postal code
@@ -1296,6 +1302,10 @@ en:
         - If the size is exceeded, the image quality of the file will be changed to the value set in advance.
         - If the width or height is exceeded, the size will be reduced to fit.
         - If you do not want to auto-resize, after you have the administrator grant you permission, click “Auto-resize enabled” on the left and set it to “Auto-resize disabled”.
+      user_file:
+        - If checked, the per-user file is displayed. The per-user file is the file you registered under Files on My Page.
+      cms_file:
+        - If checked, files shared on the site will be displayed.
     ss/model/user_title:
       code: Enter the job title code.
       name: Enter the job title.
@@ -1517,13 +1527,18 @@ en:
         - Enable or disable restrictions.
     ss/model/image_resize:
       max_width:
-        - The width of the image file can be set.
+        - The max width of the image to be uploaded can be set.
       max_height:
-        - The height of the image file can be set.
+        - The max height of the image to be uploaded can be set.
+      size:
+        - If the number of bytes in the image file is greater than this setting, the image quality is reduced.
+        - Even with reduced image quality, the number of bytes in the image may exceed this setting.
       quality:
         - Image file quality can be set between 0 and 100.
-        - Compresses images based on image quality if the maximum file size is exceeded.
+        - "If the number of bytes of the image file exceeds the value set for “Number of bytes”, the image quality is changed to this setting."
         - The higher the image quality, the less degraded it is.
+      state:
+        - Enable or disable the resize image.
     ss/model/editor_setting:
       color_button:
         - Set the display of the text color change button.

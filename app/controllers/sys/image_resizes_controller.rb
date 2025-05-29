@@ -9,16 +9,21 @@ class Sys::ImageResizesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("sys.image_resize"), sys_image_resizes_path]
+    @crumbs << [t("sys.image_resize"), sys_image_resize_path]
   end
 
-  public
-
-  def index
+  def set_item
     raise "403" unless @model.allowed?(:edit, @cur_user)
-    @items = @model.allow(:edit, @cur_user).
-      search(params[:s]).
-      order_by(order: 1, name: 1, _id: -1).
-      page(params[:page]).per(50)
+    @item ||= begin
+      criteria = @model.all
+      criteria = criteria.reorder(order: 1, name: 1, _id: -1)
+      item = criteria.first
+      item ||= @model.new(state: SS::ImageResize::STATE_DISABLED)
+      item.attributes = fix_params
+      item
+    end
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
   end
 end

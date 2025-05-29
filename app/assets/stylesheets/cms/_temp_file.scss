@@ -49,4 +49,13 @@
       grid-column: 1 / span 3;
     }
   }
+
+  .cms-temp-file-centering {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .cms-temp-file-gap-narrow {
+    gap: 5px;
+  }
 }

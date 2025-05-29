@@ -46,7 +46,7 @@ Rails.application.routes.draw do
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
-    resources :image_resizes, concerns: :deletion
+    resource :image_resize, except: %i[new create destroy]
     resources :postal_codes, concerns: [:deletion, :export]
     resources :prefecture_codes, concerns: [:deletion, :export]
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]

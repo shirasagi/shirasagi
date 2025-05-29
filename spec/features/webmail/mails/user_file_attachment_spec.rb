@@ -43,7 +43,8 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           within_dialog do
             wait_for_event_fired "turbo:frame-load" do
               within "form.search" do
-                check I18n.t("sns.user_file")
+                # check I18n.t("sns.user_file")
+                first("[name='s[types][]'][value='user_file']").click
               end
             end
           end
