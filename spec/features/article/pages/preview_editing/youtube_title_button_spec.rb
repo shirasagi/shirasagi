@@ -1,5 +1,4 @@
 require 'spec_helper'
-require 'nokogiri'
 
 describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
