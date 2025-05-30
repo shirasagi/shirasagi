@@ -85,7 +85,7 @@ class Gws::Survey::FileEnumerator < Enumerator
 
   def bom
     return '' if @encoding == 'Shift_JIS'
-    "\uFEFF"
+    SS::Csv::UTF8_BOM
   end
 
   def encode(str)

@@ -323,6 +323,6 @@ class Gws::Workflow2::FileEnumerator < Enumerator
 
   def bom
     return '' if @encoding == 'Shift_JIS'
-    "\uFEFF"
+    SS::Csv::UTF8_BOM
   end
 end
