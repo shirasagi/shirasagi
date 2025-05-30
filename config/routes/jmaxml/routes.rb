@@ -43,14 +43,14 @@ Rails.application.routes.draw do
       resources :ash_fall_forecasts, path: 'triggers/ash_fall_forecasts', concerns: [:deletion]
       resources :tornado_alerts, path: 'triggers/tornado_alerts', concerns: [:deletion]
       # put base at last
-      resources :bases, path: 'triggers', concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
+      resources :bases, path: 'triggers', concerns: [:deletion], only: [:index, :show, :new, :create, :edit]
     end
     scope module: :action, as: :action do
       resources :switch_urgencies, path: 'actions/switch_urgencies', concerns: [:deletion]
       resources :publish_pages, path: 'actions/publish_pages', concerns: [:deletion]
       resources :send_mails, path: 'actions/send_mails', concerns: [:deletion]
       # put base at last
-      resources :bases, path: 'actions', concerns: [:deletion], only: [:index, :show, :new, :create, :edit, :delete]
+      resources :bases, path: 'actions', concerns: [:deletion], only: [:index, :show, :new, :create, :edit]
     end
   end
 end
