@@ -71,7 +71,7 @@ class Chorg::EntityLog::Exporter
         end
       end
     end
-    csv = "\uFEFF".freeze + csv
+    csv = SS::Csv::UTF8_BOM + csv
     csv
   end
 end
