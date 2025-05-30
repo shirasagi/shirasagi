@@ -81,7 +81,7 @@ Rails.application.routes.draw do
 
       namespace "apis" do
         scope path: ':todo_id' do
-          resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+          resources :comments, concerns: [:deletion], except: [:index, :new, :show]
         end
         get "categories" => "categories#index"
       end
