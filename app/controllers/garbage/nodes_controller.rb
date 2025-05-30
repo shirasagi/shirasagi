@@ -55,7 +55,7 @@ class Garbage::NodesController < ApplicationController
       end
     end
 
-    csv = "\uFEFF" + csv
+    csv = SS::Csv::UTF8_BOM + csv
     send_data csv.encode("UTF-8", invalid: :replace, undef: :replace),
       filename: "garbage_pages_#{Time.zone.now.strftime("%Y_%m%d_%H%M")}.csv"
   end
