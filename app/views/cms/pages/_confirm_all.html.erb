@@ -3,10 +3,10 @@
   is_changeable = permitted && (item.try(:state_changeable?) || action == "destroy_all")
   errors = @item_errors.present? ? (@item_errors[item.id] || {}) : {}
   hide_checkbox =
-    (!ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?) ||
+    (!ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?) && action == "close_all" ||
     (!ignore_alert_to_syntax_check? && errors[:syntax_error].present? && action == "publish_all")
   show_unchecked_checkbox =
-    (ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?) ||
+    (ignore_alert_to_contains_urls? && errors[:contains_urls_error].present?) && action == "close_all" ||
     (ignore_alert_to_syntax_check? && errors[:syntax_error].present? && action == "publish_all")
 %>
 <% if permitted %>

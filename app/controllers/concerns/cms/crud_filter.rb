@@ -234,10 +234,8 @@ module Cms::CrudFilter
     @change_state = params[:state]
     @items = @selected_items.to_a
 
-    # 被リンクチェック
-    @item_errors = (check_contains_urls_for_items(@items))
     # 差し替えページのチェック
-    @item_errors.deep_merge!(check_branch_page_for_items(@items))
+    @item_errors = check_branch_page_for_items(@items)
     # アクセシビリティチェック
     @item_errors.deep_merge!(check_syntax_for_items(@items))
 
@@ -262,7 +260,7 @@ module Cms::CrudFilter
     @item_errors = (check_contains_urls_for_items(@items))
     # 差し替えページのチェック
     @item_errors.deep_merge!(check_branch_page_for_items(@items))
-    # 構文チェック
+    # アクセシビリティチェック
     @item_errors.deep_merge!(check_syntax_for_items(@items))
 
     if params[:change_state_all]
