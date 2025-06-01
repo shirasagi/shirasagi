@@ -78,4 +78,30 @@ describe Cms::Column::Value::Youtube, type: :model, dbscope: :example do
       expect(value.title).to eq new_title
     end
   end
+
+  describe "default title when title is blank" do
+    let!(:node) { create :article_node_page }
+    let!(:form) { create(:cms_form, cur_site: cms_site, state: 'public', sub_type: 'static') }
+    let!(:column1) { create(:cms_column_youtube, cur_form: form, order: 1) }
+    let!(:page) do
+      create(
+        :article_page, cur_node: node, form: form,
+        column_values: [
+          column1.value_type.new(
+            column: column1,
+            url: "https://www.youtube.com/watch?v=CSlLndeDc48",
+            width: 640,
+            height: 400,
+            title: nil
+          )
+        ]
+      )
+    end
+    let!(:value) { page.column_values.first }
+
+    it "sets iframe title to I18n generic_title when title is blank" do
+      iframe_html = value.youtube_iframe
+      expect(iframe_html).to include("title=\"#{I18n.t('mongoid.attributes.cms/column/value/youtube.generic_title')}\"")
+    end
+  end
 end
