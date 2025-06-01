@@ -187,6 +187,7 @@ ja:
       link_label_placeholder: リンクテキスト
       link_url_placeholder: URL
     column_youtube_title_field:
+      field_label: YouTube動画タイトル
       field_placeholder: 画面読み上げなどで使う動画のタイトルを入力してください。
     visit_article: 記事を見る
 
@@ -1471,7 +1472,7 @@ ja:
         text: テキスト
       cms/column/value/youtube:
         url: URL
-        title: タイトル
+        title: YouTube動画タイトル
         generic_title: YouTube動画
         width: 幅
         height: 高さ

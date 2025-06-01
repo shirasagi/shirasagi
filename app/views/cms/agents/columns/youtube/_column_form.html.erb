@@ -8,9 +8,14 @@
       "#{f.object_name}[][in_wrap][title]",
       value.try(:title),
       column.form_options(:title).merge(
-        id: "youtube-title-field",
+        id: nil,
         style: "width: 70%;",
-        placeholder: I18n.t("cms.column_youtube_title_field.field_placeholder")
+        placeholder: I18n.t("cms.column_youtube_title_field.field_placeholder"),
+        data: {
+          syntax_check: "value",
+          syntax_check_name: column.name,
+          check_presence: I18n.t('cms.column_youtube_title_field.field_label'),
+        }
       )
     ) %>
     <%= button_tag I18n.t("cms.buttons.youtube_title"), type: "button", class: "btn youtube-title-check" %>
