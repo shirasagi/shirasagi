@@ -186,6 +186,8 @@ ja:
     column_url_field:
       link_label_placeholder: リンクテキスト
       link_url_placeholder: URL
+    column_youtube_title_field:
+      field_placeholder: 画面読み上げなどで使う動画のタイトルを入力してください。
     visit_article: 記事を見る
 
     adobe_reader:
@@ -1470,6 +1472,7 @@ ja:
       cms/column/value/youtube:
         url: URL
         title: タイトル
+        generic_title: YouTube動画
         width: 幅
         height: 高さ
         auto_width: 画面幅に合わせる
@@ -3342,9 +3345,10 @@ ja:
         - 省略した場合は「パーツ名」が表示されます。
     cms/column/value/youtube:
       title:
-      - "YouTube動画のタイトルを入力してください（アクセシビリティ向上のため必須）。"
+      - "YouTube動画のタイトルを入力してください（アクセシビリティ向上のため）。"
       - "「YouTubeからタイトルを取得」ボタンで自動取得もできます。"
       - "自動取得後に内容を修正することも可能です。"
+      - "未入力の場合は「YouTube動画」がタイトルに設定されます。"
 
   all_content:
     page_id: ページID

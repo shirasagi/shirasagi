@@ -61,7 +61,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       frameborder: "0",
       allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
       allowfullscreen: "allowfullscreen",
-      title: title.presence || "YouTube: #{youtube_id}"
+      title: title.presence || I18n.t("mongoid.attributes.cms/column/value/youtube.generic_title")
     }
 
     if auto_width != "enabled"
