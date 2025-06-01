@@ -6,7 +6,7 @@
       <div class="addon-body">
         <dl class="see">
           <dt><%= @model.t :resizing %><%= @model.tt :resizing %></dt>
-          <dd><%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %></dd>
+          <dd><%= f.select :resizing, @model.resizing_options(user: @cur_user, site: @cur_site.is_a?(SS::Model::Site) ? @cur_site : nil, node: @cur_node), { include_blank: t("ss.resize_image") }, { class: "image-size" } %></dd>
         </dl>
       </div>
     </div>

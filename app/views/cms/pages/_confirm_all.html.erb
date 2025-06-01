@@ -41,7 +41,7 @@
           <% errors.each do |key, value| %>
             <% if key == :contains_urls_error %>
               <li><%= link_to value, { action: :contains_urls, id: item },
-                class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %></li>
+                  class: "contains-urls", target: :_blank, rel: "noopener" rescue nil %></li>
             <% else %>
               <li><%= value %></li>
             <% end %>

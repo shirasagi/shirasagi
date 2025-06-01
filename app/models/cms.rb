@@ -394,35 +394,4 @@ module Cms
 
     options
   end
-
-  def self.file_resizing_options(user, site:, node: nil)
-    options = SS::File.system_resizing_options
-
-    site_resizing = site.file_resizing
-    if site_resizing.present?
-      site_resizing_label = site.t(:file_resizing_label, size: site_resizing.join("x"))
-      site_resizing_value = site_resizing.join(",")
-      site_resizing_option = options.find { |_label, value, _attr| value == site_resizing_value }
-      if site_resizing_option
-        site_resizing_option[0] = site_resizing_label
-        site_resizing_option[2] ||= {}
-        site_resizing_option[2][:selected] = true
-      else
-        options << [ site_resizing_label, site_resizing_value, { selected: true } ]
-        _sort_file_resizing_options(options)
-      end
-    end
-
-    attr = SS::File.image_resizes_min_attributes(user: user, node: node)
-    min_width = attr['max_width']
-    min_height = attr['max_height']
-    if min_width.present? || min_height.present?
-      options.select! do |_label, value, _attr|
-        width, height = value.split(',', 2).map(&:to_i)
-        width <= min_width && height <= min_height
-      end
-    end
-
-    options
-  end
 end
