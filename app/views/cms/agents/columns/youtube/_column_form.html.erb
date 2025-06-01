@@ -2,7 +2,7 @@
 <% controller ||= false %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
   <%= Cms::Column::Value::Youtube.t("url") %><%= text_field_tag("#{f.object_name}[][in_wrap][url]", value.try(:url) || (value.try(:youtube_id) ? "https://youtu.be/#{value.youtube_id}" : ""), column.form_options(:url).merge(id: nil, style: "width: 70%;")) %><br />
-  <div class="column-youtube-title" style="display: flex; align-items: center;">
+  <div class="column-youtube-title">
     <dt><%= Cms::Column::Value::Youtube.t("title") %><%= Cms::Column::Value::Youtube.tt("title") %></dt>
     <%= text_field_tag(
       "#{f.object_name}[][in_wrap][title]",
