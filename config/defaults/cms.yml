@@ -195,6 +195,12 @@ production: &production
     category/node:
       disable: true
 
+  nodes:
+    board/anpi_post:
+      disable: true
+    board/post:
+      disable: true
+
   # column name validation type
   #
   # restricted: restrict reserved characters.
