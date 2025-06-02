@@ -1,6 +1,6 @@
 class SS::Task
   class PerformanceCollector
-    class_attribute :current, instance_accessor: false, default: true
+    class_attribute :current, instance_accessor: false, default: nil
 
     def initialize(task)
       @task = task
