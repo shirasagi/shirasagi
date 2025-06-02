@@ -455,6 +455,19 @@ module Workflow::Approver
     max_editable_approvers[:editable].to_i > 0
   end
 
+  def ignore_alert_to_syntax_check?
+    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_syntax_check))
+  end
+
+  def can_approve_with_accessibility_errors?
+    Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? called: workflow_kind=#{workflow_kind}, ignore_alert_to_syntax_check?=#{ignore_alert_to_syntax_check?}")
+    return true if workflow_kind != 'public'
+    return true if ignore_alert_to_syntax_check?
+    result = !has_accessibility_errors?
+    Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? result: #{result}")
+    result
+  end
+
   def workflow_back_to_previous?
     workflow_on_remand == 'back_to_previous'
   end
@@ -562,6 +575,47 @@ module Workflow::Approver
     set_workflow_circulation_state_at(next_level, state: "unseen", comment: "")
     self.workflow_current_circulation_level = next_level
     true
+  end
+
+  def build_syntax_check_contents
+    contents = []
+    if @item.respond_to?(:html)
+      contents << { "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }
+    end
+
+    # ブロック入力（カラム値）もcontentsに追加
+    if @item.respond_to?(:column_values)
+      @item.column_values.each_with_index do |column_value, idx|
+        value =
+          if column_value.respond_to?(:in_wrap) && column_value.in_wrap.present?
+            column_value.in_wrap
+          elsif column_value.respond_to?(:value)
+            column_value.value
+          else
+            nil
+          end
+        next if value.blank?
+        contents << {
+          "id" => "column_#{idx}",
+          "content" => value,
+          "resolve" => "html",
+          "type" => "scalar"
+        }
+      end
+    end
+    contents
+  end
+
+  def has_accessibility_errors?
+    contents = build_syntax_check_contents
+    return false if contents.blank?
+
+    result = Cms::SyntaxChecker.check(cur_site: site, cur_user: user, contents: contents)
+    Rails.logger.debug("[workflow/approver] has_accessibility_errors? result.errors=#{result.errors.inspect}")
+
+    accessibility_error = result.errors.any? { |error| error[:msg].present? }
+    Rails.logger.debug("[workflow/approver] has_accessibility_errors? accessibility_error=#{accessibility_error}")
+    accessibility_error
   end
 
   private

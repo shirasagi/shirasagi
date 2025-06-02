@@ -30,6 +30,7 @@
           <% end %>
           <dl class="see">
             <% if @item.workflow_kind.present? %>
+              <h1>テスト</h1>
               <dt><%= @model.t :workflow_kind %><%= @model.tt :workflow_kind %></dt>
               <dd><%= @item.label(:workflow_kind) %></dd>
             <% end %>
@@ -45,8 +46,14 @@
             end
           %>
           <div class="buttons">
-            <% if workflow_approver[:state] == 'request' %>
-              <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+            <% if workflow_approver[:state] == 'request'  %>
+              <% if @item.can_approve_with_accessibility_errors? %>
+                <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+              <% else %>
+                <div class="error-message">
+                  <%= t("errors.messages.accessibility_check_required") %>
+                </div>
+              <% end %>
               <%= button_tag t("workflow.buttons.remand"), updatetype: :remand, class: "update-item btn-default", disabled: true, data: { disable: '' } %>
             <% elsif workflow_approver[:state] == 'pending' %>
               <%= button_tag t("workflow.buttons.pull_up"), updatetype: :pull_up, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
