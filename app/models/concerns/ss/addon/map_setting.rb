@@ -8,8 +8,8 @@ module SS::Addon
       field :map_api_key, type: String
       field :map_api_layer, type: String
       field :map_header_text, type: String
-      field :show_google_maps_search_in_marker, type: String, default: "show" # マーカー
-      field :show_google_maps_search_in_view, type: String, default: "hide" # 詳細画面
+      field :show_google_maps_search_in_marker, type: String, default: "show"
+      field :show_google_maps_search_in_view, type: String, default: "hide"
       field :map_api_mypage, type: String, default: "active"
       field :map_center, type: Map::Extensions::Loc
       field :map_max_number_of_markers, type: Integer

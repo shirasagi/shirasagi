@@ -616,9 +616,9 @@ ja:
         mypage: "マイページ"
         portal: "ポータル"
       show_google_maps_search_in_view:
-        hide: 表示しない
+        hide: 非表示
         show_first: 先頭1件のみ表示
-        show_all: 全て表示する
+        show_all: 全て表示
 
     tasks:
       started: 開始しました。
