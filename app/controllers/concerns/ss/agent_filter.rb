@@ -1,6 +1,20 @@
 module SS::AgentFilter
   extend ActiveSupport::Concern
 
+  # inquiry/agents/parts/feedback は inquiry/node/form 配下であることが必須。
+  #
+  # cms/agents/nodes/photo_album_controller でセットした @cur_parent（クラス article/node/page のインスタンス） が、
+  # app/views/inquiry/agents/parts/feedback/index.erb で不正に利用されることを防ぐ目的で、
+  # 継承可能なインスタンス変数をホワイトリスト方式とする。
+  INHERITABLE_VARIABLES = begin
+    allowed_variables = %i[
+      @csrf_token
+      @task @cur_site @cur_node @cur_page @cur_part
+      @cur_path @cur_main_path @filters
+    ]
+    Set.new(allowed_variables)
+  end.freeze
+
   included do
     before_action :inherit_variables
   end
@@ -12,7 +26,9 @@ module SS::AgentFilter
   end
 
   def inherit_variables
-    controller.instance_variables.select { |m| m =~ /^@[a-z]/ }.each do |name|
+    variables = controller.instance_variables
+    variables = variables.select { INHERITABLE_VARIABLES.include?(_1.to_sym) }
+    variables.each do |name|
       next if instance_variable_defined?(name)
       instance_variable_set name, controller.instance_variable_get(name)
     end
