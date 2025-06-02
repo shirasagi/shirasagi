@@ -516,7 +516,7 @@ Rails.application.routes.draw do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
-    resources :image_resizes, concerns: :deletion
+    resource :image_resize, except: %i[new create destroy]
     resources :nodes, concerns: [:deletion, :change_state, :import] do
       match :download, on: :collection, via: %i[get post]
     end
@@ -550,8 +550,10 @@ Rails.application.routes.draw do
     get "group_page/rss.xml" => "public#rss", cell: "nodes/group_page", format: "xml"
     get "group_page/rss-recent.xml" => "public#rss_recent", cell: "nodes/group_page", format: "xml"
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
-    get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
-    get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
+    get "archive/:ymd/(index.:format)" => "public#yearly", cell: "nodes/archive", ymd: /\d{4}/
+    get "archive/:ymd/(index.:format)" => "public#monthly", cell: "nodes/archive", ymd: /\d{6}/
+    get "archive/:ymd/(index.:format)" => "public#daily", cell: "nodes/archive", ymd: /\d{8}/
+    get "archive" => "public#index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
     #get "site_search/article_nodes(.:format)" => "public#article_nodes", cell: "nodes/site_search"

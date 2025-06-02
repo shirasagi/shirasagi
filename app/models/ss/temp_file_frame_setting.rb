@@ -9,7 +9,7 @@ class SS::TempFileFrameSetting
   class << self
     def decode(setting)
       return self.default if setting.blank? || setting == "-"
-      setting = JSON::JWS.decode_compact_serialized(setting, Rails.application.secret_key_base)
+      setting = JSON::JWS.decode_compact_serialized(setting, SS::Crypto.salt)
       new(setting)
     end
 
