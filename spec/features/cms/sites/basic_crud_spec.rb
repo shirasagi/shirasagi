@@ -109,8 +109,12 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
     let(:map_api_key) { unique_id }
     let(:map_api_layer) { SS.config.map.layers.map { |layer| layer["name"] }.sample }
     let(:map_api_layer_label) { map_api_layer }
-    let(:show_google_maps_search) { %w(active expired).sample }
-    let(:show_google_maps_search_label) { I18n.t("ss.options.state.#{show_google_maps_search}") }
+    let(:show_google_maps_search_in_marker) { %w(show hide).sample }
+    let(:show_google_maps_search_in_marker_label) { I18n.t("ss.options.state.#{show_google_maps_search_in_marker}") }
+    let(:show_google_maps_search_in_view) { %w(hide show_first show_all).sample }
+    let(:show_google_maps_search_in_view_label) do
+      I18n.t("ss.options.show_google_maps_search_in_view.#{show_google_maps_search_in_view}")
+    end
     let(:map_api_mypage) { %w(active expired).sample }
     let(:map_api_mypage_label) { I18n.t("ss.options.state.#{map_api_mypage}") }
     let(:map_center_lng) { rand(13_800..13_900) / 100.0 }
@@ -126,7 +130,8 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         select map_api_label, from: "item[map_api]"
         fill_in "item[map_api_key]", with: map_api_key
         select map_api_layer_label, from: "item[map_api_layer]"
-        select show_google_maps_search_label, from: "item[show_google_maps_search]"
+        select show_google_maps_search_in_marker_label, from: "item[show_google_maps_search_in_marker]"
+        select show_google_maps_search_in_view_label, from: "item[show_google_maps_search_in_view]"
         select map_api_mypage_label, from: "item[map_api_mypage]"
         fill_in "item[map_center][lng]", with: map_center_lng
         fill_in "item[map_center][lat]", with: map_center_lat
@@ -140,7 +145,8 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
       expect(site.map_api).to eq map_api
       expect(site.map_api_key).to eq map_api_key
       expect(site.map_api_layer).to eq map_api_layer
-      expect(site.show_google_maps_search).to eq show_google_maps_search
+      expect(site.show_google_maps_search_in_marker).to eq show_google_maps_search_in_marker
+      expect(site.show_google_maps_search_in_view).to eq show_google_maps_search_in_view
       expect(site.map_api_mypage).to eq map_api_mypage
       expect(site.map_center.lng).to be_within(0.1).of(map_center_lng)
       expect(site.map_center.lat).to be_within(0.1).of(map_center_lat)
