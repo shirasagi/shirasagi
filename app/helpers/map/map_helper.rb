@@ -238,6 +238,6 @@ module Map::MapHelper
 
     lat = map_point["loc"][1]
     lng = map_point["loc"][0]
-    link_to(name, "#{SS.config.map.googlemaps_search_end_point}#{lat},#{lng}")
+    link_to(name, "#{SS.config.map.googlemaps_search_end_point}#{lat},#{lng}", target: "_blank", rel: "noopener")
   end
 end
