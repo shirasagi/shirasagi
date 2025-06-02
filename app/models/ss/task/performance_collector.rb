@@ -24,13 +24,13 @@ class SS::Task
       end
 
       def succeeded(event)
-        return if PerformanceCollector.current.blank?
-        PerformanceCollector.current.increment_db_stats(event, "succeeded")
+        return if SS::Task::PerformanceCollector.current.blank?
+        SS::Task::PerformanceCollector.current.increment_db_stats(event, "succeeded")
       end
 
       def failed(event)
-        return if PerformanceCollector.current.blank?
-        PerformanceCollector.current.increment_db_stats(event, "failed")
+        return if SS::Task::PerformanceCollector.current.blank?
+        SS::Task::PerformanceCollector.current.increment_db_stats(event, "failed")
       end
     end
 
