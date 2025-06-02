@@ -12,7 +12,13 @@
   <dd><%= @item.map_header_text.presence || t("map.views.header") %></dd>
 
   <dt><%= @model.t :show_google_maps_search %></dt>
-  <dd><%= @item.label :show_google_maps_search %></dd>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :show_google_maps_search_in_marker %></dt>
+  <dd class="depth-2"><%= @item.label :show_google_maps_search_in_marker %></dd>
+
+  <dt class="depth-2"><%= @model.t :show_google_maps_search_in_view %></dt>
+  <dd class="depth-2"><%= @item.label :show_google_maps_search_in_view %></dd>
 
   <dt><%= @model.t :map_api_mypage %></dt>
   <dd><%= @item.label :map_api_mypage %></dd>

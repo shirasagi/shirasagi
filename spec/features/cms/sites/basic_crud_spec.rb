@@ -109,9 +109,9 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
     let(:map_api_key) { unique_id }
     let(:map_api_layer) { SS.config.map.layers.map { |layer| layer["name"] }.sample }
     let(:map_api_layer_label) { map_api_layer }
-    let(:show_google_maps_search) { %w(active expired).sample }
+    let(:show_google_maps_search) { %w(show hide).sample }
     let(:show_google_maps_search_label) { I18n.t("ss.options.state.#{show_google_maps_search}") }
-    let(:map_api_mypage) { %w(active expired).sample }
+    let(:map_api_mypage) { %w(show hide).sample }
     let(:map_api_mypage_label) { I18n.t("ss.options.state.#{map_api_mypage}") }
     let(:map_center_lng) { rand(13_800..13_900) / 100.0 }
     let(:map_center_lat) { rand(3600..3700) / 100.0 }

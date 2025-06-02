@@ -23,7 +23,7 @@ module Map::MapHelper
 
   def show_google_maps_search(opts = {})
     return false unless opts[:site]
-    opts[:site].show_google_maps_search_enabled?
+    opts[:site].show_google_maps_search_in_marker_enabled?
   end
 
   def include_map_api(opts = {})
@@ -119,6 +119,7 @@ module Map::MapHelper
       s << '  var canvas = $("' + selector + '")[0];'
       s << "  var opts = #{map_options.to_json};"
       s << '  var map = new Openlayers_Map_Form(canvas, opts);'
+      s << '  window._map = map'
     else
       include_googlemaps_api(opts)
       map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
@@ -232,7 +233,7 @@ module Map::MapHelper
 
   ## show googlemaps
 
-  def show_googlemaps_link(map_point)
+  def google_maps_search_link(map_point)
     name = map_point["name"].presence || map_point["loc"].to_s
     name += "(#{t("map.links.google_maps_search")})"
 

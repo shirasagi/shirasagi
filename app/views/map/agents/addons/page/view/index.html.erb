@@ -12,10 +12,15 @@
   </header>
   <% end %>
   <div id="map-canvas" style="width: 100%; height: 400px;"></div>
-  <% if @cur_site.show_google_maps_search_enabled? %>
+  <% if @cur_site.show_google_maps_search_in_view.to_s.start_with?("show") %>
+    <%
+      if @cur_site.show_google_maps_search_in_view == "show_first"
+        map_points = map_points.take(1)
+      end
+    %>
     <ul class="map-markers">
       <% map_points.each do |map_point| %>
-        <li><%= show_googlemaps_link(map_point) %></li>
+        <li><%= google_maps_search_link(map_point) %></li>
       <% end %>
     </ul>
   <% end %>
