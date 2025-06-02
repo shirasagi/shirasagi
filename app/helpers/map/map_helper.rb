@@ -119,7 +119,6 @@ module Map::MapHelper
       s << '  var canvas = $("' + selector + '")[0];'
       s << "  var opts = #{map_options.to_json};"
       s << '  var map = new Openlayers_Map_Form(canvas, opts);'
-      s << '  window._map = map'
     else
       include_googlemaps_api(opts)
       map_options[:showGoogleMapsSearch] = show_google_maps_search(opts)
