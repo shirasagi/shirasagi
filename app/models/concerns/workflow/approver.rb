@@ -460,13 +460,9 @@ module Workflow::Approver
   end
 
   def can_approve_with_accessibility_errors?
-    Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? called: workflow_kind=#{workflow_kind}")
-    return true if workflow_kind != 'public' && workflow_kind != 'replace'
-    result = !accessibility_errors?(@cur_user, @cur_site)
-    Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? result: #{result}")
+    return true unless %w(public replace).include?(workflow_kind)
     return true if ignore_alert_to_syntax_check?
-    Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? result: #{result}")
-    result
+    !accessibility_errors?(@cur_user, @cur_site)
   end
 
   def workflow_back_to_previous?
@@ -608,17 +604,6 @@ module Workflow::Approver
           "resolve" => "html",
           "type" => "scalar"
         }
-      end
-    end
-
-    # siteのurl_scheme属性が未定義の場合はデフォルト値をセット
-    site = self.respond_to?(:site) ? self.site : nil
-    if site
-      unless site.respond_to?(:syntax_checker_url_scheme_attributes)
-        site.define_singleton_method(:syntax_checker_url_scheme_attributes) { %w(href src) }
-      end
-      unless site.respond_to?(:syntax_checker_url_scheme_schemes)
-        site.define_singleton_method(:syntax_checker_url_scheme_schemes) { %w(http https) }
       end
     end
 
