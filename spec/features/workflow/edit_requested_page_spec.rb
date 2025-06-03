@@ -101,7 +101,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
     end
     let(:show_path) { article_page_path(site, node, item) }
 
-    # アクセシビリティチェックを無視して保存する権限がある場合、承認ボタンが表示される
+    # アクセシビリティチェックを無視して保存する権限がある場合、公開承認ボタンが表示される
     context "when user with permission approves" do
       it do
         login_cms_user
@@ -147,7 +147,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    # アクセシビリティエラーがある記事の承認を試みた場合、承認ボタンが表示されず、差し戻しのみ可能
+    # アクセシビリティエラーがある記事の公開承認を試みた場合、承認ボタンが表示されず、差し戻しのみ可能
     context "when user without permission attempts to approve" do
       it do
         role = cms_role
