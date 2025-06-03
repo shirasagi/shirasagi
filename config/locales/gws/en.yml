@@ -182,8 +182,9 @@ en:
       gws/user/duty_hour: Duty hour
       gws/link: Link
       gws/site_usage: Usage amount
-      gws/user/affair_setting: Affair setting / Workflow2
-      gws/group/affair_setting: Affair setting / Workflow2
+      gws/user/affair_setting: Affair setting
+      gws/user/workflow2_setting: Workflow2 setting
+      gws/group/workflow2_setting: Workflow2 setting
       gws/user/staff_category: Staff category setting
       gws/circular/browsing_authority: Viewing permission
 
@@ -365,6 +366,8 @@ en:
         menu_attendance_state: Display attendance
         menu_affair_label: Display affair
         menu_affair_state: Display affair
+        menu_affair2_label: Display affair2
+        menu_affair2_state: Display affair2
         menu_daily_report_label: Display daily report
         menu_daily_report_state: Display daily report
         menu_bookmark_label: Display favorites
@@ -499,9 +502,10 @@ en:
       gws/addon/user/affair_setting:
         staff_category: Staff category
         staff_address_uid: Staff address uid
+      gws/addon/user/workflow2_setting:
         gws_superior_group_ids: Superior groups
         gws_superior_user_ids: Superior users
-      gws/addon/group/affair_setting:
+      gws/addon/group/workflow2_setting:
         superior_group_ids: Superior groups
         superior_user_ids: Superior users
       gws/contrast:
@@ -646,9 +650,10 @@ en:
     gws/addon/user/affair_setting:
       staff_category: Select staff category
       staff_address_uid: Input staff address uid
+    gws/addon/group/workflow2_setting:
       gws_superior_group_ids: Select superior groups
       gws_superior_user_ids: Select superior users
-    gws/addon/group/affair_setting:
+    gws/addon/group/workflow2_setting:
       superior_group_ids: Select superior groups
       superior_user_ids: Select superior users
 
