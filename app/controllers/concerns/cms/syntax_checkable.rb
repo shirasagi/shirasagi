@@ -4,8 +4,7 @@ module Cms::SyntaxCheckable
   private
 
   def syntax_check
-    contents = build_syntax_check_contents
-
+    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
     @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
     if @syntax_checker.errors.present?
       @syntax_checker.errors.each do |error|
@@ -14,32 +13,6 @@ module Cms::SyntaxCheckable
       return false
     end
     true
-  end
-
-  def build_syntax_check_contents
-    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
-
-    # ブロック入力（カラム値）もcontentsに追加
-    if @item.respond_to?(:column_values)
-      @item.column_values.each_with_index do |column_value, idx|
-        value =
-          if column_value.respond_to?(:in_wrap) && column_value.in_wrap.present?
-            column_value.in_wrap
-          elsif column_value.respond_to?(:value)
-            column_value.value
-          else
-            nil
-          end
-        next if value.blank?
-        contents << {
-          "id" => "column_#{idx}",
-          "content" => value,
-          "resolve" => "html",
-          "type" => "scalar"
-        }
-      end
-    end
-    contents
   end
 
   def auto_correct
