@@ -114,28 +114,6 @@ Rails.application.routes.draw do
       resources :achieve, path: 'achieve/:group/:year_month', only: [:index, :show]
     end
 
-    # books
-    namespace "book" do
-      get '/' => "main#index", as: :main
-      get '/:form' => "main#index", as: :form_main
-
-      resources :time_cards, path: 'time_cards/:fiscal_year', only: %i[index] do
-        get :print, on: :collection
-      end
-      resources :workday_overtime, path: 'workday_overtime/:year_month', only: %i[index] do
-        get :print, on: :collection
-      end
-      resources :holiday_overtime, path: 'holiday_overtime/:year_month', only: %i[index] do
-        get :print, on: :collection
-      end
-      resources :paid_leave, path: 'paid_leave/:year', only: %i[index] do
-        get :print, on: :collection
-      end
-      resources :other_leave, path: 'other_leave/:year', only: %i[index] do
-        get :print, on: :collection
-      end
-    end
-
     # management
     namespace "management" do
       get '/' => "main#index", as: :main

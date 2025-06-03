@@ -37,33 +37,6 @@
     <h3><%= link_to t("modules.gws/affair2/leave/achieve"), gws_affair2_leave_achieve_index_path(group: @cur_group, year_month: Time.zone.today.strftime('%Y%m')), class: 'readable' %></h3>
   <% end %>
 
-  <%
-    links = []
-    if Gws::Affair2::Book::TimeCard.allowed?(:read, @cur_user, site: @cur_site)
-      links << link_to(t("modules.gws/affair2/book/time_cards"), gws_affair2_book_form_main_path(form: :time_cards))
-    end
-    if Gws::Affair2::Book::WorkdayOvertime.allowed?(:read, @cur_user, site: @cur_site)
-      links << link_to(t("modules.gws/affair2/book/workday_overtime"), gws_affair2_book_form_main_path(form: :workday_overtime))
-    end
-    if Gws::Affair2::Book::HolidayOvertime.allowed?(:read, @cur_user, site: @cur_site)
-      links << link_to(t("modules.gws/affair2/book/holiday_overtime"), gws_affair2_book_form_main_path(form: :holiday_overtime))
-    end
-    if Gws::Affair2::Book::PaidLeave.allowed?(:read, @cur_user, site: @cur_site)
-      links << link_to(t("modules.gws/affair2/book/paid_leave"), gws_affair2_book_form_main_path(form: :paid_leave))
-    end
-    if Gws::Affair2::Book::OtherLeave.allowed?(:read, @cur_user, site: @cur_site)
-      links << link_to(t("modules.gws/affair2/book/other_leave"), gws_affair2_book_form_main_path(form: :other_leave))
-    end
-  %>
-  <% if links.present? %>
-    <h3><%= link_to t("modules.gws/affair2/book"), gws_affair2_book_main_path, class: 'readable' %></h3>
-    <ul class="narrow-page">
-      <% links.each do |link| %>
-        <li><%= link %></li>
-      <% end %>
-    </ul>
-  <% end %>
-
   <% if Gws::Affair2::Management.allowed?(:use, @cur_user, site: @cur_site) %>
     <h2><%= link_to t('modules.gws/affair2/management'), gws_affair2_management_main_path %></h2>
   <% end %>

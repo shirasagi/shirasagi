@@ -10,8 +10,6 @@ ja:
       monthly_leave: 休暇時間
       unit_monthly: 月単位
       unit_daily: 日単位
-
-    book:
       time_cards:
         title1: "%{year}年度前期 出勤簿"
         title2: "%{year}年度後期 出勤簿"
@@ -263,12 +261,6 @@ ja:
     gws/affair2/admin/special_leave: 特別休暇
     gws/affair2/admin/special_holiday: 組織の休日
     gws/affair2/admin/duty_notice: 警告文
-    gws/affair2/book: 様式
-    gws/affair2/book/time_cards: 出勤簿
-    gws/affair2/book/workday_overtime: 時間外(平日)
-    gws/affair2/book/holiday_overtime: 時間外(休日)
-    gws/affair2/book/paid_leave: 休暇(有給)
-    gws/affair2/book/other_leave: 休暇(その他)
     addons:
       gws/user/affair2_setting: 庶務事務2
       gws/affair2/attendance_setting/paid_leave: 年次有給休暇
@@ -587,12 +579,6 @@ ja:
     approve_private_gws_affair2_leave_files: 休暇申請の承認（所有）
     reroute_other_gws_affair2_leave_files: 休暇申請の経路変更（全て）
     reroute_private_gws_affair2_leave_files: 休暇申請の経路変更（所有）
-    # book
-    read_gws_affair2_time_card_books: "様式 出勤簿の閲覧"
-    read_gws_affair2_workday_overtime_books: "様式 時間外(平日)の閲覧"
-    read_gws_affair2_holiday_overtime_books: "様式 時間外(休日)の閲覧"
-    read_gws_affair2_paid_leave_books: "様式 休暇(有給)の閲覧"
-    read_gws_affair2_other_leave_books: "様式 休暇(その他)の閲覧"
     # achieve
     use_private_gws_affair2_overtime_achieves: 時間外累計の閲覧（自所属）
     use_sub_gws_affair2_overtime_achieves: 時間外累計の閲覧（所属下）
