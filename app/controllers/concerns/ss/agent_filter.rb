@@ -9,8 +9,8 @@ module SS::AgentFilter
   INHERITABLE_VARIABLES = begin
     allowed_variables = %i[
       @csrf_token
+      @cur_path @cur_main_path @filters @preview
       @task @cur_site @cur_node @cur_page @cur_part
-      @cur_path @cur_main_path @filters
     ]
     Set.new(allowed_variables)
   end.freeze
@@ -26,11 +26,15 @@ module SS::AgentFilter
   end
 
   def inherit_variables
-    variables = controller.instance_variables
-    variables = variables.select { INHERITABLE_VARIABLES.include?(_1.to_sym) }
-    variables.each do |name|
+    variable_names = controller.instance_variables
+    variable_names = variable_names.select { INHERITABLE_VARIABLES.include?(_1.to_sym) }
+    variable_names.each do |name|
       next if instance_variable_defined?(name)
-      instance_variable_set name, controller.instance_variable_get(name)
+
+      variable_value = controller.instance_variable_get(name)
+      next if variable_value.nil?
+
+      instance_variable_set name, variable_value
     end
   end
 
