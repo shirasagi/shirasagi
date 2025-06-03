@@ -85,4 +85,120 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "with article/page with accessibility errors" do
+    let(:node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }
+    let(:html_with_accessibility_error) do
+      <<~HTML
+        <div>
+          <img src="image.jpg">
+        </div>
+      HTML
+    end
+    let!(:item) do
+      create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id,
+             html: html_with_accessibility_error, state: "closed")
+    end
+    let(:show_path) { article_page_path(site, node, item) }
+
+    # アクセシビリティチェックを無視して保存する権限がある場合、承認ボタンが表示される
+    context "when user with permission approves" do
+      it do
+        login_cms_user
+        visit show_path
+
+        within ".mod-workflow-request" do
+          select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+          click_on I18n.t("workflow.buttons.select")
+          wait_for_cbox_opened do
+            click_on I18n.t("workflow.search_approvers.index")
+          end
+        end
+        within_cbox do
+          expect(page).to have_content(user1.long_name)
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          wait_for_cbox_closed do
+            click_on I18n.t("workflow.search_approvers.select")
+          end
+        end
+        within ".mod-workflow-request" do
+          fill_in "workflow[comment]", with: workflow_comment
+          click_on I18n.t("workflow.buttons.request")
+        end
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+
+        item.reload
+        expect(item.workflow_user_id).to eq cms_user.id
+        expect(item.workflow_state).to eq "request"
+        expect(item.state).to eq "closed"
+        expect(item.workflow_comment).to eq workflow_comment
+        expect(item.workflow_approvers.count).to eq 1
+        expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
+
+        login_user user1
+        visit show_path
+
+        expect(page).to have_button(I18n.t("workflow.buttons.approve"))
+
+        click_on I18n.t("workflow.buttons.approve")
+        click_on I18n.t("article.page_navi.back_to_index")
+        expect(page).to have_content(item.name)
+        expect(page).to have_content(I18n.t("ss.state.public"))
+      end
+    end
+
+    # アクセシビリティエラーがある記事の承認を試みた場合、承認ボタンが表示されず、差し戻しのみ可能
+    context "when user without permission attempts to approve" do
+      it do
+        role = cms_role
+        role.update(permissions: (role.permissions - %w(edit_cms_ignore_syntax_check)))
+        role.reload
+
+        # 申請処理
+        login_cms_user
+        visit show_path
+
+        within ".mod-workflow-request" do
+          select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+          click_on I18n.t("workflow.buttons.select")
+          wait_for_cbox_opened do
+            click_on I18n.t("workflow.search_approvers.index")
+          end
+        end
+        within_cbox do
+          expect(page).to have_content(user1.long_name)
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          wait_for_cbox_closed do
+            click_on I18n.t("workflow.search_approvers.select")
+          end
+        end
+        within ".mod-workflow-request" do
+          fill_in "workflow[comment]", with: workflow_comment
+          click_on I18n.t("workflow.buttons.request")
+        end
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+
+        item.reload
+        expect(item.workflow_user_id).to eq cms_user.id
+        expect(item.workflow_state).to eq "request"
+        expect(item.state).to eq "closed"
+        expect(item.workflow_comment).to eq workflow_comment
+        expect(item.workflow_approvers.count).to eq 1
+        expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
+
+        login_user user1
+        visit show_path
+
+        expect(page).to have_content(I18n.t("errors.messages.accessibility_check_required"))
+        expect(page).not_to have_button(I18n.t("workflow.buttons.approve"))
+        expect(page).to have_button(I18n.t("workflow.buttons.remand"))
+
+        click_on I18n.t("workflow.buttons.remand")
+
+        click_on I18n.t("article.page_navi.back_to_index")
+        expect(page).to have_content(item.name)
+        expect(page).to have_content(I18n.t("workflow.state.remand"))
+      end
+    end
+  end
 end
