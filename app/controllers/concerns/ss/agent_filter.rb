@@ -9,7 +9,7 @@ module SS::AgentFilter
   INHERITABLE_VARIABLES = begin
     allowed_variables = %i[
       @csrf_token
-      @cur_path @cur_main_path @filters @preview
+      @cur_path @cur_main_path @filters @preview @translate_target @translate_source
       @task @cur_site @cur_node @cur_page @cur_part
     ]
     Set.new(allowed_variables)
