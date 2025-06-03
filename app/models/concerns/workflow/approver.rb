@@ -455,15 +455,10 @@ module Workflow::Approver
     max_editable_approvers[:editable].to_i > 0
   end
 
-  def ignore_alert_to_syntax_check?
-    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_syntax_check))
-  end
-
   def can_approve_with_accessibility_errors?
-    Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? called: workflow_kind=#{workflow_kind}, ignore_alert_to_syntax_check?=#{ignore_alert_to_syntax_check?}")
+    Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? called: workflow_kind=#{workflow_kind}")
     return true if workflow_kind != 'public'
-    return true if ignore_alert_to_syntax_check?
-    result = !has_accessibility_errors?
+    result = !accessibility_errors?(@cur_user, @cur_site)
     Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? result: #{result}")
     result
   end
@@ -578,22 +573,28 @@ module Workflow::Approver
   end
 
   def build_syntax_check_contents
+    Rails.logger.debug("[workflow/approver] build_syntax_check_contents called")
     contents = []
-    if @item.respond_to?(:html)
-      contents << { "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }
+    if self.respond_to?(:html) && self.html.present?
+      Rails.logger.debug("[workflow/approver] build_syntax_check_contents: html found, html=#{self.html.inspect}")
+      contents << { "id" => "html", "content" => self.html, "resolve" => "html", "type" => "scalar" }
     end
 
-    # ブロック入力（カラム値）もcontentsに追加
-    if @item.respond_to?(:column_values)
-      @item.column_values.each_with_index do |column_value, idx|
+    if self.respond_to?(:column_values)
+      self.column_values.each_with_index do |column_value, idx|
         value =
           if column_value.respond_to?(:in_wrap) && column_value.in_wrap.present?
             column_value.in_wrap
           elsif column_value.respond_to?(:value)
             column_value.value
+          elsif column_value.respond_to?(:html)
+            column_value.html
+          elsif column_value.respond_to?(:text)
+            column_value.text
           else
             nil
           end
+        Rails.logger.debug("[workflow/approver] build_syntax_check_contents: column_value[#{idx}] class=#{column_value.class.name} value=#{value.inspect}")
         next if value.blank?
         contents << {
           "id" => "column_#{idx}",
@@ -603,18 +604,33 @@ module Workflow::Approver
         }
       end
     end
+
+    # siteのurl_scheme属性が未定義の場合はデフォルト値をセット
+    site = self.respond_to?(:site) ? self.site : nil
+    if site
+      unless site.respond_to?(:syntax_checker_url_scheme_attributes)
+        site.define_singleton_method(:syntax_checker_url_scheme_attributes) { %w(href src) }
+      end
+      unless site.respond_to?(:syntax_checker_url_scheme_schemes)
+        site.define_singleton_method(:syntax_checker_url_scheme_schemes) { %w(http https) }
+      end
+    end
+
+    Rails.logger.debug("[workflow/approver] build_syntax_check_contents: contents=#{contents.inspect}")
     contents
   end
 
-  def has_accessibility_errors?
+  def accessibility_errors?(user, site)
+    Rails.logger.debug("[workflow/approver] accessibility_errors? called user=#{user.id} site=#{site.id if site}")
     contents = build_syntax_check_contents
+    Rails.logger.debug("[workflow/approver] accessibility_errors? contents=#{contents.inspect}")
     return false if contents.blank?
 
     result = Cms::SyntaxChecker.check(cur_site: site, cur_user: user, contents: contents)
-    Rails.logger.debug("[workflow/approver] has_accessibility_errors? result.errors=#{result.errors.inspect}")
+    Rails.logger.debug("[workflow/approver] accessibility_errors? result.errors=#{result.errors.inspect}")
 
     accessibility_error = result.errors.any? { |error| error[:msg].present? }
-    Rails.logger.debug("[workflow/approver] has_accessibility_errors? accessibility_error=#{accessibility_error}")
+    Rails.logger.debug("[workflow/approver] accessibility_errors? accessibility_error=#{accessibility_error}")
     accessibility_error
   end
 

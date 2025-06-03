@@ -30,7 +30,6 @@
           <% end %>
           <dl class="see">
             <% if @item.workflow_kind.present? %>
-              <h1>テスト</h1>
               <dt><%= @model.t :workflow_kind %><%= @model.tt :workflow_kind %></dt>
               <dd><%= @item.label(:workflow_kind) %></dd>
             <% end %>
