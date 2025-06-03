@@ -19,7 +19,6 @@ module Cms::SyntaxCheckable
   def build_syntax_check_contents
     contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
 
-    # ブロック入力（カラム値）もcontentsに追加
     if @item.respond_to?(:column_values)
       @item.column_values.each_with_index do |column_value, idx|
         value =
@@ -27,6 +26,10 @@ module Cms::SyntaxCheckable
             column_value.in_wrap
           elsif column_value.respond_to?(:value)
             column_value.value
+          elsif column_value.respond_to?(:html)
+            column_value.html
+          elsif column_value.respond_to?(:text)
+            column_value.text
           else
             nil
           end
