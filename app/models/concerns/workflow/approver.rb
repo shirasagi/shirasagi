@@ -455,10 +455,16 @@ module Workflow::Approver
     max_editable_approvers[:editable].to_i > 0
   end
 
+  def ignore_alert_to_syntax_check?
+    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_syntax_check))
+  end
+
   def can_approve_with_accessibility_errors?
     Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? called: workflow_kind=#{workflow_kind}")
-    return true if workflow_kind != 'public'
+    return true if workflow_kind != 'public' && workflow_kind != 'replace'
     result = !accessibility_errors?(@cur_user, @cur_site)
+    Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? result: #{result}")
+    return true if ignore_alert_to_syntax_check?
     Rails.logger.debug("[workflow/approver] can_approve_with_accessibility_errors? result: #{result}")
     result
   end
