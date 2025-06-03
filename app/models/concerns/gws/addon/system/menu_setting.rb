@@ -5,7 +5,7 @@ module Gws::Addon::System::MenuSetting
   set_addon_type :organization
 
   included do
-    %w(portal notice reminder presence schedule todo affair2 affair daily_report attendance bookmark memo board
+    %w(portal notice reminder presence schedule todo affair affair2 daily_report attendance bookmark memo board
        faq qna workload report workflow2 circular monitor survey share shared_address personal_address
        staff_record links discussion).each do |name|
       define_menu_setting(name)
@@ -13,6 +13,7 @@ module Gws::Addon::System::MenuSetting
     define_menu_setting('contrast', default_state: 'hide')
     define_menu_setting('elasticsearch', default_state: 'hide')
     define_menu_setting('workflow', default_state: 'hide')
+    define_menu_setting('affair', default_state: 'hide')
   end
 
   module ClassMethods

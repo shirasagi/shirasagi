@@ -182,8 +182,9 @@ ja:
       gws/user/duty_hour: 勤務時間
       gws/link: リンク
       gws/site_usage: 使用量
-      gws/user/affair_setting: 庶務事務・ワークフロー2
-      gws/group/affair_setting: 庶務事務・ワークフロー2
+      gws/user/affair_setting: 庶務事務
+      gws/user/workflow2_setting: ワークフロー2
+      gws/group/workflow2_setting: ワークフロー2
       gws/user/staff_category: 職員区分
       gws/circular/browsing_authority: 閲覧権限
 
@@ -498,12 +499,13 @@ ja:
         charge_tel: 担当電話
         charge_address: 担当住所
         divide_duties: 分掌事務
+      gws/addon/user/workflow2_setting:
+        gws_superior_group_ids: 上位グループ
+        gws_superior_user_ids: 上位ユーザー
       gws/addon/user/affair_setting:
         staff_category: 職員区分
         staff_address_uid: 宛名番号
-        gws_superior_group_ids: 上位グループ
-        gws_superior_user_ids: 上位ユーザー
-      gws/addon/group/affair_setting:
+      gws/addon/group/workflow2_setting:
         superior_group_ids: 上位グループ
         superior_user_ids: 上位ユーザー
       gws/contrast:
@@ -645,12 +647,13 @@ ja:
         - 並び順を入力します。
       in_parent:
         - 親フォルダーを選択してください。
+    gws/addon/group/workflow2_setting:
+      gws_superior_group_ids: 上位グループを入力します。
+      gws_superior_user_ids: 上位ユーザーを入力します。
     gws/addon/user/affair_setting:
       staff_category: 職員区分を設定します。
       staff_address_uid: 宛名番号を入力します。
-      gws_superior_group_ids: 上位グループを入力します。
-      gws_superior_user_ids: 上位ユーザーを入力します。
-    gws/addon/group/affair_setting:
+    gws/addon/group/workflow2_setting:
       superior_group_ids: 上位グループを入力します。
       superior_user_ids: 上位ユーザーを入力します。
 

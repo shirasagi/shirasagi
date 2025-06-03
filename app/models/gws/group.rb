@@ -3,7 +3,7 @@ class Gws::Group
   include SS::Relation::File
   include Gws::Referenceable
   include Gws::SitePermission
-  include Gws::Addon::Group::AffairSetting
+  include Gws::Addon::Group::Workflow2Setting
   include Gws::Addon::Notice::GroupSetting
   include Gws::Addon::Schedule::GroupSetting
   include Gws::Addon::Facility::GroupSetting

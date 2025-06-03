@@ -164,9 +164,11 @@ class Gws::UsersController < ApplicationController
     items = @model.unscoped.site(@cur_site).order_by_title(@cur_site)
     filename = "gws_users_#{Time.zone.now.to_i}.csv"
     webmail_support = params[:webmail_support].present?
+    affair_support = @cur_site.menu_visible?(:affair)
     response.status = 200
     send_enum(
-      Gws::UserCsv::Exporter.enum_csv(items, site: @cur_site, encoding: @item.encoding, webmail_support: webmail_support),
+      Gws::UserCsv::Exporter.enum_csv(items, site: @cur_site, encoding: @item.encoding,
+        webmail_support: webmail_support, affair_support: affair_support),
       type: "text/csv; charset=#{@item.encoding}", filename: filename
     )
   end
@@ -175,9 +177,11 @@ class Gws::UsersController < ApplicationController
     @items = @model.none
     filename = 'gws_users_template.csv'
     webmail_support = params[:webmail_support].present?
+    affair_support = @cur_site.menu_visible?(:affair)
     response.status = 200
     send_enum(
-      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site, webmail_support: webmail_support),
+      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site,
+        webmail_support: webmail_support, affair_support: affair_support),
       type: 'text/csv; charset=Shift_JIS', filename: filename
     )
   end
