@@ -200,5 +200,60 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         expect(page).to have_content(I18n.t("workflow.state.remand"))
       end
     end
+
+    # 権限がないユーザーでも「非公開」承認は可能であること
+    context "when user without permission approves for closed" do
+      it do
+        role = cms_role
+        role.update(permissions: (role.permissions - %w(edit_cms_ignore_syntax_check)))
+        role.reload
+
+        item.update!(state: "public")
+
+        # 申請処理（非公開申請）
+        login_cms_user
+        visit show_path
+
+        within ".mod-workflow-request" do
+          select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
+          click_on I18n.t("workflow.buttons.select")
+          wait_for_cbox_opened do
+            click_on I18n.t("workflow.search_approvers.index")
+          end
+        end
+        within_cbox do
+          expect(page).to have_content(user1.long_name)
+          find("tr[data-id='1,#{user1.id}'] input[type=checkbox]").click
+          wait_for_cbox_closed do
+            click_on I18n.t("workflow.search_approvers.select")
+          end
+        end
+        within ".mod-workflow-request" do
+          fill_in "workflow[comment]", with: workflow_comment
+          click_on I18n.t("workflow.buttons.request")
+        end
+        expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+
+        item.reload
+        expect(item.workflow_user_id).to eq cms_user.id
+        expect(item.workflow_state).to eq "request"
+        expect(item.state).to eq "public"
+        expect(item.workflow_comment).to eq workflow_comment
+        expect(item.workflow_approvers.count).to eq 1
+        expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
+
+        # 承認者としてログイン
+        login_user user1
+        visit show_path
+
+        # 非公開申請の場合は承認ボタンが表示され、承認できる
+        expect(page).to have_button(I18n.t("workflow.buttons.approve"))
+
+        click_on I18n.t("workflow.buttons.approve")
+        click_on I18n.t("article.page_navi.back_to_index")
+        expect(page).to have_content(item.name)
+        expect(page).to have_content(I18n.t("ss.state.closed"))
+      end
+    end
   end
 end
