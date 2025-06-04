@@ -455,16 +455,6 @@ module Workflow::Approver
     max_editable_approvers[:editable].to_i > 0
   end
 
-  def ignore_alert_to_syntax_check?
-    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_syntax_check))
-  end
-
-  def can_approve_with_accessibility_errors?
-    return true unless %w(public replace).include?(workflow_kind)
-    return true if ignore_alert_to_syntax_check?
-    !accessibility_errors?(@cur_user, @cur_site)
-  end
-
   def workflow_back_to_previous?
     workflow_on_remand == 'back_to_previous'
   end
@@ -574,6 +564,23 @@ module Workflow::Approver
     true
   end
 
+  # アクセシビリティチェック
+  def accessibility_check_target?
+    is_a?(Cms::Page) || is_a?(Article::Page)
+  end
+
+  def ignore_alert_to_syntax_check?
+    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_syntax_check))
+  end
+
+  # 記事ページのみアクセシビリティチェックを行う
+  def can_approve_with_accessibility_errors?
+    return true unless accessibility_check_target?
+    return true unless %w(public replace).include?(workflow_kind)
+    return true if ignore_alert_to_syntax_check?
+    !accessibility_errors?(@cur_user, @cur_site)
+  end
+
   def build_syntax_check_contents
     contents = []
     if self.respond_to?(:html) && self.html.present?
@@ -607,6 +614,7 @@ module Workflow::Approver
   end
 
   def accessibility_errors?(user, site)
+    return false unless accessibility_check_target?
     contents = build_syntax_check_contents
     return false if contents.blank?
 
