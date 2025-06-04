@@ -8,7 +8,7 @@ class Gws::Workflow2::RouteMigrationJob < Gws::ApplicationJob
       each_route do |route|
         migrate_route(route)
 
-        task.log "#{route}: 移行しました。"
+        task.log "#{route.name}: 移行しました。"
       end
     end
   end
