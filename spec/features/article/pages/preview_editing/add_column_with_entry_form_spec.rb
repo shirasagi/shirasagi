@@ -106,6 +106,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       let(:column12_caption1) { unique_id }
       let(:column13_youtube_id1) { unique_id }
       let(:column13_url1) { "https://www.youtube.com/watch?v=#{column13_youtube_id1}" }
+      let(:column13_title1) { unique_id }
       let(:column14_page1) { [ selectable_page1, selectable_page2, selectable_page3 ].sample }
 
       it do
@@ -560,6 +561,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             within ".column-value-cms-column-youtube" do
               fill_in "item[column_values][][in_wrap][url]", with: column13_url1
+              fill_in "item[column_values][][in_wrap][title]", with: column13_title1
             end
 
             click_on I18n.t("ss.buttons.save")
@@ -570,6 +572,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
         expect(page).to have_css("[data-column-name='#{column13.name}'] iframe[src='https://www.youtube.com/embed/#{column13_youtube_id1}']")
+        expect(page).to have_css("[data-column-name='#{column13.name}'] iframe[title='#{column13_title1}']")
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 13
@@ -577,6 +580,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         column_value13 = column_values.last
         expect(column_value13.column_id).to eq column13.id
         expect(column_value13.youtube_id).to eq column13_youtube_id1
+        expect(column_value13.title).to eq column13_title1
         expect(column_value13.order).to eq 12
 
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }

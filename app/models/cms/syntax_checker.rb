@@ -34,6 +34,7 @@ module Cms::SyntaxChecker
     Cms::SyntaxChecker::AdjacentAChecker,
     Cms::SyntaxChecker::AreaAltChecker,
     Cms::SyntaxChecker::EmbeddedMediaChecker,
+    Cms::SyntaxChecker::IframeTitleChecker,
     Cms::SyntaxChecker::ImgAltChecker,
     Cms::SyntaxChecker::ImgDataUriSchemeChecker,
     Cms::SyntaxChecker::LinkTextChecker,

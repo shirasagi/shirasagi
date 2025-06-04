@@ -193,6 +193,9 @@ ja:
     column_url_field:
       link_label_placeholder: リンクテキスト
       link_url_placeholder: URL
+    column_youtube_title_field:
+      field_label: YouTube動画タイトル
+      field_placeholder: 画面読み上げなどで使う動画のタイトルを入力してください。
     visit_article: 記事を見る
 
     adobe_reader:
@@ -255,6 +258,7 @@ ja:
       setting: 設定する
       apply_richmenu: リッチメニューを反映する
       add_template: "テンプレートを追加する（最大5個）"
+      youtube_title: YouTubeからタイトルを取得する
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
@@ -1500,6 +1504,8 @@ ja:
         text: テキスト
       cms/column/value/youtube:
         url: URL
+        title: YouTube動画タイトル
+        generic_title: YouTube動画
         width: 幅
         height: 高さ
         auto_width: 画面幅に合わせる
@@ -1880,6 +1886,10 @@ ja:
       check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: リンクのテキストを確認してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
+      input_youtube_url: YouTubeのURLを入力してください。
+      youtube_title_fetch_failed: タイトルの取得に失敗しました。
+      network_error: 通信エラーが発生しました。
       replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
@@ -1924,6 +1934,8 @@ ja:
           - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
+        set_iframe_title:
+          - iframe要素またはframe要素には、アクセシビリティのためにtitle属性を設定する必要があります。
         alt_is_included_in_filename:
           - 代替テキストの一部もしくは全部がファイル名に含まれています。
           - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
@@ -3393,6 +3405,12 @@ ja:
         - ボタンに表示するテキストを入力してください。
         - 「印刷する」「帳票出力」など、自由に設定できます。
         - 省略した場合は「パーツ名」が表示されます。
+    cms/column/value/youtube:
+      title:
+      - "YouTube動画のタイトルを入力してください（アクセシビリティ向上のため）。"
+      - "「YouTubeからタイトルを取得」ボタンで自動取得もできます。"
+      - "自動取得後に内容を修正することも可能です。"
+      - "未入力の場合は「YouTube動画」がタイトルに設定されます。"
 
   all_content:
     page_id: ページID
