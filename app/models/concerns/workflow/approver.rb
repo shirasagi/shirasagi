@@ -575,10 +575,8 @@ module Workflow::Approver
   end
 
   def build_syntax_check_contents
-    Rails.logger.debug("[workflow/approver] build_syntax_check_contents called")
     contents = []
     if self.respond_to?(:html) && self.html.present?
-      Rails.logger.debug("[workflow/approver] build_syntax_check_contents: html found, html=#{self.html.inspect}")
       contents << { "id" => "html", "content" => self.html, "resolve" => "html", "type" => "scalar" }
     end
 
@@ -596,7 +594,6 @@ module Workflow::Approver
           else
             nil
           end
-        Rails.logger.debug("[workflow/approver] build_syntax_check_contents: column_value[#{idx}] class=#{column_value.class.name} value=#{value.inspect}")
         next if value.blank?
         contents << {
           "id" => "column_#{idx}",
@@ -606,22 +603,16 @@ module Workflow::Approver
         }
       end
     end
-
-    Rails.logger.debug("[workflow/approver] build_syntax_check_contents: contents=#{contents.inspect}")
     contents
   end
 
   def accessibility_errors?(user, site)
-    Rails.logger.debug("[workflow/approver] accessibility_errors? called user=#{user.id} site=#{site.id if site}")
     contents = build_syntax_check_contents
-    Rails.logger.debug("[workflow/approver] accessibility_errors? contents=#{contents.inspect}")
     return false if contents.blank?
 
     result = Cms::SyntaxChecker.check(cur_site: site, cur_user: user, contents: contents)
-    Rails.logger.debug("[workflow/approver] accessibility_errors? result.errors=#{result.errors.inspect}")
 
     accessibility_error = result.errors.any? { |error| error[:msg].present? }
-    Rails.logger.debug("[workflow/approver] accessibility_errors? accessibility_error=#{accessibility_error}")
     accessibility_error
   end
 
