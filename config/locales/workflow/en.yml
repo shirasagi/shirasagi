@@ -209,6 +209,7 @@ en:
       forced_update: Run even if an e-mail address is not set.
       no_approvers: No approver found.
       branch_is_already_existed: A replacement page has been created.
+      accessibility_check_required: Accessibility errors exist. You need permission to ignore the accessibility check.
 
   tooltip:
     workflow/approver:
