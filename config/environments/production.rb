@@ -69,7 +69,7 @@ Rails.application.configure do
 
   # Log to STDOUT by default
   # config.logger = ActiveSupport::Logger.new(STDOUT)
-  config.logger = ActiveSupport::Logger.new("#{Rails.root}/log/production.log")
+  #config.logger = ActiveSupport::Logger.new("#{Rails.root}/log/production.log")
 
   # Prepend all log lines with the following tags.
   config.log_tags = [ :request_id ]
