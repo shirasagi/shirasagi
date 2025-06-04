@@ -95,4 +95,10 @@ Rails.application.routes.draw do
       post "oauth2/token" => "oauth2#token"
     end
   end
+
+  namespace :cms do
+    namespace :apis do
+      get 'youtube_title', to: 'youtube#fetch_title'
+    end
+  end
 end

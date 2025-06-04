@@ -2,6 +2,24 @@
 <% controller ||= false %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
   <%= Cms::Column::Value::Youtube.t("url") %><%= text_field_tag("#{f.object_name}[][in_wrap][url]", value.try(:url) || (value.try(:youtube_id) ? "https://youtu.be/#{value.youtube_id}" : ""), column.form_options(:url).merge(id: nil, style: "width: 70%;")) %><br />
+  <div class="column-youtube-title">
+    <%= Cms::Column::Value::Youtube.t("title") %><%= Cms::Column::Value::Youtube.tt("title") %>
+    <%= text_field_tag(
+      "#{f.object_name}[][in_wrap][title]",
+      value.try(:title),
+      column.form_options(:title).merge(
+        id: nil,
+        style: "width: 70%;",
+        placeholder: I18n.t("cms.column_youtube_title_field.field_placeholder"),
+        data: {
+          syntax_check: "value",
+          syntax_check_name: column.name,
+          check_presence: I18n.t('cms.column_youtube_title_field.field_label'),
+        }
+      )
+    ) %>
+    <%= button_tag I18n.t("cms.buttons.youtube_title"), type: "button", class: "btn youtube-title-check" %>
+  </div>
   <div class="column-youtube-left">
     <%= check_box_tag("#{f.object_name}[][in_wrap][auto_width]", "enabled", value.try(:auto_width) == "enabled", column.form_options(:auto_width).merge(id: "auto-width")) %><label for="auto-width"><%= Cms::Column::Value::Youtube.t("auto_width") %></label>
   </div>
@@ -9,4 +27,30 @@
     <%= Cms::Column::Value::Youtube.t("width") %><%= text_field_tag("#{f.object_name}[][in_wrap][width]", (value.try(:width) || 640), column.form_options.merge(id: nil, style: "width: 10%;")) %>
     <%= Cms::Column::Value::Youtube.t("height") %><%= text_field_tag("#{f.object_name}[][in_wrap][height]", (value.try(:height) || 360), column.form_options.merge(id: nil, style: "width: 10%;")) %>
   </div>
+
+  <%= jquery do %>
+    var $youtubeTitleCheck = $(".youtube-title-check");
+    $youtubeTitleCheck.off("click");
+    $youtubeTitleCheck.on("click", function() {
+      var $block = $(this).closest('.column-value');
+      var $urlField = $block.find('input[name*="[in_wrap][url]"]');
+      var url = $urlField.val();
+      if (!url) {
+        alert("<%= (I18n.t('errors.messages.input_youtube_url')) %>");
+        return;
+      }
+      var $titleField = $block.find('input[name*="[in_wrap][title]"]');
+      $.get("<%= cms_apis_youtube_title_path %>", { url: url })
+        .done(function(data) {
+          if (data.title) {
+            $titleField.val(data.title);
+          } else {
+            alert("<%= (I18n.t('errors.messages.youtube_title_fetch_failed')) %>" + (data.error ? ': ' + data.error : ''));
+          }
+        })
+        .fail(function() {
+          alert("<%= (I18n.t('errors.messages.network_error')) %>");
+        });
+    });
+  <% end %>
 <% end %>
