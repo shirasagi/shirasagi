@@ -599,6 +599,13 @@ ja:
       list_origin:
         deployment: 配備された階層に応じてリストを作成
         content: アクセスされたページ/フォルダーに応じてリストを作成
+      origin_of_page:
+        parent1: 対象が配置されているフォルダー内のリスト
+        parent2: 対象が配置されているフォルダーの親フォルダー内のリスト
+      origin_of_node:
+        parent1: 対象が配置されているフォルダー内のリスト
+        parent2: 対象が配置されているフォルダーの親フォルダー内のリスト
+        self_node: 対象（自フォルダー）内のリスト
       clipboard_copy_target:
         url: URL
         css_selector: CSSセレクター
@@ -1205,6 +1212,8 @@ ja:
       cms/addon/node_list:
         node_routes: フォルダー属性
         list_origin: 起点
+        origin_of_page: ページの場合
+        origin_of_node: フォルダーの場合
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
