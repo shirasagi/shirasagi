@@ -51,40 +51,44 @@ module Chorg::MongoidSupport
   # rubocop:disable Layout::EmptyLineBetweenDefs
   def with_entities(models, scope = {})
     models.each do |model|
-      criteria = model.where(scope)
-      all_ids = criteria.pluck(:id)
-      all_ids.each_slice(20) do |ids|
-        entities = criteria.in(id: ids).to_a
-        entities.each do |entity|
-          entity = entity.try(:becomes_with_topic) || entity
-          next unless set_site(entity)
-          entity.try(:allow_other_user_files)
+      task.performance.collect_model_update(model) do
+        criteria = model.where(scope)
+        all_ids = criteria.pluck(:id)
+        all_ids.each_slice(20) do |ids|
+          entities = criteria.in(id: ids).to_a
+          entities.each do |entity|
+            task.performance.collect_entity_update(entity) do
+              entity = entity.try(:becomes_with_topic) || entity
+              next unless set_site(entity)
+              entity.try(:allow_other_user_files)
 
-          entity_user = (entity.try(:user) || @cur_user)
-          entity_user.try(:cur_site=, @cur_site)
-          entity.try(:cur_user=, entity_user)
+              entity_user = (entity.try(:user) || @cur_user)
+              entity_user.try(:cur_site=, @cur_site)
+              entity.try(:cur_user=, entity_user)
 
-          entity.try(:skip_twitter_post=, true)
-          entity.try(:skip_line_post=, true)
-          def entity.post_to_line(execute: :inline); end
-          def entity.post_to_twitter(execute: :inline); end
+              entity.try(:skip_twitter_post=, true)
+              entity.try(:skip_line_post=, true)
+              def entity.post_to_line(execute: :inline); end
+              def entity.post_to_twitter(execute: :inline); end
 
-          entity.try(:skip_assoc_opendata=, true)
-          def entity.invoke_opendata_job(action); end
+              entity.try(:skip_assoc_opendata=, true)
+              def entity.invoke_opendata_job(action); end
 
-          entity.instance_variable_set(:@base_model, model)
-          def entity.base_model
-            return @base_model
-          end
+              entity.instance_variable_set(:@base_model, model)
+              def entity.base_model
+                return @base_model
+              end
 
-          logger_tags = [ "#{entity.class}(#{entity.id})" ]
-          if entity.respond_to?(:site_id)
-            logger_tags << "site:#{entity.try(:site_id)}"
-          end
-          Rails.logger.tagged(*logger_tags) do
-            entity.move_changes
-            yield entity
-            Rails.logger.info { "done" }
+              logger_tags = [ "#{entity.class}(#{entity.id})" ]
+              if entity.respond_to?(:site_id)
+                logger_tags << "site:#{entity.try(:site_id)}"
+              end
+              Rails.logger.tagged(*logger_tags) do
+                entity.move_changes
+                yield entity
+                Rails.logger.info { "done" }
+              end
+            end
           end
         end
       end
@@ -246,17 +250,19 @@ module Chorg::MongoidSupport
   end
 
   def delete_groups(group_ids)
-    group_ids.each do |id|
-      group = self.class.group_class.where(id: id).first
-      if group.present?
-        if delete_entity(group)
-          # put_log("deleted group: #{group.name}")
-          task.log("  \"#{group.name}\"")
-        else
-          # put_log("failed to delete group: #{group.name}")
-          task.log("  \"#{group.name}\": 削除失敗")
+    task.performance.collect_delete_groups do
+      group_ids.each do |id|
+        group = self.class.group_class.where(id: id).first
+        if group.present?
+          if delete_entity(group)
+            # put_log("deleted group: #{group.name}")
+            task.log("  \"#{group.name}\"")
+          else
+            # put_log("failed to delete group: #{group.name}")
+            task.log("  \"#{group.name}\": 削除失敗")
+          end
+          remove_group_from_site(group)
         end
-        remove_group_from_site(group)
       end
     end
   end
