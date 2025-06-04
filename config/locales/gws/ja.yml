@@ -499,12 +499,12 @@ ja:
         charge_tel: 担当電話
         charge_address: 担当住所
         divide_duties: 分掌事務
-      gws/addon/user/workflow2_setting:
-        gws_superior_group_ids: 上位グループ
-        gws_superior_user_ids: 上位ユーザー
       gws/addon/user/affair_setting:
         staff_category: 職員区分
         staff_address_uid: 宛名番号
+      gws/addon/user/workflow2_setting:
+        gws_superior_group_ids: 上位グループ
+        gws_superior_user_ids: 上位ユーザー
       gws/addon/group/workflow2_setting:
         superior_group_ids: 上位グループ
         superior_user_ids: 上位ユーザー
@@ -650,7 +650,7 @@ ja:
     gws/addon/user/affair_setting:
       staff_category: 職員区分を設定します。
       staff_address_uid: 宛名番号を入力します。
-    gws/addon/group/workflow2_setting:
+    gws/addon/user/workflow2_setting:
       gws_superior_group_ids: 上位グループを入力します。
       gws_superior_user_ids: 上位ユーザーを入力します。
     gws/addon/group/workflow2_setting:

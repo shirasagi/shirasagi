@@ -650,7 +650,7 @@ en:
     gws/addon/user/affair_setting:
       staff_category: Select staff category
       staff_address_uid: Input staff address uid
-    gws/addon/group/workflow2_setting:
+    gws/addon/user/workflow2_setting:
       gws_superior_group_ids: Select superior groups
       gws_superior_user_ids: Select superior users
     gws/addon/group/workflow2_setting:
