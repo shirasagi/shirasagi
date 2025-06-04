@@ -13,7 +13,7 @@ class Gws::Affair2::Aggregation::Downloader::Base
     v = I18n.t("gws/affair2.aggregation.#{unit}.#{key}", **opts)
     return v if !v.is_a?(Array)
     return v[0] if v.size <= 1
-     "#{v[0]}/#{v.drop(1).join}"
+    "#{v[0]}/#{v.drop(1).join}"
   end
 
   def monthly_threshold

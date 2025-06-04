@@ -56,7 +56,7 @@ class Gws::Affair2::TimeCardForms::LeaveController < ApplicationController
       @time_card.histories.create(
         date: @record.date, field_name: field_name, action: "modify",
         time: Time.zone.now, reason: @item.reason)
-      flash[:notice] = I18n.t("ss.notice.saved")
+      flash.now[:notice] = I18n.t("ss.notice.saved")
       render :update
     else
       render :index

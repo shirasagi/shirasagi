@@ -45,7 +45,7 @@ class Gws::Affair2::Overtime::RecordsController < ApplicationController
 
     user_ids = @overtime_file.workflow_approvers.map { |item| item[:user_id] }.select(&:present?)
     to_users = Gws::User.in(id: user_ids).to_a
-    to_users.select! { |user| user.id != @cur_user.id }
+    to_users.reject! { |user| user.id == @cur_user.id }
     to_users.select! { |user| user.use_notice?(@overtime_file) }
 
     notifier = Gws::Affair2::Notifier.new(@overtime_file)
@@ -57,14 +57,12 @@ class Gws::Affair2::Overtime::RecordsController < ApplicationController
     return if @first_confirmed.errors.present?
 
     to_users = [@overtime_file.user]
-    to_users.select! { |user| user.id != @cur_user.id }
+    to_users.reject! { |user| user.id == @cur_user.id }
     to_users.select! { |user| user.use_notice?(@overtime_file) }
 
     notifier = Gws::Affair2::Notifier.new(@overtime_file)
     notifier.deliver_record_confirmed(to_users)
   end
-
-  public
 
   def show
   end

@@ -56,10 +56,10 @@ class Gws::Affair2::Attendance::TimeCardsController < ApplicationController
     @monthly_attendance = Gws::Affair2::AttendanceSetting.current_setting(@cur_site, @cur_user, @cur_month)
     @monthly_time_card = @time_cards.where(date: @cur_month).first
 
-    if params[:action] != "download"
-      @monthly_loader = Gws::Affair2::Loader::Monthly::View.new(@monthly_time_card, view_context)
-    else
+    if params[:action] == "download"
       @monthly_loader = Gws::Affair2::Loader::Monthly::Csv.new(@monthly_time_card)
+    else
+      @monthly_loader = Gws::Affair2::Loader::Monthly::View.new(@monthly_time_card, view_context)
     end
     @monthly_loader.load
   end
@@ -88,7 +88,7 @@ class Gws::Affair2::Attendance::TimeCardsController < ApplicationController
   end
 
   def setting
-    raise "404"if !@monthly_time_card.allowed?(:format, @cur_user, site: @cur_site)
+    raise "404" if !@monthly_time_card.allowed?(:format, @cur_user, site: @cur_site)
   end
 
   def create

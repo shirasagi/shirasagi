@@ -17,7 +17,10 @@ class Gws::Affair2::Overtime::HolidayFilesController < ApplicationController
   end
 
   def set_crumbs
-    @crumbs << [ @cur_site.menu_affair2_label || t('modules.gws/affair2/attendance'), gws_affair2_overtime_holiday_files_main_path ]
+    @crumbs << [
+      @cur_site.menu_affair2_label || t('modules.gws/affair2/attendance'),
+      gws_affair2_overtime_holiday_files_main_path
+    ]
     @crumbs << [ t('modules.gws/affair2/overtime/holiday_file'), gws_affair2_overtime_holiday_files_path ]
   end
 

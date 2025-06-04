@@ -45,7 +45,7 @@ class Gws::Affair2::TimeCardForms::OvertimeRecordsController < ApplicationContro
       file = record.file
       user_ids = file.workflow_approvers.map { |item| item[:user_id] }.select(&:present?)
       to_users = Gws::User.in(id: user_ids).to_a
-      to_users.select! { |user| user.id != @cur_user.id }
+      to_users.reject! { |user| user.id == @cur_user.id }
       to_users.select! { |user| user.use_notice?(file) }
 
       notifier = Gws::Affair2::Notifier.new(file)
@@ -61,7 +61,7 @@ class Gws::Affair2::TimeCardForms::OvertimeRecordsController < ApplicationContro
   def update
     @item.attributes = params.require(:item).permit(in_records: {})
     if @item.save
-      flash[:notice] = I18n.t("ss.notice.saved")
+      flash.now[:notice] = I18n.t("ss.notice.saved")
       render :update
     else
       render :index

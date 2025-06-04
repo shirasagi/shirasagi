@@ -50,7 +50,7 @@ class Gws::Affair2::TimeCardForms::RegularCloseController < ApplicationControlle
     @item.attributes = params.require(:item).permit(:hour, :minute)
     if @item.save
       @time_card.update_regular_state
-      flash[:notice] = I18n.t("ss.notice.saved")
+      flash.now[:notice] = I18n.t("ss.notice.saved")
       render :update
     else
       render :index

@@ -46,7 +46,7 @@ class Gws::Affair2::TimeCardForms::RegularBreakMinutesController < ApplicationCo
     @item.attributes = params.require(:item).permit(:minutes)
     if @item.save
       @time_card.update_regular_state
-      flash[:notice] = I18n.t("ss.notice.saved")
+      flash.now[:notice] = I18n.t("ss.notice.saved")
       render :update
     else
       render :index

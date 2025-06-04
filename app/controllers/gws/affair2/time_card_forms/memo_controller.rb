@@ -36,7 +36,7 @@ class Gws::Affair2::TimeCardForms::MemoController < ApplicationController
   def update
     @item.attributes = params.require(:item).permit(:memo)
     if @item.save
-      flash[:notice] = I18n.t("ss.notice.saved")
+      flash.now[:notice] = I18n.t("ss.notice.saved")
       render :update
     else
       render :index

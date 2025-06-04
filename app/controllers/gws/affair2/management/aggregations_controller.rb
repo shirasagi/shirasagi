@@ -52,7 +52,7 @@ class Gws::Affair2::Management::AggregationsController < ApplicationController
   def index
     raise "403" unless Gws::Affair2::Aggregation.allowed?(:use, @cur_user, site: @cur_site)
 
-    @s = { keyword: params[:keyword ]}
+    @s = { keyword: params[:keyword] }
     @items = items.search(@s).
       page(params[:page]).
       per(50)
