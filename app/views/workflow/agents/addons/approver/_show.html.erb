@@ -47,6 +47,11 @@
           <div class="buttons">
             <% if workflow_approver[:state] == 'request'  %>
               <% if @item.can_approve_with_accessibility_errors? %>
+                <% if @item.accessibility_errors?(@cur_user, @cur_site) %>
+                  <div class="error-message">
+                    <%= t("errors.messages.check_html") %>
+                  </div>
+                <% end %>
                 <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
               <% else %>
                 <div class="error-message">
