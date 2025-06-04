@@ -97,7 +97,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
     end
     let!(:item) do
       create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id,
-             html: html_with_accessibility_error, state: "closed")
+            html: html_with_accessibility_error, state: "closed")
     end
     let(:show_path) { article_page_path(site, node, item) }
 
@@ -139,6 +139,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         visit show_path
 
         expect(page).to have_button(I18n.t("workflow.buttons.approve"))
+        expect(page).to have_content(I18n.t("errors.messages.check_html"))
 
         click_on I18n.t("workflow.buttons.approve")
         click_on I18n.t("article.page_navi.back_to_index")
@@ -248,6 +249,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
 
         # 非公開申請の場合は承認ボタンが表示され、承認できる
         expect(page).to have_button(I18n.t("workflow.buttons.approve"))
+        expect(page).to have_content(I18n.t("errors.messages.check_html"))
 
         click_on I18n.t("workflow.buttons.approve")
         click_on I18n.t("article.page_navi.back_to_index")
@@ -329,6 +331,7 @@ comment: ''})
         visit branch_path
 
         expect(page).to have_button(I18n.t("workflow.buttons.approve"))
+        expect(page).to have_content(I18n.t("errors.messages.check_html"))
 
         click_on I18n.t("workflow.buttons.approve")
         click_on I18n.t("article.page_navi.back_to_index")
