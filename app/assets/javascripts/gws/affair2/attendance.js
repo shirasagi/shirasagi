@@ -9,7 +9,7 @@ Gws_Affair2_Attendance.prototype.renderCommon = function() {
   var self = this;
 
   // reason tooltips events
-  this.$el.find('.reason-tooltip').on('click', function(ev) {
+  this.$el.find('.reason-tooltip').on('click', function() {
     self.hideToolbar();
     self.hideTooltip();
     $(this).find('.reason').show();
@@ -38,7 +38,7 @@ Gws_Affair2_Attendance.prototype.renderToday = function() {
       }
     });
   });
-  this.$el.find('.today .punch').on("click", function (ev) {
+  this.$el.find('.today .punch').on("click", function () {
     var message = $(this).data("confirm");
     if (message) {
       if (! confirm(message)) {
@@ -71,7 +71,7 @@ Gws_Affair2_Attendance.prototype.renderMonthly = function() {
       $("#cboxLoadedContent").find('[name="ref"]').val(self.ref);
     }
   });
-  this.$el.find('.cell-toolbar .punch').on("click", function (ev) {
+  this.$el.find('.cell-toolbar .punch').on("click", function () {
     var message = $(this).data("confirm");
     if (message) {
       if (! confirm(message)) {
@@ -93,15 +93,15 @@ Gws_Affair2_Attendance.prototype.renderMonthly = function() {
   });
 
   // cell events
-  this.$el.find('[data-mode="punch"]').on("click", function(ev) {
+  this.$el.find('[data-mode="punch"]').on("click", function() {
     self.onPunch($(this));
     return false;
   });
-  this.$el.find('[data-mode="edit"]').on("click", function(ev) {
+  this.$el.find('[data-mode="edit"]').on("click", function() {
     self.onEdit($(this));
     return false;
   });
-  this.$el.find('[data-mode="none"]').on("click", function(ev) {
+  this.$el.find('[data-mode="none"]').on("click", function() {
     self.hideToolbar();
     self.hideTooltip();
     self.setFocus($(this));

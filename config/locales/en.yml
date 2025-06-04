@@ -63,6 +63,12 @@ en:
       - :year
       - :month
       - :day
+    wareki:
+      M: meiji
+      T: taisyo
+      S: showa
+      H: heisei
+      R: reiwa
   datetime:
     distance_in_words:
       about_x_hours:
@@ -132,6 +138,8 @@ en:
       exclusion: Already reserved.
       greater_than: Must be a value greater than %{count}.
       greater_than_or_equal_to: Must be a value equal to or greater than %{count}.
+      after_than: Must be a value after than %{time}.
+      after_than_or_equal_to: Must be a value equal to or after than %{time}.
       inclusion: Not in the list.
       invalid: Invalid value.
       invalid_file_type: Invalid file format.

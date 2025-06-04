@@ -1,4 +1,4 @@
 <%= jquery do %>
-  location.href = "<%== @ref %>";
+  location.href = "<%== trusted_url!(@ref) %>";
 <% end %>
 <%= loading %>
