@@ -74,9 +74,12 @@ class SS::Task
       time = result = nil
       @scopes.push(scope)
 
-      time = Benchmark.realtime do
-        result = yield
+      if block_given?
+        time = Benchmark.realtime do
+          result = yield
+        end
       end
+      time ||= 0
 
       puts_performance_log(time)
 
@@ -203,6 +206,17 @@ class SS::Task
     def collect_entity_update(entity, &block)
       scope = { type: :entity_update, model: entity.class.name, key: entity.to_key }
       collect(scope, &block)
+    end
+
+    def collect_callback(kind, entity, overall_started, kind_started, kind_finished, overall_finished)
+      before_elapsed = kind_started - overall_started
+      kind_elapsed = kind_finished - kind_started
+      after_elapsed = overall_finished - kind_finished
+      scope = {
+        type: :callback, callback_kind: kind, model: entity.class.name, key: entity.to_key,
+        before_elapsed: before_elapsed, kind_elapsed: kind_elapsed, after_elapsed: after_elapsed
+      }
+      collect(scope)
     end
 
     def increment_view_stats(event)

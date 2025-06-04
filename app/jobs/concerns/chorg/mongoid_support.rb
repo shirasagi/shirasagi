@@ -79,6 +79,27 @@ module Chorg::MongoidSupport
                 return @base_model
               end
 
+              def entity.run_callbacks(kind, *args, **options, &block)
+                overall_started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+                kind_started = kind_finished = overall_started
+
+                ret = super(kind, *args, **options) do
+                  kind_started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+                  ret = block.call if block
+                  kind_finished = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+                  ret
+                end
+
+                overall_finished = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+
+                if SS::Task::PerformanceCollector.current
+                  SS::Task::PerformanceCollector.current.collect_callback(
+                    kind, self, overall_started, kind_started, kind_finished, overall_finished)
+                end
+
+                ret
+              end
+
               logger_tags = [ "#{entity.class}(#{entity.id})" ]
               if entity.respond_to?(:site_id)
                 logger_tags << "site:#{entity.try(:site_id)}"
