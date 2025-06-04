@@ -27,7 +27,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
     end
     let(:approver_attachment_use_level1) { %w(enabled disabled).sample }
     let(:approver_attachment_use_level1_label) { I18n.t("ss.options.state.#{approver_attachment_use_level1}") }
-    let(:superior_label) { I18n.t("mongoid.attributes.gws/addon/group/affair_setting.superior_user_ids") }
+    let(:superior_label) { I18n.t("mongoid.attributes.gws/addon/group/workflow2_setting.superior_user_ids") }
 
     it do
       #

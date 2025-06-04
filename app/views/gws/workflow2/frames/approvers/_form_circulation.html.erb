@@ -86,7 +86,7 @@
                 user = circulation_hash[:user]
                 user ||= find_circulator(circulation_hash[:user_id])
                 user_type = "superior"
-                name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")})"
+                name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids")})"
               when "special"
                 user_type = "special"
                 user = circulation_hash[:user]

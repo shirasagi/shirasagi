@@ -16,7 +16,7 @@
   <dt class="depth-2"><%= t("modules.addons.gws/workflow/approver_view") %></dt>
   <dd class="depth-2"></dd>
 
-  <dt class="depth-3"><%= t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids") %><%= @model.tt :workflow_route_approver_superior %></dt>
+  <dt class="depth-3"><%= t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids") %><%= @model.tt :workflow_route_approver_superior %></dt>
   <dd class="depth-3"><%= f.select :workflow_route_approver_superior, @item.workflow_route_approver_superior_options %></dd>
 
   <dt class="depth-3"><%= Gws::UserTitle.model_name.human %><%= @model.tt :workflow_route_approver_title %></dt>
@@ -28,7 +28,7 @@
   <dt class="depth-2"><%= t("modules.addons.gws/workflow/circulation_view") %></dt>
   <dd class="depth-2"></dd>
 
-  <dt class="depth-3"><%= t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids") %><%= @model.tt :workflow_route_circulation_superior %></dt>
+  <dt class="depth-3"><%= t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids") %><%= @model.tt :workflow_route_circulation_superior %></dt>
   <dd class="depth-3"><%= f.select :workflow_route_circulation_superior, @item.workflow_route_circulation_superior_options %></dd>
 
   <dt class="depth-3"><%= Gws::UserTitle.model_name.human %><%= @model.tt :workflow_route_circulation_title %></dt>
