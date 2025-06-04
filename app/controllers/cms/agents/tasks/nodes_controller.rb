@@ -42,8 +42,10 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
 
   def each_node_with_rescue(&block)
     each_node do |node|
-      rescue_with(rescue_p: rescue_p) do
-        yield node
+      Rails.logger.tagged(node.filename) do
+        rescue_with(rescue_p: rescue_p) do
+          yield node
+        end
       end
     end
   end
@@ -90,31 +92,33 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
     @task.log "# #{@site.name}"
     @task.performance.header(name: "generate node performance log at #{Time.zone.now.iso8601}")
     @task.performance.collect_site(@site) do
-      if @site.generate_locked?
-        @task.log(@site.t(:generate_locked))
-        return
-      end
+      Rails.logger.tagged(@site.host) do
+        if @site.generate_locked?
+          @task.log(@site.t(:generate_locked))
+          return
+        end
 
-      generate_root_pages unless @node
+        generate_root_pages unless @node
 
-      each_node_with_rescue do |node|
-        next unless node
-        next unless node.public?
-        next unless node.public_node?
-        next if node.try(:any_ancestor_nodes_for_member_enabled?)
+        each_node_with_rescue do |node|
+          next unless node
+          next unless node.public?
+          next unless node.public_node?
+          next if node.try(:any_ancestor_nodes_for_member_enabled?)
 
-        @task.performance.collect_node(node) do
-          # ex: "article/page" => "article/agents/nodes/page"
-          cont = node.route.sub("/", "/agents/nodes/")
-          next if SS::Agent.invoke_action(
-            cont, :generate,
-            task: @task, cur_site: @site, cur_node: node,
-            cur_path: "#{node.url}index.html", cur_main_path: "#{node.url.sub(@site.url, "/")}index.html"
-          )
+          @task.performance.collect_node(node) do
+            # ex: "article/page" => "article/agents/nodes/page"
+            cont = node.route.sub("/", "/agents/nodes/")
+            next if SS::Agent.invoke_action(
+              cont, :generate,
+              task: @task, cur_site: @site, cur_node: node,
+              cur_path: "#{node.url}index.html", cur_main_path: "#{node.url.sub(@site.url, "/")}index.html"
+            )
 
-          # ex: "article/page" => "article/agents/tasks/node/pages"
-          cont = node.route.sub("/", "/agents/tasks/node/").pluralize
-          SS::Agent.invoke_action(cont, :generate, task: @task, site: @site, node: node)
+            # ex: "article/page" => "article/agents/tasks/node/pages"
+            cont = node.route.sub("/", "/agents/tasks/node/").pluralize
+            SS::Agent.invoke_action(cont, :generate, task: @task, site: @site, node: node)
+          end
         end
       end
     end
