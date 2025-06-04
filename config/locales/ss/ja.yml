@@ -133,6 +133,7 @@ ja:
       copy: 複製する
       command: コマンド
       input: 入力する
+      index: 一覧へ
       make_them_public: 公開にする
       make_them_close: 非公開にする
       delete: 削除する
@@ -322,7 +323,7 @@ ja:
       not_allowed_to_publish: このページを公開することは許可されていません
       not_allowed_to_close: このページを非公開にすることは許可されていません
       submit_image_canvas: 画像のリサイズを確定するにはツールバーの ✓ をクリックしてください。
-
+      run: 実行してよろしいですか？
     notice:
       saved: 保存しました。
       not_saved_successfully: 正常に保存できませんでした。

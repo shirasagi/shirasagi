@@ -1,0 +1,18 @@
+<table class="index data-table">
+  <thead>
+    <tr>
+      <th><%= "対象年" %></th>
+      <th colspan="3"><%= "年次有給" %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% years_options.each do |name, year| %>
+      <tr <% if year == Time.zone.today.year %>style="background: #fff5ce;"<% end %>>
+        <td><%= name %></td>
+        <td><%= link_to "設定一覧", gws_affair2_admin_paid_leave_settings_path(year: year) %></td>
+        <td><%= link_to "インポート", import_gws_affair2_admin_paid_leave_settings_path(year: year) %></td>
+        <td><%= link_to "時間数出力", download_remind_gws_affair2_admin_paid_leave_settings_path(year: year) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

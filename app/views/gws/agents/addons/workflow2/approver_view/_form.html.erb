@@ -13,7 +13,7 @@
   approver_options += tag.option(t('gws/workflow2.specify_at_time_of_application'), value: 'specify_at_time_of_application', data: { type: 'special' })
 
   if @cur_site.workflow_route_approver_superior == 'show'
-    approver_options0 = tag.optgroup(label: t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), class: "superior") { tag.option(t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), value: 'superior', data: { type: 'superior' }) }
+    approver_options0 = tag.optgroup(label: t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids"), class: "superior") { tag.option(t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids"), value: 'superior', data: { type: 'superior' }) }
     approver_options0 += approver_options
   else
     approver_options0 = approver_options.dup
@@ -129,7 +129,7 @@
               @item.approvers_at(level).each do |approver|
                 case approver[:user_type]
                 when "superior"
-                  render_row.call(level, approver[:_id], approver[:editable] == 1, approver[:alternatable] == 1, "superior", "superior", t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"))
+                  render_row.call(level, approver[:_id], approver[:editable] == 1, approver[:alternatable] == 1, "superior", "superior", t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids"))
                 when Gws::User.name
                   user = id_user_map[approver[:user_id]]
                   if user

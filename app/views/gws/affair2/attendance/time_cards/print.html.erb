@@ -1,0 +1,12 @@
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index } ]] %>
+
+<div class="sheet gws-attendance">
+  <div class="attendance-box-title"><%= I18n.t('gws/attendance.formats.time_card_full_name', user_name: @monthly_time_card.user.name, month: I18n.l(@cur_month.to_date, format: :attendance_year_month)) %></div>
+  <div class="main">
+    <%= render partial: "monthly/time_card", locals: { month: @cur_month, item: @monthly_time_card, loader: @monthly_loader } %>
+  </div>
+</div>
+
+<%= jquery do %>
+  SS_Font.render();
+<% end %>

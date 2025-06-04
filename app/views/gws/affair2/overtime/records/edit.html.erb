@@ -1,0 +1,50 @@
+<%= jquery do %>
+$(".overtime-results .break-time").each(function(){
+  new Gws_Affair2_Breaktime(this);
+});
+<% end %>
+
+<% if !@item.entered? %>
+  <div style="color: red; padding-bottom: 5px;">結果を入力してください。</div>
+<% elsif !@item.confirmed? %>
+  <div style="color: red; padding-bottom: 5px;">承認者は結果を確認済みにしてください。</div>
+<% else %>
+  <div style="padding-bottom: 5px;">結果は確認済みです。</div>
+<% end %>
+
+<%= form_for :item, url: { action: :update }, html: { method: :put } do |f| %>
+  <%= error_messages_for :item %>
+
+  <table class="index overtime-results">
+    <thead>
+      <tr class="item-head">
+        <th class="time"><%= "開始時間" %></th>
+        <th class="time"><%= "終了時間" %></th>
+        <th class="time"><%= "休憩時間 (開始時間～終了時間)" %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr class="item">
+        <td class="time">
+          <%= f.select :in_start_hour, @item.in_start_hour_options %>
+          <%= f.select :in_start_minute, @item.in_start_minute_options %>
+        </td>
+        <td class="time">
+          <%= f.select :in_close_hour, @item.in_close_hour_options %>
+          <%= f.select :in_close_minute, @item.in_close_minute_options %>
+        </td>
+        <td class="time break-time" data-date="<%= @item.date.strftime("%Y-%m-%d") %>">
+          <%= f.select :in_break_start_hour, @item.in_break_start_hour_options, {}, { class: "start-hour" } %>
+          <%= f.select :in_break_start_minute, @item.in_break_start_minute_options, {}, { class: "start-minute" } %>
+          <%= t("ss.wave_dash") %>
+          <%= f.select :in_break_close_hour, @item.in_break_close_hour_options, {}, { class: "close-hour" } %>
+          <%= f.select :in_break_close_minute, @item.in_break_close_minute_options, {}, { class: "close-minute" } %>
+          <span class="diff"></span>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <%= f.submit t("ss.buttons.save"), class: :btn %>
+  <%= link_to t("ss.links.back"), { action: :show }, class: :btn %>
+<% end %>

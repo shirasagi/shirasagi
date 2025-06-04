@@ -1,0 +1,48 @@
+<nav class="mod-navi current-navi sub-features">
+  <h2><%= link_to @cur_site.menu_affair2_label || t('modules.gws/affair2'), gws_affair2_main_path, class: 'icon-affair' %></h2>
+  <h2 class="open"><%= link_to t('modules.gws/affair2/attendance'), gws_affair2_attendance_main_path, class: 'open' %></h2>
+  <h3><%= link_to t('modules.gws/affair2/attendance/time_card'), gws_affair2_attendance_time_card_main_path, class: 'readable' %></h3>
+  <% if Gws::Affair2::Attendance::Groups.allowed_private?(:use, @cur_user, site: @cur_site, cur_group: @cur_group) %>
+    <h3><%= link_to t('modules.gws/affair2/attendance/group'), gws_affair2_attendance_groups_main_path, class: 'readable' %></h3>
+  <% end %>
+
+  <% if Gws::Affair2::Overtime::WorkdayFile.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('modules.gws/affair2/overtime/workday_file'), gws_affair2_overtime_workday_files_main_path, class: 'readable' %></h3>
+    <ul class="narrow-page">
+      <li><%= link_to  t('modules.gws/affair2/overtime/workday_file/mine'), gws_affair2_overtime_workday_files_path(state: "mine") %></li>
+      <li><%= link_to  t('modules.gws/affair2/overtime/workday_file/approve'), gws_affair2_overtime_workday_files_path(state: "approve") %></li>
+      <li><%= link_to  t('modules.gws/affair2/overtime/workday_file/all'), gws_affair2_overtime_workday_files_path(state: "all") %></li>
+    </ul>
+  <% end %>
+  <% if Gws::Affair2::Overtime::HolidayFile.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('modules.gws/affair2/overtime/holiday_file'), gws_affair2_overtime_holiday_files_main_path, class: 'readable' %></h3>
+    <ul class="narrow-page">
+      <li><%= link_to  t('modules.gws/affair2/overtime/holiday_file/mine'), gws_affair2_overtime_holiday_files_path(state: "mine") %></li>
+      <li><%= link_to  t('modules.gws/affair2/overtime/holiday_file/approve'), gws_affair2_overtime_holiday_files_path(state: "approve") %></li>
+      <li><%= link_to  t('modules.gws/affair2/overtime/holiday_file/all'), gws_affair2_overtime_holiday_files_path(state: "all") %></li>
+    </ul>
+  <% end %>
+  <% if Gws::Affair2::Leave::File.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t('modules.gws/affair2/leave/file'), gws_affair2_leave_files_main_path, class: 'readable' %></h3>
+    <ul class="narrow-page">
+      <li><%= link_to  t('modules.gws/affair2/leave/file/mine'), gws_affair2_leave_files_path(state: "mine") %></li>
+      <li><%= link_to  t('modules.gws/affair2/leave/file/approve'), gws_affair2_leave_files_path(state: "approve") %></li>
+      <li><%= link_to  t('modules.gws/affair2/leave/file/all'), gws_affair2_leave_files_path(state: "all") %></li>
+    </ul>
+  <% end %>
+  <% if Gws::Affair2::Overtime::Achieve.allowed_private?(:use, @cur_user, site: @cur_site, cur_group: @cur_group) %>
+    <h3><%= link_to t("modules.gws/affair2/overtime/achieve"), gws_affair2_overtime_achieve_index_path(group: @cur_group, year_month: Time.zone.today.strftime('%Y%m')), class: 'readable' %></h3>
+  <% end %>
+  <% if Gws::Affair2::Leave::Achieve.allowed_private?(:use, @cur_user, site: @cur_site, cur_group: @cur_group) %>
+    <h3><%= link_to t("modules.gws/affair2/leave/achieve"), gws_affair2_leave_achieve_index_path(group: @cur_group, year_month: Time.zone.today.strftime('%Y%m')), class: 'readable' %></h3>
+  <% end %>
+
+  <% if Gws::Affair2::Management.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t('modules.gws/affair2/management'), gws_affair2_management_main_path %></h2>
+  <% end %>
+  <% if Gws::Affair2::Admin.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t('modules.gws/affair2/admin'),  gws_affair2_admin_main_path %></h2>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

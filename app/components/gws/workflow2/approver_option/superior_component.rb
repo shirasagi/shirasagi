@@ -35,10 +35,10 @@ class Gws::Workflow2::ApproverOption::SuperiorComponent < ApplicationComponent
 
   def call
     cache_component do
-      tag.optgroup(label: I18n.t("mongoid.attributes.gws/addon/group/affair_setting.superior_user_ids")) do
+      tag.optgroup(label: I18n.t("mongoid.attributes.gws/addon/group/workflow2_setting.superior_user_ids")) do
         label = gws_public_user_long_name(superior.long_name)
         tag.option(
-          "#{label} (#{I18n.t("mongoid.attributes.gws/addon/group/affair_setting.superior_user_ids")})",
+          "#{label} (#{I18n.t("mongoid.attributes.gws/addon/group/workflow2_setting.superior_user_ids")})",
           value: superior.id, data: { type: 'superior' })
       end
     end

@@ -1,4 +1,4 @@
-module Gws::Addon::Group::AffairSetting
+module Gws::Addon::Group::Workflow2Setting
   extend ActiveSupport::Concern
   extend SS::Addon
 

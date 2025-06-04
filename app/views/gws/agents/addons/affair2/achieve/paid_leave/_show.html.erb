@@ -1,0 +1,40 @@
+<dl class="see">
+  <dt>有効時間数</dt>
+  <dd><%= @item.effective_minutes_label %></dd>
+
+  <dt>取得時間数</dt>
+  <dd><%= @item.used_minutes_label %></dd>
+
+  <dt>残時間数</dt>
+  <dd><%= @item.remind_minutes_label %></dd>
+
+  <dt>申請一覧</dt>
+  <dd>
+    <% if @item.paid_leave_files.present? %>
+      <table class="index overtime-results">
+        <thead>
+          <th><%= "申請" %></th>
+          <th><%= "休暇区分" %></th>
+          <th><%= "取得時間" %></th>
+        </thead>
+        <tbody>
+          <% @item.paid_leave_files.each do |item| %>
+            <tr>
+              <td>
+                <% if item.allowed?(:read, @cur_user, site: @cur_site) %>
+                  <%= link_to item.long_name, item.private_show_path %>
+                <% else %>
+                  <%= item.name %>
+                <% end %>
+              </td>
+              <td><%= item.label :leave_type %></td>
+              <td><%= format_minutes(item.records.map(&:minutes).sum) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% else %>
+      <%= "申請はありません" %>
+    <% end %>
+  </dd>
+</dl>

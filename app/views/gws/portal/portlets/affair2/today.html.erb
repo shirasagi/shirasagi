@@ -1,0 +1,152 @@
+<%
+  def attendance_date?(date)
+    true
+  end
+
+  def format_time(date, time)
+    Gws::Affair2::Utils.format_time(date, time)
+  end
+
+  def format_minutes(minutes)
+    Gws::Affair2::Utils.format_minutes(minutes)
+  end
+
+  def punchable?(item)
+    @punchable ||= {}
+    @punchable[item.id] ||= item.unlocked?
+  end
+
+  def editable?(item)
+    @editable ||= {}
+    @editable[item.id] ||= (item.allowed?(:edit, @cur_user, site: @cur_site) && item.unlocked?)
+  end
+
+  def time_card_forms_path(field_name, mode, *args)
+    path = "gws_affair2_time_card_forms_#{mode}_#{field_name}_path"
+    send(path, *args)
+  end
+
+  def render_punchable(item, record, field_name, &block)
+    mode = "none"
+    if punchable?(item) && record.find_latest_history(field_name).blank? && attendance_date?(record.date)
+      mode = "punch"
+    elsif editable?(item)
+      mode = "edit"
+    end
+    url = time_card_forms_path(field_name, mode, id: item, day: record.date.day) if mode != "none"
+    capture(mode, url, &block)
+  end
+
+  def render_editable(item, record, field_name, &block)
+    mode = "none"
+    if punchable?(item) && attendance_date?(record.date)
+      mode = "edit"
+    elsif editable?(item)
+      mode = "edit"
+    end
+    url = time_card_forms_path(field_name, mode, id: item, day: record.date.day) if mode != "none"
+    capture(mode, url, &block)
+  end
+
+  def render_reason(record, field_name)
+    history = record.find_latest_history(field_name)
+    return if history.nil?
+    return if history.reason.blank?
+
+    tag.div(class: "reason-tooltip") do
+      '<i class="material-icons md-13">&#xE0C9;</i>'.html_safe +
+      tag.div(class: "reason") do
+        tag.div { history.reason } +
+        ss_time_tag(history.created)
+      end
+    end
+  end
+%>
+<%= jquery do %>
+var attendance = new Gws_Affair2_Attendance('.gws-attendance', "<%== request.path %>");
+attendance.renderToday();
+<% end %>
+<div class="main-box gws-affair2 gws-attendance">
+  <div class="portlet-title"><%= @portlet.name %></div>
+  <div style="padding: 2px;"><%= I18n.l(date.to_date, format: :full) %></div>
+  <div class="today-wrap">
+    <table class="today">
+      <thead>
+        <th class="enter"><%= Gws::Affair2::Attendance::Record.t(:enter) %></th>
+        <th class="leave"><%= Gws::Affair2::Attendance::Record.t(:leave) %></th>
+        <th class="break_time"><%= Gws::Affair2::Attendance::Record.t(:break_time) %></th>
+        <th class="memo"><%= Gws::Affair2::Attendance::Record.t(:memo) %></th>
+      </thead>
+      <tbody>
+        <% if item.unlocked? %>
+          <tr class="action">
+            <td class="time enter">
+              <%= render_punchable(item, record, "enter") do |mode, url| %>
+                <% if mode == "punch" %>
+                  <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url, confirm: t('gws/attendance.confirm.punch') }) %>
+                <% elsif mode == "edit" %>
+                  <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url }) %>
+                <% elsif mode == "none" %>
+                  <%= button_tag(t("gws/attendance.buttons.edit"), name: mode, type: 'button', class: "#{mode} btn", disabled: "disabled") %>
+                <% end %>
+              <% end %>
+            </td>
+            <td class="time leave">
+              <%= render_punchable(item, record, "leave") do |mode, url| %>
+                <% if mode == "punch" %>
+                  <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url, confirm: t('gws/attendance.confirm.punch') }) %>
+                <% elsif mode == "edit" %>
+                  <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url }) %>
+                <% elsif mode == "none" %>
+                  <%= button_tag(t("gws/attendance.buttons.edit"), name: mode, type: 'button', class: "#{mode} btn", disabled: "disabled") %>
+                <% end %>
+              <% end %>
+            </td>
+            <td class="time break-time">
+              <%= render_editable(item, record, "break_minutes") do |mode, url| %>
+                <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url }) %>
+              <% end %>
+            </td>
+            <td class="memo">
+              <%= render_editable(item, record, "memo") do |mode, url| %>
+                <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url }) %>
+              <% end %>
+            </td>
+          </tr>
+          <tr class="info">
+            <td class="time enter">
+              <%= format_time(record.date, record.enter) %>
+              <%= render_reason(record, "enter") %>
+            </td>
+            <td class="time leave">
+              <%= format_time(record.date, record.leave) %>
+              <%= render_reason(record, "leave") %>
+            </td>
+            <td class="time break-time">
+              <%= format_minutes(record.break_minutes) %>
+            </td>
+            <td class="memo"><%= record.memo %></td>
+          </tr>
+        <% else %>
+          <tr>
+            <td colspan="<%= 8 %>"><%= t('gws/attendance.already_locked') %></td>
+          </tr>
+          <tr class="info">
+            <td class="time enter">
+              <%= format_time(record.date, record.enter) %>
+              <%= render_reason(record, "enter") %>
+            </td>
+            <td class="time leave">
+              <%= format_time(record.date, record.leave) %>
+              <%= render_reason(record, "leave") %>
+            </td>
+            <td class="time break-time">
+              <%= format_minutes(record.break_minutes) %>
+            </td>
+            <td class="memo"><%= record.try(:memo) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</div>

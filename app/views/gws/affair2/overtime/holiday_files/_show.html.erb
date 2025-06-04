@@ -1,0 +1,39 @@
+<%
+  def format_minutes(minutes)
+    (minutes.to_i > 0) ? "#{minutes / 60}:#{format("%02d", (minutes % 60))}" : "--:--"
+  end
+%>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :date %></dt>
+  <dd><%= @item.start_close_label %></dd>
+
+  <dt><%= @model.t :expense %></dt>
+  <dd><%= @item.label :expense %></dd>
+
+  <% if @item.compens? %>
+    <dt><%= @model.t :compens_date %></dt>
+    <dd><%= l(@item.compens_date.to_date, format: :long) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :remark %></dt>
+  <dd><%= @item.remark %></dd>
+
+  <dt><%= @model.t :status %></dt>
+  <dd><%= @item.label :status %></dd>
+  <dt class="depth-2"><%= @model.t :created %></dt>
+  <dd class="depth-2"><%= @item.created.strftime("%Y/%m/%d %H:%M") %></dd>
+  <dt class="depth-2"><%= @model.t :updated %></dt>
+  <dd class="depth-2"><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% if @item.requested %>
+  <dt class="depth-2"><%= @model.t :requested %></dt>
+  <dd class="depth-2"><%= @item.requested.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% end %>
+  <% if @item.approved %>
+  <dt class="depth-2"><%= @model.t :approved %></dt>
+  <dd class="depth-2"><%= @item.approved.strftime("%Y/%m/%d %H:%M") %></dd>
+  <% end %>
+</dl>

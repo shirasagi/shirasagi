@@ -5,6 +5,7 @@ class Gws::User
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::User::PublicDuty
+  include Gws::Addon::User::Workflow2Setting
   include Gws::Addon::User::AffairSetting
   include Gws::Addon::User::DutyHour
   include Gws::Addon::User::CustomForm

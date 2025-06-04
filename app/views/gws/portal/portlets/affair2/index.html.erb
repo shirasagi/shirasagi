@@ -1,0 +1,26 @@
+<%
+  return unless Gws::Affair2::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site)
+
+  @cur_attendance = Gws::Affair2::AttendanceSetting.current_setting(@cur_site, @cur_user, Time.zone.now)
+  today = @cur_site.affair2_attendance_date
+
+  # create_new_time_card_if_necessary
+  if @cur_attendance
+    date = today.beginning_of_month
+    today_time_card = Gws::Affair2::Attendance::TimeCard.site(@cur_site).user(@cur_user).where(date: date).first
+    if today_time_card.nil?
+      today_time_card = Gws::Affair2::Attendance::TimeCard.new
+      today_time_card.cur_site = @cur_site
+      today_time_card.cur_user = @cur_user
+      today_time_card.date = date
+      today_time_card.attendance_setting = @cur_attendance
+      today_time_card.save!
+    end
+    today_record = today_time_card.records.where(date: today).first
+  end
+%>
+<% if @cur_attendance %>
+<%= render template: "gws/portal/portlets/affair2/today", locals: { date: today, item: today_time_card, record: today_record } %>
+<% else %>
+<%= render template: "gws/portal/portlets/affair2/errors", locals: { today: today } %>
+<% end %>

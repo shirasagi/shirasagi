@@ -1,0 +1,58 @@
+<%
+  # 再申請は不可
+  if @item.workflow_state == Workflow::Approver::WORKFLOW_STATE_APPROVE
+    @hide_workflow_request = true
+  end
+%>
+
+<%= jquery do %>
+var options = {};
+options.request_url = "<%= request.path %>";
+options.user_id = <%= @cur_user.id %>;
+options.errors = {};
+options.errors.not_select = "<%= @model.t :workflow_approvers %><%= t("errors.messages.not_select") %>";
+
+options.paths = {};
+var wizard_path = "<%= @item.try(:workflow_wizard_path).to_s %>";
+if (wizard_path) {
+  options.paths["wizard"] = wizard_path;
+}
+var pages_path = "<%= @item.try(:workflow_pages_path).to_s %>";
+if (pages_path) {
+  options.paths["pages"] = pages_path;
+}
+
+var workflow = new SS_Workflow('.mod-workflow', options);
+<% end %>
+
+<div class="mod-workflow">
+  <% if !@hide_workflow_approve %>
+    <% if @item.workflow_requested? %>
+      <% if @item.allowed?(:approve, @cur_user, site: @cur_site) %>
+        <!-- 承認フォーム -->
+        <%= render "gws/agents/addons/affair2/approver/show_approve" %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if !@hide_workflow_request %>
+    <% if !@item.workflow_requested? %>
+      <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <!-- 申請フォーム -->
+        <%= render "gws/agents/addons/affair2/approver/show_request" %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if @item.workflow_state == @model::WORKFLOW_STATE_APPROVE %>
+    <!-- 回覧者のフォーム -->
+    <%= render "gws/agents/addons/affair2/approver/show_circulations" %>
+  <% end %>
+
+  <% if @item.workflow_state? %>
+    <!-- ワークフロー詳細表示 -->
+    <div class="mod-workflow-view">
+      <%= render "gws/agents/addons/affair2/approver/show_workflow" %>
+    </div>
+  <% end %>
+</div>

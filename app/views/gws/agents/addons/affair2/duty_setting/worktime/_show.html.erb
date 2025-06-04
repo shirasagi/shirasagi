@@ -1,0 +1,31 @@
+<dl class="see">
+  <dt><%= @model.t :worktime_day_minute %></dt>
+  <dd><%= format_minutes(@item.worktime_day_minute) %></dd>
+
+  <dt><%= @model.t :worktime %></dt>
+  <% if @item.worktime_of_wday_enabled? %>
+    <dd><%= t("gws/affair2.links.set_worktime_of_wday") %></dd>
+    <% (0..6).each do |wday| %>
+      <dt class="depth-2"><%= t("date.day_names")[wday] %></dt>
+      <dd class="depth-2">
+        <%
+          start_at_hour = @item.send("start_at_hour_#{wday}")
+          start_at_minute = @item.send("start_at_minute_#{wday}")
+          close_at_hour = @item.send("close_at_hour_#{wday}")
+          close_at_minute = @item.send("close_at_minute_#{wday}")
+        %>
+        <%= "#{start_at_hour}:#{format("%02d", @item.start_at_minute)}" %>
+        <%= t("ss.wave_dash") %>
+        <%= "#{close_at_hour}:#{format("%02d", @item.close_at_minute)}" %>
+        <%= "(休憩#{@item.send("break_at_minutes_#{wday}")}分)" %>
+      </dd>
+    <% end %>
+  <% else %>
+    <dd>
+      <%= "#{@item.start_at_hour}:#{format("%02d", @item.start_at_minute)}" %>
+      <%= t("ss.wave_dash") %>
+      <%= "#{@item.close_at_hour}:#{format("%02d", @item.close_at_minute)}" %>
+      <%= "(休憩#{@item.break_minutes_at}分)" %>
+    </dd>
+  <% end %>
+</dl>

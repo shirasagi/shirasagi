@@ -185,6 +185,7 @@ class Gws::UserCsv::Importer
       define_importer_ldap(importer)
       define_importer_public_duty(importer)
       define_importer_affair(importer)
+      define_importer_workflow2(importer)
       define_importer_gws_role(importer)
       define_importer_sys_role(importer)
       define_importer_webmail_role(importer)
@@ -322,6 +323,9 @@ class Gws::UserCsv::Importer
       item.staff_category = from_label(value, item.staff_category_options).presence
     end
     importer.simple_column :staff_address_uid
+  end
+
+  def define_importer_workflow2(importer)
     importer.simple_column :gws_superior_group_ids do |row, item, head, value|
       item.in_gws_superior_group_ids = Gws::Group.site(cur_site).in(name: to_array(value)).pluck(:id)
     end

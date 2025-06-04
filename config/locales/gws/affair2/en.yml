@@ -1,0 +1,515 @@
+en:
+  gws/affair2:
+    views:
+      not_created_time_card: Timecard not created
+      daily_time_cards_in_group: "Time card for %{year}/%{month}/%{day} (%{group})"
+      monthly_time_cards_in_group: "Time card for %{year}/%{month} (%{group})"
+      leave_minutes_label1: '%{days}days+%{rem_hours}hours%{rem_minutes}minutes'
+      leave_minutes_label2: '%{days}days+%{rem_hours}hours%{rem_minutes}minutes (%{minutes}minutes)'
+      monthly_works: Working hours/overtime
+      monthly_leave: Leave hours
+      unit_monthly: Monthly
+      unit_daily: Daily
+    time_card_errors:
+      regular_open: There are days when the working days and scheduled hours have not been entered. Please set them before punch on a time card.
+      no_attendance_setting: You may have changed your attendance setting after creating your timecard.
+
+    options:
+      state:
+        public: Public
+        closed: Private
+        request: Applying
+        approve: Approve
+        pending: Pending sub-approval
+        remand: Remand
+      wday_type:
+        workday: Workday
+        holiday: Holiday
+      employee_type:
+        regular: Regular staff
+        temporary_staff1: Temporary staff (monthly employee)
+        temporary_staff2: Temporary staff (hourly employee)
+      worktime_type:
+        constant: Fixed on a weekly basis
+        variable: Irregular
+      regular_holiday:
+        workday: Workday
+        holiday: Holiday
+      leave_type:
+        paid: Paid leave
+        sick1: Work-related sick leave
+        sick2: Personal sick leave
+        nursing_care: Nursing care leave
+        special: Special leave
+        compens: Compens leave
+      expense:
+        compens: Compens
+        settle: Settle
+      notice_type:
+        monthly_overtime_limit: Monthly overtime limit
+    links:
+      set_worktime_of_wday: Set by day of the week
+      download_all: All attendance settings
+      download_no_setting: User with no settings (template)
+    labels:
+      caution: Caution
+    notice:
+      no_attendance_setting: '%{user} does not have attendance settings.'
+      reset: Reset
+      started_lock: Closing process has begun.
+      started_unlock: Unclosing process has begun.
+    formats:
+      attendace_setting_name: '%{duty} %{year}/%{month} started'
+    apis:
+      attendance_setting:
+        index: Select a attendance setting
+        search: Find a attendance setting
+        select: Set a attendance setting
+      special_leave:
+        index: Select a special leave
+        search: Find a special leave
+        select: Set a special leave
+      duty_notice:
+        index: Select a duty notice
+        search: Find a duty notice
+        select: Set a duty notice
+
+    aggregation:
+      monthly: &affair2_aggregation_monthly
+        user_id: name
+        employee_type: Employee type
+        organization_uid: Staff number
+        date: Month
+        work_minutes2: Work minutes
+        overtime_short_minutes1:
+          - Overtime (Workday)
+          - Reduced
+        overtime_day_minutes1:
+          - Overtime (Workday)
+          - Normal
+        overtime_night_minutes1:
+          - Overtime (Workday)
+          - Midnight
+        overtime_short_minutes2:
+          - Overtime (Workday)
+          - Reduced
+          - (%{threshold}h over)
+        overtime_day_minutes2:
+          - Overtime (Workday)
+          - Normal
+          - (%{threshold}h over)
+        overtime_night_minutes2:
+          - Overtime (Workday)
+          - Midnight
+          - (%{threshold}h over)
+        compens_overtime_day_minutes1:
+          - Overtime (Holiday)
+          - Compens
+          - Normal
+        compens_overtime_night_minutes1:
+          - Overtime (Holiday)
+          - Compens
+          - Midnight
+        settle_overtime_day_minutes1:
+          - Overtime (Holiday)
+          - Settle
+          - Normal
+        settle_overtime_night_minutes1:
+          - Overtime (Holiday)
+          - Settle
+          - Midnight
+        compens_overtime_day_minutes2:
+          - Overtime (Holiday)
+          - Compens
+          - Normal
+          - (%{threshold}h over)
+        compens_overtime_night_minutes2:
+          - Overtime (Holiday)
+          - Compens
+          - Midnight
+          - (%{threshold}h over)
+        settle_overtime_day_minutes2:
+          - Overtime (Holiday)
+          - Settle
+          - Normal
+          - (%{threshold}h over)
+        settle_overtime_night_minutes2:
+          - Overtime (Holiday)
+          - Settle
+          - Midnight
+          - (%{threshold}h over)
+        overtime_minutes: Overtime total
+        leave_paid_minutes:
+          - Leave
+          - Paid leave
+        leave_sick1_minutes:
+          - Leave
+          - Work-related sick leave
+        leave_sick2_minutes:
+          - Leave
+          - Personal sick leave
+        leave_nursing_care_minutes:
+          - Leave
+          - Nursing care leave
+        leave_special_minutes:
+          - Leave
+          - Special leave
+        leave_compens_minutes:
+          - Leave
+          - Compens leave
+        leave_minutes: 休暇合計
+      daily:
+        <<: *affair2_aggregation_monthly
+        date: Date
+
+  modules:
+    gws/affair2: Affair2
+    gws/affair2/attendance: Attendance
+    gws/affair2/attendance/time_card: Timecard
+    gws/affair2/attendance/group: Group
+    gws/affair2/overtime/workday_file: Overtime workday file
+    gws/affair2/overtime/workday_file/mine: Mine
+    gws/affair2/overtime/workday_file/approve: Approve
+    gws/affair2/overtime/workday_file/all: All
+    gws/affair2/overtime/holiday_file: Overtime holiday file
+    gws/affair2/overtime/holiday_file/mine: Mine
+    gws/affair2/overtime/holiday_file/approve: Approve
+    gws/affair2/overtime/holiday_file/all: All
+    gws/affair2/overtime/achieve: Overtime achieve
+    gws/affair2/leave/file: Leave file
+    gws/affair2/leave/file/mine: Mine
+    gws/affair2/leave/file/approve: Approve
+    gws/affair2/leave/file/all: All
+    gws/affair2/leave/achieve: Leave achieve
+    gws/affair2/management: Management
+    gws/affair2/management/users: Timecards
+    gws/affair2/management/time_card: Achieves
+    gws/affair2/admin: Setting
+    gws/affair2/admin/attendance_setting: Attendance setting
+    gws/affair2/admin/paid_leave_setting: Paid leave setting
+    gws/affair2/admin/duty_setting: Duty setting
+    gws/affair2/admin/leave_setting: Leave setting
+    gws/affair2/admin/special_leave: Special leave
+    gws/affair2/admin/special_holiday: Special holiday
+    gws/affair2/admin/duty_notice: Duty notice
+    addons:
+      gws/user/affair2_setting: affair2
+      gws/affair2/attendance_setting/paid_leave: Paid leave
+      gws/affair2/duty_setting/worktime: Worktime
+      gws/affair2/duty_setting/workday: Workday
+      gws/affair2/duty_setting/leave: Leave
+      gws/affair2/duty_setting/notice: Notice
+      gws/affair2/leave_setting/unit: Leave unit
+      gws/affair2/approver: Approver
+      gws/affair2/overtime_record: Result
+      gws/affair2/achieve/paid_leave: Paid leave
+      gws/affair2/achieve/other_leave: Other leave
+  mongoid:
+    models:
+      gws/affair2/overtime/workday_file: Overtime workday file
+      gws/affair2/overtime/holiday_file: Overtime holiday file
+      gws/affair2/leave/file: Leave file
+    attributes:
+      gws/affair2/attendance/time_card:
+        name: Name
+        duty_setting_id: Duty setting
+      gws/affair2/attendance/record:
+        date: Date
+        enter: Enter
+        leave: Leave
+        break_time: Break time
+        memo: memo
+        work_time: Work time
+        regular_holiday: Regular work day
+        regular_start: Regular start
+        regular_close: Regular close
+        regular_break_minutes: Regular break minutes
+      gws/affair2/attendance_setting:
+        name: Name
+        user_id: User
+        organization_uid: Staff number
+        start_date: Start
+        close_date: End
+        duty_setting_id: Duty setting
+        leave_setting_id: Leave setting
+      gws/affair2/duty_setting:
+        name: Name
+        code: Code
+        remark: Remark
+        employee_type: Employee type
+        worktime_type: Worktime type
+        order: Order
+      gws/affair2/leave_setting:
+        name: Name
+        special_leave_ids: Special leave
+        order: Order
+      gws/affair2/special_leave:
+        name: Name
+        order: Order
+      gws/affair2/paid_leave_setting:
+        name: Name
+        year: Year
+        user_id: User
+        attendance_setting_id: Attendance setting
+        carryover_minutes: Carryover minutes
+        additional_minutes: Additional minutes
+        effective_minutes: Effective minutes
+        used_minutes: Used minutes
+        remind_minutes: Remind minutes
+        order: Order
+      gws/affair2/paid_leave:
+        name: Name
+        hour_type: Hour type
+        start_date: Start
+        close_date: Close
+        effective_days: Effective days
+        remark: Remark
+      gws/addon/affair2/duty_setting/worktime:
+        worktime_day_minute: Worktime day minute
+        worktime_week_minute: Worktime week minute
+        worktime: worktime
+      gws/addon/affair2/duty_setting/workday:
+        wday_settings: Wday settings
+        sunday_type: Sunday
+        monday_type: Monday
+        tuesday_type: Tuesday
+        wednesday_type: Wednesday
+        thursday_type: Thursday
+        friday_type: Friday
+        saturday_type: Saturday
+        national_holiday_type: National holiday
+        special_holiday_type: Special holiday
+      gws/addon/affair2/duty_setting/leave:
+        day_leave_minutes: Day leave minutes
+      gws/addon/affair2/duty_setting/notice:
+        duty_notice_ids: Duty notice
+      gws/affair2/overtime/workday_file:
+        name: Name
+        date: Date
+        start_at: Start
+        close_at: End
+        remark: Remark
+      gws/affair2/overtime/holiday_file:
+        name: Name
+        date: Date
+        start_at: Start
+        close_at: End
+        remark: Remark
+        expense: Expense
+        compens_date: Compens date
+      gws/affair2/overtime/record:
+        start_at: Start
+        close_at: End
+        break_start_at: Break time start
+        break_close_at: Break time end
+      gws/affair2/leave/file:
+        name: Name
+        date: Date
+        allday: Allday
+        start_at: Start
+        close_at: End
+        leave_type: Leave type
+        special_leave_id: Special leave
+        remark: Remark
+      gws/addon/affair2/approver:
+        workflow_user_id: Workflow user
+        workflow_state: Workflow state
+        workflow_comment: Workflow comment
+        workflow_pull_up: Workflow pull up
+        workflow_on_remand: Workflow on remand
+        workflow_approvers: Workflow approvers
+        workflow_required_counts: Workflow required counts
+        workflow_circulations: Workflow circulations
+        requested: Requested
+        approved: Approved
+        comment: Comment
+        approver_comment: Approver_comment
+        status: Status
+      gws/addon/affair2/attendance_setting/paid_leave:
+        paid_leave: Paid leave
+      gws/affair2/duty_notice:
+        name: Name
+        notice_type: Notice type
+        threshold_hour: Threshold hour
+        body: Body
+      gws/affair2/special_holiday:
+        name: Name
+        date: Date
+
+  activemodel:
+    attributes:
+      gws/affair2/time_card_forms/time_edit:
+        time: Time
+        reason: Reason
+      gws/affair2/time_card_forms/minutes_edit:
+        minutes: Minutes
+      gws/affair2/attendance/default_record/importer:
+        in_file: File
+        organization_uid: Organization uid
+        date: Date
+        regular_start: Regular start
+        regular_close: Regular close
+        start: Start
+        close: Close
+        break_time: Break time
+        regular_holiday: Regular holiday
+
+  gws_notification:
+    gws/affair2/overtime/workday_file:
+      request: "[Overtime workday file] %{name} approval has arrived."
+      approve: "[Overtime workday file] %{name} final approval completed."
+      remand: "[Overtime workday file] %{name} approval request was returned."
+      circular: "[Overtime workday file] %{name} has arrived."
+      comment: "[Overtime workday file] %{name} there was a comment."
+      record_entered: "[Overtime workday file] %{name} the result time was entered."
+      record_confirmed: "[Overtime workday file] %{name} the results have been confirmed."
+    gws/affair2/overtime/holiday_file:
+      request: "[Overtime holiday file] %{name} approval has arrived."
+      approve: "[Overtime holiday file] %{name} final approval completed."
+      remand: "[Overtime holiday file] %{name} approval request was returned."
+      circular: "[Overtime holiday file] %{name} has arrived."
+      comment: "[Overtime holiday file] %{name} there was a comment."
+      record_entered: "[Overtime holiday file] %{name} the result time was entered."
+      record_confirmed: "[Overtime holiday file] %{name} the results have been confirmed."
+    gws/affair2/leave/file:
+      request: "[Leave file]「%{name}」received an application"
+      approve: "[Leave file]「%{name}」final approval completed."
+      remand: "[Leave file]「%{name}」approval request was returned."
+      circular: "[Leave file]「%{name}」has arrived."
+      comment: "[Leave file]「%{name}」there was a comment."
+
+  tooltip:
+    gws/affair2/duty_setting:
+      name:
+        - Enter name.
+      code:
+        - Enter code.
+      remark:
+        - Enter remark.
+      employee_type:
+        - Select employee type.
+      worktime_type:
+        - Select worktime type
+    gws/affair2/leave_setting:
+      name:
+        - Enter name.
+      special_leave_ids:
+        - Select special leave.
+      order:
+        - Enter order.
+    gws/affair2/special_leave:
+      name:
+        - Enter name.
+      order:
+        - Enter order.
+    gws/affair2/paid_leave:
+      hour_type:
+        - Select hour type.
+      start_date:
+        - Enter start date.
+      effective_days:
+        - Enter effective days.
+      remark:
+        - Enter remark
+    gws/affair2/overtime/workday_file:
+      name:
+        - Enter name.
+      date:
+        - Enter date.
+      start_at:
+        - Enter start.
+      close_at:
+        - Enter close.
+      remark:
+        - Enter remark.
+    gws/affair2/overtime/holiday_file:
+      name:
+        - Enter name.
+      date:
+        - Enter date.
+      start_at:
+        - Enter start.
+      close_at:
+        - Enter close.
+      remark:
+        - Enter remark.
+      expense:
+        - Select expense.
+      compens_date:
+        - Enter compens date.
+    gws/affair2/leave/file:
+      name:
+        - Enter name.
+      date:
+        - Enter date.
+      leave_type:
+        - Enter leave type.
+      special_leave_id:
+        - Enter special.
+      remark:
+        - Enter remark.
+    gws/affair2/duty_notice:
+      name:
+        - Enter name.
+      notice_type:
+        - Select notice.
+      threshold_hour:
+        - Enter threshold.
+      body:
+        - Enter body.
+
+  gws_role:
+    # time_cards
+    use_gws_affair2_attendance_time_cards: Use timecards
+    edit_gws_affair2_attendance_time_cards: Edit timecard times
+    format_gws_affair2_attendance_time_cards: Edit regular timecard times
+    manage_all_gws_affair2_attendance_time_cards: Manage (all)
+    manage_sub_gws_affair2_attendance_time_cards: Manage (sub groups)
+    # groups
+    use_private_gws_affair2_attendance_groups: Use attendance groups（self groups)
+    use_sub_gws_affair2_attendance_groups: Use attendance groups（sub groups)
+    use_all_gws_affair2_attendance_groups: Use attendance groups（all)
+    # overtime_workday_files
+    read_other_gws_affair2_overtime_workday_files: Read workday overtime file (all)
+    read_private_gws_affair2_overtime_workday_files: Read workday overtime file (own)
+    edit_other_gws_affair2_overtime_workday_files: Edit workday overtime file (all)
+    edit_private_gws_affair2_overtime_workday_files: Edit workday overtime file (own)
+    delete_other_gws_affair2_overtime_workday_files: Delete workday overtime file (all)
+    delete_private_gws_affair2_overtime_workday_files: Delete workday overtime file (own)
+    approve_other_gws_affair2_overtime_workday_files: Approve workday overtime file (all)
+    approve_private_gws_affair2_overtime_workday_files: Approve workday overtime file (own)
+    reroute_other_gws_affair2_overtime_workday_files: Reroute workday overtime file (all)
+    reroute_private_gws_affair2_overtime_workday_files: Reroute workday overtime file (own)
+    # overtime_holiday_files
+    read_other_gws_affair2_overtime_holiday_files: Read holiday overtime file (all)
+    read_private_gws_affair2_overtime_holiday_files: Read holiday overtime file (own)
+    edit_other_gws_affair2_overtime_holiday_files: Edit holiday overtime file (all)
+    edit_private_gws_affair2_overtime_holiday_files: Edit holiday overtime file (own)
+    delete_other_gws_affair2_overtime_holiday_files: Delete holiday overtime file (all)
+    delete_private_gws_affair2_overtime_holiday_files: Delete holiday overtime file (own)
+    approve_other_gws_affair2_overtime_holiday_files: Approve holiday overtime file (all)
+    approve_private_gws_affair2_overtime_holiday_files: Approve holiday overtime file (own)
+    reroute_other_gws_affair2_overtime_holiday_files: Reroute holiday overtime file (all)
+    reroute_private_gws_affair2_overtime_holiday_files: Reroute workday overtime file (own)
+    # leave_files
+    read_other_gws_affair2_leave_files: Read leave file (all)
+    read_private_gws_affair2_leave_files: Read leave file (own)
+    edit_other_gws_affair2_leave_files: Edit leave file (all)
+    edit_private_gws_affair2_leave_files: Edit leave file (own)
+    delete_other_gws_affair2_leave_files: Delete leave file (all)
+    delete_private_gws_affair2_leave_files: Delete leave file (own)
+    approve_other_gws_affair2_leave_files: Approve leave file (all)
+    approve_private_gws_affair2_leave_files: Approve leave file (own)
+    reroute_other_gws_affair2_leave_files: Reroute leave file (all)
+    reroute_private_gws_affair2_leave_files: Reroute leave file (own)
+    # achieve
+    use_private_gws_affair2_overtime_achieves: Read overtime achieves（self groups）
+    use_sub_gws_affair2_overtime_achieves: Read overtime achieves（sub groups)
+    use_all_gws_affair2_overtime_achieves: Read overtime achieves（all)
+    use_private_gws_affair2_leave_achieves: Read leave achieves（self groups）
+    use_sub_gws_affair2_leave_achieves: Read leave achieves（sub groups)
+    use_all_gws_affair2_leave_achieves: Read leave achieves（all)
+    # aggregation
+    use_gws_affair2_aggregations: Use affair2 aggregations
+    # settings
+    use_gws_affair2_admin_settings: Use affair2 settings

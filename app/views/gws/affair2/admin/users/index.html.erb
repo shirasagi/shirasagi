@@ -1,0 +1,20 @@
+<div class="index">
+  <%= render template: "_list_head" %>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+      <% attendance = @attendances[item.id] %>
+      <li class="list-item">
+        <div class="info">
+          <%= link_to item.name, gws_affair2_admin_user_attendance_settings_path(user_id: item), class: "title" %>
+          <div class="meta">
+            <%= gws_public_user_profile(item, :uid_or_id, :main_group_section_name, :user_title) %>
+            <span class="attendance"><%= attendance ? attendance.name : "設定なし" %></span>
+          </div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

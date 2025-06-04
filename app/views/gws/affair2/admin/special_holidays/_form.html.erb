@@ -1,0 +1,4 @@
+<dl class="see">
+  <dt><%= @item.t :date %></dt>
+  <dd><%= f.text_field :date, value: tryb{ @item.date.strftime("%Y/%m/%d") }, class: "date js-date" %></dd>
+</dl>

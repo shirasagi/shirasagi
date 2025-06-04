@@ -12,14 +12,12 @@
 </head>
 <body class="print-preview <%= @portrait.presence || 'vertical' %>">
   <div id="page" class="print-preview">
-    <div id="wrap" class="print-preview">
-      <div class="wrap">
-        <article id="main" class="print-preview">
-          <div class="wrap">
-            <%= yield %>
-          </div>
-        </article>
-      </div>
+    <div class="wrap">
+      <article id="main" class="print-preview">
+        <div class="wrap">
+          <%= yield %>
+        </div>
+      </article>
     </div>
   </div>
 </body>

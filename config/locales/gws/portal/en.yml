@@ -83,6 +83,9 @@ en:
       workflow:
         name: Workflows
         text: Displays new workflows.
+      affair2:
+        name: Affair2
+        text: Displays today’s attendance and clocks the time.(Affair2)
       attendance:
         name: Attendance
         text: Displays today’s attendance and clocks the time.

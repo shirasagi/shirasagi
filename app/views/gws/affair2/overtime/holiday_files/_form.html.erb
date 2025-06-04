@@ -1,0 +1,59 @@
+<%= jquery do %>
+var $expense = $('form#item-form [name="item[expense]"]');
+var $compensDate = $('form#item-form .compens-date');
+var toggleCompDate = function() {
+  var val = $expense.filter(':checked').val();
+  if (val == "compens") {
+    $compensDate.show();
+  } else {
+    $compensDate.hide();
+  }
+};
+$expense.on("change", toggleCompDate);
+toggleCompDate();
+<% end %>
+<%
+  @item.load_in_accessor
+
+  now = Time.zone.now
+  start_hour = SS.config.affair2.default_duty["worktime"]["start_hour"]
+  start_minute = SS.config.affair2.default_duty["worktime"]["start_minute"]
+  close_hour = SS.config.affair2.default_duty["worktime"]["close_hour"]
+  close_minute = SS.config.affair2.default_duty["worktime"]["close_minute"]
+
+  @item.in_date ||= now.beginning_of_day
+  @item.in_start_hour ||= start_hour
+  @item.in_start_minute ||= start_minute
+  @item.in_close_hour ||= close_hour
+  @item.in_close_minute ||= close_minute
+%>
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :date %><%= @model.tt :date %></dt>
+  <dd>
+    <%= f.text_field :in_date, class: "date js-date" %>
+    <%= f.select :in_start_hour, @item.in_start_hour_options %>
+    <%= f.select :in_start_minute, @item.in_start_minute_options %>
+    <%= t("ss.wave_dash") %>
+    <%= f.select :in_close_hour, @item.in_close_hour_options %>
+    <%= f.select :in_close_minute, @item.in_close_minute_options %>
+  </dd>
+
+  <dt><%= @model.t :expense %><%= @model.tt :expense %></dt>
+  <dd>
+    <% @item.expense_options.each do |v, k| %>
+      <label>
+        <%= f.radio_button :expense, k %>
+        <%= v %>
+      </label>
+    <% end %>
+  </dd>
+
+  <dt class="compens-date"><%= @model.t :compens_date %><%= @model.tt :compens_date %></dt>
+  <dd class="compens-date"><%= f.ss_date_field :compens_date %></dd>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+</dl>
