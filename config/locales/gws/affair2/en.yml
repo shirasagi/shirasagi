@@ -320,196 +320,196 @@ en:
         workflow_approvers: Workflow approvers
         workflow_required_counts: Workflow required counts
         workflow_circulations: Workflow circulations
-        requested: 申請日時
-        approved: 承認日時
-        comment: 差し戻しコメント
-        approver_comment: 承認者コメント
-        status: ステータス
+        requested: Requested
+        approved: Approved
+        comment: Comment
+        approver_comment: Approver_comment
+        status: Status
       gws/addon/affair2/attendance_setting/paid_leave:
-        paid_leave: 有効日数
+        paid_leave: Paid leave
       gws/affair2/duty_notice:
-        name: 名称
-        notice_type: 種別
-        threshold_hour: 上限時間
-        body: 警告文
+        name: Name
+        notice_type: Notice type
+        threshold_hour: Threshold hour
+        body: Body
       gws/affair2/special_holiday:
-        name: 日付
-        date: 日付
+        name: Name
+        date: Date
 
   activemodel:
     attributes:
       gws/affair2/time_card_forms/time_edit:
-        time: 時刻
-        reason: 修正理由
+        time: Time
+        reason: Reason
       gws/affair2/time_card_forms/minutes_edit:
-        minutes: 時間
+        minutes: Minutes
       gws/affair2/attendance/default_record/importer:
-        in_file: ファイル
-        organization_uid: 職員番号
-        date: 年月日
-        regular_start: 所定開始
-        regular_close: 所定終了
-        start: 出勤予定
-        close: 退勤予定
-        break_time: 休憩時間
-        regular_holiday: 休日フラグ
+        in_file: File
+        organization_uid: Organization uid
+        date: Date
+        regular_start: Regular start
+        regular_close: Regular close
+        start: Start
+        close: Close
+        break_time: Break time
+        regular_holiday: Regular holiday
 
   gws_notification:
     gws/affair2/overtime/workday_file:
-      request: "[時間外申請]「%{name}」の承認申請が届きました。"
-      approve: "[時間外申請]「%{name}」の最終承認が完了しました。"
-      remand: "[時間外申請]「%{name}」の承認申請が差し戻されました。"
-      circular: "[時間外申請]「%{name}」が届きました。"
-      comment: "[時間外申請]「%{name}」にコメントがありました。"
-      record_entered: "[時間外申請]「%{name}」に結果時間の入力がありました。"
-      record_confirmed: "[時間外申請]「%{name}」の結果が確認済みになりました。"
+      request: "[Overtime workday file] %{name} approval has arrived."
+      approve: "[Overtime workday file] %{name} final approval completed."
+      remand: "[Overtime workday file] %{name} approval request was returned."
+      circular: "[Overtime workday file] %{name} has arrived."
+      comment: "[Overtime workday file] %{name} there was a comment."
+      record_entered: "[Overtime workday file] %{name} the result time was entered."
+      record_confirmed: "[Overtime workday file] %{name} the results have been confirmed."
     gws/affair2/overtime/holiday_file:
-      request: "[休出申請]「%{name}」の承認申請が届きました。"
-      approve: "[休出申請]「%{name}」の最終承認が完了しました。"
-      remand: "[休出申請]「%{name}」の承認申請が差し戻されました。"
-      circular: "[休出申請]「%{name}」が届きました。"
-      comment: "[休出申請]「%{name}」にコメントがありました。"
-      record_entered: "[休出申請]「%{name}」に結果時間の入力がありました。"
-      record_confirmed: "[休出申請]「%{name}」の結果が確認済みになりました。"
+      request: "[Overtime holiday file] %{name} approval has arrived."
+      approve: "[Overtime holiday file] %{name} final approval completed."
+      remand: "[Overtime holiday file] %{name} approval request was returned."
+      circular: "[Overtime holiday file] %{name} has arrived."
+      comment: "[Overtime holiday file] %{name} there was a comment."
+      record_entered: "[Overtime holiday file] %{name} the result time was entered."
+      record_confirmed: "[Overtime holiday file] %{name} the results have been confirmed."
     gws/affair2/leave/file:
-      request: "[休暇申請]「%{name}」の承認申請が届きました。"
-      approve: "[休暇申請]「%{name}」の最終承認が完了しました。"
-      remand: "[休暇申請]「%{name}」の承認申請が差し戻されました。"
-      circular: "[休暇申請]「%{name}」が届きました。"
-      comment: "[休暇申請]「%{name}」にコメントがありました。"
+      request: "[Leave file]「%{name}」received an application"
+      approve: "[Leave file]「%{name}」final approval completed."
+      remand: "[Leave file]「%{name}」approval request was returned."
+      circular: "[Leave file]「%{name}」has arrived."
+      comment: "[Leave file]「%{name}」there was a comment."
 
   tooltip:
     gws/affair2/duty_setting:
       name:
-        - 名称を入力します。
+        - Enter name.
       code:
-        - 雇用区分コードを入力します。
+        - Enter code.
       remark:
-        - 説明を入力します。
+        - Enter remark.
       employee_type:
-        - 職員区分を選択します。
+        - Select employee type.
       worktime_type:
-        - 勤務時間及び勤務日を選択します。
+        - Select worktime type
     gws/affair2/leave_setting:
       name:
-        - 名称を入力します。
+        - Enter name.
       special_leave_ids:
-        - 特別休暇を選択します。
+        - Select special leave.
       order:
-        - 並び順を入力します。
+        - Enter order.
     gws/affair2/special_leave:
       name:
-        - 名称を入力します。
+        - Enter name.
       order:
-        - 並び順を入力します。
+        - Enter order.
     gws/affair2/paid_leave:
       hour_type:
-        - 時間数を選択します。
+        - Select hour type.
       start_date:
-        - 付与日を入力します。
+        - Enter start date.
       effective_days:
-        - 有効日数を入力します。
+        - Enter effective days.
       remark:
-        - 備考を入力します。
+        - Enter remark
     gws/affair2/overtime/workday_file:
       name:
-        - 業務名を入力します。
+        - Enter name.
       date:
-        - 日時を入力します。
+        - Enter date.
       start_at:
-        - 開始日時を入力します。
+        - Enter start.
       close_at:
-        - 終了日時を入力します。
+        - Enter close.
       remark:
-        - 業務内容を入力します。
+        - Enter remark.
     gws/affair2/overtime/holiday_file:
       name:
-        - 業務名を入力します。
+        - Enter name.
       date:
-        - 日時を入力します。
+        - Enter date.
       start_at:
-        - 開始日時を入力します。
+        - Enter start.
       close_at:
-        - 終了日時を入力します。
+        - Enter close.
       remark:
-        - 業務内容を入力します。
+        - Enter remark.
       expense:
-        - 振替もしくは精算かを選択肢します。
+        - Select expense.
       compens_date:
-        - 振替日を入力します。
+        - Enter compens date.
     gws/affair2/leave/file:
       name:
-        - 申請名を入力します。
+        - Enter name.
       date:
-        - 日時を入力します。
+        - Enter date.
       leave_type:
-        - 休暇区分を入力します。
+        - Enter leave type.
       special_leave_id:
-        - 特別休暇を入力します。
+        - Enter special.
       remark:
-        - 理由を入力します。
+        - Enter remark.
     gws/affair2/duty_notice:
       name:
-        - 名称を入力します。
+        - Enter name.
       notice_type:
-        - 種別を選択します。
+        - Select notice.
       threshold_hour:
-        - 上限時間を入力します。
+        - Enter threshold.
       body:
-        - 警告文を入力します。
+        - Enter body.
 
   gws_role:
     # time_cards
-    use_gws_affair2_attendance_time_cards: 出退勤の利用
-    edit_gws_affair2_attendance_time_cards: 出退勤時刻の変更
-    format_gws_affair2_attendance_time_cards: 出退勤所定時間の変更
-    manage_all_gws_affair2_attendance_time_cards: 出退勤の管理（全て）
-    manage_sub_gws_affair2_attendance_time_cards: 出退勤の管理（所属下）
+    use_gws_affair2_attendance_time_cards: Use timecards
+    edit_gws_affair2_attendance_time_cards: Edit timecard times
+    format_gws_affair2_attendance_time_cards: Edit regular timecard times
+    manage_all_gws_affair2_attendance_time_cards: Manage (all)
+    manage_sub_gws_affair2_attendance_time_cards: Manage (sub groups)
     # groups
-    use_private_gws_affair2_attendance_groups: 出退勤グループの利用（自所属）
-    use_sub_gws_affair2_attendance_groups: 出退勤グループの利用（所属下）
-    use_all_gws_affair2_attendance_groups: 出退勤グループの利用（全て）
+    use_private_gws_affair2_attendance_groups: Use attendance groups（self groups)
+    use_sub_gws_affair2_attendance_groups: Use attendance groups（sub groups)
+    use_all_gws_affair2_attendance_groups: Use attendance groups（all)
     # overtime_workday_files
-    read_other_gws_affair2_overtime_workday_files: 時間外申請の閲覧（全て）
-    read_private_gws_affair2_overtime_workday_files: 時間外申請の閲覧（所有）
-    edit_other_gws_affair2_overtime_workday_files: 時間外申請の編集（全て）
-    edit_private_gws_affair2_overtime_workday_files: 時間外申請の編集（所有）
-    delete_other_gws_affair2_overtime_workday_files: 時間外申請の削除（全て）
-    delete_private_gws_affair2_overtime_workday_files: 時間外申請の削除（所有）
-    approve_other_gws_affair2_overtime_workday_files: 時間外申請の承認（全て）
-    approve_private_gws_affair2_overtime_workday_files: 時間外申請の承認（所有）
-    reroute_other_gws_affair2_overtime_workday_files: 時間外申請の経路変更（全て）
-    reroute_private_gws_affair2_overtime_workday_files: 時間外申請の経路変更（所有）
+    read_other_gws_affair2_overtime_workday_files: Read workday overtime file (all)
+    read_private_gws_affair2_overtime_workday_files: Read workday overtime file (own)
+    edit_other_gws_affair2_overtime_workday_files: Edit workday overtime file (all)
+    edit_private_gws_affair2_overtime_workday_files: Edit workday overtime file (own)
+    delete_other_gws_affair2_overtime_workday_files: Delete workday overtime file (all)
+    delete_private_gws_affair2_overtime_workday_files: Delete workday overtime file (own)
+    approve_other_gws_affair2_overtime_workday_files: Approve workday overtime file (all)
+    approve_private_gws_affair2_overtime_workday_files: Approve workday overtime file (own)
+    reroute_other_gws_affair2_overtime_workday_files: Reroute workday overtime file (all)
+    reroute_private_gws_affair2_overtime_workday_files: Reroute workday overtime file (own)
     # overtime_holiday_files
-    read_other_gws_affair2_overtime_holiday_files: 休出申請の閲覧（全て）
-    read_private_gws_affair2_overtime_holiday_files: 休出申請の閲覧（所有）
-    edit_other_gws_affair2_overtime_holiday_files: 休出申請の編集（全て）
-    edit_private_gws_affair2_overtime_holiday_files: 休出申請の編集（所有）
-    delete_other_gws_affair2_overtime_holiday_files: 休出申請の削除（全て）
-    delete_private_gws_affair2_overtime_holiday_files: 休出申請の削除（所有）
-    approve_other_gws_affair2_overtime_holiday_files: 休出申請の承認（全て）
-    approve_private_gws_affair2_overtime_holiday_files: 休出申請の承認（所有）
-    reroute_other_gws_affair2_overtime_holiday_files: 休出申請の経路変更（全て）
-    reroute_private_gws_affair2_overtime_holiday_files: 休出申請の経路変更（所有）
+    read_other_gws_affair2_overtime_holiday_files: Read holiday overtime file (all)
+    read_private_gws_affair2_overtime_holiday_files: Read holiday overtime file (own)
+    edit_other_gws_affair2_overtime_holiday_files: Edit holiday overtime file (all)
+    edit_private_gws_affair2_overtime_holiday_files: Edit holiday overtime file (own)
+    delete_other_gws_affair2_overtime_holiday_files: Delete holiday overtime file (all)
+    delete_private_gws_affair2_overtime_holiday_files: Delete holiday overtime file (own)
+    approve_other_gws_affair2_overtime_holiday_files: Approve holiday overtime file (all)
+    approve_private_gws_affair2_overtime_holiday_files: Approve holiday overtime file (own)
+    reroute_other_gws_affair2_overtime_holiday_files: Reroute holiday overtime file (all)
+    reroute_private_gws_affair2_overtime_holiday_files: Reroute workday overtime file (own)
     # leave_files
-    read_other_gws_affair2_leave_files: 休暇申請の閲覧（全て）
-    read_private_gws_affair2_leave_files: 休暇申請の閲覧（所有）
-    edit_other_gws_affair2_leave_files: 休暇申請の編集（全て）
-    edit_private_gws_affair2_leave_files: 休暇申請の編集（所有）
-    delete_other_gws_affair2_leave_files: 休暇申請の削除（全て）
-    delete_private_gws_affair2_leave_files: 休暇申請の削除（所有）
-    approve_other_gws_affair2_leave_files: 休暇申請の承認（全て）
-    approve_private_gws_affair2_leave_files: 休暇申請の承認（所有）
-    reroute_other_gws_affair2_leave_files: 休暇申請の経路変更（全て）
-    reroute_private_gws_affair2_leave_files: 休暇申請の経路変更（所有）
+    read_other_gws_affair2_leave_files: Read leave file (all)
+    read_private_gws_affair2_leave_files: Read leave file (own)
+    edit_other_gws_affair2_leave_files: Edit leave file (all)
+    edit_private_gws_affair2_leave_files: Edit leave file (own)
+    delete_other_gws_affair2_leave_files: Delete leave file (all)
+    delete_private_gws_affair2_leave_files: Delete leave file (own)
+    approve_other_gws_affair2_leave_files: Approve leave file (all)
+    approve_private_gws_affair2_leave_files: Approve leave file (own)
+    reroute_other_gws_affair2_leave_files: Reroute leave file (all)
+    reroute_private_gws_affair2_leave_files: Reroute leave file (own)
     # achieve
-    use_private_gws_affair2_overtime_achieves: 時間外累計の閲覧（自所属）
-    use_sub_gws_affair2_overtime_achieves: 時間外累計の閲覧（所属下）
-    use_all_gws_affair2_overtime_achieves: 時間外累計の閲覧（全て）
-    use_private_gws_affair2_leave_achieves: 休暇取得累計の閲覧（自所属）
-    use_sub_gws_affair2_leave_achieves: 休暇取得累計の閲覧（所属下）
-    use_all_gws_affair2_leave_achieves: 休暇取得累計の閲覧（全て）
+    use_private_gws_affair2_overtime_achieves: Read overtime achieves（self groups）
+    use_sub_gws_affair2_overtime_achieves: Read overtime achieves（sub groups)
+    use_all_gws_affair2_overtime_achieves: Read overtime achieves（all)
+    use_private_gws_affair2_leave_achieves: Read leave achieves（self groups）
+    use_sub_gws_affair2_leave_achieves: Read leave achieves（sub groups)
+    use_all_gws_affair2_leave_achieves: Read leave achieves（all)
     # aggregation
-    use_gws_affair2_aggregations: 実績出力の利用
+    use_gws_affair2_aggregations: Use affair2 aggregations
     # settings
-    use_gws_affair2_admin_settings: 設定の管理
+    use_gws_affair2_admin_settings: Use affair2 settings
