@@ -21,11 +21,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 8:30 - 17:15 60m
     context "case1" do
-      let(:enter_hour) { "#{8}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{30}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 8) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 30) }
 
-      let(:leave_hour) { "#{17}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{15}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 17) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 15) }
 
       # 17:15 - 18:15 未承認
       let(:overtime_workday_file) do
@@ -113,11 +113,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 8:30 - 17:15 60m
     context "case1" do
-      let(:enter_hour) { "#{8}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{30}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 8) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 30) }
 
-      let(:leave_hour) { "#{17}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{15}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 17) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 15) }
 
       # 17:15 - 18:15 承認済み
       let(:overtime_workday_file) do

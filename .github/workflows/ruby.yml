@@ -9,9 +9,9 @@ name: Ruby-3.3
 
 on:
   push:
-    branches: [ master, main, affair2 ]
+    branches: [ master, main ]
   pull_request:
-    branches: [ master, main, affair2 ]
+    branches: [ master, main ]
 
 env:
   DISABLE_SPRING: 1
@@ -157,4 +157,3 @@ jobs:
           # driver: random
           # RSPEC_LOCALE: en
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-          RSPEC_LOCALE: ja

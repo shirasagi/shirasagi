@@ -25,15 +25,15 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
     context "regular user" do
       let(:user) { affair2.users.u3 }
 
-      let(:enter_hour) { "#{8}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{30}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 8) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 30) }
       let(:enter_reason) { unique_id }
 
-      let(:leave_hour) { "#{17}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{15}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 17) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 15) }
       let(:leave_reason) { unique_id }
 
-      let(:break_minutes) { "#{60}#{I18n.t("datetime.prompts.minute")}" }
+      let(:break_minutes) { I18n.t('gws/attendance.minute', count: 60) }
       let(:memo) { unique_id }
 
       before { login_user(user) }
@@ -128,7 +128,7 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
     context "restricted user" do
       let(:user) { affair2.users.u11 }
 
-      let(:break_minutes) { "#{60}#{I18n.t("datetime.prompts.minute")}" }
+      let(:break_minutes) { I18n.t('gws/attendance.minute', count: 60) }
       let(:memo) { unique_id }
 
       before { login_user(user) }

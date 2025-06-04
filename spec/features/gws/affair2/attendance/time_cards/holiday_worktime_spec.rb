@@ -20,11 +20,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 8:30 - 17:15 0m
     context "case1" do
-      let(:enter_hour) { "#{8}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{30}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 8) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 30) }
 
-      let(:leave_hour) { "#{17}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{15}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 17) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 15) }
 
       it do
         Timecop.travel(month) do
@@ -89,11 +89,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 8:00 - 15:00 0m
     context "case2" do
-      let(:enter_hour) { "#{8}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 8) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{15}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 15) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -158,11 +158,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 8:00 - 22:00 0m
     context "case3" do
-      let(:enter_hour) { "#{8}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 8) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{22}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 22) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -227,11 +227,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 15:00 - 15:00 0m
     context "case4" do
-      let(:enter_hour) { "#{15}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 15) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{15}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 15) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -296,11 +296,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 18:00 - 22:00 0m
     context "case5" do
-      let(:enter_hour) { "#{18}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 18) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{22}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 22) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -365,11 +365,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 7:00 - 7:30 0m
     context "case6" do
-      let(:enter_hour) { "#{7}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 7) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{7}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{30}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 7) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 30) }
 
       it do
         Timecop.travel(month) do
@@ -434,11 +434,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 15:00 - 26:00 0m
     context "case7" do
-      let(:enter_hour) { "#{15}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 15) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{26}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 26) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -508,11 +508,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 7:45 - 16:15 0m
     context "case1" do
-      let(:enter_hour) { "#{7}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{45}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 7) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 45) }
 
-      let(:leave_hour) { "#{16}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{15}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 16) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 15) }
 
       it do
         Timecop.travel(month) do
@@ -577,11 +577,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 7:35 - 15:00 0m
     context "case2" do
-      let(:enter_hour) { "#{7}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{35}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 7) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 35) }
 
-      let(:leave_hour) { "#{15}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 15) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -646,11 +646,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 7:00 - 22:00 60m
     context "case3" do
-      let(:enter_hour) { "#{7}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 7) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{22}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 22) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -715,11 +715,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 15:00 - 15:00 0m
     context "case4" do
-      let(:enter_hour) { "#{15}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 15) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{15}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 15) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -784,11 +784,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 18:00 - 22:00 0m
     context "case5" do
-      let(:enter_hour) { "#{18}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 18) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{22}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 22)}
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
@@ -853,11 +853,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 7:00 - 7:30 0m
     context "case6" do
-      let(:enter_hour) { "#{7}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 7) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{7}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{30}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 7) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 30) }
 
       it do
         Timecop.travel(month) do
@@ -922,11 +922,11 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
 
     # 15:00 - 26:00 0m
     context "case7" do
-      let(:enter_hour) { "#{15}#{I18n.t("datetime.prompts.hour")}" }
-      let(:enter_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:enter_hour) { I18n.t('gws/attendance.hour', count: 15) }
+      let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { "#{26}#{I18n.t("datetime.prompts.hour")}" }
-      let(:leave_minute) { "#{0}#{I18n.t("datetime.prompts.minute")}" }
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 26) }
+      let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do
         Timecop.travel(month) do
