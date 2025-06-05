@@ -97,7 +97,7 @@ class Gws::Attendance::TimeCardEnumerator < Enumerator
 
   def bom
     return '' if @params.encoding == 'Shift_JIS'
-    "\uFEFF"
+    SS::Csv::UTF8_BOM
   end
 
   def encode(str)

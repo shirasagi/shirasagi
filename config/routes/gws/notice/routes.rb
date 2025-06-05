@@ -45,7 +45,7 @@ Rails.application.routes.draw do
       get ":folder_id/:category_id/:mode/folder_list" => "folder_list#index", as: "folder_list"
       scope path: ':notice_id' do
         get 'members' => 'members#index'
-        resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+        resources :comments, concerns: [:deletion], except: [:index, :new, :show]
       end
     end
   end
