@@ -1,13 +1,24 @@
-<% @tap_menu = proc do |item| %>
-  <%= link_to t('ss.links.show'), action: :show, id: item if @cur_form.allowed?(:read, @cur_user, site: @cur_site) %>
-  <%= link_to t('ss.links.edit'), action: :edit, id: item if @cur_form.allowed?(:edit, @cur_user, site: @cur_site) %>
-  <%= link_to t('ss.links.delete'), action: :delete, id: item if @cur_form.allowed?(:delete, @cur_user, site: @cur_site) %>
-<% end %>
-<% @index_meta = proc do |item| %>
-  <span class="datetime"><%= ss_time_tag item.updated %></span>
-  <span class="order"><%= item.order %></span>
-  <span class="class"><%= item.class.model_name.human %></span>
-  <span class="required"><%= item.label :required %></span>
+<% if cur_form.respond_to?(:name) %>
+  <div class="main-box">
+    <header>
+      <h2><%= cur_form.name %></h2>
+    </header>
+    <% if (description = cur_form.try(:description)).present? %>
+      <div>
+        <%= sanitize br(description, html_escape: false) %>
+      </div>
+    <% end %>
+  </div>
 <% end %>
 
-<%= render template: 'cms/crud/index' %>
+<%= render "cms/columns2/toolbar", target: ".gws-column-item-list", placement: 'top' %>
+
+<%= ss_stimulus_tag({ "gws/column/drag_drop" => { reorder: url_for(action: :reorder) } }, class: "gws-column-item-list") do %>
+  <% items.each do |item| %>
+    <turbo-frame id="item-<%= item.id %>">
+      <%= render template: "cms/frames/columns/show", locals: { ref: SS.request_path(request), model: item.class, item: item } %>
+    </turbo-frame>
+  <% end %>
+<% end %>
+
+<%= render "cms/columns2/toolbar", target: ".gws-column-item-list", placement: 'bottom' %>

@@ -1,190 +1,220 @@
 class Cms::Form::ColumnsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::ColumnFilter2
 
-  model Cms::Column::Base
+  # model Cms::Column::Base
 
   navi_view "cms/form/main/navi"
+  self.form_model = Cms::Form
 
-  helper_method :column_type_options, :form_is_in_use?
+  before_action :set_assets
+
+  # helper_method :column_type_options, :form_is_in_use?
 
   private
 
-  def set_form
-    @cur_form ||= Cms::Form.site(@cur_site).find(params[:form_id])
+  def set_assets
+    stylesheet "/assets/css/codemirror/codemirror.css"
+    javascript "/assets/js/codemirror/codemirror.js"
   end
 
-  def set_items
-    set_form
-    @items = @cur_form.columns
-  end
+  # def cur_form
+  #   @cur_form ||= form_model.site(@cur_site).find(params[:editable_id])
+  # end
 
-  def set_item
-    set_form
-    @item = @cur_form.columns.find(params[:id])
-    @item.attributes = fix_params
+  # def set_form
+  #   @cur_form ||= Cms::Form.site(@cur_site).find(params[:form_id])
+  # end
 
-    @model = @item.class
-  rescue Mongoid::Errors::DocumentNotFound => e
-    return render_destroy(true) if params[:action] == 'destroy'
-    raise e
-  end
+  # def set_items
+  #   set_form
+  #   @items = @cur_form.columns
+  # end
 
-  def set_crumbs
-    set_form
-    @crumbs << [Cms::Form.model_name.human, cms_forms_path]
-    @crumbs << [@cur_form.name, cms_form_path(id: @cur_form)]
-    @crumbs << [Cms::Column::Base.model_name.human, action: :index]
-  end
+  # def set_item
+  #   set_form
+  #   @item = @cur_form.columns.find(params[:id])
+  #   @item.attributes = fix_params
 
-  def fix_params
-    set_form
-    { cur_site: @cur_site, cur_form: @cur_form }
-  end
+  #   @model = @item.class
+  # rescue Mongoid::Errors::DocumentNotFound => e
+  #   return render_destroy(true) if params[:action] == 'destroy'
+  #   raise e
+  # end
 
-  def pre_params
-    ret = super || {}
+  # def set_crumbs
+  #   set_form
+  #   @crumbs << [Cms::Form.model_name.human, cms_forms_path]
+  #   @crumbs << [@cur_form.name, cms_form_path(id: @cur_form)]
+  #   @crumbs << [Cms::Column::Base.model_name.human, action: :index]
+  # end
 
-    max_order = @cur_form.columns.max(:order) || 0
-    ret[:order] = max_order + 10
+  # def fix_params
+  #   set_form
+  #   { cur_site: @cur_site, cur_form: @cur_form }
+  # end
 
-    if @cur_form.sub_type_entry?
-      ret[:required] = "optional"
-    end
-    ret
-  end
+  # def pre_params
+  #   ret = super || {}
 
-  def column_type_options
-    items = {}
+  #   max_order = @cur_form.columns.max(:order) || 0
+  #   ret[:order] = max_order + 10
 
-    Cms::Column.route_options.each do |name, path|
-      mod = path.sub(/\/.*/, '')
-      items[mod] = { name: t("modules.#{mod}"), items: [] } if !items[mod]
-      items[mod][:items] << [ name.sub(/.*\//, ''), path ]
-    end
+  #   if @cur_form.sub_type_entry?
+  #     ret[:required] = "optional"
+  #   end
+  #   ret
+  # end
 
-    items
-  end
+  # def column_type_options
+  #   items = {}
 
-  def form_is_in_use?
-    return @form_is_in_use if !@form_is_in_use.nil?
+  #   Cms::Column.route_options.each do |name, path|
+  #     mod = path.sub(/\/.*/, '')
+  #     items[mod] = { name: t("modules.#{mod}"), items: [] } if !items[mod]
+  #     items[mod][:items] << [ name.sub(/.*\//, ''), path ]
+  #   end
 
-    set_form
-    @form_is_in_use = Cms::Page.site(@cur_site).where(form_id: @cur_form.id).present?
-  end
+  #   items
+  # end
 
-  def set_column_model
-    raise "404" if params[:type].blank?
+  # def form_is_in_use?
+  #   return @form_is_in_use if !@form_is_in_use.nil?
 
-    type = params[:type].sub('/', '/column/').classify
-    models = Cms::Column.route_options.collect do |k, v|
-      v.sub('/', '/column/').classify.constantize
-    end
-    model = models.find { |m| m.to_s == type }
-    raise '404' unless model
+  #   set_form
+  #   @form_is_in_use = Cms::Page.site(@cur_site).where(form_id: @cur_form.id).present?
+  # end
 
-    @model = model
-  end
+  # def set_column_model
+  #   raise "404" if params[:type].blank?
 
-  public
+  #   type = params[:type].sub('/', '/column/').classify
+  #   models = Cms::Column.route_options.collect do |k, v|
+  #     v.sub('/', '/column/').classify.constantize
+  #   end
+  #   model = models.find { |m| m.to_s == type }
+  #   raise '404' unless model
 
-  def index
-    set_items
-    raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site)
+  #   @model = model
+  # end
 
-    @items = @items.search(params[:s]).
-      order_by(order: 1).
-      page(params[:page]).per(50)
-  end
+  # public
 
-  def show
-    raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-    render
-  end
+  # def index
+  #   set_items
+  #   raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site)
 
-  def new
-    set_column_model
-    raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
+  #   @items = @items.search(params[:s]).
+  #     order_by(order: 1).
+  #     page(params[:page]).per(50)
+  # end
 
-    @item = @model.new pre_params.merge(fix_params)
-  end
+  # def show
+  #   raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+  #   render
+  # end
 
-  def create
-    set_column_model
-    raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
+  # def new
+  #   set_column_model
+  #   raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
 
-    @item = @model.new get_params
-    render_create @item.save
-  end
+  #   @item = @model.new pre_params.merge(fix_params)
+  # end
 
-  def edit
-    raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render
-  end
+  # def create
+  #   set_column_model
+  #   raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
 
-  def update
-    @item.attributes = get_params
-    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_update @item.update
-  end
+  #   @item = @model.new get_params
+  #   render_create @item.save
+  # end
 
-  def delete
-    raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-    render
-  end
+  # def edit
+  #   raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+  #   render
+  # end
 
-  def destroy
-    raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-    if form_is_in_use? && params[:in_delete_confirmation].to_s != "yes"
-      @item.errors.add :base, :unable_to_delete_in_use_column_without_confirmation
-      render_destroy false
-      return
-    end
+  # def update
+  #   @item.attributes = get_params
+  #   @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+  #   raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+  #   render_update @item.update
+  # end
 
-    render_destroy @item.destroy
-  end
+  # def delete
+  #   raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+  #   render
+  # end
 
-  def destroy_all
-    if form_is_in_use?
-      redirect_to url_for(action: :index), notice: t("errors.messages.unable_to_delete_all_columns_if_form_is_in_use")
-      return
-    end
-    raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+  # def destroy
+  #   raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+  #   if form_is_in_use? && params[:in_delete_confirmation].to_s != "yes"
+  #     @item.errors.add :base, :unable_to_delete_in_use_column_without_confirmation
+  #     render_destroy false
+  #     return
+  #   end
 
-    if params[:destroy_all]
-      render_destroy_all(destroy_items, location: SS.request_path(request))
-      return
-    end
+  #   render_destroy @item.destroy
+  # end
 
-    respond_to do |format|
-      format.html { render "cms/crud/destroy_all" }
-      format.json { head json: errors }
-    end
-  end
+  # def destroy_all
+  #   if form_is_in_use?
+  #     redirect_to url_for(action: :index), notice: t("errors.messages.unable_to_delete_all_columns_if_form_is_in_use")
+  #     return
+  #   end
+  #   raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
 
-  def destroy_items
-    entries = @items.entries
-    entries.each do |item|
-      next if item.destroy
-      @items << item
-    end
+  #   if params[:destroy_all]
+  #     render_destroy_all(destroy_items, location: SS.request_path(request))
+  #     return
+  #   end
 
-    entries.size != @items.size
-  end
+  #   respond_to do |format|
+  #     format.html { render "cms/crud/destroy_all" }
+  #     format.json { head json: errors }
+  #   end
+  # end
 
-  def render_destroy_all(result, opts = {})
-    location = opts[:location].presence || crud_redirect_url || { action: :index }
-    if result
-      notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
-    else
-      notice = { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
-    end
-    errors = @items.map { |item| [item.id, item.errors.full_messages] }
+  # def destroy_items
+  #   entries = @items.entries
+  #   entries.each do |item|
+  #     next if item.destroy
+  #     @items << item
+  #   end
 
-    respond_to do |format|
-      format.html { redirect_to location, notice }
-      format.json { head json: errors }
-    end
-  end
+  #   entries.size != @items.size
+  # end
+
+  # def render_destroy_all(result, opts = {})
+  #   location = opts[:location].presence || crud_redirect_url || { action: :index }
+  #   if result
+  #     notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
+  #   else
+  #     notice = { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
+  #   end
+  #   errors = @items.map { |item| [item.id, item.errors.full_messages] }
+
+  #   respond_to do |format|
+  #     format.html { redirect_to location, notice }
+  #     format.json { head json: errors }
+  #   end
+  # end
+
+  # def reorder
+  #   ids = params.require(:ids)
+  #   id_order_map = ids.index_with.with_index do |id, index|
+  #     (index + 1) * 10
+  #   end
+
+  #   cur_form.columns.only(:id, :order).each do |column|
+  #     next unless id_order_map.key?(column.id.to_s)
+
+  #     order = id_order_map[column.id.to_s]
+  #     column.set(order: order)
+  #   end
+
+  #   json = { status: 200 }
+  #   render json: json, status: :ok, content_type: json_content_type
+  # end
 end
