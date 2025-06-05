@@ -130,5 +130,36 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         end
       end
     end
+
+    context "with feedback part" do
+      let!(:inquiry_node) { create :inquiry_node_form, cur_site: site }
+      let!(:feedback_part) { create :inquiry_part_feedback, cur_site: site, cur_node: inquiry_node }
+      let!(:layout) { create_cms_layout feedback_part }
+
+      before do
+        inquiry_node.update!(layout: layout)
+
+        ::FileUtils.rm_rf(photo_album_node.path)
+      end
+
+      it do
+        expect do
+          described_class.bind(site_id: site.id).perform_now
+        end.to output(include("/#{photo_album_node.filename}/index.html")).to_stdout
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(File.size("#{photo_album_node.path}/index.html")).to be > 0
+
+        html = File.read("#{photo_album_node.path}/index.html")
+        html = Nokogiri::HTML.fragment(html)
+        expect(html.css(".inquiry-form")).to have(1).items
+        expect(html.css(".member-photos")).to have(1).items
+      end
+    end
   end
 end
