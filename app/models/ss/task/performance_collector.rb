@@ -208,10 +208,10 @@ class SS::Task
       collect(scope, &block)
     end
 
-    def collect_callback(kind, entity, overall_started, kind_started, kind_finished, overall_finished)
-      before_elapsed = kind_started - overall_started
-      kind_elapsed = kind_finished - kind_started
-      after_elapsed = overall_finished - kind_finished
+    def collect_callback(kind, entity, overall, net)
+      before_elapsed = net.first - overall.first
+      kind_elapsed = net.last - net.first
+      after_elapsed = overall.last - net.last
       scope = {
         type: :callback, callback_kind: kind, model: entity.class.name, key: entity.to_key,
         before_elapsed: before_elapsed, kind_elapsed: kind_elapsed, after_elapsed: after_elapsed
