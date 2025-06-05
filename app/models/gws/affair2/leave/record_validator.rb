@@ -1,9 +1,10 @@
 class Gws::Affair2::Leave::RecordValidator
-  attr_reader :file, :user, :site
-  attr_reader :allday, :start_at, :close_at, :year
-  attr_reader :attendance_setting, :duty_setting
-  attr_reader :time_cards, :time_card_records
-  attr_reader :total_leave_minutes, :records
+
+  attr_reader :file, :user, :site,
+    :allday, :start_at, :close_at, :year,
+    :attendance_setting, :duty_setting,
+    :time_cards, :time_card_records,
+    :total_leave_minutes, :records
 
   delegate :errors, to: :file
   delegate :day_leave_minutes, to: :duty_setting
@@ -24,7 +25,13 @@ class Gws::Affair2::Leave::RecordValidator
     validate_attendance_setting
     validate_duty_setting
     validate_time_card
-    validate_records
+
+    if allday == "allday"
+      validate_records_allday
+    else
+      validate_records_timely
+    end
+
     validate_paid_leave
   end
 
@@ -94,48 +101,55 @@ class Gws::Affair2::Leave::RecordValidator
     @time_card_records = @time_cards.map(&:records).flatten.index_by(&:date)
   end
 
-  # 各日チェック
-  def validate_records
+  # 各日チェック(終日)
+  def validate_records_allday
     return if errors.present?
 
     @records = []
     @total_leave_minutes = 0
 
-    if allday == "allday"
-      # 終日
-      (start_at.to_date..close_at.to_date).each do |date|
-        trecord = time_card_records[date.in_time_zone.to_datetime]
-        if trecord.regular_workday?
-          record = new_record
-          record.date = date
-          record.allday = "allday"
-          record.start_at = trecord.regular_start
-          record.close_at = trecord.regular_close
-          record.minutes = trecord.regular_work_minutes
-          record.day_leave_minutes = day_leave_minutes
-
-          @records << record
-          @total_leave_minutes += record.minutes
-        end
-      end
-    else
-      # 時間休
-      date = start_at.to_date
+    (start_at.to_date..close_at.to_date).each do |date|
       trecord = time_card_records[date.in_time_zone.to_datetime]
-      if trecord.regular_workday?
-        record = new_record
-        record.date = date
-        #
-        record.start_at = (start_at > trecord.regular_start) ? start_at : trecord.regular_start
-        record.close_at = (close_at < trecord.regular_close) ? close_at : trecord.regular_close
-        #
-        record.minutes = time_to_min(record.close_at, date: record.date) - time_to_min(record.start_at, date: record.date)
-        record.minutes = day_leave_minutes if record.minutes > day_leave_minutes
-        record.day_leave_minutes = day_leave_minutes
+      next if trecord.regular_holiday?
 
-        @records << record
-        @total_leave_minutes += record.minutes
-      end
+      record = new_record
+      record.date = date
+      record.allday = "allday"
+      record.start_at = trecord.regular_start
+      record.close_at = trecord.regular_close
+      record.minutes = trecord.regular_work_minutes
+      record.day_leave_minutes = day_leave_minutes
+
+      @records << record
+      @total_leave_minutes += record.minutes
+    end
+    errors.add :base, "開始日〜終了日が休業日です。" if @records.blank?
+  end
+
+  # 各日チェック(時間休)
+  def validate_records_timely
+    return if errors.present?
+
+    @records = []
+    @total_leave_minutes = 0
+
+    date = start_at.to_date
+    date.tap do |date|
+      trecord = time_card_records[date.in_time_zone.to_datetime]
+      next if trecord.regular_holiday?
+
+      record = new_record
+      record.date = date
+
+      record.start_at = (start_at > trecord.regular_start) ? start_at : trecord.regular_start
+      record.close_at = (close_at < trecord.regular_close) ? close_at : trecord.regular_close
+
+      record.minutes = time_to_min(record.close_at, date: record.date) - time_to_min(record.start_at, date: record.date)
+      record.minutes = day_leave_minutes if record.minutes > day_leave_minutes
+      record.day_leave_minutes = day_leave_minutes
+
+      @records << record
+      @total_leave_minutes += record.minutes
     end
     errors.add :base, "開始日〜終了日が休業日です。" if @records.blank?
   end

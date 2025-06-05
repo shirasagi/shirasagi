@@ -50,13 +50,6 @@ module Gws::Affair2
     Gws::Role.permission :reroute_other_gws_affair2_leave_files, module_name: 'gws/affair2'
     Gws::Role.permission :reroute_private_gws_affair2_leave_files, module_name: 'gws/affair2'
 
-    # book
-    Gws::Role.permission :read_gws_affair2_time_card_books, module_name: 'gws/affair2'
-    Gws::Role.permission :read_gws_affair2_workday_overtime_books, module_name: 'gws/affair2'
-    Gws::Role.permission :read_gws_affair2_holiday_overtime_books, module_name: 'gws/affair2'
-    Gws::Role.permission :read_gws_affair2_paid_leave_books, module_name: 'gws/affair2'
-    Gws::Role.permission :read_gws_affair2_other_leave_books, module_name: 'gws/affair2'
-
     # achieve
     Gws::Role.permission :use_private_gws_affair2_overtime_achieves, module_name: 'gws/affair2'
     Gws::Role.permission :use_sub_gws_affair2_overtime_achieves, module_name: 'gws/affair2'

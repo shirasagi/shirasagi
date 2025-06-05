@@ -27,8 +27,6 @@ class Gws::Affair2::LeaveSetting
     special_leave.to_a.map { |item| [item.name, item.id] }
   end
 
-  private
-
   class << self
     def leave_type_options
       I18n.t("gws/affair2.options.leave_type").map { |k, v| [v, k] }

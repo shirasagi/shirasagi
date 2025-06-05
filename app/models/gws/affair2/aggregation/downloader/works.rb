@@ -1,4 +1,8 @@
 class Gws::Affair2::Aggregation::Downloader::Works < Gws::Affair2::Aggregation::Downloader::Base
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/BlockLength
+
   def enum_csv(options)
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
       drawer.column :user_id do
@@ -80,4 +84,8 @@ class Gws::Affair2::Aggregation::Downloader::Works < Gws::Affair2::Aggregation::
     end
     drawer.enum(items, options)
   end
+
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/BlockLength
 end

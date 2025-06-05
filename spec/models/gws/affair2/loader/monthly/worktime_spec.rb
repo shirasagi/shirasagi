@@ -97,8 +97,8 @@ describe Gws::Affair2::Loader::Monthly::Base, type: :model, dbscope: :example do
       item = described_class.new(time_card)
       item.load
 
-      expect(item.work_minutes1).to eq (465 + 465 + 210)
-      expect(item.work_minutes2).to eq (465 + 465 + 210)
+      expect(item.work_minutes1).to eq(465 + 465 + 210)
+      expect(item.work_minutes2).to eq(465 + 465 + 210)
     end
   end
 end

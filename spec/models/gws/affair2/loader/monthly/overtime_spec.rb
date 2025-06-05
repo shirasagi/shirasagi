@@ -117,12 +117,12 @@ describe Gws::Affair2::Loader::Monthly::Base, type: :model, dbscope: :example do
       item = described_class.new(time_card)
       item.load
 
-      expect(item.overtime_short_minutes1).to eq (0 + 0 + 45)
-      expect(item.overtime_day_minutes1).to eq (60 + 255 + 0)
-      expect(item.overtime_night_minutes1).to eq (0 + 390 + 0)
-      expect(item.overtime_short_minutes2).to eq (0 + 0 + 0)
-      expect(item.overtime_day_minutes2).to eq (0 + 0 + 0)
-      expect(item.overtime_night_minutes2).to eq (0 + 0 + 0)
+      expect(item.overtime_short_minutes1).to eq(0 + 0 + 45)
+      expect(item.overtime_day_minutes1).to eq(60 + 255 + 0)
+      expect(item.overtime_night_minutes1).to eq(0 + 390 + 0)
+      expect(item.overtime_short_minutes2).to eq(0 + 0 + 0)
+      expect(item.overtime_day_minutes2).to eq(0 + 0 + 0)
+      expect(item.overtime_night_minutes2).to eq(0 + 0 + 0)
     end
   end
 end

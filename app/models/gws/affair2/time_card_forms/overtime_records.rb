@@ -2,10 +2,11 @@ class Gws::Affair2::TimeCardForms::OvertimeRecords
   include ActiveModel::Model
   include SS::PermitParams
 
-  attr_accessor :site, :user, :date
-  attr_accessor :records, :in_records, :first_entered_records
+  attr_accessor :site, :user, :date,
+    :records, :in_records, :first_entered_records
 
-  permit_params in_records: [:id,
+  permit_params in_records: [
+    :id,
     :in_start_hour, :in_start_minute, :in_close_hour, :in_close_minute,
     :in_break_start_hour, :in_break_start_minute, :in_break_close_hour, :in_break_close_minute
   ]

@@ -787,7 +787,7 @@ describe "gws_affair2_time_cards", type: :feature, dbscope: :example, js: true d
       let(:enter_hour) { I18n.t('gws/attendance.hour', count: 18) }
       let(:enter_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
-      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 22)}
+      let(:leave_hour) { I18n.t('gws/attendance.hour', count: 22) }
       let(:leave_minute) { I18n.t('gws/attendance.minute', count: 0) }
 
       it do

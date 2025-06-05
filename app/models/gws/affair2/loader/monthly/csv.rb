@@ -47,30 +47,19 @@ class Gws::Affair2::Loader::Monthly::Csv < Gws::Affair2::Loader::Monthly::Base
       # 結果確認済み
       label2 = format_minutes(over_minutes2)
       label3 = "[確認]"
-      link = label2 + label3
-      if diff_minutes >= 0
-        label4 = format_minutes2(diff_minutes)
-      else
-        label4 = format_minutes2(diff_minutes)
-      end
+      label4 = format_minutes2(diff_minutes)
     elsif effective_records.all?(&:entered?)
       # 結果入力済み
       label2 = format_minutes(over_minutes2)
       label3 = "[命令]"
-      link = label2 + label3
-
-      if diff_minutes >= 0
-        label4 = format_minutes2(diff_minutes)
-      else
-        label4 = format_minutes2(diff_minutes)
-      end
+      label4 = format_minutes2(diff_minutes)
     else
       # 結果未入力
       label2 = "結果を入力"
       label3 = "[命令]"
       label4 = nil
-      link = label2 + label3
     end
+    link = label2 + label3
 
     h = []
     h << label1
@@ -80,7 +69,7 @@ class Gws::Affair2::Loader::Monthly::Csv < Gws::Affair2::Loader::Monthly::Base
       h << " | "
       h << label4
     end
-    h <<  " )"
+    h << " )"
     h.join
   end
 

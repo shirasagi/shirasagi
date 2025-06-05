@@ -3,8 +3,7 @@ class Gws::Affair2::TimeCardForms::MinutesEdit
   include ActiveModel::Model
   include SS::PermitParams
 
-  attr_accessor :record, :field
-  attr_accessor :minutes
+  attr_accessor :record, :field, :minutes
 
   permit_params :minutes
 
@@ -30,8 +29,6 @@ class Gws::Affair2::TimeCardForms::MinutesEdit
     end
     true
   end
-
-  private
 
   class << self
     def t(*args)

@@ -47,6 +47,9 @@ en:
         settle: Settle
       notice_type:
         monthly_overtime_limit: Monthly overtime limit
+      record_state:
+        request: Request
+        order: Order
     links:
       set_worktime_of_wday: Set by day of the week
       download_all: All attendance settings

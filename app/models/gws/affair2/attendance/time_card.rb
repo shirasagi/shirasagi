@@ -149,14 +149,14 @@ class Gws::Affair2::Attendance::TimeCard
 
     def lock_all(site)
       items = self.all
-      items.update_all({ "$set" => { lock_state: "processing" } })
+      items.set(lock_state: "processing")
       Gws::Affair2::TimeCardLockJob.bind(site_id: site).perform_later(items.pluck(:id))
       true
     end
 
     def unlock_all(site)
       items = self.all
-      items.update_all({ "$set" => { lock_state: "processing" } })
+      items.set(lock_state: "processing")
       Gws::Affair2::TimeCardUnlockJob.bind(site_id: site).perform_later(items.pluck(:id))
       true
     end

@@ -69,7 +69,7 @@ class Gws::Affair2::Overtime::WorkdayFile < Gws::Affair2::Overtime::File
     close_date = I18n.l(close_at.to_date, format: :long)
     start_time = "#{start_at.hour}:#{format('%02d', start_at.minute)}"
     close_time = "#{close_at.hour}:#{format('%02d', close_at.minute)}"
-    next_day = (start_date != close_date) ? "翌" : ""
+    next_day = (start_date == close_date) ? "" : "翌"
     "#{start_date} #{start_time}#{I18n.t("ss.wave_dash")}#{next_day}#{close_time}"
   end
 
@@ -136,7 +136,7 @@ class Gws::Affair2::Overtime::WorkdayFile < Gws::Affair2::Overtime::File
   end
 
   def save_record
-    item = record ? record : Gws::Affair2::Overtime::Record.new
+    item = record || Gws::Affair2::Overtime::Record.new
     item.cur_site = site
     item.cur_user = user
     item.file = self

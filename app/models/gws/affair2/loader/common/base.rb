@@ -2,6 +2,7 @@ class Gws::Affair2::Loader::Common::Base
   include ActiveModel::Model
 
   attr_accessor :site
+
   delegate :time_range_minutes, to: Gws::Affair2::Utils
 
   def night_time_start_at(date)
@@ -110,7 +111,7 @@ class Gws::Affair2::Loader::Common::Base
     cup = Gws::Affair2::Loader::Common::Cup.new(daily_threshold - item.work_minutes2)
     day_minutes = cup.pour(day_minutes)
     night_minutes = cup.pour(night_minutes)
-    short_minutes = cup.value
+    short_minutes = cup.pool
 
     item.overtime_short_minutes = short_minutes
     item.overtime_day_minutes = day_minutes

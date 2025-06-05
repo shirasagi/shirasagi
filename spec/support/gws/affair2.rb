@@ -51,12 +51,6 @@ def gws_affair2_manager_permissions
     use_sub_gws_affair2_overtime_achieves
     use_private_gws_affair2_leave_achieves
     use_sub_gws_affair2_leave_achieves
-
-    read_gws_affair2_time_card_books
-    read_gws_affair2_workday_overtime_books
-    read_gws_affair2_holiday_overtime_books
-    read_gws_affair2_paid_leave_books
-    read_gws_affair2_other_leave_books
   )
 end
 
@@ -89,12 +83,6 @@ def gws_affair2_regular_permissions
 
     use_private_gws_affair2_overtime_achieves
     use_private_gws_affair2_leave_achieves
-
-    read_gws_affair2_time_card_books
-    read_gws_affair2_workday_overtime_books
-    read_gws_affair2_holiday_overtime_books
-    read_gws_affair2_paid_leave_books
-    read_gws_affair2_other_leave_books
   )
 end
 
@@ -129,12 +117,6 @@ def gws_affair2_lotation_permissions
 
     use_private_gws_affair2_overtime_achieves
     use_private_gws_affair2_leave_achieves
-
-    read_gws_affair2_time_card_books
-    read_gws_affair2_workday_overtime_books
-    read_gws_affair2_holiday_overtime_books
-    read_gws_affair2_paid_leave_books
-    read_gws_affair2_other_leave_books
   )
 end
 
@@ -167,12 +149,6 @@ def gws_affair2_restricted_permissions
 
     use_private_gws_affair2_overtime_achieves
     use_private_gws_affair2_leave_achieves
-
-    read_gws_affair2_time_card_books
-    read_gws_affair2_workday_overtime_books
-    read_gws_affair2_holiday_overtime_books
-    read_gws_affair2_paid_leave_books
-    read_gws_affair2_other_leave_books
   )
 end
 
@@ -223,14 +199,15 @@ def gws_affair2
 
   # leave_setting
   leave_settings = OpenStruct.new
-  leave_settings.s1 = create(:gws_affair2_leave_setting) # 特別休暇無し
-  leave_settings.s2 = create(:gws_affair2_leave_setting,
+  leave_settings.s1 = create(:gws_affair2_leave_setting, name: "休暇区分1") # 特別休暇無し
+  leave_settings.s2 = create(:gws_affair2_leave_setting, name: "休暇区分2",
     special_leave_ids: [special_leave.l1.id, special_leave.l2.id, special_leave.l3.id]) # 特別休暇有
 
   # duty_setting
   duty_settings = OpenStruct.new
-  duty_settings.s1 = create :gws_affair2_duty_setting # 8:30 - 17:15
+  duty_settings.s1 = create(:gws_affair2_duty_setting, name: "正規職員1") # 8:30 - 17:15
   duty_settings.s2 = create(:gws_affair2_duty_setting,
+    name: "正規職員2",
     start_at_hour: 7, start_at_minute: 45,
     close_at_hour: 16, close_at_minute: 15,
     break_minutes_at: 60) # 7:45～16:15

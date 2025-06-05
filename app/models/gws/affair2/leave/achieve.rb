@@ -7,11 +7,11 @@ class Gws::Affair2::Leave::Achieve
 
   set_permission_name "gws_affair2_leave_achieves"
 
-  attr_reader :site, :user, :group, :month
-  attr_reader :start_date, :close_date
-  attr_reader :organization_uid
-  attr_reader :attendance_setting, :duty_setting, :paid_leave_setting
-  attr_reader :paid_leave_files, :other_leave_files
+  attr_reader :site, :user, :group, :month,
+    :start_date, :close_date,
+    :organization_uid,
+    :attendance_setting, :duty_setting, :paid_leave_setting,
+    :paid_leave_files, :other_leave_files
 
   validate :validate_attendance_setting
 

@@ -3,8 +3,8 @@ class Gws::Affair2::Overtime::Achieve < Gws::Affair2::Loader::Monthly::Base
 
   set_permission_name "gws_affair2_overtime_achieves"
 
-  attr_reader :site, :user, :group, :month
-  attr_reader :attendance_setting, :duty_setting
+  attr_reader :site, :user, :group, :month,
+    :attendance_setting, :duty_setting
 
   #validate :validate_attendance_setting
 

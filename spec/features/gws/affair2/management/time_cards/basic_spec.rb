@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_affair2_leave_achieve", type: :feature, dbscope: :example, js: true do
+describe "gws_affair2_management_time_cards", type: :feature, dbscope: :example, js: true do
   let!(:site) { gws_site }
   let!(:user) { gws_user }
   let!(:affair2) { gws_affair2 }

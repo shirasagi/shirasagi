@@ -1,4 +1,7 @@
 class Gws::Affair2::Loader::Monthly::Aggregation < Gws::Affair2::Loader::Monthly::Base
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
+
   def save!
     load
 
@@ -91,4 +94,7 @@ class Gws::Affair2::Loader::Monthly::Aggregation < Gws::Affair2::Loader::Monthly
       @agg_day.save!
     end
   end
+
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end

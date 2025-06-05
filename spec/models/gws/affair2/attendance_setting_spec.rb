@@ -15,7 +15,7 @@ describe Gws::Affair2::AttendanceSetting, type: :model, dbscope: :example do
   let!(:duty_setting) { create :gws_affair2_duty_setting }
 
   context "#validate_double_booking" do
-    let(:user1_attr) {
+    let(:user1_attr) do
       {
         cur_site: site,
         cur_user: user1,
@@ -23,8 +23,8 @@ describe Gws::Affair2::AttendanceSetting, type: :model, dbscope: :example do
         duty_setting: duty_setting,
         leave_setting: leave_setting
       }
-    }
-    let(:user2_attr) {
+    end
+    let(:user2_attr) do
       {
         cur_site: site,
         cur_user: user2,
@@ -32,7 +32,7 @@ describe Gws::Affair2::AttendanceSetting, type: :model, dbscope: :example do
         duty_setting: duty_setting,
         leave_setting: leave_setting
       }
-    }
+    end
     let(:messages) { ["開始~終了が重複している設定が存在します。"] }
 
     it do

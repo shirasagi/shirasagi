@@ -10,8 +10,8 @@ class Gws::Affair2::Leave::File
 
   #permission_include_sub_groups
 
-  attr_accessor :in_start_date, :in_start_hour, :in_start_minute
-  attr_accessor :in_close_date, :in_close_hour, :in_close_minute
+  attr_accessor :in_start_date, :in_start_hour, :in_start_minute,
+    :in_close_date, :in_close_hour, :in_close_minute
 
   seqid :id
   field :name, type: String
@@ -61,18 +61,16 @@ class Gws::Affair2::Leave::File
   end
 
   def start_close_label
-    if allday?
-      start_date = I18n.l(start_at.to_date, format: :long)
-      close_date = I18n.l(close_at.to_date, format: :long)
+    start_date = I18n.l(start_at.to_date, format: :long)
+    close_date = I18n.l(close_at.to_date, format: :long)
 
+    if allday?
       if start_date == close_date
         start_date
       else
         "#{start_date}#{I18n.t("ss.wave_dash")}#{close_date}"
       end
     else
-      start_date = I18n.l(start_at.to_date, format: :long)
-      close_date = I18n.l(close_at.to_date, format: :long)
       start_time = "#{start_at.hour}:#{format('%02d', start_at.minute)}"
       close_time = "#{close_at.hour}:#{format('%02d', close_at.minute)}"
 

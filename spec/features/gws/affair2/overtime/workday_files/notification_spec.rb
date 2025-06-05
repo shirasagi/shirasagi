@@ -14,6 +14,21 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
     I18n.t('gws/attendance.formats.time_card_name', month: I18n.l(month, format: :attendance_year_month))
   end
 
+  let(:time_card) { create_time_card }
+  let(:item) { create_overtime_file }
+
+  let(:request_subject) { I18n.t("gws_notification.gws/affair2/overtime/workday_file.request", name: item.name) }
+  let(:approve_subject) { I18n.t("gws_notification.gws/affair2/overtime/workday_file.approve", name: item.name) }
+  let(:remand_subject) { I18n.t("gws_notification.gws/affair2/overtime/workday_file.remand", name: item.name) }
+  let(:circular_subject) { I18n.t("gws_notification.gws/affair2/overtime/workday_file.circular", name: item.name) }
+  let(:comment_subject) { I18n.t("gws_notification.gws/affair2/overtime/workday_file.comment", name: item.name) }
+  let(:record_entered_subject) do
+    I18n.t("gws_notification.gws/affair2/overtime/workday_file.record_entered", name: item.name)
+  end
+  let(:record_confirmed_subject) do
+    I18n.t("gws_notification.gws/affair2/overtime/workday_file.record_confirmed", name: item.name)
+  end
+
   def create_time_card
     visit gws_affair2_attendance_main_path(site)
 
@@ -54,9 +69,8 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
       Timecop.travel(month) do
         login_user(user1)
 
-        create_time_card
-
-        item = create_overtime_file
+        time_card
+        item
 
         expect(SS::Notification.member(user1).count).to eq 0
         expect(SS::Notification.member(user2).count).to eq 0
@@ -88,7 +102,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 0
         expect(SS::Notification.member(user2).count).to eq 1
         notification = SS::Notification.member(user2).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.request", name: item.name)
+        expect(notification.subject).to eq request_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -108,7 +122,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 1
         expect(SS::Notification.member(user2).count).to eq 1
         notification = SS::Notification.member(user1).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.approve", name: item.name)
+        expect(notification.subject).to eq approve_subject
         expect(notification.url).to eq item.private_show_path
       end
     end
@@ -163,7 +177,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 0
         expect(SS::Notification.member(user2).count).to eq 1
         notification = SS::Notification.member(user2).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.request", name: item.name)
+        expect(notification.subject).to eq request_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -184,7 +198,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 1
         expect(SS::Notification.member(user2).count).to eq 1
         notification = SS::Notification.member(user1).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.remand", name: item.name)
+        expect(notification.subject).to eq remand_subject
         expect(notification.url).to eq item.private_show_path
       end
     end
@@ -253,7 +267,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user3).count).to eq 0
 
         notification = SS::Notification.member(user2).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.request", name: item.name)
+        expect(notification.subject).to eq request_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -278,11 +292,11 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user3).count).to eq 1
 
         notification = SS::Notification.member(user1).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.approve", name: item.name)
+        expect(notification.subject).to eq approve_subject
         expect(notification.url).to eq item.private_show_path
 
         notification = SS::Notification.member(user3).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.circular", name: item.name)
+        expect(notification.subject).to eq circular_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -311,7 +325,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user3).count).to eq 1
 
         notification = SS::Notification.member(user1).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.comment", name: item.name)
+        expect(notification.subject).to eq comment_subject
         expect(notification.url).to eq item.private_show_path
       end
     end
@@ -365,7 +379,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 0
         expect(SS::Notification.member(user2).count).to eq 1
         notification = SS::Notification.member(user2).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.request", name: item.name)
+        expect(notification.subject).to eq request_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -385,7 +399,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 1
         expect(SS::Notification.member(user2).count).to eq 1
         notification = SS::Notification.member(user1).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.approve", name: item.name)
+        expect(notification.subject).to eq approve_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -409,7 +423,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 1
         expect(SS::Notification.member(user2).count).to eq 2
         notification = SS::Notification.member(user2).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.record_entered", name: item.name)
+        expect(notification.subject).to eq record_entered_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -448,7 +462,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user2).count).to eq 2
 
         notification = SS::Notification.member(user1).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.record_confirmed", name: item.name)
+        expect(notification.subject).to eq record_confirmed_subject
         expect(notification.url).to eq item.private_show_path
       end
     end
@@ -502,7 +516,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 0
         expect(SS::Notification.member(user2).count).to eq 1
         notification = SS::Notification.member(user2).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.request", name: item.name)
+        expect(notification.subject).to eq request_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -522,7 +536,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 1
         expect(SS::Notification.member(user2).count).to eq 1
         notification = SS::Notification.member(user1).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.approve", name: item.name)
+        expect(notification.subject).to eq approve_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -546,7 +560,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user1).count).to eq 1
         expect(SS::Notification.member(user2).count).to eq 2
         notification = SS::Notification.member(user2).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.record_entered", name: item.name)
+        expect(notification.subject).to eq record_entered_subject
         expect(notification.url).to eq item.private_show_path
 
         #
@@ -568,7 +582,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
         expect(SS::Notification.member(user2).count).to eq 2
 
         notification = SS::Notification.member(user1).first
-        expect(notification.subject).to eq I18n.t("gws_notification.gws/affair2/overtime/workday_file.record_confirmed", name: item.name)
+        expect(notification.subject).to eq record_confirmed_subject
         expect(notification.url).to eq item.private_show_path
       end
     end

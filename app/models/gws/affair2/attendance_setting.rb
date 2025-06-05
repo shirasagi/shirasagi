@@ -107,15 +107,13 @@ class Gws::Affair2::AttendanceSetting
 
   class << self
     def and_current(date)
-      self.where({
-        "$and" => [
-          { start_date: { "$lte" => date.to_date } },
-          { "$or" => [
-            { close_date: { "$gte" => date.to_date } },
-            { close_date: nil },
-          ]}
-        ]
-      })
+      self.where({ "$and" => [
+        { start_date: { "$lte" => date.to_date } },
+        { "$or" => [
+          { close_date: { "$gte" => date.to_date } },
+          { close_date: nil },
+        ]}
+      ]})
     end
 
     def and_between(start_date, close_date)
@@ -123,19 +121,17 @@ class Gws::Affair2::AttendanceSetting
       close_date = close_date.to_date
       return self.none if start_date > close_date
 
-      self.where({
-        "$or" => [
-          { "$and" => [
-            { close_date: { "$ne" => nil } },
-            { close_date: { "$gte" => start_date } },
-            { start_date: { "$lte" => close_date } }
-          ]},
-          { "$and" => [
-            { start_date: { "$lte" => close_date } },
-            { close_date: nil }
-          ]}
-        ]
-      })
+      self.where({ "$or" => [
+        { "$and" => [
+          { close_date: { "$ne" => nil } },
+          { close_date: { "$gte" => start_date } },
+          { start_date: { "$lte" => close_date } }
+        ]},
+        { "$and" => [
+          { start_date: { "$lte" => close_date } },
+          { close_date: nil }
+        ]}
+      ]})
     end
 
     def current_setting(site, user, date)

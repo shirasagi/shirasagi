@@ -11,16 +11,14 @@ class Gws::Affair2::TimeCardForms::RegularRecords
   validates :in_file, presence: true
   validate :validate_in_file, if: ->{ in_file }
 
+  delegate :site, to: :time_card
+
   def initialize(time_card)
     @time_card = time_card
   end
 
   def model
     Gws::Affair2::Attendance::Record
-  end
-
-  def site
-    time_card.site
   end
 
   def required_headers
@@ -129,8 +127,6 @@ class Gws::Affair2::TimeCardForms::RegularRecords
 
     date.advance(hours: h).change(min: m, sec: 0)
   end
-
-  private
 
   class << self
     def t(*args)

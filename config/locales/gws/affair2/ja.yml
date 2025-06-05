@@ -47,6 +47,9 @@ ja:
         settle: 精算
       notice_type:
         monthly_overtime_limit: 月の時間外上限
+      record_state:
+        request: 申請
+        order: 命令
     links:
       set_worktime_of_wday: 曜日毎に設定する
       download_all: 全ての出退勤設定

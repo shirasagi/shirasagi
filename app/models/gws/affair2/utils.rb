@@ -23,12 +23,12 @@ class Gws::Affair2::Utils
       SS.config.affair2.night_time["close_hour"]
     end
 
-    def night_time_close_at(date = Date.today)
+    def night_time_close_at(date = Time.zone.today)
       time = date.in_time_zone
       hour = night_time_close_hour
       if hour >= 24
         time = time.advance(days: (hour / 24))
-        hour = hour % 24
+        hour %= 24
       end
       time.change(hour: hour, min: 0, sec: 0)
     end
@@ -59,7 +59,6 @@ class Gws::Affair2::Utils
       date.change(hour: 0, min: 0, sec: 0).advance(minutes: min)
     end
 
-    #
     def format_time(date, time)
       return '--:--' if time.blank?
 
@@ -71,19 +70,17 @@ class Gws::Affair2::Utils
       "#{hour}:#{format('%02d', time.min)}"
     end
 
-    #
     def format_minutes(minutes)
       return "--:--" if minutes.blank?
       "#{minutes / 60}:#{format("%02d", (minutes % 60))}"
     end
 
-    #
     def format_minutes2(minutes)
       return "--:--" if minutes.blank?
       if minutes >= 0
         "#{minutes / 60}:#{format("%02d", (minutes % 60))}"
       else
-        minutes = minutes * -1
+        minutes *= -1
         "-#{minutes / 60}:#{format("%02d", (minutes % 60))}"
       end
     end

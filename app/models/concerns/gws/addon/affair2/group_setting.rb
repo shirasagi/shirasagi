@@ -32,7 +32,7 @@ module Gws::Addon::Affair2::GroupSetting
     hour = affair2_night_time_close_hour
     if hour >= 24
       time = time.advance(days: (hour / 24))
-      hour = hour % 24
+      hour %= 24
     end
     time.change(hour: hour, min: 0, sec: 0)
   end

@@ -1,8 +1,9 @@
 class Gws::Affair2::Loader::DailyGroups::Base < Gws::Affair2::Loader::Common::Base
-  attr_reader :site, :group, :date
-  attr_reader :users, :user_ids
-  attr_reader :time_cards, :time_card_records
-  attr_reader :overtime_records, :leave_records, :load_records
+
+  attr_reader :site, :group, :date,
+    :users, :user_ids,
+    :time_cards, :time_card_records,
+    :overtime_records, :leave_records, :load_records
 
   def initialize(site, group, date)
     @site = site

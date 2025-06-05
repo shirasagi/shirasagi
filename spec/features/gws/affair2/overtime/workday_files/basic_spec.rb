@@ -114,7 +114,7 @@ describe "gws_affair2_overtime_workday_files", type: :feature, dbscope: :example
 
           visit edit_gws_affair2_overtime_workday_file_path(site, item)
           within "form#item-form" do
-           click_button I18n.t('ss.buttons.save')
+            click_button I18n.t('ss.buttons.save')
           end
           wait_for_notice I18n.t("ss.notice.saved")
         end

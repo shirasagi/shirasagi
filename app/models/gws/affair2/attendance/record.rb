@@ -145,10 +145,9 @@ class Gws::Affair2::Attendance::Record
     if regular_workday?
       effective_close = regular_close > enter ? regular_close : enter
       self.over_minutes = time_to_min(leave, date: date) - time_to_min(effective_close, date: date)
-      self.over_minutes = 0 if over_minutes < 0
     else
       self.over_minutes = time_to_min(leave, date: date) - time_to_min(enter, date: date) - break_minutes.to_i
-      self.over_minutes = 0 if over_minutes < 0
     end
+    self.over_minutes = 0 if over_minutes < 0
   end
 end

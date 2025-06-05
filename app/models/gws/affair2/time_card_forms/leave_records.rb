@@ -2,8 +2,7 @@ class Gws::Affair2::TimeCardForms::LeaveRecords
   include ActiveModel::Model
   include SS::PermitParams
 
-  attr_accessor :site, :user, :date
-  attr_accessor :records
+  attr_accessor :site, :user, :date, :records
 
   class << self
     def t(*args)

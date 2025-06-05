@@ -22,6 +22,9 @@ module Gws::Affair2::Loader::Common::TimeCardView
     format_minutes(load_record.work_minutes2)
   end
 
+  # rubocop:disable Metrics/CyclomaticComplexity
+  # rubocop:disable Metrics/MethodLength
+  # rubocop:disable Metrics/PerceivedComplexity
   # --:--
   # --:-- ( 結果を入力 [命令] )
   # --:-- ( 1:00 [命令] | -1:00 )
@@ -52,36 +55,39 @@ module Gws::Affair2::Loader::Common::TimeCardView
       # 結果確認済み
       label2 = format_minutes(over_minutes2)
       label3 = "[確認]"
-      link = label2 + label3
       if diff_minutes >= 0
         label4 = "<span class=\"overtime-diff plus\">#{format_minutes2(diff_minutes)}</span>"
       else
         label4 = "<span class=\"overtime-diff minus\">#{format_minutes2(diff_minutes)}</span>"
       end
+      link = label2 + label3
     elsif overtime_records.all?(&:entered?)
       # 結果入力済み
       label2 = format_minutes(over_minutes2)
       label3 = "[命令]"
-
-      if editable?(time_card)
-        link = link_to(label2 + label3, time_card_forms_path(:overtime_records, :edit, id: time_card, day: date.day), { class: "edit-overtime-records" })
-      else
-        link = label2 + label3
-      end
-
       if diff_minutes >= 0
         label4 = "<span class=\"overtime-diff plus\">#{format_minutes2(diff_minutes)}</span>"
       else
         label4 = "<span class=\"overtime-diff minus\">#{format_minutes2(diff_minutes)}</span>"
+      end
+      if editable?(time_card)
+        link = link_to(
+          label2 + label3,
+          time_card_forms_path(:overtime_records, :edit, id: time_card, day: date.day),
+          { class: "edit-overtime-records" })
+      else
+        link = label2 + label3
       end
     else
       # 結果未入力
       label2 = "結果を入力"
       label3 = "[命令]"
       label4 = nil
-
       if editable?(time_card)
-        link = link_to(label2 + label3, time_card_forms_path(:overtime_records, :edit, id: time_card, day: date.day), { class: "edit-overtime-records" })
+        link = link_to(
+          label2 + label3,
+          time_card_forms_path(:overtime_records, :edit, id: time_card, day: date.day),
+          { class: "edit-overtime-records" })
       else
         link = label2 + label3
       end
@@ -95,9 +101,12 @@ module Gws::Affair2::Loader::Common::TimeCardView
       h << " | "
       h << label4
     end
-    h <<  " )"
+    h << " )"
     h.join.html_safe
   end
+  # rubocop:enable Metrics/CyclomaticComplexity
+  # rubocop:enable Metrics/MethodLength
+  # rubocop:enable Metrics/PerceivedComplexity
 
   def render_over_break_time(date, time_card, time_card_record, load_record)
     # タイムカードに所定時間が設定されているか
@@ -148,7 +157,10 @@ module Gws::Affair2::Loader::Common::TimeCardView
     h = []
     leave_records.each do |record|
       if time_card.unlocked?
-        link = link_to(record.name, time_card_forms_path(:leave_records, :edit, id: time_card, day: date.day), { class: "edit-leave-records" })
+        link = link_to(
+          record.name,
+          time_card_forms_path(:leave_records, :edit, id: time_card, day: date.day),
+          { class: "edit-leave-records" })
       else
         link = record.name
       end

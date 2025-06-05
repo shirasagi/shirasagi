@@ -57,10 +57,7 @@ class Gws::Affair2::Overtime::Record
   # state: order, first_entered: 結果入力済み
   # state: order, first_confirmed: 結果確認済み
   def state_options
-    [
-      ["申請", "request"],
-      ["命令", "order"]
-    ]
+    %w(request order).map { |k| [I18n.t("gws/affair2.options.record_state.#{k}"), k] }
   end
 
   def entered?
@@ -85,28 +82,34 @@ class Gws::Affair2::Overtime::Record
 
   def load_in_accessor
     if start_at && close_at && break_start_at && break_close_at
-      self.in_start_hour = start_at.hour
-      self.in_start_minute = start_at.min
-      self.in_close_hour = (start_at.to_date == close_at.to_date) ? close_at.hour : close_at.hour + 24
-      self.in_close_minute = close_at.min
-
-      self.in_break_start_hour = (start_at.to_date == break_start_at.to_date) ? break_start_at.hour : break_start_at.hour + 24
-      self.in_break_start_minute = break_start_at.min
-      self.in_break_close_hour = (start_at.to_date == break_close_at.to_date) ? break_close_at.hour : break_close_at.hour + 24
-      self.in_break_close_minute = break_close_at.min
-      return
+      load_in_accessor_from_field
+    elsif file
+      load_in_accessor_from_file
     end
-    if file
-      self.in_start_hour = file.start_at.hour
-      self.in_start_minute = file.start_at.min
-      self.in_close_hour = (file.start_at.to_date == file.close_at.to_date) ? file.close_at.hour : file.close_at.hour + 24
-      self.in_close_minute = file.close_at.min
+  end
 
-      self.in_break_start_hour = file.start_at.hour
-      self.in_break_start_minute = file.start_at.min
-      self.in_break_close_hour = file.start_at.hour
-      self.in_break_close_minute = file.start_at.min
-    end
+  def load_in_accessor_from_field
+    self.in_start_hour = start_at.hour
+    self.in_start_minute = start_at.min
+    self.in_close_hour = (start_at.to_date == close_at.to_date) ? close_at.hour : close_at.hour + 24
+    self.in_close_minute = close_at.min
+
+    self.in_break_start_hour = (start_at.to_date == break_start_at.to_date) ? break_start_at.hour : break_start_at.hour + 24
+    self.in_break_start_minute = break_start_at.min
+    self.in_break_close_hour = (start_at.to_date == break_close_at.to_date) ? break_close_at.hour : break_close_at.hour + 24
+    self.in_break_close_minute = break_close_at.min
+  end
+
+  def load_in_accessor_from_file
+    self.in_start_hour = file.start_at.hour
+    self.in_start_minute = file.start_at.min
+    self.in_close_hour = (file.start_at.to_date == file.close_at.to_date) ? file.close_at.hour : file.close_at.hour + 24
+    self.in_close_minute = file.close_at.min
+
+    self.in_break_start_hour = file.start_at.hour
+    self.in_break_start_minute = file.start_at.min
+    self.in_break_close_hour = file.start_at.hour
+    self.in_break_close_minute = file.start_at.min
   end
 
   alias in_start_hour_options hour_options
@@ -187,12 +190,11 @@ class Gws::Affair2::Overtime::Record
     if record.regular_workday?
       # 勤務日の場合は 所定終業 から 深夜時間外終了 まで
       day_range = (record.regular_close..night_time_start_at(date))
-      night_range = (night_time_start_at(date)..night_time_close_at(date))
     else
       # 休業日の場合は 前日の深夜時間外終了 から 深夜時間外終了 まで
       day_range = (night_time_close_at(date.advance(days: -1))..night_time_start_at(date))
-      night_range = (night_time_start_at(date)..night_time_close_at(date))
     end
+    night_range = (night_time_start_at(date)..night_time_close_at(date))
 
     sub_ranges = []
     sub_ranges << (start_at..close_at)

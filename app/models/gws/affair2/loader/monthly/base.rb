@@ -1,21 +1,23 @@
 class Gws::Affair2::Loader::Monthly::Base < Gws::Affair2::Loader::Common::Base
+  # rubocop:disable Metrics/AbcSize
+  # rubocop:disable Metrics/MethodLength
 
-  attr_accessor :user, :time_card, :notice_messages
-  attr_accessor :time_card_records, :overtime_records, :leave_records, :load_records
-  attr_accessor :work_minutes1, :work_minutes2
-
-  attr_accessor :overtime_minutes, :overtime_minutes1, :overtime_minutes2
-
-  attr_accessor :overtime_short_minutes1, :overtime_day_minutes1, :overtime_night_minutes1
-  attr_accessor :overtime_short_minutes2, :overtime_day_minutes2, :overtime_night_minutes2
-
-  attr_accessor :compens_overtime_day_minutes1, :compens_overtime_night_minutes1
-  attr_accessor :compens_overtime_day_minutes2, :compens_overtime_night_minutes2
-
-  attr_accessor :settle_overtime_day_minutes1, :settle_overtime_night_minutes1
-  attr_accessor :settle_overtime_day_minutes2, :settle_overtime_night_minutes2
-
-  attr_accessor :leave_minutes, :leave_minutes_hash
+  attr_accessor :user, :time_card, :notice_messages,
+    :time_card_records, :overtime_records, :leave_records, :load_records,
+    :work_minutes1, :work_minutes2,
+    # overtime total
+    :overtime_minutes, :overtime_minutes1, :overtime_minutes2,
+    # short, day, night
+    :overtime_short_minutes1, :overtime_day_minutes1, :overtime_night_minutes1,
+    :overtime_short_minutes2, :overtime_day_minutes2, :overtime_night_minutes2,
+    # compens
+    :compens_overtime_day_minutes1, :compens_overtime_night_minutes1,
+    :compens_overtime_day_minutes2, :compens_overtime_night_minutes2,
+    # settle
+    :settle_overtime_day_minutes1, :settle_overtime_night_minutes1,
+    :settle_overtime_day_minutes2, :settle_overtime_night_minutes2,
+    # leave
+    :leave_minutes, :leave_minutes_hash
 
   def initialize(time_card)
     @time_card = time_card
@@ -231,4 +233,7 @@ class Gws::Affair2::Loader::Monthly::Base < Gws::Affair2::Loader::Common::Base
     end
     @overtime_minutes = @overtime_minutes1 + @overtime_minutes2
   end
+
+  # rubocop:enable Metrics/AbcSize
+  # rubocop:enable Metrics/MethodLength
 end

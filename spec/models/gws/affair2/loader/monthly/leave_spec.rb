@@ -92,8 +92,8 @@ describe Gws::Affair2::Loader::Monthly::Base, type: :model, dbscope: :example do
       item = described_class.new(time_card)
       item.load
 
-      expect(item.work_minutes2).to eq (0 + (465 - 120))
-      expect(item.leave_minutes).to eq (day_leave_minutes + 120)
+      expect(item.work_minutes2).to eq(0 + (465 - 120))
+      expect(item.leave_minutes).to eq(day_leave_minutes + 120)
 
       expect(item.leave_minutes_hash.size).to eq 2
       expect(item.leave_minutes_hash[leave_type1]).to eq day_leave_minutes

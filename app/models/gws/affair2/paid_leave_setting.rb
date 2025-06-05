@@ -31,8 +31,8 @@ class Gws::Affair2::PaidLeaveSetting
   end
 
   def used_minutes
-    start = with_start ? with_start : Time.zone.local(year, 1, 1)
-    close = with_close ? with_close : start.end_of_year
+    start = with_start || Time.zone.local(year, 1, 1)
+    close = with_close || start.end_of_year
 
     records = Gws::Affair2::Leave::Record.site(site).user(user).
       and_approved.
@@ -53,7 +53,7 @@ class Gws::Affair2::PaidLeaveSetting
     rem_minutes = minutes % day_minutes
 
     rem_hours = rem_minutes / 60
-    rem_minutes = rem_minutes % 60
+    rem_minutes %= 60
     I18n.t("gws/affair2.views.#{format}",
       minutes: minutes, days: days,
       rem_hours: rem_hours,

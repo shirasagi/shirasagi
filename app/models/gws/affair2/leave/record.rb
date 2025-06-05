@@ -40,10 +40,7 @@ class Gws::Affair2::Leave::Record
   end
 
   def state_options
-    [
-      ["申請", "request"],
-      ["命令", "order"]
-    ]
+    %w(request order).map { |k| [I18n.t("gws/affair2.options.record_state.#{k}"), k] }
   end
 
   def allday?

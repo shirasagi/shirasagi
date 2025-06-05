@@ -6,7 +6,8 @@ describe "gws_affair2_management_aggregations", type: :feature, dbscope: :exampl
   let!(:affair2) { gws_affair2 }
   let!(:year_month) { Time.zone.now.strftime('%Y%m') }
   let!(:download_path) do
-    download_gws_affair2_management_aggregations_path(site: site, employee_type: employee_type, unit: unit, form: form, year_month: year_month)
+    download_gws_affair2_management_aggregations_path(site: site, employee_type: employee_type,
+      unit: unit, form: form, year_month: year_month)
   end
 
   context "basic" do

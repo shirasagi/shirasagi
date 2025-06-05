@@ -37,10 +37,9 @@ module Gws::Affair2::TimeCardHelper
 
     tag.div(class: "reason-tooltip") do
       '<i class="material-icons md-13">&#xE0C9;</i>'.html_safe +
-      tag.div(class: "reason") do
-        tag.div { history.reason } +
-        ss_time_tag(history.created)
-      end
+        tag.div(class: "reason") do
+          tag.div { history.reason } + ss_time_tag(history.created)
+        end
     end
   end
 end
