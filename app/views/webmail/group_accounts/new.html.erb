@@ -1,0 +1,5 @@
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+<% end %>
+
+<%= render template: "ss/crud/new" %>

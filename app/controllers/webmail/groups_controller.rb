@@ -90,7 +90,7 @@ class Webmail::GroupsController < ApplicationController
       return
     end
 
-    if !Webmail::GroupImportJob.valid_csv?(@item.in_file)
+    if !Webmail::GroupExport::Importer.valid_csv?(@item.in_file)
       @item.errors.add :base, :malformed_csv
       render action: :import
       return
@@ -116,15 +116,17 @@ class Webmail::GroupsController < ApplicationController
     end
 
     items = @model.all.allow(:edit, @cur_user).reorder(id: 1)
-    exporter = Webmail::GroupExporter.new(criteria: items)
-    send_enum exporter.enum_csv(encoding: @item.encoding), filename: "webmail_groups_#{Time.zone.now.to_i}.csv"
+    exporter = Webmail::GroupExport::Exporter.new(items: items)
+    send_enum exporter.enum_csv(encoding: @item.encoding), type: exporter.content_type,
+      filename: "webmail_groups_#{Time.zone.now.to_i}.csv"
   end
 
   def download_template
     raise "403" unless @model.allowed?(:edit, @cur_user)
 
     items = @model.all.allow(:edit, @cur_user).reorder(id: 1)
-    exporter = Webmail::GroupExporter.new(criteria: items, template: true)
-    send_enum exporter.enum_csv(encoding: "UTF-8"), filename: "webmail_groups_#{Time.zone.now.to_i}.csv"
+    exporter = Webmail::GroupExport::Exporter.new(items: items)
+    send_enum exporter.enum_template_csv(encoding: "UTF8"), type: exporter.content_type,
+      filename: "webmail_groups_#{Time.zone.now.to_i}.csv"
   end
 end

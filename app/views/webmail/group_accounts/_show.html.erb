@@ -47,4 +47,7 @@
   <dt><%= @model.t :threshold_mb %></dt>
   <dd><%= @item.threshold_mb %><%= t "ss.units.mega_byte" %></dd>
   <% end %>
+
+  <dt><%= @model.t :imap_default_index %></dt>
+  <dd><%= check_box_tag "", 1, (@group.imap_default_index == @index), class: "default-index", disabled: true %></dd>
 </dl>
