@@ -9,6 +9,8 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
   let!(:user1) { create(:cms_test_user, group_ids: group_ids, cms_role_ids: role_ids) }
   # let!(:user2) { create(:cms_test_user, group_ids: group_ids, cms_role_ids: role_ids) }
   let(:workflow_comment) { unique_id }
+  let(:approve_comment) { "approve-#{unique_id}" }
+  let(:remand_comment) { "remand-#{unique_id}" }
 
   before do
     ActionMailer::Base.deliveries = []
@@ -30,8 +32,9 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         #
         # admin: send request
         #
-        login_cms_user
-        visit show_path
+        login_user cms_user, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -52,6 +55,8 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -66,13 +71,20 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         # user1: edit requested page
         #
         login_user user1, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t("ss.links.edit")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "#item-form" do
           fill_in_ckeditor "item[html]", with: unique_id
           click_on I18n.t("ss.buttons.draft_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -91,7 +103,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
     let(:html_with_accessibility_error) do
       <<~HTML
         <div>
-          <img src="image.jpg">
+          <img src="/image.jpg">
         </div>
       HTML
     end
@@ -104,8 +116,9 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
     # アクセシビリティチェックを無視して保存する権限がある場合、公開承認ボタンが表示される
     context "when user with permission approves" do
       it do
-        login_cms_user
-        visit show_path
+        login_user cms_user, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -126,6 +139,8 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -135,13 +150,22 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
 
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_button(I18n.t("workflow.buttons.approve"))
         expect(page).to have_content(I18n.t("errors.messages.check_html"))
 
-        click_on I18n.t("workflow.buttons.approve")
+        within ".mod-workflow-approve" do
+          fill_in "remand[comment]", with: approve_comment
+          click_on I18n.t("workflow.buttons.approve")
+        end
+        wait_for_js_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t("article.page_navi.back_to_index")
         expect(page).to have_content(item.name)
         expect(page).to have_content(I18n.t("ss.state.public"))
@@ -156,8 +180,9 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         role.reload
 
         # 申請処理
-        login_cms_user
-        visit show_path
+        login_user cms_user, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -178,6 +203,8 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -187,14 +214,22 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
 
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_content(I18n.t("errors.messages.accessibility_check_required"))
         expect(page).not_to have_button(I18n.t("workflow.buttons.approve"))
         expect(page).to have_button(I18n.t("workflow.buttons.remand"))
 
-        click_on I18n.t("workflow.buttons.remand")
+        within ".mod-workflow-approve" do
+          fill_in "remand[comment]", with: remand_comment
+          click_on I18n.t("workflow.buttons.remand")
+        end
+        wait_for_js_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         click_on I18n.t("article.page_navi.back_to_index")
         expect(page).to have_content(item.name)
@@ -212,8 +247,9 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         item.update!(state: "public")
 
         # 申請処理（非公開申請）
-        login_cms_user
-        visit show_path
+        login_user cms_user, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
@@ -234,6 +270,8 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
         expect(item.workflow_user_id).to eq cms_user.id
@@ -244,14 +282,23 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
 
         # 承認者としてログイン
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         # 非公開申請の場合は承認ボタンが表示され、承認できる
         expect(page).to have_button(I18n.t("workflow.buttons.approve"))
         expect(page).to have_content(I18n.t("errors.messages.check_html"))
 
-        click_on I18n.t("workflow.buttons.approve")
+        within ".mod-workflow-approve" do
+          fill_in "remand[comment]", with: approve_comment
+          click_on I18n.t("workflow.buttons.approve")
+        end
+        wait_for_js_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t("article.page_navi.back_to_index")
         expect(page).to have_content(item.name)
         expect(page).to have_content(I18n.t("ss.state.closed"))
@@ -264,27 +311,31 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
     let(:html_with_accessibility_error) do
       <<~HTML
         <div>
-          <img src=\"image.jpg\">
+          <img src="/image.jpg">
         </div>
       HTML
     end
     let!(:original_item) do
-      create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: html_with_accessibility_error,
-state: "closed")
+      create(
+        :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: html_with_accessibility_error,
+        state: "closed")
     end
     let(:show_path) { article_page_path(site, node, original_item) }
 
     # 権限ありの場合、差し替えページも承認できる
     context "when user with permission approves branch" do
       it do
-        login_cms_user
-        visit show_path
+        login_user cms_user, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "#addon-workflow-agents-addons-branch" do
-          click_on I18n.t('workflow.create_branch')
+          wait_for_event_fired("turbo:frame-load") { click_on I18n.t('workflow.create_branch') }
           expect(page).to have_content(original_item.name)
           click_on original_item.name
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         click_on I18n.t('ss.links.edit')
         within "form#item-form" do
@@ -295,6 +346,8 @@ state: "closed")
           click_on I18n.t("ss.buttons.ignore_alert")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         branch_item = Cms::Page.last
         branch_path = article_page_path(site, node, branch_item)
 
@@ -317,6 +370,8 @@ state: "closed")
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         branch_item.reload
         expect(branch_item.workflow_user_id).to eq cms_user.id
@@ -324,16 +379,25 @@ state: "closed")
         expect(branch_item.state).to eq "closed"
         expect(branch_item.workflow_comment).to eq workflow_comment
         expect(branch_item.workflow_approvers.count).to eq 1
-        expect(branch_item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request',
-comment: ''})
+        expect(branch_item.workflow_approvers).to include(
+          { level: 1, user_id: user1.id, editable: '', state: 'request', comment: '' })
 
-        login_user user1
-        visit branch_path
+        login_user user1, to: branch_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_button(I18n.t("workflow.buttons.approve"))
         expect(page).to have_content(I18n.t("errors.messages.check_html"))
 
-        click_on I18n.t("workflow.buttons.approve")
+        within ".mod-workflow-approve" do
+          fill_in "remand[comment]", with: approve_comment
+          click_on I18n.t("workflow.buttons.approve")
+        end
+        wait_for_js_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: approve_comment)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t("article.page_navi.back_to_index")
         expect(page).to have_content(branch_item.name)
         expect(page).to have_content(I18n.t("ss.state.public"))
@@ -346,25 +410,29 @@ comment: ''})
       let(:html_with_accessibility_error) do
         <<~HTML
           <div>
-            <img src=\"image.jpg\">
+            <img src="/image.jpg">
           </div>
         HTML
       end
       let!(:original_item) do
-        create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: html_with_accessibility_error,
-state: "closed")
+        create(
+          :article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: html_with_accessibility_error,
+          state: "closed")
       end
       let(:show_path) { article_page_path(site, node, original_item) }
       it do
 
-        login_cms_user
-        visit show_path
+        login_user cms_user, to: show_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "#addon-workflow-agents-addons-branch" do
-          click_on I18n.t('workflow.create_branch')
+          wait_for_event_fired("turbo:frame-load") { click_on I18n.t('workflow.create_branch') }
           expect(page).to have_content(original_item.name)
           click_on original_item.name
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         click_on I18n.t('ss.links.edit')
         within "form#item-form" do
@@ -375,6 +443,8 @@ state: "closed")
           click_on I18n.t("ss.buttons.ignore_alert")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         branch_item = Cms::Page.last
         branch_path = article_page_path(site, node, branch_item)
 
@@ -397,6 +467,8 @@ state: "closed")
           click_on I18n.t("workflow.buttons.request")
         end
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         branch_item.reload
         expect(branch_item.workflow_user_id).to eq cms_user.id
@@ -404,20 +476,29 @@ state: "closed")
         expect(branch_item.state).to eq "closed"
         expect(branch_item.workflow_comment).to eq workflow_comment
         expect(branch_item.workflow_approvers.count).to eq 1
-        expect(branch_item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request',
-comment: ''})
+        expect(branch_item.workflow_approvers).to include(
+          { level: 1, user_id: user1.id, editable: '', state: 'request', comment: '' })
 
         role = cms_role
         role.update(permissions: (role.permissions - %w(edit_cms_ignore_syntax_check)))
         role.reload
-        login_user user1
-        visit branch_path
+        login_user user1, to: branch_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_content(I18n.t("errors.messages.accessibility_check_required"))
         expect(page).not_to have_button(I18n.t("workflow.buttons.approve"))
         expect(page).to have_button(I18n.t("workflow.buttons.remand"))
 
-        click_on I18n.t("workflow.buttons.remand")
+        within ".mod-workflow-approve" do
+          fill_in "remand[comment]", with: remand_comment
+          click_on I18n.t("workflow.buttons.remand")
+        end
+        wait_for_js_ready
+        expect(page).to have_css(".mod-workflow-view dd", text: remand_comment)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t("article.page_navi.back_to_index")
         expect(page).to have_content(branch_item.name)
         expect(page).to have_content(I18n.t("workflow.state.remand"))

@@ -16,8 +16,8 @@ describe "gws_login", type: :feature, dbscope: :example, js: true, ldap: true do
           fill_in "item[password]", with: "pass"
           click_on I18n.t("ss.login")
         end
-        expect(current_path).to eq gws_portal_path(site: site)
         expect(page).to have_css("nav.user .user-name", text: ldap_user.name)
+        expect(current_path).to eq gws_portal_path(site: site)
       end
     end
 
@@ -30,8 +30,8 @@ describe "gws_login", type: :feature, dbscope: :example, js: true, ldap: true do
           fill_in "item[password]", with: "pass"
           click_on I18n.t("ss.login")
         end
-        expect(current_path).to eq gws_portal_path(site: site)
         expect(page).to have_css("nav.user .user-name", text: ldap_user.name)
+        expect(current_path).to eq gws_portal_path(site: site)
       end
     end
   end
