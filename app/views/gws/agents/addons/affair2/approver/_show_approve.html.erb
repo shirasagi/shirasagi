@@ -1,0 +1,34 @@
+<%
+  workflow_approver = @item.find_workflow_request_to(@cur_user)
+  return if workflow_approver.nil?
+%>
+<section class="mod-workflow-approve">
+  <%= render "ss/crud/addon", addon: { head: "#{t("workflow.buttons.approve")}/#{t("workflow.buttons.remand")}#{@model.tt :approve_remand}".html_safe } do %>
+    <dl class="see">
+      <% if @item.workflow_kind.present? %>
+        <dt><%= @model.t :workflow_kind %><%= @model.tt :workflow_kind %></dt>
+        <dd><%= @item.label(:workflow_kind) %></dd>
+      <% end %>
+    </dl>
+    <%= text_area :remand, :comment, value: "" %>
+    <% if @item.workflow_approver_attachment_enabled_at?(workflow_approver[:level]) %>
+      <div class="upload">
+        <span class="upload-menu-new">
+          <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+        </span>
+        <div class="upload-drop-area">
+          <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
+        </div>
+        <div id="selected-files"></div>
+      </div>
+    <% end %>
+    <div class="buttons">
+      <% if workflow_approver[:state] == 'request' %>
+          <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+        <%= button_tag t("workflow.buttons.remand"), updatetype: :remand, class: "update-item btn-default", disabled: true, data: { disable: '' } %>
+      <% elsif workflow_approver[:state] == 'pending' %>
+        <%= button_tag t("workflow.buttons.pull_up"), updatetype: :pull_up, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+      <% end %>
+    </div>
+  <% end %>
+</section>

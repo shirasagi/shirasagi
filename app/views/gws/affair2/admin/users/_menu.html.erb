@@ -1,0 +1,11 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <%= dropdown_link(t('ss.links.download')) do %>
+      <%= link_to t('gws/affair2.links.download_all'), { action: :download_all } %>
+      <%= link_to t('gws/affair2.links.download_no_setting'), { action: :download_no_setting } %>
+    <% end %>
+    <%= link_to t('ss.links.import'), { action: :import } %>
+  <% elsif params[:action] =~ /import|download/ %>
+    <%= link_to t('ss.links.back'), action: :index %>
+  <% end %>
+</nav>

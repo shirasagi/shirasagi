@@ -1,0 +1,7 @@
+<%
+  return if @item.workflow_state != Workflow::Approver::WORKFLOW_STATE_APPROVE
+%>
+<dl class="see addon-gws-affair2-overtime_record">
+<%= tag.turbo_frame id: "overtime-records", src: gws_affair2_overtime_record_path(file_id: @item) do %>
+<% end %>
+</dl>

@@ -133,6 +133,7 @@ en:
       copy: Duplicate
       command: Command
       input: Enter
+      index: Go list
       make_them_public: Make it public
       make_them_close: Make it closed
       delete: Delete
@@ -322,7 +323,7 @@ en:
       not_allowed_to_publish: You are not allowed to Publish this Page
       not_allowed_to_close: You are not allowed to Close this Page
       submit_image_canvas: To confirm the image resize, click the ✓ on the toolbar.
-
+      run: Are you sure you want to execute it?
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.

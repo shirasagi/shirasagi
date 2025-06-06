@@ -1,0 +1,8 @@
+<div class="nav-group">
+  <%= tag.nav(class: "nav-menu select-year-month", data: { controller: "ss--redirect-on-change", url: url_for(action: :index, year_month: ':year_month:', day: ':day:') }) do %>
+    <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month]), { include_blank: true, data: { default: default_year_month } }) %>
+    <%= select_tag(:day, options_for_select(day_options, params[:day]), { include_blank: true, data: { default: default_day } }) %>
+    <%= link_to(t('gws/attendance.prev_day'), prev_day, class: :btn) if prev_day %>
+    <%= link_to(t('gws/attendance.next_day'), next_day, class: :btn) if next_day %>
+  <% end %>
+</div>

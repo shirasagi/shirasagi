@@ -5,7 +5,7 @@ describe Gws::Bookmark, type: :model, dbscope: :example do
 
   describe ".bookmark_model_options_all" do
     context "with all menus available" do
-      let(:private_types) { 2 }
+      let(:private_types) { 3 }
       let(:public_types) { Gws::Bookmark::BOOKMARK_MODEL_ALL_TYPES.count - private_types }
 
       it do
@@ -19,7 +19,7 @@ describe Gws::Bookmark, type: :model, dbscope: :example do
 
     context "with all menus available" do
       let(:disabled_menu) { (Gws::Bookmark::BOOKMARK_MODEL_TYPES - %w(workflow elasticsearch)).sample }
-      let(:private_types) { 3 }
+      let(:private_types) { 4 }
       let(:public_types) { Gws::Bookmark::BOOKMARK_MODEL_ALL_TYPES.count - private_types }
 
       before do

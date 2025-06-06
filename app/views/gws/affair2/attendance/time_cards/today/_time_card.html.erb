@@ -1,0 +1,86 @@
+<div class="attendance-box today">
+  <div class="attendance-box-title"><%= I18n.l(date.to_date, format: :full) %></div>
+
+  <div class="attendance-box-main">
+    <div class="today-wrap">
+      <table class="today">
+        <thead>
+          <th class="enter"><%= Gws::Affair2::Attendance::Record.t(:enter) %></th>
+          <th class="leave"><%= Gws::Affair2::Attendance::Record.t(:leave) %></th>
+          <th class="break_time"><%= Gws::Affair2::Attendance::Record.t(:break_time) %></th>
+          <th class="memo"><%= Gws::Affair2::Attendance::Record.t(:memo) %></th>
+        </thead>
+        <tbody>
+          <% if item.unlocked? %>
+            <tr class="action">
+              <td class="time enter">
+                <%= render_punchable(item, record, "enter") do |mode, url| %>
+                  <% if mode == "punch" %>
+                    <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url, confirm: t('gws/attendance.confirm.punch') }) %>
+                  <% elsif mode == "edit" %>
+                    <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url }) %>
+                  <% elsif mode == "none" %>
+                    <%= button_tag(t("gws/attendance.buttons.edit"), name: mode, type: 'button', class: "#{mode} btn", disabled: "disabled") %>
+                  <% end %>
+                <% end %>
+              </td>
+              <td class="time leave">
+                <%= render_punchable(item, record, "leave") do |mode, url| %>
+                  <% if mode == "punch" %>
+                    <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url, confirm: t('gws/attendance.confirm.punch') }) %>
+                  <% elsif mode == "edit" %>
+                    <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url }) %>
+                  <% elsif mode == "none" %>
+                    <%= button_tag(t("gws/attendance.buttons.edit"), name: mode, type: 'button', class: "#{mode} btn", disabled: "disabled") %>
+                  <% end %>
+                <% end %>
+              </td>
+              <td class="time break-time">
+                <%= render_editable(item, record, "break_minutes") do |mode, url| %>
+                  <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url }) %>
+                <% end %>
+              </td>
+              <td class="memo">
+                <%= render_editable(item, record, "memo") do |mode, url| %>
+                  <%= button_tag(t("gws/attendance.buttons.#{mode}"), name: mode, type: 'button', class: "#{mode} btn", data: { url: url }) %>
+                <% end %>
+              </td>
+            </tr>
+            <tr class="info">
+              <td class="time enter">
+                <%= format_time(record.date, record.enter) %>
+                <%= render_reason(record, "enter") %>
+              </td>
+              <td class="time leave">
+                <%= format_time(record.date, record.leave) %>
+                <%= render_reason(record, "leave") %>
+              </td>
+              <td class="time break-time">
+                <%= format_minutes(record.break_minutes) %>
+              </td>
+              <td class="memo"><%= record.memo %></td>
+            </tr>
+          <% else %>
+            <tr>
+              <td colspan="<%= 8 %>"><%= t('gws/attendance.already_locked') %></td>
+            </tr>
+            <tr class="info">
+              <td class="time enter">
+                <%= format_time(record.date, record.enter) %>
+                <%= render_reason(record, "enter") %>
+              </td>
+              <td class="time leave">
+                <%= format_time(record.date, record.leave) %>
+                <%= render_reason(record, "leave") %>
+              </td>
+              <td class="time break-time">
+                <%= format_minutes(record.break_minutes) %>
+              </td>
+              <td class="memo"><%= record.try(:memo) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

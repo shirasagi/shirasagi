@@ -4,6 +4,11 @@ describe "gws_affair_users", type: :feature, dbscope: :example, js: true do
   before { create_affair_users }
   let(:site) { affair_site }
 
+  before do
+    site.menu_affair_state = "show"
+    site.update!
+  end
+
   context "regular_staff" do
     before { login_gws_user }
     let(:item) { affair_user(638) }

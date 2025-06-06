@@ -1,0 +1,117 @@
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <div class="nav-group">
+        <%= tag.nav(class: "nav-menu", data: { controller: "ss--redirect-on-change", url: url_for(action: :show, year_month: ':year_month:') }) do %>
+          <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month]), { include_blank: true, data: { default: default_year_month } }) %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="addon-views">
+  <div class="addon-view">
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @user.t :name %></dt>
+        <dd><%= @user.long_name %></dd>
+
+        <dt><%= @user.t :organization_uid %></dt>
+        <dd><%= @user.organization_uid %></dd>
+      </dl>
+
+      <dl class="see">
+        <dt><%= "時間外（通常分）" %></dt>
+        <dd class="wide">
+          <table class="index overtime-results">
+            <thead>
+              <tr class="item-head">
+                <th class="time" colspan="3"><%= "時間外（勤務日）" %></th>
+                <th class="time" colspan="4"><%= "時間外（休業日）" %></th>
+                <th class="time" rowspan="2"><%= "計" %></th>
+              </tr>
+              <tr class="item-head">
+                <th class="time"><%=br "時短" %></th>
+                <th class="time"><%=br "通常" %></th>
+                <th class="time"><%=br "深夜" %></th>
+                <th class="time"><%=br "振替通常" %></th>
+                <th class="time"><%=br "振替深夜" %></th>
+                <th class="time"><%=br "精算通常" %></th>
+                <th class="time"><%=br "精算深夜" %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="item">
+                <td class="time"><%= format_minutes(@item.overtime_short_minutes1) %></td>
+                <td class="time"><%= format_minutes(@item.overtime_day_minutes1) %></td>
+                <td class="time"><%= format_minutes(@item.overtime_night_minutes1) %></td>
+                <td class="time"><%= format_minutes(@item.compens_overtime_day_minutes1) %></td>
+                <td class="time"><%= format_minutes(@item.compens_overtime_night_minutes1) %></td>
+                <td class="time"><%= format_minutes(@item.settle_overtime_day_minutes1) %></td>
+                <td class="time"><%= format_minutes(@item.settle_overtime_night_minutes1) %></td>
+                <td class="time"><%= format_minutes(@item.overtime_minutes1) %></td>
+              </tr>
+            </tbody>
+          </table>
+        </dd>
+
+        <dt><%= "時間外（#{@item.monthly_threshold_hour}時間超分）" %></dt>
+        <dd class="wide">
+          <table class="index overtime-results">
+            <thead>
+              <tr class="item-head">
+                <th class="time" colspan="3"><%= "時間外（勤務日）" %></th>
+                <th class="time" colspan="4"><%= "時間外（休業日）" %></th>
+                <th class="time" rowspan="2"><%= "計" %></th>
+              </tr>
+              <tr class="item-head">
+                <th class="time"><%=br "時短" %></th>
+                <th class="time"><%=br "通常" %></th>
+                <th class="time"><%=br "深夜" %></th>
+                <th class="time"><%=br "振替通常" %></th>
+                <th class="time"><%=br "振替深夜" %></th>
+                <th class="time"><%=br "精算通常" %></th>
+                <th class="time"><%=br "精算深夜" %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="item">
+                <td class="time"><%= format_minutes(@item.overtime_short_minutes2) %></td>
+                <td class="time"><%= format_minutes(@item.overtime_day_minutes2) %></td>
+                <td class="time"><%= format_minutes(@item.overtime_night_minutes2) %></td>
+                <td class="time"><%= format_minutes(@item.compens_overtime_day_minutes2) %></td>
+                <td class="time"><%= format_minutes(@item.compens_overtime_night_minutes2) %></td>
+                <td class="time"><%= format_minutes(@item.settle_overtime_day_minutes2) %></td>
+                <td class="time"><%= format_minutes(@item.settle_overtime_night_minutes2) %></td>
+                <td class="time"><%= format_minutes(@item.overtime_minutes2) %></td>
+              </tr>
+            </tbody>
+          </table>
+        </dd>
+
+        <!--
+        <dt></dt>
+        <dd class="wide">
+          <table class="index overtime-results">
+            <thead>
+              <th><%= "日付" %></th>
+              <th><%= "時間外（通常分）" %></th>
+              <th><%= "時間外（#{SS.config.affair2.dig("overtime", "monthly_threshold")}時間超分）" %></th>
+            </thead>
+            <tbody>
+            <% @item.load_records.each do |date, record| %>
+              <% next if record.overtime_minutes == 0 %>
+              <tr>
+                <td><%= l(date.to_date, format: :full) %></td>
+                <td><%= format_minutes(record.over_minutes1) %></td>
+                <td><%= format_minutes(record.over_minutes2) %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </dd>
+        -->
+      </dl>
+    </div>
+  </div>
+</div>

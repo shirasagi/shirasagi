@@ -1,0 +1,27 @@
+<% @item.workflow_circulations.each_with_index do |workflow_circulation, index| %>
+  <% user_id = workflow_circulation[:user_id] %>
+  <% state = workflow_circulation[:state] %>
+  <% level = workflow_circulation[:level] %>
+  <% if user_id == @cur_user.id && state == "unseen" %>
+    <section class="mod-workflow-approve">
+      <%= render "ss/crud/addon", addon: { head: "#{t("workflow.circulation_step")}#{@model.tt(:circulation_step)}".html_safe } do %>
+        <%= text_area :remand, :comment, value: "" %>
+        <% if @item.workflow_circulation_attachment_enabled_at?(level) %>
+          <div class="upload">
+            <span class="upload-menu-new">
+              <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+            </span>
+            <div class="upload-drop-area">
+              <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
+            </div>
+            <div id="selected-files"></div>
+          </div>
+        <% end %>
+
+        <div class="buttons">
+          <%= button_tag t("workflow.links.set_seen"), updatetype: :seen, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+        </div>
+      <% end %>
+    </section>
+  <% end %>
+<% end %>

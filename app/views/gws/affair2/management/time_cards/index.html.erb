@@ -1,0 +1,66 @@
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <div class="nav-group">
+        <%= tag.nav(class: "nav-menu select-group", data: { controller: "ss--redirect-on-change", url: url_for(action: :index, group: ':group:') }) do %>
+          <%= select_tag(:group, options_for_select(group_options, selected: params[:group]), { include_blank: true, data: { default: default_group } }) %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-title"><%= t('gws/affair2.views.monthly_time_cards_in_group', year: @cur_month.year, month: @cur_month.month, group: @group.trailing_name) %></div>
+    <div class="attendance-box-main">
+      <div class="nav-group">
+        <%= tag.nav(class: "nav-menu select-year-month", data: { controller: "ss--redirect-on-change", url: url_for(action: :index, year_month: ':year_month:') }) do %>
+          <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month]), { include_blank: true, data: { default: default_year_month } }) %>
+
+          <% if @cur_month.to_date > @active_year_range.first %>
+          <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+          <% end %>
+          <% if @cur_month.to_date < @active_year_range.last %>
+          <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
+  <table class="index">
+    <thead>
+      <tr>
+        <th><%= Gws::User.t(:name) %></th>
+        <th><%= t("modules.gws/affair2/attendance/time_card") %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <%
+          item = @time_cards[user.id]
+        %>
+        <tr>
+          <td><%= user.long_name %></td>
+          <td>
+            <% if item %>
+              <%= link_to({ action: :show, id: item }, class: 'title') do %>
+                <% if item.locked? %>
+                  <%= md_icons.filled "lock", tag: :i, size: 18 %>
+                <% elsif item.processing? %>
+                  <%= md_icons.filled "sync_lock", tag: :i, size: 18 %>
+                <% else %>
+                  <%= md_icons.filled "lock_open", tag: :i, size: 18 %>
+                <% end %>
+                <%= item.name %>
+              <% end %>
+            <% else %>
+              <%= t("gws/affair2.views.not_created_time_card") %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

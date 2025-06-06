@@ -1,0 +1,94 @@
+<div class="time-card-wrap" style="padding-top: 5px;">
+  <table class="time-card">
+    <thead>
+      <tr class="header">
+        <th rowspan="2"><%= t("mongoid.models.gws/user") %></th>
+        <th colspan="5"><%= t("gws/affair.timecard.in_work.title") %></th>
+        <th class="time overtime" colspan="3"><%= t("gws/affair.timecard.in_over.title") %></th>
+        <th class="time leave" rowspan="2"><%= t("gws/affair.timecard.in_leave.title") %></th>
+        <th class="memo" rowspan="2"><%= Gws::Affair2::Attendance::Record.t(:memo) %></th>
+      </tr>
+      <tr class="header">
+        <th class="date"><%= Gws::Affair2::Attendance::Record.t(:date) %></th>
+        <th class="time enter"><%= Gws::Affair2::Attendance::Record.t(:enter) %></th>
+        <th class="time leave"><%= Gws::Affair2::Attendance::Record.t(:leave) %></th>
+        <th class="time break-time"><%= Gws::Affair2::Attendance::Record.t(:break_time) %></th>
+        <th class="time work-time"><%= t("gws/affair.timecard.in_work.worktime") %></th>
+        <th class="time"><%= t("gws/affair.timecard.in_over.difference") %></th>
+        <th class="time break-time"><%= t("gws/affair.timecard.in_over.breaktime") %></th>
+        <th class="time compensatory-time"><%= t("gws/affair.timecard.in_over.compensatory") %></th>
+      <tr>
+    </thead>
+    <tbody>
+      <% @item.users.each do |user| %>
+        <%
+          item = @item.time_cards[user.id]
+          record = @item.time_card_records[user.id]
+        %>
+        <% if item %>
+          <%
+            tr_css_classes = [ "day-#{date.day}" ]
+            tr_css_classes << "holiday" if record.regular_holiday?
+          %>
+          <tr class="<%= tr_css_classes.compact.join(' ') %>" data-day="<%= date.day %>">
+            <td class="name"><%= user.name %></td>
+            <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+
+            <%= render_punchable(item, record, "enter") do |mode, url| %>
+              <td class="time enter" data-mode="<%= mode %>" data-url="<%= url %>">
+                <%= format_time(date, record.enter) %>
+                <%= render_reason(record, "enter") %>
+              </td>
+            <% end %>
+            <%= render_punchable(item, record, "leave") do |mode, url| %>
+              <td class="time leave" data-mode="<%= mode %>" data-url="<%= url %>">
+                <%= format_time(date, record.leave) %>
+                <%= render_reason(record, "leave") %>
+              </td>
+            <% end %>
+            <%= render_editable(item, record, "break_minutes") do |mode, url| %>
+              <td class="time break_minutes" data-mode="<%= mode %>" data-url="<%= url %>">
+                <%= format_minutes(record.break_minutes) %>
+              </td>
+            <% end %>
+
+            <td class="time work_time">
+              <%= @item.render_work_time(user) %>
+            </td>
+            <td class="time over_time">
+              <%= @item.render_over_time(user) %>
+            </td>
+            <td class="time over_break_time">
+              <%= @item.render_over_break_time(user) %>
+            </td>
+            <td class="time over_compens">
+              <%= @item.render_over_compens(user) %>
+            </td>
+            <td class="leave_files">
+              <%= @item.render_leave(user) %>
+            </td>
+
+            <%= render_editable(item, record, "memo") do |mode, url| %>
+              <td class="memo data-mode="<%= mode %>" data-url="<%= url %>">
+                <%= record.memo %>
+              </td>
+            <% end %>
+          </tr>
+        <% else %>
+          <%
+            tr_css_classes = [ "day-#{date.day}" ]
+          %>
+          <tr class="<%= tr_css_classes.compact.join(' ') %>" data-day="<%= date.day %>">
+            <td class="name"><%= user.name %></td>
+            <td colspan="10" style="background: #f2f2f2;"><%= t("gws/affair2.views.not_created_time_card") %></td>
+          </tr>
+        <% end %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="cell-toolbar">
+  <a href="#" class="punch" data-confirm="<%= t('gws/attendance.confirm.punch') %>"><%= t('gws/attendance.links.punch') %></a>
+  <a href="#" class="edit"><%= t('ss.links.edit') %></a>
+</div>

@@ -1,0 +1,70 @@
+<div class="time-card-wrap">
+  <% if item.unlocked? %>
+  <div class="time-card-notice">
+    <p><%= I18n.l(@cur_month.to_date, format: :attendance_year_month) %>の勤務日及び所定時間を表示しています。</p>
+    <p>打刻前に勤務日及び所定時間を入力してください。</p>
+    <%= link_to "インポート", time_card_forms_path(:regular_record, :import, id: item), class: "btn regular-import", style: "margin-top: 5px;" %>
+  </div>
+  <% end %>
+
+  <table class="time-card">
+    <tbody>
+    <% date = month %>
+    <% while date <= month.end_of_month %>
+      <% offset = date.day >= 16 ? 'top' : '' %>
+      <% if date.day == 1 %>
+        <tr class="header">
+          <th class="date"><%= Gws::Affair2::Attendance::Record.t(:date) %></th>
+          <th class="time regular-holiday"><%= Gws::Affair2::Attendance::Record.t(:regular_holiday) %></th>
+          <th class="time regular-start"><%= Gws::Affair2::Attendance::Record.t(:regular_start) %></th>
+          <th class="time regular-close"><%= Gws::Affair2::Attendance::Record.t(:regular_close) %></th>
+          <th class="time regular-break-minutes"><%= Gws::Affair2::Attendance::Record.t(:regular_break_minutes) %></th>
+        <tr>
+    　<% end %>
+      <% if date.day == 16 %>
+        <tr class="header">
+          <th class="date"><%= Gws::Affair2::Attendance::Record.t(:date) %></th>
+          <th class="time regular-holiday"><%= Gws::Affair2::Attendance::Record.t(:regular_holiday) %></th>
+          <th class="time regular-start"><%= Gws::Affair2::Attendance::Record.t(:regular_start) %></th>
+          <th class="time regular-close"><%= Gws::Affair2::Attendance::Record.t(:regular_close) %></th>
+          <th class="time regular-break-minutes"><%= Gws::Affair2::Attendance::Record.t(:regular_break_minutes) %></th>
+        </tr>
+      <% end %>
+      <%
+        record = item.records.where(date: date).first
+        tr_css_classes = [ "day-#{date.day}" ]
+        tr_css_classes << (Time.zone.now.beginning_of_day == date ? 'current' : nil)
+        tr_css_classes << "holiday" if record.regular_holiday?
+      %>
+      <tr class="<%= tr_css_classes.compact.join(' ') %>" data-day="<%= date.day %>">
+        <td class="date"><%= I18n.l(date.to_date, format: :attendance_month_day) %></td>
+        <%= render_editable(item, record, "regular_holiday") do |mode, url| %>
+          <td class="time regular_holiday <%= offset %>" data-mode="<%= mode %>" data-url="<%= url %>">
+            <%= record.label(:regular_holiday) %>
+          </td>
+        <% end %>
+        <%= render_editable(item, record, "regular_start") do |mode, url| %>
+          <td class="time regular_start <%= offset %>" data-mode="<%= mode %>" data-url="<%= url %>">
+            <%= format_time(date, record.regular_start) %>
+          </td>
+        <% end %>
+        <%= render_editable(item, record, "regular_close") do |mode, url| %>
+          <td class="time regular_close <%= offset %>" data-mode="<%= mode %>" data-url="<%= url %>">
+            <%= format_time(date, record.regular_close) %>
+          </td>
+        <% end %>
+        <%= render_editable(item, record, "regular_break_minutes") do |mode, url| %>
+          <td class="time regular_close <%= offset %>" data-mode="<%= mode %>" data-url="<%= url %>">
+            <%= format_minutes(record.regular_break_minutes) %>
+          </td>
+        <% end %>
+      </tr>
+      <% date += 1.day %>
+    <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="cell-toolbar">
+  <a href="#" class="edit"><%= t('ss.links.edit') %></a>
+</div>

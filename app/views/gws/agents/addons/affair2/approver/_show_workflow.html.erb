@@ -1,0 +1,47 @@
+<dl class="see">
+  <dt><%= @model.t :workflow_user_id %></dt>
+  <dd>
+    <% if @item.workflow_user.present? %>
+      <%= workflow_user_profile(@item.workflow_user) %>
+    <% else %>
+      <%= t("workflow.user_deleted") %>
+    <% end %>
+  </dd>
+
+  <% agent = @item.workflow_agent %>
+  <% if agent.present? %>
+    <dd>
+      <%= t(agent.email.blank? ? "agent_name" : "agent_name_with_email", scope: :workflow, long_name: workflow_user_long_name(agent), email: workflow_user_email(agent)) %>
+    </dd>
+  <% end %>
+
+  <dt><%= @model.t :workflow_state %></dt>
+  <dd>
+    <%= t("workflow.state.#{@item.workflow_state}") if @item.workflow_state.present? %>
+    <% if @item.workflow_requested? && @item.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to(t('workflow.buttons.cancel'), { action: :request_cancel }, class: :btn) rescue nil %>
+    <% end %>
+  </dd>
+
+  <% if @item.workflow_comment.present? %>
+    <dt><%= @model.t :workflow_comment %></dt>
+    <dd><%= @item.workflow_comment %></dd>
+  <% end %>
+
+  <% if @item.workflow_kind.present? %>
+    <dt><%= @model.t :workflow_kind %></dt>
+    <dd><%= @item.label(:workflow_kind) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :workflow_pull_up %></dt>
+  <dd><%= @item.label :workflow_pull_up %></dd>
+
+  <dt><%= @model.t :workflow_on_remand %></dt>
+  <dd><%= @item.label :workflow_on_remand %></dd>
+
+  <dt><%= @model.t :workflow_approvers %></dt>
+  <dd><%= render "gws/agents/addons/affair2/approver/show_workflow_approvers" %></dd>
+
+  <dt><%= @model.t :workflow_circulations %></dt>
+  <dd><%= render "gws/agents/addons/affair2/approver/show_workflow_circulations" %></dd>
+</dl>

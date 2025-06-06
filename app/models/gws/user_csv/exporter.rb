@@ -1,7 +1,7 @@
 class Gws::UserCsv::Exporter
   include ActiveModel::Model
 
-  attr_accessor :site, :form, :criteria, :encoding, :webmail_support
+  attr_accessor :site, :form, :criteria, :encoding, :webmail_support, :affair_support
 
   PREFIX = 'A:'.freeze
 
@@ -17,8 +17,10 @@ class Gws::UserCsv::Exporter
       unless Sys::Auth::Setting.instance.mfa_otp_use_none?
         headers << "mfa_otp_enabled_at"
       end
-      headers += %w(charge_name charge_address charge_tel divide_duties
-        staff_category staff_address_uid gws_superior_group_ids gws_superior_user_ids gws_roles sys_roles
+      headers += %w(charge_name charge_address charge_tel divide_duties)
+      headers += %w(staff_category staff_address_uid) if opts[:affair_support]
+      headers += %w(
+         gws_superior_group_ids gws_superior_user_ids gws_roles sys_roles
         readable_setting_range readable_group_ids readable_member_ids
       )
       headers += %w(webmail_roles) if opts[:webmail_support]
@@ -53,7 +55,7 @@ class Gws::UserCsv::Exporter
   end
 
   def csv_headers
-    self.class.csv_basic_headers(webmail_support: @webmail_support) + csv_extend_headers
+    self.class.csv_basic_headers(webmail_support: @webmail_support, affair_support: @affair_support) + csv_extend_headers
   end
 
   def enum_csv
@@ -128,8 +130,10 @@ class Gws::UserCsv::Exporter
     terms << item.charge_address
     terms << item.charge_tel
     terms << item.divide_duties
-    terms << item.label(:staff_category)
-    terms << item.staff_address_uid
+    if @affair_support
+      terms << item.label(:staff_category)
+      terms << item.staff_address_uid
+    end
     terms << item.find_gws_superior_groups(site).map(&:name).join("\n")
     terms << item.find_gws_superior_users(site).map { |user| "#{user.id},#{user.name}" }.join("\n")
     terms << item_roles(item).map(&:name).join("\n")

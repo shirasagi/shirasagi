@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :user_id %></dt>
+  <dd><%= @item.user.try(:long_name) %></dd>
+
+  <dt><%= @model.t :organization_uid %></dt>
+  <dd><%= @item.organization_uid %></dd>
+
+  <dt><%= @model.t :start_date %></dt>
+  <dd><%= tryb{ l(@item.start_date.to_date) } %></dd>
+
+  <dt><%= @model.t :close_date %></dt>
+  <dd><%= tryb{ l(@item.close_date.to_date) } %></dd>
+
+  <dt><%= @model.t :duty_setting_id %></dt>
+  <dd><%= @item.duty_setting.try(:long_name) %></dd>
+
+  <dt><%= @model.t :leave_setting_id %></dt>
+  <dd><%= @item.leave_setting.try(:name) %></dd>
+</dl>

@@ -1,0 +1,11 @@
+<dl class="see">
+  <dt><%= @model.t :wday_settings %><%= @model.tt :wday_settings %></dt>
+  <dd></dd>
+
+  <% Gws::Addon::Affair2::DutySetting::Workday::WORKDAY_TYPE.each do |wday| %>
+    <dt class="depth-2"><%= @model.t "#{wday}_type" %></dt>
+    <dd class="depth-2">
+      <%= f.select("#{wday}_type", @item.wday_type_options) %>
+    </dd>
+  <% end %>
+</dl>

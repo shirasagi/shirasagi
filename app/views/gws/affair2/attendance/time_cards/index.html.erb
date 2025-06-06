@@ -1,0 +1,27 @@
+<div class="gws-attendance">
+  <%= error_messages_for :item %>
+
+  <% if @today_time_card %>
+    <%= render partial: "today/time_card", locals: { date: @today, item: @today_time_card, record: @today_record } %>
+  <% else %>
+    <%= render partial: "today/no_time_card", locals: { date: @today } %>
+  <% end %>
+
+  <div class="attendance-box monthly">
+    <div class="attendance-box-title"><%= t('gws/attendance.formats.time_card_name', month: I18n.l(@cur_month.to_date, format: :attendance_year_month)) %></div>
+    <div class="attendance-box-main main">
+      <%= render partial: 'monthly/time_card_nav', locals: { month: @cur_month, item: @monthly_time_card } %>
+      <% if @monthly_time_card %>
+        <%= render partial: "monthly/time_card", locals: { month: @cur_month, item: @monthly_time_card, loader: @monthly_loader } %>
+      <% else %>
+        <%= render partial: "monthly/no_time_card", locals: { month: @cur_month } %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<%= jquery do %>
+var attendance = new Gws_Affair2_Attendance('.gws-attendance', "<%== request.path %>");
+attendance.renderToday();
+attendance.renderMonthly();
+<% end %>

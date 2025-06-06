@@ -63,7 +63,7 @@
                 <%=
                   case circulator[:user_type]
                   when "superior"
-                    t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")
+                    t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids")
                   when Gws::User.name
                     user = id_user_map[circulator[:user_id]]
                     user ? gws_public_user_long_name(user.long_name) : t("workflow.user_deleted")

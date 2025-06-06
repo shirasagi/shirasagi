@@ -1,0 +1,67 @@
+<%= jquery do %>
+new Gws_Affair2_LeaveFile(
+  '#addon-basic',
+  '<%= gws_affair2_apis_paid_leave_path(user: @cur_user.id, date: "YMD", file_id: @item.id) %>');
+<% end %>
+<%
+  @item.initialize_in_accessor
+
+  now = Time.zone.now
+  start_hour = SS.config.affair2.default_duty["worktime"]["start_hour"]
+  start_minute = SS.config.affair2.default_duty["worktime"]["start_minute"]
+  close_hour = SS.config.affair2.default_duty["worktime"]["close_hour"]
+  close_minute = SS.config.affair2.default_duty["worktime"]["close_minute"]
+
+  @item.in_start_date ||= now.beginning_of_day
+  @item.in_start_hour ||= start_hour
+  @item.in_start_minute ||= start_minute
+
+  @item.in_close_date ||= now.beginning_of_day
+  @item.in_close_hour ||= close_hour
+  @item.in_close_minute ||= close_minute
+%>
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :date %><%= @model.tt :date %></dt>
+  <dd>
+    <div class="start-end-combo">
+      <div class="datetimes-field">
+        <%= f.text_field :in_start_date, class: "date js-date" %>
+        <%= f.select :in_start_hour, @item.in_start_hour_options %>
+        <%= f.select :in_start_minute, @item.in_start_minute_options %>
+        <%= t("ss.wave_dash") %>
+        <%= f.select :in_close_hour, @item.in_close_hour_options %>
+        <%= f.select :in_close_minute, @item.in_close_minute_options %>
+      </div>
+      <div class="date-field hide">
+        <%= f.text_field :in_start_date, class: "date js-date" %>
+        <%= t("ss.wave_dash") %>
+        <%= f.text_field :in_close_date, class: "date js-date" %>
+      </div>
+      <div class="date-options mt-3">
+        <%= f.hidden_field "allday", value: "", id: nil, class: "hidden-ids" %>
+        <label for="item_allday"><%= f.check_box :allday, {}, "allday", "" %> <%= @item.t :allday %></label>
+      </div>
+    </div>
+  </dd>
+
+  <dt><%= @model.t :leave_type %><%= @model.tt :leave_type %></dt>
+  <dd>
+    <% if @item.state != Workflow::Approver::WORKFLOW_STATE_APPROVE %>
+      <%= f.select :leave_type, @cur_leave.leave_type_options %>
+      <span class="leave-count"></span>
+    <% else %>
+      <%= @item.label :leave_type %>
+    <% end %>
+  </dd>
+
+  <% if @cur_leave.special_leave_options.present? %>
+  <dt class="special-leave" style="display: none;"><%= @model.t :special_leave_id %><%= @model.tt :special_leave_id %></dt>
+  <dd class="special-leave" style="display: none;"><%= f.select :special_leave_id, @cur_leave.special_leave_options, include_blank: true %></dd>
+  <% end %>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+</dl>

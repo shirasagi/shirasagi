@@ -1,0 +1,53 @@
+<%= jquery do %>
+$(".nav-menu form.search").on("submit", function(){
+  var action = $(this).attr("action");
+  var $select = $('[name="year_month"]');
+  var $unit = $('[name="unit"]');
+
+  action = action.replace(":year_month:", $select.val());
+  action = action.replace(":unit:", $unit.filter(":checked").val());
+
+  $(this).attr("action", action);
+  $select.attr("name", "");
+  $unit.attr("name", "");
+  return true;
+});
+<% end %>
+
+<div class="gws-attendance aggregation-monthly">
+  <div class="attendance-box">
+    <div class="attendance-box-title">
+      <%= t("gws/affair2.options.employee_type.#{params[:employee_type]}") %>
+    </div>
+    <div class="attendance-box-main">
+      <div class="nav-group">
+        <nav class="nav-menu">
+          <%= form_tag({ action: :index, unit: ":unit:", year_month: ":year_month:" }, { method: "GET", class: :search }) do %>
+            <div>
+              <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month]), { data: { controller: "ss--submit-on-change" } }) %>
+              <%= text_field_tag :keyword, params[:keyword], placeholder: Gws::User.t(:organization_uid), style: "width: 300px;" %>
+              <%= submit_tag(t("ss.buttons.search"), name: :search, class: "btn") %>
+            </div>
+            <div style="padding-top: 10px;">
+              <label>
+                <%= radio_button_tag(:unit, 'monthly', (@unit == "monthly"), { data: { controller: "ss--submit-on-change" } }) %>
+                <%= t("gws/affair2.views.unit_monthly") %>
+              </label>
+              <label>
+                <%= radio_button_tag(:unit, 'daily', (@unit == "daily"), { data: { controller: "ss--submit-on-change" } }) %>
+                <%= t("gws/affair2.views.unit_daily") %>
+              </label>
+            </div>
+          <% end %>
+        </nav>
+        <nav class="nav-operation">
+          <%= link_to t("ss.buttons.download"), { action: :download }, class: "btn" %>
+        </nav>
+      </div>
+    </div>
+  </div>
+
+  <%= render partial: @form %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

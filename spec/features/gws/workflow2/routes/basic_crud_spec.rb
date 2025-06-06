@@ -57,7 +57,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
   before { login_user user }
 
   context "with superior" do
-    let(:superior_label) { I18n.t("mongoid.attributes.gws/addon/group/affair_setting.superior_user_ids") }
+    let(:superior_label) { I18n.t("mongoid.attributes.gws/addon/group/workflow2_setting.superior_user_ids") }
 
     it do
       #

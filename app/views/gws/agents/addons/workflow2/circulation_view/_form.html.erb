@@ -13,7 +13,7 @@
   circulator_options += tag.option(t('gws/workflow2.specify_at_time_of_application'), value: 'specify_at_time_of_application', data: { type: 'special' })
 
   if @cur_site.workflow_route_circulation_superior == 'show'
-    circulator_options0 = tag.optgroup(label: t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), class: "superior") { tag.option(t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), value: 'superior', data: { type: 'superior' }) }
+    circulator_options0 = tag.optgroup(label: t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids"), class: "superior") { tag.option(t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids"), value: 'superior', data: { type: 'superior' }) }
     circulator_options0 += circulator_options
   else
     circulator_options0 = circulator_options.dup
@@ -107,7 +107,7 @@
               @item.circulations_at(level).each do |circulator|
                 case circulator[:user_type]
                 when "superior"
-                  render_row.call(level, circulator[:_id], "superior", "superior", t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"))
+                  render_row.call(level, circulator[:_id], "superior", "superior", t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids"))
                 when Gws::User.name
                   user = id_user_map[circulator[:user_id]]
                   if user

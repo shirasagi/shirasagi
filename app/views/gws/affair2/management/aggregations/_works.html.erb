@@ -1,0 +1,102 @@
+
+<div class="table-wrap">
+  <div class="gws-schedule-tabs">
+    <%= link_to url_for({ action: :index, form: "works" }) do %>
+      <span class="tab-name"><%= t("gws/affair2.views.monthly_works") %></span>
+    <% end %>
+    <%= link_to url_for({ action: :index, form: "leave" }) do %>
+      <span class="tab-name"><%= t("gws/affair2.views.monthly_leave") %></span>
+    <% end %>
+  </div>
+  <table class="index works data-table">
+    <thead>
+      <tr>
+        <th style="width: 120px;" rowspan="2"><%= t("gws/affair2.aggregation.#{@unit}.user_id") %></th>
+        <th style="width: 120px;" rowspan="2"><%= t("gws/affair2.aggregation.#{@unit}.organization_uid") %></th>
+        <th style="width: 120px;" rowspan="2"><%= t("gws/affair2.aggregation.#{@unit}.date") %></th>
+        <th class="time" rowspan="2"><%= t("gws/affair2.aggregation.#{@unit}.work_minutes2") %></th>
+        <th colspan="6"><%= t("gws/affair2.aggregation.#{@unit}.overtime_short_minutes1")[0] %></th>
+        <th colspan="8"><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_day_minutes1")[0] %></th>
+        <th class="time" rowspan="2"><%= t("gws/affair2.aggregation.#{@unit}.overtime_minutes") %></th>
+      </tr>
+      <tr>
+        <th class="time"><%= t("gws/affair2.aggregation.#{@unit}.overtime_short_minutes1")[1] %></th>
+        <th class="time"><%= t("gws/affair2.aggregation.#{@unit}.overtime_day_minutes1")[1] %></th>
+        <th class="time"><%= t("gws/affair2.aggregation.#{@unit}.overtime_night_minutes1")[1] %></th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.overtime_short_minutes2")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.overtime_short_minutes2", threshold: Gws::Affair2::Utils.monthly_threshold_hour)[2] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.overtime_day_minutes2")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.overtime_day_minutes2", threshold: Gws::Affair2::Utils.monthly_threshold_hour)[2] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.overtime_night_minutes2")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.overtime_night_minutes2", threshold: Gws::Affair2::Utils.monthly_threshold_hour)[2] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_day_minutes1")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_day_minutes1")[2] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_night_minutes1")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_night_minutes1")[2] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_day_minutes1")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_day_minutes1")[2] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_night_minutes1")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_night_minutes1")[2] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_day_minutes2")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_day_minutes2")[2] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_day_minutes2", threshold: Gws::Affair2::Utils.monthly_threshold_hour)[3] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_night_minutes2")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_night_minutes2")[2] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.compens_overtime_night_minutes2", threshold: Gws::Affair2::Utils.monthly_threshold_hour)[3] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_day_minutes2")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_day_minutes2")[2] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_day_minutes2", threshold: Gws::Affair2::Utils.monthly_threshold_hour)[3] %></div>
+        </th>
+        <th class="time">
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_night_minutes2")[1] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_night_minutes2")[2] %></div>
+          <div><%= t("gws/affair2.aggregation.#{@unit}.settle_overtime_night_minutes2", threshold: Gws::Affair2::Utils.monthly_threshold_hour)[3] %></div>
+        </th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+        <tr>
+          <td><%= item.user_name %></td>
+          <td><%= item.organization_uid %></td>
+          <td><%= item.date_label %></td>
+          <td><%= format_minutes(item.work_minutes2) %></td>
+          <td><%= format_minutes(item.overtime_short_minutes1) %></td>
+          <td><%= format_minutes(item.overtime_day_minutes1) %></td>
+          <td><%= format_minutes(item.overtime_night_minutes1) %></td>
+          <td><%= format_minutes(item.compens_overtime_day_minutes1) %></td>
+          <td><%= format_minutes(item.compens_overtime_night_minutes1) %></td>
+          <td><%= format_minutes(item.settle_overtime_day_minutes1) %></td>
+          <td><%= format_minutes(item.settle_overtime_night_minutes1) %></td>
+          <td><%= format_minutes(item.overtime_short_minutes2) %></td>
+          <td><%= format_minutes(item.overtime_day_minutes2) %></td>
+          <td><%= format_minutes(item.overtime_night_minutes2) %></td>
+          <td><%= format_minutes(item.compens_overtime_day_minutes2) %></td>
+          <td><%= format_minutes(item.compens_overtime_night_minutes2) %></td>
+          <td><%= format_minutes(item.settle_overtime_day_minutes2) %></td>
+          <td><%= format_minutes(item.settle_overtime_night_minutes2) %></td>
+          <td><%= format_minutes(item.overtime_minutes) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

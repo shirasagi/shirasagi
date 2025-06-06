@@ -1,0 +1,21 @@
+<div class="gws-workload-navi">
+  <%= jquery do %>
+    var navi = new Gws_Workload_Navi('.year-navi');
+    navi.setBaseUrl('<%= url_for(action: :index, year: 'ID') %>');
+    navi.render(<%== @years.to_json %>);
+  <% end %>
+
+  <div class="year-navi dropdown" style="display: inline-block;">
+    <%= link_to({ action: :index, category: '-', client: '-' }, { class: 'btn dropdown-toggle', "data-id": @year_name }) do %>
+      <%= @year_name || t('gws/workload.year') %>
+      <i class="material-icons md-13">keyboard_arrow_down</i>
+    <% end %>
+    <div class="dropdown-menu dropdown-menu--white"></div>
+  </div>
+
+  <%= link_to({ action: :index, year: Time.zone.now.year }) do %>
+    <%= md_icons.filled "clear", tag: :i, size: 18, class: "md-dark" %>
+  <% end %>
+</div>
+
+<%= render template: "gws/crud/index" %>

@@ -135,7 +135,7 @@
                 user = approver_hash[:user]
                 user ||= find_approver(approver_hash[:user_id])
                 user_type = "superior"
-                name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")})"
+                name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.gws/addon/user/workflow2_setting.gws_superior_user_ids")})"
               when "special"
                 user_type = "special"
                 user = approver_hash[:user]

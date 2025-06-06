@@ -1,0 +1,46 @@
+<%= jquery do %>
+var toggleWorktimeOfWday = function(ele){
+  if($('.toggle-worktime-of-wday').prop("checked")) {
+    $(".worktime-of-wday").show("fast");
+  } else {
+    $(".worktime-of-wday").hide("fast");
+  }
+};
+$('.toggle-worktime-of-wday').on("change", toggleWorktimeOfWday);
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :worktime %><%= @model.tt :worktime %></dt>
+  <dd>
+    <%= f.select :start_at_hour, @item.start_at_hour_options %>
+    <%= f.select :start_at_minute, @item.start_at_minute_options %>
+    <%= t("ss.wave_dash") %>
+    <%= f.select :close_at_hour, @item.close_at_hour_options %>
+    <%= f.select :close_at_minute, @item.close_at_minute_options %>
+    <%= "(休憩" %>
+    <%= f.select :break_minutes_at, @item.break_minutes_at_options %>
+    <%= ")" %>
+  </dd>
+  <dd>
+    <%= f.hidden_field "worktime_of_wday", value: "disabled" %>
+    <label>
+      <%= check_box_tag "#{f.object_name}[worktime_of_wday]", "enabled", @item.worktime_of_wday_enabled?, class: "toggle-worktime-of-wday" %>
+      <%= t("gws/affair2.links.set_worktime_of_wday") %>
+    </label>
+  </dd>
+
+  <% style = @item.worktime_of_wday_enabled? ? "" : "display: none;" %>
+  <% (0..6).each do |wday| %>
+    <dt class="depth-2 worktime-of-wday" style="<%= style %>"><%= t("date.day_names")[wday] %></dt>
+    <dd class="depth-2 worktime-of-wday" style="<%= style %>">
+      <%= f.select "start_at_hour_#{wday}", @item.start_at_hour_options %>
+      <%= f.select "start_at_minute_#{wday}", @item.start_at_minute_options %>
+      <%= t("ss.wave_dash") %>
+      <%= f.select "close_at_hour_#{wday}", @item.close_at_hour_options %>
+      <%= f.select "close_at_minute_#{wday}", @item.close_at_minute_options %>
+      <%= "(休憩" %>
+      <%= f.select "break_minutes_at_#{wday}", @item.break_minutes_at_options %>
+      <%= ")" %>
+    </dd>
+  <% end %>
+</dl>

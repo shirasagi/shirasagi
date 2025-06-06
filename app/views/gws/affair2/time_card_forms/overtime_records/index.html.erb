@@ -1,0 +1,78 @@
+<%= jquery do %>
+$("#ajax-box form").ajaxForm({
+  success: function(data) {
+    var $body = $("<div>" + data + "</div>").find("#ajax-box");
+    $("#ajax-box").replaceWith($body);
+    $.colorbox.resize();
+  }
+});
+
+$(".overtime-results .break-time").each(function(){
+  new Gws_Affair2_Breaktime(this);
+});
+<% end %>
+
+<%= form_tag({ action: :update }, { method: :post }) do %>
+  <%= error_messages_for :item %>
+  <%= hidden_field_tag "ref", params[:ref] %>
+
+  <% @item.records.each do |record| %>
+    <%
+      file = record.file
+      record.load_in_accessor
+    %>
+    <% if file %>
+      <div class="addon-view" id="addon-gws-agents-addons-affair-overtime_file">
+        <div class="addon-head toggle-head"><h2><%= "#{record.date.strftime("%Y/%m/%d")} : #{file.name}" %></h2></div>
+        <div class="addon-body toggle-body" style="display: none;">
+          <dl class="see addon-gws-affair-overtime_file">
+            <dt><%= file.t :name %></dt>
+            <dd><%= file.long_name %></dd>
+
+            <% if file.remark.present? %>
+              <dt><%= file.t :remark %></dt>
+              <dd><%=br file.remark %></dd>
+            <% end %>
+          </dl>
+        </div>
+      </div>
+    <% end %>
+
+    <table class="index overtime-results" style="margin-bottom: 10px;">
+      <tr class="item-head">
+        <th></th>
+        <th class="start-at"><%= Gws::Affair::OvertimeResult.t("start_at") %></th>
+        <th class="end-at"><%= Gws::Affair::OvertimeResult.t("end_at") %></th>
+        <th class="break-time">
+          <%= Gws::Affair::OvertimeResult.t("break_time_minute") %>
+          <%= "(#{Gws::Affair::OvertimeResult.t("start_at")}#{t("ss.wave_dash")}#{Gws::Affair::OvertimeResult.t("end_at")})" %>
+        </th>
+      </tr>
+      <tr class="item">
+        <td><%= I18n.l(record.date.to_date, format: :attendance_month_day) %></td>
+        <td class="start-at">
+          <%= select_tag "item[in_records][#{record.id}][in_start_hour]", options_for_select(record.hour_options, record.in_start_hour), include_blank: true %>
+          <%= select_tag "item[in_records][#{record.id}][in_start_minute]", options_for_select(record.minute_options, record.in_start_minute), include_blank: true %>
+        </td>
+        <td class="end-at">
+          <%= select_tag "item[in_records][#{record.id}][in_close_hour]", options_for_select(record.hour_options, record.in_close_hour), include_blank: true %>
+          <%= select_tag "item[in_records][#{record.id}][in_close_minute]", options_for_select(record.minute_options, record.in_close_minute), include_blank: true %>
+        </td>
+        <td class="break-time" colspan="2">
+          <%= select_tag "item[in_records][#{record.id}][in_break_start_hour]", options_for_select(record.hour_options, record.in_break_start_hour), { class: "start-hour" } %>
+          <%= select_tag "item[in_records][#{record.id}][in_break_start_minute]", options_for_select(record.minute_options, record.in_break_start_minute), { class: "start-minute" } %>
+          <%= t("ss.wave_dash") %>
+          <%= select_tag "item[in_records][#{record.id}][in_break_close_hour]", options_for_select(record.hour_options, record.in_break_close_hour), { include_blank: true, class: "close-hour" } %>
+          <%= select_tag "item[in_records][#{record.id}][in_break_close_minute]", options_for_select(record.minute_options, record.in_break_close_minute), { class: "close-minute" } %>
+          <span class="diff"></span>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+
+  <footer class="send">
+    <%= submit_tag t("ss.buttons.save"), class: "btn-primary save" %>
+    <%= link_to t("ss.buttons.cancel"), "", class: "btn btn-default", onclick: "$.colorbox.close(); return false;" %>
+  </footer>
+
+<% end %>

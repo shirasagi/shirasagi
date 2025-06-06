@@ -13,8 +13,8 @@ ja:
     views:
       total_working_minute: 就業時間合計
     confirm:
-      download: タイムカードをダウンロードしてよろしですか？
-      lock: タイムカードを締めてよろしですか？
+      download: タイムカードをダウンロードしてよろしいですか？
+      lock: タイムカードを締めてよろしいですか？
       unlock: タイムカードを締めを解除してよろしですか？
       punch: 打刻してよろしいですか？
     notice:
@@ -30,6 +30,7 @@ ja:
       lock: 締める
       unlock: 締めを解除する
       punch: 打刻
+      edit: 編集
     links:
       lock: 締める
       unlock: 締めを解除する

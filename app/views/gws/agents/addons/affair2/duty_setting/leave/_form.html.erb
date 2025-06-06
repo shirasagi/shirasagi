@@ -1,0 +1,10 @@
+<%
+  @item.load_in_accessor
+%>
+<dl class="see">
+  <dt><%= @item.t :day_leave_minutes %></dt>
+  <dd>
+    <%= f.select :in_day_leave_hour, @item.in_day_leave_hour_options %>
+    <%= f.select :in_day_leave_minute, @item.in_day_leave_minute_options %>
+  </dd>
+</dl>

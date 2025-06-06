@@ -1,0 +1,13 @@
+<%= jquery do %>
+  var navi = new Gws_Workload_Navi('.year-navi');
+  navi.setBaseUrl('<%= url_for(action: :index, year: 'ID') %>');
+  navi.render(<%== @years.to_json %>);
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id"><%= "\##{item.id}" %></span>
+  <span class="attendance-setting"><%= item.attendance_setting.try(:name) %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
+<% end %>
+
+<%= render template: "gws/crud/index" %>

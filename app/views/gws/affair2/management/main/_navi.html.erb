@@ -1,0 +1,24 @@
+<nav class="mod-navi current-navi sub-features">
+  <h2><%= link_to @cur_site.menu_affair2_label || t('modules.gws/affair2'), gws_affair2_attendance_main_path, class: 'icon-affair' %></h2>
+  <h2><%= link_to t('modules.gws/affair2/attendance'), gws_affair2_attendance_main_path %></h2>
+  <h2><%= link_to t('modules.gws/affair2/management'), gws_affair2_management_main_path, class: 'open' %></h2>
+  <h3><%= link_to t('modules.gws/affair2/management/users'), gws_affair2_management_time_cards_path(group: @cur_group) %></h3>
+
+  <% if Gws::Affair2::Aggregation.allowed?(:use, @cur_user, site: @cur_site) %>
+  <%
+    today = @cur_site.calc_attendance_date(Time.zone.now)
+  %>
+  <h3><%= link_to t('modules.gws/affair2/management/time_card'), gws_affair2_management_aggregation_main_path %></h3>
+  <ul class="narrow-page">
+    <% t("gws/affair2.options.employee_type").each do |employee_type, name| %>
+      <li><%= link_to name, gws_affair2_management_aggregation_employee_type_main_path(employee_type: employee_type) %></li>
+    <% end %>
+  </ul>
+  <% end %>
+
+  <% if Gws::Affair2::Admin.allowed?(:use, @cur_user, site: @cur_site) %>
+    <h2><%= link_to t('modules.gws/affair2/admin'), gws_affair2_admin_main_path %></h2>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

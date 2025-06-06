@@ -1,0 +1,25 @@
+
+<%= form_for :item, url: { action: :download_no_setting }, html: { method: :post, id: "item-form" } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t 'ss.confirm.download' %></h2></header>
+
+    <dl class="see">
+      <dt><%= t('ss.encoding') %></dt>
+      <dd>
+        <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+          <label>
+            <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', {id: nil} %>
+            <%= t("ss.options.csv_encoding.#{encoding}") %>
+          </label>
+        <% end %>
+      </dd>
+    </dl>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.download"), class: :save %>
+    <%= f.button t("ss.buttons.cancel"), type: :reset, class: 'btn-default', onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+  </footer>
+<% end %>

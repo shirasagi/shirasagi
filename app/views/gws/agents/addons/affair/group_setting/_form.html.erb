@@ -1,4 +1,6 @@
 <%
+  return unless @cur_site.menu_visible?(:affair)
+
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
 %>

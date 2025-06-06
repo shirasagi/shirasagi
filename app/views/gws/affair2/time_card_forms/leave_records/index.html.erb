@@ -1,0 +1,48 @@
+<% @item.records.each do |record| %>
+  <% file = record.file %>
+  <div class="addon-view" id="addon-gws-agents-addons-affair-leave_file">
+    <div class="addon-head toggle-head"><h2><%= "#{record.date.strftime("%Y/%m/%d")} : #{file.name}" %></h2></div>
+    <div class="addon-body toggle-body">
+
+      <% if file.is_a?(Gws::Affair2::Leave::File) %>
+        <dl class="see addon-gws-affair-leave_file">
+          <dt><%= file.t :name %></dt>
+          <dd><%= file.name %></dd>
+
+          <dt><%= file.t :date %></dt>
+          <dd><%= file.start_close_label %></dd>
+
+          <dt><%= file.t :leave_type %></dt>
+          <dd><%= file.label :leave_type %></dd>
+
+          <% if file.special_leave %>
+            <dt><%= file.t :special_leave_id %></dt>
+            <dd><%= file.special_leave.name %></dd>
+          <% end %>
+
+          <dt><%= file.t :remark %></dt>
+          <dd><%=br file.remark %></dd>
+        </dl>
+      <% elsif file.is_a?(Gws::Affair2::Overtime::HolidayFile) %>
+        <dl class="see addon-gws-affair-leave_file">
+          <dt><%= file.t :name %></dt>
+          <dd><%= file.name %></dd>
+
+          <dt><%= file.t :date %></dt>
+          <dd><%= file.start_close_label %></dd>
+
+          <dt><%= file.t :expense %></dt>
+          <dd><%= file.label :expense %></dd>
+
+          <% if file.compens? %>
+            <dt><%= file.t :compens_date %></dt>
+            <dd><%= l(file.compens_date.to_date, format: :long) %></dd>
+          <% end %>
+
+          <dt><%= file.t :remark %></dt>
+          <dd><%= file.label :remark %></dd>
+        </dl>
+      <% end %>
+    </div>
+  </div>
+<% end %>

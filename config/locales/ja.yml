@@ -63,6 +63,12 @@ ja:
     - :year
     - :month
     - :day
+    wareki:
+      M: 明治
+      T: 大正
+      S: 昭和
+      H: 平成
+      R: 令和
   datetime:
     distance_in_words:
       about_x_hours:
@@ -132,6 +138,8 @@ ja:
       exclusion: は予約されています。
       greater_than: は%{count}より大きい値にしてください。
       greater_than_or_equal_to: は%{count}以上の値にしてください。
+      after_than: は%{time}より後にしてください。
+      after_than_or_equal_to: は%{time}以降にしてください。
       inclusion: は一覧にありません。
       invalid: は不正な値です。
       invalid_file_type: は不正なファイル形式です。

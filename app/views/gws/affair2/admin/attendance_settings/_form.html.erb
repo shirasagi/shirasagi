@@ -1,0 +1,39 @@
+<%
+  @item.organization_uid ||= @user.organization_uid
+
+  @item.in_start_year = @item.start_date.try(:year)
+  @item.in_start_month = @item.start_date.try(:month)
+  @item.in_close_year = @item.close_date.try(:year)
+  @item.in_close_month = @item.close_date.try(:month)
+
+  today = Time.zone.today
+  @item.in_start_year ||= today.year
+  @item.in_start_month ||= today.month
+%>
+
+<dl class="see">
+  <dt><%= @model.t :user_id %></dt>
+  <dd><%= @user.long_name %></dd>
+
+  <dt><%= @model.t :organization_uid %></dt>
+  <dd><%= f.text_field :organization_uid %></dd>
+
+  <dt><%= @model.t :start_date %></dt>
+  <dd>
+    <%= f.select :in_start_year, @item.year_options %>
+    <%= f.select :in_start_month, @item.month_options %>
+  </dd>
+
+  <dt><%= @model.t :close_date %></dt>
+  <dd>
+    <%= f.select :in_close_year, @item.year_options, include_blank: true %>
+    <%= f.select :in_close_month, @item.month_options, include_blank: true %>
+    <%= "末まで" %>
+  </dd>
+
+  <dt><%= @model.t :duty_setting_id %></dt>
+  <dd><%= f.select :duty_setting_id, duty_setting_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :leave_setting_id %></dt>
+  <dd><%= f.select :leave_setting_id, leave_setting_options, include_blank: true %></dd>
+</dl>

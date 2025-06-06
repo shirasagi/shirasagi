@@ -1,0 +1,33 @@
+<%
+  @item.load_in_accessor
+
+  start_hour = SS.config.affair2.default_duty["worktime"]["close_hour"]
+  start_minute = SS.config.affair2.default_duty["worktime"]["close_minute"]
+
+  now = Time.zone.now
+  default_start_time = now.change(hour: start_hour, min: start_minute)
+  default_close_time = default_start_time.advance(hours: 1)
+
+  @item.in_date ||= now.beginning_of_day
+  @item.in_start_hour ||= default_start_time.hour
+  @item.in_start_minute ||= default_start_time.min
+  @item.in_close_hour ||= default_close_time.hour
+  @item.in_close_minute ||= default_close_time.min
+%>
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :date %><%= @model.tt :date %></dt>
+  <dd>
+    <%= f.text_field :in_date, class: "date js-date" %>
+    <%= f.select :in_start_hour, @item.in_start_hour_options %>
+    <%= f.select :in_start_minute, @item.in_start_minute_options %>
+    <%= t("ss.wave_dash") %>
+    <%= f.select :in_close_hour, @item.in_close_hour_options %>
+    <%= f.select :in_close_minute, @item.in_close_minute_options %>
+  </dd>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+</dl>

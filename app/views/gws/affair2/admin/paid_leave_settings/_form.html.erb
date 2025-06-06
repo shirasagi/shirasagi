@@ -1,0 +1,29 @@
+<dl class="see">
+  <dt><%= @model.t :year %></dt>
+  <dd><%= @item.year %></dd>
+
+  <dt><%= @model.t :attendance_setting_id %><%= @model.tt :attendance_setting_id %></dt>
+  <dd>
+    <%= f.hidden_field "attendance_setting_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws/affair2.apis.attendance_setting.index"), gws_affair2_apis_attendance_settings_path(single: 1, fiscal_year: @year), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Affair2::AttendanceSetting.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% if @item.attendance_setting %>
+          <tr data-id="<%= @item.attendance_setting_id %>">
+            <td><%= f.hidden_field "attendance_setting_id", value: @item.attendance_setting_id, id: nil %> <%= @item.attendance_setting.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :carryover_minutes %></dt>
+  <dd><%= f.number_field :carryover_minutes, min: 0 %></dd>
+
+  <dt><%= @model.t :additional_minutes %></dt>
+  <dd><%= f.number_field :additional_minutes, min: 0 %></dd>
+</dl>

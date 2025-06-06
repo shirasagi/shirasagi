@@ -1,0 +1,32 @@
+<%= jquery do %>
+var $item = $('[name="item[worktime_type]"]');
+var toggleWorktimeType = function() {
+  var val = $item.val();
+  if (val == "constant") {
+    $("#addon-gws-agents-addons-affair2-duty_setting-worktime").show();
+    $("#addon-gws-agents-addons-affair2-duty_setting-workday").show();
+  } else {
+    $("#addon-gws-agents-addons-affair2-duty_setting-worktime").hide();
+    $("#addon-gws-agents-addons-affair2-duty_setting-workday").hide();
+  }
+}
+$item.on("change", toggleWorktimeType);
+toggleWorktimeType();
+<% end %>
+
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :employee_type %></dt>
+  <dd><%= @item.label :employee_type %></dd>
+
+  <dt><%= @model.t :worktime_type %></dt>
+  <dd>
+    <%= @item.label :worktime_type %>
+    <%= hidden_field_tag "item[worktime_type]", @item.worktime_type, id: nil %>
+  </dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+</dl>

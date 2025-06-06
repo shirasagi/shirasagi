@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.t :year %></dt>
+  <dd><%= @item.year %></dd>
+
+  <dt><%= @model.t :user_id %></dt>
+  <dd><%= @item.user_name %></dd>
+
+  <dt><%= @model.t :attendance_setting_id %></dt>
+  <dd><%= @item.attendance_setting.try(:name) %></dd>
+
+  <dt><%= @model.t :carryover_minutes %></dt>
+  <dd><%= @item.carryover_minutes %></dd>
+
+  <dt><%= @model.t :additional_minutes %></dt>
+  <dd><%= @item.additional_minutes %></dd>
+</dl>

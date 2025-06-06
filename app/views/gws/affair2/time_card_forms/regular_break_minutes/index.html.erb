@@ -1,0 +1,28 @@
+<%= jquery do %>
+$("#ajax-box form").ajaxForm({
+  success: function(data) {
+    var $body = $("<div>" + data + "</div>").find("#ajax-box");
+    $("#ajax-box").replaceWith($body);
+    $.colorbox.resize();
+  }
+});
+<% end %>
+
+<%= form_for :item, url: { action: :update }, html: { method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+  <%= hidden_field_tag 'ref', params[:ref] %>
+
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "addon-basic", head: false } do %>
+      <dl class="see">
+        <dt><%= t('gws/attendance.edit_cell.time') %></dt>
+        <dd><%= f.select :minutes, break_minutes_options, include_blank: true %></dd>
+      </dl>
+    <% end %>
+  </div>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+    <%= f.button t("gws/attendance.buttons.close"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+  </footer>
+<% end %>

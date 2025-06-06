@@ -30,6 +30,7 @@ en:
       lock: Lock
       unlock: Unlock
       punch: Punch
+      edit: Edit
     links:
       lock: Lock
       unlock: Unlock

@@ -1,0 +1,26 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :special_leave_ids %><%= @model.tt :special_leave_ids %></dt>
+  <dd>
+    <%= f.hidden_field "special_leave_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws/affair2.apis.special_leave.index"), gws_affair2_apis_special_leave_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Affair2::SpecialLeave.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% @item.special_leave.each do |item| %>
+          <tr data-id="<%= item.id %>">
+            <td><%= f.hidden_field "special_leave_ids[]", value: item.id, id: nil %> <%= item.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>
