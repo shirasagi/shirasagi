@@ -1,0 +1,65 @@
+<div class="gws-column-form-grid-list">
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t :i18n_name %><%= model.tt :i18n_name %></legend>
+
+    <% SS.locales_in_order.each_with_index do |lang, index| %>
+      <div class="gws-column-form-input-group">
+        <%= label_tag "#{f.object_name}[i18n_name_translations][#{lang}]", model.t(:"i18n_name_#{lang}", default: t("ss.options.lang.#{lang}", default: lang.to_s)), class: "i18n_name" %>
+        <div class="i18n_name">
+          <%= text_field_tag "#{f.object_name}[i18n_name_translations][#{lang}]", item.i18n_name_translations[lang], autofocus: index == 0 && pc_browser? %>
+        </div>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= t("ss.basic_info") %></legend>
+    <div class="gws-column-form-input-group">
+      <%= f.label :reference_form_id, model.t(:reference_form_id) %><%= model.tt :reference_form_id %>
+      <%=
+        options = Gws::Tabular::Form.site(@cur_site).space(item.form.space).reorder(order: 1, id: 1).only(:_id, :i18n_name).map { |form| [form.name, form.id.to_s ] }
+        choices = render SS::OptionsForSelectComponent.new(options: options, selected: item.reference_form_id.to_s)
+        f.select :reference_form_id, choices, include_blank: true %>
+    </div>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :reference_type, model.t(:reference_type) %><%= model.tt :reference_type %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.reference_type_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :reference_type, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= t("gws/tabular.option_setting") %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :required, model.t(:required) %><%= model.tt :required %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.required_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :required, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :index_state, model.t(:index_state) %><%= model.tt :index_state %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.index_state_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :index_state, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+</div>

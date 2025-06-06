@@ -1,4 +1,5 @@
 import { Controller } from "@hotwired/stimulus"
+import {findTarget} from "../../../ss/tool";
 
 export default class extends Controller {
   initialize() {
@@ -16,10 +17,10 @@ export default class extends Controller {
 
   bind() {
     this.element.addEventListener("click", (ev) => {
-      if (ev.target.classList.contains("btn-add")) {
+      if (findTarget(ev.target, ".btn-add")) {
         this.addRow(ev)
       }
-      if (ev.target.classList.contains("btn-delete")) {
+      if (findTarget(ev.target, ".btn-delete")) {
         this.deleteRow(ev)
       }
       if (ev.target.classList.contains("unifies-to-main")) {

@@ -5,8 +5,10 @@
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
-  <dt><%= @model.t :required %><%= @model.tt :required %></dt>
-  <dd><%= f.select :required, @item.required_options %></dd>
+  <% if @model.use_required %>
+    <dt><%= @model.t :required %><%= @model.tt :required %></dt>
+    <dd><%= f.select :required, @item.required_options %></dd>
+  <% end %>
 
   <dt><%= @model.t :tooltips %><%= @model.tt :tooltips %></dt>
   <dd><%= f.ss_lines_field :tooltips %></dd>

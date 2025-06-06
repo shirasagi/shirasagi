@@ -1,0 +1,27 @@
+<dl class="see">
+  <dt><%= @model.human_attribute_name :type %></dt>
+  <dd></dd>
+
+  <% view_type_options.each_with_index do |mod_def, index| %>
+    <dt class="depth-2"><%= mod_def[1][:name] %></dt>
+    <dd class="depth-2">
+      <% mod_def[1][:items].each do |name, type| %>
+        <label><%= f.radio_button :type, type, id: nil %> <%= name %></label>
+      <% end %>
+    </dd>
+  <% end %>
+
+  <% if Gws.service_account?(@cur_user) %>
+    <% ::Riken::RecycleBoard::View.plugins.group_by { _1.i18n_module_name }.each do |name, plugins| %>
+      <dt class="depth-2"><%= name %></dt>
+      <dd class="depth-2">
+        <% plugins.each do |plugin| %>
+          <label><%= f.radio_button :type, plugin.path, id: nil %> <%= plugin.i18n_name_only %></label>
+        <% end %>
+      </dd>
+    <% end %>
+  <% end %>
+
+  <dt><%= @model.human_attribute_name :form_id %></dt>
+  <dd><%= f.select :form_id, forms_options, include_blank: true %></dd>
+</dl>

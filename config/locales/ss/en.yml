@@ -840,6 +840,7 @@ en:
         domains: Domain
         gws_use: Use of groupware
         upload_policy: Upload restrictions
+        path_id: Path ID
       ss/user_group_history:
         created: Move date and time
         cms_site_id: CMS site
@@ -1216,6 +1217,8 @@ en:
         - Groupware is used by default.
       upload_policy:
         - Set behavior when uploading files.
+      path_id:
+        - Set the ID of the export path. The path ID is the name of the folder under public/gws/. Only small alphanumeric characters and numbers are allowed.
     ss/document:
       title:
         - Used for the page title and displayed in the title bar of the browser.

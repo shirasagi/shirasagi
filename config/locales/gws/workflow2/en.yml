@@ -287,8 +287,9 @@ en:
         purpose_ids: Business type
       gws/workflow2/form/purpose:
         name: Purpose of Work
-      gws/workflow2/destination_setting:
+      gws/workflow2/destination_state:
         destination_treat_state: Treated state
+      gws/workflow2/destination_setting:
         destination_group_ids: Destination group
         destination_user_ids: Destination user
 

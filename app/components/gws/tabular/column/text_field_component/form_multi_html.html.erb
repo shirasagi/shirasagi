@@ -1,0 +1,11 @@
+<%
+  SS.config.cms.ckeditor.fetch('stylesheets', []).each do |ss|
+    controller.stylesheet ss
+  end
+  SS.config.cms.ckeditor.fetch('javascripts', []).each do |js|
+    controller.javascript js
+  end
+%>
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <%= text_area_tag("#{form.object_name}[col_#{column.id}]", value, id: nil, data: { controller: "gws--tabular--cke", "gws--tabular--cke-config-value" => gws_apis_cke_config_path(format: "js") }) %>
+<% end %>

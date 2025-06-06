@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 import i18next from 'i18next'
 import Dialog from "../../../ss/dialog"
-import {csrfToken, dispatchEvent, fadeOut} from "../../../ss/tool"
+import {csrfToken, dispatchEvent, fadeOut, findTarget} from "../../../ss/tool"
 
 function findItemRoot(element) {
   while (element.parentElement) {
@@ -17,13 +17,13 @@ function findItemRoot(element) {
 export default class extends Controller {
   connect() {
     this.element.addEventListener("click", (ev) => {
-      if (ev.target.classList.contains("btn-gws-column-item-delete") || ev.target.closest(".btn-gws-column-item-delete"))  {
+      if (findTarget(ev.target, ".btn-gws-column-item-delete"))  {
         this.#removeColumnItem(ev)
         ev.stopImmediatePropagation()
         ev.preventDefault()
         return false
       }
-      if (ev.target.classList.contains("btn-gws-column-item-detail") || ev.target.closest(".btn-gws-column-item-detail")) {
+      if (findTarget(ev.target, ".btn-gws-column-item-detail")) {
         this.#showColumnDetail(ev)
         ev.stopImmediatePropagation()
         ev.preventDefault()
@@ -35,15 +35,15 @@ export default class extends Controller {
   }
 
   #showColumnDetail(ev) {
-    const btn = ev.target.classList.contains("btn-gws-column-item-detail") ? ev.target : ev.target.closest(".btn-gws-column-item-detail")
-    if (btn.dataset.ref) {
+    const btn = findTarget(ev.target, ".btn-gws-column-item-detail")
+    if (btn && btn.dataset.ref) {
       Dialog.showModal(btn.dataset.ref)
     }
   }
 
   async #removeColumnItem(ev) {
-    const btn = ev.target.classList.contains("btn-gws-column-item-delete") ? ev.target : ev.target.closest(".btn-gws-column-item-delete")
-    if (!btn.dataset.ref) {
+    const btn = findTarget(ev.target, ".btn-gws-column-item-delete")
+    if (!btn || !btn.dataset.ref) {
       return
     }
 
@@ -67,7 +67,7 @@ export default class extends Controller {
       return
     }
 
-    const columnItemList = this.element.closest(".gws-column-item-list")
+    const columnItemList = findTarget(this.element, ".gws-column-item-list")
     const columnItem = findItemRoot(this.element)
     if (!columnItem) {
       return
