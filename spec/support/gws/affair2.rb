@@ -15,6 +15,8 @@ module Gws
   end
 end
 
+# rubocop:disable Metrics/AbcSize
+# rubocop:disable Metrics/MethodLength
 def gws_affair2_manager_permissions
   %w(
     use_gws_portal_user_settings
@@ -178,18 +180,30 @@ def gws_affair2
 
   # user
   users = OpenStruct.new
-  users.u1 = create :gws_user, name: "部長", group_ids: [groups.g1.id], organization_id: site.id, organization_uid: "0001", gws_role_ids: [roles.r1.id]
-  users.u2 = create :gws_user, name: "A課長", group_ids: [groups.g1_1.id], organization_id: site.id, organization_uid: "0002", gws_role_ids: [roles.r1.id]
-  users.u3 = create :gws_user, name: "C担当1", group_ids: [groups.g1_1_1.id], organization_id: site.id, organization_uid: "0003", gws_role_ids: [roles.r2.id]
-  users.u4 = create :gws_user, name: "C担当2", group_ids: [groups.g1_1_1.id], organization_id: site.id, organization_uid: "0004", gws_role_ids: [roles.r2.id]
-  users.u5 = create :gws_user, name: "D担当1(ローテ)", group_ids: [groups.g1_1_2.id], organization_id: site.id, organization_uid: "0005", gws_role_ids: [roles.r4.id]
-  users.u6 = create :gws_user, name: "D担当2(ローテ)", group_ids: [groups.g1_1_2.id], organization_id: site.id, organization_uid: "0006", gws_role_ids: [roles.r4.id]
-  users.u7 = create :gws_user, name: "B課長", group_ids: [groups.g1_2.id], organization_id: site.id, organization_uid: "0007", gws_role_ids: [roles.r1.id]
-  users.u8 = create :gws_user, name: "E担当1", group_ids: [groups.g1_2_1.id], organization_id: site.id, organization_uid: "0008", gws_role_ids: [roles.r2.id]
-  users.u9 = create :gws_user, name: "E担当2", group_ids: [groups.g1_2_1.id], organization_id: site.id, organization_uid: "0009", gws_role_ids: [roles.r2.id]
-  users.u10 = create :gws_user, name: "F担当1", group_ids: [groups.g1_2_2.id], organization_id: site.id, organization_uid: "0010", gws_role_ids: [roles.r2.id]
-  users.u11 = create :gws_user, name: "F担当2", group_ids: [groups.g1_2_2.id], organization_id: site.id, organization_uid: "0011", gws_role_ids: [roles.r3.id]
-  users.u12 = create :gws_user, name: "AB兼務課長", group_ids: [groups.g1_1.id, groups.g1_2.id], organization_id: site.id, organization_uid: "0012", gws_role_ids: [roles.r1.id]
+  users.u1 = create :gws_user, name: "部長", group_ids: [groups.g1.id],
+    organization_id: site.id, organization_uid: "0001", gws_role_ids: [roles.r1.id]
+  users.u2 = create :gws_user, name: "A課長", group_ids: [groups.g1_1.id],
+    organization_id: site.id, organization_uid: "0002", gws_role_ids: [roles.r1.id]
+  users.u3 = create :gws_user, name: "C担当1", group_ids: [groups.g1_1_1.id],
+    organization_id: site.id, organization_uid: "0003", gws_role_ids: [roles.r2.id]
+  users.u4 = create :gws_user, name: "C担当2", group_ids: [groups.g1_1_1.id],
+    organization_id: site.id, organization_uid: "0004", gws_role_ids: [roles.r2.id]
+  users.u5 = create :gws_user, name: "D担当1(ローテ)", group_ids: [groups.g1_1_2.id],
+    organization_id: site.id, organization_uid: "0005", gws_role_ids: [roles.r4.id]
+  users.u6 = create :gws_user, name: "D担当2(ローテ)", group_ids: [groups.g1_1_2.id],
+    organization_id: site.id, organization_uid: "0006", gws_role_ids: [roles.r4.id]
+  users.u7 = create :gws_user, name: "B課長", group_ids: [groups.g1_2.id],
+    organization_id: site.id, organization_uid: "0007", gws_role_ids: [roles.r1.id]
+  users.u8 = create :gws_user, name: "E担当1", group_ids: [groups.g1_2_1.id],
+    organization_id: site.id, organization_uid: "0008", gws_role_ids: [roles.r2.id]
+  users.u9 = create :gws_user, name: "E担当2", group_ids: [groups.g1_2_1.id],
+    organization_id: site.id, organization_uid: "0009", gws_role_ids: [roles.r2.id]
+  users.u10 = create :gws_user, name: "F担当1", group_ids: [groups.g1_2_2.id],
+    organization_id: site.id, organization_uid: "0010", gws_role_ids: [roles.r2.id]
+  users.u11 = create :gws_user, name: "F担当2", group_ids: [groups.g1_2_2.id],
+    organization_id: site.id, organization_uid: "0011", gws_role_ids: [roles.r3.id]
+  users.u12 = create :gws_user, name: "AB兼務課長", group_ids: [groups.g1_1.id, groups.g1_2.id],
+    organization_id: site.id, organization_uid: "0012", gws_role_ids: [roles.r1.id]
 
   # special_leave
   special_leave = OpenStruct.new
@@ -285,5 +299,7 @@ def gws_affair2
   Gws::Affair2Support.data.paid_leave_settings = paid_leave_settings
   Gws::Affair2Support.data
 end
+# rubocop:enable Metrics/AbcSize
+# rubocop:enable Metrics/MethodLength
 
 RSpec.configuration.extend(Gws::Affair2Support::Hooks)

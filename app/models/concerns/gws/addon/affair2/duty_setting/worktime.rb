@@ -5,6 +5,10 @@ module Gws::Addon::Affair2
       extend SS::Addon
 
       included do
+        class_variable_set(
+          :@@default_duty_worktime,
+          SS.config.affair2.dig("default_duty", "worktime").with_indifferent_access)
+
         delegate :time_to_min, :min_to_time, to: Gws::Affair2::Utils
 
         # 所定労働時間(日)
@@ -16,11 +20,11 @@ module Gws::Addon::Affair2
         field :worktime_of_wday, default: "disabled"
         permit_params :worktime_of_wday
 
-        field :start_at_hour, type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "start_hour")
-        field :start_at_minute, type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "start_minute")
-        field :close_at_hour, type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "close_hour")
-        field :close_at_minute, type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "close_minute")
-        field :break_minutes_at, type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "break_minutes")
+        field :start_at_hour, type: Integer, default: default_duty_worktime[:start_hour]
+        field :start_at_minute, type: Integer, default: default_duty_worktime[:start_minute]
+        field :close_at_hour, type: Integer, default: default_duty_worktime[:close_hour]
+        field :close_at_minute, type: Integer, default: default_duty_worktime[:close_minute]
+        field :break_minutes_at, type: Integer, default: default_duty_worktime[:break_minutes]
         permit_params :start_at_hour, :start_at_minute
         permit_params :close_at_hour, :close_at_minute
         permit_params :break_minutes_at
@@ -35,11 +39,11 @@ module Gws::Addon::Affair2
           numericality: { only_integer: true, greater_than_or_equal_to: 0, less_than_or_equal_to: 59 }
 
         (0..6).each do |wday|
-          field "start_at_hour_#{wday}", type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "start_hour")
-          field "start_at_minute_#{wday}", type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "start_minute")
-          field "close_at_hour_#{wday}", type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "close_hour")
-          field "close_at_minute_#{wday}", type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "close_minute")
-          field "break_minutes_at_#{wday}", type: Integer, default: SS.config.affair2.dig("default_duty", "worktime", "break_minutes")
+          field "start_at_hour_#{wday}", type: Integer, default: default_duty_worktime[:start_hour]
+          field "start_at_minute_#{wday}", type: Integer, default: default_duty_worktime[:start_minute]
+          field "close_at_hour_#{wday}", type: Integer, default: default_duty_worktime[:close_hour]
+          field "close_at_minute_#{wday}", type: Integer, default: default_duty_worktime[:close_minute]
+          field "break_minutes_at_#{wday}", type: Integer, default: default_duty_worktime[:break_minutes]
           permit_params "start_at_hour_#{wday}", "start_at_minute_#{wday}"
           permit_params "close_at_hour_#{wday}", "close_at_minute_#{wday}"
           permit_params "break_minutes_at_#{wday}"
@@ -112,8 +116,6 @@ module Gws::Addon::Affair2
         alias_method "break_minutes_at_#{wday}_options", "break_minutes_options"
       end
 
-      public
-
       def start_time(time = nil)
         return nil if worktime_variable?
         return nil if regular_holiday(time) == "holiday"
@@ -170,6 +172,12 @@ module Gws::Addon::Affair2
         return nil if regular_holiday(time) == "holiday"
         return close_at_minute if time.nil?
         worktime_of_wday_disabled? ? close_at_minute : send("close_at_minute_#{time.wday}")
+      end
+
+      module ClassMethods
+        def default_duty_worktime
+          class_variable_get(:@@default_duty_worktime)
+        end
       end
     end
   end

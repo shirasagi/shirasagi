@@ -6,6 +6,7 @@ module Gws::Addon::Affair2
 
       included do
         attr_accessor :in_day_leave_hour, :in_day_leave_minute
+
         field :day_leave_minutes, type: Integer, default: SS.config.affair2.dig("default_duty", "day_leave_minutes")
 
         permit_params :in_day_leave_hour, :in_day_leave_minute

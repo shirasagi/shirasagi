@@ -73,8 +73,12 @@ module Gws::Addon::Affair2
       end
       users = users.select(&:present?)
       users.each do |user|
-        errors.add :workflow_approvers, :not_read, name: user.name unless allowed?(:read, user, site: cur_site, adds_error: false)
-        errors.add :workflow_approvers, :not_approve, name: user.name unless allowed?(:approve, user, site: cur_site, adds_error: false)
+        if !allowed?(:read, user, site: cur_site, adds_error: false)
+          errors.add :workflow_approvers, :not_read, name: user.name
+        end
+        if !allowed?(:approve, user, site: cur_site, adds_error: false)
+          errors.add :workflow_approvers, :not_approve, name: user.name
+        end
       end
     end
   end
