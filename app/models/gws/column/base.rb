@@ -16,6 +16,13 @@ class Gws::Column::Base
         name: self.model_name.human
       }
     end
+
+    def inherited(subclass)
+      super
+
+      subclass.cattr_accessor(:use_required, instance_accessor: false)
+      subclass.use_required = true
+    end
   end
 
   def to_es

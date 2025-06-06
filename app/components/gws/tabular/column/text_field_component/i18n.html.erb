@@ -1,0 +1,19 @@
+<%
+  locales = SS.locales_in_order.to_a
+%>
+<div class="gws-tabular-column-i18n-list">
+  <% parts.each_with_index do |part, index| %>
+    <%
+      lang = locales[index]
+      break unless lang
+    %>
+    <div class="gws-tabular-column-i18n-list-item">
+      <div class="gws-tabular-column-i18n-list-item-lang">
+        <%= t("ss.options.lang.#{lang}", default: lang.to_s) %>
+      </div>
+      <div class="gws-tabular-column-i18n-list-value">
+        <%= part %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -1,0 +1,11 @@
+<%
+  return unless @cur_form
+
+  policy = Gws::Tabular::Frames::ApproversPolicy.new(
+    cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, model: @item.class, item: @item)
+  return unless policy.show?
+%>
+
+<turbo-frame id="workflow-approver-frame" src="<%= gws_tabular_frames_approver_path(id: @item, ref: request.path) %>">
+  <%= loading %>
+</turbo-frame>

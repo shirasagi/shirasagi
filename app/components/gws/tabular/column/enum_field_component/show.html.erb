@@ -1,0 +1,10 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% normalized_values.each do |v| %>
+    <div data-value="<%= v %>">
+      <% value_translations = Gws::Column.to_translations(v) %>
+      <% I18n.available_locales.each do |lang| %>
+        <%= tag.span value_translations[lang].presence || value_translations[I18n.default_locale], data: { "show-in" => lang } %>
+      <% end %>
+    </div>
+  <% end %>
+<% end %>

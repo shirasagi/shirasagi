@@ -1,0 +1,45 @@
+<%
+  columns = nil
+  id_column_map = nil
+%>
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), url_for(action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%
+    component = Gws::Tabular::View::ListTitleComponent.new(
+      cur_site: @cur_site, cur_user: @cur_user, cur_space: cur_space, cur_form: cur_form, cur_release: cur_release, cur_view: cur_view, item: item,
+      trash: @trash, columns: columns, id_column_map: id_column_map)
+  %>
+  <%= render component %>
+  <%
+    columns = component.columns
+    id_column_map = component.id_column_map
+  %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <%
+    component = Gws::Tabular::View::ListMetaComponent.new(
+      cur_site: @cur_site, cur_user: @cur_user, cur_space: cur_space, cur_form: cur_form, cur_release: cur_release, cur_view: cur_view, item: item,
+      trash: @trash, columns: columns, id_column_map: id_column_map)
+  %>
+  <%= render component %>
+  <%
+    columns = component.columns
+    id_column_map = component.id_column_map
+  %>
+<% end %>
+
+<% if list_check_box? %>
+  <% @index_check = proc do |item| %>
+    <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></label>
+  <% end %>
+<% else %>
+  <% @index_check = proc { |_item| } %>
+<% end %>
+
+<%= tag.div class: "gws-tabular-views-main-box", data: { controller: "ss--list-action-enabler" } do %>
+  <%= render template: "gws/crud/index" %>
+<% end %>

@@ -27,7 +27,7 @@ function isFileView(el) {
 export default class extends Controller {
   connect() {
     $(this.element).on("change", (ev) => {
-      if (isInputText(ev.target) || isTextArea(ev.target) || isSelect(ev.target) || isAjaxTable(ev.target) || isFileView(ev.target)) {
+      if ((isInputText(ev.target) || isTextArea(ev.target) || isSelect(ev.target) || isAjaxTable(ev.target) || isFileView(ev.target)) && ev.target.name) {
         SS.formChanged = new Date().getTime();
       }
     }).on("ss:change", (_ev) => {

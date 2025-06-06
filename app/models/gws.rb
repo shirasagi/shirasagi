@@ -159,4 +159,44 @@ module Gws
 
     "<#{::Mail.random_tag}@#{domain}.mail>"
   end
+
+  def public_dir_path(site, file)
+    root_path = site.root_path
+    return if root_path.blank?
+    return if !root_path.start_with?(Rails.root.to_s)
+
+    path = ::File.join("fs", file.id.to_s.chars.join("/"), "_")
+    path = ::File.expand_path(path, root_path)
+    return if !path.start_with?(root_path)
+
+    path
+  end
+
+  def public_file_path(site, file)
+    dir = public_dir_path(site, file)
+    return if dir.blank?
+
+    path = ::File.expand_path(file.filename, dir)
+    return if !path.start_with?(Rails.root.to_s)
+
+    path
+  end
+
+  def publish_file(site, file)
+    return if site.blank? || file.blank?
+
+    dir = Gws.public_dir_path(site, file)
+    return if dir.blank?
+
+    SS::FilePublisher.publish(file, dir)
+  end
+
+  def depublish_file(site, file)
+    return if site.blank? || file.blank?
+
+    dir = Gws.public_dir_path(site, file)
+    return if dir.blank?
+
+    SS::FilePublisher.depublish(file, dir)
+  end
 end
