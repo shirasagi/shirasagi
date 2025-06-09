@@ -99,6 +99,7 @@ en:
     buttons:
       unset: Cancel
       add_item: Add a new element
+      change_menu_icon: Change menu icon
     confirm:
       readable_setting:
         empty: "No viewer has been entered. \\n Are you sure you want everyone to see it?"
