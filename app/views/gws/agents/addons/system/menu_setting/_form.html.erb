@@ -17,11 +17,11 @@
       <dd>
       <span style="display: flex; align-items: center; gap: 0.5em; margin-left: 1em;">
         <% if icon_file.present? %>
-          <%= image_tag icon_file.url, style: "width: 32px; height: 32px;" %>
+          <%= image_tag icon_file.url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
         <% else %>
           <%= image_tag "/assets/img/ic-#{type}.svg", class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
         <% end %>
-        <%= f.ss_file_field "menu_#{type}_icon_image_id", accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
+        <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
         </span>
       </dd>
       <% end %>
