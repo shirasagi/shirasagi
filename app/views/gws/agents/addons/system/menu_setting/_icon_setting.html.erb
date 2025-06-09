@@ -1,0 +1,29 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<%
+  menu_label ||= local_assigns.fetch(:menu_label, "")
+  menu_type ||= local_assigns.fetch(:menu_type, "")
+  icon_image ||= local_assigns.fetch(:icon_image, nil)
+%>
+
+<dl class="see">
+  <dt><%= menu_label %></dt>
+  <dd>
+    <% if icon_image.present? %>
+      <%= image_tag icon_image.url, style: "width: 48px; height: 48px;" %>
+      <span><%= icon_image.name %> (<%= number_to_human_size(icon_image.size) %>)</span>
+      <%= button_to "削除", delete_menu_icon_path(menu_type: menu_type), method: :delete, form: { data: { turbo: false } }, class: "btn btn-danger", form_class: "inline" %>
+    <% else %>
+      <span class="default-icon"><!-- デフォルトアイコン --></span>
+    <% end %>
+  </dd>
+
+  <dt>新しい画像を選択</dt>
+  <dd>
+    <%= f.ss_file_field "menu_#{menu_type}_icon_image_id", accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
+  </dd>
+  <dd>
+    <%= f.button_tag(t("gws.buttons.change_menu_icon"), type: "submit", class: "btn-icon-only icon-#{menu_type}") %>
+    <%= f.button_tag(t("ss.buttons.cancel"), type: "button", class: "btn-default cancel") %>
+  </dd>
+</dl>

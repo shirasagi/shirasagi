@@ -7,6 +7,16 @@
   <dl class="see addon-gws-system-menu-setting">
     <dt><%= @model.t("menu_#{type}_state") %></dt>
     <dd>
+      <% skip_icon_types = %w(staff_record links contrast) %>
+      <% unless skip_icon_types.include?(type.to_s) %>
+      <% if @item.send("menu_#{type}_icon_image").present? %>
+        <%= image_tag @item.send("menu_#{type}_icon_image").url, style: "width: 32px; height: 32px;" %>
+      <% else %>
+        <%= image_tag "/assets/img/ic-#{type}.svg", class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
+      <% end %>
+      <% end %>
+    </dd>
+    <dd>
       <% if @item.send("menu_#{type}_visible?") %>
         <%= @item.send("menu_#{type}_label") || fallback_label || t("modules.gws/#{type}") %>
       <% else %>

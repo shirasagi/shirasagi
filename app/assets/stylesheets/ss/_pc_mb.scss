@@ -1187,34 +1187,46 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -192px !important;
   }
   .icon-conf:before {
-    background-position: left -224px !important;
+    background: url(/assets/img/ic-conf.svg) no-repeat center center !important;
   }
   .icon-conf:hover:before {
-    background-position: -32px -224px !important;
+    background: url(/assets/img/ic-conf.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-portal:before {
-    background-position: left -256px !important;
+    background: url(/assets/img/ic-portal.svg) no-repeat center center !important;
   }
   .icon-portal:hover:before {
-    background-position: -32px -256px !important;
+    background: url(/assets/img/ic-portal.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
+  }
+  .icon-notice:before {
+    background: url(/assets/img/ic-notice.svg) no-repeat center center !important;
+  }
+  .icon-notice:hover:before {
+    background: url(/assets/img/ic-notice.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-schedule:before {
-    background-position: left -288px !important;
+    background: url(/assets/img/ic-schedule.svg) no-repeat center center !important;
   }
   .icon-schedule:hover:before {
-    background-position: -32px -288px !important;
+    background: url(/assets/img/ic-schedule.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-board:before {
-    background-position: left -320px !important;
+    background: url(/assets/img/ic-board.svg) no-repeat center center !important;
   }
   .icon-board:hover:before {
-    background-position: -32px -320px !important;
+    background: url(/assets/img/ic-board.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-todo:before {
-    background-position: left -352px !important;
+    background: url(/assets/img/ic-todo.svg) no-repeat center center !important;
   }
   .icon-todo:hover:before {
-    background-position: -32px -352px !important;
+    background: url(/assets/img/ic-todo.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-facility:before {
     background-position: left -384px !important;
@@ -1223,106 +1235,123 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -384px !important;
   }
   .icon-workflow:before {
-    background-position: left -416px !important;
+    background: url(/assets/img/ic-workflow.svg) no-repeat center center !important;
   }
   .icon-workflow:hover:before {
-    background-position: -32px -416px !important;
+    background: url(/assets/img/ic-workflow.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-search:before {
-    background-position: left -448px !important;
+    background: url(/assets/img/ic-search.svg) no-repeat center center !important;
   }
   .icon-search:hover:before {
-    background-position: -32px -448px !important;
+    background: url(/assets/img/ic-search.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-message:before {
-    background-position: left -480px !important;
+    background: url(/assets/img/ic-message.svg) no-repeat center center !important;
   }
   .icon-message:hover:before {
-    background-position: -32px -480px !important;
+    background: url(/assets/img/ic-message.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-memo:before {
-    background-position: left -480px !important;
+    background: url(/assets/img/ic-memo.svg) no-repeat center center !important;
   }
   .icon-memo:hover:before {
-    background-position: -32px -480px !important;
+    background: url(/assets/img/ic-memo.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-report:before {
-    background-position: left -512px !important;
+    background: url(/assets/img/ic-report.svg) no-repeat center center !important;
   }
   .icon-report:hover:before {
-    background-position: -32px -512px !important;
+    background: url(/assets/img/ic-report.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-question:before {
-    background-position: left -640px !important;
+    background: url(/assets/img/ic-question.svg) no-repeat center center !important;
   }
   .icon-question:hover:before {
-    background-position: -32px -640px !important;
+    background: url(/assets/img/ic-question.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-circular:before {
-    background-position: left -544px !important;
+    background: url(/assets/img/ic-circular.svg) no-repeat center center !important;
   }
   .icon-circular:hover:before {
-    background-position: -32px -544px !important;
+    background: url(/assets/img/ic-circular.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-monitor:before {
-    background-position: left -672px !important;
+    background: url(/assets/img/ic-monitor.svg) no-repeat center center !important;
   }
   .icon-monitor:hover:before {
-    background-position: -32px -672px !important;
+    background: url(/assets/img/ic-monitor.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-share:before {
-    background-position: left -576px !important;
+    background: url(/assets/img/ic-share.svg) no-repeat center center !important;
   }
   .icon-share:hover:before {
-    background-position: -32px -576px !important;
+    background: url(/assets/img/ic-share.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-address:before {
-    background-position: left -608px !important;
+    background: url(/assets/img/ic-address.svg) no-repeat center center !important;
   }
   .icon-address:hover:before {
-    background-position: -32px -608px !important;
+    background: url(/assets/img/ic-address.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-discussion:before {
-    background-position: left -736px !important;
+    background: url(/assets/img/ic-discussion.svg) no-repeat center center !important;
   }
   .icon-discussion:hover:before {
-    background-position: -32px -736px !important;
+    background: url(/assets/img/ic-discussion.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-reminder:before {
-    background-position: left -768px !important;
+    background: url(/assets/img/ic-reminder.svg) no-repeat center center !important;
   }
   .icon-reminder:hover:before {
-    background-position: -32px -768px !important;
+    background: url(/assets/img/ic-reminder.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-bookmark:before {
-    background-position: left -800px !important;
+    background: url(/assets/img/ic-bookmark.svg) no-repeat center center !important;
   }
   .icon-bookmark:hover:before {
-    background-position: -32px -800px !important;
+    background: url(/assets/img/ic-bookmark.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-faq:before {
-    background-position: left -832px !important;
+    background: url(/assets/img/ic-faq.svg) no-repeat center center !important;
   }
   .icon-faq:hover:before {
-    background-position: -32px -832px !important;
+    background: url(/assets/img/ic-faq.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-attendance:before {
-    background-position: left -864px !important;
+    background: url(/assets/img/ic-attendance.svg) no-repeat center center !important;
   }
   .icon-attendance:hover:before {
-    background-position: -32px -864px !important;
+    background: url(/assets/img/ic-attendance.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-presence:before {
-    background-position: left -896px !important;
+    background: url(/assets/img/ic-presence.svg) no-repeat center center !important;
   }
   .icon-presence:hover:before {
-    background-position: -32px -896px !important;
+    background: url(/assets/img/ic-presence.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-survey:before {
-    background-position: left -928px !important;
+    background: url(/assets/img/ic-survey.svg) no-repeat center center !important;
   }
   .icon-survey:hover:before {
-    background-position: -32px -928px !important;
+    background: url(/assets/img/ic-survey.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-trash:before {
     background-position: left -960px !important;
@@ -1337,22 +1366,25 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -992px !important;
   }
   .icon-affair:before {
-    background-position: left -1024px !important;
+    background: url(/assets/img/ic-affair.svg) no-repeat center center !important;
   }
   .icon-affair:hover:before {
-    background-position: -32px -1024px !important;
+    background: url(/assets/img/ic-affair.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-daily-report:before {
-    background-position: left -1056px !important;
+    background: url(/assets/img/ic-daily-report.svg) no-repeat center center !important;
   }
   .icon-daily-report:hover:before {
-    background-position: -32px -1056px !important;
+    background: url(/assets/img/ic-daily-report.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-workload:before {
-    background-position: left -1088px !important;
+    background: url(/assets/img/ic-workload.svg) no-repeat center center !important;
   }
   .icon-workload:hover:before {
-    background-position: -32px -1088px !important;
+    background: url(/assets/img/ic-workload.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-export:before {
     background-position: left -1120px !important;

@@ -99,6 +99,7 @@ ja:
     buttons:
       unset: 解除
       add_item: 新しい要素を追加
+      change_menu_icon: アイコン変更
     confirm:
       readable_setting:
         empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
