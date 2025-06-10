@@ -16,6 +16,8 @@ ja:
     layer: レイヤー
     longitude: 経度
     latitude: 緯度
+    views:
+      header: 地図
     alert:
       invalid_center: 座標を取得できませんでした。
       invalid_location:
@@ -33,7 +35,7 @@ ja:
       delete_marker: マーカーを削除してよろしいですか？
       find_exif: 画像に位置情報が含まれています。位置情報を地図に設定しますか？
     links:
-      google_maps_search: Googleマップで見る
+      google_maps_search: Googleマップで確認する
     coordinate:
       delimiters:
         degree: "°度"
