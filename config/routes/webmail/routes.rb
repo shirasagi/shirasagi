@@ -120,7 +120,8 @@ Rails.application.routes.draw do
     resources :signatures, path: ':webmail_mode-:account/signatures',
       webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
     resources :filters, path: ':webmail_mode-:account/filters',
-      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, concerns: [:deletion, :export, :filter], defaults: { webmail_mode: 'account' }
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, concerns: [:deletion, :export, :filter],
+      defaults: { webmail_mode: 'account' }
     resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update],
       webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, defaults: { webmail_mode: 'account' }
     resources :import_mails, only: :index, path: ':webmail_mode-:account/import_mails',
