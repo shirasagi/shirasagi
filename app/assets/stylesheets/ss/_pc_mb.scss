@@ -1235,17 +1235,17 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -384px !important;
   }
   .icon-workflow:before {
-    background: url(/assets/img/ic-workflow.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-workflow2.svg) no-repeat center center !important;
   }
   .icon-workflow:hover:before {
-    background: url(/assets/img/ic-workflow.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-workflow2.svg) no-repeat center center !important;
     filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-search:before {
-    background: url(/assets/img/ic-search.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-elasticsearch.svg) no-repeat center center !important;
   }
   .icon-search:hover:before {
-    background: url(/assets/img/ic-search.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-elasticsearch.svg) no-repeat center center !important;
     filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-message:before {
@@ -1270,10 +1270,10 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-question:before {
-    background: url(/assets/img/ic-question.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-qna.svg) no-repeat center center !important;
   }
   .icon-question:hover:before {
-    background: url(/assets/img/ic-question.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-qna.svg) no-repeat center center !important;
     filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-circular:before {
@@ -1298,10 +1298,10 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-address:before {
-    background: url(/assets/img/ic-address.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-shared_address.svg) no-repeat center center !important;
   }
   .icon-address:hover:before {
-    background: url(/assets/img/ic-address.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-shared_address.svg) no-repeat center center !important;
     filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-discussion:before {
@@ -1366,17 +1366,17 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -992px !important;
   }
   .icon-affair:before {
-    background: url(/assets/img/ic-affair.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-affair2.svg) no-repeat center center !important;
   }
   .icon-affair:hover:before {
-    background: url(/assets/img/ic-affair.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-affair2.svg) no-repeat center center !important;
     filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-daily-report:before {
-    background: url(/assets/img/ic-daily-report.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-daily_report.svg) no-repeat center center !important;
   }
   .icon-daily-report:hover:before {
-    background: url(/assets/img/ic-daily-report.svg) no-repeat center center !important;
+    background: url(/assets/img/ic-daily_report.svg) no-repeat center center !important;
     filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
   }
   .icon-workload:before {
@@ -4218,3 +4218,50 @@ table.check-links-erros {
   }
 }
 
+// アップロード画像がある場合は疑似要素を無効化
+.icon-portal.has-custom-icon:before,
+.icon-notice.has-custom-icon:before,
+.icon-schedule.has-custom-icon:before,
+.icon-board.has-custom-icon:before,
+.icon-todo.has-custom-icon:before,
+.icon-reminder.has-custom-icon:before,
+.icon-presence.has-custom-icon:before,
+.icon-memo.has-custom-icon:before,
+.icon-bookmark.has-custom-icon:before,
+.icon-attendance.has-custom-icon:before,
+.icon-affair.has-custom-icon:before,
+.icon-affair2.has-custom-icon:before,
+.icon-workload.has-custom-icon:before,
+.icon-daily_report.has-custom-icon:before,
+.icon-report.has-custom-icon:before,
+.icon-share.has-custom-icon:before,
+.icon-workflow.has-custom-icon:before,
+.icon-workflow2.has-custom-icon:before,
+.icon-circular.has-custom-icon:before,
+.icon-monitor.has-custom-icon:before,
+.icon-survey.has-custom-icon:before,
+.icon-message.has-custom-icon:before,
+.icon-faq.has-custom-icon:before,
+.icon-qna.has-custom-icon:before,
+.icon-discussion.has-custom-icon:before,
+.icon-share.has-custom-icon:before,
+.icon-shared_address.has-custom-icon:before,
+.icon-personal_address.has-custom-icon:before,
+.icon-workload.has-custom-icon:before,
+.icon-elasticsearch.has-custom-icon:before {
+  display: none !important;
+}
+
+// gwsメニューのimgタグのアイコン用スタイル
+.nav-icon-img {
+  width: 17px;
+  height: 17px;
+  margin-right: 15px;
+  vertical-align: middle;
+}
+
+.main-navi h2 a.has-custom-icon {
+  padding-left: 17px !important;
+  display: flex;
+  align-items: center;
+}

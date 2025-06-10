@@ -16,4 +16,22 @@ module Gws::LayoutHelper
     return nil if colorize.color.blank?
     "background-color: #{colorize.color}; color: #{colorize.text_color};"
   end
+
+  # メインナビ用アイコン表示ヘルパー
+  def gws_menu_icon(type, label_i18n, path)
+    icon_file = @cur_site.send("menu_#{type}_icon_image")
+    label = @cur_site.send("menu_#{type}_label") || t(label_i18n)
+    icon_class = "icon-#{type}"
+    if icon_file.present?
+      content_tag(:h2) do
+        link_to(path, class: "#{icon_class} has-custom-icon") do
+          image_tag(icon_file.url, class: "nav-icon-img") + label
+        end
+      end
+    else
+      content_tag(:h2) do
+        link_to(label, path, class: icon_class)
+      end
+    end
+  end
 end
