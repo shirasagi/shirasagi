@@ -1,21 +1,26 @@
 require 'nkf'
 
 class Sys::SiteImportJob < SS::ApplicationJob
-  include Job::SS::TaskFilter
+  #include Job::SS::TaskFilter
   include Sys::SiteImport::Contents
   include Sys::SiteImport::Opendata
   include Sys::SiteImport::File
 
-  def perform
-    @dst_site = Cms::Site.find(@task.target_site_id)
+  def put_log(message)
+    Rails.logger.info(message)
+    puts message
+  end
 
-    @import_zip = @task.import_file
+  def perform(import_file)
+    @dst_site = site
+
+    @import_zip = import_file
     @import_dir = "#{Rails.root}/private/import/site-#{@dst_site.host}"
 
-    @task.log("=== Site Import ===")
-    @task.log("Site name: #{@dst_site.name}")
-    @task.log("Temporary directory: #{@import_dir}")
-    @task.log("Import file: #{@import_zip}")
+    put_log("=== Site Import ===")
+    put_log("Site name: #{@dst_site.name}")
+    put_log("Temporary directory: #{@import_dir}")
+    put_log("Import file: #{@import_zip}")
 
     invoke :extract
 
@@ -27,8 +32,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
     import_cms_editor_templates
 
     if @dst_site.errors.present?
-      @task.log("Error: Could not create the site. #{@dst_site.name}")
-      @task.log(@dst_site.errors.full_messages.join(' '))
+      put_log("Error: Could not create the site. #{@dst_site.name}")
+      put_log(@dst_site.errors.full_messages.join(' '))
       return
     end
 
@@ -69,13 +74,16 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_check_links_ignore_urls
 
     FileUtils.rm_rf(@import_dir)
-    @task.log("Completed.")
+    put_log("Completed.")
+  rescue => e
+    puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+    raise
   end
 
   private
 
   def invoke(method)
-    @task.log("- " + method.to_s.sub('_', ' '))
+    put_log("- " + method.to_s.sub('_', ' '))
     send(method)
   end
 
@@ -236,13 +244,13 @@ class Sys::SiteImportJob < SS::ApplicationJob
     def item.set_updated; end
     return true if item.save
 
-    @task.log "#{item.class} - " + item.errors.full_messages.join(' ')
-    @task.log "> #{item.to_json}"
+    put_log "#{item.class} - " + item.errors.full_messages.join(' ')
+    put_log "> #{item.to_json}"
     false
   end
 
   def import_cms_groups
-    @task.log("- import cms_groups")
+    put_log("- import cms_groups")
 
     name = "cms_groups"
     model = Cms::Group
@@ -336,7 +344,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_roles
-    @task.log("- import cms_roles")
+    put_log("- import cms_roles")
     @cms_roles_map = import_documents "cms_roles", Cms::Role, %w(site_id name permissions)
   end
 
@@ -350,7 +358,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_editor_templates
-    @task.log("- import cms_editor_templates")
+    put_log("- import cms_editor_templates")
 
     read_json("cms_editor_templates").each do |data|
       id   = data.delete('_id')
@@ -385,7 +393,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_source_cleaner_templates
-    @task.log("- import source cleaner templates")
+    put_log("- import source cleaner templates")
     read_json("cms_source_cleaner_templates").each do |data|
       id   = data.delete('_id')
       data = convert_data(data)
@@ -399,7 +407,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_theme_templates
-    @task.log("- import theme templates")
+    put_log("- import theme templates")
 
     read_json("cms_theme_templates").each do |data|
       id   = data.delete('_id')
@@ -413,7 +421,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_word_dictionaries
-    @task.log("- import cms word dictionaries")
+    put_log("- import cms word dictionaries")
 
     dictionaries = Cms::WordDictionary.site(@src_site)
 
@@ -430,7 +438,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_translate_langs
-    @task.log("- import cms translate langs")
+    put_log("- import cms translate langs")
 
     translate_langs = ::Translate::Lang.site(@src_site)
 
@@ -447,7 +455,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_translate_text_caches
-    @task.log("- import cms translate text caches")
+    put_log("- import cms translate text caches")
 
     translate_text_caches = ::Translate::TextCache.site(@src_site)
 
@@ -464,7 +472,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_page_search
-    @task.log("- import cms Page Search")
+    put_log("- import cms Page Search")
 
     page_searches = Cms::PageSearch.site(@src_site)
 
@@ -490,7 +498,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_guides
-    @task.log("- import cms Guide::Diagram::Point")
+    put_log("- import cms Guide::Diagram::Point")
 
     @guide_diagram_point_map = {}
 
@@ -528,7 +536,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_check_links_ignore_urls
-    @task.log("- import cms_check_links_ignore_urls")
-    @cms_roles_map = import_documents "cms_check_links_ignore_urls", Cms::CheckLinks::IgnoreUrl, %w(site_id name)
+    put_log("- import cms_check_links_ignore_urls")
+    import_documents "cms_check_links_ignore_urls", Cms::CheckLinks::IgnoreUrl, %w(site_id name)
   end
 end
