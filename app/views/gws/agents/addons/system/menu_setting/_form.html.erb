@@ -58,33 +58,4 @@
 <% render_menu_setting.call(:links, t('mongoid.models.gws/link')) %>
 <% render_menu_setting.call(:contrast, t('mongoid.models.gws/contrast')) %>
 <% render_menu_setting.call(:elasticsearch) %>
-
-<%
-=begin%>
- <% menu_types = %w(portal notice reminder presence schedule todo affair affair2 daily_report attendance bookmark memo board
-  faq qna workload report workflow2 circular monitor survey share shared_address personal_address
-  staff_record links discussion contrast elasticsearch workflow) %>
-
-<% menu_types.each do |type| %>
-  <%= render partial: "gws/agents/addons/system/menu_setting/icon_setting",
-              locals: {
-                f: f,
-                menu_type: type,
-                menu_label: @item.send("menu_#{type}_label") || t("modules.gws/#{type}"),
-                icon_image: @item.send("menu_#{type}_icon_image")
-              } %>
-<% end %>
-
-<% jquery do %>
-$(function() {
-  $('.open-menu-icon-modal').on('click', function() {
-    var menuType = $(this).data('menu-type');
-    $('#menu-icon-modal-' + menuType).show();
-  });
-  $('.menu-icon-modal .cancel').on('click', function() {
-    $(this).closest('.menu-icon-modal').hide();
-  });
-});
-<% end %> 
-<%
-=end%>
+<% render_menu_setting.call(:conf, t('gws.site_config')) %>

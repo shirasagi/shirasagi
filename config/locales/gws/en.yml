@@ -410,6 +410,8 @@ en:
         menu_contrast_state: Contrast
         menu_presence_label: Display presence management
         menu_presence_state: Display presence management
+        menu_conf_label: Display site settings
+        menu_conf_state: Display site settings
       gws/addon/system/notice_setting:
         notice_schedule_state: Schedule
         notice_todo_state: ToDo
