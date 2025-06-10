@@ -25,14 +25,8 @@ class Webmail::GroupAccountsController < ApplicationController
   end
 
   def set_item
-    @index = 0
+    @index = Integer(params[:id])
     @item = @items[@index]
-    if @index == 0
-      @item ||= Webmail::ImapSetting.default.merge(
-        name: @group.section_name, from: @group.section_name
-      )
-    end
-
     raise "404" if @item.nil?
   end
 
@@ -60,8 +54,35 @@ class Webmail::GroupAccountsController < ApplicationController
 
   public
 
+  def new
+    raise "403" unless @group.allowed?(:edit, @cur_user)
+    @item = Webmail::ImapSetting.default.merge(name: @group.section_name, from: @group.section_name)
+    render
+  end
+
+  def create
+    raise "403" unless @group.allowed?(:edit, @cur_user)
+    @item = Webmail::ImapSetting.default
+    @item.merge!(get_params.to_h.symbolize_keys)
+    if @item.invalid?
+      render_create false
+      return
+    end
+
+    new_imap_settings = @group.imap_settings
+    new_imap_settings << @item.to_h
+    @group.imap_settings = new_imap_settings.compact
+
+    result = @group.save
+    if !result
+      SS::Model.copy_errors(@group, @item)
+    end
+
+    @index = @group.imap_settings.length - 1
+    render_create result, { location: { action: :show, id: @index } }
+  end
+
   def show
-    raise "404" if @group.imap_settings.blank?
     raise "403" unless @group.allowed?(:read, @cur_user)
     render
   end
@@ -81,7 +102,9 @@ class Webmail::GroupAccountsController < ApplicationController
       return
     end
 
-    @group.imap_settings = [ @item ]
+    new_imap_settings = @group.imap_settings.dup
+    new_imap_settings[@index] = @item
+    @group.imap_settings = new_imap_settings
 
     result = @group.save
     if !result
@@ -98,7 +121,9 @@ class Webmail::GroupAccountsController < ApplicationController
   def destroy
     raise "403" unless @group.allowed?(:delete, @cur_user)
 
-    @group.imap_settings = []
+    new_imap_settings = @group.imap_settings.dup
+    new_imap_settings.delete_at(@index)
+    @group.imap_settings = new_imap_settings
 
     result = @group.save
     if !result

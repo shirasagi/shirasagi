@@ -1,0 +1,7 @@
+id,グループ名,IMAP_アカウント番号,IMAP_アカウント名,IMAP_名前,IMAP_メールアドレス,IMAP_転送先メールアドレス,IMAP_ホスト,IMAP_ポート,IMAP_SSL,IMAP_認証方式,IMAP_ユーザー名,IMAP_パスワード,IMAP_送信済みフォルダー,IMAP_下書きフォルダー,IMAP_ゴミ箱フォルダー,IMAP_警告表示,IMAP_既定のアカウント
+100,テスト市,,,,,,,,,,,,,,,,
+101,テスト市/グループA,1,テスト市・グループA,グループA,group-a@test.example.jp,,imap.test.example.jp,123,使用しない,PLAIN,group-a,pass-a,INBOX.Sent,INBOX.Draft,INBOX.Trash,987,
+102,テスト市/グループB,1,テスト市・グループB,グループB,group-b@test.example.jp,,imap.test.example.jp,321,使用する,LOGIN,group-b,pass-b,INBOX.Sent,INBOX.Draft,INBOX.Trash,654,
+103,テスト市/グループC,1,テスト市・グループC,グループC,group-c@test.example.jp,,imap.test.example.jp,456,使用しない,CRAM-MD5,group-c,pass-c,INBOX.Sent,INBOX.Draft,INBOX.Trash,321,
+104,テスト市/グループD,1,テスト市・グループD,グループD,group-d@test.example.jp,,imap.test.example.jp,654,使用する,DIGEST-MD5,group-d,pass-d,INBOX.Sent,INBOX.Draft,INBOX.Trash,123,
+,テスト市/グループE,1,テスト市・グループE,グループE,group-e@test.example.jp,,imap.test.example.jp,789,使用しない,PLAIN,group-e,pass-e,INBOX.Sent,INBOX.Draft,INBOX.Trash,456,

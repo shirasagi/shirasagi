@@ -89,7 +89,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
   describe "webmail_mode is group" do
     let!(:group) { create :webmail_group }
-    let!(:imap) { group.initialize_imap }
+    let!(:imap) { group.initialize_imap(0) }
     let!(:mdn_mail) do
       Mail.new(
         from: "from-#{unique_id}@example.jp",
