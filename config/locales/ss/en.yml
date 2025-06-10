@@ -1674,3 +1674,4 @@ en:
       ss/delete_sso_tokens_job: System/Cleanup SSO tokens job
       ss/delete_ss_o_tokens_job: System/Cleanup SSO tokens job
       ss/cleanup_file_store_cache_job: System/Cleanup file cache job
+      ss/remove_site_job: System/Delete site
