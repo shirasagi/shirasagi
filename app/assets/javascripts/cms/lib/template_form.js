@@ -46,7 +46,7 @@ Cms_TemplateForm.createElementFromHTML = function(html) {
   var div = document.createElement('div');
   div.innerHTML = html.trim();
 
-  return div.firstChild;
+  return div.firstElementChild;
 };
 
 Cms_TemplateForm.prototype.render = function() {
