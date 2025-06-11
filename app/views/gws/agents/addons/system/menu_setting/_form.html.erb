@@ -8,7 +8,7 @@
     <dl class="see addon-gws-system-menu-setting" style="display: flex; align-items: center; gap: 1em; margin-bottom: 0.5em;">
       <dt><%= t('gws.site_config') %></dt>
       <dd>
-        <%= f.select "menu_#{type}_state", { "表示" => "show" } %>
+        <%= f.select "menu_#{type}_state", { 表示: "show" } %>
         <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}"), style: 'width: 10.5em;') %>
       </dd>
       <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
