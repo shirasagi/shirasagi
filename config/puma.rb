@@ -35,7 +35,7 @@ plugin :tmp_restart
 
 # Specify the PID file. Defaults to tmp/pids/server.pid in development.
 # In other environments, only set the PID file if requested.
-pidfile ENV["PIDFILE"] if ENV["PIDFILE"]
+pidfile ENV.fetch("PIDFILE", "tmp/pids/server.pid")
 
 before_fork do
   require 'puma_worker_killer'
@@ -55,4 +55,5 @@ before_fork do
   end
 
   PumaWorkerKiller.start
+  puts "Puma Worker Killer started!"
 end
