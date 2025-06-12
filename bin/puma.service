@@ -8,6 +8,7 @@ WorkingDirectory=/var/www/shirasagi
 Environment=RAILS_ENV=production
 #Environment=PORT=3000
 Environment=WEB_CONCURRENCY=2 # make sure that this value be >= 1. if this value is 0 or unset, puma worker killer won't start.
+#Environment=WORKER_TIMEOUT=120
 #Environment=RAILS_MAX_THREADS=3
 #Environment=PUMA_RAM=1024
 #Environment=PUMA_ROLLING_RESTART_FREQUENCY=43200

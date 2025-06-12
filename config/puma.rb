@@ -37,6 +37,8 @@ plugin :tmp_restart
 # In other environments, only set the PID file if requested.
 pidfile ENV.fetch("PIDFILE", "tmp/pids/server.pid")
 
+worker_timeout ENV.fetch("WORKER_TIMEOUT", 120)
+
 before_fork do
   require 'puma_worker_killer'
 
