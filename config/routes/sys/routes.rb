@@ -50,7 +50,7 @@ Rails.application.routes.draw do
     resources :postal_codes, concerns: [:deletion, :export]
     resources :prefecture_codes, concerns: [:deletion, :export]
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
-    resources :mail_logs, concerns: :deletion, only: [ :index, :show, :delete, :destroy ] do
+    resources :mail_logs, concerns: :deletion, only: [ :index, :show, :destroy ] do
       get :decode, on: :member
       put :decode, on: :member, action: :commit_decode
     end
