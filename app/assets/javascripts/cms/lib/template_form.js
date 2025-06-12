@@ -122,7 +122,7 @@ Cms_TemplateForm.prototype.deleteEditors = function() {
 
 Cms_TemplateForm.prototype.loadForm = function(html) {
   this.deleteEditors();
-  this.$formPage.html($(html).html());
+  this.$formPage.html(html);
   // SS.render();
   SS.renderAjaxBox();
   SS_DateTimePicker.render();
