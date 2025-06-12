@@ -34,6 +34,12 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
+      expect(Gws::Chorg::Task.all.count).to eq 1
+      Gws::Chorg::Task.all.first.tap do |task|
+        path = task.perf_log_file_path
+        expect(::File.size(path)).to be > 0
+      end
+
       expect(Gws::Group.where(id: group1.id).first.active?).to be_truthy
       expect(Gws::Group.where(id: group2.id).first.active?).to be_falsey
       new_group = Gws::Group.where(name: changeset.destinations.first['name']).first
