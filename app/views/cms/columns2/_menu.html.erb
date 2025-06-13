@@ -1,5 +1,4 @@
-<% return %>
-
+<% if false %>
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
@@ -10,10 +9,16 @@
           <% end %>
           <h3 class="dropdown-item"><%= mod_def[1][:name] %></h3>
           <% mod_def[1][:items].each do |name, type| %>
-            <%= link_to(name, new_cms_form_column_path(form_id: @cur_form, type: type), class: 'dropdown-item') %>
+            <%= link_to(name, { action: :new, type: type }, { class: 'dropdown-item' }) %>
           <% end %>
         <% end %>
       <% end %>
+    <% end %>
+    <% if @cur_form.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(t('ss.links.download'), { action: :download }) rescue nil %>
+    <% end %>
+    <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(t('ss.links.import'), { action: :import }) rescue nil %>
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|download|import|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
@@ -38,3 +43,4 @@
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% end %>
 </nav>
+<% end %>
