@@ -15,6 +15,14 @@ module Cms::Addon::Column::SelectLike
     validate :validate_select_options
   end
 
+  module ClassMethods
+    def default_attributes
+      attributes = super
+      attributes[:select_options] = SS::Extensions::Lines.demongoize(I18n.t("gws/column.default_select_options"))
+      attributes
+    end
+  end
+
   def parent_column
     return unless self.class.use_parent_column_name
     form.columns.where(name: parent_column_name).first
