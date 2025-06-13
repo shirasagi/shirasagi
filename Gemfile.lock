@@ -341,7 +341,7 @@ GEM
       kramdown (~> 2.0)
     language_server-protocol (3.17.0.5)
     levenshtein (0.2.2)
-    line-bot-api (2.0.0)
+    line-bot-api (1.30.0)
       base64 (~> 0.2)
       multipart-post (~> 2.4)
     link_header (0.0.8)
@@ -845,7 +845,7 @@ DEPENDENCIES
   kramdown
   kramdown-parser-gfm
   levenshtein
-  line-bot-api
+  line-bot-api (~> 1.29)
   liquid
   mail
   mail-iso-2022-jp
