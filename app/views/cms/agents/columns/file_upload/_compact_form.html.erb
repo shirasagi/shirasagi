@@ -11,8 +11,9 @@
   </fieldset>
 
   <fieldset class="gws-column-form-grid">
+    <legend><%= f.label :file_type, model.t(:file_type) %><%= model.tt :file_type %></legend>
+
     <div class="gws-column-form-input-group">
-      <%= f.label :file_type, model.t(:file_type) %><%= model.tt :file_type %>
       <div class="gws-column-form-radio-button-list">
         <% item.file_type_options.each do |label, value| %>
           <label class="gws-column-form-radio-button-item">
