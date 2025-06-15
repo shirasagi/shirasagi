@@ -1,3 +1,4 @@
+<% value ||= [] %>
 <% values = value.try(:values) || [] %>
 <% controller ||= false %>
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do %>
