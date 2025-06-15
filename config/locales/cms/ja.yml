@@ -193,12 +193,12 @@ ja:
     column_url_field:
       link_label_placeholder: リンクテキスト
       link_url_placeholder: URL
+    visit_article: 記事を見る
     init_column:
       new_form_notice:
         - "上部のツールバー内のボタンをクリックすると入力項目を先頭に追加することができます。"
         - "下部のツールバー内のボタンをクリックすると入力項目を末尾に追加することができます。"
       not_found_column: 入力項目が見つかりません。
-    visit_article: 記事を見る
 
     adobe_reader:
       remark:
