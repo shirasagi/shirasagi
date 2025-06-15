@@ -3,10 +3,11 @@ class Cms::Form::ColumnsController < ApplicationController
   include Cms::CrudFilter
   include Cms::ColumnFilter2
 
-  # model Cms::Column::Base
+  model Cms::Column::Base
+  self.form_model = Cms::Form
 
   navi_view "cms/form/main/navi"
-  self.form_model = Cms::Form
+  append_view_path 'app/views/cms/columns2'
 
   # helper_method :column_type_options, :form_is_in_use?
 

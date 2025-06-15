@@ -169,8 +169,10 @@ Rails.application.routes.draw do
 
     scope module: "form" do
       resources :forms, concerns: [:deletion, :download, :import, :change_state] do
-        resources :init_columns, concerns: [:deletion]
         resources :columns, concerns: [:deletion] do
+          post :reorder, on: :collection
+        end
+        resources :init_columns, concerns: [:deletion] do
           post :reorder, on: :collection
         end
 
@@ -191,6 +193,9 @@ Rails.application.routes.draw do
 
     namespace :frames do
       resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
+      resources :init_columns, only: %i[show edit update destroy] do
         get :detail, on: :member
       end
     end

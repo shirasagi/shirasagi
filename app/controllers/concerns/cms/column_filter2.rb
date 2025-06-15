@@ -10,7 +10,6 @@ module Cms::ColumnFilter2
 
     navi_view 'cms/main/conf_navi'
     menu_view 'cms/columns2/menu'
-    append_view_path 'app/views/cms/columns2'
 
     before_action :set_assets
 
