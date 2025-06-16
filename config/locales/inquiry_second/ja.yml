@@ -79,7 +79,7 @@ ja:
         updated: "更新日時：%{updated}"
 
   modules:
-    inquiry_second: メールフォームv2
+    inquiry_second: メールフォーム v2
     addons:
       inquiry_second/message: メッセージ
       inquiry_second/captcha: 認証
