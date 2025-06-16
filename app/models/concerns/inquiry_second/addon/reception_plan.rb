@@ -1,0 +1,45 @@
+module Inquiry::Addon
+  module ReceptionPlan
+    extend ActiveSupport::Concern
+    extend SS::Addon
+
+    included do
+      field :reception_start_date, type: DateTime
+      field :reception_close_date, type: DateTime
+      permit_params :reception_start_date, :reception_close_date
+
+      validates :reception_start_date, datetime: true
+      validates :reception_close_date, datetime: true
+      validate :validate_reception_date
+      before_save :validate_reception_state
+    end
+
+    def reception_enabled?
+      if (reception_start_date.present? && reception_start_date.to_date > Time.zone.now.to_date) ||
+         (reception_close_date.present? && reception_close_date.to_date < Time.zone.now.to_date)
+        false
+      else
+        true
+      end
+    end
+
+    private
+
+    def validate_reception_date
+      if reception_start_date.present? || reception_close_date.present?
+        if reception_start_date.blank?
+          errors.add :reception_start_date, :empty
+        elsif reception_close_date.blank?
+          errors.add :reception_close_date, :empty
+        elsif reception_start_date > reception_close_date
+          errors.add :reception_close_date, :greater_than, count: t(:reception_start_date)
+        end
+      end
+    end
+
+    def validate_reception_state
+      return if reception_enabled?
+      remove_owned_files
+    end
+  end
+end

@@ -1,0 +1,21 @@
+<% return unless @item.try(:kintone_app_enabled?) %>
+
+<dl class="see mod-kintone_app-setting">
+  <dt><%= @model.t :kintone_app_activation %></dt>
+  <dd><%= @item.label :kintone_app_activation %></dd>
+
+  <dt><%= @model.t :kintone_app_api_token %></dt>
+  <dd><%= @item.kintone_app_api_token %></dd>
+
+  <dt><%= @model.t :kintone_app_key %></dt>
+  <dd><%= @item.kintone_app_key %></dd>
+
+  <dt><%= @model.t :kintone_app_field_code %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :kintone_app_remote_addr_field_code %></dt>
+  <dd class="depth-2"><%= @item.kintone_app_remote_addr_field_code %></dd>
+
+  <dt class="depth-2"><%= @model.t :kintone_app_user_agent_field_code %></dt>
+  <dd class="depth-2"><%= @item.kintone_app_user_agent_field_code %></dd>
+</dl>

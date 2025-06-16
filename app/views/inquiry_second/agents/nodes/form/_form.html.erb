@@ -1,0 +1,110 @@
+<div class="columns">
+<% content = @answer.source_content if @answer %>
+<% if content %>
+  <dl class="column">
+    <dt><%= Cms::Page.t :name %></dt>
+    <dd><%= content.name %></dd>
+  </dl>
+<% end %>
+<% @items.each do |column, data, confirm_data| %>
+  <%= inquiry_column_tag(column, f: f, confirm: confirm) do %>
+    <% if confirm %>
+      <% if data.kind_of? Hash %>
+        <% data.each do |key, value| %>
+          <% opt = {id: "#{f.object_name}_#{column.id}_#{key}" } %>
+          <%= hidden_field_tag "#{f.object_name}[#{column.id}][#{key}]", value, opt %><%= value %><br />
+        <% end %>
+      <% else %>
+        <% if column.input_type =~ /upload_file/ %>
+          <% file_data = @answer.find_data(column) %>
+          <% if file_data && file_data.values.try(:[], 0) %>
+            <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0], id: nil %>
+            <%= file_data.values[2] %>
+          <% end %>
+        <% else %>
+          <%= f.hidden_field column.id, value: data, id: nil %>
+            <% if column.input_type =~ /date_field/ %>
+              <% data = I18n.l(data.to_date, format: :picker) rescue data %>
+            <% elsif column.input_type =~ /datetime_field/  %>
+              <% data = I18n.l(data.to_datetime, format: :picker) rescue data %>
+            <% end %>
+            <%=br data %>
+          <% if column.input_confirm == "enabled" %>
+            <%= f.hidden_field "#{column.id}_confirm", value: confirm_data, id: nil %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% else %>
+      <%= raw column.html %>
+      <% if column.input_type =~ /(text_field|email_field|text_area|number_field)/ %>
+        <% opt = { value: data } %>
+        <% opt.merge!(column.additional_attr_to_h) %>
+        <%= f.send(column.input_type, column.id, opt) %>
+      <% elsif column.input_type =~ /date_field/ %>
+        <% if column.date_inputter == "picker" %>
+          <%= f.ss_date_field column.id.to_s, value: data %>
+        <% else %>
+          <% opt = { type: "date", name: "#{f.object_name}[#{column.id}]", value: data } %>
+          <% opt.merge!(column.additional_attr_to_h) %>
+          <%= tag.input(**opt) %>
+        <% end %>
+      <% elsif column.input_type =~ /datetime_field/ %>
+        <% if column.date_inputter == "picker" %>
+          <%= f.ss_datetime_field column.id.to_s, value: data %>
+        <% else %>
+          <% opt = { type: "datetime-local", name: "#{f.object_name}[#{column.id}]", value: data } %>
+          <% opt.merge!(column.additional_attr_to_h) %>
+          <%= tag.input(**opt) %>
+        <% end %>
+      <% elsif column.input_type =~ /form_select/ %>
+        <% column.select_options.each_with_index do |value, i| %>
+          <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
+          <% opt.merge!(column.additional_attr_to_h) %>
+          <% checked = (data == value) %>
+          <%= label_tag "#{f.object_name}_#{column.id}_#{i}" do %>
+            <%= send("radio_button_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>
+          <% end %>
+        <% end %>
+      <% elsif column.input_type =~ /select/ %>
+        <% opt = column.additional_attr_to_h %>
+        <%= f.send(column.input_type, column.id, column.select_options, { selected: data, include_blank: true }, opt) %>
+      <% elsif column.input_type =~ /radio_button/ %>
+        <% column.select_options.each_with_index do |value, i| %>
+          <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
+          <% opt.merge!(column.additional_attr_to_h) %>
+          <% checked = (data == value) %>
+          <%= label_tag "#{f.object_name}_#{column.id}_#{i}" do %>
+            <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>
+          <% end %>
+        <% end %>
+      <% elsif column.input_type =~ /check_box/ %>
+        <% column.select_options.each_with_index do |value, i| %>
+          <% opt = column.additional_attr_to_h %>
+          <% checked = data.try(:[], "#{i}") ? true : false %>
+          <%= label_tag "#{f.object_name}_#{column.id}_#{i}" do %>
+            <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}][#{i}]", value, checked, opt) %><span><%= value %></span>
+          <% end %>
+        <% end %>
+      <% elsif column.input_type =~ /upload_file/ %>
+        <% opt = {id: "#{f.object_name}_#{column.id}" } %>
+        <% opt.merge!(column.additional_attr_to_h) %>
+        <% file_data = @answer.find_data(column) %>
+        <% if file_data && file_data.values.try(:[], 0) %>
+          <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0], id: nil if file_data.values[0] %>
+          <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %><br />
+          <%= file_data.values[2] %>
+        <% else %>
+          <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %><br />
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+    <% if column.input_confirm == "enabled" && !confirm %>
+      <%= inquiry_column_tag(column, f: f, column: { name: t("inquiry.confirm_input", name: column.name), id: "#{column.id}_confirm" }, confirm: confirm) do %>
+      <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
+      <% opt = { value: "" } %>
+      <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
+    <% end %>
+  <% end %>
+<% end %>
+</div>
