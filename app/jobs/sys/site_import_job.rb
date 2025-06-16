@@ -248,6 +248,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
   def save_document(item)
     def item.set_updated; end
+    def item.save_backup; end
+    def item.generate_file; end
     return true if item.save
 
     @task.log "#{item.class} - " + item.errors.full_messages.join(' ')
