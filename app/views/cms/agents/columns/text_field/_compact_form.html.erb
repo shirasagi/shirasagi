@@ -1,0 +1,44 @@
+<div class="gws-column-form-grid-list">
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t :name %><%= model.tt :name %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= label_tag "#{f.object_name}[name]", model.t(:name) %>
+      <div>
+        <%= text_field_tag "#{f.object_name}[name]", item.name, autofocus: pc_browser? %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= t("gws.columns.gws/text_field") %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :input_type, model.t(:input_type) %><%= model.tt :input_type %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.input_type_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :input_type, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= t("modules.addons.gws/column/text_like") %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :required, model.t(:required) %><%= model.tt :required %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.required_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :required, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+</div>

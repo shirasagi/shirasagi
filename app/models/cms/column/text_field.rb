@@ -6,6 +6,14 @@ class Cms::Column::TextField < Cms::Column::Base
 
   validates :input_type, presence: true, inclusion: { in: %w(text email tel), allow_blank: true }
 
+  class << self
+    def default_attributes
+      attributes = super
+      attributes[:input_type] = "text"
+      attributes
+    end
+  end
+
   def input_type_options
     %w(text email tel).map do |v|
       [ I18n.t("cms.options.column_input_type.#{v}"), v ]
