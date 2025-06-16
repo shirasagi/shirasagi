@@ -88,7 +88,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       let!(:item) { create(:article_page, cur_site: site, cur_node: node, layout: layout, form: form, state: state) }
       let(:column1_value1) { unique_id }
       let(:column2_date1) { Date.new(rand(2000..2050), 1, 1) }
-      let(:column2_value1) { I18n.l(column2_date1, format: :picker) }
+      # let(:column2_value1) { I18n.l(column2_date1, format: :picker) }
       let(:column3_label1) { unique_id }
       let(:column3_url1) { "/#{unique_id}/" }
       let(:column4_value1) { Array.new(2) { unique_id } }
@@ -179,7 +179,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-datefield" do
-              fill_in "item[column_values][][in_wrap][date]", with: column2_value1
+              fill_in_date "item[column_values][][in_wrap][date]", with: column2_date1
             end
 
             click_on I18n.t("ss.buttons.save")
