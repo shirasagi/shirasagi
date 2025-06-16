@@ -22,10 +22,24 @@ module Gws::LayoutHelper
     icon_file = @cur_site.send("menu_#{type}_icon_image")
     label = @cur_site.send("menu_#{type}_label") || t(label_i18n)
     icon_class = "icon-#{type}"
+
+    svg_path = Rails.root.join("public/assets/img/ic-#{type}.svg")
+    svg_tag = ""
+    if File.exist?(svg_path)
+      svg_content = File.read(svg_path)
+      svg_tag = raw(svg_content)
+    end
+
     if icon_file.present?
       content_tag(:h2) do
         link_to(path, class: "#{icon_class} has-custom-icon") do
           image_tag(icon_file.url, class: "nav-icon-img") + label
+        end
+      end
+    elsif svg_tag.present?
+      content_tag(:h2) do
+        link_to(path, class: "#{icon_class} has-inline-svg") do
+          svg_tag + label
         end
       end
     else

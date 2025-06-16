@@ -1441,15 +1441,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .icon-material-shortcut::before {
     content: "shortcut" !important;
   }
-
-  // 背景色に応じたホバー色の設定
-  [style*="background-color: #0066cc"] [class*="icon-"]:hover:before {
-    filter: brightness(0) saturate(100%) invert(67%) sepia(100%) saturate(1000%) hue-rotate(199deg) brightness(100%) contrast(100%) !important;
-  }
-
-  [style*="background-color: #000000"] [class*="icon-"]:hover:before {
-    filter: brightness(0) saturate(100%) invert(20%) sepia(0%) saturate(0%) hue-rotate(0deg) brightness(20%) contrast(100%) !important;
-  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -4293,10 +4284,28 @@ table.check-links-erros {
 
 .main-navi h2 a.has-custom-icon {
   display: flex;
-  padding-left: 17px !important;
+  padding-left: 20px !important;
   align-items: center;
 }
 
 // .main-navi h2 a.has-custom-icon:hover {
 //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(104%);
 // }
+
+// svgアイコン用スタイル
+.main-navi [class*="icon-"] svg {
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+a[class*="icon-"].has-inline-svg::before {
+  display: none !important;
+}
+
+.main-navi h2 a.has-inline-svg {
+  display: flex;
+  align-items: center;
+  padding-left: 13px !important;
+}

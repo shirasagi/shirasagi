@@ -10,7 +10,7 @@
 
       .cls-1, .cls-2 {
         fill: none;
-        stroke: #333;
+        stroke: currentColor;
       }
 
       .cls-2 {
@@ -22,7 +22,7 @@
       }
 
       .cls-4 {
-        fill: #333;
+        fill: currentColor;
       }
     </style>
   </defs>
