@@ -20,7 +20,7 @@
           <% else %>
             <%= image_tag "/assets/img/ic-#{type}.svg", class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
           <% end %>
-          <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
+          <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
         </span>
       </dd>
     </dl>
@@ -41,7 +41,7 @@
           <% else %>
             <%= image_tag "/assets/img/ic-#{type}.svg", class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
           <% end %>
-          <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
+          <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
         </span>
         </dd>
         <% end %>
