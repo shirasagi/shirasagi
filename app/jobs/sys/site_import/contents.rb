@@ -10,7 +10,10 @@ module Sys::SiteImport::Contents
   end
 
   def import_cms_nodes
-    @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename) do |item|
+    @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename) do |item, data|
+      if data["condition_forms"].present? && item.respond_to?(:condition_forms)
+        item.condition_forms = data["condition_forms"]["values"].to_a
+      end
       item[:opendata_site_ids] = [] if item[:opendata_site_ids].present?
       item.skip_remove_files_recursively = true
     end
@@ -121,6 +124,18 @@ module Sys::SiteImport::Contents
       item[:service_ids] = convert_ids(@cms_nodes_map, item[:service_ids])
       item[:my_anpi_post] = @cms_nodes_map[item[:my_anpi_post]] if item[:my_anpi_post].present?
       item[:anpi_mail] = @cms_nodes_map[item[:anpi_mail]] if item[:anpi_mail].present?
+
+      if item[:condition_forms].present?
+        values = item[:condition_forms].to_a.map do |value|
+          value[:form_id] = @cms_forms_map[value[:form_id]]
+          value[:filters] = value[:filters].map do |filter|
+            filter[:column_id] = @cms_columns_map[filter[:column_id].to_s]
+            filter
+          end
+          value
+        end
+        item[:condition_forms] = values
+      end
       save_document(item)
     end
   end
