@@ -131,6 +131,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-textfield" do
@@ -176,6 +181,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-datefield" do
@@ -206,6 +216,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               click_on column3.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -242,6 +257,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-textarea" do
@@ -275,6 +295,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-select" do
@@ -305,6 +330,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               click_on column6.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -337,6 +367,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-checkbox" do
@@ -367,6 +402,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               click_on column8.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           wait_for_all_ckeditors_ready
@@ -409,6 +449,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               click_on column9.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           wait_for_all_ckeditors_ready
@@ -454,6 +499,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-headline" do
@@ -489,6 +539,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-list" do
@@ -521,6 +576,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               click_on column12.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -557,6 +617,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-youtube" do
@@ -592,6 +657,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               click_on column14.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
