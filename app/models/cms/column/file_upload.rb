@@ -10,6 +10,14 @@ class Cms::Column::FileUpload < Cms::Column::Base
   validates :file_type, inclusion: { in: %w(image video attachment banner), allow_blank: true }
   permit_params :file_type
 
+  class << self
+    def default_attributes
+      attributes = super
+      attributes[:file_type] = "image"
+      attributes
+    end
+  end
+
   def alignment_options
     if file_type.blank? || file_type == "image"
       return %w(flow left center right).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] }

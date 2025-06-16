@@ -1,0 +1,61 @@
+<div class="gws-column-form-grid-list">
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t :name %><%= model.tt :name %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= label_tag "#{f.object_name}[name]", model.t(:name) %>
+      <div>
+        <%= text_field_tag "#{f.object_name}[name]", item.name, autofocus: pc_browser? %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t :node_ids %><%= model.tt :node_ids %></legend>
+
+    <%= jquery do %>
+      $('.sortable-index tbody').sortable();
+    <% end %>
+    <dl class="column-cms-select_page">
+      <dd class="mb-1 ml-0">
+        <%= f.hidden_field "node_ids[]", value: "", id: nil, class: "hidden-ids" %>
+        <% page_params = { model: "Article::Node::Page" } %>
+        <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(page_params), class: "ajax-box btn" %>
+      </dd>
+      <dd class="ml-0">
+        <table class="index ajax-selected sortable-index">
+          <thead>
+            <tr>
+              <th class="name"><%= @model.t :name %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @item.ordered_nodes.each do |item| %>
+            <tr data-id="<%= item.id %>">
+              <td><%= f.hidden_field "node_ids[]", value: item.id, id: nil %><%= item.name %> (<%= item.filename %>)</td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </dd>
+    </dl>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= t("modules.addons.gws/column/text_like") %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= f.label :required, model.t(:required) %><%= model.tt :required %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.required_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :required, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+</div>

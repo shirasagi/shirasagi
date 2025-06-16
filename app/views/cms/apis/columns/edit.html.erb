@@ -1,0 +1,46 @@
+<% addons = @item ? @item.class.addons : [] %>
+
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off, data: { controller: "ss--unload-protection ss--close-on-submit", turbo: true, turbo_frame: "item-#{@item.id}" } } do |f| %>
+<%= error_messages_for :item %>
+
+<%= hidden_field_tag :ref, params[:ref] if params[:ref] %>
+<%= hidden_field_tag :_updated, params[:_updated] || @item.updated if @item.respond_to?(:updated) %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div>
+    <div class="addon-body">
+      <%=
+        column_path = Gws::Column.to_path(@item.class)
+        partial_view_path = "gws/apis/columns/#{column_path}/form"
+        physical_view_path = "app/views/gws/apis/columns/#{column_path}/_form.html.erb"
+        if ::File.exist?(physical_view_path)
+          render partial_view_path, f: f
+        else
+          render 'form', f: f
+        end
+      %>
+    </div>
+  </div>
+  <%= render template: "_column_form", locals: { f: f } %>
+  <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+</div>
+
+<footer class="send">
+  <% if @crud_buttons %>
+    <% @crud_buttons.call f %>
+  <% else %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+    <% if request.xhr? %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "$.colorbox.close(); return false;" %>
+    <% elsif request.headers['X-SS-DIALOG'].present? || request.headers['Turbo-Frame'].present? %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: "button", data: { action: "close-dialog" } %>
+    <% else %>
+      <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+    <% end %>
+  <% end %>
+</footer>
+
+<% end %>
+
+<%= jquery do %> SS.confirmUnloading(); <% end %>
