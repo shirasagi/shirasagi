@@ -1,10 +1,10 @@
-module Inquiry::AnswersFilter
+module InquirySecond::AnswersFilter
   extend ActiveSupport::Concern
 
   included do
-    model Inquiry::Answer
+    model InquirySecond::Answer
 
-    append_view_path "app/views/inquiry/answers"
+    append_view_path "app/views/inquiry_second/answers"
     append_view_path "app/views/cms/pages"
 
     before_action :set_items, only: %i[index download]
@@ -19,10 +19,10 @@ module Inquiry::AnswersFilter
   def send_csv(items)
     require "csv"
 
-    columns = (@cur_inquiry_form || @cur_node).becomes_with_route("inquiry/form").columns.order_by(order: 1).to_a
+    columns = (@cur_inquiry_second_form || @cur_node).becomes_with_route("inquiry_second/form").columns.order_by(order: 1).to_a
     headers = %w(id state comment).map { |key| @model.t(key) }
     headers += columns.map(&:name)
-    headers += %w(source_url source_name inquiry_page_url inquiry_page_name created updated).map { |key| @model.t(key) }
+    headers += %w(source_url source_name inquiry_second_page_url inquiry_second_page_name created updated).map { |key| @model.t(key) }
     csv = I18n.with_locale(I18n.default_locale) do
       CSV.generate do |data|
         data << headers
@@ -44,8 +44,8 @@ module Inquiry::AnswersFilter
           end
           row << item.source_full_url
           row << item.source_name
-          row << item.inquiry_page_full_url
-          row << item.inquiry_page_name
+          row << item.inquiry_second_page_full_url
+          row << item.inquiry_second_page_name
           row << I18n.l(item.created, format: :picker)
           row << I18n.l(item.updated, format: :picker)
 
@@ -55,7 +55,7 @@ module Inquiry::AnswersFilter
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-      filename: "inquiry_answers_#{Time.zone.now.to_i}.csv"
+      filename: "inquiry_second_answers_#{Time.zone.now.to_i}.csv"
   end
 
   def send_afile(file)
@@ -125,7 +125,7 @@ module Inquiry::AnswersFilter
   def download_afile
     raise "404" if params[:id].blank?
 
-    client_name = Inquiry::Answer.persistence_context.send(:client_name)
+    client_name = InquirySecond::Answer.persistence_context.send(:client_name)
     file = SS::File.with(client: client_name) do |model|
       model.where(id: params[:fid].to_i).first
     end

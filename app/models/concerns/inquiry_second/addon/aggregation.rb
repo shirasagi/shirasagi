@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module Aggregation
     extend ActiveSupport::Concern
     extend SS::Addon
@@ -10,8 +10,8 @@ module Inquiry::Addon
 
     def aggregation_state_options
       [
-        [I18n.t('inquiry.options.state.disabled'), 'disabled'],
-        [I18n.t('inquiry.options.state.enabled'), 'enabled'],
+        [I18n.t('inquiry_second.options.state.disabled'), 'disabled'],
+        [I18n.t('inquiry_second.options.state.enabled'), 'enabled'],
       ]
     end
 
@@ -39,7 +39,7 @@ module Inquiry::Addon
         _id: { "column_id" => "$data.column_id", "value" => "$data.values" },
         count: { "$sum"=> 1 }
       } }
-      aggregation = Inquiry::Answer.collection.aggregate(pipes)
+      aggregation = InquirySecond::Answer.collection.aggregate(pipes)
       aggregation = aggregation.map { |i| [ i["_id"], i["count"] ] }.to_h
       aggregation.default = 0
 
@@ -63,7 +63,7 @@ module Inquiry::Addon
       } }
       pipes << { "$sort" => { "updated" => -1 } }
 
-      Inquiry::Answer.collection.aggregate(pipes)
+      InquirySecond::Answer.collection.aggregate(pipes)
     end
 
     private
@@ -76,7 +76,7 @@ module Inquiry::Addon
       match["node_id"] = params[:node].id if params[:node].present?
 
       if params[:user].present?
-        match["_id"] = { "$in" => Inquiry::Answer.site(params[:site]).allow(:read, params[:user]).pluck(:id) }
+        match["_id"] = { "$in" => InquirySecond::Answer.site(params[:site]).allow(:read, params[:user]).pluck(:id) }
       end
 
       match["source_url"] = /^#{::Regexp.escape(params[:url])}/ if params[:url].present?

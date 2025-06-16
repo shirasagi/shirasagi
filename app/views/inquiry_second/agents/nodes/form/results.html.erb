@@ -1,12 +1,12 @@
-<%= javascript_include_tag "inquiry/chart" %>
+<%= javascript_include_tag "inquiry_second/chart" %>
 <%= jquery do %>Inquiry_Chart.drawBar(".graph-canvas");<% end %>
 
-<% if @cur_node.inquiry_results_html.present? %>
-  <%= raw @cur_node.inquiry_results_html %>
+<% if @cur_node.inquiry_second_results_html.present? %>
+  <%= raw @cur_node.inquiry_second_results_html %>
 <% end %>
 <div class="columns">
   <dl class="column count">
-    <dt><%= t "inquiry.total_count" %></dt>
+    <dt><%= t "inquiry_second.total_count" %></dt>
     <dd>
       <%= @cur_node.answers.count %>
       <%= t "ss.units.count" %>

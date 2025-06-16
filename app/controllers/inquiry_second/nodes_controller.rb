@@ -1,11 +1,11 @@
-class Inquiry::NodesController < ApplicationController
+class InquirySecond::NodesController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
 
-  model Inquiry::Node::Form
+  model InquirySecond::Node::Form
 
   prepend_view_path "app/views/cms/node/nodes"
-  navi_view "inquiry/nodes/navi"
+  navi_view "inquiry_second/nodes/navi"
 
   before_action :redirect_with_route, only: :index
 
@@ -16,12 +16,12 @@ class Inquiry::NodesController < ApplicationController
   end
 
   def pre_params
-    { route: "inquiry/form" }
+    { route: "inquiry_second/form" }
   end
 
   def redirect_with_route
-    if @cur_node.route == "inquiry/form"
-      redirect_to inquiry_columns_path
+    if @cur_node.route == "inquiry_second/form"
+      redirect_to inquiry_second_columns_path
     end
   end
 end

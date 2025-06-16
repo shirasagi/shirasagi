@@ -1,20 +1,20 @@
-Inquiry_Form = function (options) {
+InquirySecond_Form = function (options) {
   this.options = options;
   this.render();
 };
 
-Inquiry_Form.instance = null;
+InquirySecond_Form.instance = null;
 
-Inquiry_Form.render = function(options) {
-  if (Inquiry_Form.instance) {
+InquirySecond_Form.render = function(options) {
+  if (InquirySecond_Form.instance) {
     return;
   }
 
-  Inquiry_Form.instance = new Inquiry_Form(options);
+  InquirySecond_Form.instance = new InquirySecond_Form(options);
 };
 
-Inquiry_Form.prototype.render = function() {
-  $('.inquiry-form input:not([type="submit"], [type="button"], [type="reset"])').on('keypress', function (ev) {
+InquirySecond_Form.prototype.render = function() {
+  $('.inquiry_second-form input:not([type="submit"], [type="button"], [type="reset"])').on('keypress', function (ev) {
     if ((ev.which && ev.which === SS.KEY_ENTER) || (ev.keyCode && ev.keyCode === SS.KEY_ENTER)) {
       return false;
     } else {
@@ -32,7 +32,7 @@ Inquiry_Form.prototype.render = function() {
   }
 };
 
-Inquiry_Form.prototype.collectSelectFormValues = function() {
+InquirySecond_Form.prototype.collectSelectFormValues = function() {
   var selector;
   if (this.options.confirm) {
     selector = 'input[type="hidden"]';
@@ -50,13 +50,13 @@ Inquiry_Form.prototype.collectSelectFormValues = function() {
   return values;
 };
 
-Inquiry_Form.prototype.intersect = function(arr1, arr2) {
+InquirySecond_Form.prototype.intersect = function(arr1, arr2) {
   return arr1.filter(function(el) {
     return arr2.indexOf(el) !== -1
   });
 };
 
-Inquiry_Form.prototype.changeForm = function() {
+InquirySecond_Form.prototype.changeForm = function() {
   var _this = this;
   var checkedValues = this.collectSelectFormValues();
 

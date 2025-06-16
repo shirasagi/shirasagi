@@ -1,7 +1,7 @@
-class Inquiry::FormsController < ApplicationController
+class InquirySecond::FormsController < ApplicationController
   include Cms::BaseFilter
 
-  prepend_before_action ->{ redirect_to inquiry_columns_path }, only: :index
+  prepend_before_action ->{ redirect_to inquiry_second_columns_path }, only: :index
 
   def index
     # redirect

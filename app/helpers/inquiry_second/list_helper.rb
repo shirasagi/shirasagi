@@ -1,4 +1,4 @@
-module Inquiry::ListHelper
+module InquirySecond::ListHelper
   include Cms::ListHelper
 
   def default_table_html
@@ -8,10 +8,10 @@ module Inquiry::ListHelper
     ih << "<thead>"
     ih << "<tr>"
     ih << "<th>#{@cur_node.class.t :name}</th>"
-    ih << "<th>#{t "inquiry.reception_plan"}</th>"
+    ih << "<th>#{t "inquiry_second.reception_plan"}</th>"
     show_aggregation = @items.map(&:aggregation_enabled?).index(true)
     if show_aggregation
-      ih << "<th>#{t "inquiry.aggregate"}</th>"
+      ih << "<th>#{t "inquiry_second.aggregate"}</th>"
     end
     ih << "</tr>"
     ih << "</thead>"
@@ -31,16 +31,16 @@ module Inquiry::ListHelper
       ih << "<td>"
       if item.reception_start_date.present?
         ih << I18n.l(item.reception_start_date.to_date, format: :long)
-        ih << t("inquiry.from")
+        ih << t("inquiry_second.from")
         ih << I18n.l(item.reception_close_date.to_date, format: :long)
       end
       ih << "</td>"
       if show_aggregation
         ih << "<td>"
         if item.aggregation_enabled?
-          ih << link_to(t("inquiry.aggregate"), "#{item.url}results.html")
+          ih << link_to(t("inquiry_second.aggregate"), "#{item.url}results.html")
         else
-          ih << t("inquiry.aggregate")
+          ih << t("inquiry_second.aggregate")
         end
         ih << "</td>"
       end
@@ -51,7 +51,7 @@ module Inquiry::ListHelper
     ih.join("\n").freeze
   end
 
-  def render_inquiry_list(&block)
+  def render_inquiry_second_list(&block)
     cur_item = @cur_part || @cur_node
     if @items.blank? && cur_item.try(:no_items_display_state) == 'hide'
       return cur_item.substitute_html.to_s.html_safe

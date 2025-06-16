@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module Faq
     extend ActiveSupport::Concern
     extend SS::Addon

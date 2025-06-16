@@ -1,11 +1,11 @@
-<%= jquery do %>Inquiry_Form.render({ confirm: false, requiredLabel: <%== t('inquiry.required_field').to_json %> });<% end %>
+<%= jquery do %>Inquiry_Form.render({ confirm: false, requiredLabel: <%== t('inquiry_second.required_field').to_json %> });<% end %>
 
 <%== @cur_part.upper_html %>
 
-<div class="inquiry">
-  <% if @cur_parent.inquiry_html.present? %>
-    <div class="inquiry-html">
-      <%== @cur_parent.inquiry_html %>
+<div class="inquiry_second">
+  <% if @cur_parent.inquiry_second_html.present? %>
+    <div class="inquiry_second-html">
+      <%== @cur_parent.inquiry_second_html %>
     </div>
   <% end %>
 
@@ -18,17 +18,17 @@
     end
   %>
   <%= form_for :item, url: url, html: { multipart: true }, authenticity_token: false do |f| %>
-    <div class="inquiry-form">
+    <div class="inquiry_second-form">
       <%= error_messages_for :answer, header_message: false %>
       <% if @columns.count > 0 %>
-        <%= render partial: "inquiry/agents/nodes/form/form", locals: { f: f, confirm: false }  %>
+        <%= render partial: "inquiry_second/agents/nodes/form/form", locals: { f: f, confirm: false }  %>
       <% end %>
       <% if @preview %>
       <%= hidden_field_tag "preview", @preview, id: nil %>
       <% end %>
       <%= hidden_field_tag "#{f.object_name}[source_url]", @cur_path, id: nil %>
       <footer class="send">
-        <%= f.submit confirmation_enabled ? t('inquiry.confirm') : t('inquiry.submit'), name: :submit %>
+        <%= f.submit confirmation_enabled ? t('inquiry_second.confirm') : t('inquiry_second.submit'), name: :submit %>
       </footer>
     </div>
   <% end %>

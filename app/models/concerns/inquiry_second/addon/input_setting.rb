@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module InputSetting
     extend ActiveSupport::Concern
     extend SS::Addon
@@ -38,22 +38,22 @@ module Inquiry::Addon
 
     def input_type_options
       INPUT_TYPES.map do |v|
-        [ I18n.t("inquiry.options.input_type.#{v}"), v ]
+        [ I18n.t("inquiry_second.options.input_type.#{v}"), v ]
       end
     end
 
     def required_options
       [
-        [I18n.t('inquiry.options.required.required'), 'required'],
-        [I18n.t('inquiry.options.required.optional'), 'optional'],
+        [I18n.t('inquiry_second.options.required.required'), 'required'],
+        [I18n.t('inquiry_second.options.required.optional'), 'optional'],
       ]
     end
     alias required_in_reply_options required_options
 
     def input_confirm_options
       [
-        [I18n.t('inquiry.options.input_confirm.disabled'), 'disabled'],
-        [I18n.t('inquiry.options.input_confirm.enabled'), 'enabled'],
+        [I18n.t('inquiry_second.options.input_confirm.disabled'), 'disabled'],
+        [I18n.t('inquiry_second.options.input_confirm.enabled'), 'enabled'],
       ]
     end
 
@@ -65,8 +65,8 @@ module Inquiry::Addon
 
     def date_inputter_options
       [
-        [I18n.t('inquiry.options.date_inputter.local'), 'local'],
-        [I18n.t('inquiry.options.date_inputter.picker'), 'picker'],
+        [I18n.t('inquiry_second.options.date_inputter.local'), 'local'],
+        [I18n.t('inquiry_second.options.date_inputter.picker'), 'picker'],
       ]
     end
 

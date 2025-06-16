@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module Notice
     extend ActiveSupport::Concern
     extend SS::Addon
@@ -17,15 +17,15 @@ module Inquiry::Addon
 
     def notice_state_options
       [
-        [I18n.t('inquiry.options.state.enabled'), 'enabled'],
-        [I18n.t('inquiry.options.state.disabled'), 'disabled'],
+        [I18n.t('inquiry_second.options.state.enabled'), 'enabled'],
+        [I18n.t('inquiry_second.options.state.disabled'), 'disabled'],
       ]
     end
 
     def notice_content_options
       [
-        [I18n.t('inquiry.options.notice_content.link_only'), 'link_only'],
-        [I18n.t('inquiry.options.notice_content.include_answers'), 'include_answers'],
+        [I18n.t('inquiry_second.options.notice_content.link_only'), 'link_only'],
+        [I18n.t('inquiry_second.options.notice_content.include_answers'), 'include_answers'],
       ]
     end
 

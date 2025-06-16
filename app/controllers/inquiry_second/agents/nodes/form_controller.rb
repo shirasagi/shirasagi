@@ -1,8 +1,8 @@
-class Inquiry::Agents::Nodes::FormController < ApplicationController
+class InquirySecond::Agents::Nodes::FormController < ApplicationController
   include Cms::NodeFilter::View
   include Cms::ForMemberFilter::Node
   include SS::CaptchaFilter
-  helper Inquiry::FormHelper
+  helper InquirySecond::FormHelper
 
   before_action :check_release_state, only: [:new, :confirm, :create, :sent, :results], if: ->{ !@preview }
   before_action :check_reception_state, only: [:new, :confirm, :create, :sent], if: ->{ !@preview }
@@ -29,7 +29,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def set_columns
-    @columns = Inquiry::Column.site(@cur_site).
+    @columns = InquirySecond::Column.site(@cur_site).
       where(node_id: @cur_node.id, state: "public").
       order_by(order: 1)
   end
@@ -47,7 +47,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
          !param.blank? &&
          !param.kind_of?(ActionDispatch::Http::UploadedFile)
 
-        client_name = Inquiry::Answer.persistence_context.send(:client_name)
+        client_name = InquirySecond::Answer.persistence_context.send(:client_name)
         param = SS::File.with(client: client_name) do |model|
           model.find(param)
         end
@@ -72,7 +72,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
     end
     @to = @to.uniq.compact.sort
-    @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
+    @answer = InquirySecond::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
     @answer.remote_addr = remote_addr
     @answer.user_agent = request.user_agent
     @answer.member = @cur_member
@@ -80,8 +80,8 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     @answer.set_data(@data)
     @answer.group_ids = @group ? [ @group.id ] : @cur_node.group_ids
     if @page
-      @answer.inquiry_page_url = @page.url
-      @answer.inquiry_page_name = @page.name
+      @answer.inquiry_second_page_url = @page.url
+      @answer.inquiry_second_page_name = @page.name
     end
   end
 
@@ -102,18 +102,18 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
   def set_saved_params
     return if !@cur_node.show_sent_data?
-    @saved_params = Inquiry::SavedParams.get(session[saved_params_key])
+    @saved_params = InquirySecond::SavedParams.get(session[saved_params_key])
   end
 
   def saved_params_key
-    "inquiry_saved_params_#{@cur_node.id}"
+    "inquiry_second_saved_params_#{@cur_node.id}"
   end
 
   public
 
   def new
     if @group || @page
-      raise SS::NotFoundError if @cur_site.inquiry_form != @cur_node
+      raise SS::NotFoundError if @cur_site.inquiry_second_form != @cur_node
     end
     if @group && @page
       raise SS::NotFoundError if @page.contact_group_id != @group.id
@@ -145,16 +145,16 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     if @cur_node.notify_mail_enabled?
       if @group.present? && @group.contact_email.present?
         notice_email = @group.contact_email
-        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now if notice_email.present?
+        InquirySecond::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now if notice_email.present?
       else
-        @to.each { |notice_email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
+        @to.each { |notice_email| InquirySecond::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
       end
     end
 
     if @cur_node.reply_mail_enabled?
       # `try` method doesn't work as you think because mail is an instance of Delegator.
       # see: http://tech.misoca.jp/entry/2015/12/04/110000
-      mail = Inquiry::Mailer.reply_mail(@cur_site, @cur_node, @answer)
+      mail = InquirySecond::Mailer.reply_mail(@cur_site, @cur_node, @answer)
       mail.deliver_now if mail.present?
     end
 
@@ -177,7 +177,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
           data[column_id] = value.filename
         end
       end
-      session[saved_params_key] = Inquiry::SavedParams.apply(data)
+      session[saved_params_key] = InquirySecond::SavedParams.apply(data)
     end
 
     query = {}
@@ -202,7 +202,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def results
-    @cur_node.name = "#{@cur_node.name} #{I18n.t("inquiry.result")}"
+    @cur_node.name = "#{@cur_node.name} #{I18n.t("inquiry_second.result")}"
     @aggregation = @cur_node.aggregate_select_columns
     render action: :results
   end

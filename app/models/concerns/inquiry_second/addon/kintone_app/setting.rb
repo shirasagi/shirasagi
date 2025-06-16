@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module KintoneApp::Setting
     extend ActiveSupport::Concern
     extend SS::Addon

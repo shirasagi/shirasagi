@@ -1,4 +1,4 @@
-<%= jquery do %>Inquiry_Form.render({ confirm: false, requiredLabel: <%== t('inquiry.required_field').to_json %> });<% end %>
+<%= jquery do %>Inquiry_Form.render({ confirm: false, requiredLabel: <%== t('inquiry_second.required_field').to_json %> });<% end %>
 <%
   if @group.present?
     if @group.contact_group_name.present?
@@ -8,13 +8,13 @@
     end
   end
 %>
-<div class="inquiry-html">
-  <%== @cur_node.inquiry_html %>
+<div class="inquiry_second-html">
+  <%== @cur_node.inquiry_second_html %>
 </div>
 
 <% if @columns.count > 0 %>
   <%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
-  <div class="inquiry-form">
+  <div class="inquiry_second-form">
     <%= error_messages_for :answer, header_message: false %>
     <%= render partial: "form", locals: { f: f, confirm: false }  %>
     <% if params[:preview] %>
@@ -24,7 +24,7 @@
     <%= hidden_field_tag "group", @group.id, id: nil if @group %>
     <%= hidden_field_tag "page", @page.id, id: nil if @page %>
     <footer class="send">
-    <%= f.submit t('inquiry.confirm'), name: :confirm %>
+    <%= f.submit t('inquiry_second.confirm'), name: :confirm %>
     </footer>
   </div>
   <% end %>

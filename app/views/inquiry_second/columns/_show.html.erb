@@ -4,8 +4,8 @@
   <dt><%= @model.t :html %></dt>
   <dd>
     <% if @item.send(:html).present?  %>
-      <%= html_editor "#inquiry_column_html", height: "200px", readonly: true %>
-      <%= text_area_tag "inquiry_column_html", @item.html, style: "height: 200px;" %>
+      <%= html_editor "#inquiry_second_column_html", height: "200px", readonly: true %>
+      <%= text_area_tag "inquiry_second_column_html", @item.html, style: "height: 200px;" %>
     <% end %>
   </dd>
   <dt><%= @model.t :state %></dt>

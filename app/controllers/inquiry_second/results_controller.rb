@@ -1,13 +1,13 @@
 require "csv"
 
-class Inquiry::ResultsController < ApplicationController
+class InquirySecond::ResultsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Inquiry::Column
+  model InquirySecond::Column
 
   append_view_path "app/views/cms/pages"
-  navi_view "inquiry/main/navi"
+  navi_view "inquiry_second/main/navi"
   before_action :set_aggregation
   before_action :check_permission
 
@@ -18,7 +18,7 @@ class Inquiry::ResultsController < ApplicationController
   end
 
   def set_aggregation
-    raise "403" if @cur_node.route != "inquiry/form"
+    raise "403" if @cur_node.route != "inquiry_second/form"
     @columns = @cur_node.columns.order_by(order: 1)
     @answer_count = @cur_node.answers.site(@cur_site).allow(:read, @cur_user).count
 
@@ -31,7 +31,7 @@ class Inquiry::ResultsController < ApplicationController
   end
 
   def check_permission
-    return if @cur_site.inquiry_form_id != @cur_node.id
+    return if @cur_site.inquiry_second_form_id != @cur_node.id
     raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
@@ -43,7 +43,7 @@ class Inquiry::ResultsController < ApplicationController
   def download
     csv = I18n.with_locale(I18n.default_locale) do
       CSV.generate do |data|
-        data << [t("inquiry.total_count"), @answer_count]
+        data << [t("inquiry_second.total_count"), @answer_count]
         @columns.each do |column|
           data << []
           data << [column.name]
@@ -63,6 +63,6 @@ class Inquiry::ResultsController < ApplicationController
     end
 
     send_data csv.encode("SJIS", invalid: :replace, undef: :replace),
-      filename: "inquiry_results_#{Time.zone.now.to_i}.csv"
+      filename: "inquiry_second_results_#{Time.zone.now.to_i}.csv"
   end
 end

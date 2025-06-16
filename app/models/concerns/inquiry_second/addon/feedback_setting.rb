@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module FeedbackSetting
     extend ActiveSupport::Concern
     extend SS::Addon
@@ -12,7 +12,7 @@ module Inquiry::Addon
 
     def feedback_confirmation_options
       %w(enabled disabled).map do |w|
-        [I18n.t("inquiry.options.state.#{w}"), w]
+        [I18n.t("inquiry_second.options.state.#{w}"), w]
       end
     end
 

@@ -1,25 +1,25 @@
-<dl class="see mod-inquiry-message">
-  <dt><%= @model.t :inquiry_show_sent_data %></dt>
-  <dd><%= @item.label :inquiry_show_sent_data %></dd>
-  <dt><%= @model.t :inquiry_html %></dt>
+<dl class="see mod-inquiry_second-message">
+  <dt><%= @model.t :inquiry_second_show_sent_data %></dt>
+  <dd><%= @item.label :inquiry_second_show_sent_data %></dd>
+  <dt><%= @model.t :inquiry_second_html %></dt>
   <dd>
-  <% if @item.send(:inquiry_html).present?  %>
-    <%= html_editor "#inquiry_html", height: "200px", readonly: true %>
-    <%= text_area_tag "inquiry_html", @item.inquiry_html, style: "height: 200px;" %>
+  <% if @item.send(:inquiry_second_html).present?  %>
+    <%= html_editor "#inquiry_second_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry_second_html", @item.inquiry_second_html, style: "height: 200px;" %>
   <% end %>
   </dd>
-  <dt><%= @model.t :inquiry_sent_html %></dt>
+  <dt><%= @model.t :inquiry_second_sent_html %></dt>
   <dd>
-  <% if @item.send(:inquiry_sent_html).present?  %>
-    <%= html_editor "#inquiry_sent_html", height: "200px", readonly: true %>
-    <%= text_area_tag "inquiry_sent_html", @item.inquiry_sent_html, style: "height: 200px;" %>
+  <% if @item.send(:inquiry_second_sent_html).present?  %>
+    <%= html_editor "#inquiry_second_sent_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry_second_sent_html", @item.inquiry_second_sent_html, style: "height: 200px;" %>
   <% end %>
   </dd>
-  <dt><%= @model.t :inquiry_results_html %></dt>
+  <dt><%= @model.t :inquiry_second_results_html %></dt>
   <dd>
-  <% if @item.send(:inquiry_results_html).present?  %>
-    <%= html_editor "#inquiry_results_html", height: "200px", readonly: true %>
-    <%= text_area_tag "inquiry_results_html", @item.inquiry_results_html, style: "height: 200px;" %>
+  <% if @item.send(:inquiry_second_results_html).present?  %>
+    <%= html_editor "#inquiry_second_results_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry_second_results_html", @item.inquiry_second_results_html, style: "height: 200px;" %>
   <% end %>
   </dd>
 </dl>

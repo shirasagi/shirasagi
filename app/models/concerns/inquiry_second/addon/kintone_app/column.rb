@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module KintoneApp::Column
     extend ActiveSupport::Concern
     extend SS::Addon

@@ -1,10 +1,10 @@
-class Inquiry::Agents::Nodes::NodeController < ApplicationController
+class InquirySecond::Agents::Nodes::NodeController < ApplicationController
   include Cms::NodeFilter::View
   include Cms::ForMemberFilter::Node
-  helper Inquiry::ListHelper
+  helper InquirySecond::ListHelper
 
   def index
-    @items = Inquiry::Node::Form.site(@cur_site).and_public(@cur_date).
+    @items = InquirySecond::Node::Form.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
       order_by(@cur_node.sort_hash).
       page(params[:page]).

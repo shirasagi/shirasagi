@@ -1,36 +1,36 @@
-module Inquiry::Node
+module InquirySecond::Node
   class Base
     include Cms::Model::Node
 
-    default_scope ->{ where(route: /^inquiry\//) }
+    default_scope ->{ where(route: /^inquiry_second\//) }
   end
 
   class Form
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
-    include Inquiry::Addon::Message
-    include Inquiry::Addon::Captcha
-    include Inquiry::Addon::Notice
-    include Inquiry::Addon::Reply
-    include Inquiry::Addon::Aggregation
-    include Inquiry::Addon::Faq
-    include Inquiry::Addon::KintoneApp::Setting
+    include InquirySecond::Addon::Message
+    include InquirySecond::Addon::Captcha
+    include InquirySecond::Addon::Notice
+    include InquirySecond::Addon::Reply
+    include InquirySecond::Addon::Aggregation
+    include InquirySecond::Addon::Faq
+    include InquirySecond::Addon::KintoneApp::Setting
     include Cms::Addon::ForMemberNode
     include Cms::Addon::ReleasePlan
-    include Inquiry::Addon::ReceptionPlan
+    include InquirySecond::Addon::ReceptionPlan
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    has_many :columns, foreign_key: :node_id, class_name: "Inquiry::Column"
-    has_many :answers, foreign_key: :node_id, class_name: "Inquiry::Answer"
+    has_many :columns, foreign_key: :node_id, class_name: "InquirySecond::Column"
+    has_many :answers, foreign_key: :node_id, class_name: "InquirySecond::Answer"
 
-    default_scope ->{ where(route: "inquiry/form") }
+    default_scope ->{ where(route: "inquiry_second/form") }
 
     def serve_static_file?
-      (site.try(:inquiry_form_id) == id) ? false : super
+      (site.try(:inquiry_second_form_id) == id) ? false : super
     end
   end
 
@@ -45,7 +45,7 @@ module Inquiry::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    default_scope ->{ where(route: "inquiry/node") }
+    default_scope ->{ where(route: "inquiry_second/node") }
 
     def condition_hash(options = {})
       super(options.reverse_merge(category: false))

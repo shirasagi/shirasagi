@@ -4,7 +4,7 @@
 <%= "" %>
 <% end %>
 <% if @node.reply_content_static? %>
-<%= sanitize(@node.reply_content_static.presence || I18n.t("inquiry.default_reply_content_static"), tags: []) %>
+<%= sanitize(@node.reply_content_static.presence || I18n.t("inquiry_second.default_reply_content_static"), tags: []) %>
 <% else %>
 <% @answer.data.each do |data| %>
 <%= "- #{sanitize(data.column.name, tags: [])}" %>

@@ -1,9 +1,9 @@
-class Inquiry::AnswersController < ApplicationController
+class InquirySecond::AnswersController < ApplicationController
   include Cms::BaseFilter
   include SS::CrudFilter
-  include Inquiry::AnswersFilter
+  include InquirySecond::AnswersFilter
 
-  navi_view "inquiry/main/navi"
+  navi_view "inquiry_second/main/navi"
 
   before_action :check_permission
 

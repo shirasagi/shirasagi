@@ -1,9 +1,9 @@
-class Inquiry::Column
+class InquirySecond::Column
   include SS::Document
   include SS::Reference::Site
   include Cms::SitePermission
-  include Inquiry::Addon::InputSetting
-  include Inquiry::Addon::KintoneApp::Column
+  include InquirySecond::Addon::InputSetting
+  include InquirySecond::Addon::KintoneApp::Column
   include Cms::Addon::GroupPermission
 
   INPUT_TYPE_VALIDATION_HANDLERS = [
@@ -17,10 +17,10 @@ class Inquiry::Column
     [ :upload_file, :validate_upload_file ].freeze,
   ].freeze
 
-  set_permission_name "inquiry_columns"
+  set_permission_name "inquiry_second_columns"
 
   seqid :id
-  belongs_to :node, class_name: "Inquiry::Node::Form"
+  belongs_to :node, class_name: "InquirySecond::Node::Form"
   field :state, type: String, default: "public"
   field :name, type: String
   field :html, type: String, default: ""

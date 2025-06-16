@@ -1,4 +1,4 @@
-<%= jquery do %>Inquiry_Form.render({ confirm: true, requiredLabel: <%== t('inquiry.required_field').to_json %> });<% end %>
+<%= jquery do %>Inquiry_Form.render({ confirm: true, requiredLabel: <%== t('inquiry_second.required_field').to_json %> });<% end %>
 <%
   if @group.present?
     if @group.contact_group_name.present?
@@ -8,10 +8,10 @@
     end
   end
 %>
-<div class="inquiry-form confirm">
+<div class="inquiry_second-form confirm">
   <%= form_for :item, url: "#{@cur_node.url}create.html", html: { multipart: true } do |f| %>
     <% if @answer.errors.empty? %>
-      <div class="inquiry-confirm-message"><%= t('inquiry.confirm_message') %></div>
+      <div class="inquiry_second-confirm-message"><%= t('inquiry_second.confirm_message') %></div>
     <% end %>
     <%= error_messages_for :answer, header_message: false %>
     <%= render partial: "form", locals: { f: f, confirm: true }  %>
@@ -25,8 +25,8 @@
     <%= hidden_field_tag "group", @group.id, id: nil if @group %>
     <%= hidden_field_tag "page", @page.id, id: nil if @page %>
     <footer class="send">
-      <%= f.submit t('inquiry.cancel'), name: :cancel %>
-      <%= f.submit t('inquiry.submit'), name: :submit %>
+      <%= f.submit t('inquiry_second.cancel'), name: :cancel %>
+      <%= f.submit t('inquiry_second.submit'), name: :submit %>
     </footer>
   <% end %>
 </div>

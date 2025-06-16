@@ -1,11 +1,11 @@
-class Inquiry::FeedbacksController < ApplicationController
+class InquirySecond::FeedbacksController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Inquiry::Column
+  model InquirySecond::Column
 
   append_view_path "app/views/cms/pages"
-  navi_view "inquiry/main/navi"
+  navi_view "inquiry_second/main/navi"
   menu_view nil
 
   skip_before_action :set_item
@@ -18,7 +18,7 @@ class Inquiry::FeedbacksController < ApplicationController
   end
 
   def check_permission
-    return if @cur_site.inquiry_form_id != @cur_node.id
+    return if @cur_site.inquiry_second_form_id != @cur_node.id
     raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
@@ -30,7 +30,7 @@ class Inquiry::FeedbacksController < ApplicationController
       return
     end
 
-    raise "403" if @cur_node.route != "inquiry/form"
+    raise "403" if @cur_node.route != "inquiry_second/form"
 
     options = params[:s] || {}
     options[:site] = @cur_site
@@ -50,7 +50,7 @@ class Inquiry::FeedbacksController < ApplicationController
     @items = @cur_node.aggregate_for_list(options)
     @source_url = options[:url]
     @source_url = "#{@source_url}.#{params[:format]}" if params[:format].present?
-    @source_content = Inquiry::Answer.find_content(@cur_site, @source_url)
+    @source_content = InquirySecond::Answer.find_content(@cur_site, @source_url)
     @answer_count = @items.first["count"]
     @aggregation = @cur_node.aggregate_select_columns(options)
     @answer_data_opts = options

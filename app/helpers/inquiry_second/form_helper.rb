@@ -1,7 +1,7 @@
-module Inquiry::FormHelper
+module InquirySecond::FormHelper
   extend ActiveSupport::Concern
 
-  def inquiry_column_tag(column, options, &block)
+  def inquiry_second_column_tag(column, options, &block)
     tag_name = options[:confirm] ? 'dl' : 'fieldset'
 
     if column.required_in_select_form.present?
@@ -14,12 +14,12 @@ module Inquiry::FormHelper
     end
 
     content_tag(tag_name, class: css_classes, data: { select_form: select_form }) do
-      inquiry_label_tag(column, options)
-      inquiry_fields_tag(column, options, &block)
+      inquiry_second_label_tag(column, options)
+      inquiry_second_fields_tag(column, options, &block)
     end
   end
 
-  def inquiry_label_tag(column, options)
+  def inquiry_second_label_tag(column, options)
     tag_name = options[:confirm] ? 'dt' : 'legend'
 
     column = { name: column.name, id: column.id, input_type: column.input_type, required: column.required }
@@ -35,12 +35,12 @@ module Inquiry::FormHelper
     output_buffer << content_tag(tag_name) do
       output_buffer << label
       if column[:required] == "required"
-        output_buffer << content_tag('span', t('inquiry.required_field'), class: 'required')
+        output_buffer << content_tag('span', t('inquiry_second.required_field'), class: 'required')
       end
     end
   end
 
-  def inquiry_fields_tag(column, options, &block)
+  def inquiry_second_fields_tag(column, options, &block)
     tag_name = options[:confirm] ? 'dd' : 'div'
 
     column = { name: column.name, id: column.id, input_type: column.input_type, required: column.required }

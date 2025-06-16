@@ -7,7 +7,7 @@
   </dl>
 <% end %>
 <% @items.each do |column, data, confirm_data| %>
-  <%= inquiry_column_tag(column, f: f, confirm: confirm) do %>
+  <%= inquiry_second_column_tag(column, f: f, confirm: confirm) do %>
     <% if confirm %>
       <% if data.kind_of? Hash %>
         <% data.each do |key, value| %>
@@ -100,8 +100,8 @@
     <% end %>
   <% end %>
     <% if column.input_confirm == "enabled" && !confirm %>
-      <%= inquiry_column_tag(column, f: f, column: { name: t("inquiry.confirm_input", name: column.name), id: "#{column.id}_confirm" }, confirm: confirm) do %>
-      <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
+      <%= inquiry_second_column_tag(column, f: f, column: { name: t("inquiry_second.confirm_input", name: column.name), id: "#{column.id}_confirm" }, confirm: confirm) do %>
+      <p><%= t "inquiry_second.confirm_input_description", name: column.name %></p>
       <% opt = { value: "" } %>
       <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
     <% end %>

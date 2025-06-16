@@ -1,4 +1,4 @@
-class Inquiry::SavedParams
+class InquirySecond::SavedParams
   include SS::Document
 
   field :data, type: Hash, default: {}

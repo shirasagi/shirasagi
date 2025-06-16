@@ -1,4 +1,4 @@
-module Inquiry::Addon::Answer
+module InquirySecond::Addon::Answer
   module Body
     extend ActiveSupport::Concern
     extend SS::Addon

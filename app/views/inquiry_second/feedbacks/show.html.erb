@@ -1,14 +1,14 @@
 <% @main_box = proc do %>
 <dl class="see">
   <% if @source_content %>
-  <dt><%= Inquiry::Answer.t :source_name %></dt>
+  <dt><%= InquirySecond::Answer.t :source_name %></dt>
   <dd><%= @source_content.public? ? link_to(@source_content.name, @source_content.full_url, target: "_blank", rel: "noopener") : @source_content.name %></dd>
   <% end %>
   <% if @source_url %>
-  <dt><%= Inquiry::Answer.t :source_url %></dt>
+  <dt><%= InquirySecond::Answer.t :source_url %></dt>
   <dd><%= @source_url %></dd>
   <% end %>
-  <dt><%= t "inquiry.total_count" %></dt>
+  <dt><%= t "inquiry_second.total_count" %></dt>
   <dd>
     <%= @answer_count %>
     <%= t "ss.units.count" %>
@@ -16,4 +16,4 @@
 </dl>
 <% end %>
 
-<%= render template: 'inquiry/results/index' %>
+<%= render template: 'inquiry_second/results/index' %>

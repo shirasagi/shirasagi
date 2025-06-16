@@ -1,11 +1,11 @@
-class Inquiry::ColumnsController < ApplicationController
+class InquirySecond::ColumnsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Inquiry::Column
+  model InquirySecond::Column
 
   append_view_path "app/views/cms/pages"
-  navi_view "inquiry/main/navi"
+  navi_view "inquiry_second/main/navi"
 
   before_action :check_permission
 

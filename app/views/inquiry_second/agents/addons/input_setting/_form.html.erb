@@ -1,25 +1,25 @@
 <% max_term_form = SS.config.cms.max_term_form.to_i %>
 <%= jquery do %>
-$(document).on("click", ".mod-inquiry-input-setting dd.setting-keywords button.add", function(e) {
-  if ($(".mod-inquiry-input-setting tr.keywords").length < <%= (max_term_form > 0) ? max_term_form : 1 %>) {
+$(document).on("click", ".mod-inquiry_second-input-setting dd.setting-keywords button.add", function(e) {
+  if ($(".mod-inquiry_second-input-setting tr.keywords").length < <%= (max_term_form > 0) ? max_term_form : 1 %>) {
     var cln;
-    cln = $(".mod-inquiry-input-setting tr.keywords:last").clone(false).insertAfter($(".mod-inquiry-input-setting tr.keywords:last"));
+    cln = $(".mod-inquiry_second-input-setting tr.keywords:last").clone(false).insertAfter($(".mod-inquiry_second-input-setting tr.keywords:last"));
     cln.find(".keyword").val('');
     cln.find(".email").val('');
     return;
   }
 });
-$(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", function(e) {
+$(document).on("click", ".mod-inquiry_second-input-setting tr.keywords button.clear", function(e) {
   tr = $(this).parent("td").parent("tr")
   tr.find(".keyword").val('');
   tr.find(".email").val('');
-  if ($(".mod-inquiry-input-setting tr.keywords").length > 1) {
+  if ($(".mod-inquiry_second-input-setting tr.keywords").length > 1) {
     tr.remove();
   }
   return;
 });
 <% end %>
-<dl class="see mod-inquiry-input-setting">
+<dl class="see mod-inquiry_second-input-setting">
   <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
   <dd><%= f.select :input_type, @item.input_type_options %></dd>
 

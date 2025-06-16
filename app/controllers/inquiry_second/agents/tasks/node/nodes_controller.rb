@@ -1,4 +1,4 @@
-class Inquiry::Agents::Tasks::Node::NodesController < ApplicationController
+class InquirySecond::Agents::Tasks::Node::NodesController < ApplicationController
   include Cms::PublicFilter::Node
 
   def generate

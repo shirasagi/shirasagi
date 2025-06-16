@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module Reply
     extend ActiveSupport::Concern
     extend SS::Addon
@@ -19,15 +19,15 @@ module Inquiry::Addon
 
     def reply_state_options
       [
-        [ I18n.t('inquiry.options.state.enabled'), 'enabled' ],
-        [ I18n.t('inquiry.options.state.disabled'), 'disabled' ],
+        [ I18n.t('inquiry_second.options.state.enabled'), 'enabled' ],
+        [ I18n.t('inquiry_second.options.state.disabled'), 'disabled' ],
       ]
     end
 
     def reply_content_state_options
       [
-        [ I18n.t('inquiry.options.reply_content_state.static'), 'static' ],
-        [ I18n.t('inquiry.options.reply_content_state.answer'), 'answer' ],
+        [ I18n.t('inquiry_second.options.reply_content_state.static'), 'static' ],
+        [ I18n.t('inquiry_second.options.reply_content_state.answer'), 'answer' ],
       ]
     end
 

@@ -1,10 +1,10 @@
 //= require chart.js/dist/chart.js
 //= require chartjs-plugin-datalabels/dist/chartjs-plugin-datalabels.js
 
-this.Inquiry_Chart = (function() {
-  function Inquiry_Chart() {}
+this.InquirySecond_Chart = (function() {
+  function InquirySecond_Chart() {}
 
-  Inquiry_Chart.drawBar = function(selector) {
+  InquirySecond_Chart.drawBar = function(selector) {
     $(selector).each(function(){
       var dataColumns = $.parseJSON($(this).attr("data-columns"));
       var labels = [];
@@ -51,6 +51,6 @@ this.Inquiry_Chart = (function() {
     });
   };
 
-  return Inquiry_Chart;
+  return InquirySecond_Chart;
 
 })();

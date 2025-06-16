@@ -1,4 +1,4 @@
-class Inquiry::Answer::Data
+class InquirySecond::Answer::Data
   include Mongoid::Document
 
   field :column_id, type: Integer
@@ -6,7 +6,7 @@ class Inquiry::Answer::Data
   field :values, type: Array
   field :confirm, type: String
 
-  belongs_to :column, foreign_key: :column_id, class_name: "Inquiry::Column"
+  belongs_to :column, foreign_key: :column_id, class_name: "InquirySecond::Column"
 
   def file
     return nil if column.nil?

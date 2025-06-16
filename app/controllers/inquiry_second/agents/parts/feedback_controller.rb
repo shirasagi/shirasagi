@@ -1,6 +1,6 @@
-class Inquiry::Agents::Parts::FeedbackController < ApplicationController
+class InquirySecond::Agents::Parts::FeedbackController < ApplicationController
   include Cms::PartFilter::View
-  helper Inquiry::FormHelper
+  helper InquirySecond::FormHelper
 
   before_action :set_parent
   before_action :set_columns
@@ -13,7 +13,7 @@ class Inquiry::Agents::Parts::FeedbackController < ApplicationController
   end
 
   def set_columns
-    @columns = Inquiry::Column.site(@cur_site).
+    @columns = InquirySecond::Column.site(@cur_site).
       where(node_id: @cur_parent.id, state: "public").
       order_by(order: 1)
   end
@@ -29,7 +29,7 @@ class Inquiry::Agents::Parts::FeedbackController < ApplicationController
         @data[column.id] << params[:item].try(:[], "#{column.id}_confirm")
       end
     end
-    @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_parent)
+    @answer = InquirySecond::Answer.new(cur_site: @cur_site, cur_node: @cur_parent)
     @answer.remote_addr = remote_addr
     @answer.user_agent = request.user_agent
     @answer.set_data(@data)

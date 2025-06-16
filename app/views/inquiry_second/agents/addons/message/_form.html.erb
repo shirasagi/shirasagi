@@ -1,15 +1,15 @@
 <% advanced = Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
-<%= html_editor ".mod-inquiry-message .inquiry-html", height: "180px", advanced: advanced %>
-<%= html_editor ".mod-inquiry-message .inquiry-sent-html", height: "180px", advanced: advanced %>
-<%= html_editor ".mod-inquiry-message .inquiry-results-html", height: "180px", advanced: advanced %>
+<%= html_editor ".mod-inquiry_second-message .inquiry_second-html", height: "180px", advanced: advanced %>
+<%= html_editor ".mod-inquiry_second-message .inquiry_second-sent-html", height: "180px", advanced: advanced %>
+<%= html_editor ".mod-inquiry_second-message .inquiry_second-results-html", height: "180px", advanced: advanced %>
 
-<dl class="see mod-inquiry-message">
-  <dt><%= @model.t :inquiry_show_sent_data %><%= @model.tt :inquiry_show_sent_data %></dt>
-  <dd><%= f.select :inquiry_show_sent_data, @item.inquiry_show_sent_data_options %></dd>
-  <dt><%= @model.t :inquiry_html %><%= @model.tt :inquiry_html %></dt>
-  <dd><%= f.text_area :inquiry_html, class: "inquiry-html", style: "height: 180px;" %></dd>
-  <dt><%= @model.t :inquiry_sent_html %><%= @model.tt :inquiry_sent_html %></dt>
-  <dd><%= f.text_area :inquiry_sent_html, class: "inquiry-sent-html", style: "height: 180px;" %></dd>
-  <dt><%= @model.t :inquiry_results_html %><%= @model.tt :inquiry_results_html %></dt>
-  <dd><%= f.text_area :inquiry_results_html, class: "inquiry-results-html", style: "height: 180px;" %></dd>
+<dl class="see mod-inquiry_second-message">
+  <dt><%= @model.t :inquiry_second_show_sent_data %><%= @model.tt :inquiry_second_show_sent_data %></dt>
+  <dd><%= f.select :inquiry_second_show_sent_data, @item.inquiry_second_show_sent_data_options %></dd>
+  <dt><%= @model.t :inquiry_second_html %><%= @model.tt :inquiry_second_html %></dt>
+  <dd><%= f.text_area :inquiry_second_html, class: "inquiry_second-html", style: "height: 180px;" %></dd>
+  <dt><%= @model.t :inquiry_second_sent_html %><%= @model.tt :inquiry_second_sent_html %></dt>
+  <dd><%= f.text_area :inquiry_second_sent_html, class: "inquiry_second-sent-html", style: "height: 180px;" %></dd>
+  <dt><%= @model.t :inquiry_second_results_html %><%= @model.tt :inquiry_second_results_html %></dt>
+  <dd><%= f.text_area :inquiry_second_results_html, class: "inquiry_second-results-html", style: "height: 180px;" %></dd>
 </dl>

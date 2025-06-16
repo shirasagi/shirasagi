@@ -1,14 +1,14 @@
-class Inquiry::Mailer < ApplicationMailer
-  helper Inquiry::MailerHelper
+class InquirySecond::Mailer < ApplicationMailer
+  helper InquirySecond::MailerHelper
 
   def notify_mail(site, node, answer, notice_email)
     @node = node
     @answer = answer
     @answer_url = ::File.join(
       site.mypage_full_url,
-      Rails.application.routes.url_helpers.inquiry_answer_path(site: site.id, cid: node.id, id: answer.id)
+      Rails.application.routes.url_helpers.inquiry_second_answer_path(site: site.id, cid: node.id, id: answer.id)
     )
-    @subject = "[#{I18n.t('inquiry.notify')}]#{node.name} - #{site.name}"
+    @subject = "[#{I18n.t('inquiry_second.notify')}]#{node.name} - #{site.name}"
 
     @answer_data = []
     if @node.notice_content == "include_answers"

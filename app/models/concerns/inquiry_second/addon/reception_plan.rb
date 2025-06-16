@@ -1,4 +1,4 @@
-module Inquiry::Addon
+module InquirySecond::Addon
   module ReceptionPlan
     extend ActiveSupport::Concern
     extend SS::Addon

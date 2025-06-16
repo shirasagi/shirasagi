@@ -1,17 +1,17 @@
-class Inquiry::Answer
+class InquirySecond::Answer
   include SS::Document
   include SS::Reference::Site
-  include Inquiry::Addon::Answer::Body
-  include Inquiry::Addon::KintoneApp::Answer
+  include InquirySecond::Addon::Answer::Body
+  include InquirySecond::Addon::KintoneApp::Answer
   include Cms::Addon::GroupPermission
 
   attr_accessor :cur_node
 
   store_in_default_post
-  set_permission_name "inquiry_answers"
+  set_permission_name "inquiry_second_answers"
 
   seqid :id
-  belongs_to :node, class_name: "Inquiry::Node::Form"
+  belongs_to :node, class_name: "InquirySecond::Node::Form"
   field :remote_addr, type: String
   field :user_agent, type: String
   field :source_url, type: String
@@ -20,14 +20,14 @@ class Inquiry::Answer
   field :closed, type: DateTime, default: nil
   field :state, type: String, default: "open"
   field :comment, type: String
-  field :inquiry_page_url, type: String
-  field :inquiry_page_name, type: String
+  field :inquiry_second_page_url, type: String
+  field :inquiry_second_page_name, type: String
 
   belongs_to :member, class_name: "Cms::Member"
-  embeds_many :data, class_name: "Inquiry::Answer::Data"
+  embeds_many :data, class_name: "InquirySecond::Answer::Data"
 
   permit_params :id, :node_id, :remote_addr, :user_agent
-  permit_params :state, :comment, :inquiry_page_url, :inquiry_page_name
+  permit_params :state, :comment, :inquiry_second_page_url, :inquiry_second_page_name
 
   before_validation :set_node, if: ->{ cur_node.present? }
   before_validation :set_closed
@@ -111,13 +111,13 @@ class Inquiry::Answer
         values = value.values
         value  = value.map { |k, v| v }.join("\n")
       elsif value.kind_of? ActionDispatch::Http::UploadedFile
-        client_name = Inquiry::Answer.persistence_context.send(:client_name)
+        client_name = InquirySecond::Answer.persistence_context.send(:client_name)
         ss_file = SS::File.with(client: client_name) do |model|
           ss_file = model.new
           ss_file.in_file = value
           ss_file.site_id = cur_site.id
           ss_file.state = "closed"
-          ss_file.model = "inquiry/temp_file"
+          ss_file.model = "inquiry_second/temp_file"
           ss_file.sanitizer_skip unless self.class.default_client?
           ss_file.save
           ss_file
@@ -132,7 +132,7 @@ class Inquiry::Answer
         values = [value.to_s]
         value  = value.to_s
       end
-      self.data << Inquiry::Answer::Data.new(column_id: key.to_i, value: value, values: values, confirm: confirm)
+      self.data << InquirySecond::Answer::Data.new(column_id: key.to_i, value: value, values: values, confirm: confirm)
     end
   end
 
@@ -156,30 +156,30 @@ class Inquiry::Answer
     end
   end
 
-  def inquiry_page_content
-    self.class.find_content(@cur_site || site, inquiry_page_url)
+  def inquiry_second_page_content
+    self.class.find_content(@cur_site || site, inquiry_second_page_url)
   end
 
-  def inquiry_page_full_url
-    if inquiry_page_url.present?
+  def inquiry_second_page_full_url
+    if inquiry_second_page_url.present?
       uri = ::Addressable::URI.parse(site.full_url)
-      uri.path = inquiry_page_url
+      uri.path = inquiry_second_page_url
       uri.to_s
     end
   end
 
   def state_options
-    I18n.t("inquiry.options.answer_state").map { |k, v| [v, k] }
+    I18n.t("inquiry_second.options.answer_state").map { |k, v| [v, k] }
   end
 
   def search_state_options
-    I18n.t("inquiry.options.search_answer_state").map { |k, v| [v, k] }
+    I18n.t("inquiry_second.options.search_answer_state").map { |k, v| [v, k] }
   end
 
   private
 
   def validate_data
-    columns = Inquiry::Column.where(site_id: site_id, node_id: node_id, state: "public").order_by(order: 1)
+    columns = InquirySecond::Column.where(site_id: site_id, node_id: node_id, state: "public").order_by(order: 1)
     in_reply = nil
     columns.each_with_index do |column, i|
       if column.input_type == 'form_select'
@@ -226,7 +226,7 @@ class Inquiry::Answer
       file = SS::File.find(file_id) rescue nil
       next if file.blank?
 
-      file.model = "inquiry/answer"
+      file.model = "inquiry_second/answer"
       file.owner_item = self
       file.save
     end
@@ -239,7 +239,7 @@ class Inquiry::Answer
 
       file = SS::File.find(file_id) rescue nil
       next if file.blank?
-      next if file.model != "inquiry/answer"
+      next if file.model != "inquiry_second/answer"
 
       file.destroy
     end

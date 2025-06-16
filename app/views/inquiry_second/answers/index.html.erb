@@ -9,20 +9,20 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <% if item.try(:created) %>
-    <span class="datetime"><%= t("inquiry.views.index.created", created: I18n.l(item.created)) %></span>
+    <span class="datetime"><%= t("inquiry_second.views.index.created", created: I18n.l(item.created)) %></span>
   <% end %>
   <% if item.try(:updated) %>
-    <span class="datetime"><%= t("inquiry.views.index.updated", updated: I18n.l(item.updated)) %></span>
+    <span class="datetime"><%= t("inquiry_second.views.index.updated", updated: I18n.l(item.updated)) %></span>
   <% end %>
   <% if item.source_url.present? %>
     <span class="url"><%= item.source_url %></span>
-  <% elsif item.inquiry_page_url.present? %>
-    <span class="url"><%= item.inquiry_page_url %></span>
+  <% elsif item.inquiry_second_page_url.present? %>
+    <span class="url"><%= item.inquiry_second_page_url %></span>
   <% end %>
   <% if item.source_name.present? %>
     <span class="name"><%= item.source_name %></span>
-  <% elsif item.inquiry_page_name.present? %>
-    <span class="name"><%= item.inquiry_page_name %></span>
+  <% elsif item.inquiry_second_page_name.present? %>
+    <span class="name"><%= item.inquiry_second_page_name %></span>
   <% end %>
   <% if item.member.present? %>
     <span class="name"><%= item.member.name %></span>

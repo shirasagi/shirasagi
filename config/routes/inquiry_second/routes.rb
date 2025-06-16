@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  Inquiry::Initializer
+  InquirySecond::Initializer
 
   concern :deletion do
     get :delete, on: :member
@@ -15,7 +15,7 @@ Rails.application.routes.draw do
     get :download, on: :collection
   end
 
-  content "inquiry" do
+  content "inquiry_second" do
     get "/" => redirect { |p, req| "#{req.path}/columns" }, as: :main
     resources :nodes, concerns: [:deletion, :change_state]
     resources :forms, only: [:index]
@@ -28,7 +28,7 @@ Rails.application.routes.draw do
     resources :feedbacks, only: [:index, :show]
   end
 
-  node "inquiry" do
+  node "inquiry_second" do
     get "form/(index.:format)" => "public#new", cell: "nodes/form"
     get "form/sent.html" => "public#sent", cell: "nodes/form"
     get "form/results.html" => "public#results", cell: "nodes/form"
@@ -37,11 +37,11 @@ Rails.application.routes.draw do
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
   end
 
-  part "inquiry" do
+  part "inquiry_second" do
     get "feedback" => "public#index", cell: "parts/feedback"
   end
 
-  namespace "inquiry", path: ".s:site/inquiry" do
+  namespace "inquiry_second", path: ".s:site/inquiry_second" do
     resources :site_answers, path: "answers", concerns: [:deletion, :download], only: %i[index show edit update destroy] do
       get :download_afile, on: :member, path: "/fileid/:fid/download"
     end

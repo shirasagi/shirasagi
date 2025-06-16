@@ -1,5 +1,5 @@
 ja:
-  inquiry:
+  inquiry_second:
     form: メールフォーム
     nodes: フォーム一覧
     column: 質問項目
@@ -79,68 +79,68 @@ ja:
         updated: "更新日時：%{updated}"
 
   modules:
-    inquiry: メールフォーム
+    inquiry_second: メールフォームv2
     addons:
-      inquiry/message: メッセージ
-      inquiry/captcha: 認証
-      inquiry/notice: メール通知
-      inquiry/reply: 自動返信メール
-      inquiry/input_setting: 入力設定
-      inquiry/release_plan: 公開期間
-      inquiry/reception_plan: 回答受付期間
-      inquiry/aggregation: 集計
-      inquiry/feedback_setting: フィードバック設定
-      inquiry/faq: FAQ
-      inquiry/answer/body: 回答
-      inquiry/kintone_app/setting: kintoneアプリ
-      inquiry/kintone_app/column: kintoneアプリ
-      inquiry/kintone_app/answer: kintoneアプリ
+      inquiry_second/message: メッセージ
+      inquiry_second/captcha: 認証
+      inquiry_second/notice: メール通知
+      inquiry_second/reply: 自動返信メール
+      inquiry_second/input_setting: 入力設定
+      inquiry_second/release_plan: 公開期間
+      inquiry_second/reception_plan: 回答受付期間
+      inquiry_second/aggregation: 集計
+      inquiry_second/feedback_setting: フィードバック設定
+      inquiry_second/faq: FAQ
+      inquiry_second/answer/body: 回答
+      inquiry_second/kintone_app/setting: kintoneアプリ
+      inquiry_second/kintone_app/column: kintoneアプリ
+      inquiry_second/kintone_app/answer: kintoneアプリ
 
   cms:
     nodes:
-      inquiry/form: フォーム
-      inquiry/node: フォーム一覧
+      inquiry_second/form: フォーム
+      inquiry_second/node: フォーム一覧
     parts:
-      inquiry/feedback: フィードバック
+      inquiry_second/feedback: フィードバック
 
   cms_role:
-    read_other_inquiry_columns: 質問項目の閲覧（全て）
-    read_private_inquiry_columns: 質問項目の閲覧（所有）
-    edit_other_inquiry_columns: 質問項目の編集（全て）
-    edit_private_inquiry_columns: 質問項目の編集（所有）
-    delete_other_inquiry_columns: 質問項目の削除（全て）
-    delete_private_inquiry_columns: 質問項目の削除（所有）
-    read_other_inquiry_answers: 回答データの閲覧（全て）
-    read_private_inquiry_answers: 回答データの閲覧（所有）
-    edit_other_inquiry_answers: 回答データの編集（全て）
-    edit_private_inquiry_answers: 回答データの編集（所有）
-    delete_other_inquiry_answers: 回答データの削除（全て）
-    delete_private_inquiry_answers: 回答データの削除（所有）
+    read_other_inquiry_second_columns: 質問項目の閲覧（全て）
+    read_private_inquiry_second_columns: 質問項目の閲覧（所有）
+    edit_other_inquiry_second_columns: 質問項目の編集（全て）
+    edit_private_inquiry_second_columns: 質問項目の編集（所有）
+    delete_other_inquiry_second_columns: 質問項目の削除（全て）
+    delete_private_inquiry_second_columns: 質問項目の削除（所有）
+    read_other_inquiry_second_answers: 回答データの閲覧（全て）
+    read_private_inquiry_second_answers: 回答データの閲覧（所有）
+    edit_other_inquiry_second_answers: 回答データの編集（全て）
+    edit_private_inquiry_second_answers: 回答データの編集（所有）
+    delete_other_inquiry_second_answers: 回答データの削除（全て）
+    delete_private_inquiry_second_answers: 回答データの削除（所有）
 
 
   mongoid:
     models:
-      inquiry/column: 入力項目
-      inquiry/answer: 回答データ
+      inquiry_second/column: 入力項目
+      inquiry_second/answer: 回答データ
     attributes:
-      inquiry/addon/message:
-        inquiry_html: 説明テキスト
-        inquiry_sent_html: 送信完了テキスト
-        inquiry_results_html: 集計結果テキスト
-        inquiry_show_sent_data: 投稿内容の表示
+      inquiry_second/addon/message:
+        inquiry_second_html: 説明テキスト
+        inquiry_second_sent_html: 送信完了テキスト
+        inquiry_second_results_html: 集計結果テキスト
+        inquiry_second_show_sent_data: 投稿内容の表示
 
-      inquiry/addon/captcha:
-        inquiry_captcha: 画像認証
+      inquiry_second/addon/captcha:
+        inquiry_second_captcha: 画像認証
         captcha_test: 認証画像の表示確認
 
-      inquiry/addon/notice:
+      inquiry_second/addon/notice:
         notice_state: 通知設定
         notice_content: 通知内容
         notice_email: 通知メールアドレス
         from_name: 差出人名
         from_email: 差出人メールアドレス
 
-      inquiry/addon/reply:
+      inquiry_second/addon/reply:
         reply_state: 返信設定
         reply_subject: 返信件名
         reply_upper_text: 上部返信テキスト
@@ -148,21 +148,21 @@ ja:
         reply_content_state: 返信内容
         reply_content_static: 固定メッセージ
 
-      inquiry/addon/release_plan:
+      inquiry_second/addon/release_plan:
         release_date: 公開開始日
         close_date: 公開終了日
 
-      inquiry/addon/reception_plan:
+      inquiry_second/addon/reception_plan:
         reception_start_date: 回答受付開始日
         reception_close_date: 回答受付終了日
 
-      inquiry/addon/aggregation:
+      inquiry_second/addon/aggregation:
         aggregation_state: 集計設定
 
-      inquiry/addon/faq:
+      inquiry_second/addon/faq:
         faq_id: FAQフォルダー
 
-      inquiry/column:
+      inquiry_second/column:
         name: 項目名
         html: 説明テキスト
         state: ステータス
@@ -178,7 +178,7 @@ ja:
         transfers: キーワード
         date_inputter: 日付・日時の入力形式
 
-      inquiry/answer:
+      inquiry_second/answer:
         id: id
         remote_addr: IPアドレス
         user_agent: ユーザーエージェント
@@ -189,16 +189,16 @@ ja:
         created: 受信日時
         state: 状態
         comment: コメント
-        inquiry_page_url: お問い合わせページURL
-        inquiry_page_name: お問い合わせページタイトル
+        inquiry_second_page_url: お問い合わせページURL
+        inquiry_second_page_name: お問い合わせページタイトル
         member_id: 回答メンバー
 
-      inquiry/addon/feedback_setting:
+      inquiry_second/addon/feedback_setting:
         upper_html: 上部HTML
         lower_html: 下部HTML
         feedback_confirmation: 確認画面
 
-      inquiry/addon/kintone_app/setting:
+      inquiry_second/addon/kintone_app/setting:
         kintone_app_activation: 連携
         kintone_app_api_token: APIトークン
         kintone_app_key: アプリID
@@ -207,10 +207,10 @@ ja:
         kintone_app_remote_addr_field_code: リモートIP
         kintone_app_user_agent_field_code: ユーザーエージェント
 
-      inquiry/addon/kintone_app/column:
+      inquiry_second/addon/kintone_app/column:
         kintone_field_code: フィールドコード
 
-      inquiry/addon/kintone_app/answer:
+      inquiry_second/addon/kintone_app/answer:
         kintone_record_key: レコードID
         kintone_revision: レコードrevision
         kintone_update_error_message: エラーメッセージ
@@ -226,21 +226,21 @@ ja:
     captcha_button: 画像認証のテスト
 
   tooltip:
-    inquiry/addon/message:
-      inquiry_html:
+    inquiry_second/addon/message:
+      inquiry_second_html:
         - フォーム画面の上部に表示する説明テキストを入力します。
-      inquiry_sent_html:
+      inquiry_second_sent_html:
         - 送信完了画面に表示される画面の内容を入力します。
-      inquiry_results_html:
+      inquiry_second_results_html:
         - 集計結果画面の上部に表示される内容を入力します。
-      inquiry_show_sent_data:
+      inquiry_second_show_sent_data:
         - 送信完了画面に投稿した内容を表示するか選択します。
-    inquiry/addon/captcha:
-      inquiry_captcha:
+    inquiry_second/addon/captcha:
+      inquiry_second_captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
       captcha_test:
         - 認証画像の表示を確認します。
-    inquiry/addon/notice:
+    inquiry_second/addon/notice:
       notice_state:
         - フォームへの投稿があったことを通知することが可能です。
       notice_content:
@@ -253,7 +253,7 @@ ja:
         - 通知メールに記載される差出人名を入力します。
       from_email:
         - 通知メールの差出人メールアドレスを入力します。
-    inquiry/addon/reply:
+    inquiry_second/addon/reply:
       reply_state:
         - フォームへ投稿した利用者に自動返信メールを送ることが可能です。
       reply_subject:
@@ -276,7 +276,7 @@ ja:
       reply_content_static:
         - 返信内容に「固定メッセージ」を選択した場合に送信するメッセージを選択します。
         - 空の場合、システムの既定のメッセージを送信します。
-    inquiry/column:
+    inquiry_second/column:
       name:
         - 質問項目の名称を入力します。
       html:
@@ -287,12 +287,12 @@ ja:
       order:
         - 質問項目の並び順を指定します。
         - 数字が小さいほど上位に表示されます。
-    inquiry/answer:
+    inquiry_second/answer:
       state:
         - 状態を選択します。
       comment:
         - コメントを入力します。
-    inquiry/addon/input_setting:
+    inquiry_second/addon/input_setting:
       input_type:
         - 回答欄の入力形式を選択します。
       select_options:
@@ -320,7 +320,7 @@ ja:
         - 日付・日時の入力形式を選択します。
         - inputタグ ... 入力コントロールを '&lt;input type=&quot;date&quot;&gt;' または '&lt;input type=&quot;datetime-local&quot;&gt;' にて表示します。
         - DateTimePicker ... 入力コントロールを 'jQuery DateTimePicker' にて表示します。
-    inquiry/addon/release_plan:
+    inquiry_second/addon/release_plan:
       release_date:
         - 公開を開始する日時を指定します。
         - 指定した日時が来るとメールフォームが公開されます。
@@ -328,28 +328,28 @@ ja:
       close_date:
         - 公開を終了する日時を指定します。
         - 指定した日時が来るとメールフォームが非公開になります。
-    inquiry/addon/reception_plan:
+    inquiry_second/addon/reception_plan:
       reception_start_date:
         - 回答受付開始日時を指定します。
         - 「メールフォーム/フォーム一覧」属性のフォルダー配下に配置した際に、指定した日時が来ると公開されます。
       reception_close_date:
         - 回答受付終了日時を指定します。
         - 「メールフォーム/フォーム一覧」属性のフォルダー配下に配置した際に、指定した日時が来ると非公開になります。
-    inquiry/addon/aggregation:
+    inquiry_second/addon/aggregation:
       aggregation_state:
         - 公開側で集計機能を使用するかを選択します。
-    inquiry/addon/feedback_setting:
+    inquiry_second/addon/feedback_setting:
       upper_html:
         - 上部に任意の内容をHTMLで記述することが可能です。
       lower_html:
         - 下部に任意の内容をHTMLで記述することが可能です。
       feedback_confirmation:
         - 確認画面を利用する場合は「使用する」を選択してください。
-    inquiry/addon/faq:
+    inquiry_second/addon/faq:
       faq_id:
         - FAQのフォルダーを選択します。
         - 回答データからFAQのページを作成できます。
-    inquiry/addon/kintone_app/setting:
+    inquiry_second/addon/kintone_app/setting:
       kintone_app_activation:
         - 連携を有効にすると、フォーム投稿完了時に回答データを kintone アプリに登録します。
         - 質問項目のフィールドコードを kintone アプリに合わせて適切に設定する必要があります。
@@ -365,7 +365,7 @@ ja:
       kintone_app_field_code:
         - 回答データのリモートIPやユーザーエージェントを連携する場合、連携する項目のフィールドコードを入力してください。
 
-    inquiry/addon/kintone_app/column:
+    inquiry_second/addon/kintone_app/column:
       kintone_field_code: kintone アプリのフィールドコードを入力します。
 
   errors:
@@ -378,4 +378,4 @@ ja:
 
   job:
     models:
-      inquiry/delete_inquiry_temp_files_job: メールフォーム/一時ファイル削除
+      inquiry_second/delete_inquiry_second_temp_files_job: メールフォーム/一時ファイル削除
