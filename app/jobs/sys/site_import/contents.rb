@@ -20,7 +20,11 @@ module Sys::SiteImport::Contents
   end
 
   def import_cms_parts
-    @cms_parts_map = import_documents "cms_parts", Cms::Part, %w(site_id filename)
+    @cms_parts_map = import_documents "cms_parts", Cms::Part, %w(site_id filename) do |item, data|
+      if data["condition_forms"].present? && item.respond_to?(:condition_forms)
+        item.condition_forms = data["condition_forms"]["values"].to_a
+      end
+    end
   end
 
   def import_cms_pages
@@ -162,6 +166,26 @@ module Sys::SiteImport::Contents
             column_value.page_id = @cms_pages_map[column_value.page_id]
           end
         end
+      end
+      save_document(item)
+    end
+  end
+
+  def update_cms_parts
+    @cms_parts_map.each do |old_id, id|
+      item = Cms::Part.unscoped.find(id) rescue nil
+      next unless item
+
+      if item[:condition_forms].present?
+        values = item[:condition_forms].to_a.map do |value|
+          value[:form_id] = @cms_forms_map[value[:form_id]]
+          value[:filters] = value[:filters].map do |filter|
+            filter[:column_id] = @cms_columns_map[filter[:column_id].to_s]
+            filter
+          end
+          value
+        end
+        item[:condition_forms] = values
       end
       save_document(item)
     end

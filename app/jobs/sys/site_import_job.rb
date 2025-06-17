@@ -65,6 +65,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_opendata_licenses
     invoke :update_cms_nodes
     invoke :update_cms_pages
+    invoke :update_cms_parts
     invoke :update_ss_files
     invoke :update_opendata_dataset_resources
     invoke :update_opendata_app_appfiles
