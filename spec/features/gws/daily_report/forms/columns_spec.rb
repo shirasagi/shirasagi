@@ -4,25 +4,25 @@ describe "gws_daily_report_forms", type: :feature, dbscope: :example, js: true d
   let(:site) { gws_site }
   let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}" }
   let!(:form) { create :gws_daily_report_form, cur_site: site, daily_report_group: group1 }
-  let!(:column_type) { I18n.with_locale(gws_user.lang) { I18n.t("gws.columns").stringify_keys.to_a.sample } }
-  # let!(:column_type) { I18n.with_locale(gws_user.lang) { [ "gws/title", I18n.t("gws.columns.gws/title") ] } }
-  # let!(:column_type) { I18n.with_locale(gws_user.lang) { [ "gws/section", I18n.t("gws.columns.gws/section") ] } }
-  # let!(:column_type) { I18n.with_locale(gws_user.lang) { [ "gws/radio_button", I18n.t("gws.columns.gws/radio_button") ] } }
   let(:available_fields_map) do
     common = %i(name order required tooltips label explanation)
     {
-      "gws/title" => %i(title order title_explanation),
-      "gws/text_field" => common + %i(text_input_type max_length place_holder additional_attr),
-      "gws/date_field" => common + %i(date_input_type place_holder),
-      "gws/number_field" => common + %i(decimal max_length place_holder additional_attr),
-      "gws/url_field" => common + %i(max_length place_holder additional_attr),
-      "gws/text_area" => common + %i(max_length place_holder additional_attr),
-      "gws/select" => common + %i(place_holder select_options),
-      "gws/radio_button" => common + %i(select_options other_option),
-      "gws/check_box" => common + %i(select_options),
-      "gws/file_upload" => common + %i(upload_file_count),
-      "gws/section" => %i(name),
+      "gws/column/title" => %i(title order title_explanation),
+      "gws/column/text_field" => common + %i(text_input_type max_length place_holder additional_attr),
+      "gws/column/date_field" => common + %i(date_input_type place_holder),
+      "gws/column/number_field" => common + %i(decimal max_length place_holder additional_attr),
+      "gws/column/url_field" => common + %i(max_length place_holder additional_attr),
+      "gws/column/text_area" => common + %i(max_length place_holder additional_attr),
+      "gws/column/select" => common + %i(place_holder select_options),
+      "gws/column/radio_button" => common + %i(select_options other_option),
+      "gws/column/check_box" => common + %i(select_options),
+      "gws/column/file_upload" => common + %i(upload_file_count),
+      "gws/column/section" => %i(name),
     }
+  end
+  let!(:column_type) do
+    key = available_fields_map.keys.sample
+    I18n.with_locale(gws_user.lang) { [ key, I18n.t("mongoid.models.#{key}") ] }
   end
   let(:available_fields) { available_fields_map[column_type[0]] }
 

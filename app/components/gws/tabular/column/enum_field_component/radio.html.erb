@@ -1,0 +1,19 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% select_options.each do |select_option| %>
+    <%
+      select_option = select_option.strip
+      next if select_option.blank?
+    %>
+
+    <label>
+      <%= radio_button_tag "#{form.object_name}[col_#{column.id}][]", select_option, normalized_values.include?(select_option), id: nil %>
+      <%= select_option %>
+    </label>
+  <% end %>
+
+  <% if !column.required? %>
+    <div class="mt-1">
+      <%= button_tag(t("ss.buttons.clear"), name: nil, type: "button", class: "btn", onclick: "$(\"input[name='#{form.object_name}[col_#{column.id}][]']\").prop('checked', false);") %>
+    </div>
+  <% end %>
+<% end %>

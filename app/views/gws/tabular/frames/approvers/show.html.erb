@@ -1,0 +1,106 @@
+<% return unless policy.show? %>
+
+<% if @item.errors.present? %>
+  <%= error_messages_for :item %>
+<% end %>
+
+<div class="mod-workflow-view gws-workflow-view">
+  <%= render "form_restart", local_assigns %>
+
+  <dl class="see workflow_user_id">
+    <dt><%= @model.t :workflow_user_id %></dt>
+    <dd>
+      <%=
+        if @item.workflow_user_custom_data.present?
+          workflow_user_profile_at_application(@item.workflow_user_custom_data)
+        elsif @item.workflow_user.present?
+          workflow_user_profile(@item.workflow_user)
+        else
+          t("workflow.user_deleted")
+        end
+      %><br>
+      <%=
+        # ここでは、申請時の情報を表示する
+        # 申請時の情報が workflow_user_custom_data に保存されているはず。
+        if @item.workflow_user_custom_data.present?
+          Gws::Workflow.find_custom_data_value_in_locale(@item.workflow_user_custom_data, "i18n_section_name")
+        end
+      %>
+    </dd>
+  </dl>
+
+  <% if @item.workflow_agent_custom_data.present? %>
+    <dl class="see workflow_agent_id">
+      <dt><%= @model.t :workflow_agent_id %></dt>
+      <dd>
+        <%= workflow_user_profile_at_application(@item.workflow_agent_custom_data) %><br>
+        <%=
+          # ここでは、申請時の情報を表示する
+          # 申請時の情報が workflow_agent_custom_data に保存されているはず。
+          Gws::Workflow.find_custom_data_value_in_locale(@item.workflow_agent_custom_data, "i18n_section_name")
+        %>
+      </dd>
+    </dl>
+  <% end %>
+
+  <dl class="see workflow_state">
+    <dt><%= @model.t :workflow_state %></dt>
+    <dd>
+      <%= t("workflow.state.#{@item.workflow_state.presence || "draft"}") %>
+      <%= render "form_cancel", local_assigns %>
+    </dd>
+  </dl>
+
+  <dl class="see workflow_comment">
+    <dt><%= @model.t :workflow_comment %></dt>
+    <dd><%= @item.workflow_comment %></dd>
+  </dl>
+
+  <% if @item.workflow_state != Gws::Workflow::File::WORKFLOW_STATE_APPROVE_WITHOUT_APPROVAL %>
+    <dl class="see workflow_pull_up">
+      <dt><%= @model.t :workflow_pull_up %></dt>
+      <dd><%= @item.label :workflow_pull_up %></dd>
+    </dl>
+
+    <dl class="see workflow_on_remand">
+      <dt><%= @model.t :workflow_on_remand %></dt>
+      <dd><%= @item.label :workflow_on_remand %></dd>
+    </dl>
+
+    <dl class="see workflow_approvers">
+      <dt><%= @model.t :workflow_approvers %></dt>
+      <dd>
+        <% if @item.workflow_approvers.present? %>
+          <table class="index">
+            <tbody>
+            <% @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers| %>
+              <% workflow_approver_count = workflow_approvers.count %>
+              <% workflow_approvers.each_with_index do |workflow_approver, index| %>
+                <%= render "show_approver_row", level: level, count: workflow_approver_count, index: index, workflow_approver: workflow_approver, has_dailog: true %>
+              <% end %>
+            <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </dd>
+    </dl>
+
+    <dl class="see workflow_circulations">
+      <dt><%= @model.t :workflow_circulations %></dt>
+      <dd>
+        <% if @item.workflow_circulations.present? %>
+          <table class="index">
+            <tbody>
+            <% @item.workflow_circulations.group_by { |workflow_circulation| workflow_circulation[:level] }.each do |level, workflow_circulations| %>
+              <% workflow_circulation_count = workflow_circulations.count %>
+              <% workflow_circulations.each_with_index do |workflow_circulation, index| %>
+                <%= render "show_circulation_row", level: level, count: workflow_circulation_count, index: index, workflow_circulation: workflow_circulation, has_dailog: true %>
+              <% end %>
+            <% end %>
+            </tbody>
+          </table>
+        <% end %>
+      </dd>
+    </dl>
+  <% end %>
+</div>

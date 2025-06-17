@@ -1,0 +1,14 @@
+<dl class="see">
+  <dt><%= @model.t :reference_form_id %><%= @model.tt :reference_form_id %></dt>
+  <dd>
+    <%=
+      options = Gws::Tabular::Form.site(@cur_site).space(@item.form.space).reorder(order: 1, id: 1).only(:_id, :i18n_name).map { |form| [form.name, form.id.to_s ] }
+      choices = render SS::OptionsForSelectComponent.new(options: options, selected: @item.reference_form_id.to_s)
+      f.select :reference_form_id, choices, include_blank: true %>
+  </dd>
+
+  <% if @model.use_reference_type %>
+    <dt><%= @model.t :reference_type %><%= @model.tt :reference_type %></dt>
+    <dd><%= f.select :reference_type, @item.reference_type_options, include_blank: true %></dd>
+  <% end %>
+</dl>
