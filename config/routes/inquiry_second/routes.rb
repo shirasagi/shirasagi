@@ -19,7 +19,9 @@ Rails.application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/columns" }, as: :main
     resources :nodes, concerns: [:deletion, :change_state]
     resources :forms, only: [:index]
-    resources :columns, concerns: :deletion
+    resources :columns, concerns: [:deletion] do
+      post :reorder, on: :collection
+    end
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :edit, :update, :destroy] do
       get :download_afile, on: :member, path: "/fileid/:fid/download"
     end

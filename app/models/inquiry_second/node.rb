@@ -16,6 +16,7 @@ module InquirySecond::Node
     include InquirySecond::Addon::Aggregation
     include InquirySecond::Addon::Faq
     include InquirySecond::Addon::KintoneApp::Setting
+    include InquirySecond::Addon::ColumnSetting
     include Cms::Addon::ForMemberNode
     include Cms::Addon::ReleasePlan
     include InquirySecond::Addon::ReceptionPlan
@@ -24,7 +25,10 @@ module InquirySecond::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    has_many :columns, foreign_key: :node_id, class_name: "InquirySecond::Column"
+    # has_many :columns, class_name: 'Cms::Column::Base', dependent: :destroy, inverse_of: :form, as: :form
+    # delegate :build_column_values, to: :columns
+
+    #has_many :columns, foreign_key: :node_id, class_name: "InquirySecond::Column"
     has_many :answers, foreign_key: :node_id, class_name: "InquirySecond::Answer"
 
     default_scope ->{ where(route: "inquiry_second/form") }

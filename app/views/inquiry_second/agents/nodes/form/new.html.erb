@@ -12,6 +12,33 @@
   <%== @cur_node.inquiry_second_html %>
 </div>
 
+<%
+  @cur_form = @cur_node
+  @item = @answer
+%>
+<% if @cur_form.columns.count > 0 %>
+  <%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
+    <%= error_messages_for :answer, header_message: false %>
+    <%#= render partial: "form", locals: { f: f, confirm: false }  %>
+    <%= hidden_field_tag "group", @group.id, id: nil if @group %>
+    <%= hidden_field_tag "page", @page.id, id: nil if @page %>
+    <% if params[:preview] %>
+      <%= hidden_field_tag "preview", params[:preview], id: nil %>
+    <% end %>
+
+    <dl class="see gws-column-see mod-gws-survey-custom_form">
+      <% @cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
+        <%#= render(column.column_form_partial_path, column: column, object_name: 'custom', value: @item.read_column_value(column)) %>
+        <%= render(column.column_form_partial_path, f: f, column: column, object_name: 'custom', value: @item.read_column_value(column)) %>
+      <% end %>
+    </dl>
+
+    <footer class="send">
+      <%= f.submit t('inquiry_second.confirm'), name: :confirm %>
+    </footer>
+  <% end %>
+<% end %>
+
 <% if @columns.count > 0 %>
   <%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
   <div class="inquiry_second-form">

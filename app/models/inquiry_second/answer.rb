@@ -4,6 +4,7 @@ class InquirySecond::Answer
   include InquirySecond::Addon::Answer::Body
   include InquirySecond::Addon::KintoneApp::Answer
   include Cms::Addon::GroupPermission
+  include InquirySecond::Addon::CustomForm
 
   attr_accessor :cur_node
 

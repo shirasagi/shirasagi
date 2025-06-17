@@ -76,7 +76,7 @@ class InquirySecond::Agents::Nodes::FormController < ApplicationController
     @answer.remote_addr = remote_addr
     @answer.user_agent = request.user_agent
     @answer.member = @cur_member
-    @answer.source_url = params[:item].try(:[], :source_url)
+    #@answer.source_url = params[:item].try(:[], :source_url)
     @answer.set_data(@data)
     @answer.group_ids = @group ? [ @group.id ] : @cur_node.group_ids
     if @page
