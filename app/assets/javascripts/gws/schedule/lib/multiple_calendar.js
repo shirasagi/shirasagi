@@ -135,6 +135,23 @@ SS.ready(function() {
           }
         },
         eventAfterAllRender: function (_view) {
+          var attendance, todo;
+          todo = $('.fc .fc-withTodo-button');
+          if (todo.length) {
+            if (todo.hasClass('fc-state-active')) {
+              $('.fc .fc-event-todo').show();
+            } else {
+              $('.fc .fc-event-todo').hide();
+            }
+          }
+          attendance = $('.fc .fc-withAbsence-button');
+          if (attendance.length) {
+            if (attendance.hasClass('fc-state-active')) {
+              $('.fc .fc-event-user-attendance-absence').removeClass('hide');
+            } else {
+              $('.fc .fc-event-user-attendance-absence').addClass('hide');
+            }
+          }
           $(window).trigger('resize');
         }
       };
