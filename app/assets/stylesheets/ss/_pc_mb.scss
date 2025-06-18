@@ -921,24 +921,44 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         background-color: $gray1;
         @include navi-icon;
         color: $black;
-        &:before {
-          content: "";
-          position: absolute;
-          top: 4px;
-          left: 10px;
-          width: 32px;
-          height: 32px;
-          background: url(/assets/img/ic-main-navi.png) no-repeat left top;
-        }
+        margin-left: 10px;
+        // &:before {
+        //   content: "";
+        //   position: absolute;
+        //   top: 4px;
+        //   left: 10px;
+        //   width: 32px;
+        //   height: 32px;
+        //   background: url(/assets/img/ic-main-navi.png) no-repeat left top;
+        // }
         &:hover {
           position: relative;
           color: $orange;
           text-decoration: none;
         }
       }
-      a.navi-icon:hover:before {
-        background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
+      // a.navi-icon:hover:before {
+      //   background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
+      // }
+      a[class*="icon-"] svg {
+        width: 32px;
+        height: 32px;
+        margin-right: 6px;
+        vertical-align: middle;
       }
+      
+      a[class*="icon-"].has-inline-svg {
+        display: flex;
+        align-items: center;
+        padding-left: 13px !important;
+      }
+
+      a[class*="icon-"].has-custom-icon {
+        display: flex;
+        align-items: center;
+        padding-left: 20px !important;
+      }
+
       background-color: $gray1;
       &:hover {
         background-color: $gray1;

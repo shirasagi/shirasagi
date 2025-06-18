@@ -1,5 +1,5 @@
 <nav class="mod-navi current-navi">
-  <h2><%= link_to @cur_site.menu_bookmark_label || t('modules.gws/bookmark'), gws_bookmark_main_path, class: 'icon-bookmark' %></h2>
+  <%= gws_menu_icon(:bookmark, 'modules.gws/bookmark', gws_bookmark_main_path) %>
 
   <h3><%= link_to t('ss.navi.readable'), gws_bookmark_items_path(folder_id: @cur_user.bookmark_root_folder(@cur_site)), class: 'readable' %></h3>
   <h3><%= link_to Gws::Bookmark::Folder.model_name.human, gws_bookmark_folders_path, class: 'management' %></h3>
