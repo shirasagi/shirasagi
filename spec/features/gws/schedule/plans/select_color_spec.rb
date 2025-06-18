@@ -1,16 +1,17 @@
 require 'spec_helper'
 
-describe 'gws_schedule_plans_form', type: :feature, dbscope: :example do
+describe 'gws_schedule_plans_form', type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
 
   before { login_gws_user }
 
-  describe 'select color', js: true do
+  describe 'select color' do
     context 'new' do
       let(:new_path) { new_gws_schedule_plan_path site }
 
       before do
         visit new_path
+        wait_for_color_picker_ready find('input[name="item[color]"]')
       end
 
       it do
@@ -34,6 +35,7 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example do
 
       before do
         visit edit_path
+        wait_for_color_picker_ready find('input[name="item[color]"]')
       end
 
       it do
@@ -56,6 +58,7 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example do
 
       before do
         visit copy_path
+        wait_for_color_picker_ready find('input[name="item[color]"]')
       end
 
       it do
