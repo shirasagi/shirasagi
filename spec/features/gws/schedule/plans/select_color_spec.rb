@@ -11,7 +11,7 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example, js: true 
 
       before do
         visit new_path
-        wait_for_js_ready
+        wait_for_color_picker_ready find('input[name="item[color]"]')
       end
 
       it do
@@ -35,7 +35,7 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example, js: true 
 
       before do
         visit edit_path
-        wait_for_js_ready
+        wait_for_color_picker_ready find('input[name="item[color]"]')
       end
 
       it do
@@ -58,7 +58,7 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example, js: true 
 
       before do
         visit copy_path
-        wait_for_js_ready
+        wait_for_color_picker_ready find('input[name="item[color]"]')
       end
 
       it do
