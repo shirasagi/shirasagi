@@ -6,6 +6,8 @@ module Tasks
       def start
         conf = "#{Rails.root}/config/unicorn.rb"
         env  = ENV['RAILS_ENV'] || "development"
+
+        puts "Please consider using Puma because Unicorn is going to be unsupported"
         sh "bundle exec unicorn_rails -c #{conf} -E #{env} -D"
       end
 
