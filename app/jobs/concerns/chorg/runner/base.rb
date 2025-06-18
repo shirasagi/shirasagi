@@ -95,7 +95,10 @@ module Chorg::Runner::Base
 
     task.performance.collect_update_all do
       with_entity_updates(@models, substitutor, models_scope) do |entity, updates|
-        # next if updates.blank?
+        # グループウェアの場合、更新がなければスキップ。
+        # 以下のコードはコメントアウトされていたので、CMS の場合は更新がなくても保存した方が良いんだと思う。
+        next if self.class.ss_mode == :gws && updates.blank?
+
         put_log("#{entity_title(entity)} has some updates. module=#{entity.class}") if updates.present?
         with_inc_depth do
           updates = updates.select { |k, v| v.present? }
