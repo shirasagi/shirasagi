@@ -12,9 +12,11 @@ module Chorg::PrimitiveRunner
   def run_primitive_chorg
     run_callbacks :primitive_chorg do
       Chorg::Model::Changeset::TYPES.each do |type|
-        # put_log("==#{type}==")
-        task.log("==#{I18n.t("chorg.views.revisions/edit.#{type}")}==")
-        with_inc_depth { @item.send("#{type}_changesets").each(&method("execute_#{type}")) }
+        task.performance.collect_changeset(type) do
+          # put_log("==#{type}==")
+          task.log("==#{I18n.t("chorg.views.revisions/edit.#{type}")}==")
+          with_inc_depth { @item.send("#{type}_changesets").each(&method("execute_#{type}")) }
+        end
       end
     end
   end
