@@ -100,28 +100,30 @@ module Chorg::MongoidSupport
       return @base_model
     end
 
-    def entity.run_callbacks(kind, *args, **options, &block)
-      overall_started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-      kind_started = kind_finished = overall_started
-
-      ret =
-        super(kind, *args, **options) do
-          kind_started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-          ret = block.call if block
-          kind_finished = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-          ret
-        end
-
-      overall_finished = Process.clock_gettime(Process::CLOCK_MONOTONIC)
-
-      if SS::Task::PerformanceCollector.current
-        SS::Task::PerformanceCollector.current.collect_callback(
-          kind, self, overall_started..overall_finished, kind_started..kind_finished
-        )
-      end
-
-      ret
-    end
+    # 以下のコメントを解除すると、非常に細かい性能指標を取得することができるが、
+    # 細かすぎて実行時間への影響が大きいので、普段は利用しないようにコメントアウトしておく
+    # def entity.run_callbacks(kind, *args, **options, &block)
+    #   overall_started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    #   kind_started = kind_finished = overall_started
+    #
+    #   ret =
+    #     super(kind, *args, **options) do
+    #       kind_started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    #       ret = block.call if block
+    #       kind_finished = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    #       ret
+    #     end
+    #
+    #   overall_finished = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    #
+    #   if SS::Task::PerformanceCollector.current
+    #     SS::Task::PerformanceCollector.current.collect_callback(
+    #       kind, self, overall_started..overall_finished, kind_started..kind_finished
+    #     )
+    #   end
+    #
+    #   ret
+    # end
   end
 
   def all_cms_sites
