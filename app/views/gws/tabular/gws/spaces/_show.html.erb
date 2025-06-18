@@ -1,0 +1,38 @@
+<dl class="see">
+  <dt><%= @model.t :i18n_name %></dt>
+  <% if I18n.available_locales.length == 1 %>
+    <dd><%= @item.i18n_name %></dd>
+  <% else %>
+    <dd></dd>
+    <% SS.each_locale_in_order do |lang| %>
+      <dt class="depth-2 i18n_name"><%= @model.t(:"i18n_name_#{lang}", default: t("ss.options.lang.#{lang}", default: lang.to_s)) %></dt>
+      <dd class="depth-2 i18n_name">
+        <%= @item.i18n_name_translations[lang] %>
+      </dd>
+    <% end %>
+  <% end %>
+
+  <% if false %>
+  <dt><%= @model.t :i18n_description %></dt>
+  <% if I18n.available_locales.length == 1 %>
+    <dd><%= sanitize ss_auto_link_urls br(@item.i18n_description, html_escape: false) %></dd>
+  <% else %>
+    <dd></dd>
+    <% SS.each_locale_in_order do |lang| %>
+      <dt class="depth-2 i18n_description"><%= @model.t(:"i18n_description_#{lang}", default: t("ss.options.lang.#{lang}", default: lang.to_s)) %></dt>
+      <dd class="depth-2 i18n_description">
+        <%= sanitize ss_auto_link_urls br(@item.i18n_description_translations[lang], html_escape: false) %>
+      </dd>
+    <% end %>
+  <% end %>
+  <% end %>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.state_label %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :memo %></dt>
+  <dd><%= auto_link br(@item.memo) %></dd>
+</dl>

@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @model.human_attribute_name :type %></dt>
+  <dd></dd>
+
+  <% view_type_options.each_with_index do |mod_def, index| %>
+    <dt class="depth-2"><%= mod_def[1][:name] %></dt>
+    <dd class="depth-2">
+      <% mod_def[1][:items].each do |name, type| %>
+        <label><%= f.radio_button :type, type, id: nil %> <%= name %></label>
+      <% end %>
+    </dd>
+  <% end %>
+
+  <dt><%= @model.human_attribute_name :form_id %></dt>
+  <dd><%= f.select :form_id, forms_options, include_blank: true %></dd>
+</dl>

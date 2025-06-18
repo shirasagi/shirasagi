@@ -1,0 +1,13 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% if type == :form %>
+    <%=
+      if field_type == "integer"
+        number_field_tag "#{form.object_name}[col_#{column.id}]", value.presence || default_value, id: nil, min: min_value, max: max_value
+      else
+        text_field_tag "#{form.object_name}[col_#{column.id}]", value.presence || default_value, id: nil, min: min_value, max: max_value, inputmode: "decimal"
+      end
+    %>
+  <% else %>
+    <%= value %>
+  <% end %>
+<% end %>

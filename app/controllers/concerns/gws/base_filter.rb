@@ -16,6 +16,8 @@ module Gws::BaseFilter
     before_action :set_current_site
     before_action :set_gws_logged_in, if: ->{ @cur_user }
     before_action :set_current_group, if: ->{ @cur_user }
+    # SS::BaseFilter#set_model の呼び出しはここ。set_current_site の後ろで set_crumbs の前
+    before_action :set_model
     before_action :set_crumbs
     after_action :put_history_log, if: ->{ @cur_user }
     navi_view "gws/main/navi"

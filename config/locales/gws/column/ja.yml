@@ -30,20 +30,6 @@ ja:
       - "以下の項目に適切な値を設定するか%{link}から適切な値を設定してください。"
     other_value: その他
 
-  gws:
-    columns:
-      gws/title: タイトル
-      gws/text_field: 一行入力
-      gws/date_field: 日付入力
-      gws/number_field: 数値入力
-      gws/url_field: URL入力
-      gws/text_area: 複数行入力
-      gws/select: ドロップダウン
-      gws/radio_button: ラジオボタン
-      gws/check_box: チェックボックス
-      gws/file_upload: ファイルアップロード
-      gws/section: セクション
-
   modules:
     addons:
       gws/column/text_like: 制約条件

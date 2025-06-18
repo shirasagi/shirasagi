@@ -5,6 +5,10 @@ class Gws::Column::DateField < Gws::Column::Base
   permit_params :input_type, :place_holder, :html_tag, :html_additional_attr
 
   class << self
+    def as_plugin
+      @plugin ||= Gws::Plugin.new(plugin_type: "column", path: "gws/date_field", model_class: self)
+    end
+
     def default_attributes
       attributes = super
       attributes[:input_type] = "date"

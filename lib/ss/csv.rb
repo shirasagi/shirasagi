@@ -34,19 +34,22 @@ class SS::Csv
       "text/csv; charset=#{@encoding}"
     end
 
+    def headers
+      @columns.map do |column|
+        head_proc = column[:head]
+        if head_proc.blank?
+          label = @model_class.t(column[:id])
+        else
+          label = @context.instance_exec(&head_proc)
+        end
+        [ label, column[:id] ]
+      end
+    end
+
     private
 
     def _draw_header
-      terms = @columns.map do |column|
-        head_proc = column[:head]
-        if head_proc.blank?
-          @model_class.t column[:id]
-        else
-          @context.instance_exec(&head_proc)
-        end
-      end
-
-      terms.to_csv
+      headers.map { |label, _key| label }.to_csv
     end
 
     def _draw_data(item)
@@ -166,6 +169,20 @@ class SS::Csv
       ret.instance_variable_set(:@columns, @columns)
       ret
     end
+
+    def headers(criteria, **options)
+      encoding = options[:encoding]
+      if encoding && encoding.casecmp("UTF-8") == 0
+        klass = UTF8Exporter
+      else
+        klass = ShiftJisExporter
+      end
+
+      ret = klass.new(criteria, options)
+      ret.instance_variable_set(:@context, @context)
+      ret.instance_variable_set(:@columns, @columns)
+      ret.headers
+    end
   end
 
   class DSLImporter
@@ -256,13 +273,13 @@ class SS::Csv
       @row = row
       @item = item
 
-      head_value_array = row.headers.map { |h| [ h.split("/"), row[h].try(:strip) ] }
+      head_value_array = row.headers.map { |h| [ SS::Csv.split_column_name_for_csv(h), row[h].try(:strip) ] }
 
       head_value_array.slice_when { |lhs, rhs| lhs.first.first != rhs.first.first }.each do |chunk|
         heads, value = chunk.first
 
         if chunk.length == 1
-          import_simple_column(row, item, heads.first, value)
+          import_simple_column(row, item, SS::Csv.unescape_column_name_for_csv(heads.first), value)
           next
         end
 
@@ -286,7 +303,9 @@ class SS::Csv
           end
         end
 
-        item.send("#{@options.dig(:fields, :column_values) || "column_values"}=", column_values)
+        field_name = @options.dig(:fields, :column_values) || "column_values"
+        field_setter = "#{field_name}="
+        item.send(field_setter, column_values) if item.respond_to?(field_setter)
       end
     end
 
@@ -402,6 +421,20 @@ class SS::Csv
       false
     end
 
+    def split_column_name_for_csv(name)
+      name.split(/(?<!\\)\//, 2)
+    end
+
+    def escape_column_name_for_csv(name)
+      return name if name.blank?
+      name.gsub("/", '\/')
+    end
+
+    def unescape_column_name_for_csv(name)
+      return name if name.blank?
+      name.gsub('\/', "/")
+    end
+
     private
 
     def with_keeping_io_position(io)
@@ -419,6 +452,7 @@ class SS::Csv
 
     def _detect_encoding(io)
       bom = io.read(3)
+      return Encoding::ASCII_8BIT if bom.blank?
       return Encoding::UTF_8 if utf8_bom?(bom)
 
       body = bom + io.read(997)
