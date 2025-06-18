@@ -47,8 +47,8 @@ class SS::UserGroupHistory
     self.group_names     = groups.map(&:name)
     self.inc_group_names = inc_groups.map(&:name)
     self.dec_group_names = dec_groups.map(&:name)
-    self.groups_hash     = groups.map { |m| [m.id, m.name] }.to_h
-    self.inc_groups_hash = inc_groups.map { |m| [m.id, m.name] }.to_h
-    self.dec_groups_hash = dec_groups.map { |m| [m.id, m.name] }.to_h
+    self.groups_hash     = Gws.id_name_hash(groups)
+    self.inc_groups_hash = Gws.id_name_hash(inc_groups)
+    self.dec_groups_hash = Gws.id_name_hash(dec_groups)
   end
 end
