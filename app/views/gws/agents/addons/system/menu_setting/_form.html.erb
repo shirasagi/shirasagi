@@ -13,12 +13,11 @@
       </dd>
       <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
       <dd>
-        <% icon_file = @item.send("menu_#{type}_icon_image") %>
         <span style="display: flex; align-items: center; gap: 0.5em; margin-left: 1em;">
-          <% if icon_file.present? %>
-            <%= image_tag icon_file.url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
+          <% if @item.send("menu_#{type}_icon_image").present? %>
+            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
           <% else %>
-            <%= image_tag "/assets/img/ic-#{type}.svg", class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
+            <%= gws_inline_svg(type, class: "icon-#{type}", style: "width: 50px; height: 50px;") %>
           <% end %>
           <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
         </span>
