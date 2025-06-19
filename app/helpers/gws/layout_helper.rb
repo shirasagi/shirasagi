@@ -48,4 +48,18 @@ module Gws::LayoutHelper
       end
     end
   end
+
+  def gws_inline_svg(type, options = {})
+    svg_path = Rails.root.join("public/assets/img/ic-#{type}.svg")
+    return "" unless File.exist?(svg_path)
+    svg_content = File.read(svg_path)
+    doc = Nokogiri::HTML::DocumentFragment.parse(svg_content)
+    svg = doc.at_css("svg")
+    base_class = "icon-#{type} has-inline-svg"
+    if svg
+      svg["class"] = [svg["class"], base_class, options.delete(:class)].compact.join(" ")
+      options.each { |k, v| svg[k.to_s] = v }
+    end
+    raw(doc.to_html)
+  end
 end
