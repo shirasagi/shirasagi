@@ -918,9 +918,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       a {
         display: block;
         position: relative;
+        margin-left: 10px;
         background-color: $gray1;
         @include navi-icon;
-        margin-left: 10px;
         color: $black;
         // &:before {
         //   content: "";
@@ -1207,46 +1207,34 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -192px !important;
   }
   .icon-conf:before {
-    background: url(/assets/img/ic-conf.svg) no-repeat center center !important;
+    background-position: left -224px !important;
   }
   .icon-conf:hover:before {
-    background: url(/assets/img/ic-conf.svg) no-repeat center center !important;
-    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+    background-position: -32px -224px !important;
   }
   // .icon-portal:before {
-  //   background: url(/assets/img/ic-portal.svg) no-repeat center center !important;
+  //   background-position: left -256px !important;
   // }
   // .icon-portal:hover:before {
-  //   background: url(/assets/img/ic-portal.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
-  // }
-  // .icon-notice:before {
-  //   background: url(/assets/img/ic-notice.svg) no-repeat center center !important;
-  // }
-  // .icon-notice:hover:before {
-  //   background: url(/assets/img/ic-notice.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -256px !important;
   // }
   // .icon-schedule:before {
-  //   background: url(/assets/img/ic-schedule.svg) no-repeat center center !important;
+  //   background-position: left -288px !important;
   // }
   // .icon-schedule:hover:before {
-  //   background: url(/assets/img/ic-schedule.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -288px !important;
   // }
   // .icon-board:before {
-  //   background: url(/assets/img/ic-board.svg) no-repeat center center !important;
+  //   background-position: left -320px !important;
   // }
   // .icon-board:hover:before {
-  //   background: url(/assets/img/ic-board.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -320px !important;
   // }
   // .icon-todo:before {
-  //   background: url(/assets/img/ic-todo.svg) no-repeat center center !important;
+  //   background-position: left -352px !important;
   // }
   // .icon-todo:hover:before {
-  //   background: url(/assets/img/ic-todo.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -352px !important;
   // }
   .icon-facility:before {
     background-position: left -384px !important;
@@ -1255,137 +1243,106 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -384px !important;
   }
   // .icon-workflow:before {
-  //   background: url(/assets/img/ic-workflow.svg) no-repeat center center !important;
+  //   background-position: left -416px !important;
   // }
   // .icon-workflow:hover:before {
-  //   background: url(/assets/img/ic-workflow.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
-  // }
-  // .icon-workflow2:before {
-  //   background: url(/assets/img/ic-workflow2.svg) no-repeat center center !important;
-  // }
-  // .icon-workflow2:hover:before {
-  //   background: url(/assets/img/ic-workflow2.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -416px !important;
   // }
   // .icon-search:before {
-  //   background: url(/assets/img/ic-elasticsearch.svg) no-repeat center center !important;
+  //   background-position: left -448px !important;
   // }
   // .icon-search:hover:before {
-  //   background: url(/assets/img/ic-elasticsearch.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -448px !important;
   // }
   // .icon-message:before {
-  //   background: url(/assets/img/ic-message.svg) no-repeat center center !important;
+  //   background-position: left -480px !important;
   // }
   // .icon-message:hover:before {
-  //   background: url(/assets/img/ic-message.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -480px !important;
   // }
   // .icon-memo:before {
-  //   background: url(/assets/img/ic-memo.svg) no-repeat center center !important;
+  //   background-position: left -480px !important;
   // }
   // .icon-memo:hover:before {
-  //   background: url(/assets/img/ic-memo.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -480px !important;
   // }
   // .icon-report:before {
-  //   background: url(/assets/img/ic-report.svg) no-repeat center center !important;
+  //   background-position: left -512px !important;
   // }
   // .icon-report:hover:before {
-  //   background: url(/assets/img/ic-report.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -512px !important;
   // }
-  // .icon-qna:before {
-  //   background: url(/assets/img/ic-qna.svg) no-repeat center center !important;
+  // .icon-question:before {
+  //   background-position: left -640px !important;
   // }
-  // .icon-qna:hover:before {
-  //   background: url(/assets/img/ic-qna.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  // .icon-question:hover:before {
+  //   background-position: -32px -640px !important;
   // }
   // .icon-circular:before {
-  //   background: url(/assets/img/ic-circular.svg) no-repeat center center !important;
+  //   background-position: left -544px !important;
   // }
   // .icon-circular:hover:before {
-  //   background: url(/assets/img/ic-circular.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -544px !important;
   // }
   // .icon-monitor:before {
-  //   background: url(/assets/img/ic-monitor.svg) no-repeat center center !important;
+  //   background-position: left -672px !important;
   // }
   // .icon-monitor:hover:before {
-  //   background: url(/assets/img/ic-monitor.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -672px !important;
   // }
   // .icon-share:before {
-  //   background: url(/assets/img/ic-share.svg) no-repeat center center !important;
+  //   background-position: left -576px !important;
   // }
   // .icon-share:hover:before {
-  //   background: url(/assets/img/ic-share.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -576px !important;
   // }
-  // .icon-shared_address:before {
-  //   background: url(/assets/img/ic-personal_address.svg) no-repeat center center !important;
+  // .icon-address:before {
+  //   background-position: left -608px !important;
   // }
-  // .icon-shared_address:hover:before {
-  //   background: url(/assets/img/ic-personal_address.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
-  // }
-  // .icon-personal_address:before {
-  //   background: url(/assets/img/ic-personal_address.svg) no-repeat center center !important;
-  // }
-  // .icon-personal_address:hover:before {
-  //   background: url(/assets/img/ic-personal_address.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  // .icon-address:hover:before {
+  //   background-position: -32px -608px !important;
   // }
   // .icon-discussion:before {
-  //   background: url(/assets/img/ic-discussion.svg) no-repeat center center !important;
+  //   background-position: left -736px !important;
   // }
   // .icon-discussion:hover:before {
-  //   background: url(/assets/img/ic-discussion.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -736px !important;
   // }
   // .icon-reminder:before {
-  //   background: url(/assets/img/ic-reminder.svg) no-repeat center center !important;
+  //   background-position: left -768px !important;
   // }
   // .icon-reminder:hover:before {
-  //   background: url(/assets/img/ic-reminder.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -768px !important;
   // }
   // .icon-bookmark:before {
-  //   background: url(/assets/img/ic-bookmark.svg) no-repeat center center !important;
+  //   background-position: left -800px !important;
   // }
   // .icon-bookmark:hover:before {
-  //   background: url(/assets/img/ic-bookmark.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -800px !important;
   // }
   // .icon-faq:before {
-  //   background: url(/assets/img/ic-faq.svg) no-repeat center center !important;
+  //   background-position: left -832px !important;
   // }
   // .icon-faq:hover:before {
-  //   background: url(/assets/img/ic-faq.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -832px !important;
   // }
   // .icon-attendance:before {
-  //   background: url(/assets/img/ic-attendance.svg) no-repeat center center !important;
+  //   background-position: left -864px !important;
   // }
   // .icon-attendance:hover:before {
-  //   background: url(/assets/img/ic-attendance.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -864px !important;
   // }
   // .icon-presence:before {
-  //   background: url(/assets/img/ic-presence.svg) no-repeat center center !important;
+  //   background-position: left -896px !important;
   // }
   // .icon-presence:hover:before {
-  //   background: url(/assets/img/ic-presence.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -896px !important;
   // }
   // .icon-survey:before {
-  //   background: url(/assets/img/ic-survey.svg) no-repeat center center !important;
+  //   background-position: left -928px !important;
   // }
   // .icon-survey:hover:before {
-  //   background: url(/assets/img/ic-survey.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -928px !important;
   // }
   .icon-trash:before {
     background-position: left -960px !important;
@@ -1400,32 +1357,22 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     background-position: -32px -992px !important;
   }
   // .icon-affair:before {
-  //   background: url(/assets/img/ic-affair.svg) no-repeat center center !important;
+  //   background-position: left -1024px !important;
   // }
   // .icon-affair:hover:before {
-  //   background: url(/assets/img/ic-affair.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -1024px !important;
   // }
-  // .icon-affair2:before {
-  //   background: url(/assets/img/ic-affair2.svg) no-repeat center center !important;
+  // .icon-daily-report:before {
+  //   background-position: left -1056px !important;
   // }
-  // .icon-affair2:hover:before {
-  //   background: url(/assets/img/ic-affair2.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
-  // }
-  // .icon-daily_report:before {
-  //   background: url(/assets/img/ic-daily_report.svg) no-repeat center center !important;
-  // }
-  // .icon-daily_report:hover:before {
-  //   background: url(/assets/img/ic-daily_report.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  // .icon-daily-report:hover:before {
+  //   background-position: -32px -1056px !important;
   // }
   // .icon-workload:before {
-  //   background: url(/assets/img/ic-workload.svg) no-repeat center center !important;
+  //   background-position: left -1088px !important;
   // }
   // .icon-workload:hover:before {
-  //   background: url(/assets/img/ic-workload.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  //   background-position: -32px -1088px !important;
   // }
   .icon-export:before {
     background-position: left -1120px !important;
@@ -4258,14 +4205,8 @@ table.check-links-erros {
     }
   }
 }
-
-// gwsメニュー設定画面のimgタグのアイコン用スタイル
-.nav-icon-img {
-  width: 17px;
-  height: 17px;
-  margin-right: 15px;
-  vertical-align: middle;
-}
+// -------------------------------------------------------------------------------------------------
+// GWSメニューアイコン用スタイル
 
 // カスタムアイコン・SVGアイコン共通: before疑似要素を無効化
 .main-navi [class*="icon-"].has-custom-icon:before,
@@ -4275,6 +4216,13 @@ table.check-links-erros {
 }
 
 // カスタムアイコン用
+.nav-icon-img {
+  width: 17px;
+  height: 17px;
+  margin-right: 15px;
+  vertical-align: middle;
+}
+
 .main-navi h2 a.has-custom-icon {
   display: flex;
   align-items: center;
