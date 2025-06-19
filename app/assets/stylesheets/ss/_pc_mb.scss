@@ -920,8 +920,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         position: relative;
         background-color: $gray1;
         @include navi-icon;
-        color: $black;
         margin-left: 10px;
+        color: $black;
         // &:before {
         //   content: "";
         //   position: absolute;
@@ -4270,8 +4270,8 @@ table.check-links-erros {
 // カスタムアイコン・SVGアイコン共通: before疑似要素を無効化
 .main-navi [class*="icon-"].has-custom-icon:before,
 .main-navi [class*="icon-"].has-inline-svg:before {
-  display: none !important;
   content: none !important;
+  display: none !important;
 }
 
 // カスタムアイコン用
