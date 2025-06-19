@@ -759,24 +759,24 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     position: relative;
     @include navi-icon;
     color: $black;
-    // &:before {
-    //   content: "";
-    //   position: absolute;
-    //   top: 4px;
-    //   left: 10px;
-    //   width: 32px;
-    //   height: 32px;
-    //   background: url(/assets/img/ic-main-navi.png) no-repeat left top;
-    // }
-    // &:hover {
-    //   position: relative;
-    //   color: $orange;
-    //   text-decoration: none;
-    // }
+    &:before {
+      content: "";
+      position: absolute;
+      top: 4px;
+      left: 10px;
+      width: 32px;
+      height: 32px;
+      background: url(/assets/img/ic-main-navi.png) no-repeat left top;
+    }
+    &:hover {
+      position: relative;
+      color: $orange;
+      text-decoration: none;
+    }
   }
-  // h2 a:hover:before {
-  //   background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
-  // }
+  h2 a:hover:before {
+    background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
+  }
   h2.current {
     background-color: $gray1;
   }
@@ -1169,50 +1169,50 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   }
 }
 
-// .main-navi, .mod-navi {
-//   .icon-node:before {
-//     background-position: left -32px !important;
-//   }
-//   .icon-node:hover:before, .icon-node.current:before {
-//     background-position: -32px -32px !important;
-//   }
-//   .icon-page:before {
-//     background-position: left -64px !important;
-//   }
-//   .icon-page:hover:before, .icon-page.current:before {
-//     background-position: -32px -64px !important;
-//   }
-//   .icon-part:before {
-//     background-position: left -96px !important;
-//   }
-//   .icon-part:hover:before, .icon-part.current:before {
-//     background-position: -32px -96px !important;
-//   }
-//   .icon-layout:before {
-//     background-position: left -128px !important;
-//   }
-//   .icon-layout:hover:before, .icon-layout.current:before {
-//     background-position: -32px -128px !important;
-//   }
-//   .icon-conv:before {
-//     background-position: left -160px !important;
-//   }
-//   .icon-conv:hover:before {
-//     background-position: -32px -160px !important;
-//   }
-//   .icon-write:before {
-//     background-position: left -192px !important;
-//   }
-//   .icon-write:hover:before, .icon-write.current:before {
-//     background-position: -32px -192px !important;
-//   }
-  // .icon-conf:before {
-  //   background: url(/assets/img/ic-conf.svg) no-repeat center center !important;
-  // }
-  // .icon-conf:hover:before {
-  //   background: url(/assets/img/ic-conf.svg) no-repeat center center !important;
-  //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
-  // }
+.main-navi, .mod-navi {
+  .icon-node:before {
+    background-position: left -32px !important;
+  }
+  .icon-node:hover:before, .icon-node.current:before {
+    background-position: -32px -32px !important;
+  }
+  .icon-page:before {
+    background-position: left -64px !important;
+  }
+  .icon-page:hover:before, .icon-page.current:before {
+    background-position: -32px -64px !important;
+  }
+  .icon-part:before {
+    background-position: left -96px !important;
+  }
+  .icon-part:hover:before, .icon-part.current:before {
+    background-position: -32px -96px !important;
+  }
+  .icon-layout:before {
+    background-position: left -128px !important;
+  }
+  .icon-layout:hover:before, .icon-layout.current:before {
+    background-position: -32px -128px !important;
+  }
+  .icon-conv:before {
+    background-position: left -160px !important;
+  }
+  .icon-conv:hover:before {
+    background-position: -32px -160px !important;
+  }
+  .icon-write:before {
+    background-position: left -192px !important;
+  }
+  .icon-write:hover:before, .icon-write.current:before {
+    background-position: -32px -192px !important;
+  }
+  .icon-conf:before {
+    background: url(/assets/img/ic-conf.svg) no-repeat center center !important;
+  }
+  .icon-conf:hover:before {
+    background: url(/assets/img/ic-conf.svg) no-repeat center center !important;
+    filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
+  }
   // .icon-portal:before {
   //   background: url(/assets/img/ic-portal.svg) no-repeat center center !important;
   // }
@@ -1248,12 +1248,12 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   //   background: url(/assets/img/ic-todo.svg) no-repeat center center !important;
   //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
   // }
-  // .icon-facility:before {
-  //   background-position: left -384px !important;
-  // }
-  // .icon-facility:hover:before {
-  //   background-position: -32px -384px !important;
-  // }
+  .icon-facility:before {
+    background-position: left -384px !important;
+  }
+  .icon-facility:hover:before {
+    background-position: -32px -384px !important;
+  }
   // .icon-workflow:before {
   //   background: url(/assets/img/ic-workflow.svg) no-repeat center center !important;
   // }
@@ -1387,18 +1387,18 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   //   background: url(/assets/img/ic-survey.svg) no-repeat center center !important;
   //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
   // }
-  // .icon-trash:before {
-  //   background-position: left -960px !important;
-  // }
-  // .icon-trash:hover:before {
-  //   background-position: -32px -960px !important;
-  // }
-  // .icon-facility2:before {
-  //   background-position: left -992px !important;
-  // }
-  // .icon-facility2:hover:before {
-  //   background-position: -32px -992px !important;
-  // }
+  .icon-trash:before {
+    background-position: left -960px !important;
+  }
+  .icon-trash:hover:before {
+    background-position: -32px -960px !important;
+  }
+  .icon-facility2:before {
+    background-position: left -992px !important;
+  }
+  .icon-facility2:hover:before {
+    background-position: -32px -992px !important;
+  }
   // .icon-affair:before {
   //   background: url(/assets/img/ic-affair.svg) no-repeat center center !important;
   // }
@@ -1427,41 +1427,41 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   //   background: url(/assets/img/ic-workload.svg) no-repeat center center !important;
   //   filter: brightness(0) saturate(100%) invert(53%) sepia(94%) saturate(7471%) hue-rotate(2deg) brightness(101%) contrast(105%);
   // }
-//   .icon-export:before {
-//     background-position: left -1120px !important;
-//   }
-//   .icon-export:hover:before {
-//     background-position: -32px -1120px !important;
-//   }
-//   .icon-import:before {
-//     background-position: left -1152px !important;
-//   }
-//   .icon-import:hover:before {
-//     background-position: -32px -1152px !important;
-//   }
-//   .icon-material::before {
-//     position: absolute;
-//     top: 8px;
-//     background: none !important;
-//     font-family: "Material Icons Outlined";
-//     font-size: 20px;
-//   }
-//   .icon-material-display::before {
-//     content: "display_settings" !important;
-//   }
-//   .icon-material-import-node::before {
-//     content: "drive_folder_upload" !important;
-//   }
-//   .icon-material-more-horiz::before {
-//     content: "more_horiz" !important;
-//   }
-//   .icon-material-settings::before {
-//     content: "settings" !important;
-//   }
-//   .icon-material-shortcut::before {
-//     content: "shortcut" !important;
-//   }
-// }
+  .icon-export:before {
+    background-position: left -1120px !important;
+  }
+  .icon-export:hover:before {
+    background-position: -32px -1120px !important;
+  }
+  .icon-import:before {
+    background-position: left -1152px !important;
+  }
+  .icon-import:hover:before {
+    background-position: -32px -1152px !important;
+  }
+  .icon-material::before {
+    position: absolute;
+    top: 8px;
+    background: none !important;
+    font-family: "Material Icons Outlined";
+    font-size: 20px;
+  }
+  .icon-material-display::before {
+    content: "display_settings" !important;
+  }
+  .icon-material-import-node::before {
+    content: "drive_folder_upload" !important;
+  }
+  .icon-material-more-horiz::before {
+    content: "more_horiz" !important;
+  }
+  .icon-material-settings::before {
+    content: "settings" !important;
+  }
+  .icon-material-shortcut::before {
+    content: "shortcut" !important;
+  }
+}
 
 // -------------------------------------------------------------------------------------------------
 // main
@@ -4259,41 +4259,6 @@ table.check-links-erros {
   }
 }
 
-// アップロード画像がある場合は疑似要素を無効化
-.icon-portal.has-custom-icon:before,
-.icon-notice.has-custom-icon:before,
-.icon-schedule.has-custom-icon:before,
-.icon-board.has-custom-icon:before,
-.icon-todo.has-custom-icon:before,
-.icon-reminder.has-custom-icon:before,
-.icon-presence.has-custom-icon:before,
-.icon-memo.has-custom-icon:before,
-.icon-bookmark.has-custom-icon:before,
-.icon-attendance.has-custom-icon:before,
-.icon-affair.has-custom-icon:before,
-.icon-affair2.has-custom-icon:before,
-.icon-workload.has-custom-icon:before,
-.icon-daily_report.has-custom-icon:before,
-.icon-report.has-custom-icon:before,
-.icon-share.has-custom-icon:before,
-.icon-workflow.has-custom-icon:before,
-.icon-workflow2.has-custom-icon:before,
-.icon-circular.has-custom-icon:before,
-.icon-monitor.has-custom-icon:before,
-.icon-survey.has-custom-icon:before,
-.icon-message.has-custom-icon:before,
-.icon-faq.has-custom-icon:before,
-.icon-qna.has-custom-icon:before,
-.icon-discussion.has-custom-icon:before,
-.icon-share.has-custom-icon:before,
-.icon-shared_address.has-custom-icon:before,
-.icon-personal_address.has-custom-icon:before,
-.icon-workload.has-custom-icon:before,
-.icon-elasticsearch.has-custom-icon:before,
-.icon-conf.has-custom-icon:before {
-  display: none !important;
-}
-
 // gwsメニューのimgタグのアイコン用スタイル
 .nav-icon-img {
   width: 17px;
@@ -4328,4 +4293,14 @@ table.check-links-erros {
 
 .main-navi h2 a.has-inline-svg:hover {
   color: $orange;
+}
+
+.main-navi [class*="icon-"].has-custom-icon:before {
+  display: none !important;
+  content: none !important;
+}
+
+.main-navi [class*="icon-"].has-inline-svg:before {
+  display: none !important;
+  content: none !important;
 }
