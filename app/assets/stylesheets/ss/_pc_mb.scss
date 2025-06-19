@@ -4261,23 +4261,31 @@ table.check-links-erros {
 
 // gwsメニューのimgタグのアイコン用スタイル
 .nav-icon-img {
-  width: 17px;
-  height: 17px;
+  width: 32px;
+  height: 32px;
   margin-right: 15px;
   vertical-align: middle;
 }
 
+// カスタムアイコン・SVGアイコン共通: before疑似要素を無効化
+.main-navi [class*="icon-"].has-custom-icon:before,
+.main-navi [class*="icon-"].has-inline-svg:before {
+  display: none !important;
+  content: none !important;
+}
+
+// カスタムアイコン用
 .main-navi h2 a.has-custom-icon {
   display: flex;
   align-items: center;
   padding-left: 20px !important;
+  &:hover {
+    // color: $orange !important;
+    text-decoration: underline !important;
+  }
 }
 
-.main-navi h2 a.has-custom-icon:hover {
-  color: $orange;
-}
-
-// svgアイコン用スタイル
+// デフォルトSVGアイコン用
 .main-navi [class*="icon-"] svg {
   width: 32px;
   height: 32px;
@@ -4289,18 +4297,8 @@ table.check-links-erros {
   display: flex;
   align-items: center;
   padding-left: 13px !important;
-}
-
-.main-navi h2 a.has-inline-svg:hover {
-  color: $orange;
-}
-
-.main-navi [class*="icon-"].has-custom-icon:before {
-  display: none !important;
-  content: none !important;
-}
-
-.main-navi [class*="icon-"].has-inline-svg:before {
-  display: none !important;
-  content: none !important;
+  &:hover {
+    // color: $orange !important;
+    text-decoration: underline !important;
+  }
 }
