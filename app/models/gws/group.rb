@@ -1,6 +1,7 @@
 class Gws::Group
   include SS::Model::Group
   include SS::Relation::File
+  include Fs::FilePreviewable
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::Group::AffairSetting
@@ -46,6 +47,17 @@ class Gws::Group
   validate :validate_parent_name, if: ->{ cur_site.present? }
 
   scope :site, ->(site) { self.and name: /^#{::Regexp.escape(site.name)}(\/|$)/ }
+
+  def file_previewable?(file, site: @cur_site, user: @cur_user, member: nil)
+    if site.blank? && file&.owner_item_type == "Gws::Group" && file&.owner_item_id.present?
+      site = Gws::Group.find(file.owner_item_id)
+    end
+
+    return false if user.blank?
+    return false if site.blank? || site.id.blank?
+
+    user.groups.in_group(site).active.present?
+  end
 
   private
 
