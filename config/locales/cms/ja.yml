@@ -951,6 +951,7 @@ ja:
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
       cms/site_search/setting: サイト内検索設定
+      cms/site_search/group: 組織
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/history_list: 閲覧履歴
@@ -1385,7 +1386,8 @@ ja:
         category_state: カテゴリーの選択
         organization_state: 組織の選択
         st_article_node_ids: 記事フォルダー
-        site_search_type: 検索種類
+        site_search_type: 検索種類の初期値
+        st_group_ids: 組織の設定
       cms/form:
         name: 名前
         order: 並び順
@@ -3255,6 +3257,8 @@ ja:
         - 検索フォームに組織の選択を表示します。
       st_article_node_ids:
         - サイト内検索の対象となる記事フォルダーを設定します。
+      site_search_type:
+        - 検索種類の初期値を設定します。
 
     cms/line/facility_search/category:
       name:
@@ -3378,6 +3382,10 @@ ja:
       st_categories:
         - サイト内検索で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+      st_group_ids:
+        - サイト内検索で使用する組織の一覧を設定します。
+        - 選択した部署とその配下の部署が検索対象となります。
+        - 設定されていない場合は全部署が対象となります。
 
     cms/syntax_checker/main_setting:
       syntax_check:

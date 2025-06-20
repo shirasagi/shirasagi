@@ -1048,7 +1048,7 @@ en:
         elasticsearch_deny: Exclusion path
         elasticsearch_site_ids: Site
         elasticsearch_indexes: Index
-        elasticsearch_outside: External site search
+        elasticsearch_outside: External site search (Fess)
       ss/addon/translate/site_setting:
         translate_state: Status
         translate_source_id: Source language code
