@@ -330,6 +330,7 @@ ja:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
       generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
+      batch_accessibility_check_notice: ※ 一括処理の場合、簡易なアクセシビリティチェックなどは実行されません。各ページについて確実にアクセシビリティチェックを実施されたい場合は、ページ単位で処理をされることをお勧めします。
     apis:
       categories:
         index: カテゴリーを選択する

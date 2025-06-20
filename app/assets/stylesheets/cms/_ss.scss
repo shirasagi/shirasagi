@@ -238,3 +238,11 @@ i.calendar-month {
   a { margin: 0 5px; }
   a:first-of-type { margin-left: 0; }
 }
+
+// Accessibility check notice
+.cms-accessibility-notice {
+  margin-left: 25px;
+  padding: 8px;
+  color: red;
+  text-align: left;
+}
