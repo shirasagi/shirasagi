@@ -54,7 +54,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
 
   context 'one site with hidden settings' do
     before do
-      site_search_node.update search_type_state: 'hide', search_target_state: 'hide',
+      site_search_node.update search_type_state: 'hide',
         article_node_state: 'hide', category_state: 'hide', organization_state: 'hide'
     end
 
