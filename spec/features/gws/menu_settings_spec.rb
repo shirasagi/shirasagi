@@ -71,11 +71,8 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         #
-        # メニュー設定のアイコンを変更
+        # ポータルのアイコンを変更
         #
-        within ".addon-gws-system-menu-setting", text: I18n.t("gws.site_config") do
-          expect(page).to have_css('select[name="item[menu_conf_state]"] option', text: I18n.t("ss.options.state.show"))
-        end
 
         within all(".addon-gws-system-menu-setting").first do
           within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
@@ -92,7 +89,11 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
             within "form" do
               click_on I18n.t("ss.buttons.upload")
             end
-            # expect(page).to have_css(".file-view", text: "logo.png")
+          end
+        end
+        within all(".addon-gws-system-menu-setting").first do
+          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
+            expect(page).to have_css(".file-view", text: /logo/)
           end
         end
 
@@ -112,7 +113,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         end
 
         #
-        # 変更後のメニュー設定の状態を確認
+        # 変更後のアイコンの状態を確認
         #
         visit index_path
         wait_for_js_ready
