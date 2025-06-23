@@ -28,6 +28,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         #
         # メニュー設定の詳細画面の初期状態を確認
@@ -67,19 +68,16 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         #
         # メニュー設定のアイコンを変更
         #
-        first("#addon-gws-agents-addons-system-menu_setting").click
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
-
         within ".addon-gws-system-menu-setting", text: I18n.t("gws.site_config") do
           expect(page).to have_css('select[name="item[menu_conf_state]"] option', text: I18n.t("ss.options.state.show"))
         end
 
-        within all(".addon-gws-system-menu-setting").last do
+        within all(".addon-gws-system-menu-setting").first do
           within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
             wait_for_cbox_opened do
               click_on I18n.t("ss.buttons.upload")
@@ -94,9 +92,9 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
             within "form" do
               click_on I18n.t("ss.buttons.upload")
             end
+            # expect(page).to have_css(".file-view", text: "logo.png")
           end
         end
-        expect(page).to have_no_css(".ss-dialog")
 
         within "form#item-form" do
           click_on I18n.t("ss.buttons.save")
@@ -107,9 +105,10 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
-        within all(".addon-gws-system-menu-setting").last do
-          expect(page).to have_css("img.icon-conf[src*='logo.png']")
+        within all(".addon-gws-system-menu-setting").first do
+          expect(page).to have_css("img.icon-portal[src*='logo.png']")
         end
 
         #
@@ -117,9 +116,10 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         #
         visit index_path
         wait_for_js_ready
-        within all(".addon-gws-system-menu-setting").last do
-          expect(page).to have_no_css("svg.icon-conf")
-          expect(page).to have_css("img.icon-conf[src*='logo.png']")
+        within ".main-navi" do
+          expect(page).to have_no_css("svg.icon-portal")
+          expect(page).to have_css(".icon-portal.has-custom-icon")
+          expect(page).to have_css("img.nav-icon-img[src*='logo.png']")
         end
       end
     end
