@@ -287,9 +287,13 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    context "svg file upload" do
-      it "accepts svg files" do
-        visit index_path
+    context "svg file upload and different user sees uploaded icon" do
+      let(:user1) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
+      let(:user2) { create :gws_user, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids }
+
+      it "user1 uploads icon and user2 sees it" do
+        # user1でログインしてアイコンをアップロード
+        login_user user1, to: index_path
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
 
@@ -354,6 +358,21 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         # ポータルページでSVGアイコンが表示されていることを確認
         visit index_path
         wait_for_js_ready
+        within ".main-navi" do
+          expect(page).to have_no_css("svg.icon-portal")
+          expect(page).to have_css(".icon-portal.has-custom-icon")
+          expect(page).to have_css("img.nav-icon-img[src*='test_icon.svg']")
+        end
+
+        # user1をログアウトしてuser2でログイン
+        within ".user-navigation" do
+          wait_for_event_fired("turbo:frame-load") { click_on user1.name }
+          click_on I18n.t("ss.logout")
+        end
+        login_user user2, to: index_path
+        wait_for_js_ready
+
+        # user2でもアップロードされたアイコンが表示されることを確認
         within ".main-navi" do
           expect(page).to have_no_css("svg.icon-portal")
           expect(page).to have_css(".icon-portal.has-custom-icon")
