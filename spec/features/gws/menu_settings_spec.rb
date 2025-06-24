@@ -124,5 +124,242 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context "multiple menu icons" do
+      it "changes multiple menu icons" do
+        visit index_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        within ".main-navi" do
+          click_on I18n.t("gws.site_config")
+        end
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+
+        # ポータルとスケジュールのアイコンを変更
+        menu_types = [:portal, :schedule]
+        menu_types.each do |menu_type|
+          within(all(".addon-gws-system-menu-setting").find { |el| el.has_css?("svg.icon-#{menu_type}") }) do
+            within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
+              wait_for_cbox_opened do
+                click_on I18n.t("ss.buttons.upload")
+              end
+            end
+          end
+          within_dialog do
+            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
+            wait_for_cbox_closed do
+              within "form" do
+                click_on I18n.t("ss.buttons.upload")
+              end
+            end
+          end
+        end
+
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        # 複数のアイコンが変更されていることを確認
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+
+        menu_types.each do |menu_type|
+          within(all(".addon-gws-system-menu-setting").find { |el| el.has_css?("img.icon-#{menu_type}") }) do
+            expect(page).to have_css("img.icon-#{menu_type}[src*='logo.png']")
+          end
+        end
+        visit index_path
+        wait_for_js_ready
+        within ".main-navi" do
+          within ".icon-portal" do
+            expect(page).to have_no_css("icon-portal.has-inline-svg")
+            expect(page).to have_css("img.nav-icon-img[src*='logo.png']")
+          end
+          within ".icon-schedule" do
+            expect(page).to have_no_css("icon-schedule.has-inline-svg")
+            expect(page).to have_css("img.nav-icon-img[src*='logo.png']")
+          end
+        end
+      end
+    end
+
+    context "icon removal" do
+      it "removes uploaded icon and restores default" do
+        visit index_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        within ".main-navi" do
+          click_on I18n.t("gws.site_config")
+        end
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+
+        # アイコンをアップロード
+        within all(".addon-gws-system-menu-setting").first do
+          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
+            wait_for_cbox_opened do
+              click_on I18n.t("ss.buttons.upload")
+            end
+          end
+        end
+        within_dialog do
+          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          end
+          wait_for_cbox_closed do
+            within "form" do
+              click_on I18n.t("ss.buttons.upload")
+            end
+          end
+        end
+
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        # アイコンがアップロードされていることを確認
+        within all(".addon-gws-system-menu-setting").first do
+          expect(page).to have_css("img.icon-portal[src*='logo.png']")
+        end
+
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+        # アイコンを削除
+        within all(".addon-gws-system-menu-setting").first do
+          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
+            click_on I18n.t("ss.buttons.delete")
+          end
+        end
+
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+        # デフォルトアイコンに戻っていることを確認
+        within all(".addon-gws-system-menu-setting").first do
+          expect(page).to have_css("svg.icon-portal")
+          expect(page).to have_no_css("img.icon-portal[src*='logo.png']")
+        end
+
+        visit index_path
+        wait_for_js_ready
+        within ".main-navi" do
+          expect(page).to have_css(".icon-portal.has-inline-svg")
+          expect(page).to have_no_css(".icon-portal.has-custom-icon")
+          expect(page).to have_no_css("img.nav-icon-img[src*='logo.png']")
+        end
+      end
+    end
+
+    context "svg file upload" do
+      it "accepts svg files" do
+        visit index_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        within ".main-navi" do
+          click_on I18n.t("gws.site_config")
+        end
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+
+        # SVGファイルをアップロード
+        within all(".addon-gws-system-menu-setting").first do
+          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
+            wait_for_cbox_opened do
+              click_on I18n.t("ss.buttons.upload")
+            end
+          end
+        end
+        within_dialog do
+          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/test_icon.svg"
+          end
+          wait_for_cbox_closed do
+            within "form" do
+              click_on I18n.t("ss.buttons.upload")
+            end
+          end
+        end
+
+        # SVGファイルが正常にアップロードされていることを確認
+        within all(".addon-gws-system-menu-setting").first do
+          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
+            expect(page).to have_css(".file-view", text: /test_icon/)
+          end
+        end
+
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        wait_for_ajax
+        wait_for_js_ready
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+
+        # SVGアイコンが表示されていることを確認
+        within all(".addon-gws-system-menu-setting").first do
+          expect(page).to have_css("img.icon-portal[src*='test_icon.svg']")
+        end
+
+        # ポータルページでSVGアイコンが表示されていることを確認
+        visit index_path
+        wait_for_js_ready
+        within ".main-navi" do
+          expect(page).to have_no_css("svg.icon-portal")
+          expect(page).to have_css(".icon-portal.has-custom-icon")
+          expect(page).to have_css("img.nav-icon-img[src*='test_icon.svg']")
+        end
+      end
+    end
   end
 end
