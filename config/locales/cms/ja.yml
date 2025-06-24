@@ -89,6 +89,8 @@ ja:
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
+    search_contents_fields:
+      keyword_place_holder: キーワードを入力
     search_contents_files: ファイル一覧
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索

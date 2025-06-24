@@ -62,7 +62,8 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     <dl class="site-search-keyword">
       <dt><%= t("ss.keyword") %></dt>
       <dd>
-        <%= f.text_field :keyword, id: nil, size: 30, autocomplete: "off", title: t('ss.keyword')
+        <%= f.text_field :keyword, id: nil, size: 30, autocomplete: "off", title: t('ss.keyword'),
+          placeholder: t('cms.search_contents_fields.keyword_place_holder')
         %><input class="btn send" type="submit" value="<%= t('ss.buttons.search') %>">
         <input class="btn reset" type="reset" value="<%= t('ss.buttons.reset') %>">
       </dd>
