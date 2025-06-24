@@ -47,7 +47,7 @@ module Gws::Addon::System::MenuSetting
   def set_menu_icon_owner
     %w(portal notice reminder presence schedule todo affair affair2 daily_report attendance bookmark memo board
        faq qna workload report workflow2 circular monitor survey share shared_address personal_address
-       staff_record links discussion contrast elasticsearch workflow conf).each do |name|
+       discussion contrast elasticsearch workflow conf).each do |name|
       icon_file = send("menu_#{name}_icon_image")
       next unless icon_file
 

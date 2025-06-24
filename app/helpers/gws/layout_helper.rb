@@ -23,7 +23,7 @@ module Gws::LayoutHelper
     label = @cur_site.send("menu_#{type}_label") || t(label_i18n)
     icon_class = "icon-#{type}"
 
-    svg_path = Rails.root.join("public/assets/img/ic-#{type}.svg")
+    svg_path = Rails.root.join("public/assets/img/icons/ic-#{type}.svg")
     svg_tag = ""
     if File.exist?(svg_path)
       svg_content = File.read(svg_path)
@@ -50,7 +50,7 @@ module Gws::LayoutHelper
   end
 
   def gws_inline_svg(type, options = {})
-    svg_path = Rails.root.join("public/assets/img/ic-#{type}.svg")
+    svg_path = Rails.root.join("public/assets/img/icons/ic-#{type}.svg")
     return "" unless File.exist?(svg_path)
     svg_content = File.read(svg_path)
     doc = Nokogiri::HTML::DocumentFragment.parse(svg_content)
