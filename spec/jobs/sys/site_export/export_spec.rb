@@ -43,12 +43,8 @@ describe Sys::SiteExportJob, dbscope: :example do
   end
 
   def execute
-    job = Sys::SiteExportJob.new
-    task = OpenStruct.new(source_site_id: site.id)
-    def task.log(_msg)
-    end
-    job.task = task
-    job.perform
+    job = ::Sys::SiteExportJob.new
+    job.bind("site_id" => site.id).perform
     job.instance_variable_get(:@output_zip)
   end
 

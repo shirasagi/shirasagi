@@ -19,10 +19,7 @@ describe Sys::SiteExportJob, dbscope: :example do
 
     it do
       job = ::Sys::SiteExportJob.new
-      job.task = ::Tasks::Cms.mock_task(
-        source_site_id: site.id
-      )
-      job.perform
+      job.bind("site_id" => site.id).perform
       output_zip = job.instance_variable_get(:@output_zip)
 
       expect(::File.size(output_zip)).to be > 0
