@@ -637,14 +637,13 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // nav
 #navi {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   width: 211px;
   min-width: 211px;
   padding-bottom: 120px;
   border-right: 1px solid #dcdcdc;
   border-bottom: 1px solid #dcdcdc;
   background: $white;
-  z-index: 10;
   .icon-material::before {
     top: 6px;
     left: 16px;
@@ -2115,11 +2114,11 @@ footer.send {
     .unused-message{
       position: absolute;
       background: rgba(173, 34, 4, 0.8);
-      color: white;
       padding: 3px 5px;
-      font-size: 10px;
+      color: white;
       top: 0;
       right: 0;
+      font-size: 10px;
       font-weight: bold;
     }
   }
