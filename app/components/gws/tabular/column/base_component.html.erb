@@ -1,0 +1,42 @@
+<% if type == :form || type == :show %>
+  <dt>
+    <%= sanitize_easy column.name %>
+    <% if type == :form && column.tooltips.present? %>
+      <div class="tooltip">?
+        <ul class="tooltip-content">
+          <% column.tooltips.each do |tooltip| %>
+            <li><%= tooltip %><br></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+    <% if column.required? %>
+      <%= required_mark %>
+    <% end %>
+  </dt>
+  <dd>
+    <% if type == :form && column.prefix_explanation.present? %>
+      <span class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></span>
+    <% end %>
+    <div class="gws-tabular-column <%= column.class.name.underscore.gsub('/', '-') %>" data-column-id="<%= column.id %>">
+      <% if column.prefix_label.present? %>
+        <span class="prefix"><%= column.prefix_label %></span>
+      <% end %>
+
+      <%= content %>
+
+      <% if column.postfix_label.present? %>
+        <span class="postfix"><%= column.postfix_label %></span>
+      <% end %>
+    </div>
+    <% if type == :form && column.postfix_explanation.present? %>
+      <span class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></span>
+    <% end %>
+  </dd>
+<% elsif type == :title || type == :meta %>
+  <div class="gws-tabular-column <%= column.class.name.underscore.gsub('/', '-') %>" data-column-id="<%= column.id %>">
+    <%= content %>
+  </div>
+<% else %>
+  <%= content %>
+<% end %>

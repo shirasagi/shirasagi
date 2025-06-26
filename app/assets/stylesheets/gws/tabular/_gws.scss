@@ -1,0 +1,213 @@
+.mod-navi {
+  &:has(.gws-tabular-icon-wrap) {
+    h2:first-child {
+      a {
+        padding: 4px 10px 4px 14px;
+
+        &:before {
+          content: none;
+        }
+      }
+    }
+
+    .gws-tabular-icon-wrap {
+      width: 30px;
+      margin-top: -2px;
+      margin-right: 6px;
+      line-height: 20px;
+      vertical-align: middle;
+    }
+  }
+}
+
+.gws-tabular-file-main-box {
+  .list-head {
+    margin: 0;
+    padding: 0;
+  }
+
+  .badge[data-count='0'] {
+    display: none;
+  }
+}
+
+.list-head {
+  .badge {
+    padding: 2px 4px;
+    border-radius: 20px;
+    background-color: $gray3;
+    color: $white;
+
+    &[data-count='0'] {
+      display: none;
+    }
+  }
+}
+.gws-tabular-form-head-container {
+  display: flex;
+  align-items: center;
+  gap: 0 10px;
+
+  .navi {
+    font-weight: normal;
+  }
+}
+
+.gws-tabular-column {
+  [inputmode="decimal"], [inputmode="numeric"] {
+    width: 12em;
+  }
+}
+
+.list-item {
+  .meta {
+    .gws-tabular-column {
+      display: inline;
+    }
+  }
+}
+
+.gws-tabular-column-group {
+  .depth-2 input {
+    margin: unset;
+  }
+}
+
+.gws-tabular-column-i18n-list {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  border-top: 1px solid #eee;
+  border-left: 1px solid #eee;
+}
+
+.gws-tabular-column-i18n-list-item {
+  display: contents;
+}
+
+.gws-tabular-column-i18n-list-item-lang {
+  padding: 6px 18px;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+  background-color: #fafafa;
+  color: #616161;
+}
+
+.gws-tabular-column-i18n-list-value {
+  padding: 6px 18px;
+  border-right: 1px solid #eee;
+  border-bottom: 1px solid #eee;
+}
+
+.gws-tabular-views-main-box {
+  .index {
+    .title, .meta {
+      .gws-tabular-column {
+        display: inline-block;
+      }
+    }
+
+    .meta {
+      display: flex;
+      gap: 5px;
+    }
+  }
+}
+
+.gws-tabular-icon-image {
+  //width: attr(data-size px, 32);
+  //height: attr(data-size px, 32);
+  object-fit: cover;
+  &[data-size="26"] {
+    width: 26px;
+    height: 26px;
+  }
+  &[data-size="32"] {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.addon-head {
+  h2:has(.gws-tabular-file-head) {
+    display: block;
+  }
+}
+
+.gws-tabular-file-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+
+  .actions {
+    display: inline-flex;
+    margin-left: auto;
+    gap: 10px;
+    font-weight: normal;
+  }
+}
+
+.gws-tabular-column-see.gws-column-see.see {
+  display: flex;
+  gap: 15px 10px;
+  flex-wrap: nowrap;
+
+  > dt {
+    width: calc((100% - 10px) * 0.3);
+    max-width: unset;
+    float: unset;
+    zoom: unset;
+    color: var(--text-color-dt);
+    font-weight: bold;
+  }
+
+  > dd {
+    margin: 0;
+    zoom: unset;
+  }
+
+  > dt ~ dt {
+    margin-top: unset;
+  }
+
+  @include mb {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0 10px;
+
+    > dt {
+      width: 100%;
+      min-width: initial;
+    }
+
+    > dd {
+      width: 100%;
+      margin-left: initial;
+    }
+  }
+}
+
+.addon-body:has(.gws-tabular-column-see) {
+  display: flex;
+  flex-direction: column;
+  gap: 15px 10px;
+}
+
+.gws-tabular-workflow-inspection {
+  .buttons {
+    display: flex;
+    gap: 5px;
+  }
+
+  .button-set {
+    display: flex;
+    gap: 5px;
+
+    &:last-child {
+      margin-left: auto;
+    }
+  }
+}
+
+.list-head-action-gws-tabular-approve {
+  display: inline-block;
+}

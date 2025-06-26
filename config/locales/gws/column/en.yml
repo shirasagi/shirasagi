@@ -30,20 +30,6 @@ en:
       - "Set appropriate values for the following items or set appropriate values from %{link}."
     other_value: Other
 
-  gws:
-    columns:
-      gws/title: Title
-      gws/text_field: Text
-      gws/date_field: Date
-      gws/number_field: Number
-      gws/url_field: URL
-      gws/text_area: Text Area
-      gws/select: Dropdown
-      gws/radio_button: Radio Button
-      gws/check_box: Checkbox
-      gws/file_upload: File Upload
-      gws/section: Section
-
   modules:
     addons:
       gws/column/text_like: Constraints
@@ -54,15 +40,15 @@ en:
     models:
       gws/column/base: Input items
       gws/column/title: Title
-      gws/column/text_field: Enter one line
-      gws/column/date_field: Enter date
-      gws/column/number_field: Enter number
-      gws/column/url_field: Enter URL
-      gws/column/text_area: Enter multiple lines
+      gws/column/text_field: Text
+      gws/column/date_field: Date
+      gws/column/number_field: Number
+      gws/column/url_field: URL
+      gws/column/text_area: Text Area
       gws/column/select: Dropdown
       gws/column/radio_button: Radio button
       gws/column/check_box: Checkbox
-      gws/column/file_upload: Upload file
+      gws/column/file_upload: File Upload
       gws/column/section: Section
     attributes:
       gws/column/base:

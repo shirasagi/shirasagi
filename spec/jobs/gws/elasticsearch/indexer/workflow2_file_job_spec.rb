@@ -40,8 +40,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "treated"
         )
-        item.update_workflow_user(site, user)
-        item.update_workflow_agent(site, nil)
+        item.update_workflow_user(site, user, nil)
+        item.update_workflow_agent(site, nil, nil)
         item.save!
         item.class.find(item.id)
       end
@@ -97,8 +97,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "treated"
         )
-        item.update_workflow_user(site, delegatee_user)
-        item.update_workflow_agent(site, user)
+        item.update_workflow_user(site, delegatee_user, delegatee_group)
+        item.update_workflow_agent(site, user, nil)
         item.save!
         item.class.find(item.id)
       end
@@ -154,8 +154,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "untreated"
         )
-        item.update_workflow_user(site, delegatee_user)
-        item.update_workflow_agent(site, user)
+        item.update_workflow_user(site, delegatee_user, delegatee_group)
+        item.update_workflow_agent(site, user, nil)
         item.save!
         item.class.find(item.id)
       end

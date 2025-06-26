@@ -24,7 +24,11 @@ module SS::Model::Group
     field :domains, type: SS::Extensions::Words
     field :gws_use, type: String
     field :upload_policy, type: String
+    # 書き出しパスのID; public/gws/ 以下のフォルダー名Add commentMore actions
+    field :path_id, type: String
+
     permit_params :name, :order, :activation_date, :expiration_date, :domains, :gws_use
+    permit_params :path_id
 
     default_scope -> { order_by(order: 1, name: 1) }
 
@@ -34,6 +38,7 @@ module SS::Model::Group
     validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
     validates :gws_use, inclusion: { in: %w(enabled disabled), allow_blank: true }
+    validates :path_id, format: { with: /\A[a-z][a-z0-9]+\z/, allow_blank: true }
     validate :validate_name
     validate :validate_domains, if: ->{ domains.present? }
 
@@ -67,6 +72,10 @@ module SS::Model::Group
   end
 
   module ClassMethods
+    def root
+      "#{Rails.public_path}/gws"
+    end
+
     def search(params)
       criteria = self.where({})
       return criteria if params.blank?
@@ -193,6 +202,11 @@ module SS::Model::Group
 
   def webmail_group
     is_a?(Webmail::Group) ? self : Webmail::Group.find(id)
+  end
+
+  def root_path
+    return if path_id.blank?
+    "#{self.class.root}/#{path_id}"
   end
 
   private
