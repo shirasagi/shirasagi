@@ -2113,11 +2113,11 @@ footer.send {
   &.unused{
     .unused-message{
       position: absolute;
-      background: rgba(173, 34, 4, 0.8);
-      padding: 3px 5px;
-      color: white;
       top: 0;
       right: 0;
+      padding: 3px 5px;
+      background: rgba(173, 34, 4, 0.8);
+      color: white;
       font-size: 10px;
       font-weight: bold;
     }
