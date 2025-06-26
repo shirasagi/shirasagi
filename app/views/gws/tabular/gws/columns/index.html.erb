@@ -1,0 +1,12 @@
+<% @notice_box = proc do %>
+  <div class="main-box">
+    <div class="body markdown-body">
+      <%=
+        text = t("gws/tabular.new_form_notice_md", name: cur_form.class.model_name.human)
+        SS::Addon::Markdown.text_to_html(text, auto_link: true)
+      %>
+    </div>
+  </div>
+<% end %>
+
+<%= render template: "gws/columns2/index" %>

@@ -1,0 +1,14 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% if type == :form %>
+    <%=
+      component = SS::FileFieldV2Component.new(
+        ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, item: @item, file: value,
+        field_name: "#{form.object_name}[col_#{column.id}_id]", accepts: column.allowed_extensions)
+      render component
+    %>
+  <% elsif type == :show %>
+    <%= show_image_info value %>
+  <% else %>
+    <%= value.try(:humanized_name) %>
+  <% end %>
+<% end %>

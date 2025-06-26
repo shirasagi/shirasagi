@@ -1,0 +1,77 @@
+<%
+  reference_field_criteria = Gws::Tabular::Column::ReferenceField.site(@cur_site)
+  reference_field_criteria = reference_field_criteria.form(item.form)
+  reference_field_criteria = reference_field_criteria.only(:_id, :name)
+  reference_field_options = reference_field_criteria.to_a.map do |column|
+    [ column.name, column.id ]
+  end
+%>
+
+<div class="gws-column-form-grid-list">
+  <fieldset class="gws-column-form-grid">
+    <legend><%= model.t :name %><%= model.tt :name %></legend>
+
+    <div class="gws-column-form-input-group">
+      <%= label_tag "#{f.object_name}[name]", model.t(:name) %>
+      <div>
+        <%= text_field_tag "#{f.object_name}[name]", item.name, autofocus: pc_browser? %>
+      </div>
+    </div>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid" data-controller="gws--tabular--lookup-column" data-gws--tabular--lookup-column-url-value="<%= gws_tabular_frames_gws_lookup_columns_path(space: item.form.space, form: item.form) %>">
+    <legend><%= t("ss.basic_info") %></legend>
+    <% if reference_field_options.blank? %>
+      <%= t("gws/tabular.no_reference_fields") %>
+    <% else %>
+      <div class="gws-column-form-input-group" data-field-name="reference_column_id">
+        <%= f.label :reference_column_id, model.t(:reference_column_id) %><%= model.tt :reference_column_id %>
+        <%=
+          select_options = { include_blank: true }
+          html_options = { data: { "gws--tabular--lookup-column-target" => "source" } }
+          f.select(:reference_column_id, reference_field_options, select_options, html_options)
+        %>
+      </div>
+
+      <div class="gws-column-form-input-group" data-field-name="lookup_column_id">
+        <%= f.label :lookup_column_id, model.t(:lookup_column_id) %><%= model.tt :lookup_column_id %>
+        <%=
+          options = nil
+          if item.reference_column.present? && item.reference_column.reference_form.present?
+            form = item.reference_column.reference_form
+
+            column_criteria = Gws::Column::Base.site(@cur_site)
+            column_criteria = column_criteria.form(form)
+            column_criteria = column_criteria.reorder(order: 1, id: 1)
+            column_criteria = column_criteria.only(:id, :name)
+            column_options = column_criteria.to_a.map do |column|
+              [ column.name, column.id ]
+            end
+          end
+          choices = column_options ? options_for_select(column_options, selected: item.lookup_column_id) : []
+          select_options = { include_blank: true }
+          html_options = {
+            disabled: options.blank?, data: { "gws--tabular--lookup-column-target" => "target" }
+          }
+          f.select(:lookup_column_id, choices, select_options, html_options)
+        %>
+      </div>
+    <% end %>
+  </fieldset>
+
+  <fieldset class="gws-column-form-grid">
+    <legend><%= t("gws/tabular.option_setting") %></legend>
+
+    <div class="gws-column-form-input-group" data-field-name="index_state">
+      <%= f.label :index_state, model.t(:index_state) %><%= model.tt :index_state %>
+      <div class="gws-column-form-radio-button-list">
+        <% item.index_state_options.each do |label, value| %>
+          <label class="gws-column-form-radio-button-item">
+            <%= f.radio_button :index_state, value %>
+            <%= label %>
+          </label>
+        <% end %>
+      </div>
+    </div>
+  </fieldset>
+</div>

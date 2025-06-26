@@ -1,0 +1,22 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+
+  column_options = Gws::Tabular.build_column_options(@item.form, site: @cur_site)
+%>
+<dl class="see">
+  <dt><%= @model.t :template_html %></dt>
+  <dd><%= text_area_tag "item[template_html]", @item.template_html, style: "height: 400px", class: "html" %></dd>
+
+  <dt><%= @model.t :template_style %></dt>
+  <dd><%= text_area_tag "item[template_style]", @item.template_style, style: "height: 400px", class: "html" %></dd>
+
+  <dt><%= @model.t :orders %></dt>
+  <dd>
+    <%= render Gws::Tabular::DndOrderShowComponent.new(options: column_options, selected: @item.orders) %>
+  </dd>
+
+  <dt><%= @model.t :limit_count %></dt>
+  <dd><%= @item.limit_count %></dd>
+</dl>
+
+<%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>

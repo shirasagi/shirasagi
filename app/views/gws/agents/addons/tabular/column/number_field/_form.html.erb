@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt><%= @model.t :field_type %><%= @model.tt :field_type %></dt>
+  <dd><%= f.select :field_type, @item.field_type_options %></dd>
+
+  <dt><%= @model.t :min_value %><%= @model.tt :min_value %></dt>
+  <dd><%= f.number_field :min_value %></dd>
+
+  <dt><%= @model.t :max_value %><%= @model.tt :max_value %></dt>
+  <dd><%= f.number_field :max_value %></dd>
+
+  <dt><%= @model.t :default_value %><%= @model.tt :default_value %></dt>
+  <dd><%= f.number_field :default_value %></dd>
+</dl>

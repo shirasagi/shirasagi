@@ -1,6 +1,6 @@
 <% addons = @item ? @item.class.addons : [] %>
 
-<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off, data: { controller: "ss--unload-protection ss--close-on-submit", turbo: true, turbo_frame: "item-#{@item.id}" } } do |f| %>
+<%= form_for :item, url: { action: :update }, html: { id: "item-form", method: :put, autocomplete: :off, data: { controller: "ss--unload-protection ss--close-on-submit", turbo: true, turbo_frame: "item-#{@item.id}" } } do |f| %>
 <%= error_messages_for :item %>
 
 <%= hidden_field_tag :ref, params[:ref] if params[:ref] %>
@@ -10,16 +10,7 @@
   <div class="addon-view" id="addon-basic">
     <div class="addon-head"><h2><%= @addon_basic_name || t("ss.basic_info") %></h2></div>
     <div class="addon-body">
-      <%=
-        column_path = Gws::Column.to_path(@item.class)
-        partial_view_path = "gws/apis/columns/#{column_path}/form"
-        physical_view_path = "app/views/gws/apis/columns/#{column_path}/_form.html.erb"
-        if ::File.exist?(physical_view_path)
-          render partial_view_path, f: f
-        else
-          render 'form', f: f
-        end
-      %>
+      <%= render template: '_form', locals: { f: f } %>
     </div>
   </div>
   <%= render template: "_column_form", locals: { f: f } %>

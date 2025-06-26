@@ -29,7 +29,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("gws/workflow.columns.index")
 
       within ".gws-column-list-toolbar[data-placement='top']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/check_box") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/check_box") }
       end
       within first(".gws-column-item") do
         wait_for_event_fired("turbo:frame-load") { click_on "cancel" }

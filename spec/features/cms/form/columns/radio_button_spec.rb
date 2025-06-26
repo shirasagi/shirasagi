@@ -14,7 +14,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       click_on I18n.t('cms.buttons.manage_columns')
 
       within '.gws-column-list-toolbar[data-placement="top"]' do
-        click_on I18n.t('cms.columns.cms/radio_button')
+        wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/radio_button') }
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
@@ -30,7 +30,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         expect(item.select_options).to eq select_options
       end
 
-      find('.btn-gws-column-item-detail').click
+      wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
       within_dialog do
         find('.save').click
       end

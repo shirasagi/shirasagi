@@ -108,6 +108,9 @@ export default class extends Controller {
   }
 
   _renderResult(selectedItems) {
+    if (!selectedItems || selectedItems.length === 0) {
+      return;
+    }
     if (!this.hasResultTarget) {
       return;
     }

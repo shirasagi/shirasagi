@@ -1,0 +1,7 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <%=
+    if value.present?
+      tag.div(sanitize(br(value.html_safe)), class: "ss-cke")
+    end
+  %>
+<% end %>

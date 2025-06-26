@@ -1,0 +1,33 @@
+<div class="list-head-action-gws-tabular-approve" data-controller="gws--tabular--approve-all">
+  <%
+    approve_all_button_data = {
+      action: "gws--tabular--approve-all#showDialog",
+      "ss--list-action-enabler-target" => "button",
+      "gws--tabular--approve-all-href-param" => gws_tabular_frames_inspection_path(id: "$id", format: :json)
+    }
+  %>
+  <%= button_tag type: :button, name: :approve_all, class: "btn btn-inline-flex", disabled: true, data: approve_all_button_data do %>
+    <%= t("workflow.buttons.approve") %>
+    <%= md_icons.outlined "open_in_new", size: 15 %>
+    <span class="badge" data-count="0"></span>
+  <% end %>
+  <template data-gws--tabular--approve-all-target="dialog">
+    <form id="workflow-inspection" method="dialog">
+      <%
+        addon_options = {
+          head: "#{t("modules.addons.gws/tabular/inspection")}#{@model.tt :approve_remand}".html_safe,
+          toggle: false
+        }
+      %>
+      <%= render("ss/crud/addon", addon: addon_options) do %>
+        <section class="mod-workflow-approve">
+          <%= text_area_tag "comment", "", id: nil %>
+          <div class="buttons">
+            <%= button_tag t("workflow.buttons.approve"), name: :approve, value: "approve", class: "btn-primary" %>
+            <%= button_tag t("workflow.buttons.remand"), name: :remand, value: "remand", class: "btn-default" %>
+          </div>
+        </section>
+      <% end %>
+    </form>
+  </template>
+</div>

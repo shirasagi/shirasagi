@@ -1,0 +1,22 @@
+<div id="errorExplanation" class="errorExplanation">
+  <div class="markdown-body">
+    <%=
+      expres_in = SS::Duration.format(@cur_site.trash_threshold_in_days)
+      SS::Addon::Markdown.text_to_html(t("gws/tabular.trash_notice_md", expires_in: expres_in))
+    %>
+  </div>
+</div>
+
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), url_for(action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+<% end %>
+
+<% @index_check = proc { |_item| } %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= ss_time_tag item.deleted %></span>
+  <span class="state"><%= item.state_label %></span>
+  <span class="order"><%= item.order %></span>
+<% end %>
+
+<%= render template: "gws/crud/index" %>

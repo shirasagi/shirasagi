@@ -1,0 +1,7 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% normalized_values.each do |v| %>
+    <div data-value="<%= v %>">
+      <%= tag.span v %>
+    </div>
+  <% end %>
+<% end %>

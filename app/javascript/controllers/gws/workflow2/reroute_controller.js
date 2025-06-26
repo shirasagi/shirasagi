@@ -30,21 +30,22 @@ export default class extends Controller {
       return
     }
 
+    this.token = csrfToken(this.element)
     this.element.addEventListener("click", (ev) => this.#onClick(ev))
   }
 
   #onClick(ev) {
     ev.preventDefault()
-    Dialog.showModal(this.dialogSource).then((result) => this.#ok(result))
+    Dialog.showModal(this.dialogSource).then((result) => this.#ok(ev.currentTarget, result))
   }
 
-  #ok(result) {
+  #ok(eventSourceElement, result) {
     if (!result.returnValue) {
       return
     }
     const data = result.returnValue[0]
     const form = this.#buildForm(data.id)
-    this.element.parentElement.appendChild(form)
+    this.#appendForm(form)
     form.addEventListener("turbo:submit-end", () => form.remove(), { once: true });
     requestAnimationFrame(() => form.requestSubmit());
   }
@@ -58,7 +59,7 @@ export default class extends Controller {
     const inputAuthneticityToken = document.createElement("input")
     inputAuthneticityToken.name = "authneticity_token"
     inputAuthneticityToken.type = "hidden"
-    inputAuthneticityToken.value = csrfToken()
+    inputAuthneticityToken.value = this.token
     form.appendChild(inputAuthneticityToken)
 
     const inputLevel = document.createElement("input")
@@ -80,5 +81,16 @@ export default class extends Controller {
     form.appendChild(inputNewUserId)
 
     return form
+  }
+
+  #appendForm(form) {
+    // this.element.parentElement.appendChild(form)
+    const turboFrameEl = this.element.closest("turbo-frame")
+    if (turboFrameEl) {
+      turboFrameEl.appendChild(form)
+      return
+    }
+
+    document.body.appendChild(form)
   }
 }

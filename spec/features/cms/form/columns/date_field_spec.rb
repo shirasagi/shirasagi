@@ -13,7 +13,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       click_on I18n.t('cms.buttons.manage_columns')
 
       within '.gws-column-list-toolbar[data-placement="top"]' do
-        click_on I18n.t('cms.columns.cms/date_field')
+        wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/date_field') }
       end
       wait_for_notice I18n.t('ss.notice.saved')
 
@@ -27,7 +27,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         expect(item.required).to eq 'required'
       end
 
-      find('.btn-gws-column-item-detail').click
+      wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
       within_dialog do
         find('.save').click
       end
