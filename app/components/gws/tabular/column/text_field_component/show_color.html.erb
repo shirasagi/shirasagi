@@ -1,0 +1,11 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <%=
+    if type == :show || type == :meta
+      if value.present?
+        tag.span(value, class: "gws-category-label", style: "background-color: #{value}; color: #{SS::Color.text_color(value)};")
+      end
+    else # type == :title || type == :localized
+      value
+    end
+  %>
+<% end %>

@@ -1,0 +1,13 @@
+<div class="list-head">
+  <% if list_check_box? %>
+    <label class="check"><input type="checkbox" /></label>
+
+    <div class="list-head-action">
+      <div class="list-head-action-set">
+        <%= render "gws/tabular/files/list_head_destroy_all" %>
+      </div>
+    </div>
+  <% end %>
+
+  <%= render template: "_search" %>
+</div>

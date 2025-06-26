@@ -267,7 +267,7 @@ ja:
         state: 公開状態
         description: 説明
         memo: 備考
-      gws/workflow2/form/application:
+      gws/workflow2/application_setting:
         approval_state: 承認の利用
         default_route_id: 既定の承認経路
         agent_state: 代理申請
@@ -287,8 +287,9 @@ ja:
         purpose_ids: 業務別
       gws/workflow2/form/purpose:
         name: 業務の目的
-      gws/workflow2/destination_setting:
+      gws/workflow2/destination_state:
         destination_treat_state: 処理状態
+      gws/workflow2/destination_setting:
         destination_group_ids: 提出先グループ
         destination_user_ids: 提出先ユーザー
 

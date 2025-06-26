@@ -5,7 +5,7 @@ FactoryBot.define do
     name { "name-#{unique_id}" }
     order { rand(999) }
     required { %w(required optional).sample }
-    tooltips { Array.new(rand(3..10)) { "tooltips-#{unique_id}" } }
+    tooltips { Array.new(rand(2..3)) { "tooltips-#{unique_id}" } }
     prefix_label { "pre-#{unique_id(2)}" }
     postfix_label { "pos-#{unique_id(2)}" }
     prefix_explanation { "<b>prefix</b>#{unique_id}" }

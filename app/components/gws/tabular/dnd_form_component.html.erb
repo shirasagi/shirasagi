@@ -1,0 +1,31 @@
+<%= hidden_field_tag "#{object_name}[#{method_name}][]", nil, id: nil %>
+<div class="ss-dnd-list ss-dnd-list-vertical" data-controller="ss--dnd-list">
+  <% if selected.present? %>
+    <% selected.each do |selected_item| %>
+      <%
+        selected_item = selected_item.to_s
+        selected_option = options.find { |_label, value| value.to_s == selected_item }
+        next unless selected_option
+      %>
+      <div class="ss-dnd-list-item">
+        <span class="material-icons-outlined md-15">drag_indicator</span>
+        <%= check_box_tag "#{object_name}[#{method_name}][]", selected_item, true, id: "#{object_name}_#{method_name}_#{selected_item}" %>
+        <label for="<%= "#{object_name}_#{method_name}_#{selected_item}" %>">
+          <%= selected_option[0] %>
+        </label>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% options.each do |label, value| %>
+    <% next if selected && selected.include?(value) %>
+
+    <div class="ss-dnd-list-item">
+      <span class="material-icons-outlined md-15">drag_indicator</span>
+      <%= check_box_tag "#{object_name}[#{method_name}][]", value, false, id: "#{object_name}_#{method_name}_#{value}" %>
+      <label for="<%= "#{object_name}_#{method_name}_#{value}" %>">
+        <%= label %>
+      </label>
+    </div>
+  <% end %>
+</div>

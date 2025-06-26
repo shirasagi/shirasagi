@@ -1,0 +1,65 @@
+<%
+  columns = cur_form.columns.reorder(order: 1, id: 1).to_a
+%>
+
+<%= tag.div class: "main-box gws-tabular-file-main-box", data: { controller: "ss--list-action-enabler" } do %>
+  <div class="list-head">
+    <div class="list-head-action">
+      <div class="list-head-action-destroy" data-controller="ss--destroy-all">
+        <%= button_tag type: :button, name: "destroy_all", class: "btn", disabled: true, data: { action: "ss--destroy-all#destroyAll", "ss--list-action-enabler-target" => "button" } do %>
+          <%= t("ss.links.delete") %>
+          <span class="badge" data-count="0"></span>
+        <% end %>
+      </div>
+    </div>
+
+    <%= render template: "_search" %>
+  </div>
+  <table class="index">
+    <thead class="list-head">
+    <tr>
+      <th><input type="checkbox" /></th>
+      <% columns.each do |column| %>
+        <th><%= column.name %></th>
+      <% end %>
+      <% if cur_form.workflow_enabled? %>
+        <th><%= @model.t :workflow_state %></th>
+        <th><%= @model.t :destination_treat_state %></th>
+      <% end %>
+      <th><%= @model.t :updated %></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @items.each do |item| %>
+    <tr class="list-item" data-id="<%= item.id %>">
+      <td><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
+      <% columns.each do |column| %>
+        <% column_value = item.column_values.where(column_id: column.id).first %>
+        <td><%= column_value.to_html %></td>
+      <% end %>
+      <% if cur_form.workflow_enabled? %>
+        <td><%= t("workflow.state.#{item.workflow_state.presence || "draft"}") %></td>
+        <td><%= item.label(:destination_treat_state) %></td>
+      <% end %>
+      <td><%= ss_time_tag item.updated %></td>
+      <td>
+        <%= link_to t('ss.links.show'), url_for(action: :show, id: item), class: 'btn primary' if item.allowed?(:read, @cur_user, site: @cur_site) %>
+        <%=
+          if item.allowed?(:edit, @cur_user, site: @cur_site)
+            link_to tag.span("edit", class: "material-icons-outlined md-15"), url_for(action: :edit, id: item), class: 'btn', title: t('ss.links.edit') rescue nil
+          end
+        %>
+        <%=
+          if item.allowed?(:delete, @cur_user, site: @cur_site)
+            link_to tag.span("delete", class: "material-icons-outlined md-15"), url_for(action: :destroy, id: item), class: 'btn', title: t('ss.links.delete'), method: "delete", data: { confirm: t('ss.confirm.delete') } rescue nil
+          end
+        %>
+      </td>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+
+  <%= paginate @items if @items.try(:current_page) %>
+<% end %>

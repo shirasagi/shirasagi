@@ -1,0 +1,30 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% if type == :form -%>
+    <%=
+      # EnumField など一部のフィールド型では、配列を格納している。
+      # また、TextField であれば、テキスト型で値を格納し、NumberField型であれば整数型や十進数型など多様な型で値を格納している。
+      # view を介して、このように多様な値を受け渡しするのは難しく、現時点では妙案はない。
+      #
+      # そこで、インタラクティブに参照結果を表示するのは諦めて、編集時は説明書きのみを表示する。
+      # なお、参照結果の作成は、before_validation コールバック内にて行われるので、表示時には参照結果が正しく表示される。
+      if reference_column.blank? || reference_column.reference_form.blank?
+        "有効な参照入力項目を選択してください。"
+      elsif lookup_column.blank?
+        "参照する入力項目を選択してください。"
+      else
+        "#{reference_column.name}を選択すると#{reference_column.reference_form.name}の#{lookup_column.name}が設定されます。"
+      end
+    -%>
+  <% elsif type == :show -%>
+    <% normalized_values.each do |value| -%>
+      <%= render lookup_column.value_renderer(value, :title, cur_site: cur_site, cur_user: cur_user, locale: locale) -%>
+    <% end -%>
+  <% else -%>
+    <%=
+      normalized_values.map do |value|
+        result = render lookup_column.value_renderer(value, type, cur_site: cur_site, cur_user: cur_user, locale: locale)
+        result.strip
+      end.join("\n").html_safe
+    -%>
+  <% end -%>
+<% end -%>

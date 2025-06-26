@@ -5,6 +5,11 @@ module SS::PluginBase
   included do
     cattr_accessor(:scope, instance_accessor: false)
     attr_accessor :plugin_type, :path
+    attr_writer :module_key
+  end
+
+  def disabled?
+    !enabled?
   end
 
   def enabled?
@@ -24,12 +29,23 @@ module SS::PluginBase
     !part_settings.fetch('disable', false)
   end
 
-  def i18n_name
-    module_name = path.split('/', 2).first
-    name = I18n.t("modules.#{module_name}", default: path.titleize)
-    name << "/" + I18n.t("#{self.class.scope}.#{plugin_type.pluralize}.#{path}", default: path.titleize)
-    name
+  def module_key
+    @module_key ||= path.split('/', 2).first
   end
 
+  def i18n_module_name
+    key = module_key
+    I18n.t("modules.#{key}", default: key.titleize)
+  end
+  alias module_name i18n_module_name
+
+  def i18n_name_only
+    I18n.t("#{self.class.scope}.#{plugin_type.pluralize}.#{path}", default: path.split('/', 2).last.titleize)
+  end
+  alias name_only i18n_name_only
+
+  def i18n_name
+    [ i18n_module_name, i18n_name_only ].join("/")
+  end
   alias name i18n_name
 end
