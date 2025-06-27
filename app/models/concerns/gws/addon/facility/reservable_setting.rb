@@ -37,7 +37,7 @@ module Gws::Addon::Facility::ReservableSetting
   end
 
   def reservable_groups_hash
-    self[:reservable_groups_hash].presence || reservable_groups.map { |m| [m.id, m.name] }.to_h
+    self[:reservable_groups_hash].presence || Gws.id_name_hash(reservable_groups)
   end
 
   def reservable_group_names
@@ -45,7 +45,7 @@ module Gws::Addon::Facility::ReservableSetting
   end
 
   def reservable_members_hash
-    self[:reservable_members_hash].presence || reservable_members.map { |m| [m.id, m.long_name] }.to_h
+    self[:reservable_members_hash].presence || Gws.id_name_hash(reservable_members, name_method: :long_name)
   end
 
   def reservable_member_names
@@ -55,10 +55,12 @@ module Gws::Addon::Facility::ReservableSetting
   private
 
   def set_reservable_groups_hash
-    self.reservable_groups_hash = reservable_groups.map { |m| [m.id, m.name] }.to_h
+    return unless reservable_group_ids_changed?
+    self.reservable_groups_hash = Gws.id_name_hash(reservable_groups)
   end
 
   def set_reservable_members_hash
-    self.reservable_members_hash = reservable_members.map { |m| [m.id, m.long_name] }.to_h
+    return unless reservable_member_ids_changed?
+    self.reservable_members_hash = Gws.id_name_hash(reservable_members, name_method: :long_name)
   end
 end
