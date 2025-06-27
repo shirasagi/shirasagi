@@ -123,7 +123,7 @@ gem 'faraday'
 gem 'elasticsearch', '~> 7'
 
 # line
-gem 'line-bot-api'
+gem 'line-bot-api', '~> 1.29'
 
 # kintone
 gem 'kintone', git: "https://github.com/jue58/kintone.git"
