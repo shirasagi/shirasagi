@@ -197,6 +197,11 @@ ja:
       field_label: YouTube動画タイトル
       field_placeholder: 画面読み上げなどで使う動画のタイトルを入力してください。
     visit_article: 記事を見る
+    init_column:
+      new_form_notice:
+        - "上部のツールバー内のボタンをクリックすると入力項目を先頭に追加することができます。"
+        - "下部のツールバー内のボタンをクリックすると入力項目を末尾に追加することができます。"
+      not_found_column: 入力項目が見つかりません。
 
     adobe_reader:
       remark:
@@ -325,6 +330,7 @@ ja:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
       generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
+      batch_accessibility_check_notice: ※ 一括処理の場合、簡易なアクセシビリティチェックなどは実行されません。各ページについて確実にアクセシビリティチェックを実施されたい場合は、ページ単位で処理をされることをお勧めします。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -599,6 +605,13 @@ ja:
       list_origin:
         deployment: 配備された階層に応じてリストを作成
         content: アクセスされたページ/フォルダーに応じてリストを作成
+      origin_of_page:
+        parent1: 対象が配置されているフォルダー内のリスト
+        parent2: 対象が配置されているフォルダーの親フォルダー内のリスト
+      origin_of_node:
+        parent1: 対象が配置されているフォルダー内のリスト
+        parent2: 対象が配置されているフォルダーの親フォルダー内のリスト
+        self_node: 対象（自フォルダー）内のリスト
       clipboard_copy_target:
         url: URL
         css_selector: CSSセレクター
@@ -1205,6 +1218,8 @@ ja:
       cms/addon/node_list:
         node_routes: フォルダー属性
         list_origin: 起点
+        origin_of_page: ページの場合
+        origin_of_node: フォルダーの場合
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:

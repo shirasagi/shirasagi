@@ -46,7 +46,7 @@ Cms_TemplateForm.createElementFromHTML = function(html) {
   var div = document.createElement('div');
   div.innerHTML = html.trim();
 
-  return div.firstChild;
+  return div.firstElementChild;
 };
 
 Cms_TemplateForm.prototype.render = function() {
@@ -122,7 +122,12 @@ Cms_TemplateForm.prototype.deleteEditors = function() {
 
 Cms_TemplateForm.prototype.loadForm = function(html) {
   this.deleteEditors();
-  this.$formPage.html($(html).html());
+
+  var $html = $(html);
+  var $siblings = $html.siblings();
+  $html = $siblings.length > 0 ? $siblings.first() : $html;
+
+  this.$formPage.html($html.html());
   // SS.render();
   SS.renderAjaxBox();
   SS_DateTimePicker.render();

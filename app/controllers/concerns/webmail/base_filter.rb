@@ -58,19 +58,23 @@ module Webmail::BaseFilter
 
   def imap_initialize
     @webmail_redirect_path ||= [ :render, "webmail/main/login_failed", 403 ]
+    return if @imap_setting
 
-    @imap_setting ||= begin
-      if @webmail_mode == :group
-        raise "403" if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
+    if @webmail_mode == :group
+      raise "403" if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
 
-        group = @cur_user.groups.find_by(id: params[:account])
-        @imap = group.webmail_group.initialize_imap
-      elsif params.key?(:account)
-        @imap = @cur_user.initialize_imap(params[:account].to_i)
+      group_id, account_index = params[:account].to_s.split(".").map(&:to_i)
+      if account_index.nil?
+        redirect_to(url_for(account: "#{group_id}.0"))
+        return
       end
 
-      @imap.present? ? @imap.setting : nil
+      @imap = @cur_user.initialize_group_imap(group_id, account_index)
+      raise "404" if !@imap
+    elsif params.key?(:account)
+      @imap = @cur_user.initialize_imap(params[:account].to_i)
     end
+    @imap_setting = @imap ? @imap.setting : nil
   end
 
   def imap_disconnect

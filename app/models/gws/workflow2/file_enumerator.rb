@@ -9,12 +9,14 @@ class Gws::Workflow2::FileEnumerator < Enumerator
     @encoding = encoding
 
     super() do |yielder|
-      load_forms
-      build_term_handlers
+      I18n.with_locale(I18n.default_locale) do
+        load_forms
+        build_term_handlers
 
-      yielder << bom + encode(headers.to_csv)
-      @wf_files.each do |wf_file|
-        enum_comment(yielder, wf_file)
+        yielder << bom + encode(headers.to_csv)
+        @wf_files.each do |wf_file|
+          enum_comment(yielder, wf_file)
+        end
       end
     end
   end
@@ -321,6 +323,6 @@ class Gws::Workflow2::FileEnumerator < Enumerator
 
   def bom
     return '' if @encoding == 'Shift_JIS'
-    "\uFEFF"
+    SS::Csv::UTF8_BOM
   end
 end
