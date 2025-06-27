@@ -41,30 +41,74 @@ describe "opendata_agents_nodes_dataset_resource", type: :feature, dbscope: :exa
         within ".tabs .tab.graph" do
           click_on I18n.t("opendata.labels.graph_view")
         end
-        wait_for_ajax
-
-        expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.bar"))
-        expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.line"))
-        expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.pie"))
-        expect(page).to have_css(".graph-warp.loaded")
-        within ".graph-types" do
-          click_on I18n.t("opendata.graph_types.bar")
+      end
+      wait_for_ajax
+      within_cbox do
+        within ".resource-content[data-graph-style='bar']" do
+          expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.bar"))
+          expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.line"))
+          expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.pie"))
+          expect(page).to have_css(".graph-warp.loaded")
+          canvas_to_png(first("canvas.graph")).tap do |data_url|
+            expect(data_url).to start_with("data:image/png;base64,")
+            png_data = data_url[22, data_url.length].then do |base64|
+              Base64.urlsafe_decode64(base64)
+            end
+            expect(png_data.length).to be > 10_240
+          end
+          within ".graph-types" do
+            click_on I18n.t("opendata.graph_types.line")
+          end
         end
-        wait_for_ajax
+      end
 
-        expect(page).to have_css(".graph-warp.loaded")
-        within ".graph-types" do
-          click_on I18n.t("opendata.graph_types.line")
+      wait_for_ajax
+
+      within_cbox do
+        within ".resource-content[data-graph-style='line']" do
+          expect(page).to have_css(".graph-warp.loaded")
+          canvas_to_png(first("canvas.graph")).tap do |data_url|
+            expect(data_url).to start_with("data:image/png;base64,")
+            png_data = data_url[22, data_url.length].then do |base64|
+              Base64.urlsafe_decode64(base64)
+            end
+            expect(png_data.length).to be > 10_240
+          end
+          within ".graph-types" do
+            click_on I18n.t("opendata.graph_types.pie")
+          end
         end
-        wait_for_ajax
+      end
 
-        expect(page).to have_css(".graph-warp.loaded")
-        within ".graph-types" do
-          click_on I18n.t("opendata.graph_types.pie")
+      wait_for_ajax
+
+      within_cbox do
+        within ".resource-content[data-graph-style='pie']" do
+          expect(page).to have_css(".graph-warp.loaded")
+          canvas_to_png(first("canvas.graph")).tap do |data_url|
+            expect(data_url).to start_with("data:image/png;base64,")
+            png_data = data_url[22, data_url.length].then do |base64|
+              Base64.urlsafe_decode64(base64)
+            end
+            expect(png_data.length).to be > 10_240
+          end
+          within ".graph-types" do
+            click_on I18n.t("opendata.graph_types.bar")
+          end
         end
-        wait_for_ajax
-
-        expect(page).to have_css(".graph-warp.loaded")
+      end
+      wait_for_ajax
+      within_cbox do
+        within ".resource-content[data-graph-style='bar']" do
+          expect(page).to have_css(".graph-warp.loaded")
+          canvas_to_png(first("canvas.graph")).tap do |data_url|
+            expect(data_url).to start_with("data:image/png;base64,")
+            png_data = data_url[22, data_url.length].then do |base64|
+              Base64.urlsafe_decode64(base64)
+            end
+            expect(png_data.length).to be > 10_240
+          end
+        end
       end
     end
   end

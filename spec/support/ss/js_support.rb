@@ -419,6 +419,12 @@ module SS
       })(...arguments)
     SCRIPT
 
+    CANVAS_TO_PNG_SCRIPT = <<~SCRIPT.freeze
+      (function(element) {
+        return element.toDataURL("image/png");
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -1111,6 +1117,10 @@ module SS
 
     def bounding_client_rect(selector)
       page.evaluate_script(BOUNDING_CLIENT_RECT_SCRIPT, selector)
+    end
+
+    def canvas_to_png(element)
+      page.evaluate_script(CANVAS_TO_PNG_SCRIPT, element)
     end
   end
 end
