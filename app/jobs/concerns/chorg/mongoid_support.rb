@@ -51,46 +51,80 @@ module Chorg::MongoidSupport
   # rubocop:disable Layout::EmptyLineBetweenDefs
   def with_entities(models, scope = {})
     models.each do |model|
-      criteria = model.where(scope)
-      all_ids = criteria.pluck(:id)
-      all_ids.each_slice(20) do |ids|
-        entities = criteria.in(id: ids).to_a
-        entities.each do |entity|
-          entity = entity.try(:becomes_with_topic) || entity
-          next unless set_site(entity)
-          entity.try(:allow_other_user_files)
+      task.performance.collect_model_update(model) do
+        criteria = model.where(scope)
+        all_ids = criteria.pluck(:id)
+        all_ids.each_slice(20) do |ids|
+          entities = criteria.in(id: ids).to_a
+          entities.each do |entity|
+            task.performance.collect_entity_update(entity) do
+              entity = entity.try(:becomes_with_topic) || entity
+              next unless set_site(entity)
 
-          entity_user = (entity.try(:user) || @cur_user)
-          entity_user.try(:cur_site=, @cur_site)
-          entity.try(:cur_user=, entity_user)
+              decorate_entity(model, entity)
 
-          entity.try(:skip_twitter_post=, true)
-          entity.try(:skip_line_post=, true)
-          def entity.post_to_line(execute: :inline); end
-          def entity.post_to_twitter(execute: :inline); end
-
-          entity.try(:skip_assoc_opendata=, true)
-          def entity.invoke_opendata_job(action); end
-
-          entity.instance_variable_set(:@base_model, model)
-          def entity.base_model
-            return @base_model
-          end
-
-          logger_tags = [ "#{entity.class}(#{entity.id})" ]
-          if entity.respond_to?(:site_id)
-            logger_tags << "site:#{entity.try(:site_id)}"
-          end
-          Rails.logger.tagged(*logger_tags) do
-            entity.move_changes
-            yield entity
-            Rails.logger.info { "done" }
+              logger_tags = [ "#{entity.class}(#{entity.id})" ]
+              if entity.respond_to?(:site_id)
+                logger_tags << "site:#{entity.try(:site_id)}"
+              end
+              Rails.logger.tagged(*logger_tags) do
+                entity.move_changes
+                yield entity
+                Rails.logger.info { "done" }
+              end
+            end
           end
         end
       end
     end
   end
   # rubocop:enable Layout::EmptyLineBetweenDefs
+
+  def decorate_entity(model, entity)
+    entity.try(:allow_other_user_files)
+
+    entity_user = (entity.try(:user) || @cur_user)
+    entity_user.try(:cur_site=, @cur_site)
+    entity.try(:cur_user=, entity_user)
+
+    entity.try(:skip_twitter_post=, true)
+    entity.try(:skip_line_post=, true)
+    def entity.post_to_line(execute: :inline); end
+    def entity.post_to_twitter(execute: :inline); end
+
+    entity.try(:skip_assoc_opendata=, true)
+    def entity.invoke_opendata_job(action); end
+
+    entity.instance_variable_set(:@base_model, model)
+    def entity.base_model
+      return @base_model
+    end
+
+    # 以下のコメントを解除すると、非常に細かい性能指標を取得することができるが、
+    # 細かすぎて実行時間への影響が大きいので、普段は利用しないようにコメントアウトしておく
+    # def entity.run_callbacks(kind, *args, **options, &block)
+    #   overall_started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    #   kind_started = kind_finished = overall_started
+    #
+    #   ret =
+    #     super(kind, *args, **options) do
+    #       kind_started = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    #       ret = block.call if block
+    #       kind_finished = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    #       ret
+    #     end
+    #
+    #   overall_finished = Process.clock_gettime(Process::CLOCK_MONOTONIC)
+    #
+    #   if SS::Task::PerformanceCollector.current
+    #     SS::Task::PerformanceCollector.current.collect_callback(
+    #       kind, self, overall_started..overall_finished, kind_started..kind_finished
+    #     )
+    #   end
+    #
+    #   ret
+    # end
+  end
 
   def all_cms_sites
     @all_cms_sites ||= Cms::Site.all.to_a
@@ -155,7 +189,7 @@ module Chorg::MongoidSupport
     end
     return false if options.blank?
 
-    classes = [:class_name, :elem_class].map do |k|
+    classes = %i[class_name elem_class].map do |k|
       v = options[k]
       v = v.constantize if v.present?
       v
@@ -167,15 +201,11 @@ module Chorg::MongoidSupport
     @exclude_fields = defs.map { |e| e.start_with?("/") && e.end_with?("/") ? /#{::Regexp.escape(e[1..-2])}/ : e }.freeze
   end
 
+  SUPPORTED_FIELD_TYPES = [ String, Array, SS::Extensions::Lines, SS::Extensions::Words ].freeze
+
   def updatable_field?(key, val)
-    supported_field_types = [
-      String,
-      Array,
-      SS::Extensions::Lines,
-      SS::Extensions::Words
-    ]
     field_type = val.options[:type]
-    return false if !supported_field_types.include?(field_type)
+    return false if !SUPPORTED_FIELD_TYPES.include?(field_type)
 
     @exclude_fields.each do |filter|
       case filter
@@ -203,6 +233,7 @@ module Chorg::MongoidSupport
   # exclude html field when cms form present
   def skip_target_field?(entity, field_name)
     return false if field_name != "html"
+
     form = entity.try(:form)
     form.instance_of?(Cms::Form)
   end
@@ -229,15 +260,16 @@ module Chorg::MongoidSupport
       embedded_values = entity.send(field_name)
       next if embedded_values.blank?
 
-      array = embedded_values.map do |embedded_entity|
-        updates = {}
-        target_fields(embedded_entity).each do |k, _|
-          v = embedded_entity[k]
-          new_value = substitutor.call(k, v, entity.try(:contact_group_id))
-          updates[k] = new_value if v != new_value
+      array =
+        embedded_values.map do |embedded_entity|
+          updates = {}
+          target_fields(embedded_entity).each do |k, _|
+            v = embedded_entity[k]
+            new_value = substitutor.call(k, v, entity.try(:contact_group_id))
+            updates[k] = new_value if v != new_value
+          end
+          updates
         end
-        updates
-      end
       next if !array.select(&:present?).first
 
       hash[field_name] = Chorg::EmbeddedArray.new(field_name, array)
@@ -246,17 +278,19 @@ module Chorg::MongoidSupport
   end
 
   def delete_groups(group_ids)
-    group_ids.each do |id|
-      group = self.class.group_class.where(id: id).first
-      if group.present?
-        if delete_entity(group)
-          # put_log("deleted group: #{group.name}")
-          task.log("  \"#{group.name}\"")
-        else
-          # put_log("failed to delete group: #{group.name}")
-          task.log("  \"#{group.name}\": 削除失敗")
+    task.performance.collect_delete_groups do
+      group_ids.each do |id|
+        group = self.class.group_class.where(id: id).first
+        if group.present?
+          if delete_entity(group)
+            # put_log("deleted group: #{group.name}")
+            task.log("  \"#{group.name}\"")
+          else
+            # put_log("failed to delete group: #{group.name}")
+            task.log("  \"#{group.name}\": 削除失敗")
+          end
+          remove_group_from_site(group)
         end
-        remove_group_from_site(group)
       end
     end
   end
