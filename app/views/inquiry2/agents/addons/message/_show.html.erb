@@ -1,0 +1,25 @@
+<dl class="see mod-inquiry2-message">
+  <dt><%= @model.t :inquiry2_show_sent_data %></dt>
+  <dd><%= @item.label :inquiry2_show_sent_data %></dd>
+  <dt><%= @model.t :inquiry2_html %></dt>
+  <dd>
+  <% if @item.send(:inquiry2_html).present?  %>
+    <%= html_editor "#inquiry2_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry2_html", @item.inquiry2_html, style: "height: 200px;" %>
+  <% end %>
+  </dd>
+  <dt><%= @model.t :inquiry2_sent_html %></dt>
+  <dd>
+  <% if @item.send(:inquiry2_sent_html).present?  %>
+    <%= html_editor "#inquiry2_sent_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry2_sent_html", @item.inquiry2_sent_html, style: "height: 200px;" %>
+  <% end %>
+  </dd>
+  <dt><%= @model.t :inquiry2_results_html %></dt>
+  <dd>
+  <% if @item.send(:inquiry2_results_html).present?  %>
+    <%= html_editor "#inquiry2_results_html", height: "200px", readonly: true %>
+    <%= text_area_tag "inquiry2_results_html", @item.inquiry2_results_html, style: "height: 200px;" %>
+  <% end %>
+  </dd>
+</dl>

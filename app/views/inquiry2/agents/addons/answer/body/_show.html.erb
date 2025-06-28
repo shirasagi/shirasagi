@@ -1,0 +1,46 @@
+<dl class="see mod-inquiry2-answer-body">
+  <% @item.column_values.each do |column| %>
+    <dt><%= column.name %></dt>
+    <dd><%= column.value %></dd>
+  <% end %>
+
+  <dt><%= @model.t :remote_addr %></dt>
+  <dd><%= @item.remote_addr %></dd>
+
+  <dt><%= @model.t :user_agent %></dt>
+  <% browser = Browser.new(@item.user_agent, accept_language: request.accept_language) rescue nil %>
+  <% if browser %>
+    <dd>
+      <span class="browser"><%= browser.name %> <%= browser.full_version %></span>
+      @
+      <span class="platform"><%= browser.platform.name %></span>
+    </dd>
+  <% end %>
+  <dd><%= @item.user_agent %></dd>
+
+  <% if @item.source_url.present? %>
+    <dt><%= @model.t :source_url %></dt>
+    <dd><%= @item.source_content && @item.source_content.public? ? link_to(@item.source_content.full_url, @item.source_content.full_url, target: "_blank", rel: "noopener") : @item.source_url %></dd>
+  <% end %>
+
+  <% if @item.source_name.present? %>
+    <dt><%= @model.t :source_name %></dt>
+    <dd><%= @item.source_name %></dd>
+  <% end %>
+
+  <% if @item.inquiry2_page_url.present? %>
+    <dt><%= @model.t :inquiry2_page_url %></dt>
+    <dd>
+      <% if @item.inquiry2_page_content.try(:public?) %>
+        <%= link_to(@item.inquiry2_page_content.full_url, @item.inquiry2_page_content.full_url, target: "_blank") %>
+      <% else %>
+        <%= @item.inquiry2_page_url %>
+      <% end %>
+    </dd>
+  <% end %>
+
+  <% if @item.inquiry2_page_name.present? %>
+    <dt><%= @model.t :inquiry2_page_name %></dt>
+    <dd><%= @item.inquiry2_page_name %></dd>
+  <% end %>
+</dl>

@@ -43,6 +43,19 @@ module Job::Cms::CopyNodes::CmsNodes
     end
   end
 
+  def copy_inquiry2_columns(src_node, dest_node)
+    Inquiry2::Column.where(site_id: src_node.site_id, node_id: src_node.id).order_by(updated: 1).each do |src_inquiry_column|
+      @task.log("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry2::Column をコピーします。")
+      dest_inquiry_column = Inquiry2::Column.new src_inquiry_column.
+        attributes.except("id", "_id", "node_id", "site_id", "created", "updated")
+
+      dest_inquiry_column.site_id = dest_node.site_id
+      dest_inquiry_column.node_id = dest_node.id
+      dest_inquiry_column.save!
+      @task.log("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry2::Column をコピーしました。")
+    end
+  end
+
   def copy_ezine_columns(src_node, dest_node)
     Ezine::Column.where(site_id: src_node.site_id, node_id: src_node.id).order_by(updated: 1).each do |src_ezine_column|
       @task.log("#{src_ezine_column.name}(#{src_ezine_column.id}): Ezine::Column をコピーします。")

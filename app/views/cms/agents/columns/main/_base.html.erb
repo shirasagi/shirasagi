@@ -2,7 +2,8 @@
 <% controller ||= false %>
 <% id = value.try(:id) || BSON::ObjectId.new %>
 <% unique_id = id %>
-<% id = "column-value-#{id}" %>
+<% id_suffix ||= nil %>
+<% id = "column-value-#{id}#{id_suffix}" %>
 <%
   @buttons = []
   @buttons << :syntax_check if @inplace_syntax_check

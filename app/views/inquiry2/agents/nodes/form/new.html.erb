@@ -1,0 +1,51 @@
+<%= jquery do %>
+  Inquiry2_Form.render({ confirm: false, requiredLabel: <%== t('inquiry2.required_field').to_json %> });
+<% end %>
+<%
+  if @group.present?
+    if @group.contact_group_name.present?
+      @cur_node.name = @group.contact_group_name + " " + @cur_node.name
+    else
+      @cur_node.name = @group.section_name + " " + @cur_node.name
+    end
+  end
+%>
+<div class="inquiry2-html">
+  <%== @cur_node.inquiry2_html %>
+</div>
+
+<% if @answer && content = @answer.source_content %>
+  <dl class="column">
+    <dt><%= Cms::Page.t :name %></dt>
+    <dd><%= content.name %></dd>
+  </dl>
+<% end %>
+
+<% if @cur_form.columns.count > 0 %>
+  <div class="inquiry2-form">
+    <%= form_for :item, url: "#{@cur_node.url}confirm.html", html: { multipart: true } do |f| %>
+      <%= error_messages_for :answer, header_message: false %>
+      <%= hidden_field_tag "group", @group.id, id: nil if @group %>
+      <%= hidden_field_tag "page", @page.id, id: nil if @page %>
+      <% if params[:preview] %>
+        <%= hidden_field_tag "preview", params[:preview], id: nil %>
+      <% end %>
+
+      <%
+        def find_column_value(column_values, column)
+          column_values.where(column_id: column.id).first
+        end
+      %>
+      <%= f.fields_for :column_values do |g| %>
+        <% @cur_form.columns.order_by(order: 1, id: 1).each do |column| %>
+          <% column_value = find_column_value(@item.column_values, column) %>
+          <%= render column.column_form_partial_path, f: g, column: column, value: column_value, controller: false %>
+        <% end %>
+      <% end %>
+
+      <footer class="send">
+        <%= f.submit t('inquiry2.confirm'), name: :confirm %>
+      </footer>
+    <% end %>
+  </div>
+<% end %>

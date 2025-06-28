@@ -1,0 +1,12 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+
+<dl class="see mod-inquiry2-reception_plan">
+  <dt><%= @model.t :reception_start_date %><%= @model.tt :reception_start_date %></dt>
+  <dd><%= f.ss_date_field :reception_start_date %></dd>
+
+  <dt><%= @model.t :reception_close_date %><%= @model.tt :reception_close_date %></dt>
+  <dd><%= f.ss_date_field :reception_close_date %></dd>
+</dl>

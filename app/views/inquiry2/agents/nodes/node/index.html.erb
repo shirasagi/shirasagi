@@ -1,0 +1,4 @@
+<div class="inquiry2-nodes nodes">
+  <%= render_inquiry2_list %>
+</div>
+<%= paginate @items if @items.try(:current_page) %>

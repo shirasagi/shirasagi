@@ -1,0 +1,8 @@
+<%= node_navi :inquiry2 do %>
+  <% if @cur_node.route == "inquiry2/form" %>
+    <h3><%= link_to t("inquiry2.column"), inquiry2_columns_path %></h3>
+    <h3><%= link_to t("inquiry2.answer"), inquiry2_answers_path %></h3>
+  <% else %>
+    <h3><%= link_to t("inquiry2.nodes"), inquiry2_nodes_path %></h3>
+  <% end %>
+<% end %>

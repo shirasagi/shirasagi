@@ -65,6 +65,21 @@ module Sys::SiteCopy::CmsNodes
     end
   end
 
+  def copy_inquiry2_columns(src_node, dest_node)
+    Inquiry2::Column.where(site_id: @src_site.id, node_id: src_node.id).order_by(updated: 1).each do |src_inquiry_column|
+      Rails.logger.debug("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry2::Column をコピーします。")
+      attributes = src_inquiry_column.attributes.slice(*Inquiry2::Column.fields.keys)
+      attributes = attributes.except("id", "_id", "node_id", "site_id", "created", "updated")
+      dest_inquiry_column = Inquiry2::Column.new attributes
+      dest_inquiry_column.cur_site = @dest_site
+      dest_inquiry_column.site_id = @dest_site.id
+      # dest_inquiry_column.cur_node = dest_node
+      dest_inquiry_column.node_id = dest_node.id
+      dest_inquiry_column.save!
+      Rails.logger.info("#{src_inquiry_column.name}(#{src_inquiry_column.id}): Inquiry2::Column をコピーしました。")
+    end
+  end
+
   def copy_ezine_columns(src_node, dest_node)
     Ezine::Column.where(site_id: @src_site.id, node_id: src_node.id).order_by(updated: 1).each do |src_ezine_column|
       Rails.logger.debug("#{src_ezine_column.name}(#{src_ezine_column.id}): Ezine::Column をコピーします。")

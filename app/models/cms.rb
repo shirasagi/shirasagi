@@ -95,6 +95,8 @@ module Cms
     ::History::Trash
     ::Inquiry::Answer
     ::Inquiry::Column
+    ::Inquiry2::Answer
+    ::Inquiry2::Column
     ::Jmaxml::Action::Base
     ::Jmaxml::ForecastRegion
     ::Jmaxml::QuakeRegion

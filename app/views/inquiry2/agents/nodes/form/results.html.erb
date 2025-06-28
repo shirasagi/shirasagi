@@ -1,0 +1,45 @@
+<%= javascript_include_tag "inquiry2/chart" %>
+<%= jquery do %>Inquiry_Chart.drawBar(".graph-canvas");<% end %>
+
+<% if @cur_node.inquiry2_results_html.present? %>
+  <%= raw @cur_node.inquiry2_results_html %>
+<% end %>
+<div class="columns">
+  <dl class="column count">
+    <dt><%= t "inquiry2.total_count" %></dt>
+    <dd>
+      <%= @cur_node.answers.count %>
+      <%= t "ss.units.count" %>
+    </dd>
+  </dl>
+  <% @columns.each do |column| %>
+    <% if column.input_type =~ /(select|radio_button|check_box)/ %>
+      <dl class="column">
+        <dt><%= column.name %></dt>
+        <dd class ="wide">
+          <table class="index">
+            <caption><%= column.name %></caption>
+            <tbody>
+              <% data = {} %>
+              <% column.select_options.each do |opts| %>
+                <% count = @aggregation[{ "column_id" => column.id, "value" => opts }] %>
+                <% total = @aggregation[{ "column_id" => column.id}] %>
+                <% percentage = (total > 0) ? ( count.to_f / total.to_f * 100.0 ).round(1) : 0 %>
+                <% data[opts] = percentage %>
+                <tr>
+                  <th scope="row"><%= opts %></th>
+                  <td class="count"><%= count %><%= t "ss.units.count" %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </dd>
+        <% if data.size > 0 %>
+          <dd class="graph">
+            <canvas class="graph-canvas" height="<%= data.keys.count * 25 %>" data-name='<%= column.name %>' data-columns='<%= data.to_json %>'></canvas>
+          </dd>
+        <% end %>
+      </dl>
+    <% end %>
+  <% end %>
+</div>

@@ -46,6 +46,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_check_links_ignore_urls
     invoke :export_ezine_columns
     invoke :export_inquiry_columns
+    invoke :export_inquiry2_columns
     invoke :export_kana_dictionaries
     invoke :export_opendata_dataset_groups
     invoke :export_opendata_licenses
@@ -221,6 +222,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def export_inquiry_columns
     export_documents "inquiry_columns", Inquiry::Column
+  end
+
+  def export_inquiry2_columns
+    export_documents "inquiry2_columns", Inquiry2::Column
   end
 
   def export_kana_dictionaries

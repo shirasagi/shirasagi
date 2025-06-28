@@ -1,0 +1,15 @@
+<% advanced = Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+<%= html_editor ".mod-inquiry2-message .inquiry2-html", height: "180px", advanced: advanced %>
+<%= html_editor ".mod-inquiry2-message .inquiry2-sent-html", height: "180px", advanced: advanced %>
+<%= html_editor ".mod-inquiry2-message .inquiry2-results-html", height: "180px", advanced: advanced %>
+
+<dl class="see mod-inquiry2-message">
+  <dt><%= @model.t :inquiry2_show_sent_data %><%= @model.tt :inquiry2_show_sent_data %></dt>
+  <dd><%= f.select :inquiry2_show_sent_data, @item.inquiry2_show_sent_data_options %></dd>
+  <dt><%= @model.t :inquiry2_html %><%= @model.tt :inquiry2_html %></dt>
+  <dd><%= f.text_area :inquiry2_html, class: "inquiry2-html", style: "height: 180px;" %></dd>
+  <dt><%= @model.t :inquiry2_sent_html %><%= @model.tt :inquiry2_sent_html %></dt>
+  <dd><%= f.text_area :inquiry2_sent_html, class: "inquiry2-sent-html", style: "height: 180px;" %></dd>
+  <dt><%= @model.t :inquiry2_results_html %><%= @model.tt :inquiry2_results_html %></dt>
+  <dd><%= f.text_area :inquiry2_results_html, class: "inquiry2-results-html", style: "height: 180px;" %></dd>
+</dl>

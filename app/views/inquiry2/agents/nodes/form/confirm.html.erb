@@ -1,0 +1,61 @@
+<%= jquery do %>Inquiry_Form.render({ confirm: true, requiredLabel: <%== t('inquiry2.required_field').to_json %> });<% end %>
+<%
+  if @group.present?
+    if @group.contact_group_name.present?
+      @cur_node.name = @group.contact_group_name + " " + @cur_node.name
+    else
+      @cur_node.name = @group.section_name + " " + @cur_node.name
+    end
+  end
+%>
+<div class="inquiry2-form confirm">
+  <%= form_for :item, url: "#{@cur_node.url}create.html", html: { multipart: true } do |f| %>
+    <% if @answer.errors.empty? %>
+      <div class="inquiry2-confirm-message"><%= t('inquiry2.confirm_message') %></div>
+    <% end %>
+
+    <%= error_messages_for :answer, header_message: false %>
+    <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url, id: nil %>
+    <%= hidden_field_tag "group", @group.id, id: nil if @group %>
+    <%= hidden_field_tag "page", @page.id, id: nil if @page %>
+    <% if params[:preview] %>
+      <%= hidden_field_tag "preview", params[:preview], id: nil %>
+    <% end %>
+    <% if @cur_node.captcha_enabled? %>
+      <%= show_captcha %>
+    <% end %>
+
+    <div style="display: none;">
+      <%
+        def find_column_value(column_values, column)
+          column_values.where(column_id: column.id).first
+        end
+      %>
+      <%= f.fields_for :column_values do |g| %>
+        <% @cur_form.columns.order_by(order: 1, id: 1).each do |column| %>
+          <% column_value = find_column_value(@item.column_values, column) %>
+          <%= render column.column_form_partial_path, f: g, column: column, value: column_value, controller: false %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="columns">
+      <% @item.column_values.order_by(order: 1, name: 1).each do |column_value| %>
+        <% column = @cur_form.columns.find(column_value.column_id) rescue nil %>
+        <% next if column.blank? %>
+        <% if column.column_show_partial_path %>
+          <%= render column.column_show_partial_path, column: column, value: column_value %>
+        <% elsif column_value.class != Cms::Column::Value::Base && column_value.respond_to?(:value) %>
+          <%= render 'cms/agents/columns/main/base', show: true, column: column, value: column_value, id_suffix: "-confirm" do %>
+            <%= br [ column_value.value.presence ].compact.flatten.join(', ') %>
+          <% end %>
+        <% end %>
+      <% end %>
+    </div>
+
+    <footer class="send">
+      <%= f.submit t('inquiry2.cancel'), name: :cancel %>
+      <%= f.submit t('inquiry2.submit'), name: :submit %>
+    </footer>
+  <% end %>
+</div>

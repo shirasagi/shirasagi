@@ -1,0 +1,5 @@
+<% message.subject = @subject %>
+<%= "「#{@node.name}」に入力がありました。" %>
+<%= @answer_url %>
+
+<%= convert_to_lines(sanitize(@answer_data.to_s, tags: [])) %>

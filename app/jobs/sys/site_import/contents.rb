@@ -103,6 +103,10 @@ module Sys::SiteImport::Contents
     import_documents "inquiry_columns", Inquiry::Column
   end
 
+  def import_inquiry2_columns
+    import_documents "inquiry2_columns", Inquiry2::Column
+  end
+
   def import_kana_dictionaries
     import_documents "kana_dictionaries", Kana::Dictionary
   end

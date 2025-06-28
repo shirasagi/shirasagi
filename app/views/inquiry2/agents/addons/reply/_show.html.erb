@@ -1,0 +1,24 @@
+<dl class="see mod-inquiry2-reply">
+  <dt><%= @model.t :reply_state %></dt>
+  <dd>
+    <%= @item.label :reply_state %>
+    <% if @item.try(:reply_mail_enabled?) && !@item.email_column_exist? %>
+      <div class="email-column-not-exists"><%=br t("inquiry2.email_column_not_exists") %></div>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :reply_subject %></dt>
+  <dd><%= @item.reply_subject %></dd>
+
+  <dt><%= @model.t :reply_upper_text %></dt>
+  <dd><%= br @item.reply_upper_text %></dd>
+
+  <dt><%= @model.t :reply_content_state %></dt>
+  <dd><%= @item.label :reply_content_state %></dd>
+
+  <dt><%= @model.t :reply_content_static %></dt>
+  <dd><%= br @item.reply_content_static %></dd>
+
+  <dt><%= @model.t :reply_lower_text %></dt>
+  <dd><%= br @item.reply_lower_text %></dd>
+</dl>

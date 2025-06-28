@@ -1,0 +1,37 @@
+<%
+  if @group.present?
+    if @group.contact_group_name.present?
+      @cur_node.name = @group.contact_group_name + " " + @cur_node.name
+    else
+      @cur_node.name = @group.section_name + " " + @cur_node.name
+    end
+  end
+%>
+<div class="inquiry2-sent">
+  <%= sanitize(@cur_node.inquiry2_sent_html) %>
+</div>
+
+<% if @saved_params.present? %>
+  <div class="columns">
+    <% @columns.each do |column| %>
+      <% next if @saved_params.data[column.id.to_s].blank? %>
+
+      <div class="column-value <%= column._type.parameterize %>">
+        <div class="column-value-header">
+          <div class="column-value-header-group">
+            <label>
+              <span class="column-name"><%= column.name %></span>
+            </label>
+          </div>
+        </div>
+        <div class="column-value-body">
+          <%=br @saved_params.data[column.id.to_s] %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<% if params[:ref].present? %>
+  <div class="back-to-ref"><%= link_to I18n.t("inquiry2.links.back_to_page"), ::Addressable::URI.parse(params[:ref].to_s).request_uri %></div>
+<% end %>

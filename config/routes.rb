@@ -24,7 +24,7 @@ class ActionDispatch::Routing::Mapper
   def content(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
-    namespace(name, path: ".s:site/#{ns}:cid", module: mod, cid: /\w+/, &block)
+    namespace(name, path: ".s:site/#{ns}-:cid", module: mod, cid: /\d+/, &block)
   end
 
   def node(ns, &block)

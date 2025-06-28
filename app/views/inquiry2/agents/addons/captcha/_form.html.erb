@@ -1,0 +1,9 @@
+<dl class="see mod-inquiry2-captcha">
+  <dt><%= @model.t :inquiry2_captcha %><%= @model.tt :inquiry2_captcha %></dt>
+  <dd><%= f.select :inquiry2_captcha, @item.inquiry2_captcha_options %></dd>
+  <dt><%= @model.t :captcha_test %><%= @model.tt :captcha_test %></dt>
+  <dd>
+    <div><%= I18n.t('simple_captcha.captcha_button') %></div>
+    <%= show_captcha(show_specific_error: true) %>
+  </dd>
+</dl>

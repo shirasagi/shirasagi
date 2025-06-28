@@ -8,6 +8,7 @@ Cms_Column_Select.renderChild = function(el, options) {
 Cms_Column_ChildSelect = function(el, options) {
   this.$el = $(el);
   this.$container = this.$el.closest("#addon-cms-agents-addons-form-page");
+  if (!this.$container.length) this.$container = this.$el.closest("form");
   this.options = options;
   this.render();
 };
