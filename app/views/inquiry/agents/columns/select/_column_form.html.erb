@@ -1,0 +1,6 @@
+<% value ||= nil %>
+<% controller ||= false %>
+<%= render 'inquiry/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <% options = options_for_select(column.select_options, selected: value.try(:value)) %>
+  <%= select_tag("#{f.object_name}[][in_wrap][value]", options, column.form_options.merge(include_blank: true)) %>
+<% end %>

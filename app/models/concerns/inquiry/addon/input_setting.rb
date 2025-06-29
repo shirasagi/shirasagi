@@ -74,7 +74,7 @@ module Inquiry::Addon
     #   [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ]
     # end
 
-    def required?(in_reply)
+    def required?(in_reply = nil)
       return true if in_reply && required_in_select_form && required_in_select_form.include?(in_reply)
       required == "required"
     end

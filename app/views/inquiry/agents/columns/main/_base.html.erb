@@ -1,0 +1,122 @@
+<% show ||= false %>
+<% controller ||= false %>
+<% id = value.try(:id) || BSON::ObjectId.new %>
+<% unique_id = id %>
+<% id = "column-value-#{id}" %>
+<%
+  @buttons = []
+  @buttons << :syntax_check if @inplace_syntax_check
+  @buttons << :link_check if @inplace_link_check
+  @buttons << :form_check if @inplace_form_check
+
+  @extra_bodies = []
+%>
+<div id="<%= id %>" class="column-value column-value-<%= column._type.parameterize %> <%= 'column-with-errors' if value.try(:errors).present? %>">
+  <div class="column-value-header">
+    <div class="column-value-header-group">
+      <label <% if controller %>class="sortable-handle"<% end %>>
+        <% if controller %>
+          <i class="material-icons">swap_vert</i>
+        <% end %>
+        <span class="column-name"><%= column.name %></span>
+      </label>
+      <% if !show && column.tooltips.present? %>
+        <div class="tooltip">?
+          <ul class="tooltip-content">
+            <% column.tooltips.each do |tooltip| %>
+              <li><%= tooltip %><br></li>
+            <% end %>
+          </ul>
+        </div>
+      <% end %>
+      <%= required_label if column.required? %>
+    </div>
+
+    <% if show %>
+      <% if value.alignment %>
+        <div class="column-value-header-group">
+          <label><%= t("mongoid.attributes.cms/column/value/base.alignment") %></label>
+          <span><%= t("cms.options.alignment.#{value.alignment}") %></span>
+        </div>
+      <% end %>
+    <% else %>
+      <!--
+      <% alignment_options = column.alignment_options %>
+      <% if alignment_options.length > 1 %>
+        <div class="column-value-header-group">
+          <label>
+            <%= t("mongoid.attributes.cms/column/value/base.alignment") %>
+            <%= select_tag("#{f.object_name}[][alignment]", options_for_select(alignment_options, value.try(:alignment)), id: nil) %>
+          </label>
+        </div>
+      <% elsif alignment_options.length == 1 %>
+        <%= hidden_field_tag("#{f.object_name}[][alignment]", alignment_options.first[1], id: nil) %>
+      <% end %>
+      -->
+    <% end %>
+
+    <% if controller %>
+      <div class="column-value-header-group">
+        <button type="button" class="column-value-controller-move-up"><i class="material-icons md-14">keyboard_arrow_up</i></button>
+        <%= select_tag("#{f.object_name}[][order]", [], class: "column-value-controller-move-position no-form-control") %>
+        <button type="button" class="column-value-controller-move-down"><i class="material-icons md-14">keyboard_arrow_down</i></button>
+      </div>
+      <div class="column-value-header-group">
+        <button type="button" class="column-value-controller-delete">
+          <i class="material-icons md-14">delete</i> <%= t("ss.links.delete") %>
+        </button>
+      </div>
+    <% end %>
+  </div>
+  <div class="column-value-body">
+    <% if column.html.present? %>
+      <div class="mb-2"><%== column.html %></div>
+    <% end %>
+
+    <% if !show %>
+      <%= hidden_field_tag "#{f.object_name}[][column_id]", column.id, id: nil %>
+      <%= hidden_field_tag "#{f.object_name}[][_type]", column.value_type, id: nil %>
+    <% end %>
+    <%= yield(id) %>
+
+    <% if @buttons.present? %>
+    <div class="inplace-checkers">
+      <% @buttons.each do |button| %>
+        <% case button %>
+        <% when :syntax_check %>
+          <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } %>
+        <% when :link_check %>
+          <% if !SS::Lgwan.enabled? || SS::Lgwan.web? %>
+            <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+          <% end %>
+        <% when :form_check %>
+          <%= button_tag t("cms.form_check"), { type: :button, class: "btn form-check" } %>
+        <% when :source_cleaner %>
+          <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn", id: "#{id}-source-cleaner" } %>
+        <% when :related_pages %>
+          <% if !@inplace_mode %>
+            <%
+              page_params = {}
+              page_params[:unique_id] = unique_id
+              if @cur_node
+                page_params[:s] = { node: @cur_node }
+              end
+            %>
+            <%= link_to t("cms.apis.related_pages.index"), cms_apis_pages_path(page_params), class: "btn ajax-box related-pages" %>
+          <% end %>
+        <% when String %>
+          <%= button %>
+        <% end %>
+      <% end %>
+    </div>
+    <% end %>
+  </div>
+
+  <% if @extra_bodies.present? %>
+    <% @extra_bodies.each do |extra_body| %>
+      <div class="column-value-body">
+        <% extra_body.call(id) %>
+      </div>
+    <% end %>
+  <% end %>
+</div>

@@ -1,0 +1,16 @@
+<% value ||= nil %>
+<% controller ||= false %>
+<%= render 'inquiry/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <%= hidden_field_tag("#{f.object_name}[][in_wrap][value]", value.try(:value) || "", id: nil, class: "radio-value") %>
+
+  <% column.select_options.each do |val| %>
+    <label>
+      <%= radio_button_tag("radio[#{id}]", val, value.try(:value) == val, column.form_options.merge(id: nil)) %>
+      <%= val %>
+    </label>
+  <% end %>
+
+  <%= jquery do %>
+    var radioButton = Cms_Column_RadioButton.render("#<%= id %>");
+  <% end %>
+<% end %>

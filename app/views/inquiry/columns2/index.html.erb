@@ -1,0 +1,56 @@
+<%# ユーザーの拡張情報の場合 .name は存在しないので、存在しない場合は表示しないようにする %>
+<% if cur_form.respond_to?(:name) %>
+  <div class="main-box">
+    <header>
+      <h2><%= cur_form.name %></h2>
+    </header>
+    <% if (description = cur_form.try(:description)).present? %>
+      <div>
+        <%= sanitize br(description, html_escape: false) %>
+      </div>
+    <% end %>
+  </div>
+<% end %>
+
+<div class="main-box">
+  <% new_form_notices = t("gws/column.new_form_notice", name: t("inquiry.column")) %>
+  <div class="gws-column-new-form-notice">
+    <ul class="gws-column-new-form-notice-list">
+      <% new_form_notices.each do |message, options| %>
+        <%=
+          if options.present?
+            options = options.dup
+            options[:class] = Array(options[:class]) + %w(gws-column-new-form-notice-item)
+          else
+            options = { class: %w(gws-column-new-form-notice-item) }
+          end
+
+          tag.li message.html_safe, **options
+        %>
+      <% end %>
+    </ul>
+  </div>
+</div>
+
+<script>
+SS.ready(function() {
+  const target = document.getElementsByClassName('gws-column-item-list')[0];
+  const config = { attributes: true, subtree: true };
+  const observer = new MutationObserver((mutations) => {
+    <%= html_editor_js ".inquiry-column-html", height: "180px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+  });
+  observer.observe(target, config);
+});
+</script>
+
+<%= render "cms/columns2/toolbar", target: ".gws-column-item-list", placement: 'top' %>
+
+<%= ss_stimulus_tag({ "gws/column/drag_drop" => { reorder: url_for(action: :reorder) } }, class: "gws-column-item-list") do %>
+  <% items.each do |item| %>
+    <turbo-frame id="item-<%= item.id %>">
+      <%= render template: "inquiry/frames/columns/show", locals: { ref: SS.request_path(request), model: item.class, item: item } %>
+    </turbo-frame>
+  <% end %>
+<% end %>
+
+<%= render "cms/columns2/toolbar", target: ".gws-column-item-list", placement: 'bottom' %>
