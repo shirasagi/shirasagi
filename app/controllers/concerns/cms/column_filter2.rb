@@ -31,11 +31,15 @@ module Cms::ColumnFilter2
     @items ||= cur_form.columns.reorder(order: 1)
   end
 
+  def column_route_options
+    Cms::Column.route_options
+  end
+
   def column_type_options
     @column_type_options ||= begin
       items = {}
 
-      Cms::Column.route_options.each do |name, path|
+      column_route_options.each do |name, path|
         mod = path.sub(/\/.*/, '')
         items[mod] = { name: t("modules.#{mod}"), items: [] } if !items[mod]
         items[mod][:items] << [ name.sub(/.*\//, ''), path ]
@@ -49,7 +53,7 @@ module Cms::ColumnFilter2
     model = self.class.model_class
 
     if params[:type].present?
-      models = Cms::Column.route_options.collect do |k, v|
+      models = column_route_options.collect do |k, v|
         v.sub('/', '/column/').classify.constantize
       end
       model = models.find { |m| m.to_s == params[:type].sub('/', '/column/').classify }
