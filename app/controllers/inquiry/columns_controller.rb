@@ -22,7 +22,7 @@ class Inquiry::ColumnsController < ApplicationController
   end
 
   def cur_form
-    @cur_form ||= @cur_node if @cur_node.class == form_model
+    @cur_form ||= @cur_node if @cur_node.instance_of?(form_model)
     @cur_form ||= @cur_node.becomes_with(form_model)
   end
 
