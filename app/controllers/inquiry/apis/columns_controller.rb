@@ -13,11 +13,7 @@ class Inquiry::Apis::ColumnsController < ApplicationController
   end
 
   def cur_form
-    if params[:form_id]
-      @cur_form ||= Inquiry::Node::Form.site(@cur_site).find(params[:form_id])
-    else
-      @cur_form ||= @item.form
-    end
+    @cur_form ||= @item.form
   end
 
   def ref

@@ -9,15 +9,9 @@ class Inquiry::ColumnsController < ApplicationController
   navi_view "inquiry/main/navi"
   append_view_path 'app/views/inquiry/columns2'
 
-  before_action :set_inquiry_assets
   before_action :check_permission
 
   private
-
-  def set_inquiry_assets
-    javascript "/assets/js/ckeditor/ckeditor.js"
-    javascript "/assets/js/ckeditor/adapters/jquery.js"
-  end
 
   def fix_params
     { cur_site: @cur_site, node_id: @cur_node.id }
@@ -28,7 +22,8 @@ class Inquiry::ColumnsController < ApplicationController
   end
 
   def cur_form
-    @cur_form ||= @cur_node
+    @cur_form ||= @cur_node if @cur_node.class == form_model
+    @cur_form ||= @cur_node.becomes_with(form_model)
   end
 
   def column_route_options
@@ -44,6 +39,7 @@ class Inquiry::ColumnsController < ApplicationController
     if params[:type]
       @item.input_type = params[:type].sub(/.*\//, '')
       @item.name = I18n.t("inquiry.columns.#{params[:type]}", default: params[:type])
+      @item.required = "required"
     end
 
     case params[:type]
@@ -68,11 +64,11 @@ class Inquiry::ColumnsController < ApplicationController
     set_default_attributes
 
     @item.order = placement == "bottom" ? cur_form.columns.max(:order).to_i + 10 : 10
-    @item.required = cur_form.columns.reorder(order: -1).only(:required).first.try(:required) || "required"
+    # @item.required = cur_form.columns.reorder(order: -1).only(:required).first.try(:required) || "required"
     unless @item.save
-      json = { status: 422, errors: @item.errors.full_messages }
-      render json: json, status: :unprocessable_entity, content_type: json_content_type
-      return
+      # json = { status: 422, errors: @item.errors.full_messages }
+      # render json: json, status: :unprocessable_entity, content_type: json_content_type
+      return render :create_error, layout: false
     end
 
     if placement == "top"

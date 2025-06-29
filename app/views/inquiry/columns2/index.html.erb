@@ -32,6 +32,17 @@
   </div>
 </div>
 
+<script>
+SS.ready(function() {
+  const target = document.getElementsByClassName('gws-column-item-list')[0];
+  const config = { attributes: true, subtree: true };
+  const observer = new MutationObserver((mutations) => {
+    <%= html_editor_js ".inquiry-column-html", height: "180px", advanced: Cms::EditorExtension.allowed?(:use, @cur_user, site: @cur_site) %>
+  });
+  observer.observe(target, config);
+});
+</script>
+
 <%= render "cms/columns2/toolbar", target: ".gws-column-item-list", placement: 'top' %>
 
 <%= ss_stimulus_tag({ "gws/column/drag_drop" => { reorder: url_for(action: :reorder) } }, class: "gws-column-item-list") do %>

@@ -1,3 +1,4 @@
+## 管理画面用
 module Inquiry::Addon::ExpandColumn
   extend ActiveSupport::Concern
 
@@ -8,7 +9,7 @@ module Inquiry::Addon::ExpandColumn
   end
 
   def form
-    node
+    @form ||= Cms::Node.site(site).find(node_id).becomes_with_route("inquiry/form")
   end
 
   def path
@@ -26,10 +27,6 @@ module Inquiry::Addon::ExpandColumn
 
   def value_type
     Cms::Column::Value::TextField
-  end
-
-  def required?
-    required == 'required'
   end
 
   def tooltips
