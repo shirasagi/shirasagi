@@ -88,7 +88,20 @@ class Cms::Elasticsearch::Searcher
 
     if group_ids.present?
       ids = group_ids.reject(&:blank?)
-      query[:bool][:must] << { terms: { group_ids: ids } } if ids.present?
+      # query[:bool][:must] << { terms: { group_ids: ids } } if ids.present?
+
+      if ids.present?
+        group_query = {}
+        group_query[:bool] = {}
+        group_query[:bool][:filter] = []
+        group_query[:bool][:should] = []
+
+        Cms::Group.in(id: ids).each do |group|
+          name = group.name.gsub('*', '\\*').gsub('?', '\\?')
+          group_query[:bool][:should] << { wildcard: { groups: "#{name}*" } }
+        end
+        query[:bool][:must] << group_query
+      end
     end
 
     if category_name.present?
