@@ -53,5 +53,10 @@ CKEDITOR.editorConfig = function( config ) {
 	// 	  styles: { color: '#(color)' }
 	// };
 
+	config.coreStyles_underline = {
+		element: 'span',
+		attributes: { 'class': 'ss-cke-underline' }
+	};
+
 	config.templates_replaceContent = false;
 };
