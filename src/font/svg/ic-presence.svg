@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-presence" data-name="ic-presence" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-presence-svg-1 {
+        fill: #969696;
+      }
+
+      .ic-presence-svg-2 {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <polygon class="ic-presence-svg-2" points="11 8 11 12 11.99 16 19.96 16 21 12 21 8 11 8"/>
+  <rect class="ic-presence-svg-1" x="15" y="19.84" width="2" height="4.15"/>
+  <polygon class="ic-presence-svg-2" points="10 16.99 10 19.01 14.01 19.01 14.01 20 18 20 18 18.99 22 19 22 17 10 16.99"/>
+  <polygon class="ic-presence-svg-2" points="10.99 23.99 12.98 23.99 14.01 23 17.99 23 19.01 23.99 21.01 23.99 21.01 23 18.45 22 13.48 22 10.99 23 10.99 23.99"/>
+</svg>

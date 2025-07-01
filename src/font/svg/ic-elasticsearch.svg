@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-elasticsearch" data-name="ic-elasticsearch" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-elasticsearch-svg {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <path class="ic-elasticsearch-svg" d="M7.99,10.02h17.07v.94l-7.04,6.98v4l-2.02,2.02h-.98v-6.02l-7.02-7.01v-.91ZM25.06,7.91H7.99v1.1h17.07v-1.1Z"/>
+</svg>

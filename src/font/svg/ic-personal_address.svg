@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-personal_address" data-name="ic-personal_address" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-personal_address-svg {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <path class="ic-personal_address-svg" d="M24.03,23.96h-14.98V6.97h14.98v16.99ZM11.55,8.81h-2.51v2.96h2.51v-2.96ZM11.55,18.83h-2.51v2.96h2.51v-2.96ZM11.55,13.81h-2.51v2.98h2.51v-2.98ZM23.02,7.96h-9.97v15.02h9.97V7.96Z"/>
+  <rect class="ic-personal_address-svg" x="7.03" y="14.32" width="4.01" height="1.96"/>
+  <rect class="ic-personal_address-svg" x="7.03" y="19.32" width="4.01" height="1.96"/>
+  <rect class="ic-personal_address-svg" x="7.03" y="9.32" width="4.01" height="1.96"/>
+  <path class="ic-personal_address-svg" d="M17.21,16.53c-.01-1.37-1.02-2.63-1.03-3.71-.01-1.48.56-3.01,1.96-3.01s2.05,1.14,2.04,3.17c0,.94-.99,2.44-1.01,3.55v.24c.61.79,2.45.44,3.05,2.18.07.21.42,1.05,0,1.84-.56,1.05-1.95,1.08-2.02,1.08h-4.96c-.2-.1-.77-.41-1.08-1.08-.4-.86-.12-1.69,0-1.9.58-.98,1.85-1.41,3-2.03,0,0,.05,0,.05-.34Z"/>
+</svg>

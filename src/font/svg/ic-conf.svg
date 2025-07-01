@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-conf" data-name="ic-conf" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-conf-svg {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <path class="ic-conf-svg" d="M13.91,15.98l7.15-8.1c.92-.89,2.31-.78,2.96,0,.49.6.51,1.57,0,2.34l-8.01,8.82v2.96l-1.97,2.09h-2.96v-2.19l1.7-.05v-2.87h-2.74v2.01h-2v-3.11l2.02-1.86,3.86-.02Z"/>
+</svg>

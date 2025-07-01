@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-memo" data-name="ic-memo" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-memo-svg {
+        fill: none;
+        stroke: currentColor;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <polygon class="ic-memo-svg" points="7.5 8.5 7.5 18.46 11.48 18.46 11.48 22.65 15.01 18.46 17.47 18.46 17.47 14.53 22.53 14.53 22.53 8.5 7.5 8.5"/>
+  <polygon class="ic-memo-svg" points="28.54 14.53 28.54 21.69 25.5 21.69 25.5 24.9 23 21.58 17.47 21.58 17.47 14.53 28.54 14.53"/>
+</svg>

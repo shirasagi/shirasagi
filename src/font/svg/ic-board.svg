@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-board" data-name="ic-board" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-board-svg {
+        fill: none;
+        stroke: currentColor;
+        stroke-miterlimit: 10;
+      }
+    </style>
+  </defs>
+  <polygon class="ic-board-svg" points="8.47 9.51 8.47 19.47 12.58 19.47 12.58 23.56 15.86 19.47 23.53 19.47 23.53 9.51 8.47 9.51"/>
+  <line class="ic-board-svg" x1="10.01" y1="11.51" x2="22" y2="11.51"/>
+  <line class="ic-board-svg" x1="10.01" y1="13.51" x2="22" y2="13.51"/>
+  <line class="ic-board-svg" x1="10.01" y1="15.51" x2="22" y2="15.51"/>
+  <line class="ic-board-svg" x1="10.01" y1="17.51" x2="16" y2="17.51"/>
+</svg>

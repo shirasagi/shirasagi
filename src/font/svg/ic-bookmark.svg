@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-bookmark" data-name="ic-bookmark" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-bookmark-svg {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <polygon class="ic-bookmark-svg" points="8.02 13.89 13.95 13.89 16 8 17.95 13.89 24.05 13.89 18.91 18.01 21.02 23.06 16 19.95 11.05 23.06 12.94 17.97 8.02 13.89"/>
+</svg>

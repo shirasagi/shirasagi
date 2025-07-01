@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-share" data-name="ic-share" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-share-svg {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <path class="ic-share-svg" d="M23.02,23.01h-13.99l4-8h13.99l-4,8ZM12.02,14.02l11.97-.05v-4.96h-5.96l-2.02,1.95h-6.97v8.87l2.98-5.81Z"/>
+</svg>

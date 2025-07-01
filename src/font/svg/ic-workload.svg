@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-workload" data-name="ic-workload" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-workload-svg {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <path class="ic-workload-svg" d="M10,24.99h-2.99v-6h2.99v6ZM14,12.01h-2.99v12.98h2.99v-12.98ZM14,9.99h-2.99v1h2.99v-1ZM14,7.97h-2.99v1h2.99v-1ZM18,17h-2.99v7.99h2.99v-7.99ZM18,14.99h-2.99v1h2.99v-1ZM22,14.99h-2.99v10h2.99v-10ZM22,12.99h-2.99v1h2.99v-1ZM22,10.99h-2.99v1h2.99v-1ZM25.99,18.01h-2.99v6.98h2.99v-6.98Z"/>
+</svg>

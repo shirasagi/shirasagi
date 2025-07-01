@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-portal" data-name="ic-portal" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-portal-svg-1 {
+        fill: none;
+        stroke: currentColor;
+        stroke-miterlimit: 10;
+      }
+
+      .ic-portal-svg-2 {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <rect class="ic-portal-svg-1" x="8.55" y="8.51" width="14.94" height="14.94"/>
+  <rect class="ic-portal-svg-2" x="10.01" y="12.99" width="3.96" height="8.98"/>
+  <rect class="ic-portal-svg-2" x="15" y="19.98" width="6.99" height="1.99"/>
+  <rect class="ic-portal-svg-2" x="15" y="17" width="6.99" height="1.99"/>
+  <rect class="ic-portal-svg-2" x="10.01" y="10.01" width="11.98" height="1.99"/>
+  <rect class="ic-portal-svg-2" x="15" y="12.99" width="2.99" height="2.99"/>
+  <rect class="ic-portal-svg-2" x="19" y="12.99" width="2.99" height="2.99"/>
+</svg>

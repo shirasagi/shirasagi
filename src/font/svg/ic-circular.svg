@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-circular" data-name="ic-circular" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-circular-svg-1 {
+        fill: none;
+        stroke: currentColor;
+        stroke-miterlimit: 10;
+      }
+
+      .ic-circular-svg-2 {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <path class="ic-circular-svg-2" d="M23,24.98h-14.01V7.06h14.01v17.92ZM21.66,8.49l-3.76.02v1.64s-3.69.02-3.69.02v-1.66s-3.86-.02-3.86-.02v15.15h11.32v-15.15Z"/>
+  <rect class="ic-circular-svg-2" x="13.01" y="8.07" width="5.98" height="2.98"/>
+  <line class="ic-circular-svg-1" x1="11.99" y1="15.49" x2="20.01" y2="15.49"/>
+  <line class="ic-circular-svg-1" x1="11.99" y1="13.5" x2="20.01" y2="13.5"/>
+  <line class="ic-circular-svg-1" x1="11.99" y1="17.48" x2="20.01" y2="17.48"/>
+  <line class="ic-circular-svg-1" x1="11.99" y1="19.49" x2="20.01" y2="19.49"/>
+  <line class="ic-circular-svg-1" x1="11.99" y1="21.51" x2="20.01" y2="21.51"/>
+</svg>

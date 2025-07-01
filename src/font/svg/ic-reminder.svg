@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-reminder" data-name="ic-reminder" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-reminder-svg {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <path class="ic-reminder-svg" d="M24.42,15.82c0,4.46-3.62,8.07-8.07,8.07s-8.07-3.62-8.07-8.07,3.62-8.07,8.07-8.07,8.07,3.62,8.07,8.07ZM14.99,9.99l.34,9h2.34l.33-9h-3.01ZM18,20h-3.01v2h3.01v-2Z"/>
+</svg>

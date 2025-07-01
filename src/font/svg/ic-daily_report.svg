@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="ic-daily_report" data-name="ic-daily_report" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <defs>
+    <style>
+      .ic-daily_report-svg-1 {
+        fill: none;
+        stroke: currentColor;
+        stroke-miterlimit: 10;
+      }
+
+      .ic-daily_report-svg-2 {
+        fill: currentColor;
+      }
+    </style>
+  </defs>
+  <path class="ic-daily_report-svg-2" d="M22.98,25.96H7.01V7.06h15.97v18.9ZM21.58,8.54l-4.4.02v.73s-4.33.02-4.33.02v-.75s-4.52-.02-4.52-.02v15.01h13.26v-15.01Z"/>
+  <rect class="ic-daily_report-svg-2" x="11.96" y="7.06" width="5.98" height="2.98"/>
+  <line class="ic-daily_report-svg-1" x1="11" y1="20.51" x2="15" y2="20.51"/>
+  <line class="ic-daily_report-svg-1" x1="11" y1="18.51" x2="16" y2="18.51"/>
+  <line class="ic-daily_report-svg-1" x1="11" y1="14.51" x2="18" y2="14.51"/>
+  <line class="ic-daily_report-svg-1" x1="11" y1="12.51" x2="19.02" y2="12.51"/>
+  <path class="ic-daily_report-svg-2" d="M17,19l7.06-10.07h.04c1.16-.26,1.91.12,1.86,1.52h0s-6.99,10.52-6.99,10.52h-1.97v-1.97Z"/>
+</svg>
