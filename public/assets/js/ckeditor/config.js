@@ -58,6 +58,10 @@ CKEDITOR.editorConfig = function( config ) {
 		attributes: { 'class': 'ss-cke-underline' }
 	};
 
+	config.coreStyles_strike = {
+		element: 'del'
+	};
+
 	config.templates_replaceContent = false;
 
 	config.stylesSet = 'ss-styles:/assets/js/ckeditor/ss-styles.js'
