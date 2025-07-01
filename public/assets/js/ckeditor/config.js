@@ -59,4 +59,6 @@ CKEDITOR.editorConfig = function( config ) {
 	};
 
 	config.templates_replaceContent = false;
+
+	config.stylesSet = 'ss-styles:/assets/js/ckeditor/ss-styles.js'
 };
