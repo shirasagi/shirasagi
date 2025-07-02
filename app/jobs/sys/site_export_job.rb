@@ -4,13 +4,18 @@ class Sys::SiteExportJob < SS::ApplicationJob
   cattr_accessor :export_root
   self.export_root = "#{Rails.root}/private/export"
 
-  def put_log(message)
-    Rails.logger.info(message)
-    puts message
+  def mock_task
+    task = OpenStruct.new
+    def task.log(message)
+      Rails.logger.info(message)
+      puts message
+    end
+    task
   end
 
   def perform(opts = {})
     @src_site = Cms::Site.find(site.id)
+    @task = mock_task
 
     @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
     @output_zip = "#{@output_dir}.ssr"
@@ -22,11 +27,11 @@ class Sys::SiteExportJob < SS::ApplicationJob
     FileUtils.rm_rf(@output_dir)
     FileUtils.mkdir_p(@output_dir)
 
-    put_log("=== Site Export ===")
-    put_log("Started at: #{I18n.l(Time.zone.now, format: :picker)}")
-    put_log("Site name: #{@src_site.name}")
-    put_log("Temporary directory: #{@output_dir}")
-    put_log("Output file: #{@output_zip}")
+    @task.log("=== Site Export ===")
+    @task.log("Started at: #{I18n.l(Time.zone.now, format: :picker)}")
+    @task.log("Site name: #{@src_site.name}")
+    @task.log("Temporary directory: #{@output_dir}")
+    @task.log("Output file: #{@output_zip}")
 
     @ss_file_ids = []
 
@@ -64,7 +69,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :compress
 
     FileUtils.rm_rf(@output_dir)
-    put_log("Completed at #{I18n.l(Time.zone.now, format: :picker)}.")
+    @task.log("Completed at #{I18n.l(Time.zone.now, format: :picker)}.")
   rescue => e
     puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
     raise
@@ -83,7 +88,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
   end
 
   def invoke(method)
-    put_log("- #{method.to_s.sub('_', ' ')} at #{I18n.l(Time.zone.now, format: :picker)}")
+    @task.log("- #{method.to_s.sub('_', ' ')} at #{I18n.l(Time.zone.now, format: :picker)}")
     send(method)
   end
 
