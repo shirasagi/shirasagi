@@ -4236,18 +4236,17 @@ table.check-links-erros {
   display: none !important;
 }
 
+// フォントアイコンのホバー設定クラス
 .main-navi h2 a.has-font-icon {
   display: flex;
   align-items: center;
   padding: 5px 0 5px 8px !important;
-  &:hover {
-    text-decoration: underline !important;
-  }
+  // &:hover {
+  //   color: blue !important;
+  // }
 }
 
+// フォントアイコン用スタイル設定クラス
 span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
   margin-right: 5px !important;
-  &:hover {
-    text-decoration: none !important;
-  }
 }
