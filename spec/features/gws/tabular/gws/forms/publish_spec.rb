@@ -62,7 +62,7 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.user_ids).to eq [ user.id ]
         expect(form.group_ids).to eq [ group.id ]
         expect(form.custom_group_ids).to be_blank
-        #
+        # Common
         expect(form.site_id).to eq site.id
         expect(form.space_id).to eq space.id
         expect(form.deleted).to be_blank
@@ -108,7 +108,7 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.user_ids).to eq [ user.id ]
         expect(form.group_ids).to eq [ group.id ]
         expect(form.custom_group_ids).to be_blank
-        #
+        # Common
         expect(form.site_id).to eq site.id
         expect(form.space_id).to eq space.id
         expect(form.deleted).to be_blank
