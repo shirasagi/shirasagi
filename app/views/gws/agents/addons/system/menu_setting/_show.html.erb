@@ -9,16 +9,10 @@
     <dd>
       <% skip_icon_types = %w(staff_record links contrast) %>
       <% unless skip_icon_types.include?(type.to_s) %>
-        <% icon_file = @item.send("menu_#{type}_icon_image") %>
-        <% icon_class = "icon-#{type}" %>
-        <% if icon_file.present? %>
-          <a class="<%= icon_class %> has-custom-icon">
-            <%= image_tag icon_file.url, class: "nav-icon-img" %>
-          </a>
+        <% if @item.send("menu_#{type}_icon_image").present? %>
+            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
         <% else %>
-          <a class="<%= icon_class %> has-font-icon">
-            <span class="ss-icon ss-icon-<%= type %>"></span>
-          </a>
+          <span class="ss-icon ss-icon-<%= type %>"></span>
         <% end %>
       <% end %>
     </dd>

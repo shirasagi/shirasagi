@@ -950,12 +950,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       a[class*="icon-"].has-font-icon {
         display: flex;
         align-items: center;
+        padding: 5px 0 5px 8px !important;
         margin-left: 0px !important;
-        padding-left: 20px !important;
-      }
-
-      span[class*="ss-icon"] {
-        font-size: 32px;
       }
 
       background-color: $gray1;
@@ -4208,7 +4204,7 @@ table.check-links-erros {
 // GWSメニューアイコン用スタイル
 
 // カスタムアイコン用before疑似要素を無効化
-.main-navi [class*="icon-"].has-custom-icon:before {
+.main-navi [class*="icon-"].has-custom-icon::before {
   content: none !important;
   display: none !important;
 }
@@ -4225,16 +4221,17 @@ table.check-links-erros {
   display: flex;
   align-items: center;
   padding-left: 20px !important;
-    &:hover {
-      text-decoration: underline !important;
-    }
+
+  &:hover {
+    text-decoration: underline !important;
+  }
 }
 
 //--------------------------------
 // shirasagiデフォルトアイコン用スタイル
 
 // フォントアイコン用before疑似要素を無効化
-.main-navi h2 [class*="icon-"].has-font-icon:before {
+.main-navi h2 [class*="icon-"].has-font-icon::before {
   content: none !important;
   display: none !important;
 }
@@ -4242,5 +4239,15 @@ table.check-links-erros {
 .main-navi h2 a.has-font-icon {
   display: flex;
   align-items: center;
-  padding-left: 20px !important;
+  padding: 5px 0 5px 8px !important;
+  &:hover {
+    text-decoration: underline !important;
+  }
+}
+
+span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
+  margin-right: 5px !important;
+  &:hover {
+    text-decoration: none !important;
+  }
 }

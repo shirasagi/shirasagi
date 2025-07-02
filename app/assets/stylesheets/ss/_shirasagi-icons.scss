@@ -1,140 +1,139 @@
 $shirasagi-icons-font: "shirasagi-icons";
 
 @font-face {
-    font-family: $shirasagi-icons-font;
-    src: url("/assets/font/shirasagi-icons.eot?4900c6faefa424eb50bfdceeb5e3fbe1#iefix") format("embedded-opentype"),
-url("/assets/font/shirasagi-icons.woff?4900c6faefa424eb50bfdceeb5e3fbe1") format("woff"),
-url("/assets/font/shirasagi-icons.woff2?4900c6faefa424eb50bfdceeb5e3fbe1") format("woff2");
+  font-family: $shirasagi-icons-font;
+  src: url("/assets/font/shirasagi-icons.eot?4900c6faefa424eb50bfdceeb5e3fbe1#iefix") format("embedded-opentype"),
+    url("/assets/font/shirasagi-icons.woff?4900c6faefa424eb50bfdceeb5e3fbe1") format("woff"),
+    url("/assets/font/shirasagi-icons.woff2?4900c6faefa424eb50bfdceeb5e3fbe1") format("woff2");
 }
 
 span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
-    font-family: shirasagi-icons, sans-serif !important;
-    font-style: normal;
-    font-size: 32px;
-    font-variant: normal;
-    font-weight: normal !important;
-    line-height: 1;
-    text-transform: none;
-    -moz-osx-font-smoothing: grayscale;
-    -webkit-font-smoothing: antialiased;
-    &:hover {
-        text-decoration: none !important;
-    }
+  font-family: shirasagi-icons, sans-serif !important;
+  font-style: normal;
+  font-size: 32px;
+  font-variant: normal;
+  font-weight: normal !important;
+  line-height: 1;
+  text-transform: none;
+  -moz-osx-font-smoothing: grayscale;
+  -webkit-font-smoothing: antialiased;
+  &:hover {
+    text-decoration: none !important;
+  }
 }
 
 $shirasagi-icons-map: (
-    "workload": "\f101",
-    "workflow2": "\f102",
-    "workflow": "\f103",
-    "todo": "\f104",
-    "survey": "\f105",
-    "shared-address": "\f106",
-    "share": "\f107",
-    "schedule": "\f108",
-    "report": "\f109",
-    "reminder": "\f10a",
-    "qna": "\f10b",
-    "presence": "\f10c",
-    "portal": "\f10d",
-    "personal-address": "\f10e",
-    "notice": "\f10f",
-    "monitor": "\f110",
-    "memo": "\f111",
-    "faq": "\f112",
-    "elasticsearch": "\f113",
-    "discussion": "\f114",
-    "daily-report": "\f115",
-    "conf": "\f116",
-    "circular": "\f117",
-    "bookmark": "\f118",
-    "board": "\f119",
-    "attendance": "\f11a",
-    "affair2": "\f11b",
-    "affair": "\f11c",
+  "workload": "\f101",
+  "workflow2": "\f102",
+  "workflow": "\f103",
+  "todo": "\f104",
+  "survey": "\f105",
+  "shared-address": "\f106",
+  "share": "\f107",
+  "schedule": "\f108",
+  "report": "\f109",
+  "reminder": "\f10a",
+  "qna": "\f10b",
+  "presence": "\f10c",
+  "portal": "\f10d",
+  "personal-address": "\f10e",
+  "notice": "\f10f",
+  "monitor": "\f110",
+  "memo": "\f111",
+  "faq": "\f112",
+  "elasticsearch": "\f113",
+  "discussion": "\f114",
+  "daily-report": "\f115",
+  "conf": "\f116",
+  "circular": "\f117",
+  "bookmark": "\f118",
+  "board": "\f119",
+  "attendance": "\f11a",
+  "affair2": "\f11b",
+  "affair": "\f11c",
 );
 
 .ss-icon-workload:before {
-
-    content: map-get($shirasagi-icons-map, "workload")!important;
+  content: map-get($shirasagi-icons-map, "workload")!important;
 }
 .ss-icon-workflow2:before {
-    content: map-get($shirasagi-icons-map, "workflow2")!important;
+  content: map-get($shirasagi-icons-map, "workflow2")!important;
 }
 .ss-icon-workflow:before {
-    content: map-get($shirasagi-icons-map, "workflow")!important;
+  content: map-get($shirasagi-icons-map, "workflow")!important;
 }
 .ss-icon-todo:before {
-    content: map-get($shirasagi-icons-map, "todo")!important;
+  content: map-get($shirasagi-icons-map, "todo")!important;
 }
 .ss-icon-survey:before {
-    content: map-get($shirasagi-icons-map, "survey")!important;
+  content: map-get($shirasagi-icons-map, "survey")!important;
 }
 .ss-icon-shared_address:before {
-    content: map-get($shirasagi-icons-map, "shared-address")!important;
+  content: map-get($shirasagi-icons-map, "shared-address")!important;
 }
 .ss-icon-share:before {
-    content: map-get($shirasagi-icons-map, "share")!important;
+  content: map-get($shirasagi-icons-map, "share")!important;
 }
 .ss-icon-schedule:before {
-    content: map-get($shirasagi-icons-map, "schedule")!important;
+  content: map-get($shirasagi-icons-map, "schedule")!important;
 }
 .ss-icon-report:before {
-    content: map-get($shirasagi-icons-map, "report")!important;
+  content: map-get($shirasagi-icons-map, "report")!important;
 }
 .ss-icon-reminder:before {
-    content: map-get($shirasagi-icons-map, "reminder")!important;
+  content: map-get($shirasagi-icons-map, "reminder")!important;
 }
 .ss-icon-qna:before {
-    content: map-get($shirasagi-icons-map, "qna")!important;
+  content: map-get($shirasagi-icons-map, "qna")!important;
 }
 .ss-icon-presence:before {
-    content: map-get($shirasagi-icons-map, "presence")!important;
+  content: map-get($shirasagi-icons-map, "presence")!important;
 }
 .ss-icon-portal:before {
-    content: map-get($shirasagi-icons-map, "portal")!important;
+  content: map-get($shirasagi-icons-map, "portal")!important;
 }
 .ss-icon-personal_address:before {
-    content: map-get($shirasagi-icons-map, "personal-address")!important;
+  content: map-get($shirasagi-icons-map, "personal-address")!important;
 }
 .ss-icon-notice:before {
-    content: map-get($shirasagi-icons-map, "notice")!important;
+  content: map-get($shirasagi-icons-map, "notice")!important;
 }
 .ss-icon-monitor:before {
-    content: map-get($shirasagi-icons-map, "monitor")!important;
+  content: map-get($shirasagi-icons-map, "monitor")!important;
 }
 .ss-icon-memo:before {
-    content: map-get($shirasagi-icons-map, "memo")!important;
+  content: map-get($shirasagi-icons-map, "memo")!important;
 }
 .ss-icon-faq:before {
-    content: map-get($shirasagi-icons-map, "faq")!important;
+  content: map-get($shirasagi-icons-map, "faq")!important;
 }
 .ss-icon-elasticsearch:before {
-    content: map-get($shirasagi-icons-map, "elasticsearch")!important;
+  content: map-get($shirasagi-icons-map, "elasticsearch")!important;
 }
 .ss-icon-discussion:before {
-    content: map-get($shirasagi-icons-map, "discussion")!important;
+  content: map-get($shirasagi-icons-map, "discussion")!important;
 }
 .ss-icon-daily_report:before {
-    content: map-get($shirasagi-icons-map, "daily-report")!important;
+  content: map-get($shirasagi-icons-map, "daily-report")!important;
 }
 .ss-icon-conf:before {
-    content: map-get($shirasagi-icons-map, "conf")!important;
+  content: map-get($shirasagi-icons-map, "conf")!important;
 }
 .ss-icon-circular:before {
-    content: map-get($shirasagi-icons-map, "circular")!important;
+  content: map-get($shirasagi-icons-map, "circular")!important;
 }
 .ss-icon-bookmark:before {
-    content: map-get($shirasagi-icons-map, "bookmark")!important;
+  content: map-get($shirasagi-icons-map, "bookmark")!important;
 }
 .ss-icon-board:before {
-    content: map-get($shirasagi-icons-map, "board")!important;
+  content: map-get($shirasagi-icons-map, "board")!important;
 }
 .ss-icon-attendance:before {
-    content: map-get($shirasagi-icons-map, "attendance")!important;
+  content: map-get($shirasagi-icons-map, "attendance")!important;
 }
 .ss-icon-affair2:before {
-    content: map-get($shirasagi-icons-map, "affair2")!important;
+  content: map-get($shirasagi-icons-map, "affair2")!important;
 }
 .ss-icon-affair:before {
-    content: map-get($shirasagi-icons-map, "affair")!important;
+  content: map-get($shirasagi-icons-map, "affair")!important;
 }

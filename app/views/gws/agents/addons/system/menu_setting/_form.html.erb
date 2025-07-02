@@ -14,16 +14,10 @@
       <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
       <dd>
         <span style="display: flex; align-items: center; gap: 0.5em; margin-left: 1em;">
-          <% icon_file = @item.send("menu_#{type}_icon_image") %>
-          <% icon_class = "icon-#{type}" %>
-          <% if icon_file.present? %>
-            <a class="<%= icon_class %> has-custom-icon">
-              <%= image_tag icon_file.url, class: "nav-icon-img" %>
-            </a>
+          <% if @item.send("menu_#{type}_icon_image").present? %>
+            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
           <% else %>
-            <a class="<%= icon_class %> has-font-icon">
-              <span class="ss-icon ss-icon-<%= type %>"></span>
-            </a>
+            <span class="ss-icon ss-icon-<%= type %>"></span>
           <% end %>
           <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
         </span>
@@ -41,16 +35,10 @@
         <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
         <dd>
         <span style="display: flex; align-items: center; gap: 0.5em; margin-left: 1em;">
-          <% icon_file = @item.send("menu_#{type}_icon_image") %>
-          <% icon_class = "icon-#{type}" %>
-          <% if icon_file.present? %>
-            <a class="<%= icon_class %> has-custom-icon">
-              <%= image_tag icon_file.url, class: "nav-icon-img" %>
-            </a>
+          <% if @item.send("menu_#{type}_icon_image").present? %>
+            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
           <% else %>
-            <a class="<%= icon_class %> has-font-icon">
-              <span class="ss-icon ss-icon-<%= type %>"></span>
-            </a>
+            <span class="ss-icon ss-icon-<%= type %>"></span>
           <% end %>
           <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
         </span>
