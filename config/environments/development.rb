@@ -104,4 +104,9 @@ Rails.application.configure do
   # config.logger = ActiveSupport::Logger.new("#{Rails.root}/log/development.log")
   config.log_formatter = ::Logger::Formatter.new
   config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :debug
+
+  # HACK: Load routes because load initializers in rake tasks.
+  config.after_initialize do
+    Rails.application.reload_routes!
+  end
 end

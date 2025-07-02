@@ -40,12 +40,10 @@ module SS::Model::Role
     end
 
     def permission_names
-      Rails.application.reload_routes_unless_loaded
       _permission_names.sort
     end
 
     def module_permission_names(opts = {})
-      Rails.application.reload_routes_unless_loaded
       permissions = _module_permission_names.sort_by { |k, v| k }.map do |mod, names|
         [mod, names.sort_by { |name| name.to_s.split('_').reverse.join } ]
       end.to_h
