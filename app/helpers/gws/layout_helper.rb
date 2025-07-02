@@ -13,7 +13,7 @@ module Gws::LayoutHelper
   #end
 
   def category_label_css(colorize)
-    return nil if colorize.color.blank?
+    return nil if colorize.nil? || colorize.color.blank?
     "background-color: #{colorize.color}; color: #{colorize.text_color};"
   end
 end
