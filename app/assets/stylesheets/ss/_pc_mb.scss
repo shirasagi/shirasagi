@@ -940,18 +940,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       // a.navi-icon:hover:before {
       //   background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
       // }
-      a[class*="icon-"] svg {
-        width: 32px;
-        height: 32px;
-        margin-right: 6px;
-        vertical-align: middle;
-      }
-      
-      a[class*="icon-"].has-inline-svg {
-        display: flex;
-        align-items: center;
-        padding-left: 13px !important;
-      }
 
       a[class*="icon-"].has-custom-icon {
         display: flex;
@@ -4208,9 +4196,8 @@ table.check-links-erros {
 // -------------------------------------------------------------------------------------------------
 // GWSメニューアイコン用スタイル
 
-// カスタムアイコン・SVGアイコン共通: before疑似要素を無効化
-.main-navi [class*="icon-"].has-custom-icon:before,
-.main-navi [class*="icon-"].has-inline-svg:before {
+// カスタムアイコン用before疑似要素を無効化
+.main-navi [class*="icon-"].has-custom-icon:before {
   content: none !important;
   display: none !important;
 }
@@ -4233,20 +4220,8 @@ table.check-links-erros {
   }
 }
 
-// デフォルトSVGアイコン用
-.main-navi [class*="icon-"] svg {
-  width: 32px;
-  height: 32px;
-  margin-right: 6px;
-  vertical-align: middle;
-}
-
-.main-navi h2 a.has-inline-svg {
-  display: flex;
-  align-items: center;
-  padding-left: 13px !important;
-  &:hover {
-    // color: $orange !important;
-    text-decoration: underline !important;
-  }
+// フォントアイコン用before疑似要素を無効化
+.main-navi h2 [class*="icon-"].has-font-icon:before {
+  content: none !important;
+  display: none !important;
 }

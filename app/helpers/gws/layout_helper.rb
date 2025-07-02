@@ -31,7 +31,7 @@ module Gws::LayoutHelper
       end
     else
       content_tag(:h2) do
-        link_to(path, class: "ss-icon ss-icon-#{type}") do
+        link_to(path, class: "#{icon_class} has-font-icon") do
           content_tag(:span, "", class: "ss-icon ss-icon-#{type}") + label
         end
       end
