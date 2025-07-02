@@ -43,7 +43,7 @@ class Gws::Share::Apis::FolderListController < ApplicationController
     case @type
     when 'gws/share/files'
       @item.parents.each do |item|
-        next unless item.allowed?(:read, @cur_user, site: @cur_site)
+        next unless item.readable?(@cur_user, site: @cur_site)
         children = item.children.readable(@cur_user, site: @cur_site)
         children = children.limit(@limit) if @limit
         items = append_items(items, children, item)
