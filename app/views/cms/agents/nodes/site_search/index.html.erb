@@ -62,7 +62,8 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
     <dl class="site-search-keyword">
       <dt><%= t("ss.keyword") %></dt>
       <dd>
-        <%= f.text_field :keyword, id: nil, size: 30, autocomplete: "off", title: t('ss.keyword')
+        <%= f.text_field :keyword, id: nil, size: 30, autocomplete: "off", title: t('ss.keyword'),
+          placeholder: t('cms.search_contents_fields.keyword_place_holder')
         %><input class="btn send" type="submit" value="<%= t('ss.buttons.search') %>">
         <input class="btn reset" type="reset" value="<%= t('ss.buttons.reset') %>">
       </dd>
@@ -71,7 +72,7 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
       </dd>
     </dl>
 
-    <% if @cur_node.search_target_state != 'hide' && @cur_site.elasticsearch_outside_enabled? %>
+    <% if @cur_site.elasticsearch_outside_enabled? %>
       <dl class="site-search-target">
         <dt><%= t("cms.search_target") %></dt>
         <dd><%= select_tag 'target',
@@ -155,7 +156,9 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
         <dt><%= t("ss.organization") %></dt>
         <dd>
           <%
-            options = Cms::Group.site(@cur_site).active.tree_sort.map do |group|
+            groups = @cur_node.st_groups
+            groups = Cms::Group.site(@cur_site).active.tree_sort if groups.size == 0
+            options = groups.map do |group|
               [group.section_name, group.id]
             end
           %>
@@ -174,21 +177,19 @@ Cms_Site_Search_History.render(".cms-site-search .search-form", "<%= @cur_node.f
   <script>
     document.addEventListener('DOMContentLoaded', () => {
       const form = document.querySelector('.search-form');
-      const target = form.querySelector('select[name="target"]'); // outside or insinde
+      const target = form.querySelector('select[name="target"]'); // Undefined or outside or insinde
       form.querySelectorAll('.choices__list--dropdown').forEach(el => el.role = 'group');
 
-      if (target) {
-        const changeTarget = () => {
-          const input = (target.value === 'outside' || <%== @cur_site.elasticsearch_site_ids.present? %>);
-          form.querySelectorAll('.style-input').forEach(el => el.style.display = input ? 'block' : 'none');
-          form.querySelectorAll('.style-input input').forEach(el => el.disabled = input ? false : true);
-          form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
-          form.querySelectorAll('.style-select select').forEach(el => el.disabled = input ? true : false);
-          form.querySelectorAll('.style-select input').forEach(el => el.disabled = input ? true : false);
-        };
-        changeTarget();
-        target.addEventListener('change', changeTarget);
-      }
+      const changeTarget = () => {
+        let input = <%== @cur_site.elasticsearch_site_ids.present? %> || target?.value === 'outside';
+        form.querySelectorAll('.style-input').forEach(el => el.style.display = input ? 'block' : 'none');
+        form.querySelectorAll('.style-input input').forEach(el => el.disabled = input ? false : true);
+        form.querySelectorAll('.style-select').forEach(el => el.style.display = input ? 'none' : 'block');
+        form.querySelectorAll('.style-select select').forEach(el => el.disabled = input ? true : false);
+        form.querySelectorAll('.style-select input').forEach(el => el.disabled = input ? true : false);
+      };
+      changeTarget();
+      target?.addEventListener('change', changeTarget);
     });
   </script>
 

@@ -101,7 +101,7 @@ class Gws::Schedule::Plan
   end
 
   def validate_file_size
-    limit = cur_site.schedule_max_file_size || 0
+    limit = (cur_site || site).schedule_max_file_size || 0
     return if limit <= 0
 
     size = files.compact.map(&:size).max || 0

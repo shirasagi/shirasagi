@@ -17,9 +17,14 @@ gem 'sdoc', group: :doc
 # 'bundle exec rails' や 'bundle exec rake' を使用しなければならなくなるので、バージョンを固定する。
 gem 'rdoc', '~> 6.3.0', group: :doc #
 
-# Server
+# Server (currently supported)
+gem 'puma'
+gem 'puma_worker_killer'
+
+# Server (currently not recommended)
 gem 'unicorn'
 gem 'unicorn-worker-killer'
+
 
 # Database
 gem 'mongoid'
@@ -118,7 +123,7 @@ gem 'faraday'
 gem 'elasticsearch', '~> 7'
 
 # line
-gem 'line-bot-api'
+gem 'line-bot-api', '~> 1.29'
 
 # kintone
 gem 'kintone', git: "https://github.com/jue58/kintone.git"
@@ -137,7 +142,6 @@ group :development, :test do
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
   gem 'pry-stack_explorer', require: false
-  gem 'puma', require: false
   gem 'rails-controller-testing', require: false
   gem 'rspec', require: false
   gem 'rspec-collection_matchers', require: false

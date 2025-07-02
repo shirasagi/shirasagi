@@ -187,6 +187,10 @@ module Gws
     "<#{::Mail.random_tag}@#{domain}.mail>"
   end
 
+  def id_name_hash(items, name_method: :name)
+    items.map { |m| [ m.id.to_s, m.send(name_method) ] }.to_h
+  end
+
   def public_dir_path(site, file)
     root_path = site.root_path
     return if root_path.blank?

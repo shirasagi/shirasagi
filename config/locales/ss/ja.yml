@@ -1050,7 +1050,7 @@ ja:
         elasticsearch_deny: 除外パス
         elasticsearch_site_ids: サイト
         elasticsearch_indexes: インデックス
-        elasticsearch_outside: 外部サイト検索
+        elasticsearch_outside: 外部サイト検索(Fess)
       ss/addon/translate/site_setting:
         translate_state: ステータス
         translate_source_id: 元言語コード
