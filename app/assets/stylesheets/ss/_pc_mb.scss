@@ -951,7 +951,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         display: flex;
         align-items: center;
         padding: 5px 0 5px 8px !important;
-        margin-left: 0px !important;
       }
 
       background-color: $gray1;
@@ -4247,6 +4246,6 @@ table.check-links-erros {
 }
 
 // フォントアイコン用スタイル設定クラス
-span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
+span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]::before {
   margin-right: 5px !important;
 }
