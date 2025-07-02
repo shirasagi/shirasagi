@@ -5,6 +5,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
 
   before_action :set_mode
   before_action :set_folders
+  before_action :set_child_count
   before_action :set_root_folder
   before_action :set_cur_folder
   before_action :set_items
@@ -28,6 +29,18 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
       else
         @model.none
       end
+    end
+  end
+
+  def set_child_count
+    @child_count = Hash.new(0)
+    @folders.pluck(:name, :depth).each do |name, depth|
+      next if depth == 1
+      parts = name.split("/")
+      child = parts.pop
+      parent = parts.join("/")
+      @child_count[parent] ||= 0
+      @child_count[parent] += 1
     end
   end
 
