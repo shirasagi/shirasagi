@@ -1,11 +1,21 @@
 class Sys::SiteExportJob < SS::ApplicationJob
-  include Job::SS::TaskFilter
+  #include Job::SS::TaskFilter
 
   cattr_accessor :export_root
   self.export_root = "#{Rails.root}/private/export"
 
+  def mock_task
+    task = OpenStruct.new
+    def task.log(message)
+      Rails.logger.info(message)
+      puts message
+    end
+    task
+  end
+
   def perform(opts = {})
-    @src_site = Cms::Site.find(@task.source_site_id)
+    @src_site = Cms::Site.find(site.id)
+    @task = mock_task
 
     @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
     @output_zip = "#{@output_dir}.ssr"
@@ -60,6 +70,9 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
     FileUtils.rm_rf(@output_dir)
     @task.log("Completed at #{I18n.l(Time.zone.now, format: :picker)}.")
+  rescue => e
+    puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+    raise
   end
 
   private

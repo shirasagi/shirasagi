@@ -34,8 +34,7 @@ describe Sys::SiteImportJob, dbscope: :example do
 
     begin
       job = ::Sys::SiteExportJob.new
-      job.task = ::Tasks::Cms.mock_task(source_site_id: source_site.id)
-      job.perform
+      job.bind("site_id" => source_site.id).perform
       output_zip = job.instance_variable_get(:@output_zip)
 
       output_zip
@@ -49,8 +48,7 @@ describe Sys::SiteImportJob, dbscope: :example do
 
     it do
       job = ::Sys::SiteImportJob.new
-      job.task = ::Tasks::Cms.mock_task(target_site_id: destination_site.id, import_file: file_path)
-      job.perform
+      job.bind("site_id" => destination_site.id).perform(file_path)
 
       expect(Uploader::Node::File.site(destination_site).count).to eq 3
       dest_node1 = Uploader::Node::File.site(destination_site).where(filename: node1.filename).first
