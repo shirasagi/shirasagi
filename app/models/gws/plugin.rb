@@ -8,6 +8,7 @@ class Gws::Plugin
   def i18n_name_only
     model_class.model_name.human
   end
+  alias name_only i18n_name_only
 
   # def enabled?
   #   true
