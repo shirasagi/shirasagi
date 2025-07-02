@@ -10,12 +10,16 @@ url("/assets/font/shirasagi-icons.woff2?4900c6faefa424eb50bfdceeb5e3fbe1") forma
 span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
     font-family: shirasagi-icons, sans-serif !important;
     font-style: normal;
+    font-size: 32px;
     font-variant: normal;
     font-weight: normal !important;
     line-height: 1;
     text-transform: none;
     -moz-osx-font-smoothing: grayscale;
     -webkit-font-smoothing: antialiased;
+    &:hover {
+        text-decoration: none !important;
+    }
 }
 
 $shirasagi-icons-map: (
@@ -65,7 +69,7 @@ $shirasagi-icons-map: (
 .ss-icon-survey:before {
     content: map-get($shirasagi-icons-map, "survey")!important;
 }
-.ss-icon-shared-address:before {
+.ss-icon-shared_address:before {
     content: map-get($shirasagi-icons-map, "shared-address")!important;
 }
 .ss-icon-share:before {
@@ -89,7 +93,7 @@ $shirasagi-icons-map: (
 .ss-icon-portal:before {
     content: map-get($shirasagi-icons-map, "portal")!important;
 }
-.ss-icon-personal-address:before {
+.ss-icon-personal_address:before {
     content: map-get($shirasagi-icons-map, "personal-address")!important;
 }
 .ss-icon-notice:before {
@@ -110,7 +114,7 @@ $shirasagi-icons-map: (
 .ss-icon-discussion:before {
     content: map-get($shirasagi-icons-map, "discussion")!important;
 }
-.ss-icon-daily-report:before {
+.ss-icon-daily_report:before {
     content: map-get($shirasagi-icons-map, "daily-report")!important;
 }
 .ss-icon-conf:before {

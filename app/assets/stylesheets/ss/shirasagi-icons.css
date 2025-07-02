@@ -31,7 +31,7 @@ span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
 .ss-icon-survey:before {
     content: "\f105";
 }
-.ss-icon-shared-address:before {
+.ss-icon-shared_address:before {
     content: "\f106";
 }
 .ss-icon-share:before {
@@ -55,7 +55,7 @@ span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
 .ss-icon-portal:before {
     content: "\f10d";
 }
-.ss-icon-personal-address:before {
+.ss-icon-personal_address:before {
     content: "\f10e";
 }
 .ss-icon-notice:before {
@@ -76,7 +76,7 @@ span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
 .ss-icon-discussion:before {
     content: "\f114";
 }
-.ss-icon-daily-report:before {
+.ss-icon-daily_report:before {
     content: "\f115";
 }
 .ss-icon-conf:before {
