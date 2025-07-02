@@ -160,7 +160,7 @@ class Gws::Tabular::Gws::ViewsController < ApplicationController
     end
 
     new_params = NewPrerequisiteParams.new pre_params.merge(fix_params)
-    new_params.attributes = params.require(:item).permit(:type, :form_id)
+    new_params.attributes = params.expect(item: [:type, :form_id])
     if new_params.invalid?
       @model = new_params.class
       @item = new_params

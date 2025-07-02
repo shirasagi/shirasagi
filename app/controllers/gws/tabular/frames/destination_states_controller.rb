@@ -91,7 +91,7 @@ class Gws::Tabular::Frames::DestinationStatesController < ApplicationController
     raise "404" unless %w(approve approve_without_approval).include?(item.workflow_state)
     raise "404" if !item.destination_group_ids.include?(@cur_group.id) && !item.destination_user_ids.include?(@cur_user.id)
 
-    destination_treat_state = params.require(:item).permit(:destination_treat_state)[:destination_treat_state]
+    destination_treat_state = params.expect(item: [:destination_treat_state])[:destination_treat_state]
     # バリデーションエラーがあっても「処理済み」にはできるようにするため #set を用いる
     item.set(destination_treat_state: destination_treat_state)
 

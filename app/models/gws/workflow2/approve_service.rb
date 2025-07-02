@@ -64,6 +64,7 @@ class Gws::Workflow2::ApproveService
     end
   end
 
+  # rubocop:disable Naming/PredicateMethod
   def validate_item
     if work_item.invalid?
       SS::Model.copy_errors(work_item, self)
@@ -72,6 +73,7 @@ class Gws::Workflow2::ApproveService
 
     true
   end
+  # rubocop:enable Naming/PredicateMethod
 
   # rubocop:disable Rails/Pluck
   def send_request

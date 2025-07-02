@@ -237,9 +237,11 @@ class Gws::Tabular::File::CsvImporter
     @entry_map[path.downcase]
   end
 
+  # rubocop:disable Naming/PredicateMethod
   def item_after_import_row(_item)
     true
   end
+  # rubocop:enable Naming/PredicateMethod
 
   def item_import_succeeded(_item)
     Rails.logger.info { "インポートしました。" }

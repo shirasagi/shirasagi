@@ -32,7 +32,7 @@ class Gws::Tabular::Frames::Gws::LookupColumnsController < ApplicationController
 
   def target_form
     @target_form ||= begin
-      column_id = params.require(:item).permit(:column_id)[:column_id].to_s.presence
+      column_id = params.expect(item: [:column_id])[:column_id].to_s.presence
 
       cur_columns = Gws::Column::Base.site(@cur_site)
       cur_columns = cur_columns.form(cur_form)

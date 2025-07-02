@@ -87,7 +87,7 @@ class Gws::Frames::ColumnsController < ApplicationController
 
   def change_type
     set_item
-    new_route = params.require(:item).permit(:route)[:route].to_s
+    new_route = params.expect(item: [:route])[:route].to_s
     new_plugin = find_new_plugin(new_route)
     raise "404" unless new_plugin
     raise "404" unless new_plugin.model_class

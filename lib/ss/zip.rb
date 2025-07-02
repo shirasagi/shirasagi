@@ -257,7 +257,7 @@ module SS::Zip
 
   def safe_zip_entry_name(zip_entry)
     name = zip_entry.name
-    if (zip_entry.gp_flags & Zip::Entry::EFS) == Zip::Entry::EFS
+    if zip_entry.gp_flags.allbits?(Zip::Entry::EFS)
       # unicode_names
       name = name.dup
       name.force_encoding("UTF-8")

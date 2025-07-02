@@ -7,5 +7,5 @@ class Gws::Group
 end
 
 RSpec.configuration.after(:suite) do
-  ::FileUtils.rm_rf Gws::Group.root if ::Dir.exist?(Gws::Group.root)
+  ::FileUtils.rm_rf Gws::Group.root
 end

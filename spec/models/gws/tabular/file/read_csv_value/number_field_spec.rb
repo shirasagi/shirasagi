@@ -101,7 +101,7 @@ describe Gws::Tabular::File, type: :model, dbscope: :example do
 
     context "with decimal place 0" do
       let(:file_model) { Gws::Tabular::File[form.current_release] }
-      let(:decimal_value) { BigDecimal("10") }
+      let(:decimal_value) { BigDecimal(10) }
       let!(:file_data) do
         file_model.create!(cur_site: site, cur_user: user, cur_space: space, cur_form: form, "col_#{column1.id}" => decimal_value)
       end

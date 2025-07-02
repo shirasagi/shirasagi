@@ -56,7 +56,7 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
         expect(space.user_ids).to eq [ admin.id ]
         expect(space.group_ids).to eq [ group.id ]
         expect(space.custom_group_ids).to be_blank
-        #
+        # Common
         expect(space.site_id).to eq site.id
         expect(space.deleted).to be_blank
       end
@@ -99,7 +99,7 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
         expect(space.user_ids).to eq [ admin.id ]
         expect(space.group_ids).to eq [ group.id ]
         expect(space.custom_group_ids).to be_blank
-        #
+        # Common
         expect(space.site_id).to eq site.id
         expect(space.deleted).to be_blank
       end
@@ -136,7 +136,7 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
         expect(space.user_ids).to eq [ admin.id ]
         expect(space.group_ids).to eq [ group.id ]
         expect(space.custom_group_ids).to be_blank
-        #
+        # Common
         expect(space.site_id).to eq site.id
         expect(space.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
       end
@@ -175,7 +175,7 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
         expect(space.user_ids).to eq [ admin.id ]
         expect(space.group_ids).to eq [ group.id ]
         expect(space.custom_group_ids).to be_blank
-        #
+        # Common
         expect(space.site_id).to eq site.id
         expect(space.deleted).to be_blank
       end

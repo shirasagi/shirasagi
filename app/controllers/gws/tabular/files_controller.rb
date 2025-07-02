@@ -261,7 +261,7 @@ class Gws::Tabular::FilesController < ApplicationController
       return
     end
 
-    @item.attributes = params.require(:item).permit(:encoding, :format)
+    @item.attributes = params.expect(item: [:encoding, :format])
     if @item.invalid?
       render
       return
@@ -297,7 +297,7 @@ class Gws::Tabular::FilesController < ApplicationController
       return
     end
 
-    @item.attributes = params.require(:item).permit(:in_file)
+    @item.attributes = params.expect(item: [:in_file])
     if @item.invalid?
       render template: "import"
       return
@@ -345,7 +345,7 @@ class Gws::Tabular::FilesController < ApplicationController
       return
     end
 
-    service.overwrites = params.require(:item).permit(permit_fields)
+    service.overwrites = params.expect(item: [permit_fields])
     result = service.save
 
     render_opts = {}

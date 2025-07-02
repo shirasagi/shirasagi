@@ -20,7 +20,7 @@ class Gws::Tabular::FormPublishJob < Gws::ApplicationJob
     if @item.current_release
       Rails.logger.info { "already published" }
       @item.update(state: "public") if @item.state != "public"
-      return false
+      return
     end
 
     release = Gws::Tabular::FormRelease.new(cur_site: site, cur_space: @item.space, cur_form: @item, revision: @item.revision)
@@ -32,7 +32,6 @@ class Gws::Tabular::FormPublishJob < Gws::ApplicationJob
     backup_service.call
 
     @current_release = release
-    true
   end
 
   class MigrationCreator
@@ -44,7 +43,7 @@ class Gws::Tabular::FormPublishJob < Gws::ApplicationJob
       return false if current_columns.nil?
 
       ::File.dirname(current_release.migration_rb_path).tap do |dir_path|
-        ::FileUtils.mkdir_p(dir_path) unless ::Dir.exist?(dir_path)
+        ::FileUtils.mkdir_p(dir_path)
       end
       ::File.open(current_release.migration_rb_path, "wt") do |f|
         f.puts "self.shirasagi = '#{SS.version}'"
@@ -130,14 +129,13 @@ class Gws::Tabular::FormPublishJob < Gws::ApplicationJob
   end
 
   def execute_migration
-    return false unless @current_release
+    return unless @current_release
 
     path = @current_release.migration_rb_path
-    return true unless ::File.exist?(path)
+    return unless ::File.exist?(path)
 
     migration = Gws::Tabular::FormMigration.new
     migration.instance_eval(::File.read(path), ::File.basename(path))
     migration.call
-    true
   end
 end

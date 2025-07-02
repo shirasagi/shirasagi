@@ -145,7 +145,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
     return @route_id if @route_id
 
     if params.key?(:item)
-      route_id = params.require(:item).permit(:route_id)[:route_id]
+      route_id = params.expect(item: [:route_id])[:route_id]
     end
     route_id = default_route_id if route_id.blank?
     route_id = "my_group" if route_id.blank?
@@ -188,7 +188,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
     resolver = Gws::Workflow::ApproverResolver.new(
       cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, route: route || route_id.to_sym, item: @item)
     if params.key?(:item)
-      resolver.attributes = params.require(:item).permit(*Gws::Workflow::ApproverResolver::PERMIT_PARAMS)
+      resolver.attributes = params.expect(item: [*Gws::Workflow::ApproverResolver::PERMIT_PARAMS])
     end
     resolver.resolve
   end
@@ -234,7 +234,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, route_id: route_id, route: route,
       item: @item, ref: ref)
     if params.key?(:item)
-      service.attributes = params.require(:item).permit(*service_class::PERMIT_PARAMS)
+      service.attributes = params.expect(item: [*service_class::PERMIT_PARAMS])
     end
     unless service.call
       @item.workflow_state = nil

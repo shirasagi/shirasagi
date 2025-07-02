@@ -11,11 +11,13 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
   let!(:user1) { create :gws_user, group_ids: admin.group_ids, gws_role_ids: [ role.id ] }
   let!(:user2) { create :gws_user, group_ids: admin.group_ids, gws_role_ids: [ role.id ] }
 
-  let!(:space) { create :gws_tabular_space, cur_site: site, cur_user: admin, state: "public", readable_setting_range: "public" }
+  let!(:space) do
+    create :gws_tabular_space, cur_site: site, cur_user: admin, state: "public", readable_setting_range: "public"
+  end
   let!(:form) do
     create(
-      :gws_tabular_form, cur_site: site, cur_space: space, cur_user: admin, state: 'publishing', revision: 1, workflow_state: 'disabled',
-      readable_setting_range: "public"
+      :gws_tabular_form, cur_site: site, cur_space: space, cur_user: admin, state: 'publishing', revision: 1,
+      workflow_state: 'disabled', readable_setting_range: "public"
     )
   end
   let!(:column1) do
