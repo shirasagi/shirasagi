@@ -1999,8 +1999,8 @@ dl.mod-cms-parent_crumbs {
 .tooltip-border {
   border: 1px solid #fff;
 }
-.tippy-tooltip {
-  &.ss-tooltip-theme {
+.tippy-box {
+  &[data-theme~=ss-tooltip] {
     font-size: 90%;
     font-weight: normal;
     text-align: left;
