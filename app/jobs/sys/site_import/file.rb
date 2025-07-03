@@ -98,7 +98,9 @@ module Sys::SiteImport::File
     end
 
     # column_values
-    Cms::Page.in(id: @cms_pages_map.values).each do |item|
+    criteria = Cms::Page.in(id: @cms_pages_map.values)
+    criteria = criteria.where(column_values: { "$exists" => true, "$ne" => [] })
+    criteria.each do |item|
       next if !item.respond_to?(:column_values)
       next if item.column_values.blank?
 
