@@ -12,9 +12,9 @@
     <dd>
       <% unless skip_icon_types.include?(type.to_s) %>
         <% if @item.send("menu_#{type}_icon_image").present? %>
-            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
+            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", style: "width: 32px; height: 32px;" %>
         <% else %>
-          <span class="ss-icon ss-icon-<%= type %>"></span>
+          <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>"></span>
         <% end %>
       <% end %>
     </dd>

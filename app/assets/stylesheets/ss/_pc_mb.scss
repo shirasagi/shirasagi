@@ -943,9 +943,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       a[class*="icon-"].has-custom-icon {
         display: flex;
         align-items: center;
-        width: 100%;
+        width: 210px;
         height: 100%;
-        padding-left: 20px !important;
+        padding-left: 15px !important;
       }
 
       a[class*="icon-"].has-font-icon {
@@ -4213,18 +4213,18 @@ table.check-links-erros {
 
 // カスタムアイコン用
 .nav-icon-img {
-  width: 17px;
-  height: 17px;
-  margin-right: 15px;
+  width: 18px;
+  height: 18px;
+  margin-right: 10px;
   vertical-align: middle;
 }
 
 .main-navi h2 a.has-custom-icon {
   display: flex;
   align-items: center;
-  width: 100%;
+  width: 210px;
   height: 100%;
-  padding-left: 20px !important;
+  padding-left: 15px !important;
 
   &:hover {
     text-decoration: underline !important;
