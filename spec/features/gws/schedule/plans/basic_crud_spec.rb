@@ -74,7 +74,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".fc-event-container", text: name)
 
       # click_on name
-      within ".fc-event-container" do
+      within ".fc-event-container:not(:has(.fc-holiday))" do
         first(".fc-event .fc-content", text: name).click
       end
       wait_for_js_ready
@@ -100,7 +100,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       expect(page).to have_content(name2)
 
       # click_on name2
-      within ".fc-event-container" do
+      within ".fc-event-container:not(:has(.fc-holiday))" do
         first(".fc-event .fc-content", text: name2).click
       end
       wait_for_js_ready

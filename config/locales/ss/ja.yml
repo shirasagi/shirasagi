@@ -1681,3 +1681,4 @@ ja:
       ss/delete_sso_tokens_job: システム/SSOトークン掃除ジョブ
       ss/delete_ss_o_tokens_job: システム/SSOトークン掃除ジョブ
       ss/cleanup_file_store_cache_job: システム/ファイルキャッシュ掃除ジョブ
+      ss/remove_site_job: システム/サイト削除
