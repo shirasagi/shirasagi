@@ -943,13 +943,17 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       a[class*="icon-"].has-custom-icon {
         display: flex;
         align-items: center;
+        width: 100%;
+        height: 100%;
         padding-left: 20px !important;
       }
 
       a[class*="icon-"].has-font-icon {
         display: flex;
         align-items: center;
-        padding: 5px 0 5px 8px !important;
+        width: 210px;
+        height: 100%;
+        padding: 1px 33.59px 1px 8px !important;
       }
 
       background-color: $gray1;
@@ -4218,6 +4222,8 @@ table.check-links-erros {
 .main-navi h2 a.has-custom-icon {
   display: flex;
   align-items: center;
+  width: 100%;
+  height: 100%;
   padding-left: 20px !important;
 
   &:hover {
@@ -4238,7 +4244,9 @@ table.check-links-erros {
 .main-navi h2 a.has-font-icon {
   display: flex;
   align-items: center;
-  padding: 5px 0 5px 8px !important;
+  width: 100%;
+  height: 100%;
+  padding: 1px 33.59px 1px 8px !important;
   // &:hover {
   //   color: blue !important;
   // }
