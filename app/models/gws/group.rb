@@ -55,10 +55,7 @@ class Gws::Group
     end
 
     # その他のファイルの場合は、既存のロジックで権限チェック
-    return false if user.blank?
-    return false if site.blank? || site.id.blank?
-
-    user.groups.in_group(site).active.present?
+    super
   end
 
   private
