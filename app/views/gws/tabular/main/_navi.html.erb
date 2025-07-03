@@ -1,0 +1,39 @@
+<nav class="mod-navi current-navi">
+  <h2>
+    <%= link_to gws_tabular_main_path(space: cur_space) do %>
+      <span><%= cur_space.name %></span>
+    <% end %>
+  </h2>
+
+  <% forms.each do |form| %>
+    <% views = find_views(form) %>
+    <% if views.blank? %>
+      <h3 class="no-icons pl-3 pr-1">
+        <%= link_to gws_tabular_files_path(space: cur_space, form: form, view: "-"), class: "d-inline-flex", title: form.name do %>
+          <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+          <span class="mod-navi-name" style="flex-basis: 150px;"><%= form.name %></span>
+        <% end %>
+        <%= link_to md_icons.outlined("delete", size: 16), gws_tabular_trash_files_path(space: cur_space, form: form, view: "-"), class: "ml-auto", title: t("ss.links.trash") %>
+      </h3>
+    <% else %>
+      <% first_editable_view = true %>
+      <% views.each do |view| %>
+        <h3 class="no-icons pl-3 pr-1">
+          <%= link_to gws_tabular_files_path(space: cur_space, form: form, view: view), class: "d-inline-flex", title: view.name do %>
+            <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+            <span class="mod-navi-name" style="flex-basis: 150px;"><%= view.name %></span>
+          <% end %>
+          <% next unless view.authoring_allowed?("delete") %>
+          <%=
+            if first_editable_view
+              first_editable_view = false
+              link_to md_icons.outlined("delete", size: 16), gws_tabular_trash_files_path(space: cur_space, form: form, view: view), class: "ml-auto", title: t("ss.links.trash")
+            end
+          %>
+        </h3>
+      <% end %>
+    <% end %>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

@@ -1,0 +1,3 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <%= text_area_tag("#{form.object_name}[col_#{column.id}]", value, id: nil) %>
+<% end %>

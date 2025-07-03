@@ -44,8 +44,8 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
       destination_treat_state: "treated"
     )
-    item.update_workflow_user(site, delegatee_user)
-    item.update_workflow_agent(site, admin)
+    item.update_workflow_user(site, delegatee_user, delegatee_group)
+    item.update_workflow_agent(site, admin, nil)
     item.save!
     item.class.find(item.id)
   end

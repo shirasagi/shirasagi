@@ -1,0 +1,29 @@
+<% policy = policy_class.new(cur_site: @cur_site, cur_user: @cur_user, model: @model, item: @item) %>
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if policy.new? && cur_view.authoring_allowed?("edit") %>
+      <%= link_to t('ss.links.new'), action: :new rescue nil %>
+    <% end %>
+    <% if policy.download_all? && cur_view.authoring_allowed?("download_all") %>
+      <%= link_to t('ss.links.download'), action: :download_all rescue nil %>
+    <% end %>
+    <% if policy.import? && cur_view.authoring_allowed?("import") %>
+      <%= link_to t('ss.links.import'), action: :import rescue nil %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|download_all|import|destroy_all/ %>
+    <%= link_to t('ss.links.back_to_index'), action: :index %>
+  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+    <% if policy.show? %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index rescue nil %>
+  <% else %>
+    <% if policy.edit? && cur_view.authoring_allowed?("edit") %>
+      <%= link_to t('ss.links.edit'), action: :edit, id: @item rescue nil %>
+    <% end %>
+    <% if policy.delete? && cur_view.authoring_allowed?("delete") %>
+      <%= link_to t('ss.links.delete'), action: :delete, id: @item rescue nil %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), action: :index rescue nil %>
+  <% end %>
+</nav>

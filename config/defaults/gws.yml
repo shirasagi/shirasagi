@@ -261,6 +261,13 @@ production: &production
   aggregation:
     first_activation_date: "2000/1/1"
 
+  # サービスアカウント（運用業者アカウント）を設定します。
+  # サービスアカウントには、一部の高度な機能が有効になります。
+  service_account:
+    users:
+      - sys
+      #- admin
+
 test:
   <<: *production
   disable: false

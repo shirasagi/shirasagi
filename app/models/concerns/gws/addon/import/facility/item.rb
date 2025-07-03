@@ -407,15 +407,11 @@ module Gws::Addon::Import::Facility
 
     def column_model(type)
       return if type.blank?
-      type_text_to_value(type).sub('/', '/column/').classify.constantize
-    end
 
-    def type_text_to_value(text)
-      return if text.blank?
-      k, _v = I18n.t("gws.columns").find do |key, value|
-        text.match(value)
-      end
-      k.to_s
+      plugin = Gws::Column.plugins.find { |plugin| type.match(plugin.name_only) }
+      return unless plugin
+
+      plugin.model_class
     end
 
     def input_type_datas_text_to_value(text)

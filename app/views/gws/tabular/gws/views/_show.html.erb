@@ -1,0 +1,39 @@
+<dl class="see">
+  <dt><%= @model.t :form_id %></dt>
+  <dd><%= @item.form.try(:name) %></dd>
+
+  <dt><%= @model.t :i18n_name %></dt>
+  <% if I18n.available_locales.length == 1 %>
+    <dd><%= @item.i18n_name %></dd>
+  <% else %>
+    <dd></dd>
+    <% SS.each_locale_in_order do |lang| %>
+      <dt class="depth-2 i18n_name"><%= @model.t(:"i18n_name_#{lang}", default: t("ss.options.lang.#{lang}", default: lang.to_s)) %></dt>
+      <dd class="depth-2 i18n_name">
+        <%= @item.i18n_name_translations[lang] %>
+      </dd>
+    <% end %>
+  <% end %>
+
+  <dt><%= @model.t :authoring_permissions %></dt>
+  <dd>
+    <% Gws::Tabular::View::Base::AUTHORING_PERMISSIONS.each do |permission| %>
+      <label>
+        <%= check_box_tag "authoring_permissions[]", permission, permission == Gws::Tabular::View::Base::DEFAULT_AUTHORING_PERMISSION ? true : @item.authoring_allowed?(permission), id: nil, disabled: true %>
+        <%= t("gws/tabular.options.authoring_permission.#{permission}") %>
+      </label>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.state_label %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :default_state %></dt>
+  <dd><%= @item.label(:default_state) %></dd>
+
+  <dt><%= @model.t :memo %></dt>
+  <dd><%= auto_link br(@item.memo) %></dd>
+</dl>

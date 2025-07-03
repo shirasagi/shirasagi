@@ -1,0 +1,44 @@
+<%
+  return if @cur_form.blank? && (@item.cur_form || @item.form).blank?
+  @cur_form ||= (@item.cur_form || @item.form)
+  addon = local_assigns.fetch(:addon, {})
+%>
+
+<%
+  head_actions = []
+  if @model.allowed?(:edit, @cur_user, site: @cur_site) && cur_view.authoring_allowed?("edit")
+    copy_path = url_for(action: :copy, id: @item) rescue nil
+    if copy_path
+      head_actions << link_to(t("ss.buttons.copy"), copy_path, class: 'btn')
+    end
+  end
+
+  if @item.allowed?(:delete, @cur_user, site: @cur_site) && cur_view.authoring_allowed?("delete")
+    undo_delete_path = url_for(action: :undo_delete, id: @item) rescue nil
+    if undo_delete_path
+      head_actions << link_to(t('ss.links.restore'), undo_delete_path, class: 'btn', method: "post", data: { confirm: t('ss.confirm.restore') })
+    end
+
+    destroy_path = url_for(action: :destroy, id: @item) rescue nil
+    if destroy_path
+      head_actions << link_to(md_icons.outlined("delete", size: 15), destroy_path, title: t("ss.buttons.delete"), class: 'btn btn-red', method: "delete", data: { confirm: t('ss.confirm.delete') })
+    end
+  end
+%>
+
+<%
+  if head_actions.present?
+    head_html = tag.div(class: "gws-tabular-file-head") do
+      tag.div(t("ss.basic_info"), class: "title") + tag.div(head_actions.join.html_safe, class: "actions")
+    end
+    addon[:head] = head_html.html_safe
+  end
+%>
+
+<%= error_messages_for :item if @item.errors.present? %>
+
+<% @cur_form.columns.reorder(order: 1, id: 1).each do |column| %>
+  <dl class="see gws-column-see gws-tabular-column-see" data-column-id="<%= column.id %>">
+    <%= render @item.column_renderer(column, :show, cur_site: @cur_site, cur_user: @cur_user) %>
+  </dl>
+<% end %>

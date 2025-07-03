@@ -1,0 +1,8 @@
+<%
+  return unless route
+%>
+
+<dl class="see pull_up">
+  <dt><%= @model.t :workflow_pull_up %></dt>
+  <dd><%= route.label :pull_up %><%= f.hidden_field :workflow_pull_up, value: route.pull_up %></dd>
+</dl>

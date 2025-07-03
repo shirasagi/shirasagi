@@ -23,6 +23,7 @@ module Gws::Addon::System::NoticeSetting
     %w(gws/survey/form gws/survey/file).each { |k| map[k] = 'survey' }
     %w(gws/monitor/topic gws/monitor/post).each { |k| map[k] = 'monitor' }
     %w(gws/affair/overtime_file gws/affair/leave_file gws/affair/compensatory_file).each { |k| map[k] = 'affair' }
+    %w(gws/tabular/file).each { |k| map[k] = 'tabular' }
 
     map.freeze
   end
