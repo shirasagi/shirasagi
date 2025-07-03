@@ -37,20 +37,6 @@ module SS::Model::Group
     validate :validate_name
     validate :validate_domains, if: ->{ domains.present? }
 
-    scope :in_group, ->(group) {
-      where(name: /^#{::Regexp.escape(group.name)}(\/|$)/)
-    }
-    scope :organizations, ->{
-      where(:name.not => /\//)
-    }
-    scope :and_gws_use, ->{
-      conditions = [
-        { :gws_use.exists => false },
-        { :gws_use.ne => "disabled" },
-      ]
-      where("$and" => [{ "$or" => conditions }])
-    }
-
     liquidize do
       export as: :to_s do
         name
@@ -67,6 +53,31 @@ module SS::Model::Group
   end
 
   module ClassMethods
+    def in_group(group)
+      all.where("$and" => [{ name: /^#{::Regexp.escape(group.name)}(\/|$)/ }])
+    end
+
+    def in_groups(groups)
+      return none if groups.blank?
+      return in_group(groups.first) if groups.count == 1
+
+      names = groups.pluck(:name)
+      conditions = names.map { { name: /^#{::Regexp.escape(_1)}(\/|$)/ } }
+      all.where("$and" => [{ "$or" => conditions }])
+    end
+
+    def organizations
+      all.where("$and" => [{ :name.not => /\// }])
+    end
+
+    def and_gws_use
+      conditions = [
+        { :gws_use.exists => false },
+        { :gws_use.ne => "disabled" },
+      ]
+      all.where("$and" => [{ "$or" => conditions }])
+    end
+
     def search(params)
       criteria = self.where({})
       return criteria if params.blank?
