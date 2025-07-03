@@ -3,11 +3,13 @@
   addon[:display_body] = "hide"
 %>
 
+<%# 元々アイコンが設定されていないためスキップするメニュータイプ %>
+<% skip_icon_types = %w(staff_record links contrast) %>
+
 <% render_menu_setting = proc do |type, fallback_label| %>
   <dl class="see addon-gws-system-menu-setting">
     <dt><%= @model.t("menu_#{type}_state") %></dt>
     <dd>
-      <% skip_icon_types = %w(staff_record links contrast) %>
       <% unless skip_icon_types.include?(type.to_s) %>
         <% if @item.send("menu_#{type}_icon_image").present? %>
             <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
