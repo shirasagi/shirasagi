@@ -3,26 +3,33 @@
   addon[:display_body] = "hide"
 %>
 
+<%# 元々アイコンが設定されていないためスキップするメニュータイプ %>
+<% skip_icon_types = %w(staff_record links contrast) %>
+
+<% render_menu_setting_conf = proc do |type, fallback_label| %>
+  <dl class="see addon-gws-system-menu-setting" style="display: flex; align-items: center; gap: 1em; margin-bottom: 0.5em;">
+    <dt><%= t('gws.site_config') %></dt>
+    <dd>
+      <%= f.select "menu_#{type}_state", { t('ss.options.state.show') => "show" } %>
+      <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}"), style: 'width: 10.5em;') %>
+    </dd>
+    <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
+    <dd>
+      <span style="display: flex; align-items: center; gap: 0.5em; margin-left: 1em;">
+        <% if @item.send("menu_#{type}_icon_image").present? %>
+          <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
+        <% else %>
+          <span class="ss-icon ss-icon-<%= type %>"></span>
+        <% end %>
+        <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
+      </span>
+    </dd>
+  </dl>
+<% end %>
+
 <% render_menu_setting = proc do |type, fallback_label| %>
   <% if type.to_s == "conf" %>
-    <dl class="see addon-gws-system-menu-setting" style="display: flex; align-items: center; gap: 1em; margin-bottom: 0.5em;">
-      <dt><%= t('gws.site_config') %></dt>
-      <dd>
-        <%= f.select "menu_#{type}_state", { t('ss.options.state.show') => "show" } %>
-        <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}"), style: 'width: 10.5em;') %>
-      </dd>
-      <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
-      <dd>
-        <span style="display: flex; align-items: center; gap: 0.5em; margin-left: 1em;">
-          <% if @item.send("menu_#{type}_icon_image").present? %>
-            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type}", style: "width: 32px; height: 32px;" %>
-          <% else %>
-            <span class="ss-icon ss-icon-<%= type %>"></span>
-          <% end %>
-          <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
-        </span>
-      </dd>
-    </dl>
+    <% render_menu_setting_conf.call(type, fallback_label) %>
   <% else %>
     <dl class="see addon-gws-system-menu-setting" style="display: flex; align-items: center; gap: 1em; margin-bottom: 0.5em;">
       <dt><%= @model.t("menu_#{type}_state") %><%= @model.tt("menu_#{type}_state") %></dt>
@@ -30,7 +37,6 @@
         <%= f.select "menu_#{type}_state", @item.send("menu_#{type}_state_options") %>
         <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}"), style: 'width: 10.5em;') %>
 
-        <% skip_icon_types = %w(staff_record links contrast) %>
         <% unless skip_icon_types.include?(type.to_s) %>
         <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
         <dd>
