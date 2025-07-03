@@ -840,6 +840,7 @@ ja:
         domains: ドメイン
         gws_use: グループウェアの使用
         upload_policy: アップロード制限
+        path_id: 書き出しパスID
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -1217,6 +1218,8 @@ ja:
         - 既定では、グループウェアを使用します。
       upload_policy:
         - ファイルアップロード時の動作を設定します。
+      path_id:
+        - 書き出しパスのIDを設定します。パスのIDとはpublic/gws/以下のフォルダー名で、英子文字と数字のみが利用できます。
     ss/document:
       title:
         - ページのタイトルに利用し、ブラウザのタイトルバーに表示されます。

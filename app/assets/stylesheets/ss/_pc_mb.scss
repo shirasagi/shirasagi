@@ -950,54 +950,63 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       font-weight: bold;
     }
   }
-  h3 a {
+  h3:not(.no-icons) a {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+
     &.down {
       background: url(/assets/img/ic-arrow16down-off.png) no-repeat 35px center;
     }
+
     &.management {
       background: url(/assets/img/ic-setting.png) no-repeat 35px center;
     }
+
     &.trash {
       background: url(/assets/img/ic-trash.png) no-repeat 35px center;
     }
-    color: $black;
-    @at-root h3.current a {
-      background-color: $gray1;
-      &.management {
-        background-color: $gray1;
-      }
-      &.trash {
-        background-color: $gray1;
-      }
-    }
+
     &:hover {
       background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px center;
-      color: $orange;
-      text-decoration: none;
     }
+
     &.down:hover {
       background: url(/assets/img/ic-arrow16down-on.png) no-repeat 35px center;
     }
+
     &.management:hover {
       background: $gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
+    }
+
+    &.trash:hover {
+      background: $gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+    }
+  }
+  h3 a {
+    color: $black;
+    &:hover {
+      background: $gray1;
+      color: $orange;
+      text-decoration: none;
+    }
+    &.management:hover {
+      background: $gray1;
       color: $orange;
       text-decoration: none;
     }
     &.trash:hover {
-      background: $gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+      background: $gray1;
       color: $orange;
       text-decoration: none;
     }
   }
-  h3 .label {
+  h3:not(.no-icons) .label {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
   }
-  h3 span {
+  h3:not(.no-icons) span {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
@@ -1005,26 +1014,90 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   h3:last-child, ul:last-child {
     margin-bottom: 8px;
   }
-  h4 a {
-    display: block;
-    padding: 5px 15px 5px 85px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
-    &.management {
-      background: url(/assets/img/ic-setting.png) no-repeat 60px center;
+  h3.no-icons {
+    @include display-flex;
+    @include align-items(center);
+    gap: 5px;
+    padding: 5px;
+
+    .d-inline-flex {
+      @include display-flex(inline-flex);
+      @include align-items(center);
+      gap: 5px;
     }
-    color: $black;
-    @at-root h4.current a {
-      background-color: $gray1;
+    .ml-auto {
+      margin-left: auto;
     }
-    &:hover {
-      background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
-      color: $orange;
-      text-decoration: none;
+
+    .flex-basis-100 {
+      flex-basis: 100%;
     }
-    &.management:hover {
-      background: $gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
-      color: $orange;
-      text-decoration: none;
+  }
+  h4 {
+    a {
+      display: block;
+      color: $black;
+
+      @at-root h4.current a {
+        background-color: $gray1;
+
+        &.management {
+          background: $gray1;
+        }
+
+        &.trash {
+          background: $gray1;
+        }
+      }
+
+      &:hover {
+        background: $gray1;
+        color: $orange;
+        text-decoration: none;
+      }
+
+      &.management:hover {
+        background: $gray1;
+        color: $orange;
+        text-decoration: none;
+      }
+    }
+
+    &.no-icons {
+      @include display-flex;
+      @include align-items(center);
+      gap: 5px;
+      padding: 5px;
+
+      .d-inline-flex {
+        display: inline-flex;
+        @include align-items(center);
+        gap: 5px;
+      }
+      .ml-auto {
+        margin-left: auto;
+      }
+
+      a {
+        padding-left: 20px;
+      }
+    }
+
+    &:not(.no-icons) {
+      padding: 5px 15px 5px 85px;
+      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+
+      &:hover {
+        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
+      }
+
+      &.management {
+        background: url(/assets/img/ic-setting.png) no-repeat 60px center;
+      }
+
+      &.management:hover {
+        background: $gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+      }
     }
   }
   .navi-link:hover {
@@ -1033,7 +1106,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     cursor: pointer;
   }
   @include mb {
-    h3 {
+    h3:not(.no-icons) {
       a, a:hover, a.management, a:hover.management, a.trash, a:hover.trash, span {
         padding: 5px 15px 5px 35px;
         background-position: 15px center;
@@ -2037,6 +2110,14 @@ footer.send {
 }
 .btn-red {
   @include btn-red-core;
+}
+.btn-orange {
+  @include btn-orange-core;
+}
+.btn-inline-flex {
+  @include display-flex(inline-flex);
+  @include align-items(center);
+  gap: 5px;
 }
 .chorg-revisions {
   margin-bottom: 10px;

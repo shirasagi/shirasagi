@@ -1,0 +1,34 @@
+<dl class="see">
+  <dt><%= @model.t :workflow_state %></dt>
+  <dd><%= @item.label :workflow_state %></dd>
+
+  <dt><%= @model.t :approval_state %></dt>
+  <dd>
+    <%= @item.label(:approval_state) || t("gws/workflow2.options.approval_state.with_approval") %>
+    <% if @item.approval_state == "with_approval" && @item.default_route_id.present? %>
+      （
+      <%=
+        case @item.default_route_id
+        when "my_group"
+          t("mongoid.attributes.gws/workflow2/route.my_group")
+        when "my_group_alternate"
+          t("mongoid.attributes.gws/workflow2/route.my_group_alternate")
+        else
+          # 他人のプライベートな承認経路でも名前は確認することができる点に留意
+          route = Gws::Workflow2::Route.site(@cur_site).where(id: @item.default_route_id).first
+          route.try(:name)
+        end
+      %>
+      ）
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :agent_state %></dt>
+  <dd><%= @item.label(:agent_state) %></dd>
+
+  <dt><%= @model.t :destination_group_ids %></dt>
+  <dd><%= br @item.destination_groups.active.pluck(:name) %></dd>
+
+  <dt><%= @model.t :destination_user_ids %></dt>
+  <dd><%= br @item.destination_users.active.order_by_title(@cur_site).map { |user| gws_public_user_long_name(user.long_name, cur_site: @cur_site) } %></dd>
+</dl>

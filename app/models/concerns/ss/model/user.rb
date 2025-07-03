@@ -10,6 +10,7 @@ module SS::Model::User
   include SS::Addon::Ldap::User
   include SS::Addon::MFA::UserSetting
   include SS::Addon::SSO::User
+  include SS::Liquidization
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
@@ -105,6 +106,17 @@ module SS::Model::User
     end
     scope :and_unlocked, -> do
       self.and('$or' => [{ lock_state: 'unlocked' }, { :lock_state.exists => false }])
+    end
+
+    liquidize do
+      export :name
+      export :kana
+      export :uid
+      export :email
+      export :tel
+      export :tel_ext
+      export :organization_uid
+      export :lang
     end
   end
 

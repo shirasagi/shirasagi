@@ -4,6 +4,12 @@ class Gws::Column::RadioButton < Gws::Column::Base
 
   field :branch_section_ids, type: Array, default: []
 
+  class << self
+    def as_plugin
+      @plugin ||= Gws::Plugin.new(plugin_type: "column", path: "gws/radio_button", model_class: self)
+    end
+  end
+
   def branch_section_options
     form.columns.where(_type: Gws::Column::Section.to_s).order_by(order: 1).map do |c|
       [I18n.t('gws/column.show_section', name: c.name), c.id]
