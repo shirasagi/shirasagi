@@ -69,7 +69,7 @@ $shirasagi-icons-map: (
 .ss-icon-survey:before {
   content: map-get($shirasagi-icons-map, "survey")!important;
 }
-.ss-icon-shared_address:before {
+.ss-icon-shared-address:before {
   content: map-get($shirasagi-icons-map, "shared-address")!important;
 }
 .ss-icon-share:before {
@@ -93,7 +93,7 @@ $shirasagi-icons-map: (
 .ss-icon-portal:before {
   content: map-get($shirasagi-icons-map, "portal")!important;
 }
-.ss-icon-personal_address:before {
+.ss-icon-personal-address:before {
   content: map-get($shirasagi-icons-map, "personal-address")!important;
 }
 .ss-icon-notice:before {
@@ -114,7 +114,7 @@ $shirasagi-icons-map: (
 .ss-icon-discussion:before {
   content: map-get($shirasagi-icons-map, "discussion")!important;
 }
-.ss-icon-daily_report:before {
+.ss-icon-daily-report:before {
   content: map-get($shirasagi-icons-map, "daily-report")!important;
 }
 .ss-icon-conf:before {

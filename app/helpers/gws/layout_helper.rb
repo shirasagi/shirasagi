@@ -21,7 +21,7 @@ module Gws::LayoutHelper
   def gws_menu_icon(type, label_i18n, path)
     icon_file = @cur_site.send("menu_#{type}_icon_image")
     label = @cur_site.send("menu_#{type}_label") || t(label_i18n)
-    icon_class = "icon-#{type}"
+    icon_class = "icon-#{type.to_s.dasherize}"
 
     if icon_file.present?
       content_tag(:h2) do
@@ -32,7 +32,7 @@ module Gws::LayoutHelper
     else
       content_tag(:h2) do
         link_to(path, class: "#{icon_class} has-font-icon") do
-          content_tag(:span, "", class: "ss-icon ss-icon-#{type}") + label
+          content_tag(:span, "", class: "ss-icon ss-icon-#{type.to_s.dasherize}") + label
         end
       end
     end
