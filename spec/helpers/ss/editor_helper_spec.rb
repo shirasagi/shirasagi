@@ -29,7 +29,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:height)).to eq '360px'
         expect(subject.delete(:templates)).to eq 'shirasagi'
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
-        expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:removeButtons)).to eq 'Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
@@ -48,7 +48,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:height)).to eq '360px'
         expect(subject.delete(:templates)).to eq 'shirasagi'
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
-        expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:removeButtons)).to eq 'Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
@@ -65,7 +65,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:height)).to eq '360px'
         expect(subject.key?(:templates)).to be_falsey
         expect(subject.key?(:templates_files)).to be_falsey
-        expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:removeButtons)).to eq 'Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
@@ -84,7 +84,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:height)).to eq '400px'
         expect(subject.delete(:templates)).to eq 'shirasagi'
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
-        expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:removeButtons)).to eq 'Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
@@ -103,7 +103,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(subject.delete(:height)).to eq '360px'
         expect(subject.delete(:templates)).to eq 'shirasagi'
         expect(subject.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
-        expect(subject.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(subject.delete(:removeButtons)).to eq 'Subscript,Superscript,Font,BGColor,Source'
         expect(subject.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(subject.delete(:colorButton_colors)).to eq colorButton_colors
         expect(subject.blank?).to be_truthy
@@ -134,7 +134,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(standard.delete(:height)).to eq '360px'
         expect(standard.delete(:templates)).to eq 'shirasagi'
         expect(standard.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
-        expect(standard.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor,Source'
+        expect(standard.delete(:removeButtons)).to eq 'Subscript,Superscript,Font,BGColor,Source'
         expect(standard.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(standard.delete(:colorButton_colors)).to eq colorButton_colors
         expect(standard.blank?).to be_truthy
@@ -147,7 +147,7 @@ RSpec.describe SS::EditorHelper, type: :helper do
         expect(advanced.delete(:height)).to eq '360px'
         expect(advanced.delete(:templates)).to eq 'shirasagi'
         expect(advanced.delete(:templates_files)).to include(start_with('/.s1/cms/editor_templates/template.js'))
-        expect(advanced.delete(:removeButtons)).to eq 'Underline,Subscript,Superscript,Font,BGColor'
+        expect(advanced.delete(:removeButtons)).to eq 'Subscript,Superscript,Font,BGColor'
         expect(advanced.delete(:fontSize_sizes)).to eq fontSize_sizes
         expect(advanced.delete(:colorButton_colors)).to eq colorButton_colors
         expect(advanced.blank?).to be_truthy
