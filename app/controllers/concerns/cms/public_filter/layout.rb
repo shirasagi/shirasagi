@@ -132,6 +132,7 @@ module Cms::PublicFilter::Layout
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
+    @cur_layout.description = @cur_item.template_variable_handler_description if @cur_item.respond_to?(:template_variable_handler_description)
 
     @parts = {}
   end
@@ -159,6 +160,14 @@ module Cms::PublicFilter::Layout
 
     html.gsub!('#{parent_name}') do
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
+    end
+
+    html.gsub!('#{description}') do
+      if @cur_item.respond_to?(:template_variable_handler_description)
+        @cur_item.template_variable_handler_description
+      else
+        @cur_item.description if @cur_item.respond_to?(:description)
+      end
     end
 
     template = %w(

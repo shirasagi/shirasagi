@@ -53,6 +53,21 @@ module Cms::Addon
       !description_setting_manual?
     end
 
+    def template_variable_handler_description(*_)
+      return description unless description_setting_auto?
+      return unless respond_to?(:html)
+
+      html = self.try(:render_html).presence || self.html
+      return description if html.blank?
+
+      text = ApplicationController.helpers.sanitize(html.to_s, tags: [])
+      return description if text.blank?
+
+      text = Cms.unescape_html_entities(text)
+      text = text.squish
+      text.truncate(60, omission: "...")
+    end
+
     private
 
     def set_keywords
@@ -78,21 +93,6 @@ module Cms::Addon
       text = Cms.unescape_html_entities(text)
       text = text.squish
       self.description = text.truncate(60, omission: "...")
-    end
-
-    def template_variable_handler_description(*_)
-      return description unless description_setting_auto?
-      return unless respond_to?(:html)
-
-      html = self.try(:render_html).presence || self.html
-      return description if html.blank?
-
-      text = ApplicationController.helpers.sanitize(html.to_s, tags: [])
-      return description if text.blank?
-
-      text = Cms.unescape_html_entities(text)
-      text = text.squish
-      text.truncate(60, omission: "...")
     end
   end
 end
