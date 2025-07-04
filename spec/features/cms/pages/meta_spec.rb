@@ -541,73 +541,73 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(description_elements[0]['content']).to eq "Second body"
       end
 
-      #   it "updates description when html is changed in duplicated page with auto mode" do
-      #     # オリジナルページを作成
-      #     visit edit_cms_page_path(site.id, item)
+      it "updates description when html is changed in duplicated page with auto mode" do
+        # オリジナルページを作成
+        visit edit_cms_page_path(site.id, item)
 
-      #     within "form#item-form" do
-      #       fill_in "item[name]", with: "original"
-      #       find_by_id('addon-cms-agents-addons-meta').click
-      #       choose "item_description_setting_auto"
-      #       click_button I18n.t('ss.buttons.publish_save')
-      #     end
-      #     wait_for_notice I18n.t("ss.notice.saved")
+        within "form#item-form" do
+          fill_in "item[name]", with: "original"
+          find_by_id('addon-cms-agents-addons-meta').click
+          choose "item_description_setting_auto"
+          click_button I18n.t('ss.buttons.publish_save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
 
-      #     original_item = Cms::Page.last
-      #     expect(original_item.name).to eq 'original'
-      #     expect(original_item.description_setting).to eq 'auto'
-      #     expect(original_item.description).to be_blank
+        original_item = Cms::Page.last
+        expect(original_item.name).to eq 'original'
+        expect(original_item.description_setting).to eq 'auto'
+        expect(original_item.description).to be_blank
 
-      #     # 複製
-      #     visit cms_page_path(site.id, original_item)
-      #     click_on I18n.t('ss.links.copy')
-      #     within "form#item-form" do
-      #       fill_in "item[name]", with: "duplicate"
-      #       click_button I18n.t('ss.buttons.save')
-      #     end
-      #     wait_for_notice I18n.t("ss.notice.saved")
+        # 複製
+        visit cms_page_path(site.id, original_item)
+        click_on I18n.t('ss.links.copy')
+        within "form#item-form" do
+          fill_in "item[name]", with: "duplicate"
+          click_button I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
 
-      #     duplicated_item = Cms::Page.last
-      #     expect(duplicated_item.name).to eq "duplicate"
-      #     expect(duplicated_item.description_setting).to eq 'auto'
-      #     expect(duplicated_item.description).to be_blank
+        duplicated_item = Cms::Page.last
+        expect(duplicated_item.name).to eq "duplicate"
+        expect(duplicated_item.description_setting).to eq 'auto'
+        expect(duplicated_item.description).to be_blank
 
-      #     # 複製したページを編集
-      #     visit edit_cms_page_path(site.id, duplicated_item)
-      #     duplicated_description = "Updated content for the duplicated page."
-      #     within "form#item-form" do
-      #       fill_in_ckeditor "item[html]", with: duplicated_html
-      #       click_button I18n.t('ss.buttons.publish_save')
-      #     end
-      #     wait_for_notice I18n.t("ss.notice.saved")
+        # 複製したページを編集
+        visit edit_cms_page_path(site.id, duplicated_item)
+        duplicated_html = "<p>Updated content for the duplicated page.</p>"
+        duplicated_description = "Updated content for the duplicated page."
+        within "form#item-form" do
+          fill_in_ckeditor "item[html]", with: duplicated_html
+          click_button I18n.t('ss.buttons.publish_save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
 
-      #     # 複製したページの概要を確認
-      #     duplicated_item.reload
+        # 複製したページの概要を確認
+        duplicated_item.reload
 
-      #     expect(duplicated_item.description).to be_blank
+        expect(duplicated_item.description).to be_blank
 
-      #     # メタタグが生成されていることを確認
-      #     url = File.read(duplicated_item.path)
-      #     doc = Nokogiri::HTML.parse(url)
-      #     description_elements = doc.css("meta[name='description']")
-      #     expect(description_elements).not_to be_empty
-      #     expect(description_elements[0]['content']).to eq duplicated_description
+        # メタタグが生成されていることを確認
+        url = File.read(duplicated_item.path)
+        doc = Nokogiri::HTML.parse(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq duplicated_description
 
-      #     # オリジナルページを確認
-      #     original_item.reload
+        # オリジナルページを確認
+        original_item.reload
 
-      #     expect(original_item.name).to eq 'original'
-      #     expect(original_item.description_setting).to eq 'auto'
-      #     expect(original_item.description).to eq original_description
+        expect(original_item.name).to eq 'original'
+        expect(original_item.description_setting).to eq 'auto'
+        expect(original_item.description).to be_blank
 
-      #     # メタタグが生成されていることを確認
-      #     url = File.read(original_item.path)
-      #     doc = Nokogiri::HTML.parse(url)
-      #     description_elements = doc.css("meta[name='description']")
-      #     expect(description_elements).not_to be_empty
-      #     expect(description_elements[0]['content']).to eq original_description
-      #   end
-      # end
+        # メタタグが生成されていることを確認
+        url = File.read(original_item.path)
+        doc = Nokogiri::HTML.parse(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq original_description
+      end
 
       # it "creates a branch (replacement) page and meta tag is from body" do
       #   let(:original_html) { "<p>Original content of the published page.</p>" }
