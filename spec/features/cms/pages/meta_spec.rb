@@ -609,88 +609,67 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         expect(description_elements[0]['content']).to eq original_description
       end
 
-      # it "creates a branch (replacement) page and meta tag is from body" do
-      #   let(:original_html) { "<p>Original content of the published page.</p>" }
-      #   let(:original_description) { 'Original content of the published page.' }
-      #   let(:item) { create(:cms_page, site: site, html: original_html, layout_id: layout.id) }
-      #   let(:branch_html) { "<p>Branch page content</p>" }
-      #   let(:branch_description) { 'Branch page content' }
+      it "updates description in the replacement page with auto mode" do
+        # 差し替え前のページを作成
+        visit edit_cms_page_path(site.id, item)
 
-      #   # 差し替え前ページ作成
-      #   visit new_cms_page_path(site.id)
-      #   within "form#item-form" do
-      #     fill_in "item[name]", with: "branch"
-      #     fill_in "item[basename]", with: "branch"
-      #     fill_in_ckeditor "item[html]", with: original_html
-      #     find_by_id('addon-cms-agents-addons-meta').click
-      #     click_button I18n.t('ss.buttons.publish_save')
-      #   end
-      #   wait_for_notice I18n.t("ss.notice.saved")
-      #   branch_item = Cms::Page.last
-      #   branch_item.update!(layout_id: layout.id)
+        within "form#item-form" do
+          fill_in "item[name]", with: "published"
+          find_by_id('addon-cms-agents-addons-meta').click
+          choose "item_description_setting_auto"
+          click_button I18n.t('ss.buttons.publish_save')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
 
-      #   expect(branch_item.description_setting).to eq 'auto'
-      #   expect(branch_item.description).to be_blank
+        published_item = Cms::Page.last
+        expect(published_item.name).to eq 'published'
+        expect(published_item.description_setting).to eq 'auto'
+        expect(published_item.description).to be_blank
 
-      #   url = File.read(branch_item.path)
-      #   doc = Nokogiri::HTML.parse(url)
-      #   description_elements = doc.css("meta[name='description']")
-      #   expect(description_elements).not_to be_empty
-      #   expect(description_elements[0]['content']).to eq branch_description
-      # end
+        # メタタグが生成されていることを確認
+        url = File.read(published_item.path)
+        doc = Nokogiri::HTML.parse(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq original_description
 
-      # it "updates description in the replacement page with auto mode" do
-      #   # 差し替え前のページを作成
-      #   visit edit_cms_page_path(site.id, item)
+        # 差し替えページを作成
+        visit cms_page_path(site.id, published_item)
+        within "#addon-workflow-agents-addons-branch" do
+          click_on I18n.t('workflow.create_branch')
+          expect(page).to have_content(published_item.name)
+          click_on published_item.name
+        end
 
-      #   within "form#item-form" do
-      #     fill_in "item[name]", with: "published"
-      #     find_by_id('addon-cms-agents-addons-meta').click
-      #     choose "item_description_setting_auto"
-      #     click_button I18n.t('ss.buttons.publish_save')
-      #   end
-      #   wait_for_notice I18n.t("ss.notice.saved")
+        click_on I18n.t('ss.links.edit')
+        updated_html = "<p>Updated content for the replaced page.</p>"
+        updated_description = "Updated content for the replaced page."
+        within "form#item-form" do
+          fill_in "item[name]", with: "replacement"
+          fill_in_ckeditor "item[html]", with: updated_html
+          click_button I18n.t('ss.buttons.publish')
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
 
-      #   published_item = Cms::Page.last
-      #   expect(published_item.name).to eq 'published'
-      #   expect(published_item.description_setting).to eq 'auto'
-      #   expect(published_item.description).to eq original_description
+        replacement_item = Cms::Page.last
 
-      #   # 差し替えページを作成
-      #   visit cms_page_path(site.id, published_item)
-      #   within "#addon-workflow-agents-addons-branch" do
-      #     click_on I18n.t('workflow.create_branch')
-      #     expect(page).to have_content(published_item.name)
-      #     click_on published_item.name
-      #   end
+        expect(replacement_item.name).to eq "replacement"
+        expect(replacement_item.description_setting).to eq 'auto'
+        expect(replacement_item.description).to be_blank
 
-      #   click_on I18n.t('ss.links.edit')
-      #   within "form#item-form" do
-      #     fill_in "item[name]", with: "replacement"
-      #     fill_in_ckeditor "item[html]", with: updated_html
-      #     click_button I18n.t('ss.buttons.publish')
-      #   end
-      #   wait_for_notice I18n.t("ss.notice.saved")
+        # 公開後、元のページは置き換えられるが、内容自体は新しい内容に変わっているはず
+        published_item.reload
 
-      #   replacement_item = Cms::Page.last
+        expect(published_item.html).to include updated_html
+        expect(published_item.description).to be_blank
 
-      #   expect(replacement_item.name).to eq "replacement"
-      #   expect(replacement_item.description_setting).to eq 'auto'
-      #   expect(replacement_item.description).to eq updated_description
-
-      #   # 公開後、元のページは置き換えられるが、内容自体は新しい内容に変わっているはず
-      #   published_item.reload
-
-      #   expect(published_item.html).to include updated_html
-      #   expect(published_item.description).to eq updated_description
-
-      #   # 公開されたページのメタタグを確認
-      #   url = File.read(published_item.path)
-      #   doc = Nokogiri::HTML.parse(url)
-      #   description_elements = doc.css("meta[name='description']")
-      #   expect(description_elements).not_to be_empty
-      #   expect(description_elements[0]['content']).to eq updated_description
-      # end
+        # 公開されたページのメタタグを確認
+        url = File.read(published_item.path)
+        doc = Nokogiri::HTML.parse(url)
+        description_elements = doc.css("meta[name='description']")
+        expect(description_elements).not_to be_empty
+        expect(description_elements[0]['content']).to eq updated_description
+      end
     end
   end
 end
