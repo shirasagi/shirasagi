@@ -94,6 +94,19 @@ class Gws::Schedule::Plan
     super
   end
 
+  def owned?(user)
+    return true if super
+
+    if SS.config.gws.facility_plans["owned"] == "facility"
+      # 設備を予約している場合、設備の管理者であれば所有しているものとみなす
+      facilities.each do |facility|
+        return true if facility.owned?(user)
+      end
+    end
+
+    false
+  end
+
   private
 
   def validate_color

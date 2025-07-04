@@ -186,6 +186,12 @@ production: &production
     search_times:
       max_facilities: 20
 
+  # 設備予約の所有判定
+  # plan : 予定自身を所有しているか(既定)
+  # facility : 予定自身だけでなく設備の管理者であれば所有しているものとみなす
+  facility_plans:
+    owned: plan
+
   # Default state and style label in user presence
   presence:
     state:
