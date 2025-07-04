@@ -40,7 +40,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
     @items = []
     @data = {}
-    @to = [@cur_node.notice_email]
+    @to = @cur_node.notice_emails.to_a
     @columns.each do |column|
       param = params.to_unsafe_h[:item].try(:[], column.id.to_s)
       if column.input_type == "upload_file" &&
@@ -144,10 +144,10 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
     if @cur_node.notify_mail_enabled?
       if @group.present? && @group.contact_email.present?
-        notice_email = @group.contact_email
-        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now if notice_email.present?
+        email = @group.contact_email
+        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, email).deliver_now if email.present?
       else
-        @to.each { |notice_email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
+        @to.each { |email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, email).deliver_now }
       end
     end
 
