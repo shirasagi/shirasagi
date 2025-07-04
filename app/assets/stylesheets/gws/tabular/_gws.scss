@@ -147,26 +147,23 @@
 }
 
 .gws-tabular-column-see.gws-column-see.see {
-  display: flex;
+  display: grid;
   gap: 15px 10px;
+  grid-template-columns: calc((100% - 10px) * 0.3) 1fr;
   flex-wrap: nowrap;
 
-  > dt {
-    width: calc((100% - 10px) * 0.3);
+  dt {
+    width: 100%;
+    min-width: unset;
     max-width: unset;
-    float: unset;
-    zoom: unset;
-    color: var(--text-color-dt);
+    color: #a0522d;
     font-weight: bold;
   }
 
-  > dd {
-    margin: 0;
-    zoom: unset;
-  }
-
-  > dt ~ dt {
-    margin-top: unset;
+  dd {
+    grid-column-start: 2;
+    width: 100%;
+    margin: unset;
   }
 
   @include mb {
@@ -174,12 +171,12 @@
     grid-template-columns: 1fr;
     gap: 0 10px;
 
-    > dt {
-      width: 100%;
+    dt {
       min-width: initial;
     }
 
-    > dd {
+    dd {
+      grid-column-start: 1;
       width: 100%;
       margin-left: initial;
     }
