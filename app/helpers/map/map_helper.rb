@@ -23,7 +23,7 @@ module Map::MapHelper
 
   def show_google_maps_search(opts = {})
     return false unless opts[:site]
-    opts[:site].show_google_maps_search_enabled?
+    opts[:site].show_google_maps_search_in_marker_enabled?
   end
 
   def include_map_api(opts = {})
@@ -228,5 +228,16 @@ module Map::MapHelper
     else
       SS.config.map.dig("map_marker_images", "googlemaps", "picker")
     end
+  end
+
+  ## show googlemaps
+
+  def google_maps_search_link(map_point)
+    name = map_point["name"].presence || map_point["loc"].to_s
+    name += "(#{t("map.links.google_maps_search")})"
+
+    lat = map_point["loc"][1]
+    lng = map_point["loc"][0]
+    link_to(name, "#{SS.config.map.googlemaps_search_end_point}#{lat},#{lng}", target: "_blank", rel: "noopener")
   end
 end
