@@ -8,7 +8,7 @@ FactoryBot.define do
     cur_site { cms_site }
     route { "inquiry/form" }
     from_email { "from@example.jp" }
-    notice_email { "notice@example.jp" }
+    notice_emails { ["notice@example.jp"] }
     inquiry_html { '<p>下記事項を入力の上、確認画面へのボタンを押してください。</p>' }
     inquiry_sent_html { '<p>お問い合わせを受け付けました。</p>' }
     reply_subject { 'シラサギ市へのお問い合わせを受け付けました。' }

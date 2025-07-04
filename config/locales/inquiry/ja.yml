@@ -149,7 +149,7 @@ ja:
       inquiry/addon/notice:
         notice_state: 通知設定
         notice_content: 通知内容
-        notice_email: 通知メールアドレス
+        notice_emails: 通知メールアドレス
         from_name: 差出人名
         from_email: 差出人メールアドレス
 
@@ -260,8 +260,9 @@ ja:
         - 通知メールの内容を設定します。
         - 「通知のみ」 回答へのリンクが記載されます。
         - 「投稿内容含む」回答へのリンクと回答内容すべてが記載されます。
-      notice_email:
+      notice_emails:
         - フォームへの投稿があったことを通知する先のメールアドレスを入力します。
+        - 複数のメールアドレスを設定する場合は、改行で区切って設定します。
       from_name:
         - 通知メールに記載される差出人名を入力します。
       from_email:

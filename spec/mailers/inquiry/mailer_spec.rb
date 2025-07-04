@@ -6,7 +6,7 @@ describe Inquiry::Mailer, type: :mailer, dbscope: :example do
   let(:answer) { Inquiry::Answer.new }
 
   describe "#notify_mail" do
-    let(:mail) { Inquiry::Mailer.notify_mail(site, node, answer, node.notice_email) }
+    let(:mail) { Inquiry::Mailer.notify_mail(site, node, answer, node.notice_emails.first) }
 
     it "mail attributes" do
       expect(mail.from.first).to eq "from@example.jp"
