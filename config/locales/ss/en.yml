@@ -623,6 +623,10 @@ en:
       logo_application_link:
         mypage: Mypage
         portal: Portal
+      show_google_maps_search_in_view:
+        hide: Not display
+        show_first: Display first one
+        show_all: Display all
 
     tasks:
       started: Started.
@@ -918,7 +922,10 @@ en:
         map_api: Map API
         map_api_key: API key
         map_api_layer: Map layer
+        map_header_text: Map header text
         show_google_maps_search: Link to Google Maps
+        show_google_maps_search_in_marker: In marker
+        show_google_maps_search_in_view: In view
         map_api_mypage: Map type on the admin screen
         map_center: Map center
         map_max_number_of_markers: Maximum number of markers
@@ -1408,8 +1415,10 @@ en:
         - The API key for Google Maps is set in this field.
       map_api_layer:
         - Select the OpenLayers layer to use on the site.
+      map_header_text:
+        - Set the text for the map addon's header on the page view.
       show_google_maps_search:
-        - When enabled, the map marker will display a “View on Google Maps” link.
+        - When enabled, the map marker or page view will display a “View on Google Maps” link.
       map_api_mypage:
         - Set whether to display the map on the administration screen.
       map_center:
