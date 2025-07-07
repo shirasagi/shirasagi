@@ -132,9 +132,6 @@ module Cms::PublicFilter::Layout
 
     @cur_layout.keywords    = @cur_item.keywords if @cur_item.respond_to?(:keywords)
     @cur_layout.description = @cur_item.description if @cur_item.respond_to?(:description)
-    if @cur_item.respond_to?(:template_variable_handler_description)
-      @cur_layout.description = @cur_item.template_variable_handler_description
-    end
 
     @parts = {}
   end
