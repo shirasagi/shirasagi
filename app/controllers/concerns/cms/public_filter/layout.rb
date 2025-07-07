@@ -162,7 +162,7 @@ module Cms::PublicFilter::Layout
 
     html.gsub!('#{description}') do
       if @cur_item.respond_to?(:template_variable_handler_description)
-        @cur_item.template_variable_handler_description
+        @cur_item.template_variable_handler_description("description", self)
       else
         @cur_item.description if @cur_item.respond_to?(:description)
       end
