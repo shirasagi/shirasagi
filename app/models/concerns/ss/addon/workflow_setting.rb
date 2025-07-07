@@ -4,7 +4,8 @@ module SS::Addon::WorkflowSetting
 
   included do
     field :workflow_my_group, type: String, default: "enabled"
-    permit_params :workflow_my_group
+    field :workflow_default_comment, type: String
+    permit_params :workflow_my_group, :workflow_default_comment
   end
 
   def workflow_my_group_options

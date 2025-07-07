@@ -5,4 +5,7 @@
 <dl class="see mod-ss-workflow-setting">
   <dt><%= @model.t :workflow_my_group %><%= @model.tt :workflow_my_group %></dt>
   <dd><%= f.select :workflow_my_group, @item.workflow_my_group_options %></dd>
+
+  <dt><%= @model.t :workflow_default_comment %><%= @model.tt :workflow_default_comment %></dt>
+  <dd><%= f.text_area :workflow_default_comment %></dd>
 </dl>
