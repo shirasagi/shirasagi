@@ -43,6 +43,11 @@
       </label>
       <%# content %>
     </div>
+    <%=
+      if file_type_label
+        tag.div file_type_label, class: "file-type", data: { type: file.model.parameterize }
+      end
+    %>
   <% end %>
   <div class="action">
     <% if show_attach %>
