@@ -44,12 +44,12 @@ before_fork do
 
   PumaWorkerKiller.config do |config|
     # see: https://github.com/zombocom/puma_worker_killer
-    config.ram           = ENV.fetch("PUMA_RAM", 1024).to_i # mb
+    config.ram           = ENV.fetch("PUMA_RAM", 256 * 10).to_i # mb
     config.frequency     = 60 # seconds
     config.percent_usage = 0.98
     # 12 hours in seconds, or 12.hours if using Rails
     config.rolling_restart_frequency = ENV.fetch("PUMA_ROLLING_RESTART_FREQUENCY", 12.hours).to_i
-    config.reaper_status_logs = true # setting this to false will not log lines like:
+    config.reaper_status_logs = false # setting this to false will not log lines like:
     # PumaWorkerKiller: Consuming 54.34765625 mb with master and 2 workers.
 
     config.pre_term = ->(worker) { puts "Worker #{worker.inspect} being killed" }
