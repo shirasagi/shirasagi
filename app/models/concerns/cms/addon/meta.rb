@@ -81,18 +81,11 @@ module Cms::Addon
     end
 
     def set_description
-      return if description_setting_manual? && description.present?
+      return if description.present?
       return unless respond_to?(:html)
-
       html = self.try(:render_html).presence || self.html
-      return if html.blank?
-
-      text = ApplicationController.helpers.sanitize(html.to_s, tags: [])
-      return if text.blank?
-
-      text = Cms.unescape_html_entities(text)
-      text = text.squish
-      self.description = text.truncate(60, omission: "...")
+      self.description = ApplicationController.helpers.
+        sanitize(html.to_s, tags: []).squish.truncate(60)
     end
   end
 end
