@@ -3093,14 +3093,8 @@ input {
 input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
 input[type=email], input[type=number], input[type=tel] {
   @include input;
-  width: 80%;
+  width: 100%;
   padding: 6px;
-}
-@include mb {
-  input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
-  input[type=email], input[type=number], input[type=tel] {
-    width: 100% !important;
-  }
 }
 input[type=number] {
   width: 12em !important;
