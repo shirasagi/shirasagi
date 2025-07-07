@@ -81,7 +81,7 @@ class SS::ApiToken
     end
 
     def secret
-      Rails.application.secret_key_base[0..31]
+      SS::Crypto.salt[0..31]
     end
 
     def get_token(request)

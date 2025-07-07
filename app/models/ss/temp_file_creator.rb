@@ -14,7 +14,6 @@ class SS::TempFileCreator
   attribute :filename, :string
   attribute :resizing, :string
   attribute :quality, :string
-  attribute :image_resizes_disabled, :string
   attribute :in_file
   attribute :accepts
 
@@ -55,7 +54,7 @@ class SS::TempFileCreator
     item.filename = filename
     item.resizing = resizing
     item.quality = quality
-    item.image_resizes_disabled = image_resizes_disabled
+    item.image_resizes_disabled = "disabled"
     item.in_file = in_file
 
     result = item.save

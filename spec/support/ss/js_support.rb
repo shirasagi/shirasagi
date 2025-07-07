@@ -400,6 +400,31 @@ module SS
       })(...arguments)
     SCRIPT
 
+    BOUNDING_CLIENT_RECT_SCRIPT = <<~SCRIPT.freeze
+      (function(selector) {
+        const element = document.querySelector(selector);
+        if (!element) {
+          return {};
+        }
+
+        const rect = element.getBoundingClientRect();
+        if (!rect) {
+          return {};
+        }
+
+        return {
+          x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+          top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left
+        };
+      })(...arguments)
+    SCRIPT
+
+    CANVAS_TO_PNG_SCRIPT = <<~SCRIPT.freeze
+      (function(element) {
+        return element.toDataURL("image/png");
+      })(...arguments)
+    SCRIPT
+
     def wait_timeout
       Capybara.default_max_wait_time
     end
@@ -1088,6 +1113,14 @@ module SS
     def wait_for_all_themes_ready
       result = page.evaluate_async_script(WAIT_FOR_ALL_THEMES_READY_SCRIPT)
       expect(result).to be_truthy
+    end
+
+    def bounding_client_rect(selector)
+      page.evaluate_script(BOUNDING_CLIENT_RECT_SCRIPT, selector)
+    end
+
+    def canvas_to_png(element)
+      page.evaluate_script(CANVAS_TO_PNG_SCRIPT, element)
     end
   end
 end

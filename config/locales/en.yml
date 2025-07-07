@@ -223,6 +223,9 @@ en:
       password_include_kana: contains your reading.
       edit_approved: Approved plans cannot be changed.
       disallowed_domains: "Only the following domains are allowed: %{domains}"
+      tel: Must be a valid telephone number.
+      date: Must be a valid date.
+      datetime: Must be a valid datetime.
       unable_to_accept_file: "An unauthorized file has been selected. Uploadable files can be in %{allowed_format_list}."
     template:
       body: Please check the following items.

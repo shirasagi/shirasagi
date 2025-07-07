@@ -6,6 +6,14 @@ class Cms::Column::List < Cms::Column::Base
 
   validates :list_type, presence: true, inclusion: { in: %w(ol ul), allow_blank: true }
 
+  class << self
+    def default_attributes
+      attributes = super
+      attributes[:list_type] = 'ol'
+      attributes
+    end
+  end
+
   def list_type_options
     %w(ol ul).map do |v|
       [ I18n.t("cms.options.column_list_type.#{v}"), v ]

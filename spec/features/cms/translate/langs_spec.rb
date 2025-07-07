@@ -104,8 +104,7 @@ describe "cms_translate_langs", type: :feature, dbscope: :example do
       visit index_path
       click_on I18n.t("ss.buttons.download")
 
-      expect(page.response_headers["Transfer-Encoding"]).to eq "chunked"
-      csv = ::SS::ChunkReader.new(page.html).to_a.join
+      csv = page.html
       csv = csv.encode("UTF-8", "SJIS")
       csv = ::CSV.parse(csv)
 

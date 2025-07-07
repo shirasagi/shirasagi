@@ -29,7 +29,8 @@ describe SS::File, dbscope: :example do
         let!(:user3) { create :cms_test_user, group_ids: [ group1.id, group2.id ], cms_role_ids: [] }
         let!(:file) do
           tmp_ss_file(
-            Cms::File, site: site1, user: user1, model: "cms/file", contents: file_path, group_ids: [ group1.id, group2.id ]
+            Cms::File, site: site1, user: user1, model: Cms::File::FILE_MODEL, contents: file_path,
+            group_ids: [ group1.id, group2.id ]
           )
         end
 
@@ -376,7 +377,7 @@ describe SS::File, dbscope: :example do
         let!(:user2) { create :sys_user_sample, group_ids: [ group0.id ], sys_role_ids: [] }
         let!(:file) do
           tmp_ss_file(
-            SS::UserFile, user: user1, model: "ss/user_file", contents: file_path
+            SS::UserFile, user: user1, model: SS::UserFile::FILE_MODEL, contents: file_path
           )
         end
 

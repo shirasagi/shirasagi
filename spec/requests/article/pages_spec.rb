@@ -196,9 +196,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           }
           post download_pages_path, params: params
           expect(response.status).to eq 200
-          expect(response.headers["Cache-Control"]).to include "no-store"
-          expect(response.headers["Transfer-Encoding"]).to eq "chunked"
-          body = ::SS::ChunkReader.new(response.body).to_a.join
+          body = response.body
           body = body.encode("UTF-8", "SJIS")
 
           csv = ::CSV.parse(body, headers: true)

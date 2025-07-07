@@ -82,18 +82,25 @@ ja:
     preview_page2: 画面プレビュー
     preview_pc_page: PCプレビュー
     preview_site: サイトプレビュー
+    reference_article: 参照記事
+    release_date: 公開日
     role: 権限/ロール
     root_menu: メインメニュー
-    search_button: 検索
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
+    search_contents_fields:
+      keyword_place_holder: キーワードを入力
+    search_contents_files: ファイル一覧
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
-    search_contents_files: ファイル一覧
-    search_form: サイト検索フォーム
-    search_target: サイト検索範囲を選択してください
     search_contents_sitemap: サイトマップ
+    search_form: サイト検索フォーム
+    search_target: サイト検索範囲
+    search_sort: 表示順
+    search_sort_options:
+      score: 関連性
+      released: 公開日
     shortcut: ショートカット
     show_link_to_part: パーツのリンクを表示
     site: サイト
@@ -128,6 +135,8 @@ ja:
     csv_export_node: 一括エクスポート
     csv_import_node: 一括インポート
     root: ルート
+    yearly_archive: 年別アーカイブ
+    monthly_archive: 月別アーカイブ
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -186,7 +195,16 @@ ja:
     column_url_field:
       link_label_placeholder: リンクテキスト
       link_url_placeholder: URL
+    column_youtube_title_field:
+      field_label: YouTube動画タイトル
+      field_placeholder: 画面読み上げなどで使う動画のタイトルを入力してください。
     visit_article: 記事を見る
+    init_column:
+      new_form_notice:
+        - "上部のツールバー内のボタンをクリックすると入力項目を先頭に追加することができます。"
+        - "下部のツールバー内のボタンをクリックすると入力項目を末尾に追加することができます。"
+      not_found_column: 入力項目が見つかりません。
+    content_quota_navi: フォルダー使用量
 
     adobe_reader:
       remark:
@@ -248,6 +266,7 @@ ja:
       setting: 設定する
       apply_richmenu: リッチメニューを反映する
       add_template: "テンプレートを追加する（最大5個）"
+      youtube_title: YouTubeからタイトルを取得する
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
@@ -314,6 +333,10 @@ ja:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
       generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
+      batch_accessibility_check_notice: ※ 一括処理の場合、簡易なアクセシビリティチェックなどは実行されません。各ページについて確実にアクセシビリティチェックを実施されたい場合は、ページ単位で処理をされることをお勧めします。
+      content_quota_navi:
+        - "ショートカットに表示されているフォルダーのおおよその使用量を表示しています。"
+        - "対象のフォルダー属性: %{routes} "
     apis:
       categories:
         index: カテゴリーを選択する
@@ -588,6 +611,13 @@ ja:
       list_origin:
         deployment: 配備された階層に応じてリストを作成
         content: アクセスされたページ/フォルダーに応じてリストを作成
+      origin_of_page:
+        parent1: 対象が配置されているフォルダー内のリスト
+        parent2: 対象が配置されているフォルダーの親フォルダー内のリスト
+      origin_of_node:
+        parent1: 対象が配置されているフォルダー内のリスト
+        parent2: 対象が配置されているフォルダーの親フォルダー内のリスト
+        self_node: 対象（自フォルダー）内のリスト
       clipboard_copy_target:
         url: URL
         css_selector: CSSセレクター
@@ -602,6 +632,21 @@ ja:
       description_setting_manual: 手動
       description_setting_auto: 自動的に本文と連動
       description_body: 概要の本文
+      site_search_type:
+        page: ウェブページ
+        file: 添付ファイル
+        all: 全て
+      link_target:
+        self: 同じタブで表示
+        blank: 別のタブで表示
+      archive_view:
+        list: リスト（月別）
+        yearly_list: リスト（年別）
+        calendar: カレンダー
+    site_search:
+      no_results: 選択候補がありません。
+      no_choices: 選択候補がありません。
+      max_item: 個まで選択できます。
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP
@@ -915,6 +960,8 @@ ja:
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
+      cms/site_search/setting: サイト内検索設定
+      cms/site_search/group: 組織
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/history_list: 閲覧履歴
@@ -1183,6 +1230,8 @@ ja:
       cms/addon/node_list:
         node_routes: フォルダー属性
         list_origin: 起点
+        origin_of_page: ページの場合
+        origin_of_node: フォルダーの場合
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -1340,6 +1389,15 @@ ja:
         site_search_keywords: 注目ワード
         upper_html: 上部HTML
         lower_html: 下部HTML
+      cms/addon/site_search/setting:
+        link_target: リンク表示
+        search_type_state: 検索種類の選択
+        article_node_state: フォルダーの選択
+        category_state: カテゴリーの選択
+        organization_state: 組織の選択
+        st_article_node_ids: 記事フォルダー
+        site_search_type: 検索種類の初期値
+        st_group_ids: 組織の設定
       cms/form:
         name: 名前
         order: 並び順
@@ -1473,6 +1531,8 @@ ja:
         text: テキスト
       cms/column/value/youtube:
         url: URL
+        title: YouTube動画タイトル
+        generic_title: YouTube動画
         width: 幅
         height: 高さ
         auto_width: 画面幅に合わせる
@@ -1853,6 +1913,10 @@ ja:
       check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: リンクのテキストを確認してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
+      input_youtube_url: YouTubeのURLを入力してください。
+      youtube_title_fetch_failed: タイトルの取得に失敗しました。
+      network_error: 通信エラーが発生しました。
       replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
@@ -1897,6 +1961,8 @@ ja:
           - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
+        set_iframe_title:
+          - iframe要素またはframe要素には、アクセシビリティのためにtitle属性を設定する必要があります。
         alt_is_included_in_filename:
           - 代替テキストの一部もしくは全部がファイル名に含まれています。
           - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
@@ -2771,6 +2837,8 @@ ja:
         ページの更新日時が「2015年4月1日」の形式で表示されます。
         #{page_updated.short}
         ページの更新日時が「4/1」の形式で表示されます。
+        #{page_thumb.src}
+        ページやフォルダーに設定しているサムネイル画像が表示されます。
 
         &lt;!-- skip-voice --&gt;&lt;div&gt;読み上げない&lt;/div&gt;&lt;!-- end-skip-voice --&gt;
         コメントアウトで囲われた個所の読み上げをスキップします。
@@ -3144,7 +3212,7 @@ ja:
         - フォルダーの合計容量の上限を入力します。合計容量が設定した上限を超えた場合、警告が表示されます。
         - 初期値は「未設定」で、未設定である場合、警告は表示されません。
         -
-        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。 
+        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。
         - 1. 容量制限が設定されている。
         - 2. フォルダー設定のショートカットが「表示」に設定されている。
         - 3. 自グループが管理権限の管理グループに設定されている。
@@ -3155,7 +3223,17 @@ ja:
 
     cms/check_links/ignore_url:
       name:
-        - 除外URLを入力します。
+        - リンクチェック時に、チェックの対象外にしたいURLを登録します。
+        - URLの記述は、管理画面側より実際にページなどに記述されている書き方で登録してください。
+        - ""
+        - 【記述例】
+        - ・外部リンクなどでドメインから全てURLを記述している場合
+        - https://demo.ss-proj.org/kurashi/
+        - https://demo.ss-proj.org/kurashi/xxxx.html
+        - ""
+        - ・内部リンクでドメインを除いてURLを記述している場合
+        - /kurashi/
+        - /kurashi/xxxx.html
 
     cms/addon/site_search/history:
       upper_html:
@@ -3172,6 +3250,22 @@ ja:
         - 上部HTMLを入力します。
       lower_html:
         - 下部HTMLを入力します。
+
+    cms/addon/site_search/setting:
+      link_target:
+        - 検索結果のリンクの表示形式を設定します。
+      search_type_state:
+        - 検索フォームに検索種類の選択を表示します。
+      article_node_state:
+        - 検索フォームにフォルダーの選択を表示します。
+      category_state:
+        - 検索フォームにカテゴリーの選択を表示します。
+      organization_state:
+        - 検索フォームに組織の選択を表示します。
+      st_article_node_ids:
+        - サイト内検索の対象となる記事フォルダーを設定します。
+      site_search_type:
+        - 検索種類の初期値を設定します。
 
     cms/line/facility_search/category:
       name:
@@ -3295,6 +3389,10 @@ ja:
       st_categories:
         - サイト内検索で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+      st_group_ids:
+        - サイト内検索で使用する組織の一覧を設定します。
+        - 選択した部署とその配下の部署が検索対象となります。
+        - 設定されていない場合は全部署が対象となります。
 
     cms/syntax_checker/main_setting:
       syntax_check:
@@ -3337,6 +3435,12 @@ ja:
         - ボタンに表示するテキストを入力してください。
         - 「印刷する」「帳票出力」など、自由に設定できます。
         - 省略した場合は「パーツ名」が表示されます。
+    cms/column/value/youtube:
+      title:
+      - "YouTube動画のタイトルを入力してください（アクセシビリティ向上のため）。"
+      - "「YouTubeからタイトルを取得」ボタンで自動取得もできます。"
+      - "自動取得後に内容を修正することも可能です。"
+      - "未入力の場合は「YouTube動画」がタイトルに設定されます。"
     cms/addon/meta:
       description_setting:
         - 概要について、記事本文から自動入力するか手動入力するかを選択します。初期値は「自動的に本文と連動」です。

@@ -20,31 +20,57 @@ describe Inquiry::Node::Form, type: :model, dbscope: :example do
     end
   end
 
-  context "notice_email and from_email" do
+  context "notice_emails and from_email" do
     let(:valid_email) { "sample@example.jp" }
-    let(:invalid_email1) { "sample＠example.jp" }
-    let(:invalid_email2) { "name <sample@example.jp>" }
+    let(:invalid_email) { "sample＠example.jp" }
+
+    let(:valid_emails1) { ["sample@example.jp"] }
+    let(:valid_emails2) { ["sample1@example.jp", "sample2@example.jp"] }
+    let(:invalid_emails1) { ["sample＠example.jp"] }
+    let(:invalid_emails2) { ["sample1@example.jp", "name <sample2@example.jp>"] }
 
     it do
-      item = build(:inquiry_node_form, notice_state: "disabled", notice_email: nil, from_email: nil)
+      item = build(:inquiry_node_form, notice_state: "disabled", notice_emails: nil, from_email: nil)
       expect(item.valid?).to be_truthy
+    end
 
-      item = build(:inquiry_node_form, notice_state: "enabled", notice_email: nil, from_email: nil)
+    it do
+      item = build(:inquiry_node_form, notice_state: "enabled", notice_emails: nil, from_email: nil)
       expect(item.valid?).to be_falsey
+    end
 
-      item = build(:inquiry_node_form, notice_state: "enabled", notice_email: valid_email, from_email: nil)
+    it do
+      item = build(:inquiry_node_form, notice_state: "enabled", notice_emails: valid_emails1, from_email: nil)
       expect(item.valid?).to be_falsey
+    end
 
-      item = build(:inquiry_node_form, notice_state: "enabled", notice_email: nil, from_email: valid_email)
+    it do
+      item = build(:inquiry_node_form, notice_state: "enabled", notice_emails: nil, from_email: valid_email)
       expect(item.valid?).to be_falsey
+    end
 
-      item = build(:inquiry_node_form, notice_state: "enabled", notice_email: valid_email, from_email: valid_email)
+    it do
+      item = build(:inquiry_node_form, notice_state: "enabled", notice_emails: valid_emails1, from_email: valid_email)
       expect(item.valid?).to be_truthy
+    end
 
-      item = build(:inquiry_node_form, notice_state: "enabled", notice_email: invalid_email1, from_email: valid_email)
+    it do
+      item = build(:inquiry_node_form, notice_state: "enabled", notice_emails: valid_emails2, from_email: valid_email)
+      expect(item.valid?).to be_truthy
+    end
+
+    it do
+      item = build(:inquiry_node_form, notice_state: "enabled", notice_emails: invalid_emails1, from_email: valid_email)
       expect(item.valid?).to be_falsey
+    end
 
-      item = build(:inquiry_node_form, notice_state: "enabled", notice_email: invalid_email2, from_email: valid_email)
+    it do
+      item = build(:inquiry_node_form, notice_state: "enabled", notice_emails: invalid_emails2, from_email: valid_email)
+      expect(item.valid?).to be_falsey
+    end
+
+    it do
+      item = build(:inquiry_node_form, notice_state: "enabled", notice_emails: valid_emails1, from_email: invalid_email)
       expect(item.valid?).to be_falsey
     end
   end

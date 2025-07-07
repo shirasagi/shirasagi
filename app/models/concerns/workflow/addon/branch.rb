@@ -97,7 +97,8 @@ module Workflow::Addon
     end
 
     def clone_file(source_file)
-      file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: SS::Model.container_of(self))
+      owner_item = SS::Model.container_of(self)
+      file = SS::File.clone_file(source_file, cur_site: @cur_site, cur_user: @cur_user, owner_item: owner_item)
       update_html_with_clone_file(source_file, file)
       file
     end

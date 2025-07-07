@@ -8,7 +8,7 @@ class SS::FileFieldV2Component < SS::FileFieldComponent
 
   def setting
     @setting ||= begin
-      JSON::JWT.new({ field_name: field_name, accepts: accepts }).sign(Rails.application.secret_key_base).to_s
+      JSON::JWT.new({ field_name: field_name, accepts: accepts }).sign(SS::Crypto.salt).to_s
     end
   end
 

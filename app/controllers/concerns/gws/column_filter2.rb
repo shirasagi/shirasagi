@@ -12,7 +12,7 @@ module Gws::ColumnFilter2
     menu_view 'gws/columns2/menu'
     append_view_path 'app/views/gws/columns2'
 
-    helper_method :cur_form, :items, :column_type_options
+    helper_method :cur_form, :items, :column_type_options, :show_component
   end
 
   private
@@ -26,17 +26,7 @@ module Gws::ColumnFilter2
   end
 
   def column_type_options
-    @column_type_options ||= begin
-      items = {}
-
-      Gws::Column.route_options.each do |name, path|
-        mod = path.sub(/\/.*/, '')
-        items[mod] = { name: t("modules.#{mod}"), items: [] } if !items[mod]
-        items[mod][:items] << [ name.sub(/.*\//, ''), path ]
-      end
-
-      items
-    end
+    @column_type_options ||= Gws::Column.column_type_options
   end
 
   def set_model
@@ -61,6 +51,16 @@ module Gws::ColumnFilter2
         "top"
       end
     end
+  end
+
+  def show_component(item)
+    Gws::Frames::Columns::ShowComponent.new(
+      cur_site: @cur_site, cur_user: @cur_user, item: item, ref: request.path, column_type_options: column_type_options)
+  end
+
+  def edit_component(item)
+    Gws::Frames::Columns::EditComponent.new(
+      cur_site: @cur_site, cur_user: @cur_user, item: item, ref: request.path, new_item: true)
   end
 
   public
@@ -93,8 +93,7 @@ module Gws::ColumnFilter2
     end
 
     @frame_id = "item-#{@item.id}"
-    locals = { ref: SS.request_path(request), model: @model, item: @item, new_item: true }
-    render template: "gws/frames/columns/edit", locals: locals, layout: "ss/item_frame"
+    render edit_component(@item), layout: "ss/item_frame"
   end
 
   def reorder

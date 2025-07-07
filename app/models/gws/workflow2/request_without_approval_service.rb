@@ -6,9 +6,11 @@ class Gws::Workflow2::RequestWithoutApprovalService
   ].freeze
 
   attr_accessor :cur_site, :cur_group, :cur_user, :route_id, :route, :item, :ref,
-    :workflow_agent_type, :workflow_user_id, :workflow_comment
+    :workflow_agent_type, :workflow_user_id, :workflow_comment, :stop_sending_notification
 
   validate :validate_item_form
+
+  define_model_callbacks :approve
 
   def call
     if invalid?
@@ -17,11 +19,17 @@ class Gws::Workflow2::RequestWithoutApprovalService
     end
 
     if workflow_agent_type.to_s == "agent"
-      item.update_workflow_user(cur_site, Gws::User.site(cur_site).where(id: workflow_user_id).first)
-      item.update_workflow_agent(cur_site, cur_user)
+      wk_user = Gws::User.site(cur_site).where(id: workflow_user_id).first
+      if wk_user.blank?
+        item.errors.add :base, :workflow_user_is_not_selected
+        return false
+      end
+      wk_group = wk_user.gws_main_group(cur_site) rescue nil
+      item.update_workflow_user(cur_site, wk_user, wk_group)
+      item.update_workflow_agent(cur_site, cur_user, cur_group)
     else
-      item.update_workflow_user(cur_site, cur_user)
-      item.update_workflow_agent(cur_site, nil)
+      item.update_workflow_user(cur_site, cur_user, cur_group)
+      item.update_workflow_agent(cur_site, nil, nil)
     end
     item.workflow_state = Gws::Workflow2::File::WORKFLOW_STATE_APPROVE_WITHOUT_APPROVAL
     item.workflow_comment = workflow_comment
@@ -42,7 +50,10 @@ class Gws::Workflow2::RequestWithoutApprovalService
     result = item.save
     return result unless result
 
-    send_destination
+    run_callbacks :approve do
+      send_destination
+    end
+
     item.class.destroy_workflow_files(save_workflow_approvers, save_workflow_circulations)
 
     result
@@ -61,6 +72,8 @@ class Gws::Workflow2::RequestWithoutApprovalService
   end
 
   def send_destination
+    return if stop_sending_notification
+
     to_users = item.workflow_destination_users
     return if to_users.blank?
 

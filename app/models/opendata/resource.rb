@@ -156,6 +156,7 @@ class Opendata::Resource
     dataset.updated = updated if in_update_dataset.present?
     dataset.released ||= Time.zone.now
     dataset.save(validate: false)
+    dataset.send(:generate_file) unless dataset.changed?
     # dataset.send(:save_backup)
   end
 

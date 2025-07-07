@@ -59,7 +59,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".gws-column-new-form-notice-item", text: I18n.t("gws/column.new_form_notice").first)
 
       within ".gws-column-list-toolbar[data-placement='top']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/radio_button") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/radio_button") }
       end
       within first(".gws-column-item") do
         fill_in "item[name]", with: column_name

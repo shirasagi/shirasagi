@@ -57,28 +57,24 @@ class Gws::UserCsv::Exporter
   end
 
   def enum_csv
-    form ||= begin
-      if site
-        Gws::UserForm.find_for_site(site)
-      end
-    end
-
     Enumerator.new do |y|
-      csv_headers.to_csv.tap do |csv|
-        case encoding
-        when "Shift_JIS"
-          y << encode_sjis(csv)
-        when "UTF-8"
-          y << SS::Csv::UTF8_BOM + csv
-        end
-      end
-      @criteria.each do |item|
-        item_to_csv(item).to_csv.tap do |csv|
+      I18n.with_locale(I18n.default_locale) do
+        csv_headers.to_csv.tap do |csv|
           case encoding
           when "Shift_JIS"
             y << encode_sjis(csv)
           when "UTF-8"
-            y << csv
+            y << SS::Csv::UTF8_BOM + csv
+          end
+        end
+        @criteria.each do |item|
+          item_to_csv(item).to_csv.tap do |csv|
+            case encoding
+            when "Shift_JIS"
+              y << encode_sjis(csv)
+            when "UTF-8"
+              y << csv
+            end
           end
         end
       end

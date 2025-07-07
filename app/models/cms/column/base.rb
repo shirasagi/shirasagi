@@ -6,6 +6,14 @@ class Cms::Column::Base
 
   store_in collection: 'cms_columns'
 
+  class << self
+    def default_attributes
+      {
+        name: self.model_name.human
+      }
+    end
+  end
+
   def alignment_options
     %w(flow center).map { |v| [ I18n.t("cms.options.alignment.#{v}"), v ] }
   end

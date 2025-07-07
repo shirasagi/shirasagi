@@ -2,11 +2,15 @@
 // base
 
 header, footer, nav, section, article, figure, aside {
-  display: block;
-  margin: 0;
+  & {
+    display: block;
+    margin: 0;
+  }
 }
 * {
-  @include box-sizing(border-box);
+  & {
+    @include box-sizing(border-box);
+  }
 }
 html {
   font-size: 13px;
@@ -633,8 +637,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 // nav
 #navi {
   position: relative;
-  z-index: 1;
+  z-index: 10;
   width: 211px;
+  min-width: 211px;
   padding-bottom: 120px;
   border-right: 1px solid #dcdcdc;
   border-bottom: 1px solid #dcdcdc;
@@ -698,9 +703,11 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 .site-name {
   @include clear;
   @include truncate;
-  padding: 10px 15px;
-  border-bottom: $border-gray5;
-  font-weight: bold;
+  & {
+    padding: 10px 15px;
+    border-bottom: $border-gray5;
+    font-weight: bold;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -943,54 +950,63 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       font-weight: bold;
     }
   }
-  h3 a {
+  h3:not(.no-icons) a {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
+
     &.down {
       background: url(/assets/img/ic-arrow16down-off.png) no-repeat 35px center;
     }
+
     &.management {
       background: url(/assets/img/ic-setting.png) no-repeat 35px center;
     }
+
     &.trash {
       background: url(/assets/img/ic-trash.png) no-repeat 35px center;
     }
-    color: $black;
-    @at-root h3.current a {
-      background-color: $gray1;
-      &.management {
-        background-color: $gray1;
-      }
-      &.trash {
-        background-color: $gray1;
-      }
-    }
+
     &:hover {
       background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px center;
-      color: $orange;
-      text-decoration: none;
     }
+
     &.down:hover {
       background: url(/assets/img/ic-arrow16down-on.png) no-repeat 35px center;
     }
+
     &.management:hover {
       background: $gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
+    }
+
+    &.trash:hover {
+      background: $gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+    }
+  }
+  h3 a {
+    color: $black;
+    &:hover {
+      background: $gray1;
+      color: $orange;
+      text-decoration: none;
+    }
+    &.management:hover {
+      background: $gray1;
       color: $orange;
       text-decoration: none;
     }
     &.trash:hover {
-      background: $gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+      background: $gray1;
       color: $orange;
       text-decoration: none;
     }
   }
-  h3 .label {
+  h3:not(.no-icons) .label {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
   }
-  h3 span {
+  h3:not(.no-icons) span {
     display: block;
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
@@ -998,26 +1014,90 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   h3:last-child, ul:last-child {
     margin-bottom: 8px;
   }
-  h4 a {
-    display: block;
-    padding: 5px 15px 5px 85px;
-    background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
-    &.management {
-      background: url(/assets/img/ic-setting.png) no-repeat 60px center;
+  h3.no-icons {
+    @include display-flex;
+    @include align-items(center);
+    gap: 5px;
+    padding: 5px;
+
+    .d-inline-flex {
+      @include display-flex(inline-flex);
+      @include align-items(center);
+      gap: 5px;
     }
-    color: $black;
-    @at-root h4.current a {
-      background-color: $gray1;
+    .ml-auto {
+      margin-left: auto;
     }
-    &:hover {
-      background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
-      color: $orange;
-      text-decoration: none;
+
+    .flex-basis-100 {
+      flex-basis: 100%;
     }
-    &.management:hover {
-      background: $gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
-      color: $orange;
-      text-decoration: none;
+  }
+  h4 {
+    a {
+      display: block;
+      color: $black;
+
+      @at-root h4.current a {
+        background-color: $gray1;
+
+        &.management {
+          background: $gray1;
+        }
+
+        &.trash {
+          background: $gray1;
+        }
+      }
+
+      &:hover {
+        background: $gray1;
+        color: $orange;
+        text-decoration: none;
+      }
+
+      &.management:hover {
+        background: $gray1;
+        color: $orange;
+        text-decoration: none;
+      }
+    }
+
+    &.no-icons {
+      @include display-flex;
+      @include align-items(center);
+      gap: 5px;
+      padding: 5px;
+
+      .d-inline-flex {
+        display: inline-flex;
+        @include align-items(center);
+        gap: 5px;
+      }
+      .ml-auto {
+        margin-left: auto;
+      }
+
+      a {
+        padding-left: 20px;
+      }
+    }
+
+    &:not(.no-icons) {
+      padding: 5px 15px 5px 85px;
+      background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
+
+      &:hover {
+        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
+      }
+
+      &.management {
+        background: url(/assets/img/ic-setting.png) no-repeat 60px center;
+      }
+
+      &.management:hover {
+        background: $gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+      }
     }
   }
   .navi-link:hover {
@@ -1026,7 +1106,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     cursor: pointer;
   }
   @include mb {
-    h3 {
+    h3:not(.no-icons) {
       a, a:hover, a.management, a:hover.management, a.trash, a:hover.trash, span {
         padding: 5px 15px 5px 35px;
         background-position: 15px center;
@@ -1673,8 +1753,10 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   @include mb { margin: 0 10px 10px; }
   header {
     @include box-head;
-    margin: -15px -10px 15px;
-    border-bottom: $border-gray1;
+    & {
+      margin: -15px -10px 15px;
+      border-bottom: $border-gray1;
+    }
   }
   .main-body {
     margin: -20px 0;
@@ -1738,6 +1820,14 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   @include box-body;
   &.print {
     border-top: $border-black2;
+  }
+  .images{
+    .image{
+      img{
+        max-width: 140px;
+        object-fit: scale-down;
+      }
+    }
   }
 }
 dl.see {
@@ -1909,8 +1999,8 @@ dl.mod-cms-parent_crumbs {
 .tooltip-border {
   border: 1px solid #fff;
 }
-.tippy-tooltip {
-  &.ss-tooltip-theme {
+.tippy-box {
+  &[data-theme~=ss-tooltip] {
     font-size: 90%;
     font-weight: normal;
     text-align: left;
@@ -1958,9 +2048,11 @@ footer.send {
   }
   button.preview {
     @include btn-white;
-    position: relative;
-    margin-top: -2px;
-    padding-left: 36px;
+    & {
+      position: relative;
+      margin-top: -2px;
+      padding-left: 36px;
+    }
 
     &::before {
       content: "pageview";
@@ -2018,6 +2110,14 @@ footer.send {
 }
 .btn-red {
   @include btn-red-core;
+}
+.btn-orange {
+  @include btn-orange-core;
+}
+.btn-inline-flex {
+  @include display-flex(inline-flex);
+  @include align-items(center);
+  gap: 5px;
 }
 .chorg-revisions {
   margin-bottom: 10px;
@@ -2090,6 +2190,18 @@ footer.send {
   //margin: 0 28px 20px 0;
   @include mb {
     //margin: 0 10px 10px 0;
+  }
+  &.unused{
+    .unused-message{
+      position: absolute;
+      top: 0;
+      right: 0;
+      padding: 3px 5px;
+      background: rgba(173, 34, 4, 0.8);
+      color: white;
+      font-size: 10px;
+      font-weight: bold;
+    }
   }
   .sanitizer-status {
     position: absolute;
@@ -2353,7 +2465,9 @@ footer.send {
   }
   .add-marker {
     @include btn-orange;
-    margin: 10px 0 28px;
+    & {
+      margin: 10px 0 28px;
+    }
   }
 }
 #map-canvas {
@@ -3331,6 +3445,12 @@ form .CodeMirror {
     top: 65px;
     right: 15px;
     @include mb { position: static;}
+    a{
+      img{
+        max-width: 140px;
+        object-fit: scale-down;
+      }
+    }
   }
   #map-canvas {
     margin-bottom: 10px;

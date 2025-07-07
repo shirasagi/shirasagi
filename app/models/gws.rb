@@ -96,6 +96,10 @@ module Gws
     Gws::Workflow2::Form::External
     Gws::Workflow2::Form::Purpose
     Gws::Workflow2::Route
+    Gws::Tabular::Space
+    Gws::Tabular::Form
+    Gws::Tabular::FormRelease
+    Gws::Tabular::View::Base
   )).freeze
 
   MODULES_BOUND_TO_GROUP = Set.new(%w(
@@ -139,7 +143,30 @@ module Gws
     size += filter.call(MODULES_BOUND_TO_GROUPS).map(&:constantize).sum do |klass|
       klass.all.unscoped.any_in(group_ids: group_ids).total_bsonsize
     end
+    size += _gws_tabular_file_used(org_ids)
     size
+  end
+
+  def _gws_tabular_file_used(org_ids)
+    form_ids = Gws::Tabular::Form.unscoped.any_in(site_id: org_ids).pluck(:id)
+    return 0 if form_ids.blank?
+
+    file_collection_names = form_ids.map { |form_id| "gws_tabular_file_#{form_id}" }
+    file_collections = Mongoid.default_client.collections.select do |collection|
+      file_collection_names.include?(collection.name)
+    end
+    return 0 if file_collections.blank?
+
+    file_collections.sum do |collection|
+      pipes = [
+        { "$group" => { _id: nil, total_object_size: { "$sum" => { "$bsonSize" => "$$ROOT" } } } },
+      ]
+      result = collection.aggregate(pipes)
+      data = result.first
+      next 0 if data.blank?
+
+      data["total_object_size"] || 0
+    end
   end
 
   def gws_files_used(organizations_criteria, _opts = {})
@@ -158,5 +185,71 @@ module Gws
     domain = domain.sub(/:.*$/, '') if domain.include?(":")
 
     "<#{::Mail.random_tag}@#{domain}.mail>"
+  end
+
+  def id_name_hash(items, name_method: :name)
+    items.map { |m| [ m.id.to_s, m.send(name_method) ] }.to_h
+  end
+
+  def public_dir_path(site, file)
+    root_path = site.root_path
+    return if root_path.blank?
+    return if !root_path.start_with?(Rails.root.to_s)
+
+    path = ::File.join("fs", file.id.to_s.chars.join("/"), "_")
+    path = ::File.expand_path(path, root_path)
+    return if !path.start_with?(root_path)
+
+    path
+  end
+
+  def public_file_path(site, file)
+    dir = public_dir_path(site, file)
+    return if dir.blank?
+
+    path = ::File.expand_path(file.filename, dir)
+    return if !path.start_with?(Rails.root.to_s)
+
+    path
+  end
+
+  def publish_file(site, file)
+    return if site.blank? || file.blank?
+
+    dir = Gws.public_dir_path(site, file)
+    return if dir.blank?
+
+    SS::FilePublisher.publish(file, dir)
+  end
+
+  def depublish_file(site, file)
+    return if site.blank? || file.blank?
+
+    dir = Gws.public_dir_path(site, file)
+    return if dir.blank?
+
+    SS::FilePublisher.depublish(file, dir)
+  end
+
+  def service_account_users
+    return @service_account_users if defined? @service_account_users
+
+    unless SS.config.gws.service_account
+      @service_account_users = SS::EMPTY_SET
+      return @service_account_users
+    end
+
+    users = SS.config.gws.service_account["users"]
+    unless users
+      @service_account_users = SS::EMPTY_SET
+      return @service_account_users
+    end
+
+    users = users.map { _1.to_s.strip }
+    @service_account_users = Set.new(users)
+  end
+
+  def service_account?(user)
+    service_account_users.include?(user.uid)
   end
 end

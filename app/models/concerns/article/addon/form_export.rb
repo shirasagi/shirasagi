@@ -52,7 +52,7 @@ module Article::Addon
           pages_to_json(pages).each { |line| data << line }
         end
       end
-      ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)
+      (SS::Csv::UTF8_BOM + csv).encode("UTF-8", invalid: :replace, undef: :replace)
     end
 
     def pages_to_json(pages)

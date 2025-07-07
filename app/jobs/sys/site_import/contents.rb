@@ -10,14 +10,21 @@ module Sys::SiteImport::Contents
   end
 
   def import_cms_nodes
-    @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename) do |item|
+    @cms_nodes_map = import_documents "cms_nodes", Cms::Node, %w(site_id filename) do |item, data|
+      if data["condition_forms"].present? && item.respond_to?(:condition_forms)
+        item.condition_forms = data["condition_forms"]["values"].to_a
+      end
       item[:opendata_site_ids] = [] if item[:opendata_site_ids].present?
       item.skip_remove_files_recursively = true
     end
   end
 
   def import_cms_parts
-    @cms_parts_map = import_documents "cms_parts", Cms::Part, %w(site_id filename)
+    @cms_parts_map = import_documents "cms_parts", Cms::Part, %w(site_id filename) do |item, data|
+      if data["condition_forms"].present? && item.respond_to?(:condition_forms)
+        item.condition_forms = data["condition_forms"]["values"].to_a
+      end
+    end
   end
 
   def import_cms_pages
@@ -40,12 +47,6 @@ module Sys::SiteImport::Contents
           if column_value['file_ids'].present?
             column_value['file_ids'] = column_value['file_ids'].map do |file_id|
               @ss_files_map[file_id]
-            end
-            if column_value.value.present?
-              @ss_files_url.each do |src, dst|
-                src_path = /#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
-                column_value.value = column_value.value.gsub(src_path, dst)
-              end
             end
           end
           column_value
@@ -127,6 +128,18 @@ module Sys::SiteImport::Contents
       item[:service_ids] = convert_ids(@cms_nodes_map, item[:service_ids])
       item[:my_anpi_post] = @cms_nodes_map[item[:my_anpi_post]] if item[:my_anpi_post].present?
       item[:anpi_mail] = @cms_nodes_map[item[:anpi_mail]] if item[:anpi_mail].present?
+
+      if item[:condition_forms].present?
+        values = item[:condition_forms].to_a.map do |value|
+          value[:form_id] = @cms_forms_map[value[:form_id]]
+          value[:filters] = value[:filters].map do |filter|
+            filter[:column_id] = @cms_columns_map[filter[:column_id].to_s]
+            filter
+          end
+          value
+        end
+        item[:condition_forms] = values
+      end
       save_document(item)
     end
   end
@@ -153,6 +166,26 @@ module Sys::SiteImport::Contents
             column_value.page_id = @cms_pages_map[column_value.page_id]
           end
         end
+      end
+      save_document(item)
+    end
+  end
+
+  def update_cms_parts
+    @cms_parts_map.each do |old_id, id|
+      item = Cms::Part.unscoped.find(id) rescue nil
+      next unless item
+
+      if item[:condition_forms].present?
+        values = item[:condition_forms].to_a.map do |value|
+          value[:form_id] = @cms_forms_map[value[:form_id]]
+          value[:filters] = value[:filters].map do |filter|
+            filter[:column_id] = @cms_columns_map[filter[:column_id].to_s]
+            filter
+          end
+          value
+        end
+        item[:condition_forms] = values
       end
       save_document(item)
     end

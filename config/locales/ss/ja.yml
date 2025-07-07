@@ -20,9 +20,11 @@ ja:
     menu: メニュー
     module: モジュール
     operation: 操作
+    organization: 組織
     qr_code: QRコード
     regexp: 正規表現
     resize_image: 画像リサイズ
+    no_resize_image: 画像リサイズしない
     role: ロール
     role_setting: ロール一括設定
     required: 必須入力
@@ -79,6 +81,7 @@ ja:
     mfa_otp_not_enabled_yet: "有効化されていません。"
     system_operation: "-- システムによる操作 --"
     upload_or_select_from_list: ファイルアップロードまたは一覧から選択
+    auto_resizing_label: "%{size}（システム設定）"
 
     views:
       login/login:
@@ -277,6 +280,7 @@ ja:
       select_from_list: 一覧から選択
       select_files: ファイル選択
       cancel_upload: アップロード取消
+      do_access_to_unreliable_site: 外部サイトへ進む
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
@@ -303,7 +307,9 @@ ja:
       delete_file_histories: ファイル履歴を削除してもよろしいですか？
       contains_url_expect: このページにリンクを貼っているページがあるため、処理を中断します。貼っているリンクを全て解除してから操作を続行してください。
       contains_links_in_file: このページに対して、リンクを貼っている他のページがあるため削除できません
+      contains_links_in_file_close: このページに対して、リンクを貼っている他のページがあるため非公開にできません
       contains_links_in_file_ignoring_alert: 被リンクを確認の上、チェックボックスをクリックして削除してください。
+      contains_links_in_file_ignoring_alert_close: 被リンクを確認の上、チェックボックスをクリックして非公開にしてください。
       not_contains_links_in_file: 被リンクがないので削除できます。
       target_to_delete: 削除対象の確認
       target_to_public: 公開対象の確認
@@ -481,6 +487,9 @@ ja:
         768x1024: 768x1024 (XGA縦)
         1280x720: 1280x720 (HD横)
         720x1280: 720x1280 (HD縦)
+        380x380: 380x380 (3カラムレイアウトに最適)
+        580x580: 580x580 (2カラムレイアウトに最適)
+        1200x1200: 1200x1200 (一般的なページに最適)
       text_type:
         plain: テキスト形式
         markdown: Markdown形式
@@ -614,6 +623,10 @@ ja:
       logo_application_link:
         mypage: "マイページ"
         portal: "ポータル"
+      show_google_maps_search_in_view:
+        hide: 非表示
+        show_first: 先頭1件のみ表示
+        show_all: 全て表示
 
     tasks:
       started: 開始しました。
@@ -831,6 +844,7 @@ ja:
         domains: ドメイン
         gws_use: グループウェアの使用
         upload_policy: アップロード制限
+        path_id: 書き出しパスID
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -908,7 +922,10 @@ ja:
         map_api: 地図API
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
+        map_header_text: ヘッダーテキスト
         show_google_maps_search: Googleマップへのリンク
+        show_google_maps_search_in_marker: マーカー内
+        show_google_maps_search_in_view: 詳細画面
         map_api_mypage: 管理画面での地図表示
         map_center: 地図の中心座標
         map_max_number_of_markers: 最大地点数
@@ -975,9 +992,11 @@ ja:
         order: 並び順
         state: 状態
       ss/model/image_resize:
-        max_width: 横幅
-        max_height: 縦幅
+        max_width: 最大の横幅
+        max_height: 最大の縦幅
+        size: バイト数
         quality: 画質
+        state: 状態
       ss/model/postal_code:
         code: 郵便番号
         prefecture: 都道府県
@@ -1038,7 +1057,7 @@ ja:
         elasticsearch_deny: 除外パス
         elasticsearch_site_ids: サイト
         elasticsearch_indexes: インデックス
-        elasticsearch_outside: 外部サイト検索
+        elasticsearch_outside: 外部サイト検索(Fess)
       ss/addon/translate/site_setting:
         translate_state: ステータス
         translate_source_id: 元言語コード
@@ -1206,6 +1225,8 @@ ja:
         - 既定では、グループウェアを使用します。
       upload_policy:
         - ファイルアップロード時の動作を設定します。
+      path_id:
+        - 書き出しパスのIDを設定します。パスのIDとはpublic/gws/以下のフォルダー名で、英子文字と数字のみが利用できます。
     ss/document:
       title:
         - ページのタイトルに利用し、ブラウザのタイトルバーに表示されます。
@@ -1292,6 +1313,10 @@ ja:
         - 容量を超過している場合、あらかじめ設定している画質に変更されます。
         - 横幅、高さを超過している場合、収まるように縮小されます。
         - 自動リサイズをしたくない場合は、管理者に権限を付与してもらった後、左の「自動リサイズ有効」をクリックし「自動リサイズ無効」に設定してください。
+      user_file:
+        - チェックを入れるとユーザー単位でのファイルを表示します。このファイルはマイページのファイルで登録したファイルのことです。
+      cms_file:
+        - チェックを入れるとサイト内で共有されているファイルを表示します。
     ss/model/user_title:
       code: 役職コードを入力します。
       name: 役職名を入力します。
@@ -1391,8 +1416,10 @@ ja:
         - GoogleマップのAPIキーはこの項目に設定します。
       map_api_layer:
         - サイトで使用するOpenLayersのレイヤーを選択します。
+      map_header_text:
+        - ページ詳細画面の地図アドオンのヘッダーのテキストを設定できます。
       show_google_maps_search:
-        - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
+        - 有効にすると「Googleマップで見る」リンクが表示されます。
       map_api_mypage:
         - 管理画面で地図を表示するか設定します。
       map_center:
@@ -1513,13 +1540,20 @@ ja:
         - 制限の有効/無効を設定します
     ss/model/image_resize:
       max_width:
-        - 画像ファイルの横幅を設定可能です
+        - 画像の最大の横幅を設定します。
+        - ファイルアップロード時に、この設定値以下へ縮小します。
       max_height:
-        - 画像ファイルの縦幅を設定可能です
+        - 画像の最大の縦幅を設定します。
+        - ファイルアップロード時に、この設定値以下へ縮小します。
+      size:
+        - 画像ファイルのバイト数がこの設定値より大きい場合、画質を落とす処理を実行します。
+        - 画質を落としても画像のバイト数がこの設定値を超過する場合があります。
       quality:
-        - 画像ファイルの画質を0から100の間で設定可能です
-        - 最大ファイルサイズを超過した場合、画質に基づいて画像を圧縮します
-        - 画質が高い程劣化が少ないです
+        - 画像ファイルの画質を0から100の間で設定します。
+        - 画像ファイルのバイト数が「バイト数」に設定した値を超過した場合、この設定の画質に変更します。
+        - 画質が高い程劣化が少ないです。
+      state:
+        - 画像リサイズの有効/無効を設定します
     ss/model/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。
@@ -1555,6 +1589,7 @@ ja:
       elasticsearch_outside:
         - 外部サイト検索を設定します。
         - 検索フォームにプルダウンが表示され、外部サイト検索ができるようになります。
+        - Fess のインストールが必要です。
 
     ss/addon/source_cleaner/site_setting:
       source_cleaner_unwrap_tag_state:
@@ -1655,3 +1690,4 @@ ja:
       ss/delete_sso_tokens_job: システム/SSOトークン掃除ジョブ
       ss/delete_ss_o_tokens_job: システム/SSOトークン掃除ジョブ
       ss/cleanup_file_store_cache_job: システム/ファイルキャッシュ掃除ジョブ
+      ss/remove_site_job: システム/サイト削除

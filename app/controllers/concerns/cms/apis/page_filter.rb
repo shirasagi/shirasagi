@@ -58,7 +58,7 @@ module Cms::Apis::PageFilter
 
   def set_items
     if params[:s] && params[:s][:partner_site].present?
-      site = Cms::Site.find_by(id: params[:s][:partner_site])
+      site = Cms::Site.without_deleted.find_by(id: params[:s][:partner_site])
       @items = @model.site(site).exists(master_id: false)
     else
       @items = @model.site(@cur_site).exists(master_id: false)

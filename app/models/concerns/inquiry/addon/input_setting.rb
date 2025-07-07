@@ -12,7 +12,7 @@ module Inquiry::Addon
       field :input_type, type: String, default: "text_field"
       field :select_options, type: SS::Extensions::Lines, default: ""
       field :required, type: String, default: "required"
-      field :required_in_select_form, type: Array
+      field :required_in_select_form, type: Array, default: []
       field :additional_attr, type: String, default: ""
       field :input_confirm, type: String, default: ""
       field :question, type: String, default: 'disabled'
@@ -28,6 +28,7 @@ module Inquiry::Addon
       validates :input_type, presence: true, inclusion: { in: INPUT_TYPES }
       validates :question, presence: true, inclusion: { in: %w(enabled disabled) }
       validate :validate_select_options
+      validate :validate_required_in_select_form
       validate :validate_input_confirm_options
       # validate :validate_max_upload_file_size_options
       validate :validate_transfers
@@ -73,7 +74,7 @@ module Inquiry::Addon
     #   [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ]
     # end
 
-    def required?(in_reply)
+    def required?(in_reply = nil)
       return true if in_reply && required_in_select_form && required_in_select_form.include?(in_reply)
       required == "required"
     end
@@ -90,6 +91,10 @@ module Inquiry::Addon
       if /(select|radio_button|check_box|form_select)/.match?(input_type)
         errors.add :select_options, :blank if select_options.blank?
       end
+    end
+
+    def validate_required_in_select_form
+      self.required_in_select_form = required_in_select_form.to_a.select(&:present?)
     end
 
     def validate_input_confirm_options
