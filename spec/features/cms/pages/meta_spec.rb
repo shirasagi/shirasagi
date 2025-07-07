@@ -18,7 +18,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"
         fill_in_ckeditor "item[html]", with: "<p>sample</p>"
-        find_by_id('addon-cms-agents-addons-meta').click
+        ensure_addon_opened('#addon-cms-agents-addons-meta')
         choose "item_description_setting_auto"
         click_button I18n.t('ss.buttons.publish_save')
       end
@@ -53,7 +53,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample"
           fill_in "item[basename]", with: "sample"
           fill_in_ckeditor "item[html]", with: "<p>sample</p>"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           find_by_id('addon-category-agents-addons-category').click
           check category.name
@@ -99,7 +99,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample"
           fill_in "item[basename]", with: "sample"
           fill_in_ckeditor "item[html]", with: html_content
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -126,7 +126,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample"
           fill_in "item[basename]", with: "sample"
           fill_in_ckeditor "item[html]", with: html_content
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_manual"
           fill_in "item[description]", with: manual_description
           click_button I18n.t('ss.buttons.publish_save')
@@ -155,7 +155,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       it "updates description when switching to auto mode" do
         visit edit_cms_page_path(site.id, item)
         within "form#item-form" do
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -180,7 +180,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         visit edit_cms_page_path(site.id, item)
         within "form#item-form" do
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           fill_in_ckeditor "item[html]", with: updated_html
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -210,7 +210,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         within "form#item-form" do
           fill_in "item[name]", with: "original"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -284,7 +284,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         within "form#item-form" do
           fill_in "item[name]", with: "published"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -349,7 +349,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample"
           fill_in "item[basename]", with: "sample"
           fill_in_ckeditor "item[html]", with: html_content
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           click_button I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
@@ -375,7 +375,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "sample2"
           fill_in "item[basename]", with: "sample2"
           fill_in_ckeditor "item[html]", with: html_content
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           click_button I18n.t('ss.buttons.publish_save')
         end
         wait_for_notice I18n.t("ss.notice.saved")
@@ -415,7 +415,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "manual"
           fill_in "item[basename]", with: "manual"
           fill_in_ckeditor "item[html]", with: "<p>Manual mode test</p>"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_manual"
           fill_in "item[description]", with: "Manual description"
           click_button I18n.t('ss.buttons.publish_save')
@@ -438,7 +438,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "auto"
           fill_in "item[basename]", with: "auto"
           fill_in_ckeditor "item[html]", with: "<p>Auto mode test</p>"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -461,7 +461,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "switch"
           fill_in "item[basename]", with: "switch"
           fill_in_ckeditor "item[html]", with: "<p>Switch test</p>"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_manual"
           fill_in "item[description]", with: "Manual desc"
           click_button I18n.t('ss.buttons.publish_save')
@@ -472,7 +472,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         # manual→autoに切り替え
         visit edit_cms_page_path(site.id, item)
         within "form#item-form" do
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -493,7 +493,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "empty"
           fill_in "item[basename]", with: "empty"
           fill_in_ckeditor "item[html]", with: ""
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -515,7 +515,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: "latest"
           fill_in "item[basename]", with: "latest"
           fill_in_ckeditor "item[html]", with: "<p>First body</p>"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -547,7 +547,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         within "form#item-form" do
           fill_in "item[name]", with: "original"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end
@@ -615,7 +615,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         within "form#item-form" do
           fill_in "item[name]", with: "published"
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           click_button I18n.t('ss.buttons.publish_save')
         end

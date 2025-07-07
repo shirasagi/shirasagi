@@ -130,7 +130,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               select form.name, from: 'in_form_id'
             end
           end
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
           expect(page).to have_no_selector('#item_body_layout_id', visible: true)
@@ -570,7 +570,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
-          find_by_id('addon-cms-agents-addons-meta').click
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
           choose "item_description_setting_auto"
 
           within ".column-value-palette" do
