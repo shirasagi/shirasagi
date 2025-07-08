@@ -102,14 +102,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
       entries.each do |entry|
         next if entry.directory?
 
-        name = entry.name
-        if (entry.gp_flags & Zip::Entry::EFS) == Zip::Entry::EFS
-          name.force_encoding("UTF-8")
-        else
-          name = NKF.nkf('-w', name)
-        end
-        name = name.tr('\\', '/')
-
+        name = SS::Zip.safe_zip_entry_name(entry)
         if name.start_with?('public/')
           root_dir = @dst_site.path
           name = name.sub(/^public\//, '')
