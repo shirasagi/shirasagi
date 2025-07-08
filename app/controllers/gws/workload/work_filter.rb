@@ -82,8 +82,6 @@ module Gws::Workload::WorkFilter
       #due_end_on = today + @cur_site.workload_default_due_date.day
     end
 
-    Rails.logger.debug "[DEBUG] Gws::Workload::Work#pre_params - due_date: \\#{due_date}"
-
     ret = {}
     ret[:due_date] = due_date
     ret[:due_start_on] = due_start_on
@@ -131,7 +129,6 @@ module Gws::Workload::WorkFilter
 
   def create
     @item = @model.new get_params
-    Rails.logger.debug "[DEBUG] Gws::Workload::Work#create - due_date: \\#{@item.due_date}"
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
     render_create @item.save
