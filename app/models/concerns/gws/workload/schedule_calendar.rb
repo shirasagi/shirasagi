@@ -33,10 +33,11 @@ module Gws::Workload::ScheduleCalendar
       end
     end
 
-    #data[:startDateLabel] = date_label(due_date)
-    #data[:startTimeLabel] = nil
-    #data[:endDateLabel] = date_label(due_date)
-    #data[:endTimeLabel] = nil
+    data[:startDateLabel] = date_label(due_date)
+    data[:startTimeLabel] = "00:00"
+    data[:endDateLabel] = date_label(due_date)
+    data[:endTimeLabel] = "23:59"
+    data[:allDayLabel] = I18n.t("gws/schedule.options.allday.allday")
 
     data[:className] = 'fc-event-range'
     data[:className] += ' fc-event-work'
