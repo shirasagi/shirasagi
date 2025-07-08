@@ -98,14 +98,17 @@ create_workflow2_form_external(
 puts "# workflow2/file"
 
 def create_workflow2_file(data)
+  user = data[:workflow_user]
+  group = user.gws_main_group(@site) rescue nil
+
   item = Gws::Workflow2::File.new(site: @site)
   item.attributes = data
   item.cur_site ||= @site
-  item.cur_user ||= data[:workflow_user] if item.respond_to?(:cur_user=)
+  item.cur_user ||= user if item.respond_to?(:cur_user=)
   item.name ||= data[:cur_form].new_file_name
   item.destination_treat_state ||= "no_need_to_treat"
-  item.update_workflow_user(@site, data[:workflow_user])
-  item.update_workflow_agent(@site, nil)
+  item.update_workflow_user(@site, user, group)
+  item.update_workflow_agent(@site, nil, nil)
   puts item.name
   puts item.errors.full_messages unless item.save
   item
