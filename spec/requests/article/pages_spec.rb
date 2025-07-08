@@ -160,7 +160,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           layout: layout.id,
           order: 0,
           keywords: 'test1_keywords',
-          description_setting: 'manual',
+          description_setting: 'auto',
           description: 'test1_description',
           summary_html: 'test1_summary_html',
           html: 'test1_html',
