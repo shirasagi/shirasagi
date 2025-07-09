@@ -9,15 +9,15 @@
     margin: 2px;
     padding-left: calc(1.5 * var(--spacing) - var(--radius) - 2px);
 
-    &.is-current{
-      .ss-tree-subtree-wrap{
+    &.is-current {
+      .ss-tree-subtree-wrap {
         summary{
-          a{
+          a {
             background: #fbeee8;
           }
         }
       }
-      > a{
+      > a {
         background: #fbeee8;
       }
     }

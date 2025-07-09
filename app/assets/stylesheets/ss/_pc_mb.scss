@@ -1821,9 +1821,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   &.print {
     border-top: $border-black2;
   }
-  .images{
-    .image{
-      img{
+  .images {
+    .image {
+      img {
         max-width: 140px;
         object-fit: scale-down;
       }
@@ -2191,8 +2191,8 @@ footer.send {
   @include mb {
     //margin: 0 10px 10px 0;
   }
-  &.unused{
-    .unused-message{
+  &.unused {
+    .unused-message {
       position: absolute;
       top: 0;
       right: 0;
@@ -3445,8 +3445,8 @@ form .CodeMirror {
     top: 65px;
     right: 15px;
     @include mb { position: static;}
-    a{
-      img{
+    a {
+      img {
         max-width: 140px;
         object-fit: scale-down;
       }
