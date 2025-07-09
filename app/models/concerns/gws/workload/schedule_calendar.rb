@@ -33,11 +33,13 @@ module Gws::Workload::ScheduleCalendar
       end
     end
 
+    # 業務見える化で登録されている場合に対応 -----
     data[:startDateLabel] = date_label(due_date)
     data[:startTimeLabel] = "00:00"
     data[:endDateLabel] = date_label(due_date)
     data[:endTimeLabel] = "23:59"
     data[:allDayLabel] = I18n.t("gws/schedule.options.allday.allday")
+    # ------------------------------------
 
     data[:className] = 'fc-event-range'
     data[:className] += ' fc-event-work'
