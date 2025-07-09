@@ -8,6 +8,8 @@ class Gws::Share::Apis::FolderListController < ApplicationController
     @type = params[:type].presence || 'gws/share/files'
     @item = @model.find(params[:id]) if params[:id].present?
 
+    set_child_count
+
     if params[:only_children]
       items = []
       items = child_items if @item
@@ -43,7 +45,7 @@ class Gws::Share::Apis::FolderListController < ApplicationController
     case @type
     when 'gws/share/files'
       @item.parents.each do |item|
-        next unless item.allowed?(:read, @cur_user, site: @cur_site)
+        next unless item.readable?(@cur_user, site: @cur_site)
         children = item.children.readable(@cur_user, site: @cur_site)
         children = children.limit(@limit) if @limit
         items = append_items(items, children, item)
@@ -85,9 +87,28 @@ class Gws::Share::Apis::FolderListController < ApplicationController
     end
   end
 
+  def set_child_count
+    @child_count = Hash.new(0)
+    case @type
+    when 'gws/share/files'
+      items = @model.site(@cur_site).readable(@cur_user, site: @cur_site).pluck(:name, :depth)
+    when 'gws/share/management/files'
+      items = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site).pluck(:name, :depth)
+    end
+    items.each do |name, depth|
+      next if depth == 1
+      parts = name.split("/")
+      child = parts.pop
+      parent = parts.join("/")
+      @child_count[parent] ||= 0
+      @child_count[parent] += 1
+    end
+  end
+
   def items_hash(items)
     items = items.compact.map do |item|
       {
+        id: item.id,
         name: item.trailing_name,
         filename: item.name,
         order: item.depth == 1 ? item.order : item.parents.where(depth: 1).first.order,
@@ -95,7 +116,8 @@ class Gws::Share::Apis::FolderListController < ApplicationController
         url: item_url(item),
         tree_url: gws_share_apis_folder_list_path(id: item.id, type: @type, category: params[:category]),
         is_current: (@item.present? && item.id == @item.id),
-        is_parent: (@item.present? && @item.name.start_with?("#{item.name}/"))
+        is_parent: (@item.present? && @item.name.start_with?("#{item.name}/")),
+        child_count: @child_count[item.name]
       }
     end
     items.uniq

@@ -67,9 +67,19 @@ SS_TreeNavi.prototype.renderChildren = function(item) {
 SS_TreeNavi.prototype.renderItems = function(data, roots) {
   var _this = this;
   var ret = $.map(data, function(item) {
-    var is_open = item.is_current || item.is_parent
-    var mark = is_open ? _this.openMark : _this.closeMark;
-    var cls = is_open ? ['is-open is-cache'] : ['is-close'];
+    var is_open, mark, cls;
+
+    is_open = item.is_current || item.is_parent
+    if (item.child_count === 0) {
+      cls = ['is-close no-child'];
+      mark = _this.openMark;
+    } else if (is_open) {
+      cls = ['is-open is-cache'];
+      mark = _this.openMark;
+    } else {
+      cls = ['is-close'];
+      mark = _this.closeMark;
+    }
     if (item.is_current) cls.push('is-current');
 
     return '<div class="tree-item ' + cls.join(' ') + '" data-id="' + item.id + '" data-filename="' + item.filename + '"' + '>' +
@@ -101,10 +111,12 @@ SS_TreeNavi.prototype.registerEvents = function() {
     var $this = $(this);
     var item = $this.closest(".tree-item");
 
-    if (item.hasClass('is-open')) {
-      _this.closeItem(item, $(this));
-    } else {
-      _this.openItem(item, $(this));
+    if (!item.hasClass('no-child')) {
+      if (item.hasClass('is-open')) {
+        _this.closeItem(item, $(this));
+      } else {
+        _this.openItem(item, $(this));
+      }
     }
     return false;
   })
@@ -114,6 +126,9 @@ SS_TreeNavi.prototype.openItem = function(item, mark) {
   item.addClass('is-open');
   mark.html(this.openMark);
 
+  if (item.hasClass('no-child')) {
+    return;
+  }
   if (!item.hasClass('is-cache')) {
     this.renderChildren(item);
     return;
