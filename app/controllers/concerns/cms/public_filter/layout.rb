@@ -10,6 +10,7 @@ module Cms::PublicFilter::Layout
 
   included do
     helper_method :render_layout_parts
+    helper_method :render_template_variables
   end
 
   private
@@ -157,6 +158,14 @@ module Cms::PublicFilter::Layout
 
     html.gsub!('#{parent_name}') do
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
+    end
+
+    html.gsub!('#{description}') do
+      if @cur_item.respond_to?(:template_variable_handler_description)
+        @cur_item.template_variable_handler_description("description", self)
+      else
+        @cur_item.description if @cur_item.respond_to?(:description)
+      end
     end
 
     template = %w(

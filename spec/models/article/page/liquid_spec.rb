@@ -54,7 +54,7 @@ describe Article::Page, dbscope: :example do
         let(:summary) { Array.new(2) { "<p>#{unique_id}</p>" }.join("\n") }
         let(:description) { Array.new(2) { unique_id }.join("\n") }
         let!(:page) do
-          create :article_page, cur_node: node, summary_html: summary, description: description
+          create :article_page, cur_node: node, summary_html: summary, description: description, description_setting: 'manual'
         end
 
         it do

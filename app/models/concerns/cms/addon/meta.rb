@@ -7,19 +7,20 @@ module Cms::Addon
       field :keywords, type: SS::Extensions::Words
       field :description, type: String
       field :summary_html, type: String
-      permit_params :keywords, :description, :summary_html
+      field :description_setting, type: String
+      permit_params :keywords, :description, :summary_html, :description_setting
 
       before_save :set_keywords, if: ->{ @cur_site && @cur_site.auto_keywords_enabled? }
       before_save :set_description, if: ->{ @cur_site && @cur_site.auto_description_enabled? }
 
       if respond_to? :template_variable_handler
         template_variable_handler :summary, :template_variable_handler_name
-        template_variable_handler :description, :template_variable_handler_name
+        template_variable_handler :description, :template_variable_handler_description
       end
       if respond_to? :liquidize
         liquidize do
           export :summary
-          export :description
+          export :template_variable_handler_description, as: :description
         end
       end
     end
@@ -42,6 +43,29 @@ module Cms::Addon
 
     def meta_present?
       [keywords, description, summary_html].map(&:present?).any?
+    end
+
+    def description_setting_manual?
+      description_setting == 'manual'
+    end
+
+    def description_setting_auto?
+      !description_setting_manual?
+    end
+
+    def template_variable_handler_description(*_)
+      return description unless description_setting_auto?
+      return unless respond_to?(:html)
+
+      html = self.try(:render_html).presence || self.html
+      return description if html.blank?
+
+      text = ApplicationController.helpers.sanitize(html.to_s, tags: [])
+      return description if text.blank?
+
+      text = Cms.unescape_html_entities(text)
+      text = text.squish
+      text.truncate(60, omission: "...")
     end
 
     private
