@@ -398,5 +398,41 @@ describe "gws_workload_works", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    context "work registration and schedule reflection" do
+
+      let(:today) { Time.zone.parse("2025/7/9").to_date }
+      let(:year) { 2025 }
+      let(:due_date) { today }
+      let(:due_start_on) { today }
+      let(:item_name) { "E2Eテスト業務予定" }
+      let(:item) do
+        create :gws_workload_work, name: item_name, year: year, due_date: due_date, due_start_on: due_start_on, due_end_on: nil
+      end
+      let(:schedule_plans_path) { gws_schedule_plans_path(site) }
+
+      it "Newly registered workload is reflected as an all-day event in the schedule calendar and list" do
+        Timecop.travel(today) do
+          item
+          visit schedule_plans_path
+
+          # カレンダー画面で該当予定が表示されているか確認
+          expect(page).to have_content(item_name)
+
+          # 「リスト」ボタンをクリックしてリスト画面に遷移
+          click_on I18n.t("gws/schedule.calendar.buttonText.listMonth")
+          # リスト画面で該当予定が表示されているか確認
+          expect(page).to have_content(item_name)
+
+          japanese_format = "#{due_date.strftime('%Y年 %-m月%-d日')} " \
+                            "(#{I18n.t('date.abbr_day_names')[due_date.wday]}) " \
+                            "#{I18n.t('gws/schedule.options.allday.allday')}"
+          english_format = "#{due_date.strftime('%a, %m/%d/%Y')} #{I18n.t('gws/schedule.options.allday.allday')}"
+
+          expect(page).to have_css(".td.startAt", text: japanese_format).or have_css(".td.startAt", text: english_format)
+          expect(page).to have_css(".td.endAt", text: japanese_format).or have_css(".td.endAt", text: english_format)
+        end
+      end
+    end
   end
 end
