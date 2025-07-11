@@ -3,6 +3,11 @@ require 'spec_helper'
 describe "cms_preview", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   context "with article page" do
     let(:node) { create :article_node_page, cur_site: site }
     let(:item) { create(:article_page, cur_site: site, cur_node: node, layout: layout) }

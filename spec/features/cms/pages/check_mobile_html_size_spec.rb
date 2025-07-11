@@ -6,6 +6,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
   # check_mobile_html_size at addon body
   context "check_mobile_html_size" do
     it "on click check_size_button html_size too big" do
+      site.mobile_state = "enabled"
       site.mobile_size = 1_024
       site.save!
 
@@ -23,6 +24,9 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     end
 
     it "on click check_size_button html_size ok" do
+      site.mobile_state = "enabled"
+      site.save!
+
       html_text = "<p>あいうえおカキクケコ</p>"
 
       login_cms_user

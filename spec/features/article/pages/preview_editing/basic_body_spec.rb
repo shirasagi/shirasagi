@@ -22,6 +22,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:layout) { create :cms_layout, html: layout_html }
   let!(:node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   before { login_cms_user }
 
   describe "preview editing" do

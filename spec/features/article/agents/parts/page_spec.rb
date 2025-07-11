@@ -6,6 +6,11 @@ describe "article_agents_parts_page", type: :feature, dbscope: :example do
   let(:node)   { create :cms_node, layout_id: layout.id, filename: "node" }
   let(:part)   { create :article_part_page, filename: "node/part" }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   context "public" do
     let!(:item) { create :article_page, layout_id: layout.id, filename: "node/item" }
 

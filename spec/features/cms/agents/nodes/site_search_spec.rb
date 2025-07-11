@@ -17,6 +17,8 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
   let(:requests) { [] }
 
   before do
+    site.mobile_state = "enabled"
+    site.save!
     site_search_node.set(layout_id: layout.id)
     stub_request(:any, /#{::Regexp.escape(site.elasticsearch_hosts.first)}/).to_return do |request|
       if request.uri.path == "/"

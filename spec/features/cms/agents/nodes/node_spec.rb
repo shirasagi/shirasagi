@@ -5,6 +5,11 @@ describe "cms_agents_nodes_node", type: :feature, dbscope: :example do
   let(:layout) { create_cms_layout }
   let(:node)   { create :cms_node_node, layout_id: layout.id, filename: "node" }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   context "public" do
     let!(:item) { create :cms_node, filename: "node/item" }
 

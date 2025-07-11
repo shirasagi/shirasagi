@@ -1,3 +1,8 @@
+<%
+  # mobile_stateが無効の場合は非表示
+  return if @item.mobile_disabled?
+%>
+
 <dl class="see mod-mobile-setting">
   <dt><%= @model.t :mobile_state %></dt>
   <dd><%= @item.label :mobile_state %></dd>

@@ -5,6 +5,11 @@ describe "article_agents_nodes_page", type: :feature, dbscope: :example do
   let(:layout) { create_cms_layout }
   let(:node)   { create :article_node_page, layout_id: layout.id, filename: "node" }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   context "public" do
     let!(:item) { create :article_page, filename: "node/item" }
 
