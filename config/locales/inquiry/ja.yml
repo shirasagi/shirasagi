@@ -78,6 +78,19 @@ ja:
         created: "受信日時：%{created}"
         updated: "更新日時：%{updated}"
 
+    columns:
+      inquiry/text_field: テキストボックス
+      inquiry/text_area: テキストエリア
+      inquiry/email_field: メールアドレス
+      inquiry/number_field: 数値入力
+      inquiry/date_field: 日付入力
+      inquiry/datetime_field: 日時入力
+      inquiry/radio_button: ラジオボタン選択
+      inquiry/select: プルダウン選択
+      inquiry/check_box: チェックボックス選択
+      inquiry/upload_file: ファイル投稿
+      inquiry/form_select: フォーム選択
+
   modules:
     inquiry: メールフォーム
     addons:
@@ -136,7 +149,7 @@ ja:
       inquiry/addon/notice:
         notice_state: 通知設定
         notice_content: 通知内容
-        notice_email: 通知メールアドレス
+        notice_emails: 通知メールアドレス
         from_name: 差出人名
         from_email: 差出人メールアドレス
 
@@ -247,8 +260,9 @@ ja:
         - 通知メールの内容を設定します。
         - 「通知のみ」 回答へのリンクが記載されます。
         - 「投稿内容含む」回答へのリンクと回答内容すべてが記載されます。
-      notice_email:
+      notice_emails:
         - フォームへの投稿があったことを通知する先のメールアドレスを入力します。
+        - 複数のメールアドレスを設定する場合は、改行で区切って設定します。
       from_name:
         - 通知メールに記載される差出人名を入力します。
       from_email:

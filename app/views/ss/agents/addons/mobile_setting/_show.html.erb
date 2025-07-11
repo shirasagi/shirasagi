@@ -1,5 +1,8 @@
-<%# ガラケー機能は非推奨のため非表示 %>
-<!--
+<%
+  # mobile_stateが無効の場合は非表示
+  return if @item.mobile_disabled?
+%>
+
 <dl class="see mod-mobile-setting">
   <dt><%= @model.t :mobile_state %></dt>
   <dd><%= @item.label :mobile_state %></dd>
@@ -18,4 +21,4 @@
   <dt><%= @model.t :mobile_css %></dt>
   <dd><%= br(@item.mobile_css) %></dd>
 </dl>
--->
+

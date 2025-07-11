@@ -88,17 +88,8 @@ module Tasks
 
       def export_site
         with_site(ENV['site']) do |site|
-          job = ::Sys::SiteExportJob.new
-          job.task = mock_task(
-            source_site_id: site.id
-          )
-          job.perform(exclude: ENV['exclude'])
+          ::Sys::SiteExportJob.bind(site_id: site).perform_now(exclude: ENV['exclude'])
         end
-      rescue => e
-        msg = "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
-        puts(msg)
-        Rails.logger.error(msg)
-        raise
       end
 
       def import_site
@@ -108,18 +99,8 @@ module Tasks
           file = ENV['file']
           puts "File not found: #{ENV['file']}" or break unless ::File.exist?(file)
 
-          job = ::Sys::SiteImportJob.new
-          job.task = mock_task(
-            target_site_id: site.id,
-            import_file: file
-          )
-          job.perform
+          ::Sys::SiteImportJob.bind(site_id: site).perform_now(file)
         end
-      rescue => e
-        msg = "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
-        puts(msg)
-        Rails.logger.error(msg)
-        raise
       end
 
       def reload_site_usage

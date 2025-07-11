@@ -52,7 +52,7 @@ module Gws::GroupPermission
   end
 
   def groups_hash
-    self[:groups_hash].presence || groups.map { |m| [m.id, m.name] }.to_h
+    self[:groups_hash].presence || Gws.id_name_hash(groups)
   end
 
   def group_names
@@ -60,7 +60,7 @@ module Gws::GroupPermission
   end
 
   def users_hash
-    self[:users_hash].presence || users.map { |m| [m.id, m.long_name] }.to_h
+    self[:users_hash].presence || Gws.id_name_hash(users, name_method: :long_name)
   end
 
   def user_names
@@ -68,7 +68,7 @@ module Gws::GroupPermission
   end
 
   def custom_groups_hash
-    self[:custom_groups_hash].presence || custom_groups.map { |m| [m.id, m.name] }.to_h
+    self[:custom_groups_hash].presence || Gws.id_name_hash(custom_groups)
   end
 
   def custom_group_names
@@ -78,15 +78,18 @@ module Gws::GroupPermission
   private
 
   def set_groups_hash
-    self.groups_hash = groups.map { |m| [m.id, m.name] }.to_h
+    return unless group_ids_changed?
+    self.groups_hash = Gws.id_name_hash(groups)
   end
 
   def set_users_hash
-    self.users_hash = users.map { |m| [m.id, m.long_name] }.to_h
+    return unless user_ids_changed?
+    self.users_hash = Gws.id_name_hash(users, name_method: :long_name)
   end
 
   def set_custom_groups_hash
-    self.custom_groups_hash = custom_groups.map { |m| [m.id, m.name] }.to_h
+    return unless custom_group_ids_changed?
+    self.custom_groups_hash = Gws.id_name_hash(custom_groups)
   end
 
   module ClassMethods

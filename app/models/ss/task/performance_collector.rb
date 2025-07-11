@@ -74,9 +74,12 @@ class SS::Task
       time = result = nil
       @scopes.push(scope)
 
-      time = Benchmark.realtime do
-        result = yield
+      if block_given?
+        time = Benchmark.realtime do
+          result = yield
+        end
       end
+      time ||= 0
 
       puts_performance_log(time)
 
@@ -128,8 +131,10 @@ class SS::Task
       Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     end
 
-    def collect_site(site, options = {}, &block)
-      scope = { type: :site, id: site.id, name: site.name, host: site.host }.merge(options)
+    def collect_site(cms_site_or_gws_site, options = {}, &block)
+      scope = { type: :site, id: cms_site_or_gws_site.id, name: cms_site_or_gws_site.name }
+      scope[:host] = cms_site_or_gws_site.host if cms_site_or_gws_site.respond_to?(:host)
+      scope = scope.merge(options)
       collect(scope, &block)
     end
 
@@ -151,6 +156,67 @@ class SS::Task
     def collect_part(part, options = {}, &block)
       scope = { type: :part, id: part.id, route: part.route, name: part.name, filename: part.filename }.merge(options)
       collect(scope, &block)
+    end
+
+    def collect_init_context(&block)
+      scope = { type: :init_context }
+      collect(scope, &block)
+    end
+
+    def collect_result(&block)
+      scope = { type: :result }
+      collect(scope, &block)
+    end
+
+    def collect_finalize_context(&block)
+      scope = { type: :finalize_context }
+      collect(scope, &block)
+    end
+
+    def collect_import_user_csv(&block)
+      scope = { type: :import_user_csv }
+      collect(scope, &block)
+    end
+
+    def collect_update_all(&block)
+      scope = { type: :update_all }
+      collect(scope, &block)
+    end
+
+    def collect_validate_all(&block)
+      scope = { type: :validate_all }
+      collect(scope, &block)
+    end
+
+    def collect_delete_groups(&block)
+      scope = { type: :delete_groups }
+      collect(scope, &block)
+    end
+
+    def collect_changeset(changeset_type, &block)
+      scope = { type: :changeset, changeset_type: changeset_type }
+      collect(scope, &block)
+    end
+
+    def collect_model_update(model, &block)
+      scope = { type: :model_update, model: model.name }
+      collect(scope, &block)
+    end
+
+    def collect_entity_update(entity, &block)
+      scope = { type: :entity_update, model: entity.class.name, key: entity.to_key }
+      collect(scope, &block)
+    end
+
+    def collect_callback(kind, entity, overall, net)
+      before_elapsed = net.first - overall.first
+      kind_elapsed = net.last - net.first
+      after_elapsed = overall.last - net.last
+      scope = {
+        type: :callback, callback_kind: kind, model: entity.class.name, key: entity.to_key,
+        before_elapsed: before_elapsed, kind_elapsed: kind_elapsed, after_elapsed: after_elapsed
+      }
+      collect(scope)
     end
 
     def increment_view_stats(event)

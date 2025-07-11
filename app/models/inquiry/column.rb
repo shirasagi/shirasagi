@@ -4,7 +4,13 @@ class Inquiry::Column
   include Cms::SitePermission
   include Inquiry::Addon::InputSetting
   include Inquiry::Addon::KintoneApp::Column
+  include Inquiry::Addon::ExpandColumn
   include Cms::Addon::GroupPermission
+
+  include SS::PluginRepository
+
+  plugin_class Inquiry::Plugin
+  plugin_type 'column'
 
   INPUT_TYPE_VALIDATION_HANDLERS = [
     [ :email_field, :validate_email_field ].freeze,

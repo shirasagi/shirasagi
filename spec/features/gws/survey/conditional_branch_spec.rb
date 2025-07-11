@@ -55,7 +55,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(survey_form.name).to eq form_name
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/radio_button") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/radio_button") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: radio_name
@@ -68,7 +68,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       clear_notice
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/section") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/section") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: section1_name
@@ -78,7 +78,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       clear_notice
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/text_field") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/text_field") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: section1_text_name
@@ -88,7 +88,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       clear_notice
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/section") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/section") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: section2_name
@@ -98,7 +98,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       clear_notice
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/text_field") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/text_field") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: section2_text_name

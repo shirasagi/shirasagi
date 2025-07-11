@@ -3,9 +3,11 @@
   addon[:display_body] = "hide"
 
   @item.in_mobile_size ||= @item.mobile_size / 1_024
+
+  # mobile_stateが無効の場合は即リターンして非表示にする
+  return if @item.mobile_disabled?
 %>
-<%# ガラケー機能は非推奨のため非表示 %>
-<!--
+
 <dl class="see mod-ss-mobile-setting">
   <dt><%= @model.t :mobile_state %><%= @model.tt :mobile_state %></dt>
   <dd><%= f.select :mobile_state, @item.mobile_state_options %></dd>
@@ -19,4 +21,3 @@
   <dt><%= @model.t :mobile_css %><%= @model.tt :mobile_css %></dt>
   <dd><%= f.ss_lines_field :mobile_css, value: @item.mobile_css == @item.default_mobile_css ? nil : @item.mobile_css.join("\n") %></dd>
 </dl>
--->

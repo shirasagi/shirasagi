@@ -10,7 +10,14 @@
     padding-left: calc(1.5 * var(--spacing) - var(--radius) - 2px);
 
     &.is-current{
-      a{
+      .ss-tree-subtree-wrap{
+        summary{
+          a{
+            background: #fbeee8;
+          }
+        }
+      }
+      > a{
         background: #fbeee8;
       }
     }
