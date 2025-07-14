@@ -18,6 +18,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
   end
 
   before do
+    site.mobile_state = "enabled"
+    site.save!
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_optional).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_transfers).reverse_merge({cur_site: site})
