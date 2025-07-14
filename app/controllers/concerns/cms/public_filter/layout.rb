@@ -152,7 +152,7 @@ module Cms::PublicFilter::Layout
   end
 
   def render_template_variables(html)
-    return html unless html.is_a?(String)
+    return html if html.blank?
     html.gsub!('#{page_name}') do
       ERB::Util.html_escape(@cur_item.name)
     end
