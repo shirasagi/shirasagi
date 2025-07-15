@@ -142,7 +142,7 @@
   border-bottom: 1px solid #f2f2f2;
 
   .cms-nodes-tree-frame-header-title {
-    &:before {
+    &::before {
       content: " ";
       margin-right: 6px;
       padding-left: 3px;

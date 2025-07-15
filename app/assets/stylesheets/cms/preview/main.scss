@@ -179,10 +179,10 @@
     }
   }
   .ss-preview-btn-toggle-inplace {
-    &:after {
+    &::after {
       content: " onにする";
     }
-    &.ss-preview-active:after {
+    &.ss-preview-active::after {
       content: " offにする";
     }
   }
@@ -249,7 +249,7 @@
         z-index: 10;
       }
     }
-    .ss-preview-overlay-btn-group-edit:before {
+    .ss-preview-overlay-btn-group-edit::before {
       content: "";
       position: absolute;
       z-index: 0;
@@ -525,7 +525,7 @@ table.index {
         @include mb {
           width: 15em;
         }
-        &:before {
+        &::before {
           content: "";
           position: absolute;
           top: -13px;
@@ -537,7 +537,7 @@ table.index {
           border-left: 12px solid transparent;
           background-color: #fff;
         }
-        &:after {
+        &::after {
           content: "";
           position: absolute;
           top: -12px;
