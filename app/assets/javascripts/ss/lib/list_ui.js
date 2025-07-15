@@ -113,6 +113,7 @@ this.SS_ListUI = (function () {
     });
     $el.find(".list-head .btn-list-head-action").each(function () {
       $(this).on("ss:beforeSend", function(ev) {
+        console.log("ss:beforeSend");
         var checked = $el.find(".list-item input:checkbox:checked").map(function () {
           return $(this).val();
         });
@@ -126,6 +127,63 @@ this.SS_ListUI = (function () {
           ev.$form.append($("<input/>", { name: "ids[]", value: id, type: "hidden" }));
         }
       });
+    });
+    $el.find('.list-head [name="expiration_setting_all"]').on("click", function (ev) {
+      SS_ListUI.changeAllExpirationSetting($el, $(this), ev.target.value);
+      ev.preventDefault();
+    });
+  };
+
+  SS_ListUI.changeAllExpirationSetting = function($el, $this, state) {
+    if (!state) {
+      return;
+    }
+
+    var checkedIds = $el.find(".list-item input:checkbox:checked").map(function () {
+      return $(this).val();
+    });
+    if (checkedIds.length === 0) {
+      return false;
+    }
+
+    var confirmation = $this.data('confirm') || '';
+    if (confirmation) {
+      if (!confirm(confirmation)) {
+        return false;
+      }
+    }
+
+    $this.attr("disabled", true);
+
+    var promises = [];
+    $.each(checkedIds, function() {
+      var id = this;
+      var action = window.location.pathname + "/" + id + ".json";
+
+      var formData = new FormData();
+      formData.append("_method", "put");
+      formData.append("authenticity_token", $('meta[name="csrf-token"]').attr('content'));
+      formData.append("item[expiration_setting_type]", state);
+
+      var promise = $.ajax({
+        type: "POST",
+        url: action,
+        data: formData,
+        processData: false,
+        contentType: false,
+        cache: false
+      });
+
+      promises.push(promise);
+    });
+
+    $.when.apply($, promises).done(function() {
+      alert(i18next.t("ss.notice.changed"));
+      window.location.reload();
+    }).fail(function(xhr, status, error) {
+      alert("Error!");
+    }).always(function() {
+      $this.attr("disabled", false);
     });
   };
 

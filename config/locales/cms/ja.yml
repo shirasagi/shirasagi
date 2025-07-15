@@ -285,6 +285,9 @@ ja:
       line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
       disallow_edit_ignore_syntax_check: アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。
       confirm_move_changes: 移動により影響を受けるコンテンツを確認しました。
+      expiration_setting_type:
+        site: "公開期限をサイト設定にしたがうへ変更してもよろしいですか？"
+        never: "公開期限を無期限へ変更してもよろしいですか？"
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
@@ -405,6 +408,7 @@ ja:
       download: フォルダ容量をCSVダウンロードする
       check_preview: プレビューで確認する
       open_remark: 詳細を開く
+      page_expiration_setting: 公開期限ページ設定
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
@@ -639,6 +643,15 @@ ja:
         list: リスト（月別）
         yearly_list: リスト（年別）
         calendar: カレンダー
+      expiration_setting_type:
+        site: サイト設定にしたがう
+        never: 無期限
+      updated_before:
+        90_days: 90日以上更新なし
+        180_days: 180日以上更新なし
+        1_year: 1年以上更新なし
+        2_years: 2年以上更新なし
+        3_years: 3年以上更新なし
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
@@ -885,6 +898,7 @@ ja:
     edit_cms_ignore_syntax_check: アクセシビリティチェックを無視して保存する
     edit_cms_user_profile: プロフィールの編集
     edit_password_cms_user_profile: プロフィールのパスワード変更
+    edit_cms_page_expiration_settings: 公開期限ページ設定の管理
 
   modules:
     cms: 標準機能
@@ -1828,6 +1842,8 @@ ja:
         average_sub_total__db: 平均子合計DB処理時間
         average_sub_total_view: 平均子合計ビュー処理時間
         average_sub_total_elapsed: 平均子合計全処理時間
+      cms/page_expiration_setting:
+        expiration_setting_type: 公開期限
 
   activemodel:
     attributes:
@@ -3436,6 +3452,13 @@ ja:
       - "「YouTubeからタイトルを取得」ボタンで自動取得もできます。"
       - "自動取得後に内容を修正することも可能です。"
       - "未入力の場合は「YouTube動画」がタイトルに設定されます。"
+
+    cms/page_expiration_setting:
+      expiration_setting_type:
+        - 公開期限の期限切れ警告の公開期限をページごとに個別に設定することができます。
+        -
+        - "・サイト設定にしたがう: この選択はサイト設定の公開期限にしたがうことを意味します。この選択が既定です。"
+        - "・無期限: この選択は公開期限を無期限に設定します。この設定をしたページは公開期限切れ警告が通知または表示されることはありません。"
 
   all_content:
     page_id: ページID

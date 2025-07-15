@@ -372,6 +372,7 @@ Rails.application.routes.draw do
       end
       resources :result, only: [:index]
     end
+    resources :page_expiration_settings, only: [:index, :show, :edit, :update]
 
     namespace "apis" do
       get "groups" => "groups#index"
