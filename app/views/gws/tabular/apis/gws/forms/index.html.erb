@@ -1,0 +1,47 @@
+<%= jquery do %> SS_SearchUI.modal(); <% end %>
+
+<div class="search-ui-form">
+  <%= form_with scope: :s, url: url_for(action: :index), method: "GET", class: "search" do |f| %>
+    <%= hidden_field_tag :single, params[:single] %>
+    <dl class="see">
+      <dt><%= t("ss.keyword") %></dt>
+      <dd>
+        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+        <%= f.submit  t("ss.buttons.search"), class: "btn" %>
+      </dd>
+    </dl>
+  <% end %>
+</div>
+
+<table class="index">
+  <thead class="list-head">
+  <tr>
+    <% if @multi %>
+      <th class="checkbox">
+        <%= check_box_tag(nil, nil, false, id: nil) %>
+      </th>
+    <% end %>
+    <th class="name"><%= @model.t :name %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @items.each do |item| %>
+    <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.i18n_name %>">
+      <% if @multi %>
+        <td class="checkbox">
+          <%= check_box_tag("ids[]", item.id, false, id: nil) %>
+        </td>
+      <% end %>
+      <td><%= link_to item.i18n_name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<% if @multi %>
+  <div class="search-ui-select">
+    <%= button_tag t("ss.links.select"), type: :button, class: "select-items btn" %>
+  </div>
+<% end %>
+
+<%= paginate @items if @items.try(:current_page) %>

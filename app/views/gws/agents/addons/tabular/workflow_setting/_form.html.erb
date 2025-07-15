@@ -1,0 +1,65 @@
+<dl class="see">
+  <dt><%= @model.t :workflow_state %><%= @model.tt :workflow_state %></dt>
+  <dd><%= f.select :workflow_state, @item.workflow_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :approval_state %><%= @model.tt :approval_state %></dt>
+  <dd>
+    <label><%= f.radio_button :approval_state, "without_approval" %> <%= t("gws/workflow2.options.approval_state.without_approval") %></label>
+  </dd>
+  <dd>
+    <label><%= f.radio_button :approval_state, "with_approval" %> <%= t("gws/workflow2.options.approval_state.with_approval") %></label>
+    <%=
+      route_options = Gws::Workflow2::Route.route_options(@cur_user, cur_site: @cur_site, selected: @item.default_route_id)
+      f.select :default_route_id, options_for_select(route_options, selected: @item.default_route_id), include_blank: true
+    %>
+  </dd>
+
+  <dt><%= @model.t :agent_state %><%= @model.tt :agent_state %></dt>
+  <dd><%= f.select :agent_state, @item.agent_state_options %></dd>
+</dl>
+
+<dl class="see destination_group_ids">
+  <dt><%= @model.t :destination_group_ids %><%= @model.tt :destination_group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "destination_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "btn ajax-box" %>
+    <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
+    <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.destination_groups.each do |group| %>
+        <tr data-id="<%= group.id %>">
+          <td><%= f.hidden_field "destination_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see destination_user_ids">
+  <dt><%= @model.t :destination_user_ids %><%= @model.tt :destination_user_ids %></dt>
+  <dd>
+    <%= f.hidden_field "destination_user_ids[]", value: "", id: nil, class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
+    <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
+    <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.destination_users.active.order_by_title(@cur_site).each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "destination_user_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -74,4 +74,75 @@ describe Gws::Group, type: :model, dbscope: :example do
       expect { ss_file1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
     end
   end
+
+  context ".in_group / .in_groups / .organizations / .and_gws_use" do
+    let!(:site) { create :gws_group, name: unique_id, gws_use: "enabled" }
+    let!(:group1) { create :gws_group, name: "#{site.name}/#{unique_id}", gws_use: "disabled" }
+    let!(:group1_1) { create :gws_group, name: "#{group1.name}/#{unique_id}", gws_use: "disabled" }
+    let!(:group1_2) { create :gws_group, name: "#{group1.name}/#{unique_id}", gws_use: "disabled" }
+    let!(:group2) { create :gws_group, name: "#{site.name}/#{unique_id}", gws_use: "disabled" }
+    let!(:group2_1) { create :gws_group, name: "#{group2.name}/#{unique_id}", gws_use: "disabled" }
+    let!(:group2_2) { create :gws_group, name: "#{group2.name}/#{unique_id}", gws_use: "disabled" }
+
+    describe ".in_group" do
+      it do
+        expect(Gws::Group.in_group(site).count).to eq 7
+        expect(Gws::Group.in_group(group1).count).to eq 3
+        expect(Gws::Group.in_group(group1_1).count).to eq 1
+        expect(Gws::Group.in_group(group1_2).count).to eq 1
+        expect(Gws::Group.in_group(group2).count).to eq 3
+        expect(Gws::Group.in_group(group2_1).count).to eq 1
+        expect(Gws::Group.in_group(group2_2).count).to eq 1
+
+        expect(Gws::Group.in_group(site).in_group(group1).pluck(:id)).to contain_exactly(group1.id, group1_1.id, group1_2.id)
+        expect(Gws::Group.in_group(group1).in_group(site).pluck(:id)).to contain_exactly(group1.id, group1_1.id, group1_2.id)
+
+        expect(Gws::Group.in_group(group1).in_group(group1).pluck(:id)).to contain_exactly(group1.id, group1_1.id, group1_2.id)
+        expect(Gws::Group.in_group(group1).in_group(group2).pluck(:id)).to be_blank
+        expect(Gws::Group.in_group(group2).in_group(group1).pluck(:id)).to be_blank
+      end
+    end
+
+    describe ".in_groups" do
+      it do
+        expect(Gws::Group.in_groups([ site ]).count).to eq 7
+        expect(Gws::Group.in_groups([ group1 ]).count).to eq 3
+        expect(Gws::Group.in_groups([ group1_1 ]).count).to eq 1
+        expect(Gws::Group.in_groups([ group1_2 ]).count).to eq 1
+        expect(Gws::Group.in_groups([ group2 ]).count).to eq 3
+        expect(Gws::Group.in_groups([ group2_1 ]).count).to eq 1
+        expect(Gws::Group.in_groups([ group2_2 ]).count).to eq 1
+
+        expect(Gws::Group.in_groups([ site, group1 ]).count).to eq 7
+        expect(Gws::Group.in_groups([ site, group2 ]).count).to eq 7
+        expect(Gws::Group.in_groups([ group1, group2 ]).count).to eq 6
+        expect(Gws::Group.in_groups([ group2, group1 ]).count).to eq 6
+
+        expect(Gws::Group.in_groups([ group1_2, group2_1 ]).count).to eq 2
+        expect(Gws::Group.in_groups([ group2_2, group1_1 ]).count).to eq 2
+      end
+    end
+
+    describe ".organizations" do
+      it do
+        expect(Gws::Group.organizations.count).to eq 1
+        expect(Gws::Group.in_group(site).organizations.count).to eq 1
+        expect(Gws::Group.organizations.in_group(site).count).to eq 1
+        expect(Gws::Group.in_group(group1).organizations.count).to eq 0
+        expect(Gws::Group.organizations.in_group(group1).count).to eq 0
+        expect(Gws::Group.in_group(group2_1).organizations.count).to eq 0
+        expect(Gws::Group.organizations.in_group(group2_1).count).to eq 0
+      end
+    end
+
+    describe ".and_gws_use" do
+      it do
+        expect(Gws::Group.and_gws_use.count).to eq 1
+        expect(Gws::Group.in_group(site).and_gws_use.count).to eq 1
+        expect(Gws::Group.and_gws_use.in_group(site).count).to eq 1
+        expect(Gws::Group.in_group(group1).and_gws_use.count).to eq 0
+        expect(Gws::Group.and_gws_use.in_group(group1).count).to eq 0
+      end
+    end
+  end
 end

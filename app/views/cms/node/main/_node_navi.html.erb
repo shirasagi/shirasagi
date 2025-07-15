@@ -20,6 +20,6 @@
   <% if History::Trash.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <h2><%= link_to History::Trash.model_name.human, history_cms_trashes_path, class: "icon-trash" %></h2>
   <% end %>
-</nav>
 
-<%= render partial: 'cms/agents/addons/content_quota/navi' %>
+  <h2><%= link_to t("cms.content_quota_navi"), cms_apis_content_quota_navi_path, class: "icon-conf ajax-box" %></h2>
+</nav>

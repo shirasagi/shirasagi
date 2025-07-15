@@ -267,7 +267,7 @@ en:
         state: Publishing status
         description: Description
         memo: Remarks
-      gws/workflow2/form/application:
+      gws/workflow2/application_setting:
         approval_state: Use of approvals
         default_route_id: Default approval route
         agent_state: Proxy application
@@ -287,8 +287,9 @@ en:
         purpose_ids: Business type
       gws/workflow2/form/purpose:
         name: Purpose of Work
-      gws/workflow2/destination_setting:
+      gws/workflow2/destination_state:
         destination_treat_state: Treated state
+      gws/workflow2/destination_setting:
         destination_group_ids: Destination group
         destination_user_ids: Destination user
 

@@ -1,0 +1,31 @@
+<% if respond_to?(:cur_space) && cur_space.present? %>
+  <nav class="mod-navi">
+    <h2><%= cur_space.name %></h2>
+    <h3 class="no-icons pl-3 pr-1">
+      <%= link_to gws_tabular_gws_forms_path(space: cur_space), class: "d-inline-flex flex-basis-100" do %>
+        <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+        <span class="mod-navi-name" style="flex-basis: 150px;"><%= t("mongoid.models.gws/tabular/form") %></span>
+      <% end %>
+      <%= link_to md_icons.outlined("delete", size: 16), gws_tabular_gws_trash_forms_path, class: "d-inline-flex ml-auto", title: t("ss.links.trash") %>
+    </h3>
+    <h3 class="no-icons pl-3 pr-1">
+      <%= link_to gws_tabular_gws_views_path(space: cur_space), class: "d-inline-flex" do %>
+        <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+        <%= t("mongoid.models.gws/tabular/view/base") %>
+      <% end %>
+    </h3>
+  </nav>
+<% else %>
+  <nav class="mod-navi">
+    <h2><%= t('modules.gws/tabular') %></h2>
+    <h3 class="no-icons pl-3 pr-1">
+      <%= link_to gws_tabular_gws_spaces_path, class: "d-inline-flex flex-basis-100" do %>
+        <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+        <span class="mod-navi-name" style="flex-basis: 150px;"><%= t("mongoid.models.gws/tabular/space") %></span>
+      <% end %>
+      <%= link_to md_icons.outlined("delete", size: 16), gws_tabular_gws_trash_spaces_path, class: "d-inline-flex ml-auto", title: t("ss.links.trash") %>
+    </h3>
+  </nav>
+<% end %>
+
+<%= render partial: 'gws/main/conf_navi' %>

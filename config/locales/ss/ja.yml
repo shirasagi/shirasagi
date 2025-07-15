@@ -623,6 +623,10 @@ ja:
       logo_application_link:
         mypage: "マイページ"
         portal: "ポータル"
+      show_google_maps_search_in_view:
+        hide: 非表示
+        show_first: 先頭1件のみ表示
+        show_all: 全て表示
 
     tasks:
       started: 開始しました。
@@ -840,6 +844,7 @@ ja:
         domains: ドメイン
         gws_use: グループウェアの使用
         upload_policy: アップロード制限
+        path_id: 書き出しパスID
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -917,7 +922,10 @@ ja:
         map_api: 地図API
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
+        map_header_text: ヘッダーテキスト
         show_google_maps_search: Googleマップへのリンク
+        show_google_maps_search_in_marker: マーカー内
+        show_google_maps_search_in_view: 詳細画面
         map_api_mypage: 管理画面での地図表示
         map_center: 地図の中心座標
         map_max_number_of_markers: 最大地点数
@@ -1049,7 +1057,7 @@ ja:
         elasticsearch_deny: 除外パス
         elasticsearch_site_ids: サイト
         elasticsearch_indexes: インデックス
-        elasticsearch_outside: 外部サイト検索
+        elasticsearch_outside: 外部サイト検索(Fess)
       ss/addon/translate/site_setting:
         translate_state: ステータス
         translate_source_id: 元言語コード
@@ -1217,6 +1225,8 @@ ja:
         - 既定では、グループウェアを使用します。
       upload_policy:
         - ファイルアップロード時の動作を設定します。
+      path_id:
+        - 書き出しパスのIDを設定します。パスのIDとはpublic/gws/以下のフォルダー名で、英子文字と数字のみが利用できます。
     ss/document:
       title:
         - ページのタイトルに利用し、ブラウザのタイトルバーに表示されます。
@@ -1406,8 +1416,10 @@ ja:
         - GoogleマップのAPIキーはこの項目に設定します。
       map_api_layer:
         - サイトで使用するOpenLayersのレイヤーを選択します。
+      map_header_text:
+        - ページ詳細画面の地図アドオンのヘッダーのテキストを設定できます。
       show_google_maps_search:
-        - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
+        - 有効にすると「Googleマップで見る」リンクが表示されます。
       map_api_mypage:
         - 管理画面で地図を表示するか設定します。
       map_center:
@@ -1678,3 +1690,4 @@ ja:
       ss/delete_sso_tokens_job: システム/SSOトークン掃除ジョブ
       ss/delete_ss_o_tokens_job: システム/SSOトークン掃除ジョブ
       ss/cleanup_file_store_cache_job: システム/ファイルキャッシュ掃除ジョブ
+      ss/remove_site_job: システム/サイト削除

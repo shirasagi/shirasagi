@@ -1,0 +1,11 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <%=
+    if type == :localized
+      value
+    else
+      if value.present?
+        link_to value, sns_redirect_path(ref: value), target: "_blank", rel: "noopener"
+      end
+    end
+  %>
+<% end %>

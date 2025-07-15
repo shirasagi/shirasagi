@@ -89,6 +89,8 @@ ja:
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
+    search_contents_fields:
+      keyword_place_holder: キーワードを入力
     search_contents_files: ファイル一覧
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
@@ -202,6 +204,7 @@ ja:
         - "上部のツールバー内のボタンをクリックすると入力項目を先頭に追加することができます。"
         - "下部のツールバー内のボタンをクリックすると入力項目を末尾に追加することができます。"
       not_found_column: 入力項目が見つかりません。
+    content_quota_navi: フォルダー使用量
 
     adobe_reader:
       remark:
@@ -331,6 +334,9 @@ ja:
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
       generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
       batch_accessibility_check_notice: ※ 一括処理の場合、簡易なアクセシビリティチェックなどは実行されません。各ページについて確実にアクセシビリティチェックを実施されたい場合は、ページ単位で処理をされることをお勧めします。
+      content_quota_navi:
+        - "ショートカットに表示されているフォルダーのおおよその使用量を表示しています。"
+        - "対象のフォルダー属性: %{routes} "
     apis:
       categories:
         index: カテゴリーを選択する
@@ -951,6 +957,7 @@ ja:
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
       cms/site_search/setting: サイト内検索設定
+      cms/site_search/group: 組織
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/history_list: 閲覧履歴
@@ -1380,12 +1387,12 @@ ja:
       cms/addon/site_search/setting:
         link_target: リンク表示
         search_type_state: 検索種類の選択
-        search_target_state: サイト検索範囲の選択
         article_node_state: フォルダーの選択
         category_state: カテゴリーの選択
         organization_state: 組織の選択
         st_article_node_ids: 記事フォルダー
-        site_search_type: 検索種類
+        site_search_type: 検索種類の初期値
+        st_group_ids: 組織の設定
       cms/form:
         name: 名前
         order: 並び順
@@ -3244,9 +3251,6 @@ ja:
         - 検索結果のリンクの表示形式を設定します。
       search_type_state:
         - 検索フォームに検索種類の選択を表示します。
-      search_target_state:
-        - 検索フォームにサイト検索範囲の選択を表示します。
-        - (表示にはサイト設定の外部サイト検索が有効である必要があります。)
       article_node_state:
         - 検索フォームにフォルダーの選択を表示します。
       category_state:
@@ -3255,6 +3259,8 @@ ja:
         - 検索フォームに組織の選択を表示します。
       st_article_node_ids:
         - サイト内検索の対象となる記事フォルダーを設定します。
+      site_search_type:
+        - 検索種類の初期値を設定します。
 
     cms/line/facility_search/category:
       name:
@@ -3378,6 +3384,10 @@ ja:
       st_categories:
         - サイト内検索で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+      st_group_ids:
+        - サイト内検索で使用する組織の一覧を設定します。
+        - 選択した部署とその配下の部署が検索対象となります。
+        - 設定されていない場合は全部署が対象となります。
 
     cms/syntax_checker/main_setting:
       syntax_check:

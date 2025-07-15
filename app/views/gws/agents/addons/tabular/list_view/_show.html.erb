@@ -1,0 +1,22 @@
+<%
+  column_options = Gws::Tabular.build_column_options(@item.form, site: @cur_site)
+%>
+<dl class="see">
+  <dt><%= @model.t :title_column_ids %></dt>
+  <dd>
+    <%= render Gws::Tabular::DndShowComponent.new(options: column_options, selected: @item.title_column_ids) %>
+  </dd>
+
+  <dt><%= @model.t :meta_column_ids %></dt>
+  <dd>
+    <%= render Gws::Tabular::DndShowComponent.new(options: column_options, selected: @item.meta_column_ids) %>
+  </dd>
+
+  <dt><%= @model.t :orders %></dt>
+  <dd>
+    <%= render Gws::Tabular::DndOrderShowComponent.new(options: column_options, selected: @item.orders) %>
+  </dd>
+
+  <dt><%= @model.t :limit_count %></dt>
+  <dd><%= @item.limit_count %></dd>
+</dl>

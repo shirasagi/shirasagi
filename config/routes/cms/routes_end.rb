@@ -404,6 +404,7 @@ Rails.application.routes.draw do
       put "finalize" => "large_file_upload#finalize"
       post "run" => "large_file_upload#run"
       delete "delete_init_files" => "large_file_upload#delete_init_files"
+      get "content_quota_navi" => "content_quota_navi#index"
 
       resources :columns, only: %i[edit update]
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do

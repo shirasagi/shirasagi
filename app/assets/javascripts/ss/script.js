@@ -29,8 +29,8 @@
 //= require mdn-polyfills/String.prototype.repeat.js
 //= require mdn-polyfills/String.prototype.startsWith.js
 //= require mdn-polyfills/String.prototype.trim.js
-//= require popper.js/dist/umd/popper.js
-//= require tippy.js/dist/tippy-bundle.iife.js
+//= require @popperjs/core/dist/umd/popper.js
+//= require tippy.js/dist/tippy-bundle.umd.js
 //= require crypto-js/crypto-js.js
 //= require ejs/ejs.min.js
 //= require ss/lib/base
