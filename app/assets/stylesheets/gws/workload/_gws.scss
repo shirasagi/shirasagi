@@ -80,7 +80,7 @@
     padding: 10px 12px;
     border-bottom: 1px solid #f2f2f2;
     font-weight: bold;
-    &:before {
+    &::before {
       content: " ";
       margin-right: 6px;
       padding-left: 3px;

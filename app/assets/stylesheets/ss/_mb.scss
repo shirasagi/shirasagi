@@ -135,7 +135,7 @@
         }
       }
     }
-    div.dropdown-menu a.current:after {
+    div.dropdown-menu a.current::after {
       display: none;
     }
   }
@@ -188,14 +188,14 @@
       th {
         padding: 7px 0;
         float: left;
-        &:before {
+        &::before {
           content: "/";
           margin: 0 2px;
         }
       }
       th.checkbox {
         padding: 5px 2px;
-        &:before {
+        &::before {
           content: "";
           margin: 0;
         }

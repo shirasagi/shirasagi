@@ -16,7 +16,7 @@
     color: $white;
     white-space: nowrap;
 
-    &:before {
+    &::before {
       content: "";
       position: absolute;
       bottom: -7px;

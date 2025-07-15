@@ -426,7 +426,7 @@ table.dataTable td {
 .dataTables_wrapper.no-footer div.dataTables_scrollBody > table {
   border-bottom: 0;
 }
-.dataTables_wrapper:after {
+.dataTables_wrapper::after {
   content: "";
   display: block;
   visibility: hidden;

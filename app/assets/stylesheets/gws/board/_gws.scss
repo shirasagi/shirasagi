@@ -16,7 +16,7 @@
   //margin-right: 8px;
   color: #d00;
   font-weight: bold;
-  &:after { content: "New"; }
+  &::after { content: "New"; }
 }
 
 // show
@@ -94,10 +94,10 @@
       }
       time {
         margin: 0 4px;
-        &:before {
+        &::before {
           content: "(";
         }
-        &:after {
+        &::after {
           content: ")";
         }
       }

@@ -67,7 +67,7 @@
       &-item-all {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e160";
 
           display: inline;
@@ -85,7 +85,7 @@
       &-item-error {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e000";
 
           display: inline;
@@ -99,7 +99,7 @@
       &-item-warning {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e002";
 
           display: inline;
@@ -113,7 +113,7 @@
       &-item-caution {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e001";
 
           display: inline;
@@ -127,7 +127,7 @@
       &-item-notice {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e8b2";
 
           display: inline;

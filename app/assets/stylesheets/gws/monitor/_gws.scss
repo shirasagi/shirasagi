@@ -2,7 +2,7 @@
   margin-right: 8px;
   color: #d00;
   font-weight: bold;
-  &:before {
+  &::before {
     content: "\E001";
 
     display: inline;

@@ -19,7 +19,7 @@
     margin-top: 15px;
   }
 }
-#marker-popup:after, #marker-popup:before {
+#marker-popup::after, #marker-popup::before {
   content: " ";
   position: absolute;
   top: 100%;
@@ -28,13 +28,13 @@
   border: solid transparent;
   pointer-events: none;
 }
-#marker-popup:after {
+#marker-popup::after {
   left: 48px;
   margin-left: -10px;
   border-width: 10px;
   border-top-color: #fff;
 }
-#marker-popup:before {
+#marker-popup::before {
   left: 48px;
   margin-left: -11px;
   border-width: 11px;
@@ -50,8 +50,8 @@
   text-decoration: none;
   cursor: pointer;
 
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     content: "";
     display: block;
     position: absolute;
@@ -62,11 +62,11 @@
     background-color: #000;
   }
 
-  &:before {
+  &::before {
     transform: translate(-50%, -50%) rotate(45deg);
   }
 
-  &:after {
+  &::after {
     transform: translate(-50%, -50%) rotate(-45deg);
   }
 }
