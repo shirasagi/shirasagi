@@ -6,7 +6,7 @@ module.exports = {
     "stylelint-config-property-sort-order-smacss"
   ],
   "plugins": [
-    "@stylistic/stylelint-plugin"
+    "stylelint-stylistic"
   ],
   "ignoreFiles": [
     "app/assets/builds/**/*.css",
@@ -27,8 +27,9 @@ module.exports = {
       "/[.#].*(campaign|splash|adsbygoogle|google_ads).*/",
       "/[.#].*ads[-_].*/", "/[.#].*[-_]ads.*/", "/[.#]ads/"
     ],
-    // stylistic rules from @stylistic/stylelint-plugin:
-    "block-opening-brace-space-before": "always",
-    "selector-pseudo-element-colon-notation": "double"
+    // stylistic rules from stylelint-stylistic:
+    "selector-pseudo-element-colon-notation": "double",
+    "no-invalid-position-at-import-rule": null,
+    "block-opening-brace-space-before": "always"
   }
 }
