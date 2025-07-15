@@ -41,7 +41,7 @@ class Cms::PageExpirationSettingsController < ApplicationController
 
   def set_search_params
     @s ||= OpenStruct.new(params[:s])
-    end
+  end
 
   public
 
