@@ -34,12 +34,12 @@ module SS::Addon
     public
 
     def mobile_state
-      return 'disabled' unless value = self.attributes["mobile_state"]
+      return 'disabled' unless self.attributes["mobile_state"]
       value
     end
 
     def mobile_location
-      return '/mobile' unless value = self.attributes["mobile_location"]
+      return '/mobile' unless self.attributes["mobile_location"]
       value
     end
 
@@ -56,7 +56,7 @@ module SS::Addon
     end
 
     def mobile_css
-      return default_mobile_css unless value = self.attributes["mobile_css"]
+      return default_mobile_css unless self.attributes["mobile_css"]
       value
     end
 
