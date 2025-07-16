@@ -32,7 +32,8 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
     it "#index" do
       visit index_path
       within "#content-navi" do
-        expect(page).to have_selector(".is-open a.item-name", count: 2)
+        expect(page).to have_selector(".is-open a.item-name", count: 1)
+        expect(page).to have_selector(".is-close a.item-name", count: 1)
         expect(page).to have_link folder1.trailing_name
         expect(page).to have_link folder2.trailing_name
       end
@@ -60,7 +61,8 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
     it "#index" do
       visit index_path
       within "#content-navi" do
-        expect(page).to have_selector(".is-open a.item-name", count: 2)
+      expect(page).to have_selector(".is-open a.item-name", count: 1)
+      expect(page).to have_selector(".is-close a.item-name", count: 1)
         expect(page).to have_link folder3.trailing_name
         expect(page).to have_link folder4.trailing_name
       end
@@ -88,7 +90,8 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
     it "#index" do
       visit index_path
       within "#content-navi" do
-        expect(page).to have_selector(".is-open a.item-name", count: 2)
+      expect(page).to have_selector(".is-open a.item-name", count: 1)
+      expect(page).to have_selector(".is-close a.item-name", count: 1)
         expect(page).to have_link folder5.trailing_name
         expect(page).to have_link folder6.trailing_name
       end
