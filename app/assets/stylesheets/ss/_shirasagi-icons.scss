@@ -45,7 +45,7 @@ $shirasagi-icons-map: (
     "bookmark": "\f118",
     "board": "\f119",
     "attendance": "\f11a",
-    "affair2": "\f11b",
+    // "affair2": "\f11b",
     "affair": "\f11c",
 );
 
@@ -127,9 +127,9 @@ $shirasagi-icons-map: (
 .ss-icon-attendance:before {
     content: map-get($shirasagi-icons-map, "attendance");
 }
-.ss-icon-affair2:before {
-    content: map-get($shirasagi-icons-map, "affair2");
-}
+// .ss-icon-affair2:before {
+//     content: map-get($shirasagi-icons-map, "affair2");
+// }
 .ss-icon-affair:before {
     content: map-get($shirasagi-icons-map, "affair");
 }

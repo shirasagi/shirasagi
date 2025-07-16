@@ -8,7 +8,11 @@
   <%= gws_menu_icon(:memo, 'modules.gws/memo', gws_memo_messages_path) if @cur_site.menu_memo_visible? && Gws.module_usable?(:memo, @cur_site, @cur_user) %>
   <%= gws_menu_icon(:bookmark, 'modules.gws/bookmark', gws_bookmark_main_path) if @cur_site.menu_bookmark_visible? && Gws.module_usable?(:bookmark, @cur_site, @cur_user) %>
   <%= gws_menu_icon(:attendance, 'modules.gws/attendance', gws_attendance_main_path) if @cur_site.menu_attendance_visible? && Gws.module_usable?(:attendance, @cur_site, @cur_user) %>
-  <%= gws_menu_icon(:affair2, 'modules.gws/affair', gws_affair_main_path) if @cur_site.menu_affair2_visible? && Gws.module_usable?(:affair2, @cur_site, @cur_user) %>
+  <%
+=begin%>
+ <%= gws_menu_icon(:affair2, 'modules.gws/affair', gws_affair_main_path) if @cur_site.menu_affair2_visible? && Gws.module_usable?(:affair2, @cur_site, @cur_user) %> 
+<%
+=end%>
   <%= gws_menu_icon(:affair, 'modules.gws/affair', gws_affair_main_path) if @cur_site.menu_affair_visible? && Gws.module_usable?(:affair, @cur_site, @cur_user) %>
   <%= gws_menu_icon(:workload, 'modules.gws/workload', gws_workload_main_path) if @cur_site.menu_workload_visible? && Gws.module_usable?(:workload, @cur_site, @cur_user) %>
   <%= gws_menu_icon(:daily_report, 'modules.gws/daily_report', gws_daily_report_main_path) if @cur_site.menu_daily_report_visible? && Gws.module_usable?(:daily_report, @cur_site, @cur_user) %>
