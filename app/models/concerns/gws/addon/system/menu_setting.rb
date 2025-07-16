@@ -42,7 +42,6 @@ module Gws::Addon::System::MenuSetting
     def define_menu_setting(name, default_label, options = {})
       field "menu_#{name}_state", type: String, default: options[:default_state]
       field "menu_#{name}_label", type: String, localize: true
-      field "menu_#{name}_icon_image_id", type: BSON::ObjectId
       belongs_to_file "menu_#{name}_icon_image", class_name: "SS::File", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"]
       permit_params "menu_#{name}_state", "menu_#{name}_label", "menu_#{name}_icon_image_id"
       alias_method("menu_#{name}_state_options", "menu_state_options")
