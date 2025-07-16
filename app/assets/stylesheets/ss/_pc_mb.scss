@@ -2268,6 +2268,14 @@ footer.send {
   * ~ .action {
     margin-top: 10px;
   }
+  .file-type {
+    &:before {
+      content: "(";
+    }
+    &:after {
+      content: ")";
+    }
+  }
 }
 
 #addon-cms-agents-addons-file .file-view,#addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
