@@ -1724,6 +1724,13 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     }
   }
 }
+.tree-navi .tree-item.no-child .material-icons {
+  background: #e5e5e5;
+  &:hover {
+    border-color: #d0d0d0;
+    color: #333;
+  }
+}
 .tree-navi .item-name {
   flex-grow: 10;
   padding: 2px;
