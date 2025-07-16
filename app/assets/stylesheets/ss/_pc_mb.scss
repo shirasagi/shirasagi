@@ -3675,12 +3675,6 @@ body.ss-ajax-in-iframe {
       filter: none \9;
     }
   }
-  .column-youtube-left {
-    margin-top: 10px;
-    @include mb {
-      float: none;
-    }
-  }
   .inplace-edit.select_page {
     min-height: 600px;
   }
@@ -3864,36 +3858,6 @@ body.ss-ajax-in-iframe {
   }
   iframe, video {
     max-width: 100%;
-  }
-}
-.column-value-cms-column-youtube {
-  .column-youtube-left {
-    margin-top: 8px;
-    @include mb {
-      margin: 10px 0;
-      float: none;
-    }
-  }
-  .column-youtube-right {
-    @include display-flex;
-    @include justify-content(flex-end);
-    @include align-items(center);
-    @include mb {
-      display: block;
-      text-align: left;
-    }
-    input:first-child {
-      margin-right: 5px;
-      @include mb {
-        margin-right: 0;
-      }
-    }
-  }
-  input {
-    margin-left: 5px;
-    @include mb {
-      margin: 10px 0;
-    }
   }
 }
 .column-value-body select,
