@@ -113,7 +113,6 @@ this.SS_ListUI = (function () {
     });
     $el.find(".list-head .btn-list-head-action").each(function () {
       $(this).on("ss:beforeSend", function(ev) {
-        console.log("ss:beforeSend");
         var checked = $el.find(".list-item input:checkbox:checked").map(function () {
           return $(this).val();
         });
