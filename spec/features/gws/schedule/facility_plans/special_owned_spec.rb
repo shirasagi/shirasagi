@@ -5,8 +5,11 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
   let!(:user) { gws_user }
 
   let!(:private_permissions) do
-    %w(read_private_gws_schedule_plans edit_private_gws_schedule_plans delete_private_gws_schedule_plans
-      use_private_gws_facility_plans read_private_gws_facility_items)
+    %w(
+      read_private_gws_schedule_plans edit_private_gws_schedule_plans
+      delete_private_gws_schedule_plans use_private_gws_facility_plans
+      read_private_gws_facility_items
+    )
   end
   let!(:role) { create :gws_role, permissions: private_permissions }
 
