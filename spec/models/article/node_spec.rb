@@ -102,7 +102,7 @@ describe Article::Node::Page, type: :model, dbscope: :example do
     context "with Cms::Addon::Meta" do
       let(:summary) { Array.new(2) { "<p>#{unique_id}</p>" }.join("\n") }
       let(:description) { Array.new(2) { unique_id }.join("\n") }
-      let!(:node) { create :article_node_page, summary_html: summary, description: description }
+      let!(:node) { create :article_node_page, summary_html: summary, description: description, description_setting: 'manual' }
 
       it do
         # Cms::Addon::Meta

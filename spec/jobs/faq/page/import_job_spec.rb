@@ -100,6 +100,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.order).to be 10
         expect(item.keywords).to match_array %w(キーワード)
         expect(item.description).to eq "概要"
+        # expect(item.description_setting).to eq "manual"
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
         expect(item.html).to eq "<p>可能です。</p>"
