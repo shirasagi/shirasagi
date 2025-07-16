@@ -279,7 +279,7 @@ ja:
       check_accessibility_manually: "セマンティックなマークアップであり、コントラスト比に問題がない事を確認してください。"
       when_publish: 公開時の注意
       line_post_enabled: LINE連携が有効になっています。連携しない場合は、設定を解除してください。
-      twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
+      twitter_post_enabled: X(旧Twitter)投稿が有効になっています。連携しない場合は、設定を解除してください。
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
       change_form: 定型フォームを変更してよろしいですか？
       line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
@@ -597,7 +597,7 @@ ja:
         main: 本配信
         test: テスト配信
       sns_post_log_type:
-        twitter: Twitter投稿
+        twitter: X(旧Twitter)投稿
         line: LINE投稿
       sns_post_log_state:
         success: 成功
@@ -646,7 +646,7 @@ ja:
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP
-      twitter: Twitter
+      twitter: X(旧Twitter)
       tweet: ツイート
       hatena: はてなブックマーク
       hatena_add: このエントリーをはてなブックマークに追加
@@ -876,7 +876,7 @@ ja:
     use_cms_line_deliver_categories: LINE配信カテゴリーの管理
     use_cms_line_services: LINEサービスの管理
     use_cms_all_contents: 全コンテンツの利用
-    use_cms_page_twitter_posts: ページTwitter投稿の利用
+    use_cms_page_twitter_posts: ページX(旧Twitter)投稿の利用
     use_cms_page_line_posts: ページLINE投稿の利用
     use_other_cms_line_mail_handlers: LINEメール連携の管理（全て）
     use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
@@ -919,8 +919,8 @@ ja:
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
-      cms/twitter_poster: Twitter連携
-      cms/node_twitter_post_setting: Twitter連携設定
+      cms/twitter_poster: X(旧Twitter)連携
+      cms/node_twitter_post_setting: X(旧Twitter)連携設定
       cms/node_line_post_setting: LINE連携設定
       cms/captcha: 認証
       cms/body_layout_html: HTML
@@ -1254,10 +1254,10 @@ ja:
         sns_share_states: 表示
         sns_share_orders: 並び順
       cms/addon/twitter_poster:
-        twitter_auto_post: Twitter投稿
+        twitter_auto_post: X(旧Twitter)投稿
         twitter_edit_auto_post: 編集時に自動投稿
         twitter_post_format: 投稿形式
-        twitter_posted: Twitter投稿履歴
+        twitter_posted: X(旧Twitter)投稿履歴
         twitter_posted_url: TweetURL
         twitter_posted_at: 投稿日時
         twitter_post_error: 投稿エラー
@@ -1271,7 +1271,7 @@ ja:
         line_post_error: 投稿エラー
       cms/addon/node_twitter_post_setting:
         node_twitter_poster_state: ページ連携
-        node_twitter_auto_post: Twitter投稿
+        node_twitter_auto_post: X(旧Twitter)投稿
         node_twitter_post_format: 投稿形式
         node_twitter_edit_auto_post: 編集時に自動投稿
       cms/addon/node_line_post_setting:
@@ -2386,7 +2386,7 @@ ja:
           パンくずリストを自動生成します。
         - |-
           標準機能/SNSシェアボタン
-          facebook、Twitter等のSNSシェアボタンを表示します。
+          facebook、X(旧Twitter)等のSNSシェアボタンを表示します。
         - |-
           イベント/カレンダー
           イベントカレンダーを表示します。
@@ -3114,11 +3114,11 @@ ja:
         インポートした際に記事ページを書き出します。
     cms/addon/node_twitter_post_setting:
       node_twitter_poster_state:
-        - 有効に設定するとフォルダー内の記事編集時にTwitter連携が表示されます。
+        - 有効に設定するとフォルダー内の記事編集時にX(旧Twitter)連携が表示されます。
       node_twitter_auto_post:
-        - 有効に設定すると公開時にTwitter投稿をおこないます。
+        - 有効に設定すると公開時にX(旧Twitter)投稿をおこないます。
       node_twitter_edit_auto_post:
-        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - 有効に設定すると再度公開した際にX(旧Twitter)投稿をおこないます。
         - この設定は再投稿が完了した際に、自動的に無効に戻ります。
       node_twitter_post_format:
         - 投稿形式を選択します。
@@ -3156,9 +3156,9 @@ ja:
 
     cms/addon/twitter_poster:
       twitter_auto_post:
-        - 有効に設定すると公開時にTwitter投稿をおこないます。
+        - 有効に設定すると公開時にX(旧Twitter)投稿をおこないます。
       twitter_edit_auto_post:
-        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - 有効に設定すると再度公開した際にX(旧Twitter)投稿をおこないます。
         - この設定は再投稿が完了した際に、自動的に無効に戻ります。
       twitter_post_format:
         - 投稿形式を選択します。
@@ -3503,7 +3503,7 @@ ja:
       cms/form_db/import_url_job: CMS/定型DBインポート
       cms/all_contents_import_job: CMS/全コンテンツ一括設定
       cms/michecker_job: CMS/miChecker
-      cms/sns_post/twitter_job: CMS/Twitterページ投稿
+      cms/sns_post/twitter_job: CMS/X(旧Twitter)ページ投稿
       cms/sns_post/line_job: LINE/ページ投稿
       cms/line/deliver_job: LINE/配信
       cms/line/test_deliver_job: LINE/テスト配信
