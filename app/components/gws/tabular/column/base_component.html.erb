@@ -16,21 +16,23 @@
   </dt>
   <dd>
     <% if type == :form && column.prefix_explanation.present? %>
-      <span class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></span>
+      <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></div>
     <% end %>
     <div class="gws-tabular-column <%= column.class.name.underscore.gsub('/', '-') %>" data-column-id="<%= column.id %>">
-      <% if column.prefix_label.present? %>
-        <span class="prefix"><%= column.prefix_label %></span>
-      <% end %>
+      <div class="input-group">
+        <% if column.prefix_label.present? %>
+          <span class="prefix"><%= column.prefix_label %></span>
+        <% end %>
 
-      <%= content %>
+        <%= content %>
 
-      <% if column.postfix_label.present? %>
-        <span class="postfix"><%= column.postfix_label %></span>
-      <% end %>
+        <% if column.postfix_label.present? %>
+          <span class="postfix"><%= column.postfix_label %></span>
+        <% end %>
+      </div>
     </div>
     <% if type == :form && column.postfix_explanation.present? %>
-      <span class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></span>
+      <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></div>
     <% end %>
   </dd>
 <% elsif type == :title || type == :meta %>

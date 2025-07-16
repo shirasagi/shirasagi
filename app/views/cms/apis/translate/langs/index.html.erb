@@ -3,8 +3,10 @@
 <div class="search-ui-form">
   <% url = @multi ? { action: :index } : { action: :index, single: 1 } %>
   <%= form_for :s, url: url, html: { method: "GET", class: :search } do |f| %>
-    <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-    <%= f.submit t("translate.apis.langs.search"), class: :btn %>
+    <div class="input-group">
+      <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), placeholder: t("ss.keyword") %>
+      <%= f.submit t("translate.apis.langs.search"), class: :btn %>
+    </div>
   <% end %>
 </div>
 
