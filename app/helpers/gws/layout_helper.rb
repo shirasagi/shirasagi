@@ -18,22 +18,21 @@ module Gws::LayoutHelper
   end
 
   # メインナビ用アイコン表示ヘルパー
-  def gws_menu_icon(type, label_i18n, path)
-    icon_file = @cur_site.send("menu_#{type}_icon_image")
-    label = @cur_site.send("menu_#{type}_label") || t(label_i18n)
-    icon_class = "icon-#{type.to_s.dasherize}"
+  def gws_menu_icon(name, label_i18n, path)
+    icon_file = @cur_site.send("menu_#{name}_icon_image")
+    label = @cur_site.send("menu_#{name}_label") || t(label_i18n)
 
     if icon_file.present?
-      tag.h2 do
-        link_to(path, class: "#{icon_class} has-custom-icon") do
-          image_tag(icon_file.url, class: "nav-icon-img", aria: { hidden: true }) + label
-        end
-      end
+      icon_class = "has-custom-icon icon-#{name.to_s.dasherize}"
+      inner_tag = image_tag(icon_file.url, class: "nav-icon-img", aria: { hidden: true })
     else
-      tag.h2 do
-        link_to(path, class: "#{icon_class} has-font-icon") do
-          tag.span("", class: "ss-icon ss-icon-#{type.to_s.dasherize}", role: "img", aria: { hidden: true }) + label
-        end
+      icon_class = "has-font-icon icon-#{name.to_s.dasherize}"
+      inner_tag = tag.span("", class: "ss-icon ss-icon-#{name.to_s.dasherize}", role: "img", aria: { hidden: true })
+    end
+
+    tag.h2 do
+      link_to(path, class: icon_class) do
+        inner_tag + label
       end
     end
   end
