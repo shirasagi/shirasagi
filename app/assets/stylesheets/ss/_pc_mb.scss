@@ -4363,4 +4363,5 @@ table.check-links-erros {
 // フォントアイコン用スタイル設定クラス
 span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]::before {
   margin-right: 5px !important;
+  font-size: 32px !important;
 }
