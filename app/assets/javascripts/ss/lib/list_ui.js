@@ -138,10 +138,11 @@ this.SS_ListUI = (function () {
       return;
     }
 
-    var checkedIds = $el.find(".list-item input:checkbox:checked").map(function () {
-      return $(this).val();
+    var checkedElements = $el.find(".list-item input:checkbox:checked");
+    checkedElements = $.grep(checkedElements, function(element, _index) {
+      return !!$(element).val();
     });
-    if (checkedIds.length === 0) {
+    if (checkedElements.length === 0) {
       return false;
     }
 
@@ -153,10 +154,15 @@ this.SS_ListUI = (function () {
     }
 
     $this.attr("disabled", true);
+    $.each(checkedElements, function() {
+      var $element = $(this);
+      $element.replaceWith(SS.loading);
+    });
 
     var promises = [];
-    $.each(checkedIds, function() {
-      var id = this;
+    $.each(checkedElements, function() {
+      var $element = $(this);
+      var id = $element.val();
       var action = window.location.pathname + "/" + id + ".json";
 
       var formData = new FormData();
