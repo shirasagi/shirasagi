@@ -549,10 +549,6 @@ ja:
         same_as_updated: 更新日
         same_as_created: 作成日
         same_as_first_released: 初公開日
-      twitter_post_format:
-        thumb_and_page: サムネイル画像とページ
-        files_and_page: 本文内の画像とページ
-        page_only: ページ
       line_post_format:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ
@@ -1256,7 +1252,6 @@ ja:
       cms/addon/twitter_poster:
         twitter_auto_post: X(旧Twitter)投稿
         twitter_edit_auto_post: 編集時に自動投稿
-        twitter_post_format: 投稿形式
         twitter_posted: X(旧Twitter)投稿履歴
         twitter_posted_url: TweetURL
         twitter_posted_at: 投稿日時
@@ -1272,7 +1267,6 @@ ja:
       cms/addon/node_twitter_post_setting:
         node_twitter_poster_state: ページ連携
         node_twitter_auto_post: X(旧Twitter)投稿
-        node_twitter_post_format: 投稿形式
         node_twitter_edit_auto_post: 編集時に自動投稿
       cms/addon/node_line_post_setting:
         node_line_poster_state: ページ連携
@@ -3120,19 +3114,6 @@ ja:
       node_twitter_edit_auto_post:
         - 有効に設定すると再度公開した際にX(旧Twitter)投稿をおこないます。
         - この設定は再投稿が完了した際に、自動的に無効に戻ります。
-      node_twitter_post_format:
-        - 投稿形式を選択します。
-        -
-        - ・サムネイル画像とページ
-        - サムネイル画像とページタイトルおよびリンクを投稿します。
-        -
-        - ・本文内の画像とページ
-        - 本文内の画像とページタイトルおよびリンクを投稿します。
-        - 画像は最大４件表示されます。
-        -
-        - ・ページ
-        - ページタイトルおよびリンクを投稿します。
-        - ページをOGPで表示する場合は、こちらを選択してください。
 
     cms/addon/node_line_post_setting:
       node_line_poster_state:
@@ -3160,19 +3141,6 @@ ja:
       twitter_edit_auto_post:
         - 有効に設定すると再度公開した際にX(旧Twitter)投稿をおこないます。
         - この設定は再投稿が完了した際に、自動的に無効に戻ります。
-      twitter_post_format:
-        - 投稿形式を選択します。
-        -
-        - ・サムネイル画像とページ
-        - サムネイル画像とページタイトルおよびリンクを投稿します。
-        -
-        - ・本文内の画像とページ
-        - 本文内の画像とページタイトルおよびリンクを投稿します。
-        - 画像は最大４件表示されます。
-        -
-        - ・ページ
-        - ページタイトルおよびリンクを投稿します。
-        - ページをOGPで表示する場合は、こちらを選択してください。
 
     cms/addon/line_poster:
       line_auto_post:

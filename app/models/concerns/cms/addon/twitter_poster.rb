@@ -11,13 +11,12 @@ module Cms::Addon
       attr_accessor :skip_twitter_post
 
       field :twitter_auto_post, type: String
-      field :twitter_post_format, type: String
       field :twitter_edit_auto_post, type: String
 
       field :twitter_posted, type: Array, default: [], metadata: { branch: false }
       field :twitter_post_error, type: String, metadata: { branch: false }
 
-      permit_params :twitter_auto_post, :twitter_edit_auto_post, :twitter_post_format, :twitter_post_id, :twitter_user_id
+      permit_params :twitter_auto_post, :twitter_edit_auto_post, :twitter_post_id, :twitter_user_id
 
       validate :validate_twitter_postable, if: -> { twitter_auto_post == "active" }
 
@@ -26,10 +25,6 @@ module Cms::Addon
 
     def twitter_auto_post_options
       %w(expired active).map { |v| [I18n.t("ss.options.state.#{v}"), v] }
-    end
-
-    def twitter_post_format_options
-      I18n.t("cms.options.twitter_post_format").map { |k, v| [v, k] }
     end
 
     def twitter_edit_auto_post_options
@@ -99,11 +94,6 @@ module Cms::Addon
       if policy
         msg = I18n.t("errors.messages.denied_with_upload_policy", policy: I18n.t("ss.options.upload_policy.#{policy}"))
         errors.add :base, "#{t(:twitter_auto_post)}：#{msg}"
-        return
-      end
-
-      if twitter_post_format == "thumb_and_page" && thumb.blank?
-        errors.add :thumb_id, :blank
       end
     end
 
