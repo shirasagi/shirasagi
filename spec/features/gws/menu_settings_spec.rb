@@ -41,7 +41,6 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("span.ss-icon.ss-icon-presence")
         expect(page).to have_css("span.ss-icon.ss-icon-attendance")
         expect(page).to have_css("span.ss-icon.ss-icon-affair")
-        # expect(page).to have_css("span.ss-icon.ss-icon-affair2")
         expect(page).to have_css("span.ss-icon.ss-icon-daily-report")
         expect(page).to have_css("span.ss-icon.ss-icon-bookmark")
         expect(page).to have_css("span.ss-icon.ss-icon-memo")
