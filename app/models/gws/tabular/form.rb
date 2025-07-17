@@ -95,7 +95,7 @@ class Gws::Tabular::Form
   private
 
   def validate_i18n_name
-    # validates :name, presence: true, length: { maximum: Gws.max_name_length }
+    # validates :name, presence: true, length: { maximum: SS.max_name_length }
     translations = i18n_name_translations
     if translations.blank? || translations[I18n.default_locale].blank?
       errors.add :i18n_name, :blank
@@ -105,8 +105,8 @@ class Gws::Tabular::Form
       local_name = translations[locale]
       next if local_name.blank?
 
-      if local_name.length > Gws.max_name_length
-        errors.add :i18n_name, :too_long, count: Gws.max_name_length
+      if local_name.length > SS.max_name_length
+        errors.add :i18n_name, :too_long, count: SS.max_name_length
       end
     end
   end

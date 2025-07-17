@@ -7,10 +7,6 @@ module Gws
 
   mattr_accessor(:module_usable_handlers) { {} }
 
-  # 200 = 80 for japanese name + 120 for english name
-  # 日本語タイトルと英語タイトルとをスラッシュで連結して、一つのページとして運用することを想定
-  mattr_reader(:max_name_length, default: 200)
-
   def module_usable(name, proc = nil, &block)
     proc = block if block
     module_usable_handlers[name.to_sym] = proc
