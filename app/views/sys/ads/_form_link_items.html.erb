@@ -29,6 +29,9 @@
 <% end %>
 
 <div data-controller="ss--increase-decrease" data-ss--increase-decrease-max-value="<%= max_count %>" data-ss--increase-decrease-attribute-value="<%= attribute_name %>">
+  <%# 全ての広告を削除すると ad_links がサーバーへ送られなくなるため、削除したのに削除されない現象が発生することを防ぐ目的でダミーを追加する %>
+  <%= hidden_field_tag "#{field_name_prefix}[$unused$]", "", id: nil %>
+
   <table class="index ss-link-item-table ss-link-item-table-form">
     <thead>
     <tr>
