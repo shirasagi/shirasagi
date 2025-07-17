@@ -2,9 +2,9 @@ $shirasagi-icons-font: "shirasagi-icons";
 
 @font-face {
     font-family: $shirasagi-icons-font;
-    src: url("/assets/font/shirasagi-icons.eot?0e15216c9ad3b27893768d930a3b23e2#iefix") format("embedded-opentype"),
-url("/assets/font/shirasagi-icons.woff?0e15216c9ad3b27893768d930a3b23e2") format("woff"),
-url("/assets/font/shirasagi-icons.woff2?0e15216c9ad3b27893768d930a3b23e2") format("woff2");
+    src: url("/assets/font/shirasagi-icons.eot?354a08a890f52fbc2d1a15df131344c7#iefix") format("embedded-opentype"),
+url("/assets/font/shirasagi-icons.woff?354a08a890f52fbc2d1a15df131344c7") format("woff"),
+url("/assets/font/shirasagi-icons.woff2?354a08a890f52fbc2d1a15df131344c7") format("woff2");
 }
 
 span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
@@ -23,29 +23,30 @@ $shirasagi-icons-map: (
     "workflow2": "\f102",
     "workflow": "\f103",
     "todo": "\f104",
-    "survey": "\f105",
-    "shared-address": "\f106",
-    "share": "\f107",
-    "schedule": "\f108",
-    "report": "\f109",
-    "reminder": "\f10a",
-    "qna": "\f10b",
-    "presence": "\f10c",
-    "portal": "\f10d",
-    "personal-address": "\f10e",
-    "notice": "\f10f",
-    "monitor": "\f110",
-    "memo": "\f111",
-    "faq": "\f112",
-    "elasticsearch": "\f113",
-    "discussion": "\f114",
-    "daily-report": "\f115",
-    "conf": "\f116",
-    "circular": "\f117",
-    "bookmark": "\f118",
-    "board": "\f119",
-    "attendance": "\f11a",
-    "affair": "\f11c",
+    "tabular": "\f105",
+    "survey": "\f106",
+    "shared-address": "\f107",
+    "share": "\f108",
+    "schedule": "\f109",
+    "report": "\f10a",
+    "reminder": "\f10b",
+    "qna": "\f10c",
+    "presence": "\f10d",
+    "portal": "\f10e",
+    "personal-address": "\f10f",
+    "notice": "\f110",
+    "monitor": "\f111",
+    "memo": "\f112",
+    "faq": "\f113",
+    "elasticsearch": "\f114",
+    "discussion": "\f115",
+    "daily-report": "\f116",
+    "conf": "\f117",
+    "circular": "\f118",
+    "bookmark": "\f119",
+    "board": "\f11a",
+    "attendance": "\f11b",
+    "affair": "\f11d",
 );
 
 .ss-icon-workload:before {
@@ -59,6 +60,9 @@ $shirasagi-icons-map: (
 }
 .ss-icon-todo:before {
     content: map-get($shirasagi-icons-map, "todo");
+}
+.ss-icon-tabular:before {
+    content: map-get($shirasagi-icons-map, "tabular");
 }
 .ss-icon-survey:before {
     content: map-get($shirasagi-icons-map, "survey");

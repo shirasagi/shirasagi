@@ -24,6 +24,7 @@
   <%= gws_menu_icon(:share, 'modules.gws/share', gws_share_files_path) if @cur_site.menu_share_visible? && Gws.module_usable?(:share, @cur_site, @cur_user) %>
   <%= gws_menu_icon(:shared_address, 'modules.gws/shared_address', gws_shared_address_addresses_path) if @cur_site.menu_shared_address_visible? && Gws.module_usable?(:shared_address, @cur_site, @cur_user) %>
   <%= gws_menu_icon(:personal_address, 'modules.gws/personal_address', gws_personal_address_addresses_path) if @cur_site.menu_personal_address_visible? && Gws.module_usable?(:personal_address, @cur_site, @cur_user) %>
+  <%= gws_menu_icon(:tabular, 'modules.gws/tabular', gws_tabular_spaces_path) if @cur_site.menu_tabular_visible? && Gws.module_usable?(:tabular, @cur_site, @cur_user) %>
   <%= gws_menu_icon(:elasticsearch, 'modules.gws/elasticsearch', gws_elasticsearch_search_main_path) if @cur_site.menu_elasticsearch_visible? && Gws.module_usable?(:elasticsearch, @cur_site, @cur_user) %>
   <%= gws_menu_icon(:conf, 'gws.site_config', gws_site_path) if @cur_user.gws_role_permit_any?(@cur_site, :read_gws_organization) %>
 </nav>
