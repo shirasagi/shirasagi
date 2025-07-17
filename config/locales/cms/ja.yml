@@ -279,7 +279,7 @@ ja:
       check_accessibility_manually: "セマンティックなマークアップであり、コントラスト比に問題がない事を確認してください。"
       when_publish: 公開時の注意
       line_post_enabled: LINE連携が有効になっています。連携しない場合は、設定を解除してください。
-      twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
+      twitter_post_enabled: X(旧Twitter)投稿が有効になっています。連携しない場合は、設定を解除してください。
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
       change_form: 定型フォームを変更してよろしいですか？
       line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
@@ -553,10 +553,6 @@ ja:
         same_as_updated: 更新日
         same_as_created: 作成日
         same_as_first_released: 初公開日
-      twitter_post_format:
-        thumb_and_page: サムネイル画像とページ
-        files_and_page: 本文内の画像とページ
-        page_only: ページ
       line_post_format:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ
@@ -601,7 +597,7 @@ ja:
         main: 本配信
         test: テスト配信
       sns_post_log_type:
-        twitter: Twitter投稿
+        twitter: X(旧Twitter)投稿
         line: LINE投稿
       sns_post_log_state:
         success: 成功
@@ -632,6 +628,9 @@ ja:
       subject_state:
         disabled: 本文に含めない
         include: 本文に含める
+      description_setting:
+        description_setting_manual: 手動
+        description_setting_auto: 自動的に本文と連動
       site_search_type:
         page: ウェブページ
         file: 添付ファイル
@@ -659,7 +658,7 @@ ja:
     sns_share:
       fb_share: Facebook シェア
       fb_lang: ja_JP
-      twitter: Twitter
+      twitter: X(旧Twitter)
       tweet: ツイート
       hatena: はてなブックマーク
       hatena_add: このエントリーをはてなブックマークに追加
@@ -872,8 +871,8 @@ ja:
     delete_private_cms_forms: 定型フォームの削除（所有）
     delete_other_cms_forms: 定型フォームの削除（全て）
     use_cms_michecker: micheckerの利用
-    delete_cms_ignore_alert: 警告を無視して削除する
-    edit_cms_ignore_alert: 警告を無視して非公開保存する
+    delete_cms_ignore_alert: リンクチェック警告を無視して削除する
+    edit_cms_ignore_alert: リンクチェック警告を無視して非公開保存する
     use_cms_sitemap: フォルダ容量のCSVダウンロード
     use_cms_check_links: リンクチェックの利用
     run_cms_check_links: リンクチェックの実行
@@ -889,7 +888,7 @@ ja:
     use_cms_line_deliver_categories: LINE配信カテゴリーの管理
     use_cms_line_services: LINEサービスの管理
     use_cms_all_contents: 全コンテンツの利用
-    use_cms_page_twitter_posts: ページTwitter投稿の利用
+    use_cms_page_twitter_posts: ページX(旧Twitter)投稿の利用
     use_cms_page_line_posts: ページLINE投稿の利用
     use_other_cms_line_mail_handlers: LINEメール連携の管理（全て）
     use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
@@ -933,8 +932,8 @@ ja:
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
-      cms/twitter_poster: Twitter連携
-      cms/node_twitter_post_setting: Twitter連携設定
+      cms/twitter_poster: X(旧Twitter)連携
+      cms/node_twitter_post_setting: X(旧Twitter)連携設定
       cms/node_line_post_setting: LINE連携設定
       cms/captcha: 認証
       cms/body_layout_html: HTML
@@ -1194,6 +1193,8 @@ ja:
       cms/addon/meta:
         keywords: キーワード
         description: 概要
+        description_setting: 概要の連動設定
+        description_body: 概要の本文
         summary_html: サマリー
       cms/addon/editor_setting:
         color_button: 文字色変更ボタン
@@ -1268,10 +1269,9 @@ ja:
         sns_share_states: 表示
         sns_share_orders: 並び順
       cms/addon/twitter_poster:
-        twitter_auto_post: Twitter投稿
+        twitter_auto_post: X(旧Twitter)投稿
         twitter_edit_auto_post: 編集時に自動投稿
-        twitter_post_format: 投稿形式
-        twitter_posted: Twitter投稿履歴
+        twitter_posted: X(旧Twitter)投稿履歴
         twitter_posted_url: TweetURL
         twitter_posted_at: 投稿日時
         twitter_post_error: 投稿エラー
@@ -1285,8 +1285,7 @@ ja:
         line_post_error: 投稿エラー
       cms/addon/node_twitter_post_setting:
         node_twitter_poster_state: ページ連携
-        node_twitter_auto_post: Twitter投稿
-        node_twitter_post_format: 投稿形式
+        node_twitter_auto_post: X(旧Twitter)投稿
         node_twitter_edit_auto_post: 編集時に自動投稿
       cms/addon/node_line_post_setting:
         node_line_poster_state: ページ連携
@@ -2402,7 +2401,7 @@ ja:
           パンくずリストを自動生成します。
         - |-
           標準機能/SNSシェアボタン
-          facebook、Twitter等のSNSシェアボタンを表示します。
+          facebook、X(旧Twitter)等のSNSシェアボタンを表示します。
         - |-
           イベント/カレンダー
           イベントカレンダーを表示します。
@@ -3130,25 +3129,12 @@ ja:
         インポートした際に記事ページを書き出します。
     cms/addon/node_twitter_post_setting:
       node_twitter_poster_state:
-        - 有効に設定するとフォルダー内の記事編集時にTwitter連携が表示されます。
+        - 有効に設定するとフォルダー内の記事編集時にX(旧Twitter)連携が表示されます。
       node_twitter_auto_post:
-        - 有効に設定すると公開時にTwitter投稿をおこないます。
+        - 有効に設定すると公開時にX(旧Twitter)投稿をおこないます。
       node_twitter_edit_auto_post:
-        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - 有効に設定すると再度公開した際にX(旧Twitter)投稿をおこないます。
         - この設定は再投稿が完了した際に、自動的に無効に戻ります。
-      node_twitter_post_format:
-        - 投稿形式を選択します。
-        -
-        - ・サムネイル画像とページ
-        - サムネイル画像とページタイトルおよびリンクを投稿します。
-        -
-        - ・本文内の画像とページ
-        - 本文内の画像とページタイトルおよびリンクを投稿します。
-        - 画像は最大４件表示されます。
-        -
-        - ・ページ
-        - ページタイトルおよびリンクを投稿します。
-        - ページをOGPで表示する場合は、こちらを選択してください。
 
     cms/addon/node_line_post_setting:
       node_line_poster_state:
@@ -3172,23 +3158,10 @@ ja:
 
     cms/addon/twitter_poster:
       twitter_auto_post:
-        - 有効に設定すると公開時にTwitter投稿をおこないます。
+        - 有効に設定すると公開時にX(旧Twitter)投稿をおこないます。
       twitter_edit_auto_post:
-        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - 有効に設定すると再度公開した際にX(旧Twitter)投稿をおこないます。
         - この設定は再投稿が完了した際に、自動的に無効に戻ります。
-      twitter_post_format:
-        - 投稿形式を選択します。
-        -
-        - ・サムネイル画像とページ
-        - サムネイル画像とページタイトルおよびリンクを投稿します。
-        -
-        - ・本文内の画像とページ
-        - 本文内の画像とページタイトルおよびリンクを投稿します。
-        - 画像は最大４件表示されます。
-        -
-        - ・ページ
-        - ページタイトルおよびリンクを投稿します。
-        - ページをOGPで表示する場合は、こちらを選択してください。
 
     cms/addon/line_poster:
       line_auto_post:
@@ -3452,6 +3425,22 @@ ja:
       - "「YouTubeからタイトルを取得」ボタンで自動取得もできます。"
       - "自動取得後に内容を修正することも可能です。"
       - "未入力の場合は「YouTube動画」がタイトルに設定されます。"
+    cms/addon/meta:
+      description_setting:
+        - 概要について、記事本文から自動入力するか手動入力するかを選択します。初期値は「自動的に本文と連動」です。
+        -
+        - ・自動的に本文と連動
+        - 保存時に本文の内容の最初の60文字を概要として表示します。
+        - 本文の冒頭60文字の内容を変更した場合は、自動的に概要も更新されます。
+        -
+        - ・手動
+        - 概要の本文欄に概要を入力します。
+        - 本文欄の内容を変更した場合は、手動で概要を更新する必要があります。
+      description_body:
+        - メタ情報の概要欄を入力します。
+        - メタ情報の概要欄を設定しておくことで、閲覧者の方が必要な情報を見つけやすくなり、サイトの利便性が高まります。
+        - ・「自動的に本文と連動」を選択した場合は、常に本文の内容の冒頭60文字を概要として表示します。
+        - ・「手動」を選択した場合は本文の内容が変更されても、概要欄に変更内容は反映されません。
 
     cms/page_expiration_setting:
       expiration_setting_type:
@@ -3526,7 +3515,7 @@ ja:
       cms/form_db/import_url_job: CMS/定型DBインポート
       cms/all_contents_import_job: CMS/全コンテンツ一括設定
       cms/michecker_job: CMS/miChecker
-      cms/sns_post/twitter_job: CMS/Twitterページ投稿
+      cms/sns_post/twitter_job: CMS/X(旧Twitter)ページ投稿
       cms/sns_post/line_job: LINE/ページ投稿
       cms/line/deliver_job: LINE/配信
       cms/line/test_deliver_job: LINE/テスト配信

@@ -1724,6 +1724,13 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     }
   }
 }
+.tree-navi .tree-item.no-child .material-icons {
+  background: #e5e5e5;
+  &:hover {
+    border-color: #d0d0d0;
+    color: #333;
+  }
+}
 .tree-navi .item-name {
   flex-grow: 10;
   padding: 2px;
@@ -2267,6 +2274,14 @@ footer.send {
   }
   * ~ .action {
     margin-top: 10px;
+  }
+  .file-type {
+    &:before {
+      content: "(";
+    }
+    &:after {
+      content: ")";
+    }
   }
 }
 
@@ -3673,12 +3688,6 @@ body.ss-ajax-in-iframe {
       filter: none \9;
     }
   }
-  .column-youtube-left {
-    margin-top: 10px;
-    @include mb {
-      float: none;
-    }
-  }
   .inplace-edit.select_page {
     min-height: 600px;
   }
@@ -3862,36 +3871,6 @@ body.ss-ajax-in-iframe {
   }
   iframe, video {
     max-width: 100%;
-  }
-}
-.column-value-cms-column-youtube {
-  .column-youtube-left {
-    margin-top: 8px;
-    @include mb {
-      margin: 10px 0;
-      float: none;
-    }
-  }
-  .column-youtube-right {
-    @include display-flex;
-    @include justify-content(flex-end);
-    @include align-items(center);
-    @include mb {
-      display: block;
-      text-align: left;
-    }
-    input:first-child {
-      margin-right: 5px;
-      @include mb {
-        margin-right: 0;
-      }
-    }
-  }
-  input {
-    margin-left: 5px;
-    @include mb {
-      margin: 10px 0;
-    }
   }
 }
 .column-value-body select,

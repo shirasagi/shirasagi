@@ -292,10 +292,10 @@ en:
 
   job:
     models:
-      gws/tabular/file/csv_import_job: CSV Import Job
-      gws/tabular/file/publish_upload_file_job: Upload File Publication Job
-      gws/tabular/file/zip_export_job: Data Zip Archiving Job
-      gws/tabular/file/zip_import_job: Zip Import Job
-      gws/tabular/form_publish_job: Form Publishing Job
-      gws/tabular/form_trash_purge_job: Empty forms trash
-      gws/tabular/space_trash_purge_job: Empty spaces trash
+      gws/tabular/file/csv_import_job: Tabular/CSV Import Job
+      gws/tabular/file/publish_upload_file_job: Tabular/Upload File Publication Job
+      gws/tabular/file/zip_export_job: Tabular/Data Zip Archiving Job
+      gws/tabular/file/zip_import_job: Tabular/Zip Import Job
+      gws/tabular/form_publish_job: Tabular/Form Publishing Job
+      gws/tabular/form_trash_purge_job: Tabular/Empty forms trash
+      gws/tabular/space_trash_purge_job: Tabular/Empty spaces trash
