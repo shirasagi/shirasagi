@@ -97,7 +97,7 @@ td {
     display: block;
   }
   .ss-open-in-new-window {
-    &:after {
+    &::after {
       content: "\e89e";
       display: inline-block;
       padding-left: 4px;
@@ -160,7 +160,7 @@ td {
     width: 100%;
     max-width: 450px;
   }
-  &:before {
+  &::before {
     content: "";
     display: block;
     position: absolute;
@@ -213,7 +213,7 @@ td {
     }
   }
 }
-_::-webkit-full-page-media, _:future, :root .popup-notice-container .popup-notice:before {
+_::-webkit-full-page-media, _:future, :root .popup-notice-container .popup-notice::before {
   @include mb {
     right: 219px;
   }
@@ -250,12 +250,12 @@ _::-webkit-full-page-media, _:future, :root .popup-notice-container .popup-notic
   display: inline-block;
   vertical-align: bottom;
   @include mb {
-    .popup-notice:before {
+    .popup-notice::before {
       right: 279px;
     }
   }
 }
-_::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:before {
+_::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::before {
   @include mb {
     right: 268px;
   }
@@ -760,7 +760,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     position: relative;
     @include navi-icon;
     color: $black;
-    &:before {
+    &::before {
       content: "";
       position: absolute;
       top: 4px;
@@ -775,7 +775,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       text-decoration: none;
     }
   }
-  h2 a:hover:before {
+  h2 a:hover::before {
     background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
   }
   h2.current {
@@ -801,7 +801,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     a {
       padding-left: 14px;
     }
-    a:before {
+    a::before {
       background: none !important;
     }
     .material-icons {
@@ -922,7 +922,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         background-color: $gray1;
         @include navi-icon;
         color: $black;
-        &:before {
+        &::before {
           content: "";
           position: absolute;
           top: 4px;
@@ -937,7 +937,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
           text-decoration: none;
         }
       }
-      a.navi-icon:hover:before {
+      a.navi-icon:hover::before {
         background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
       }
       background-color: $gray1;
@@ -1122,7 +1122,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       color: $orange;
     }
     &.active h2 {
-      &:before {
+      &::before {
         content: "";
         position: absolute;
         z-index: 100;
@@ -1132,7 +1132,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
         border-bottom: 11px solid transparent;
         border-left: 9px solid $gray4;
       }
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         z-index: 100;
@@ -1224,220 +1224,220 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
 }
 
 .main-navi, .mod-navi {
-  .icon-node:before {
+  .icon-node::before {
     background-position: left -32px !important;
   }
-  .icon-node:hover:before, .icon-node.current:before {
+  .icon-node:hover::before, .icon-node.current::before {
     background-position: -32px -32px !important;
   }
-  .icon-page:before {
+  .icon-page::before {
     background-position: left -64px !important;
   }
-  .icon-page:hover:before, .icon-page.current:before {
+  .icon-page:hover::before, .icon-page.current::before {
     background-position: -32px -64px !important;
   }
-  .icon-part:before {
+  .icon-part::before {
     background-position: left -96px !important;
   }
-  .icon-part:hover:before, .icon-part.current:before {
+  .icon-part:hover::before, .icon-part.current::before {
     background-position: -32px -96px !important;
   }
-  .icon-layout:before {
+  .icon-layout::before {
     background-position: left -128px !important;
   }
-  .icon-layout:hover:before, .icon-layout.current:before {
+  .icon-layout:hover::before, .icon-layout.current::before {
     background-position: -32px -128px !important;
   }
-  .icon-conv:before {
+  .icon-conv::before {
     background-position: left -160px !important;
   }
-  .icon-conv:hover:before {
+  .icon-conv:hover::before {
     background-position: -32px -160px !important;
   }
-  .icon-write:before {
+  .icon-write::before {
     background-position: left -192px !important;
   }
-  .icon-write:hover:before, .icon-write.current:before {
+  .icon-write:hover::before, .icon-write.current::before {
     background-position: -32px -192px !important;
   }
-  .icon-conf:before {
+  .icon-conf::before {
     background-position: left -224px !important;
   }
-  .icon-conf:hover:before {
+  .icon-conf:hover::before {
     background-position: -32px -224px !important;
   }
-  .icon-portal:before {
+  .icon-portal::before {
     background-position: left -256px !important;
   }
-  .icon-portal:hover:before {
+  .icon-portal:hover::before {
     background-position: -32px -256px !important;
   }
-  .icon-schedule:before {
+  .icon-schedule::before {
     background-position: left -288px !important;
   }
-  .icon-schedule:hover:before {
+  .icon-schedule:hover::before {
     background-position: -32px -288px !important;
   }
-  .icon-board:before {
+  .icon-board::before {
     background-position: left -320px !important;
   }
-  .icon-board:hover:before {
+  .icon-board:hover::before {
     background-position: -32px -320px !important;
   }
-  .icon-todo:before {
+  .icon-todo::before {
     background-position: left -352px !important;
   }
-  .icon-todo:hover:before {
+  .icon-todo:hover::before {
     background-position: -32px -352px !important;
   }
-  .icon-facility:before {
+  .icon-facility::before {
     background-position: left -384px !important;
   }
-  .icon-facility:hover:before {
+  .icon-facility:hover::before {
     background-position: -32px -384px !important;
   }
-  .icon-workflow:before {
+  .icon-workflow::before {
     background-position: left -416px !important;
   }
-  .icon-workflow:hover:before {
+  .icon-workflow:hover::before {
     background-position: -32px -416px !important;
   }
-  .icon-search:before {
+  .icon-search::before {
     background-position: left -448px !important;
   }
-  .icon-search:hover:before {
+  .icon-search:hover::before {
     background-position: -32px -448px !important;
   }
-  .icon-message:before {
+  .icon-message::before {
     background-position: left -480px !important;
   }
-  .icon-message:hover:before {
+  .icon-message:hover::before {
     background-position: -32px -480px !important;
   }
-  .icon-memo:before {
+  .icon-memo::before {
     background-position: left -480px !important;
   }
-  .icon-memo:hover:before {
+  .icon-memo:hover::before {
     background-position: -32px -480px !important;
   }
-  .icon-report:before {
+  .icon-report::before {
     background-position: left -512px !important;
   }
-  .icon-report:hover:before {
+  .icon-report:hover::before {
     background-position: -32px -512px !important;
   }
-  .icon-question:before {
+  .icon-question::before {
     background-position: left -640px !important;
   }
-  .icon-question:hover:before {
+  .icon-question:hover::before {
     background-position: -32px -640px !important;
   }
-  .icon-circular:before {
+  .icon-circular::before {
     background-position: left -544px !important;
   }
-  .icon-circular:hover:before {
+  .icon-circular:hover::before {
     background-position: -32px -544px !important;
   }
-  .icon-monitor:before {
+  .icon-monitor::before {
     background-position: left -672px !important;
   }
-  .icon-monitor:hover:before {
+  .icon-monitor:hover::before {
     background-position: -32px -672px !important;
   }
-  .icon-share:before {
+  .icon-share::before {
     background-position: left -576px !important;
   }
-  .icon-share:hover:before {
+  .icon-share:hover::before {
     background-position: -32px -576px !important;
   }
-  .icon-address:before {
+  .icon-address::before {
     background-position: left -608px !important;
   }
-  .icon-address:hover:before {
+  .icon-address:hover::before {
     background-position: -32px -608px !important;
   }
-  .icon-discussion:before {
+  .icon-discussion::before {
     background-position: left -736px !important;
   }
-  .icon-discussion:hover:before {
+  .icon-discussion:hover::before {
     background-position: -32px -736px !important;
   }
-  .icon-reminder:before {
+  .icon-reminder::before {
     background-position: left -768px !important;
   }
-  .icon-reminder:hover:before {
+  .icon-reminder:hover::before {
     background-position: -32px -768px !important;
   }
-  .icon-bookmark:before {
+  .icon-bookmark::before {
     background-position: left -800px !important;
   }
-  .icon-bookmark:hover:before {
+  .icon-bookmark:hover::before {
     background-position: -32px -800px !important;
   }
-  .icon-faq:before {
+  .icon-faq::before {
     background-position: left -832px !important;
   }
-  .icon-faq:hover:before {
+  .icon-faq:hover::before {
     background-position: -32px -832px !important;
   }
-  .icon-attendance:before {
+  .icon-attendance::before {
     background-position: left -864px !important;
   }
-  .icon-attendance:hover:before {
+  .icon-attendance:hover::before {
     background-position: -32px -864px !important;
   }
-  .icon-presence:before {
+  .icon-presence::before {
     background-position: left -896px !important;
   }
-  .icon-presence:hover:before {
+  .icon-presence:hover::before {
     background-position: -32px -896px !important;
   }
-  .icon-survey:before {
+  .icon-survey::before {
     background-position: left -928px !important;
   }
-  .icon-survey:hover:before {
+  .icon-survey:hover::before {
     background-position: -32px -928px !important;
   }
-  .icon-trash:before {
+  .icon-trash::before {
     background-position: left -960px !important;
   }
-  .icon-trash:hover:before {
+  .icon-trash:hover::before {
     background-position: -32px -960px !important;
   }
-  .icon-facility2:before {
+  .icon-facility2::before {
     background-position: left -992px !important;
   }
-  .icon-facility2:hover:before {
+  .icon-facility2:hover::before {
     background-position: -32px -992px !important;
   }
-  .icon-affair:before {
+  .icon-affair::before {
     background-position: left -1024px !important;
   }
-  .icon-affair:hover:before {
+  .icon-affair:hover::before {
     background-position: -32px -1024px !important;
   }
-  .icon-daily-report:before {
+  .icon-daily-report::before {
     background-position: left -1056px !important;
   }
-  .icon-daily-report:hover:before {
+  .icon-daily-report:hover::before {
     background-position: -32px -1056px !important;
   }
-  .icon-workload:before {
+  .icon-workload::before {
     background-position: left -1088px !important;
   }
-  .icon-workload:hover:before {
+  .icon-workload:hover::before {
     background-position: -32px -1088px !important;
   }
-  .icon-export:before {
+  .icon-export::before {
     background-position: left -1120px !important;
   }
-  .icon-export:hover:before {
+  .icon-export:hover::before {
     background-position: -32px -1120px !important;
   }
-  .icon-import:before {
+  .icon-import::before {
     background-position: left -1152px !important;
   }
-  .icon-import:hover:before {
+  .icon-import:hover::before {
     background-position: -32px -1152px !important;
   }
   .icon-material::before {
@@ -1512,7 +1512,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   @include mb { display: none; }
   li {
     float: left;
-    &:first-child a:before {
+    &:first-child a::before {
       border: 0;
     }
   }
@@ -1521,7 +1521,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     position: relative;
     padding: 10px 28px;
     color: $black;
-    &:before {
+    &::before {
       content: "";
       position: absolute;
       top: 0;
@@ -1530,7 +1530,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       border-bottom: 20px solid transparent;
       border-left: 12px solid #c6c6c6;
     }
-    &:after {
+    &::after {
       content: "";
       position: absolute;
       z-index: 1;
@@ -1580,7 +1580,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
       margin-right: 16px;
     }
     .dropdown-toggle {
-      &:after {
+      &::after {
         content: "";
         display: inline-block;
         width: 0;
@@ -1660,7 +1660,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
     padding: 10px 12px;
     border-bottom: 1px solid #f2f2f2;
     font-weight: bold;
-    &:before {
+    &::before {
       content: " ";
       margin-right: 6px;
       padding-left: 3px;
@@ -2027,10 +2027,10 @@ dl.mod-cms-parent_crumbs {
 }
 #cboxLoadedContent .tooltip ul {
   left: -80px;
-  &:before {
+  &::before {
     left: 75px;
   }
-  &:after {
+  &::after {
     left: 75px;
   }
 }
@@ -2564,7 +2564,7 @@ div.index {
     padding: 10px 14px;
     font-weight: normal;
 
-    &:before, &:after {
+    &::before, &::after {
       content: "";
       display: none;
     }
@@ -2597,7 +2597,7 @@ div.index {
   margin: -10px 0 0 -18px;
   padding: 10px 12px;
   font-weight: bold;
-  &:before {
+  &::before {
     content: " ";
     margin-right: 6px;
     padding-left: 3px;
@@ -2742,8 +2742,8 @@ div.index {
       .label {
         margin-right: 0;
         color: #844;
-        &:before { content: "["; }
-        &:after { content: "]"; }
+        &::before { content: "["; }
+        &::after { content: "]"; }
       }
       .id {
         color: #444;
@@ -2756,7 +2756,7 @@ div.index {
       }
       .order {
         color: #888;
-        &:before {
+        &::before {
           content: "\25b9";
         }
       }
@@ -2784,7 +2784,7 @@ div.index {
       display: inline-block;
       width: 0;
     }
-    .list-item-title.dir:after {
+    .list-item-title.dir::after {
       content: "/";
     }
     &[data-depth="0"] {
@@ -2859,7 +2859,7 @@ div.index {
     table.index thead th {
       border-bottom: $border-gray5;
     }
-    table.index thead th:after {
+    table.index thead th::after {
       display: none;
     }
   }
@@ -2942,7 +2942,7 @@ table.index {
       border: 0;
       background: none;
       @include mb { width: auto !important; }
-      &:after {
+      &::after {
         content: "/";
       }
       &:first-child {
@@ -2987,7 +2987,7 @@ table.index.data-table {
   td:first-of-type {
     padding-left: 22px;
     cursor: move;
-    &:before {
+    &::before {
       content: "";
       display: inline-block;
       position: absolute;
@@ -3001,7 +3001,7 @@ table.index.data-table {
   td.sortable-handle {
     padding: 0 5px 0 10px;
     cursor: move;
-    &:before {
+    &::before {
       content: "";
       display: inline-block;
       position: static;
@@ -3034,7 +3034,7 @@ table.form-index {
   }
 }
 table.form-index.sortable-index {
-  td:first-of-type:before {
+  td:first-of-type::before {
     margin-top: 4px;
   }
 }
@@ -3496,7 +3496,7 @@ form .CodeMirror {
   -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
   filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
 
-  &:after, &:before {
+  &::after, &::before {
     content: " ";
     position: absolute;
     top: 100%;
@@ -3505,13 +3505,13 @@ form .CodeMirror {
     border: solid transparent;
     pointer-events: none;
   }
-  &:after {
+  &::after {
     left: 48px;
     margin-left: -10px;
     border-width: 10px;
     border-top-color: #fff;
   }
-  &:before {
+  &::before {
     left: 48px;
     margin-left: -11px;
     border-width: 11px;
@@ -3528,8 +3528,8 @@ form .CodeMirror {
     text-decoration: none;
     cursor: pointer;
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
       content: "";
       display: block;
       position: absolute;
@@ -3540,11 +3540,11 @@ form .CodeMirror {
       background-color: #000;
     }
 
-    &:before {
+    &::before {
       transform: translate(-50%, -50%) rotate(45deg);
     }
 
-    &:after {
+    &::after {
       transform: translate(-50%, -50%) rotate(-45deg);
     }
   }
@@ -3794,7 +3794,7 @@ body.ss-ajax-in-iframe {
     }
     .control-top {
       height: 25px;
-      &:before {
+      &::before {
         @include display-flex;
         @include align-items(center);
         @include justify-content(center);
@@ -3807,7 +3807,7 @@ body.ss-ajax-in-iframe {
     .control-left {
       width: 100px;
       min-width: 100px;
-      &:before {
+      &::before {
         @include display-flex;
         @include align-items(center);
         @include justify-content(center);

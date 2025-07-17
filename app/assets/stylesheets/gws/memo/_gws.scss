@@ -238,7 +238,7 @@ table.index.gws-memo-folder {
   min-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  &:before {
+  &::before {
     content: "";
     position: absolute;
     top: 0;

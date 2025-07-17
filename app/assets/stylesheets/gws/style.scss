@@ -242,7 +242,7 @@ a.gws-category-label:hover {
   border-radius: 4px;
   background-color: #fff;
   @include box-shadow(0 1px 6px #666);
-  &:after {
+  &::after {
     content: "";
     position: absolute;
     bottom: -10px;
@@ -254,17 +254,17 @@ a.gws-category-label:hover {
     border-right: 10px solid transparent;
     border-left: 10px solid transparent;
   }
-  &.top:after {
+  &.top::after {
     top: -20px;
     bottom: auto;
     border-bottom: 10px solid #bbb;
     border-top-color: transparent;
   }
-  &.left:after {
+  &.left::after {
     left: 10px;
     margin: 0;
   }
-  &.right:after {
+  &.right::after {
     right: 10px;
     left: auto;
     margin: 0;
