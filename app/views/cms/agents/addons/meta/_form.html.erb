@@ -12,22 +12,18 @@
 
   <dt><%= @model.t :description %></dt>
   <dd></dd>
-  <dt class="depth-2"><%= @model.t :description_setting %><%= @model.tt :description_setting %></dt>
-  <dd>
-    <%
-      if @item.description_setting.blank? && @cur_site
-        @item.description_setting_auto?
-      end
-    %>
 
+  <dt class="depth-2"><%= @model.t :description_setting %><%= @model.tt :description_setting %></dt>
+  <dd class="depth-2">
     <%= f.radio_button :description_setting, "manual", checked: @item.description_setting_manual? %>
-    <%= f.label :description_setting, t("cms.cms/addon/meta.description_setting_manual"), value: "manual" %>
+    <%= f.label :description_setting, t("cms.options.description_setting.description_setting_manual"), value: "manual" %>
 
     <%= f.radio_button :description_setting, "auto", checked: @item.description_setting_auto? %>
-    <%= f.label :description_setting, t("cms.cms/addon/meta.description_setting_auto"), value: "auto" %>
+    <%= f.label :description_setting, t("cms.options.description_setting.description_setting_auto"), value: "auto" %>
   </dd>
-  <dt class="depth-2"><%= t("cms.cms/addon/meta.description_body") %><%= tt("cms/addon/meta.description_body") %></dt>
-  <dd>
+
+  <dt class="depth-2"><%= @model.t :description_body %><%= @model.tt :description_body %></dt>
+  <dd class="depth-2">
     <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence" } %>
     <% opts[:readonly] = @item.description_setting_auto? %>
     <%= f.text_area :description, opts %>
