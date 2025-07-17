@@ -665,7 +665,7 @@ ja:
       ss/kana_setting: かな設定
       ss/open_graph_setting: OpenGraph設定
       ss/facebook_setting: Facebook設定
-      ss/twitter_setting: Twitter設定
+      ss/twitter_setting: X(旧Twitter)設定
       ss/line_setting: LINE設定
       ss/kintone_setting: kintone設定
       ss/approve_setting: 承認設定
@@ -955,7 +955,7 @@ ja:
         kintone_user: Basic認証ユーザー
         kintone_password: Basic認証パスワード
       ss/addon/site_auto_post_setting:
-        site_twitter_auto_post: Twitter自動投稿
+        site_twitter_auto_post: X(旧Twitter)自動投稿
         site_edit_auto_post: 編集時に自動投稿
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
@@ -1441,7 +1441,7 @@ ja:
         - Open Graph 形式を選択します。
         - それぞれのSNSでシェアした場合の表示確認を以下のURLからできます。
         - Facebook share debugger：https://developers.facebook.com/tools/debug/sharing/
-        - Twitter Card Validator：https://cards-dev.twitter.com/validator/
+        - X(旧twitter) Card Validator：https://cards-dev.twitter.com/validator/
         - LINE Page Poker：https://poker.line.naver.jp/
       opengraph_defaul_image_url:
         - 既定の画像のURL を設定します。
@@ -1449,14 +1449,14 @@ ja:
         - ページに画像が含まれている場合、ここで設定した URL は使用されません。
     ss/addon/twitter_setting:
       twitter_poster_state:
-        - 有効にすると、ページ編集時にTwitter連携が表示されます。
+        - 有効にすると、ページ編集時にX(旧Twitter)連携が表示されます。
         - コンシューマーキーとアクセストークン、それぞれのシークレットキーを設定する必要があります。
       twitter_card:
-        - Twitter のカード形式を選択します。
-        - Twitter でどのような見え方をするかは「Twitter Card Validator（https://cards-dev.twitter.com/validator）」で確認することができます。
+        - X(旧twitter) のカード形式を選択します。
+        - X(旧twitter) でどのような見え方をするかは「X(旧twitter) Card Validator（https://cards-dev.twitter.com/validator）」で確認することができます。
       twitter_username:
-        - Twitter のユーザー名を設定します。
-        - 設定すると「Twitter Card Analytics」でアクセスを解析できるようになります。
+        - X(旧twitter) のユーザー名を設定します。
+        - 設定すると「X(旧twitter) Card Analytics」でアクセスを解析できるようになります。
       twitter_default_image_url:
         - 既定の画像のURL を設定します。
         - ページに画像が含まれていない場合、ここで設定した URL が twitter:image として使用されます。

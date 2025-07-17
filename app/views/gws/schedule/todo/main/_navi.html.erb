@@ -1,5 +1,5 @@
 <nav class="mod-navi current-navi">
-  <h2><%= link_to @cur_site.menu_todo_label || t('modules.gws/schedule/todo'), gws_schedule_todo_main_path, class: "navi-icon icon-todo" %></h2>
+  <%= gws_menu_icon(:todo, 'modules.gws/schedule/todo', gws_schedule_todo_main_path) %>
   <h3><%= link_to t('gws/schedule.navi.todo'), gws_schedule_todo_main_path %></h3>
   <% if Gws::Schedule::Todo.allowed?(:trash, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('gws/schedule.navi.trash'), gws_schedule_todo_trashes_path, class: 'trash' %></h3>

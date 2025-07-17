@@ -1,0 +1,135 @@
+$shirasagi-icons-font: "shirasagi-icons";
+
+@font-face {
+    font-family: $shirasagi-icons-font;
+    src: url("/assets/font/shirasagi-icons.eot?354a08a890f52fbc2d1a15df131344c7#iefix") format("embedded-opentype"),
+url("/assets/font/shirasagi-icons.woff?354a08a890f52fbc2d1a15df131344c7") format("woff"),
+url("/assets/font/shirasagi-icons.woff2?354a08a890f52fbc2d1a15df131344c7") format("woff2");
+}
+
+span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]:before {
+    font-family: shirasagi-icons !important;
+    font-style: normal;
+    font-weight: normal !important;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+$shirasagi-icons-map: (
+    "workload": "\f101",
+    "workflow2": "\f102",
+    "workflow": "\f103",
+    "todo": "\f104",
+    "tabular": "\f105",
+    "survey": "\f106",
+    "shared-address": "\f107",
+    "share": "\f108",
+    "schedule": "\f109",
+    "report": "\f10a",
+    "reminder": "\f10b",
+    "qna": "\f10c",
+    "presence": "\f10d",
+    "portal": "\f10e",
+    "personal-address": "\f10f",
+    "notice": "\f110",
+    "monitor": "\f111",
+    "memo": "\f112",
+    "faq": "\f113",
+    "elasticsearch": "\f114",
+    "discussion": "\f115",
+    "daily-report": "\f116",
+    "conf": "\f117",
+    "circular": "\f118",
+    "bookmark": "\f119",
+    "board": "\f11a",
+    "attendance": "\f11b",
+    "affair": "\f11d",
+);
+
+.ss-icon-workload:before {
+    content: map-get($shirasagi-icons-map, "workload");
+}
+.ss-icon-workflow2:before {
+    content: map-get($shirasagi-icons-map, "workflow2");
+}
+.ss-icon-workflow:before {
+    content: map-get($shirasagi-icons-map, "workflow");
+}
+.ss-icon-todo:before {
+    content: map-get($shirasagi-icons-map, "todo");
+}
+.ss-icon-tabular:before {
+    content: map-get($shirasagi-icons-map, "tabular");
+}
+.ss-icon-survey:before {
+    content: map-get($shirasagi-icons-map, "survey");
+}
+.ss-icon-shared-address:before {
+    content: map-get($shirasagi-icons-map, "shared-address");
+}
+.ss-icon-share:before {
+    content: map-get($shirasagi-icons-map, "share");
+}
+.ss-icon-schedule:before {
+    content: map-get($shirasagi-icons-map, "schedule");
+}
+.ss-icon-report:before {
+    content: map-get($shirasagi-icons-map, "report");
+}
+.ss-icon-reminder:before {
+    content: map-get($shirasagi-icons-map, "reminder");
+}
+.ss-icon-qna:before {
+    content: map-get($shirasagi-icons-map, "qna");
+}
+.ss-icon-presence:before {
+    content: map-get($shirasagi-icons-map, "presence");
+}
+.ss-icon-portal:before {
+    content: map-get($shirasagi-icons-map, "portal");
+}
+.ss-icon-personal-address:before {
+    content: map-get($shirasagi-icons-map, "personal-address");
+}
+.ss-icon-notice:before {
+    content: map-get($shirasagi-icons-map, "notice");
+}
+.ss-icon-monitor:before {
+    content: map-get($shirasagi-icons-map, "monitor");
+}
+.ss-icon-memo:before {
+    content: map-get($shirasagi-icons-map, "memo");
+}
+.ss-icon-faq:before {
+    content: map-get($shirasagi-icons-map, "faq");
+}
+.ss-icon-elasticsearch:before {
+    content: map-get($shirasagi-icons-map, "elasticsearch");
+}
+.ss-icon-discussion:before {
+    content: map-get($shirasagi-icons-map, "discussion");
+}
+.ss-icon-daily-report:before {
+    content: map-get($shirasagi-icons-map, "daily-report");
+}
+.ss-icon-conf:before {
+    content: map-get($shirasagi-icons-map, "conf");
+}
+.ss-icon-circular:before {
+    content: map-get($shirasagi-icons-map, "circular");
+}
+.ss-icon-bookmark:before {
+    content: map-get($shirasagi-icons-map, "bookmark");
+}
+.ss-icon-board:before {
+    content: map-get($shirasagi-icons-map, "board");
+}
+.ss-icon-attendance:before {
+    content: map-get($shirasagi-icons-map, "attendance");
+}
+.ss-icon-affair:before {
+    content: map-get($shirasagi-icons-map, "affair");
+}
