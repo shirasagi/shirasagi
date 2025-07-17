@@ -63,7 +63,7 @@ module SS::Addon
         text = text.join("\n") if text.is_a?(Array)
         html = Kramdown::Document.new(text.to_s, input: 'GFM').to_html
         if auto_link
-          html = SS::Addon::Markdown.auto_link(html)
+          html = SS::Addon::Markdown.auto_link(html, sanitize: sanitize)
         end
         if sanitize
           html = ApplicationController.helpers.sanitize(html)
