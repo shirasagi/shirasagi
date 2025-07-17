@@ -32,7 +32,7 @@
       <% end %>
     </div>
     <%# 型変更はあまりにも高度。サービスマン向けメニュー（つまり運用業者メニュー）としたい。 %>
-    <% if Gws.service_account?(@cur_user) && column_type_options.present? %>
+    <% if Gws.service_account?(@cur_user) && column_type_options.present? && change_type_frame_path.present? %>
       <div class="gws-column-item-toolbar-item-group">
         <div class="gws-column-item-toolbar-item gws-column-item-change-type">
           <%= form_with scope: :item, url: change_type_frame_path, data: { turbo: true, turbo_confirm: t("gws/column.confirm.change_type") } do |f| %>
