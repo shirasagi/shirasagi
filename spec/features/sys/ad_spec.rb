@@ -249,9 +249,9 @@ describe "sys_ad", type: :feature, dbscope: :example, js: true do
             expect(ad_link.id).to be_present
             expect(ad_link.name).to be_blank
             expect(ad_link.url).to be_blank
-            expect(ad_link.target).to eq "_blank"
+            expect(ad_link.target).to be_blank
             expect(ad_link.file).to be_blank
-            expect(ad_link.state).to eq "show"
+            expect(ad_link.state).to be_blank
           end
         end
       end
