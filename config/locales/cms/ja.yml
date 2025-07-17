@@ -652,6 +652,11 @@ ja:
         1_year: 1年以上更新なし
         2_years: 2年以上更新なし
         3_years: 3年以上更新なし
+      column_kind:
+        any_of: 部分一致
+        start_with: 前方一致
+        end_with: 後方一致
+        all: 完全一致
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
@@ -714,6 +719,7 @@ ja:
       cms/site_search_keyword: サイト内検索(注目ワード)
       cms/print: 印刷
       cms/clipboard_copy: クリップボードへコピー
+      cms/form_search: 定型フォーム絞込検索
     columns:
       cms/text_field: 一行入力
       cms/date_field: 日付入力
@@ -1004,6 +1010,7 @@ ja:
       cms/clipboard_copy: クリップボードへコピー
       cms/logo_setting: ロゴ設定
       cms/print: 印刷ボタンの設定
+      cms/form_search: 定型フォーム絞込検索
 
   mongoid:
     models:
@@ -1844,6 +1851,10 @@ ja:
         average_sub_total_elapsed: 平均子合計全処理時間
       cms/page_expiration_setting:
         expiration_setting_type: 公開期限
+      cms/addon/form_search:
+        search_node_id: 検索フォルダー
+        column_name: 検索項目名
+        column_kind: 検索パターン
 
   activemodel:
     attributes:
@@ -3447,6 +3458,14 @@ ja:
         -
         - "・サイト設定にしたがう: この選択はサイト設定の公開期限にしたがうことを意味します。この選択が既定です。"
         - "・無期限: この選択は公開期限を無期限に設定します。この設定をしたページは公開期限切れ警告が通知または表示されることはありません。"
+    cms/addon/form_search:
+      search_node_id: |-
+        検索先のフォルダーを設定します。
+        未入力の場合は自フォルダーを対象にします。
+      column_name: |-
+        検索項目名を入力します。
+      column_kind: |-
+        検索パターンを設定します。
 
   all_content:
     page_id: ページID

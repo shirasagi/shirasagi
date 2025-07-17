@@ -27,7 +27,16 @@ class Cms::Column::Base
     { type: 'input' }
   end
 
-  def exact_match_to_value(value)
-    { value: value }
+  def exact_match_to_value(value, opts = {})
+    case opts[:operator]
+    when 'any_of'
+      { value: /#{::Regexp.escape(value)}/ }
+    when 'start_with'
+      { value: /\A#{::Regexp.escape(value)}/ }
+    when 'end_with'
+      { value: /#{::Regexp.escape(value)}\z/ }
+    else
+      { value: value }
+    end
   end
 end
