@@ -13,7 +13,6 @@ module Gws::Addon::System::MenuSetting
     define_menu_setting('contrast', default_state: 'hide')
     define_menu_setting('elasticsearch', default_state: 'hide')
     define_menu_setting('workflow', default_state: 'hide')
-    define_menu_setting('affair', default_state: 'hide')
     define_menu_setting('conf')
   end
 
