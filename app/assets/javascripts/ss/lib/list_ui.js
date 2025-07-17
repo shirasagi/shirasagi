@@ -127,6 +127,69 @@ this.SS_ListUI = (function () {
         }
       });
     });
+    $el.find('.list-head [name="expiration_setting_all"]').on("click", function (ev) {
+      SS_ListUI.changeAllExpirationSetting($el, $(this), ev.target.value);
+      ev.preventDefault();
+    });
+  };
+
+  SS_ListUI.changeAllExpirationSetting = function($el, $this, state) {
+    if (!state) {
+      return;
+    }
+
+    var checkedElements = $el.find(".list-item input:checkbox:checked");
+    checkedElements = $.grep(checkedElements, function(element, _index) {
+      return !!$(element).val();
+    });
+    if (checkedElements.length === 0) {
+      return false;
+    }
+
+    var confirmation = $this.data('confirm') || '';
+    if (confirmation) {
+      if (!confirm(confirmation)) {
+        return false;
+      }
+    }
+
+    $this.attr("disabled", true);
+    $.each(checkedElements, function() {
+      var $element = $(this);
+      $element.replaceWith(SS.loading);
+    });
+
+    var promises = [];
+    $.each(checkedElements, function() {
+      var $element = $(this);
+      var id = $element.val();
+      var action = window.location.pathname + "/" + id + ".json";
+
+      var formData = new FormData();
+      formData.append("_method", "put");
+      formData.append("authenticity_token", $('meta[name="csrf-token"]').attr('content'));
+      formData.append("item[expiration_setting_type]", state);
+
+      var promise = $.ajax({
+        type: "POST",
+        url: action,
+        data: formData,
+        processData: false,
+        contentType: false,
+        cache: false
+      });
+
+      promises.push(promise);
+    });
+
+    $.when.apply($, promises).done(function() {
+      alert(i18next.t("ss.notice.changed"));
+      window.location.reload();
+    }).fail(function(xhr, status, error) {
+      alert("Error!");
+    }).always(function() {
+      $this.attr("disabled", false);
+    });
   };
 
   return SS_ListUI;
