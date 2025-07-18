@@ -1194,7 +1194,7 @@ ja:
         keywords: キーワード
         description: 概要
         description_setting: 概要の連動設定
-        description_body: 概要の本文
+        description_body: 概要の本文(手動)
         summary_html: サマリー
       cms/addon/editor_setting:
         color_button: 文字色変更ボタン
