@@ -1,5 +1,5 @@
 <nav class="mod-navi current-navi">
-  <%= gws_menu_icon(:circular, 'modules.gws/circular', gws_circular_main_path) %>
+  <%= gws_menu_icon(:circular, gws_circular_main_path) %>
   <h3><%= link_to t('gws/circular.tabs.post'), { controller: 'posts', action: 'index', category: '-' }, { class: 'post' } %></h3>
   <h3><%= link_to t('gws/circular.tabs.admin'), { controller: 'admins', action: 'index', category: '-' }, { class: 'admin' } %></h3>
   <% if Gws::Circular::Post.allowed?(:trash, @cur_user, site: @cur_site) %>
