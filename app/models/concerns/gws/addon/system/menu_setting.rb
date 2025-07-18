@@ -52,11 +52,8 @@ module Gws::Addon::System::MenuSetting
       define_method("menu_#{name}_effective_label") do
         send("menu_#{name}_label").presence || send("menu_#{name}_default_label")
       end
-
-      if !options[:define_visible]
-        define_method("menu_#{name}_visible?") do
-          menu_visible?(name)
-        end
+      define_method("menu_#{name}_visible?") do
+        menu_visible?(name)
       end
     end
   end
