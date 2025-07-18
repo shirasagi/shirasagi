@@ -410,6 +410,8 @@ en:
         menu_contrast_state: Contrast
         menu_presence_label: Display presence management
         menu_presence_state: Display presence management
+        menu_tabular_label: Display general-purpose database
+        menu_tabular_state: Display general-purpose database
         menu_conf_label: Display site settings
         menu_conf_state: Display site settings
       gws/addon/system/notice_setting:
