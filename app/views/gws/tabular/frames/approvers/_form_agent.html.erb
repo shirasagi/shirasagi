@@ -16,7 +16,7 @@
     <label>
       <%= radio_button_tag("#{f.object_name}[workflow_agent_type]", "myself", true) %>
       <%= t("gws/workflow.agent_type.myself") %>
-      (<%= @cur_user.i18n_name %>)
+      (<%= @cur_user.name %>)
     </label>
   </dd>
   <dd class="agent-type-agent">

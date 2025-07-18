@@ -2,12 +2,9 @@
   <dt><%= @model.t :workflow_state %><%= @model.tt :workflow_state %></dt>
   <dd><%= f.select :workflow_state, @item.workflow_state_options, include_blank: true %></dd>
 
-  <dt><%= @model.t :approval_state %><%= @model.tt :approval_state %></dt>
+  <dt><%= @model.t :default_route_id %><%= @model.tt :default_route_id %></dt>
   <dd>
-    <label><%= f.radio_button :approval_state, "without_approval" %> <%= t("gws/workflow2.options.approval_state.without_approval") %></label>
-  </dd>
-  <dd>
-    <label><%= f.radio_button :approval_state, "with_approval" %> <%= t("gws/workflow2.options.approval_state.with_approval") %></label>
+    <%= f.hidden_field :approval_state, value: "with_approval" %>
     <%=
       route_options = Gws::Workflow2::Route.route_options(@cur_user, cur_site: @cur_site, selected: @item.default_route_id)
       f.select :default_route_id, options_for_select(route_options, selected: @item.default_route_id), include_blank: true

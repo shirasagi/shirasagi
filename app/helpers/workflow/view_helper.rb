@@ -32,4 +32,20 @@ module Workflow::ViewHelper
     return user.email if @cur_site.user_profile_public?("email")
     nil
   end
+
+  def workflow_user_profile_at_application(workflow_user_custom_data)
+    name = Gws::Workflow2.find_custom_data_value_in_locale(workflow_user_custom_data, "i18n_name")
+    if @cur_site.user_profile_public?("uid")
+      uid = Gws::Workflow2.find_custom_data_value(workflow_user_custom_data, "uid")
+    end
+    if @cur_site.user_profile_public?("email")
+      email = Gws::Workflow2.find_custom_data_value(workflow_user_custom_data, "email")
+    end
+
+    long_name = name
+    long_name = "#{long_name} (#{uid})" if uid.present?
+
+    template = email.present? ? "agent_value_with_email" : "agent_value"
+    I18n.t(template, scope: :workflow, long_name: long_name, email: email)
+  end
 end

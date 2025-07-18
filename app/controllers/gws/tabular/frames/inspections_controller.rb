@@ -140,13 +140,13 @@ class Gws::Tabular::Frames::InspectionsController < ApplicationController
 
     if params.key?(:approve)
       service_class = Gws::Tabular::ApproveService
-      notice = t("workflow.notice.approved")
+      notice = t("gws/workflow2.notice.approved")
     elsif params.key?(:pull_up)
-      service_class = Gws::Workflow::PullUpService
-      notice = t("workflow.notice.pulled_up")
+      service_class = Gws::Workflow2::PullUpService
+      notice = t("gws/workflow2.notice.pulled_up")
     elsif params.key?(:remand)
-      service_class = Gws::Workflow::RemandService
-      notice = t("workflow.notice.remanded")
+      service_class = Gws::Workflow2::RemandService
+      notice = t("gws/workflow2.notice.remanded")
     end
 
     service = service_class.new(cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
@@ -176,16 +176,16 @@ class Gws::Tabular::Frames::InspectionsController < ApplicationController
       return
     end
 
-    service = Gws::Workflow::RerouteService.new(
+    service = Gws::Workflow2::RerouteService.new(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
-    service.attributes = params.require(:item).permit(*Gws::Workflow::RerouteService::PERMIT_PARAMS)
+    service.attributes = params.require(:item).permit(*Gws::Workflow2::RerouteService::PERMIT_PARAMS)
     unless service.call
       SS::Model.copy_errors(service, @item)
       render template: "edit", status: :unprocessable_entity
       return
     end
 
-    flash[:notice] = t("workflow.notice.rerouted")
+    flash[:notice] = t("gws/workflow2.notice.rerouted")
     json = { status: 302, location: ref }
     render json: json, status: :ok, content_type: json_content_type
   end
