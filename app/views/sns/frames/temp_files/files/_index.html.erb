@@ -1,6 +1,7 @@
 <div class="cms-temp-file" data-controller="ss--temp-file">
   <div class="search-ui-form">
     <%= form_with scope: :s, url: url_for(action: :index), method: :get, class: "search", data: { turbo: true } do |f| %>
+      <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
       <div class="cms-temp-file-centering cms-temp-file-gap-narrow">
         <label class="cms-temp-file-centering">
           <%= check_box_tag "#{f.object_name}[types][]", "temp_file", @s.types && @s.types.include?("temp_file"), id: nil, data: { controller: "ss--submit-on-change" } %>
@@ -31,8 +32,7 @@
           </label>
         <% end %>
       </div>
-      <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
-      <%= f.text_field :keyword %>
+      <%= f.text_field :keyword, placeholder: t("ss.keyword") %>
       <%= f.submit  t("ss.buttons.search"), class: :btn %>
     <% end %>
   </div>

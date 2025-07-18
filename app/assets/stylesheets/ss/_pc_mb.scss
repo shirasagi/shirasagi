@@ -493,12 +493,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice:befo
   .gws-search {
     padding: 10px 0px 0px 30px;
     //width: 400px;
-    .input-group {
-      display: flex;
-      .input-group-append {
-        display: flex;
-      }
-    }
     input.keyword {
       width: 200px;
     }
@@ -1879,18 +1873,6 @@ dl.see {
       padding: 3px 0;
       vertical-align: middle;
     }
-    .prefix + input {
-      width: 60%;
-    }
-    .prefix + textarea {
-      width: 60%;
-    }
-    .prefix:empty + input {
-      width: 80%;
-    }
-    .prefix:empty + textarea {
-      width: 100%;
-    }
     input, select {
       margin: -5px 0;
       @include mb {
@@ -3117,14 +3099,8 @@ input {
 input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
 input[type=email], input[type=number], input[type=tel] {
   @include input;
-  width: 80%;
+  width: 100%;
   padding: 6px;
-}
-@include mb {
-  input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
-  input[type=email], input[type=number], input[type=tel] {
-    width: 100% !important;
-  }
 }
 input[type=number] {
   width: 12em !important;
@@ -3389,6 +3365,21 @@ form .CodeMirror {
   padding: 10px;
   border: 1px solid #ddd;
   background-color: #ffd;
+}
+.input-group {
+  display: flex;
+
+  .input-group-append {
+    display: flex;
+  }
+
+  &.gap-5 {
+    gap: 5px;
+  }
+
+  &.align-items-center {
+    align-items: center;
+  }
 }
 
 // event-repeat-dates-ui
