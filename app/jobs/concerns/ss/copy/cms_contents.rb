@@ -65,6 +65,8 @@ module SS::Copy::CmsContents
       :opendata_license
     elsif ancestors.include?(Jmaxml::QuakeRegion)
       :jmaxml_quake_region
+    elsif klass == Guide::Procedure
+      :guide_procedure
     elsif klass == SS::Contact
       :contact
     else
@@ -156,6 +158,8 @@ module SS::Copy::CmsContents
       resolve_opendata_dataset_group_reference(id_or_ids)
     when :opendata_license
       resolve_opendata_license_reference(id_or_ids)
+    when :guide_procedure
+      id_or_ids
     end
   end
 end
