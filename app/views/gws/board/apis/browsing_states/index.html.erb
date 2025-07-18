@@ -43,10 +43,8 @@
       <% end %>
 
       <dt><%= t "ss.keyword" %></dt>
-      <dd>
-        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), style: 'max-width: 20rem;' %>
-        <%= f.submit  t("ss.buttons.search"), class: 'btn my-0' %>
-      </dd>
+      <dd><%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %></dd>
+      <dd><%= f.submit  t("ss.buttons.search"), class: 'btn' %></dd>
     </dl>
   <% end %>
 </div>

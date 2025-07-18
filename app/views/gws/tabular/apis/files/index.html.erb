@@ -8,13 +8,10 @@
         <%= hidden_field_tag "ids[]", selected_id, id: nil %>
       <% end %>
     <% end %>
-    <dl class="see">
-      <dt><%= t("ss.keyword") %></dt>
-      <dd>
-        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), id: nil %>
-        <%= f.submit  t("ss.buttons.search"), name: :search, class: "btn" %>
-      </dd>
-    </dl>
+    <div class="input-group">
+      <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), id: nil, placeholder: t("ss.keyword") %>
+      <%= f.submit t("ss.buttons.search"), name: :search, class: "btn" %>
+    </div>
   <% end %>
 </div>
 

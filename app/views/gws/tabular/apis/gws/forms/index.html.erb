@@ -3,13 +3,10 @@
 <div class="search-ui-form">
   <%= form_with scope: :s, url: url_for(action: :index), method: "GET", class: "search" do |f| %>
     <%= hidden_field_tag :single, params[:single] %>
-    <dl class="see">
-      <dt><%= t("ss.keyword") %></dt>
-      <dd>
-        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-        <%= f.submit  t("ss.buttons.search"), class: "btn" %>
-      </dd>
-    </dl>
+    <div class="input-group">
+      <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), placeholder: t("ss.keyword") %>
+      <%= f.submit t("ss.buttons.search"), class: "btn" %>
+    </div>
   <% end %>
 </div>
 

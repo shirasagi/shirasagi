@@ -30,7 +30,8 @@ class Gws::Frames::Columns::ShowComponent < ApplicationComponent
   end
 
   def change_type_frame_path
-    change_type_gws_frames_column_path(id: item, ref: ref)
+    return @change_type_frame_path if instance_variable_defined?(:@change_type_frame_path)
+    @change_type_frame_path = change_type_gws_frames_column_path(id: item, ref: ref) rescue nil
   end
 
   def see_class_list
