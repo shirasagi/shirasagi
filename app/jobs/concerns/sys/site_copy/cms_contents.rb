@@ -19,6 +19,12 @@ module Sys::SiteCopy::CmsContents
 
       # at first, copy non-reference values and references which have no possibility of circular reference
       dest_content = klass.new(cur_site: @dest_site)
+
+      # 画像マップノードの場合、バリデーションを一時的に無効化
+      if dest_content.is_a?(ImageMap::Node::Page)
+        dest_content.skip_validation = true
+      end
+
       dest_content.attributes = copy_basic_attributes(src_content, klass)
       dest_content.save!
       dest_content.id

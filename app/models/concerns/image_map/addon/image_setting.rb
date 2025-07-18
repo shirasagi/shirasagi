@@ -13,6 +13,7 @@ module ImageMap::Addon
       permit_params :supplement_state
 
       validate :validate_area_states
+      validate :validate_image_presence, unless: :skip_validation
     end
 
     def area_state_options
@@ -37,6 +38,10 @@ module ImageMap::Addon
       self.area_states = area_states.select do |item|
         item["name"].present? && item["value"].present?
       end
+    end
+
+    def validate_image_presence
+      errors.add :image_id, :blank if image.blank?
     end
   end
 end

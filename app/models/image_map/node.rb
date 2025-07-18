@@ -21,6 +21,8 @@ module ImageMap::Node
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
+    attr_accessor :skip_validation
+
     default_scope ->{ where(route: "image_map/page") }
 
     self.use_conditions = false
