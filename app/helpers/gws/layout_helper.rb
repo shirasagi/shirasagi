@@ -18,9 +18,9 @@ module Gws::LayoutHelper
   end
 
   # メインナビ用アイコン表示ヘルパー
-  def gws_menu_icon(name, label_i18n, path)
+  def gws_menu_icon(name, path)
     icon_file = @cur_site.send("menu_#{name}_icon_image")
-    label = @cur_site.send("menu_#{name}_label") || t(label_i18n)
+    label = @cur_site.send("menu_#{name}_effective_label")
 
     if icon_file.present?
       icon_class = "has-custom-icon icon-#{name.to_s.dasherize}"
