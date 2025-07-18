@@ -3,7 +3,7 @@
   addon[:display_body] = "hide"
 %>
 <% render_menu_setting = proc do |name, edit_icon: true| %>
-  <dl class="see addon-gws-system-menu-setting">
+  <dl class="see addon-gws-system-menu-setting menu-setting-<%= name %>">
     <dt><%= @model.t("menu_#{name}_state") %></dt>
     <dd>
       <div class="input-group gap-5 align-items-center">
