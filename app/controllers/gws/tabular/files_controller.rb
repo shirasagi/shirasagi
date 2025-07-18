@@ -345,7 +345,7 @@ class Gws::Tabular::FilesController < ApplicationController
       return
     end
 
-    service.overwrites = params.expect(item: [permit_fields])
+    service.overwrites = params.require(:item).permit(*permit_fields)
     result = service.save
 
     render_opts = {}

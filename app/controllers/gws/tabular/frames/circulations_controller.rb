@@ -142,7 +142,7 @@ class Gws::Tabular::Frames::CirculationsController < ApplicationController
   def update
     service = Gws::Workflow::CircularService.new(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
-    service.attributes = params.expect(item: [*Gws::Workflow::CircularService::PERMIT_PARAMS])
+    service.attributes = params.require(:item).permit(*Gws::Workflow::CircularService::PERMIT_PARAMS)
     unless service.call
       render template: "edit"
       return

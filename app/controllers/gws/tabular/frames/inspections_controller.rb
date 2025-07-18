@@ -150,7 +150,7 @@ class Gws::Tabular::Frames::InspectionsController < ApplicationController
     end
 
     service = service_class.new(cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
-    service.attributes = params.expect(item: [*service_class::PERMIT_PARAMS])
+    service.attributes = params.require(:item).permit(*service_class::PERMIT_PARAMS)
     unless service.valid?
       SS::Model.copy_errors(service, @item)
       render_update false
@@ -178,7 +178,7 @@ class Gws::Tabular::Frames::InspectionsController < ApplicationController
 
     service = Gws::Workflow::RerouteService.new(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
-    service.attributes = params.expect(item: [*Gws::Workflow::RerouteService::PERMIT_PARAMS])
+    service.attributes = params.require(:item).permit(*Gws::Workflow::RerouteService::PERMIT_PARAMS)
     unless service.call
       SS::Model.copy_errors(service, @item)
       render template: "edit", status: :unprocessable_entity
