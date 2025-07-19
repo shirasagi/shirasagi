@@ -9,6 +9,7 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
   let!(:item2) { create :member_photo, filename: "#{folder_path}/#{unique_id}", order: 2 }
   let!(:item3) { create :member_photo, filename: "#{folder_path}/#{unique_id}", order: 3, slideable_state: "closed" }
   let!(:item4) { create :member_photo, filename: "#{folder_path}/#{unique_id}", order: 4, state: "closed" }
+  let!(:item5) { create :member_photo, filename: "#{folder_path}/#{unique_id}", order: 5 }
 
   context "without limit" do
     let!(:part) do
@@ -23,6 +24,28 @@ describe KeyVisual::Agents::Parts::SwiperSlideController, type: :feature, dbscop
         expect(page).to have_css(".ss-swiper-slide-item[data-ss-page-id='#{item2.id}']")
         expect(page).to have_no_css(".ss-swiper-slide-item[data-ss-page-id='#{item3.id}']")
         expect(page).to have_no_css(".ss-swiper-slide-item[data-ss-page-id='#{item4.id}']")
+        expect(page).to have_css(".ss-swiper-slide-item[data-ss-page-id='#{item5.id}']")
+
+        # wait for slider initialization
+        expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
+      end
+    end
+  end
+
+  context "when limit is 3" do
+    let!(:part) do
+      create :key_visual_part_swiper_slide, filename: "#{folder_path}/#{unique_id}", limit: 3, kv_thumbnail: "show"
+    end
+
+    it do
+      visit node.full_url
+
+      within ".ss-swiper-slide#key_visual-swiper_slide-#{part.id}" do
+        expect(page).to have_css(".ss-swiper-slide-item[data-ss-page-id='#{item1.id}']")
+        expect(page).to have_css(".ss-swiper-slide-item[data-ss-page-id='#{item2.id}']")
+        expect(page).to have_no_css(".ss-swiper-slide-item[data-ss-page-id='#{item3.id}']")
+        expect(page).to have_no_css(".ss-swiper-slide-item[data-ss-page-id='#{item4.id}']")
+        expect(page).to have_css(".ss-swiper-slide-item[data-ss-page-id='#{item5.id}']")
 
         # wait for slider initialization
         expect(page).to have_css(".swiper-slide-active[data-ss-page-id='#{item1.id}']")
