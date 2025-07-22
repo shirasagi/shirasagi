@@ -14,10 +14,11 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
   let!(:route) { create(:gws_workflow2_route, group_ids: admin.group_ids) }
 
   let!(:space) { create :gws_tabular_space, cur_site: site, state: "public", readable_setting_range: "public" }
+  let(:workflow_state) { 'enabled' }
   let!(:form) do
     create(
       :gws_tabular_form, cur_site: site, cur_space: space, cur_user: admin, state: 'publishing', revision: 1,
-      workflow_state: 'enabled', approval_state: "with_approval", default_route_id: route.id.to_s, agent_state: "enabled",
+      workflow_state: workflow_state, approval_state: "with_approval", default_route_id: route.id.to_s, agent_state: "enabled",
       readable_setting_range: "public"
     )
   end
@@ -58,15 +59,17 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
     # Basic
     item_file.send("col_#{column1.id}=", column1_value1)
     item_file.send("col_#{column2.id}=", attachment)
-    # Gws::Addon::Tabular::Approver (Gws::Workflow::Approver, ::Workflow::Approver)
-    item_file.workflow_user = user1
-    item_file.workflow_state = 'approve'
-    # Gws::Workflow::DestinationState
-    item_file.destination_treat_state = 'no_need_to_treat'
-    # SS::Release
-    item_file.state = 'public'
-    item_file.released = Time.zone.now
-    item_file.close_date = Time.zone.now + 2.weeks
+    if form.workflow_enabled?
+      # Gws::Addon::Tabular::Approver (Gws::Workflow::Approver, ::Workflow::Approver)
+      item_file.workflow_user = user1
+      item_file.workflow_state = 'approve'
+      # Gws::Workflow::DestinationState
+      item_file.destination_treat_state = 'no_need_to_treat'
+      # SS::Release
+      item_file.state = 'public'
+      item_file.released = Time.zone.now
+      item_file.close_date = Time.zone.now + 2.weeks
+    end
     item_file.save!
   end
 
@@ -87,7 +90,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         # column1 の重複が許可されているので、同じ文字列でも保存に成功する
         fill_in "item[col_#{column1.id}]", with: column1_value1
-        # fill_in_datetime "item[close_date]", with: close_date1
+
         click_on I18n.t("gws/workflow2.buttons.save_and_apply")
       end
       wait_for_notice I18n.t('ss.notice.copied')
@@ -105,6 +108,9 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
         expect(item_image_value.filename).to eq attachment.filename
         expect(item_image_value.size).to eq attachment.size
         expect(item_image_value.content_type).to eq attachment.content_type
+
+        public_path = Gws.public_file_path(site, item_image_value)
+        expect(::File.exist?(public_path)).to be_falsey
       end
       # Gws::Addon::Tabular::Approver (Gws::Workflow::Approver, ::Workflow::Approver)
       expect(item_copy.workflow_user).to be_blank
@@ -158,7 +164,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       within "form#item-form" do
         # 資産番号の重複は許可されていないので、保存に失敗する
         fill_in "item[col_#{column1.id}]", with: column1_value1
-        # fill_in_datetime "item[close_date]", with: close_date1
+
         click_on I18n.t("gws/workflow2.buttons.save_and_apply")
       end
       message = I18n.t('mongoid.errors.messages.taken')
@@ -167,7 +173,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
 
       within "form#item-form" do
         fill_in "item[col_#{column1.id}]", with: column1_value2
-        # fill_in_datetime "item[close_date]", with: close_date1
+
         click_on I18n.t("gws/workflow2.buttons.save_and_apply")
       end
       wait_for_notice I18n.t('ss.notice.copied')
@@ -185,6 +191,9 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
         expect(item_image_value.filename).to eq attachment.filename
         expect(item_image_value.size).to eq attachment.size
         expect(item_image_value.content_type).to eq attachment.content_type
+
+        public_path = Gws.public_file_path(site, item_image_value)
+        expect(::File.exist?(public_path)).to be_falsey
       end
       # Gws::Addon::Tabular::Approver (Gws::Workflow::Approver, ::Workflow::Approver)
       expect(item_copy.workflow_user).to be_blank
@@ -214,6 +223,53 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       expect(item_copy.released).to be_blank
       expect(item_copy.release_date).to be_blank
       expect(item_copy.close_date).to be_blank
+
+      attachment.reload
+      expect(attachment.owner_item_id).to eq item_original.id
+    end
+  end
+
+  context "when workflow_state is disabled" do
+    let(:workflow_state) { 'disabled' }
+    let(:unique_state) { "disabled" }
+
+
+    it do
+      file_model = Gws::Tabular::File[form.current_release]
+      expect(file_model.all.count).to eq 1
+      item_original = file_model.first
+
+      login_user user1, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-')
+      click_on column1_value1
+      wait_for_all_turbo_frames
+      within ".gws-tabular-file-head" do
+        click_on I18n.t("ss.buttons.copy")
+      end
+      within "form#item-form" do
+        # column1 の重複が許可されているので、同じ文字列でも保存に成功する
+        fill_in "item[col_#{column1.id}]", with: column1_value1
+
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t('ss.notice.copied')
+      wait_for_all_turbo_frames
+
+      expect(file_model.all.count).to eq 2
+      item_copy = file_model.all.ne(id: item_original.id).first
+      # Basic
+      expect(item_copy.read_tabular_value(column1)).to eq column1_value1
+      item_copy.read_tabular_value(column2).tap do |item_image_value|
+        expect(item_image_value).to be_present
+        expect(item_image_value.owner_item_id).to eq item_copy.id
+        expect(item_image_value.id).not_to eq attachment.id
+        expect(item_image_value.name).to eq attachment.name
+        expect(item_image_value.filename).to eq attachment.filename
+        expect(item_image_value.size).to eq attachment.size
+        expect(item_image_value.content_type).to eq attachment.content_type
+
+        public_path = Gws.public_file_path(site, item_image_value)
+        expect(::File.size(public_path)).to eq item_image_value.size
+      end
 
       attachment.reload
       expect(attachment.owner_item_id).to eq item_original.id

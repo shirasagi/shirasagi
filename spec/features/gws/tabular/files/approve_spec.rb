@@ -39,6 +39,11 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       :gws_tabular_column_text_field, cur_site: site, cur_form: form, order: 10, required: "required",
       input_type: "single", validation_type: "none", i18n_state: "disabled")
   end
+  let!(:column2) do
+    create(
+      :gws_tabular_column_file_upload_field, cur_site: site, cur_form: form, order: 20,
+      required: "required", export_state: "public")
+  end
 
   before do
     site.path_id = unique_id
@@ -58,6 +63,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
   end
 
   context "crud with workflow" do
+    let(:attachment_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
     let(:column1_value1) { "name-#{unique_id}" }
     let(:column1_value2) { "name-#{unique_id}" }
     let(:workflow_comment1) { "workflow_comment-#{unique_id}" }
@@ -75,6 +81,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       click_on I18n.t("ss.links.new")
       within "form#item-form" do
         fill_in "item[col_#{column1.id}]", with: column1_value1
+        ss_upload_file attachment_path, addon: ".gws-tabular-column-file_upload_field"
 
         click_on I18n.t("gws/workflow2.buttons.save_and_apply")
       end
@@ -90,6 +97,18 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.space_id).to eq space.id
           expect(file.form_id).to eq form.id
           expect(file.read_tabular_value(column1)).to eq column1_value1
+          file.read_tabular_value(column2).tap do |file_image_value|
+            expect(file_image_value).to be_present
+            expect(file_image_value.owner_item_id).to eq file.id
+            expect(file_image_value.id).to be_present
+            expect(file_image_value.name).to eq ::File.basename(attachment_path)
+            expect(file_image_value.filename).to eq ::File.basename(attachment_path)
+            expect(file_image_value.size).to eq ::File.size(attachment_path)
+            expect(file_image_value.content_type).to be_present
+
+            public_path = Gws.public_file_path(site, file_image_value)
+            expect(::File.exist?(public_path)).to be_falsey
+          end
           # Gws::Addon::Tabular::Approver (Gws::Workflow::Approver, ::Workflow::Approver)
           expect(file.workflow_user).to be_blank
           expect(file.workflow_agent).to be_blank
@@ -155,6 +174,18 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.space_id).to eq space.id
           expect(file.form_id).to eq form.id
           expect(file.read_tabular_value(column1)).to eq column1_value1
+          file.read_tabular_value(column2).tap do |file_image_value|
+            expect(file_image_value).to be_present
+            expect(file_image_value.owner_item_id).to eq file.id
+            expect(file_image_value.id).to be_present
+            expect(file_image_value.name).to eq ::File.basename(attachment_path)
+            expect(file_image_value.filename).to eq ::File.basename(attachment_path)
+            expect(file_image_value.size).to eq ::File.size(attachment_path)
+            expect(file_image_value.content_type).to be_present
+
+            public_path = Gws.public_file_path(site, file_image_value)
+            expect(::File.exist?(public_path)).to be_falsey
+          end
           # Gws::Addon::Tabular::Approver (Gws::Workflow::Approver, ::Workflow::Approver)
           expect(file.workflow_user).to eq user1
           expect(file.workflow_agent).to be_blank
@@ -246,6 +277,18 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.space_id).to eq space.id
           expect(file.form_id).to eq form.id
           expect(file.read_tabular_value(column1)).to eq column1_value2
+          file.read_tabular_value(column2).tap do |file_image_value|
+            expect(file_image_value).to be_present
+            expect(file_image_value.owner_item_id).to eq file.id
+            expect(file_image_value.id).to be_present
+            expect(file_image_value.name).to eq ::File.basename(attachment_path)
+            expect(file_image_value.filename).to eq ::File.basename(attachment_path)
+            expect(file_image_value.size).to eq ::File.size(attachment_path)
+            expect(file_image_value.content_type).to be_present
+
+            public_path = Gws.public_file_path(site, file_image_value)
+            expect(::File.exist?(public_path)).to be_falsey
+          end
           # SS::Release
           expect(file.state).to eq "closed"
           expect(file.released).to be_blank
@@ -313,6 +356,18 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.space_id).to eq space.id
           expect(file.form_id).to eq form.id
           expect(file.read_tabular_value(column1)).to eq column1_value2
+          file.read_tabular_value(column2).tap do |file_image_value|
+            expect(file_image_value).to be_present
+            expect(file_image_value.owner_item_id).to eq file.id
+            expect(file_image_value.id).to be_present
+            expect(file_image_value.name).to eq ::File.basename(attachment_path)
+            expect(file_image_value.filename).to eq ::File.basename(attachment_path)
+            expect(file_image_value.size).to eq ::File.size(attachment_path)
+            expect(file_image_value.content_type).to be_present
+
+            public_path = Gws.public_file_path(site, file_image_value)
+            expect(::File.size(public_path)).to eq file_image_value.size
+          end
           # Gws::Addon::Tabular::Approver (Gws::Workflow::Approver, ::Workflow::Approver)
           expect(file.workflow_user).to eq user1
           expect(file.workflow_agent).to be_blank

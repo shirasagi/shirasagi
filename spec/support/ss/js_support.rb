@@ -936,7 +936,7 @@ module SS
         end
       end
       within addon do
-        expect(page).to have_css(".file-view", text: ::File.basename(file_paths.first))
+        expect(page).to have_css(".file-view", text: ::File.basename(file_paths.first, ".*"))
       end
     end
 
