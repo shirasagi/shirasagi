@@ -9,6 +9,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
   let!(:user1) { create :gws_user, :gws_tabular_notice, group_ids: admin.group_ids, gws_role_ids: [ role.id ] }
   let!(:user2) { create :gws_user, :gws_tabular_notice, group_ids: admin.group_ids, gws_role_ids: [ role.id ] }
   let!(:user3) { create :gws_user, :gws_tabular_notice, group_ids: admin.group_ids, gws_role_ids: [ role.id ] }
+  let!(:user4) { create :gws_user, :gws_tabular_notice, group_ids: admin.group_ids, gws_role_ids: [ role.id ] }
 
   let!(:route) do
     create(
@@ -68,7 +69,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       expect(ActionMailer::Base.deliveries.length).to eq 0
 
       #
-      # first, user1 operates
+      # 新規作成
       #
       login_user user1, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-')
       click_on I18n.t("ss.links.new")
@@ -107,15 +108,32 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.approved).to be_blank
           expect(file.workflow_reminder_sent_at).to be_blank
           expect(file.requested).to be_blank
+          # Gws::Workflow::DestinationState
+          expect(file.destination_treat_state).to eq "no_need_to_treat"
+          # Gws::Workflow::DestinationSetting
+          expect(file.destination_group_ids).to be_blank
+          expect(file.destination_user_ids).to be_blank
+          # SS::Release
+          expect(file.state).to eq "closed"
+          expect(file.released).to be_blank
+          expect(file.release_date).to be_blank
+          expect(file.close_date).to be_blank
         end
       end
 
       expect(SS::Notification.count).to eq 0
       expect(ActionMailer::Base.deliveries.length).to eq 0
 
+      # 承認前（公開前）のファイルが閲覧できないことをチェック
+      login_user user4, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-')
+      wait_for_all_turbo_frames
+      expect(page).to have_css(".list-item", count: 0)
+
       #
       # 申請
       #
+      login_user user1, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-')
+      click_on column1_value1
       within ".mod-workflow-request" do
         fill_in "item[workflow_comment]", with: workflow_comment1
         click_on I18n.t("workflow.buttons.request")
@@ -161,6 +179,16 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.approved).to be_blank
           expect(file.workflow_reminder_sent_at).to be_blank
           expect(file.requested.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+          # Gws::Workflow::DestinationState
+          expect(file.destination_treat_state).to eq "no_need_to_treat"
+          # Gws::Workflow::DestinationSetting
+          expect(file.destination_group_ids).to be_blank
+          expect(file.destination_user_ids).to be_blank
+          # SS::Release
+          expect(file.state).to eq "closed"
+          expect(file.released).to be_blank
+          expect(file.release_date).to be_blank
+          expect(file.close_date).to be_blank
         end
       end
 
@@ -190,6 +218,11 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
 
+      # 承認前（公開前）のファイルが閲覧できないことをチェック
+      login_user user4, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-')
+      wait_for_all_turbo_frames
+      expect(page).to have_css(".list-item", count: 0)
+
       #
       # 承認者が承認の際に編集
       #
@@ -213,13 +246,23 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.space_id).to eq space.id
           expect(file.form_id).to eq form.id
           expect(file.read_tabular_value(column1)).to eq column1_value2
+          # SS::Release
+          expect(file.state).to eq "closed"
+          expect(file.released).to be_blank
+          expect(file.release_date).to be_blank
+          expect(file.close_date).to be_blank
         end
       end
+
+      # 承認前（公開前）のファイルが閲覧できないことをチェック
+      login_user user4, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-')
+      wait_for_all_turbo_frames
+      expect(page).to have_css(".list-item", count: 0)
 
       #
       # 承認
       #
-      visit gws_tabular_files_path(site: site, space: space, form: form, view: '-')
+      login_user user2, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-')
       click_on column1_value2
       wait_for_all_turbo_frames
       within ".mod-workflow-approve" do
@@ -295,6 +338,16 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.approved.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
           expect(file.workflow_reminder_sent_at).to be_blank
           expect(file.requested.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+          # Gws::Workflow::DestinationState
+          expect(file.destination_treat_state).to eq "no_need_to_treat"
+          # Gws::Workflow::DestinationSetting
+          expect(file.destination_group_ids).to be_blank
+          expect(file.destination_user_ids).to be_blank
+          # SS::Release
+          expect(file.state).to eq "public"
+          expect(file.released.in_time_zone).to be_within(5.minutes).of(file.approved.in_time_zone)
+          expect(file.release_date).to be_blank
+          expect(file.close_date).to be_blank
         end
       end
 
@@ -347,6 +400,12 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
         expect(mail.decoded.to_s).to include(mail.subject, url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
+
+      # 承認後（公開中）のファイルは閲覧できることをチェック
+      login_user user4, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-')
+      wait_for_all_turbo_frames
+      expect(page).to have_css(".list-item", count: 1)
+      expect(page).to have_css(".list-item", text: column1_value2)
 
       #
       # 確認する（回覧）
@@ -428,6 +487,16 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           expect(file.approved.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
           expect(file.workflow_reminder_sent_at).to be_blank
           expect(file.requested.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
+          # Gws::Workflow::DestinationState
+          expect(file.destination_treat_state).to eq "no_need_to_treat"
+          # Gws::Workflow::DestinationSetting
+          expect(file.destination_group_ids).to be_blank
+          expect(file.destination_user_ids).to be_blank
+          # SS::Release
+          expect(file.state).to eq "public"
+          expect(file.released.in_time_zone).to be_within(5.minutes).of(file.approved.in_time_zone)
+          expect(file.release_date).to be_blank
+          expect(file.close_date).to be_blank
         end
       end
 

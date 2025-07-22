@@ -63,10 +63,10 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
     item_file.workflow_state = 'approve'
     # Gws::Workflow::DestinationState
     item_file.destination_treat_state = 'no_need_to_treat'
-    # # SS::Release
-    # item_file.state = 'public'
-    # item_file.released = Time.zone.now
-    # item_file.close_date = Time.zone.now + 2.weeks
+    # SS::Release
+    item_file.state = 'public'
+    item_file.released = Time.zone.now
+    item_file.close_date = Time.zone.now + 2.weeks
     item_file.save!
   end
 
@@ -129,11 +129,11 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       # Gws::Workflow::DestinationSetting
       expect(item_copy.destination_group_ids).to be_blank
       expect(item_copy.destination_user_ids).to be_blank
-      # # SS::Release
-      # expect(item_copy.state).to eq "closed"
-      # expect(item_copy.released).to be_blank
-      # expect(item_copy.release_date).to be_blank
-      # expect(item_copy.close_date).to eq close_date1
+      # SS::Release
+      expect(item_copy.state).to eq "closed"
+      expect(item_copy.released).to be_blank
+      expect(item_copy.release_date).to be_blank
+      expect(item_copy.close_date).to be_blank
 
       attachment.reload
       expect(attachment.owner_item_id).to eq item_original.id
@@ -209,11 +209,11 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       # Gws::Workflow::DestinationSetting
       expect(item_copy.destination_group_ids).to be_blank
       expect(item_copy.destination_user_ids).to be_blank
-      # # SS::Release
-      # expect(item_copy.state).to eq "closed"
-      # expect(item_copy.released).to be_blank
-      # expect(item_copy.release_date).to be_blank
-      # expect(item_copy.close_date).to eq close_date1
+      # SS::Release
+      expect(item_copy.state).to eq "closed"
+      expect(item_copy.released).to be_blank
+      expect(item_copy.release_date).to be_blank
+      expect(item_copy.close_date).to be_blank
 
       attachment.reload
       expect(attachment.owner_item_id).to eq item_original.id
