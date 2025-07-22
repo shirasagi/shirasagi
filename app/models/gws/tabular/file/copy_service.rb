@@ -35,13 +35,9 @@ class Gws::Tabular::File::CopyService
     new_item.user_id   = nil
     new_item.user_uid  = nil
     new_item.user_name = nil
-    new_item.user_i18n_name_translations = nil
 
     new_item.user_group_id   = nil
     new_item.user_group_name = nil
-    new_item.user_group_i18n_name_translations = nil
-
-    new_item.user_form_data_values = []
 
     new_item
   end
