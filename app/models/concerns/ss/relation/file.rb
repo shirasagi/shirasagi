@@ -12,7 +12,7 @@ module SS::Relation::File
 
       belongs_to name.to_sym, class_name: class_name
 
-      attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
+      attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing", "skip_#{name}_validate_relation"
 
       permit_params "#{name}_id", "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}_resizing" => []
@@ -105,6 +105,8 @@ module SS::Relation::File
     end
 
     def validate_relation(item, name, presence:, accepts:)
+      return if item.send("skip_#{name}_validate_relation")
+
       file = item.send("in_#{name}") || item.send(name)
       if !file && presence
         item.errors.add("#{name}_id", :blank)
