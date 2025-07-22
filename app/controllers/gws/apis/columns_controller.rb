@@ -23,6 +23,10 @@ class Gws::Apis::ColumnsController < ApplicationController
     ret
   end
 
+  def crud_redirect_url
+    gws_frames_column_path(id: @item, ref: ref)
+  end
+
   public
 
   def edit
@@ -41,6 +45,7 @@ class Gws::Apis::ColumnsController < ApplicationController
       return
     end
 
-    redirect_to gws_frames_column_path(id: @item, ref: ref), notice: t("ss.notice.saved")
+    # redirect_to gws_frames_column_path(id: @item, ref: ref), notice: t("ss.notice.saved")
+    render_update true, notice: t("ss.notice.saved")
   end
 end

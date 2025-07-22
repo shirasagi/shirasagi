@@ -29,9 +29,9 @@ class Gws::Tabular::Gws::Columns::ShowComponent < Gws::Frames::Columns::ShowComp
     edit_gws_tabular_frames_gws_column_path(id: item, ref: ref, form: 'branch')
   end
 
-  # def edit_api_path
-  #   edit_gws_apis_column_path(form_id: item.form, id: item, ref: ref)
-  # end
+  def edit_api_path
+    edit_gws_tabular_apis_gws_column_path(form: cur_form, id: item, ref: ref)
+  end
 
   def delete_frame_path
     gws_tabular_frames_gws_column_path(form: cur_form, id: item, ref: ref)
