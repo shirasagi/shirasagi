@@ -70,7 +70,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
     item_file.save!
   end
 
-  context "copy other's recycle item by super user" do
+  context "copy other's item by super user" do
     it do
       file_model = Gws::Tabular::File[form.current_release]
       expect(file_model.all.count).to eq 1
@@ -125,10 +125,10 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       expect(item_copy.destination_group_ids).to be_blank
       expect(item_copy.destination_user_ids).to be_blank
       # SS::Release
-      expect(recycle_item_copy.state).to eq "closed"
-      expect(recycle_item_copy.released).to be_blank
-      expect(recycle_item_copy.release_date).to be_blank
-      expect(recycle_item_copy.close_date).to be_blank
+      expect(item_copy.state).to eq "closed"
+      expect(item_copy.released).to be_blank
+      expect(item_copy.release_date).to be_blank
+      expect(item_copy.close_date).to be_blank
       # Gws::Reference::User
       expect(item_copy.user_id).to eq admin.id
       expect(item_copy.user_uid).to eq admin.uid
