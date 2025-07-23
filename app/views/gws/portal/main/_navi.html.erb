@@ -69,7 +69,7 @@
 
 <% if navi_links.present? %>
   <nav class="mod-navi current-navi">
-    <%= gws_menu_icon(:portal, 'modules.gws/portal', gws_portal_path) %>
+    <%= gws_menu_icon(:portal, gws_portal_path) %>
 
     <% navi_links.each do |h, label, path, options| %>
       <% if path.present? %>

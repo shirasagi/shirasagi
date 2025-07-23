@@ -19,15 +19,10 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
     context "basic" do
       it do
         visit index_path
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
-
         within ".main-navi" do
           click_on I18n.t("gws.site_config")
         end
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         #
@@ -66,19 +61,14 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         #
         # ポータルのアイコンを変更
         #
-
-        within all(".addon-gws-system-menu-setting").first do
-          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
+        within ".menu-setting-portal .menu-icon-field" do
+          wait_for_cbox_opened do
+            click_on I18n.t("ss.buttons.upload")
           end
         end
         within_dialog do
@@ -91,10 +81,8 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
             end
           end
         end
-        within all(".addon-gws-system-menu-setting").first do
-          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
-            expect(page).to have_css(".file-view", text: /logo/)
-          end
+        within ".menu-setting-portal" do
+          expect(page).to have_css(".file-view", text: /logo/)
         end
 
         within "form#item-form" do
@@ -102,10 +90,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
-        wait_for_ajax
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         within all(".addon-gws-system-menu-setting").first do
@@ -128,33 +113,24 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
     context "multiple menu icons" do
       it "changes multiple menu icons" do
         visit index_path
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
-
         within ".main-navi" do
           click_on I18n.t("gws.site_config")
         end
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         # ポータルとスケジュールのアイコンを変更
         menu_types = [:portal, :schedule]
         menu_types.each do |menu_type|
-          within(all(".addon-gws-system-menu-setting").find { |el| el.has_css?("span.ss-icon.ss-icon-#{menu_type}") }) do
-            within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
-              wait_for_cbox_opened do
-                click_on I18n.t("ss.buttons.upload")
-              end
+          within ".menu-setting-#{menu_type} .menu-icon-field" do
+            wait_for_cbox_opened do
+              click_on I18n.t("ss.buttons.upload")
             end
           end
           within_dialog do
@@ -176,12 +152,10 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
 
         # 複数のアイコンが変更されていることを確認
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         menu_types.each do |menu_type|
-          within(all(".addon-gws-system-menu-setting").find { |el| el.has_css?("img.icon-#{menu_type}") }) do
+          within ".menu-setting-#{menu_type}" do
             expect(page).to have_css("img.icon-#{menu_type}[src*='logo.png']")
           end
         end
@@ -203,31 +177,22 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
     context "icon removal" do
       it "removes uploaded icon and restores default" do
         visit index_path
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
-
         within ".main-navi" do
           click_on I18n.t("gws.site_config")
         end
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         # アイコンをアップロード
-        within all(".addon-gws-system-menu-setting").first do
-          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
+        within ".menu-setting-portal .menu-icon-field" do
+          wait_for_cbox_opened do
+            click_on I18n.t("ss.buttons.upload")
           end
         end
         within_dialog do
@@ -247,7 +212,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t("ss.notice.saved")
 
         # アイコンがアップロードされていることを確認
-        within all(".addon-gws-system-menu-setting").first do
+        within ".menu-setting-portal" do
           expect(page).to have_css("img.icon-portal[src*='logo.png']")
         end
 
@@ -255,14 +220,10 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
         # アイコンを削除
-        within all(".addon-gws-system-menu-setting").first do
-          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
-            click_on I18n.t("ss.buttons.delete")
-          end
+        within ".menu-setting-portal .menu-icon-field" do
+          click_on I18n.t("ss.buttons.delete")
         end
 
         within "form#item-form" do
@@ -272,7 +233,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
 
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
         # デフォルトアイコンに戻っていることを確認
-        within all(".addon-gws-system-menu-setting").first do
+        within ".menu-setting-portal" do
           expect(page).to have_css("span.ss-icon.ss-icon-portal")
           expect(page).to have_no_css("img.icon-portal[src*='logo.png']")
         end
@@ -294,9 +255,6 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
       it "user1 uploads icon and user2 sees it" do
         # user1でログインしてアイコンをアップロード
         login_user user1, to: index_path
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
-
         within ".main-navi" do
           click_on I18n.t("gws.site_config")
         end
@@ -309,16 +267,12 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.edit")
         end
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         # SVGファイルをアップロード
-        within all(".addon-gws-system-menu-setting").first do
-          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
+        within ".menu-setting-portal .menu-icon-field" do
+          wait_for_cbox_opened do
+            click_on I18n.t("ss.buttons.upload")
           end
         end
         within_dialog do
@@ -333,10 +287,8 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         end
 
         # SVGファイルが正常にアップロードされていることを確認
-        within all(".addon-gws-system-menu-setting").first do
-          within find("dt", text: I18n.t("gws.buttons.change_menu_icon")).find(:xpath, "following-sibling::dd") do
-            expect(page).to have_css(".file-view", text: /test_icon/)
-          end
+        within ".menu-setting-portal" do
+          expect(page).to have_css(".file-view", text: /test_icon/)
         end
 
         within "form#item-form" do
@@ -344,14 +296,11 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
-        wait_for_ajax
         wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         # SVGアイコンが表示されていることを確認
-        within all(".addon-gws-system-menu-setting").first do
+        within ".menu-setting-portal" do
           expect(page).to have_css("img.icon-portal[src*='test_icon.svg']")
         end
 

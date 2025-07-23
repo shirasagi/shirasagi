@@ -49,13 +49,8 @@ class Gws::Group
   scope :site, ->(site) { self.and name: /^#{::Regexp.escape(site.name)}(\/|$)/ }
 
   def file_previewable?(file, site: @cur_site, user: @cur_user, member: nil)
-    # メニューのファイル（Gws::Groupが所有者のファイル）の場合は、ユーザーが存在すればtrueを返す
-    if file&.owner_item_type == "Gws::Group" && file&.owner_item_id.present?
-      return user.present?
-    end
-
-    # その他のファイルの場合は、既存のロジックで権限チェック
-    super
+    # メニューのファイルの場合は、閲覧者がログインしていればtrueを返す
+    user.present?
   end
 
   private
