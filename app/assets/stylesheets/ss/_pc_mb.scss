@@ -2809,6 +2809,29 @@ div.index {
         padding-left: 50px;
       }
     }
+    &:has(.ss-ajax-result) {
+      flex-wrap: wrap;
+    }
+
+    .ss-ajax-result {
+      &:has(.errorExplanation) {
+        flex-basis: 100%;
+      }
+    }
+
+    .ss-ajax-success {
+      @include display-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .ss-ajax-success-icon {
+      color: #080;
+    }
+
+    .errorExplanation {
+      margin: 10px 0;
+    }
   }
 
   &.list-items-grid {

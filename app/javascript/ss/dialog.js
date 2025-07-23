@@ -143,6 +143,7 @@ export default class Dialog {
     this.src = src
     this.options = options
     this._open = false
+    this._result = undefined
     this._returnValue = undefined
   }
 
@@ -155,12 +156,17 @@ export default class Dialog {
     return this._open;
   }
 
+  get result() {
+    return this._result;
+  }
+
   get returnValue() {
     return this._returnValue;
   }
 
   async showModal() {
     this._open = false
+    this._result = undefined
     this._returnValue = undefined
     this._dialogFrame = undefined
 
@@ -205,11 +211,14 @@ export default class Dialog {
   }
 
   #onClose(resolve) {
-    if (this._dialogFrame._dialog.returnValue === 'send' && !this._returnValue) {
-      const formElement = this._dialogFrame._dialog.querySelector("form")
-      if (formElement) {
-        const formData = new FormData(formElement)
-        this._returnValue = Array.from(formData.entries())
+    if (!this._result && !this._returnValue) {
+      this._result = this._dialogFrame._dialog.returnValue;
+      if (this._result) {
+        const formElement = this._dialogFrame._dialog.querySelector("form");
+        if (formElement) {
+          const formData = new FormData(formElement)
+          this._returnValue = Array.from(formData.entries())
+        }
       }
     }
 
@@ -230,6 +239,7 @@ export default class Dialog {
     if (!this._returnValue) {
       this._returnValue = []
     }
+    this._result = "send"
     this._returnValue.push(data)
     this.ok = true
   }
