@@ -10,19 +10,21 @@
   <dl class="see addon-gws-system-menu-setting">
     <dt><%= t('gws.site_config') %></dt>
     <dd>
-      <%= f.select "menu_#{type}_state", { t('ss.options.state.show') => "show" } %>
-      <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}")) %>
+      <div class="input-group gap-5 align-items-center">
+        <%= f.select "menu_#{type}_state", { t('ss.options.state.show') => "show" } %>
+        <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}")) %>
+      </div>
     </dd>
     <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
-    <dd>
-      <span class="menu-icon-field">
+    <dd class="depth-2">
+      <div class="menu-icon-field input-group gap-5 align-items-center">
         <% if @item.send("menu_#{type}_icon_image").present? %>
-          <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", style: "width: 32px; height: 32px;" %>
+          <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", aria: { hidden: true }, style: "width: 32px; height: 32px;" %>
         <% else %>
-          <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>"></span>
+          <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>" role="img" aria-hidden="true"></span>
         <% end %>
         <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
-      </span>
+      </div>
     </dd>
   </dl>
 <% end %>
@@ -34,20 +36,22 @@
     <dl class="see addon-gws-system-menu-setting">
       <dt><%= @model.t("menu_#{type}_state") %><%= @model.tt("menu_#{type}_state") %></dt>
       <dd>
-        <%= f.select "menu_#{type}_state", @item.send("menu_#{type}_state_options") %>
-        <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}")) %>
+        <div class="input-group gap-5 align-items-center">
+          <%= f.select "menu_#{type}_state", @item.send("menu_#{type}_state_options") %>
+          <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}")) %>
+        </div>
       </dd>
       <% unless skip_icon_types.include?(type.to_s) %>
       <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
-      <dd>
-        <span class="menu-icon-field">
+      <dd class="depth-2">
+        <div class="menu-icon-field input-group gap-5 align-items-center">
           <% if @item.send("menu_#{type}_icon_image").present? %>
-            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", style: "width: 32px; height: 32px;" %>
+            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", aria: { hidden: true }, style: "width: 32px; height: 32px;" %>
           <% else %>
-            <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>"></span>
+            <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>" role="img" aria-hidden="true"></span>
           <% end %>
           <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
-        </span>
+        </div>
       </dd>
       <% end %>
     </dl>
