@@ -24,15 +24,15 @@ module Gws::LayoutHelper
     icon_class = "icon-#{type.to_s.dasherize}"
 
     if icon_file.present?
-      content_tag(:h2) do
+      tag.h2 do
         link_to(path, class: "#{icon_class} has-custom-icon") do
-          image_tag(icon_file.url, class: "nav-icon-img") + label
+          image_tag(icon_file.url, class: "nav-icon-img", aria: { hidden: true }) + label
         end
       end
     else
-      content_tag(:h2) do
+      tag.h2 do
         link_to(path, class: "#{icon_class} has-font-icon") do
-          content_tag(:span, "", class: "ss-icon ss-icon-#{type.to_s.dasherize}") + label
+          tag.span("", class: "ss-icon ss-icon-#{type.to_s.dasherize}", role: "img", aria: { hidden: true }) + label
         end
       end
     end
