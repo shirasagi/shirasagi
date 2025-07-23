@@ -11,7 +11,7 @@ class Gws::Tabular::File::ActQuery < ApplicationQuery
   def query
     return base_criteria if act.blank?
     # ワークフローが無効の場合、state による検索は機能しない
-    return base_criteria if !cur_form.workflow_enabled? && !cur_form.riken_recycle_board_enabled?
+    return base_criteria unless cur_form.workflow_enabled?
 
     # サブクエリ構築時に `unscoped` を用いているが、`unscoped` を呼び出すと現在の検索条件が消失してしまう。
     # それを防ぐため、前もって現在の検索条件を複製しておく。

@@ -51,7 +51,7 @@ class Gws::Tabular::View::LiquidComponent < ApplicationComponent
       cur_view = context.registers[:cur_view]
 
       item = item.delegatee if item.respond_to?(:delegatee)
-      view_context.gws_riken_recycle_board_file_path(
+      view_context.gws_tabular_file_path(
         site: cur_site, space: cur_space, form: cur_form, view: cur_view || '-', id: item)
     end
   end

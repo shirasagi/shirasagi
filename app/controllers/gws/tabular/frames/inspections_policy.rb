@@ -32,7 +32,7 @@ class Gws::Tabular::Frames::InspectionsPolicy
 
   def reroute_myself?
     return false if item.deleted?
-    return false unless cur_user.gws_role_permit_any?(cur_site, :reroute_private_riken_recycle_boards)
+    return false unless cur_user.gws_role_permit_any?(cur_site, :reroute_private_gws_tabular_files)
 
     workflow_approver = item.find_workflow_request_to(cur_user)
     return false unless workflow_approver
