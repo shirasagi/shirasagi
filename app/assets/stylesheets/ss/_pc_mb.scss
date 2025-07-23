@@ -2615,6 +2615,14 @@ div.index {
     span { display: inline-block; }
   }
 }
+.list-head-action-set {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center
+}
+*+.list-head-action-set {
+  margin-left: 15px
+}
 .list-head-action-tag {
   display: inline-block;
   margin-right: 8px;

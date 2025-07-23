@@ -34,7 +34,7 @@ module Workflow::ViewHelper
   end
 
   def workflow_user_profile_at_application(workflow_user_custom_data)
-    name = Gws::Workflow2.find_custom_data_value_in_locale(workflow_user_custom_data, "i18n_name")
+    name = Gws::Workflow2.find_custom_data_value(workflow_user_custom_data, "name")
     if @cur_site.user_profile_public?("uid")
       uid = Gws::Workflow2.find_custom_data_value(workflow_user_custom_data, "uid")
     end

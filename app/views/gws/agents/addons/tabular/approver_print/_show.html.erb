@@ -43,7 +43,7 @@
           # ここでは、申請時の情報を表示する
           # 申請時の情報が workflow_user_custom_data に保存されているはず。
           if @item.workflow_user_custom_data.present?
-            Gws::Workflow2.find_custom_data_value_in_locale(@item.workflow_user_custom_data, "i18n_section_name")
+            Gws::Workflow2.find_custom_data_value(@item.workflow_user_custom_data, "section_name")
           end
         %>
       </dd>
@@ -56,7 +56,7 @@
           <%=
             # ここでは、申請時の情報を表示する
             # 申請時の情報が workflow_agent_custom_data に保存されているはず。
-            Gws::Workflow2.find_custom_data_value_in_locale(@item.workflow_agent_custom_data, "i18n_section_name")
+            Gws::Workflow2.find_custom_data_value(@item.workflow_agent_custom_data, "section_name")
           %>
         </dd>
       <% end %>

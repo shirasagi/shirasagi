@@ -22,16 +22,4 @@ module Gws::Workflow2
       find { |data| data["name"] == name }.
       then { |data| data ? data["value"] : nil }
   end
-
-  def find_custom_data_value_in_locale(custom_data_array, prefix, locale: nil)
-    return if custom_data_array.blank?
-
-    search_locales = [ locale || I18n.locale, I18n.default_locale ]
-    search_locales.each do |search_locale|
-      value = find_custom_data_value(custom_data_array, "#{prefix}_#{search_locale}")
-      return value if value.present?
-    end
-
-    nil
-  end
 end
