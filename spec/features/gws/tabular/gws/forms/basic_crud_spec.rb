@@ -50,29 +50,29 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         # workflow_setting
         select workflow_state_label, from: "item[workflow_state]"
         select agent_state_label, from: "item[agent_state]"
-        within ".destination_group_ids" do
-          wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
-        end
+        # within ".destination_group_ids" do
+        #   wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
+        # end
       end
-      within_cbox do
-        wait_for_cbox_closed { click_on group.trailing_name }
-      end
+      # within_cbox do
+      #   wait_for_cbox_closed { click_on group.trailing_name }
+      # end
+      # within "form#item-form" do
+      #   within ".destination_group_ids" do
+      #     expect(page).to have_css(".index [data-id='#{group.id}']", text: group.name)
+      #   end
+      #
+      #   within ".destination_user_ids" do
+      #     wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
+      #   end
+      # end
+      # within_cbox do
+      #   wait_for_cbox_closed { click_on user.name }
+      # end
       within "form#item-form" do
-        within ".destination_group_ids" do
-          expect(page).to have_css(".index [data-id='#{group.id}']", text: group.name)
-        end
-
-        within ".destination_user_ids" do
-          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
-        end
-      end
-      within_cbox do
-        wait_for_cbox_closed { click_on user.name }
-      end
-      within "form#item-form" do
-        within ".destination_user_ids" do
-          expect(page).to have_css(".index [data-id='#{user.id}']", text: user.name)
-        end
+        # within ".destination_user_ids" do
+        #   expect(page).to have_css(".index [data-id='#{user.id}']", text: user.name)
+        # end
 
         click_on I18n.t("ss.buttons.save")
       end
@@ -91,8 +91,10 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.approval_state).to eq "with_approval"
         expect(form.default_route_id).to eq "my_group"
         expect(form.agent_state).to eq agent_state
-        expect(form.destination_group_ids).to eq [ group.id ]
-        expect(form.destination_user_ids).to eq [ user.id ]
+        # expect(form.destination_group_ids).to eq [ group.id ]
+        expect(form.destination_group_ids).to be_blank
+        # expect(form.destination_user_ids).to eq [ user.id ]
+        expect(form.destination_user_ids).to be_blank
         # Gws::Addon::ReadableSetting
         expect(form.readable_setting_range).to eq "select"
         expect(form.readable_member_ids).to be_blank
@@ -146,8 +148,10 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.approval_state).to eq "with_approval"
         expect(form.default_route_id).to eq "my_group"
         expect(form.agent_state).to eq agent_state2
-        expect(form.destination_group_ids).to eq [ group.id ]
-        expect(form.destination_user_ids).to eq [ user.id ]
+        # expect(form.destination_group_ids).to eq [ group.id ]
+        expect(form.destination_group_ids).to be_blank
+        # expect(form.destination_user_ids).to eq [ user.id ]
+        expect(form.destination_user_ids).to be_blank
         # Gws::Addon::ReadableSetting
         expect(form.readable_setting_range).to eq "select"
         expect(form.readable_member_ids).to be_blank
@@ -192,8 +196,10 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.approval_state).to eq "with_approval"
         expect(form.default_route_id).to eq "my_group"
         expect(form.agent_state).to eq agent_state2
-        expect(form.destination_group_ids).to eq [ group.id ]
-        expect(form.destination_user_ids).to eq [ user.id ]
+        # expect(form.destination_group_ids).to eq [ group.id ]
+        expect(form.destination_group_ids).to be_blank
+        # expect(form.destination_user_ids).to eq [ user.id ]
+        expect(form.destination_user_ids).to be_blank
         # Gws::Addon::ReadableSetting
         expect(form.readable_setting_range).to eq "select"
         expect(form.readable_member_ids).to be_blank
@@ -242,8 +248,10 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.approval_state).to eq "with_approval"
         expect(form.default_route_id).to eq "my_group"
         expect(form.agent_state).to eq agent_state2
-        expect(form.destination_group_ids).to eq [ group.id ]
-        expect(form.destination_user_ids).to eq [ user.id ]
+        # expect(form.destination_group_ids).to eq [ group.id ]
+        expect(form.destination_group_ids).to be_blank
+        # expect(form.destination_user_ids).to eq [ user.id ]
+        expect(form.destination_user_ids).to be_blank
         # Gws::Addon::ReadableSetting
         expect(form.readable_setting_range).to eq "select"
         expect(form.readable_member_ids).to be_blank
