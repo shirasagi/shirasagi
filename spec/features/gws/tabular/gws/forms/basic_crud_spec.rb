@@ -16,8 +16,6 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
     let(:memo) { Array.new(2) { "memo-#{unique_id}" } }
     let(:workflow_state) { %w(enabled disabled).sample }
     let(:workflow_state_label) { I18n.t("ss.options.state.#{workflow_state}") }
-    let(:approval_state) { %w(without_approval with_approval).sample }
-    let(:approval_state_label) { I18n.t("gws/workflow2.options.approval_state.#{approval_state}") }
     let(:agent_state) { %w(enabled disabled).sample }
     let(:agent_state_label) { I18n.t("gws/workflow.options.agent_state.#{agent_state}") }
 
@@ -28,8 +26,6 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
     let(:memo2) { Array.new(2) { "memo-#{unique_id}" } }
     let(:workflow_state2) { %w(enabled disabled).sample }
     let(:workflow_state2_label) { I18n.t("ss.options.state.#{workflow_state2}") }
-    let(:approval_state2) { %w(without_approval with_approval).sample }
-    let(:approval_state2_label) { I18n.t("gws/workflow2.options.approval_state.#{approval_state2}") }
     let(:agent_state2) { %w(enabled disabled).sample }
     let(:agent_state2_label) { I18n.t("gws/workflow.options.agent_state.#{agent_state2}") }
 
@@ -53,7 +49,6 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         fill_in "item[memo]", with: memo.join("\n")
         # workflow_setting
         select workflow_state_label, from: "item[workflow_state]"
-        choose approval_state_label
         select agent_state_label, from: "item[agent_state]"
         within ".destination_group_ids" do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
@@ -93,7 +88,7 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.revision).to be_blank
         # Gws::Addon::Tabular::WorkflowSetting
         expect(form.workflow_state).to eq workflow_state
-        expect(form.approval_state).to eq approval_state
+        expect(form.approval_state).to eq "with_approval"
         expect(form.default_route_id).to eq "my_group"
         expect(form.agent_state).to eq agent_state
         expect(form.destination_group_ids).to eq [ group.id ]
@@ -132,7 +127,6 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         fill_in "item[memo]", with: memo2.join("\n")
         # workflow_setting
         select workflow_state2_label, from: "item[workflow_state]"
-        choose approval_state2_label
         select agent_state2_label, from: "item[agent_state]"
 
         click_on I18n.t("ss.buttons.save")
@@ -149,7 +143,7 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.revision).to be_blank
         # Gws::Addon::Tabular::WorkflowSetting
         expect(form.workflow_state).to eq workflow_state2
-        expect(form.approval_state).to eq approval_state2
+        expect(form.approval_state).to eq "with_approval"
         expect(form.default_route_id).to eq "my_group"
         expect(form.agent_state).to eq agent_state2
         expect(form.destination_group_ids).to eq [ group.id ]
@@ -195,7 +189,7 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.revision).to be_blank
         # Gws::Addon::Tabular::WorkflowSetting
         expect(form.workflow_state).to eq workflow_state2
-        expect(form.approval_state).to eq approval_state2
+        expect(form.approval_state).to eq "with_approval"
         expect(form.default_route_id).to eq "my_group"
         expect(form.agent_state).to eq agent_state2
         expect(form.destination_group_ids).to eq [ group.id ]
@@ -245,7 +239,7 @@ describe Gws::Tabular::Gws::FormsController, type: :feature, dbscope: :example, 
         expect(form.revision).to be_blank
         # Gws::Addon::Tabular::WorkflowSetting
         expect(form.workflow_state).to eq workflow_state2
-        expect(form.approval_state).to eq approval_state2
+        expect(form.approval_state).to eq "with_approval"
         expect(form.default_route_id).to eq "my_group"
         expect(form.agent_state).to eq agent_state2
         expect(form.destination_group_ids).to eq [ group.id ]
