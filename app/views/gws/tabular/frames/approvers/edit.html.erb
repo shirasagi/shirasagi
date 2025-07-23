@@ -2,7 +2,7 @@
 
 <div class="workflow-request-notice">
   <ul class="workflow-request-notice-list">
-    <% request_notices = with_approval? ? t("gws/workflow.request_notice") : t("gws/workflow.request_notice_without_approval") %>
+    <% request_notices = with_approval? ? t("gws/workflow2.request_notice") : t("gws/workflow2.request_notice_without_approval") %>
     <% request_notices.each do |message, options| %>
       <%=
         if options.present?

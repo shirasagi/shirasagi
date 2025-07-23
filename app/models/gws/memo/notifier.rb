@@ -19,37 +19,72 @@ class Gws::Memo::Notifier
     end
 
     def deliver_workflow_request!(cur_site:, item:, url:, **options)
-      subject = I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
+      if item.is_a?(Gws::Tabular::File)
+        subject = Gws::Tabular::File::NotificationSubjectService.new(cur_site, item, :workflow_request)
+        subject = subject.call
+      else
+        subject = I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
+      end
       deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
 
     def deliver_workflow_approve!(cur_site:, item:, url:, **options)
-      subject = I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
+      if item.is_a?(Gws::Tabular::File)
+        subject = Gws::Tabular::File::NotificationSubjectService.new(cur_site, item, :workflow_approve)
+        subject = subject.call
+      else
+        subject = I18n.t("gws_notification.gws/workflow/file.approve", name: item.name)
+      end
       deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
 
     def deliver_workflow_remand!(cur_site:, item:, url:, **options)
-      subject = I18n.t("gws_notification.gws/workflow/file.remand", name: item.name)
+      if item.is_a?(Gws::Tabular::File)
+        subject = Gws::Tabular::File::NotificationSubjectService.new(cur_site, item, :workflow_remand)
+        subject = subject.call
+      else
+        subject = I18n.t("gws_notification.gws/workflow/file.remand", name: item.name)
+      end
       deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
 
     def deliver_workflow_circulations!(cur_site:, item:, url:, **options)
-      subject = I18n.t("gws_notification.gws/workflow/file.circular", name: item.name)
+      if item.is_a?(Gws::Tabular::File)
+        subject = Gws::Tabular::File::NotificationSubjectService.new(cur_site, item, :workflow_circular)
+        subject = subject.call
+      else
+        subject = I18n.t("gws_notification.gws/workflow/file.circular", name: item.name)
+      end
       deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
 
     def deliver_workflow_comment!(cur_site:, item:, url:, **options)
-      subject = I18n.t("gws_notification.gws/workflow/file.comment", name: item.name)
+      if item.is_a?(Gws::Tabular::File)
+        subject = Gws::Tabular::File::NotificationSubjectService.new(cur_site, item, :workflow_comment)
+        subject = subject.call
+      else
+        subject = I18n.t("gws_notification.gws/workflow/file.comment", name: item.name)
+      end
       deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
 
     def deliver_workflow_destination!(cur_site:, item:, url:, **options)
-      subject = I18n.t("gws_notification.gws/workflow2/file.destination", name: item.name)
+      if item.is_a?(Gws::Tabular::File)
+        subject = Gws::Tabular::File::NotificationSubjectService.new(cur_site, item, :workflow_destination)
+        subject = subject.call
+      else
+        subject = I18n.t("gws_notification.gws/workflow2/file.destination", name: item.name)
+      end
       deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
 
     def deliver_workflow_cancel!(cur_site:, item:, url:, **options)
-      subject = I18n.t("gws_notification.gws/workflow2/file.cancel", name: item.name)
+      if item.is_a?(Gws::Tabular::File)
+        subject = Gws::Tabular::File::NotificationSubjectService.new(cur_site, item, :workflow_cancel)
+        subject = subject.call
+      else
+        subject = I18n.t("gws_notification.gws/workflow2/file.cancel", name: item.name)
+      end
       deliver_workflow!(cur_site: cur_site, item: item, url: url, subject: subject, **options)
     end
   end

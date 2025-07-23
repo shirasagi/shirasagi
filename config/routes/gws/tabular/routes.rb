@@ -36,6 +36,9 @@ Rails.application.routes.draw do
       namespace :gws do
         scope ':space' do
           resources :forms, only: %i[index]
+          scope 'forms/:form' do
+            resources :columns, only: %i[edit update]
+          end
         end
       end
     end

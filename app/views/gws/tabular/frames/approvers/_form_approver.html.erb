@@ -15,12 +15,12 @@
   <dt><%= @model.t :workflow_approvers %></dt>
   <dd></dd>
 
-  <% 1.upto(Gws::Workflow::Route::MAX_APPROVERS) do |level| %>
+  <% 1.upto(Gws::Workflow2::Route::MAX_APPROVERS) do |level| %>
     <%
       workflow_approvers = @item.workflow_approvers_at(level)
       next if workflow_approvers.blank?
     %>
-    <dt class="depth-2"><%= Gws::Workflow::Route.t :level, level: level %></dt>
+    <dt class="depth-2"><%= Gws::Workflow2::Route.t :level, level: level %></dt>
     <dd class="depth-2">
       <table class="index gws-workflow-grid-table" data-col="2">
         <tbody>
@@ -30,7 +30,7 @@
             <%=
               selected_required_count = route ? route.required_count_at(level) : false
               selected_required_count = 1 if @item.route_my_group_alternate?
-              Gws::Workflow::Route.required_count_options.find { |_label, value| value == selected_required_count }.try(:[], 0)
+              Gws::Workflow2::Route.required_count_options.find { |_label, value| value == selected_required_count }.try(:[], 0)
             %>
           </td>
         </tr>
@@ -39,7 +39,7 @@
           <td>
             <%=
               selected_attachment_use = route.try(:approver_attachment_use_at, level).presence || "disabled"
-              Gws::Workflow::Route.approver_attachment_use_options.find { |_label, value| value == selected_attachment_use }.try(:[], 0)
+              Gws::Workflow2::Route.approver_attachment_use_options.find { |_label, value| value == selected_attachment_use }.try(:[], 0)
             %>
           </td>
         </tr>
@@ -68,7 +68,7 @@
                 user = approver_hash[:user]
                 user ||= find_approver(approver_hash[:user_id])
                 user_type = "superior"
-                name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.ss/model/user.superior_id")})"
+                name = "#{gws_public_user_long_name(user.long_name)} (#{t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids")})"
               when Gws::UserTitle.name
                 user = approver_hash[:user]
                 user ||= find_approver(approver_hash[:user_id])
@@ -105,9 +105,9 @@
     <% if @item.route_my_group_alternate? %>
       <dd class="depth-2">
         <div class="mb-2">
-          <%= link_to t("gws/workflow.search_alternates.index"), gws_apis_users_path(single: 1, myself: "superior"), class: "btn ajax-box" %>
+          <%= link_to t("gws/workflow2.search_alternates.index"), gws_apis_users_path(single: 1, myself: "superior"), class: "btn ajax-box" %>
           <%= f.hidden_field "workflow_approver_alternate", value: "", class: "hidden-ids", id: nil %>
-          <span style="vertical-align: middle; color: #e00"><%= I18n.t('gws/workflow.notice.select_correct_proxy_approver') %></span>
+          <span style="vertical-align: middle; color: #e00"><%= I18n.t('gws/workflow2.notice.select_correct_proxy_approver') %></span>
         </div>
         <table class="index ajax-selected">
           <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>

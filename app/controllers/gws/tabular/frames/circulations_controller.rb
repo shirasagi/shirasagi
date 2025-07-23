@@ -140,15 +140,15 @@ class Gws::Tabular::Frames::CirculationsController < ApplicationController
 
   # rubocop:disable Rails/ActionControllerFlashBeforeRender
   def update
-    service = Gws::Workflow::CircularService.new(
+    service = Gws::Workflow2::CircularService.new(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
-    service.attributes = params.expect(item: [*Gws::Workflow::CircularService::PERMIT_PARAMS])
+    service.attributes = params.require(:item).permit(*Gws::Workflow2::CircularService::PERMIT_PARAMS)
     unless service.call
       render template: "edit"
       return
     end
 
-    flash[:notice] = t("workflow.notice.seen")
+    flash[:notice] = t("gws/workflow2.notice.seen")
     render json: { status: 302, location: ref }, status: :ok, content_type: json_content_type
   end
   # rubocop:enable Rails/ActionControllerFlashBeforeRender

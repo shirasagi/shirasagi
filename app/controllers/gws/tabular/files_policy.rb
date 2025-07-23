@@ -63,20 +63,18 @@ class Gws::Tabular::FilesPolicy
     # 非公開でない場合、編集/更新はできない
     return false if item.respond_to?(:closed?) && !item.closed?
 
-    # 編集者の場合、承認を申請していなければ編集可能
-    if item.allowed?(:edit, cur_user, site: cur_site)
-      if item.respond_to?(:workflow_requested?) && item.workflow_requested?
-        return false
+    # 承認者の編集が許可されている場合、編集可能
+    workflow_requested = item.respond_to?(:workflow_requested?) && item.workflow_requested?
+    if workflow_requested
+      workflow_request = item.find_workflow_request_to(cur_user)
+      if workflow_request.present? && workflow_request[:editable]
+        return true
       end
-      return true
     end
 
-    # 承認者の編集が許可されている場合、編集可能
-    if item.respond_to?(:workflow_requested?) && item.workflow_requested?
-      workflow_request = item.find_workflow_request_to(cur_user)
-      return false if workflow_request.blank?
-
-      return workflow_request[:editable]
+    # 編集者の場合、承認を申請していなければ編集可能
+    if item.allowed?(:edit, cur_user, site: cur_site)
+      return !workflow_requested
     end
 
     false

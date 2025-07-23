@@ -14,6 +14,7 @@ class Gws::Tabular::File::CopyService
 
     if cur_form.workflow_enabled?
       set_workflow_defaults(new_item)
+      set_release_defaults(new_item)
     end
 
     @new_item = new_item
@@ -35,13 +36,9 @@ class Gws::Tabular::File::CopyService
     new_item.user_id   = nil
     new_item.user_uid  = nil
     new_item.user_name = nil
-    new_item.user_i18n_name_translations = nil
 
     new_item.user_group_id   = nil
     new_item.user_group_name = nil
-    new_item.user_group_i18n_name_translations = nil
-
-    new_item.user_form_data_values = []
 
     new_item
   end
@@ -71,6 +68,15 @@ class Gws::Tabular::File::CopyService
     new_item.workflow_circulation_attachment_uses = []
     new_item.approved = nil
     new_item.workflow_reminder_sent_at = nil
+
+    new_item
+  end
+
+  def set_release_defaults(new_item)
+    new_item.state = "closed"
+    new_item.released = nil
+    new_item.release_date = nil
+    new_item.close_date = nil
 
     new_item
   end

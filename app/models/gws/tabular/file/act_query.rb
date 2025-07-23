@@ -11,7 +11,7 @@ class Gws::Tabular::File::ActQuery < ApplicationQuery
   def query
     return base_criteria if act.blank?
     # ワークフローが無効の場合、state による検索は機能しない
-    return base_criteria if !cur_form.workflow_enabled? && !cur_form.riken_recycle_board_enabled?
+    return base_criteria unless cur_form.workflow_enabled?
 
     # サブクエリ構築時に `unscoped` を用いているが、`unscoped` を呼び出すと現在の検索条件が消失してしまう。
     # それを防ぐため、前もって現在の検索条件を複製しておく。
@@ -24,7 +24,7 @@ class Gws::Tabular::File::ActQuery < ApplicationQuery
     when 'applicant'
       # 承認依頼したもの（実体は申請者のためのビュー）
       criteria.where('$and' => [{ '$or' => [{ workflow_user_id: cur_user.id }, { workflow_agent_id: cur_user.id }] }])
-    else # blank or 'all'
+    else # 'all'
       # すべて
       cur_user_group_ids = cur_user.groups.site(cur_site).pluck(:id)
       readable_conditions = build_readable_conditions(
@@ -43,6 +43,11 @@ class Gws::Tabular::File::ActQuery < ApplicationQuery
         model.all.allow(:read, cur_user, site: cur_site).selector
       end
       ret << allow_selector
+    else
+      public_selector = model.unscoped do
+        model.all.and_public.selector
+      end
+      ret << public_selector
     end
     ret << { user_id: cur_user.id }
     ret << { workflow_user_id: cur_user.id }

@@ -23,7 +23,7 @@
         # ここでは、申請時の情報を表示する
         # 申請時の情報が workflow_user_custom_data に保存されているはず。
         if @item.workflow_user_custom_data.present?
-          Gws::Workflow.find_custom_data_value_in_locale(@item.workflow_user_custom_data, "i18n_section_name")
+          Gws::Workflow2.find_custom_data_value(@item.workflow_user_custom_data, "section_name")
         end
       %>
     </dd>
@@ -37,7 +37,7 @@
         <%=
           # ここでは、申請時の情報を表示する
           # 申請時の情報が workflow_agent_custom_data に保存されているはず。
-          Gws::Workflow.find_custom_data_value_in_locale(@item.workflow_agent_custom_data, "i18n_section_name")
+          Gws::Workflow2.find_custom_data_value(@item.workflow_agent_custom_data, "section_name")
         %>
       </dd>
     </dl>
@@ -56,7 +56,7 @@
     <dd><%= @item.workflow_comment %></dd>
   </dl>
 
-  <% if @item.workflow_state != Gws::Workflow::File::WORKFLOW_STATE_APPROVE_WITHOUT_APPROVAL %>
+  <% if @item.workflow_state != Gws::Workflow2::File::WORKFLOW_STATE_APPROVE_WITHOUT_APPROVAL %>
     <dl class="see workflow_pull_up">
       <dt><%= @model.t :workflow_pull_up %></dt>
       <dd><%= @item.label :workflow_pull_up %></dd>

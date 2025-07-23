@@ -22,7 +22,7 @@
   <td>
     <% if approver %>
       <% if @item.route_my_group_alternate? && index == 1 %>
-        <%= I18n.t('gws/workflow.labels.approver_alternator') %>
+        <%= t('gws/workflow2.labels.approver_alternator') %>
       <% end %>
       <%= workflow_user_profile(approver) %>
     <% else %>

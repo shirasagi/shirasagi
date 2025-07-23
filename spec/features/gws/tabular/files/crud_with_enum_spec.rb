@@ -38,7 +38,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
     end
   end
 
-  context "crud: RIKEN_RECYCLE-93" do
+  context "crud with enum column" do
     let(:column1_value1) { "name-#{unique_id}" }
     let(:column1_value2) { "name-#{unique_id}" }
     let(:column2_value1) { column2.select_options.last }

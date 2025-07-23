@@ -79,6 +79,7 @@ module Gws::Tabular::File
       addons << Gws::Addon::Tabular::Approver
       addons << Gws::Addon::Tabular::ApproverPrint
       addons << Gws::Workflow2::DestinationSetting
+      addons << Gws::Tabular::Release
 
       addons
     end

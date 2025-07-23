@@ -122,6 +122,11 @@ class Gws::Tabular::FilesController < ApplicationController
       s = OpenStruct.new(params[:s])
       s.cur_site = @cur_site
       s.cur_user = @cur_user
+      s.cur_form = cur_form
+      s.cur_release = cur_release
+      if cur_form.workflow_enabled?
+        s.act ||= "all"
+      end
       s
     end
   end
@@ -345,7 +350,7 @@ class Gws::Tabular::FilesController < ApplicationController
       return
     end
 
-    service.overwrites = params.expect(item: [permit_fields])
+    service.overwrites = params.require(:item).permit(*permit_fields)
     result = service.save
 
     render_opts = {}

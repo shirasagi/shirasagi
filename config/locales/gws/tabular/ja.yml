@@ -137,6 +137,19 @@ ja:
     download_gws_tabular_files: データのダウンロード
     import_gws_tabular_files: データのインポート
 
+  gws_notification:
+    gws/tabular/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+      request: "[%{form}]「%{name}」の承認申請が届きました。"
+      approve: "[%{form}]「%{name}」の最終承認が完了しました。"
+      remand: "[%{form}]「%{name}」の承認申請が差し戻されました。"
+      circular: "[%{form}]「%{name}」が届きました。"
+      comment: "[%{form}]「%{name}」にコメントがありました。"
+
   modules:
     gws/tabular: 汎用DB
     addons:

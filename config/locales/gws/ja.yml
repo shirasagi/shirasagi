@@ -429,6 +429,7 @@ ja:
         notice_discussion_state: 電子会議室
         notice_report_state: レポート
         notice_announcement_state: お知らせ
+        notice_tabular_state: 汎用DB
         send_notice_email_state: 個人メール転送
       gws/addon/system/log_setting:
         log_save_days: ログ保持日数

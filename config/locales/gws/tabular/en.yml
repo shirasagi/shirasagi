@@ -137,6 +137,19 @@ en:
     download_gws_tabular_files: Download data
     import_gws_tabular_files: Import data
 
+  gws_notification:
+    gws/tabular/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+      request: "[%{form}] An approval request for “%{name}” has arrived."
+      approve: "[%{form}] Final approval of “%{name}” has been completed."
+      remand: "[%{form}] The approval request for “%{name}” has been referred back."
+      circular: "[%{form}] “%{name}” has arrived."
+      comment: "[%{form}] There is a comment in “%{name}”."
+
   modules:
     gws/tabular: Tabular
     addons:

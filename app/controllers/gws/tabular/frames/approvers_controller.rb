@@ -126,7 +126,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
   end
 
   def route_options
-    @route_options ||= Gws::Workflow::Route.route_options(@cur_user, cur_site: @cur_site, item: @item)
+    @route_options ||= Gws::Workflow2::Route.route_options(@cur_user, cur_site: @cur_site, item: @item)
   end
 
   def use_agent?
@@ -153,8 +153,10 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
     if BSON::ObjectId.legal?(route_id)
       # 申請フォームにセットされている既定の route が削除されているかもしれない
       # route が削除されている場合、@route_id に "my_group" をセットする
-      @route = Gws::Workflow::Route.site(@cur_site).find(route_id) rescue nil
+      @route = Gws::Workflow2::Route.site(@cur_site).find(route_id) rescue nil
       @route_id = @route ? route_id : "my_group"
+    elsif route_id.numeric?
+      raise "Gws::Workflow::Route is not supported"
     else
       @route_id = route_id
       @route = nil
@@ -185,10 +187,10 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
   alias find_circulator find_approver
 
   def interpret_route
-    resolver = Gws::Workflow::ApproverResolver.new(
+    resolver = Gws::Workflow2::ApproverResolver.new(
       cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, route: route || route_id.to_sym, item: @item)
     if params.key?(:item)
-      resolver.attributes = params.expect(item: [*Gws::Workflow::ApproverResolver::PERMIT_PARAMS])
+      resolver.attributes = params.require(:item).permit(*Gws::Workflow2::ApproverResolver::PERMIT_PARAMS)
     end
     resolver.resolve
   end
@@ -226,7 +228,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
     end
 
     if with_approval?
-      service_class = Gws::Workflow::RequestService
+      service_class = Gws::Workflow2::RequestService
     else
       service_class = Gws::Tabular::RequestWithoutApprovalService
     end
@@ -234,7 +236,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, route_id: route_id, route: route,
       item: @item, ref: ref)
     if params.key?(:item)
-      service.attributes = params.expect(item: [*service_class::PERMIT_PARAMS])
+      service.attributes = params.require(:item).permit(*service_class::PERMIT_PARAMS)
     end
     unless service.call
       @item.workflow_state = nil
@@ -242,7 +244,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
       return
     end
 
-    flash[:notice] = t("workflow.notice.requested")
+    flash[:notice] = t("gws/workflow2.notice.requested")
     json = { status: 302, location: ref }
     render json: json, status: :ok, content_type: json_content_type
   end
@@ -291,7 +293,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
       return
     end
 
-    service = Gws::Workflow::CancelService.new(
+    service = Gws::Workflow2::CancelService.new(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
     unless service.call
       SS::Model.copy_errors(service, @item)
