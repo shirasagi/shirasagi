@@ -233,7 +233,6 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
     let(:workflow_state) { 'disabled' }
     let(:unique_state) { "disabled" }
 
-
     it do
       file_model = Gws::Tabular::File[form.current_release]
       expect(file_model.all.count).to eq 1
