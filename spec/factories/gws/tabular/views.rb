@@ -30,4 +30,23 @@ FactoryBot.define do
 
   factory :gws_tabular_view_list, class: Gws::Tabular::View::List, traits: [:gws_tabular_view_base]
   factory :gws_tabular_view_liquid, class: Gws::Tabular::View::Liquid, traits: [:gws_tabular_view_base]
+
+  factory :gws_tabular_view_liquid_with_pagination, class: Gws::Tabular::View::Liquid, traits: [:gws_tabular_view_base] do
+    template_html do
+      <<~HTML
+        <div class="pagination upper">{% ss_pagination %}</div>
+
+        <div class="list">
+          {% for item in items %}
+          <a href="{{ item | show_url }}" class="list-item" data-id="{{ item.id }}">
+            <span class="list-item-name">{{ item.values["name"] }}</span>
+            <time class="list-item-updated" datetime="{{ item.updated }}">{{ item.updated | ss_item: "iso" }}</span>
+          </a>
+          {% endfor %}
+        </div>
+
+        <div class="pagination lower">{% ss_pagination %}</div>
+      HTML
+    end
+  end
 end
