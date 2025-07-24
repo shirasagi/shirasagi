@@ -1301,7 +1301,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
   // .icon-todo:hover:before {
   //   background-position: -32px -352px !important;
   // }
-  .icon-facility:before {
+  .icon-facility::before {
     background-position: left -384px !important;
   }
   .icon-facility:hover::before {
@@ -1409,7 +1409,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
   // .icon-survey:hover:before {
   //   background-position: -32px -928px !important;
   // }
-  .icon-trash:before {
+  .icon-trash::before {
     background-position: left -960px !important;
   }
   .icon-trash:hover::before {
@@ -1439,7 +1439,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
   // .icon-workload:hover:before {
   //   background-position: -32px -1088px !important;
   // }
-  .icon-export:before {
+  .icon-export::before {
     background-position: left -1120px !important;
   }
   .icon-export:hover::before {
@@ -2275,10 +2275,10 @@ footer.send {
     margin-top: 10px;
   }
   .file-type {
-    &:before {
+    &::before {
       content: "(";
     }
-    &:after {
+    &::after {
       content: ")";
     }
   }
@@ -4362,7 +4362,7 @@ table.check-links-erros {
 }
 
 // フォントアイコン用スタイル設定クラス
-span[class^="ss-icon-"]:before, span[class*=" ss-icon-"]::before {
+span[class^="ss-icon-"]::before, span[class*=" ss-icon-"]::before {
   margin-right: 5px !important;
   font-size: 32px !important;
 }

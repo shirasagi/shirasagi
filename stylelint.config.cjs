@@ -6,7 +6,7 @@ module.exports = {
     "stylelint-config-property-sort-order-smacss"
   ],
   "plugins": [
-    "stylelint-stylistic"
+    "@stylistic/stylelint-plugin"
   ],
   "ignoreFiles": [
     "app/assets/builds/**/*.css",
@@ -28,8 +28,8 @@ module.exports = {
       "/[.#].*ads[-_].*/", "/[.#].*[-_]ads.*/", "/[.#]ads/"
     ],
     // stylistic rules from stylelint-stylistic:
-    "selector-pseudo-element-colon-notation": "double",
+    "declaration-property-value-keyword-no-deprecated": null,
     "no-invalid-position-at-import-rule": null,
-    "block-opening-brace-space-before": "always"
+    "selector-pseudo-element-colon-notation": "double"
   }
 }
