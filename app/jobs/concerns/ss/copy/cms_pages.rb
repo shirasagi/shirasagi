@@ -26,7 +26,7 @@ module SS::Copy::CmsPages
     }
   end
 
-  def before_copy_cms_page(src_page)
+  def before_copy_cms_page(src_page, dest_page)
     Rails.logger.debug("#{src_page.filename}(#{src_page.id}): ページのコピーを開始します。")
   end
 
