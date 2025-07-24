@@ -17,7 +17,6 @@ module Sys::SiteCopy::CmsContents
 
       if dest_content.present?
         options[:before].call(src_content, dest_content) if options[:before]
-        dest_content.id
       else
         # at first, copy non-reference values and references which have no possibility of circular reference
         dest_content = klass.new(cur_site: @dest_site)
@@ -25,8 +24,8 @@ module Sys::SiteCopy::CmsContents
 
         options[:before].call(src_content, dest_content) if options[:before]
         dest_content.save!
-        dest_content.id
       end
+      dest_content.id
     end
 
     Rails.logger.debug{ "[cache] キャッシュキー=#{cache_id}, 値=#{id} (#{id.class})" }

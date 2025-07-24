@@ -12,7 +12,6 @@ module Job::Cms::CopyNodes::CmsContents
 
       if dest_content.present?
         options[:before].call(src_content, dest_content) if options[:before]
-        dest_content.id
       else
         # at first, copy non-reference values and references which have no possibility of circular reference
         dest_content = klass.new(cur_site: @cur_site)
@@ -21,8 +20,8 @@ module Job::Cms::CopyNodes::CmsContents
 
         options[:before].call(src_content, dest_content) if options[:before]
         dest_content.save!
-        dest_content.id
       end
+      dest_content.id
     end
 
     if dest_content
