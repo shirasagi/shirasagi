@@ -196,7 +196,13 @@ module Cms::Addon::List
     end
 
     def render_loop_html(item, opts = {})
-      item.render_template(opts[:html] || loop_html, self)
+      if loop_setting.present? && loop_setting.state == "public" &&
+         loop_setting.html_format == "SHIRASAGI" &&
+         loop_setting.custom_html.present?
+        item.render_template(loop_setting.custom_html, self)
+      else
+        item.render_template(opts[:html] || loop_html, self)
+      end
     end
 
     private

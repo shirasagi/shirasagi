@@ -87,8 +87,11 @@ module Cms::ListHelper
       h << capture(&block)
     else
       h << cur_item.substitute_html.to_s.html_safe if @items.blank?
-      if cur_item.loop_setting.present?
-        loop_html = cur_item.loop_setting.html
+      if cur_item.loop_setting.present? &&
+         cur_item.loop_setting.state == "public" &&
+         cur_item.loop_setting.html_format == "SHIRASAGI" &&
+         cur_item.loop_setting.custom_html.present?
+        loop_html = cur_item.loop_setting.custom_html
       elsif cur_item.loop_html.present?
         loop_html = cur_item.loop_html
       else
