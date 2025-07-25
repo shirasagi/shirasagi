@@ -98,6 +98,18 @@ $("#addon-guide-agents-addons-question a.ajax-box").data("on-select", function($
 
 <% end %>
 <%
+  def yes_in_edge
+    @item.in_edges.select do |in_edge|
+      in_edge[:question_type] == "yes_no" && in_edge[:value] == I18n.t("guide.links.applicable")
+    end.first
+  end
+
+  def no_in_edge
+    @item.in_edges.select do |in_edge|
+      in_edge[:question_type] == "yes_no" && in_edge[:value] == I18n.t("guide.links.not_applicable")
+    end.first
+  end
+
   def checkbox_in_edges
     @item.in_edges.select { |in_edge| in_edge[:question_type] == "choices" }
   end
@@ -127,6 +139,11 @@ $("#addon-guide-agents-addons-question a.ajax-box").data("on-select", function($
     <% end %>
   </dd>
 </dl>
+
+<div  class="question-edges yes_no">
+  <%= render partial: "edge/yes", locals: { f: f, in_edge: yes_in_edge } %>
+  <%= render partial: "edge/no", locals: { f: f, in_edge: no_in_edge } %>
+</div>
 
 <div class="question-edges choices">
   <dl class="see">

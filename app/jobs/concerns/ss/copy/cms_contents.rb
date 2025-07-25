@@ -59,6 +59,8 @@ module SS::Copy::CmsContents
       :loop_setting
     elsif klass == Cms::EditorTemplate
       :editor_template
+    elsif ancestors.include?(Guide::Diagram::Point)
+      :guide_diagram_point
     elsif klass == Opendata::DatasetGroup
       :opendata_dataset_group
     elsif klass == Opendata::License

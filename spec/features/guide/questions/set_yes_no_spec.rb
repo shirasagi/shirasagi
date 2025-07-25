@@ -50,6 +50,11 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.saved')
 
       item = ::Guide::Question.find_by(id_name: '0.sample')
+      expect(item.edges.size).to eq 2
+      expect(item.edges[0].value).to eq I18n.t("guide.links.applicable")
+      expect(item.edges[0].question_type).to eq "yes_no"
+      expect(item.edges[1].value).to eq I18n.t("guide.links.not_applicable")
+      expect(item.edges[1].question_type).to eq "yes_no"
     end
   end
 end
