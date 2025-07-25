@@ -78,15 +78,20 @@ table.dataTable tbody th,
 table.dataTable tbody td {
   padding: 8px 10px;
 }
-table.dataTable.row-border tbody th, table.dataTable.row-border tbody td, table.dataTable.display tbody th, table.dataTable.display tbody td {
+table.dataTable.row-border tbody th,
+table.dataTable.row-border tbody td,
+table.dataTable.display tbody th,
+table.dataTable.display tbody td {
   border-top: 1px solid #ddd;
 }
 table.dataTable.row-border tbody tr:first-child th,
-table.dataTable.row-border tbody tr:first-child td, table.dataTable.display tbody tr:first-child th,
+table.dataTable.row-border tbody tr:first-child td,
+table.dataTable.display tbody tr:first-child th,
 table.dataTable.display tbody tr:first-child td {
   border-top: 0;
 }
-table.dataTable.cell-border tbody th, table.dataTable.cell-border tbody td {
+table.dataTable.cell-border tbody th,
+table.dataTable.cell-border tbody td {
   border-top: 1px solid #ddd;
   border-right: 1px solid #ddd;
 }
@@ -98,90 +103,115 @@ table.dataTable.cell-border tbody tr:first-child th,
 table.dataTable.cell-border tbody tr:first-child td {
   border-top: 0;
 }
-table.dataTable.stripe tbody tr.odd, table.dataTable.display tbody tr.odd {
+table.dataTable.stripe tbody tr.odd,
+table.dataTable.display tbody tr.odd {
   background-color: #f9f9f9;
 }
-table.dataTable.stripe tbody tr.odd.selected, table.dataTable.display tbody tr.odd.selected {
+table.dataTable.stripe tbody tr.odd.selected,
+table.dataTable.display tbody tr.odd.selected {
   background-color: #acbad4;
 }
-table.dataTable.hover tbody tr:hover, table.dataTable.display tbody tr:hover {
+table.dataTable.hover tbody tr:hover,
+table.dataTable.display tbody tr:hover {
   background-color: #f6f6f6;
 }
-table.dataTable.hover tbody tr:hover.selected, table.dataTable.display tbody tr:hover.selected {
+table.dataTable.hover tbody tr:hover.selected,
+table.dataTable.display tbody tr:hover.selected {
   background-color: #aab7d1;
 }
 table.dataTable.order-column tbody tr > .sorting_1,
 table.dataTable.order-column tbody tr > .sorting_2,
-table.dataTable.order-column tbody tr > .sorting_3, table.dataTable.display tbody tr > .sorting_1,
+table.dataTable.order-column tbody tr > .sorting_3,
+table.dataTable.display tbody tr > .sorting_1,
 table.dataTable.display tbody tr > .sorting_2,
 table.dataTable.display tbody tr > .sorting_3 {
   background-color: #fafafa;
 }
 table.dataTable.order-column tbody tr.selected > .sorting_1,
 table.dataTable.order-column tbody tr.selected > .sorting_2,
-table.dataTable.order-column tbody tr.selected > .sorting_3, table.dataTable.display tbody tr.selected > .sorting_1,
+table.dataTable.order-column tbody tr.selected > .sorting_3,
+table.dataTable.display tbody tr.selected > .sorting_1,
 table.dataTable.display tbody tr.selected > .sorting_2,
 table.dataTable.display tbody tr.selected > .sorting_3 {
   background-color: #acbad5;
 }
-table.dataTable.display tbody tr.odd > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
+table.dataTable.display tbody tr.odd > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_1 {
   background-color: #f1f1f1;
 }
-table.dataTable.display tbody tr.odd > .sorting_2, table.dataTable.order-column.stripe tbody tr.odd > .sorting_2 {
+table.dataTable.display tbody tr.odd > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_2 {
   background-color: #f3f3f3;
 }
-table.dataTable.display tbody tr.odd > .sorting_3, table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
+table.dataTable.display tbody tr.odd > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.odd > .sorting_3 {
   background-color: #f5f5f5;
 }
-table.dataTable.display tbody tr.odd.selected > .sorting_1, table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_1 {
+table.dataTable.display tbody tr.odd.selected > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_1 {
   background-color: #a6b4cd;
 }
-table.dataTable.display tbody tr.odd.selected > .sorting_2, table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_2 {
+table.dataTable.display tbody tr.odd.selected > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_2 {
   background-color: #a8b5cf;
 }
-table.dataTable.display tbody tr.odd.selected > .sorting_3, table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_3 {
+table.dataTable.display tbody tr.odd.selected > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.odd.selected > .sorting_3 {
   background-color: #a9b7d1;
 }
-table.dataTable.display tbody tr.even > .sorting_1, table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
+table.dataTable.display tbody tr.even > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_1 {
   background-color: #fafafa;
 }
-table.dataTable.display tbody tr.even > .sorting_2, table.dataTable.order-column.stripe tbody tr.even > .sorting_2 {
+table.dataTable.display tbody tr.even > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_2 {
   background-color: #fcfcfc;
 }
-table.dataTable.display tbody tr.even > .sorting_3, table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
+table.dataTable.display tbody tr.even > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.even > .sorting_3 {
   background-color: #fefefe;
 }
-table.dataTable.display tbody tr.even.selected > .sorting_1, table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_1 {
+table.dataTable.display tbody tr.even.selected > .sorting_1,
+table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_1 {
   background-color: #acbad5;
 }
-table.dataTable.display tbody tr.even.selected > .sorting_2, table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_2 {
+table.dataTable.display tbody tr.even.selected > .sorting_2,
+table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_2 {
   background-color: #aebcd6;
 }
-table.dataTable.display tbody tr.even.selected > .sorting_3, table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_3 {
+table.dataTable.display tbody tr.even.selected > .sorting_3,
+table.dataTable.order-column.stripe tbody tr.even.selected > .sorting_3 {
   background-color: #afbdd8;
 }
-table.dataTable.display tbody tr:hover > .sorting_1, table.dataTable.order-column.hover tbody tr:hover > .sorting_1 {
+table.dataTable.display tbody tr:hover > .sorting_1,
+table.dataTable.order-column.hover tbody tr:hover > .sorting_1 {
   background-color: #eaeaea;
 }
-table.dataTable.display tbody tr:hover > .sorting_2, table.dataTable.order-column.hover tbody tr:hover > .sorting_2 {
+table.dataTable.display tbody tr:hover > .sorting_2,
+table.dataTable.order-column.hover tbody tr:hover > .sorting_2 {
   background-color: #ececec;
 }
-table.dataTable.display tbody tr:hover > .sorting_3, table.dataTable.order-column.hover tbody tr:hover > .sorting_3 {
+table.dataTable.display tbody tr:hover > .sorting_3,
+table.dataTable.order-column.hover tbody tr:hover > .sorting_3 {
   background-color: #efefef;
 }
-table.dataTable.display tbody tr:hover.selected > .sorting_1, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_1 {
+table.dataTable.display tbody tr:hover.selected > .sorting_1,
+table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_1 {
   background-color: #a2aec7;
 }
-table.dataTable.display tbody tr:hover.selected > .sorting_2, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_2 {
+table.dataTable.display tbody tr:hover.selected > .sorting_2,
+table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_2 {
   background-color: #a3b0c9;
 }
-table.dataTable.display tbody tr:hover.selected > .sorting_3, table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_3 {
+table.dataTable.display tbody tr:hover.selected > .sorting_3,
+table.dataTable.order-column.hover tbody tr:hover.selected > .sorting_3 {
   background-color: #a5b2cb;
 }
 table.dataTable.no-footer {
   border-bottom: 1px solid #111;
 }
-table.dataTable.nowrap th, table.dataTable.nowrap td {
+table.dataTable.nowrap th,
+table.dataTable.nowrap td {
   white-space: nowrap;
 }
 table.dataTable.compact thead th,
@@ -290,15 +320,15 @@ table.dataTable td {
   text-align: right;
 }
 .dataTables_wrapper .dataTables_filter input {
-  margin-left: .5em;
+  margin-left: 0.5em;
 }
 .dataTables_wrapper .dataTables_info {
-  padding-top: .755em;
+  padding-top: 0.755em;
   float: left;
   clear: both;
 }
 .dataTables_wrapper .dataTables_paginate {
-  padding-top: .25em;
+  padding-top: 0.25em;
   float: right;
   text-align: right;
 }
@@ -307,7 +337,7 @@ table.dataTable td {
   box-sizing: border-box;
   min-width: 1.5em;
   margin-left: 2px;
-  padding: .5em 1em;
+  padding: 0.5em 1em;
   border: 1px solid transparent;
   border-radius: 2px;
   color: #333 !important;
@@ -315,9 +345,16 @@ table.dataTable td {
   text-decoration: none !important;
   cursor: pointer;
 }
-.dataTables_wrapper .dataTables_paginate .paginate_button.current, .dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
+.dataTables_wrapper .dataTables_paginate .paginate_button.current,
+.dataTables_wrapper .dataTables_paginate .paginate_button.current:hover {
   border: 1px solid #979797;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #fff), color-stop(100%, #dcdcdc));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #fff),
+    color-stop(100%, #dcdcdc)
+  );
   /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(top, #fff 0%, #dcdcdc 100%);
   /* Chrome10+,Safari5.1+ */
@@ -332,7 +369,9 @@ table.dataTable td {
   background-color: #fff;
   color: #333 !important;
 }
-.dataTables_wrapper .dataTables_paginate .paginate_button.disabled, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover, .dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:hover,
+.dataTables_wrapper .dataTables_paginate .paginate_button.disabled:active {
   border: 1px solid transparent;
   background: transparent;
   box-shadow: none;
@@ -341,7 +380,13 @@ table.dataTable td {
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button:hover {
   border: 1px solid #111;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #585858), color-stop(100%, #111));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #585858),
+    color-stop(100%, #111)
+  );
   /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(top, #585858 0%, #111 100%);
   /* Chrome10+,Safari5.1+ */
@@ -358,7 +403,13 @@ table.dataTable td {
 }
 .dataTables_wrapper .dataTables_paginate .paginate_button:active {
   outline: none;
-  background: -webkit-gradient(linear, left top, left bottom, color-stop(0%, #2b2b2b), color-stop(100%, #0c0c0c));
+  background: -webkit-gradient(
+    linear,
+    left top,
+    left bottom,
+    color-stop(0%, #2b2b2b),
+    color-stop(100%, #0c0c0c)
+  );
   /* Chrome,Safari4+ */
   background: -webkit-linear-gradient(top, #2b2b2b 0%, #0c0c0c 100%);
   /* Chrome10+,Safari5.1+ */
@@ -385,12 +436,50 @@ table.dataTable td {
   margin-top: -25px;
   margin-left: -50%;
   padding-top: 20px;
-  background: -webkit-gradient(linear, left top, right top, color-stop(0%, rgba(255, 255, 255, 0)), color-stop(25%, rgba(255, 255, 255, .9)), color-stop(75%, rgba(255, 255, 255, .9)), color-stop(100%, rgba(255, 255, 255, 0)));
-  background: -webkit-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .9) 25%, rgba(255, 255, 255, .9) 75%, rgba(255, 255, 255, 0) 100%);
-  background: -moz-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .9) 25%, rgba(255, 255, 255, .9) 75%, rgba(255, 255, 255, 0) 100%);
-  background: -ms-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .9) 25%, rgba(255, 255, 255, .9) 75%, rgba(255, 255, 255, 0) 100%);
-  background: -o-linear-gradient(left, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .9) 25%, rgba(255, 255, 255, .9) 75%, rgba(255, 255, 255, 0) 100%);
-  background: linear-gradient(to right, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, .9) 25%, rgba(255, 255, 255, .9) 75%, rgba(255, 255, 255, 0) 100%);
+  background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0%, rgba(255, 255, 255, 0)),
+    color-stop(25%, rgba(255, 255, 255, 0.9)),
+    color-stop(75%, rgba(255, 255, 255, 0.9)),
+    color-stop(100%, rgba(255, 255, 255, 0))
+  );
+  background: -webkit-linear-gradient(
+    left,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 25%,
+    rgba(255, 255, 255, 0.9) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background: -moz-linear-gradient(
+    left,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 25%,
+    rgba(255, 255, 255, 0.9) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background: -ms-linear-gradient(
+    left,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 25%,
+    rgba(255, 255, 255, 0.9) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background: -o-linear-gradient(
+    left,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 25%,
+    rgba(255, 255, 255, 0.9) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.9) 25%,
+    rgba(255, 255, 255, 0.9) 75%,
+    rgba(255, 255, 255, 0) 100%
+  );
   background-color: #fff;
   font-size: 1.2em;
   text-align: center;
@@ -408,12 +497,68 @@ table.dataTable td {
 .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody {
   -webkit-overflow-scrolling: touch;
 }
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > td, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > th, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > td {
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > thead
+  > tr
+  > th,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > thead
+  > tr
+  > td,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > tbody
+  > tr
+  > th,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > tbody
+  > tr
+  > td {
   vertical-align: middle;
 }
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > th > div.dataTables_sizing,
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > thead > tr > td > div.dataTables_sizing, .dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > th > div.dataTables_sizing,
-.dataTables_wrapper .dataTables_scroll div.dataTables_scrollBody > table > tbody > tr > td > div.dataTables_sizing {
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > thead
+  > tr
+  > th
+  > div.dataTables_sizing,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > thead
+  > tr
+  > td
+  > div.dataTables_sizing,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > tbody
+  > tr
+  > th
+  > div.dataTables_sizing,
+.dataTables_wrapper
+  .dataTables_scroll
+  div.dataTables_scrollBody
+  > table
+  > tbody
+  > tr
+  > td
+  > div.dataTables_sizing {
   height: 0;
   margin: 0 !important;
   padding: 0 !important;
@@ -426,7 +571,7 @@ table.dataTable td {
 .dataTables_wrapper.no-footer div.dataTables_scrollBody > table {
   border-bottom: 0;
 }
-.dataTables_wrapper:after {
+.dataTables_wrapper::after {
   content: "";
   display: block;
   visibility: hidden;
@@ -441,7 +586,7 @@ table.dataTable td {
     text-align: center;
   }
   .dataTables_wrapper .dataTables_paginate {
-    margin-top: .5em;
+    margin-top: 0.5em;
   }
 }
 @media screen and (max-width: 640px) {
@@ -451,8 +596,6 @@ table.dataTable td {
     text-align: center;
   }
   .dataTables_wrapper .dataTables_filter {
-    margin-top: .5em;
+    margin-top: 0.5em;
   }
 }
-
-

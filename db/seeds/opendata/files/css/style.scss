@@ -11,10 +11,10 @@ html {
 body {
   height: 100%;
   margin: 0 auto;
+  color: $black1;
   font-family: $font-base;
   font-size: 100%;
   line-height: 1.5;
-  color: $black1;
 }
 
 h1,
@@ -62,8 +62,8 @@ select,
 input,
 textarea,
 button {
-  font-size: 100%;
   font-family: $font-base;
+  font-size: 100%;
 }
 
 select {
@@ -121,17 +121,17 @@ textarea {
   }
 
   .logo {
-    float: left;
     margin-right: 40px;
+    float: left;
   }
 
   .tab {
-    float: left;
     margin-bottom: -2px;
+    float: left;
 
     li {
-      float: left;
       margin-right: 10px;
+      float: left;
 
       a {
         display: block;
@@ -212,18 +212,18 @@ textarea {
   padding: 0 10px;
 
   .logo {
-    float: left;
     margin-top: 18px;
+    float: left;
   }
 
   .menu {
-    float: right;
     padding: $item-margin 0;
+    float: right;
 
     .u-menu {
       @include clear;
-      float: right;
       margin-bottom: $item-margin;
+      float: right;
     }
 
     .search {
@@ -237,10 +237,10 @@ textarea {
       @include border-radius(3px);
 
       input[type=text] {
-        float: left;
         width: auto;
         min-height: 1em;
         padding: 0;
+        float: left;
         border: 0;
       }
 
@@ -250,20 +250,20 @@ textarea {
     }
 
     .inquiry {
-      float: left;
       margin: 4px 0 0 $item-margin;
       padding-left: 20px;
+      float: left;
       background: url(../img/ic-info.png) no-repeat left center;
     }
 
     .l-menu {
       @include clear;
-      clear: both;
       float: right;
+      clear: both;
 
       li {
-        float: left;
         margin-left: $item-margin;
+        float: left;
         list-style: none;
 
         a {
@@ -299,8 +299,8 @@ textarea {
     padding: 0 10px;
 
     li {
-      float: left;
       width: 179px;
+      float: left;
       border-left: 1px solid #fff;
       list-style: none;
 
@@ -315,8 +315,8 @@ textarea {
       padding: 10px 0;
       color: $black1;
       font-size: $px16;
-      text-decoration: none;
       text-align: center;
+      text-decoration: none;
     }
   }
 }
@@ -358,7 +358,7 @@ textarea {
   width: 100%;
   margin-bottom: $box-margin;
 
-  &:after {
+  &::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -378,13 +378,13 @@ textarea {
   }
 
   h2 {
-    float: left;
     margin-top: 55px;
+    float: left;
   }
 
   nav {
-    float: right;
     margin: $box-margin 0;
+    float: right;
 
     li {
       width: 249px;
@@ -484,7 +484,7 @@ textarea {
   margin-bottom: $box-margin;
   @include grd-sky;
 
-  &:after {
+  &::after {
     content: "";
     position: absolute;
     bottom: 0;
@@ -509,8 +509,8 @@ textarea {
     }
 
     li {
-      float: left;
       width: 249px;
+      float: left;
       list-style: none;
 
       &:first-child {
@@ -564,8 +564,8 @@ textarea {
     display: inline-block;
     padding: 33px 10px;
     background: $gray2;
-    line-height: 1em;
     font-size: $px18;
+    line-height: 1em;
   }
 
   .count {
@@ -605,18 +605,18 @@ textarea {
 }
 
 #main {
-  float: left;
   width: 803px;
+  float: left;
 }
 
 .one #main {
-  float: none;
   width: $page-width;
+  float: none;
 }
 
 #side {
-  float: right;
   width: 249px;
+  float: right;
 }
 
 // -----------------------------------------------------------------------------
@@ -669,9 +669,9 @@ textarea {
       min-width: 100px;
       margin-right: 10px;
       padding: 10px;
-      text-align: center;
-      background-color: $gray3;
       border-radius: 6px 6px 0 0;
+      background-color: $gray3;
+      text-align: center;
       text-decoration: none;
 
       &.current {
@@ -680,8 +680,8 @@ textarea {
 
       a {
         display: block;
-        text-decoration: none;
         color: $black2;
+        text-decoration: none;
       }
     }
   }
@@ -713,10 +713,10 @@ textarea {
 .opendatagraph a,
 .settings a {
   @include btn-black;
-  width: 100%;
-  text-align: center;
   box-sizing: border-box;
+  width: 100%;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .body--dataset-map #wrap {
@@ -731,23 +731,23 @@ textarea {
 }
 
 .body--dataset-map #main {
+  width: 100%;
   float: none;
   @include display-flex;
-  width: 100%;
 
   .dataset-search {
+    box-sizing: border-box;
     width: 300px;
     height: 600px;
-    overflow-y: scroll;
     padding: 10px;
+    overflow-y: scroll;
     border: 1px solid $gray2;
     border-right: 0;
-    box-sizing: border-box;
 
     #ajax-search {
       @include btn-black;
-      width: 100%;
       box-sizing: border-box;
+      width: 100%;
     }
 
     .settings {
@@ -782,8 +782,8 @@ textarea {
         position: absolute;
         top: -3px;
         right: 0;
-        border: 0;
         box-sizing: border-box;
+        border: 0;
       }
 
       label {
@@ -799,14 +799,14 @@ textarea {
 
         .images {
           @include display-flex;
-          flex-wrap: wrap;
-          z-index: 9999;
-          padding: 2px;
-          position: absolute;
-          background: #fff;
-          border: 1px solid #d0d0d0;
           display: flex;
+          position: absolute;
+          z-index: 9999;
+          flex-wrap: wrap;
           width: 260px;
+          padding: 2px;
+          border: 1px solid #d0d0d0;
+          background: #fff;
 
           .image {
             padding: 2px;
@@ -840,24 +840,24 @@ textarea {
   }
 
   #map-canvas {
+    box-sizing: border-box;
     width: 100%;
     border: 1px solid $gray2;
-    box-sizing: border-box;
   }
 }
 
 .body--dataset-map {
   #ajax-box {
     .submitters {
-      text-align: center;
       margin: 20px 0 0;
+      text-align: center;
     }
 
     .btn {
       @include btn-black;
-      vertical-align: top;
       margin-bottom: 10px;
       border: 0;
+      vertical-align: top;
     }
 
     .search-ui-form {
@@ -894,12 +894,12 @@ textarea {
   }
 
   a.btn {
-    text-decoration: none;
     padding: 4px;
     border: solid 1px #767676;
     border-radius: 3px;
-    color: black;
     background: #efefef;
+    color: black;
+    text-decoration: none;
     vertical-align: middle;
 
     &:hover {
@@ -959,14 +959,14 @@ textarea {
     @include display-flex;
 
     .dataset-search {
-      border: none;
-      border-right: 1px solid #d5d5d5;
+      box-sizing: border-box;
+      width: 300px;
       height: auto;
       max-height: 100%;
-      width: 300px;
-      overflow-y: scroll;
       padding: 10px;
-      box-sizing: border-box;
+      overflow-y: scroll;
+      border: none;
+      border-right: 1px solid #d5d5d5;
     }
 
     .resource-graph {
@@ -988,14 +988,14 @@ textarea {
 }
 
 .resource-graph {
-  overflow-x: scroll;
   max-width: 740px;
   margin: 0 auto;
+  overflow-x: scroll;
 }
 
 .graph-controller {
-  text-align: right;
   margin: 10px;
+  text-align: right;
 
   .graph-types {
     margin-bottom: 5px;
@@ -1049,13 +1049,13 @@ textarea {
     }
 
     time {
-      float: left;
       width: 20%;
+      float: left;
     }
 
     h2 {
-      float: left;
       width: 80%;
+      float: left;
     }
 
     .point {
@@ -1094,8 +1094,8 @@ textarea {
   }
 
   article {
-    float: left;
     margin: 14px 7px 0;
+    float: left;
 
     a {
       display: block;
@@ -1171,8 +1171,8 @@ textarea {
   display: block;
 
   div {
-    float: left;
     margin-right: $item-margin;
+    float: left;
   }
 
   .fb-like {
@@ -1180,8 +1180,8 @@ textarea {
   }
 
   .fb-share {
-    margin-right: 5px;
     margin-top: -1px;
+    margin-right: 5px;
   }
 }
 
@@ -1190,9 +1190,9 @@ textarea {
 .dataset-count,
 .app-count,
 .idea-count {
-  float: right;
   margin: $item-margin 0;
   padding-right: 10px;
+  float: right;
   border: $border-gray2;
 
   .count-label {
@@ -1209,13 +1209,13 @@ textarea {
 .opendata-search-groups-form,
 .opendata-search-apps-form,
 .opendata-search-ideas-form {
-  clear: both;
-  @include display-flex;
-  @include flex-wrap(wrap);
-  gap: $item-margin;
   margin: $box-margin 0;
   padding: 12px;
+  clear: both;
   border: 2px solid $sky;
+  gap: $item-margin;
+  @include display-flex;
+  @include flex-wrap(wrap);
 
   dl {
     width: 249px;
@@ -1236,8 +1236,8 @@ textarea {
   }
 
   .send input {
-    float: right;
     margin-top: 20px;
+    float: right;
     @include btn-black;
   }
 }
@@ -1258,8 +1258,8 @@ textarea {
 
   .download {
     position: absolute;
-    bottom: 20px;
     right: 15px;
+    bottom: 20px;
   }
 }
 
@@ -1281,8 +1281,8 @@ textarea {
 }
 
 .download-all {
-  float: right;
   margin-right: 15px;
+  float: right;
 }
 
 .download-all,
@@ -1299,10 +1299,10 @@ textarea {
 // categories
 div.categories,
 nav.categories {
+  width: calc(100% - 187px);
   margin-top: 15px;
   @include display-flex;
   @include flex-wrap(wrap);
-  width: calc(100% - 187px);
 
   span,
   a {
@@ -1353,10 +1353,10 @@ nav.categories {
 .app .one,
 .idea .one {
   header .id {
-    float: right;
     padding: 1em 0 0;
+    float: right;
 
-    &:before {
+    &::before {
       content: "ID:";
     }
   }
@@ -1369,9 +1369,9 @@ nav.categories {
   }
 
   .point {
-    float: right;
     width: 247px;
     padding: $item-margin 0;
+    float: right;
     border: $border-gray2;
     text-align: center;
 
@@ -1395,16 +1395,16 @@ nav.categories {
 
   .categories {
     @include clear;
-    float: left;
     width: 803px;
     margin-bottom: $item-margin;
+    float: left;
   }
 
   .text,
   div.idea {
-    float: left;
     width: 780px;
     margin-bottom: $box-margin;
+    float: left;
 
     h2 {
       font-size: $px18;
@@ -1421,10 +1421,10 @@ nav.categories {
   }
 
   .names {
-    clear: both;
-    @include tab;
     margin-bottom: $box-margin;
+    clear: both;
     border-bottom: 2px solid $sky;
+    @include tab;
 
     a:hover,
     a.current,
@@ -1457,8 +1457,8 @@ nav.categories {
       padding: 12px;
 
       &:not(:last-child) {
-        border-bottom: $border-gray2;
         margin-bottom: 20px;
+        border-bottom: $border-gray2;
       }
 
       .info {
@@ -1471,14 +1471,14 @@ nav.categories {
         .name {
           display: block;
           width: 500px;
+          margin-bottom: 10px;
           padding: 7px 0 7px 35px;
           float: none;
-          margin-bottom: 10px;
         }
 
         .download-count {
-          border-top: solid 1px #dfdfdf;
           padding: 8px 12px;
+          border-top: solid 1px #dfdfdf;
         }
 
         div[class^="name format-"] {
@@ -1585,8 +1585,8 @@ nav.categories {
       padding: 12px;
 
       &:not(:last-child) {
-        border-bottom: $border-gray2;
         margin-bottom: 20px;
+        border-bottom: $border-gray2;
       }
 
       .info {
@@ -1595,14 +1595,14 @@ nav.categories {
         .name {
           display: block;
           width: 500px;
+          margin-bottom: 10px;
           padding: 7px 0 7px 35px;
           float: none;
-          margin-bottom: 10px;
         }
 
         .download-count {
-          border-top: solid 1px #dfdfdf;
           padding: 8px 12px;
+          border-top: solid 1px #dfdfdf;
         }
 
         div[class^="name format-"] {
@@ -1675,16 +1675,16 @@ nav.categories {
 
       .info-detail {
         display: flex;
-        justify-content: space-between;
         align-items: start;
+        justify-content: space-between;
         margin-top: 20px;
 
         .info-list {
           display: flex;
           flex-wrap: wrap;
+          width: 450px;
           margin-top: 5px;
           margin-left: 20px;
-          width: 450px;
 
           dt {
             width: 35%;
@@ -1700,8 +1700,8 @@ nav.categories {
 
           .icons {
             display: flex;
-            align-items: center;
             flex-wrap: nowrap;
+            align-items: center;
             margin: 6px 0;
 
             .content-wrap {
@@ -1872,9 +1872,9 @@ nav.categories {
     }
 
     .comment-add {
+      margin: 40px;
       float: left;
       @include btn-black;
-      margin: 40px;
     }
   }
 
@@ -1888,9 +1888,9 @@ nav.categories {
 
     .app,
     .dataset {
-      clear: both;
       width: 550px;
       padding: 12px;
+      clear: both;
     }
 
     .app-executed,
@@ -1913,19 +1913,19 @@ nav.categories {
     border: $border-gray2;
 
     dt {
-      clear: both;
-      float: left;
       width: 230px;
       margin: 0 $item-margin 3px 0;
       padding: 3px 10px;
+      float: left;
+      clear: both;
       background: $sky;
     }
 
     dd {
-      float: left;
       width: 808px;
       margin-bottom: 3px;
       padding: 3px 0;
+      float: left;
     }
   }
 
@@ -1948,8 +1948,8 @@ nav.categories {
 
     dl {
       @include clear;
-      float: left;
       margin-right: $item-margin;
+      float: left;
 
       dt,
       dd {
@@ -2195,11 +2195,11 @@ nav.categories {
 
       a {
         display: block;
-        background: $hgreen;
-        padding: 10px 20px;
-        text-align: center;
         box-sizing: border-box;
+        padding: 10px 20px;
+        background: $hgreen;
         color: $black2;
+        text-align: center;
         text-decoration: none;
 
         &:hover {
@@ -2338,8 +2338,8 @@ nav.categories {
     .tel,
     .fax,
     .email {
-      float: left;
       margin-right: $item-margin;
+      float: left;
     }
   }
 }
@@ -2349,23 +2349,23 @@ nav.categories {
 .inquiry-form,
 .body--event .see {
   dl {
+    margin-bottom: $item-margin;
     clear: both;
     @include clear;
-    margin-bottom: $item-margin;
   }
 
   dt {
     width: 200px;
-    float: left;
     margin-right: $item-margin;
     padding: 10px;
+    float: left;
     background: $gray3;
   }
 
   dd {
-    float: left;
     width: 569px;
     margin-top: 4px;
+    float: left;
   }
 
   .send {
@@ -2419,8 +2419,8 @@ nav.categories {
 
   .see {
     dt {
-      clear: both;
       margin-bottom: $item-margin;
+      clear: both;
     }
 
     dd {
@@ -2517,10 +2517,10 @@ nav.categories {
     a {
       margin: 7px;
       padding: 7px 8px;
-      text-align: center;
       // text-decoration: none;
       // background-color: #bcbcbc;
       border-radius: 10px;
+      text-align: center;
 
       &:hover {
         // text-decoration: solid;
@@ -2560,9 +2560,9 @@ nav.categories {
 
   .calendar {
     width: 100%;
-    border: 1px solid #fff;
-    border-collapse: separate;
     border-spacing: 0;
+    border-collapse: separate;
+    border: 1px solid #fff;
     border-radius: 20px;
 
     @media only screen and (max-width: 768px) {
@@ -2609,18 +2609,18 @@ nav.categories {
     height: 36px;
     min-height: 36px;
     background: $white;
+    font-size: $px12;
     font-weight: normal;
     vertical-align: middle;
-    font-size: $px12;
 
     &:first-child {
-      background: #ffdeda;
       border-bottom: 1px solid #fff;
+      background: #ffdeda;
     }
 
     &:last-child {
-      background: #e1f0ff;
       border-bottom: 1px solid #fff;
+      background: #e1f0ff;
     }
   }
 
@@ -2628,8 +2628,8 @@ nav.categories {
     height: 100px;
     min-height: 100px;
     background: #fff;
-    font-weight: bold;
     font-size: $px12;
+    font-weight: bold;
 
     vertical-align: top;
   }
@@ -2704,28 +2704,28 @@ nav.categories {
 }
 
 #event-list {
-  clear: both;
   margin-bottom: 2em;
+  clear: both;
   border-top: $border-gray2;
 
   dl {
     margin: 0;
     padding: 6px 10px 3px;
-    border-bottom: $border-gray2;
     zoom: 1;
+    border-bottom: $border-gray2;
 
-    &:before {
+    &::before {
       content: "\0020";
       display: block;
       height: 0;
       overflow: hidden;
     }
 
-    &:after {
+    &::after {
       content: "\0020";
-      clear: both;
       display: block;
       height: 0;
+      clear: both;
       overflow: hidden;
     }
 
@@ -2752,8 +2752,8 @@ nav.categories {
   }
 
   dt {
-    float: left;
     width: 20%;
+    float: left;
   }
 
   dd {
@@ -2855,13 +2855,13 @@ nav.categories {
   @include clear;
 
   dt {
-    clear: both;
-    @include float(left);
     width: 150px;
     margin: 0 $box-margin $item-margin 0;
     padding: 3px 5px;
-    @include border-radius(3px);
+    clear: both;
     background: $hblue;
+    @include float(left);
+    @include border-radius(3px);
   }
 
   dd {
@@ -3196,19 +3196,19 @@ nav.categories {
   }
 
   .menu {
-    float: left;
     margin-bottom: $item-margin;
+    float: left;
 
     a {
       @include btn-blue;
-      padding: 7px 12px;
       width: 180px;
+      padding: 7px 12px;
     }
   }
 
   .tutorial-data {
-    float: right;
     margin-bottom: $item-margin;
+    float: right;
 
     a {
       @include btn-black;
@@ -3216,9 +3216,9 @@ nav.categories {
   }
 
   .index {
-    clear: both;
     width: 100%;
     margin-bottom: $box-margin;
+    clear: both;
 
     thead {
       border-bottom: 2px solid $blue;
@@ -3295,34 +3295,34 @@ nav.categories {
 
   #item-form {
     .tooltip {
-      position: relative;
       display: inline-block;
+      position: relative;
       width: 16px;
       height: 16px;
-      @include border-radius(8px);
       background: $black1;
-      line-height: 18px;
       color: $white;
       font-weight: bold;
+      line-height: 18px;
       text-align: center;
       cursor: pointer;
+      @include border-radius(8px);
 
       ul {
+        display: none;
         position: absolute;
         bottom: 18px;
         left: -30px;
-        display: none;
         width: 22em;
         padding: 10px;
         border: $border-gray2;
         background: $white;
-        line-height: 1.6em;
         color: $black1;
         font-weight: normal;
-        text-align: left;
+        line-height: 1.6em;
         list-style: none;
+        text-align: left;
 
-        &:before {
+        &::before {
           content: "";
           position: absolute;
           bottom: -11px;
@@ -3330,11 +3330,11 @@ nav.categories {
           width: 0;
           height: 0;
           border-top: 10px solid $gray2;
-          border-left: 6px solid transparent;
           border-right: 6px solid transparent;
+          border-left: 6px solid transparent;
         }
 
-        &:after {
+        &::after {
           content: "";
           position: absolute;
           bottom: -16px;
@@ -3342,8 +3342,8 @@ nav.categories {
           width: 0;
           height: 0;
           border-top: 10px solid $white;
-          border-left: 6px solid transparent;
           border-right: 6px solid transparent;
+          border-left: 6px solid transparent;
         }
       }
     }
@@ -3444,15 +3444,15 @@ nav.categories {
     @include clear;
 
     dl {
+      margin-bottom: $item-margin;
       clear: both;
       @include clear;
-      margin-bottom: $item-margin;
     }
 
     dt,
     dd {
-      float: left;
       margin-right: $item-margin;
+      float: left;
     }
 
     dt {
@@ -3487,57 +3487,57 @@ nav.categories {
     padding: 8px 10px 5px 40px;
   }
 
-  .favorite:after {
+  .favorite::after {
     content: "";
+    display: block;
     position: absolute;
     top: 7px;
     left: 14px;
-    display: block;
     width: 25px;
     height: 25px;
     background: url(../img/favorite_star.png) no-repeat left center;
     background-size: 25px;
   }
 
-  .dataset:after {
+  .dataset::after {
     content: "";
+    display: block;
     position: absolute;
     top: 7px;
     left: 14px;
-    display: block;
     width: 25px;
     height: 25px;
     background: url(../img/ic-data-wh.png) no-repeat left center;
   }
 
-  .app:after {
+  .app::after {
     content: "";
+    display: block;
     position: absolute;
     top: 7px;
     left: 10px;
-    display: block;
     width: 25px;
     height: 25px;
     background: url(../img/ic-app-wh.png) no-repeat left center;
   }
 
-  .idea:after {
+  .idea::after {
     content: "";
+    display: block;
     position: absolute;
     top: 7px;
     left: 14px;
-    display: block;
     width: 25px;
     height: 25px;
     background: url(../img/ic-idea-wh.png) no-repeat left center;
   }
 
-  .profile:after {
+  .profile::after {
     content: "";
+    display: block;
     position: absolute;
     top: 7px;
     left: 14px;
-    display: block;
     width: 25px;
     height: 25px;
     background: url(../img/ic-login.png) no-repeat left center;
@@ -3557,9 +3557,9 @@ nav.categories {
   }
 
   li {
-    float: left;
     width: 332px;
     margin: 0 $item-margin $item-margin;
+    float: left;
     list-style: none;
     vertical-align: middle;
 
@@ -3585,16 +3585,16 @@ nav.categories {
 
 .body--member .profile {
   .icon {
-    float: left;
     margin: 0 $box-margin $box-margin 0;
     padding: 2px;
+    float: left;
     border: $border-gray2;
   }
 
   .name {
-    float: left;
     width: 903px;
     margin: $box-margin 0;
+    float: left;
     font-size: $px32;
     font-weight: bold;
   }

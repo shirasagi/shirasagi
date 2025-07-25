@@ -14,7 +14,10 @@
     align-items: center;
     padding: 5px;
 
-    thead, tbody, tfoot, tr {
+    thead,
+    tbody,
+    tfoot,
+    tr {
       display: contents;
     }
 
