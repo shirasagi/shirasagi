@@ -1,7 +1,13 @@
 // -------------------------------------------------------------------------------------------------
 // base
 
-header, footer, nav, section, article, figure, aside {
+header,
+footer,
+nav,
+section,
+article,
+figure,
+aside {
   & {
     display: block;
     margin: 0;
@@ -15,7 +21,8 @@ header, footer, nav, section, article, figure, aside {
 html {
   font-size: 13px;
 }
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   color: $black3;
@@ -30,7 +37,12 @@ body {
   position: relative;
   min-height: 100%;
 }
-h1, h2, h3, h4, h5, p {
+h1,
+h2,
+h3,
+h4,
+h5,
+p {
   margin: 0;
   font-size: 100%;
   font-weight: normal;
@@ -44,7 +56,9 @@ a:hover {
 }
 nav a {
   color: $black;
-  &:hover { color: $orange; }
+  &:hover {
+    color: $orange;
+  }
 }
 img {
   max-width: 100%;
@@ -70,9 +84,13 @@ td {
 
 // -------------------------------------------------------------------------------------------------
 
-.hide { display: none !important; }
+.hide {
+  display: none !important;
+}
 
-.nowrap { white-space: nowrap; }
+.nowrap {
+  white-space: nowrap;
+}
 
 .material-icons {
   vertical-align: middle;
@@ -115,7 +133,7 @@ td {
   padding: 5px 0;
   border: 1px solid #d0d0d0;
   background-color: #fff;
-  @include box-shadow(1px 3px 8px rgba(0, 0, 0, .2));
+  @include box-shadow(1px 3px 8px rgba(0, 0, 0, 0.2));
 }
 .dropdown-menu--white li {
   border-bottom: 1px solid #eee;
@@ -154,7 +172,7 @@ td {
   right: -55px;
   width: 450px;
   background: #fff;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+  @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
   @include mb {
     right: 0;
     width: 100%;
@@ -186,7 +204,7 @@ td {
     margin: 0;
     li {
       padding: 15px;
-      border-bottom: 1px solid  #f2f2f2;
+      border-bottom: 1px solid #f2f2f2;
       &.list-item {
         width: 100%;
         &.unseen {
@@ -198,10 +216,13 @@ td {
       }
     }
   }
-  a { color: #f25a38 !important; }
+  a {
+    color: #f25a38 !important;
+  }
   .popup-notice-actions {
     display: flex;
-    .more-all, .set-seen-all {
+    .more-all,
+    .set-seen-all {
       display: inline-block;
       width: 100%;
       padding: 10px 0;
@@ -213,7 +234,9 @@ td {
     }
   }
 }
-_::-webkit-full-page-media, _:future, :root .popup-notice-container .popup-notice::before {
+_::-webkit-full-page-media,
+_:future,
+:root .popup-notice-container .popup-notice::before {
   @include mb {
     right: 219px;
   }
@@ -255,7 +278,9 @@ _::-webkit-full-page-media, _:future, :root .popup-notice-container .popup-notic
     }
   }
 }
-_::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::before {
+_::-webkit-full-page-media,
+_:future,
+:root .gws-memo-message .popup-notice::before {
   @include mb {
     right: 268px;
   }
@@ -280,12 +305,15 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     margin: 20px 10px 0;
     float: right;
     text-align: right;
-    .updated, .user, .severity {
+    .updated,
+    .user,
+    .severity {
       display: block;
       margin-bottom: 8px;
     }
   }
-  .files, .links {
+  .files,
+  .links {
     span {
       display: block;
     }
@@ -405,16 +433,23 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       display: none;
     }
   }
-  .cms, .gws, .sns, .webmail, .gws-search {
+  .cms,
+  .gws,
+  .sns,
+  .webmail,
+  .gws-search {
     @include clear;
     float: left;
-    @include mb { float: none; }
+    @include mb {
+      float: none;
+    }
     h2 {
       float: left;
       a {
         display: block;
         color: $white;
-        &.current, &:hover {
+        &.current,
+        &:hover {
           color: $black;
           text-decoration: none;
         }
@@ -441,7 +476,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       padding: 5px 10px 5px 40px;
       background-position: 10px center;
     }
-    &.current, &:hover {
+    &.current,
+    &:hover {
       background: $white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
       @include mb {
         background-position: 10px center;
@@ -455,7 +491,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       padding: 5px 10px 5px 55px;
       background-position: 10px center;
     }
-    &.current, &:hover {
+    &.current,
+    &:hover {
       background: $white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
       @include mb {
         background-position: 10px center;
@@ -469,7 +506,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       padding: 5px 10px 5px 45px;
       background-position: 10px center;
     }
-    &.current, &:hover {
+    &.current,
+    &:hover {
       background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
       @include mb {
         background-position: 10px center;
@@ -483,7 +521,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       padding: 5px 10px 5px 45px;
       background-position: 10px center;
     }
-    &.current, &:hover {
+    &.current,
+    &:hover {
       background: $white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
       @include mb {
         background-position: 10px center;
@@ -587,9 +626,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
         left: 8px;
         width: 24px;
         height: 3px;
-        -moz-transition: all .4s;
-        -webkit-transition: all .4s;
-        transition: all .4s;
+        -moz-transition: all 0.4s;
+        -webkit-transition: all 0.4s;
+        transition: all 0.4s;
         background: $black;
       }
       span:first-child {
@@ -668,7 +707,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     font-size: 80%;
     font-weight: bold;
     text-decoration: none;
-    &.opened::before, &.closed::before {
+    &.opened::before,
+    &.closed::before {
       display: block;
       width: 36px;
       height: 36px;
@@ -713,7 +753,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     width: 105px;
     float: left;
     text-align: center;
-    @include mb { width: 50%; }
+    @include mb {
+      width: 50%;
+    }
     a {
       display: block;
       padding: 45px 0 10px;
@@ -721,12 +763,14 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       color: $black;
       font-size: $px12;
       &:hover {
-        background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center 5px;
+        background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center
+          5px;
         color: $orange;
         text-decoration: none;
       }
     }
-    a, a:hover {
+    a,
+    a:hover {
       @include mb {
         padding: 15px 15px 15px 45px;
         background-position: 4px center;
@@ -749,7 +793,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
 }
 .main-navi {
   border-bottom: $border-gray5;
-  h2 a, .icon-ss {
+  h2 a,
+  .icon-ss {
     display: block;
     position: relative;
     @include navi-icon;
@@ -870,7 +915,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     li a.current {
       color: $orange;
     }
-    .icon-ss, .icon-material {
+    .icon-ss,
+    .icon-material {
       padding-left: 36px;
     }
     .icon-ss::before {
@@ -979,7 +1025,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     }
 
     &:hover {
-      background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px center;
+      background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px
+        center;
     }
 
     &.down:hover {
@@ -1022,7 +1069,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     padding: 5px 15px 5px 60px;
     background: url(/assets/img/ic-arrow16-off.png) no-repeat 35px center;
   }
-  h3:last-child, ul:last-child {
+  h3:last-child,
+  ul:last-child {
     margin-bottom: 8px;
   }
   h3.no-icons {
@@ -1099,7 +1147,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
 
       &:hover {
-        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
+        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
+          center;
       }
 
       &.management {
@@ -1118,7 +1167,13 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
   }
   @include mb {
     h3:not(.no-icons) {
-      a, a:hover, a.management, a:hover.management, a.trash, a:hover.trash, span {
+      a,
+      a:hover,
+      a.management,
+      a:hover.management,
+      a.trash,
+      a:hover.trash,
+      span {
         padding: 5px 15px 5px 35px;
         background-position: 15px center;
       }
@@ -1128,7 +1183,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     h2 {
       background: url(/assets/img/ic-arrow-off.png) no-repeat 190px center;
     }
-    &:hover h2, &.active h2 {
+    &:hover h2,
+    &.active h2 {
       background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 190px center;
       color: $orange;
     }
@@ -1155,7 +1211,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       }
     }
     @include mb {
-      h2, &.active h2, &:hover h2 {
+      h2,
+      &.active h2,
+      &:hover h2 {
         background-position: 97% center;
       }
     }
@@ -1173,7 +1231,7 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     li {
       width: 180px;
       float: left;
-      &:nth-child(2n+1) {
+      &:nth-child(2n + 1) {
         clear: both;
       }
     }
@@ -1207,7 +1265,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       }
       color: $black;
       &:hover {
-        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px center;
+        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
+          center;
         color: $orange;
         text-decoration: none;
       }
@@ -1225,7 +1284,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       li {
         margin-left: 25px;
         float: left;
-        a, a:hover {
+        a,
+        a:hover {
           padding: 5px 0 5px 20px;
           background-position: left center;
         }
@@ -1234,29 +1294,34 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
   }
 }
 
-.main-navi, .mod-navi {
+.main-navi,
+.mod-navi {
   .icon-node::before {
     background-position: left -32px !important;
   }
-  .icon-node:hover::before, .icon-node.current::before {
+  .icon-node:hover::before,
+  .icon-node.current::before {
     background-position: -32px -32px !important;
   }
   .icon-page::before {
     background-position: left -64px !important;
   }
-  .icon-page:hover::before, .icon-page.current::before {
+  .icon-page:hover::before,
+  .icon-page.current::before {
     background-position: -32px -64px !important;
   }
   .icon-part::before {
     background-position: left -96px !important;
   }
-  .icon-part:hover::before, .icon-part.current::before {
+  .icon-part:hover::before,
+  .icon-part.current::before {
     background-position: -32px -96px !important;
   }
   .icon-layout::before {
     background-position: left -128px !important;
   }
-  .icon-layout:hover::before, .icon-layout.current::before {
+  .icon-layout:hover::before,
+  .icon-layout.current::before {
     background-position: -32px -128px !important;
   }
   .icon-conv::before {
@@ -1268,7 +1333,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
   .icon-write::before {
     background-position: left -192px !important;
   }
-  .icon-write:hover::before, .icon-write.current::before {
+  .icon-write:hover::before,
+  .icon-write.current::before {
     background-position: -32px -192px !important;
   }
   .icon-conf::before {
@@ -1506,9 +1572,12 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
   right: 15px;
   bottom: 15px;
   text-align: right;
-  @include mb { padding: 10px; }
+  @include mb {
+    padding: 10px;
+  }
 }
-#ss-mb, #ss-pc {
+#ss-mb,
+#ss-pc {
   margin-top: 10px;
   @include btn;
 }
@@ -1520,7 +1589,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
   border-bottom: $border-gray4;
   background: $gray5;
   list-style: none;
-  @include mb { display: none; }
+  @include mb {
+    display: none;
+  }
   li {
     float: left;
     &:first-child a::before {
@@ -1565,14 +1636,17 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     color: $black;
     font-weight: bold;
   }
-  @include mb { padding-left: 10px; }
+  @include mb {
+    padding-left: 10px;
+  }
 }
 
 // -------------------------------------------------------------------------------------------------
 // menu
 #menu {
   position: relative;
-  .nav-menu, .sns-nav-menu {
+  .nav-menu,
+  .sns-nav-menu {
     margin: 20px;
     @include mb {
       margin: 0;
@@ -1582,7 +1656,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
       display: inline-block;
       @include arrow;
       color: $black;
-      &:hover { color: $orange;}
+      &:hover {
+        color: $orange;
+      }
       @include mb {
         margin-bottom: 16px;
       }
@@ -1596,11 +1672,11 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
         display: inline-block;
         width: 0;
         height: 0;
-        margin-left: .255em;
-        border-top: .3em solid;
-        border-right: .3em solid transparent;
-        border-left: .3em solid transparent;
-        vertical-align: .255em;
+        margin-left: 0.255em;
+        border-top: 0.3em solid;
+        border-right: 0.3em solid transparent;
+        border-left: 0.3em solid transparent;
+        vertical-align: 0.255em;
       }
     }
     .dropdown-toggle-split {
@@ -1684,7 +1760,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     right: 4px;
   }
 }
-#content-navi + .index, #content-navi ~ .content-main {
+#content-navi + .index,
+#content-navi ~ .content-main {
   width: calc(100% - 24% - 10px);
   float: right;
 }
@@ -1696,7 +1773,8 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
     float: none;
     overflow: scroll;
   }
-  #content-navi + .index, #content-navi ~ .content-main {
+  #content-navi + .index,
+  #content-navi ~ .content-main {
     width: auto;
     float: none;
   }
@@ -1758,7 +1836,6 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
 // -------------------------------------------------------------------------------------------------
 // common view
 
-
 #ajax-box {
   margin: 10px;
   div.index {
@@ -1768,7 +1845,9 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
 .main-box {
   @include box;
   padding: 15px 10px;
-  @include mb { margin: 0 10px 10px; }
+  @include mb {
+    margin: 0 10px 10px;
+  }
   header {
     @include box-head;
     & {
@@ -1783,9 +1862,14 @@ _::-webkit-full-page-media, _:future, :root .gws-memo-message .popup-notice::bef
 }
 .toggle-head {
   cursor: pointer;
-  &:hover { background: $orange2; }
+  &:hover {
+    background: $orange2;
+  }
 }
-.addon-view, .search-pages, .index-search, .search-form {
+.addon-view,
+.search-pages,
+.index-search,
+.search-form {
   &:not(.print) {
     @include box;
   }
@@ -1868,15 +1952,19 @@ dl.see {
     @include mb {
       margin: 0;
     }
-    .prefix, .postfix {
+    .prefix,
+    .postfix {
       display: inline-block;
       padding: 3px 0;
       vertical-align: middle;
     }
-    input, select {
+    input,
+    select {
       margin: -5px 0;
       @include mb {
-        &[type="text"] ~ .btn, &[type="text"] ~ label, ~ select {
+        &[type="text"] ~ .btn,
+        &[type="text"] ~ label,
+        ~ select {
           margin-top: 10px;
         }
         &[type="text"] ~ label {
@@ -1890,7 +1978,7 @@ dl.see {
       vertical-align: middle;
     }
     > .sanitizer-status {
-      margin-left: .5rem;
+      margin-left: 0.5rem;
     }
     @include mb {
       select + input[type="text"] {
@@ -1899,13 +1987,16 @@ dl.see {
       input + button {
         margin-top: 10px;
       }
-      .prefix, .postfix {
+      .prefix,
+      .postfix {
         display: block;
         margin: 5px 0;
       }
     }
   }
-  > dt ~ dt { margin-top: 15px; }
+  > dt ~ dt {
+    margin-top: 15px;
+  }
   > dd ~ dd {
     margin-top: 15px;
     @include mb {
@@ -1928,7 +2019,8 @@ dl.see {
     padding-top: 0;
     float: none;
     border-top: 0;
-    button, .ajax-box {
+    button,
+    .ajax-box {
       margin: 0 5px 5px 0;
       @include mb {
         margin-bottom: 10px;
@@ -1939,7 +2031,8 @@ dl.see {
     @include mb {
       @include display-flex;
       @include align-items(center);
-      .prefix, .postfix {
+      .prefix,
+      .postfix {
         margin-left: 5px;
         white-space: nowrap;
       }
@@ -1981,11 +2074,14 @@ dl.see {
     }
   }
 }
-:root dl.see > dd input, :root dl.see > dd select {
+:root dl.see > dd input,
+:root dl.see > dd select {
   vertical-align: middle\0;
 }
 dl.mod-cms-parent_crumbs {
-  dd { margin-bottom: 10px; }
+  dd {
+    margin-bottom: 10px;
+  }
 }
 .tooltip {
   display: inline-block;
@@ -2006,7 +2102,7 @@ dl.mod-cms-parent_crumbs {
   border: 1px solid #fff;
 }
 .tippy-box {
-  &[data-theme~=ss-tooltip] {
+  &[data-theme~="ss-tooltip"] {
     font-size: 90%;
     font-weight: normal;
     text-align: left;
@@ -2036,17 +2132,22 @@ dl.mod-cms-parent_crumbs {
 footer.send {
   padding: 28px 0 0;
   text-align: center;
-  input, button {
+  input,
+  button {
     min-width: 80px;
     margin: 0 5px;
     @include mb {
       margin: 0 4px 4px;
     }
   }
-  input.publish_save, input.delete {
+  input.publish_save,
+  input.delete {
     @include btn-red;
   }
-  input.branch_save, input.draft_save, input.save, button.save {
+  input.branch_save,
+  input.draft_save,
+  input.save,
+  button.save {
     @include btn-blue;
   }
   input.branch_save {
@@ -2083,7 +2184,9 @@ footer.send {
 .field_with_errors {
   display: inline;
 
-  input, textarea, select {
+  input,
+  textarea,
+  select {
     display: inline-block;
     border: 1px solid #e00;
   }
@@ -2138,7 +2241,10 @@ footer.send {
 // -------------------------------------------------------------------------------------------------
 // addon
 
-#addon-cms-agents-addons-file .see, .addon-view .see, .mod-workflow-approve .upload, .column-value {
+#addon-cms-agents-addons-file .see,
+.addon-view .see,
+.mod-workflow-approve .upload,
+.column-value {
   .upload-menu-select {
     float: right;
     @include mb {
@@ -2151,7 +2257,8 @@ footer.send {
       margin-bottom: 10px;
     }
   }
-  .upload-drop-area, .column-value-upload-drop-area {
+  .upload-drop-area,
+  .column-value-upload-drop-area {
     margin-top: 10px;
     padding-top: 25px;
     padding-bottom: 25px;
@@ -2165,7 +2272,8 @@ footer.send {
     margin-bottom: 10px;
     background: $white;
   }
-  .upload-drop-notice, .column-value-upload-drop-notice {
+  .upload-drop-notice,
+  .column-value-upload-drop-notice {
     display: inline-block;
     margin: 0 20px;
     color: #b30;
@@ -2184,7 +2292,8 @@ footer.send {
     }
   }
 }
-#selected-files, .user-files {
+#selected-files,
+.user-files {
   @include display-flex;
   @include flex-wrap(wrap);
   gap: 20px;
@@ -2284,7 +2393,9 @@ footer.send {
   }
 }
 
-#addon-cms-agents-addons-file .file-view,#addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
+#addon-cms-agents-addons-file .file-view,
+#addon-cms-agents-addons-form-page .file-view,
+.column-value-cms-column-free .file-view {
   width: 240px;
   .od-resource-file-meta {
     display: inline-block;
@@ -2297,14 +2408,18 @@ footer.send {
     dd {
       margin: 0;
       margin: 4px 0 16px;
-      select, input, a, table {
+      select,
+      input,
+      a,
+      table {
         margin: 4px 0;
       }
     }
   }
 }
 
-#addon-cms-agents-addons-form-page .file-view,.column-value-cms-column-free .file-view {
+#addon-cms-agents-addons-form-page .file-view,
+.column-value-cms-column-free .file-view {
   width: 240px;
   .od-resource-file-meta {
     display: inline-block;
@@ -2317,7 +2432,10 @@ footer.send {
     dd {
       margin: 0;
       margin: 4px 0 16px;
-      select, input, a, table {
+      select,
+      input,
+      a,
+      table {
         margin: 4px 0;
       }
     }
@@ -2364,7 +2482,9 @@ footer.send {
         border-bottom: $border-gray1;
       }
     }
-    input { margin: 5px !important;}
+    input {
+      margin: 5px !important;
+    }
   }
   div.parent {
     padding: 15px 24px;
@@ -2392,8 +2512,11 @@ footer.send {
 // mod-map
 .mod-map {
   padding: 0 10px;
-  @include mb { padding: 0 10px; }
-  .reference-column-name, .center-input {
+  @include mb {
+    padding: 0 10px;
+  }
+  .reference-column-name,
+  .center-input {
     width: 260px;
     margin: 0;
   }
@@ -2407,7 +2530,9 @@ footer.send {
   }
   .keyword {
     max-width: 400px;
-    @include mb { max-width: 75%; }
+    @include mb {
+      max-width: 75%;
+    }
   }
   .location-search {
     margin-top: 20px;
@@ -2439,7 +2564,9 @@ footer.send {
       &.active {
         background: #ffebbd;
       }
-      .marker-name,.marker-text,.marker-loc-input {
+      .marker-name,
+      .marker-text,
+      .marker-loc-input {
         width: 240px;
         @include mb {
           width: 100%;
@@ -2500,7 +2627,9 @@ footer.send {
   @include box;
   margin-bottom: 15px;
   padding: 12px;
-  @include mb { margin: 0 10px 10px; }
+  @include mb {
+    margin: 0 10px 10px;
+  }
   .title {
     float: left;
     font-size: 140%;
@@ -2523,20 +2652,24 @@ footer.send {
   padding: 5px 0;
   border: $border-gray4;
   background: $white;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+  @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
   a {
     display: block;
     padding: 5px 15px;
     line-height: 1.8;
     white-space: nowrap;
-    &:hover { background: $gray1; }
+    &:hover {
+      background: $gray1;
+    }
   }
 }
 div.index {
   @include clear;
   @include box;
   position: static;
-  @include mb { margin: 0 10px 10px; }
+  @include mb {
+    margin: 0 10px 10px;
+  }
   .more {
     margin: 0 18px 10px;
   }
@@ -2547,7 +2680,9 @@ div.index {
   padding: 10px 18px;
   border-bottom: $border-gray1;
   font-weight: bold;
-  @include mb { padding: 10px 20px; }
+  @include mb {
+    padding: 10px 20px;
+  }
   .check {
     width: 32px;
     margin: 6px 0 6px -5px;
@@ -2563,7 +2698,8 @@ div.index {
     padding: 10px 14px;
     font-weight: normal;
 
-    &::before, &::after {
+    &::before,
+    &::after {
       content: "";
       display: none;
     }
@@ -2574,7 +2710,8 @@ div.index {
       float: none;
     }
 
-    .list-head-action, .list-head-search {
+    .list-head-action,
+    .list-head-search {
       margin: 0;
       float: none;
     }
@@ -2608,20 +2745,30 @@ div.index {
   float: left;
   @include mb {
     float: none;
-    * { margin-bottom: 5px; }
-    input[type="text"] { width: 70% !important; }
-    input[type="submit"] { width: auto !important; }
-    button { margin: 0 0 5px; }
-    span { display: inline-block; }
+    * {
+      margin-bottom: 5px;
+    }
+    input[type="text"] {
+      width: 70% !important;
+    }
+    input[type="submit"] {
+      width: auto !important;
+    }
+    button {
+      margin: 0 0 5px;
+    }
+    span {
+      display: inline-block;
+    }
   }
 }
 .list-head-action-set {
   display: inline-flex;
   gap: 5px;
-  align-items: center
+  align-items: center;
 }
-*+.list-head-action-set {
-  margin-left: 15px
+* + .list-head-action-set {
+  margin-left: 15px;
 }
 .list-head-action-tag {
   display: inline-block;
@@ -2648,9 +2795,15 @@ div.index {
         @include align-items(center);
       }
     }
-    * { margin: 0 5px 5px 0; }
-    input[type="text"] { width: 70% !important; }
-    input[type="submit"] { width: auto !important; }
+    * {
+      margin: 0 5px 5px 0;
+    }
+    input[type="text"] {
+      width: 70% !important;
+    }
+    input[type="submit"] {
+      width: auto !important;
+    }
     .limit {
       display: inline-block;
       width: 100%;
@@ -2696,11 +2849,15 @@ div.index {
     &:last-child {
       border: 0;
     }
-    .checked, &:hover {
+    .checked,
+    &:hover {
       background: $orange2;
     }
-    label + .info, .info + .links {
-      @include mb { margin-left: 26px; }
+    label + .info,
+    .info + .links {
+      @include mb {
+        margin-left: 26px;
+      }
     }
     .up {
       padding: 4px 0 4px 25px;
@@ -2719,18 +2876,22 @@ div.index {
     .title {
       color: $orange;
       font-size: $px15;
-      @include mb { font-size: $px14; }
+      @include mb {
+        font-size: $px14;
+      }
     }
     &.seen {
       a.title:link {
         color: #d00;
       }
-      a.title:visited, .from a {
+      a.title:visited,
+      .from a {
         color: #200;
       }
     }
     &.unseen {
-      .title, .from a {
+      .title,
+      .from a {
         color: #f00;
         font-weight: bold;
       }
@@ -2749,8 +2910,12 @@ div.index {
       .label {
         margin-right: 0;
         color: #844;
-        &::before { content: "["; }
-        &::after { content: "]"; }
+        &::before {
+          content: "[";
+        }
+        &::after {
+          content: "]";
+        }
       }
       .id {
         color: #444;
@@ -2781,7 +2946,8 @@ div.index {
         margin-top: 4px;
       }
     }
-    .gws-notice-file-count, .gws-notice-comment-count {
+    .gws-notice-file-count,
+    .gws-notice-comment-count {
       display: inline-block;
       img {
         margin-right: 2px;
@@ -2853,8 +3019,11 @@ div.index {
         background: $orange2;
       }
 
-      label + .info, .info + .links {
-        @include mb { margin-left: unset; }
+      label + .info,
+      .info + .links {
+        @include mb {
+          margin-left: unset;
+        }
       }
     }
 
@@ -2883,7 +3052,8 @@ div.index {
 .wrap-table {
   @include mb {
     overflow: scroll;
-    table.index th, table.index td {
+    table.index th,
+    table.index td {
       display: table-cell;
     }
     table.index thead th {
@@ -2900,7 +3070,8 @@ div.index {
   table.index {
     width: auto;
 
-    th, td {
+    th,
+    td {
       max-width: 200px;
       overflow: visible;
       text-overflow: clip;
@@ -2934,14 +3105,19 @@ table.index {
   tr:nth-child(2n) {
     background: #f8f8f8;
   }
-  tr.current, tr:hover {
+  tr.current,
+  tr:hover {
     background: $gray1;
   }
-  th, td {
+  th,
+  td {
     padding: 6px 18px;
-    @include mb { display: inline-block; }
+    @include mb {
+      display: inline-block;
+    }
   }
-  th:not(.datetime), td:not(.datetime) {
+  th:not(.datetime),
+  td:not(.datetime) {
     word-break: break-all;
   }
   td.state {
@@ -2971,7 +3147,9 @@ table.index {
       padding: 5px 0;
       border: 0;
       background: none;
-      @include mb { width: auto !important; }
+      @include mb {
+        width: auto !important;
+      }
       &::after {
         content: "/";
       }
@@ -3001,7 +3179,8 @@ table.index.data-table {
   tr {
     background: $white;
   }
-  th, td {
+  th,
+  td {
     padding: 6px 8px;
     border: $border-gray5;
   }
@@ -3056,10 +3235,12 @@ table.index.data-table {
   }
 }
 table.form-index {
-  th, td {
+  th,
+  td {
     padding: 6px;
   }
-  select, input[type=text] {
+  select,
+  input[type="text"] {
     width: 100%;
   }
 }
@@ -3088,7 +3269,10 @@ table.form-index.sortable-index {
 
 // -------------------------------------------------------------------------------------------------
 // form
-select, input, textarea, button {
+select,
+input,
+textarea,
+button {
   font-family: $font-base;
   font-size: 100%;
 }
@@ -3100,7 +3284,8 @@ select, input, textarea, button {
     vertical-align: middle;
   }
 }
-#addon-cms-agents-addons-file .see .cboxElement, .addon-view .see .cboxElement {
+#addon-cms-agents-addons-file .see .cboxElement,
+.addon-view .see .cboxElement {
   &:not(.link) {
     @include btn;
     &.add-date {
@@ -3113,27 +3298,47 @@ select {
   max-width: 100%;
   height: 2.4em;
   padding: 0 4px;
-  option, optgroup {
+  option,
+  optgroup {
     color: #333;
   }
-  &.blank-value, &.has-blank-value > option:first-child {
+  &.blank-value,
+  &.has-blank-value > option:first-child {
     color: #888;
   }
 }
 input {
-  &:placeholder-shown { color: #888; }
-  &::-webkit-input-placeholder { color: #888; }
-  &:-moz-placeholder { opacity: 1; color: #888; }
-  &::-moz-placeholder { opacity: 1; color: #888; }
-  &:-ms-input-placeholder { color: #888; }
+  &:placeholder-shown {
+    color: #888;
+  }
+  &::-webkit-input-placeholder {
+    color: #888;
+  }
+  &:-moz-placeholder {
+    opacity: 1;
+    color: #888;
+  }
+  &::-moz-placeholder {
+    opacity: 1;
+    color: #888;
+  }
+  &:-ms-input-placeholder {
+    color: #888;
+  }
 }
-input[type=text], input[type=password], input[type=date], input[type=datetime], input[type=url],
-input[type=email], input[type=number], input[type=tel] {
+input[type="text"],
+input[type="password"],
+input[type="date"],
+input[type="datetime"],
+input[type="url"],
+input[type="email"],
+input[type="number"],
+input[type="tel"] {
   @include input;
   width: 100%;
   padding: 6px;
 }
-input[type=number] {
+input[type="number"] {
   width: 12em !important;
 }
 input.alnum {
@@ -3244,15 +3449,16 @@ form .CodeMirror {
   left: 0;
   width: 100%;
   padding: 10px 8px;
-  background-color: rgba(90, 90, 90, .94);
-  @include box-shadow(0 6px 12px rgba(0, 0, 0, .2));
+  background-color: rgba(90, 90, 90, 0.94);
+  @include box-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
   color: #fff;
   line-height: 1.8;
   .wrap {
     text-align: center;
   }
 }
-.errorExplanation, .cms-notice {
+.errorExplanation,
+.cms-notice {
   margin: 0 0 20px;
   padding: 20px;
   border: 1px solid $orange;
@@ -3264,7 +3470,8 @@ form .CodeMirror {
     background-color: $orange;
     color: #fff;
   }
-  p, ul {
+  p,
+  ul {
     padding: 0;
   }
   ul {
@@ -3308,7 +3515,8 @@ form .CodeMirror {
     background: $orange;
     color: #fff;
   }
-  p, ul {
+  p,
+  ul {
     color: #822;
   }
 }
@@ -3340,8 +3548,12 @@ form .CodeMirror {
 .pagination {
   @include clear;
   margin: 20px 0;
-  @include mb { padding: 0 10px; }
-  span a, .current, .gap {
+  @include mb {
+    padding: 0 10px;
+  }
+  span a,
+  .current,
+  .gap {
     min-width: 20px;
     margin: 0 4px 0 0;
     padding: 10px;
@@ -3353,12 +3565,16 @@ form .CodeMirror {
   }
   span:first-child {
     margin-left: 0;
-    a { margin-left: 0; }
+    a {
+      margin-left: 0;
+    }
   }
-  .first a, .last a {
+  .first a,
+  .last a {
     min-width: 20px;
   }
-  .prev a, .next a {
+  .prev a,
+  .next a {
     min-width: 50px;
   }
   .current {
@@ -3374,7 +3590,11 @@ form .CodeMirror {
 // -------------------------------------------------------------------------------------------------
 // colorbox
 
-#cboxTitle, #cboxCurrent, #cboxNext, #cboxPrevious, #cboxSlideshow {
+#cboxTitle,
+#cboxCurrent,
+#cboxNext,
+#cboxPrevious,
+#cboxSlideshow {
   display: none !important;
 }
 #colorbox {
@@ -3447,7 +3667,8 @@ form .CodeMirror {
   //   border-color: #f2f2f2;
   //   background-color: #f9e9e3;
   // }
-  .unseen:hover, .seen:hover {
+  .unseen:hover,
+  .seen:hover {
     background: #ebebeb;
   }
   // .unseen:hover, .seen:hover {
@@ -3456,13 +3677,23 @@ form .CodeMirror {
   .icon {
     width: 28px;
     float: left;
-    &:first-of-type { margin-left: -7px; }
-    .material-icopns { display: block; }
+    &:first-of-type {
+      margin-left: -7px;
+    }
+    .material-icopns {
+      display: block;
+    }
   }
-  .icon a:hover .material-icons { opacity: .8; }
+  .icon a:hover .material-icons {
+    opacity: 0.8;
+  }
   .icon-star {
-    &.on  .material-icons { color: #f70; }
-    &.off .material-icons { color: #bbb; }
+    &.on .material-icons {
+      color: #f70;
+    }
+    &.off .material-icons {
+      color: #bbb;
+    }
   }
 }
 
@@ -3472,18 +3703,18 @@ form .CodeMirror {
 .sanitizer-status {
   display: inline-block;
   padding: 0 4px;
-  background: rgba(60, 60, 60, .8);
+  background: rgba(60, 60, 60, 0.8);
   color: #fff;
   font-weight: bold;
 }
 .sanitizer-wait {
-  background: rgba(0, 60, 120, .8);
+  background: rgba(0, 60, 120, 0.8);
 }
 .sanitizer-complete {
-  background: rgba(0, 120, 60, .8);
+  background: rgba(0, 120, 60, 0.8);
 }
 .sanitizer-error {
-  background: rgba(180, 0, 0, .8);
+  background: rgba(180, 0, 0, 0.8);
 }
 .sanitizer-none {
   display: none;
@@ -3498,7 +3729,9 @@ form .CodeMirror {
     position: absolute;
     top: 65px;
     right: 15px;
-    @include mb { position: static;}
+    @include mb {
+      position: static;
+    }
     a {
       img {
         max-width: 140px;
@@ -3511,7 +3744,9 @@ form .CodeMirror {
   }
 }
 .mod-cms-additional-info {
-  #item_additional_info__field { width: 160px; }
+  #item_additional_info__field {
+    width: 160px;
+  }
   dd textarea {
     width: 70%;
   }
@@ -3532,10 +3767,11 @@ form .CodeMirror {
   border-radius: 10px;
   background-color: #fff;
   font-size: 12px;
-  -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
+  -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
 
-  &::after, &::before {
+  &::after,
+  &::before {
     content: " ";
     position: absolute;
     top: 100%;
@@ -3645,7 +3881,10 @@ form .CodeMirror {
     dd {
       margin: 0;
       margin: 4px 0 16px;
-      select, input, a, table {
+      select,
+      input,
+      a,
+      table {
         margin: 4px 0;
       }
     }
@@ -3733,7 +3972,8 @@ body.ss-ajax-in-iframe {
 }
 
 .column-value-cms-column-table {
-  input, select {
+  input,
+  select {
     margin-left: 5px;
     @include mb {
       margin: 0 0 10px;
@@ -3753,7 +3993,8 @@ body.ss-ajax-in-iframe {
     th {
       background: #bbb;
     }
-    th ,td {
+    th,
+    td {
       padding: 20px 10px;
       border-collapse: collapse;
       font-size: $px16;
@@ -3767,7 +4008,7 @@ body.ss-ajax-in-iframe {
     width: 200px;
     border: 1px solid #ccc;
     background-color: #fff;
-    @include box-shadow(1px 1px 1px rgba(0, 0, 0, .2));
+    @include box-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
   }
   .table-menu.show {
     display: block;
@@ -3780,7 +4021,8 @@ body.ss-ajax-in-iframe {
       padding: 4px 10px;
     }
   }
-  .column-table-height, .column-table-width {
+  .column-table-height,
+  .column-table-width {
     width: 8em !important;
     margin-right: 1em;
     @include mb {
@@ -3798,13 +4040,13 @@ body.ss-ajax-in-iframe {
   .table-editor {
     overflow-x: auto;
     .control {
-      @include transition(.3s);
+      @include transition(0.3s);
       padding: 0;
       border: 1px solid #f2f2f2;
       background-color: $black;
       cursor: pointer;
       &:hover {
-        opacity: .8;
+        opacity: 0.8;
       }
     }
     table {
@@ -3814,7 +4056,8 @@ body.ss-ajax-in-iframe {
       width: 100px;
       min-width: initial;
     }
-    th ,td {
+    th,
+    td {
       min-width: 200px;
       max-width: 400px;
       padding: 3px 5px;
@@ -3908,12 +4151,13 @@ body.ss-ajax-in-iframe {
       list-style-type: disc;
     }
   }
-  iframe, video {
+  iframe,
+  video {
     max-width: 100%;
   }
 }
 .column-value-body select,
-.column-value-cms-column-urlfield2 .column-value-body input[type=text],
+.column-value-cms-column-urlfield2 .column-value-body input[type="text"],
 .list input {
   @include mb {
     margin-bottom: 10px;
@@ -3971,9 +4215,15 @@ body.ss-ajax-in-iframe {
     .icon-star {
       margin: 12px 0 0;
       float: right;
-      &.on    .material-icons { color: #f70; }
-      &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: .8; }
+      &.on .material-icons {
+        color: #f70;
+      }
+      &.off .material-icons {
+        color: #ddd;
+      }
+      &:hover .material-icons {
+        opacity: 0.8;
+      }
     }
     .subject {
       display: block;
@@ -4018,13 +4268,13 @@ body.ss-ajax-in-iframe {
     margin: -5px 0 10px;
     padding: 8px;
     border: 1px solid #fd8;
-    background-color: rgba(255, 255, 0, .2);
+    background-color: rgba(255, 255, 0, 0.2);
     background-color: #ffc;
     text-align: center;
     text-decoration: none;
     &:hover {
       border-color: #fb8;
-      background-color: rgba(255, 255, 0, .35);
+      background-color: rgba(255, 255, 0, 0.35);
       background-color: #ffa;
     }
   }
@@ -4049,7 +4299,8 @@ body.ss-ajax-in-iframe {
     &.unseen {
       background-color: #f9e9e3;
     }
-    &.seen:hover, &.unseen:hover {
+    &.seen:hover,
+    &.unseen:hover {
       background-color: #fbeee8;
     }
   }
@@ -4103,12 +4354,14 @@ body.ss-ajax-in-iframe {
 
 table.check-links-erros {
   table-layout: fixed;
-  th, td {
+  th,
+  td {
     padding: 6px 9px;
     &.name {
       width: 30%;
     }
-    &.url, &.groups {
+    &.url,
+    &.groups {
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -4362,7 +4615,8 @@ table.check-links-erros {
 }
 
 // フォントアイコン用スタイル設定クラス
-span[class^="ss-icon-"]::before, span[class*=" ss-icon-"]::before {
+span[class^="ss-icon-"]::before,
+span[class*=" ss-icon-"]::before {
   margin-right: 5px !important;
   font-size: 32px !important;
 }

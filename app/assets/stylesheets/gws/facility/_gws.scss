@@ -2,7 +2,8 @@
   table.index {
     width: auto;
 
-    th, td {
+    th,
+    td {
       padding: 4px;
     }
   }
@@ -12,7 +13,8 @@
   .kind {
     min-width: 3.5em;
   }
-  .day, .month {
+  .day,
+  .month {
     min-width: 3.5em;
     text-align: center;
   }

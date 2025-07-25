@@ -29,8 +29,7 @@
   .addon-body .updated {
     padding: 0 0 0 7px;
   }
-  .markdown
-  .files {
+  .markdown .files {
     margin: 5px;
     padding: 15px;
     border-radius: 4px;
@@ -81,7 +80,7 @@
   .selected-files {
     margin-top: 10px;
     span {
-      margin: 0 1em .5em 0;
+      margin: 0 1em 0.5em 0;
     }
   }
   .deselect {
@@ -133,7 +132,7 @@
     select {
       width: 160px;
     }
-    input[type=text] {
+    input[type="text"] {
       width: 240px !important;
     }
   }

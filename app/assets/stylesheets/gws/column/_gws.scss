@@ -85,7 +85,11 @@
     grid-template-columns: 1fr;
   }
 
-  select, textarea, input[type="text"], input[type="number"], input[type="url"] {
+  select,
+  textarea,
+  input[type="text"],
+  input[type="number"],
+  input[type="url"] {
     width: 100%;
   }
 

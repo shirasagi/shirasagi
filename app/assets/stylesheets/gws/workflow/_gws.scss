@@ -6,7 +6,7 @@
       margin-right: 4px;
       font-family: "Material Icons";
       font-size: 108%;
-      line-height: .9;
+      line-height: 0.9;
       vertical-align: -3px;
     }
   }
@@ -38,7 +38,7 @@
   .send {
     position: sticky;
     bottom: 0;
-    background-color: rgba(255, 255, 255, .85);
+    background-color: rgba(255, 255, 255, 0.85);
   }
 }
 
@@ -102,11 +102,13 @@
   }
 }
 
-.gws-workflow-select-forms-search ~ .gws-workflow-select-forms-selected-categories {
+.gws-workflow-select-forms-search
+  ~ .gws-workflow-select-forms-selected-categories {
   display: flex;
   margin-top: 10px;
 }
-.gws-workflow-select-forms-selected-search ~ .gws-workflow-select-forms-selected-categories {
+.gws-workflow-select-forms-selected-search
+  ~ .gws-workflow-select-forms-selected-categories {
   display: inline;
   margin-top: 10px;
 }
@@ -114,20 +116,23 @@
 .gws-workflow-grid-table {
   display: grid;
 
-  &[data-col='1'] {
+  &[data-col="1"] {
     grid-template-columns: 1fr;
   }
-  &[data-col='2'] {
+  &[data-col="2"] {
     grid-template-columns: auto 1fr;
   }
-  &[data-col='3'] {
+  &[data-col="3"] {
     grid-template-columns: auto auto 1fr;
   }
-  &[data-col='4'] {
+  &[data-col="4"] {
     grid-template-columns: auto auto auto 1fr;
   }
 
-  thead, tbody, tfoot, tr {
+  thead,
+  tbody,
+  tfoot,
+  tr {
     display: contents;
   }
 
@@ -140,24 +145,28 @@
 
   tr {
     &:hover {
-      th, td {
+      th,
+      td {
         background: #f2f2f2;
       }
     }
   }
 
   tr:nth-child(2n) {
-    th, td {
+    th,
+    td {
       background: #f8f8f8;
     }
     &:hover {
-      th, td {
+      th,
+      td {
         background: #f2f2f2;
       }
     }
   }
 
-  th, td {
+  th,
+  td {
     display: flex;
     align-items: center;
   }
@@ -191,7 +200,7 @@
   align-items: center;
 
   .material-icons-outlined {
-    color: #00C853
+    color: #00c853;
   }
 }
 
@@ -205,7 +214,8 @@
   }
 }
 
-.gws-workflow-file-approver-item-special-result, .gws-workflow-file-circulation-item-special-result {
+.gws-workflow-file-approver-item-special-result,
+.gws-workflow-file-circulation-item-special-result {
   width: 100%;
 
   &-item {

@@ -37,22 +37,30 @@
     table {
       width: 100%;
       background: $white;
-      @include mb { border-collapse: collapse; }
+      @include mb {
+        border-collapse: collapse;
+      }
     }
     tr {
-      @include mb { border-bottom: $border-gray5; }
+      @include mb {
+        border-bottom: $border-gray5;
+      }
     }
     tr:nth-child(2n) {
       // background: #f8f8f8;
     }
-    tr.current, tr:hover {
+    tr.current,
+    tr:hover {
       background: $gray1;
       // background: #fbeee8
     }
-    th, td {
+    th,
+    td {
       padding: 6px 18px;
       white-space: nowrap;
-      @include mb { display: inline-block; }
+      @include mb {
+        display: inline-block;
+      }
     }
     thead {
       tr {
@@ -81,7 +89,9 @@
     tbody {
       td {
         border-top: $border-gray5;
-        @include mb { border-top: 0; }
+        @include mb {
+          border-top: 0;
+        }
       }
     }
   }
@@ -98,7 +108,8 @@
       background-color: $orange;
       color: #fff;
     }
-    p, ul {
+    p,
+    ul {
       padding: 0;
     }
   }

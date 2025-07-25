@@ -51,7 +51,8 @@
       margin-bottom: 5px;
     }
 
-    &__accessibility, &__low-vision-result-table {
+    &__accessibility,
+    &__low-vision-result-table {
       @include display-flex;
     }
 
@@ -186,7 +187,8 @@
       @include display-flex;
       @include justify-content(center);
 
-      &-source, &-result {
+      &-source,
+      &-result {
         display: inline-block;
         max-width: 50%;
       }

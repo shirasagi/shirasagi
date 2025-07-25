@@ -7,14 +7,17 @@ div.csv2rdf-settings-table-container {
 
   table {
     table-layout: fixed;
-    th, td {
+    th,
+    td {
       max-width: 200px;
       padding: 4px 8px;
     }
     thead {
       tr {
         //&:nth-child(even) { background-color: #fff; }
-        &:hover { background-color: $gray3; }
+        &:hover {
+          background-color: $gray3;
+        }
         th {
           font-weight: bold;
         }
@@ -23,8 +26,12 @@ div.csv2rdf-settings-table-container {
     }
     tbody {
       tr {
-        &:nth-child(even) { background-color: #fff; }
-        &:hover { background-color: $gray3; }
+        &:nth-child(even) {
+          background-color: #fff;
+        }
+        &:hover {
+          background-color: $gray3;
+        }
         &.selected {
           font-weight: bold;
         }
@@ -51,7 +58,8 @@ div.csv2rdf-settings-table-container {
         padding-left: 144px;
       }
     }
-    tr.rdf-prop, tr.rdf-class {
+    tr.rdf-prop,
+    tr.rdf-class {
       border-bottom: $border-gray4;
       td {
         padding: 10px 8px;
@@ -169,14 +177,17 @@ table.opendata-harvest-report {
     padding-left: 16px;
   }
   overflow: auto;
-  th, td {
+  th,
+  td {
     min-width: 30px;
   }
-  th[colspan="7"], td[colspan="7"] {
+  th[colspan="7"],
+  td[colspan="7"] {
     width: calc(100% / 30 * 7);
   }
   .index {
-    th, td {
+    th,
+    td {
       padding: 6px;
     }
   }

@@ -28,7 +28,8 @@
   }
 
   // グループ名、ユーザー名は最大2行
-  .group-name, .user-name {
+  .group-name,
+  .user-name {
     display: -webkit-box;
     overflow: hidden;
     -webkit-line-clamp: 2;

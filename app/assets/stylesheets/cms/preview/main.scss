@@ -14,14 +14,19 @@
   background-color: #323232;
   color: #fff;
   font-family: $font-base;
-  font-size: .8rem;
-  .ss-preview-dropdown ,#ss-preview-btn-select-draft-page {
+  font-size: 0.8rem;
+  .ss-preview-dropdown,
+  #ss-preview-btn-select-draft-page {
     display: inline-block;
     color: #000;
     text-decoration: none;
     vertical-align: top;
   }
-  button, select, #ss-preview-btn-select-draft-page, input, .ss-preview-part-list {
+  button,
+  select,
+  #ss-preview-btn-select-draft-page,
+  input,
+  .ss-preview-part-list {
     @include btn;
     box-sizing: border-box;
     width: auto;
@@ -69,7 +74,8 @@
     }
   }
   // scss-lint:disable PropertySpelling
-  #ss-preview-btn-workflow-start, #ss-preview-btn-workflow-approve {
+  #ss-preview-btn-workflow-start,
+  #ss-preview-btn-workflow-approve {
     *zoom: 1;
     border: 1px solid #b23a3d;
     background: #e13026;
@@ -207,7 +213,7 @@
   padding: 3px 5px 0 0;
   border: 1px solid #000;
   border-left: 3px solid #000;
-  @include transition(.18s);
+  @include transition(0.18s);
   pointer-events: none;
   .ss-preview-overlay-tool {
     @include display-flex;
@@ -221,7 +227,7 @@
     max-width: 100%;
     margin: 0;
     padding: 0 5px;
-    background-color: rgba(0, 0, 0, .8);
+    background-color: rgba(0, 0, 0, 0.8);
     pointer-events: none;
     @include mb {
       display: block;
@@ -229,7 +235,8 @@
     span {
       color: #fff;
     }
-    button, select {
+    button,
+    select {
       min-height: 3em;
       @include btn;
     }
@@ -242,9 +249,11 @@
     .ss-preview-btn-group {
       z-index: 101;
       padding: 5px 5px 5px 0;
-      font-size: .8rem;
+      font-size: 0.8rem;
       pointer-events: auto;
-      button, select, input {
+      button,
+      select,
+      input {
         position: relative;
         z-index: 10;
       }
@@ -263,9 +272,9 @@
     display: inline-block;
   }
   .ss-preview-overlay-name {
-    margin: 0 .75rem;
+    margin: 0 0.75rem;
     color: #fff;
-    font-size: .8em;
+    font-size: 0.8em;
   }
 }
 
@@ -290,7 +299,9 @@
     display: none;
   }
 
-  .hide { display: none; }
+  .hide {
+    display: none;
+  }
 
   @import "cms/column";
 }
@@ -336,20 +347,23 @@ div.ss-preview-dialog {
     padding: 5px;
     line-height: 1.4;
   }
-  .btn-primary, .commit {
+  .btn-primary,
+  .commit {
     @include btn-red;
-
   }
   .btn-default {
     @include btn-gray-l;
   }
-  .btn-primary, .commit, .btn-default {
+  .btn-primary,
+  .commit,
+  .btn-default {
     font-size: $px13;
   }
   .send {
     margin-top: 10px;
     text-align: center;
-    input, button {
+    input,
+    button {
       vertical-align: top;
     }
   }
@@ -361,7 +375,8 @@ div.ss-preview-dialog {
   }
 }
 
-.ss-preview-page, .ss-preview-column {
+.ss-preview-page,
+.ss-preview-column {
   min-height: 1em;
 }
 body.ss-ajax-in-iframe {
@@ -414,7 +429,8 @@ table.index {
     padding-right: 0;
     text-align: center;
   }
-  th, td {
+  th,
+  td {
     padding: 6px 18px;
     font-size: $px13;
     a {
@@ -444,9 +460,11 @@ table.index {
     margin-bottom: 15px;
   }
 }
-.mod-workflow-request, .search-ui-form {
+.mod-workflow-request,
+.search-ui-form {
   font-size: $px12;
-  dl.see > dt ~ dt, dl.see > dd ~ dd {
+  dl.see > dt ~ dt,
+  dl.see > dd ~ dd {
     margin-top: 15px;
     @include clear;
   }
@@ -461,7 +479,7 @@ table.index {
   dd {
     margin: 0 0 0 180px;
     padding: 5px 0;
-    input[type=text] {
+    input[type="text"] {
       @include box-sizing(border-box);
       @include box-sizing("inset 0 1px 3px #dcdcdc");
       width: 80%;

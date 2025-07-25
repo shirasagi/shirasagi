@@ -1,13 +1,18 @@
 .history-backup {
-  th, td {
+  th,
+  td {
     border: $border-gray5;
     @include mb {
       display: block !important;
       border: 0;
     }
   }
-  th { font-weight: bold; }
-  td { word-break: break-all; }
+  th {
+    font-weight: bold;
+  }
+  td {
+    word-break: break-all;
+  }
   td.diff {
     background-color: #ffc;
   }
