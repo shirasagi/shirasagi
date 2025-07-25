@@ -23,9 +23,9 @@ html {
 
 body {
   margin: 0 auto;
+  color: $black;
   font-family: $font-base;
   font-size: 100%;
-  color: $black;
 }
 
 h1,
@@ -56,10 +56,10 @@ a {
 
 rp,
 rt {
+  background: $white;
   color: $black;
   font-size: $px10;
   font-weight: normal;
-  background: $white;
 }
 
 rp {
@@ -89,8 +89,8 @@ select,
 input,
 textarea,
 button {
-  font-size: 100%;
   font-family: $font-base;
+  font-size: 100%;
 }
 
 select {
@@ -144,8 +144,8 @@ textarea {
   width: 70%;
   height: 6.5em;
   padding: 12px;
-  line-height: 1.4;
   border: 1px solid $gray3;
+  line-height: 1.4;
 
   @include mb {
     width: 100%;
@@ -181,15 +181,15 @@ textarea {
   li {
     @include li;
 
-    &:before {
+    &::before {
       background: $red;
     }
   }
 }
 
 #ss-notice {
-  color: $red;
   margin-bottom: 30px;
+  color: $red;
 }
 
 .simple-captcha {
@@ -225,10 +225,10 @@ textarea {
 #wrap {
   @include clear;
   position: relative;
-  overflow: visible;
-  @include page-width;
   margin: 0 auto;
   padding: 0;
+  overflow: visible;
+  @include page-width;
 
   @include mb {
     display: block;
@@ -275,8 +275,8 @@ textarea {
     padding: 5px 15px;
 
     #nocssread {
-      float: left;
       padding: 3px 10px 3px 0;
+      float: left;
     }
 
     #size,
@@ -354,8 +354,8 @@ textarea {
 
     @include mb {
       display: block;
-      float: right;
       padding: 10px 0 7px;
+      float: right;
 
       li {
         display: inline-block;
@@ -364,9 +364,9 @@ textarea {
       a {
         display: block;
         padding: 10px;
+        background: $primary3;
         line-height: 1;
         @include border-radius(6px);
-        background: $primary3;
 
         img {
           width: 16px;
@@ -377,13 +377,13 @@ textarea {
   }
 
   #search {
-    float: right;
     padding: 20px 0;
+    float: right;
 
     @include mb {
+      display: none;
       float: none;
       clear: both;
-      display: none;
     }
 
     form {
@@ -393,9 +393,9 @@ textarea {
     }
 
     #search-box {
-      float: left;
       width: 20em;
       padding: .4em 1em 0;
+      float: left;
       border: 0;
       background: none;
 
@@ -409,10 +409,10 @@ textarea {
     }
 
     #search-button {
-      float: left;
-      @include btn-primary-s;
       padding: 5px 10px;
+      float: left;
       border: 0;
+      @include btn-primary-s;
       @include border-radius(0);
 
       @include mb {
@@ -447,10 +447,10 @@ textarea {
 
   ul {
     @include page-width;
+    -js-display: flex;
     padding: 0 15px;
     @include display-flex;
     @include flex-direction(row);
-    -js-display: flex;
 
     @include mb {
       display: block;
@@ -483,21 +483,21 @@ textarea {
 .pagetop {
   display: none;
   position: fixed;
-  bottom: 30px;
   right: 30px;
+  bottom: 30px;
 
   a {
-    position: relative;
     display: block;
+    position: relative;
     padding: 40px 10px 10px;
-    @include border-radius(6px);
-    background: $primary2 url(../img/ic-pagetop.png) no-repeat center 10px;
     opacity: .8;
-    @include box-shadow(0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12));
-    text-align: center;
+    background: $primary2 url(../img/ic-pagetop.png) no-repeat center 10px;
     color: #fff;
     font-size: $px12;
+    text-align: center;
     text-decoration: none;
+    @include border-radius(6px);
+    @include box-shadow(0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12));
 
     @include mb {
       padding: 0;
@@ -533,8 +533,8 @@ textarea {
 
       @include mb {
         width: 50%;
-        float: left;
         padding: 0;
+        float: left;
         border: 0;
         border-right: 1px solid $white;
         border-bottom: 1px solid $white;
@@ -629,9 +629,9 @@ textarea {
   }
 
   time {
-    clear: left;
-    float: left;
     width: 8em;
+    float: left;
+    clear: left;
 
     @include mb {
       float: none;
@@ -799,14 +799,14 @@ textarea {
   .names {
     @include content-head;
     position: relative;
-    padding-left: 8em;
     padding-bottom: 0;
+    padding-left: 8em;
 
     @include mb {
       padding-left: 5px;
     }
 
-    &:before {
+    &::before {
       content: "新着情報";
       position: absolute;
       top: 10px;
@@ -848,9 +848,9 @@ textarea {
     }
 
     time {
-      clear: left;
-      float: left;
       width: 8em;
+      float: left;
+      clear: left;
 
       @include mb {
         float: none;
@@ -904,8 +904,8 @@ textarea {
     @include clear;
 
     li {
-      float: left;
       width: 20%;
+      float: left;
 
       @include mb {
         width: 50%;
@@ -1039,8 +1039,8 @@ textarea {
 
     @include mb {
       width: 50%;
-      float: left;
       margin-bottom: 0;
+      float: left;
 
       a {
         margin: 0 5px 10px;
@@ -1065,8 +1065,8 @@ textarea {
   }
 
   span {
-    float: left;
     margin: 0 15px 15px 0;
+    float: left;
 
     a {
       display: block;
@@ -1127,12 +1127,12 @@ textarea {
   }
 
   a {
-    position: relative;
     display: block;
+    position: relative;
     padding: 10px 15px 10px 30px;
     @include transition(.3s);
 
-    &:before {
+    &::before {
       content: "";
       position: absolute;
       top: 15px;
@@ -1142,7 +1142,7 @@ textarea {
       border-left: 10px solid $primary1;
     }
 
-    &:after {
+    &::after {
       content: "";
       position: absolute;
       top: 15px;
@@ -1157,7 +1157,7 @@ textarea {
       background: $primary4;
       color: $black;
 
-      &:after {
+      &::after {
         border-left: 10px solid $primary4;
       }
     }
@@ -1234,23 +1234,23 @@ textarea {
 
     .float-left,
     .ss-alignment-left {
-      float: left;
       margin: 0 15px 15px 0;
+      float: left;
 
       @include mb {
-        float: none;
         margin: 0 0 15px;
+        float: none;
       }
     }
 
     .float-right,
     .ss-alignment-right {
-      float: right;
       margin: 0 0 15px 15px;
+      float: right;
 
       @include mb {
-        float: none;
         margin: 0 0 15px;
+        float: none;
       }
     }
 
@@ -1321,8 +1321,8 @@ textarea {
     margin: 0 15px 15px;
 
     .site {
-      float: left;
       margin-right: 10px;
+      float: left;
     }
 
     .fb {
@@ -1344,7 +1344,7 @@ textarea {
     position: relative;
     padding-left: 45px;
 
-    &:before {
+    &::before {
       position: absolute;
       top: 0;
       left: 15px;
@@ -1355,11 +1355,11 @@ textarea {
     }
   }
 
-  .faq-question:before {
+  .faq-question::before {
     content: "Q:";
   }
 
-  .body:before {
+  .body::before {
     content: "A:";
   }
 
@@ -1422,9 +1422,9 @@ textarea {
   @include arrow;
 
   time {
-    clear: left;
-    float: left;
     width: 8em;
+    float: left;
+    clear: left;
 
     @include mb {
       float: none;
@@ -1467,14 +1467,14 @@ textarea {
 
   dt,
   legend {
-    clear: left;
-    float: left;
     width: 12em;
+    float: left;
+    clear: left;
     font-weight: bold;
 
     @include mb {
-      float: none;
       width: 100%;
+      float: none;
     }
   }
 
@@ -1539,10 +1539,10 @@ textarea {
     a{
       margin: 7px;
       padding: 7px 8px;
+      border-radius: 10px;
+      background-color: #bcbcbc;
       text-align: center;
       text-decoration: none;
-      background-color: #bcbcbc;
-      border-radius: 10px;
 
       &:hover{
         text-decoration: solid;
@@ -1562,10 +1562,10 @@ textarea {
 .event-ics-file{
   margin: 7px;
   padding: 7px 8px;
+  border-radius: 10px;
+  background-color: #faffc7;
   text-align: center;
   text-decoration: none;
-  background-color: #faffc7;
-  border-radius: 10px;
 
   &:hover{
     text-decoration: solid;
@@ -1582,9 +1582,9 @@ textarea {
 
   .calendar {
     width: 100%;
-    border: 1px solid #fff;
-    border-collapse: separate;
     border-spacing: 0;
+    border-collapse: separate;
+    border: 1px solid #fff;
     border-radius: 20px;
 
     @include tb {
@@ -1631,18 +1631,18 @@ textarea {
     height: 36px;
     min-height: 36px;
     background: $white;
+    font-size: $px12;
     font-weight: normal;
     vertical-align: middle;
-    font-size: $px12;
 
     &:first-child {
-      background: #ffdeda;
       border-bottom: 1px solid #fff;
+      background: #ffdeda;
     }
 
     &:last-child {
-      background: #e1f0ff;
       border-bottom: 1px solid #fff;
+      background: #e1f0ff;
     }
   }
 
@@ -1650,8 +1650,8 @@ textarea {
     height: 100px;
     min-height: 100px;
     background: #fff;
-    font-weight: bold;
     font-size: $px12;
+    font-weight: bold;
 
     vertical-align: top;
   }
@@ -1748,9 +1748,9 @@ textarea {
   }
 
   dt {
-    clear: left;
-    float: left;
     width: 11em;
+    float: left;
+    clear: left;
 
     @include mb {
       width: 100%;
@@ -1833,16 +1833,16 @@ textarea {
   padding: 0 15px;
 
   dt {
-    clear: left;
-    float: left;
     width: 10em;
     padding: 10px 0;
+    float: left;
+    clear: left;
     font-weight: bold;
 
     @include mb {
-      float: none;
       width: 100%;
       padding-bottom: 0;
+      float: none;
     }
   }
 
@@ -1949,14 +1949,14 @@ textarea {
 
     dt,
     legend {
-      clear: left;
-      float: left;
       width: 10em;
+      float: left;
+      clear: left;
       font-weight: bold;
 
       @include mb {
-        float: none;
         width: 100%;
+        float: none;
       }
     }
 
@@ -1972,8 +1972,8 @@ textarea {
   }
 
   .settings {
-    text-align: right;
     margin-bottom: 30px;
+    text-align: right;
 
     a {
       @include btn-primary-s;
@@ -2003,10 +2003,10 @@ textarea {
   #map-sidebar {
     @include box-sizing(border-box);
     @include content-box;
-    float: left;
     width: 25%;
     margin: 0 0 15px;
     padding: 10px;
+    float: left;
     overflow-y: scroll;
 
     @include mb {
@@ -2027,14 +2027,14 @@ textarea {
 
   #map-canvas {
     @include content-box;
-    float: right;
     width: 75% !important;
     margin: 0 0 15px;
+    float: right;
 
     @include mb {
-      float: none;
       width: 100% !important;
       height: 300px !important;
+      float: none;
     }
   }
 
@@ -2084,13 +2084,13 @@ textarea {
   }
 
   .summary-image {
-    float: right;
     width: 120px;
     margin: 0 15px 30px;
+    float: right;
 
     @include mb {
-      float: none;
       width: 100%;
+      float: none;
     }
   }
 
@@ -2106,16 +2106,16 @@ textarea {
     }
 
     dt {
-      clear: left;
-      float: left;
       width: 12em;
       margin-bottom: 10px;
+      float: left;
+      clear: left;
       font-weight: bold;
 
       @include mb {
-        float: none;
         width: 100%;
         margin-bottom: 0;
+        float: none;
       }
     }
 
@@ -2226,9 +2226,9 @@ h2.ezine-html {
     }
 
     dd {
-      float: left;
       width: 75%;
       padding: 0;
+      float: left;
 
       @include mb {
         width: 100%;
@@ -2280,13 +2280,13 @@ article.post {
   }
 
   .toggle {
-    position: relative;
     display: block;
+    position: relative;
     width: 4em;
     margin-top: -2em;
     padding-left: 15px;
 
-    &:before {
+    &::before {
       content: "";
       position: absolute;
       top: 7px;
@@ -2322,11 +2322,11 @@ article.post {
   .search-form {
     @include display-flex;
     @include justify-content(space-between);
+    align-items: center;
+    width: 25em;
     margin-bottom: 30px;
     border: 2px solid $gray2;
     background: $gray4;
-    align-items: center;
-    width: 25em;
 
     .send{
       padding: 0;
@@ -2405,9 +2405,9 @@ body#body--index {
   #wrap {
     .ss-swiper-slide {
       box-sizing: border-box;
-      margin: 0 auto 30px;
       width: calc(100% - 30px);
       max-width: 1050px;
+      margin: 0 auto 30px;
       background: #fff;
       -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 14%), 0 3px 1px -2px rgba(0, 0, 0, 20%), 0 1px 5px 0 rgba(0, 0, 0, 12%);
       -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
@@ -2433,14 +2433,14 @@ body#body--index {
         }
 
         &.ss-swiper-slide-thumbnail {
-          position: absolute;
-          bottom: 10px;
-          right: 15px;
-          max-width: calc(100% - 80px);
-          padding: 0;
-          height: 40px;
           display: flex;
+          position: absolute;
+          right: 15px;
+          bottom: 10px;
           justify-content: flex-end;
+          max-width: calc(100% - 80px);
+          height: 40px;
+          padding: 0;
 
 
           @include mb {
@@ -2448,17 +2448,17 @@ body#body--index {
           }
 
           .swiper-wrapper {
-            margin: 0;
             width: 387px;
-            transform: translate3d(0px, 0px, 0px) !important;
+            margin: 0;
             overflow: hidden;
+            transform: translate3d(0px, 0px, 0px) !important;
 
             .swiper-slide {
               display: inline-block;
-              margin-left: 9px;
-              margin-bottom: 5px;
               width: 120px !important;
               height: 40px;
+              margin-bottom: 5px;
+              margin-left: 9px;
 
               &:not(:first-child) {}
             }
@@ -2468,10 +2468,10 @@ body#body--index {
         .swiper-wrapper {}
 
         .ss-swiper-slide-controller {
+          display: flex;
           right: auto;
           bottom: 5px;
           left: 15px;
-          display: flex;
           flex-direction: column;
 
           @include mb {
@@ -2482,11 +2482,11 @@ body#body--index {
             position: relative;
             padding-left: 16px;
             border: none;
-            text-decoration: underline;
-            color: #06c;
             background-color: transparent;
+            color: #06c;
+            text-decoration: underline;
 
-            &:before {
+            &::before {
               content: "";
               position: absolute;
               top: 5px;
@@ -2494,7 +2494,7 @@ body#body--index {
             }
 
             &.ss-swiper-slide-play {
-              &:before {
+              &::before {
                 border-top: 7px solid transparent;
                 border-bottom: 7px solid transparent;
                 border-left: 10px solid #009dd5;
@@ -2502,7 +2502,7 @@ body#body--index {
             }
 
             &.ss-swiper-slide-stop {
-              &:before {
+              &::before {
                 width: 10px;
                 height: 10px;
                 background: #009dd5;

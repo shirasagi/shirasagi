@@ -104,12 +104,12 @@ br {
 
 /* PDFダウンロード */
 .ss-adobe-reader {
-  clear: both;
   margin-top: 30px;
   padding: 20px;
-  font-size: $px14;
+  clear: both;
   border: 1px solid $main-blue;
   background: $white;
+  font-size: $px14;
   @include border-radius(16px);
 
   @include tb {
@@ -131,17 +131,17 @@ br {
 
   .anchor-links {
     padding: 20px;
-    background-color: #FFF8D0;
     border-radius: 10px;
+    background-color: #FFF8D0;
 
     .anchor-links__header {
       font-weight: bold;
     }
 
     .anchor-links__list {
-      margin-top: 10px;
       display: flex;
       flex-wrap: wrap;
+      margin-top: 10px;
       padding-left: 10px;
 
       .anchor-links__item {
@@ -151,44 +151,44 @@ br {
           display: inline-block;
           position: relative;
           padding-left: 30px;
-          text-decoration: none;
           color: #000;
+          text-decoration: none;
 
           &:hover {
             text-decoration: underline;
           }
 
-          &:before,
-          &:after {
+          &::before,
+          &::after {
             content: "";
             position: absolute;
             top: 50%;
             left: 0;
-            transform: translateY(-50%);
             width: 25px;
             height: 14px;
+            transform: translateY(-50%);
           }
 
-          &:before {
+          &::before {
+            width: 0;
+            height: 0;
             margin-top: 2px;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-right: 12px solid transparent;
-            border-left: 12px solid transparent;
             border-top: 14px solid #46c0f5;
+            border-right: 12px solid transparent;
             border-bottom: 0;
+            border-left: 12px solid transparent;
+            border-style: solid;
           }
 
-          &:after {
-            margin-top: -2px;
+          &::after {
             width: 0;
             height: 0;
-            border-style: solid;
-            border-right: 12px solid transparent;
-            border-left: 12px solid transparent;
+            margin-top: -2px;
             border-top: 14px solid #0c53b7;
+            border-right: 12px solid transparent;
             border-bottom: 0;
+            border-left: 12px solid transparent;
+            border-style: solid;
           }
         }
       }
@@ -215,12 +215,12 @@ common
 /* common - アクセシビリティ(tool.part.html)
 ---------------------------------------------------------- */
 .accessibility {
-  padding: 5px 0;
-  color: #4f4f4f;
-  background-color: $gray;
-  font-size: $px12;
   display: flex;
   justify-content: flex-end;
+  padding: 5px 0;
+  background-color: $gray;
+  color: #4f4f4f;
+  font-size: $px12;
   white-space: nowrap;
 
   @include tb {
@@ -230,14 +230,14 @@ common
 
 
   &-inner {
-    max-width: 1300px;
     display: flex;
-    justify-content: flex-end;
     align-items: center;
+    justify-content: flex-end;
+    max-width: 1300px;
 
     @include tb {
-      width: 100%;
       justify-content: flex-start;
+      width: 100%;
     }
 
     .accessibility__contentlink,
@@ -328,10 +328,10 @@ common
 
           .ss-voice-controller {
             position: absolute;
+            z-index: 60;
             top: 46px;
             right: auto;
             left: 0;
-            z-index: 60;
 
             .ss-jp-close {
               color: #000 !important;
@@ -341,8 +341,8 @@ common
           .accessibility__theme {
             span {
               a {
-                padding: 3px;
                 margin: 0 3px;
+                padding: 3px;
                 @include border-radius(50px);
               }
 
@@ -351,21 +351,21 @@ common
               }
 
               .blue {
-                color: $white;
                 background-color: #0068b7;
+                color: $white;
               }
 
               .black {
-                color: $white;
                 background-color: $text;
+                color: $white;
               }
 
             }
           }
 
           .accessibility__fontsize {
-            padding: 0 10px;
             margin-right: 30px;
+            padding: 0 10px;
 
             a {
               padding: 5px;
@@ -388,12 +388,12 @@ common
 /* common - header(head-top.part.html)
 ---------------------------------------------------------- */
 #head {
-  height: 110px;
-  font-size: $px12;
-  background-color: $white;
-  box-shadow: 0px 12px 14px -8px rgba($color: $black, $alpha: 0.2);
   position: relative;
   z-index: 50;
+  height: 110px;
+  background-color: $white;
+  box-shadow: 0px 12px 14px -8px rgba($color: $black, $alpha: 0.2);
+  font-size: $px12;
 
   @include tb {
     height: 220px;
@@ -410,14 +410,14 @@ common
   }
 
   .head__utility-wrap {
+    display: flex;
+
+    position: relative;
+    align-items: center;
+    justify-content: space-between;
     max-width: 1100px;
     height: 110px;
     margin: 0 auto;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    position: relative;
 
     .siteinfo__logo {
       width: 250px;
@@ -428,23 +428,23 @@ common
     }
 
     .head__utility {
-      width: 550px;
-      height: 80%;
       display: flex;
       flex-direction: column;
       justify-content: space-around;
+      width: 550px;
+      height: 80%;
 
       @include tb {
         position: absolute;
-        left: 0;
         top: 110px;
+        left: 0;
         width: 100%;
       }
 
       &-inner {
         display: flex;
-        justify-content: flex-end;
         align-items: end;
+        justify-content: flex-end;
         margin-bottom: 10px;
 
 
@@ -455,12 +455,12 @@ common
           }
 
           form {
-            width: 260px;
-            min-height: 30px;
             display: flex;
             justify-content: space-around;
-            background-color: $white;
+            width: 260px;
+            min-height: 30px;
             border: #787878 solid 1px;
+            background-color: $white;
             @include border-radius(25px);
 
             @include tb {
@@ -512,17 +512,17 @@ common
             min-height: 30px;
             margin-left: 10px;
             padding: 10px 0;
-            font-weight: bold;
-            color: $white;
-            text-align: center;
             background-color: $blue;
+            color: $white;
+            font-weight: bold;
+            text-align: center;
             @include border-radius(25px);
 
           }
 
           a:hover {
-            color: $text;
             background-color: $ygreen;
+            color: $text;
             // border: #787878 solid 1px;
           }
         }
@@ -530,8 +530,8 @@ common
 
       .head-words {
         display: flex;
-        justify-content: flex-end;
         align-items: center;
+        justify-content: flex-end;
         white-space: nowrap;
 
         @include tb {
@@ -540,8 +540,8 @@ common
         }
 
         p {
-          font-weight: bold;
           margin: 0 10px;
+          font-weight: bold;
         }
 
         ul {
@@ -555,8 +555,8 @@ common
               display: block;
               margin: 0 10px;
               padding: 5px 20px;
-              color: $text;
               background-color: #f1f1f1;
+              color: $text;
               @include border-radius(10px);
 
               @include tb {
@@ -574,11 +574,11 @@ common
 /* common - グローバルメニュー (navi.part.html)
 ---------------------------------------------------------- */
 .cat-navi.pc {
+  position: relative;
+  z-index: 40;
   max-width: 1000px;
   height: 65px;
   margin: 0 auto;
-  position: relative;
-  z-index: 40;
 
   @include tb {
     display: none;
@@ -594,18 +594,18 @@ common
       min-width: calc(1000px/6);
       min-height: 65px;
       padding-top: 13px;
+      border: #f4f8fe solid 7px;
+      border-top: none;
       background-color: $lyblue;
       font-size: $px14;
       font-weight: bold;
       text-align: center;
-      border: #f4f8fe solid 7px;
-      border-top: none;
       @include border-radius-bl(25px);
       @include border-radius-br(25px);
 
       a {
-        color: $text;
         display: block;
+        color: $text;
         text-decoration: none;
 
         &:hover,
@@ -616,34 +616,34 @@ common
 
       .cat-nav__sub {
         display: none;
+        visibility: visible;
+
+        position: absolute;
+        z-index: 35;
+        top: 42px;
+        right: 0;
+        left: 0;
         width: 1000px;
 
         padding: 50px 70px;
-        text-align: left;
-        font-size: $px16;
-        font-weight: normal;
-        background-color: $ygreen;
         border: #f4f8fe solid 7px;
         border-top: none;
+        opacity: 1;
+        background-color: $ygreen;
+        font-size: $px16;
+        font-weight: normal;
+        text-align: left;
         @include border-radius-bl(25px);
         @include border-radius-br(25px);
 
-        position: absolute;
-        top: 42px;
-        left: 0;
-        right: 0;
-        z-index: 35;
-        visibility: visible;
-        opacity: 1;
-
         .cat-subnavi__list {
           >.cat-subbavi__item {
-            float: left;
+            position: relative;
             width: 32%;
             margin-top: 5px;
             padding: 5px 5px 5px 30px;
+            float: left;
             border-bottom: $text 1px dashed;
-            position: relative;
           }
 
           >.cat-subbavi__item::before {
@@ -652,8 +652,8 @@ common
             top: 16px;
             left: 8px;
             height: 0;
-            border-style: solid;
             border-width: 5px 0 5px 8px;
+            border-style: solid;
             border-color: transparent transparent transparent $text;
           }
 
@@ -665,8 +665,8 @@ common
     }
 
     .cat-mainnavi__item:hover {
-      background-color: $ygreen;
       border: $ygreen solid 0 7px 7px 7px;
+      background-color: $ygreen;
 
       a {
         color: $black;
@@ -703,32 +703,32 @@ common
 
   @include tb {
     display: block;
+
+    display: flex;
     position: relative;
+
+    position: fixed;
+    z-index: 110;
+    top: 20px;
+    right: 20px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
 
     width: 50px;
     height: 50px;
     background-color: $white;
     @include border-radius(5px);
 
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 110;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    align-items: center;
-
     &-line {
       display: inline-block;
-      transition: all .4s;
       /*アニメーションの設定*/
       position: absolute;
       left: 14px;
-      height: 3px;
-      background: $text;
       width: 45%;
+      height: 3px;
+      transition: all .4s;
+      background: $text;
       @include border-radius(50px);
     }
 
@@ -748,8 +748,8 @@ common
       .hamburger-menu__btn-line:nth-of-type(1) {
         top: 18px;
         left: 18px;
-        transform: translateY(6px) rotate(-45deg);
         width: 30%;
+        transform: translateY(6px) rotate(-45deg);
       }
 
       .hamburger-menu__btn-line:nth-of-type(2) {
@@ -759,8 +759,8 @@ common
       .hamburger-menu__btn-line:nth-of-type(3) {
         top: 30px;
         left: 18px;
-        transform: translateY(-6px) rotate(45deg);
         width: 30%;
+        transform: translateY(-6px) rotate(45deg);
       }
     }
   }
@@ -773,9 +773,9 @@ common
     display: block;
 
     position: fixed;
+    z-index: 105;
     top: 0;
     left: 0;
-    z-index: 105;
 
     width: 100%;
     height: 100vh;
@@ -786,29 +786,29 @@ common
     }
 
     .cat-mainnavi__list {
-      width: 100%;
-      padding-top: 80px;
       display: flex;
       flex-direction: column;
-      justify-content: space-around;
       align-items: center;
+      justify-content: space-around;
+      width: 100%;
+      padding-top: 80px;
 
       .cat-mainnavi__item {
+
+        position: relative;
         width: 80%;
         padding: 15px 30px;
         border-top: 1px $text dashed;
 
-        position: relative;
-
         &::after {
-          position: absolute;
           content: '';
+          position: absolute;
           top: 28px;
           right: 30px;
           width: 0;
           height: 0;
-          border-style: solid;
           border-width: 5px 0 5px 8px;
+          border-style: solid;
           border-color: transparent transparent transparent $link;
         }
 
@@ -818,13 +818,13 @@ common
 
         &:hover,
         &:focus {
-          background-color: $white;
           opacity: 1;
+          background-color: $white;
         }
 
         .cat-mainnavi__link {
-          width: 100%;
           display: inline-block;
+          width: 100%;
           font-size: $px20;
           font-weight: bold;
         }
@@ -837,9 +837,9 @@ common
 ---------------------------------------------------------- */
 .chat {
   position: fixed;
-  bottom: 50px;
-  right: 30px;
   z-index: 100;
+  right: 30px;
+  bottom: 50px;
 
   @include tb {
     bottom: 30px;
@@ -847,21 +847,21 @@ common
   }
 
   &--close {
-    width: 100px;
-    min-height: 120px;
-    padding: 10px 5px;
-    background: $blue;
-    color: $white;
-    border: $white solid 2px;
-    @include border-radius(10px);
 
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: space-around;
+    width: 100px;
+    min-height: 120px;
+    padding: 10px 5px;
 
     transform: scale(1);
     transition: .3s ease-in-out;
+    border: $white solid 2px;
+    background: $blue;
+    color: $white;
+    @include border-radius(10px);
 
     &:hover,
     &:focus {
@@ -869,8 +869,8 @@ common
     }
 
     p {
-      padding-left: 8px;
       width: 100%;
+      padding-left: 8px;
       font-size: $px14;
     }
 
@@ -881,13 +881,12 @@ common
 
   &--open {
     display: none;
-    display: none;
     width: 375px;
     height: 480px;
     max-height: calc(100vh - 120px);
+    overflow: hidden;
     border: 3px solid $blue;
     background: #f4f8fe;
-    overflow: hidden;
     @include border-radius(10px);
 
     header {
@@ -911,14 +910,14 @@ common
     .chat-items {
       height: calc(480px - 8.2em);
       max-height: calc(100vh - 120px - 8.2em);
-      overflow: scroll;
       padding: 10px;
+      overflow: scroll;
     }
 
     .chat-item {
-      clear: both;
       margin-bottom: 15px;
       padding: 10px;
+      clear: both;
       @include border-radius(6px);
     }
 
@@ -927,7 +926,7 @@ common
       margin-left: 70px;
       background: $lyblue;
 
-      &:before {
+      &::before {
         content: "";
         position: absolute;
         top: 0;
@@ -938,7 +937,7 @@ common
         background-size: contain;
       }
 
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         top: 14px;
@@ -954,13 +953,13 @@ common
       padding: 0;
 
       a {
-        position: relative;
         display: block;
+        position: relative;
         padding: 5px 10px 5px 25px;
-        @include border-radius(0);
         background: $white;
+        @include border-radius(0);
 
-        &:before {
+        &::before {
           content: "";
           position: absolute;
           top: 12px;
@@ -974,8 +973,8 @@ common
 
     .chat-item.user {
       display: inline-block;
-      float: right;
       margin-left: 90px;
+      float: right;
       background: $ygreen;
     }
 
@@ -1007,13 +1006,13 @@ common
     }
 
     .chat-form {
+      display: flex;
       position: absolute;
-      width: 95%;
       right: 5px;
       bottom: 15px;
       left: 6px;
-      display: flex;
       justify-content: space-between;
+      width: 95%;
       padding: 10px;
       background: #f4f8fe;
 
@@ -1090,24 +1089,24 @@ common
 ---------------------------------------------------------- */
 .tabs-wrap .tabs .view .pages .no-info {
   padding: 27px 0px !important;
+  color: black !important;
   font-size: 88% !important;
   font-weight: bold !important;
-  color: black !important;
 }
 
 .tabs-wrap .tabs .view>nav,
 .common-feed,
 .publicrelation__navlink-wrap {
   display: flex;
-  margin-top: 7px;
   flex-direction: row-reverse;
+  margin-top: 7px;
 
   a {
     position: relative;
     padding-right: 11px;
+    color: #3b4043;
     font-size: $px14;
     font-weight: bold;
-    color: #3b4043;
     text-decoration: none;
 
     @include tb {
@@ -1124,7 +1123,7 @@ common
         padding-left: 14px;
       }
 
-      &:before {
+      &::before {
         content: "";
         position: absolute;
         top: 6px;
@@ -1147,15 +1146,15 @@ common
       text-decoration: underline;
     }
 
-    &:after {
+    &::after {
       content: "";
       position: absolute;
       top: 8px;
       right: 0;
       width: 0;
       height: 0;
-      border-style: solid;
       border-width: 5px 0 5px 5px;
+      border-style: solid;
       border-color: transparent transparent transparent #3b4043;
 
       @include tb {
@@ -1188,39 +1187,39 @@ body#body--index {
         flex-wrap: wrap;
         justify-content: space-between;
         padding: 0 14px;
-        border: 4px solid #96d7ff;
-        @include border-radius(28px);
-        background-color: $white;
         overflow: hidden;
+        border: 4px solid #96d7ff;
+        background-color: $white;
+        @include border-radius(28px);
 
         li.sec-cmn-top__item {
           display: flex;
           padding: 15px 10px;
 
           a {
-            position: relative;
             display: flex;
+            position: relative;
             align-items: center;
             transition: .3s ease-in-out;
-            text-decoration: none;
+            color: $text;
             font-size: $px15;
             font-weight: bold;
-            color: $text;
+            text-decoration: none;
             @include border-radius(15px);
 
             &:hover,
             &:focus {
-              background-color: rgba(0, 0, 0, 0.1);
               transition: .3s ease-in-out;
               opacity: 1;
+              background-color: rgba(0, 0, 0, 0.1);
             }
 
-            &:before {
-              position: absolute;
+            &::before {
               content: "";
-              background-size: contain;
-              background-position: center;
+              position: absolute;
               background-repeat: no-repeat;
+              background-position: center;
+              background-size: contain;
             }
           }
         }
@@ -1248,11 +1247,11 @@ body#body--index {
             }
 
             a {
-              padding-left: 78px;
               width: 100%;
               height: 70px;
+              padding-left: 78px;
 
-              &:before {
+              &::before {
                 top: 50%;
                 left: 0;
                 width: 78px;
@@ -1271,9 +1270,9 @@ body#body--index {
               @include pc1 {
                 position: relative;
 
-                &:after {
-                  position: absolute;
+                &::after {
                   content: "";
+                  position: absolute;
                   top: 15px;
                   right: 0;
                   width: 1px;
@@ -1293,9 +1292,9 @@ body#body--index {
               @include tb {
                 position: relative;
 
-                &:after {
-                  position: absolute;
+                &::after {
                   content: "";
+                  position: absolute;
                   top: 15px;
                   right: 0;
                   width: 1px;
@@ -1307,7 +1306,7 @@ body#body--index {
 
             &.sec-cmn-top__item--kekkon {
               a {
-                &:before {
+                &::before {
                   background-image: url(../img/icon_kekkon.png);
                 }
               }
@@ -1315,7 +1314,7 @@ body#body--index {
 
             &.sec-cmn-top__item--ninshin {
               a {
-                &:before {
+                &::before {
                   background-image: url(../img/icon_ninshin.png);
                 }
               }
@@ -1323,7 +1322,7 @@ body#body--index {
 
             &.sec-cmn-top__item--kosodate {
               a {
-                &:before {
+                &::before {
                   background-image: url(../img/icon_kosodate.png);
                 }
               }
@@ -1331,7 +1330,7 @@ body#body--index {
 
             &.sec-cmn-top__item--kyoiku {
               a {
-                &:before {
+                &::before {
                   background-image: url(../img/icon_kyoiku.png);
                 }
               }
@@ -1339,7 +1338,7 @@ body#body--index {
 
             &.sec-cmn-top__item--hikkoshi {
               a {
-                &:before {
+                &::before {
                   background-image: url(../img/icon_hikkoshi.png);
                 }
               }
@@ -1347,7 +1346,7 @@ body#body--index {
 
             &.sec-cmn-top__item--shushoku {
               a {
-                &:before {
+                &::before {
                   background-image: url(../img/icon_shushoku.png);
                 }
               }
@@ -1355,7 +1354,7 @@ body#body--index {
 
             &.sec-cmn-top__item--fukushi {
               a {
-                &:before {
+                &::before {
                   background-image: url(../img/icon_fukushi.png);
                 }
               }
@@ -1363,7 +1362,7 @@ body#body--index {
 
             &.sec-cmn-top__item--okuyami {
               a {
-                &:before {
+                &::before {
                   background-image: url(../img/icon_okuyami.png);
                 }
               }
@@ -1390,7 +1389,6 @@ body#body--index {
 
             a {
               justify-content: center;
-              justify-content: center;
               width: 100%;
               height: 100%;
               padding: 20px 0;
@@ -1407,9 +1405,9 @@ body#body--index {
               @include pc1 {
                 position: relative;
 
-                &:after {
-                  position: absolute;
+                &::after {
                   content: "";
+                  position: absolute;
                   top: 15px;
                   right: 0;
                   width: 1px;
@@ -1429,9 +1427,9 @@ body#body--index {
               @include tb {
                 position: relative;
 
-                &:after {
-                  position: absolute;
+                &::after {
                   content: "";
+                  position: absolute;
                   top: 15px;
                   right: 0;
                   width: 1px;
@@ -1483,9 +1481,9 @@ body#body--index {
 
       .sec-cmn-top-02__header-title {
         padding-bottom: 10px;
+        border-bottom: 1px dotted #000;
         font-size: $px18;
         font-weight: bold;
-        border-bottom: 1px dotted #000;
       }
     }
 
@@ -1499,8 +1497,8 @@ body#body--index {
           justify-content: space-between;
 
           &__item {
-            width: calc((100% - 21px) / 4);
             display: flex;
+            width: calc((100% - 21px) / 4);
 
             @include tb {
               width: calc((100% - 10px) / 2);
@@ -1524,14 +1522,14 @@ body#body--index {
               justify-content: flex-end;
               width: 100%;
               height: 116px;
-              text-align: center;
-              @include border-radius(14px);
               overflow: hidden;
-              text-decoration: none;
-              background-repeat: no-repeat;
-              background-size: contain;
-              background-position: top center;
               transition: .3s ease-in-out;
+              background-repeat: no-repeat;
+              background-position: top center;
+              background-size: contain;
+              text-align: center;
+              text-decoration: none;
+              @include border-radius(14px);
 
               @include tb {
                 height: calc((100vw - 40px - 10px) / 2);
@@ -1539,16 +1537,16 @@ body#body--index {
 
               &:hover,
               &:focus {
-                opacity: .7;
                 transition: .3s ease-in-out;
+                opacity: .7;
               }
 
               .about-list__item-title {
                 display: block;
+                background-color: $white;
+                color: $text;
                 font-size: $px13;
                 font-weight: bold;
-                color: $text;
-                background-color: $white;
 
                 @include tb {
                   padding: 20px 0;
@@ -1668,8 +1666,8 @@ body#body--index {
           a {
             display: flex;
             justify-content: space-between;
-            color: $text;
             transition: .3s ease-in-out;
+            color: $text;
             text-decoration: none;
 
             .thumb {
@@ -1691,8 +1689,8 @@ body#body--index {
               text-decoration: underline;
 
               .thumb {
-                opacity: .7;
                 transition: .3s ease-in-out;
+                opacity: .7;
               }
 
               h3 {
@@ -1710,20 +1708,20 @@ body#body--index {
           display: inline-block;
           position: relative;
           padding-right: 11px;
+          color: #3b4043;
           font-size: $px14;
           font-weight: bold;
-          color: #3b4043;
           text-decoration: none;
 
-          &:after {
-            position: absolute;
+          &::after {
             content: "";
+            position: absolute;
             top: 8px;
             right: 0;
             width: 0;
             height: 0;
-            border-style: solid;
             border-width: 5px 0 5px 5px;
+            border-style: solid;
             border-color: transparent transparent transparent #3b4043;
           }
 
@@ -1740,11 +1738,11 @@ body#body--index {
       margin-top: 50px;
 
       article {
-        margin-top: 18px;
         display: flex;
         flex-wrap: wrap;
-        padding: 20px;
         justify-content: space-between;
+        margin-top: 18px;
+        padding: 20px;
         background-color: $white;
         @include border-radius(15px);
 
@@ -1772,8 +1770,8 @@ body#body--index {
 
       .date {
         margin-top: 10px;
-        text-align: right;
         font-size: $px14;
+        text-align: right;
       }
     }
 
@@ -1784,9 +1782,9 @@ body#body--index {
 
           a.publicrelation__link {
             display: block;
-            margin: 20px auto;
             width: calc(100% - 40px);
             max-width: 200px;
+            margin: 20px auto;
             transition: .3s ease-in-out;
 
             .publicrelation__image {
@@ -1799,8 +1797,8 @@ body#body--index {
 
             &:hover,
             &:focus {
-              opacity: .7;
               transition: .3s ease-in-out;
+              opacity: .7;
             }
           }
 
@@ -1813,8 +1811,8 @@ body#body--index {
 
         .publicrelation__navlink-wrap {
           display: flex;
-          justify-content: center;
           flex-direction: row;
+          justify-content: center;
           margin-top: 10px;
         }
       }
@@ -1827,8 +1825,8 @@ body#body--index {
         margin-top: 18px;
 
         ul {
-          background-color: $white;
           padding: 15px;
+          background-color: $white;
           @include border-radius(15px);
 
           li {
@@ -1837,13 +1835,13 @@ body#body--index {
             }
 
             a {
-              position: relative;
               display: block;
+              position: relative;
               padding: 15px 0 15px 11px;
               font-size: $px14;
               text-decoration: none;
 
-              &:before {
+              &::before {
                 content: "";
                 position: absolute;
                 top: 50%;
@@ -1851,8 +1849,8 @@ body#body--index {
                 width: 0;
                 height: 0;
                 transform: translateY(-50%);
-                border-style: solid;
                 border-width: 5px 0 5px 5px;
+                border-style: solid;
                 border-color: transparent transparent transparent #004098;
               }
 
@@ -1869,9 +1867,9 @@ body#body--index {
 
   #main {
     .main__inner {
-      margin: 0 auto;
-      max-width: 1040px;
       width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
       padding: 60px 20px;
     }
 
@@ -1884,10 +1882,10 @@ body#body--index {
       }
 
       section {
+        width: 50%;
+        overflow: hidden;
         background-color: $white;
         @include border-radius(25px);
-        overflow: hidden;
-        width: 50%;
 
         @include tb {
           width: 100%;
@@ -1897,9 +1895,9 @@ body#body--index {
           padding: 10px 20px;
 
           h2 {
+            color: $white;
             font-size: $px18;
             font-weight: bold;
-            color: $white;
           }
         }
 
@@ -1950,8 +1948,8 @@ body#body--index {
 
         ul {
           display: flex;
-          justify-content: space-between;
           flex-wrap: wrap;
+          justify-content: space-between;
 
           li {
             width: calc((100% - 20px) / 2);
@@ -1965,15 +1963,15 @@ body#body--index {
                 text-decoration: underline;
               }
 
-              &:before {
+              &::before {
+                content: "";
                 position: absolute;
                 top: 50%;
-                content: "";
                 left: 0;
-                border-left: 5px solid #004098;
+                transform: translateY(-50%);
                 border-top: 5px solid transparent;
                 border-bottom: 5px solid transparent;
-                transform: translateY(-50%);
+                border-left: 5px solid #004098;
               }
             }
           }
@@ -1990,9 +1988,9 @@ body#body--index {
     }
 
     .main__area--useful {
-      margin-top: 50px;
       display: flex;
       justify-content: space-between;
+      margin-top: 50px;
 
       @include tb {
         flex-direction: column;
@@ -2041,17 +2039,17 @@ body#body--index {
           }
 
           a.name {
-            position: relative;
-            height: 45px;
             display: flex;
+            position: relative;
             align-items: center;
             justify-content: center;
             width: calc((100% - 8px) / 3);
+            height: 45px;
+            transition: .3s ease-in-out;
+            color: $text;
             font-size: $px13;
             font-weight: bold;
-            color: $text;
             text-decoration: none;
-            transition: .3s ease-in-out;
 
             &:nth-child(n+3) {
               @include tb {
@@ -2084,7 +2082,7 @@ body#body--index {
               background-color: $orange;
             }
 
-            &:after {
+            &::after {
               @include pc1 {
                 content: "";
                 position: absolute;
@@ -2092,17 +2090,17 @@ body#body--index {
                 right: 8px;
                 width: 7px;
                 height: 7px;
-                border-top: 2px solid #000;
-                border-right: 2px solid #000;
                 -webkit-transform: rotate(135deg);
                 transform: rotate(135deg);
+                border-top: 2px solid #000;
+                border-right: 2px solid #000;
               }
             }
 
             &:hover,
             &:focus {
-              opacity: .7;
               transition: .3s ease-in-out;
+              opacity: .7;
             }
           }
         }
@@ -2145,12 +2143,12 @@ body#body--index {
                   display: block;
                   width: 100px;
                   height: 20px;
-                  text-align: center;
-                  font-size: $px12;
-                  line-height: 20px;
-                  font-weight: bold;
-                  white-space: nowrap;
                   margin-left: 25px;
+                  font-size: $px12;
+                  font-weight: bold;
+                  line-height: 20px;
+                  text-align: center;
+                  white-space: nowrap;
 
                   @include tb {
                     // grid-area: 1 / 1 / 2 / 2;
@@ -2185,37 +2183,37 @@ body#body--index {
                 }
 
                 time {
-                  margin-left: 10px;
                   width: 105px;
+                  margin-left: 10px;
                   font-size: $px12;
                   letter-spacing: 0.5px;
                   white-space: nowrap;
 
                   @include tb {
                     grid-area: 2 / 1 / 3 / 2;
-                    margin: 5px 0 0 0;
                     width: 100px;
+                    margin: 5px 0 0 0;
                     letter-spacing: 0;
                     text-align: center;
                   }
                 }
 
                 h3 {
-                  margin-left: 35px;
                   width: calc(100% - 238px);
+                  margin-left: 35px;
                   line-height: 1.428;
 
                   @include tb {
-                    grid-area: 1 / 2 / 3 / 3;
                     display: inline;
-                    margin-left: 0;
+                    grid-area: 1 / 2 / 3 / 3;
                     width: 100%;
+                    margin-left: 0;
                   }
 
                   a {
                     font-size: $px14;
-                    line-height: 1.428;
                     font-weight: bold;
+                    line-height: 1.428;
                     text-decoration: none;
                     word-wrap: break-word;
 
@@ -2233,9 +2231,9 @@ body#body--index {
     }
 
     .main__area--utility {
-      margin-top: 50px;
       display: flex;
       justify-content: space-between;
+      margin-top: 50px;
 
       @include tb {
         flex-direction: column;
@@ -2264,10 +2262,10 @@ body#body--index {
 
     #ad {
       position: relative;
+      width: 100%;
+      max-width: 1040px;
       margin: 0 auto;
       padding: 0 20px;
-      max-width: 1040px;
-      width: 100%;
 
       .info {
         position: absolute;
@@ -2282,10 +2280,10 @@ body#body--index {
 
       .ss-image-box {
         .ss-image-box-item-list {
-          margin-top: 18px;
           display: flex;
-          justify-content: space-between;
           flex-wrap: wrap;
+          justify-content: space-between;
+          margin-top: 18px;
 
           .ss-image-box-item {
             width: calc((100% - 40px) / 5);
@@ -2307,13 +2305,13 @@ body#body--index {
             a {
               display: block;
               width: 100%;
-              font-size: 0;
               transition: .3s ease-in-out;
+              font-size: 0;
 
               &:hover,
               &:focus {
-                opacity: .7;
                 transition: .3s ease-in-out;
+                opacity: .7;
               }
 
               img {
@@ -2330,10 +2328,10 @@ body#body--index {
 /* common - pagination
 ---------------------------------------------------------- */
 .pagination {
-  margin-top: 45px;
   display: flex;
-  justify-content: center;
   flex-wrap: wrap;
+  justify-content: center;
+  margin-top: 45px;
   gap: 10px 0;
 
   span {
@@ -2345,19 +2343,19 @@ body#body--index {
 
     &.current {
       width: 34px;
-      font-size: 82%;
       background-color: #b0e8ff;
+      font-size: 82%;
       font-weight: bold;
     }
 
     a {
       display: block;
       padding: 5px 11px;
-      font-size: 82%;
-      text-decoration: none;
-      color: #000;
-      text-align: center;
       background-color: #EEE;
+      color: #000;
+      font-size: 82%;
+      text-align: center;
+      text-decoration: none;
       @include border-radius(20px);
 
       &:hover,
@@ -2382,8 +2380,8 @@ body#body--index {
     }
 
     .footer-navi {
-      margin: 0 auto;
       width: 1000px;
+      margin: 0 auto;
 
       @include tb {
         width: 100%;
@@ -2394,25 +2392,25 @@ body#body--index {
         justify-content: center;
 
         @include tb {
-          margin: 0 auto;
-          width: 80%;
           display: flex;
-          justify-content: center;
           flex-wrap: wrap;
+          justify-content: center;
+          width: 80%;
+          margin: 0 auto;
         }
 
         .footer-navi__item {
           display: inline-block;
+          position: relative;
           min-height: 2em;
           padding: 0 10px;
-          position: relative;
 
           &::before {
             content: '';
-            position: absolute;
-            right: 0px;
-            top: 11px;
             display: inline-block;
+            position: absolute;
+            top: 11px;
+            right: 0px;
             width: 1px;
             height: 12px;
             background-color: $blue;
@@ -2425,8 +2423,8 @@ body#body--index {
           }
 
           a {
-            font-size: $px12;
             color: $blue;
+            font-size: $px12;
           }
         }
       }
@@ -2434,14 +2432,14 @@ body#body--index {
   }
 
   &-inner {
-    color: $white;
     background-color: $blue;
+    color: $white;
 
     .footer-upper {
+      display: flex;
       width: 1000px;
       margin: 0 auto;
       padding-top: 40px;
-      display: flex;
 
       @include tb {
         justify-content: space-around;
@@ -2449,20 +2447,20 @@ body#body--index {
       }
 
       .footer-info {
-        padding-right: 30px;
         display: flex;
+        padding-right: 30px;
         border-right: $white solid 1px;
 
         @include tb {
-          padding-right: 10px;
           flex-direction: column;
           width: 60%;
+          padding-right: 10px;
         }
 
         &__name {
           padding-right: 30px;
-          font-weight: bold;
           font-size: $px15;
+          font-weight: bold;
         }
 
         span {
@@ -2486,18 +2484,18 @@ body#body--index {
     }
 
     .footer-sns {
+      display: flex;
+      align-items: center;
+      justify-content: space-around;
       width: 300px;
       padding: 0 20px;
       border-right: $white solid 1px;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
 
       @include tb {
-        padding: 20px 10px;
-        justify-content: center;
         flex-wrap: wrap;
+        justify-content: center;
         width: 40%;
+        padding: 20px 10px;
         border-right: none;
       }
 
@@ -2518,30 +2516,30 @@ body#body--index {
 
     .footer-downer {
       @include tb {
-        width: 90%;
-        margin: 0 auto;
         display: flex;
         align-items: center;
         justify-content: space-between;
+        width: 90%;
+        margin: 0 auto;
       }
     }
 
     .footer-businessHours {
+      display: flex;
       width: 1000px;
       margin: 0 auto;
       padding: 40px 0px;
-      display: flex;
 
       @include tb {
         flex-direction: column;
         justify-content: center;
-        padding: 50px 0px;
         width: 70%;
+        padding: 50px 0px;
       }
 
       &__title {
-        font-size: $px15;
         padding-right: 74px;
+        font-size: $px15;
         font-weight: bold;
       }
 
@@ -2556,19 +2554,19 @@ body#body--index {
 
     .pagetop {
       display: block;
+
+      position: relative;
       width: 100px;
       min-height: 70px;
       margin-left: 40px;
       padding: 10px 5px;
-      background: $blue;
-      color: $white;
-      border: $white solid 2px;
-      @include border-radius(10px);
-
-      position: relative;
 
       transform: scale(1);
       transition: .3s ease-in-out;
+      border: $white solid 2px;
+      background: $blue;
+      color: $white;
+      @include border-radius(10px);
 
       &:hover,
       &:focus {
@@ -2580,23 +2578,23 @@ body#body--index {
       }
 
       &__icon {
+        position: absolute;
+        top: -15px;
+        left: 33px;
         width: 30px;
         height: 30px;
         background-color: $white;
         text-align: center;
         @include border-radius(50%);
-        position: absolute;
-        top: -15px;
-        left: 33px;
 
         span {
           display: inline-block;
           width: 10px;
           height: 10px;
           margin: 10px;
+          transform: rotate(45deg);
           border-top: 3px solid $blue;
           border-left: 3px solid $blue;
-          transform: rotate(45deg);
         }
       }
 
@@ -2622,30 +2620,30 @@ body#body--index {
 
         @include tb {
           display: block;
-          margin: auto;
-          padding: 3px;
           width: 70px;
           height: 50px;
+          margin: auto;
+          padding: 3px;
           font-size: $px10;
 
           .pagetop__icon {
+            position: absolute;
+            top: -10px;
+            left: 23px;
             width: 20px;
             height: 20px;
             background-color: $white;
             text-align: center;
             @include border-radius(50%);
-            position: absolute;
-            top: -10px;
-            left: 23px;
 
             span {
               display: inline-block;
               width: 10px;
               height: 10px;
               margin: 7px 5px;
+              transform: rotate(45deg);
               border-top: 2px solid $blue;
               border-left: 2px solid $blue;
-              transform: rotate(45deg);
             }
           }
         }
@@ -2654,8 +2652,8 @@ body#body--index {
   }
 
   .footer-copy {
-    color: $white;
     background-color: $blue;
+    color: $white;
     font-size: $px10;
     text-align: center;
   }
@@ -2679,9 +2677,9 @@ body.general {
     }
 
     &__inner {
-      margin: 0 auto;
-      max-width: 1040px;
       width: 100%;
+      max-width: 1040px;
+      margin: 0 auto;
       padding: 115px 20px;
     }
 
@@ -2691,10 +2689,10 @@ body.general {
       padding-top: 45px;
 
       #main {
-        width: 100%;
-        overflow: hidden;
         display: flex;
         flex-direction: column;
+        width: 100%;
+        overflow: hidden;
 
         >header {
           padding: 25px 35px 48px;
@@ -2707,10 +2705,10 @@ body.general {
 
           h1 {
             padding-top: 4px;
-            font-size: $px28;
-            color: #004bb4;
-            font-weight: bold;
             border-top: 3px solid #004bb4;
+            color: #004bb4;
+            font-size: $px28;
+            font-weight: bold;
 
             @include tb {
               font-size: $px20;
@@ -2728,14 +2726,14 @@ body.general {
             padding: 12px 15px 3px;
           }
 
-          &:before {
-            position: absolute;
+          &::before {
             content: "";
+            position: absolute;
             top: 0;
             left: 50%;
-            transform: translateX(-50%);
             width: calc(100% - 70px);
             height: 1px;
+            transform: translateX(-50%);
             background-color: #004bb4;
 
             @include tb {
@@ -2775,10 +2773,10 @@ body.general {
 
           .released {
             position: absolute;
-            bottom: 0;
             right: 35px;
-            font-size: $px11;
+            bottom: 0;
             color: #000ead;
+            font-size: $px11;
 
             @include tb {
               position: static;
@@ -2810,9 +2808,9 @@ body.general {
             }
 
             h2 {
+              color: $main-blue;
               font-size: $px14;
               font-weight: bold;
-              color: $main-blue;
 
               @include tb {
                 font-size: $px14;
@@ -2840,7 +2838,7 @@ body.general {
                   font-size: $px10;
                 }
 
-                &:before {
+                &::before {
                   content: "・";
                 }
               }
@@ -2868,9 +2866,9 @@ body.general {
             h2 {
               margin: 30px 0 12px;
               padding: 8px 12px;
+              background-color: #ccf0ff;
               font-size: $px15;
               font-weight: bold;
-              background-color: #ccf0ff;
 
               @include tb {
                 font-size: $px14;
@@ -2899,15 +2897,14 @@ body.general {
 
                   dt,
                   legend {
-                    float: left;
-                    min-width: 15%;
-                    font-weight: bold;
-                    clear: both;
                     width: 180px;
+                    min-width: 15%;
                     padding: 6px 12px;
+                    float: left;
+                    clear: both;
+                    background: #e2edee;
                     font-size: $px14;
                     font-weight: bold;
-                    background: #e2edee;
                     @include border-radius(3px);
 
                     @include tb {
@@ -2923,14 +2920,14 @@ body.general {
 
                   dd,
                   .fields {
-                    float: left;
                     width: calc(100% - 180px);
                     padding: 0 12px;
+                    float: left;
                     font-size: $px14;
 
                     @include tb {
-                      margin-top: 10px;
                       width: 100%;
+                      margin-top: 10px;
                     }
 
                     p {
@@ -2974,12 +2971,12 @@ body.general {
 
   // コンテンツエリア
   .yield-wrap {
-    width: 100%;
     display: flex;
     flex-direction: column;
+    width: 100%;
+    padding: 25px 35px;
     background-color: white;
     @include border-radius(0 0 16px 16px);
-    padding: 25px 35px;
 
     @include tb {
       width: 100%;
@@ -2989,8 +2986,8 @@ body.general {
     // 記事内容
     >.body,
     .blog {
-      padding-bottom: 30px;
       order: 1;
+      padding-bottom: 30px;
 
       p {
         margin-bottom: 20px;
@@ -3009,9 +3006,9 @@ body.general {
       h2 {
         margin: 30px 0 12px;
         padding: 8px 12px;
+        background-color: #ccf0ff;
         font-size: $px15;
         font-weight: bold;
-        background-color: #ccf0ff;
 
         @include tb {
           font-size: $px14;
@@ -3021,9 +3018,9 @@ body.general {
       h3 {
         margin-bottom: 12px;
         padding: 0 8px;
+        border-left: 2px solid $main-blue;
         font-size: $px14;
         font-weight: bold;
-        border-left: 2px solid $main-blue;
 
         @include tb {
           font-size: $px12;
@@ -3032,9 +3029,9 @@ body.general {
 
       h4 {
         margin-bottom: 12px;
+        color: $main-blue;
         font-size: $px14;
         font-weight: bold;
-        color: $main-blue;
 
         @include tb {
           font-size: $px12;
@@ -3113,9 +3110,9 @@ body.general {
         h2 {
           margin: 30px 0 12px;
           padding: 8px 12px;
+          background-color: #ccf0ff;
           font-size: $px15;
           font-weight: bold;
-          background-color: #ccf0ff;
         }
       }
     }
@@ -3128,18 +3125,18 @@ body.general {
       @include border-radius(10px);
 
       h2 {
-        font-size: 0;
         opacity: 0;
+        font-size: 0;
       }
 
       .group {
+        color: #004bb4;
         font-size: $px17;
         font-weight: bold;
-        color: #004bb4;
 
         @include tb {
-          margin-left: 0;
           margin-bottom: 5px;
+          margin-left: 0;
           font-size: $px12;
         }
       }
@@ -3163,10 +3160,10 @@ body.general {
         }
 
         a {
-          text-decoration: none;
           color: $text;
-          pointer-events: none;
+          text-decoration: none;
           cursor: text;
+          pointer-events: none;
         }
       }
 
@@ -3193,14 +3190,14 @@ body.general {
         a {
           display: inline-block;
           padding: 9px 28px;
-          font-size: $px14;
-          font-weight: bold;
-          @include border-radius(20px);
+          transition: .3s ease-in-out;
           border: 1px solid #09698e;
           background-color: #09698e;
           color: $white;
+          font-size: $px14;
+          font-weight: bold;
           text-decoration: none;
-          transition: .3s ease-in-out;
+          @include border-radius(20px);
 
           @include tb {
             padding: 7px 24px;
@@ -3209,9 +3206,9 @@ body.general {
 
           &:hover,
           &:focus {
+            transition: .3s ease-in-out;
             background-color: $white;
             color: #09698e;
-            transition: .3s ease-in-out;
           }
         }
       }
@@ -3228,22 +3225,22 @@ body.general {
 
     // ボタン
     .link-back-wrap {
-      margin-top: 40px;
-      width: 100%;
       display: inline-block;
-      text-align: center;
       order: 10;
+      width: 100%;
+      margin-top: 40px;
+      text-align: center;
 
       .link-back {
         padding: 8px 50px;
+        transition: .3s ease-in-out;
+        border: 1px solid #e2edee;
+        background-color: #e2edee;
+        color: $text;
         font-size: $px14;
         font-weight: bold;
         text-decoration: none;
-        border: 1px solid #e2edee;
         @include border-radius(21px);
-        color: $text;
-        background-color: #e2edee;
-        transition: .3s ease-in-out;
 
         @include tb {
           padding: 7px 42px;
@@ -3255,33 +3252,33 @@ body.general {
 
         &:hover,
         &:focus {
-          opacity: .7;
           transition: .3s ease-in-out;
+          opacity: .7;
         }
       }
     }
 
     .copy-wrap {
-      margin-top: 40px;
-      width: 100%;
       display: flex;
       justify-content: center;
       order: 9;
+      width: 100%;
+      margin-top: 40px;
 
       button[name="clipboard-copy"],
       button[name="print"] {
         min-width: 132px;
         margin: 0 5px;
         padding: 1em;
-        background-color: #fcf8d7;
         border: none;
-        @include border-radius(20px);
+        background-color: #fcf8d7;
         font-weight: bold;
+        @include border-radius(20px);
 
         &:hover,
         &:focus {
-          opacity: 0.7;
           transition: .3s ease-in-out;
+          opacity: 0.7;
           cursor: pointer;
         }
       }
@@ -3307,18 +3304,18 @@ body.general {
         li {
           position: relative;
           padding-left: 1em;
-          text-indent: -1em;
           list-style-type: none !important;
+          text-indent: -1em;
 
-          &:before {
-            display: inline-block;
+          &::before {
             /*以下白丸つくる*/
             content: '';
-            margin-right: calc(1em - 5px);
+            display: inline-block;
             width: 5px;
             height: 5px;
-            vertical-align: middle;
+            margin-right: calc(1em - 5px);
             background: #09698e;
+            vertical-align: middle;
             @include border-radius(50%);
           }
         }
@@ -3332,42 +3329,42 @@ body.general {
       dl,
       fieldset {
         @include clear;
-        clear: both;
         width: 100%;
         margin-bottom: 24px;
         padding-bottom: 16px;
+        clear: both;
 
         dt,
         legend {
-          clear: both;
-          float: left;
           width: 12em;
           margin-right: 20px;
           padding: 6px 0;
+          float: left;
+          clear: both;
           font-weight: bold;
 
           @include tb {
-            float: none;
             width: 100%;
+            float: none;
           }
 
           .required {
             display: block;
-            font-size: $px14;
             color: $red;
+            font-size: $px14;
             font-weight: normal;
           }
         }
 
         dd,
         .fields {
-          float: left;
           width: calc(100% - 12em - 20px);
           padding: 6px 0;
+          float: left;
 
           @include tb {
-            float: none;
             width: 100%;
+            float: none;
           }
 
           p {
@@ -3377,11 +3374,11 @@ body.general {
 
           input[type="password"],
           input[type="text"] {
+            box-sizing: border-box;
             width: 80%;
             max-width: 560px;
             padding: 4px;
             font-size: $px16;
-            box-sizing: border-box;
 
             @include tb {
               width: 100%;
@@ -3389,11 +3386,11 @@ body.general {
           }
 
           input[type="email"] {
+            box-sizing: border-box;
             width: 80%;
             max-width: 560px;
             padding: 4px 0;
             font-size: $px16;
-            box-sizing: border-box;
 
             @include tb {
               width: 100%;
@@ -3431,9 +3428,9 @@ body.general {
           }
 
           textarea {
+            box-sizing: border-box;
             width: 80%;
             max-width: 560px;
-            box-sizing: border-box;
             min-height: 200px;
 
             @include tb {
@@ -3549,8 +3546,8 @@ body.general {
       }
 
       .simple-captcha {
-        padding-left: 236px;
         margin-bottom: 24px;
+        padding-left: 236px;
 
         @include tb {
           padding-left: 0;
@@ -3568,8 +3565,8 @@ body.general {
 
       dl dt {
         width: 100%;
-        float: none;
         padding: 0;
+        float: none;
         background: none;
         font-weight: bold;
 
@@ -3579,9 +3576,9 @@ body.general {
       }
 
       dl dd {
-        float: none;
         width: 100%;
         padding: 0;
+        float: none;
       }
 
       .fields {
@@ -3600,8 +3597,8 @@ body.general {
         border: none;
 
         @media only screen and (max-width: 600px) {
-          height: 41px;
           flex-wrap: wrap;
+          height: 41px;
           margin-bottom: 47px;
         }
 
@@ -3612,8 +3609,8 @@ body.general {
         .site-search-type {
           dd {
             select {
-              padding: 7.5px;
               margin-right: 5px;
+              padding: 7.5px;
               border: 1px solid $hgry;
             }
           }
@@ -3638,9 +3635,9 @@ body.general {
               border-right: none;
 
               @media only screen and (max-width: 600px) {
-                padding: 5px;
 
                 width: 98%;
+                padding: 5px;
                 border-right: 1px solid $hgry;
               }
             }
@@ -3659,10 +3656,10 @@ body.general {
             padding: 6px 10px;
 
             @media only screen and (max-width: 600px) {
-              padding: 5px;
               position: static;
-              line-height: 29px;
+              padding: 5px;
               border-left: 1px solid $hgry;
+              line-height: 29px;
             }
           }
         }
@@ -3692,9 +3689,9 @@ body.general {
 
     .inquiry-html {
       p:last-child {
-        font-size: $px14;
         padding: 10px 15px;
         color: #666;
+        font-size: $px14;
 
         a {
           font-size: $px14;
@@ -3715,15 +3712,15 @@ body.general {
           }
 
           span.required {
-            font-size: $px12;
             color: $red;
+            font-size: $px12;
           }
         }
 
         div.fields {
+          margin-left: 25%;
           padding: 0 20px;
           font-size: $px15;
-          margin-left: 25%;
 
           @include tb {
             margin-left: 0;
@@ -3758,18 +3755,18 @@ body.general {
                   border: 1px solid $hgry;
 
                   th {
-                    border: 1px solid $hgry;
                     width: 30%;
                     margin: 10px 10px 10px 0;
                     padding: 2px 15px;
+                    border: 1px solid $hgry;
+                    background-color: #edf9ff;
                     font-size: 100%;
                     font-weight: bold;
-                    background-color: #edf9ff;
                   }
 
                   td.count {
-                    border: 1px solid $hgry;
                     padding-left: 20px;
+                    border: 1px solid $hgry;
                   }
                 }
               }
@@ -3814,27 +3811,26 @@ body.general {
         .oauth-login {
           display: flex;
           justify-content: center;
-          list-style: none;
           order: 5;
+          list-style: none;
 
           li {
             a {
+              box-sizing: border-box;
               min-width: 137px;
               padding: 16px 22px;
+              -webkit-transition: 0.3s;
+              -moz-transition: 0.3s;
+              -o-transition: 0.3s;
+              transition: 0.3s;
               border: 1px solid #09698e;
-              @include border-radius(10px);
               background: #09698e;
               color: $white;
               font-size: 88%;
               font-weight: bold;
               text-decoration: none;
-              background: #09698e;
-              box-sizing: border-box;
-              -webkit-transition: 0.3s;
-              -moz-transition: 0.3s;
-              -o-transition: 0.3s;
-              transition: 0.3s;
               cursor: pointer;
+              @include border-radius(10px);
 
               &:hover,
               &:focus {
@@ -3846,56 +3842,56 @@ body.general {
         }
 
         p.line_login {
+          order: 4;
           margin: 50px 0 20px;
           text-align: center;
-          order: 4;
         }
 
         .form-login {
+          order: 2;
 
           width: calc(100% - 80px);
           margin: 0 auto;
-          order: 2;
 
           dl,
           fieldset {
             @include clear;
-            clear: both;
             width: 100%;
             margin-bottom: 24px;
             padding-bottom: 16px;
+            clear: both;
 
             dt,
             legend {
-              clear: both;
-              float: left;
               width: 12em;
               margin-right: 20px;
               padding: 6px 0;
+              float: left;
+              clear: both;
               font-weight: bold;
 
               @include tb {
-                float: none;
                 width: 100%;
+                float: none;
               }
 
               .required {
                 display: block;
-                font-size: $px14;
                 color: $red;
+                font-size: $px14;
                 font-weight: normal;
               }
             }
 
             dd,
             .fields {
-              float: left;
               width: calc(100% - 12em - 20px);
               padding: 6px 0;
+              float: left;
 
               @include tb {
-                float: none;
                 width: 100%;
+                float: none;
               }
 
               p {
@@ -3905,11 +3901,11 @@ body.general {
 
               input[type="password"],
               input[type="text"] {
+                box-sizing: border-box;
                 width: 80%;
                 max-width: 560px;
                 padding: 4px;
                 font-size: $px16;
-                box-sizing: border-box;
 
                 @include tb {
                   width: 100%;
@@ -3917,11 +3913,11 @@ body.general {
               }
 
               input[type="email"] {
+                box-sizing: border-box;
                 width: 80%;
                 max-width: 560px;
                 padding: 4px 0;
                 font-size: $px16;
-                box-sizing: border-box;
 
                 @include tb {
                   width: 100%;
@@ -3959,9 +3955,9 @@ body.general {
               }
 
               textarea {
+                box-sizing: border-box;
                 width: 80%;
                 max-width: 560px;
-                box-sizing: border-box;
                 min-height: 200px;
 
                 @include tb {
@@ -4078,8 +4074,8 @@ body.general {
           }
 
           .simple-captcha {
-            padding-left: 236px;
             margin-bottom: 24px;
+            padding-left: 236px;
 
             @include tb {
               padding-left: 0;
@@ -4134,19 +4130,19 @@ body.general {
 
       a {
         display: block;
-        float: left;
         margin-left: $item-margin;
         padding: 5px 30px;
-        border-top-right-radius: 15px;
-        -webkit-border-top-right-radius: 15px;
-        -moz-border-radius-topright: 15px;
-        border-top-left-radius: 15px;
+        float: left;
         -webkit-border-top-left-radius: 15px;
-        -moz-border-radius-topleft: 15px;
+        border-top-left-radius: 15px;
+        -webkit-border-top-right-radius: 15px;
+        border-top-right-radius: 15px;
         background-color: #ccc;
         // @include grd-gry;
         color: $text;
         text-decoration: none;
+        -moz-border-radius-topright: 15px;
+        -moz-border-radius-topleft: 15px;
 
         @include mb {
           margin: 0 10px 10px 0;
@@ -4175,11 +4171,11 @@ body.general {
 
       a {
         display: inline-block;
-        @include btn-gry;
-        padding: 11px 22px;
         margin-bottom: 1em;
+        padding: 11px 22px;
         color: $text;
         text-decoration: none;
+        @include btn-gry;
 
         @include mb {
           margin-bottom: .5em;
@@ -4197,8 +4193,8 @@ body.general {
         .column,
         .marker-setting,
         .colum {
-          clear: both;
           display: flex;
+          clear: both;
 
           @include tb {
             flex-direction: column;
@@ -4209,10 +4205,10 @@ body.general {
             width: 35%;
             margin: 10px 10px 10px 0;
             padding: 5px 15px;
-            font-weight: bold;
-            background-color: $lyblue;
-            @include border-radius(10px);
             float: left;
+            background-color: $lyblue;
+            font-weight: bold;
+            @include border-radius(10px);
 
             @include tb {
               width: 100%;
@@ -4242,11 +4238,11 @@ body.general {
 
             input[type="password"],
             input[type="text"] {
+              box-sizing: border-box;
               width: 80%;
               max-width: 560px;
               padding: 4px;
               font-size: $px16;
-              box-sizing: border-box;
 
               @include tb {
                 width: 100%;
@@ -4254,11 +4250,11 @@ body.general {
             }
 
             input[type="email"] {
+              box-sizing: border-box;
               width: 80%;
               max-width: 560px;
               padding: 4px 0;
               font-size: $px16;
-              box-sizing: border-box;
 
               @include tb {
                 width: 100%;
@@ -4296,9 +4292,9 @@ body.general {
             }
 
             textarea {
+              box-sizing: border-box;
               width: 80%;
               max-width: 560px;
-              box-sizing: border-box;
               min-height: 200px;
 
               @include tb {
@@ -4333,20 +4329,20 @@ body.general {
 
           dd.wide {
             display: flex;
+            align-items: baseline;
             justify-content: left;
             width: 100%;
             justify-items: end;
-            align-items: baseline;
 
             @include tb {
               flex-wrap: wrap;
             }
 
             #selected-files {
-              padding-left: 50px;
 
               display: flex;
               flex-wrap: wrap;
+              padding-left: 50px;
 
               .file-view {
                 width: calc((100% - 74px)/2);
@@ -4409,12 +4405,12 @@ body.general {
 
     .body--mypage-anpi {
       form.search {
-        float: left;
         margin-bottom: 10px;
+        float: left;
 
         @include mb {
-          float: none;
           padding: 0 10px;
+          float: none;
         }
 
         select {
@@ -4428,12 +4424,12 @@ body.general {
     }
 
     .member-anpi-map {
-      float: right;
       margin-bottom: 10px;
+      float: right;
 
       @include mb {
-        float: none;
         padding: 0 10px;
+        float: none;
       }
 
       a {
@@ -4491,21 +4487,21 @@ body.general {
     }
 
     footer.send {
-      margin: 30px auto;
       display: flex;
       flex-direction: column;
+      margin: 30px auto;
 
       input,
       button {
         width: 200px;
         margin: 10px auto;
         padding: 10px 15px;
-        font-weight: bold;
-        font-size: $px12;
-        color: $white;
         border: 1px solid $blue;
-        @include border-radius(20px);
         background-color: $blue;
+        color: $white;
+        font-size: $px12;
+        font-weight: bold;
+        @include border-radius(20px);
 
         @include tb {
           width: 100%;
@@ -4513,15 +4509,15 @@ body.general {
 
         &:hover,
         &:focus {
-          color: $text;
           background-color: $white;
+          color: $text;
         }
       }
 
       button[name="button"] {
-        color: $text;
-        background-color: $hgry;
         border: 1px solid $hgry;
+        background-color: $hgry;
+        color: $text;
 
         &:hover,
         &:focus {
@@ -4544,8 +4540,8 @@ body.general {
     }
 
     .file-view {
-      float: left;
       margin: 0 12px 12px 0;
+      float: left;
 
       .thumb {
         display: block;
@@ -4557,8 +4553,8 @@ body.general {
         background: $white;
         font-size: $px14;
         font-weight: bold;
-        text-decoration: none;
         text-align: center;
+        text-decoration: none;
         // line-height: 90px;
 
         img {
@@ -4579,12 +4575,12 @@ body.general {
       .action a,
       .menu a {
         display: inline-block;
-        @include btn-gry;
         margin-bottom: 12px;
         padding: .2em 1em;
         color: $text;
-        text-decoration: none;
         letter-spacing: 0;
+        text-decoration: none;
+        @include btn-gry;
       }
     }
 
@@ -4597,14 +4593,14 @@ body.general {
   &#body--use-index {
     dl {
       margin-bottom: 10px;
+      margin-left: 1em;
       padding-bottom: 5px;
       overflow: hidden;
-      margin-left: 1em;
       font-size: $px14;
 
       dt {
-        float: left;
         min-width: 15%;
+        float: left;
         font-weight: bold;
       }
     }
@@ -4622,29 +4618,29 @@ body.general {
         dl,
         fieldset {
           @include clear;
-          clear: both;
           width: 100%;
           margin-bottom: 24px;
           padding-bottom: 16px;
+          clear: both;
 
           dt,
           legend {
-            clear: both;
-            float: left;
             width: 12em;
             margin-right: 20px;
             padding: 6px 0;
+            float: left;
+            clear: both;
             font-weight: bold;
 
             @include tb {
-              float: none;
               width: 100%;
+              float: none;
             }
 
             .required {
               display: block;
-              font-size: $px14;
               color: $red;
+              font-size: $px14;
               font-weight: normal;
             }
           }
@@ -4652,13 +4648,13 @@ body.general {
           dd,
           div,
           .fields {
-            float: left;
             width: calc(100% - 12em - 20px);
             padding: 6px 0;
+            float: left;
 
             @include tb {
-              float: none;
               width: 100%;
+              float: none;
             }
 
             p {
@@ -4668,11 +4664,11 @@ body.general {
 
             input[type="password"],
             input[type="text"] {
+              box-sizing: border-box;
               width: 80%;
               max-width: 560px;
               padding: 4px;
               font-size: $px16;
-              box-sizing: border-box;
 
               @include tb {
                 width: 100%;
@@ -4680,11 +4676,11 @@ body.general {
             }
 
             input[type="email"] {
+              box-sizing: border-box;
               width: 80%;
               max-width: 560px;
               padding: 4px 0;
               font-size: $px16;
-              box-sizing: border-box;
 
               @include tb {
                 width: 100%;
@@ -4722,9 +4718,9 @@ body.general {
             }
 
             textarea {
+              box-sizing: border-box;
               width: 80%;
               max-width: 560px;
-              box-sizing: border-box;
               min-height: 200px;
 
               @include tb {
@@ -4772,9 +4768,9 @@ body.general {
 
           .field_with_errors {
             display: inline;
-            float: none;
             width: auto;
             padding: unset;
+            float: none;
           }
         }
 
@@ -4824,8 +4820,8 @@ body.general {
         }
 
         .simple-captcha {
-          padding-left: 236px;
           margin-bottom: 24px;
+          padding-left: 236px;
 
           @include tb {
             padding-left: 0;
@@ -4890,8 +4886,8 @@ body.general {
           width: 25%;
 
           @include tb {
-            margin-top: 40px;
             width: 100%;
+            margin-top: 40px;
           }
         }
       }
@@ -4903,10 +4899,10 @@ body.general {
 
     //押し上げ用
     #page {
-      height: 100vh;
-      background-color: #e2edee;
       display: flex;
       flex-direction: column;
+      height: 100vh;
+      background-color: #e2edee;
 
       footer {
         margin-top: auto;
@@ -4917,9 +4913,9 @@ body.general {
       margin-bottom: 30px;
 
       .question-nav {
-        font-weight: bold;
-        border-bottom: 1px dashed #787878;
         padding-bottom: 10px;
+        border-bottom: 1px dashed #787878;
+        font-weight: bold;
       }
 
       .question {
@@ -4933,31 +4929,31 @@ body.general {
       .guide-nodes {
         .guide__lists {
           h2 {
-            width: 100%;
-            padding: 10px 30px 10px 0;
-            margin-bottom: 10px;
-            font-size: $px18;
-            border-bottom: 1px solid $main-blue;
             position: relative;
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 10px 30px 10px 0;
 
             -webkit-transition: .3s;
             -moz-transition: .3s;
             -o-transition: .3s;
             transition: .3s;
+            border-bottom: 1px solid $main-blue;
+            font-size: $px18;
 
 
             &::after {
               content: "";
               position: absolute;
               top: 0;
-              bottom: 0;
               right: 10px;
-              margin: auto;
+              bottom: 0;
               width: 5px;
               height: 5px;
+              margin: auto;
+              transform: rotate(135deg);
               border-top: 2px solid $text;
               border-right: 2px solid $text;
-              transform: rotate(135deg);
             }
           }
 
@@ -4969,22 +4965,22 @@ body.general {
           }
 
           .procedure__wrap {
-            margin: 0 20px 10px;
-            background-color: aliceblue;
-            padding: 10px;
-            font-size: $px14;
-            @include border-radius(16px);
 
             display: flex;
             flex-direction: column;
+            margin: 0 20px 10px;
+            padding: 10px;
+            background-color: aliceblue;
+            font-size: $px14;
+            @include border-radius(16px);
 
             @include tb {
               margin: 0 0 10px;
             }
 
             .procedure {
-              width: 100%;
               align-self: flex-start;
+              width: 100%;
 
               dt {
                 margin-top: 10px;
@@ -4994,12 +4990,12 @@ body.general {
 
             .close-btn {
               display: block;
+              align-self: center;
               margin: 20px 0 10px;
               padding: 5px 20px;
-              font-weight: bold;
               background-color: $ygreen;
+              font-weight: bold;
               @include border-radius(10px);
-              align-self: center;
 
               &:hover,
               &:focus {
@@ -5016,9 +5012,9 @@ body.general {
         .your-answers {
           margin: 30px 0;
           padding: 8px 12px;
+          background-color: #ccf0ff;
           font-size: $px15;
           font-weight: bold;
-          background-color: #ccf0ff;
         }
 
         ul {
@@ -5034,10 +5030,10 @@ body.general {
             span.answer-state {
               display: inline-block;
               min-width: 80px;
-              padding: 5px 1em;
               margin-right: 20px;
-              background-color: #ccf0ff;
+              padding: 5px 1em;
               border-radius: 5px;
+              background-color: #ccf0ff;
               text-align: center;
             }
 
@@ -5055,11 +5051,11 @@ body.general {
         width: 100%;
         margin: 20px 0 15px;
         padding: 7px 0;
+        background-color: #eee;
         font-size: $px14;
         font-weight: bold;
         text-align: center;
         text-decoration: none;
-        background-color: #eee;
         @include border-radius(10px);
 
         &:hover,
@@ -5076,31 +5072,31 @@ body.general {
 
         a {
           display: block;
-          text-align: center;
           width: 165px;
           margin: 5px 0;
           padding: 5px 15px;
+          border: 1px solid $main-blue;
+          background-color: $main-blue;
           color: $white;
           font-size: $px12;
           font-weight: bold;
+          text-align: center;
           text-decoration: none;
-          background-color: $main-blue;
-          border: 1px solid $main-blue;
           @include border-radius(20px);
 
           &:hover,
           &:focus {
-            color: $main-blue;
             background-color: $white;
+            color: $main-blue;
           }
         }
       }
 
       footer.send {
-        width: 50%;
-        margin: 30px auto;
         display: flex;
         justify-content: space-around;
+        width: 50%;
+        margin: 30px auto;
 
         @include tb {
           width: 100%;
@@ -5109,12 +5105,12 @@ body.general {
         input {
           min-width: 100px;
           padding: 10px 15px;
-          font-weight: bold;
-          font-size: $px12;
-          color: $white;
           border: 1px solid $blue;
-          @include border-radius(20px);
           background-color: $blue;
+          color: $white;
+          font-size: $px12;
+          font-weight: bold;
+          @include border-radius(20px);
 
           @include tb {
             margin-top: 10px;
@@ -5122,8 +5118,8 @@ body.general {
 
           &:hover,
           &:focus {
-            color: $text;
             background-color: $white;
+            color: $text;
           }
         }
       }
@@ -5136,14 +5132,14 @@ body.general {
 
         a {
           display: inline-block;
+          position: relative;
           padding: 8px 24px 8px 40px;
+          background-color: $lyblue;
           color: $text;
           font-size: $px12;
           font-weight: bold;
           text-decoration: none;
-          background-color: $lyblue;
           @include border-radius(20px);
-          position: relative;
 
           &:hover,
           &:focus {
@@ -5157,23 +5153,23 @@ body.general {
             left: 20px;
             width: 10px;
             height: 10px;
-            border-top: 2px solid $text;
-            border-right: 2px solid $text;
-            transform: translate(0, -50%) rotate(225deg);
             -webkit-transform: translate(0, -50%) rotate(225deg);
             -ms-transform: translate(0, -50%) rotate(225deg);
+            transform: translate(0, -50%) rotate(225deg);
+            border-top: 2px solid $text;
+            border-right: 2px solid $text;
           }
 
-          &:nth-child(2):after {
+          &:nth-child(2)::after {
             content: "";
             position: absolute;
             top: 50%;
-            transform: translate(0, -50%) rotate(225deg);
-            -webkit-transform: translate(0, -50%) rotate(225deg);
-            -ms-transform: translate(0, -50%) rotate(225deg);
             left: 26px;
             width: 10px;
             height: 10px;
+            -webkit-transform: translate(0, -50%) rotate(225deg);
+            -ms-transform: translate(0, -50%) rotate(225deg);
+            transform: translate(0, -50%) rotate(225deg);
             border-top: 2px solid $text;
             border-right: 2px solid $text;
           }
@@ -5182,9 +5178,9 @@ body.general {
     }
 
     .progress {
-      margin: 30px 0;
       display: flex;
       justify-content: center;
+      margin: 30px 0;
 
       span {
         margin: 0 10px;
@@ -5194,10 +5190,10 @@ body.general {
         position: relative;
 
         &::before {
-          position: absolute;
           content: "/";
-          left: -13px;
+          position: absolute;
           top: -1px;
+          left: -13px;
         }
       }
     }
@@ -5209,31 +5205,31 @@ body.general {
       .map-search-settings {
         fieldset {
           @include clear;
-          clear: both;
           width: 100%;
           margin-bottom: 24px;
           padding-bottom: 16px;
+          clear: both;
 
           dt,
           legend {
-            clear: both;
-            float: left;
             width: 12em;
             margin-right: 20px;
             padding: 6px 0 6px 1em;
-            font-weight: bold;
+            float: left;
+            clear: both;
             background-color: #aae2fa;
+            font-weight: bold;
             @include border-radius(10px);
 
             @include tb {
-              float: none;
               width: 100%;
+              float: none;
             }
 
             .required {
               display: block;
-              font-size: $px14;
               color: $red;
+              font-size: $px14;
               font-weight: normal;
             }
           }
@@ -5265,21 +5261,21 @@ body.general {
         }
 
         footer.send {
-          margin: 30px auto;
           display: flex;
           flex-direction: column;
+          margin: 30px auto;
 
           input,
           button {
             width: 200px;
             margin: 10px auto;
             padding: 10px 15px;
-            font-weight: bold;
-            font-size: $px12;
-            color: $white;
             border: 1px solid $blue;
-            @include border-radius(20px);
             background-color: $blue;
+            color: $white;
+            font-size: $px12;
+            font-weight: bold;
+            @include border-radius(20px);
 
             @include tb {
               width: 100%;
@@ -5287,15 +5283,15 @@ body.general {
 
             &:hover,
             &:focus {
-              color: $text;
               background-color: $white;
+              color: $text;
             }
           }
 
           button[name="button"] {
-            color: $text;
-            background-color: $hgry;
             border: 1px solid $hgry;
+            background-color: $hgry;
+            color: $text;
 
             &:hover,
             &:focus {
@@ -5309,14 +5305,14 @@ body.general {
 
         h2,
         legend {
-          clear: both;
           display: block;
+          box-sizing: border-box;
           width: 100%;
           margin-bottom: 6px;
           padding: 0 10px;
+          clear: both;
           font-size: $px16;
           font-weight: bold;
-          box-sizing: border-box;
         }
 
         .cms-nodes h2 {
@@ -5369,32 +5365,32 @@ body.general {
           letter-spacing: .7px;
 
           dt {
-            clear: both;
-            float: left;
             width: 12em;
             margin-right: 20px;
             margin-bottom: 20px;
             padding: 6px 0 6px 1em;
-            font-weight: bold;
+            float: left;
+            clear: both;
             background-color: #aae2fa;
+            font-weight: bold;
             @include border-radius(10px);
 
             @include tb {
               display: block;
-              float: none;
               margin-bottom: 0;
+              float: none;
             }
           }
 
           dd {
-            float: left;
-            padding: 10px 7px;
             margin-bottom: 6px;
+            padding: 10px 7px;
+            float: left;
 
             @include tb {
               display: block;
-              float: none;
               margin-bottom: 16px;
+              float: none;
             }
           }
         }
@@ -5403,25 +5399,25 @@ body.general {
           @include clear;
 
           .ajax-box {
-            float: right;
             display: block;
+            box-sizing: border-box;
             width: 235px;
             padding: 4px 12px 4px 12px;
+            float: right;
+            transition: .3s;
             border: 1px solid #767676;
             background-color: #767676;
             color: $white;
             font-weight: bold;
+            letter-spacing: .7px;
             text-align: center;
             text-decoration: none;
-            letter-spacing: .7px;
-            box-sizing: border-box;
-            transition: .3s;
             @include border-radius(10px);
 
             @include tb {
-              float: none;
               margin: 0 auto;
               margin-bottom: 24px;
+              float: none;
             }
 
             &:hover,
@@ -5448,8 +5444,8 @@ body.general {
 
           ul {
             @include clear;
-            float: right;
             display: none;
+            float: right;
 
             li {
               float: left;
@@ -5470,14 +5466,14 @@ body.general {
         }
 
         #map-sidebar {
-          float: left;
+          box-sizing: border-box;
           width: 234px;
           height: 600px !important;
           margin-right: 16px;
           padding: 8px 0;
-          border: 1px solid $hgry;
+          float: left;
           overflow-y: scroll;
-          box-sizing: border-box;
+          border: 1px solid $hgry;
 
           .column {
             padding: 8px 12px;
@@ -5518,11 +5514,11 @@ body.general {
           }
 
           @include tb {
-            float: none;
             width: 100%;
             // height: 400px !important;
             height: auto !important;
             margin-right: 0;
+            float: none;
           }
         }
 
@@ -5530,8 +5526,8 @@ body.general {
           position: relative;
           width: calc(100% - 234px - 16px) !important;
           height: 555px !important;
-          overflow: hidden;
           margin-bottom: 12px;
+          overflow: hidden;
 
           @include tb {
             width: 100% !important;
@@ -5564,11 +5560,11 @@ body.general {
             .show a {
               display: inline-block;
               padding: 4px 8px 4px 8px;
+              transition: .3s;
               border: 1px solid #e25b08;
-              @include border-radius(2px);
               font-size: $px10;
               text-decoration: none;
-              transition: .3s;
+              @include border-radius(2px);
 
               &:hover,
               &:focus {
@@ -5585,8 +5581,8 @@ body.general {
           }
 
           li {
-            float: left;
             padding-left: 0.5em;
+            float: left;
 
             &:first-of-type {
               padding-left: 0;
@@ -5648,8 +5644,8 @@ body.general {
 
         .columns {
           .column {
-            clear: both;
             padding: 6px 0;
+            clear: both;
             border-bottom: 1px solid $hgry;
 
             h2 {
@@ -5671,8 +5667,8 @@ body.general {
 
               li {
                 float: left;
-                list-style: none;
                 background: url(../img/ic-li.png) no-repeat center left 2px;
+                list-style: none;
 
                 a {
                   display: block;
@@ -5693,14 +5689,14 @@ body.general {
         }
 
         .summary-image {
-          float: right;
           padding: 4px;
+          float: right;
           border: 1px solid $hgry;
         }
 
         .body {
-          float: left;
           width: 528px;
+          float: left;
 
           dd {
             width: 344px;
@@ -5711,23 +5707,23 @@ body.general {
           @include clear;
 
           dt {
-            clear: both;
-            float: left;
             width: 150px;
             margin: 0 24px 12px 0;
             padding: 3px 5px;
+            float: left;
+            clear: both;
             background: #dae4e7;
           }
 
           dd {
-            float: left;
             margin-bottom: 12px;
             padding: 3px 0;
+            float: left;
           }
 
           +p {
-            border: 1px solid $hgry;
             padding: 4px;
+            border: 1px solid $hgry;
           }
         }
 
@@ -5740,9 +5736,9 @@ body.general {
           margin-bottom: 24px;
 
           .image {
-            float: left;
             margin: 0 10px 10px 0;
             padding: 4px;
+            float: left;
             border: 1px solid $hgry;
 
             &:nth-child(4n) {
@@ -5840,8 +5836,8 @@ body.general {
       .inquiry-form {
         .columns {
           .column {
-            clear: both;
             display: flex;
+            clear: both;
 
             @include tb {
               flex-direction: column;
@@ -5852,10 +5848,10 @@ body.general {
               width: 35%;
               margin: 10px 10px 10px 0;
               padding: 5px 15px;
-              font-weight: bold;
-              background-color: $lyblue;
-              @include border-radius(10px);
               float: left;
+              background-color: $lyblue;
+              font-weight: bold;
+              @include border-radius(10px);
 
               @include tb {
                 width: 100%;
@@ -5875,10 +5871,10 @@ body.general {
 
             dd.wide {
               display: flex;
+              align-items: baseline;
               justify-content: left;
               width: 100%;
               justify-items: end;
-              align-items: baseline;
 
               #selected-files {
                 padding-left: 50px;
@@ -5888,21 +5884,21 @@ body.general {
         }
 
         footer.send {
-          margin: 30px auto;
           display: flex;
           flex-direction: column;
+          margin: 30px auto;
 
           input,
           button {
             width: 200px;
             margin: 10px auto;
             padding: 10px 15px;
-            font-weight: bold;
-            font-size: $px12;
-            color: $white;
             border: 1px solid $blue;
-            @include border-radius(20px);
             background-color: $blue;
+            color: $white;
+            font-size: $px12;
+            font-weight: bold;
+            @include border-radius(20px);
 
             @include tb {
               width: 100%;
@@ -5910,15 +5906,15 @@ body.general {
 
             &:hover,
             &:focus {
-              color: $text;
               background-color: $white;
+              color: $text;
             }
           }
 
           button[name="button"] {
-            color: $text;
-            background-color: $hgry;
             border: 1px solid $hgry;
+            background-color: $hgry;
+            color: $text;
 
             &:hover,
             &:focus {
@@ -5944,9 +5940,9 @@ body#body--index {
   /* スライダー */
   #main {
     .ss-swiper-slide {
+      position: relative;
       width: 100%;
       margin-top: -64px;
-      position: relative;
 
       @include tb {
         margin-top: 0;
@@ -5954,9 +5950,9 @@ body#body--index {
 
       .ss-swiper-slide-controller {
         position: absolute;
+        z-index: 100;
         right: 60px;
         bottom: 20px;
-        z-index: 100;
 
         @include tb {
           position: relative;
@@ -5969,9 +5965,9 @@ body#body--index {
 
         button {
           padding: 5px 1.5em;
-          font-weight: bold;
-          background-color: #abe2fb;
           border: 4px solid $white;
+          background-color: #abe2fb;
+          font-weight: bold;
           @include border-radius(13px);
 
           @include tb {
@@ -6005,15 +6001,15 @@ body#body--index {
 
       .slide-remark {
         display: flex;
+        position: absolute;
+        bottom: 20px;
+        left: 100px;
         flex-direction: row-reverse;
         justify-content: flex-end;
-        position: absolute;
-        left: 100px;
-        bottom: 20px;
 
         padding: 8px 15px;
-        background-color: #000000bd;
         border-radius: 5px;
+        background-color: #000000bd;
 
         @include tb {
           // left: 10px;
@@ -6021,19 +6017,19 @@ body#body--index {
         }
 
         .title {
-          margin-left: 10px;
           max-width: 250px;
-          font-weight: bold;
+          margin-left: 10px;
           color: $white;
+          font-weight: bold;
         }
 
         .remark {
-          padding: 0px 10px;
           height: fit-content;
-          font-weight: bold;
-          color: #555;
-          background-color: $white;
+          padding: 0px 10px;
           border-radius: 10px;
+          background-color: $white;
+          color: #555;
+          font-weight: bold;
           white-space: nowrap;
         }
       }
@@ -6042,16 +6038,16 @@ body#body--index {
         bottom: 20px;
 
         @include tb {
-          text-align: center;
           bottom: 50px;
+          text-align: center;
         }
 
         .swiper-pagination-bullet {
           width: 25px;
           height: 25px;
           border: 4px solid #333;
-          background-color: $white;
           opacity: 1;
+          background-color: $white;
 
           @include tb {
             width: 15px;
@@ -6079,12 +6075,12 @@ body.category-top {
     }
 
     #wrap {
-      margin: 20px auto;
       width: 1000px;
+      margin: 20px auto;
 
       @include tb {
-        margin: 120px auto;
         width: 100%;
+        margin: 120px auto;
       }
 
       #content {
@@ -6092,24 +6088,24 @@ body.category-top {
       }
 
       #main {
-        padding: 20px 30px 0 0;
         width: 75%;
+        padding: 20px 30px 0 0;
         float: left;
 
         @include tb {
-          float: none;
           width: 100%;
           padding: 10px;
+          float: none;
         }
 
         h1 {
           display: inline-block;
           width: 100%;
           padding: 20px 25px;
+          background-color: $blue;
+          color: $white;
           font-size: $px24;
           font-weight: bold;
-          color: $white;
-          background-color: $blue;
           @include border-radius(20px);
         }
 
@@ -6120,9 +6116,9 @@ body.category-top {
 
           &__header-title {
             padding: 20px 25px;
+            background-color: $ygreen;
             font-size: $px18;
             font-weight: bold;
-            background-color: $ygreen;
             @include border-radius(20px 20px 0 0);
           }
 
@@ -6167,11 +6163,11 @@ body.category-top {
             text-align: right;
 
             a {
+              position: relative;
               padding-right: 20px;
               color: #585c5f;
-              font-weight: bold;
               font-size: $px13;
-              position: relative;
+              font-weight: bold;
 
               &::after {
                 content: '';
@@ -6179,8 +6175,8 @@ body.category-top {
                 top: 7px;
                 right: 9px;
                 height: 0;
-                border-style: solid;
                 border-width: 3px 0 3px 5px;
+                border-style: solid;
                 border-color: transparent transparent transparent #585c5f;
               }
 
@@ -6220,21 +6216,21 @@ body.category-top {
               width: 46%;
               min-height: 150px;
               margin-left: 20px;
-              border-bottom: 1px solid $blue;
               float: left;
+              border-bottom: 1px solid $blue;
 
               @include tb {
                 width: 100%;
-                margin-left: 0;
                 min-height: 0;
+                margin-left: 0;
               }
 
               h2 {
                 padding: 10px 0 10px 35px;
-                font-size: $px20;
-                font-weight: bold;
                 background-position: 12px 60%;
                 background-size: 30px;
+                font-size: $px20;
+                font-weight: bold;
 
                 @include tb {
                   padding: 10px 0;
@@ -6244,8 +6240,8 @@ body.category-top {
 
                 a {
                   display: block;
-                  width: 100%;
                   position: relative;
+                  width: 100%;
 
                   &:hover,
                   &:focus {
@@ -6255,25 +6251,25 @@ body.category-top {
 
                 @include tb {
                   a::after {
-                    position: absolute;
                     content: '';
+                    position: absolute;
                     top: 14px;
                     right: 15px;
                     width: 0;
                     height: 0;
-                    border-style: solid;
                     border-width: 5px 0 5px 8px;
+                    border-style: solid;
                     border-color: transparent transparent transparent $link;
                   }
                 }
 
                 a::before {
                   content: url(/img/ic-folder.png);
-                  background-size: 30px;
-                  transform: scale(0.5);
                   position: absolute;
                   top: -9px;
                   left: -39px;
+                  transform: scale(0.5);
+                  background-size: 30px;
 
                   @include tb {
                     display: none;
@@ -6297,13 +6293,13 @@ body.category-top {
     }
 
     #side {
-      padding-top: 20px;
       width: 25%;
+      padding-top: 20px;
       float: left;
 
       @include tb {
-        float: none;
         width: 100%;
+        float: none;
       }
 
       .relation-link {
@@ -6318,19 +6314,19 @@ body.category-top {
           width: 100%;
           margin: 0 auto;
           padding: 20px;
+          background-color: $blue;
+          color: $white;
           font-size: $px15;
           font-weight: bold;
-          color: $white;
-          background-color: $blue;
           @include border-radius(15px);
         }
 
         .ss-image-box-item-list {
-          padding: 20px 0 0;
           display: flex;
           flex-direction: column;
           align-items: center;
           justify-content: space-between;
+          padding: 20px 0 0;
 
           .ss-image-box-item {
             width: 95%;
@@ -6361,13 +6357,13 @@ body.category-top {
           width: 80%;
           margin: 0 auto;
           padding: 6px 10px 0;
-          text-align: center;
-          background-color: #96d7ff;
+          -webkit-border-top-left-radius: 20px;
+          border-top-left-radius: 20px;
           border-top-right-radius: 20px;
+          background-color: #96d7ff;
+          text-align: center;
           -webkit-top-bottom-right-radius: 20px;
           -moz-border-radius-topright: 20px;
-          border-top-left-radius: 20px;
-          -webkit-border-top-left-radius: 20px;
           -moz-border-radius-topleft: 20px;
 
           &-title {
@@ -6378,8 +6374,8 @@ body.category-top {
 
         .mod-menu__list-wrap {
           padding: 10px;
-          background-color: $white;
           border: 5px solid #96d7ff;
+          background-color: $white;
           @include border-radius(20px);
 
           .mod-menu__list {
@@ -6390,19 +6386,19 @@ body.category-top {
 
         .mod-menu__item {
           display: block;
+          position: relative;
           width: 49%;
           height: 100px;
-          border-bottom: 1px solid#96d7ff;
-          position: relative;
           padding: 0 5px 5px;
+          border-bottom: 1px solid#96d7ff;
 
 
           &:nth-child(2n+1)::after {
-            width: 1px;
-            position: absolute;
             content: "";
+            position: absolute;
             top: 15px;
             right: 0;
+            width: 1px;
             height: calc(100% - 30%);
             background-color: #96d7ff;
           }
@@ -6415,21 +6411,21 @@ body.category-top {
 
           .mod-menu__link {
             display: block;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-around;
             width: 100%;
             height: 95%;
             margin: 5px 0;
             text-decoration: none;
             @include border-radius(15px);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: space-around;
 
             &:hover,
             &:focus {
-              background-color: rgba(0, 0, 0, 0.1);
               transition: .3s ease-in-out;
               opacity: 1;
+              background-color: rgba(0, 0, 0, 0.1);
             }
 
             .mod-menu__icon {
@@ -6437,9 +6433,9 @@ body.category-top {
             }
 
             .mod-menu__menu-name {
+              color: $text;
               font-size: $px13;
               font-weight: bold;
-              color: $text;
             }
           }
 
@@ -6506,13 +6502,13 @@ body.category-top {
           width: 80%;
           margin: 0 auto;
           padding: 6px 10px 3px;
-          text-align: center;
-          background-color: $lygreen;
+          -webkit-border-top-left-radius: 20px;
+          border-top-left-radius: 20px;
           border-top-right-radius: 20px;
+          background-color: $lygreen;
+          text-align: center;
           -webkit-top-bottom-right-radius: 20px;
           -moz-border-radius-topright: 20px;
-          border-top-left-radius: 20px;
-          -webkit-border-top-left-radius: 20px;
           -moz-border-radius-topleft: 20px;
 
           &-title {
@@ -6523,8 +6519,8 @@ body.category-top {
 
         .sec-cmn-top__list-wrap {
           padding: 10px;
-          background-color: $lygreen;
           border: 5px solid $white;
+          background-color: $lygreen;
           @include border-radius(20px);
 
           .sec-cmn-top__list {
@@ -6535,19 +6531,19 @@ body.category-top {
 
         .sec-cmn-top__item {
           display: block;
+          position: relative;
           width: 49%;
           height: 100px;
-          border-bottom: 1px solid $white;
-          position: relative;
           padding-bottom: 5px;
+          border-bottom: 1px solid $white;
 
 
           &:nth-child(2n+1)::after {
-            width: 1px;
-            position: absolute;
             content: "";
+            position: absolute;
             top: 15px;
             right: 0;
+            width: 1px;
             height: calc(100% - 30%);
             background-color: $white
           }
@@ -6560,17 +6556,17 @@ body.category-top {
 
           a {
             display: block;
-            width: 90%;
-            height: 95%;
-            margin: 5px auto;
             // padding-top: 30px;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 90%;
+            height: 95%;
+            margin: 5px auto;
+            color: $text;
 
             font-size: $px13;
             font-weight: bold;
-            color: $text;
             text-align: center;
             text-decoration: none;
 
@@ -6578,9 +6574,9 @@ body.category-top {
 
             &:hover,
             &:focus {
-              background-color: rgba(0, 0, 0, 0.1);
               transition: .3s ease-in-out;
               opacity: 1;
+              background-color: rgba(0, 0, 0, 0.1);
             }
           }
         }
@@ -6616,12 +6612,12 @@ body.category-middle-layer {
     }
 
     #wrap {
-      margin: 20px auto;
       width: 1000px;
+      margin: 20px auto;
 
       @include tb {
-        margin: 120px auto;
         width: 100%;
+        margin: 120px auto;
       }
 
       #content {
@@ -6629,14 +6625,14 @@ body.category-middle-layer {
       }
 
       #main {
-        padding: 20px 30px 0 0;
         width: 75%;
+        padding: 20px 30px 0 0;
         float: left;
 
         @include tb {
-          float: none;
           width: 100%;
           padding: 10px;
+          float: none;
         }
 
         .main-inner {
@@ -6647,10 +6643,10 @@ body.category-middle-layer {
             display: inline-block;
             width: 100%;
             padding: 20px 25px;
+            background-color: #b0e8ff;
+            color: $text;
             font-size: $px18;
             font-weight: bold;
-            color: $text;
-            background-color: #b0e8ff;
             @include border-radius(20px 20px 0 0);
           }
 
@@ -6658,9 +6654,9 @@ body.category-middle-layer {
 
             button {
               padding: 5px 1.5em;
-              font-weight: bold;
-              background-color: #abe2fb;
               border: 4px solid $white;
+              background-color: #abe2fb;
+              font-weight: bold;
               @include border-radius(13px);
 
               &:hover,
@@ -6679,8 +6675,8 @@ body.category-middle-layer {
             .deepest-catelist {
 
               &__list {
-                padding: 20px 20px 20px 0;
                 display: flow-root;
+                padding: 20px 20px 20px 0;
                 list-style: none;
 
                 .deepest-catelist__item {
@@ -6702,18 +6698,18 @@ body.category-middle-layer {
 
                   a {
                     display: block;
+                    position: relative;
                     width: 100%;
                     padding: 10px 10px 10px 35px;
-                    position: relative;
                   }
 
                   a::before {
                     content: url(/img/ic-folder.png);
-                    background-size: 30px;
-                    transform: scale(0.5);
                     position: absolute;
                     top: -2px;
                     left: -7px;
+                    transform: scale(0.5);
+                    background-size: 30px;
                   }
                 }
               }
@@ -6737,9 +6733,9 @@ body.category-middle-layer {
             }
 
             .category-pages {
-              padding: 20px 20px 20px 0;
               display: flex;
               flex-wrap: wrap;
+              padding: 20px 20px 20px 0;
 
               article {
                 width: 46%;
@@ -6762,26 +6758,26 @@ body.category-middle-layer {
 
                 a {
                   display: block;
+                  position: relative;
                   width: 100%;
                   padding: 10px 10px 10px 35px;
-                  position: relative;
                 }
 
                 a::before {
                   content: url(/img/ic-file.png);
-                  background-size: 30px;
-                  transform: scale(0.5);
                   position: absolute;
                   top: -2px;
                   left: -7px;
+                  transform: scale(0.5);
+                  background-size: 30px;
                 }
               }
             }
 
             .cms-group-pages {
               article {
-                border-bottom: $text dashed 1px;
                 margin: 20px;
+                border-bottom: $text dashed 1px;
 
                 @include tb {
 
@@ -6824,13 +6820,13 @@ body.category-middle-layer {
       }
 
       #side {
-        padding-top: 20px;
         width: 25%;
+        padding-top: 20px;
         float: left;
 
         @include tb {
-          float: none;
           width: 100%;
+          float: none;
         }
 
         .sub-catelist {
@@ -6843,18 +6839,18 @@ body.category-middle-layer {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
+            background-color: $blue;
+            color: $white;
             font-size: $px18;
             font-weight: bold;
-            color: $white;
-            background-color: $blue;
             @include border-radius(15px);
           }
 
           &__list {
             width: 100%;
             margin-top: 15px;
-            background-color: $white;
             list-style-type: none;
+            background-color: $white;
             @include border-radius(20px);
 
             .sub-catelist__item {
@@ -6915,19 +6911,19 @@ body.category-middle-layer {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
+            background-color: $blue;
+            color: $white;
             font-size: $px15;
             font-weight: bold;
-            color: $white;
-            background-color: $blue;
             @include border-radius(15px);
           }
 
           .ss-image-box-item-list {
-            padding: 20px 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
+            padding: 20px 0 0;
 
             .ss-image-box-item {
               width: 95%;
@@ -6958,13 +6954,13 @@ body.category-middle-layer {
             width: 80%;
             margin: 0 auto;
             padding: 6px 10px 0;
-            text-align: center;
-            background-color: #96d7ff;
+            -webkit-border-top-left-radius: 20px;
+            border-top-left-radius: 20px;
             border-top-right-radius: 20px;
+            background-color: #96d7ff;
+            text-align: center;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
-            border-top-left-radius: 20px;
-            -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
 
             &-title {
@@ -6975,8 +6971,8 @@ body.category-middle-layer {
 
           .mod-menu__list-wrap {
             padding: 10px;
-            background-color: $white;
             border: 5px solid #96d7ff;
+            background-color: $white;
             @include border-radius(20px);
 
             .mod-menu__list {
@@ -6987,19 +6983,19 @@ body.category-middle-layer {
 
           .mod-menu__item {
             display: block;
+            position: relative;
             width: 49%;
             height: 100px;
-            border-bottom: 1px solid#96d7ff;
-            position: relative;
             padding: 0 5px 5px;
+            border-bottom: 1px solid#96d7ff;
 
 
             &:nth-child(2n+1)::after {
-              width: 1px;
-              position: absolute;
               content: "";
+              position: absolute;
               top: 15px;
               right: 0;
+              width: 1px;
               height: calc(100% - 30%);
               background-color: #96d7ff;
             }
@@ -7012,21 +7008,21 @@ body.category-middle-layer {
 
             .mod-menu__link {
               display: block;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: space-around;
               width: 100%;
               height: 95%;
               margin: 5px 0;
               text-decoration: none;
               @include border-radius(15px);
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: space-around;
 
               &:hover,
               &:focus {
-                background-color: rgba(0, 0, 0, 0.1);
                 transition: .3s ease-in-out;
                 opacity: 1;
+                background-color: rgba(0, 0, 0, 0.1);
               }
 
               .mod-menu__icon {
@@ -7034,9 +7030,9 @@ body.category-middle-layer {
               }
 
               .mod-menu__menu-name {
+                color: $text;
                 font-size: $px13;
                 font-weight: bold;
-                color: $text;
               }
             }
 
@@ -7110,13 +7106,13 @@ body.category-middle-layer {
             width: 80%;
             margin: 0 auto;
             padding: 6px 10px 3px;
-            text-align: center;
-            background-color: $lygreen;
+            -webkit-border-top-left-radius: 20px;
+            border-top-left-radius: 20px;
             border-top-right-radius: 20px;
+            background-color: $lygreen;
+            text-align: center;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
-            border-top-left-radius: 20px;
-            -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
 
             &-title {
@@ -7127,8 +7123,8 @@ body.category-middle-layer {
 
           .sec-cmn-top__list-wrap {
             padding: 10px;
-            background-color: $lygreen;
             border: 5px solid $white;
+            background-color: $lygreen;
             @include border-radius(20px);
 
             .sec-cmn-top__list {
@@ -7139,19 +7135,19 @@ body.category-middle-layer {
 
           .sec-cmn-top__item {
             display: block;
+            position: relative;
             width: 49%;
             height: 100px;
-            border-bottom: 1px solid $white;
-            position: relative;
             padding-bottom: 5px;
+            border-bottom: 1px solid $white;
 
 
             &:nth-child(2n+1)::after {
-              width: 1px;
-              position: absolute;
               content: "";
+              position: absolute;
               top: 15px;
               right: 0;
+              width: 1px;
               height: calc(100% - 30%);
               background-color: $white
             }
@@ -7164,17 +7160,17 @@ body.category-middle-layer {
 
             a {
               display: block;
-              width: 90%;
-              height: 95%;
-              margin: 5px auto;
               // padding-top: 30px;
               display: flex;
               align-items: center;
               justify-content: center;
+              width: 90%;
+              height: 95%;
+              margin: 5px auto;
+              color: $text;
 
               font-size: $px13;
               font-weight: bold;
-              color: $text;
               text-align: center;
               text-decoration: none;
 
@@ -7182,9 +7178,9 @@ body.category-middle-layer {
 
               &:hover,
               &:focus {
-                background-color: rgba(0, 0, 0, 0.1);
                 transition: .3s ease-in-out;
                 opacity: 1;
+                background-color: rgba(0, 0, 0, 0.1);
               }
             }
           }
@@ -7258,9 +7254,9 @@ body.category-middle-layer.body--kanko-info-blog {
     a.member {
       @include btn-blue;
       display: block;
-      text-align: center;
       width: 100%;
       margin: 0 auto;
+      text-align: center;
     }
 
     a.registration,
@@ -7275,12 +7271,12 @@ body.category-middle-layer.body--kanko-info-blog {
 
       header {
         padding: 6px 0;
-        text-align: center;
-        background-color: #96d7ff;
-        border-top-left-radius: 20px;
         -webkit-border-top-left-radius: 20px;
-        -moz-border-radius-topleft: 20px;
+        border-top-left-radius: 20px;
         border-top-right-radius: 20px;
+        background-color: #96d7ff;
+        text-align: center;
+        -moz-border-radius-topleft: 20px;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
 
@@ -7295,9 +7291,9 @@ body.category-middle-layer.body--kanko-info-blog {
         background-color: $white;
 
         li {
+          margin-bottom: 10px;
           padding: 2px 0;
           border-bottom: $text dashed 1px;
-          margin-bottom: 10px;
 
           &:last-of-type {
             margin-bottom: 0px;
@@ -7305,8 +7301,8 @@ body.category-middle-layer.body--kanko-info-blog {
 
           a {
             display: block;
-            text-align: center;
             margin-bottom: 10px;
+            text-align: center;
             text-decoration: none;
 
             &:hover,
@@ -7323,22 +7319,22 @@ body.category-middle-layer.body--kanko-info-blog {
 
       div.more {
         padding: 0 10px 10px;
-        background-color: $white;
-        border-bottom-left-radius: 20px;
-        -webkit-border-bottom-left-radius: 20px;
-        -moz-border-radius-bottomleft: 20px;
-        border-bottom-right-radius: 20px;
         -webkit-border-bottom-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        -webkit-border-bottom-left-radius: 20px;
+        border-bottom-left-radius: 20px;
+        background-color: $white;
+        -moz-border-radius-bottomleft: 20px;
         -moz-border-radius-bottomright: 20px;
 
         a {
           display: block;
-          text-align: right;
+          position: relative;
           padding-right: 20px;
           color: #585c5f;
-          font-weight: bold;
           font-size: $px12;
-          position: relative;
+          font-weight: bold;
+          text-align: right;
 
           &::after {
             content: '';
@@ -7346,8 +7342,8 @@ body.category-middle-layer.body--kanko-info-blog {
             top: 8.5px;
             right: 9px;
             height: 0;
-            border-style: solid;
             border-width: 3px 0 3px 5px;
+            border-style: solid;
             border-color: transparent transparent transparent #585c5f;
           }
         }
@@ -7369,8 +7365,8 @@ body.category-middle-layer.body--kanko-info-blog {
           }
 
           div {
-            text-align: right;
             font-size: $px14;
+            text-align: right;
           }
         }
       }
@@ -7385,10 +7381,10 @@ body.category-middle-layer.body--kanko-info-blog {
 body.category-middle-layer.kanko-info-under-layer,
 body.category-middle-layer.body--kanko-info-blog {
   .member-photos {
-    padding: 0 20px;
     display: flex;
     flex-wrap: wrap;
     justify-content: flex-start;
+    padding: 0 20px;
     gap: 20px 10px;
 
     .title {
@@ -7400,12 +7396,12 @@ body.category-middle-layer.body--kanko-info-blog {
     padding: 0 20px;
 
     .blog {
-      padding-bottom: 10px;
-      margin-bottom: 10px;
       display: flex;
       align-items: center;
-      gap: 20px 10px;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
       border-bottom: #231815 dashed 1px;
+      gap: 20px 10px;
 
       a {
         text-decoration: none;
@@ -7453,11 +7449,11 @@ body.category-middle-layer.body--kanko-info-blog {
   }
 
   div.blog-left {
+    display: flex;
     margin: 0px 20px;
     padding: 30px 0;
-    display: flex;
-    gap: 20px;
     border-top: #231815 dashed 1px;
+    gap: 20px;
 
     @include tb {
       flex-direction: column;
@@ -7544,12 +7540,12 @@ body.docs--list {
     }
 
     #wrap {
-      margin: 20px auto;
       width: 1000px;
+      margin: 20px auto;
 
       @include tb {
-        margin: 120px auto;
         width: 100%;
+        margin: 120px auto;
       }
 
       #content {
@@ -7557,14 +7553,14 @@ body.docs--list {
       }
 
       #main {
-        padding: 20px 30px 0 0;
         width: 75%;
+        padding: 20px 30px 0 0;
         float: left;
 
         @include tb {
-          float: none;
           width: 100%;
           padding: 10px;
+          float: none;
         }
 
         .main-inner {
@@ -7575,10 +7571,10 @@ body.docs--list {
             display: inline-block;
             width: 100%;
             padding: 20px 25px;
+            background-color: #b0e8ff;
+            color: $text;
             font-size: $px18;
             font-weight: bold;
-            color: $text;
-            background-color: #b0e8ff;
             @include border-radius(20px 20px 0 0);
           }
 
@@ -7639,13 +7635,13 @@ body.docs--list {
       }
 
       #side {
-        padding-top: 20px;
         width: 25%;
+        padding-top: 20px;
         float: left;
 
         @include tb {
-          float: none;
           width: 100%;
+          float: none;
         }
 
         .sub-catelist {
@@ -7658,10 +7654,10 @@ body.docs--list {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
+            background-color: $blue;
+            color: $white;
             font-size: $px18;
             font-weight: bold;
-            color: $white;
-            background-color: $blue;
             @include border-radius(15px);
 
           }
@@ -7669,8 +7665,8 @@ body.docs--list {
           &__list {
             width: 100%;
             margin-top: 15px;
-            background-color: $white;
             list-style-type: none;
+            background-color: $white;
             @include border-radius(20px);
 
             .sub-catelist__item {
@@ -7731,19 +7727,19 @@ body.docs--list {
             width: 100%;
             margin: 0 auto;
             padding: 20px;
+            background-color: $blue;
+            color: $white;
             font-size: $px15;
             font-weight: bold;
-            color: $white;
-            background-color: $blue;
             @include border-radius(15px);
           }
 
           .ss-image-box-item-list {
-            padding: 20px 0 0;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: space-between;
+            padding: 20px 0 0;
 
             .ss-image-box-item {
               width: 95%;
@@ -7774,13 +7770,13 @@ body.docs--list {
             width: 80%;
             margin: 0 auto;
             padding: 6px 10px 0;
-            text-align: center;
-            background-color: #96d7ff;
+            -webkit-border-top-left-radius: 20px;
+            border-top-left-radius: 20px;
             border-top-right-radius: 20px;
+            background-color: #96d7ff;
+            text-align: center;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
-            border-top-left-radius: 20px;
-            -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
 
             &-title {
@@ -7791,8 +7787,8 @@ body.docs--list {
 
           .mod-menu__list-wrap {
             padding: 10px;
-            background-color: $white;
             border: 5px solid #96d7ff;
+            background-color: $white;
             @include border-radius(20px);
 
             .mod-menu__list {
@@ -7803,18 +7799,18 @@ body.docs--list {
 
           .mod-menu__item {
             display: block;
+            position: relative;
             width: 49%;
             height: 100px;
-            border-bottom: 1px solid#96d7ff;
-            position: relative;
             padding: 0 5px 5px;
+            border-bottom: 1px solid#96d7ff;
 
             &:nth-child(2n+1)::after {
-              width: 1px;
-              position: absolute;
               content: "";
+              position: absolute;
               top: 15px;
               right: 0;
+              width: 1px;
               height: calc(100% - 30%);
               background-color: #96d7ff;
 
@@ -7828,21 +7824,21 @@ body.docs--list {
 
             .mod-menu__link {
               display: block;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              justify-content: space-around;
               width: 100%;
               height: 95%;
               margin: 5px 0;
               text-decoration: none;
               @include border-radius(15px);
-              display: flex;
-              flex-direction: column;
-              align-items: center;
-              justify-content: space-around;
 
               &:hover,
               &:focus {
-                background-color: rgba(0, 0, 0, 0.1);
                 transition: .3s ease-in-out;
                 opacity: 1;
+                background-color: rgba(0, 0, 0, 0.1);
               }
 
               .mod-menu__icon {
@@ -7850,9 +7846,9 @@ body.docs--list {
               }
 
               .mod-menu__menu-name {
+                color: $text;
                 font-size: $px13;
                 font-weight: bold;
-                color: $text;
               }
             }
 
@@ -7926,13 +7922,13 @@ body.docs--list {
             width: 80%;
             margin: 0 auto;
             padding: 6px 10px 3px;
-            text-align: center;
-            background-color: $lygreen;
+            -webkit-border-top-left-radius: 20px;
+            border-top-left-radius: 20px;
             border-top-right-radius: 20px;
+            background-color: $lygreen;
+            text-align: center;
             -webkit-top-bottom-right-radius: 20px;
             -moz-border-radius-topright: 20px;
-            border-top-left-radius: 20px;
-            -webkit-border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
 
             &-title {
@@ -7943,8 +7939,8 @@ body.docs--list {
 
           .sec-cmn-top__list-wrap {
             padding: 10px;
-            background-color: $lygreen;
             border: 5px solid $white;
+            background-color: $lygreen;
             @include border-radius(20px);
 
             .sec-cmn-top__list {
@@ -7955,19 +7951,19 @@ body.docs--list {
 
           .sec-cmn-top__item {
             display: block;
+            position: relative;
             width: 49%;
             height: 100px;
-            border-bottom: 1px solid $white;
-            position: relative;
             padding-bottom: 5px;
+            border-bottom: 1px solid $white;
 
 
             &:nth-child(2n+1)::after {
-              width: 1px;
-              position: absolute;
               content: "";
+              position: absolute;
               top: 15px;
               right: 0;
+              width: 1px;
               height: calc(100% - 30%);
               background-color: $white
             }
@@ -7980,17 +7976,17 @@ body.docs--list {
 
             a {
               display: block;
-              width: 90%;
-              height: 95%;
-              margin: 5px auto;
               // padding-top: 30px;
               display: flex;
               align-items: center;
               justify-content: center;
+              width: 90%;
+              height: 95%;
+              margin: 5px auto;
+              color: $text;
 
               font-size: $px13;
               font-weight: bold;
-              color: $text;
               text-align: center;
               text-decoration: none;
 
@@ -7998,9 +7994,9 @@ body.docs--list {
 
               &:hover,
               &:focus {
-                background-color: rgba(0, 0, 0, 0.1);
                 transition: .3s ease-in-out;
                 opacity: 1;
+                background-color: rgba(0, 0, 0, 0.1);
               }
             }
           }
@@ -8015,12 +8011,12 @@ body.docs--list {
 
   &#body--organization-index {
     .yield-wrap {
-      width: 100%;
       display: flex;
       flex-direction: column;
+      width: 100%;
+      padding: 25px 35px;
       background-color: white;
       @include border-radius(0 0 16px 16px);
-      padding: 25px 35px;
 
       @include tb {
         width: 100%;
@@ -8028,15 +8024,15 @@ body.docs--list {
       }
 
       &>.lsorg-groups {
-        padding-bottom: 30px;
         order: 1;
+        padding-bottom: 30px;
 
         h2 {
           margin: 30px 0 12px;
           padding: 8px 12px;
+          background-color: #ccf0ff;
           font-size: 15px;
           font-weight: bold;
-          background-color: #ccf0ff;
 
           @include tb {
             font-size: $px14;
@@ -8046,9 +8042,9 @@ body.docs--list {
         h3 {
           margin-bottom: 12px;
           padding: 0 8px;
+          border-left: 2px solid $main-blue;
           font-size: $px14;
           font-weight: bold;
-          border-left: 2px solid $main-blue;
 
           @include tb {
             font-size: $px12;
@@ -8057,9 +8053,9 @@ body.docs--list {
 
         h4 {
           margin-bottom: 12px;
+          color: $main-blue;
           font-size: $px14;
           font-weight: bold;
-          color: $main-blue;
 
           @include tb {
             font-size: $px12;
@@ -8125,10 +8121,10 @@ body.docs--list {
                 display: inline-block;
                 width: 31px;
                 height: 25px;
-                background-image: url(/img/ic-inquiry.png);
-                background-size: contain;
-                background-repeat: no-repeat;
                 opacity: .6;
+                background-image: url(/img/ic-inquiry.png);
+                background-repeat: no-repeat;
+                background-size: contain;
 
                 &:hover {
                   opacity: 1;
@@ -8147,8 +8143,8 @@ body.docs--list {
 
           td {
             padding: 3px 8px 0;
-            vertical-align: middle;
             border: 1px solid $hgry;
+            vertical-align: middle;
           }
         }
 
@@ -8173,38 +8169,38 @@ body.docs__layout {
       }
 
       nav.names {
-        border-top-left-radius: 20px;
-        -webkit-border-top-left-radius: 20px;
-        -moz-border-radius-topleft: 20px;
-        border-top-right-radius: 20px;
-        -webkit-top-bottom-right-radius: 20px;
-        -moz-border-radius-topright: 20px;
         display: flex;
         justify-content: space-between;
+        -webkit-border-top-left-radius: 20px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
         background-color: $white;
+        -moz-border-radius-topleft: 20px;
+        -webkit-top-bottom-right-radius: 20px;
+        -moz-border-radius-topright: 20px;
 
         @include tb {
           flex-wrap: wrap;
         }
 
         a.name {
-          text-align: center;
-          padding: 0 10px;
-          position: relative;
-          height: 45px;
           display: flex;
+          position: relative;
           align-items: center;
           justify-content: center;
           width: calc((100% - 8px) / 3);
+          height: 45px;
+          padding: 0 10px;
+          transition: .3s ease-in-out;
+          color: $text;
           font-size: $px11;
           font-weight: bold;
-          color: $text;
+          text-align: center;
           text-decoration: none;
-          transition: .3s ease-in-out;
 
           &:first-child {
-            border-top-left-radius: 20px;
             -webkit-border-top-left-radius: 20px;
+            border-top-left-radius: 20px;
             -moz-border-radius-topleft: 20px;
           }
 
@@ -8219,8 +8215,8 @@ body.docs__layout {
             @include border-radius(7px);
 
             &:first-child {
-              border-top-left-radius: 7px;
               -webkit-border-top-left-radius: 7px;
+              border-top-left-radius: 7px;
               -moz-border-radius-topleft: 7px;
             }
 
@@ -8248,8 +8244,8 @@ body.docs__layout {
 
           &:hover,
           &:focus {
-            opacity: .7;
             transition: .3s ease-in-out;
+            opacity: .7;
           }
         }
       }
@@ -8284,15 +8280,15 @@ body.docs__layout {
               }
 
               time {
-                margin-left: 10px;
                 width: 105px;
+                margin-left: 10px;
                 font-size: $px10;
                 letter-spacing: 0.5px;
                 white-space: nowrap;
 
                 @include tb {
-                  margin: 5px 0 0 0;
                   width: 100px;
+                  margin: 5px 0 0 0;
                   font-size: $px10;
                   letter-spacing: 0;
                   text-align: center;
@@ -8311,8 +8307,8 @@ body.docs__layout {
 
                 a {
                   font-size: $px12;
-                  line-height: 1.428;
                   font-weight: bold;
+                  line-height: 1.428;
                   text-decoration: none;
 
                   @include tb {
@@ -8333,11 +8329,11 @@ body.docs__layout {
           text-align: right;
 
           a {
+            position: relative;
             padding-right: 20px;
             color: #585c5f;
-            font-weight: bold;
             font-size: $px12;
-            position: relative;
+            font-weight: bold;
 
             &.more {
               margin-right: 15px;
@@ -8349,8 +8345,8 @@ body.docs__layout {
               top: 3.5px;
               right: 9px;
               height: 0;
-              border-style: solid;
               border-width: 3px 0 3px 5px;
+              border-style: solid;
               border-color: transparent transparent transparent #585c5f;
             }
 
@@ -8380,12 +8376,12 @@ body.docs__layout {
 
       .title {
         padding: 6px 0;
-        text-align: center;
-        background-color: #96d7ff;
-        border-top-left-radius: 20px;
         -webkit-border-top-left-radius: 20px;
-        -moz-border-radius-topleft: 20px;
+        border-top-left-radius: 20px;
         border-top-right-radius: 20px;
+        background-color: #96d7ff;
+        text-align: center;
+        -moz-border-radius-topleft: 20px;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
 
@@ -8397,13 +8393,13 @@ body.docs__layout {
 
       .archive-nav {
         padding: 10px 10px 20px;
-        background-color: $white;
+        -webkit-border-bottom-right-radius: 20px;
+        border-bottom-right-radius: 20px;
+        -webkit-border-bottom-left-radius: 20px;
 
         border-bottom-left-radius: 20px;
-        -webkit-border-bottom-left-radius: 20px;
+        background-color: $white;
         -moz-border-radius-bottomleft: 20px;
-        border-bottom-right-radius: 20px;
-        -webkit-border-bottom-right-radius: 20px;
         -moz-border-radius-bottomright: 20px;
 
         li {
@@ -8412,8 +8408,8 @@ body.docs__layout {
 
           span,
           a {
-            font-size: $px14;
             padding-left: 5px;
+            font-size: $px14;
           }
         }
       }
@@ -8433,10 +8429,10 @@ body.docs__layout {
         width: 100%;
         margin: 0 auto;
         padding: 10px 20px;
+        background-color: $blue;
+        color: $white;
         font-size: $px15;
         font-weight: bold;
-        color: $white;
-        background-color: $blue;
         @include border-radius(15px);
       }
 
@@ -8446,9 +8442,9 @@ body.docs__layout {
         }
 
         ul {
-          padding: 5px 20px;
           display: flex;
           justify-content: space-between;
+          padding: 5px 20px;
 
           li {
             padding: 0 5px;
@@ -8492,9 +8488,9 @@ body.docs__layout {
 
         /* 日にち */
         tbody {
+          background-color: $white;
           font-size: $px14;
           text-align: center;
-          background-color: $white;
 
           tr {
 
@@ -8529,13 +8525,13 @@ body.docs__layout {
         width: 80%;
         margin: 0 auto;
         padding: 6px 10px 0;
-        text-align: center;
-        background-color: #96d7ff;
+        -webkit-border-top-left-radius: 20px;
+        border-top-left-radius: 20px;
         border-top-right-radius: 20px;
+        background-color: #96d7ff;
+        text-align: center;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
-        border-top-left-radius: 20px;
-        -webkit-border-top-left-radius: 20px;
         -moz-border-radius-topleft: 20px;
 
         &-title {
@@ -8546,8 +8542,8 @@ body.docs__layout {
 
       .mod-menu__list-wrap {
         padding: 10px;
-        background-color: $white;
         border: 5px solid #96d7ff;
+        background-color: $white;
         @include border-radius(20px);
 
         .mod-menu__list {
@@ -8558,19 +8554,19 @@ body.docs__layout {
 
       .mod-menu__item {
         display: block;
+        position: relative;
         width: 49%;
         height: 100px;
-        border-bottom: 1px solid#96d7ff;
-        position: relative;
         padding: 0 5px 5px;
+        border-bottom: 1px solid#96d7ff;
 
 
         &:nth-child(2n+1)::after {
-          width: 1px;
-          position: absolute;
           content: "";
+          position: absolute;
           top: 15px;
           right: 0;
+          width: 1px;
           height: calc(100% - 30%);
           background-color: #96d7ff;
 
@@ -8584,21 +8580,21 @@ body.docs__layout {
 
         .mod-menu__link {
           display: block;
-          width: 100%;
-          height: 95%;
-          margin: 5px 0;
-          @include border-radius(15px);
           display: flex;
-          text-decoration: none;
           flex-direction: column;
           align-items: center;
           justify-content: space-around;
+          width: 100%;
+          height: 95%;
+          margin: 5px 0;
+          text-decoration: none;
+          @include border-radius(15px);
 
           &:hover,
           &:focus {
-            background-color: rgba(0, 0, 0, 0.1);
             transition: .3s ease-in-out;
             opacity: 1;
+            background-color: rgba(0, 0, 0, 0.1);
           }
 
 
@@ -8607,9 +8603,9 @@ body.docs__layout {
           }
 
           .mod-menu__menu-name {
+            color: $text;
             font-size: $px13;
             font-weight: bold;
-            color: $text;
           }
         }
 
@@ -8676,13 +8672,13 @@ body.docs__layout {
         width: 80%;
         margin: 0 auto;
         padding: 6px 10px 3px;
-        text-align: center;
-        background-color: $lygreen;
+        -webkit-border-top-left-radius: 20px;
+        border-top-left-radius: 20px;
         border-top-right-radius: 20px;
+        background-color: $lygreen;
+        text-align: center;
         -webkit-top-bottom-right-radius: 20px;
         -moz-border-radius-topright: 20px;
-        border-top-left-radius: 20px;
-        -webkit-border-top-left-radius: 20px;
         -moz-border-radius-topleft: 20px;
 
         &-title {
@@ -8693,8 +8689,8 @@ body.docs__layout {
 
       .sec-cmn-top__list-wrap {
         padding: 10px;
-        background-color: $lygreen;
         border: 5px solid $white;
+        background-color: $lygreen;
         @include border-radius(20px);
 
         .sec-cmn-top__list {
@@ -8705,18 +8701,18 @@ body.docs__layout {
 
       .sec-cmn-top__item {
         display: block;
+        position: relative;
         width: 49%;
         height: 100px;
-        border-bottom: 1px solid $white;
-        position: relative;
         padding-bottom: 5px;
+        border-bottom: 1px solid $white;
 
         &:nth-child(2n+1)::after {
-          width: 1px;
-          position: absolute;
           content: "";
+          position: absolute;
           top: 15px;
           right: 0;
+          width: 1px;
           height: calc(100% - 30%);
           background-color: $white
         }
@@ -8729,17 +8725,17 @@ body.docs__layout {
 
         a {
           display: block;
-          width: 90%;
-          height: 95%;
-          margin: 5px auto;
           // padding-top: 30px;
           display: flex;
           align-items: center;
           justify-content: center;
+          width: 90%;
+          height: 95%;
+          margin: 5px auto;
+          color: $text;
 
           font-size: $px13;
           font-weight: bold;
-          color: $text;
           text-align: center;
           text-decoration: none;
 
@@ -8747,9 +8743,9 @@ body.docs__layout {
 
           &:hover,
           &:focus {
-            background-color: rgba(0, 0, 0, 0.1);
             transition: .3s ease-in-out;
             opacity: 1;
+            background-color: rgba(0, 0, 0, 0.1);
           }
         }
       }
@@ -8768,8 +8764,8 @@ article.sitemap-body {
 
   h2 {
     width: 100%;
-    padding: 20px 30px;
     margin: 35px 0 15px;
+    padding: 20px 30px;
     background-color: #96d7ff;
     font-size: $px18;
     font-weight: bold;
@@ -8782,16 +8778,16 @@ article.sitemap-body {
 
   h3 {
     display: inline-block;
-    padding: 0 10px;
     position: relative;
+    padding: 0 10px;
     border-left: none !important;
 
     &::before {
       content: '';
-      position: absolute;
-      right: 0px;
-      top: 5px;
       display: inline-block;
+      position: absolute;
+      top: 5px;
+      right: 0px;
       width: 1px;
       /*線の長さ*/
       height: 18px;
@@ -8836,9 +8832,9 @@ body.body--map {
       background-color: $white;
 
       @include tb {
+        width: 90%;
         margin: 40px auto 0;
         padding-bottom: 30px;
-        width: 90%;
         float: none;
       }
 
@@ -8847,10 +8843,10 @@ body.body--map {
 
         #ss-page-name {
           padding-top: 4px;
-          font-size: $px28;
-          color: $blue;
-          font-weight: bold;
           border-top: 3px solid $blue;
+          color: $blue;
+          font-size: $px28;
+          font-weight: bold;
         }
       }
     }
@@ -8872,10 +8868,10 @@ body.body--map {
 
         header {
           padding: 10px 20px;
+          background-color: $blue;
           color: white;
           font-size: $px20;
           font-weight: bold;
-          background-color: $blue;
           @include border-radius(16px 16px 0 0);
         }
 
@@ -8886,9 +8882,9 @@ body.body--map {
             display: block;
             width: 100%;
             padding: 5px 10px;
+            border-bottom: #787878 dashed 1px;
             color: $text;
             text-decoration: none;
-            border-bottom: #787878 dashed 1px;
 
             &:hover,
             &:focus {
@@ -8933,42 +8929,42 @@ body#body--map {
         width: 100%;
         margin-bottom: 10px;
         padding-bottom: 5px;
-        font-size: $px18;
-        color: $blue;
-        font-weight: bold;
         border-bottom: 1px solid $blue;
+        color: $blue;
+        font-size: $px18;
+        font-weight: bold;
       }
 
       .keyword {
         input {
-          margin-left: 5px;
-          padding-left: 10px;
           width: 90%;
           height: 30px;
+          margin-left: 5px;
+          padding-left: 10px;
           @include border-radius(5px);
         }
       }
 
       footer.send {
-        width: 60%;
-        margin: 30px auto;
         display: flex;
         justify-content: space-around;
+        width: 60%;
+        margin: 30px auto;
 
         @include tb {
-          width: 100%;
           flex-direction: column;
           align-items: center;
+          width: 100%;
         }
 
         input {
           padding: 10px 15px;
-          font-weight: bold;
-          font-size: $px12;
-          color: $white;
           border: 1px solid $blue;
-          @include border-radius(20px);
           background-color: $blue;
+          color: $white;
+          font-size: $px12;
+          font-weight: bold;
+          @include border-radius(20px);
 
           @include tb {
             margin-top: 10px;
@@ -8976,8 +8972,8 @@ body#body--map {
 
           &:hover,
           &:focus {
-            color: $text;
             background-color: $white;
+            color: $text;
           }
         }
       }
@@ -9009,8 +9005,8 @@ body#body--map {
         width: 35%;
         margin: 10px 10px 10px 0;
         padding: 5px 15px;
-        font-weight: bold;
         background-color: $lyblue;
+        font-weight: bold;
         @include border-radius(10px);
 
         @include tb {
@@ -9051,39 +9047,39 @@ body#body--map {
           display: block;
           margin: 0 1px;
           padding: 5px 10px;
+          background-color: $ivory;
           color: $text;
           font-size: $px12;
           font-weight: bold;
           text-decoration: none;
-          background-color: $ivory;
           @include border-radius(16px 16px 0 0);
 
         }
 
         .current {
           a {
-            color: $white;
             background-color: $blue;
+            color: $white;
           }
         }
       }
     }
 
     #map-sidebar {
-      float: left;
       width: 180px;
       height: 480px !important;
       margin-right: 0px;
       padding: 9px;
-      font-size: $px12;
-      border: 1px solid $hgry;
+      float: left;
       overflow-y: scroll;
+      border: 1px solid $hgry;
+      font-size: $px12;
 
       @include tb {
-        float: none;
         width: calc(100% - 70px);
         // height: 250px !important;
         height: auto !important;
+        float: none;
       }
 
       .column {
@@ -9110,25 +9106,25 @@ body#body--map {
     }
 
     #map-canvas {
-      float: right;
+      position: relative;
       width: 750px !important;
       height: 480px !important;
-      margin-left: 0px;
       margin-bottom: 15px;
-      position: relative;
+      margin-left: 0px;
+      float: right;
 
       @include tb {
-        float: none;
         width: calc(100% - 70px) !important;
         height: auto;
         margin: 0 auto;
+        float: none;
       }
     }
 
     .filters {
       display: inline-block;
-      clear: both;
       margin: 10px 35px 20px;
+      clear: both;
 
       ul {
         display: flex;
@@ -9142,16 +9138,16 @@ body#body--map {
             display: block;
             margin-right: 10px;
             padding: 5px 15px;
+            background-color: #ecf1f1;
             color: #4e4e4e;
             font-size: $px14;
             font-weight: bold;
             text-decoration: none;
             @include border-radius(16px);
-            background-color: #ecf1f1;
 
             @include tb {
-              font-size: $px12;
               margin-top: 10px;
+              font-size: $px12;
             }
 
             &.clicked {
@@ -9184,8 +9180,8 @@ body#body--map {
           padding: 0 !important;
 
           a {
-            font-weight: bold;
             color: $text;
+            font-weight: bold;
 
           }
         }
@@ -9199,12 +9195,12 @@ body#body--map {
               a {
                 margin-left: 5px;
                 padding: 2px 5px;
+                background-color: $ygreen;
+                color: $text;
                 font-size: $px10;
                 font-weight: bold;
-                color: $text;
-                @include border-radius(10px);
-                background-color: $ygreen;
                 text-decoration: none;
+                @include border-radius(10px);
 
                 &:hover,
                 &:focus {
@@ -9216,8 +9212,8 @@ body#body--map {
         }
 
         .address {
-          font-size: $px14;
           margin-left: 10px;
+          font-size: $px14;
         }
       }
     }
@@ -9279,8 +9275,8 @@ body#body--map {
   form {
 
     fieldset.keyword {
-      padding-bottom: 60px;
       display: flex;
+      padding-bottom: 60px;
       overflow: hidden;
 
       @include tb {
@@ -9292,8 +9288,8 @@ body#body--map {
       }
 
       legend {
-        float: left;
         width: 130px;
+        float: left;
         font-size: $px16;
 
         @include tb {
@@ -9326,9 +9322,9 @@ body#body--map {
     }
 
     fieldset {
-      padding: 54px 0;
       display: flex;
       align-items: center;
+      padding: 54px 0;
       overflow: hidden;
       border-top: 1px dotted #808080;
       // border-bottom: 1px dotted #808080;
@@ -9343,8 +9339,8 @@ body#body--map {
 
       legend,
       h2 {
-        float: left;
         width: 130px;
+        float: left;
         font-size: $px16;
         line-height: 1.375;
 
@@ -9360,10 +9356,10 @@ body#body--map {
       }
 
       div.category {
-        width: calc(100% - 130px);
         // padding: 54px 0;
         display: flex;
         flex-wrap: wrap;
+        width: calc(100% - 130px);
 
         @include tb {
           width: calc(100% - 100px);
@@ -9375,13 +9371,13 @@ body#body--map {
         }
 
         >div {
-          margin-right: 32px;
           display: flex;
           align-items: center;
+          margin-right: 32px;
 
           @include mb {
-            margin-right: 0;
             align-items: flex-start;
+            margin-right: 0;
           }
 
           input {
@@ -9403,10 +9399,10 @@ body#body--map {
     }
 
     footer.send {
-      margin-top: 76px;
       display: flex;
       align-items: center;
       justify-content: center;
+      margin-top: 76px;
 
       @include tb {
         margin-top: 30px;
@@ -9419,10 +9415,10 @@ body#body--map {
 
       input {
         padding: 20px 50px;
+        overflow: hidden;
+        border-radius: 16px;
         font-size: $px14;
         font-weight: bold;
-        border-radius: 16px;
-        overflow: hidden;
 
         @include tb {
           padding: 15px 20px;
@@ -9437,25 +9433,25 @@ body#body--map {
       }
 
       input[type="submit"] {
-        color: #fff;
-        background-color: $blue;
-        border: 1px solid $blue;
         transition: .3s ease-in-out;
+        border: 1px solid $blue;
+        background-color: $blue;
+        color: #fff;
 
         &:hover,
         &:focus {
-          color: $blue;
-          background-color: #fff;
           transition: .3s ease-in-out;
+          background-color: #fff;
+          color: $blue;
         }
       }
 
       input.reset {
         margin-left: 18px;
-        color: #000;
-        background-color: #e1e1e1;
-        border: 1px solid #e1e1e1;
         transition: .3s ease-in-out;
+        border: 1px solid #e1e1e1;
+        background-color: #e1e1e1;
+        color: #000;
 
         @include mb {
           margin-top: 10px;
@@ -9464,9 +9460,9 @@ body#body--map {
 
         &:hover,
         &:focus {
-          background-color: #fff;
-          border: 1px solid #000;
           transition: .3s ease-in-out;
+          border: 1px solid #000;
+          background-color: #fff;
         }
       }
     }
@@ -9535,9 +9531,9 @@ body#body--map {
       h2 {
         margin: 30px 0 12px;
         padding: 8px 12px;
+        background-color: #ccf0ff;
         font-size: $px15;
         font-weight: bold;
-        background-color: #ccf0ff;
       }
 
       article {
@@ -9562,8 +9558,8 @@ body#body--map {
           h2 {
             margin: 0;
             padding: 0;
-            font-weight: normal;
             background-color: transparent;
+            font-weight: normal;
           }
         }
       }
@@ -9578,8 +9574,8 @@ body#body--map {
         width: 35%;
         margin: 10px 10px 10px 0;
         padding: 5px 15px;
-        font-weight: bold;
         background-color: $lyblue;
+        font-weight: bold;
         @include border-radius(10px);
 
         @include tb {
@@ -9623,8 +9619,8 @@ body#body--map {
 
         th,
         td {
-          border: 1px solid #4d4d4d;
           padding: 3px 3px 3px 1em;
+          border: 1px solid #4d4d4d;
         }
       }
 
@@ -9664,8 +9660,8 @@ body.body--garbage {
       float: left;
 
       @include tb {
-        margin: 40px auto 0;
         width: 90%;
+        margin: 40px auto 0;
         float: none;
       }
 
@@ -9677,10 +9673,10 @@ body.body--garbage {
         #ss-page-name {
           // margin: 25px 35px 48px;
           padding-top: 4px;
-          font-size: $px28;
-          color: $blue;
-          font-weight: bold;
           border-top: 3px solid $blue;
+          color: $blue;
+          font-size: $px28;
+          font-weight: bold;
         }
       }
 
@@ -9707,9 +9703,9 @@ body.body--garbage {
             width: 30%;
             margin: 10px 10px 10px 0;
             padding: 2px 15px;
+            background-color: $lyblue;
             font-size: $px16;
             font-weight: bold;
-            background-color: $lyblue;
             @include border-radius(10px);
 
             @include tb {
@@ -9720,9 +9716,9 @@ body.body--garbage {
           .name {
             input {
               width: 65%;
+              height: 30px;
               margin-left: 5px;
               padding-left: 10px;
-              height: 30px;
               @include border-radius(5px);
 
               @include tb {
@@ -9734,9 +9730,9 @@ body.body--garbage {
 
           .category {
             select {
+              height: 30px;
               margin-left: 5px;
               padding-left: 10px;
-              height: 30px;
               @include border-radius(5px);
 
               @include tb {
@@ -9746,20 +9742,20 @@ body.body--garbage {
           }
 
           footer.send {
-            margin: 30px auto;
             display: flex;
             flex-direction: column;
+            margin: 30px auto;
 
             input {
               width: 200px;
               margin: 10px auto;
               padding: 10px 15px;
-              font-weight: bold;
-              font-size: $px12;
-              color: $white;
               border: 1px solid $blue;
-              @include border-radius(20px);
               background-color: $blue;
+              color: $white;
+              font-size: $px12;
+              font-weight: bold;
+              @include border-radius(20px);
 
               @include tb {
                 width: 100%;
@@ -9767,8 +9763,8 @@ body.body--garbage {
 
               &:hover,
               &:focus {
-                color: $text;
                 background-color: $white;
+                color: $text;
               }
             }
           }
@@ -9776,13 +9772,13 @@ body.body--garbage {
       }
 
       .cms-nodes {
-        padding: 35px;
-        margin: 35px 0;
-        @include border-radius(16px);
-        background-color: $white;
         display: flex;
-        justify-content: space-around;
         flex-wrap: wrap;
+        justify-content: space-around;
+        margin: 35px 0;
+        padding: 35px;
+        background-color: $white;
+        @include border-radius(16px);
 
         @include tb {
           display: block;
@@ -9794,16 +9790,16 @@ body.body--garbage {
 
           @include tb {
             width: 100%;
-            margin-left: 0;
             min-height: 0;
+            margin-left: 0;
           }
 
           header {
             padding: 10px 0 10px 35px;
-            font-size: $px20;
-            font-weight: bold;
             background-position: 12px 60%;
             background-size: 30px;
+            font-size: $px20;
+            font-weight: bold;
             @include border-radius(0);
 
             @include tb {
@@ -9814,8 +9810,8 @@ body.body--garbage {
 
             a {
               display: block;
-              width: 100%;
               position: relative;
+              width: 100%;
               text-decoration: none;
 
               &:hover,
@@ -9826,25 +9822,25 @@ body.body--garbage {
 
             @include tb {
               a::after {
-                position: absolute;
                 content: '';
+                position: absolute;
                 top: 14px;
                 right: 15px;
                 width: 0;
                 height: 0;
-                border-style: solid;
                 border-width: 5px 0 5px 8px;
+                border-style: solid;
                 border-color: transparent transparent transparent $link;
               }
             }
 
             a::before {
               content: url(/img/ic-folder.png);
-              background-size: 30px;
-              transform: scale(0.5);
               position: absolute;
               top: -9px;
               left: -39px;
+              transform: scale(0.5);
+              background-size: 30px;
 
               @include tb {
                 display: none;
@@ -9872,10 +9868,10 @@ body.body--garbage {
 
         header {
           padding: 10px 20px;
+          background-color: $blue;
           color: white;
           font-size: $px20;
           font-weight: bold;
-          background-color: $blue;
           @include border-radius(16px 16px 0 0);
         }
 
@@ -9886,9 +9882,9 @@ body.body--garbage {
             display: block;
             width: 100%;
             padding: 5px 10px;
+            border-bottom: #787878 dashed 1px;
             color: $text;
             text-decoration: none;
-            border-bottom: #787878 dashed 1px;
 
             &:hover,
             &:focus {
@@ -9928,8 +9924,8 @@ body.body--garbage {
       width: 35%;
       margin: 10px 10px 10px 0;
       padding: 5px 15px;
-      font-weight: bold;
       background-color: $lyblue;
+      font-weight: bold;
       @include border-radius(10px);
 
       @include tb {
@@ -9978,14 +9974,14 @@ body.body--garbage {
 
       thead {
         width: 100%;
-        text-align: left;
         background-color: $ygreen;
+        text-align: left;
 
         tr {
           th {
             padding: 5px 10px;
-            white-space: nowrap;
             border: 1px solid #787878;
+            white-space: nowrap;
 
             @include tb {
               white-space: normal;
@@ -9998,8 +9994,8 @@ body.body--garbage {
         tr {
           td {
             padding: 5px 10px;
-            white-space: nowrap;
             border: 1px solid #787878;
+            white-space: nowrap;
 
             @include tb {
               white-space: normal;
@@ -10025,46 +10021,45 @@ body.body--garbage {
         .name,
         .category {
           display: flex;
-          align-items: center;
           flex-direction: column;
+          align-items: center;
           width: 100%;
 
           @include tb {}
 
           h2 {
             width: 100%;
+            color: $darkblue;
             font-size: $px16;
             font-weight: bold;
-            color: $darkblue;
 
             @include tb {}
 
             +* {
               position: relative;
               width: 100%;
+              height: 2em;
               border: 1px solid $darkblue;
               border-radius: 6px;
-              height: 2em;
               font-size: $px16;
 
 
               @include tb {}
 
-              &:before {
+              &::before {
                 content: "";
                 position: absolute;
                 top: 50%;
                 right: 3px;
-                transform: translateY(-50%);
-                -webkit-transform: translateY(-50%);
-                -ms-transform: translateY(-50%);
                 width: 4px;
                 height: 4px;
-                background-color: #000;
+                -ms-transform: translateY(-50%);
+                -webkit-transform: rotate(135deg);
+                transform: translateY(-50%);
+                transform: rotate(135deg);
                 border-top: 2px solid #000;
                 border-right: 2px solid #000;
-                -webkit-transform: rotate(135deg);
-                transform: rotate(135deg);
+                background-color: #000;
               }
             }
           }
@@ -10080,13 +10075,18 @@ body.body--garbage {
         }
 
         .send {
-          margin-top: 40px;
           display: flex;
           justify-content: center;
+          margin-top: 40px;
 
           input[type="submit"] {
+            box-sizing: border-box;
             min-width: 137px;
             padding: 16px 22px;
+            -webkit-transition: 0.3s;
+            -moz-transition: 0.3s;
+            -o-transition: 0.3s;
+            transition: 0.3s;
             border: 1px solid #09698e;
             border-radius: 10px;
             background: #09698e;
@@ -10094,12 +10094,6 @@ body.body--garbage {
             font-size: 88%;
             font-weight: bold;
             text-decoration: none;
-            background: #09698e;
-            box-sizing: border-box;
-            -webkit-transition: 0.3s;
-            -moz-transition: 0.3s;
-            -o-transition: 0.3s;
-            transition: 0.3s;
             cursor: pointer;
 
             &:hover,
@@ -10128,10 +10122,10 @@ body.body--garbage-category {
 
 body[class*="body--garbage-list-"] {
   #main {
-    font-size: $px16;
-    border-radius: 16px;
     -webkit-border-radius: 16px;
+    border-radius: 16px;
     background-color: $white;
+    font-size: $px16;
 
     table.columns {
       display: block;
@@ -10147,14 +10141,14 @@ body[class*="body--garbage-list-"] {
 
       thead {
         width: 100%;
-        text-align: left;
         background-color: $ygreen;
+        text-align: left;
 
         tr {
           th {
             padding: 5px 10px;
-            white-space: nowrap;
             border: 1px solid #787878;
+            white-space: nowrap;
 
             @include tb {
               white-space: normal;
@@ -10167,8 +10161,8 @@ body[class*="body--garbage-list-"] {
         tr {
           td {
             padding: 5px 10px;
-            white-space: nowrap;
             border: 1px solid #787878;
+            white-space: nowrap;
 
             @include tb {
               white-space: normal;
@@ -10189,8 +10183,8 @@ body[class*="body--garbage-list-"] {
 ---------------------------------------------------------- */
 body.body--calendar {
   #wrap.event {
-    margin: 20px auto;
     width: 1000px;
+    margin: 20px auto;
 
     @include tb {
       width: 90%;
@@ -10203,11 +10197,11 @@ body.body--calendar {
       >header {
         h1 {
           padding: 25px 35px;
-          @include border-radius(16px);
-          font-size: $px28;
-          color: $white;
-          font-weight: bold;
           background-color: #004bb4;
+          color: $white;
+          font-size: $px28;
+          font-weight: bold;
+          @include border-radius(16px);
 
           @include tb {
             font-size: $px20;
@@ -10231,8 +10225,8 @@ body.body--calendar {
         }
 
         .content-body {
-          background-color: $white;
           padding-top: 20px;
+          background-color: $white;
           @include border-radius(0 0 16px 16px);
 
           form {
@@ -10255,19 +10249,19 @@ body.body--calendar {
               width: 100%;
               margin-bottom: 10px;
               padding-bottom: 5px;
-              font-size: $px18;
-              color: $blue;
-              font-weight: bold;
               border-bottom: 1px solid $blue;
+              color: $blue;
+              font-size: $px18;
+              font-weight: bold;
 
             }
 
             .keyword {
               input {
-                margin-left: 5px;
-                padding-left: 10px;
                 width: 90%;
                 height: 30px;
+                margin-left: 5px;
+                padding-left: 10px;
                 @include border-radius(5px);
 
                 @include tb {
@@ -10279,9 +10273,9 @@ body.body--calendar {
 
             .event-date-range {
               input {
+                height: 30px;
                 margin-left: 5px;
                 padding-left: 10px;
-                height: 30px;
                 @include border-radius(5px);
 
                 @include tb {
@@ -10292,9 +10286,9 @@ body.body--calendar {
 
             .event-facility {
               input {
+                height: 30px;
                 margin-left: 5px;
                 padding-left: 10px;
-                height: 30px;
                 @include border-radius(5px);
 
                 @include tb {
@@ -10304,25 +10298,25 @@ body.body--calendar {
             }
 
             footer.send {
-              width: 50%;
-              margin: 30px auto;
               display: flex;
               justify-content: space-around;
+              width: 50%;
+              margin: 30px auto;
 
               @include tb {
-                width: 100%;
                 flex-direction: column;
                 align-items: center;
+                width: 100%;
               }
 
               input {
                 padding: 10px 30px;
-                font-weight: bold;
-                font-size: $px12;
-                color: $white;
                 border: 1px solid $blue;
-                @include border-radius(20px);
                 background-color: $blue;
+                color: $white;
+                font-size: $px12;
+                font-weight: bold;
+                @include border-radius(20px);
 
                 @include tb {
                   width: 90%;
@@ -10331,8 +10325,8 @@ body.body--calendar {
 
                 &:hover,
                 &:focus {
-                  color: $text;
                   background-color: $white;
+                  color: $text;
                 }
               }
             }
@@ -10341,14 +10335,14 @@ body.body--calendar {
       }
 
       .event-date {
+
+        display: flex;
+        position: relative;
+        align-items: flex-end;
         margin-top: 20px;
         padding: 25px 35px 0;
         background-color: $white;
         @include border-radius(16px 16px 0 0);
-
-        display: flex;
-        align-items: flex-end;
-        position: relative;
 
         @include tb {
           padding: 44px 35px;
@@ -10356,19 +10350,19 @@ body.body--calendar {
 
         h2 {
           order: 1;
+          margin-left: 5px;
           font-size: $px18;
           font-weight: bold;
-          margin-left: 5px;
           white-space: nowrap;
         }
 
         .event-format {
-          order: 4;
-          position: absolute;
-          bottom: 0;
-          right: 34px;
 
           display: flex;
+          position: absolute;
+          right: 34px;
+          bottom: 0;
+          order: 4;
 
           @include tb {
             left: 34px;
@@ -10379,35 +10373,35 @@ body.body--calendar {
             min-width: 80px;
             margin: 0 1px;
             padding: 5px 10px;
+            background-color: $ivory;
             color: $text;
             font-size: $px12;
             font-weight: bold;
             text-align: center;
             text-decoration: none;
-            background-color: $ivory;
             @include border-radius(16px 16px 0 0);
           }
 
           .current {
             a {
-              color: $white;
               background-color: $blue;
+              color: $white;
             }
           }
         }
 
         .event-ics-file {
-          order: 3;
-          padding: 5px 13px;
-          margin: 0px 0px 44px calc(100% - 330px);
-          font-size: $px12;
-          color: $text;
-          text-align: center;
-          font-weight: bold;
-          background-color: $ygreen;
-          @include border-radius(10px);
-          white-space: nowrap;
           z-index: 5;
+          order: 3;
+          margin: 0px 0px 44px calc(100% - 330px);
+          padding: 5px 13px;
+          background-color: $ygreen;
+          color: $text;
+          font-size: $px12;
+          font-weight: bold;
+          text-align: center;
+          white-space: nowrap;
+          @include border-radius(10px);
 
           @include tb {
             position: absolute;
@@ -10420,14 +10414,14 @@ body.body--calendar {
         }
 
         ul {
+          display: flex;
           order: 2;
           margin: 0 10px;
-          display: flex;
 
           a {
             margin-left: 15px;
-            font-size: $px13;
             color: #666;
+            font-size: $px13;
             white-space: nowrap;
           }
 
@@ -10436,12 +10430,12 @@ body.body--calendar {
               position: relative;
 
               &::before {
-                position: absolute;
                 content: "|";
-                font-size: $px11;
-                color: #666;
+                position: absolute;
                 top: -4px;
                 left: -9px;
+                color: #666;
+                font-size: $px11;
               }
             }
           }
@@ -10449,8 +10443,8 @@ body.body--calendar {
       }
 
       #event-table {
-        padding: 0px 35px 25px;
         margin-bottom: 70px;
+        padding: 0px 35px 25px;
         background-color: $white;
         @include border-radius(0 0 16px 16px);
 
@@ -10459,8 +10453,8 @@ body.body--calendar {
         }
 
         .calendar {
-          margin: 0 auto;
           width: 100%;
+          margin: 0 auto;
 
           @include tb {
             width: 930px;
@@ -10483,15 +10477,15 @@ body.body--calendar {
                 text-align: center;
 
                 &:first-child {
-                  color: #d90000;
                   border-bottom: 1px solid $white;
                   background: #f8edf3;
+                  color: #d90000;
                 }
 
                 &:last-child {
-                  color: #26499d;
                   border-bottom: 1px solid $white;
                   background: #e9eff7;
+                  color: #26499d;
                 }
 
                 @include tb {
@@ -10520,7 +10514,6 @@ body.body--calendar {
                 color: $text;
 
                 div.date {
-                  font-size: $px11;
                   display: flex;
                   flex-direction: column;
                   padding: 5px;
@@ -10540,8 +10533,8 @@ body.body--calendar {
                     .bunka {
                       display: inline-block;
                       padding: 0 3px;
-                      font-weight: bold;
                       background: #f6ffc5;
+                      font-weight: bold;
                       @include border-radius(7px);
                     }
 
@@ -10563,8 +10556,8 @@ body.body--calendar {
 
               td.next-month,
               td.prev-month {
-                color: #606060 !important;
                 background-color: #ddd !important;
+                color: #606060 !important;
 
                 div.date {
                   a {
@@ -10650,16 +10643,16 @@ body.body--calendar {
               display: block;
               margin-right: 10px;
               padding: 5px 15px;
+              background-color: $ygreen;
               color: $text;
               font-size: $px14;
               font-weight: bold;
               text-decoration: none;
               @include border-radius(16px);
-              background-color: $ygreen;
 
               @include tb {
-                font-size: $px12;
                 margin-top: 10px;
+                font-size: $px12;
               }
 
               &:hover,
@@ -10672,15 +10665,15 @@ body.body--calendar {
       }
 
       #event-list {
-        padding: 0 35px 30px;
         margin-bottom: 70px;
+        padding: 0 35px 30px;
         background-color: $white;
         @include border-radius(0 0 16px 16px);
 
         dl {
           padding: 5px 0;
-          font-size: $px14;
           border-bottom: 1px dashed #787878;
+          font-size: $px14;
 
           &:first-of-type {
             border-top: 1px solid #ccc;
@@ -10695,9 +10688,9 @@ body.body--calendar {
 
           &::after {
             content: "\0020";
-            clear: both;
             display: block;
             height: 0;
+            clear: both;
             overflow: hidden;
           }
 
@@ -10713,17 +10706,17 @@ body.body--calendar {
 
           dd {
             margin-bottom: 0;
+            margin-left: 15.5%;
             padding-bottom: 6px;
             border: 0;
-            margin-left: 15.5%;
 
             .kohen,
             .sports,
             .bunka {
               display: inline-block;
               padding: 0 3px;
-              font-weight: bold;
               background: #f6ffc5;
+              font-weight: bold;
               @include border-radius(7px);
             }
 
@@ -10737,8 +10730,8 @@ body.body--calendar {
           }
 
           @include tb {
-            font-size: $px10;
             flex-direction: column;
+            font-size: $px10;
 
             a {
               font-size: $px10;
@@ -10777,9 +10770,9 @@ body.body--calendar {
       #event-map {
         .map-page {
           margin-bottom: 70px;
-          background-color: #fff;
           padding: 0 35px 20px;
           border-radius: 0 0 16px 16px;
+          background-color: #fff;
 
           header {
             display: none;
@@ -10813,14 +10806,14 @@ body.body--calendar-search {
           footer.send {
             a {
               padding: 10px 30px;
-              font-weight: bold;
-              font-size: $px12;
-              color: $white;
-              text-decoration: none;
-              text-align: center;
               border: 1px solid $blue;
-              @include border-radius(20px);
               background-color: $blue;
+              color: $white;
+              font-size: $px12;
+              font-weight: bold;
+              text-align: center;
+              text-decoration: none;
+              @include border-radius(20px);
 
               @include tb {
                 width: 90%;
@@ -10829,8 +10822,8 @@ body.body--calendar-search {
 
               &:hover,
               &:focus {
-                color: $text;
                 background-color: $white;
+                color: $text;
               }
             }
           }
@@ -10842,8 +10835,8 @@ body.body--calendar-search {
           border-top: 1px solid $main-blue;
 
           article {
-            padding: 10px 0;
             margin-bottom: 5px;
+            padding: 10px 0;
             border-bottom: 1px dashed #787878;
 
             header {
@@ -10885,38 +10878,38 @@ body.body--calendar {
 
     @include tb {
       width: 100%;
-      padding: 0 10px;
       margin: 110px auto;
+      padding: 0 10px;
     }
 
     #main {
       width: 70%;
       margin-top: 45px;
-      @include border-radius(16px);
-      background-color: $white;
       float: left;
+      background-color: $white;
+      @include border-radius(16px);
 
       @include tb {
-        float: none;
         width: 100%;
         padding: 10px;
+        float: none;
       }
 
       header {
         h1 {
           margin: 20px 35px;
-          font-size: $px24;
-          color: $main-blue;
           border-top: 2px solid $main-blue;
+          color: $main-blue;
+          font-size: $px24;
           font-weight: bold;
         }
       }
 
       .released {
         margin: 0 35px;
-        font-size: $px14;
-        color: #2c2c2c;
         border-bottom: 1px #787878 dashed;
+        color: #2c2c2c;
+        font-size: $px14;
       }
 
       .categories {
@@ -10941,16 +10934,16 @@ body.body--calendar {
                 display: block;
                 margin-right: 10px;
                 padding: 5px 15px;
+                background-color: $ygreen;
                 color: $text;
                 font-size: $px14;
                 font-weight: bold;
                 text-decoration: none;
                 @include border-radius(16px);
-                background-color: $ygreen;
 
                 @include tb {
-                  font-size: $px12;
                   margin-top: 10px;
+                  font-size: $px12;
                   text-align: center;
                 }
 
@@ -10967,9 +10960,9 @@ body.body--calendar {
       }
 
       dl.see {
-        margin: 20px 35px;
         display: flex;
         flex-wrap: wrap;
+        margin: 20px 35px;
         font-size: $px14;
 
         @include tb {
@@ -10980,8 +10973,8 @@ body.body--calendar {
           width: 25%;
           margin-bottom: 10px;
           padding: 5px 10px;
-          font-weight: bold;
           background-color: #cae9ff;
+          font-weight: bold;
           @include border-radius(10px);
 
           @include tb {
@@ -11007,18 +11000,18 @@ body.body--calendar {
           h2 {
             margin: 30px 30px 12px;
             padding: 8px 12px;
+            background-color: #cae9ff;
             font-size: $px15;
             font-weight: bold;
-            background-color: #cae9ff;
             @include border-radius(10px);
           }
         }
 
         #map-canvas {
-          margin-left: 0px;
-          margin-bottom: 15px;
-          padding: 0 30px;
           position: relative;
+          margin-bottom: 15px;
+          margin-left: 0px;
+          padding: 0 30px;
 
           @include tb {
             height: auto;
@@ -11034,8 +11027,8 @@ body.body--calendar {
       float: right;
 
       @include tb {
-        float: none;
         width: 100%;
+        float: none;
       }
 
       #calendar {
@@ -11050,10 +11043,10 @@ body.body--calendar {
           width: 100%;
           margin: 0 auto;
           padding: 10px 20px;
+          background-color: $blue;
+          color: $white;
           font-size: $px15;
           font-weight: bold;
-          color: $white;
-          background-color: $blue;
           @include border-radius(15px);
         }
 
@@ -11063,9 +11056,9 @@ body.body--calendar {
           }
 
           ul {
-            padding: 5px 20px;
             display: flex;
             justify-content: space-between;
+            padding: 5px 20px;
 
             li {
               padding: 0 5px;
@@ -11109,9 +11102,9 @@ body.body--calendar {
 
           /* 日にち */
           tbody {
+            background-color: $white;
             font-size: $px14;
             text-align: center;
-            background-color: $white;
 
             tr {
 
@@ -11141,10 +11134,10 @@ body.body--calendar {
           width: 100%;
           margin: 0 auto;
           padding: 10px 20px;
+          background-color: $main-blue;
+          color: $white;
           font-size: $px15;
           font-weight: bold;
-          color: $white;
-          background-color: $main-blue;
           @include border-radius(15px 15px 0 0);
         }
 
@@ -11158,28 +11151,28 @@ body.body--calendar {
             margin-top: 10px;
 
             input {
-              margin-left: 5px;
-              padding-left: 10px;
               width: 90%;
               height: 25px;
+              margin-left: 5px;
+              padding-left: 10px;
               @include border-radius(5px);
             }
           }
 
           fieldset.categories {
-            margin-top: 10px;
             display: flex;
             flex-direction: column;
+            margin-top: 10px;
           }
 
           .event-date-range {
             margin-top: 10px;
 
             input {
-              margin-left: 5px;
-              padding-left: 10px;
               width: 40%;
               height: 25px;
+              margin-left: 5px;
+              padding-left: 10px;
               @include border-radius(5px);
             }
           }
@@ -11189,14 +11182,14 @@ body.body--calendar {
 
             input {
               padding: 10px 25px;
-              font-weight: bold;
-              font-size: $px12;
-              color: $white;
-              text-decoration: none;
-              text-align: center;
               border: 1px solid $main-blue;
-              @include border-radius(20px);
               background-color: $main-blue;
+              color: $white;
+              font-size: $px12;
+              font-weight: bold;
+              text-align: center;
+              text-decoration: none;
+              @include border-radius(20px);
 
               @include tb {
                 width: 90%;
@@ -11205,8 +11198,8 @@ body.body--calendar {
 
               &:hover,
               &:focus {
-                color: $text;
                 background-color: $white;
+                color: $text;
               }
             }
           }
@@ -11250,9 +11243,9 @@ body.body--faq {
             @include btn-gry;
 
             &[name="search"] {
-              color: $white;
-              background: $blue;
               border: 1px solid $blue;
+              background: $blue;
+              color: $white;
             }
           }
         }
@@ -11263,15 +11256,15 @@ body.body--faq {
       padding: 0 20px;
 
       .faq-question {
-        font-weight: bold;
         padding: 1em;
         background-color: #fcf8d7;
+        font-weight: bold;
         @include border-radius(15px);
       }
 
       .body {
-        padding: 30px 0px;
         order: 1;
+        padding: 30px 0px;
 
         p {
           margin-bottom: 20px;
@@ -11290,9 +11283,9 @@ body.body--faq {
         h2 {
           margin: 30px 0 12px;
           padding: 8px 12px;
+          background-color: #ccf0ff;
           font-size: $px15;
           font-weight: bold;
-          background-color: #ccf0ff;
 
           @include tb {
             font-size: $px14;
@@ -11302,9 +11295,9 @@ body.body--faq {
         h3 {
           margin-bottom: 12px;
           padding: 0 8px;
+          border-left: 2px solid $main-blue;
           font-size: $px14;
           font-weight: bold;
-          border-left: 2px solid $main-blue;
 
           @include tb {
             font-size: $px12;
@@ -11313,9 +11306,9 @@ body.body--faq {
 
         h4 {
           margin-bottom: 12px;
+          color: $main-blue;
           font-size: $px14;
           font-weight: bold;
-          color: $main-blue;
 
           @include tb {
             font-size: $px12;
@@ -11396,9 +11389,9 @@ body.body--faq {
           }
 
           h2 {
+            color: $main-blue;
             font-size: $px14;
             font-weight: bold;
-            color: $main-blue;
 
             @include tb {
               font-size: $px14;
@@ -11426,7 +11419,7 @@ body.body--faq {
                 font-size: $px10;
               }
 
-              &:before {
+              &::before {
                 content: "・";
               }
             }
@@ -11457,14 +11450,14 @@ body.ezine__layout {
     width: 70%;
     margin: 20px 30px 70px 0;
     padding-bottom: 30px;
+    float: left;
     background-color: $white;
     @include border-radius(20px);
-    float: left;
 
     @include tb {
-      float: none;
       width: 100%;
       margin: 20px 30px 30px 0;
+      float: none;
     }
 
     header {
@@ -11472,10 +11465,10 @@ body.ezine__layout {
         display: inline-block;
         width: 100%;
         padding: 20px 25px;
+        background-color: #b0e8ff;
+        color: $text;
         font-size: $px18;
         font-weight: bold;
-        color: $text;
-        background-color: #b0e8ff;
         @include border-radius(20px 20px 0 0);
       }
     }
@@ -11485,9 +11478,9 @@ body.ezine__layout {
     }
 
     ul.ezine-pages {
-      padding: 30px 20px;
       display: flex;
       flex-wrap: wrap;
+      padding: 30px 20px;
 
       li {
         width: 46%;
@@ -11507,17 +11500,17 @@ body.ezine__layout {
 
         a {
           display: block;
+          position: relative;
           width: 100%;
           padding: 10px 10px 10px 35px;
-          position: relative;
 
           &::before {
             content: url(/img/ic-file.png);
-            background-size: 30px;
-            transform: scale(0.5);
             position: absolute;
             top: -2px;
             left: -7px;
+            transform: scale(0.5);
+            background-size: 30px;
           }
         }
       }
@@ -11526,9 +11519,9 @@ body.ezine__layout {
     .ezine-html {
       margin: 30px 20px 12px;
       padding: 8px 12px;
+      background-color: #ccf0ff;
       font-size: $px15;
       font-weight: bold;
-      background-color: #ccf0ff;
     }
 
     form {
@@ -11543,10 +11536,10 @@ body.ezine__layout {
             width: 35%;
             margin: 10px 10px 10px 0;
             padding: 5px 15px;
-            font-weight: bold;
-            background-color: $lyblue;
-            @include border-radius(10px);
             float: left;
+            background-color: $lyblue;
+            font-weight: bold;
+            @include border-radius(10px);
 
             @include tb {
               width: 100%;
@@ -11568,10 +11561,10 @@ body.ezine__layout {
 
           dd.wide {
             display: flex;
+            align-items: baseline;
             justify-content: left;
             width: 100%;
             justify-items: end;
-            align-items: baseline;
 
             #selected-files {
               padding-left: 50px;
@@ -11581,22 +11574,22 @@ body.ezine__layout {
       }
 
       footer.send {
-        clear: both;
-        margin: 30px auto;
         display: flex;
         flex-direction: column;
+        margin: 30px auto;
+        clear: both;
 
         input,
         button {
           width: 200px;
           margin: 10px auto;
           padding: 10px 15px;
-          font-weight: bold;
-          font-size: $px12;
-          color: $white;
           border: 1px solid $blue;
-          @include border-radius(20px);
           background-color: $blue;
+          color: $white;
+          font-size: $px12;
+          font-weight: bold;
+          @include border-radius(20px);
 
           @include tb {
             width: 100%;
@@ -11604,15 +11597,15 @@ body.ezine__layout {
 
           &:hover,
           &:focus {
-            color: $text;
             background-color: $white;
+            color: $text;
           }
         }
 
         button[name="button"] {
-          color: $text;
-          background-color: $hgry;
           border: 1px solid $hgry;
+          background-color: $hgry;
+          color: $text;
 
           &:hover,
           &:focus {
@@ -11675,14 +11668,14 @@ body.ezine__layout {
   }
 
   #side {
-    padding-top: 20px;
-    margin-bottom: 70px;
     width: 25%;
+    margin-bottom: 70px;
+    padding-top: 20px;
     float: left;
 
     @include tb {
-      float: none;
       width: 100%;
+      float: none;
     }
 
     section#side-menu {
@@ -11691,10 +11684,10 @@ body.ezine__layout {
           display: inline-block;
           width: 100%;
           padding: 20px 25px;
+          background-color: $blue;
+          color: $white;
           font-size: $px18;
           font-weight: bold;
-          color: $white;
-          background-color: $blue;
           @include border-radius(20px);
 
         }
@@ -11704,8 +11697,8 @@ body.ezine__layout {
         ul {
           width: 100%;
           margin-top: 15px;
-          background-color: $white;
           list-style-type: none;
+          background-color: $white;
           @include border-radius(20px);
 
           li {

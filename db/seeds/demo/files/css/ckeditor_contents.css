@@ -1,12 +1,12 @@
 body {
+  margin: 20px;
+  /* Remove the background color to make it transparent */
+  background-color: #fff;
+  /* Text color */
+  color: #333;
   /* Font */
   font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
   font-size: 12px;
-  /* Text color */
-  color: #333;
-  /* Remove the background color to make it transparent */
-  background-color: #fff;
-  margin: 20px;
 }
 
 .cke_editable {
@@ -18,23 +18,23 @@ body {
 }
 
 blockquote {
-  font-style: italic;
-  font-family: Georgia, Times, "Times New Roman", serif;
   padding: 2px 0;
+  border-width: 0;
   border-style: solid;
   border-color: #ccc;
-  border-width: 0;
+  font-family: Georgia, Times, "Times New Roman", serif;
+  font-style: italic;
 }
 
 .cke_contents_ltr blockquote {
-  padding-left: 20px;
   padding-right: 8px;
+  padding-left: 20px;
   border-left-width: 5px;
 }
 
 .cke_contents_rtl blockquote {
-  padding-left: 8px;
   padding-right: 20px;
+  padding-left: 8px;
   border-right-width: 5px;
 }
 
@@ -67,22 +67,22 @@ hr {
 }
 
 img .right {
-  border: 1px solid #ccc;
-  float: right;
   margin-left: 15px;
   padding: 5px;
+  float: right;
+  border: 1px solid #ccc;
 }
 img .left {
-  border: 1px solid #ccc;
-  float: left;
   margin-right: 15px;
   padding: 5px;
+  float: left;
+  border: 1px solid #ccc;
 }
 
 pre {
-  white-space: pre-wrap;
   /* CSS 2.1 */
   word-wrap: break-word;
+  white-space: pre-wrap;
   /* IE7 */
   -moz-tab-size: 4;
   tab-size: 4;
@@ -97,24 +97,24 @@ span[lang] {
 }
 
 figure {
-  text-align: center;
+  display: inline-block;
+  margin: 10px 20px;
+  padding: 10px;
   border: solid 1px #ccc;
   border-radius: 2px;
   background: rgba(0, 0, 0, 0.05);
-  padding: 10px;
-  margin: 10px 20px;
-  display: inline-block;
+  text-align: center;
 }
 
 figure > figcaption {
-  text-align: center;
   display: block;
+  text-align: center;
   /* For IE8 */
 }
 
 a > img {
-  padding: 1px;
   margin: 1px;
+  padding: 1px;
   border: none;
   outline: 1px solid #0782C1;
 }
@@ -136,9 +136,9 @@ p img {
 h2 {
   margin: 30px 0 12px;
   padding: 8px 12px;
+  background-color: #ccf0ff;
   font-size: 15px;
   font-weight: bold;
-  background-color: #ccf0ff;
 }
 @media only screen and (max-width: 768px) {
   h2 {
@@ -149,9 +149,9 @@ h2 {
 h3 {
   margin-bottom: 12px;
   padding: 0 8px;
+  border-left: 2px solid #003bbc;
   font-size: 14px;
   font-weight: bold;
-  border-left: 2px solid #003bbc;
 }
 @media only screen and (max-width: 768px) {
   h3 {
@@ -161,9 +161,9 @@ h3 {
 
 h4 {
   margin-bottom: 12px;
+  color: #003bbc;
   font-size: 14px;
   font-weight: bold;
-  color: #003bbc;
 }
 @media only screen and (max-width: 768px) {
   h4 {
@@ -195,8 +195,8 @@ strong {
 table {
   width: 100%;
   margin-bottom: 24px;
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 @media only screen and (max-width: 768px) {
   table {
@@ -263,5 +263,3 @@ table td {
 .ss-cke-underline {
   text-decoration: underline;
 }
-
-/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22ckeditor_contents.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;AACE;EACA;EACA;AAEA;EACA;AAEA;EACA;EAEA;;;AAGF;EACE;EACA;EACA;AAEA;EACA;;;AAGF;EACE;EACA;EACA;EACA;EACA;EACA;;;AAIA;EACE;EACA;EACA;;;AAKF;EACE;EACA;EACA;;;AAIJ;EACE;;;AAGF;AAAA;AAAA;AAGE;EACA;AACA;EACA;;;AAGF;AAAA;AAAA;AAAA;AAAA;AAAA;EAME;EACA;;;AAGF;EACE;EACA;;;AAIA;EACE;EACA;EACA;EACA;;AAEF;EACE;EACA;EACA;EACA;;;AAIJ;EACE;AACA;EACA;AACA;EACA;EACA;;;AAGF;EACE;;;AAGF;EACE;;;AAGF;EACE;EACA;EACA;EACA;EACA;EACA;EACA;;;AAIA;EACA;EACA;AACA;;;AAKA;EACE;EACA;EACA;EACA;;;AAIJ;EACE;EACA;;AACA;EACE;;AAEF;EANF;IAOI;IACA;;;;AAIJ;EACE;EACA;EACA;EACA;EACA;;AACA;EANF;IAOI;;;;AAIJ;EACE;EACA;EACA;EACA;EACA;;AACA;EANF;IAOI;;;;AAIJ;EACE;EACA;EACA;EACA;;AACA;EALF;IAMI;;;;AAIJ;AAAA;EAEE;EACA;EACA;;AACA;EALF;AAAA;IAMI;;;;AAIJ;EACE;;;AAGF;EACE;;;AAGF;EACE;EACA;EACA;EACA;;AACA;EALF;IAMI;;;AAEF;EARF;IASI;;;AAGF;EACE;EACA;EACA;;AAEF;EACE;;AAEF;EACE;EACA;EACA;EACA;;AAGF;EACE;EACA;EACA;;;AAIJ;EACC;EACC;EACA;;AACA;EACE;;AACA;EACE;;AAEF;EACE;EACA;;;AAKN;EACE;EACA;EACA;;AACA;EACE;;AACA;EACE;;AAEF;EACE;EACA;;;AAKN;EACE%22,%22file%22:%22ckeditor_contents.css%22%7D */

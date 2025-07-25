@@ -10,8 +10,8 @@ pages - 緊急災害レイアウト
 ---------------------------------------------------------- */
 /* 緊急災害レイアウト トップ */
 body.body--index__urgency{
-  background-image: none;
   background-color: #ecebe3;
+  background-image: none;
 
   .accessibility {
 
@@ -28,14 +28,14 @@ body.body--index__urgency{
     display: flex;
     align-items: center;
     justify-content: space-between;
+    min-height: 0%;
     padding: 10px 30px;
     background-color: white;
-    min-height: 0%;
 
     .siteinfo {
-      border-bottom: none;
       display: flex;
       align-items: center;
+      border-bottom: none;
 
       &__logo {
         width: 200px;
@@ -53,9 +53,9 @@ body.body--index__urgency{
 
       &__announce {
         margin-left: 21px;
+        color: #e6000f;
         font-size: 18px;
         font-weight: bold;
-        color: #e6000f;
 
         @include tb {
           font-size: 12px;
@@ -89,8 +89,8 @@ body.body--index__urgency{
 ---------------------------------------------------------- */
   /* 新着情報/注目情報 */
   .emergency{
-    padding: 30px;
     display: flex;
+    padding: 30px;
 
     @include tb {
       display: block;
@@ -99,9 +99,9 @@ body.body--index__urgency{
 
 
     &__title{
-      width: 200px;
       display: flex;
       align-items: center;
+      width: 200px;
       background-color: #e6000f;
 
       @include tb {
@@ -110,8 +110,8 @@ body.body--index__urgency{
 
       h2{
         padding: 14px 20px;
-        font-size: $px26;
         color: $white;
+        font-size: $px26;
         font-weight: normal;
 
         @include tb {
@@ -130,9 +130,9 @@ body.body--index__urgency{
 
       article{
         width: 100%;
-        padding: 5px 15px;
         // border-bottom: 1px dotted #808080;
         margin: 10px;
+        padding: 5px 15px;
 
         @include tb {
           margin: 0;
@@ -144,8 +144,8 @@ body.body--index__urgency{
 
         a {
           font-size: 14px;
-          text-decoration: none;
           font-weight: bold;
+          text-decoration: none;
 
           @include tb {
             font-size: 12px;
@@ -165,8 +165,8 @@ body.body--index__urgency{
   .whats-new,
   .notice {
     margin-top: 30px;
-    border-radius: 16px;
     overflow: hidden;
+    border-radius: 16px;
 
     &__header {
       padding: 15px 23px;
@@ -203,9 +203,9 @@ body.body--index__urgency{
           }
 
           time {
+            width: 110px;
             font-size: 12px;
             letter-spacing: 0.5px;
-            width: 110px;
             white-space: nowrap;
 
             @include tb {
@@ -218,14 +218,14 @@ body.body--index__urgency{
             margin-left: 27px;
 
             @include tb {
-              margin-left: 0;
               display: flex;
+              margin-left: 0;
             }
 
             a {
               font-size: 14px;
-              text-decoration: none;
               font-weight: bold;
+              text-decoration: none;
 
               @include tb {
                 font-size: 12px;
@@ -241,8 +241,8 @@ body.body--index__urgency{
     }
 
     .head-content__list-wrap > &__feed {
-      margin-top: 14px;
       justify-content: flex-end;
+      margin-top: 14px;
 
       @include tb {
         margin-top: 8px;
@@ -252,7 +252,7 @@ body.body--index__urgency{
         padding-right: 9px;
         font-size: $px12;
 
-        &:after {
+        &::after {
           top: 6px;
         }
       }
@@ -262,7 +262,7 @@ body.body--index__urgency{
       margin-right: 9px;
       padding-left: 14px;
 
-      &:before {
+      &::before {
         width: 11px;
         height: 11px;
         background-size: 11px;
@@ -273,9 +273,9 @@ body.body--index__urgency{
 
     &__no-info {
       padding: 27px 0;
+      color: #000;
       font-size: 88%;
       font-weight: bold;
-      color: #000;
     }
   }
 
@@ -284,8 +284,8 @@ body.body--index__urgency{
   }
 
   #wrap {
-    padding-bottom: 60px;
     min-height: 0%;
+    padding-bottom: 60px;
 
     @include tb {
       width: 100%;
@@ -317,8 +317,8 @@ body.body--index__urgency{
         @include tb {
           display: block;
           position: static;
-          margin-top: 30px;
           width: 100%;
+          margin-top: 30px;
         }
 
       }
@@ -392,8 +392,8 @@ body.body--index__urgency{
 
     &__header {
       padding: 14px 20px;
-      color: #fff;
       border-radius: 15px 15px 0 0;
+      color: #fff;
 
       @include tb {
         padding: 12px 17px;
@@ -434,8 +434,8 @@ body.body--index__urgency{
         display: block;
         padding: 10px 0;
         font-size: $px14;
-        line-height: 1.43;
         font-weight: bold;
+        line-height: 1.43;
         text-decoration: none;
 
         @include tb {
@@ -463,9 +463,9 @@ body.body--index__urgency{
     &__link {
       position: relative;
       padding-right: 10px;
+      color: #3b4043;
       font-size: $px14;
       font-weight: bold;
-      color: #3b4043;
       text-decoration: none;
 
       @include tb {
@@ -476,25 +476,25 @@ body.body--index__urgency{
         text-decoration: underline;
       }
 
-      &:after {
+      &::after {
         content: '';
-        width: 0;
-        height: 0;
-        border-style: solid;
-        border-width: 5px 0 5px 5px;
-        border-color: transparent transparent transparent #585c5f;
         position: absolute;
         top: 50%;
         right: 0;
+        width: 0;
+        height: 0;
         margin-top: -6px;
+        border-width: 5px 0 5px 5px;
+        border-style: solid;
+        border-color: transparent transparent transparent #585c5f;
       }
     }
 
     &__no-info {
       padding: 27px 0;
+      color: #000;
       font-size: $px14;
       font-weight: bold;
-      color: #000;
 
       @include tb {
         padding: 11px 0 9px;
@@ -511,8 +511,8 @@ body.body--index__urgency{
 
     .head-content__header {
       display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
       width: 200px;
       border-radius: 0;
 
@@ -568,12 +568,12 @@ body.body--index__urgency{
     }
 
     .head-content__item-link {
-      margin-left: 25px;
       width: calc(100% - 185px);
+      margin-left: 25px;
 
       @include tb {
-        margin-left: 0;
         width: 100%;
+        margin-left: 0;
         padding: 0;
       }
     }
@@ -627,12 +627,12 @@ body.body--index__urgency{
     }
 
     .head-content__item-link {
-      margin-left: 25px;
       width: calc(100% - 105px);
+      margin-left: 25px;
 
       @include tb {
-        margin-left: 0;
         width: 100%;
+        margin-left: 0;
         padding: 0;
       }
     }
@@ -725,9 +725,9 @@ body.body--index__urgency{
   // }
 
   .urgency-content {
-    margin-top: 30px;
     display: flex;
     justify-content: space-between;
+    margin-top: 30px;
 
     @include tb {
       flex-direction: column;
@@ -745,8 +745,8 @@ body.body--index__urgency{
       width: 280px;
 
       @include tb {
-        margin-top: 45px;
         width: 100%;
+        margin-top: 45px;
       }
 
       #relation{
@@ -757,28 +757,28 @@ body.body--index__urgency{
         }
 
         .relation-inner{
-          height: 100%;
           display: flex;
           flex-direction: column;
-          justify-content: space-between;
           align-items: center;
+          justify-content: space-between;
+          height: 100%;
 
           span{
             width: 100%;
-            text-align: center;
             margin-bottom: 10px;
+            text-align: center;
           }
 
           a{
             display: block;
             width: 100%;
-            background-color: #96d7ff;
             padding: 30px 0;
+            background-color: #96d7ff;
+            color: $text;
 
             font-size: $px20;
-            color: $text;
-            text-decoration: none;
             font-weight: bold;
+            text-decoration: none;
 
             @include tb {
               // font-size: 12px;
@@ -805,13 +805,13 @@ body.body--index__urgency{
     a {
       display: block;
       padding: 19px 0;
+      border: 2px solid #96d7ff;
+      background-color: #fff;
+      color: #000;
       font-size: 22px;
       font-weight: bold;
-      color: #000;
-      text-decoration: none;
       text-align: center;
-      background-color: #fff;
-      border: 2px solid #96d7ff;
+      text-decoration: none;
 
       @include tb {
         padding: 29px 0;

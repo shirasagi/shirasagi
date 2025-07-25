@@ -34,9 +34,9 @@ time, mark, audio, video {
   padding: 0;
   border: 0;
   outline: 0;
+  background: transparent;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent;
 }
 
 body {
@@ -56,17 +56,17 @@ blockquote, q {
   quotes: none;
 }
 
-blockquote:before, blockquote:after,
-q:before, q:after {
+blockquote::before, blockquote::after,
+q::before, q::after {
   content: "";
 }
 
 a {
   margin: 0;
   padding: 0;
+  background: transparent;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent;
 }
 
 /* change colours to suit your needs */
@@ -94,18 +94,18 @@ abbr[title], dfn[title] {
 }
 
 table {
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 
 /* change border colour to suit your needs */
 hr {
   display: block;
   height: 1px;
-  border: 0;
-  border-top: 1px solid #ccc;
   margin: 1em 0;
   padding: 0;
+  border: 0;
+  border-top: 1px solid #ccc;
 }
 
 input, select {
@@ -116,13 +116,13 @@ input, select {
 
 @mixin clear {
   zoom: 1;
-  &:before, &:after {
+  &::before, &::after {
     content: "\0020";
     display: block;
     height: 0;
     overflow: hidden;
   }
-  &:after {
+  &::after {
     clear: both;
   }
 }
