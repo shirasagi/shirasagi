@@ -14,7 +14,7 @@ module Article::Addon
       permit_params :export_columns, :export_page_name, :export_filename
       permit_params :form_id, :node_id
 
-      validates :form_id, presence: true
+      # validates :form_id, presence: true
       validate :validate_export_columns, if: -> { export_columns.present? }
     end
 
@@ -56,7 +56,9 @@ module Article::Addon
     end
 
     def pages_to_json(pages)
-      columns = export_columns.presence || form.columns.order(order: 1).map(&:name)
+      columns = export_columns.presence
+      columns ||= form.columns.order(order: 1).map(&:name) if form
+      columns ||= []
 
       article_url_label = I18n.t("mongoid.attributes.cms/model/page.full_url")
       data = [ [resolve_page_name ] + columns + [article_url_label] ]
