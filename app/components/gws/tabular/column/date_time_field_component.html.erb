@@ -1,0 +1,23 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% if type == :form %>
+    <%=
+      case input_type
+      when "date"
+        ss_date_field_tag "#{form.object_name}[col_#{column.id}]", value
+      else # "datetime"
+        ss_datetime_field_tag "#{form.object_name}[col_#{column.id}]", value
+      end
+    %>
+  <% else %>
+    <%=
+      if value
+        case input_type
+        when "date"
+          ss_time_tag value, type: :date
+        else # "datetime"
+          ss_time_tag value
+        end
+      end
+    %>
+  <% end %>
+<% end %>

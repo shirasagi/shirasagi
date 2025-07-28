@@ -16,8 +16,8 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
       filename(@idea_path).
       first
 
-    raise "404" unless @idea
-    raise '404' if !@preview && !@idea.public?
+    raise SS::NotFoundError unless @idea
+    raise SS::NotFoundError if !@preview && !@idea.public?
   end
 
   public
@@ -71,7 +71,7 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
 
   def add_point
     @cur_node.layout = nil
-    raise "403" unless logged_in?(redirect: false)
+    raise SS::ForbiddenError unless logged_in?(redirect: false)
 
     cond = { site_id: @cur_site.id, member_id: @cur_member.id, idea_id: @idea.id }
 
@@ -101,8 +101,8 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
     @idea_ds = Opendata::Idea.site(@cur_site).
       filename(idea_path).
       first
-    raise "404" unless @idea_ds
-    raise '404' if !@preview && !@idea_ds.public?
+    raise SS::NotFoundError unless @idea_ds
+    raise SS::NotFoundError if !@preview && !@idea_ds.public?
 
   end
 
@@ -114,8 +114,8 @@ class Opendata::Agents::Nodes::Idea::IdeaController < ApplicationController
     @idea_ap = Opendata::Idea.site(@cur_site).
     filename(idea_path).
     first
-    raise "404" unless @idea_ap
-    raise '404' if !@preview && !@idea_ap.public?
+    raise SS::NotFoundError unless @idea_ap
+    raise SS::NotFoundError if !@preview && !@idea_ap.public?
 
   end
 

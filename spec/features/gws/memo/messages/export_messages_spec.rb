@@ -24,11 +24,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         expect(page).to have_content(memo.subject)
-        perform_enqueued_jobs do
+      end
+      perform_enqueued_jobs do
+        within "form#item-form" do
           click_on I18n.t("ss.export")
         end
+        wait_for_notice I18n.t("gws/memo/message.notice.start_export")
       end
-      wait_for_notice I18n.t("gws/memo/message.notice.start_export")
       within '#addon-basic' do
         expect(page).to have_content(I18n.t("gws/memo/message.export.start_message").split("\n").first)
       end
@@ -38,6 +40,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+
+      clear_notice
 
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
@@ -304,6 +308,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
+      clear_notice
+
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
         wait_for_js_ready
@@ -375,6 +381,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+
+      clear_notice
 
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click
@@ -453,6 +461,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+
+      clear_notice
 
       within "nav.user" do
         first(".gws-memo-notice.popup-notice-container a").click

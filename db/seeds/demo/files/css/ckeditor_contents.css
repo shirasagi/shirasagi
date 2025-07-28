@@ -1,16 +1,11 @@
-/* @import url(./style.css); */
-
 body {
   /* Font */
   font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
   font-size: 12px;
-
   /* Text color */
   color: #333;
-
   /* Remove the background color to make it transparent */
   background-color: #fff;
-
   margin: 20px;
 }
 
@@ -18,7 +13,6 @@ body {
   padding: 5px;
   font-size: 13px;
   line-height: 1.6;
-
   /* Fix for missing scrollbars with RTL texts. (#10488) */
   word-wrap: break-word;
 }
@@ -72,14 +66,13 @@ hr {
   border-top: 1px solid #ccc;
 }
 
-img.right {
+img .right {
   border: 1px solid #ccc;
   float: right;
   margin-left: 15px;
   padding: 5px;
 }
-
-img.left {
+img .left {
   border: 1px solid #ccc;
   float: left;
   margin-right: 15px;
@@ -113,13 +106,13 @@ figure {
   display: inline-block;
 }
 
-figure>figcaption {
+figure > figcaption {
   text-align: center;
   display: block;
   /* For IE8 */
 }
 
-a>img {
+a > img {
   padding: 1px;
   margin: 1px;
   border: none;
@@ -130,11 +123,9 @@ p {
   margin-bottom: 20px;
   font-size: 14px;
 }
-
 p img {
   max-width: 100%;
 }
-
 @media only screen and (max-width: 768px) {
   p {
     font-size: 12px;
@@ -149,7 +140,6 @@ h2 {
   font-weight: bold;
   background-color: #ccf0ff;
 }
-
 @media only screen and (max-width: 768px) {
   h2 {
     font-size: 14px;
@@ -163,7 +153,6 @@ h3 {
   font-weight: bold;
   border-left: 2px solid #003bbc;
 }
-
 @media only screen and (max-width: 768px) {
   h3 {
     font-size: 12px;
@@ -176,7 +165,6 @@ h4 {
   font-weight: bold;
   color: #003bbc;
 }
-
 @media only screen and (max-width: 768px) {
   h4 {
     font-size: 12px;
@@ -189,9 +177,7 @@ ol {
   padding-left: 1em;
   font-size: 14px;
 }
-
 @media only screen and (max-width: 768px) {
-
   ul,
   ol {
     font-size: 12px;
@@ -212,38 +198,70 @@ table {
   border-collapse: collapse;
   border-spacing: 0;
 }
-
 @media only screen and (max-width: 768px) {
   table {
     font-size: 14px;
   }
 }
-
 @media only screen and (max-width: 480px) {
   table {
     font-size: 12px;
   }
 }
-
 table caption {
   padding: 0 10px;
   color: #003bbc;
   text-align: left;
 }
-
 table p {
   margin-bottom: 0;
 }
-
 table th {
   padding: 3px 8px 0;
   border: 1px solid #ccc;
   background: #ecebe3;
   text-align: left;
 }
-
 table td {
   padding: 3px 8px 0;
   border: 1px solid #ccc;
   font-size: 14px;
 }
+
+.column2 {
+  display: flex;
+  gap: 10px;
+  margin: 10px auto;
+}
+.column2 .column-item {
+  width: calc((100% - 10px) / 2);
+}
+.column2 .column-item img {
+  width: 100%;
+}
+.column2 .column-item .caption {
+  margin: 0;
+  font-size: 13px;
+}
+
+.column3 {
+  display: flex;
+  gap: 10px;
+  margin: 10px auto;
+}
+.column3 .column-item {
+  width: calc((100% - 20px) / 3);
+}
+.column3 .column-item img {
+  width: 100%;
+}
+.column3 .column-item .caption {
+  margin: 0;
+  font-size: 13px;
+}
+
+.ss-cke-underline {
+  text-decoration: underline;
+}
+
+/*# sourceMappingURL=data:application/json;charset=utf-8,%7B%22version%22:3,%22sourceRoot%22:%22%22,%22sources%22:%5B%22ckeditor_contents.scss%22%5D,%22names%22:%5B%5D,%22mappings%22:%22AAAA;AACE;EACA;EACA;AAEA;EACA;AAEA;EACA;EAEA;;;AAGF;EACE;EACA;EACA;AAEA;EACA;;;AAGF;EACE;EACA;EACA;EACA;EACA;EACA;;;AAIA;EACE;EACA;EACA;;;AAKF;EACE;EACA;EACA;;;AAIJ;EACE;;;AAGF;AAAA;AAAA;AAGE;EACA;AACA;EACA;;;AAGF;AAAA;AAAA;AAAA;AAAA;AAAA;EAME;EACA;;;AAGF;EACE;EACA;;;AAIA;EACE;EACA;EACA;EACA;;AAEF;EACE;EACA;EACA;EACA;;;AAIJ;EACE;AACA;EACA;AACA;EACA;EACA;;;AAGF;EACE;;;AAGF;EACE;;;AAGF;EACE;EACA;EACA;EACA;EACA;EACA;EACA;;;AAIA;EACA;EACA;AACA;;;AAKA;EACE;EACA;EACA;EACA;;;AAIJ;EACE;EACA;;AACA;EACE;;AAEF;EANF;IAOI;IACA;;;;AAIJ;EACE;EACA;EACA;EACA;EACA;;AACA;EANF;IAOI;;;;AAIJ;EACE;EACA;EACA;EACA;EACA;;AACA;EANF;IAOI;;;;AAIJ;EACE;EACA;EACA;EACA;;AACA;EALF;IAMI;;;;AAIJ;AAAA;EAEE;EACA;EACA;;AACA;EALF;AAAA;IAMI;;;;AAIJ;EACE;;;AAGF;EACE;;;AAGF;EACE;EACA;EACA;EACA;;AACA;EALF;IAMI;;;AAEF;EARF;IASI;;;AAGF;EACE;EACA;EACA;;AAEF;EACE;;AAEF;EACE;EACA;EACA;EACA;;AAGF;EACE;EACA;EACA;;;AAIJ;EACC;EACC;EACA;;AACA;EACE;;AACA;EACE;;AAEF;EACE;EACA;;;AAKN;EACE;EACA;EACA;;AACA;EACE;;AACA;EACE;;AAEF;EACE;EACA;;;AAKN;EACE%22,%22file%22:%22ckeditor_contents.css%22%7D */

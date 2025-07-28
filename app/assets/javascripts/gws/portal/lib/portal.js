@@ -31,7 +31,10 @@ Gws_Portal.prototype.addItems = function(items) {
 };
 
 Gws_Portal.prototype.addItem = function(item) {
-  var id = item._id.$oid;
+  var id = item._id;
+  if (id !== null && typeof id === 'object' && "$oid" in id) {
+    id = id.$oid
+  }
 
   var li = this.gs.add_widget(
     '<li class="portlet-item" data-id="' + id + '"></li>',

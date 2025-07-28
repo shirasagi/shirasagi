@@ -7,7 +7,7 @@ class Opendata::Agents::Nodes::Idea::SearchIdeaController < ApplicationControlle
   def pages
     @model = Opendata::Idea
 
-    focus = params.permit(s: [@model.search_params])[:s].presence || {}
+    focus = params.permit(s: @model.search_params)[:s].presence || {}
     focus = focus.merge(site: @cur_site)
 
     case params.dig(:s, :sort) || params.permit(:sort)[:sort]

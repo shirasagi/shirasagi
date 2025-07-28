@@ -8,9 +8,16 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   let(:file_resizing_label) { site.t(:file_resizing_label, size: file_resizing.join("x")) }
 
   before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+
     site.set(file_resizing: file_resizing)
 
     login_cms_user
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
   end
 
   shared_examples "file resizing is" do
@@ -51,7 +58,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         expect(page).to have_select('item[resizing]', selected: file_resizing_label)
 
         wait_for_cbox_closed do
-          wait_for_event_fired "ss:ajaxFileSelected", "#addon-cms-agents-addons-file .ajax-box" do
+          wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-file .ajax-box" do
             click_on 'keyvisual.jpg'
           end
         end
@@ -103,9 +110,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
     after do
       expect(SS::File.all.count).to eq 2
-      expect(SS::File.all.where(model: "ss/user_file").count).to eq 1
+      expect(SS::File.all.where(model: SS::UserFile::FILE_MODEL).count).to eq 1
       expect(SS::File.all.where(model: "ss/temp_file").count).to eq 1
-      SS::File.all.where(model: "ss/user_file").first.tap do |file|
+      SS::File.all.where(model: SS::UserFile::FILE_MODEL).first.tap do |file|
         dimension = file.image_dimension
         expect(dimension).to be_present
         expect(dimension[0]).to be <= file_resizing[0]
@@ -143,9 +150,9 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
     after do
       expect(SS::File.all.count).to eq 2
-      expect(SS::File.all.where(model: "cms/file").count).to eq 1
+      expect(SS::File.all.where(model: Cms::File::FILE_MODEL).count).to eq 1
       expect(SS::File.all.where(model: "ss/temp_file").count).to eq 1
-      SS::File.all.where(model: "cms/file").first.tap do |file|
+      SS::File.all.where(model: Cms::File::FILE_MODEL).first.tap do |file|
         dimension = file.image_dimension
         expect(dimension).to be_present
         expect(dimension[0]).to be <= file_resizing[0]

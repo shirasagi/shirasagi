@@ -27,7 +27,7 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit contents_path
-      expect(page).to have_css(".main-navi a", text: I18n.t("cms.content"))
+      expect(page).to have_css(".main-navi a", text: I18n.t("cms.shortcut"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.node"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.page"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.part"))
@@ -110,8 +110,10 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
   end
 
   context "with user1" do
-    let(:permissions) { cms_role.permissions.select { |item| item =~ /_private_/ } }
-    let(:role) { create :cms_role, name: "role", permissions: permissions, permission_level: 3 }
+    let(:permissions) do
+      cms_role.permissions.select { |item| item =~ /_private_/ } + %w[edit_cms_ignore_syntax_check]
+    end
+    let(:role) { create :cms_role, name: "role", permissions: permissions }
     let!(:user1) do
       create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [group1.id], cms_role_ids: [role.id])
     end
@@ -124,7 +126,7 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit contents_path
-      expect(page).to have_css(".main-navi a", text: I18n.t("cms.content"))
+      expect(page).to have_css(".main-navi a", text: I18n.t("cms.shortcut"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.node"))
       expect(page).to have_no_css(".main-navi a", text: I18n.t("cms.page"))
       expect(page).to have_css(".main-navi a", text: I18n.t("cms.part"))

@@ -10,6 +10,7 @@ module SS::Model::User
   include SS::Addon::Ldap::User
   include SS::Addon::MFA::UserSetting
   include SS::Addon::SSO::User
+  include SS::Liquidization
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
@@ -18,7 +19,8 @@ module SS::Model::User
 
   # uidの制限をメールアドレスの"@"の左側（dot-atom-text）の仕様（RFC5322）に近づける
   # 具体的にいうと、ALPHA | DIGIT | "-" | "-" が利用でき、"." は一度だけ利用できる
-  UID_MATCHER = /^[\w\-_]+(\.[\w\-_]+)?$/
+  # => "." は複数回利用できるように改修
+  UID_MATCHER = /^[\w\-_\.]+?$/
 
   included do
     attr_accessor :cur_site, :cur_user
@@ -104,6 +106,17 @@ module SS::Model::User
     end
     scope :and_unlocked, -> do
       self.and('$or' => [{ lock_state: 'unlocked' }, { :lock_state.exists => false }])
+    end
+
+    liquidize do
+      export :name
+      export :kana
+      export :uid
+      export :email
+      export :tel
+      export :tel_ext
+      export :organization_uid
+      export :lang
     end
   end
 

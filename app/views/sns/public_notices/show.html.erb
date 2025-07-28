@@ -4,7 +4,7 @@
   <% if false %>
     <iframe src="<%= url_for(action: :frame_content) %>" frameborder="0" class="ss-notice-frame" title="<%= @item.name %>" tabindex="0" allowtransparency="true"></iframe>
   <% end %>
-  <div class="ss-notice-wrap">
+  <div class="ss-notice-wrap ss-cke">
     <%= sanitize(@item.html) %>
   </div>
 </section>

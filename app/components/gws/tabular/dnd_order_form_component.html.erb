@@ -1,0 +1,61 @@
+<div class="ss-dnd-list ss-dnd-list-vertical" data-controller="ss--dnd-list">
+  <% order_column_ids = [] %>
+  <% if selected %>
+    <% selected.each do |order| %>
+      <%
+        order_column_id = order[:column_id]
+        order_direction = order[:direction]
+        next if order_column_id.blank? || order_direction.blank?
+
+        order_column_id = order_column_id.to_s
+        selected_option = options.find { |_label, value| value.to_s == order_column_id }
+        next unless selected_option
+
+        order_column_ids << order_column_id
+      %>
+      <div class="ss-dnd-list-item" data-column-id="<%= order_column_id %>">
+        <span class="material-icons-outlined md-15">drag_indicator</span>
+        <%= hidden_field_tag "#{object_name}[#{method_name}][][column_id]", nil, id: nil %>
+        <%= check_box_tag "#{object_name}[#{method_name}][][column_id]", order_column_id, true, id: "#{object_name}_#{method_name}_column_id_#{order_column_id}" %>
+        <label for="<%= "#{object_name}_#{method_name}_column_id_#{order_column_id}" %>">
+          <%= selected_option[0] %>
+        </label>
+
+        <span data-controller="ss--linked-check">
+          <%= hidden_field_tag "#{object_name}[#{method_name}][][direction]", nil, id: nil, data: { "ss--linked-check-target" => "target" } %>
+
+          <% %w(asc desc).each do |direction| %>
+            <label>
+              <%= radio_button_tag("direction-dummy-#{order_column_id}", direction, order_direction == direction, id: nil, data: { "ss--linked-check-target" => "source" }) %>
+              <%= t("gws/tabular.options.order_direction.#{direction}") %>
+            </label>
+          <% end %>
+        </span>
+      </div>
+    <% end %>
+  <% end %>
+
+  <% options.each do |label, value| %>
+    <%= next if order_column_ids.include?(value) %>
+
+    <div class="ss-dnd-list-item" data-column-id="<%= value %>">
+      <span class="material-icons-outlined md-15">drag_indicator</span>
+      <%= hidden_field_tag "#{object_name}[#{method_name}][][column_id]", nil, id: nil %>
+      <%= check_box_tag "#{object_name}[#{method_name}][][column_id]", value, false, id: "#{object_name}_#{method_name}_column_id_#{value}" %>
+      <label for="<%= "#{object_name}_#{method_name}_column_id_#{value}" %>">
+        <%= label %>
+      </label>
+
+      <span data-controller="ss--linked-check">
+        <%= hidden_field_tag "#{object_name}[#{method_name}][][direction]", nil, id: nil, data: { "ss--linked-check-target" => "target" } %>
+
+        <% %w(asc desc).each do |direction| %>
+          <label>
+            <%= radio_button_tag("direction-dummy-#{value}", direction, direction == "asc", id: nil, data: { "ss--linked-check-target" => "source" }) %>
+            <%= t("gws/tabular.options.order_direction.#{direction}") %>
+          </label>
+        <% end %>
+      </span>
+    </div>
+  <% end %>
+</div>

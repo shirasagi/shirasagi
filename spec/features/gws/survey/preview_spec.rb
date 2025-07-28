@@ -25,9 +25,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
   context "preview" do
     context "with user who is a manger and reader" do
       it do
-        login_user user1
-
-        visit gws_survey_main_path(site: site)
+        login_user user1, to: gws_survey_main_path(site: site)
         within ".current-navi" do
           click_on I18n.t("ss.navi.editable")
         end
@@ -47,9 +45,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
     context "with user who is a manger, but not a reader" do
       it do
-        login_user user2
-
-        visit gws_survey_main_path(site: site)
+        login_user user2, to: gws_survey_main_path(site: site)
         within ".current-navi" do
           click_on I18n.t("ss.navi.editable")
         end

@@ -54,4 +54,12 @@ $(".publish_save").on("click", function(e){
   <% if @item.tsv_id %>
   <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "ss.buttons.delete" %> (<%= @item.tsv.filename %>)</label></dd>
   <% end %>
+
+  <dt></dt>
+  <dd>
+    <%= f.label(:in_update_dataset, title: t('opendata.labels.update_dataset')) do %>
+      <%= f.check_box(:in_update_dataset, { checked: false }, true, false) %>
+      <%= t('opendata.labels.update_dataset') %>
+    <% end %>
+  </dd>
 </dl>

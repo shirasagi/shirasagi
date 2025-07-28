@@ -15,6 +15,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:layout) { create :cms_layout, html: layout_html }
   let(:node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   before { login_cms_user }
 
   describe "page preview" do
@@ -147,7 +152,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.publish')
         end
 
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css('div.ss-preview-notice-wrap', text: I18n.t('ss.notice.published'))
 
         within "#ss-preview" do
@@ -169,12 +174,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     end
 
     context "check accessibility tools" do
-      let(:accessibilty_tool) { create(:accessibilty_tool, cur_site: site) }
+      let(:accessibility_tool) { create(:accessibility_tool, cur_site: site) }
       let(:layout_html) do
         html = []
         html << "<html><head>"
-        html << "{{ part \"#{accessibilty_tool.filename.sub(/\..*/, '')}\" }}"
-        html << "{{ part \"#{accessibilty_tool.filename.sub(/\..*/, '')}\" }}"
+        html << "{{ part \"#{accessibility_tool.filename.sub(/\..*/, '')}\" }}"
+        html << "{{ part \"#{accessibility_tool.filename.sub(/\..*/, '')}\" }}"
         html << "<script src='/assets/cms/public.js'></script>"
         html << "</head><body><br><br><br><div id=\"main\" class=\"page\">"
         html << "{{ yield }}"

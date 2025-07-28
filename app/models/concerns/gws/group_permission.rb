@@ -6,7 +6,6 @@ module Gws::GroupPermission
   included do
     class_variable_set(:@@_permission_include_custom_groups, nil)
 
-    field :permission_level, type: Integer, default: 1
     field :groups_hash, type: Hash
     field :users_hash, type: Hash
     field :custom_groups_hash, type: Hash
@@ -15,7 +14,7 @@ module Gws::GroupPermission
     embeds_ids :users, class_name: "Gws::User"
     embeds_ids :custom_groups, class_name: "Gws::CustomGroup"
 
-    permit_params :permission_level, group_ids: [], user_ids: [], custom_group_ids: []
+    permit_params group_ids: [], user_ids: [], custom_group_ids: []
 
     before_validation :set_groups_hash
     before_validation :set_users_hash
@@ -29,10 +28,6 @@ module Gws::GroupPermission
     return true if custom_groups.any? { |m| m.member?(user) }
 
     false
-  end
-
-  def permission_level_options
-    [%w(1 1), %w(2 2), %w(3 3)]
   end
 
   # @param [String] action
@@ -57,7 +52,7 @@ module Gws::GroupPermission
   end
 
   def groups_hash
-    self[:groups_hash].presence || groups.map { |m| [m.id, m.name] }.to_h
+    self[:groups_hash].presence || Gws.id_name_hash(groups)
   end
 
   def group_names
@@ -65,7 +60,7 @@ module Gws::GroupPermission
   end
 
   def users_hash
-    self[:users_hash].presence || users.map { |m| [m.id, m.long_name] }.to_h
+    self[:users_hash].presence || Gws.id_name_hash(users, name_method: :long_name)
   end
 
   def user_names
@@ -73,7 +68,7 @@ module Gws::GroupPermission
   end
 
   def custom_groups_hash
-    self[:custom_groups_hash].presence || custom_groups.map { |m| [m.id, m.name] }.to_h
+    self[:custom_groups_hash].presence || Gws.id_name_hash(custom_groups)
   end
 
   def custom_group_names
@@ -83,15 +78,18 @@ module Gws::GroupPermission
   private
 
   def set_groups_hash
-    self.groups_hash = groups.map { |m| [m.id, m.name] }.to_h
+    return unless group_ids_changed?
+    self.groups_hash = Gws.id_name_hash(groups)
   end
 
   def set_users_hash
-    self.users_hash = users.map { |m| [m.id, m.long_name] }.to_h
+    return unless user_ids_changed?
+    self.users_hash = Gws.id_name_hash(users, name_method: :long_name)
   end
 
   def set_custom_groups_hash
-    self.custom_groups_hash = custom_groups.map { |m| [m.id, m.name] }.to_h
+    return unless custom_group_ids_changed?
+    self.custom_groups_hash = Gws.id_name_hash(custom_groups)
   end
 
   module ClassMethods
@@ -106,14 +104,17 @@ module Gws::GroupPermission
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
       action = permission_action || action
 
-      if (level = user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"]) && !opts[:private_only]
-        { permission_level: { "$lte" => level } }
-      elsif level = user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
-        { permission_level: { "$lte" => level }, "$or" => [
+      if user.gws_role_permissions["#{action}_other_#{permission_name}_#{site_id}"] && !opts[:private_only]
+        # other allowed
+        {}
+      elsif user.gws_role_permissions["#{action}_private_#{permission_name}_#{site_id}"]
+        # private allowed
+        conditions = [
           { user_ids: user.id },
           { :group_ids.in => user.group_ids },
           { :custom_group_ids.in => Gws::CustomGroup.member(user).pluck(:id) }
-        ] }
+        ]
+        { "$and" => [{ "$or" => conditions }] }
       else
         { _id: -1 }
       end

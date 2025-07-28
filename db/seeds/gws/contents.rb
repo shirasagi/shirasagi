@@ -11,7 +11,11 @@
 
 @users_hash = {}
 def u(uid)
-  @users_hash[uid.to_s] ||= Gws::User.find_by(uid: uid)
+  @users_hash[uid.to_s] ||= begin
+    user = Gws::User.find_by(uid: uid)
+    user.cur_site = @site
+    user
+  end
 end
 
 @groups_hash = {}
@@ -87,6 +91,8 @@ end
 
 ## -------------------------------------
 
+load "#{Rails.root}/db/seeds/gws/contents/group.rb"
+load "#{Rails.root}/db/seeds/gws/contents/user.rb"
 load "#{Rails.root}/db/seeds/gws/contents/custom_group.rb"
 load "#{Rails.root}/db/seeds/gws/contents/notice.rb"
 load "#{Rails.root}/db/seeds/gws/contents/link.rb"
@@ -103,8 +109,8 @@ load "#{Rails.root}/db/seeds/gws/contents/monitor.rb"
 load "#{Rails.root}/db/seeds/gws/contents/qna.rb"
 load "#{Rails.root}/db/seeds/gws/contents/report.rb"
 load "#{Rails.root}/db/seeds/gws/contents/share.rb"
-load "#{Rails.root}/db/seeds/gws/contents/user.rb"
 load "#{Rails.root}/db/seeds/gws/contents/workflow.rb"
+load "#{Rails.root}/db/seeds/gws/contents/workflow2.rb"
 load "#{Rails.root}/db/seeds/gws/contents/bookmark.rb"
 load "#{Rails.root}/db/seeds/gws/contents/max.rb"
 load "#{Rails.root}/db/seeds/gws/contents/attendance.rb"

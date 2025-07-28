@@ -1,14 +1,16 @@
 module Gws
   class Initializer
-    Gws::Column.plugin 'gws/text_field'
-    Gws::Column.plugin 'gws/date_field'
-    Gws::Column.plugin 'gws/number_field'
-    Gws::Column.plugin 'gws/url_field'
-    Gws::Column.plugin 'gws/text_area'
-    Gws::Column.plugin 'gws/select'
-    Gws::Column.plugin 'gws/radio_button'
-    Gws::Column.plugin 'gws/check_box'
-    Gws::Column.plugin 'gws/file_upload'
+    Gws::Column.plugin Gws::Column::Title.as_plugin
+    Gws::Column.plugin Gws::Column::TextField.as_plugin
+    Gws::Column.plugin Gws::Column::DateField.as_plugin
+    Gws::Column.plugin Gws::Column::NumberField.as_plugin
+    Gws::Column.plugin Gws::Column::UrlField.as_plugin
+    Gws::Column.plugin Gws::Column::TextArea.as_plugin
+    Gws::Column.plugin Gws::Column::Select.as_plugin
+    Gws::Column.plugin Gws::Column::RadioButton.as_plugin
+    Gws::Column.plugin Gws::Column::CheckBox.as_plugin
+    Gws::Column.plugin Gws::Column::FileUpload.as_plugin
+    Gws::Column.plugin Gws::Column::Section.as_plugin
 
     Gws::Role.permission :edit_gws_groups
     Gws::Role.permission :edit_gws_users
@@ -41,6 +43,7 @@ module Gws
 
     Gws::Role.permission :edit_gws_user_profile, module_name: 'gws/user_profile'
     Gws::Role.permission :edit_password_gws_user_profile, module_name: 'gws/user_profile'
+    Gws::Role.permission :edit_gws_memo_notice_user_setting, module_name: 'gws/user_profile'
 
     SS::File.model "gws/file", Gws::File
     SS::File.model "share/file", Gws::Share::File

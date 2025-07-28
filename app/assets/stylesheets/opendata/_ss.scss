@@ -8,8 +8,8 @@ div.csv2rdf-settings-table-container {
   table {
     table-layout: fixed;
     th, td {
-      padding: 4px 8px;
       max-width: 200px;
+      padding: 4px 8px;
     }
     thead {
       tr {
@@ -62,15 +62,15 @@ div.csv2rdf-settings-table-container {
 
 .od-icon {
   &:before {
+    content: " ";
     display: inline-block;
     position: relative;
     bottom: -1px;
     width: 12px;
     height: 12px;
     margin: 0 4px 0 0;
-    text-indent: -99px;
     background-image: url("/assets/img/icons.png");
-    content: " ";
+    text-indent: -99px;
   }
 }
 .od-icon-node-prop {
@@ -98,26 +98,26 @@ textarea.readonly {
     float: left;
     border: 2px solid $white;
     select {
-      float: left;
       height: 2em;
+      margin-right: 3px;
+      float: left;
       border: 0;
       &:focus {
         @include box-shadow(none);
       }
-      margin-right: 3px;
     }
     input[type="text"] {
-      float: left;
       height: 2em;
+      float: left;
       border: 0;
       &:focus {
         @include box-shadow(none);
       }
     }
     input[type="submit"] {
-      float: left;
       margin: 0;
       padding: 2px 20px 1px;
+      float: left;
       border: 0;
       background: $gray3;
       &:hover {
@@ -143,9 +143,9 @@ div.opendata-csv2rdf-settings-class-search {
 }
 
 .list-items .list-item .meta .opendata-harvest {
+  padding: 2px;
   background: #f25a38;
   color: #fff;
-  padding: 2px;
   @include border-radius(3px);
 }
 
@@ -214,11 +214,11 @@ table.opendata-harvest-report {
 
   .btn-download {
     &:before {
-      font-family: "Material Icons";
-      font-size: 100%;
       content: "\E2C4";
       display: inline;
       margin-right: 4px;
+      font-family: "Material Icons";
+      font-size: 100%;
       vertical-align: -3px;
     }
   }

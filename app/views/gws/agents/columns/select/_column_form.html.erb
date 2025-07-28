@@ -1,7 +1,19 @@
 <% value ||= nil %>
 <%= render 'gws/agents/columns/main/common_label', column: column %>
-<dd>
-  <span class="prefix"><%= column.prefix_label %></span>
+<dd class="<%= @section_id %>">
+  <% if column.prefix_explanation.present? -%>
+    <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></div>
+  <% end -%>
+
+  <% if column.prefix_label.present? -%>
+    <span class="prefix"><%= column.prefix_label %></span>
+  <% end %>
   <%= select_tag("#{object_name}[#{column.id}]", options_for_select(column.select_options, selected: value.try(:value)), column.form_options.merge(include_blank: column.place_holder.presence || true)) %>
-  <span class="postfix"><%= column.postfix_label %></span>
+  <% if column.postfix_label.present? -%>
+    <span class="postfix"><%= column.postfix_label %></span>
+  <% end %>
+
+  <% if column.postfix_explanation.present? -%>
+    <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></div>
+  <% end -%>
 </dd>

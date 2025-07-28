@@ -82,8 +82,7 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         #
         # user3: pull up request, he is the last one
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
@@ -110,9 +109,9 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment3, file_ids: nil
+            comment: approve_comment3, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
           }
-          expect(workflow_approver).to eq(expected)
+          expect(workflow_approver).to include(expected)
         end
 
         expect(Sys::MailLog.count).to eq 4
@@ -166,8 +165,7 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         #
         # user2: pull up request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
@@ -188,9 +186,9 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         item.workflow_approvers[1].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment2, file_ids: nil
+            comment: approve_comment2, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
           }
-          expect(workflow_approver).to eq(expected)
+          expect(workflow_approver).to include(expected)
         end
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
@@ -255,8 +253,7 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         #
         # user3: pull up request, he is the last one
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
@@ -283,9 +280,9 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {
             level: 3, user_id: user3.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment3, file_ids: nil
+            comment: approve_comment3, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
           }
-          expect(workflow_approver).to eq(expected)
+          expect(workflow_approver).to include(expected)
         end
 
         expect(Sys::MailLog.count).to eq 4
@@ -339,8 +336,7 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         #
         # user2: pull up request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
@@ -362,9 +358,9 @@ describe "pull_up", type: :feature, dbscope: :example, js: true do
         item.workflow_approvers[1].tap do |workflow_approver|
           expected = {
             level: 2, user_id: user2.id, editable: '', state: Workflow::Approver::WORKFLOW_STATE_APPROVE,
-            comment: approve_comment2, file_ids: nil
+            comment: approve_comment2, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
           }
-          expect(workflow_approver).to eq(expected)
+          expect(workflow_approver).to include(expected)
         end
         item.workflow_approvers[2].tap do |workflow_approver|
           expected = {

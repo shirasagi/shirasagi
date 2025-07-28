@@ -65,11 +65,11 @@ class Cms::Column::Value::Headline < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && head.blank?
-      self.errors.add(:head, :blank)
+      self.errors.add(:head, :blank) unless skip_required?
     end
 
     if column.required? && text.blank?
-      self.errors.add(:text, :blank)
+      self.errors.add(:text, :blank) unless skip_required?
     end
 
     return if text.blank?

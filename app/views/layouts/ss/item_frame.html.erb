@@ -7,5 +7,11 @@
       SS.render("#<%= @frame_id || "item-frame" %>");
       SS_SearchUI.render();
     }, { once: true });
+
+    <% if notice.present? %>
+      SS.ready(function() {
+        SS.notice(<%== notice.to_json %>);
+      });
+    <% end %>
   <% end %>
 </turbo-frame>

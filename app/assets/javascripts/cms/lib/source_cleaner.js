@@ -35,13 +35,16 @@ this.Cms_Source_Cleaner = (function (superClass) {
       options = {};
     }
 
-    $(el).on("click", function () {
+    var $el = $(el);
+    $el.on("click", function () {
       if (!confirm(Cms_Source_Cleaner.confirms.clean)) {
         return;
       }
       var html = Cms_Source_Cleaner.getEditorHtml(options.editor);
       html = Cms_Source_Cleaner.cleanUp(html);
-      return Cms_Source_Cleaner.setEditorHtml(html, { id: options.editor });
+      Cms_Source_Cleaner.setEditorHtml(html, { id: options.editor });
+
+      $el.trigger("ss:sourceCleanerFinished")
     });
   };
 
@@ -136,17 +139,15 @@ this.Cms_Source_Cleaner = (function (superClass) {
   };
 
   Cms_Source_Cleaner.removeString = function (html, opts) {
-    var regxp, ret, value;
+    var regxp, value;
     value = opts["value"];
-    ret = html;
     regxp = new RegExp(Cms_Source_Cleaner.regexpEscape(value), "g");
     return html.replace(regxp, "");
   };
 
   Cms_Source_Cleaner.removeRegexp = function (html, opts) {
-    var regxp, ret, value;
+    var regxp, value;
     value = opts["value"];
-    ret = html;
     regxp = new RegExp(value, "g");
     return html.replace(regxp, "");
   };
@@ -190,25 +191,23 @@ this.Cms_Source_Cleaner = (function (superClass) {
   };
 
   Cms_Source_Cleaner.replaceString = function (html, opts) {
-    var regxp, replaced, ret, value;
+    var regxp, replaced, value;
     value = opts["value"];
     replaced = opts["replaced"];
-    ret = html;
     regxp = new RegExp(Cms_Source_Cleaner.regexpEscape(value), "g");
     return html.replace(regxp, replaced);
   };
 
   Cms_Source_Cleaner.replaceRegexp = function (html, opts) {
-    var regxp, replaced, ret, value;
+    var regxp, replaced, value;
     value = opts["value"];
     replaced = opts["replaced"];
-    ret = html;
     regxp = new RegExp(value, "g");
     return html.replace(regxp, replaced);
   };
 
   Cms_Source_Cleaner.regexpEscape = function (s) {
-    return s.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+    return s.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
   };
 
   Cms_Source_Cleaner.unwrapTag = function (html, opts) {
@@ -245,10 +244,8 @@ this.Cms_Source_Cleaner = (function (superClass) {
     return ret.html();
   };
 
-  Cms_Source_Cleaner.removeMsoClass = function (html, opts) {
-    var ret, value;
-    value = opts["value"];
-    ret = $('<div>' + html + '</div>');
+  Cms_Source_Cleaner.removeMsoClass = function (html, _opts) {
+    var ret = $('<div>' + html + '</div>');
     $(ret).find("*").removeClass(function(index, className) {
       return (className.match(/\bmso\S+/gi) || []).join(' ');
     });

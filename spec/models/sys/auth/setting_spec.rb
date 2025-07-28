@@ -86,6 +86,59 @@ describe Sys::Auth::Setting do
           expect(setting.form_auth_available?(param)).to be_falsey
         end
       end
+
+      context "with request ip" do
+        let(:key) { unique_id }
+        let(:password) { unique_id }
+        let(:ip_addresse) { "192.168.10.45" }
+        let(:request) { ActionDispatch::Request.new("HTTP_X_REAL_IP" => ip_addresse) }
+
+        context "no param" do
+          let(:param) do
+            {}.with_indifferent_access
+          end
+
+          it "disable form" do
+            setting = Sys::Auth::Setting.new(form_auth: "disabled")
+            setting.form_key = key
+            setting.in_form_password = password
+            expect(setting).to be_valid
+            expect(setting.form_auth_available?(param, request)).to be_falsey
+          end
+
+          it "enabled by ip" do
+            setting = Sys::Auth::Setting.new(form_auth: "disabled")
+            setting.form_key = key
+            setting.in_form_password = password
+            setting.form_enabled_ip_addresses = ip_addresse
+            expect(setting).to be_valid
+            expect(setting.form_auth_available?(param, request)).to be_truthy
+          end
+        end
+
+        context "valid param" do
+          let(:param) do
+            { key => password }.with_indifferent_access
+          end
+
+          it "enabled by param" do
+            setting = Sys::Auth::Setting.new(form_auth: "disabled")
+            setting.form_key = key
+            setting.in_form_password = password
+            expect(setting).to be_valid
+            expect(setting.form_auth_available?(param, request)).to be_truthy
+          end
+
+          it "enabled by ip" do
+            setting = Sys::Auth::Setting.new(form_auth: "disabled")
+            setting.form_key = key
+            setting.in_form_password = password
+            setting.form_enabled_ip_addresses = ip_addresse
+            expect(setting).to be_valid
+            expect(setting.form_auth_available?(param, request)).to be_truthy
+          end
+        end
+      end
     end
   end
 

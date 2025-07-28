@@ -118,7 +118,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         end
         within "form#item-form" do
           within "#addon-basic" do
-            expect(page).to have_css(".ajax-selected", text: folder0.name)
+            expect(page).to have_css(".ajax-selected [data-id='#{folder0.id}']", text: folder0.name)
           end
           within "#addon-gws-agents-addons-member" do
             wait_for_cbox_opened do
@@ -251,7 +251,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       end
       within "form#item-form" do
         within "#addon-basic" do
-          expect(page).to have_css(".ajax-selected", text: folder1.name)
+          expect(page).to have_css(".ajax-selected [data-id='#{folder1.id}']", text: folder1.name)
         end
         click_on I18n.t("ss.buttons.save")
       end
@@ -290,9 +290,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       first("button[name='reclaim_total_size']").click
       wait_for_notice I18n.t("gws/notice.notice.reclaimed")
 
-      usage1 = I18n.t("gws/notice.total_body_size_current_stats", size: post.text.size.to_s(:human_size), percentage: "0.00%")
+      usage1 = I18n.t("gws/notice.total_body_size_current_stats", size: post.text.size.to_fs(:human_size), percentage: "0.00%")
       expect(page).to have_content(usage1)
-      usage2 = I18n.t("gws/notice.total_body_size_current_stats", size: file.size.to_s(:human_size), percentage: "0.04%")
+      usage2 = I18n.t("gws/notice.total_body_size_current_stats", size: file.size.to_fs(:human_size), percentage: "0.04%")
       expect(page).to have_content(usage2)
     end
   end

@@ -72,7 +72,7 @@ class Fs::FilesController < ApplicationController
     variant = item.variants.from_filename(name_or_filename)
     if !variant
       Rails.logger.warn { "name or filename '#{name_or_filename}' is mismatched" }
-      raise "404"
+      raise SS::NotFoundError
     end
 
     @cur_item = item
@@ -93,7 +93,10 @@ class Fs::FilesController < ApplicationController
         cms_sites.first
       else
         # リクエスト・ホストから一意にサイトが決まらないケース
-        owner_item = cur_item.send(:effective_owner_item)
+        if cur_item.respond_to?(:effective_owner_item)
+          # Gws::Share::File は #effective_owner_item に応答しない
+          owner_item = cur_item.effective_owner_item
+        end
         if owner_item.try(:site) && owner_item.site.is_a?(SS::Model::Site)
           # owner_item is a cms object.
           cms_sites.find { |site| site.id == owner_item.site_id }
@@ -124,7 +127,7 @@ class Fs::FilesController < ApplicationController
     tags << "member:#{member.id}(#{member.name})" if member
 
     Rails.logger.tagged(*tags) do
-      raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: member)
+      raise SS::NotFoundError unless cur_item.previewable?(site: cur_site, user: cur_user, member: member)
       set_last_logged_in
     end
   end
@@ -160,7 +163,7 @@ class Fs::FilesController < ApplicationController
   def send_item(disposition = nil)
     path = cur_variant ? cur_variant.path : cur_item.path
     cur_variant.create! if cur_variant
-    raise "404" unless Fs.file?(path)
+    raise SS::NotFoundError unless Fs.file?(path)
 
     set_last_modified
 

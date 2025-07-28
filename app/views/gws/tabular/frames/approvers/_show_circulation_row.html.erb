@@ -1,0 +1,61 @@
+<%
+  user_id = workflow_circulation[:user_id]
+  user = Gws::User.site(@cur_site).where(id: user_id).first
+  state = workflow_circulation[:state]
+  comment = workflow_circulation[:comment].presence
+  file_ids = workflow_circulation[:file_ids].presence
+%>
+<tr data-level="<%= level %>" data-circulation-id="<%= user_id %>">
+  <% if index == 0 %>
+    <td rowspan="<%= count %>">
+      <%= t("workflow.circulation_step") %> <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+    </td>
+  <% end %>
+  <td>
+    <% if user %>
+      <%= workflow_user_profile(user) %>
+    <% else %>
+      <%= t("workflow.user_deleted") %>
+    <% end %>
+  </td>
+  <td>
+    <% if state.present? %>
+      <span class="workflow_circulations_state"><%= t("workflow.circulation_state.#{state}", default: state) %></span>
+    <% end %>
+  </td>
+  <td>
+    <% if has_dailog && (file_ids || file_ids) %>
+      <div data-controller="ss--dialog">
+        <%= button_tag md_icons.filled("chat", size: 15), type: :button, class: "btn", style: "padding: 2px 4px;", aria: { label: t('workflow.comment') }, data: { action: "ss--dialog#open" } %>
+        <%= tag.template data: { "ss--dialog-target" => "content" } do %>
+          <div class="mod-workflow-view gws-workflow-view">
+            <table class="index">
+              <tbody>
+              <%=
+                # 注意: has_dialog を false に設定して自分自身を呼び出す
+                render "show_circulation_row", level: level, count: 1, index: 0, workflow_circulation: workflow_circulation, has_dailog: false
+              %>
+              </tbody>
+            </table> <!-- .index -->
+            <br>
+            <div style="padding: 10px 30px;">
+              <% if comment %>
+                <div class="approver-comment"><%= br comment %></div>
+              <% end %>
+              <% if comment && file_ids %>
+                <br>
+              <% end %>
+              <% if file_ids %>
+                <div class="approver-files">
+                  <% SS::File.each_file(file_ids) do |file| %>
+                    <%= show_image_info(file) %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div> <!-- .mod-workflow-view .gws-workflow-view -->
+        <% end %>
+      </div>
+    <% end %>
+  </td>
+</tr>

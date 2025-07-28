@@ -41,7 +41,7 @@
               </td>
               <% days.times do |d| %>
                 <% count = item["day#{d}_count"] || 0 %>
-                <th><%= count.to_s(:delimited) %></th>
+                <th><%= count.to_fs(:delimited) %></th>
               <% end %>
             </tr>
           <% end %>

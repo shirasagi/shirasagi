@@ -3,7 +3,9 @@ require 'spec_helper'
 describe ActiveJob::QueueAdapters::ShirasagiAdapter, dbscope: :example do
   before do
     @save_job_default = SS.config.job.default.dup
-    SS.config.replace_value_at(:job, :default, @save_job_default.merge('mode' => 'on_demand'))
+    config = @save_job_default ? @save_job_default.dup : {}
+    config['mode'] = 'on_demand'
+    SS.config.replace_value_at(:job, :default, config)
     Job::Task.create!(name: Job::Service.config.name)
   end
 

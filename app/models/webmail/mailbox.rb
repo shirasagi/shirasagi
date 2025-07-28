@@ -87,11 +87,11 @@ class Webmail::Mailbox
   end
 
   def icon
-    return '&#xE163;' if original_name == imap.sent_box # send
-    return '&#xE254;' if original_name == imap.draft_box # mode_edit
-    return '&#xE872;' if original_name == imap.trash_box # delete
-    return '&#xE2C7;' if noselect? # folder
-    '&#xE2C8;' # folder_open
+    return 'send' if original_name == imap.sent_box
+    return 'mode_edit' if original_name == imap.draft_box
+    return 'delete' if original_name == imap.trash_box
+    return 'folder' if noselect?
+    'folder_open'
   end
 
   def css_class

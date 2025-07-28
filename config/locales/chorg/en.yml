@@ -112,7 +112,7 @@ en:
         disable_if_possible: Disable and allow recovery later
         always_delete: Always physically delete
     links:
-      chorg_sites_can_be_changed_in_sys_sites: 組織変更の対象サイトは、システム管理画面のサイト設定で設定することができます。
+      chorg_sites_can_be_changed_in_sys_sites: The target site for organizational changes can be set in the Site Settings on the System Administration page.
     buttons:
       reset_after_move: Reset transfer-destination
       reset_after_unify: Reset merge-destination

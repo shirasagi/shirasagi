@@ -1,0 +1,20 @@
+<dl class="see">
+  <dt><%= @model.t :purpose_ids %><%= @model.tt :purpose_ids %></dt>
+  <dd>
+    <%= f.hidden_field "purpose_ids[]", value: "", class: "hidden-ids", id: nil %>
+    <%= link_to t("gws/workflow2.apis.purposes.index"), gws_workflow2_apis_form_purposes_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Workflow2::Form::Purpose.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.purposes.each do |item| %>
+        <tr data-id="<%= item.id %>">
+          <td><%= f.hidden_field "purpose_ids[]", value: item.id, id: nil %> <%= item.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

@@ -29,8 +29,8 @@ def gws_sys_user
   create_gws_users[:sys_user]
 end
 
-def login_gws_user
-  login_user(gws_user)
+def login_gws_user(to: nil)
+  login_user(gws_user, to: to)
 end
 
 def create_gws_users
@@ -47,7 +47,7 @@ def create_gws_users
   end
 
   role = Gws::Role.create name: I18n.t('gws.roles.admin'), site_id: g00.id,
-    permissions: Gws::Role.permission_names, permission_level: 3
+    permissions: Gws::Role.permission_names
 
   user = Gws::User.create name: "gw-admin", uid: "admin", email: "admin@example.jp", in_password: "pass",
     type: SS::Model::User::TYPE_SNS,

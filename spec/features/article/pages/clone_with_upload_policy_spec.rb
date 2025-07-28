@@ -27,32 +27,28 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
 
       it do
         visit new_article_page_path(site: site, cid: node, form_id: form.id)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
           fill_in "item[column_values][][in_wrap][value]", with: column1_value
           within first(".column-value-cms-column-fileupload") do
             fill_in "item[column_values][][in_wrap][file_label]", with: unique_id
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.links.upload")
-            end
+            # wait_for_cbox_opened do
+            #   click_on I18n.t("ss.links.upload")
+            # end
           end
-        end
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".column-value-cms-column-fileupload"
 
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_for_cbox_closed do
-            click_on I18n.t('ss.buttons.attach')
-          end
-        end
-
-        within 'form#item-form' do
           expect(page).to have_content('logo')
           click_on I18n.t('ss.buttons.publish_save')
         end
 
         wait_for_notice I18n.t('ss.notice.saved')
-        expect(page).to have_css('#selected-files .sanitizer-wait')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+        expect(page).to have_css('.file-view .sanitizer-wait')
 
         # restore
         file = SS::File.first
@@ -61,8 +57,10 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
         # clone
         visit article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
-        expect(page).to have_css('#selected-files .sanitizer-complete')
+        expect(page).to have_css('.file-view .sanitizer-complete')
 
         click_on I18n.t('ss.links.copy')
         copy_name = "copy #{name}"
@@ -74,9 +72,11 @@ describe 'article_pages_with_upload_policy', type: :feature, dbscope: :example, 
         wait_for_notice I18n.t('ss.notice.saved')
 
         click_on copy_name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(page).to have_css('#selected-files .sanitizer-wait')
+        expect(page).to have_css('.file-view .sanitizer-wait')
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
     end

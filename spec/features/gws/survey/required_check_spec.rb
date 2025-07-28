@@ -23,7 +23,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         visit gws_survey_main_path(site: site)
         click_on form.name
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.save")
+          click_on I18n.t("ss.buttons.answer")
         end
         expect(page).to have_css('#errorExplanation', text: I18n.t("errors.messages.blank"))
         expect(Gws::Survey::File.count).to eq 0
@@ -38,9 +38,9 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         click_on form.name
         within "form#item-form" do
           find("input[value='#{column1.select_options.sample}']").set(true)
-          click_on I18n.t("ss.buttons.save")
+          click_on I18n.t("ss.buttons.answer")
         end
-        wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_notice I18n.t('ss.notice.answered')
 
         expect(Gws::Survey::File.all).to have(1).items
         Gws::Survey::File.all.first.tap do |answer|

@@ -48,6 +48,9 @@ en:
       categories:
         index: Select a category
         parent_id: Parent category
+        overall_criteria: Overall
+        individual_criteria: Individual
+        add_individual_criteria: Add individual
       custom_groups:
         index: Select a custom group
       user_titles:
@@ -96,6 +99,7 @@ en:
     buttons:
       unset: Cancel
       add_item: Add a new element
+      change_menu_icon: Change menu icon
     confirm:
       readable_setting:
         empty: "No viewer has been entered. \\n Are you sure you want everyone to see it?"
@@ -147,6 +151,7 @@ en:
     edit_gws_personal_addresses: Use of personal address books
     edit_gws_user_profile: Edit user profile
     edit_password_gws_user_profile: Edit password of user profile
+    edit_gws_memo_notice_user_setting: Use notice settings of user profile
 
   modules:
     gws: Standard
@@ -178,8 +183,8 @@ en:
       gws/user/duty_hour: Duty hour
       gws/link: Link
       gws/site_usage: Usage amount
-      gws/user/affair_setting: Affair setting
-      gws/group/affair_setting: Affair setting
+      gws/user/affair_setting: Affair setting / Workflow2
+      gws/group/affair_setting: Affair setting / Workflow2
       gws/user/staff_category: Staff category setting
       gws/circular/browsing_authority: Viewing permission
 
@@ -313,7 +318,6 @@ en:
         gws_role_ids: Role
       gws/addon/permission:
         group_ids: Administrative group
-        permission_level: Permission level
       gws/group_permission:
         group_ids: Administrative group
         groups_hash: Administrative group (hash)
@@ -321,8 +325,7 @@ en:
         users_hash: Administrative users (hash)
         custom_group_ids: Administrative custom group
         custom_groups_hash: Administrative custom group (hash)
-        permission_level: Permission level
-      gws/addon/readable_setting:
+      gws/readable_setting:
         readable_setting_range: Publication range
         readable_group_ids: Viewing group
         readable_groups_hash: Viewing group (hash)
@@ -375,8 +378,10 @@ en:
         menu_faq_state: Display FAQ
         menu_qna_label: Display Q&A
         menu_qna_state: Display Q&A
-        menu_workflow_label: Display workflows
-        menu_workflow_state: Display workflows
+        menu_workflow_label: Display workflow
+        menu_workflow_state: Display workflow
+        menu_workflow2_label: Display workflow2
+        menu_workflow2_state: Display workflow2
         menu_workload_label: Display workloads
         menu_workload_state: Display workloads
         menu_report_label: Display reports
@@ -405,6 +410,10 @@ en:
         menu_contrast_state: Contrast
         menu_presence_label: Display presence management
         menu_presence_state: Display presence management
+        menu_tabular_label: Display general purpose database
+        menu_tabular_state: Display general purpose database
+        menu_conf_label: Display site settings
+        menu_conf_state: Display site settings
       gws/addon/system/notice_setting:
         notice_schedule_state: Schedule
         notice_todo_state: ToDo
@@ -420,6 +429,7 @@ en:
         notice_discussion_state: Electronic conference rooms
         notice_report_state: Reports
         notice_announcement_state: Announcements
+        notice_tabular_state: Tabular
         send_notice_email_state: Personal e-mail forwarding
       gws/addon/system/log_setting:
         log_save_days: Log retention days
@@ -639,9 +649,6 @@ en:
         - Enter the order.
       in_parent:
         - Select the parent folder.
-    gws/role:
-      permission_level:
-        - Sets the permission level.
     gws/addon/user/affair_setting:
       staff_category: Select staff category
       staff_address_uid: Input staff address uid
@@ -664,10 +671,10 @@ en:
 
   job:
     models:
-      gws/history_archive_job: Create an operation history archive
-      gws/compress_job: File/Compressed download
-      gws/user_title_import_job: Import job title
-      gws/user_occupation_import_job: Occupation import
-      gws/cache_rebuild_job: Rebuild cache
-      gws/aggregation/group_update_job: Update aggregation group
-      gws/reload_site_usage_job: Update various usages
+      gws/history_archive_job: GWS/Create an operation history archive
+      gws/compress_job: GWS/File Compress and download
+      gws/user_title_import_job: GWS/Import job title
+      gws/user_occupation_import_job: GWS/Occupation import
+      gws/cache_rebuild_job: GWS/Rebuild cache
+      gws/aggregation/group_update_job: GWS/Update aggregation group
+      gws/reload_site_usage_job: GWS/Update various usages

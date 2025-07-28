@@ -255,7 +255,6 @@ class Gws::Schedule::PlanCsv::Importer
 
       item.user_ids = criteria.pluck(:id)
     end
-    drawer.simple_column :permission_level
   end
 
   def readable_facilities

@@ -1,0 +1,14 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <div class="list-head-action-destroy" data-controller="ss--destroy-all">
+      <%= button_tag type: :button, name: "destroy_all", class: "btn", disabled: true, data: { action: "ss--destroy-all#destroyAll", "ss--list-action-enabler-target" => "button" } do %>
+        <%= t("ss.links.delete") %>
+        <span class="badge" data-count="0"></span>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render template: "_search" %>
+</div>
