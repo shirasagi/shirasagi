@@ -19,7 +19,7 @@
 
     <dt><%= t "inquiry.total_count" %></dt>
     <dd>
-      <%= @items.count.to_s(:delimited) %>
+      <%= @items.count.to_fs(:delimited) %>
       <%= t "ss.units.count" %>
     </dd>
   </dl>
@@ -49,7 +49,7 @@
             <td><%= option %></td>
             <td class="count">
               <% value = find_aggregation_count(column.id, option) %>
-              <%= value.to_s(:delimited) %>
+              <%= value.to_fs(:delimited) %>
               <%= t "ss.units.count" %>
             </td>
           </tr>

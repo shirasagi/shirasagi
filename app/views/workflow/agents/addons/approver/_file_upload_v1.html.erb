@@ -1,0 +1,9 @@
+<div class="upload">
+  <span class="upload-menu-new">
+    <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
+  </span>
+  <div class="upload-drop-area">
+    <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
+  </div>
+  <div id="selected-files"></div>
+</div>

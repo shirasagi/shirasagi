@@ -66,6 +66,13 @@
   display: flex;
   flex-wrap: wrap;
   align-items: center;
+  gap: 15px;
+}
+
+.gws-column-item-toolbar-item-group {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
   gap: 5px;
 }
 
@@ -135,11 +142,15 @@ dl.gws-column-see {
   > dd {
     margin: 0 0 0 calc((100% - 20px) * 0.3 + 20px);
     .prefix {
+      word-break: keep-all;
+
       &:empty {
         display: none;
       }
     }
     .postfix {
+      word-break: keep-all;
+
       &:empty {
         display: none;
       }

@@ -17,7 +17,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("chorg.menus.revisions.move")
 
       within "form#item-form" do
-        fill_in "item[destinations[][name]]", with: name
+        fill_in "item[destinations][][name]", with: name
         wait_for_cbox_opened { click_on I18n.t("chorg.views.move_changesets.select_group") }
       end
       within_cbox do
@@ -57,7 +57,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
 
       within "form#item-form" do
-        fill_in "item[destinations[][name]]", with: name
+        fill_in "item[destinations][][name]", with: name
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')

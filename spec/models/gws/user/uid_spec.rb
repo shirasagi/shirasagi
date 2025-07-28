@@ -57,7 +57,7 @@ describe Gws::User, dbscope: :example do
 
       it do
         user = Gws::User.new(uid: uid, **required_attrs)
-        expect(user).to be_invalid
+        expect(user).to be_valid
       end
     end
 
@@ -66,7 +66,7 @@ describe Gws::User, dbscope: :example do
 
       it do
         user = Gws::User.new(uid: uid, **required_attrs)
-        expect(user).to be_invalid
+        expect(user).to be_valid
       end
     end
 

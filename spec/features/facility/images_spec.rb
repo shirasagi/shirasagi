@@ -24,24 +24,12 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       # Create
       #
       click_on I18n.t("ss.links.new")
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[order]", with: order
-        within "#addon-facility-agents-addons-image_file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-      end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_on I18n.t("ss.buttons.save")
-        expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-        wait_for_cbox_closed do
-          click_on 'keyvisual.jpg'
-        end
-      end
-      within "form#item-form" do
+
+        ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: "#addon-facility-agents-addons-image_file"
         within "#addon-facility-agents-addons-image_file" do
           expect(page).to have_css(".file-view", text: "keyvisual.jpg")
         end
@@ -54,6 +42,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       expect(Facility::Image.all.count).to eq 1
       image_page = Facility::Image.all.first
@@ -79,7 +68,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       # Check Facility::Node::Page
       #
       visit facility_pages_path(site: site, cid: facility_node)
-      expect(page).to have_css(".tree-navi", text: "refresh")
+      wait_for_all_turbo_frames
       within ".list-items" do
         click_on node.name
       end
@@ -87,15 +76,15 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".summary.image img[alt='#{image_page.image_alt}']")
 
         info = image_element_info(first(".summary.image img[alt='#{image_page.image_alt}']"))
-        expect(info[:width]).to eq image_thumb_width
-        expect(info[:height]).to eq 71
+        expect(info[:width]).to eq 140
+        expect(info[:height]).to eq 41
       end
       within "#facility-images" do
         expect(page).to have_css("img[alt='#{image_page2.image_alt}']")
 
         info = image_element_info(first("img[alt='#{image_page2.image_alt}']"))
-        expect(info[:width]).to eq [ SS::ImageConverter::DEFAULT_THUMB_WIDTH, SS::ImageConverter::DEFAULT_THUMB_HEIGHT ].min
-        expect(info[:height]).to eq [ SS::ImageConverter::DEFAULT_THUMB_WIDTH, SS::ImageConverter::DEFAULT_THUMB_HEIGHT ].min
+        expect(info[:width]).to eq 140
+        expect(info[:height]).to eq 140
       end
 
       #
@@ -105,6 +94,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       within ".list-items" do
         click_on name
       end
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       click_on I18n.t("ss.links.edit")
       wait_for_js_ready
       expect(page.all("form .addon-head h2").map(&:text).sort).to eq expected_addon_titles
@@ -114,6 +104,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       image_page.reload
       expect(image_page.name).to eq name2
@@ -125,6 +116,7 @@ describe "facility_images", type: :feature, dbscope: :example, js: true do
       within ".list-items" do
         click_on name2
       end
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       click_on I18n.t("ss.links.delete")
       within "form" do
         click_on I18n.t("ss.buttons.delete")

@@ -8,7 +8,10 @@ module Inquiry::Addon
       field :kintone_app_api_token, type: String
       field :kintone_app_key, type: String
       field :kintone_app_guest_space_id, type: String
-      permit_params :kintone_app_activation, :kintone_app_api_token, :kintone_app_key, :kintone_app_guest_space_id
+      field :kintone_app_remote_addr_field_code, type: String
+      field :kintone_app_user_agent_field_code, type: String
+      permit_params :kintone_app_activation, :kintone_app_api_token, :kintone_app_key,
+        :kintone_app_guest_space_id, :kintone_app_remote_addr_field_code, :kintone_app_user_agent_field_code
 
       validates :kintone_app_api_token, presence: true, if: -> { kintone_app_enabled? }
       validates :kintone_app_key, presence: true, if: -> { kintone_app_enabled? }

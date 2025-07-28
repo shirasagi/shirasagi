@@ -5,6 +5,11 @@ class Cms::Column::Value::TextArea < Cms::Column::Value::Base
 
   liquidize do
     export :value
+    export :values
+  end
+
+  def values
+    value.to_s.split(/\R/)
   end
 
   def search_values(values)

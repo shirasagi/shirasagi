@@ -27,7 +27,7 @@
     </div>
   </div>
   <div class="addon-body">
-    <div class="main <%= @item.text_type == 'markdown' ? "markdown-body" : nil %>" id="gws-notice-text">
+    <div class="main <%= @item.text_type != 'cke' ? "markdown-body" : nil %>" id="gws-notice-text">
       <%= @item.html %>
     </div>
     <% if @item.files.present? %>

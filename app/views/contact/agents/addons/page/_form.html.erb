@@ -4,24 +4,20 @@
   addon[:stimulus] = true
 
   if params[:action] =~ /new/ && @cur_group
-    @cur_group.cms_group.tap do |group|
-      @item.contact_group = group
-      @item.contact_group_name = group.contact_group_name
-      @item.contact_charge = group.contact_charge
-      @item.contact_tel = group.contact_tel
-      @item.contact_fax = group.contact_fax
-      @item.contact_email = group.contact_email
-      @item.contact_postal_code = group.contact_postal_code
-      @item.contact_address = group.contact_address
-      @item.contact_link_url = group.contact_link_url
-      @item.contact_link_name = group.contact_link_name
-    end
+    contact_group = @cur_group.cms_group
+    contact = contact_group.contact_groups.where(main_state: "main").first
   elsif @item.contact_group_related?
     contact_group = @item.contact_group
     if contact_group && @item.contact_group_contact_id.present?
       contact = contact_group.contact_groups.where(id: @item.contact_group_contact_id).first
     end
+  end
 
+  if contact_group
+    @item.contact_group = contact_group
+  end
+  if contact
+    @item.contact_group_contact_id = contact.try(:id)
     @item.contact_group_name = contact.try(:contact_group_name)
     @item.contact_charge = contact.try(:contact_charge)
     @item.contact_tel = contact.try(:contact_tel)

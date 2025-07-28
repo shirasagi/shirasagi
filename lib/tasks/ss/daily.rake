@@ -21,8 +21,11 @@ namespace :ss do
     # history_backupの削除
     ::Tasks::SS.invoke_task("history:backup:sweep")
 
-    # history_backupの削除
+    # taskの削除
     ::Tasks::SS.invoke_task("ss:task:sweep")
+
+    # sys_mail_logの削除
+    ::Tasks::SS.invoke_task("sys:mail_log:sweep")
 
     # ファイルキャッシュ掃除ジョブ
     ::Tasks::SS.invoke_task("ss:cleanup_file_store_cache")
@@ -46,6 +49,10 @@ namespace :ss do
       ::Tasks::Cms.each_sites do |site|
         # クローリングリソースの更新
         ::Tasks::SS.invoke_task("opendata:crawl", site.host)
+
+        if ::SS.config.opendata.dig("assoc_job", "realtime").blank?
+          ::Tasks::SS.invoke_task("opendata:assoc_job:perform", site.host)
+        end
 
         # スコア計算（リコメンド機能）
         ::Tasks::SS.invoke_task("recommend:create_similarity_scores", site.host) if ::SS.config.recommend.disable.blank?

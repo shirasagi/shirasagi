@@ -118,6 +118,7 @@ SS.ready(function() {
         },
         contentHeight: 'auto',
         displayEventEnd: {
+          month: true,
           basicWeek: true
         },
         endParam: 's[end]',
@@ -133,12 +134,16 @@ SS.ready(function() {
         slotLabelFormat: 'HH:mm',
         startParam: 's[start]',
         timeFormat: 'HH:mm',
+        // '(' と ')' とで囲むと「2025年 1月 26日（日） — 2025年 2月 1日（土）」のような表示になり、
+        // '(' と ')' とで囲まない場合、共通部分が collapse され「2025年 1月 26日（日） — 2月 1日（土）」のような表示になる。
+        // しかし、日本語の場合、FullCalendarの formatRange バグ（？）で、うまく collapse されないので、week の場合は collapse 禁止、それ以外は collapse 許可。
+        // 参考: https://fullcalendar.io/docs/v3/formatRange
         titleFormat: {
           month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.month')),
-          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')),
+          week: '(' + SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')) + ')',
           day: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.day'))
         },
-        loading: function (isLoading, view) {
+        loading: function (isLoading, _view) {
           var target = $(selector).hasClass("fc-list-format") ? $(this).find('.fc-view') : $(this).find('.fc-widget-content').eq(0)
 
           $(this).find('.fc-loading').remove();
@@ -170,16 +175,16 @@ SS.ready(function() {
             if (event.start.format(format) === end.format(format)) {
               content = end.format(format);
             }
-            var span = $('<span></span>').addClass(fcClass).append(content);
-            element.find('.fc-title').before(span);
+            var dateTimeSpan = $('<span></span>').addClass(fcClass).append(content);
+            element.find('.fc-title').before(dateTimeSpan);
           }
           if (event.category) {
-            var span = $('<span class="fc-category"></span>').append(event.category);
-            element.find('.fc-title').prepend(span);
+            var categorySpan = $('<span class="fc-category"></span>').append(event.category);
+            element.find('.fc-title').prepend(categorySpan);
           }
           if (event.facility) {
-            var span = $('<span class="fc-facility"></span>').append(event.facility);
-            element.find('.fc-title').append(span);
+            var facilitySpan = $('<span class="fc-facility"></span>').append(event.facility);
+            element.find('.fc-title').append(facilitySpan);
           }
           if (event.className.includes('fc-event-work')) {
             $(element).find(".fc-date").remove();
@@ -200,7 +205,9 @@ SS.ready(function() {
           attendance = $('.fc .fc-withAbsence-button');
           if (attendance.length) {
             if (attendance.hasClass('fc-state-active')) {
-              $('.fc .fc-event-user-attendance-absence').removeClass("hide")
+              $('.fc .fc-event-user-attendance-absence').removeClass('hide');
+            } else {
+              $('.fc .fc-event-user-attendance-absence').addClass('hide');
             }
           }
           Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));
@@ -339,12 +346,12 @@ SS.ready(function() {
               },
               authenticity_token: token
             },
-            success: function (data, dataType) {
+            success: function (_data, _dataType) {
               var viewId;
               viewId = view.el.closest('.calendar').attr('id');
               return $('.calendar.multiple').not("#" + viewId).fullCalendar('refetchEvents');
             },
-            error: function (xhr, status, error) {
+            error: function (xhr, _status, _error) {
               alert(xhr.responseJSON.join("\n"));
               return revertFunc();
             }
@@ -362,12 +369,12 @@ SS.ready(function() {
               },
               authenticity_token: token
             },
-            success: function (data, dataType) {
+            success: function (_data, _dataType) {
               var viewId;
               viewId = view.el.closest('.calendar').attr('id');
               return $('.calendar.multiple').not("#" + viewId).fullCalendar('refetchEvents');
             },
-            error: function (xhr, status, error) {
+            error: function (xhr, _status, _error) {
               alert(xhr.responseJSON.join("\n"));
               return revertFunc();
             }

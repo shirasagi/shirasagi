@@ -10,7 +10,7 @@ module SS::Document
   attr_accessor :in_updated
 
   included do
-    field :created, type: DateTime, default: -> { Time.zone.now }
+    field :created, type: DateTime, default: -> { Time.zone.now }, metadata: { branch: false }
     field :updated, type: DateTime, default: -> { created }
     field :deleted, type: DateTime
     field :text_index, type: String
@@ -70,7 +70,7 @@ module SS::Document
       define_method(name) { opts[:class_name].constantize.where("$and" => [{ :_id.in => send(store) }]) }
       define_method("ordered_#{name}") do
         items = send(name).to_a
-        send(store).map { |id| items.find { |item| item.id == id } }
+        items.sort_by { |item| send(store).index(item.id) }
       end
     end
 
@@ -146,8 +146,10 @@ module SS::Document
   end
 
   def record_timestamps
-    @record_timestamps = true if @record_timestamps.nil?
-    @record_timestamps
+    # 個別設定（@record_timestamps）が定義されている場合は個別設定
+    return @record_timestamps if instance_variable_defined?(:@record_timestamps)
+    # それ以外の場合はグローバル設定
+    SS::Model.record_timestamps?
   end
 
   def record_timestamps=(val)

@@ -8,7 +8,7 @@
 
 <div class="addon-views chorg-before">
   <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
-    <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
+    <%= md_icons.outlined "article", style: "margin-right: 10px;" %>
     <%= t("chorg.views.division_changesets.before_division") %>
   </h2>
 
@@ -44,7 +44,7 @@
 </div>
 
 <div style="display: flex; justify-content: center; font-size: 400%;">
-  <span class="material-icons-outlined" style="display: block; font-size: 100%;">arrow_circle_down</span>
+  <%= md_icons.outlined "arrow_circle_down", style: "display: block; font-size: 100%;" %>
 </div>
 
 <% 1.upto(SS.config.chorg.max_division) do |sequence| %>
@@ -54,7 +54,7 @@
   %>
   <div class="addon-views chorg-after">
     <h2 style="display: flex; padding: 15px 0; font-size: 150%; font-weight: bold">
-      <span class="material-icons-outlined" style="margin-right: 10px;">article</span>
+      <%= md_icons.outlined "article", style: "margin-right: 10px;" %>
       <%= t("chorg.views.division_changesets.after_division", count: sequence) %>
     </h2>
 

@@ -29,7 +29,9 @@ ja:
     max_file_size: 最大ファイルサイズ
     image_resize: 画像リサイズ
     site_copy: サイト複製
-    site_copy/description: ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
+    site_copy/description: |
+      ※フォルダー、固定ページ、レイアウト、パーツは必須で複製されます
+      ※ 複製する項目「記事・その他のページ」を選択しなかった場合、カテゴリーフォルダー内のサマリーページの設定は解除されます
     site_copy/started_job: サイト複製を開始しました。
     site_copy/task_status: 実行状況
     roles:
@@ -49,6 +51,13 @@ ja:
         files: 共有ファイル
         editor_templates: テンプレート
         dictionaries: かな辞書
+        loop_settings: "ループHTML"
+        page_searches: "ページ検索"
+        source_cleaner_templates: "ソースクリーニング"
+        theme_templates: "Theme切り替え"
+        translate_langs: "自動翻訳/言語"
+        translate_text_caches: "自動翻訳/翻訳テキスト"
+        word_dictionaries: "単語置換辞書"
       force_authn_state:
         enabled: 要求する
         disabled: 要求しない
@@ -93,6 +102,7 @@ ja:
       when_disabled: フォーム認証無効時
       form_key: キー
       form_password: パスワード
+      form_enabled_ip_addresses: 除外IPアドレス
 
   sys_role:
     edit_sys_sites: サイトの管理
@@ -208,11 +218,13 @@ ja:
       sys/ad:
         time: 画像切り替え時間
         width: 横幅
+        ad_links: 広告リンク
       sys/auth/setting:
         form_auth: フォーム認証
         form_key: フォーム認証利用時のキー
         form_password: フォーム認証利用時のパスワード
         in_form_password: フォーム認証利用時のパスワード
+        form_enabled_ip_addresses: 除外IPアドレス
 
   errors:
     messages:
@@ -329,10 +341,15 @@ ja:
         - ログイン画面のフォーム認証を表示するか選択します。
       when_form_auth_disabled:
         - フォーム認証無効時でも以下に設定したキーとパスワードがQuery Stringに設定されていたらフォーム認証を表示します。
+        - また、除外IPアドレスを設定した場合はアクセス元と一致する場合もフォーム認証を表示します。
 
   job:
     models:
-      sys/site_copy_job: サイト複製
-      sys/postal_code/import_job: 郵便番号インポート
-      sys/postal_code/official_csv_import_job: 日本郵便CSVインポート
-      sys/prefecture_code/import_job: 市町村コードインポート
+      sys/group_import_job: システム/グループインポート
+      sys/history_archive_job: システム/操作履歴アーカイブ化
+      sys/site_copy_job: システム/サイト複製
+      sys/site_export_job: システム/サイトエクスポート
+      sys/site_import_job: システム/サイトインポート
+      sys/postal_code/import_job: システム/郵便番号インポート
+      sys/postal_code/official_csv_import_job: システム/日本郵便CSVインポート
+      sys/prefecture_code/import_job: システム/市町村コードインポート

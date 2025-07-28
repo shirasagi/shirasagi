@@ -32,7 +32,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("gws/workflow.columns.index")
 
       within ".gws-column-list-toolbar[data-placement='top']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/file_upload") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/file_upload") }
       end
       within first(".gws-column-item") do
         wait_for_event_fired("turbo:frame-load") { click_on "cancel" }
@@ -111,7 +111,9 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       within first(".gws-column-item") do
         wait_for_event_fired("gws:column:removed") do
           page.accept_confirm(I18n.t("ss.confirm.delete")) do
-            click_on "delete"
+            within first(".gws-column-item-toolbar-list") do
+              click_on "delete"
+            end
           end
         end
       end

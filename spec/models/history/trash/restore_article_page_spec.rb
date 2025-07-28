@@ -77,20 +77,16 @@ describe History::Trash, type: :model, dbscope: :example do
 
     context "with cms/twitter_poster" do
       let(:twitter_auto_post) { %w(expired active).sample }
-      # let(:twitter_post_format) { %w(thumb_and_page files_and_page page_only).sample }
-      let(:twitter_post_format) { %w(files_and_page page_only).sample }
       let(:twitter_edit_auto_post) { %w(disabled enabled).sample }
       let!(:item) do
         create(
           :article_page, cur_user: user, cur_site: site, cur_node: node,
-          twitter_auto_post: twitter_auto_post, twitter_post_format: twitter_post_format,
-          twitter_edit_auto_post: twitter_edit_auto_post
+          twitter_auto_post: twitter_auto_post, twitter_edit_auto_post: twitter_edit_auto_post
         )
       end
 
       it do
         expect(item.twitter_auto_post).to eq twitter_auto_post
-        expect(item.twitter_post_format).to eq twitter_post_format
         expect(item.twitter_edit_auto_post).to eq twitter_edit_auto_post
       end
     end

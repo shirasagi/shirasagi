@@ -85,6 +85,7 @@ module Gws::Affair::WorkflowFilter
       approver[:state] = @model::WORKFLOW_STATE_PENDING
       approver[:comment] = ''
       approver[:file_ids] = nil
+      approver.delete(:created)
     end
     @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     @item.workflow_current_circulation_level = 0
@@ -255,7 +256,7 @@ module Gws::Affair::WorkflowFilter
 
     raise "403" unless @item.allowed?(:approve, @cur_user)
 
-    @item.remand_workflow_approver_state(@cur_user, params[:remand_comment])
+    @item.remand_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
     end

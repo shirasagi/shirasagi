@@ -290,9 +290,9 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       first("button[name='reclaim_total_size']").click
       wait_for_notice I18n.t("gws/notice.notice.reclaimed")
 
-      usage1 = I18n.t("gws/notice.total_body_size_current_stats", size: post.text.size.to_s(:human_size), percentage: "0.00%")
+      usage1 = I18n.t("gws/notice.total_body_size_current_stats", size: post.text.size.to_fs(:human_size), percentage: "0.00%")
       expect(page).to have_content(usage1)
-      usage2 = I18n.t("gws/notice.total_body_size_current_stats", size: file.size.to_s(:human_size), percentage: "0.04%")
+      usage2 = I18n.t("gws/notice.total_body_size_current_stats", size: file.size.to_fs(:human_size), percentage: "0.04%")
       expect(page).to have_content(usage2)
     end
   end

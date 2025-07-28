@@ -41,7 +41,7 @@ Cms_Column_Free.prototype.getTempFileOptions = function() {
     return self.getFileUploadPath();
   };
 
-  ret.select = function(files, dropArea) {
+  ret.select = function(files, _dropArea) {
     if (! files[0]) {
       return;
     }
@@ -66,7 +66,7 @@ Cms_Column_Free.prototype.getTempFileOptions = function() {
     $.when.apply($, promises).fail(function(xhr, status, error) {
       $fileView.html(error);
     }).always(function() {
-      $fileView.removeClass("hide");
+      $fileView.removeClass("hide").trigger("change");
     });
   };
 
@@ -143,7 +143,7 @@ Cms_Column_Free.prototype.selectFile = function($item) {
       $fileView.html(error);
     },
     complete: function() {
-      $fileView.removeClass("hide");
+      $fileView.removeClass("hide").trigger("change");
     }
   });
 };
@@ -151,7 +151,7 @@ Cms_Column_Free.prototype.selectFile = function($item) {
 Cms_Column_Free.prototype.addFile = function(html) {
   var $fileView = this.$el.find(".column-value-files");
   var $html = $("<div>" + html + "</div>");
-  $fileView.append($html.html());
+  $fileView.append($html.html()).trigger("change");
 };
 
 Cms_Column_Free.prototype.insertContent = function(content) {

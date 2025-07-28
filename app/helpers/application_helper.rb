@@ -1,12 +1,13 @@
 module ApplicationHelper
-  include Category::CategoryHelper
   include SS::AutoLink
   include SS::ButtonToHelper
   include SS::ColorPickerHelper
   include SS::DateTimeHelper
   include SS::ErrorMessagesFor
   include SS::StimulusHelper
+  include SS::InputGuide
   include Workflow::ViewHelper
+  include SS::MaterialIconsHelper
 
   def tryb(&block)
     begin
@@ -90,26 +91,10 @@ module ApplicationHelper
     end
   end
 
-  # @deprecated
-  def scss(&block)
-    load_paths = Rails.application.config.assets.paths.dup
-
-    sass = Sass::Engine.new(
-      "@import 'compass-mixins/lib/compass';\n" + capture(&block),
-      cache: false,
-      debug_info: false,
-      inline_source_maps: false,
-      load_paths: load_paths,
-      style: :compressed,
-      syntax: :scss
-    )
-
-    h = []
-    h << "<style>"
-    h << sass.render
-    h << "</style>"
-    h.join("\n").html_safe
-  end
+  # # @deprecated
+  # def scss(&block)
+  #   tag.style(media: :all, &block)
+  # end
 
   def tt(key, *args)
     opts = args.extract_options!
@@ -136,10 +121,6 @@ module ApplicationHelper
     h << %(</ul>)
     h << %(</div>)
     h.join("\n").html_safe
-  end
-
-  def render_agent(controller_name, action)
-    controller.render_agent(controller_name, action).body.html_safe
   end
 
   def mail_to_entity(email_address, name = nil, html_options = {}, &block)
@@ -273,13 +254,21 @@ module ApplicationHelper
     @cur_site.try(:logo_application_name).presence || SS.config.ss.application_name
   end
 
-  def render_application_logo(site = nil)
+  def render_application_logo(site: nil, url: nil)
     site ||= @cur_site
-    return SS.config.ss.application_logo_html.html_safe if site.blank?
+    logo_url = url || sns_mypage_path
+
+    if site.blank?
+      return link_to_application_logo(logo_url) { SS.config.ss.application_logo_html.html_safe }
+    end
 
     name = site.logo_application_name
     image = site.logo_application_image
-    return SS.config.ss.application_logo_html.html_safe if name.blank? && image.blank?
+    logo_url = url || site.logo_application_url
+
+    if name.blank? && image.blank?
+      return link_to_application_logo(logo_url) { SS.config.ss.application_logo_html.html_safe }
+    end
 
     logo_html = "".html_safe
     if image.present?
@@ -289,7 +278,13 @@ module ApplicationHelper
       logo_html += tag.span(name, class: "ss-logo-application-name")
     end
 
-    tag.div(logo_html, class: "ss-logo-wrap")
+    link_to_application_logo(logo_url) do
+      tag.div(logo_html, class: "ss-logo-wrap")
+    end
+  end
+
+  def link_to_application_logo(url, &block)
+    ("<h1 class=\"application-name\"><a href=\"#{url}\">" + yield + "</a></h1>").html_safe
   end
 
   def required_label
@@ -333,5 +328,9 @@ module ApplicationHelper
     return { media: "all" } if options.blank?
     return options if options.key?(:media)
     options.merge(media: "all")
+  end
+
+  def main_navi_closed?
+    cookies["ss-navi"] == "closed"
   end
 end

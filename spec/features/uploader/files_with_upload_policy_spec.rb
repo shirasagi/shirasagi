@@ -47,6 +47,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
           within "form" do
             click_button I18n.t("ss.buttons.delete")
           end
+          wait_for_notice I18n.t("ss.notice.deleted")
         end
         expectation.to have_enqueued_job.with [{ rm: [rel_path1] }]
         expect(page).to have_no_css(".list-item")
@@ -90,7 +91,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         within "form" do
           click_button I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.sanitizer_waiting'))
+        wait_for_error I18n.t("errors.messages.sanitizer_waiting")
 
         # sanitize
         restored_file = mock_sanitizer_restore(job_file)
@@ -104,6 +105,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
           within "form" do
             click_button I18n.t("ss.buttons.delete")
           end
+          wait_for_notice I18n.t("ss.notice.deleted")
         end
         expectation.to have_enqueued_job.with [{ rm: [rel_path1] }]
         expect(page).to have_no_css(".list-item")
@@ -147,7 +149,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
         # update
         visit "#{index_path}/#{name1}?do=show"
         click_link I18n.t('ss.links.edit')
-        expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.edit_restricted'))
+        wait_for_error I18n.t('errors.messages.edit_restricted')
 
         # delete
         visit "#{index_path}/#{name1}?do=show"
@@ -157,6 +159,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
           within "form" do
             click_button I18n.t("ss.buttons.delete")
           end
+          wait_for_notice I18n.t("ss.notice.deleted")
         end
         expectation.to have_enqueued_job.with [{ rm: [rel_path1] }]
       end
@@ -168,7 +171,7 @@ describe "uploader_files_with_upload_policy", type: :feature, dbscope: :example,
       let!(:path1) { "#{node.path}/#{name1}" }
       let!(:rel_path1) { path1.delete_prefix("#{Rails.root}/") }
       let!(:error_file) { "#{::Rails.root}/spec/fixtures/ss/file/ss_file_1_1635597955_1000_pdfEncryptReport.txt" }
-      let!(:output_path) { "#{SS.config.ss.sanitizer_output}/ss_uploader_1_1635597955_1000_pdfEncryptReport.txt" }
+      let!(:output_path) { "#{SS::UploadPolicy.sanitizer_output_path}/ss_uploader_1_1635597955_1000_pdfEncryptReport.txt" }
       let!(:error_filename) { "logo.png_sanitize_error.txt" }
 
       it do

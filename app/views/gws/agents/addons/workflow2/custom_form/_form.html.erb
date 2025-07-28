@@ -1,0 +1,47 @@
+<% return if @cur_form.blank? && (@item.cur_form || @item.form).blank? %>
+<% @cur_form ||= (@item.cur_form || @item.form) %>
+
+<%= hidden_field_tag "form_id", @cur_form.id, id: nil %>
+
+<%# params.require(:item) で例外が発生するのを防ぐ %>
+<%= f.hidden_field :in_custom_form_dummy, value: '', id: nil %>
+
+<dl class="see gws-column-see mod-gws-workflow-custom_form">
+  <% @cur_form.columns.order_by(order: 1, created: 1).each do |column| %>
+    <%= render(column.column_form_partial_path, column: column, object_name: 'custom', value: @item.read_column_value(column)) %>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  $('#addon-ss-agents-addons-markdown').hide();
+  $('#addon-gws-agents-addons-file').hide();
+  $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2').text(<%== @cur_form.name.to_json %>);
+
+  $('a.btn-file-upload').data('on-select', function($item) {
+    $.colorbox.close();
+
+    var $data = $item.closest('[data-id]');
+    var fileId = $data.data('id');
+    var humanizedName = $data.data('humanized-name');
+    if (! fileId || ! humanizedName) {
+      return;
+    }
+
+    var $element = $.colorbox.element();
+    $element.siblings('input.file-id').val(fileId);
+    $element.siblings('span.humanized-name').text(humanizedName);
+    $element.siblings(".sanitizer-status").replaceWith($data.find('.sanitizer-status'));
+    $element.siblings('.btn-file-delete').show();
+  });
+
+  $('a.btn-file-delete').on('click', function(e) {
+    var $this = $(this);
+    $this.siblings('input.file-id').val('');
+    $this.siblings('span.humanized-name').text('');
+    $this.siblings('.sanitizer-status').hide();
+    $this.hide();
+
+    e.preventDefault();
+    return false;
+  });
+<% end %>

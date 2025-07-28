@@ -53,7 +53,7 @@
 </dl>
 <dl class="see loop-format-liquid" style="margin-top: 20px;">
   <dt class="loop_format"><%= @model.t :loop_format %></dt>
-  <dd class="loop_format"><%= f.select :loop_format, @item.loop_format_options, { selected: "liquid" }, { disabled: "disabled" } %></dd>
+  <dd class="loop_format"><%= f.select :loop_format, @item.loop_format_options %></dd>
 
   <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
   <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>

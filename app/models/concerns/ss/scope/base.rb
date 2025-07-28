@@ -20,6 +20,10 @@ module SS::Scope::Base
     }
   end
 
+  def deleted?(date = Time.zone.now)
+    deleted && deleted <= date
+  end
+
   module ClassMethods
     def with_scope_ss(criteria)
       save = Mongoid::Threaded.current_scope(self)

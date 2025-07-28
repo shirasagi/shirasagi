@@ -29,6 +29,9 @@ describe Faq::Page::ImportJob, dbscope: :example do
   describe ".perform_later" do
     context "with node1" do
       before do
+        items = Faq::Page.site(site).where(filename: /^#{node1.filename}\//, depth: 3)
+        expect(items.count).to be 0
+
         job_class = described_class.bind(site_id: site.id, node_id: node1.id, user_id: user.id)
         expect { ss_perform_now(job_class, ss_file.id) }.to output(include("import start faq_pages.csv\n")).to_stdout
       end
@@ -68,13 +71,10 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.contact_link_url).to eq "リンクURL"
         expect(item.contact_link_name).to eq "リンク名"
         expect(item.released_type).to eq "same_as_updated"
-        expect(item.released.try(:strftime, "%Y/%m/%d %H:%M")).to eq "2016/09/07 19:11"
+        expect(item.released).to be_blank # due to released_type is "same_as_updated" and state is "closed"
         expect(item.release_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq nil
         expect(item.close_date.try(:strftime, "%Y/%m/%d %H:%M")).to eq nil
         expect(item.groups.pluck(:name)).to match_array ["シラサギ市/企画政策部/政策課"]
-        unless SS.config.ss.disable_permission_level
-          expect(item.permission_level).to be 1
-        end
         expect(item.state).to eq "closed"
       end
     end
@@ -100,6 +100,7 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.order).to be 10
         expect(item.keywords).to match_array %w(キーワード)
         expect(item.description).to eq "概要"
+        # expect(item.description_setting).to eq "manual"
         expect(item.summary).to eq "サマリー"
         expect(item.question).to eq "<p>休日や夜間でも戸籍の届出は可能でしょうか。</p>"
         expect(item.html).to eq "<p>可能です。</p>"
@@ -125,9 +126,6 @@ describe Faq::Page::ImportJob, dbscope: :example do
         expect(item.release_date.try(:strftime, "%Y/%m/%d %H:%M")).to be_nil
         expect(item.close_date.try(:strftime, "%Y/%m/%d %H:%M")).to be_nil
         #expect(item.groups.pluck(:name)).to match_array ["シラサギ市/企画政策部/政策課"]
-        unless SS.config.ss.disable_permission_level
-          expect(item.permission_level).to be 1
-        end
         expect(item.state).to eq "public"
       end
     end

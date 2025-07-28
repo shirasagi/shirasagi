@@ -168,4 +168,4 @@ ja:
 
   job:
     models:
-      gws/staff_record/copy_situation_job: 電子職員録現況コピージョブ
+      gws/staff_record/copy_situation_job: 電子職員録/現況コピージョブ

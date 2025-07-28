@@ -45,7 +45,8 @@ class Gws::Survey::Form
   around_save ::Gws::Elasticsearch::Indexer::SurveyFormJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::SurveyFormJob.callback
   update_form do |form|
-    ::Gws::Elasticsearch::Indexer::SurveyFormJob.around_save(form) { true }
+    skip = form.columns.last.try(:skip_elastic)
+    ::Gws::Elasticsearch::Indexer::SurveyFormJob.around_save(form) { true } unless skip
   end
 
   scope :and_public, ->(date = Time.zone.now) {

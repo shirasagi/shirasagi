@@ -9,10 +9,10 @@
     }
   }
   .form-table {
-    border: $border-gray5;
-    overflow-x: auto;
-    margin: 16px 0;
     box-sizing: content-box;
+    margin: 16px 0;
+    overflow-x: auto;
+    border: $border-gray5;
   }
   &.index {
     .form-table {
@@ -21,9 +21,9 @@
   }
   .operations {
     @include mb {
-      float: none;
-      margin-left: 0;
       margin-bottom: 16px;
+      margin-left: 0;
+      float: none;
     }
   }
   .form-table-header-inner {
@@ -106,21 +106,21 @@
   .list-head {
     .operations {
       display: inline-block;
-      float: right;
       margin-left: 16px;
+      float: right;
     }
   }
 
   .summary {
-    border: 0;
     margin: 15px 0;
     padding: 0 10px;
+    border: 0;
 
     h2 {
-      background: $gray1;
-      @include border-radius(2px);
       padding: 6px 18px;
       border: $border-gray5;
+      background: $gray1;
+      @include border-radius(2px);
     }
 
     dl.see {
@@ -139,12 +139,12 @@
   }
   .btn-download {
     &:before {
-      font-family: "Material Icons";
-      font-size: 108%;
       content: "\E2C4";
 
       display: inline;
       margin-right: 4px;
+      font-family: "Material Icons";
+      font-size: 108%;
       vertical-align: -3px;
     }
   }
@@ -156,8 +156,8 @@
       padding: 20px 10px;
     }
     .header {
-      float: right;
       margin: 12px;
+      float: right;
     }
     h2.title {
       margin: 12px;
@@ -180,25 +180,25 @@
       font-weight: bold;
 
       &:before {
-        font-family: "Material Icons";
-        font-size: 108%;
         content: "\E002";
 
         display: inline;
+        font-family: "Material Icons";
+        font-size: 108%;
         vertical-align: -3px;
       }
     }
   }
   &.near-limit {
     .limit {
-      font-weight: bold;
       color: #ff7758;
+      font-weight: bold;
       &:before {
-        font-family: "Material Icons";
-        font-size: 108%;
         content: "\E000";
 
         display: inline;
+        font-family: "Material Icons";
+        font-size: 108%;
         vertical-align: -3px;
       }
     }

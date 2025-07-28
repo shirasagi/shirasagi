@@ -41,6 +41,9 @@ ja:
         text_field: テキストボックス
         text_area: テキストエリア
         email_field: メールアドレス
+        number_field: 数値入力
+        date_field: 日付入力
+        datetime_field: 日時入力
         radio_button: ラジオボタン選択
         select: プルダウン選択
         check_box: チェックボックス選択
@@ -64,6 +67,9 @@ ja:
       reply_content_state:
         static: 固定メッセージ
         answer: お問い合わせ内容のコピー
+      date_inputter:
+        local: "input タグ"
+        picker: DateTimePicker
     links:
       back_to_page: 元のページに戻る
       faq: FAQを新規作成
@@ -71,6 +77,19 @@ ja:
       index:
         created: "受信日時：%{created}"
         updated: "更新日時：%{updated}"
+
+    columns:
+      inquiry/text_field: テキストボックス
+      inquiry/text_area: テキストエリア
+      inquiry/email_field: メールアドレス
+      inquiry/number_field: 数値入力
+      inquiry/date_field: 日付入力
+      inquiry/datetime_field: 日時入力
+      inquiry/radio_button: ラジオボタン選択
+      inquiry/select: プルダウン選択
+      inquiry/check_box: チェックボックス選択
+      inquiry/upload_file: ファイル投稿
+      inquiry/form_select: フォーム選択
 
   modules:
     inquiry: メールフォーム
@@ -121,6 +140,7 @@ ja:
         inquiry_html: 説明テキスト
         inquiry_sent_html: 送信完了テキスト
         inquiry_results_html: 集計結果テキスト
+        inquiry_show_sent_data: 投稿内容の表示
 
       inquiry/addon/captcha:
         inquiry_captcha: 画像認証
@@ -129,7 +149,7 @@ ja:
       inquiry/addon/notice:
         notice_state: 通知設定
         notice_content: 通知内容
-        notice_email: 通知メールアドレス
+        notice_emails: 通知メールアドレス
         from_name: 差出人名
         from_email: 差出人メールアドレス
 
@@ -169,6 +189,7 @@ ja:
         question: FAQ引用
         max_upload_file_size: 最大ファイルサイズ設定
         transfers: キーワード
+        date_inputter: 日付・日時の入力形式
 
       inquiry/answer:
         id: id
@@ -195,6 +216,9 @@ ja:
         kintone_app_api_token: APIトークン
         kintone_app_key: アプリID
         kintone_app_guest_space_id: ゲストスペースID
+        kintone_app_field_code: フィールドコード
+        kintone_app_remote_addr_field_code: リモートIP
+        kintone_app_user_agent_field_code: ユーザーエージェント
 
       inquiry/addon/kintone_app/column:
         kintone_field_code: フィールドコード
@@ -222,6 +246,8 @@ ja:
         - 送信完了画面に表示される画面の内容を入力します。
       inquiry_results_html:
         - 集計結果画面の上部に表示される内容を入力します。
+      inquiry_show_sent_data:
+        - 送信完了画面に投稿した内容を表示するか選択します。
     inquiry/addon/captcha:
       inquiry_captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
@@ -234,8 +260,9 @@ ja:
         - 通知メールの内容を設定します。
         - 「通知のみ」 回答へのリンクが記載されます。
         - 「投稿内容含む」回答へのリンクと回答内容すべてが記載されます。
-      notice_email:
+      notice_emails:
         - フォームへの投稿があったことを通知する先のメールアドレスを入力します。
+        - 複数のメールアドレスを設定する場合は、改行で区切って設定します。
       from_name:
         - 通知メールに記載される差出人名を入力します。
       from_email:
@@ -303,6 +330,10 @@ ja:
       transfers:
         - 入力形式で「テキストボックス」「テキストエリア」を選択した場合の回答に特定キーワードが含まれた場合、転送するアドレスを入力します。
         - 転送するにはフォルダーの通知設定を有効にする必要があります。
+      date_inputter:
+        - 日付・日時の入力形式を選択します。
+        - inputタグ ... 入力コントロールを '&lt;input type=&quot;date&quot;&gt;' または '&lt;input type=&quot;datetime-local&quot;&gt;' にて表示します。
+        - DateTimePicker ... 入力コントロールを 'jQuery DateTimePicker' にて表示します。
     inquiry/addon/release_plan:
       release_date:
         - 公開を開始する日時を指定します。
@@ -345,6 +376,8 @@ ja:
       kintone_app_guest_space_id:
         - kintone アプリのゲストスペースIDを入力します。
         - ゲストスペースのアプリとの連携に必要です。
+      kintone_app_field_code:
+        - 回答データのリモートIPやユーザーエージェントを連携する場合、連携する項目のフィールドコードを入力してください。
 
     inquiry/addon/kintone_app/column:
       kintone_field_code: kintone アプリのフィールドコードを入力します。
@@ -359,4 +392,4 @@ ja:
 
   job:
     models:
-      inquiry/delete_inquiry_temp_files_job: 一時ファイル削除（CMSお問い合わせ）
+      inquiry/delete_inquiry_temp_files_job: メールフォーム/一時ファイル削除

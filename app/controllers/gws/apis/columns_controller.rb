@@ -18,9 +18,13 @@ class Gws::Apis::ColumnsController < ApplicationController
 
   def ref
     ret = params[:ref]
-    return request.path if ret.blank?
-    return request.path unless trusted_url?(ret)
+    return SS.request_path(request) if ret.blank?
+    return SS.request_path(request) unless trusted_url?(ret)
     ret
+  end
+
+  def crud_redirect_url
+    gws_frames_column_path(id: @item, ref: ref)
   end
 
   public
@@ -41,6 +45,7 @@ class Gws::Apis::ColumnsController < ApplicationController
       return
     end
 
-    redirect_to gws_frames_column_path(id: @item, ref: ref), notice: t("ss.notice.saved")
+    # redirect_to gws_frames_column_path(id: @item, ref: ref), notice: t("ss.notice.saved")
+    render_update true, notice: t("ss.notice.saved")
   end
 end

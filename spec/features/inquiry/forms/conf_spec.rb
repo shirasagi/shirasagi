@@ -11,7 +11,7 @@ describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
       inquiry_captcha: 'enabled',
       notice_state: 'enabled',
       notice_content: 'include_answers',
-      notice_email: 'notice@example.jp',
+      notice_emails: 'notice@example.jp',
       from_name: 'admin',
       from_email: 'admin@example.jp',
       reply_state: 'enabled')

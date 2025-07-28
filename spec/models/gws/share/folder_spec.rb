@@ -39,7 +39,7 @@ RSpec.describe Gws::Share::Folder, type: :model, dbscope: :example do
 
         msg = I18n.t(
           "mongoid.errors.models.gws/share/folder.file_size_exceeds_folder_limit",
-          size: file.size.to_s(:human_size), limit: subject.share_max_file_size.to_s(:human_size)
+          size: file.size.to_fs(:human_size), limit: subject.share_max_file_size.to_fs(:human_size)
         )
         expect(subject.errors[:base]).to include(msg)
       end

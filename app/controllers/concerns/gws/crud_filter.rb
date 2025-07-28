@@ -111,7 +111,7 @@ module Gws::CrudFilter
 
     @item.record_timestamps = false
     @item.deleted = Time.zone.now
-    render_destroy @item.save
+    render_destroy @item.save(context: :soft_delete)
   end
 
   def undo_delete
@@ -187,7 +187,8 @@ module Gws::CrudFilter
       if item.allowed?(:delete, @cur_user, site: @cur_site)
         item.record_timestamps = false
         item.deleted = Time.zone.now
-        next if item.save
+        item.skip_validate_column_values = true if item.instance_of?(Gws::Workflow2::File)
+        next if item.save(context: :soft_delete)
       else
         item.errors.add :base, :auth_error
       end

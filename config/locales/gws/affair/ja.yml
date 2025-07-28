@@ -696,4 +696,4 @@ ja:
 
   job:
     models:
-      gws/affair/notify_compensatory_file_job: 時間外申請の週外振替期限通知
+      gws/affair/notify_compensatory_file_job: 庶務事務/時間外申請の週外振替期限通知

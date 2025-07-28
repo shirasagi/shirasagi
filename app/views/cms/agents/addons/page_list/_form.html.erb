@@ -73,13 +73,7 @@
 
   <% if @model.use_loop_settings && @model.use_loop_formats.present? %>
     <dt class="loop_format"><%= @model.t :loop_format %><%= @model.tt :loop_format %></dt>
-    <dd class="loop_format">
-      <% if @model.use_loop_formats.size == 1 %>
-        <%= f.select :loop_format, @item.loop_format_options, { selected: @model.use_loop_formats.first }, { disabled: "disabled" } %>
-      <% else %>
-        <%= f.select :loop_format, @item.loop_format_options %>
-      <% end %>
-    </dd>
+    <dd class="loop_format"><%= f.select :loop_format, @item.loop_format_options %></dd>
   <% end %>
 </dl>
 

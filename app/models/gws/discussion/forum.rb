@@ -19,10 +19,12 @@ class Gws::Discussion::Forum
   def discussion_member_ids
     overall_members.pluck(:id)
   end
-  deprecate discussion_member_ids: "discussion_member_ids is deprecated. use `#overall_members.pluck(:id)' instead"
+  deprecate discussion_member_ids: "discussion_member_ids is deprecated. use `#overall_members.pluck(:id)' instead",
+    deprecator: SS.deprecator
 
   alias discussion_members overall_members
-  deprecate discussion_members: "discussion_members is deprecated. use `#overall_members' instead"
+  deprecate discussion_members: "discussion_members is deprecated. use `#overall_members' instead",
+    deprecator: SS.deprecator
 
   def save_main_topic
     main_topic = Gws::Discussion::Topic.new

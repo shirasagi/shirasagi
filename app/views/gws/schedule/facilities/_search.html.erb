@@ -1,32 +1,10 @@
 <%= jquery do %>
   (function ($) {
-    var submit_search = function() {
-      if ($('#calendar-controller').length) {
-        var view = $('#calendar-controller').fullCalendar('getView');
-        var view_format = 'default';
-        if (view.el.closest(".fc").hasClass('fc-list-format')) {
-          view_format = 'list';
-        }
-        var view_attendance = 'inactive';
-        if(view.el.closest(".fc").find('.fc-withAbsence-button').hasClass("fc-state-active")) {
-          view_attendance = 'active';
-        }
-        $('form.search').append('<input type="hidden" name="calendar[view]" value="' + view.name + '" />');
-        $('form.search').append('<input type="hidden" name="calendar[date]" value="' + view.start.format() + '" />');
-        $('form.search').append('<input type="hidden" name="calendar[viewFormat]" value="' + view_format + '" />');
-        $('form.search').append('<input type="hidden" name="calendar[viewAttendance]" value="' + view_attendance + '" />');
-      }
-      $("form.search")[0].requestSubmit();
-    };
-
-    $("form.search #s_facility_category_id").on("change", submit_search);
-    $("form.search #s_category_id").on("change", submit_search);
-
     $('.gws-schedule-box header .operations .btn-print').on('click', function() {
-      var viewName = $('#calendar').fullCalendar('getView').name
+      var viewName = $('#calendar').fullCalendar('getView').name;
       var curDate = $('#calendar').fullCalendar('getDate');
       if (!viewName) {
-        viewName = $('#calendar-controller').fullCalendar('getView').name
+        viewName = $('#calendar-controller').fullCalendar('getView').name;
         curDate = $('#calendar-controller').fullCalendar('getDate');
       }
 
@@ -43,17 +21,43 @@
       var path = '<%= url_for({ action: :print }) %>' + queryString;
       location.href = path;
     });
+
+    $('.gws-schedule-box header form.search').on('submit', function() {
+      var $form = $(this);
+      var viewName = $('#calendar').fullCalendar('getView').name;
+      var curDate = $('#calendar').fullCalendar('getDate');
+      if (!viewName) {
+        viewName = $('#calendar-controller').fullCalendar('getView').name;
+        curDate = $('#calendar-controller').fullCalendar('getDate');
+      }
+
+      if (viewName) {
+        $form.append('<input type="hidden" name="calendar[view]" value="' + viewName + '" />');
+        $form.append('<input type="hidden" name="calendar[date]" value="' + curDate.format() + '" />');
+      }
+    });
   })($jQuery1);
 <% end %>
 
+<%
+  category_options = @model.new(cur_site: @cur_site, cur_user: @cur_user).category_options
+  approval_options = %w(request approve deny).map do |v|
+    [ I18n.t("gws/schedule.views.#{v}"), v ]
+  end
+%>
 <div class="operations">
   <input type="button" value="<%= t('ss.buttons.print') %>" class="btn btn-print" />
 </div>
 
 <% @s = OpenStruct.new params[:s] %>
 <%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
-  <%= f.select :facility_category_id, options_for_select(@facility_categories.to_options(offset: 1), @facility_category.try(:id)), include_blank: t('gws/schedule.tabs.facility') if @facility_categories.present? %>
-  <%= f.select :category_id, options_for_select(@schedule_categories.to_options, @schedule_category.try(:id)), include_blank: @model.t(:category_id) if @schedule_categories.present? %>
+  <% if @facility_categories.present? %>
+    <%= f.select :facility_category_id, options_for_select(@facility_categories.to_options(offset: 1), @facility_category.try(:id)), { include_blank: t('gws/schedule.tabs.facility') }, { data: { controller: "ss--submit-on-change" } } %>
+  <% end %>
+  <% if @schedule_categories.present? %>
+    <%= f.select :category_id, options_for_select(@schedule_categories.to_options, @schedule_category.try(:id)), { include_blank: @model.t(:category_id) }, { data: { controller: "ss--submit-on-change" } } %>
+  <% end %>
+  <%= f.select :approval, approval_options, { include_blank: t("gws/schedule.views.approval_state") }, { data: { controller: "ss--submit-on-change" } } %>
   <%= f.text_field :keyword, style: "width: 140px;", placeholder: t("gws/schedule.search_plans") %>
   <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
 <% end %>

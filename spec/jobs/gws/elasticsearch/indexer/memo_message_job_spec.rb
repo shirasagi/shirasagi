@@ -14,11 +14,11 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
     site.save!
 
     # gws:es:ingest:init
-    ::Gws::Elasticsearch.init_ingest(site: site)
+    Gws::Elasticsearch.init_ingest(site: site)
     # gws:es:drop
-    ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+    Gws::Elasticsearch.drop_index(site: site) rescue nil
     # gws:es:create_indexes
-    ::Gws::Elasticsearch.create_index(site: site)
+    Gws::Elasticsearch.create_index(site: site)
   end
 
   describe '#index' do
@@ -39,7 +39,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         job.perform_now(action: 'index', id: message.id.to_s)
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -92,7 +92,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         job.perform_now(action: 'index', id: message.id.to_s)
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -145,7 +145,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         job.perform_now(action: 'index', id: message.id.to_s)
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -200,7 +200,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         job.perform_now(action: 'index', id: message.id.to_s)
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -253,7 +253,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         job.perform_now(action: 'index', id: message.id.to_s)
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -311,7 +311,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
       job.perform_now(action: 'delete', id: message.id.to_s, remove_file_ids: message.file_ids)
 
       # wait for indexing
-      ::Gws::Elasticsearch.refresh_index(site: site)
+      Gws::Elasticsearch.refresh_index(site: site)
 
       expect(Gws::Job::Log.count).to eq 1
       Gws::Job::Log.first.tap do |log|
@@ -386,7 +386,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -409,7 +409,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -426,7 +425,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -450,7 +448,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -473,7 +471,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ user.id, recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -498,7 +495,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -521,7 +518,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -538,7 +534,6 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
             expect(source['user_ids']).to eq list.user_ids
             expect(source['group_ids']).to eq list.group_ids
             expect(source['custom_group_ids']).to eq list.custom_group_ids
-            expect(source['permission_level']).to eq list.permission_level
             expect(source['readable_member_ids']).to eq [ recipient.id ]
             expect(source['updated']).to be_present
             expect(source['created']).to be_present
@@ -560,7 +555,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -590,7 +585,7 @@ describe Gws::Elasticsearch::Indexer::MemoMessageJob, dbscope: :example, es: tru
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
