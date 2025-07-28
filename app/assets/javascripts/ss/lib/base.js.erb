@@ -32,9 +32,9 @@ this.SS = (function () {
   var readyPromise = new Promise(function(resolve, _reject) {
     // 5秒以内に doneReady が呼ばれない場合、強制的に呼ぶ
     SS.readyTimeout = setTimeout(function() {
-      console.error("'application.js' wasn't loaded within 5 secs. please check your 'config/ss.yml'.");
+      console.error("'application.js' wasn't loaded within 10 secs. please check your 'config/ss.yml'.");
       resolve();
-    }, 5000);
+    }, 10000);
 
     SS.doneReady = function() {
       if (SS.isReady) {
@@ -573,6 +573,10 @@ this.SS = (function () {
       from = new RegExp(from, "g");
       format = format.replace(from, to);
     });
+
+    // "(" のような文字をエスケープする（moment のエスケープはエスケープしたい文字列を "[" と "]" で囲む）
+    format = format.replaceAll(/[^A-Za-z ,/:]+/g, function(match) { return "[" + match + "]"; });
+
     return format;
   };
 
@@ -594,10 +598,10 @@ this.SS = (function () {
         format = "default"
       }
       format = i18next.t("time.formats." + format, format);
-      format = SS.convertDateTimeFormat(format);
     } else {
       format = SS.DEFAULT_TIME_FORMAT;
     }
+    format = SS.convertDateTimeFormat(format);
 
     return moment(time).format(format);
   };
@@ -611,10 +615,10 @@ this.SS = (function () {
         format = "default"
       }
       format = i18next.t("date.formats." + format, format);
-      format = SS.convertDateTimeFormat(format);
     } else {
       format = SS.DEFAULT_DATE_FORMAT;
     }
+    format = SS.convertDateTimeFormat(format);
 
     return moment(date).format(format);
   };

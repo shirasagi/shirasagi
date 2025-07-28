@@ -19,8 +19,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       reason = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit new_path
+        login_user(user638, to: new_path)
 
         within "form#item-form" do
           fill_in_date "item[start_at_date]", with: start_at.to_date
@@ -32,7 +31,9 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/attendance.minute", count: end_at.min), from: 'item[end_at_minute]'
 
           fill_in "item[reason]", with: reason
-          select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
+          wait_for_event_fired "ss:ready" do
+            select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
+          end
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
@@ -46,8 +47,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       workflow_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
 
         click_on item.name
         wait_for_js_ready
@@ -83,8 +83,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       approve_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user545)
-        visit index_path
+        login_user(user545, to: index_path)
         click_on item.name
         wait_for_js_ready
 
@@ -109,8 +108,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       item1 = request_file(item1)
       item1 = approve_file(item1)
 
-      login_user(user545)
-      visit details_path
+      login_user(user545, to: details_path)
 
       within ".gws-attendance" do
         within "table.index" do

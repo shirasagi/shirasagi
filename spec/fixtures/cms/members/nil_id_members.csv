@@ -1,0 +1,2 @@
+id,state,name,email,password,kana,organization_name,job,tel,postal_code,addr,sex,birthday,last_loggedin,updated,created
+,enabled,テストユーザー,test@example.com,secret,テストカナ,テスト組織,テスト職,0123456789,123-4567,東京都,male,1990-01-01,2025-02-20 12:34:56,2025-02-20 12:34:56,2025-02-20 12:34:56

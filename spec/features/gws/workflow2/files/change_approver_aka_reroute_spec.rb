@@ -55,8 +55,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
   context "change approver (reroute)" do
     it do
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
 
       #
@@ -100,8 +99,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # admin: change first level approver to user4
       #
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.request"))
@@ -144,8 +142,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # admin: change second level approver to user4
       #
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.request"))

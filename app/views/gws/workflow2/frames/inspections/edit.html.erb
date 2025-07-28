@@ -14,17 +14,15 @@
 
   <section class="mod-workflow-approve">
     <%= f.text_area :comment, value: "", id: nil %>
-    <% if show_file_attachment %>
-      <div class="upload">
-        <span class="upload-menu-new">
-          <%= link_to t('workflow.links.approver_file_upload'), sns_apis_temp_files_path(@cur_user), class: "ajax-box btn btn-file-upload" %>
-        </span>
-        <div class="upload-drop-area">
-          <span class="upload-drop-notice"><%= t('workflow.notice.approver_file_droppable') %></span>
-        </div>
-        <div id="selected-files"></div>
-      </div>
-    <% end %>
+    <%=
+      if show_file_attachment
+        if SS.file_upload_dialog == :v1
+          render "gws/workflow2/frames/inspections/file_attachment_v1", **local_assigns
+        else
+          render "gws/workflow2/frames/inspections/file_attachment_v2", **local_assigns
+        end
+      end
+    %>
     <% if @item.workflow_approver_alternator?(@cur_user) %>
       <%= jquery do %>
         $('.mod-workflow-approve .alternator-notice input').on('change', function() {

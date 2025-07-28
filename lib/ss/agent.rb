@@ -13,7 +13,9 @@ class SS::Agent
     @controller = controller.new
     @controller.params   = ActionController::Parameters.new
     @controller.request  = ActionDispatch::Request.new("rack.input" => "", "REQUEST_METHOD" => "GET")
-    @controller.response = ActionDispatch::Response.new
+    @controller.response = ActionDispatch::Response.new.tap do |res|
+      res.request = @controller.request
+    end
 
     #@controller.params.merge! opts[:params] if opts[:params]
     #@controller.request.env.merge! opts[:request] if opts[:request]

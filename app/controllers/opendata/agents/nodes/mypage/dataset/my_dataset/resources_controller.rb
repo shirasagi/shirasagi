@@ -18,7 +18,7 @@ class Opendata::Agents::Nodes::Mypage::Dataset::MyDataset::ResourcesController <
   end
 
   def set_dataset
-    raise "404" if dataset.member_id != @cur_member.id
+    raise SS::NotFoundError if dataset.member_id != @cur_member.id
     @dataset_url  = "#{@cur_node.url}#{@dataset.id}/"
     @resource_url = "#{@dataset_url}resources/"
   end

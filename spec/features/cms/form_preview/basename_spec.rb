@@ -136,6 +136,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
     let(:column13_youtube_id) { unique_id }
     let(:column13_url) { "https://www.youtube.com/watch?v=#{column13_youtube_id}" }
     let(:column13_embed_url) { "https://www.youtube.com/embed/#{column13_youtube_id}" }
+    let(:column13_title) { unique_id }
 
     before { login_cms_user }
     before do
@@ -149,6 +150,8 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         # Create
         #
         visit new_article_page_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
@@ -163,6 +166,8 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
               select form.name, from: 'in_form_id'
             end
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
 
@@ -189,16 +194,9 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-fileupload" do
             fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text
-            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
-        end
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-fileupload"
 
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
-        end
-
-        within 'form#item-form' do
           within ".column-value-cms-column-free" do
             fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value
           end
@@ -218,6 +216,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url
+            fill_in "item[column_values][][in_wrap][title]", with: column13_title
           end
         end
 
@@ -239,6 +238,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("div", text: column11_list)
         expect(page).to have_css("div", text: column12_caption)
         expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+        expect(page).to have_css("iframe[title=\"#{column13_title}\"]")
 
         switch_to_window(windows.first)
         wait_for_document_loading
@@ -247,11 +247,15 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.draft_save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         expect(Article::Page.count).to eq 1
 
         click_on I18n.t('ss.links.edit')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         page.first("footer.send .preview").click
 
         switch_to_window(windows.last)
@@ -270,6 +274,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("div", text: column11_list)
         expect(page).to have_css("div", text: column12_caption)
         expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+        expect(page).to have_css("iframe[title=\"#{column13_title}\"]")
       end
     end
   end

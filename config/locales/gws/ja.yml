@@ -99,6 +99,7 @@ ja:
     buttons:
       unset: 解除
       add_item: 新しい要素を追加
+      change_menu_icon: アイコン変更
     confirm:
       readable_setting:
         empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
@@ -150,6 +151,7 @@ ja:
     edit_gws_personal_addresses: 個人アドレス帳の利用
     edit_gws_user_profile: プロフィールの編集
     edit_password_gws_user_profile: プロフィールのパスワード変更
+    edit_gws_memo_notice_user_setting: プロフィールの通知設定の利用
 
   modules:
     gws: 標準機能
@@ -316,7 +318,6 @@ ja:
         gws_role_ids: ロール
       gws/addon/permission:
         group_ids: 管理グループ
-        permission_level: 権限レベル
       gws/group_permission:
         group_ids: 管理グループ
         groups_hash: 管理グループ(ハッシュ)
@@ -324,7 +325,6 @@ ja:
         users_hash: 管理ユーザー(ハッシュ)
         custom_group_ids: 管理カスタムグループ
         custom_groups_hash: 管理カスタムグループ(ハッシュ)
-        permission_level: 権限レベル
       gws/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
@@ -410,6 +410,10 @@ ja:
         menu_contrast_state: コントラスト
         menu_presence_label: 在席管理の表示
         menu_presence_state: 在席管理の表示
+        menu_tabular_label: 汎用DBの表示
+        menu_tabular_state: 汎用DBの表示
+        menu_conf_label: サイト設定の表示
+        menu_conf_state: サイト設定の表示
       gws/addon/system/notice_setting:
         notice_schedule_state: スケジュール
         notice_todo_state: ToDo
@@ -425,6 +429,7 @@ ja:
         notice_discussion_state: 電子会議室
         notice_report_state: レポート
         notice_announcement_state: お知らせ
+        notice_tabular_state: 汎用DB
         send_notice_email_state: 個人メール転送
       gws/addon/system/log_setting:
         log_save_days: ログ保持日数
@@ -644,9 +649,6 @@ ja:
         - 並び順を入力します。
       in_parent:
         - 親フォルダーを選択してください。
-    gws/role:
-      permission_level:
-        - 権限レベルを設定します。
     gws/addon/user/affair_setting:
       staff_category: 職員区分を設定します。
       staff_address_uid: 宛名番号を入力します。

@@ -215,6 +215,7 @@ ja:
       webmail/addon/group_extension:
         imap_setting_name: アカウント名
         from: 名前
+        account_index: アカウント番号
         address: メールアドレス
         imap_host: IMAP/ホスト
         imap_port: IMAP/ポート
@@ -227,6 +228,7 @@ ja:
         imap_draft_box: 下書きフォルダー
         imap_trash_box: ゴミ箱フォルダー
         threshold_mb: 警告表示
+        imap_default_index: IMAP/既定アカウント
       webmail/user:
         in_file: ファイル
         account_index: アカウント番号
@@ -384,10 +386,6 @@ ja:
         何も設定しない場合、警告は表示されません。
       imap_default_index:
         - このアカウントを既定のアカウントにするか選択します。
-
-    webmail/role:
-      permission_level:
-        - 権限レベルを設定します。
 
   job:
     models:

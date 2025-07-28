@@ -56,11 +56,13 @@ class Webmail::MailImporter
     Zip::File.open(in_file.path) do |entries|
       entries.each do |entry|
         next if !entry.file?
-        next if ::File.basename(entry.name) =~ /^\./
 
-        entry_type = SS::MimeType.find(entry.name, nil)
+        entry_name = SS::Zip.safe_zip_entry_name(entry)
+        next if ::File.basename(entry_name) =~ /^\./
+
+        entry_type = SS::MimeType.find(entry_name, nil)
         next if entry_type != "message/rfc822"
-        if !validate_size(decode_entry_name(entry), entry.size)
+        if !validate_size(entry_name, entry.size)
           next
         end
 
@@ -115,19 +117,5 @@ class Webmail::MailImporter
     params[:limit] = params[:limit].to_fs(:human_size) if params[:limit].is_a?(Numeric)
     errmsg = I18n.t("errors.messages.too_large_file", **params)
     errors.add :base, errmsg
-  end
-
-  def unicode_names?(entry)
-    (entry.gp_flags & Zip::Entry::EFS) == Zip::Entry::EFS
-  end
-
-  def decode_entry_name(entry)
-    if unicode_names?(entry)
-      name = entry.name
-      name.force_encoding("UTF-8")
-      name
-    else
-      entry.name.encode("utf-8", "cp932")
-    end
   end
 end

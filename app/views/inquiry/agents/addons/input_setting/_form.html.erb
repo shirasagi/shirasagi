@@ -1,6 +1,10 @@
-<% max_term_form = SS.config.cms.max_term_form.to_i %>
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  max_term_form = SS.config.cms.max_term_form.to_i
+%>
 <%= jquery do %>
-$(document).on("click", ".mod-inquiry-input-setting dd.setting-keywords button.add", function(e) {
+var $el = $("#<%= addon[:id] %>");
+$el.on("click", "dd.setting-keywords button.add", function(e) {
   if ($(".mod-inquiry-input-setting tr.keywords").length < <%= (max_term_form > 0) ? max_term_form : 1 %>) {
     var cln;
     cln = $(".mod-inquiry-input-setting tr.keywords:last").clone(false).insertAfter($(".mod-inquiry-input-setting tr.keywords:last"));
@@ -9,7 +13,7 @@ $(document).on("click", ".mod-inquiry-input-setting dd.setting-keywords button.a
     return;
   }
 });
-$(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", function(e) {
+$el.on("click", "tr.keywords button.clear", function(e) {
   tr = $(this).parent("td").parent("tr")
   tr.find(".keyword").val('');
   tr.find(".email").val('');
@@ -33,11 +37,13 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
   <% if form_select.present? %>
   <dt><%= @model.t :required_in_select_form %><%= @model.tt :required_in_select_form %></dt>
   <dd>
-    <% form_select.select_options.each do |option| %>
-      <% if @item.required_in_select_form.present? %>
-        <% checked = @item.required_in_select_form.include?(option) ? 'checked: true' : nil %>
-      <% end %>
-      <label><%= check_box_tag 'item[required_in_select_form][]', option, checked %> <%= option %> </label>
+    <%= hidden_field_tag 'item[required_in_select_form][]', nil, id: nil %>
+    <% form_select.select_options.each do |value| %>
+      <% checked = @item.required_in_select_form.to_a.include?(value) %>
+      <label>
+        <%= check_box_tag 'item[required_in_select_form][]', value, checked: checked %>
+        <%= value %>
+      </label>
     <% end %>
   </dd>
   <% end %>
@@ -51,6 +57,9 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
   <dt><%= @model.t :question %><%= @model.tt :question %></dt>
   <dd><%= f.select :question, @item.question_options %></dd>
 
+  <dt><%= @model.t :date_inputter %><%= @model.tt :date_inputter %></dt>
+  <dd><%= f.select :date_inputter, @item.date_inputter_options %></dd>
+
   <dt><%= @model.t :max_upload_file_size %><%= @model.tt :max_upload_file_size %></dt>
   <dd><%= f.text_field :max_upload_file_size, style: "width: 60px;" %></dd>
 
@@ -61,6 +70,7 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
         <tr>
           <th class="keyword"><%= @model.t(:transfers) %></th>
           <th class="email"><%= @cur_user.t(:email) %></th>
+          <th></th>
         </tr>
       </thead>
       <tbody>
@@ -68,19 +78,15 @@ $(document).on("click", ".mod-inquiry-input-setting tr.keywords button.clear", f
         <%   @item.transfers.each do |transfer| %>
         <tr class="keywords">
           <td><%= text_field_tag "item[transfers][][keyword]", transfer[:keyword], { id: nil, class: "keyword" } %></td>
-          <td>
-            <%= email_field_tag "item[transfers][][email]", transfer[:email], { id: nil, class: "email" } %>
-            <%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %>
-          </td>
+          <td><%= email_field_tag "item[transfers][][email]", transfer[:email], { id: nil, class: "email" } %></td>
+          <td><%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %></td>
         </tr>
         <%   end %>
         <% else %>
         <tr class="keywords">
           <td><%= text_field_tag "item[transfers][][keyword]", nil, { id: nil, class: "keyword" } %></td>
-          <td>
-            <%= email_field_tag "item[transfers][][email]", nil, { id: nil, class: "email" } %>
-            <%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %>
-          </td>
+          <td><%= email_field_tag "item[transfers][][email]", nil, { id: nil, class: "email" } %></td>
+          <td><%= button_tag t("ss.buttons.delete"), { type: :button, class: "clear btn" } %></td>
         </tr>
         <% end %>
       </tbody>

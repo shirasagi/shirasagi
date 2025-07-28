@@ -99,7 +99,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
@@ -132,7 +131,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
@@ -169,18 +167,8 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           end
 
           ensure_addon_opened("#addon-cms-agents-addons-file")
-          within "#addon-cms-agents-addons-file" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-          within_cbox do
-            attach_file "item[in_files][]", attach_file_path
-            wait_for_cbox_closed do
-              click_button I18n.t("ss.buttons.attach")
-            end
-          end
-          within '#selected-files' do
+          ss_upload_file attach_file_path
+          within '#addon-cms-agents-addons-file .file-view' do
             click_on I18n.t("sns.image_paste")
           end
 
@@ -190,7 +178,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.files_and_page"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
@@ -219,18 +206,8 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           visit edit_path
 
           ensure_addon_opened("#addon-cms-agents-addons-file")
-          within "#addon-cms-agents-addons-file" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-          within_cbox do
-            attach_file "item[in_files][]", attach_file_path
-            wait_for_cbox_closed do
-              click_button I18n.t("ss.buttons.attach")
-            end
-          end
-          within '#selected-files' do
+          ss_upload_file attach_file_path
+          within '#addon-cms-agents-addons-file .file-view' do
             click_on I18n.t("sns.image_paste")
           end
 
@@ -240,7 +217,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.files_and_page"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
@@ -283,7 +259,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
 
@@ -311,7 +286,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
@@ -341,7 +315,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.disabled"), from: "item[twitter_edit_auto_post]"

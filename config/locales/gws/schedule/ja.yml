@@ -36,7 +36,7 @@ ja:
         withAbsence: 欠席表示
       titleFormat:
         month: "%Y年 %1m月"
-        week: "(%Y年 %1m月 %1d日（%a）)"
+        week: "%Y年 %1m月 %1d日（%a）"
         day: "%Y年 %1m月 %1d日（%a）"
       columnFormat:
         month: "%a"

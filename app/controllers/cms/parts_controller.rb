@@ -1,6 +1,7 @@
 class Cms::PartsController < ApplicationController
   include Cms::BaseFilter
   include Cms::PartFilter
+  include Cms::SyntaxCheckable
 
   model Cms::Part
 
@@ -35,6 +36,54 @@ class Cms::PartsController < ApplicationController
       search(params[:s]).
       order_by(filename: 1).
       page(params[:page]).per(50)
+  end
+
+  def create
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+
+    @item = @model.new get_params
+    change_item_class
+    @item.attributes = get_params
+
+    if params.key?(:ignore_syntax_check)
+      render_create @item.valid? && @item.save
+      return
+    end
+
+    if params.key?(:auto_correct)
+      auto_correct
+      result = syntax_check
+      render_create result
+      return
+    end
+
+    if @item.respond_to?(:html)
+      render_create @item.valid? && syntax_check && @item.save
+    else
+      render_create @item.valid? && @item.save
+    end
+  end
+
+  def update
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    @item.attributes = get_params
+    if params.key?(:ignore_syntax_check)
+      render_update @item.valid? && @item.save
+      return
+    end
+
+    if params.key?(:auto_correct)
+      auto_correct
+      result = syntax_check
+      render_update result
+      return
+    end
+
+    if @item.respond_to?(:html)
+      render_update @item.valid? && syntax_check && @item.save
+    else
+      render_update @item.valid? && @item.save
+    end
   end
 
   def routes

@@ -1,11 +1,14 @@
 module Opendata::Api::PackageSearchFilter
   extend ActiveSupport::Concern
-  include Opendata::Api
 
   private
 
-  def package_search_check(rows, start)
+  def check_errors
+    @errors = []
 
+  end
+
+  def package_search_check(rows, start)
     rows_messages = []
     start_messages = []
 

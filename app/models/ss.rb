@@ -1,5 +1,11 @@
+#frozen_string_literal: true
+
 module SS
   module_function
+
+  EMPTY_ARRAY = [].freeze
+  EMPTY_HASH = {}.freeze
+  EMPTY_SET = Set.new.freeze
 
   EPOCH_TIME = Time.at(0).utc
 
@@ -8,7 +14,32 @@ module SS
   DEFAULT_TRASH_THRESHOLD = 1
   DEFAULT_TRASH_THRESHOLD_UNIT = 'year'.freeze
 
+  HTTP_STATUS_CODE_FORBIDDEN = "403"
+  HTTP_STATUS_CODE_NOT_FOUND = "404"
+
   mattr_accessor(:max_items_per_page) { 50 }
+
+  mattr_accessor(:max_files_per_page) { 20 }
+
+  mattr_accessor(:file_upload_dialog) { :v2 }
+
+  # 200 = 80 for japanese name + 120 for english name
+  # 日本語タイトルと英語タイトルとをスラッシュで連結して、一つのページとして運用することを想定
+  mattr_reader(:max_name_length, default: 200)
+
+  # 403
+  class ForbiddenError < RuntimeError
+    def initialize(msg = nil)
+      super(msg || HTTP_STATUS_CODE_FORBIDDEN)
+    end
+  end
+
+  # 404
+  class NotFoundError < RuntimeError
+    def initialize(msg = nil)
+      super(msg || HTTP_STATUS_CODE_NOT_FOUND)
+    end
+  end
 
   def change_locale_and_timezone(user)
     if user.nil?
@@ -103,6 +134,19 @@ module SS
     SS::Duration.parse("#{DEFAULT_TRASH_THRESHOLD}.#{DEFAULT_TRASH_THRESHOLD_UNIT}")
   end
 
+  def memorize(caller, key, expires_in:)
+    now = Time.zone.now
+    memorized_at = caller.instance_variable_get("@#{key}_memorized_at")
+    if memorized_at && now <= memorized_at + expires_in
+      return caller.instance_variable_get("@#{key}")
+    end
+
+    value = yield
+    caller.instance_variable_set("@#{key}", value)
+    caller.instance_variable_set("@#{key}_memorized_at", now)
+    value
+  end
+
   def parse_threshold!(now, threshold, site:)
     return now - site.trash_threshold_in_days if threshold.nil?
     case threshold
@@ -115,5 +159,20 @@ module SS
     else
       raise ArgumentError, "invalid value for threshold: \"#{threshold}\""
     end
+  end
+
+  def not_found_error?(err)
+    return true if ActionDispatch::ExceptionWrapper.status_code_for_exception(err.class.name) == 404
+    return true if err.to_s == HTTP_STATUS_CODE_NOT_FOUND
+    false
+  end
+
+  def update_const(mod, constant_name, constant)
+    mod.module_eval do
+      remove_const(constant_name) if const_defined?(constant_name)
+      const_set(constant_name, constant)
+    end
+
+    constant
   end
 end

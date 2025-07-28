@@ -5,7 +5,7 @@ env:
 jobs:
   reviewdog:
     name: reviewdog
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # uncomment blow line if you don't want to run reviewdog on your repository
     # if: ${{ github.repository == 'shirasagi/shirasagi' }}
     timeout-minutes: 15
@@ -17,7 +17,7 @@ jobs:
           sudo apt-get -y install libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: '3.2'
+          ruby-version: '3.3'
           bundler-cache: true
       - uses: actions/setup-node@v3
         with:

@@ -1,7 +1,8 @@
 class Workflow::BranchCreationService
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :item
+  attr_accessor :cur_site, :cur_user, :item
+  attr_reader :new_branch
 
   def call
     item.cur_node ||= item.parent
@@ -28,13 +29,18 @@ class Workflow::BranchCreationService
       if item.branches.present?
         item.error.add :base, :branch_is_already_existed
         result = false
+        task.log "failed\n#{item.errors.full_messages.join("\n")}"
       else
         copy = item.new_clone
         copy.master = item
         result = copy.save
-        
-        if !result && copy.errors.any?
+
+        if result
+          @new_branch = copy
+          task.log "created #{@new_branch.filename}(#{@new_branch.id})"
+        elsif copy.errors.any?
           SS::Model.copy_errors(copy, item)
+          task.log "failed\n#{copy.errors.full_messages.join("\n")}"
         end
       end
     end

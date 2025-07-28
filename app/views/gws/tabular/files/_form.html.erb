@@ -1,0 +1,23 @@
+<%
+  return if @cur_form.blank? && (@item.cur_form || @item.form).blank?
+  @cur_form ||= (@item.cur_form || @item.form)
+
+  columns = Gws::Tabular.released_columns(cur_release, site: @cur_site)
+  columns ||= @cur_form.columns.reorder(order: 1, id: 1).to_a
+  return unless columns
+%>
+
+<% columns.each do |column| %>
+  <dl class="see gws-column-see gws-tabular-column-see" data-column-id="<%= column.id %>">
+    <%= render @item.column_renderer(column, :form, form: f, cur_site: @cur_site, cur_user: @cur_user) %>
+  </dl>
+<% end %>
+
+<% @crud_buttons = proc do |f| %>
+  <% if @cur_form.workflow_enabled? && @item.workflow_state.blank? %>
+    <%= f.submit t("gws/workflow2.buttons.save_and_apply"), class: 'btn-primary save', data: { disable_with: t("gws/workflow2.buttons.save_and_apply") } %>
+  <% else %>
+    <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.save") } %>
+  <% end %>
+  <%= link_to t("ss.buttons.cancel"), (url_for(action: :show) rescue url_for(action: :index)), class: 'btn-default' %>
+<% end %>

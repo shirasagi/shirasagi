@@ -1,9 +1,16 @@
 class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
   include Cms::NodeFilter::View
+  include Cms::NodeFilter::ListView
   include Cms::ForMemberFilter::Node
-  helper Cms::ListHelper
+
+  self.generates_rss = false
+
+  if Rails.env.development?
+    before_action { ::Rails.application.eager_load! }
+  end
 
   before_action :becomes_with_route_node
+
   ALLOWED_EXTS = %w(gif png jpg jpeg bmp).freeze
 
   class PhotoAlbumSearchService < Cms::FileSearchService
@@ -53,16 +60,32 @@ class Cms::Agents::Nodes::PhotoAlbumController < ApplicationController
     @cur_parent = @cur_node.parent
   end
 
+  def condition_hash
+    @condition_hash ||= begin
+      if @cur_node.conditions.present?
+        @cur_node.condition_hash
+      else
+        condition_hash = @cur_parent.try(:condition_hash)
+        condition_hash || @cur_node.condition_hash
+      end
+    end
+  end
+
+  def all_pages
+    @all_pages ||= begin
+      service = PhotoAlbumSearchService.new(cur_site: @cur_site, cur_user: @cur_user)
+      service.cur_date = @cur_date
+      service.condition_hash = condition_hash
+      service.sort = @cur_node.sort
+      service.page = nil
+      service.limit = nil
+      service.call
+    end
+  end
+
   public
 
   def index
-    if @cur_node.conditions.present?
-      condition_hash = @cur_node.condition_hash
-    else
-      condition_hash = @cur_parent.try(:condition_hash)
-      condition_hash ||= @cur_node.condition_hash
-    end
-
     service = PhotoAlbumSearchService.new(cur_site: @cur_site, cur_user: @cur_user)
     service.cur_date = @cur_date
     service.condition_hash = condition_hash

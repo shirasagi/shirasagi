@@ -45,8 +45,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
     let(:import_path) { import_gws_groups_path(site: site) }
 
     def check_superior(user, superior_group)
-      login_user(user)
-      visit new_path
+      login_user(user, to: new_path)
 
       within "form#item-form" do
         expect(page).to have_css(".selected-capital", text: user.effective_capital(site).name)
@@ -72,8 +71,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
     it "#new" do
       Timecop.travel("2021/3/1") do
-        login_user(user_sys)
-        visit import_path
+        login_user(user_sys, to: import_path)
 
         check_superior(user461, superior_group1)
         check_superior(user545, superior_group2)

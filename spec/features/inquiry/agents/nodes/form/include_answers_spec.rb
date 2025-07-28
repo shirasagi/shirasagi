@@ -11,13 +11,15 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       inquiry_captcha: 'enabled',
       notice_state: 'enabled',
       notice_content: 'include_answers',
-      notice_email: 'notice@example.jp',
+      notice_emails: ['notice@example.jp'],
       from_name: 'admin',
       from_email: 'admin@example.jp',
       reply_state: 'disabled')
   end
 
   before do
+    site.mobile_state = "enabled"
+    site.save!
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_optional).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_transfers).reverse_merge({cur_site: site})
@@ -26,6 +28,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
     node.columns.create! attributes_for(:inquiry_column_select).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_check).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_upload_file).reverse_merge({cur_site: site})
+    node.columns.create! attributes_for(:inquiry_column_number).reverse_merge({cur_site: site})
     node.reload
   end
 
@@ -54,6 +57,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           select "50代", from: "item[6]"
           check "item[7][2]"
           attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+          fill_in "item[9]", with: "123"
         end
         click_button I18n.t('inquiry.confirm')
       end
@@ -69,6 +73,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find("[name='item[6]']")['value']).to eq '50代'
           expect(find("[name='item[7][2]']")['value']).to eq '申請について'
           expect(find("[name='item[8]']")['value']).to eq '1'
+          expect(find("[name='item[9]']")['value']).to eq '123'
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
@@ -84,7 +89,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
       expect(answer.node_id).to eq node.id
-      expect(answer.data.count).to eq 8
+      expect(answer.data.count).to eq 9
       expect(answer.data[0].value).to eq 'シラサギ太郎'
       expect(answer.data[0].confirm).to be_nil
       expect(answer.data[1].value).to eq '株式会社シラサギ'
@@ -102,6 +107,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(answer.data[7].values[0]).to eq 1
       expect(answer.data[7].values[1]).to eq 'logo.png'
       expect(answer.data[7].confirm).to be_nil
+      expect(answer.data[8].value).to eq "123"
+      expect(answer.data[8].confirm).to be_nil
 
       expect(ActionMailer::Base.deliveries.count).to eq 2
 
@@ -136,6 +143,9 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(notify_mail.body.raw_source).to include("- " + node.columns[7].name)
         expect(notify_mail.body.raw_source).to include("logo.png")
+        # inquiry_column_number
+        expect(notify_mail.body.raw_source).to include("- " + node.columns[8].name)
+        expect(notify_mail.body.raw_source).to include("123")
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -169,6 +179,9 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(notify_mail.body.raw_source).to include("- " + node.columns[7].name)
         expect(notify_mail.body.raw_source).to include("logo.png")
+        # inquiry_column_number
+        expect(notify_mail.body.raw_source).to include("- " + node.columns[8].name)
+        expect(notify_mail.body.raw_source).to include("123")
       end
     end
 
@@ -186,6 +199,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           select "50代", from: "item[6]"
           check "item[7][2]"
           attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+          fill_in "item[9]", with: "123"
         end
         click_button I18n.t('inquiry.confirm')
       end
@@ -201,6 +215,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find("[name='item[6]']")['value']).to eq '50代'
           expect(find("[name='item[7][2]']")['value']).to eq '申請について'
           expect(find("[name='item[8]']")['value']).to eq '1'
+          expect(find("[name='item[9]']")['value']).to eq '123'
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: ""
@@ -227,6 +242,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           select "50代", from: "item[6]"
           check "item[7][2]"
           attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+          fill_in "item[9]", with: "123"
         end
         click_button I18n.t('inquiry.confirm')
       end
@@ -242,6 +258,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find("[name='item[6]']")['value']).to eq '50代'
           expect(find("[name='item[7][2]']")['value']).to eq '申請について'
           expect(find("[name='item[8]']")['value']).to eq '1'
+          expect(find("[name='item[9]']")['value']).to eq '123'
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: "0000"
@@ -273,6 +290,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           choose "item_5_0"
           select "50代", from: "item[6]"
           check "item[7][2]"
+          fill_in "item[9]", with: "123"
         end
         click_button I18n.t('inquiry.confirm')
       end
@@ -291,6 +309,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find("[name='item[5]']")['value']).to eq '男性'
           expect(find("[name='item[6]']")['value']).to eq '50代'
           expect(find("[name='item[7][2]']")['value']).to eq '申請について'
+          expect(find("[name='item[9]']")['value']).to eq '123'
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
@@ -309,7 +328,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(Inquiry::Answer.site(site).count).to eq 1
       answer = Inquiry::Answer.first
       expect(answer.node_id).to eq node.id
-      expect(answer.data.count).to eq 8
+      expect(answer.data.count).to eq 9
       expect(answer.data[0].value).to eq 'シラサギ太郎'
       expect(answer.data[0].confirm).to be_nil
       expect(answer.data[1].value).to eq '株式会社シラサギ'
@@ -324,6 +343,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(answer.data[5].confirm).to be_nil
       expect(answer.data[6].values).to eq %w(申請について)
       expect(answer.data[6].confirm).to be_nil
+      expect(answer.data[8].value).to eq "123"
+      expect(answer.data[8].confirm).to be_nil
 
       expect(ActionMailer::Base.deliveries.count).to eq 2
     end
@@ -342,6 +363,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           select "50代", from: "item[6]"
           check "item[7][2]"
           attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+          fill_in "item[9]", with: "123"
         end
         click_button I18n.t('inquiry.confirm')
       end
@@ -357,6 +379,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find("[name='item[6]']")['value']).to eq '50代'
           expect(find("[name='item[7][2]']")['value']).to eq '申請について'
           expect(find("[name='item[8]']")['value']).to eq '1'
+          expect(find("[name='item[9]']")['value']).to eq "123"
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: ""
@@ -383,6 +406,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           select "50代", from: "item[6]"
           check "item[7][2]"
           attach_file "item[8]", Rails.root.join("spec", "fixtures", "ss", "logo.png").to_s
+          fill_in "item[9]", with: "123"
         end
         click_button I18n.t('inquiry.confirm')
       end
@@ -398,6 +422,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           expect(find("[name='item[6]']")['value']).to eq '50代'
           expect(find("[name='item[7][2]']")['value']).to eq '申請について'
           expect(find("[name='item[8]']")['value']).to eq '1'
+          expect(find("[name='item[9]']")['value']).to eq "123"
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: "0000"

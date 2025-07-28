@@ -14,5 +14,32 @@ FactoryBot.define do
     high_contrast_mode { %w(enabled disabled).sample }
     font_color { unique_color }
     background_color { unique_color }
+
+    trait :cms_theme_template_white do
+      name { "白" }
+      class_name { "white" }
+      high_contrast_mode { "disabled" }
+      font_color { nil }
+      background_color { nil }
+      css_path { nil }
+    end
+
+    trait :cms_theme_template_blue do
+      name { "青" }
+      class_name { "blue" }
+      high_contrast_mode { "enabled" }
+      font_color { "#fff" }
+      background_color { "#06c" }
+      css_path { nil }
+    end
+
+    trait :cms_theme_template_black do
+      name { "黒" }
+      class_name { "black" }
+      high_contrast_mode { "disabled" }
+      font_color { nil }
+      background_color { nil }
+      css_path { "/css/black.css" }
+    end
   end
 end

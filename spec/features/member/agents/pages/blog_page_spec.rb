@@ -41,6 +41,7 @@ describe "member_agents_pages_blog_page", type: :feature, dbscope: :example, js:
       #
       visit node_my_blog.full_url
       click_on I18n.t('ss.links.new')
+      wait_for_all_ckeditors_ready
       within 'form div.member-blog-page' do
         fill_in 'item[name]', with: blog_page_name
         fill_in_ckeditor 'item[html]', with: blog_page_html
@@ -105,6 +106,7 @@ describe "member_agents_pages_blog_page", type: :feature, dbscope: :example, js:
       visit node_my_blog.full_url
       click_on blog_page_name
       click_on I18n.t("ss.links.edit")
+      wait_for_all_ckeditors_ready
       within 'form div.member-blog-page' do
         fill_in 'item[name]', with: blog_page_name2
 
@@ -139,6 +141,7 @@ describe "member_agents_pages_blog_page", type: :feature, dbscope: :example, js:
       visit node_my_blog.full_url
       click_on blog_page_name2
       click_on I18n.t("ss.links.edit")
+      wait_for_all_ckeditors_ready
       within 'form div.member-blog-page' do
         select I18n.t("ss.options.state.closed"), from: 'item[state]'
 

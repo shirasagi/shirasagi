@@ -28,7 +28,26 @@
       </table>
     </dd>
 
+    <%= jquery do %>
+      var $select = $('[name="item[list_origin]"]');
+      var toggleListOrigin = function() {
+        var val = $select.val();
+        if (val == "content") {
+          $(".list_origin-content").show();
+        } else {
+          $(".list_origin-content").hide();
+        }
+      };
+      $select.on("change", toggleListOrigin);
+      toggleListOrigin();
+    <% end %>
     <dt><%= @model.t :list_origin %><%= @model.tt :list_origin %></dt>
     <dd><%= f.select :list_origin, @item.list_origin_options, include_blank: true %></dd>
+
+    <dt class="depth-2 list_origin-content"><%= @model.t :origin_of_page %><%= @model.tt :origin_of_page %></dt>
+    <dd class="depth-2 list_origin-content"><%= f.select :origin_of_page, @item.origin_of_page_options %></dd>
+
+    <dt class="depth-2 list_origin-content"><%= @model.t :origin_of_node %><%= @model.tt :origin_of_node %></dt>
+    <dd class="depth-2 list_origin-content"><%= f.select :origin_of_node, @item.origin_of_node_options %></dd>
   </dl>
 <% end %>

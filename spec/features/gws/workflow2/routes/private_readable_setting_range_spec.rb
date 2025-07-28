@@ -33,8 +33,7 @@ describe "gws_workflow2_routes", type: :feature, dbscope: :example, js: true do
       #
       # Create
       #
-      login_user user1
-      visit gws_workflow2_routes_path(site: site)
+      login_user user1, to: gws_workflow2_routes_path(site: site)
       within ".nav-menu" do
         click_on I18n.t("ss.links.new")
       end

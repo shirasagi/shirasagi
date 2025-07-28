@@ -48,7 +48,7 @@ module Cms::PublicFilter
       return redirect_to "//#{host}" + gws_login_path(site: group)
     end
 
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def set_request_path
@@ -77,7 +77,7 @@ module Cms::PublicFilter
   end
 
   def deny_path
-    raise "404" if @cur_path.match?(/^\/sites\/.\//)
+    raise SS::NotFoundError if @cur_path.match?(/^\/sites\/.\//)
   end
 
   def parse_path
@@ -106,13 +106,9 @@ module Cms::PublicFilter
     return if Fs.stat(@scss).mtime.to_i <= css_mtime.to_i
 
     Rails.logger.tagged(::File.basename(@scss)) do
-      data = Fs.read(@scss)
       begin
-        load_paths = Rails.application.config.assets.paths.dup
-
-        css = Cms.compile_scss(data, filename: @scss, load_paths: load_paths)
-        Fs.write(@file, css)
-      rescue SassC::BaseError, Sass::ScriptError => e
+        Cms.compile_scss(@scss, @file, basedir: @cur_site.path)
+      rescue Cms::ScssScriptError => e
         Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       end
     end
@@ -231,7 +227,7 @@ module Cms::PublicFilter
 
   def page_not_found
     request.env["action_dispatch.show_exceptions"] = :none if @preview
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def rescue_action(exception = nil)

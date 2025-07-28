@@ -204,6 +204,32 @@ def unique_color
   @random_color.next.to_rgb.to_s
 end
 
+def i18n_translations(prefix: nil, count: nil, join: nil, sep: nil, length: nil)
+  if prefix.present?
+    gen_value = proc do
+      ret = "#{prefix}#{sep || "-"}#{unique_id}"
+      length.numeric? && length > 0 ? ret[0, length] : ret
+    end
+  else
+    gen_value = proc do
+      ret = unique_id
+      length.numeric? && length > 0 ? ret[0, length] : ret
+    end
+  end
+  translations = {}.with_indifferent_access
+  I18n.available_locales.each do |lang|
+    if count
+      value = Array.new(count) { gen_value.call }
+      value = value.join(join) if join
+    else
+      value = gen_value.call
+    end
+
+    translations[lang.to_s] = value
+  end
+  translations
+end
+
 def ss_japanese_text(length: 10, separator: '')
   @japanese_chars ||= begin
     hiragana = ('あ'..'ん').to_a
@@ -240,16 +266,38 @@ def with_env(hash)
   ret
 end
 
-def wait_for_notice(text, wait: nil)
+def wait_for_notice(text, wait: nil, selector: nil)
   if page.driver.is_a?(Capybara::Selenium::Driver)
     wait_for_js_ready
     options = { text: text }
     options[:wait] = wait if wait
-    expect(page).to have_css('#notice', **options)
+    # CI で次のようなエラーが（たまに）観測される。
+    # unknown error: unhandled inspector error: {"code":-32000,"message":"Node with given id does not belong to the document"}
+    #
+    # おそらく #notice の変化を監視している最中にページ遷移したんだと想像。
+    # このようなエラーが発生した場合にリトライするようにしてみる。
+    Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+      expect(page).to have_css(selector || '#notice', **options)
+    end
     page.execute_script("SS.clearNotice();")
     wait_for_js_ready
   else
     expect(page).to have_css('#notice', text: text)
+  end
+end
+
+def wait_for_error(text, wait: nil, selector: nil)
+  if page.driver.is_a?(Capybara::Selenium::Driver)
+    wait_for_js_ready
+    options = { text: text }
+    options[:wait] = wait if wait
+    Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+      expect(page).to have_css(selector || '#errorExplanation', **options)
+    end
+    page.execute_script("SS.clearNotice();")
+    wait_for_js_ready
+  else
+    expect(page).to have_css('#errorExplanation', text: text)
   end
 end
 

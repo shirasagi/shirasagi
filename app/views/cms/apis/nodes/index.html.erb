@@ -7,13 +7,15 @@
 <% end %>
 
 <div class="search-ui-form">
-<%= form_tag({ action: :index }, { method: "GET", class: :search }) do %>
-  <%= text_field_tag 's[keyword]', params[:s].try(:[], :keyword) %>
-  <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
-  <%= hidden_field_tag :model, params[:model] if params[:model].present? %>
-  <%= hidden_field_tag :layout, params[:layout] if params[:layout].present? %>
-  <%= submit_tag t("cms.apis.nodes.search"), class: :btn %>
-<% end %>
+  <%= form_tag({ action: :index }, { method: "GET", class: :search }) do %>
+    <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
+    <%= hidden_field_tag :model, params[:model] if params[:model].present? %>
+    <%= hidden_field_tag :layout, params[:layout] if params[:layout].present? %>
+    <div class="input-group">
+      <%= text_field_tag 's[keyword]', params[:s].try(:[], :keyword), placeholder: t("ss.keyword") %>
+      <%= submit_tag t("cms.apis.nodes.search"), class: :btn %>
+    </div>
+  <% end %>
 </div>
 
 <table class="index">
