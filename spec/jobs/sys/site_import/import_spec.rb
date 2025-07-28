@@ -30,7 +30,7 @@ describe Sys::SiteImportJob, dbscope: :example do
     SS::Sequence.create(_id: "sys_roles_id", value: rand(0..999) * base)
     SS::Sequence.create(_id: "workflow_routes_id", value: rand(0..999) * base)
 
-    job = ::Sys::SiteImportJob.new
+    job = Sys::SiteImportJob.new
     job.bind("site_id" => destination_site.id).perform(file_path)
   end
 
