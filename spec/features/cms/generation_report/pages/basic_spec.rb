@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::GenerationReport::PagesController, type: :feature, dbscope: :example do
+describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :example do
   let!(:site) { cms_site }
 
   before { login_cms_user }
@@ -8,7 +8,9 @@ describe Cms::GenerationReport::PagesController, type: :feature, dbscope: :examp
   context "without task 'cms:generate_pages'" do
     it do
       visit cms_generation_report_pages_path(site: site)
-      expect(page).to have_content("ページ書き出しが一度も実行されていません。")
+      click_on I18n.t("ss.links.new")
+      notice = I18n.t("mongoid.errors.models.cms/generation_report/title.generate_pages_is_not_done")
+      wait_for_notice notice
     end
   end
 
@@ -29,18 +31,18 @@ describe Cms::GenerationReport::PagesController, type: :feature, dbscope: :examp
         within "form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css("#notice", text: I18n.t("cms.notices.generation_report_jos_is_started"))
+        wait_for_notice I18n.t("cms.notices.generation_report_jos_is_started")
 
         expect(enqueued_jobs.length).to eq 1
         enqueued_jobs.first.tap do |enqueued_job|
           expect(enqueued_job[:job]).to eq Cms::GenerationReportCreateJob
-          expect(enqueued_job[:args]).to be_blank
+          expect(enqueued_job[:args]).to eq [ task.id ]
         end
       end
     end
 
     context "with title" do
-      let!(:title) { create :cms_generation_report_title, cur_site: site, task: task }
+      let!(:title) { create :cms_generation_report_title, cur_site: site, task: task, generation_type: "pages" }
       let!(:content) { create :article_node_page, cur_site: site }
       let(:history_type1) { "page" }
       let(:history1_db) { rand }
@@ -109,7 +111,7 @@ describe Cms::GenerationReport::PagesController, type: :feature, dbscope: :examp
             click_on I18n.t("ss.buttons.download")
           end
 
-          csv = ::SS::ChunkReader.new(page.html).to_a.join
+          csv = page.html
           csv.force_encoding("UTF-8")
           csv = csv[1..-1]
           SS::Csv.open(StringIO.new(csv)) do |csv|

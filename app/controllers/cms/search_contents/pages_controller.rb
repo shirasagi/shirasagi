@@ -83,7 +83,7 @@ class Cms::SearchContents::PagesController < ApplicationController
     raise "400" if @selected_items.blank?
 
     if params[:destroy_all]
-      render_confirmed_all(destroy_items, location: request.path)
+      render_confirmed_all(destroy_items, location: SS.request_path(request))
       return
     end
 

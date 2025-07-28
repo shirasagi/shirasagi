@@ -25,10 +25,10 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         fill_in "item[order]", with: order
         fill_in "item[memo]", with: memo
 
-        wait_cbox_open { click_on I18n.t("gws.apis.categories.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
-        click_on category.name
+      within_cbox do
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
         click_on I18n.t('ss.buttons.save')
@@ -53,7 +53,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       form.reload
       expect(form.name).to eq name2
@@ -72,7 +72,7 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::Report::Form.find(form.id) }.to raise_error Mongoid::Errors::DocumentNotFound
     end

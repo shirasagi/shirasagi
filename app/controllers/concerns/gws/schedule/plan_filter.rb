@@ -7,6 +7,7 @@ module Gws::Schedule::PlanFilter
     model Gws::Schedule::Plan
     before_action :check_schedule_visible
     before_action :set_file_addon_state
+    before_action :set_approvals
     before_action :set_items
   end
 
@@ -49,7 +50,7 @@ module Gws::Schedule::PlanFilter
       Gws::Schedule::Plan.site(@cur_site).without_deleted.
         member(@cur_user).
         #and([{ '$or' => or_conds }]).
-        search(params[:s])
+        search(@search_plan)
     end
   end
 
@@ -71,7 +72,7 @@ module Gws::Schedule::PlanFilter
     path = params.dig(:calendar, :path)
     if path.present? && trusted_url?(path)
       uri = ::Addressable::URI.parse(path)
-      uri.query = { calendar: redirection_calendar_params }.to_param
+      uri.query = redirection_calendar_query.to_param
       uri.request_uri
     else
       url_for(controller: 'gws/schedule/main', action: :index, calendar: redirection_calendar_params)
@@ -80,6 +81,13 @@ module Gws::Schedule::PlanFilter
 
   def set_file_addon_state
     @file_addon_state = 'hide' if @cur_site.schedule_attachment_denied?
+  end
+
+  def set_approvals
+    @search_plan = params[:s].to_unsafe_h rescue {}
+    if params[:action] == "index" || params[:action] == "events"
+      @search_plan[:approvals] = %w(request approve)
+    end
   end
 
   def send_approval_mail
@@ -161,6 +169,7 @@ module Gws::Schedule::PlanFilter
     @item.record_timestamps = false
     @item.deleted = Time.zone.now
     @item.edit_range = params.dig(:item, :edit_range)
+    @item.reset_approvals
     render_destroy @item.save, location: redirection_url
   end
 

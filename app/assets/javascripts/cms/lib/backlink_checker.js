@@ -8,7 +8,7 @@ this.Backlink_Checker = (function () {
 
   Backlink_Checker.itemId = null;
 
-  Backlink_Checker.asyncCheck = function(form, submit, opts) {
+  Backlink_Checker.asyncCheck = function(form, submit, _opts) {
     var defer = $.Deferred();
     if (!Backlink_Checker.enabled || !Backlink_Checker.url || !Backlink_Checker.itemId) {
       defer.resolve();

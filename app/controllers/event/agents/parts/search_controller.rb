@@ -15,5 +15,7 @@ class Event::Agents::Parts::SearchController < ApplicationController
       in(id: facility_ids).
       order_by(order: 1, kana: 1, name: 1).
       to_a
+
+    @parent_node = @cur_part.parent
   end
 end

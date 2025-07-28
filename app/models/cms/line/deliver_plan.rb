@@ -35,6 +35,10 @@ class Cms::Line::DeliverPlan
     %w(ready completed expired).map { |k| [I18n.t("cms.options.deliver_state.#{k}"), k] }
   end
 
+  def root_owned?(user)
+    true
+  end
+
   private
 
   def set_name

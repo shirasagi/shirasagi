@@ -21,6 +21,9 @@
   <header>
     <h2>
       <%= @facility.name %>
+      <% if @facility.approval_check? %>
+        <span class="approval-check"><%= t("gws/facility.views.required_approval") %></span>
+      <% end %>
       <% if @facility.reservable?(@cur_user) %>
         <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
       <% end %>

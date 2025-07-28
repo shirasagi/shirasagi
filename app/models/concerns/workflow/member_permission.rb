@@ -25,16 +25,16 @@ module Workflow::MemberPermission
       site_id = opts[:site] ? opts[:site].id : criteria.selector["site_id"]
       action = permission_action || action
       permit = "#{action}_other_#{permission_name}"
-      level = user.cms_roles.where(site_id: site_id).in(permissions: permit).pluck(:permission_level).max
+      other_allowed = user.cms_roles.where(site_id: site_id).in(permissions: permit).exists?
       s = super
-      return s if level
+      return s if other_allowed
 
       permit = "#{action}_member_#{permission_name}"
-      level = user.cms_roles.where(site_id: site_id).in(permissions: permit).pluck(:permission_level).max
+      member_allowed = user.cms_roles.where(site_id: site_id).in(permissions: permit).exists?
       non_members = s.where(:workflow_member_id => nil)
-      non_members unless level
+      non_members unless member_allowed
 
-      members = self.where(:workflow_member_id.exists => true).where(permission_level: {"$lte" => level })
+      members = self.where(:workflow_member_id.exists => true)
       with_scope(Mongoid::Criteria.new(self)) do
         self.where("$or" => [non_members.selector, members.selector])
       end

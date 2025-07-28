@@ -71,8 +71,10 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
       path_params = { path: copy.filename, anchor: "inplace" }
       path_params[:preview_date] = params[:preview_date].to_s if params[:preview_date].present?
       location = cms_preview_path(path_params)
+      task.log "created #{copy.filename}(#{copy.id})"
     elsif copy && copy.errors.present?
       SS::Model.copy_errors(copy, @item)
+      task.log "failed\n#{copy.errors.full_messages.join("\n")}"
     end
 
     render_save_as_branch result, location

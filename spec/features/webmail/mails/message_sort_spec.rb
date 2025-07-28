@@ -14,6 +14,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
       # mail2 は無害化処理に時間がかかったため、mail3 より遅れて届いた: date と date.recieved (IMAP INTERNALDATE) とが乖離
       Timecop.freeze(now - 12.minutes) { webmail_import_mail(user, mail2) }
       Timecop.freeze(now - 15.minutes) { webmail_import_mail(user, mail3) }
+      Webmail.imap_pool.disconnect_all
 
       login_user(user)
     end
@@ -125,6 +126,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, js: true, imap: tru
       # mail2 は無害化処理に時間がかかったため、mail3 より遅れて届いた: date と date.recieved (IMAP INTERNALDATE) とが乖離
       Timecop.freeze(now - 12.minutes) { webmail_import_mail(group, mail2) }
       Timecop.freeze(now - 15.minutes) { webmail_import_mail(group, mail3) }
+      Webmail.imap_pool.disconnect_all
 
       user.add_to_set(group_ids: [ group.id ])
 

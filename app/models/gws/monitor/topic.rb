@@ -148,27 +148,6 @@ class Gws::Monitor::Topic
     "(0/0)"
   end
 
-  def to_csv
-    I18n.with_locale(I18n.default_locale) do
-      CSV.generate do |data|
-        data << I18n.t('gws/monitor.csv')
-
-        attend_groups.each do |group|
-          post = comment(group.id).last
-          data << [
-              id,
-              name,
-              answer_state_name(group),
-              group.name,
-              post.try(:contributor_name),
-              post.try(:text),
-              post.try(:updated) ? I18n.l(post.updated, format: :picker) : ''
-          ]
-        end
-      end
-    end
-  end
-
   def remove_zip
     Fs.rm_rf self.zip_path if File.exist?(self.zip_path)
   end

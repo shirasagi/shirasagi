@@ -28,26 +28,32 @@ describe Gws::StaffRecord::YearlyGroupComponent, type: :component, dbscope: :exa
   end
 
   it do
-    described_class.new(cur_site: site, cur_year: year1, selected: nil).tap do |component|
-      expect(component.cache_exist?).to be_falsey
+    # year1には何らかの汚染がありyear_groupsが正しく取得できないので、新インスタンスを取得する
+    Gws::StaffRecord::Year.find(year1.id).tap do |year|
+      described_class.new(cur_site: site, cur_year: year, selected: nil).tap do |component|
+        expect(component.cache_exist?).to be_falsey
 
-      html = render_inline component
-      html.css("option[data-id='#{staff_record_group1.id}']").tap do |option|
-        expect(option).to have(1).items
-        expect(option.to_html).to include(staff_record_group1.name)
+        html = render_inline component
+        html.css("option[data-id='#{staff_record_group1.id}']").tap do |option|
+          expect(option).to have(1).items
+          expect(option.to_html).to include(staff_record_group1.name)
+        end
+        expect(component.cache_exist?).to be_truthy
       end
-      expect(component.cache_exist?).to be_truthy
     end
 
-    described_class.new(cur_site: site, cur_year: year2, selected: nil).tap do |component|
-      expect(component.cache_exist?).to be_falsey
+    # year2には何らかの汚染がありyear_groupsが正しく取得できないので、新インスタンスを取得する
+    Gws::StaffRecord::Year.find(year2.id).tap do |year|
+      described_class.new(cur_site: site, cur_year: year, selected: nil).tap do |component|
+        expect(component.cache_exist?).to be_falsey
 
-      html = render_inline component
-      html.css("option[data-id='#{staff_record_group2.id}']").tap do |option|
-        expect(option).to have(1).items
-        expect(option.to_html).to include(staff_record_group2.name)
+        html = render_inline component
+        html.css("option[data-id='#{staff_record_group2.id}']").tap do |option|
+          expect(option).to have(1).items
+          expect(option.to_html).to include(staff_record_group2.name)
+        end
+        expect(component.cache_exist?).to be_truthy
       end
-      expect(component.cache_exist?).to be_truthy
     end
   end
 end

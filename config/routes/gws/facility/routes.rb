@@ -12,8 +12,9 @@ Rails.application.routes.draw do
   end
 
   gws "facility" do
-    resources :columns, path: 'items/:form_id/columns', concerns: [:deletion] do
+    resources :columns, path: 'items/:form_id/columns', only: %i[index create] do
       get :input_form, on: :collection
+      post :reorder, on: :collection
     end
     resources :items, concerns: [:deletion, :import] do
       match :download_all, on: :collection, via: %i[get post]

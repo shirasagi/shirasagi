@@ -45,8 +45,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
     let(:import_path) { import_gws_groups_path(site: site) }
 
     def check_superior(user, superior_group)
-      login_user(user)
-      visit new_path
+      login_user(user, to: new_path)
 
       within "form#item-form" do
         expect(page).to have_css(".selected-capital", text: user.effective_capital(site).name)
@@ -56,14 +55,14 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         fill_in "item[overtime_name]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-        wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+        wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         within ".search-ui-form" do
           expect(page).to have_css("input[name=\"s[group]\"][value=\"#{superior_group.id}\"]")
         end
@@ -72,8 +71,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
 
     it "#new" do
       Timecop.travel("2021/3/1") do
-        login_user(user_sys)
-        visit import_path
+        login_user(user_sys, to: import_path)
 
         check_superior(user461, superior_group1)
         check_superior(user545, superior_group2)

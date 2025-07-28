@@ -26,6 +26,17 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   let!(:column7) { create(:gws_column_radio_button, cur_site: site, form: form, order: 70, required: "optional") }
   let!(:column8) { create(:gws_column_check_box, cur_site: site, form: form, order: 80, required: "optional") }
   let!(:column9) { create(:gws_column_file_upload, cur_site: site, form: form, order: 90, required: "optional") }
+  let!(:column10) { create(:gws_column_section, cur_site: site, form: form, order: 100) }
+  let!(:column11) { create(:gws_column_title, cur_site: site, form: form, order: 110) }
+
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v2
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
 
   context "with deleted columns" do
     let(:name) { unique_id }
@@ -48,7 +59,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       # Create
       visit gws_report_files_main_path(site: site)
       within "#menu" do
-        wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
+        wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on form.name
         end
@@ -67,18 +78,9 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         select column_value6, from: "custom[#{column6.id}]"
         find("input[name='custom[#{column7.id}]'][value='#{column_value7}']").click
         find("input[name='custom[#{column8.id}][]'][value='#{column_value8}']").click
-        wait_cbox_open do
-          first(".btn-file-upload").click
+        within first("#custom_#{column9.id}_0").first(:xpath, './parent::*', minimum: 0) do
+          upload_to_ss_file_field "custom[#{column9.id}][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
         end
-      end
-      wait_for_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_cbox_close do
-          click_on I18n.t("ss.buttons.attach")
-        end
-      end
-      within "form#item-form" do
-        expect(page).to have_css(".column-#{column9.id}", text: "logo")
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')

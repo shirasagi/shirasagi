@@ -28,7 +28,7 @@ class Gws::Schedule::HolidaysController < ApplicationController
     path = params.dig(:calendar, :path)
     if path.present?
       uri = URI(path)
-      uri.query = { calendar: redirection_calendar_params }.to_param
+      uri.query = redirection_calendar_query.to_param
       uri.to_s
     else
       { action: :index }

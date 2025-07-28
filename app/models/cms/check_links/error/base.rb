@@ -62,10 +62,10 @@ class Cms::CheckLinks::Error::Base
 
     def enum_csv
       criteria = self.all
-      max_urls = criteria.pluck(:urls).map(&:size).max
+      max_urls = criteria.pluck(:urls).map(&:size).max.to_i
       Enumerator.new do |y|
         headers = csv_headers.map { |k| self.t(k) }
-        headers += (1..max_urls).map { |i| "#{I18n.t("ss.broken_link")}#{i}" }
+        headers += (1..max_urls).map { |i| "#{I18n.t("ss.broken_link")}#{i}" } if max_urls > 0
         y << headers.to_csv.encode("SJIS", invalid: :replace, undef: :replace)
         criteria.each do |item|
           line = []

@@ -12,6 +12,18 @@ class Gws::Column::NumberField < Gws::Column::Base
   validates :scale, numericality: { only_integer: true, greater_than_or_equal_to: 0, allow_blank: true }
   validates :minus_type, presence: true, inclusion: { in: %w(normal filled_triangle triangle), allow_blank: true }
 
+  class << self
+    def as_plugin
+      @plugin ||= Gws::Plugin.new(plugin_type: "column", path: "gws/number_field", model_class: self)
+    end
+
+    def default_attributes
+      attributes = super
+      attributes[:minus_type] = "normal"
+      attributes
+    end
+  end
+
   def minus_type_options
     %w(normal filled_triangle triangle).map do |v|
       [ I18n.t("gws/column.options.minus_type.#{v}"), v ]
@@ -21,10 +33,10 @@ class Gws::Column::NumberField < Gws::Column::Base
   def form_options
     options = super
     if min_decimal.present?
-      options['min'] = min_decimal
+      options['min'] = SS.decimal_to_s(min_decimal)
     end
     if max_decimal.present?
-      options['max'] = max_decimal
+      options['max'] = SS.decimal_to_s(max_decimal)
     end
     if scale.present? && scale > 0
       options['step'] = "0.#{"0" * (scale - 1)}1"

@@ -14,20 +14,19 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
   let(:trusted2_url) { "//#{trusted2_domain}/#{trusted2_path}" }
   let(:trusted_urls) { [ trusted1_url, trusted2_url ] }
 
-  before do
+  around do |example|
     # Rails.application.current_request = request
-    Thread.current["ss.env"] = request
-    Thread.current["ss.request"] = request
+    SS::Current.set(env: request, request: request) do
+      example.run
+    end
+  end
 
+  before do
     @save_trusted_urls = SS.config.replace_value_at(:sns, :trusted_urls, trusted_urls)
     described_class.send(:clear_trusted_urls)
   end
 
   after do
-    # Rails.application.current_request = nil
-    Thread.current["ss.env"] = nil
-    Thread.current["ss.request"] = nil
-
     SS.config.replace_value_at(:sns, :trusted_urls, @save_trusted_urls)
     described_class.send(:clear_trusted_urls)
   end
@@ -72,6 +71,9 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.trusted_url?(unique_id)).to be_truthy
 
       expect(described_class.trusted_url?(unique_url)).to be_falsey
+
+      # invalid urls
+      expect(described_class.trusted_url?("https://●●")).to be_falsey
     end
   end
 
@@ -100,6 +102,9 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
+
+      # invalid urls
+      expect(described_class.valid_url?(::Addressable::URI.parse("//●●"))).to be_falsey
     end
   end
 

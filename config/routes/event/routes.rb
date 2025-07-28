@@ -52,15 +52,17 @@ Rails.application.routes.draw do
       put :change_state_all, on: :collection, path: ''
       post :resume_new, on: :collection
       post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
     end
     resources :searches, only: [:index]
   end
 
   node "event" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
-    get "page/(:display.:format)" => "public#index", cell: "nodes/page", display: /[a-z]*/
-    get "page/:year:month/(:display.:format)" => "public#index", cell: "nodes/page",
-      year: /\d{4}/, month: /\d{2}/, display: /[a-z]*/
+    get "page/(:display.:format)" => "public#index", cell: "nodes/page", display: /(list|table|map)/
+    get "page/:year:month/(:display.:format)" => "public#monthly", cell: "nodes/page",
+      year: /\d{4}/, month: /\d{2}/, display: /(list|table|map)/
     get "page/:year:month:day/(index.:format)" => "public#daily", cell: "nodes/page",
       year: /\d{4}/, month: /\d{2}/, day: /\d{2}/
     get "search/(index.:format)" => "public#index", cell: "nodes/search"

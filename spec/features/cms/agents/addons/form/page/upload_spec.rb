@@ -10,7 +10,14 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   let(:filename) { "#{unique_id}.png" }
 
   before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+
     login_cms_user
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
   end
 
   shared_examples "file dialog is" do
@@ -18,8 +25,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       it do
         within "#ajax-box" do
           expect(page).to have_css('.file-view', text: filename)
-          wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-form-page .ajax-box" do
+          wait_for_cbox_closed do
+            wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-form-page .ajax-box" do
               click_on filename
             end
           end
@@ -53,7 +60,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
         within "#ajax-box" do
           within ".file-view[data-file-id='#{file.id}']" do
             expect(page).to have_css(".name", text: filename)
-            wait_event_to_fire "ss:ajaxRemoved", "#addon-cms-agents-addons-form-page .ajax-box" do
+            wait_for_event_fired "ss:ajaxRemoved", selector: "#addon-cms-agents-addons-form-page .ajax-box" do
               page.accept_confirm do
                 click_on I18n.t("ss.buttons.delete")
               end
@@ -71,8 +78,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           click_button I18n.t("ss.buttons.save")
           expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-          wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-form-page .ajax-box" do
+          wait_for_cbox_closed do
+            wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-form-page .ajax-box" do
               click_on 'keyvisual.jpg'
             end
           end
@@ -90,8 +97,8 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       it do
         within "#ajax-box" do
           attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-          wait_cbox_close do
-            wait_event_to_fire "ss:ajaxFileSelected", "#addon-cms-agents-addons-form-page .ajax-box" do
+          wait_for_cbox_closed do
+            wait_for_event_fired "ss:ajaxFileSelected", selector: "#addon-cms-agents-addons-form-page .ajax-box" do
               click_button I18n.t("ss.buttons.attach")
             end
           end
@@ -113,12 +120,12 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
 
       within "#addon-cms-agents-addons-form-page" do
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column1.name
           end
         end
         within ".column-value-cms-column-fileupload" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on button_label
           end
         end
@@ -201,7 +208,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with ss/user_file" do
     let!(:file) do
       tmp_ss_file(
-        SS::UserFile, model: "ss/user_file", user: cms_user, basename: filename,
+        SS::UserFile, model: SS::UserFile::FILE_MODEL, user: cms_user, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end
@@ -213,7 +220,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
   context "with cms/file" do
     let!(:file) do
       tmp_ss_file(
-        Cms::File, model: "cms/file", user: cms_user, site: site, basename: filename,
+        Cms::File, model: Cms::File::FILE_MODEL, user: cms_user, site: site, basename: filename,
         contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       )
     end

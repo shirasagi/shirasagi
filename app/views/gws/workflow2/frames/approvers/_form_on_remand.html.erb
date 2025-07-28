@@ -1,0 +1,9 @@
+<%
+  return if @item.deleted?
+  return unless route
+%>
+
+<dl class="see on_remand">
+  <dt><%= @model.t :workflow_on_remand %></dt>
+  <dd><%= route.label :on_remand %><%= f.hidden_field :workflow_on_remand, value: route.on_remand %></dd>
+</dl>

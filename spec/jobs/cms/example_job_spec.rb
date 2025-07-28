@@ -132,7 +132,7 @@ describe Cms::ExampleJob, dbscope: :example do
   describe ".perform_now" do
     context "with no bindings and no parameters" do
       before do
-        described_class.perform_now
+        ss_perform_now described_class
       end
 
       it do
@@ -145,7 +145,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with site" do
       before do
-        described_class.bind(site_id: site.id).perform_now
+        ss_perform_now described_class.bind(site_id: site.id)
       end
 
       it do
@@ -159,7 +159,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with group" do
       before do
-        described_class.bind(group_id: group.id).perform_now
+        ss_perform_now described_class.bind(group_id: group.id)
       end
 
       it do
@@ -173,7 +173,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with user" do
       before do
-        described_class.bind(user_id: user).perform_now
+        ss_perform_now described_class.bind(user_id: user)
       end
 
       it do
@@ -187,7 +187,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with node" do
       before do
-        described_class.bind(node_id: node).perform_now
+        ss_perform_now described_class.bind(node_id: node)
       end
 
       it do
@@ -201,7 +201,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with page" do
       before do
-        described_class.bind(page_id: page).perform_now
+        ss_perform_now described_class.bind(page_id: page)
       end
 
       it do
@@ -215,7 +215,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with member" do
       before do
-        described_class.bind(member_id: member).perform_now
+        ss_perform_now described_class.bind(member_id: member)
       end
 
       it do
@@ -229,7 +229,7 @@ describe Cms::ExampleJob, dbscope: :example do
 
     context "with parameters" do
       before do
-        described_class.perform_now("world")
+        ss_perform_now(described_class, "world")
       end
 
       it do

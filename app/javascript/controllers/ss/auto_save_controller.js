@@ -36,14 +36,17 @@ export default class extends Controller {
     this.#beforeUnloadHandler = () => { this.#onUnload(); };
     window.addEventListener("beforeunload", this.#beforeUnloadHandler);
 
-    const autoSaveData = localStorage.getItem(this.#key());
-    if (autoSaveData && confirm(i18next.t("ss.confirm.resume_editing"))) {
-      await this.#restoreForm(autoSaveData);
-    }
+    window.requestAnimationFrame(async () => {
+      const autoSaveData = localStorage.getItem(this.#key());
+      localStorage.removeItem(this.#key())
+      if (autoSaveData && confirm(i18next.t("ss.confirm.resume_editing"))) {
+        await this.#restoreForm(autoSaveData);
+      }
 
-    this.#serializeFormData();
+      this.#serializeFormData();
 
-    setInterval(() => this.#serializeFormDataIfModified(), 5000)
+      setInterval(() => this.#serializeFormDataIfModified(), 5000)
+    });
   }
 
   disconnect() {
@@ -57,7 +60,7 @@ export default class extends Controller {
   }
 
   #onUnload() {
-    if (this.#submitted) {
+    if (this.#submitted && this.#isSessionAlive()) {
       // form を送信したので local storage の編集途中のデータを削除
       localStorage.removeItem(this.#key())
     } else {
@@ -78,6 +81,10 @@ export default class extends Controller {
   }
 
   #serializeFormData() {
+    if (!SS.formChanged) {
+      return;
+    }
+
     Object.values(CKEDITOR.instances).forEach((editor) => {
       if (!editor.checkDirty()) {
         return;
@@ -139,6 +146,12 @@ export default class extends Controller {
     this.element.querySelectorAll("button[type='submit']").forEach((inputElement) => {
       inputElement.disabled = true;
     });
+
+    if ("CKEDITOR" in window) {
+      Object.values(CKEDITOR.instances).forEach((ckEditor) => {
+        ckEditor.destroy();
+      });
+    }
   }
 
   #enableForm() {
@@ -174,6 +187,25 @@ export default class extends Controller {
       Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value))
       newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML))
       scriptElement.parentElement.replaceChild(newScriptElement, scriptElement)
-    })
+    });
+
+    SS.renderAjaxBox();
+    SS_SearchUI.render();
+    SS_DropdownToggle.render();
+    SS.renderFileUpload();
+  }
+
+  #isSessionAlive() {
+    // セッション有効時、data-ss-session 属性が存在しないか、値が "alive" になる。
+    if (!document.body.hasAttribute("data-ss-session")) {
+      return true;
+    }
+
+    const sessionState = document.body.getAttribute("data-ss-session");
+    if (sessionState === "alive") {
+      return true;
+    }
+
+    return false;
   }
 }

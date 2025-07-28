@@ -17,7 +17,7 @@ Webmail_Address_Autocomplete.createSelectedElement = function(name, email, label
 
 // ref: https://stackoverflow.com/questions/46155/how-to-validate-email-address-in-javascript
 Webmail_Address_Autocomplete.validateEmail = function(email) {
-  var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  var re = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
   return re.test(email);
 };
 
@@ -79,9 +79,7 @@ Webmail_Address_Autocomplete.render = function(selector, opts) {
     dropOnEmpty: true,
     cursor: "pointer",
     receive: function(e, ui) {
-      var name, selected;
-      selected = $(this).closest(".webmail-mail-form-address").find(".selected-address");
-      name = $(ui.item).closest(".webmail-mail-form-address").find(".autocomplete").attr("data-name");
+      var name = $(ui.item).closest(".webmail-mail-form-address").find(".autocomplete").attr("data-name");
       return $(ui.item).find("input").attr("name", name);
     }
   });

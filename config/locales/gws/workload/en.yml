@@ -258,4 +258,4 @@ en:
 
   job:
     models:
-      gws/aggregation/group_job: Aggregation group update
+      gws/aggregation/group_job: Workload/Aggregation group update

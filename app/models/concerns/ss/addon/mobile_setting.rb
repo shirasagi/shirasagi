@@ -34,7 +34,7 @@ module SS::Addon
     public
 
     def mobile_state
-      return 'enabled' unless value = self.attributes["mobile_state"]
+      return 'disabled' unless value = self.attributes["mobile_state"]
       value
     end
 

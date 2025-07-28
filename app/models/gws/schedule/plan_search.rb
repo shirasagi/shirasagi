@@ -135,6 +135,12 @@ class Gws::Schedule::PlanSearch
   end
 
   def validate_hours
+    min_hour_limit = (@cur_site || site).facility_min_hour rescue 8
+    max_hour_limit = (@cur_site || site).facility_max_hour rescue 22
+
+    self.min_hour = min_hour_limit if min_hour < min_hour_limit || min_hour > max_hour_limit
+    self.max_hour = max_hour_limit if max_hour < min_hour_limit || max_hour > max_hour_limit
+
     return if min_hour <= max_hour
 
     self.min_hour, self.max_hour = [min_hour, max_hour].sort

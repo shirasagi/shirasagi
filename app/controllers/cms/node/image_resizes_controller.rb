@@ -10,8 +10,10 @@ class Cms::Node::ImageResizesController < ApplicationController
     { cur_site: @cur_site, cur_node: @cur_node }
   end
 
-  def set_items
-    @items = @model.site(@cur_site).node(@cur_node).
-      allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+  def set_item
+    @item = @model.site(@cur_site).node(@cur_node).first
+    @item ||= @model.new
+    @item.attributes = fix_params
+    @item
   end
 end

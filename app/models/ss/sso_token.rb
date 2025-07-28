@@ -1,4 +1,4 @@
-class SS::SsoToken
+class SS::SSOToken
   include SS::Document
 
   field :token, type: String

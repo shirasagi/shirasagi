@@ -1,14 +1,22 @@
-<dl>
-  <div>
-    <dt>総人口</dt><dd>{{ values["総人口"].value | plus: 0 | delimited }}人</dd>
-  </div>
-  <div>
-    <dt>男性</dt><dd>{{ values["男性"].value | plus: 0 | delimited }}人</dd>
-  </div>
-  <div>
-    <dt>女性</dt><dd>{{ values["女性"].value | plus: 0 | delimited }}人</dd>
-  </div>
-  <div>
-    <dt>世帯数</dt><dd>{{ values["世帯数"].value | plus: 0 | delimited }}人</dd>
-  </div>
-  </dl>
+<article>
+  <table>
+    <tbody>
+      <tr>
+        <th scope="row">総人口</th>
+        <td>{{ values["総人口"].value | plus: 0 | delimited }}人</td>
+      </tr>
+      <tr>
+        <th scope="row">男性</th>
+        <td>{{ values["男性"].value | plus: 0 | delimited }}人</td>
+      </tr>
+      <tr>
+        <th scope="row">女性</th>
+        <td>{{ values["女性"].value | plus: 0 | delimited }}人</td>
+      </tr>
+      <tr>
+        <th scope="row">世帯数</th>
+        <td>{{ values["世帯数"].value | plus: 0 | delimited }}人</td>
+      </tr>
+    </tbody>
+  </table>
+</article>

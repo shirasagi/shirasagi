@@ -4,7 +4,7 @@ class Cms::CheckLinks::IgnoreUrlsController < ApplicationController
 
   model Cms::CheckLinks::IgnoreUrl
 
-  navi_view "cms/main/navi"
+  navi_view "cms/check_links/main/navi"
 
   private
 

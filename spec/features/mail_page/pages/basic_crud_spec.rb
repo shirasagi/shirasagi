@@ -54,8 +54,8 @@ describe "mail_pages", type: :feature, dbscope: :example do
       end
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
-      expect(page).to have_css("a", text: "[複製] #{item.name}")
-      expect(page).to have_css(".state", text: "非公開")
+      expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] #{item.name}")
+      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
     end
 
     it "#delete" do

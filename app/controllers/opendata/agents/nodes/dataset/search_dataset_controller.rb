@@ -9,7 +9,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
   def pages
     @model = Opendata::Dataset
 
-    focus = params.permit(s: [@model.search_params])[:s].presence || {}
+    focus = params.permit(s: @model.search_params)[:s].presence || {}
     focus = focus.merge(site: @cur_site)
 
     sort = Opendata::Dataset.sort_hash(params.dig(:s, :sort) || params.permit(:sort)[:sort])
@@ -56,7 +56,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
     downloaded = Time.zone.now
 
     item = Opendata::Dataset.site(@cur_site).and_public(@cur_date).find_by(id: params[:id])
-    item.resources.each do |resource|
+    item.resources.and_public.each do |resource|
       if !preview_path?
         resource.dataset.inc downloaded: 1
         resource.create_dataset_download_history(remote_addr, request.user_agent, downloaded)
@@ -90,7 +90,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetController < ApplicationCon
       Zip::File.open(t.path, Zip::File::CREATE) do |zip|
         @items.each do |item|
           zip.add(::Fs.zip_safe_name("#{item.name}-#{item.id}.zip"), item.zip_path)
-          item.resources.each do |resource|
+          item.resources.and_public.each do |resource|
             if !preview_path?
               resource.dataset.inc downloaded: 1
               resource.create_bulk_download_history(remote_addr, request.user_agent, downloaded)

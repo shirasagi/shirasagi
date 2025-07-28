@@ -18,5 +18,5 @@
   <dd><%= f.select :shortcut, @item.shortcut_options %></dd>
 
   <dt><%= @model.t :view_route %><%= @model.tt :view_route %></dt>
-  <dd><%= f.select :view_route, Cms::Node.new.route_options, selected: view_route, include_blank: " " %></dd>
+  <dd><%= f.select :view_route, render(SS::OptionsForSelectComponent.new(options: Cms::Node.new.route_options, selected: view_route)), include_blank: " " %></dd>
 </dl>

@@ -17,7 +17,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         click_on I18n.t('gws/attendance.buttons.punch')
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_notice I18n.t('gws/attendance.notice.punched')
     wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24
@@ -32,7 +32,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         click_on I18n.t('gws/attendance.buttons.punch')
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+    wait_for_notice I18n.t('gws/attendance.notice.punched')
     wait_for_js_ready
 
     hour = now.hour > 3 ? now.hour : now.hour + 24
@@ -43,9 +43,9 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   def edit_enter(before_value, after_value)
     expect(page).to have_css('.today-box .today .info .enter', text: before_value)
     within '.today-box .today .action .enter' do
-      wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
+      wait_for_cbox_opened { click_on I18n.t('ss.buttons.edit') }
     end
-    wait_for_cbox do
+    within_cbox do
       hour, min = before_value.split(":")
       expect(page).to have_css('[name="cell[in_hour]"] [selected]', text: I18n.t("gws/attendance.hour", count: hour))
       expect(page).to have_css('[name="cell[in_minute]"] [selected]', text: I18n.t("gws/attendance.minute", count: min))
@@ -62,9 +62,9 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
   def edit_leave(before_day, before_value, after_day, after_value)
     expect(page).to have_css('.today-box .today .info .leave', text: before_value)
     within '.today-box .today .action .leave' do
-      wait_cbox_open { click_on I18n.t('ss.buttons.edit') }
+      wait_for_cbox_opened { click_on I18n.t('ss.buttons.edit') }
     end
-    wait_for_cbox do
+    within_cbox do
       hour, min = before_value.split(":")
       expect(page).to have_css('[name="cell[in_day]"] [selected]', text: before_day)
       expect(page).to have_css('[name="cell[in_hour]"] [selected]', text: I18n.t("gws/attendance.hour", count: hour))

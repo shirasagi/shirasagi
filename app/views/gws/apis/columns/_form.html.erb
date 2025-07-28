@@ -1,0 +1,27 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <% if @model.use_required %>
+    <dt><%= @model.t :required %><%= @model.tt :required %></dt>
+    <dd><%= f.select :required, @item.required_options %></dd>
+  <% end %>
+
+  <dt><%= @model.t :tooltips %><%= @model.tt :tooltips %></dt>
+  <dd><%= f.ss_lines_field :tooltips %></dd>
+
+  <dt><%= @model.t :prefix_label %><%= @model.tt :prefix_label %></dt>
+  <dd><%= f.text_field :prefix_label %></dd>
+
+  <dt><%= @model.t :postfix_label %><%= @model.tt :postfix_label %></dt>
+  <dd><%= f.text_field :postfix_label %></dd>
+
+  <dt><%= @model.t :prefix_explanation %><%= @model.tt :prefix_explanation %></dt>
+  <dd><%= f.text_area :prefix_explanation %></dd>
+
+  <dt><%= @model.t :postfix_explanation %><%= @model.tt :postfix_explanation %></dt>
+  <dd><%= f.text_area :postfix_explanation %></dd>
+</dl>

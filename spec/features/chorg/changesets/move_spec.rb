@@ -64,14 +64,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-move" do
         click_on I18n.t("chorg.menus.revisions.move")
       end
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.move_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.move_changesets.select_group") }
         end
       end
-      wait_event_to_fire "turbo:frame-load" do
+      wait_for_event_fired "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_move") do
-          wait_for_cbox do
+          within_cbox do
             click_on group.trailing_name
           end
         end
@@ -172,8 +173,10 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-move" do
         click_on new_name
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css(".chorg-after", text: new_name)
       click_on I18n.t("ss.links.edit")
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-after-basic" do
           fill_in "item[destinations][][name]", with: new_name2
@@ -228,6 +231,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-move" do
         click_on new_name2
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css(".chorg-after", text: new_name2)
       click_on I18n.t("ss.links.delete")
       within "form" do
@@ -274,14 +278,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-move" do
         click_on I18n.t("chorg.menus.revisions.move")
       end
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.move_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.move_changesets.select_group") }
         end
       end
-      wait_event_to_fire "turbo:frame-load" do
+      wait_for_event_fired "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_move") do
-          wait_for_cbox do
+          within_cbox do
             click_on group.trailing_name
           end
         end

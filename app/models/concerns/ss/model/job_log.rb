@@ -73,6 +73,19 @@ module SS::Model::JobLog
       return all if params[:class_name].blank?
       all.where(class_name: params[:class_name])
     end
+
+    def used_size
+      size = all.total_bsonsize
+      ids = all.pluck(:id)
+      ids.each do |id|
+        Dir["#{SS::File.root}/job_logs/" + id.to_s.chars.join("/") + "/_/*"].each do |path|
+          if ::File.file?(path)
+            size += ::File.size(path) rescue 0
+          end
+        end
+      end
+      size
+    end
   end
 
   def save_term_options

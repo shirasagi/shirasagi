@@ -16,9 +16,18 @@ class Gws::Elasticsearch::Indexer::WorkloadWorkJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      y << convert_to_doc
-      item.files.each do |file|
-        y << convert_file_to_doc(file)
+      each_item do |item|
+        @id = item.id.to_s
+        @item = item
+        puts item.name
+
+        y << convert_to_doc
+        item.files.each do |file|
+          y << convert_file_to_doc(file)
+        end
+      ensure
+        @id = nil
+        @item = nil
       end
     end
   end
@@ -64,7 +73,6 @@ class Gws::Elasticsearch::Indexer::WorkloadWorkJob < Gws::ApplicationJob
     doc[:group_ids] = item.groups.pluck(:id)
     doc[:custom_group_ids] = item.custom_groups.pluck(:id)
     doc[:user_ids] = item.users.pluck(:id)
-    doc[:permission_level] = item.permission_level
 
     doc[:member_ids] = item.members.pluck(:id)
     #doc[:member_custom_group_ids] = item.member_custom_groups.pluck(:id)

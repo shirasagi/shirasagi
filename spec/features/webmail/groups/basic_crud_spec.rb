@@ -13,7 +13,7 @@ describe "webmail_groups", type: :feature, dbscope: :example do
       fill_in "item[name]", with: "#{webmail_admin.groups.first.name}/name"
       click_button I18n.t("ss.buttons.save")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     #
     # Update
@@ -25,7 +25,7 @@ describe "webmail_groups", type: :feature, dbscope: :example do
       fill_in "item[name]", with: "#{webmail_admin.groups.first.name}/name2"
       click_button I18n.t("ss.buttons.save")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     #
     # Delete
@@ -36,6 +36,6 @@ describe "webmail_groups", type: :feature, dbscope: :example do
     within "form" do
       click_button I18n.t("ss.buttons.delete")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+    wait_for_notice I18n.t('ss.notice.deleted')
   end
 end
