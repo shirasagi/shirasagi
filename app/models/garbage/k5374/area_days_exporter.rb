@@ -78,7 +78,7 @@ class Garbage::K5374::AreaDaysExporter < Garbage::K5374::BaseExporter
         end
       end
     end
-    ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)
+    (SS::Csv::UTF8_BOM + csv).encode("UTF-8", invalid: :replace, undef: :replace)
   end
 
   def remarks_csv
@@ -90,7 +90,7 @@ class Garbage::K5374::AreaDaysExporter < Garbage::K5374::BaseExporter
         end
       end
     end
-    ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)
+    (SS::Csv::UTF8_BOM + csv).encode("UTF-8", invalid: :replace, undef: :replace)
   end
 
   def write_csv

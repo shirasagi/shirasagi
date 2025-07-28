@@ -7,7 +7,9 @@ module Cms::PublicFilter::Node
   def init_context
     self.params   = ActionController::Parameters.new
     self.request  = ActionDispatch::Request.new("rack.input" => "", "REQUEST_METHOD" => "GET")
-    self.response = ActionDispatch::Response.new
+    self.response = ActionDispatch::Response.new.tap do |res|
+      res.request = self.request
+    end
 
     @site.reload if @site.changed?
     @node.reload if @node.changed?
@@ -26,12 +28,12 @@ module Cms::PublicFilter::Node
     agent.render spec[:action]
   end
 
-  def render_layout_with_pagination_cache(layout, cache_key)
+  def render_layout_with_pagination_cache(layout, cache_key, content: nil)
     @layout_cache ||= {}
 
     # no cache
     if cache_key.nil?
-      return render_to_string html: render_layout(layout).html_safe, layout: "cms/page"
+      return render_to_string html: render_layout(layout, content: content).html_safe, layout: "cms/page"
     end
 
     # use cache
@@ -40,7 +42,7 @@ module Cms::PublicFilter::Node
     end
 
     # set cache
-    html = render_to_string html: render_layout(layout).html_safe, layout: "cms/page"
+    html = render_to_string html: render_layout(layout, content: content).html_safe, layout: "cms/page"
     @layout_cache[cache_key] = html.sub(/(<!-- layout_yield -->).*?<!-- \/layout_yield -->/m, '\\1')
 
     html
@@ -86,8 +88,7 @@ module Cms::PublicFilter::Node
       response.content_type ||= "text/html"
     rescue StandardError => e
       @exists = false
-      return if e.to_s == "404"
-      return if e.is_a? Mongoid::Errors::DocumentNotFound
+      return if SS.not_found_error?(e)
       raise e
     end
 

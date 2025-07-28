@@ -54,24 +54,24 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.select")
 
         choose "agent_type_agent"
-        wait_cbox_open { click_on I18n.t("gws/workflow.search_delegatees.index") }
+        wait_for_cbox_opened { click_on I18n.t("gws/workflow.search_delegatees.index") }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on user1.long_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.long_name }
       end
       within ".mod-workflow-request" do
         expect(page).to have_css(".agent-type-agent", text: user1.long_name)
-        wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+        wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on user2.long_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on user2.long_name }
       end
       within ".mod-workflow-request" do
         expect(page).to have_css(".index.approvers", text: user2.long_name)
-        wait_cbox_open { click_on I18n.t("workflow.search_circulations.index") }
+        wait_for_cbox_opened { click_on I18n.t("workflow.search_circulations.index") }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on user3.long_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on user3.long_name }
       end
       within ".mod-workflow-request" do
         expect(page).to have_css(".index.circulations", text: user3.long_name)
@@ -106,8 +106,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: 申請を承認する
       #
-      login_user user2
-      visit gws_workflow_files_path(site: site, state: "all")
+      login_user user2, to: gws_workflow_files_path(site: site, state: "all")
       click_on file_name
 
       within ".mod-workflow-approve" do
@@ -124,7 +123,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+          include({
+            level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_circulations.count).to eq 1
         expect(item.workflow_circulations).to \
           include({level: 1, user_id: user3.id, state: 'unseen', comment: ''})
@@ -147,8 +149,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user3: 申請を確認する
       #
-      login_user user3
-      visit gws_workflow_files_path(site: site, state: "all")
+      login_user user3, to: gws_workflow_files_path(site: site, state: "all")
       click_on file_name
       expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 
@@ -167,7 +168,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+          include({
+            level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_circulations.count).to eq 1
         expect(item.workflow_circulations).to \
           include({level: 1, user_id: user3.id, state: 'seen', comment: circulation_comment2})

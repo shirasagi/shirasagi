@@ -21,12 +21,14 @@
     <li class="user-navigation-dropdown-menu-item">
       <%= link_to gws_frames_user_navigation_contrast_path(site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
         <%= @cur_site.menu_contrast_label.presence || t('mongoid.models.gws/contrast') %>
-        <span class="caret material-icons-outlined">keyboard_arrow_right</span>
+        <%= md_icons.outlined "keyboard_arrow_right", class: "caret" %>
       <% end %>
     </li>
   <% end %>
-  <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
-  <li class="user-navigation-dropdown-menu-item"><%= link_to t('ss.logout'), logout_path, class: "logout user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <% unless @cur_user.type_sso? %>
+    <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>
+    <li class="user-navigation-dropdown-menu-item"><%= link_to t('ss.logout'), logout_path, class: "logout user-navigation-dropdown-menu-link", data: { turbo: false } %></li>
+  <% end %>
 </ul>
 
 <%= jquery do %>

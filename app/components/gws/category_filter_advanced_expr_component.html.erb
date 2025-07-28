@@ -1,0 +1,44 @@
+<%
+  return if category_filter.blank?
+
+  if category_filter.overall_operator_all?
+    overall_op = "all"
+    overall_label = t("ss.buttons.match_all")
+  else
+    overall_op = "any"
+    overall_label = t("ss.buttons.match_any_of")
+  end
+%>
+<span class="gws-category-expr gws-category-expr-term">
+  <%= tag.span overall_label, class: "gws-category-expr gws-category-expr-op", data: { op: overall_op } %>
+
+  <% category_filter.each_filter do |filter| %>
+    (
+    <span class="gws-category-expr gws-category-expr-term">
+      <%
+        case filter[:op]
+        when "any"
+          op = "any"
+          op_label = t("ss.buttons.include_any_of")
+        when "none"
+          op = "none"
+          op_label = t("ss.buttons.include_none_of")
+        else
+          op = "all"
+          op_label = t("ss.buttons.include_all_of")
+        end
+      %>
+      <%= tag.span(op_label, class: "gws-category-expr gws-category-expr-op", data: { op: op }) %>
+
+      <% if filter[:categories].present? %>
+        <% categories.select { |cate| filter[:categories].include?(cate.id) }.each do |cate| %>
+          <%= tag.span(
+                cate.trailing_name,
+                class: "gws-category-label gws-category-expr gws-category-expr-sym",
+                style: category_label_css(cate)) %>
+        <% end %>
+      <% end %>
+    </span>
+    )
+  <% end %>
+</span>

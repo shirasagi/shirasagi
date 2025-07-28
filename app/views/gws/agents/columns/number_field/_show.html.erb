@@ -1,12 +1,12 @@
 <dl class="see column-gws-number_field">
   <dt><%= @model.t :min_decimal %></dt>
-  <dd><%= tryb { @item.min_decimal.to_s(:delimited) } %></dd>
+  <dd><%= tryb { @item.min_decimal.to_fs(:delimited) } %></dd>
 
   <dt><%= @model.t :max_decimal %></dt>
-  <dd><%= tryb { @item.max_decimal.to_s(:delimited) } %></dd>
+  <dd><%= tryb { @item.max_decimal.to_fs(:delimited) } %></dd>
 
   <dt><%= @model.t :initial_decimal %></dt>
-  <dd><%= tryb { @item.initial_decimal.to_s(:delimited) } %></dd>
+  <dd><%= tryb { @item.initial_decimal.to_fs(:delimited) } %></dd>
 
   <dt><%= @model.t :scale %></dt>
   <dd><%= @item.scale %></dd>

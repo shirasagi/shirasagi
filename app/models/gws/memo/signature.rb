@@ -1,7 +1,7 @@
 class Gws::Memo::Signature
   include SS::Document
-  include SS::Reference::User
-  include SS::Reference::Site
+  include Gws::Reference::User
+  include Gws::Reference::Site
   include Gws::SitePermission
 
   set_permission_name 'private_gws_memo_messages', :edit

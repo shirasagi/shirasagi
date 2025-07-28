@@ -85,7 +85,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
     now = Time.zone.now
     yesterday = Time.zone.yesterday # 日をまたぐ勤務を想定して前日を許可する
 
-    if @record.date_range.include?(now) || @record.date_range.include?(yesterday)
+    if @record.date_range.cover?(now) || @record.date_range.cover?(yesterday)
       # 備考には打刻という概念がないので、備考の編集 = 打刻とみなす。よって、現在日もしくは前日なら何度でも編集可能。
       editable = true
     end
@@ -103,7 +103,7 @@ class Gws::Affair::Attendance::TimeCardsController < ApplicationController
 
   def check_working_time_editable
     editable = false
-    if @record.date_range.include?(Time.zone.now)
+    if @record.date_range.cover?(Time.zone.now)
       # 就業時間には打刻という概念がないので、就業時間の編集 = 打刻とみなす。よって、現在日なら何度でも編集可能。
       editable = true
     end

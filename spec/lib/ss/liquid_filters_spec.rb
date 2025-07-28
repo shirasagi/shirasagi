@@ -187,7 +187,7 @@ describe SS::LiquidFilters, dbscope: :example do
 
     context "with -10M" do
       let(:value) { - 10 * 1_024 * 1_024 }
-      it { is_expected.to eq "-10485760バイト" }
+      it { is_expected.to eq "-10MB" }
     end
   end
 

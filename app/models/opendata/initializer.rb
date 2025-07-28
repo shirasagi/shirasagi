@@ -58,6 +58,22 @@ module Opendata
     Cms::Role.permission :revoke_private_opendata_datasets
     Cms::Role.permission :import_other_opendata_datasets
 
+    Cms::Role.permission :read_other_opendata_resources
+    Cms::Role.permission :read_private_opendata_resources
+    Cms::Role.permission :read_member_opendata_resources
+    Cms::Role.permission :edit_other_opendata_resources
+    Cms::Role.permission :edit_private_opendata_resources
+    Cms::Role.permission :edit_member_opendata_resources
+    Cms::Role.permission :delete_other_opendata_resources
+    Cms::Role.permission :delete_private_opendata_resources
+    Cms::Role.permission :delete_member_opendata_resources
+    Cms::Role.permission :release_other_opendata_resources
+    Cms::Role.permission :release_private_opendata_resources
+    Cms::Role.permission :release_member_opendata_resources
+    Cms::Role.permission :close_other_opendata_resources
+    Cms::Role.permission :close_private_opendata_resources
+    Cms::Role.permission :close_member_opendata_resources
+
     Cms::Role.permission :read_other_opendata_apps
     Cms::Role.permission :read_private_opendata_apps
     Cms::Role.permission :read_member_opendata_apps
@@ -107,11 +123,14 @@ module Opendata
     Cms::Role.permission :edit_other_opendata_harvests
     Cms::Role.permission :edit_other_opendata_harvested
 
+    Cms::Role.permission :edit_other_opendata_metadata
+
     Cms::Role.permission :edit_other_opendata_public_entity_datasets
 
     Cms::Role.permission :read_opendata_reports
     Cms::Role.permission :read_opendata_histories
 
+    SS::File.model "opendata/member", Opendata::MemberFile
     SS::File.model "opendata/dataset", SS::File, permit: %i(role)
     SS::File.model "opendata/resource", SS::File, permit: %i(role)
     SS::File.model "opendata/url_resource", SS::File, permit: %i(role)

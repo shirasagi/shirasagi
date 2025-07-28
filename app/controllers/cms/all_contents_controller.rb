@@ -50,7 +50,7 @@ class Cms::AllContentsController < ApplicationController
       return
     end
 
-    safe_params = params.require(:item).permit(:in_file)
+    safe_params = params.require(:item).permit(:in_file, :keep_timestamp)
     file = safe_params[:in_file]
     if file.blank? || ::File.extname(file.original_filename).casecmp(".csv") != 0
       @errors = [ t("errors.messages.invalid_csv") ]
@@ -75,7 +75,7 @@ class Cms::AllContentsController < ApplicationController
     temp_file.save!
 
     job = Cms::AllContentsImportJob.bind(site_id: @cur_site, user_id: @cur_user)
-    job.perform_later(temp_file.id)
+    job.perform_later(temp_file.id, keep_timestamp: safe_params[:keep_timestamp] == "keep")
     redirect_to({ action: :import }, { notice: t('ss.notice.started_import') })
   end
 

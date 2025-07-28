@@ -40,7 +40,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -50,8 +50,12 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         expect(Article::Page.site(site).count).to eq 2
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_present
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_present
+        Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
+          expect(page).to be_present
+        end
+        Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
+          expect(page).to be_present
+        end
       end
     end
 
@@ -75,7 +79,7 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: dest_node.id, user_id: cms_user.id)
-        expect { job.perform_now(csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -366,16 +370,13 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            group_ids: cms_user.group_ids, permission_level: rand(1..3), contact_group: group1
+            group_ids: cms_user.group_ids, contact_group: group1
           )
         end
 
         it do
           Article::Page.site(site).node(dest_node).first.tap do |page|
             expect(page.group_ids).to eq source_page.group_ids
-            unless SS.config.ss.disable_permission_level
-              expect(page.permission_level).to eq source_page.permission_level
-            end
           end
         end
       end
@@ -410,7 +411,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -421,8 +422,12 @@ describe Article::Page::ImportJob, dbscope: :example do
 
         expect(Article::Page.site(site).count).to eq 2
 
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_present
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_present
+        Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
+          expect(page).to be_present
+        end
+        Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
+          expect(page).to be_present
+        end
       end
     end
 
@@ -439,7 +444,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -497,7 +502,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do

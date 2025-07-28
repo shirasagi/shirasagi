@@ -18,10 +18,13 @@
   <dt><%= @model.t :x509_cert %></dt>
   <dd><%= @item.fingerprint %></dd>
 
-  <dt><%= @model.t :force_authn_state %></dt>
-  <dd><%= @item.label :force_authn_state %></dd>
-
   <dt><%= @model.t :init_uri %></dt>
   <dd><%= sns_login_saml_url(id: @item.filename) %></dd>
   <dd class="markdown-body"><%= SS::Addon::Markdown.text_to_html(t("sys.notices.saml_init_uri_md")) %></dd>
+
+  <dt><%= @model.t :force_authn_state %></dt>
+  <dd><%= @item.label :force_authn_state %></dd>
+
+  <dt><%= @model.t :authn_context %></dt>
+  <dd><%= @item.label :authn_context %></dd>
 </dl>

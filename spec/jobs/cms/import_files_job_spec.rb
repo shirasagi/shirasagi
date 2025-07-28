@@ -13,7 +13,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
     end
 
     it do
-      expectation = expect { described_class.bind(job_binding).perform_now }
+      expectation = expect { ss_perform_now described_class.bind(job_binding) }
       expectation.to output(include(*expected_files)).to_stdout
 
       log = Job::Log.first
@@ -138,7 +138,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
       let(:root) { "#{node.filename}/#{dir}" }
 
       it do
-        expectation = expect { described_class.bind(job_binding).perform_now }
+        expectation = expect { ss_perform_now described_class.bind(job_binding) }
         expectation.to output.to_stdout
 
         log = Job::Log.first

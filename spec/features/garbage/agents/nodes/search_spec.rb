@@ -86,8 +86,8 @@ describe "garbage_agents_nodes_search", type: :feature, dbscope: :example, js: t
       expect(page).to have_css("table.columns td", text: item3.kana)
       expect(page).to have_css("table.columns td", text: item3.remark)
 
-      wait_cbox_open { click_link I18n.t('garbage.submit.change') }
-      wait_for_cbox do
+      wait_for_cbox_opened { click_link I18n.t('garbage.submit.change') }
+      within_cbox do
         click_button I18n.t('garbage.submit.search')
       end
 
@@ -134,8 +134,8 @@ describe "garbage_agents_nodes_search", type: :feature, dbscope: :example, js: t
       expect(page).to have_no_css("table.columns td", text: item3.kana)
       expect(page).to have_no_css("table.columns td", text: item3.remark)
 
-      wait_cbox_open { click_link I18n.t('garbage.submit.change') }
-      wait_for_cbox do
+      wait_for_cbox_opened { click_link I18n.t('garbage.submit.change') }
+      within_cbox do
         click_button I18n.t('garbage.submit.search')
       end
 
@@ -182,8 +182,8 @@ describe "garbage_agents_nodes_search", type: :feature, dbscope: :example, js: t
       expect(page).to have_no_css("table.columns td", text: item3.kana)
       expect(page).to have_no_css("table.columns td", text: item3.remark)
 
-      wait_cbox_open { click_link I18n.t('garbage.submit.change') }
-      wait_for_cbox do
+      wait_for_cbox_opened { click_link I18n.t('garbage.submit.change') }
+      within_cbox do
         click_button I18n.t('garbage.submit.search')
       end
 
@@ -230,8 +230,8 @@ describe "garbage_agents_nodes_search", type: :feature, dbscope: :example, js: t
       expect(page).to have_no_css("table.columns td", text: item3.kana)
       expect(page).to have_no_css("table.columns td", text: item3.remark)
 
-      wait_cbox_open { click_link I18n.t('garbage.submit.change') }
-      wait_for_cbox do
+      wait_for_cbox_opened { click_link I18n.t('garbage.submit.change') }
+      within_cbox do
         click_button I18n.t('garbage.submit.search')
       end
 

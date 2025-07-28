@@ -1,6 +1,6 @@
 <% @index_title = proc do |item| %>
   <%
-    if request[:state] != "mine"
+    if params[:state].to_s != "mine"
       title = item.name
     end
     title ||= "休暇申請（#{item.start_end_term}）"

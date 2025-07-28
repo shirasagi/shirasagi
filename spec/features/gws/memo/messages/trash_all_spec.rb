@@ -17,9 +17,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.deleted'))
-      end
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       memo.reload
       expect(memo.path(gws_user)).to eq "INBOX.Trash"
@@ -37,9 +35,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.deleted'))
-      end
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Memo::Message.site(site).member(gws_user).where(id: memo.id)).to be_blank
       memo.reload

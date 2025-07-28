@@ -1,0 +1,47 @@
+<%= jquery do %>
+  $('.sortable-index tbody').sortable();
+<% end %>
+
+<dl class="see mod-cms-site-search-setting">
+  <dt><%= @model.t :link_target %><%= @model.tt :link_target %></dt>
+  <dd><%= f.select :link_target, @item.link_target_options %></dd>
+
+  <dt><%= @model.t :search_type_state %><%= @model.tt :search_type_state %></dt>
+  <dd><%= f.select :search_type_state, @item.search_type_state_options %></dd>
+
+  <dt><%= @model.t :site_search_type %><%= @model.tt :site_search_type %></dt>
+  <dd><%= f.select :site_search_type, @item.site_search_type_options %></dd>
+
+  <dt><%= @model.t :article_node_state %><%= @model.tt :article_node_state %></dt>
+  <dd><%= f.select :article_node_state, @item.article_node_state_options %></dd>
+
+  <dt><%= @model.t :category_state %><%= @model.tt :category_state %></dt>
+  <dd><%= f.select :category_state, @item.category_state_options %></dd>
+
+  <dt><%= @model.t :organization_state %><%= @model.tt :organization_state %></dt>
+  <dd><%= f.select :organization_state, @item.organization_state_options %></dd>
+
+  <dt><%= t("cms.node_config") %><%= @model.tt :st_article_node_ids %></dt>
+  <dd class="wide" style="line-height: 2.5">
+    <%= f.hidden_field "st_article_node_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(model: 'Article::Node::Page'), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected sortable-index">
+      <thead>
+      <tr>
+        <th class="name"><%= t("cms.node") %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.ordered_st_article_nodes.each do |node| %>
+        <tr data-id="<%= node.id %>">
+          <td><%= f.hidden_field "st_article_node_ids[]", value: node.id %> <%= node.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

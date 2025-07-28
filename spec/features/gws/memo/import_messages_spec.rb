@@ -13,7 +13,7 @@ describe 'gws_memo_import_messages', type: :feature, dbscope: :example do
       click_on I18n.t("ss.import")
     end
 
-    expect(page).to have_css('#notice', text: I18n.t("gws/memo/message.notice.start_import"))
+    wait_for_notice I18n.t("gws/memo/message.notice.start_import")
 
     expect(Gws::Memo::Message.all.count).to eq 8
     Gws::Memo::Message.all.find_by(subject: "宛先　→ 共有アドレスメッセージ").tap do |message|

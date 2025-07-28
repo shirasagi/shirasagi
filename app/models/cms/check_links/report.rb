@@ -4,7 +4,7 @@ class Cms::CheckLinks::Report
   include Cms::SitePermission
   include Cms::PublicFilter::Agent
 
-  set_permission_name "cms_check_links_reports"
+  set_permission_name 'cms_check_links', :use
 
   seqid :id
   field :name, type: String

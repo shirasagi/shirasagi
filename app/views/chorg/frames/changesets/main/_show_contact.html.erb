@@ -41,7 +41,7 @@
             end
           %>
         </td>
-        <td class="contact-main-state"><%= contact_group[:main_state] == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+        <td class="contact-main-state"><%= contact_group[:main_state] == "main" ? md_icons.filled("radio_button_checked", size: 14, title: t("contact.options.main_state.main"), aria: { hidden: nil, label: t("contact.options.main_state.main") }) : nil %></td>
         <td class="name"><%= contact_group[:name] %></td>
         <td class="contact-group-name"><%= contact_group[:contact_group_name] %></td>
         <td class="contact-charge"><%= contact_group[:contact_charge] %></td>
@@ -60,7 +60,7 @@
 
 <% if unifies_to_main.present? %>
   <div style="display: flex; align-items: center; gap: 5px; padding: 5px 0;">
-    <%= tag.span("check_box", class: "material-icons-outlined md-14", title: t("contact.options.main_state.main")) %>
+    <%= md_icons.outlined("check_box", size: 14, title: t("contact.options.main_state.main"), aria: { hidden: nil, label: t("contact.options.main_state.main") }) %>
     <%= t("contact.links.unify_to_main") %>
   </div>
 <% end %>

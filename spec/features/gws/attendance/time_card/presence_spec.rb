@@ -30,7 +30,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             click_on I18n.t('gws/attendance.buttons.punch')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+        wait_for_notice I18n.t('gws/attendance.notice.punched')
         expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
         visit gws_attendance_main_path(site)
@@ -39,7 +39,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             click_on I18n.t('gws/attendance.buttons.punch')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+        wait_for_notice I18n.t('gws/attendance.notice.punched')
         expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "leave"
       end
     end
@@ -52,7 +52,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             click_on I18n.t('gws/attendance.buttons.punch')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+        wait_for_notice I18n.t('gws/attendance.notice.punched')
         expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "available"
 
         visit gws_attendance_main_path(site)
@@ -61,7 +61,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
             click_on I18n.t('gws/attendance.buttons.punch')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('gws/attendance.notice.punched'))
+        wait_for_notice I18n.t('gws/attendance.notice.punched')
         expect(Gws::User.find(gws_user.id).user_presence(site).state).to eq "leave"
       end
     end

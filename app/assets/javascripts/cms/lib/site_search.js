@@ -3,12 +3,12 @@ this.Cms_Site_Search = (function () {
   }
 
   Cms_Site_Search.render = function () {
-    $(".ajax-box.categories").colorbox({
+    $(".ajax-box.article-nodes, .ajax-box.categories").colorbox({
       fixed: true,
       width: "90%",
       height: "90%"
     });
-    $(".selected-categories").find(".deselect").on("click", function () {
+    $(".selected-article-nodes, .selected-categories").find(".deselect").on("click", function () {
       $(this).closest(".selected-item").remove();
       return false;
     });
@@ -28,7 +28,7 @@ this.Cms_Site_Search = (function () {
 
     // append
     item.show();
-    $(".selected-categories").append(item);
+    SS_SearchUI.anchorAjaxBox.closest("dl").find(".selected-article-nodes, .selected-categories").append(item);
 
     return item;
   }
@@ -43,13 +43,13 @@ this.Cms_Site_Search = (function () {
 
   Cms_Site_Search.modal = function () {
     // form search event
-    $(".search-ui-form form.search").on("submit", function (e) {
+    $(".search-ui-form form.search").on("submit", function (_e) {
       $(this).ajaxSubmit({
         url: $(this).attr("action"),
         success: function (data) {
           return $("#cboxLoadedContent").html(data);
         },
-        error: function (data, status) {
+        error: function (_data, _status) {
           return alert("== Error(SiteSearch) ==");
         }
       });
@@ -57,8 +57,8 @@ this.Cms_Site_Search = (function () {
     });
 
     // select item event
-    $(".search-ui a.select-item").on("click", function (e) {
-      $(".selected-categories").html('');
+    $(".search-ui a.select-item").on("click", function (_e) {
+      SS_SearchUI.anchorAjaxBox.closest("dl").find(".selected-article-nodes, .selected-categories").html('');
       var tr = $(this).closest("tr");
       var article = Cms_Site_Search.selectItem(tr);
 
@@ -69,30 +69,33 @@ this.Cms_Site_Search = (function () {
     });
 
     // select items event
-    $(".search-ui-select .select-items").on("click", function (e) {
-        $(".selected-categories").html('');
-        $(".search-ui .items .set-category:checked").each(function () {
-            var tr = $(this).closest("tr");
-            Cms_Site_Search.selectItem(tr);
-        });
+    $(".search-ui-select .select-items").on("click", function (_e) {
+      SS_SearchUI.anchorAjaxBox.closest("dl").find(".selected-article-nodes, .selected-categories").html('');
+      $(".search-ui .items .set-article-node:checked, .search-ui .items .set-category:checked").each(function () {
+        var tr = $(this).closest("tr");
+        Cms_Site_Search.selectItem(tr);
+      });
       $.colorbox.close();
       return false;
     });
 
     // list-head checkbox event
-    $(".search-ui .list-head input:checkbox").on("change", function (e) {
+    $(".search-ui .list-head input:checkbox").on("change", function (_e) {
       var chk = $(this).prop('checked');
       $('.search-ui .list-item').each(function () {
         $(this).toggleClass('checked', chk);
-        $(this).find('.set-category').prop('checked', chk);
+        $(this).find('.set-article-node, .set-category').prop('checked', chk);
       });
     });
 
-      // check selected items in modal
+    // check selected items in modal
     $(".selected-categories .selected-item").each(function () {
       var name = $(this).attr("data-name");
-      var tr = $(".items [data-name='" + name + "']");
-        tr.find("input[type=checkbox]").prop('checked', true);
+      $(`#colorbox .items [data-name="${name}"] input[type=checkbox]`).prop('checked', true);
+    });
+    $(".selected-article-nodes .selected-item").each(function () {
+      var id = $(this).attr("data-id");
+      $(`#colorbox .items [data-id="${id}"] input[type=checkbox]`).prop('checked', true);
     });
   }
 

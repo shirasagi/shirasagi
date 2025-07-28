@@ -16,16 +16,17 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
 
     it do
       visit cms_nodes_path(site: site)
+      wait_for_all_turbo_frames
       click_on I18n.t("ss.links.new")
 
       within "#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.change")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within ".mod-article" do
           click_on I18n.t("cms.nodes.article/map_search")
         end

@@ -1,0 +1,12 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox" /></label>
+
+  <div class="list-head-action">
+    <div class="list-head-action-update">
+      <%= button_tag t("cms.options.expiration_setting_type.site"), type: :button, name: "expiration_setting_all", value: "site", class: "btn", data: { confirm: t("cms.confirm.expiration_setting_type.site") } %>
+      <%= button_tag t("cms.options.expiration_setting_type.never"), type: :button, name: "expiration_setting_all", value: "never", class: "btn", data: { confirm: t("cms.confirm.expiration_setting_type.never") } %>
+    </div>
+  </div>
+
+  <%= render template: "_search" %>
+</div>

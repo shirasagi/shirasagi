@@ -284,6 +284,7 @@ module Opendata::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Opendata::Addon::ProfileSetting
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
@@ -302,7 +303,7 @@ module Opendata::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "opendata/my_dataset") }
   end
@@ -317,7 +318,7 @@ module Opendata::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "opendata/my_favorite_dataset") }
   end
@@ -332,7 +333,7 @@ module Opendata::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "opendata/my_app") }
   end
@@ -347,7 +348,7 @@ module Opendata::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "opendata/my_idea") }
   end

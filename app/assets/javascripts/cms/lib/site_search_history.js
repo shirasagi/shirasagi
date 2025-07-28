@@ -160,7 +160,7 @@ this.Cms_Site_Search_History = (function () {
       return keyword;
     }
 
-    keyword = keyword.replace(/[\s　]{1,}/g, ' ');
+    keyword = keyword.replace(/[\s\u3000]+/g, ' ');
     keyword = keyword.trim();
 
     if (keyword.length > this.maxKeywordLength) {

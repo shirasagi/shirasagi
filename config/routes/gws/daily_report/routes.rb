@@ -18,7 +18,9 @@ Rails.application.routes.draw do
     get '/' => redirect { |p, req| "#{req.path}/#{Time.zone.now.strftime('%Y%m')}/reports" }, as: :main
     resources :forms, concerns: [:deletion] do
       match :copy_year, on: :collection, via: %i[get post]
-      resources :columns, concerns: :deletion
+      resources :columns, only: %i[index create] do
+        post :reorder, on: :collection
+      end
     end
     scope(path: ':year_month') do
       resources :reports, concerns: :deletion do

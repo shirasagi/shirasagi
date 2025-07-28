@@ -175,12 +175,12 @@ ja:
     edit_private_gws_memo_categories: カテゴリーの編集（所有）
     delete_other_gws_memo_categories: カテゴリーの削除（全て）
     delete_private_gws_memo_categories: カテゴリーの削除（所有）
-    read_other_gws_memo_templates: 電話メモの閲覧（全て）
-    read_private_gws_memo_templates: 電話メモの閲覧（所有）
-    edit_other_gws_memo_templates: 電話メモの編集（全て）
-    edit_private_gws_memo_templates: 電話メモの編集（所有）
-    delete_other_gws_memo_templates: 電話メモの削除（全て）
-    delete_private_gws_memo_templates: 電話メモの削除（所有）
+    read_other_gws_memo_templates: 定型文の閲覧（全て）
+    read_private_gws_memo_templates: 定型文の閲覧（所有）
+    edit_other_gws_memo_templates: 定型文の編集（全て）
+    edit_private_gws_memo_templates: 定型文の編集（所有）
+    delete_other_gws_memo_templates: 定型文の削除（全て）
+    delete_private_gws_memo_templates: 定型文の削除（所有）
     restore_gws_memo_messages: メッセージの復元
     backup_gws_memo_messages: メッセージのバックアップ
   mongoid:
@@ -298,7 +298,7 @@ ja:
         notice_workload_user_setting: 業務見える化
         notice_presence_user_setting: 在席状況
         notice_affair_user_setting: 庶務事務
-        notice_workflow_user_setting: ワークフロー
+        notice_workflow_user_setting: ワークフロー・ワークフロー2
         notice_circular_user_setting: 回覧板
         notice_monitor_user_setting: 照会・回答
         notice_survey_user_setting: アンケート
@@ -308,6 +308,7 @@ ja:
         notice_discussion_user_setting: 電子会議室
         notice_report_user_setting: レポート
         notice_announcement_user_setting: お知らせ
+        notice_tabular_user_setting: 汎用DB
         notice_schedule_email_user_setting: スケジュール通知メール転送
         notice_todo_email_user_setting: ToDo通知メール転送
         notice_workload_email_user_setting: 業務見える化通知メール転送
@@ -322,6 +323,7 @@ ja:
         notice_discussion_email_user_setting: 電子会議室通知メール転送
         notice_report_email_user_setting: レポート通知メール転送
         notice_announcement_email_user_setting: お知らせ通知メール転送
+        notice_tabular_email_user_setting: 汎用DB通知メール転送
         send_notice_mail_addresses: 転送先メールアドレス
 
   activemodel:
@@ -382,9 +384,9 @@ ja:
         - 無効：この署名を自動で入力しません
     gws/memo/template:
       name:
-        - 電話メモの一覧に表示される名称を入力します。
+        - 定型文の一覧に表示される名称を入力します。
       text:
-        - 電話メモの本文を入力します。
+        - 定型文の本文を入力します。
       order:
         - 並び順を入力します。
         - 数字が小さいほど上位に表示されます。

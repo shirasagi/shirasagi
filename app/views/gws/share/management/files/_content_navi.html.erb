@@ -19,7 +19,7 @@
   </div>
 
   <%= jquery do %>
-    (new SS_TreeNavi('#content-navi .tree-navi')).render("<%= @tree_navi %>");
+    (new SS_TreeNavi('#content-navi .tree-navi')).render(<%== @tree_navi.to_json %>);
   <% end %>
 
   <div id="content-navi">

@@ -1,0 +1,38 @@
+<% value ||= nil %>
+<% file = value.try(:file) %>
+<% controller ||= false %>
+<%
+  form_options = column.form_options
+  form_options['class'] = [ form_options['class'].presence ].flatten.compact
+  form_options['class'] << 'file-id'
+%>
+<% opendata_assoced = @cur_node && @cur_node.try(:opendata_sites).present? %>
+<%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
+  <span class="upload-menu-new">
+    <% if @cur_node %>
+      <%= link_to t('ss.links.upload'), cms_apis_node_temp_files_path(cid: @cur_node, owner_item_id: @item.id, owner_item_type: @model.to_s), class: "ajax-box btn btn-file-upload" %>
+    <% else %>
+      <%= link_to t('ss.links.upload'), cms_apis_temp_files_path(owner_item_id: @item.id, owner_item_type: @model.to_s), class: "ajax-box btn btn-file-upload" %>
+    <% end %>
+  </span>
+  <span class="upload-menu-select">
+    <%= link_to t("sns.user_file"), cms_apis_user_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
+    <%= link_to t("cms.file"), cms_apis_files_path(cid: @cur_node || '-'), class: "ajax-box btn btn-file-upload" %>
+  </span>
+
+  <div class="column-value-upload-drop-area">
+    <span class="column-value-upload-drop-notice"><%= t('ss.notice.file_droppable') %></span>
+  </div>
+
+  <div class="column-value-files">
+    <% if file %>
+      <%= render 'cms/apis/forms/select_temp_file/upload', item: file %>
+    <% end %>
+  </div>
+
+  <%= render "cms/agents/columns/file_upload/column_form_v1_#{column.file_type.presence || "image"}", f: f, id: id, column: column, value: value %>
+
+  <%= jquery do %>
+    Cms_Column_FileUpload.render(<%== "##{id}".to_json %>);
+  <% end %>
+<% end %>

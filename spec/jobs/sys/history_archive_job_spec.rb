@@ -68,7 +68,7 @@ describe Sys::HistoryArchiveJob, dbscope: :example do
         expect(History::Log.where(site_id: nil).count).to eq 3
         expect(History::Log.where(site_id: site.id).count).to eq 3
         Timecop.freeze(now) do
-          described_class.perform_now
+          ss_perform_now described_class
         end
         expect(History::Log.where(site_id: nil).count).to eq 2
         expect(History::Log.where(site_id: site.id).count).to eq 2
@@ -130,7 +130,7 @@ describe Sys::HistoryArchiveJob, dbscope: :example do
         expect(History::Log.where(site_id: nil).count).to eq 8
         expect(History::Log.where(site_id: site.id).count).to eq 8
         Timecop.freeze(now) do
-          described_class.perform_now
+          ss_perform_now described_class
         end
 
         expect(Sys::HistoryArchiveFile.where(site_id: nil).reorder(filename: 1, id: 1).count).to eq 2

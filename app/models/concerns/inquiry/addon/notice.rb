@@ -6,12 +6,13 @@ module Inquiry::Addon
     included do
       field :notice_state, type: String, default: "disabled"
       field :notice_content, type: String, default: "disabled"
-      field :notice_email, type: String
+      field :notice_emails, type: SS::Extensions::Lines
       field :from_name, type: String
       field :from_email, type: String
-      permit_params :notice_state, :notice_content, :notice_email, :from_name, :from_email
+      permit_params :notice_state, :notice_content, :notice_emails, :from_name, :from_email
 
-      validate :validate_notify_mail
+      validates :notice_emails, emails: true, presence: true, if: ->{ notify_mail_enabled? }
+      validates :from_email, email: true, presence: true, if: ->{ notify_mail_enabled? }
     end
 
     def notice_state_options
@@ -30,16 +31,6 @@ module Inquiry::Addon
 
     def notify_mail_enabled?
       notice_state == "enabled"
-    end
-
-    private
-
-    def validate_notify_mail
-      if notify_mail_enabled?
-        [:notice_email, :from_email].each do |sym|
-          errors.add sym, :blank if send(sym).blank?
-        end
-      end
     end
   end
 end

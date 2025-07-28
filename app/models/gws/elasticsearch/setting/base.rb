@@ -86,7 +86,7 @@ module Gws::Elasticsearch::Setting::Base
   def manageable_filter
     queries = []
 
-    if level = cur_user.gws_role_permissions["read_other_#{model.permission_name}_#{cur_site.id}"]
+    if cur_user.gws_role_permissions["read_other_#{model.permission_name}_#{cur_site.id}"]
       query2 = {}
       query2[:bool] = {}
       query2[:bool][:must] = []
@@ -96,9 +96,8 @@ module Gws::Elasticsearch::Setting::Base
       query3 = {}
       query3[:bool] = {}
       query3[:bool][:must] = []
-      query3[:bool][:must] << { range: { permission_level: { gte: 0, lte: level } } }
       queries << query3
-    elsif level = cur_user.gws_role_permissions["read_private_#{model.permission_name}_#{cur_site.id}"]
+    elsif cur_user.gws_role_permissions["read_private_#{model.permission_name}_#{cur_site.id}"]
       query2 = {}
       query2[:bool] = {}
       query2[:bool][:must] = []
@@ -109,7 +108,6 @@ module Gws::Elasticsearch::Setting::Base
       query3[:bool] = {}
       query3[:bool][:must] = []
       query3[:bool][:must] << { terms: { group_ids: cur_user.group_ids } }
-      query3[:bool][:must] << { range: { permission_level: { gte: 0, lte: level } } }
       queries << query3
     else
       query2 = {}

@@ -54,6 +54,7 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
     fill_in "item_text", with: item_text
     check category.name
     click_button save
+    wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
     expect(current_path).to eq node_myidea.url
     expect(page).to have_link(item_name)
@@ -66,12 +67,14 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
     expect(page).to have_button(save)
 
     click_button save
+    wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
     expect(page).to have_link(delete)
 
     click_link delete
     expect(page).to have_button(delete)
 
     click_button delete
+    wait_for_notice I18n.t("ss.notice.deleted"), selector: "#ss-notice"
     expect(current_path).to eq node_myidea.url
   end
 
@@ -104,7 +107,7 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
       check category.name
       click_button I18n.t("ss.buttons.request")
 
-      expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
       click_link item_name
       expect(page).to have_css(".status .input", text: I18n.t("ss.options.state.request"))

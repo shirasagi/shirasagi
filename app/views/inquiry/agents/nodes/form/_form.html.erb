@@ -18,22 +18,44 @@
         <% if column.input_type =~ /upload_file/ %>
           <% file_data = @answer.find_data(column) %>
           <% if file_data && file_data.values.try(:[], 0) %>
-            <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0] %>
+            <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0], id: nil %>
             <%= file_data.values[2] %>
           <% end %>
         <% else %>
-          <%= f.hidden_field column.id, value: data %><%=br data %>
+          <%= f.hidden_field column.id, value: data, id: nil %>
+            <% if column.input_type =~ /date_field/ %>
+              <% data = I18n.l(data.to_date, format: :picker) rescue data %>
+            <% elsif column.input_type =~ /datetime_field/  %>
+              <% data = I18n.l(data.to_datetime, format: :picker) rescue data %>
+            <% end %>
+            <%=br data %>
           <% if column.input_confirm == "enabled" %>
-            <%= f.hidden_field "#{column.id}_confirm", value: confirm_data %>
+            <%= f.hidden_field "#{column.id}_confirm", value: confirm_data, id: nil %>
           <% end %>
         <% end %>
       <% end %>
     <% else %>
       <%= raw column.html %>
-      <% if column.input_type =~ /(text_field|email_field|text_area)/ %>
+      <% if column.input_type =~ /(text_field|email_field|text_area|number_field)/ %>
         <% opt = { value: data } %>
         <% opt.merge!(column.additional_attr_to_h) %>
         <%= f.send(column.input_type, column.id, opt) %>
+      <% elsif column.input_type =~ /date_field/ %>
+        <% if column.date_inputter == "picker" %>
+          <%= f.ss_date_field column.id.to_s, value: data %>
+        <% else %>
+          <% opt = { type: "date", name: "#{f.object_name}[#{column.id}]", value: data } %>
+          <% opt.merge!(column.additional_attr_to_h) %>
+          <%= tag.input(**opt) %>
+        <% end %>
+      <% elsif column.input_type =~ /datetime_field/ %>
+        <% if column.date_inputter == "picker" %>
+          <%= f.ss_datetime_field column.id.to_s, value: data %>
+        <% else %>
+          <% opt = { type: "datetime-local", name: "#{f.object_name}[#{column.id}]", value: data } %>
+          <% opt.merge!(column.additional_attr_to_h) %>
+          <%= tag.input(**opt) %>
+        <% end %>
       <% elsif column.input_type =~ /form_select/ %>
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
@@ -68,7 +90,7 @@
         <% opt.merge!(column.additional_attr_to_h) %>
         <% file_data = @answer.find_data(column) %>
         <% if file_data && file_data.values.try(:[], 0) %>
-          <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0] if file_data.values[0] %>
+          <%= hidden_field_tag "#{f.object_name}[#{column.id}]", file_data.values[0], id: nil if file_data.values[0] %>
           <%= file_field_tag "#{f.object_name}[#{column.id}]", opt %><br />
           <%= file_data.values[2] %>
         <% else %>
@@ -77,16 +99,12 @@
       <% end %>
     <% end %>
   <% end %>
-  <% if column.input_confirm == "enabled" && !confirm %>
-    <fieldset class="column">
-      <legend><%= f.label "#{column.id}_confirm" , "#{t("inquiry.confirm_input", name: column.name)}" %>
-      <span class="required"><%= "#{t("inquiry.required_field")}" %></span></legend>
-      <div class = "fields">
-        <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
-        <% opt = { value: "" } %>
-        <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
-      </div>
-    </fieldset>
+    <% if column.input_confirm == "enabled" && !confirm %>
+      <%= inquiry_column_tag(column, f: f, column: { name: t("inquiry.confirm_input", name: column.name), id: "#{column.id}_confirm" }, confirm: confirm) do %>
+      <p><%= t "inquiry.confirm_input_description", name: column.name %></p>
+      <% opt = { value: "" } %>
+      <%= f.send(column.input_type, "#{column.id}_confirm", opt) %>
+    <% end %>
   <% end %>
 <% end %>
 </div>

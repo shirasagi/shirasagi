@@ -26,8 +26,8 @@ describe "gws_sites", type: :feature, dbscope: :example, js: true do
     it do
       visit index_path
 
+      ensure_addon_opened "#addon-gws-agents-addons-site_usage"
       within "#addon-gws-agents-addons-site_usage" do
-        first(".addon-head h2").click
         expect(page).to have_css(".usage-file-count", text: "-")
         expect(page).to have_css(".usage-calculated-at", text: "-")
 

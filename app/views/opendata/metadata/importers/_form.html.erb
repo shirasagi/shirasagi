@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @item.tt :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :source_url %><%= @item.tt :source_url %></dt>
+  <dd><%= f.text_field :source_url %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+
+  <dt><%= @model.t :basicauth_state %><%= @model.tt :basicauth_state %></dt>
+  <dd><%= f.select :basicauth_state, @item.basicauth_state_options %></dd>
+
+  <dt><%= @model.t :basicauth_username %><%= @model.tt :basicauth_username %></dt>
+  <dd><%= f.text_field :basicauth_username %></dd>
+
+  <dt><%= @model.t :basicauth_password %><%= @model.tt :basicauth_password %></dt>
+  <dd><%= f.password_field :basicauth_password, autocomplete: "new-password", value: @item.basicauth_password %></dd>
+</dl>

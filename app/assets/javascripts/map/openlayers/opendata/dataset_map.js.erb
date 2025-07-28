@@ -22,7 +22,7 @@ this.Openlayers_Dataset_Map = (function () {
     // remove renderInBox class
     $(item).find("a").removeClass("cboxElement");
 
-    $(item).find('[name="resource_id"]').each(function (idx) {
+    $(item).find('[name="resource_id"]').each(function (_idx) {
       var resource_id = $(this).val();
 
       $(this).data("map_points", Openlayers_Dataset_Map.map_points[dataset_id][resource_id]);
@@ -41,7 +41,7 @@ this.Openlayers_Dataset_Map = (function () {
         $(".marker-image-form .images").hide();
 
         images.show();
-        $("body").not(this).one("click", function (e) {
+        $("body").not(this).one("click", function (_e) {
           images.hide();
         });
 
@@ -66,7 +66,7 @@ this.Openlayers_Dataset_Map = (function () {
     });
 
     // deselect button
-    $(item).find(".deselect").on("click", function (e) {
+    $(item).find(".deselect").on("click", function (_e) {
       $(this).closest(".selected-item").remove();
       Openlayers_Dataset_Map.setMarkers();
       Openlayers_Dataset_Map.map.resize();
@@ -119,13 +119,13 @@ this.Openlayers_Dataset_Map = (function () {
     Openlayers_Dataset_Map.map_points = map_points;
 
     // form search event
-    $(".search-ui-form form.search").on("submit", function (e) {
+    $(".search-ui-form form.search").on("submit", function (_e) {
       $(this).ajaxSubmit({
         url: $(this).attr("action"),
         success: function (data) {
           return $("#cboxLoadedContent").html(data);
         },
-        error: function (data, status) {
+        error: function (_data, _status) {
           return alert("== Error ==");
         }
       });
@@ -133,7 +133,7 @@ this.Openlayers_Dataset_Map = (function () {
     });
 
     // select item event
-    $(".search-ui a.select-item").on("click", function (e) {
+    $(".search-ui a.select-item").on("click", function (_e) {
       var tr = $(this).closest("tr");
       var article = Openlayers_Dataset_Map.selectItem(tr);
 
@@ -144,7 +144,7 @@ this.Openlayers_Dataset_Map = (function () {
     });
 
     // select items event
-    $(".search-ui-select .select-items").on("click", function (e) {
+    $(".search-ui-select .select-items").on("click", function (_e) {
       $(".search-ui .items .set-dataset:checked").each(function () {
         var tr = $(this).closest("tr");
         Openlayers_Dataset_Map.selectItem(tr);
@@ -154,7 +154,7 @@ this.Openlayers_Dataset_Map = (function () {
     });
 
     // list-head checkbox event
-    $(".search-ui .list-head input:checkbox").on("change", function (e) {
+    $(".search-ui .list-head input:checkbox").on("change", function (_e) {
       var chk = $(this).prop('checked');
       $('.search-ui .list-item').each(function () {
         $(this).toggleClass('checked', chk);
@@ -163,7 +163,7 @@ this.Openlayers_Dataset_Map = (function () {
     });
 
     // toggle select items button event
-    $(".search-ui").on("change", function (e) {
+    $(".search-ui").on("change", function (_e) {
         Openlayers_Dataset_Map.toggleSelectButton();
     });
 

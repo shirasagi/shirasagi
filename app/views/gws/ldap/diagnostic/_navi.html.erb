@@ -1,0 +1,8 @@
+<nav class="mod-navi">
+  <h2><%= t("sys.diag") %></h2>
+
+  <h3><%= link_to "Auth", gws_ldap_diagnostic_auth_path %></h3>
+  <h3><%= link_to "Search", gws_ldap_diagnostic_search_path %></h3>
+</nav>
+
+<%= render partial: "gws/ldap/main/navi" %>

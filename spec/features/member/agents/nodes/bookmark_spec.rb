@@ -15,7 +15,7 @@ describe 'members/agents/nodes/bookmark', type: :feature, dbscope: :example, js:
       redirect_url: mypage_node.url)
   end
   let!(:bookmark_node) { create :member_node_bookmark, cur_node: mypage_node, layout_id: layout2.id }
-  let!(:bookmark_part) { create :member_part_bookmark, cur_site: site }
+  let!(:bookmark_part) { create :member_part_bookmark, cur_site: site, cur_node: bookmark_node }
 
   let!(:article_node) { create :article_node_page, cur_node: mypage_node, layout_id: layout1.id }
   let!(:article_page) { create :article_page, cur_node: article_node, layout_id: layout1.id }
@@ -32,8 +32,8 @@ describe 'members/agents/nodes/bookmark', type: :feature, dbscope: :example, js:
         fill_in 'item[password]', with: member.in_password
         click_button I18n.t("ss.login")
       end
-      expect(current_path).to eq article_page.url
       expect(page).to have_css(".favorite", text: I18n.t("member.links.register_bookmark"))
+      expect(current_path).to eq article_page.url
       logout_member(site, login_node)
     end
   end

@@ -44,7 +44,7 @@ url = File.join(@cur_site.full_url, @cur_main_path)
 
   <% elsif service == "line" %>
     <div class="site line">
-      <div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja" ></div>
+      <div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja" data-url="<%= url %>"></div>
       <script src="//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" async="async" defer="defer" ></script>
     </div>
   <% end %>

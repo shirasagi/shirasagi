@@ -10,7 +10,7 @@
 <li class="user-navigation-dropdown-menu-item">
   <%= link_to gws_frames_user_navigation_group_path(site: @cur_site), class: "user-navigation-dropdown-menu-link" do %>
     <%= t("gws.links.switch_group") %>
-    <span class="caret material-icons-outlined">keyboard_arrow_right</span>
+    <%= md_icons.outlined "keyboard_arrow_right", class: "caret" %>
   <% end %>
 </li>
 <li class="user-navigation-dropdown-menu-item user-navigation-dropdown-menu-item-divider"><hr class="user-navigation-dropdown-menu-item-divider-item"></li>

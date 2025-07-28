@@ -6,17 +6,15 @@ licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c|
 
 <%= jquery do %>
 
-<% if @dataset.allowed?(:release, @cur_user, site: @cur_site) %>
+<% if @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
 $("<input />").attr("type", "submit").attr("name", "publish_save").attr("class", "publish_save").
   attr("value", '<%= t("ss.buttons.publish_save") %>').insertAfter("#item-form input.save");
 <% end %>
 
-<% if %w(ready public).include?(@dataset.state) %>
-  <% if @dataset.allowed?(:close, @cur_user, site: @cur_site) %>
-  $(".save").val("<%= t("ss.buttons.closed_save") %>");
-  <% else %>
-  $(".save").remove();
-  <% end %>
+<% if @item.allowed?(:close, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
+$(".save").val("<%= t("ss.buttons.closed_save") %>");
+<% else %>
+$(".save").remove();
 <% end %>
 
 $(".save").on("click", function(e){
@@ -56,4 +54,12 @@ $(".publish_save").on("click", function(e){
   <% if @item.tsv_id %>
   <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "ss.buttons.delete" %> (<%= @item.tsv.filename %>)</label></dd>
   <% end %>
+
+  <dt></dt>
+  <dd>
+    <%= f.label(:in_update_dataset, title: t('opendata.labels.update_dataset')) do %>
+      <%= f.check_box(:in_update_dataset, { checked: false }, true, false) %>
+      <%= t('opendata.labels.update_dataset') %>
+    <% end %>
+  </dd>
 </dl>

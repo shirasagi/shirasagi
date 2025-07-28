@@ -41,7 +41,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/accounts_1-1.csv"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       user1.reload
       expect(user1).to have(1).imap_settings
@@ -109,7 +109,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/accounts_1-1.csv"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit webmail_users_path
       within ".nav-menu" do
@@ -119,7 +119,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/accounts_1-2.csv"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       user1.reload
       expect(user1).to have(1).imap_settings

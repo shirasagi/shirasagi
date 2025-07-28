@@ -22,30 +22,15 @@ class Webmail::LoginController < ApplicationController
     raise "400"
   end
 
-  public
+  def login_path
+    webmail_login_path
+  end
 
-  def login
-    if !request.post?
-      # retrieve parameters from get parameter. this is bookmark support.
-      @item = SS::User.new email: params[:email]
-      return render(template: "login")
-    end
+  def logout_path
+    webmail_logout_path
+  end
 
-    safe_params     = get_params
-    email_or_uid    = safe_params[:email].presence || safe_params[:uid]
-    password        = safe_params[:password]
-    encryption_type = safe_params[:encryption_type]
-
-    if encryption_type.present?
-      password = SS::Crypto.decrypt(password, type: encryption_type) rescue nil
-    end
-
-    @item = SS::User.authenticate(email_or_uid, password) rescue false
-    @item = nil if @item && !@item.enabled?
-    @item = @item.try_switch_user || @item if @item
-    @cur_user = SS.current_user = @item
-    SS.change_locale_and_timezone(SS.current_user)
-
-    render_login @item, email_or_uid, session: true, password: password, logout_path: webmail_logout_path
+  def mfa_login_path
+    webmail_mfa_login_path
   end
 end

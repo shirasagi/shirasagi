@@ -1,0 +1,9 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <%=
+    options = select_options.map do |select_option|
+      [ select_option, select_option ]
+    end
+    choices = render ::SS::OptionsForSelectComponent.new(options: options, selected: normalized_values.first)
+    select_tag("#{form.object_name}[col_#{column.id}][]", choices, include_blank: !column.required?)
+  %>
+<% end %>

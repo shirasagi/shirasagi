@@ -13,6 +13,8 @@ ja:
     dataset_group: グループ
     harvest: ハーベスト
     poster: 投稿
+    metadata: メタデータ
+    notice_metadata_import: 取込処理結果をメールで通知する
     ckan:
       group: CKANグループ
       organization: CKAN組織
@@ -68,6 +70,9 @@ ja:
         本集計では、以下のダウンロード履歴は除外して集計していますので、ダウンロード履歴を集計して得られる数値と、本集計の数値とが異なる場合があります。
         - ダウンロード方法が「一括」は除外
         - ボットは除外
+      access_report_notice_md: |-
+        本集計はリコメンド履歴の機能を利用していますが、このサイトではリコメンド履歴が有効になっていません。
+        本集計を正しく利用するにはリコメンド履歴を有効にしてください。
     export:
       subject: '[オープンデータ/データセット] エクスポートが完了しました。'
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
@@ -91,26 +96,52 @@ ja:
       preview_history_archives: アーカイブ
     public_entity:
       format: データセット一覧
-      download: 公開中のデータセットの一覧を推奨データセット「オープンデータ一覧」の形式にてダウンロードできます。
+      download: 公開中のデータセットの一覧を自治体標準オープンデータセット「オープンデータ一覧」の形式にてダウンロードできます。
       headers:
-        - 都道府県コード又は市区町村コード
-        - "NO"
-        - 都道府県名
-        - 市区町村名
-        - データ名称
-        - データ概要
-        - データ形式
-        - 分類１
-        - 分類２
-        - 分類３
-        - 分類４
-        - 更新頻度
-        - URL
-        - API対応有無
-        - ライセンス
-        - 登録日
-        - 最終更新日
-        - 備考
+        - データセット_ID
+        - 全国地方公共団体コード
+        - 地方公共団体名
+        - データセット_タイトル
+        - データセット_サブタイトル
+        - データセット_概要
+        - データセット_キーワード
+        - データセット_分類
+        - データセット_ユニバーサルメニュー
+        - データセット_公開日
+        - データセット_最終更新日
+        - データセット_バージョン
+        - データセット_言語
+        - データセット_URL
+        - データセット_更新頻度
+        - データセット_準拠する標準
+        - データセット_関連ドキュメント
+        - データセット_来歴情報
+        - データセット_対象地域
+        - データセット_対象期間
+        - データセット_作成者
+        - データセット_連絡先名称
+        - データセット_連絡先メールアドレス
+        - データセット_連絡先電話番号
+        - データセット_連絡先内線番号
+        - データセット_連絡先FormURL
+        - データセット_連絡先備考（その他、SNSなど）
+        - データセット_備考
+        - ファイル_タイトル
+        - ファイル_アクセスURL
+        - ファイル_ダウンロードURL
+        - ファイル_説明
+        - ファイル形式
+        - ファイル_ライセンス
+        - ファイル_ステータス
+        - ファイル_サイズ
+        - ファイル_公開日
+        - ファイル_最終更新日
+        - ファイル_利用規約
+        - ファイル_関連ドキュメント
+        - ファイル_言語
+        - ファイル_準拠する標準
+        - ファイル_API対応有無
+        - ファイル_著作権表記
     download_reports:
       dataset_data: データセット/データ名
     errors:
@@ -257,6 +288,7 @@ ja:
       and_condition: AND条件
       convert_setting: コンバート設定
       errors: エラー
+      update_dataset: データセットの更新日を更新する
     messages:
       max_row_notice: "最大 %{max} 行を表示しています。"
       max_pdf_preview_notice: "最大で%{max}ページ表示しています。"
@@ -320,6 +352,10 @@ ja:
       shirasagi_scraper: "Shirasagi スクレイピング"
     harvest_exporter_api_options:
       ckan: "Ckan API"
+    edit_profile_state_options:
+      allow_all: 編集可能
+      restrict_oauth: メールアドレスログインのみ編集可能
+      restrict_all: 編集不可
     assoc_job:
       dataset_text: "%{name} の一覧は %{url} でも公開されているので、%{url} もご覧ください。"
       resource_text: "%{name} は %{now} 時点の情報を元に作成しています。"
@@ -417,6 +453,12 @@ ja:
         [param4] offset - 取得を開始するリソースの配列インデックスを指定する。
         [param5] limit - 取得するリソースの最大件数を指定する。
 
+    metadata_type_condition_options:
+      string: 文字列
+      regexp: 正規表現
+      metadata_category: カテゴリー
+      metadata_estat_category: 分類
+
   modules:
     opendata: オープンデータ
     addons:
@@ -457,6 +499,16 @@ ja:
       opendata/pref_code: 地域コード
       opendata/counter_html: レイアウト
       opendata/graph: グラフプレビュー表示
+      opendata/metadata/importer_category_setting: 分野設定
+      opendata/metadata/importer_estat_category_setting: eStat分野設定
+      opendata/metadata/importer_area_setting: 地域設定
+      opendata/metadata/importer_report: レポート
+      opendata/metadata/importer_notice: 通知
+      opendata/metadata/edit_lock: メタデータ
+      opendata/metadata/license: メタデータ設定
+      opendata/metadata/dataset: メタデータ設定
+      opendata/metadata/resource: メタデータ設定
+      opendata/profile_setting: プロフィール設定
 
   cms:
     nodes:
@@ -517,6 +569,21 @@ ja:
     reroute_private_opendata_datasets: データセットの承認経路変更（所有）
     revoke_other_opendata_datasets: データセットの承認申請取消（全て）
     revoke_private_opendata_datasets: データセットの承認申請取消（所有）
+    read_other_opendata_resources: リソースの閲覧（全て）
+    read_private_opendata_resources: リソースの閲覧（所有）
+    read_member_opendata_resources: リソースの閲覧（メンバー）
+    edit_other_opendata_resources: リソースの編集（全て）
+    edit_private_opendata_resources: リソースの編集（所有）
+    edit_member_opendata_resources: リソースの編集（メンバー）
+    delete_other_opendata_resources: リソースの削除（全て）
+    delete_private_opendata_resources: リソースの削除（所有）
+    delete_member_opendata_resources: リソースの削除（メンバー）
+    release_other_opendata_resources: リソースの公開（全て）
+    release_private_opendata_resources: リソースの公開（所有）
+    release_member_opendata_resources: リソースの公開（メンバー）
+    close_other_opendata_resources: リソースの非公開（全て）
+    close_private_opendata_resources: リソースの非公開（所有）
+    close_member_opendata_resources: リソースの非公開（メンバー）
     read_other_opendata_apps: アプリの閲覧（全て）
     read_private_opendata_apps: アプリの閲覧（所有）
     read_member_opendata_apps: アプリの閲覧（メンバー）
@@ -564,6 +631,7 @@ ja:
     import_other_opendata_datasets: データセットのインポート
     edit_other_opendata_harvests: ハーベスト機能の利用
     edit_other_opendata_harvested: ハーベスト機能の取込みデータセット強制編集
+    edit_other_opendata_metadata: メタデータ機能の利用
     edit_other_opendata_public_entity_datasets: データセット一覧ダウンロードの利用
     read_opendata_reports: 各種レポートの閲覧
     read_opendata_histories: 各種履歴の閲覧
@@ -640,6 +708,9 @@ ja:
         harvest_ckan_tags: CKANタグ
         harvest_shirasagi_categories: SHIRASAGI分野
         harvest_shirasagi_areas: SHIRASAGI地域
+        metadata_text_index: テキストインデックス
+        metadata_dataset_category: カテゴリー
+        metadata_dataset_estat_category: 分類
       opendata/resource:
         file_id: ファイル
         in_file: ファイル
@@ -862,6 +933,86 @@ ja:
       opendata/addon/graph:
         preview_graph_state: グラフ表示
         preview_graph_types: グラフ種別
+      opendata/metadata/importer:
+        name: 名前
+        source_url: URL
+        order: 並び順
+        state: ステータス
+        basicauth_state: Basic認証
+        basicauth_username: Basic認証ユーザー名
+        basicauth_password: Basic認証パスワード
+      opendata/metadata/importer/category_setting:
+        id: ID
+        order: 並び順
+        category_name: 分野名
+        category_filename: 分野ファイル名
+        type: タイプ
+        value: 値
+        operator: 操作
+      opendata/metadata/importer/estat_category_setting:
+        id: ID
+        order: 並び順
+        category_name: 分野名
+        category_filename: 分野ファイル名
+        type: タイプ
+        value: 値
+        operator: 操作
+      opendata/metadata/importer/report:
+        no: No
+        name: レポート
+        resouce_no: リソースNo
+        dataset_no: データセットNo
+        dataset_name: データセット名
+        resouce_name: リソース名
+        category_ids: 分野
+        estat_category_ids: eStat分野
+        area_ids: 地域
+      opendata/metadata/importer/report_dataset:
+        imported: インポート
+        imported_attributes: 属性
+      opendata/addon/metadata/importer_category_setting:
+        default_category_ids: 既定の分野
+        category_settings: コンバート設定
+      opendata/addon/metadata/importer_estat_category_setting:
+        default_estat_category_ids: 既定のeStat分野
+        estat_category_settings: コンバート設定
+      opendata/addon/metadata/importer_area_setting:
+        default_area_ids: 既定の地域
+      opendata/addon/metadata/importer_notice:
+        notice_user_ids: 通知ユーザー
+      opendata/addon/metadata/license:
+        metadata_uid: メタデータライセンスID
+      opendata/addon/metadata/dataset:
+        metadata_dataset_id: データセットID
+        metadata_japanese_local_goverment_code: 全国地方公共団体コード
+        metadata_local_goverment_name: 地方公共団体名
+        metadata_dataset_keyword: キーワード
+        metadata_dataset_released: 公開日
+        metadata_dataset_updated: 最終更新日
+        metadata_dataset_url: URL
+        metadata_dataset_update_frequency: 更新頻度
+        metadata_dataset_follow_standards: 準拠する標準
+        metadata_dataset_related_document: 関連ドキュメント
+        metadata_dataset_target_period: 対象期間
+        metadata_dataset_creator: 作成者
+        metadata_dataset_contact_name: 連絡先名称
+        metadata_dataset_contact_email: 連絡先メールアドレス
+        metadata_dataset_contact_tel: 連絡先電話番号
+        metadata_dataset_contact_ext: 連絡先内線番号
+        metadata_dataset_contact_form_url: 連絡先FormURL
+        metadata_dataset_contact_remark: 連絡先備考（その他、SNSなど）
+        metadata_dataset_remark: 備考
+      opendata/addon/metadata/resource:
+        metadata_file_access_url: アクセスURL
+        metadata_file_download_url: ダウンロードURL
+        metadata_file_released: 公開日
+        metadata_file_updated: 最終更新日
+        metadata_file_terms_of_service: 利用規約
+        metadata_file_related_document: 関連ドキュメント
+        metadata_file_follow_standards: 準拠する標準
+        metadata_file_copyright: 著作権表記
+      opendata/addon/profile_setting:
+        edit_profile_state: プロフィールの編集
 
   activemodel:
     models:
@@ -1129,17 +1280,111 @@ ja:
         - プレビューにてグラフ表示を有効にするか設定します。
       preview_graph_types:
         - グラフ表示する種別を選択します。
+    opendata/metadata/importer:
+      name:
+        - 名前を設定します。
+      source_url:
+        - URLを設定します。
+      order:
+        - 並び順を設定します。
+      state:
+        - ステータスを設定します。
+        - 無効に設定すると定期実行の際に無視されます。
+      basicauth_state: |-
+        Basic認証のステータスを設定します。
+        取得するメタデータにBasic認証が掛かっている際は有効にし、「Basic認証ユーザー名」と「Basic認証パスワード」にユーザー名とパスワードに設定してください。
+      basicauth_username:
+        - Basic認証のユーザー名を設定します。
+      basicauth_password:
+        - Basic認証のパスワードを設定します。
+    opendata/metadata/importer/category_setting:
+      order: 並び順を設定します。
+      category_id: コンバート先の分野を選択しています。
+      conditions: |-
+        コンバート先のeStat分野（分野）に反映したいデータセット側の該当条件を選択します。
+        右側の「＋」「−」により複数条件を設定可能です。
+
+        【文字列】：データセットの下記項目に該当の文字列があるものを条件とします。完全一致ではなく、該当の文字列を含んでいる場合対象となります。
+        　　　　　　・データセット_タイトル
+        　　　　　　・データセット_サブタイトル
+        　　　　　　・データセット_概要
+        　　　　　　・ファイル_タイトル
+        【正規表現】：データセットの下記項目に該当の文字列があるものを条件とします。正規表現が使用可能です。
+        　　　　　　　（例）「^.*観光」：先頭に「観光」があるものを対象とする。
+        　　　　　　　　　　「観光.*$」：文末に「観光」があるものを対象とする。
+        　　　　　　・データセット_タイトル
+        　　　　　　・データセット_サブタイトル
+        　　　　　　・データセット_概要
+        　　　　　　・ファイル_タイトル
+        【カテゴリー】：データセットの「データセット_分類」項目に該当の文字列があるものを条件とします。完全一致ではなく、該当の文字列を含んでいる場合対象となります。
+        【分野】：データセットの「データセット_分類」項目に該当の文字列があるものを条件とします。完全一致ではなく、該当の文字列を含んでいる場合対象となります。
+    opendata/metadata/importer/estat_category_setting:
+      order: 並び順を設定します。
+      category_id: コンバート先のeStat分野を選択しています。
+      conditions: |-
+        コンバート先のeStat分野（分野）に反映したいデータセット側の該当条件を選択します。
+        右側の「＋」「−」により複数条件を設定可能です。
+
+        【文字列】：データセットの下記項目に該当の文字列があるものを条件とします。完全一致ではなく、該当の文字列を含んでいる場合対象となります。
+        　　　　　　・データセット_タイトル
+        　　　　　　・データセット_サブタイトル
+        　　　　　　・データセット_概要
+        　　　　　　・ファイル_タイトル
+        【正規表現】：データセットの下記項目に該当の文字列があるものを条件とします。正規表現が使用可能です。
+        　　　　　　　（例）「^.*観光」：先頭に「観光」があるものを対象とする。
+        　　　　　　　　　　「観光.*$」：文末に「観光」があるものを対象とする。
+        　　　　　　・データセット_タイトル
+        　　　　　　・データセット_サブタイトル
+        　　　　　　・データセット_概要
+        　　　　　　・ファイル_タイトル
+        【カテゴリー】：データセットの「データセット_分類」項目に該当の文字列があるものを条件とします。完全一致ではなく、該当の文字列を含んでいる場合対象となります。
+        【分野】：データセットの「データセット_分類」項目に該当の文字列があるものを条件とします。完全一致ではなく、該当の文字列を含んでいる場合対象となります。
+    opendata/addon/metadata/importer_category_setting:
+      default_category_ids: |-
+        既定の分野を設定します。
+        取得するデータセットに個別で分野が設定されている場合は選択の必要はございません。
+        追加で分野を設定したい場合は選択してください。こちらで選択した分野は、取得するメタデータ内の全てのデータセットに追加されます。
+      category_settings: |-
+        ホームページで作成している分野に対し、条件のあったデータセットを分野毎にコンバートすることが可能です。
+        【ダウンロード】:作成したコンバート設定のCSVをダウンロードできます。
+        【インポート】:編集したCSVをインポートすると、コンバート設定の一括編集が可能です。
+    opendata/addon/metadata/importer_estat_category_setting:
+      default_estat_category_ids: |-
+        既定のeStat分野を設定します。
+        取得するデータセットに個別でeStat分野が設定されている場合は選択の必要はございません。
+        追加でeStat分野を設定したい場合は選択してください。こちらで選択したeStat分野は、取得するメタデータ内の全てのデータセットに追加されます。
+      estat_category_settings: |-
+        ホームページで作成しているeStat分野に対し、条件のあったデータセットをeStat分野毎にコンバートすることが可能です。
+        【ダウンロード】:作成したコンバート設定のCSVをダウンロードできます。
+        【インポート】:編集したCSVをインポートすると、コンバート設定の一括編集が可能です。
+    opendata/addon/metadata/importer_area_setting:
+      default_area_ids:
+        - 既定の地域を設定します。
+    opendata/addon/metadata/importer_notice:
+      notice_user_ids:
+        - メタデータのインポート完了時に、選択したユーザーへメールで通知します。
+    opendata/addon/profile_setting:
+      edit_profile_state:
+        - プロフィールの編集を許可するか選択します。
+
   job:
     models:
-      opendata/csv2rdf_converter/job: RDF変換ジョブ
-      opendata/facility/assoc_job: 施設CSV取り込みジョブ
-      opendata/cms_integration/assoc_job: 記事連携設定ジョブ
-      opendata/notify_dataset_plan_job: データセット更新通知ジョブ
-      opendata/dataset/export_job: データセットエクスポートジョブ
-      opendata/dataset/import_job: データセットインポートジョブ
-      opendata/resource_download_history_update_job: リソースダウンロード履歴更新ジョブ
-      opendata/resource_preview_history_update_job: リソースプレビュー履歴更新ジョブ
-      opendata/harvest/run_job: ハーベスト/実行ジョブ
-      opendata/harvest/export_job: ハーベスト/エクスポートジョブ
-      opendata/harvest/import_job: ハーベスト/インポートジョブ
-      opendata/harvest/purge_job: ハーベスト/データセット削除ジョブ
+      opendata/csv2rdf_converter/job: オープンデータ/RDF変換ジョブ
+      opendata/facility/assoc_job: オープンデータ/施設CSV取り込みジョブ
+      opendata/cms_integration/assoc_job: オープンデータ/記事連携設定ジョブ
+      opendata/notify_dataset_plan_job: オープンデータ/データセット更新通知ジョブ
+      opendata/dataset/export_job: オープンデータ/データセットエクスポートジョブ
+      opendata/dataset/import_job: オープンデータ/データセットインポートジョブ
+      opendata/resource_download_history_update_job: オープンデータ/リソースダウンロード履歴更新ジョブ
+      opendata/resource_preview_history_update_job: オープンデータ/リソースプレビュー履歴更新ジョブ
+      opendata/harvest/run_job: オープンデータ・ハーベスト/実行ジョブ
+      opendata/harvest/export_job: オープンデータ・ハーベスト/エクスポートジョブ
+      opendata/harvest/import_job: オープンデータ・ハーベスト/インポートジョブ
+      opendata/harvest/purge_job: オープンデータ・ハーベスト/データセット削除ジョブ
+      opendata/metadata/import_datasets_job: オープンデータ・メタデータ/インポートジョブ
+      opendata/metadata/destroy_datasets_job: オープンデータ・メタデータ/関連データセット削除ジョブ
+      opendata/dataset_access_report_job: オープンデータ/データセットアクセス履歴レポート
+      opendata/resource_download_history_archive_job: オープンデータ/リソースダウンロード履歴アーカイブ化
+      opendata/resource_download_report_job: オープンデータ/リソースダウンロード履歴レポート
+      opendata/resource_preview_history_archive_job: オープンデータ/リソースプレビュー履歴アーカイブ化
+      opendata/resource_preview_report_job: オープンデータ/リソースプレビュー履歴レポート

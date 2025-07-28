@@ -20,7 +20,7 @@ Rails.application.routes.draw do
     resource :user_profile, as: :cur_user_profile, only: [:show]
     resource :user_account, as: :cur_user_account do
       get :edit_password, on: :member
-      post :update_password, on: :member
+      post :edit_password, on: :member, action: :update_password
     end
 
     resources :user_files, concerns: [:deletion, :file_api], as: :cur_user_files do
@@ -44,6 +44,14 @@ Rails.application.routes.draw do
     namespace :frames do
       namespace :user_navigation do
         resource :menu, only: %i[show]
+      end
+      namespace :temp_files, path: "temp_files/:setting", setting: /-|([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)/ do
+        resources :uploads, only: %i[index new create] do
+          post :preview, on: :collection
+        end
+        resources :files, only: %i[index edit update destroy] do
+          get :select, on: :member
+        end
       end
     end
   end

@@ -3,7 +3,7 @@ this.SS_PopupNotice = (function () {
 
   SS_PopupNotice.render = function () {
     return $(document).on("click", (function (_this) {
-      return function (e) {
+      return function (_ev) {
         return SS_PopupNotice.closePopup();
       };
     })(this));

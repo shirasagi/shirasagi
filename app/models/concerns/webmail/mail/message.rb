@@ -49,14 +49,17 @@ module Webmail::Mail::Message
     set_reply_body(ref) unless without_body
   end
 
-  def new_forward(ref)
+  def new_forward(ref, webmail_mode:, account:)
     self.forward_uid = ref.uid
     self.subject = "Fw: " + ref.display_subject.to_s.gsub(/^Fw:\s*/, '')
     set_forward_body(ref)
-    set_ref_files(ref.attachments)
+    if ref.attachments.present?
+      ref_files = ref.attachments.map { Webmail::PartFile.new(webmail_mode: webmail_mode, account: account, mail: ref, part: _1) }
+      set_ref_files(ref_files)
+    end
   end
 
-  def new_edit(ref)
+  def new_edit(ref, webmail_mode:, account:)
     self.edit_as_new_uid = ref.uid
     self.to = ref.to
     self.cc = ref.cc
@@ -68,7 +71,10 @@ module Webmail::Mail::Message
     self.format = ref.format
     self.text = ref.text
     self.html = ref.html
-    set_ref_files(ref.attachments)
+    if ref.attachments.present?
+      ref_files = ref.attachments.map { Webmail::PartFile.new(webmail_mode: webmail_mode, account: account, mail: ref, part: _1) }
+      set_ref_files(ref_files)
+    end
   end
 
   def set_reply_header(ref)

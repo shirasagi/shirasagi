@@ -7,9 +7,9 @@
   <% title = I18n.t('gws/attendance.formats.time_card_full_name', user_name: item.user.name, month: I18n.l(item.date.to_date, format: :attendance_year_month)) %>
   <%= link_to({ action: :show, id: item }, class: 'title') do %>
     <% if item.locked? %>
-      <i class="material-icons md-18">&#xE897;</i>
+      <%= md_icons.filled "lock", tag: :i, size: 18 %>
     <% else %>
-      <i class="material-icons md-18">&#xE898;</i>
+      <%= md_icons.filled "lock_open", tag: :i, size: 18 %>
     <% end %>
     <%= title %>
   <% end %>
