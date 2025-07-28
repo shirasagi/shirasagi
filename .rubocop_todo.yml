@@ -2089,18 +2089,3 @@ Style/TrivialAccessors:
 Style/VariableInterpolation:
   Exclude:
     - 'app/models/board/post.rb'
-
-# Offense count: 13
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: forbid_for_all_comparison_operators, forbid_for_equality_operators_only, require_for_all_comparison_operators, require_for_equality_operators_only
-Style/YodaCondition:
-  Exclude:
-    - 'app/controllers/opendata/workflow/idea_comments_controller.rb'
-    - 'app/controllers/workflow/wizard_controller.rb'
-    - 'app/models/concerns/board/addon/list.rb'
-    - 'app/models/concerns/cms/addon/list.rb'
-    - 'app/models/concerns/recommend/addon/content_list.rb'
-    - 'app/models/concerns/sitemap/addon/body.rb'
-    - 'app/models/gws/column/value/radio_button.rb'
-    - 'app/models/workflow/extensions/route.rb'

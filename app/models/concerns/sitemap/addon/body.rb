@@ -21,7 +21,7 @@ module Sitemap::Addon
 
     def sitemap_depth
       value = self[:sitemap_depth].to_i
-      (value < 1 || 5 < value) ? 5 : value
+      (value < 1 || value > 5) ? 5 : value
     end
 
     def sitemap_page_state_options
