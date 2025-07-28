@@ -15,10 +15,10 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("chorg.menus.revisions.add")
 
       within "form#item-form" do
-        fill_in "item[destinations[][name]]", with: name
+        fill_in "item[destinations][][name]", with: name
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       revision.reload
       expect(revision.changesets.count).to eq 1
@@ -45,10 +45,10 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
 
       within "form#item-form" do
-        fill_in "item[destinations[][name]]", with: name
+        fill_in "item[destinations][][name]", with: name
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       revision.reload
       expect(revision.changesets.count).to eq 1
@@ -69,12 +69,14 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       visit gws_chorg_main_path(site: site)
       click_on revision.name
       click_on changeset0.add_description
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       revision.reload
       expect(revision.changesets.count).to eq 0

@@ -56,7 +56,7 @@ return if @categories.blank? && @disallowed_categories.blank?
 <dl class="see category-form mod-opendata-category">
   <dd class="wide allowed-categories">
     <% if @item.class.required_categories %><%= required_label %><% end %>
-    <%= f.hidden_field "category_ids[]", value: "" %>
+    <%= f.hidden_field "category_ids[]", value: "", id: nil %>
 
     <% @categories.each do |cate| %>
       <div class="parent">

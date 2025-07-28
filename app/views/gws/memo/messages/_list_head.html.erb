@@ -1,34 +1,34 @@
 <%= jquery do %>
   $(".trash-all").on("click", function(){
     var form = Gws_Memo_Message.buildForm("<%= trash_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.trash_all') %>");
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
   });
 
   $(".set-seen-all").on("click", function(){
     var form = Gws_Memo_Message.buildForm("<%= set_seen_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.set_seen_all') %>");
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
   });
 
   $(".unset-seen-all").on("click", function(){
     var form = Gws_Memo_Message.buildForm("<%= unset_seen_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.unset_seen_all') %>");
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
   });
 
   $(".set-star-all").on("click", function(){
     var form = Gws_Memo_Message.buildForm("<%= set_star_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.set_star_all') %>");
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
   });
 
   $(".unset-star-all").on("click", function(){
     var form = Gws_Memo_Message.buildForm("<%= unset_star_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.unset_star_all') %>");
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
   });
 
   $(".move-menu li a").on("click", function(){
     var path = $(this).attr("data-path");
     var form = Gws_Memo_Message.buildForm("<%= move_all_gws_memo_messages_path(folder: params[:folder]) %>", "<%= t('gws/memo/message.confirm.move') %>");
     form.append($("<input/>", {name: "path", value: path, type: "hidden"} ));
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
   });
 <% end %>
 
@@ -40,7 +40,7 @@
     <% if moveable_folders.present? && %w(INBOX.Sent INBOX.Draft).exclude?(params[:folder]) %>
       <div class="dropdown dropdown-toggle gws-memo-dropdown move-menu">
         <button class="btn">
-          <%= t 'gws/memo/message.links.move' %> <i class="material-icons md-13">&#xE313;</i>
+          <%= t 'gws/memo/message.links.move' %> <i class="material-icons md-13">keyboard_arrow_down</i>
         </button>
         <ul class="dropdown-menu">
           <% moveable_folders.each do |item| %>
@@ -52,16 +52,16 @@
 
     <% case params[:folder] %>
     <% when 'INBOX.Sent', 'INBOX.Draft' %>
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     <% when 'INBOX.Trash' %>
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     <% else %>
       <button class="btn trash-all"><%= t 'gws/memo/message.links.trash' %></button>
     <% end %>
 
     <div class="dropdown dropdown-toggle gws-memo-dropdown">
       <button class="btn">
-        <%= t 'gws/memo/message.links.sort' %><i class="material-icons md-13">&#xE313;</i>
+        <%= t 'gws/memo/message.links.sort' %><i class="material-icons md-13">keyboard_arrow_down</i>
       </button>
       <ul class="dropdown-menu">
         <% if params[:folder] == 'INBOX.Sent' %>
@@ -102,7 +102,7 @@
 
     <div class="dropdown dropdown-toggle gws-memo-dropdown">
       <button class="btn">
-        <%= t 'gws/memo/message.links.etc' %> <i class="material-icons md-13">&#xE313;</i>
+        <%= t 'gws/memo/message.links.etc' %> <i class="material-icons md-13">keyboard_arrow_down</i>
       </button>
       <ul class="dropdown-menu">
         <% if params[:folder] != 'INBOX.Draft' %>

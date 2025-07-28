@@ -1,6 +1,20 @@
 module SS::AgentFilter
   extend ActiveSupport::Concern
 
+  # inquiry/agents/parts/feedback は inquiry/node/form 配下であることが必須。
+  #
+  # cms/agents/nodes/photo_album_controller でセットした @cur_parent（クラス article/node/page のインスタンス） が、
+  # app/views/inquiry/agents/parts/feedback/index.erb で不正に利用されることを防ぐ目的で、
+  # 継承可能なインスタンス変数をホワイトリスト方式とする。
+  INHERITABLE_VARIABLES = begin
+    allowed_variables = %i[
+      @csrf_token
+      @cur_path @cur_main_path @filters @preview @translate_target @translate_source
+      @task @cur_site @cur_node @cur_page @cur_part
+    ]
+    Set.new(allowed_variables)
+  end.freeze
+
   included do
     before_action :inherit_variables
   end
@@ -12,9 +26,15 @@ module SS::AgentFilter
   end
 
   def inherit_variables
-    controller.instance_variables.select { |m| m =~ /^@[a-z]/ }.each do |name|
+    variable_names = controller.instance_variables
+    variable_names = variable_names.select { INHERITABLE_VARIABLES.include?(_1.to_sym) }
+    variable_names.each do |name|
       next if instance_variable_defined?(name)
-      instance_variable_set name, controller.instance_variable_get(name)
+
+      variable_value = controller.instance_variable_get(name)
+      next if variable_value.nil?
+
+      instance_variable_set name, variable_value
     end
   end
 
@@ -24,16 +44,16 @@ module SS::AgentFilter
     controller.stylesheets
   end
 
-  def stylesheet(path)
-    controller.stylesheet(path)
+  def stylesheet(path, **options)
+    controller.stylesheet(path, **options)
   end
 
   def javascripts
     controller.javascripts
   end
 
-  def javascript(path)
-    controller.javascript(path)
+  def javascript(path, **options)
+    controller.javascript(path, **options)
   end
 
   def opengraph(key, *values)
@@ -52,6 +72,10 @@ module SS::AgentFilter
 
   def filter_include?(key)
     filters.any? { |f| f == key || f.is_a?(Hash) && f.key?(key) }
+  end
+
+  def filter_include_any?(*keys)
+    keys.any? { |key| filter_include?(key) }
   end
 
   def filter_options(key)

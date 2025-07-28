@@ -5,17 +5,17 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="ss-quota-bar gws-schedule-todo-achievement-bar">
-    <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></div>
-    <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
+  <span class="ss-quota-bar gws-achievement-bar">
+    <span class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></span>
+    <span class="usage " style="width: <%= item.achievement_rate || 0 %>%"></span>
   </span>
   <% if params[:controller].end_with?("/manageables") %>
-    <span class="members"><%= truncate(gws_public_user_long_names(item.sorted_overall_members.limit(3).map(&:long_name)).join(", ")) %></span>
+    <span class="members"><%= ss_truncate(gws_public_user_long_names(item.sorted_overall_members.limit(3).map(&:long_name)).join(", ")) %></span>
   <% end %>
   <span class="categories">
     <% item.categories.compact.each do |category| %>
       <% category_root = category.root %>
-      <%= link_to category.name, url_for(category: category_root.id),
+      <%= link_to category.name, url_for(category: (category_root ? category_root.id : "-")),
                   class: "gws-category-label", style: category_label_css(category_root) %>
     <% end %>
   </span>
@@ -25,8 +25,8 @@
     <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
     <% end %>
   </span>
-  <span class="datetime"><%= @model.t(:updated) %>: <%= item.updated.strftime('%Y/%m/%d %H:%M') %></span>
-  <span class="datetime"><%= @model.t(:created) %>: <%= item.created.strftime('%Y/%m/%d %H:%M') %></span>
+  <span class="datetime"><%= @model.t(:updated) %>: <%= ss_time_tag item.updated %></span>
+  <span class="datetime"><%= @model.t(:created) %>: <%= ss_time_tag item.created %></span>
 <% end %>
 
 <div class="gws-schedule-todo-index">

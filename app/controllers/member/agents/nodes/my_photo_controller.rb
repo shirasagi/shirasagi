@@ -14,8 +14,8 @@ class Member::Agents::Nodes::MyPhotoController < ApplicationController
 
   def set_photo_node
     @photo_node = Member::Node::Photo.site(@cur_site).first
-    @categories = Member::Node::PhotoCategory.site(@cur_site).and_public.order_by(order: 1)
-    @locations  = Member::Node::PhotoLocation.site(@cur_site).and_public.order_by(order: 1)
+    @categories = Member::Node::PhotoCategory.site(@cur_site).and_public(@cur_date).order_by(order: 1)
+    @locations  = Member::Node::PhotoLocation.site(@cur_site).and_public(@cur_date).order_by(order: 1)
     @layout     = @photo_node.page_layout || @photo_node.layout
   end
 

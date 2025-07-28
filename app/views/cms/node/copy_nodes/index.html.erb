@@ -24,7 +24,7 @@
   <% end %>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <%= f.submit t("ss.buttons.run"), class: "btn-primary", data: { disable_with: t("ss.buttons.running") } %>
   <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{node_conf_path}'; return false;", class: "btn-default" %>
 </footer>

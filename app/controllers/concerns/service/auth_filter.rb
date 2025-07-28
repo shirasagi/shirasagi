@@ -30,5 +30,6 @@ module Service::AuthFilter
     redirect_to service_login_path if opt[:redirect]
     @cur_user = SS.current_user = nil
     SS.current_token = nil
+    SS.change_locale_and_timezone(SS.current_user)
   end
 end

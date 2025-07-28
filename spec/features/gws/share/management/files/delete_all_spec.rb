@@ -15,16 +15,23 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     expect(folder.descendants_total_file_size).to eq item.size
 
     visit gws_share_files_path(site: site)
+    within ".tree-navi" do
+      expect(page).to have_css(".item-name", text: folder.name)
+    end
+
     click_on I18n.t('ss.navi.trash')
+    within ".tree-navi" do
+      expect(page).to have_css(".item-name", text: folder.name)
+    end
     expect(page).to have_content(item.name)
 
-    find('.list-head label.check input').set(true)
+    wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
     within ".list-head-action" do
       page.accept_confirm do
         click_on I18n.t("ss.links.delete")
       end
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+    wait_for_notice I18n.t('ss.notice.deleted')
     within "#content-navi" do
       expect(page).to have_css(".tree-item", text: folder.name)
     end

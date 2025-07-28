@@ -5,7 +5,7 @@ module Garbage::Addon
 
     included do
       field :center, type: String
-      field :garbage_type, type: Array
+      field :garbage_type, type: Array, default: []
 
       permit_params :center, :garbage_type
       permit_params garbage_type: [:field, :value, :view, :remarks]

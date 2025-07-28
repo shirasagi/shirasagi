@@ -26,4 +26,5 @@ end
 class Opendata::ResourcePreviewHistory::ArchiveFile
   include SS::Model::File
   include Opendata::Resource::HistoryArchiveFileModel
+  include Cms::Lgwan::File
 end

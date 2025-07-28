@@ -116,13 +116,11 @@ module Cms::Addon::FormDb::Import
 
     # if @task
     #   @task.log("[Sync] delete before '#{I18n.l(delete_limit)}'")
-
     #   criteria = Article::Page.site(site).node(node).where(form_id: form_id).where(imported: { '$lt': delete_limit })
     #   count = criteria.destroy_all
     #   @task.log("deleted: #{count} pages")
-
-    #   self.set(import_url_hash: csv_hash)
     # end
+    self.set(import_url_hash: csv_hash)
 
     errors.blank?
   end
@@ -197,7 +195,8 @@ module Cms::Addon::FormDb::Import
       recurrence = { kind: "date", start_at: event_range.first, frequency: "daily" }
       recurrence[:until_on] = event_range.last
       item.event_recurrences = [ recurrence ]
-      item.close_date = event_range.last + 1.month
+      close_date = event_range.last + 1.month
+      item.close_date = close_date if close_date > Time.zone.now
     else
       item.event_dates = []
       item.close_date = nil

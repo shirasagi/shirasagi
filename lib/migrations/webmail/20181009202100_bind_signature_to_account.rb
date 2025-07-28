@@ -13,7 +13,7 @@ class SS::Migration20181009202100
         signature.host = scope[:host]
         signature.account = scope[:account]
 
-        signature.save
+        signature.without_record_timestamps { signature.save }
       end
     end
   end

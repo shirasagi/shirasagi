@@ -1,0 +1,21 @@
+<% addon ||= local_assigns.fetch(:addon, {}) %>
+<%= code_editor "##{addon[:id]} .html", mode: :html, readonly: true %>
+
+<dl class="see mod-cms-site_search_keyword">
+  <dt><%= @item.t :site_search_keywords %></dt>
+  <dd><%=br @item.site_search_keywords %></dd>
+
+  <dt><%= @model.t :upper_html %></dt>
+  <dd>
+    <% if @item.upper_html.present? %>
+      <%= text_area_tag :upper_html, @item.upper_html, class: "html" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :lower_html %></dt>
+  <dd>
+    <% if @item.lower_html.present? %>
+      <%= text_area_tag :lower_html, @item.lower_html, class: "html" %>
+    <% end %>
+  </dd>
+</dl>

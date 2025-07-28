@@ -45,9 +45,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
     it do
       Gws::Schedule::Plan.all.destroy_all
 
-      login_user user
-
-      visit gws_schedule_csv_path(site: site)
+      login_user user, to: gws_schedule_csv_path(site: site)
       within "form#import_form" do
         attach_file "item[in_file]", csv_file
         page.accept_confirm do
@@ -56,7 +54,9 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
       end
 
       expect(page).to have_css("div.mb-1", text: I18n.t('gws/schedule.import.count', count: count))
-      expect(page).to have_css(css_class, text: message)
+      I18n.with_locale(I18n.default_locale) do
+        expect(page).to have_css(css_class, text: message)
+      end
 
       expect(Gws::Schedule::Plan.all.count).to eq count
       if count > 0

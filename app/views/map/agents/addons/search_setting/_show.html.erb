@@ -1,0 +1,22 @@
+<div class="mod-map-search_setting">
+  <dl class="see">
+    <dt><%= @model.t :map_cluster_setting %></dt>
+    <dd><%= @item.label :map_cluster_setting %></dd>
+
+    <dt><%= @item.t :map_center_setting %></dt>
+    <dd><%= @item.label :map_center_setting %></dd>
+
+    <% if @item.map_center_setting == "fixed" %>
+      <dt><%= @item.t :map_center %></dt>
+      <dd><%= @item.map_center %></dd>
+    <% end %>
+
+    <dt><%= @item.t :map_zoom_setting %></dt>
+    <dd><%= @item.label :map_zoom_setting %></dd>
+
+    <% if @item.map_zoom_setting == "fixed" %>
+      <dt><%= @item.t :map_zoom_level %></dt>
+      <dd><%= @item.map_zoom_level %></dd>
+    <% end %>
+  </dl>
+</div>

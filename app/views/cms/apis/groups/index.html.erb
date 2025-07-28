@@ -4,10 +4,12 @@ SS_TreeUI.render(".index.groups", { descendants_check: true });
 <% end %>
 
 <div class="search-ui-form">
-<%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
-  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
-  <%= f.submit  t("ss.apis.groups.search"), class: :btn %>
-<% end %>
+  <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <div class="input-group">
+      <%= f.text_field :name, value: params[:s].try(:[], :name), placeholder: t("ss.keyword") %>
+      <%= f.submit t("ss.apis.groups.search"), class: :btn %>
+    </div>
+  <% end %>
 </div>
 
 <table class="index groups">
@@ -23,7 +25,7 @@ SS_TreeUI.render(".index.groups", { descendants_check: true });
     <% @items.each do |item| %>
       <% depth   = @search_params ? "" : %( data-depth=#{item.depth}) %>
       <% name    = @search_params ? item.name : item.trailing_name %>
-      <tr data-id="<%= item.id %>" class="list-item" <%= depth %>>
+      <tr data-id="<%= item.id %>" data-name="<%= item.name %>" class="list-item" <%= depth %>>
         <% if @multi %>
         <td class="checkbox">
           <input type="checkbox" name="ids[]" value="<%= item.id %>" />

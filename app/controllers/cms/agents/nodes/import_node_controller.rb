@@ -4,7 +4,7 @@ class Cms::Agents::Nodes::ImportNodeController < ApplicationController
   helper Cms::ListHelper
 
   def index
-    @items = Cms::Node::ImportNode.site(@cur_site).and_public.
+    @items = Cms::Node::ImportNode.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
       order_by(@cur_node.sort_hash).
       page(params[:page]).

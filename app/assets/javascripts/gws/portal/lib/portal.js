@@ -31,7 +31,10 @@ Gws_Portal.prototype.addItems = function(items) {
 };
 
 Gws_Portal.prototype.addItem = function(item) {
-  var id = item._id.$oid;
+  var id = item._id;
+  if (id !== null && typeof id === 'object' && "$oid" in id) {
+    id = id.$oid
+  }
 
   var li = this.gs.add_widget(
     '<li class="portlet-item" data-id="' + id + '"></li>',
@@ -47,9 +50,7 @@ Gws_Portal.prototype.addItem = function(item) {
 
   var html = this.el.find(".portlet-html[data-id='" + id + "']");
   if (html.length) {
-    var height = html.height();
     html.prependTo(li);
-    //this.autoResizeItem(li, height);
   }
 };
 
@@ -76,7 +77,7 @@ Gws_Portal.prototype.setResetEvent = function(selector) {
   var _this = this;
   $(selector).on("click", function() {
     var list = [];
-    _this.el.find(".portlet-item").each(function(index) {
+    _this.el.find(".portlet-item").each(function() {
       list.push($(this).clone());
     });
     _this.gs.remove_all_widgets();
@@ -107,6 +108,13 @@ Gws_Portal.prototype.serialize = function() {
     },
     success: function(data) {
       SS.notice(data.message);
+    },
+    error: function (xhr, _status, _error) {
+      if (xhr.responseJSON && xhr.responseJSON.message) {
+        SS.notice(xhr.responseJSON.message);
+      } else {
+        SS.notice("Error!!");
+      }
     }
   });
 };

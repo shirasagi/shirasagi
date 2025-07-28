@@ -51,10 +51,6 @@ describe Article::Part::Page, type: :model, dbscope: :example do
             <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
             <link href="/css/style.css" media="all" rel="stylesheet" }}
             <script src="/js/common.js"></script>
-            <!--[if lt IE 9]>
-            <script src="/js/selectivizr.js"></script>
-            <script src="/js/html5shiv.js"></script>
-            <![endif]-->
 
 
           </head>
@@ -85,6 +81,23 @@ describe Article::Part::Page, type: :model, dbscope: :example do
 
       it do
         expect(item.render_loop_html(page, html: '#{summary}')).to eq('')
+      end
+    end
+
+    context '#5484: with html entities (such as "&nbsp;") in html' do
+      let(:html) do
+        <<-HTML
+          <p>&nbsp;</p>
+          <p>&amp;</p>
+          <p>&#60;</p>
+          <p>&copy;</p>
+          <p>&nbsp;</p>
+        HTML
+      end
+      let(:page) { create(:article_page, html: html) }
+
+      it do
+        expect(item.render_loop_html(page, html: '#{summary}')).to eq('& < ©')
       end
     end
   end

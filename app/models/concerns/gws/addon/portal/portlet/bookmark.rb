@@ -8,25 +8,33 @@ module Gws::Addon::Portal::Portlet
     included do
       field :bookmark_model, type: String
 
-      permit_params :bookmark_model
+      belongs_to :bookmark_folder, class_name: "Gws::Bookmark::Folder"
 
-      validates :bookmark_model, inclusion: { in: (%w(other) << Gws::Bookmark::BOOKMARK_MODEL_TYPES).flatten, allow_blank: true }
+      permit_params :bookmark_model, :bookmark_folder_id
+
+      validates :bookmark_model, inclusion: { in: Gws::Bookmark::Item.allowed_bookmark_models, allow_blank: true }
     end
 
     def bookmark_model_options
-      options = Gws::Bookmark::BOOKMARK_MODEL_TYPES.map do |model_type|
-        [@cur_site.try(:"menu_#{model_type}_label") || I18n.t("modules.gws/#{model_type}"), model_type]
-      end
-      options.push([I18n.t('gws/bookmark.options.bookmark_model.other'), 'other'])
+      @bookmark_model_options ||= Gws::Bookmark.bookmark_model_options_all(@cur_site || site)[0]
+    end
+
+    def bookmark_model_private_options
+      @bookmark_model_private_options ||= Gws::Bookmark.bookmark_model_options_all(@cur_site || site)[1]
     end
 
     def find_bookmark_items(portal, user)
-      Gws::Bookmark.site(portal.site).
-        user(user).
-        without_deleted.
-        search({ bookmark_model: bookmark_model }).
-        page(1).
-        per(limit)
+      criteria = Gws::Bookmark::Item.site(portal.site)
+      criteria = criteria.user(user)
+      criteria = criteria.without_deleted
+      if bookmark_folder.present?
+        criteria = criteria.and_folder(bookmark_folder)
+      end
+      if bookmark_model.present?
+        criteria = criteria.search(bookmark_model: bookmark_model)
+      end
+      criteria = criteria.page(1)
+      criteria.per(limit)
     end
   end
 end

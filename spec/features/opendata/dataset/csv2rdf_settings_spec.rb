@@ -19,7 +19,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
   end
 
   before do
-    Rdf::VocabImportJob.bind(site_id: site).perform_now("ic", ipa_core_sample_file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
+    Rdf::VocabImportJob.bind(site_id: site.id).perform_now("ic", ipa_core_sample_file.to_s, Rdf::Vocab::OWNER_SYSTEM, 1000)
   end
 
   before { login_cms_user }
@@ -149,9 +149,7 @@ describe "opendata_csv2rdf_settings", type: :feature, dbscope: :example do
       expect(current_path).to eq show_resource_path
 
       # acquire that unable to convert to rdf message.
-      within "aside#notice" do
-        expect(page).to have_content(I18n.t('opendata.messages.require_at_least_two_rows'))
-      end
+      wait_for_notice I18n.t('opendata.messages.require_at_least_two_rows')
     end
   end
 end

@@ -1,0 +1,4 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= I18n.t('gws/attendance.formats.time_card_full_name', user_name: @item.user.name, month: I18n.l(@item.date.to_date, format: :attendance_year_month)) %></dd>
+</dl>

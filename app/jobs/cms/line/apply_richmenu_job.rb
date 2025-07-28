@@ -1,6 +1,8 @@
 class Cms::Line::ApplyRichmenuJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
 
+  queue_as :external
+
   self.task_class = Cms::Task
   self.task_name = "cms:line_apply_richmenu"
   self.controller = Cms::Agents::Tasks::Line::RichmenusController

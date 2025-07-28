@@ -2,6 +2,7 @@ class Cms::HistoryArchiveFile
   include SS::Model::File
   include SS::Reference::Site
   include Cms::SitePermission
+  include Cms::Lgwan::File
   extend ActiveSupport::Concern
 
   set_permission_name "cms_tools", :use

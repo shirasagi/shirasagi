@@ -49,7 +49,7 @@
     </dl>
   <% end %>
 
-  <% if @cur_node.allow_file_post? && !SS::Lgwan.enabled? %>
+  <% if @cur_node.allow_file_post? %>
     <dl class="column">
       <dt><%= @model.t :in_files %></dt>
       <dd><%= f.file_field :in_files, multiple: :multiple %></dd>

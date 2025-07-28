@@ -1,6 +1,6 @@
 <dl class="see">
   <dt><%= @model.t :due_date %></dt>
-  <dd><%= tryb { @item.due_date.strftime('%Y/%m/%d') } %></dd>
+  <dd><%= ss_time_tag(@item.due_date, type: :date) %></dd>
 
   <dt><%= @model.t :see_type %></dt>
   <dd><%= t(@item.see_type, scope: 'gws/circular.options.see_type') %></dd>

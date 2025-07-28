@@ -33,7 +33,7 @@ describe "Gws::LoginController#access_token", type: :request, dbscope: :example 
 
         get "#{test_path}?access_token=#{token}"
         expect(response.status).to eq 302
-        expect(response.body).to include test_path
+        expect(response.location).to include test_path
       end
     end
   end

@@ -1,24 +1,34 @@
 class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
-  def perform(site_id, node_id, page_id, action)
+  def perform(site_id, node_id, page_ids, action)
     return unless self.site.dataset_enabled?
     @dataset_node = Opendata::Node::Dataset.site(self.site).first
     return if @dataset_node.blank?
 
     @cms_site = Cms::Site.find(site_id)
     @cms_node = Cms::Node.site(@cms_site).find(node_id)
-    @cur_page = Cms::Page.site(@cms_site).node(@cms_node).find(page_id)
+    if page_ids.nil?
+      @page_ids = Cms::Page.site(@cms_site).node(@cms_node).distinct(:id)
+    else
+      @page_ids = [page_ids].flatten.uniq.compact
+    end
 
     @file_goes_to = []
 
-    action = action.to_sym
-    if action == :create_or_update
-      if @cur_page.opendata_dataset_state.present? && @cur_page.opendata_dataset_state != 'none'
-        create_or_update_associated_dataset
-      else
+    case action.to_sym
+    when :create_or_update
+      each_page do |page|
+        @cur_page = page
+        if @cur_page.try(:opendata_dataset_state).present? && @cur_page.opendata_dataset_state != 'none'
+          create_or_update_associated_dataset
+        else
+          close_associated_dataset
+        end
+      end
+    when :destroy
+      each_page do |page|
+        @cur_page = page
         close_associated_dataset
       end
-    elsif action == :destroy
-      close_associated_dataset
     end
 
     true
@@ -26,16 +36,24 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   private
 
+  def each_page(&block)
+    @page_ids.each_slice(20) do |ids|
+      pages = Cms::Page.site(@cms_site).node(@cms_node).in(id: ids).to_a
+      pages.each(&block)
+    end
+  end
+
   def close_associated_dataset
     Opendata::Dataset.site(self.site).node(@dataset_node).and_resource_associated_page(@cur_page).each do |dataset|
-      dataset.resources.and_associated_page(@cur_page).each do |resource|
+      dataset.resources.and_associated_page(@cur_page).and_public.each do |resource|
         if resource.assoc_method != 'auto'
           Rails.logger.info("#{resource.name}: auto association is disabled in #{dataset.name}")
           next
         end
 
-        resource.destroy
-        Rails.logger.info("#{resource.name}: resource is destroyed")
+        resource.state = 'closed'
+        resource.save!
+        Rails.logger.info("#{resource.name}: resource is closed")
       end
       dataset.save!
     end
@@ -45,7 +63,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     return if dataset.blank?
     # dataset is alread closed
     return if dataset.state == 'closed'
-    return if dataset.resources.present?
+    return if dataset.resources.and_public.present?
     # auto association is disabled
     if dataset.assoc_method != 'auto'
       Rails.logger.info("#{dataset.name}: auto association is disabled")
@@ -133,15 +151,26 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
       assoc_node_ids: [@cms_node.id],
       assoc_page_ids: [@cur_page.id],
       state: @cur_page.opendata_dataset_state.presence == 'public' ? 'public' : 'closed'
-    }
-    attributes[:contact_charge] = @cur_page.contact_charge if @cur_page.respond_to?(:contact_charge)
-    attributes[:contact_email] = @cur_page.contact_email if @cur_page.respond_to?(:contact_email)
-    attributes[:contact_fax] = @cur_page.contact_fax if @cur_page.respond_to?(:contact_fax)
-    attributes[:contact_group_id] = @cur_page.contact_group_id if @cur_page.respond_to?(:contact_group_id)
-    attributes[:contact_state] = @cur_page.contact_state if @cur_page.respond_to?(:contact_state)
-    attributes[:contact_tel] = @cur_page.contact_tel if @cur_page.respond_to?(:contact_tel)
-    attributes[:contact_link_url] = @cur_page.contact_link_url if @cur_page.respond_to?(:contact_link_url)
-    attributes[:contact_link_name] = @cur_page.contact_link_name if @cur_page.respond_to?(:contact_link_name)
+    }.stringify_keys
+    if @cur_page.try(:contact_group_id)
+      contact_group = Cms::Group.all.site(@dataset_node.site).where(id: @cur_page.contact_group_id).first
+    end
+    if @cur_page.try(:contact_group_contact_id) && contact_group
+      contact = contact_group.contact_groups.where(id: @cur_page.contact_group_contact_id).first
+    end
+    attributes["contact_state"] = @cur_page.contact_state if @cur_page.respond_to?(:contact_state)
+    attributes["contact_group_id"] = contact_group.try(:id)
+    attributes["contact_group_contact_id"] = contact.try(:id)
+    attributes["contact_group_relation"] = @cur_page.contact_group_relation if @cur_page.respond_to?(:contact_group_relation)
+    attributes["contact_group_name"] = @cur_page.contact_group_name if @cur_page.respond_to?(:contact_group_name)
+    attributes["contact_charge"] = @cur_page.contact_charge if @cur_page.respond_to?(:contact_charge)
+    attributes["contact_tel"] = @cur_page.contact_tel if @cur_page.respond_to?(:contact_tel)
+    attributes["contact_fax"] = @cur_page.contact_fax if @cur_page.respond_to?(:contact_fax)
+    attributes["contact_email"] = @cur_page.contact_email if @cur_page.respond_to?(:contact_email)
+    attributes["contact_postal_code"] = @cur_page.contact_postal_code if @cur_page.respond_to?(:contact_postal_code)
+    attributes["contact_address"] = @cur_page.contact_address if @cur_page.respond_to?(:contact_address)
+    attributes["contact_link_url"] = @cur_page.contact_link_url if @cur_page.respond_to?(:contact_link_url)
+    attributes["contact_link_name"] = @cur_page.contact_link_name if @cur_page.respond_to?(:contact_link_name)
 
     dataset = Opendata::Dataset.create(attributes)
     Rails.logger.info("#{dataset.name}: dataset is created")
@@ -203,15 +232,16 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
 
   def destroy_all_resources_unassociated_with_page
     Opendata::Dataset.site(self.site).node(@dataset_node).and_resource_associated_page(@cur_page).each do |dataset|
-      dataset.resources.and_associated_page(@cur_page).each do |resource|
+      dataset.resources.and_associated_page(@cur_page).and_public.each do |resource|
         if resource.assoc_method != 'auto'
           Rails.logger.info("#{resource.name}: auto association is disabled in #{dataset.name}")
           next
         end
 
         unless resource_is_updated?(dataset, resource)
-          resource.destroy
-          Rails.logger.info("#{resource.name}: resource is destroyed")
+          resource.state = 'closed'
+          resource.save!
+          Rails.logger.info("#{resource.name}: resource is closed")
           next
         end
       end

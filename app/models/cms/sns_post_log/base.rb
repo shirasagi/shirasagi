@@ -37,13 +37,13 @@ class Cms::SnsPostLog::Base
   def page
     return if @_page == false
     return @_page if @_page
-    @_page = soruce.include?(Cms::Model::Page) ? source.page.becomes_with_route : false
+    @_page = soruce.include?(Cms::Model::Page) ? source.page : false
   end
 
   private
 
   def set_name
-    self.name ||= "[#{label(:state)}] #{label(:type)} #{created.strftime("%Y/%m/%d %H:%M")}"
+    self.name ||= "[#{label(:state)}] #{label(:type)} #{I18n.l(created, format: :picker)}"
   end
 
   class << self

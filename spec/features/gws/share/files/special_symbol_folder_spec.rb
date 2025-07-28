@@ -10,8 +10,14 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_share_files_path(site)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       within "#gws-share-file-folder-list" do
         click_on folder.name
+      end
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
       end
 
       within "#gws-share-file-folder-list" do

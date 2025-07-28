@@ -2,6 +2,13 @@ module SS::LiquidFilters
   AVAILABLE_DATE_FORMATS = I18n.t("date.formats").keys.freeze
   AVAILABLE_TIME_FORMATS = I18n.t("time.formats").keys.freeze
 
+  module Utils
+    def self.stringify_number(input, format)
+      return input unless input.numeric?
+      ::Liquid::Utils.to_number(input).to_fs(format)
+    end
+  end
+
   def ss_date(input, format = nil)
     date = Liquid::Utils.to_date(input)
     return input unless date
@@ -69,37 +76,42 @@ module SS::LiquidFilters
   end
 
   def phone(input)
-    input.to_s(:phone)
+    Utils.stringify_number(input, :phone)
   end
 
   def currency(input)
-    input.to_s(:currency)
+    Utils.stringify_number(input, :currency)
   end
 
   def percentage(input)
-    input.to_s(:percentage)
+    Utils.stringify_number(input, :percentage)
   end
 
   def delimited(input)
-    input.to_s(:delimited)
+    Utils.stringify_number(input, :delimited)
   end
 
   def rounded(input)
-    input.to_s(:rounded)
+    Utils.stringify_number(input, :rounded)
   end
 
   def human(input)
-    input.to_s(:human)
+    Utils.stringify_number(input, :human)
   end
 
   def human_size(input)
-    input.to_s(:human_size)
+    Utils.stringify_number(input, :human_size)
+  end
+
+  def ss_br(input)
+    return input if input.blank?
+    ApplicationController.helpers.br(input)
   end
 
   def ss_append(input, string)
     string = string.to_s
     if input.is_a?(Array) || input.is_a?(Hash) || input.is_a?(Enumerable)
-      InputIterator.new(input).map { |v| v.to_s + string }
+      Liquid::StandardFilters::InputIterator.new(input, context).map { |v| v.to_s + string }
     else
       input.to_s + string
     end
@@ -108,7 +120,7 @@ module SS::LiquidFilters
   def ss_prepend(input, string)
     string = string.to_s
     if input.is_a?(Array) || input.is_a?(Hash) || input.is_a?(Enumerable)
-      InputIterator.new(input).map { |v| string + v.to_s }
+      Liquid::StandardFilters::InputIterator.new(input, context).map { |v| string + v.to_s }
     else
       string + input.to_s
     end
@@ -141,6 +153,12 @@ module SS::LiquidFilters
     criteria = Cms::Page.public_list(site: node.site, node: node)
     criteria = criteria.limit(limit) if limit.present?
     criteria.to_a
+  end
+
+  def search_column_value(page, *args)
+    return nil if !page.respond_to?(:values)
+    return nil if !args.is_a?(Array)
+    page.values.to_a.find { |value| args.include?(value.name) }
   end
 
   def filter_by_column_value(pages, key_value)

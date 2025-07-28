@@ -14,7 +14,7 @@ module Article::Addon
       permit_params :export_columns, :export_page_name, :export_filename
       permit_params :form_id, :node_id
 
-      validates :form_id, presence: true
+      # validates :form_id, presence: true
       validate :validate_export_columns, if: -> { export_columns.present? }
     end
 
@@ -47,20 +47,27 @@ module Article::Addon
     end
 
     def pages_to_csv(pages)
-      csv = CSV.generate do |data|
-        pages_to_json(pages).each { |line| data << line }
+      csv = I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          pages_to_json(pages).each { |line| data << line }
+        end
       end
-      ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)
+      (SS::Csv::UTF8_BOM + csv).encode("UTF-8", invalid: :replace, undef: :replace)
     end
 
     def pages_to_json(pages)
-      columns = export_columns.presence || form.columns.order(order: 1).map(&:name)
-      data = [[resolve_page_name] + columns]
+      columns = export_columns.presence
+      columns ||= form.columns.order(order: 1).map(&:name) if form
+      columns ||= []
+
+      article_url_label = I18n.t("mongoid.attributes.cms/model/page.full_url")
+      data = [ [resolve_page_name ] + columns + [article_url_label] ]
 
       pages.each do |page|
         column_values_hash = page.column_values.map { |cv| [cv.name, cv.export_csv_cell] }.to_h
         values = columns.map { |col| column_values_hash[col].to_s }
-        data << [page.name] + values
+        article_url_value = page.full_url || ""
+        data << [page.name] + values + [article_url_value]
       end
 
       data

@@ -1,0 +1,1032 @@
+@charset "UTF-8";
+/* ===================================================================================================
+pages - 緊急災害レイアウト
+=================================================================================================== */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\000034}}
+*,
+*:before,
+*:after {
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -o-box-sizing: border-box;
+  -ms-box-sizing: border-box;
+  box-sizing: border-box;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\0000314}}
+input[type=text],
+input[type=password],
+input[type=date],
+input[type=datetime],
+input[type=url],
+input[type=email],
+input[type=number],
+select,
+textarea {
+  border: 1px solid #b2b2b2;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\0000326}}
+input[type="submit"] {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\0000334}}
+header,
+footer,
+nav,
+section,
+article,
+figure,
+aside {
+  display: block;
+  margin: 0px;
+}
+
+/*
+html5doctor.com Reset Stylesheet
+v1.6.1
+Last Updated: 2010-09-17
+Author: Richard Clark - http://richclarkdesign.com
+Twitter: @rich_clark
+*/
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\0000354}}
+html,
+body,
+div,
+span,
+object,
+iframe,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+blockquote,
+pre,
+abbr,
+address,
+cite,
+code,
+del,
+dfn,
+em,
+img,
+ins,
+kbd,
+q,
+samp,
+small,
+strong,
+sub,
+sup,
+var,
+b,
+i,
+dl,
+dt,
+dd,
+ol,
+ul,
+li,
+fieldset,
+form,
+label,
+legend,
+table,
+caption,
+tbody,
+tfoot,
+thead,
+tr,
+th,
+td,
+article,
+aside,
+canvas,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section,
+summary,
+time,
+mark,
+audio,
+video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003132}}
+body {
+  line-height: 1.85;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003136}}
+article,
+aside,
+details,
+figcaption,
+figure,
+footer,
+header,
+hgroup,
+menu,
+nav,
+section {
+  display: block;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003150}}
+nav ul {
+  list-style: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003154}}
+blockquote,
+q {
+  quotes: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003159}}
+blockquote:before,
+blockquote:after,
+q:before,
+q:after {
+  content: '';
+  content: none;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003167}}
+a {
+  margin: 0;
+  padding: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+}
+
+/* change colours to suit your needs */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003176}}
+ins {
+  background-color: #ff9;
+  color: #000;
+  text-decoration: none;
+}
+
+/* change colours to suit your needs */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003183}}
+mark {
+  background-color: #ff9;
+  color: #000;
+  font-style: italic;
+  font-weight: bold;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003190}}
+del {
+  text-decoration: line-through;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003194}}
+abbr[title],
+dfn[title] {
+  border-bottom: 1px dotted;
+  cursor: help;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003200}}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+/* change border colour to suit your needs */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003206}}
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #cccccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003215}}
+input,
+select {
+  vertical-align: middle;
+}
+
+/* pages - body--urgency-layout
+---------------------------------------------------------- */
+/* 緊急災害レイアウト トップ */
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000312}}
+body.body--index__urgency {
+  background-image: none;
+  background-color: #ecebe3;
+  /* common - 新着情報/注目情報
+---------------------------------------------------------- */
+  /* 新着情報/注目情報 */
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000316}}
+  body.body--index__urgency .accessibility {
+    display: none;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000323}}
+body.body--index__urgency .head__utility-upper {
+  justify-content: flex-end !important;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000327}}
+body.body--index__urgency #head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 30px;
+  background-color: white;
+  min-height: 0%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000335}}
+body.body--index__urgency #head .siteinfo {
+  border-bottom: none;
+  display: flex;
+  align-items: center;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000340}}
+body.body--index__urgency #head .siteinfo__logo {
+  width: 200px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000340}}
+  body.body--index__urgency #head .siteinfo__logo {
+    width: 120px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000348}}
+body.body--index__urgency #head .siteinfo__logo a img {
+  max-width: 176px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000354}}
+body.body--index__urgency #head .siteinfo__announce {
+  margin-left: 21px;
+  font-size: 18px;
+  font-weight: bold;
+  color: #e6000f;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000354}}
+  body.body--index__urgency #head .siteinfo__announce {
+    font-size: 12px;
+  }
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000366}}
+  body.body--index__urgency #head .head__utility-wrap {
+    width: 85%;
+  }
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000371}}
+  body.body--index__urgency #head .head__utility-wrap .head__utility {
+    display: none;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000378}}
+body.body--index__urgency #head .head__utility-wrap .head__utility .head__utility-upper .head-search form {
+  border-radius: 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000391}}
+body.body--index__urgency .emergency {
+  padding: 30px;
+  display: flex;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000391}}
+  body.body--index__urgency .emergency {
+    display: block;
+    padding: 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003101}}
+body.body--index__urgency .emergency__title {
+  width: 200px;
+  display: flex;
+  align-items: center;
+  background-color: #e6000f;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003101}}
+  body.body--index__urgency .emergency__title {
+    width: 100%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003111}}
+body.body--index__urgency .emergency__title h2 {
+  padding: 14px 20px;
+  font-size: 163%;
+  color: #fff;
+  font-weight: normal;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003111}}
+  body.body--index__urgency .emergency__title h2 {
+    font-size: 113%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003123}}
+body.body--index__urgency .emergency__article {
+  width: calc(100% - 200px);
+  background-color: #fff;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003123}}
+  body.body--index__urgency .emergency__article {
+    width: 100%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003131}}
+body.body--index__urgency .emergency__article article {
+  width: 100%;
+  padding: 5px 15px;
+  margin: 10px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003131}}
+  body.body--index__urgency .emergency__article article {
+    margin: 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003141}}
+body.body--index__urgency .emergency__article article h3 {
+  border-bottom: 1px dotted #808080;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003145}}
+body.body--index__urgency .emergency__article article a {
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: bold;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003145}}
+  body.body--index__urgency .emergency__article article a {
+    font-size: 12px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003154}}
+body.body--index__urgency .emergency__article article a:hover {
+  text-decoration: underline;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003165}}
+body.body--index__urgency .whats-new,
+body.body--index__urgency .notice {
+  margin-top: 30px;
+  border-radius: 16px;
+  overflow: hidden;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003171}}
+body.body--index__urgency .whats-new__header,
+body.body--index__urgency .notice__header {
+  padding: 15px 23px;
+  background-color: #4eccca;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003176}}
+body.body--index__urgency .whats-new__header-title,
+body.body--index__urgency .notice__header-title {
+  font-size: 18px;
+  font-weight: bold;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003181}}
+body.body--index__urgency .whats-new__list-wrap,
+body.body--index__urgency .notice__list-wrap {
+  padding: 0 20px 17px;
+  background-color: #fff;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003181}}
+  body.body--index__urgency .whats-new__list-wrap,
+  body.body--index__urgency .notice__list-wrap {
+    padding: 0 16px 13px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003191}}
+body.body--index__urgency .whats-new__list article,
+body.body--index__urgency .notice__list article {
+  border-bottom: 1px dotted #808080;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003194}}
+body.body--index__urgency .whats-new__list article header,
+body.body--index__urgency .notice__list article header {
+  display: flex;
+  align-items: center;
+  padding: 15px 0 15px 3px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003194}}
+  body.body--index__urgency .whats-new__list article header,
+  body.body--index__urgency .notice__list article header {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 6px 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003205}}
+body.body--index__urgency .whats-new__list article header time,
+body.body--index__urgency .notice__list article header time {
+  font-size: 12px;
+  letter-spacing: 0.5px;
+  width: 110px;
+  white-space: nowrap;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003205}}
+  body.body--index__urgency .whats-new__list article header time,
+  body.body--index__urgency .notice__list article header time {
+    width: auto;
+    font-size: 10px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003217}}
+body.body--index__urgency .whats-new__list article header h2,
+body.body--index__urgency .notice__list article header h2 {
+  margin-left: 27px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003217}}
+  body.body--index__urgency .whats-new__list article header h2,
+  body.body--index__urgency .notice__list article header h2 {
+    margin-left: 0;
+    display: flex;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003225}}
+body.body--index__urgency .whats-new__list article header h2 a,
+body.body--index__urgency .notice__list article header h2 a {
+  font-size: 14px;
+  text-decoration: none;
+  font-weight: bold;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003225}}
+  body.body--index__urgency .whats-new__list article header h2 a,
+  body.body--index__urgency .notice__list article header h2 a {
+    font-size: 12px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003234}}
+body.body--index__urgency .whats-new__list article header h2 a:hover,
+body.body--index__urgency .notice__list article header h2 a:hover {
+  text-decoration: underline;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003243}}
+.head-content__list-wrap > body.body--index__urgency .whats-new__feed, .head-content__list-wrap >
+body.body--index__urgency .notice__feed {
+  margin-top: 14px;
+  justify-content: flex-end;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003243}}
+  .head-content__list-wrap > body.body--index__urgency .whats-new__feed, .head-content__list-wrap >
+  body.body--index__urgency .notice__feed {
+    margin-top: 8px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003251}}
+.head-content__list-wrap > body.body--index__urgency .whats-new__feed a, .head-content__list-wrap >
+body.body--index__urgency .notice__feed a {
+  padding-right: 9px;
+  font-size: 75%;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003255}}
+.head-content__list-wrap > body.body--index__urgency .whats-new__feed a:after, .head-content__list-wrap >
+body.body--index__urgency .notice__feed a:after {
+  top: 6px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003261}}
+body.body--index__urgency .whats-new__rss,
+body.body--index__urgency .notice__rss {
+  margin-right: 9px;
+  padding-left: 14px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003265}}
+body.body--index__urgency .whats-new__rss:before,
+body.body--index__urgency .notice__rss:before {
+  width: 11px;
+  height: 11px;
+  background-size: 11px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003274}}
+body.body--index__urgency .whats-new__no-info,
+body.body--index__urgency .notice__no-info {
+  padding: 27px 0;
+  font-size: 88%;
+  font-weight: bold;
+  color: #000;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003282}}
+body.body--index__urgency .hamburger-menu {
+  display: none;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003286}}
+body.body--index__urgency #wrap {
+  padding-bottom: 60px;
+  min-height: 0%;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003286}}
+  body.body--index__urgency #wrap {
+    width: 100%;
+    padding: 17px 25px 40px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003295}}
+body.body--index__urgency #wrap .wrap__inner {
+  width: 1120px;
+  margin: 0 auto;
+  padding: 4px 20px 0;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003295}}
+  body.body--index__urgency #wrap .wrap__inner {
+    width: 100%;
+    padding: 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003306}}
+body.body--index__urgency #wrap #content {
+  flex-direction: column;
+  padding-top: 26px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003306}}
+  body.body--index__urgency #wrap #content {
+    padding-top: 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003314}}
+body.body--index__urgency #wrap #content .head__utility-wrap {
+  display: none;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003314}}
+  body.body--index__urgency #wrap #content .head__utility-wrap {
+    display: block;
+    position: static;
+    margin-top: 30px;
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003328}}
+  body.body--index__urgency #wrap #content .head__utility-upper .head-search {
+    width: 100%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003333}}
+body.body--index__urgency #wrap #content .head__utility-upper .head-search form {
+  border-radius: 5px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003342}}
+body.body--index__urgency .head-content {
+  display: flex;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003342}}
+  body.body--index__urgency .head-content {
+    flex-direction: column;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003350}}
+body.body--index__urgency .head-content__left, body.body--index__urgency .head-content__right {
+  width: calc((100% - 30px) / 2);
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003350}}
+  body.body--index__urgency .head-content__left, body.body--index__urgency .head-content__right {
+    width: 100%;
+  }
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003361}}
+  body.body--index__urgency .head-content__right {
+    margin-top: 10px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003371}}
+body.body--index__urgency .head-content__area--urgency .head-content__header, body.body--index__urgency .head-content__area--covid-news .head-content__header {
+  background-color: #e6000f;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003378}}
+body.body--index__urgency .head-content__area--disaster .head-content__header, body.body--index__urgency .head-content__area--nyusatsu .head-content__header {
+  background-color: #09698e;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003383}}
+body.body--index__urgency .head-content__area--covid-news, body.body--index__urgency .head-content__area--nyusatsu {
+  margin-top: 20px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003383}}
+  body.body--index__urgency .head-content__area--covid-news, body.body--index__urgency .head-content__area--nyusatsu {
+    margin-top: 10px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003393}}
+body.body--index__urgency .head-content__header {
+  padding: 14px 20px;
+  color: #fff;
+  border-radius: 15px 15px 0 0;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003393}}
+  body.body--index__urgency .head-content__header {
+    padding: 12px 17px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003402}}
+body.body--index__urgency .head-content__header h2 {
+  font-size: 113%;
+  font-weight: bold;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003402}}
+  body.body--index__urgency .head-content__header h2 {
+    font-size: 94%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003412}}
+body.body--index__urgency .head-content__list-wrap {
+  padding: 0 20px 10px;
+  border-radius: 0 0 15px 15px;
+  background-color: #fff;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003412}}
+  body.body--index__urgency .head-content__list-wrap {
+    padding: 0 17px 5px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003422}}
+body.body--index__urgency .head-content__list {
+  list-style: none;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003426}}
+body.body--index__urgency .head-content__item {
+  border-bottom: 1px dotted #808080;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003429}}
+body.body--index__urgency .head-content__item .date {
+  display: none;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003433}}
+body.body--index__urgency .head-content__item .head-content__item-link {
+  display: block;
+  padding: 10px 0;
+  font-size: 88%;
+  line-height: 1.43;
+  font-weight: bold;
+  text-decoration: none;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003433}}
+  body.body--index__urgency .head-content__item .head-content__item-link {
+    padding: 8px 0;
+    font-size: 75%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003446}}
+body.body--index__urgency .head-content__item .head-content__item-link:hover {
+  text-decoration: underline;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003454}}
+body.body--index__urgency .head-content__link-wrap {
+  margin-top: 10px;
+  text-align: right;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003454}}
+  body.body--index__urgency .head-content__link-wrap {
+    margin-top: 7px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003463}}
+body.body--index__urgency .head-content__link {
+  position: relative;
+  padding-right: 10px;
+  font-size: 88%;
+  font-weight: bold;
+  color: #3b4043;
+  text-decoration: none;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003463}}
+  body.body--index__urgency .head-content__link {
+    font-size: 75%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003475}}
+body.body--index__urgency .head-content__link:hover {
+  text-decoration: underline;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003479}}
+body.body--index__urgency .head-content__link:after {
+  content: '';
+  width: 0;
+  height: 0;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-color: transparent transparent transparent #585c5f;
+  position: absolute;
+  top: 50%;
+  right: 0;
+  margin-top: -6px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003493}}
+body.body--index__urgency .head-content__no-info {
+  padding: 27px 0;
+  font-size: 88%;
+  font-weight: bold;
+  color: #000;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003493}}
+  body.body--index__urgency .head-content__no-info {
+    padding: 11px 0 9px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003505}}
+body.body--index__urgency .head-content__area--urgency {
+  display: flex;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003505}}
+  body.body--index__urgency .head-content__area--urgency {
+    flex-direction: column;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003512}}
+body.body--index__urgency .head-content__area--urgency .head-content__header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 200px;
+  border-radius: 0;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003512}}
+  body.body--index__urgency .head-content__area--urgency .head-content__header {
+    display: block;
+    width: 100%;
+    padding: 13px 19px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003525}}
+body.body--index__urgency .head-content__area--urgency .head-content__header h2 {
+  font-size: 26px;
+  font-weight: normal;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003525}}
+  body.body--index__urgency .head-content__area--urgency .head-content__header h2 {
+    font-size: 15px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003535}}
+body.body--index__urgency .head-content__area--urgency .head-content__list-wrap {
+  width: calc(100% - 200px);
+  padding: 0 30px 10px;
+  border-radius: 0;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003535}}
+  body.body--index__urgency .head-content__area--urgency .head-content__list-wrap {
+    width: 100%;
+    padding: 0 15px 5px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003548}}
+body.body--index__urgency .head-content__area--urgency .head-content__item {
+  display: flex;
+  align-items: center;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003548}}
+  body.body--index__urgency .head-content__area--urgency .head-content__item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003558}}
+body.body--index__urgency .head-content__area--urgency .head-content__item .date {
+  display: inline-block;
+  width: 160px;
+  font-size: 12px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003558}}
+  body.body--index__urgency .head-content__area--urgency .head-content__item .date {
+    width: auto;
+    font-size: 10px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003570}}
+body.body--index__urgency .head-content__area--urgency .head-content__item-link {
+  margin-left: 25px;
+  width: calc(100% - 185px);
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003570}}
+  body.body--index__urgency .head-content__area--urgency .head-content__item-link {
+    margin-left: 0;
+    width: 100%;
+    padding: 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003582}}
+body.body--index__urgency .head-content__area--urgency .head-content__link-wrap a.head-content__link {
+  color: #3b4043;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003589}}
+body.body--index__urgency .head-content__area--disaster .head-content__header {
+  border-radius: 0;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003595}}
+body.body--index__urgency .head-content__area--disaster .head-content__list-wrap {
+  border-radius: 0;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003595}}
+  body.body--index__urgency .head-content__area--disaster .head-content__list-wrap {
+    width: 100%;
+    padding: 0 15px 5px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003606}}
+body.body--index__urgency .head-content__area--disaster .head-content__item {
+  display: flex;
+  align-items: center;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003606}}
+  body.body--index__urgency .head-content__area--disaster .head-content__item {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003616}}
+body.body--index__urgency .head-content__area--disaster .head-content__item .date {
+  display: inline-block;
+  width: 100px;
+  min-width: 100px;
+  font-size: 12px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003616}}
+  body.body--index__urgency .head-content__area--disaster .head-content__item .date {
+    width: auto;
+    font-size: 10px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003629}}
+body.body--index__urgency .head-content__area--disaster .head-content__item-link {
+  margin-left: 25px;
+  width: calc(100% - 105px);
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003629}}
+  body.body--index__urgency .head-content__area--disaster .head-content__item-link {
+    margin-left: 0;
+    width: 100%;
+    padding: 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003727}}
+body.body--index__urgency .urgency-content {
+  margin-top: 30px;
+  display: flex;
+  justify-content: space-between;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003727}}
+  body.body--index__urgency .urgency-content {
+    flex-direction: column;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003736}}
+body.body--index__urgency .urgency-content__left {
+  width: 750px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003736}}
+  body.body--index__urgency .urgency-content__left {
+    width: 100%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003744}}
+body.body--index__urgency .urgency-content__right {
+  width: 280px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003744}}
+  body.body--index__urgency .urgency-content__right {
+    margin-top: 45px;
+    width: 100%;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003752}}
+body.body--index__urgency .urgency-content__right #relation {
+  height: 100%;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003752}}
+  body.body--index__urgency .urgency-content__right #relation {
+    height: 180px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003759}}
+body.body--index__urgency .urgency-content__right #relation .relation-inner {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003766}}
+body.body--index__urgency .urgency-content__right #relation .relation-inner span {
+  width: 100%;
+  text-align: center;
+  margin-bottom: 10px;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003772}}
+body.body--index__urgency .urgency-content__right #relation .relation-inner a {
+  display: block;
+  width: 100%;
+  background-color: #96d7ff;
+  padding: 30px 0;
+  font-size: 125%;
+  color: #231815;
+  text-decoration: none;
+  font-weight: bold;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003772}}
+  body.body--index__urgency .urgency-content__right #relation .relation-inner a {
+    padding: 20px 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003788}}
+body.body--index__urgency .urgency-content__right #relation .relation-inner a:hover {
+  text-decoration: underline;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003798}}
+body.body--index__urgency .link-potal {
+  margin-top: 77px;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003798}}
+  body.body--index__urgency .link-potal {
+    margin-top: 50px;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003805}}
+body.body--index__urgency .link-potal a {
+  display: block;
+  padding: 19px 0;
+  font-size: 22px;
+  font-weight: bold;
+  color: #000;
+  text-decoration: none;
+  text-align: center;
+  background-color: #fff;
+  border: 2px solid #96d7ff;
+}
+@media only screen and (max-width: 768px) {
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003805}}
+  body.body--index__urgency .link-potal a {
+    padding: 29px 0;
+  }
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003820}}
+body.body--index__urgency .link-potal a:hover {
+  background-color: #96d7ff;
+}
+@media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003827}}
+body.body--index__urgency #foot .footer__image {
+  display: none;
+}

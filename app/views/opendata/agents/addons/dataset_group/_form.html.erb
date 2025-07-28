@@ -1,7 +1,7 @@
 <dl class="see mod-opendata_dataset_groups">
   <dt><%= @model.t :dataset_group_ids %></dt>
   <dd>
-    <%= f.hidden_field "dataset_group_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "dataset_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("opendata.search_dataset_groups.index"), search_opendata_dataset_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -15,7 +15,7 @@
       <tbody>
         <% @item.dataset_groups.each do |group| %>
         <tr data-id="<%= group.id %>">
-          <td><%= f.hidden_field "dataset_group_ids[]", value: group.id %> <%= group.name %></td>
+          <td><%= f.hidden_field "dataset_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
           <td><%= link_to t("opendata.search_dataset_groups.deselect"), "#", class: 'deselect btn' %></td>
         </tr>
         <% end %>

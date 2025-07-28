@@ -17,6 +17,7 @@ describe "opendata_appfiles", type: :feature, dbscope: :example do
   let(:appfile) { create_appfile(app, file) }
   let(:index_path) { opendata_app_appfiles_path site, node, app_id: app.id }
   let(:new_path) { new_opendata_app_appfile_path site, node, app_id: app.id }
+  let(:edit_path) { edit_opendata_app_appfile_path site, node, app_id: app.id, id: appfile.id }
   let(:download_path) { opendata_app_appfile_file_path site, node, app_id: app.id, appfile_id: appfile.id }
 
   context "with auth" do
@@ -44,5 +45,23 @@ describe "opendata_appfiles", type: :feature, dbscope: :example do
       expect(current_path).not_to eq sns_login_path
     end
 
+    describe "release_permission", js: true do
+      it do
+        visit edit_path
+        within "footer.send" do
+          expect(page).to have_xpath("//input[@value='#{I18n.t("ss.buttons.publish_save")}']")
+          expect(page).to have_xpath("//input[@value='#{I18n.t("ss.buttons.closed_save")}']")
+        end
+
+        role = cms_user.cms_roles[0]
+        role.update permissions: role.permissions.reject { |k, v| k =~ /^(release_|close_)/ }
+
+        visit edit_path
+        within "footer.send" do
+          expect(page).to have_no_xpath("//input[@value='#{I18n.t("ss.buttons.publish_save")}']")
+          expect(page).to have_no_xpath("//input[@value='#{I18n.t("ss.buttons.closed_save")}']")
+        end
+      end
+    end
   end
 end

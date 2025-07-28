@@ -1,0 +1,24 @@
+<% if mode == "by_keyword" %>
+  <%= form_for :s, url: "", html: { method: :get, class: "gws-workflow-select-forms-search" } do |f| %>
+    <% if @s.category_ids %>
+      <% @s.category_ids.each do |category_id| %>
+        <%= f.hidden_field "category_ids[]", value: category_id %>
+      <% end %>
+    <% end %>
+    <% if @s.purpose_id.present? %>
+      <%= f.hidden_field :purpose_id %>
+    <% end %>
+    <div class="gws-workflow-select-forms-search-keyword">
+      <%= f.text_field :keyword, placeholder: t('ss.keyword'), id: nil %>
+      <div>
+        <% Gws::Workflow2.keyword_operator_options.each do |label, value| %>
+          <label><%= radio_button_tag "s[keyword_operator]", value, @s.keyword_operator == value %> <%= label %></label>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="gws-workflow-select-forms-search-buttons">
+      <%= f.submit t('ss.buttons.search'), name: nil, class: "btn" %>
+    </div>
+  <% end %>
+<% end %>

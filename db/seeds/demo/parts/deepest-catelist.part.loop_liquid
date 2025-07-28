@@ -1,0 +1,21 @@
+{% for node in nodes %}
+    {% if node.current? %}
+      {% for subnode in node.nodes %}
+  {% if forloop.first == true %}
+<div class="deepest-catelist-wrap">
+<section class="deepest-catelist">
+      <ul class="deepest-catelist__list">
+    {% endif %}
+      <li class="deepest-catelist__item deepest-catelist__item--{{ subnode.css_class }}">
+        <header class="deepest-catelist__item-header">
+          <h2 class="deepest-catelist__item-title"><a href="{{ subnode.url }}" class="deepest-catelist__item-link">{{ subnode.name }}</a></h2>
+        </header><!-- .deepest-catelist__item-header -->
+      </li><!-- .deepest-catelist__item -->
+  {% if forloop.last == true %}
+      </ul><!-- .deepest-catelist__list -->
+</section><!-- .deepest-catelist -->
+</div><!-- .deepest-catelist-wrap -->
+    {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}

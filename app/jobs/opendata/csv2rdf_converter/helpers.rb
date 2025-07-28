@@ -10,7 +10,7 @@ module Opendata::Csv2rdfConverter::Helpers
       @cur_resource = @cur_dataset.resources.find(resource)
       @item = Opendata::Csv2rdfSetting.site(@cur_site).resource(@cur_resource).first
       @csv = @cur_resource.parse_tsv
-      @uri = "#{UNF::Normalizer.normalize(@cur_resource.full_url.presence || @cur_resource.url, :nfkc)}#"
+      @uri = "#{::SS.normalize_str(@cur_resource.full_url.presence || @cur_resource.url)}#"
       @tmp_dir = nil
       @tmp_file = nil
     end
@@ -45,7 +45,7 @@ module Opendata::Csv2rdfConverter::Helpers
     end
 
     def fallback_property_name(column_index)
-      name = @item.header_labels[column_index].map { |e| UNF::Normalizer.normalize(e.strip, :nfkc) }.join("_")
+      name = @item.header_labels[column_index].map { |e| ::SS.normalize_str(e) }.join("_")
       name.gsub!(/\s+/, '_')
       name
     end

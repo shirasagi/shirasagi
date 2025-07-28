@@ -1,12 +1,24 @@
-<div id="tool">
-<nav>
-  <a id="nocssread" href="#wrap">本文へ</a>
-  <div class="tools">
-    <a id="info" href="/use/">ご利用案内</a>
-    <span id="ss-kana">ふりがなをつける</span>
-    <span id="ss-voice">読み上げる</span>
-    <div id="theme">背景色<span id="ss-theme"></span></div>
-    <div id="size">文字サイズ<span id="ss-small">小さく</span><span id="ss-medium">標準</span><span id="ss-large">大きく</span></div>
-  </div>
-</nav>
-</div>
+<!-- アクセシビリティツール -->
+<div class="accessibility__tool-wrap">
+  <nav class="accessibility__tool">
+    <div class="accessibility__tool-list">
+      <div data-tool="ss-kana" data-tool-type="button" class="accessibility__kana">
+        <span class="on-not-pressed">ふりがなをつける</span>
+        <span class="on-pressed">ふりがなをはずす</span>
+      </div>
+      <div data-tool="ss-voice" data-tool-type="button" class="accessibility__voice">読み上げる</div>
+      <div class="accessibility__theme">背景色
+        <span data-tool="ss-theme" data-tool-type="button">
+          <a href="#" class="white">白</a>
+          <a href="#" class="blue">青</a>
+          <a href="#" class="black">黒</a>
+        </span>
+      </div>
+      <div class="accessibility__fontsize">文字サイズ
+        <span data-tool="ss-small" data-tool-type="button">小さく</span>
+        <span data-tool="ss-medium" data-tool-type="button">標準</span>
+        <span data-tool="ss-large" data-tool-type="button">大きく</span>
+      </div>
+    </div><!-- .accessibility__tool-list -->
+  </nav><!-- .accessibility__tool -->
+</div><!--#tool .accessibility__tool-wrap -->

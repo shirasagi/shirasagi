@@ -17,30 +17,26 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "restore" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         # original file upload
         within "form#item-form" do
-          within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
+          ensure_addon_opened "#addon-cms-agents-addons-file"
+          ss_upload_file before_csv
 
-        wait_for_cbox do
-          attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
-            click_button I18n.t("ss.buttons.attach")
+          within "#addon-cms-agents-addons-file" do
+            expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
           end
+          click_on I18n.t("ss.buttons.publish_save")
         end
-        within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
-        end
-        click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         5.times.each do |index|
-          page.execute_script("SS.clearNotice();")
+          clear_notice
+          wait_for_js_ready
 
           # open replace file dialog
           within "#addon-cms-agents-addons-file" do
@@ -50,15 +46,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css('.file-view', text: "replaced")
             end
 
-            click_on I18n.t("ss.buttons.replace_file")
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.replace_file") }
           end
 
           # upload file and confirmation
-          wait_for_cbox do
+          wait_for_js_ready
+          within_cbox do
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
             click_button I18n.t('inquiry.confirm')
-
+          end
+          within_cbox do
             expect(page).to have_css('.file-view.before')
             expect(page).to have_css('.file-view.after', text: ::File.basename(after_csv, ".*"))
 
@@ -67,6 +65,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_button I18n.t('ss.buttons.replace_save')
           end
           wait_for_notice I18n.t('ss.notice.replace_saved')
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
         end
 
         replaced_page = item.class.find(item.id)
@@ -82,14 +82,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(Fs.cmp(history_file.path, before_csv)).to be true
 
         # show history files and restore
+        wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: "replaced")
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
+          wait_for_js_ready
           click_on I18n.t("ss.buttons.file_histories")
 
           within "table.index tbody" do
@@ -107,6 +109,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         wait_for_notice I18n.t('history.notice.restored')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         replaced_page = item.class.find(item.id)
         replaced_file = replaced_page.attached_files.first
@@ -120,30 +124,26 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "destroy" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         # original file upload
         within "form#item-form" do
-          within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
+          ensure_addon_opened "#addon-cms-agents-addons-file"
+          ss_upload_file before_csv
 
-        wait_for_cbox do
-          attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
-            click_button I18n.t("ss.buttons.attach")
+          within "#addon-cms-agents-addons-file" do
+            expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
           end
+          click_on I18n.t("ss.buttons.publish_save")
         end
-        within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
-        end
-        click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         3.times.each do |index|
-          page.execute_script("SS.clearNotice();")
+          wait_for_js_ready
+          clear_notice
 
           # open replace file dialog
           within "#addon-cms-agents-addons-file" do
@@ -153,11 +153,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css('.file-view', text: "replaced")
             end
 
-            click_on I18n.t("ss.buttons.replace_file")
+            wait_for_cbox_opened { click_on I18n.t("ss.buttons.replace_file") }
           end
 
           # upload file and confirmation
-          wait_for_cbox do
+          within_cbox do
+            wait_for_js_ready
             expect(page).to have_css("input[type='submit'][value='#{I18n.t('inquiry.confirm')}']")
             attach_file "item[in_file]", after_csv
             click_button I18n.t('inquiry.confirm')
@@ -170,18 +171,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             click_button I18n.t('ss.buttons.replace_save')
           end
           wait_for_notice I18n.t('ss.notice.replace_saved')
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
         end
 
         # show history files and destroy
         visit show_path
+        wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: "replaced")
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
+          wait_for_js_ready
           click_on I18n.t("ss.buttons.file_histories")
 
           within "table.index tbody" do
@@ -192,7 +197,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               expect(page).to have_css("a", text: I18n.t("ss.links.download"))
               expect(page).to have_css("a", text: I18n.t("ss.buttons.delete"))
 
-              wait_event_to_fire "ss:ajaxRemoved", "#addon-cms-agents-addons-file .replace-file .ajax-box" do
+              wait_for_event_fired "ss:ajaxRemoved", selector: "#addon-cms-agents-addons-file .replace-file .ajax-box" do
                 page.accept_confirm do
                   click_on I18n.t("ss.buttons.delete")
                 end

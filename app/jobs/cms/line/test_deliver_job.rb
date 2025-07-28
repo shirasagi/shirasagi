@@ -1,6 +1,8 @@
 class Cms::Line::TestDeliverJob < Cms::ApplicationJob
   include Job::SS::TaskFilter
 
+  queue_as :external
+
   self.task_class = Cms::Task
   self.task_name = "cms:line_test_deliver"
   self.controller = Cms::Agents::Tasks::Line::MessagesController

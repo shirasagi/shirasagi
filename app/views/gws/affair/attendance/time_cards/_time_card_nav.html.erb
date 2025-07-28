@@ -1,0 +1,16 @@
+<div class="nav-group">
+  <nav class="nav-menu">
+    <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month]), include_blank: true) %>
+    <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+    <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+    <% if @item && @item.locked? %>
+      <span><%= t('gws/attendance.already_locked') %></span>
+    <% end %>
+  </nav>
+  <% if @item.present? %>
+  <nav class="nav-operation">
+    <%= link_to(t('ss.buttons.download'), { action: :download }, class: :btn) %>
+    <%= link_to(t('ss.buttons.print'), { action: :print }, class: :btn) %>
+  </nav>
+  <% end %>
+</div>

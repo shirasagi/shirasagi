@@ -13,8 +13,10 @@ module Cms::PublicFilter
     before_action :parse_path
     before_action :set_preview_params
     before_action :compile_scss
-    before_action :x_sendfile, unless: ->{ filter_include?(:mobile) || filter_include?(:kana) || filter_include?(:translate) || @preview }
+    before_action :x_sendfile, unless: ->{ filter_include_any?(:mobile, :kana, :translate) || @preview }
   end
+
+  PART_FORWARDABLE_HEADERS = Set.new(%w(x-ss-received-by)).freeze
 
   def index
     if @cur_path.match?(/\.p[1-9]\d*\.html$/)
@@ -46,7 +48,7 @@ module Cms::PublicFilter
       return redirect_to "//#{host}" + gws_login_path(site: group)
     end
 
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def set_request_path
@@ -71,11 +73,11 @@ module Cms::PublicFilter
 
   def redirect_slash
     return unless request.get? || request.head?
-    redirect_to "#{request.path}/"
+    redirect_to "#{SS.request_path(request)}/"
   end
 
   def deny_path
-    raise "404" if @cur_path.match?(/^\/sites\/.\//)
+    raise SS::NotFoundError if @cur_path.match?(/^\/sites\/.\//)
   end
 
   def parse_path
@@ -103,27 +105,12 @@ module Cms::PublicFilter
     css_mtime = Fs.exist?(@file) ? Fs.stat(@file).mtime : 0
     return if Fs.stat(@scss).mtime.to_i <= css_mtime.to_i
 
-    data = Fs.read(@scss)
-    begin
-      opts = Rails.application.config.sass
-      load_paths = opts.load_paths[1..-1] || []
-      load_paths << "#{Rails.root}/vendor/assets/stylesheets"
-      load_paths << ::Fs::GridFs::CompassImporter.new(::File.dirname(@file)) if Fs.mode == :grid_fs
-
-      sass = Sass::Engine.new(
-        data,
-        cache: false,
-        debug_info: false,
-        filename: @scss,
-        inline_source_maps: false,
-        load_paths: load_paths,
-        style: :compressed,
-        syntax: :scss
-      )
-      Fs.write(@file, sass.render)
-    rescue Sass::SyntaxError => e
-      Rails.logger.error(e)
-      Fs.write(@file, data)
+    Rails.logger.tagged(::File.basename(@scss)) do
+      begin
+        Cms.compile_scss(@scss, @file, basedir: @cur_site.path)
+      rescue Cms::ScssScriptError => e
+        Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      end
     end
   end
 
@@ -169,10 +156,10 @@ module Cms::PublicFilter
   def render_and_send_part(part)
     @cur_path = params[:ref] || "/"
     set_main_path
-    resp = render_part(part)
-    return false if !resp
+    header, body = render_part(part)
+    return false if !body
 
-    send_part(resp)
+    send_part(header, body)
     request.env["ss.rendered"] = { type: :part, part: part }
     true
   end
@@ -181,8 +168,7 @@ module Cms::PublicFilter
     resp = render_page(page)
     return false if !resp
 
-    self.response = resp
-    send_page(page)
+    send_page(page, resp)
     request.env["ss.rendered"] = { type: :page, page: page, layout: @cur_layout }
     true
   end
@@ -196,33 +182,52 @@ module Cms::PublicFilter
     resp = render_node(node)
     return false if !resp
 
-    self.response = resp
-    send_page(node)
+    send_page(node, resp)
     request.env["ss.rendered"] = { type: :node, node: node, layout: @cur_layout }
     true
   end
 
-  def send_part(body)
+  def send_part(header, body)
     respond_to do |format|
-      format.html { render html: body.html_safe, layout: false }
-      format.json { render json: body.to_json }
+      format.html do
+        forward_part_header(header)
+        render html: body.html_safe, layout: false
+      end
+      format.json do
+        forward_part_header(header)
+        render json: body.to_json
+      end
     end
   end
 
-  def send_page(page)
+  def forward_part_header(header, resp = nil)
+    return unless header
+
+    resp ||= response
+    header.each do |key, value|
+      next unless PART_FORWARDABLE_HEADERS.include?(key)
+      resp.headers[key] = value
+    end
+  end
+
+  def send_page(page, resp)
     if page.view_layout == "cms/redirect" && !mobile_path?
       @redirect_link = Sys::TrustedUrlValidator.url_restricted? ? trusted_url!(page.redirect_link) : page.redirect_link
       render html: "", layout: "cms/redirect"
-    elsif response.media_type == "text/html" && page.layout
-      render html: render_layout(page.layout).html_safe, layout: (request.xhr? ? false : "cms/page")
+    elsif resp.media_type == "text/html" && page.layout
+      layout = request.xhr? ? false : "cms/page"
+      html = render_layout(page.layout, content: resp.body)
+      html = render_to_string html: html.html_safe, layout: layout
+      resp.body = html
+      self.response = resp
     else
-      @_response_body = response.body
+      self.response = resp
     end
   end
 
   def page_not_found
-    request.env["action_dispatch.show_exceptions"] = false if @preview
-    raise "404"
+    request.env["action_dispatch.show_exceptions"] = :none if @preview
+    raise SS::NotFoundError
   end
 
   def rescue_action(exception = nil)
@@ -241,8 +246,6 @@ module Cms::PublicFilter
       logger.error "404 #{@cur_path}"
       raise exception
     end
-
-    self.response = ActionDispatch::Response.new
 
     status = opts[:status].presence || 500
     file = error_html_file(status)

@@ -1,3 +1,5 @@
+require 'kconv'
+
 class Gws::Memo::Message
   module Eml
     module_function
@@ -28,7 +30,16 @@ class Gws::Memo::Message
 
     def decode_local_part(address)
       local_part, = address.split("@", 2)
-      ::Addressable::IDNA.to_unicode(local_part)
+
+      decoded = Base64.strict_decode64(local_part) rescue nil
+      if decoded
+        decoded = decoded.encode("UTF-8") rescue nil
+      end
+      if decoded
+        local_part = decoded
+      end
+
+      local_part
     end
 
     def multi_part?(mail_header)

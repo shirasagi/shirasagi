@@ -1,0 +1,14 @@
+<dl class="see mod-gws-notice-calendar">
+  <dt><%= @model.t :term %><%= @model.tt :term %></dt>
+  <dd>
+    <div class="gws-start-end-combo">
+      <div class="dates-field">
+        <%= f.ss_date_field :start_on, { max_date: @cur_site.schedule_max_at }, { class: "start" } %>
+        - <%= f.ss_date_field :end_on, { max_date: @cur_site.schedule_max_at }, { class: "end" } %>
+      </div>
+    </div>
+  </dd>
+
+  <dt><%= @model.t :color %><%= @model.tt :color %></dt>
+  <dd><%= f.ss_color_picker :color %></dd>
+</dl>

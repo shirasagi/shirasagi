@@ -8,7 +8,7 @@ $('.mod-cms-line-template a.ajax-box').data('on-select', function($item) {
 <dl class="see mod-cms-line-template">
   <dt><%= @model.t :page_id %><%= @model.tt :page_id %></dt>
   <dd>
-    <%= f.hidden_field "page_id", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "page_id", value: "", id: nil, class: "hidden-ids" %>
     <%
       page_params = { single: 1 }
       page_params[:s] = { statuses: %w(public) }
@@ -26,7 +26,7 @@ $('.mod-cms-line-template a.ajax-box').data('on-select', function($item) {
       <tbody>
         <% if @item.page %>
           <tr data-id="<%= @item.page.id %>">
-            <td><%= f.hidden_field "page_id", value: @item.page.id %> <%= @item.page.name %></td>
+            <td><%= f.hidden_field "page_id", value: @item.page.id, id: nil %> <%= @item.page.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
         <% end %>

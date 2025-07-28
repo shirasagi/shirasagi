@@ -1,0 +1,6 @@
+<% return if group.ldap_dn.blank? %>
+
+<dl class="see">
+  <dt><%= Cms::Group.t :ldap_dn %></dt>
+  <dd><%= group.ldap_dn %></dd>
+</dl>

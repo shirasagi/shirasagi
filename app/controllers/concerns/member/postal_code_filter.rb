@@ -11,6 +11,6 @@ module Member::PostalCodeFilter
     postal_code = Sys::PostalCode.search(code: postal_code).first
     raise "404" if postal_code.blank?
 
-    render json: postal_code.attributes.except(:_id, :updated, :created)
+    render json: postal_code.attributes.except("_id", "updated", "created")
   end
 end

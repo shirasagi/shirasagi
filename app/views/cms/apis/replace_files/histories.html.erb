@@ -36,7 +36,7 @@
     <% @item.history_files.each do |item| %>
       <tr>
         <td><%= item.name %></td>
-        <td><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= ss_time_tag(item.created) %></td>
         <td><%= number_to_human_size item.size %></td>
         <td>
           <%= link_to t('history.buttons.restore'), { action: :restore, source: item.id }, class: "restore" %>

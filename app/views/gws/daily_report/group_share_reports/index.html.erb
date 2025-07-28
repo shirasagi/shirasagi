@@ -1,0 +1,51 @@
+<%= jquery do %>
+  var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH' }).to_json %>;
+  $('.gws-daily-report-year-month-navi select[name=year_month]').on('change', function() {
+    var val = $(this).val();
+    location.href = baseUrl.replace(':YEAR_MONTH', val);
+  });
+<% end %>
+
+<div class="gws-tabs">
+  <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+    <%= link_to gws_daily_report_group_share_reports_path(group: group.id), class: "#{'current' if group.id == @group.id}" do %>
+      <span class="tab-name"><%= group.trailing_name %></span>
+    <% end %>
+  <% end %>
+</div>
+
+<section class="main-box gws-daily-report-box share-view">
+  <header>
+    <h2>
+      <%= @group.trailing_name %>
+    </h2>
+    <nav>
+      <%= render template: '_search' %>
+    </nav>
+  </header>
+  <div class="gws-category-navi gws-daily-report-year-month-navi">
+    <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month])) %>
+    <% if @cur_month.last_month >= @active_year_range.first %>
+      <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+    <% end %>
+    <% if @cur_month.next_month <= @active_year_range.last %>
+      <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+    <% end %>
+  </div>
+  <div class="table-wrap">
+    <table class="index">
+      <tbody>
+        <% (@cur_month.beginning_of_month.to_date..@cur_month.end_of_month.to_date).each do |date| %>
+          <tr>
+            <%= render partial: 'date', locals: { column_value: nil, date: date, print: true, report: nil, user: @cur_user } %>
+            <% @items.where(form_id: @forms.first.try(:id), daily_report_date: date).each do |report| %>
+              <% %w(small_talk column_values).each do |path| %>
+                <%= render partial: path, locals: { column_value: nil, date: date, print: false, report: report, user: report.user } %>
+              <% end %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

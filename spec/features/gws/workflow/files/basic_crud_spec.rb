@@ -19,27 +19,20 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       #
       # Create
       #
-      click_link I18n.t('ss.links.new')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.new')
+      end
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
-        wait_cbox_open do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-      wait_for_cbox do
-        within "article.file-view" do
-          wait_cbox_close do
-            click_on file.name
-          end
-        end
-      end
-      within "form#item-form" do
+
+        ss_select_file file, addon: '#addon-gws-agents-addons-file'
         expect(page).to have_content(file.name)
+
         click_on I18n.t("ss.buttons.save")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name
@@ -58,14 +51,16 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       #
       # Update
       #
-      click_on I18n.t('ss.links.edit')
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.edit')
+      end
       within "form#item-form" do
         fill_in "item[name]", with: item_name2
         fill_in "item[text]", with: item_text2
         click_on I18n.t("ss.buttons.save")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(Gws::Workflow::File.site(site).count).to eq 1
       item = Gws::Workflow::File.site(site).first
       expect(item.name).to eq item_name2
@@ -84,12 +79,14 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       #
       # Soft Delete
       #
-      click_on I18n.t('ss.links.delete')
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.delete')
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Gws::Workflow::File.site(site).count).to eq 1
       Gws::Workflow::File.site(site).first.tap do |workflow|
         expect(workflow.deleted).not_to be_nil

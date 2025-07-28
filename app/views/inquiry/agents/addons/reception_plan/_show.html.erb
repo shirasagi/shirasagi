@@ -10,8 +10,8 @@ return if @item.reception_start_date.blank? && @item.reception_close_date.blank?
 <% end %>
 <dl class="see">
   <dt><%= @model.t :reception_start_date %></dt>
-  <dd><%= tryb{@item.send(:reception_start_date).strftime("%Y/%m/%d")} %></dd>
+  <dd><%= ss_time_tag(@item.reception_start_date, type: :date) %></dd>
 
   <dt><%= @model.t :reception_close_date %></dt>
-  <dd><%= tryb{@item.send(:reception_close_date).strftime("%Y/%m/%d")} %></dd>
+  <dd><%= ss_time_tag(@item.reception_close_date, type: :date) %></dd>
 </dl>

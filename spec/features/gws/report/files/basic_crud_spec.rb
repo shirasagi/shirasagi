@@ -26,6 +26,16 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   let!(:column7) { create(:gws_column_radio_button, cur_site: site, form: form, order: 70, required: "optional") }
   let!(:column8) { create(:gws_column_check_box, cur_site: site, form: form, order: 80, required: "optional") }
   let!(:column9) { create(:gws_column_file_upload, cur_site: site, form: form, order: 90, required: "optional") }
+  let!(:column10) { create(:gws_column_title, cur_site: site, form: form, order: 100) }
+
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v2
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
 
   context "basic crud" do
     let(:name) { unique_id }
@@ -50,7 +60,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       #
       visit gws_report_files_main_path(site: site)
       within "#menu" do
-        click_on I18n.t("ss.links.new")
+        wait_for_event_fired("ss:dropdownOpened") { click_on I18n.t("ss.links.new") }
         within ".gws-dropdown-menu" do
           click_on form.name
         end
@@ -61,32 +71,23 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         fill_in "custom[#{column1_text1.id}]", with: column_value1_text1
         fill_in "custom[#{column1_text2.id}]", with: column_value1_text2
         fill_in "custom[#{column1_text3.id}]", with: column_value1_text3
-        fill_in "custom[#{column2_date1.id}]", with: column_value2_date1.strftime("%Y/%m/%d")
-        fill_in "custom[#{column2_date2.id}]", with: column_value2_date2.strftime("%Y/%m/%d %H:%M")
+        fill_in_date "custom[#{column2_date1.id}]", with: column_value2_date1
+        fill_in_datetime "custom[#{column2_date2.id}]", with: column_value2_date2
         fill_in "custom[#{column3.id}]", with: column_value3
         fill_in "custom[#{column4.id}]", with: column_value4
         fill_in "custom[#{column5.id}]", with: column_value5
         select column_value6, from: "custom[#{column6.id}]"
         find("input[name='custom[#{column7.id}]'][value='#{column_value7}']").click
         find("input[name='custom[#{column8.id}][]'][value='#{column_value8}']").click
-        wait_cbox_open do
-          first(".btn-file-upload").click
+        within first("#custom_#{column9.id}_0").first(:xpath, './parent::*', minimum: 0) do
+          upload_to_ss_file_field "custom[#{column9.id}][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
         end
-      end
-      wait_for_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_cbox_close do
-          click_on I18n.t("ss.buttons.attach")
-        end
-      end
-      within "form#item-form" do
-        expect(page).to have_css(".column-#{column9.id}", text: "logo")
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Report::File.count).to eq 1
-      file = Gws::Report::File.first
+      file = Gws::Report::File.first # TODO: timeout
       expect(file.name).to eq name
       expect(file.column_values.count).to eq form.columns.count
       file.column_values.where(column_id: column1_text1.id).first.tap do |cv|
@@ -133,6 +134,9 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
           expect(cv_file.owner_item_type).to eq file.class.name
         end
       end
+      file.column_values.where(column_id: column10.id).first.tap do |cv|
+        expect(cv.value).to eq column10.default_value
+      end
       expect(file.state).to eq "closed"
       expect(file.deleted).to be_blank
 
@@ -148,7 +152,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       file.reload
       expect(file.name).to eq name2
@@ -162,12 +166,14 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       visit gws_report_files_main_path(site: site)
       click_on I18n.t('gws/report.options.file_state.closed')
       click_on name2
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       file.reload
       expect(file.name).to eq name2
@@ -183,10 +189,10 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       click_on name2
       click_on I18n.t("ss.links.restore")
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.restore")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+      wait_for_notice I18n.t('ss.notice.restored')
 
       file.reload
       expect(file.name).to eq name2
@@ -200,21 +206,25 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       visit gws_report_files_main_path(site: site)
       click_on I18n.t('gws/report.options.file_state.closed')
       click_on name2
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
 
       visit gws_report_files_main_path(site: site)
       click_on I18n.t('ss.links.trash')
       click_on name2
-      click_on I18n.t("ss.links.delete")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::Report::File.find(file.id) }.to raise_error Mongoid::Errors::DocumentNotFound
     end

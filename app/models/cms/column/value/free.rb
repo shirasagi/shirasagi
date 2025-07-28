@@ -7,7 +7,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   permit_values :value, file_ids: []
 
   before_validation :set_contains_urls
-  before_save { @add_file_ids = file_ids - file_ids_was.to_a }
+  before_save { @add_file_ids ||= file_ids - file_ids_was.to_a }
   after_save :put_contains_urls_logs
   before_parent_save :before_save_files
   after_parent_destroy :destroy_files
@@ -41,7 +41,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
   private
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || skip_required?
 
     if column.required? && value.blank?
       self.errors.add(:value, :blank)
@@ -70,6 +70,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     # master から branch を作成する際は @merge_values はセットされないのに対し、
     # master へ branch をマージする際は @merge_values がセットされる。
     clone_files if @new_clone && !@merge_values
+    @add_file_ids ||= file_ids - file_ids_was.to_a
     save_files
   end
 
@@ -79,10 +80,15 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
     owner_item = SS::Model.container_of(self)
     return if owner_item.respond_to?(:branch?) && owner_item.branch?
 
+    cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
+    cur_site ||= owner_item.site if owner_item.respond_to?(:site)
+    cur_site ||= SS.current_site
+    cur_site = nil unless cur_site.is_a?(SS::Model::Site)
     cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
+    cur_user ||= SS.current_user
     cloned_file_ids = []
     SS::File.each_file(file_ids) do |source_file|
-      clone_file = SS::File.clone_file(source_file, cur_user: cur_user, owner_item: owner_item) do |new_file|
+      clone_file = SS::File.clone_file(source_file, cur_site: cur_site, cur_user: cur_user, owner_item: owner_item) do |new_file|
         # history_files
         if @merge_values
           new_file.history_file_ids = source_file.history_file_ids
@@ -140,7 +146,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   def put_contains_urls_logs
     owner_item = SS::Model.container_of(self)
-    add_contains_urls = owner_item.value_contains_urls - owner_item.value_contains_urls_was.to_a
+    add_contains_urls = owner_item.value_contains_urls - owner_item.value_contains_urls_previously_was.to_a
     add_contains_urls.each do |file_url|
       item = build_history_log(nil)
       item.url = file_url
@@ -150,7 +156,7 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
       item.save
     end
 
-    del_contains_urls = owner_item.value_contains_urls_was.to_a - owner_item.value_contains_urls
+    del_contains_urls = owner_item.value_contains_urls_previously_was.to_a - owner_item.value_contains_urls
     del_contains_urls.each do |file_url|
       item = build_history_log(nil)
       item.url = file_url

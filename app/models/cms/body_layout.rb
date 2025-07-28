@@ -7,7 +7,7 @@ class Cms::BodyLayout
   store_in collection: "cms_body_layouts"
   set_permission_name "cms_body_layouts"
 
-  field :parts, type: SS::Extensions::Words, default: ""
+  field :parts, type: SS::Extensions::Lines, default: ""
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 

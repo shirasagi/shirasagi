@@ -77,7 +77,7 @@ describe SS::FilenameUtils, dbscope: :example do
         expect(SS::FilenameUtils.url_safe_japanese?("$")).to be_truthy
         expect(SS::FilenameUtils.url_safe_japanese?("%")).to be_falsey
         expect(SS::FilenameUtils.url_safe_japanese?("^")).to be_falsey
-        expect(SS::FilenameUtils.url_safe_japanese?("&")).to be_truthy
+        expect(SS::FilenameUtils.url_safe_japanese?("&")).to be_falsey
         expect(SS::FilenameUtils.url_safe_japanese?("*")).to be_falsey
         expect(SS::FilenameUtils.url_safe_japanese?("(")).to be_truthy
         expect(SS::FilenameUtils.url_safe_japanese?(")")).to be_truthy
@@ -93,7 +93,7 @@ describe SS::FilenameUtils, dbscope: :example do
         expect(SS::FilenameUtils.url_safe_japanese?("|")).to be_falsey
         expect(SS::FilenameUtils.url_safe_japanese?(":")).to be_falsey
         expect(SS::FilenameUtils.url_safe_japanese?(";")).to be_truthy
-        expect(SS::FilenameUtils.url_safe_japanese?("'")).to be_truthy
+        expect(SS::FilenameUtils.url_safe_japanese?("'")).to be_falsey
         expect(SS::FilenameUtils.url_safe_japanese?("\"")).to be_falsey
         expect(SS::FilenameUtils.url_safe_japanese?(",")).to be_truthy
         expect(SS::FilenameUtils.url_safe_japanese?(".")).to be_truthy

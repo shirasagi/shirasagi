@@ -6,13 +6,6 @@ module Translate::Part
 
     default_scope ->{ where(route: "translate/tool") }
 
-    before_save :set_view_options
-
-    def set_view_options
-      self.mobile_view = "hide"
-      self.ajax_view = "enabled"
-    end
-
     def translate_target_options(target = nil)
       if target
         options = [ [ I18n.t("translate.views.show_original"), "" ] ]

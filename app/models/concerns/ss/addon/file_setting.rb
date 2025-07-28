@@ -3,6 +3,9 @@ module SS::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    MIN_FILE_RESIZING = 200
+    MAX_FILE_RESIZING = 5 * 1_024
+
     included do
       attr_accessor :in_file_resizing_width, :in_file_resizing_height, :in_file_fs_access_restriction_basic_auth_password
 
@@ -26,6 +29,7 @@ module SS::Addon
 
       validates :multibyte_filename_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
       validates :file_fs_access_restriction_state, inclusion: { in: %w(enabled disabled), allow_blank: true }
+      validates :file_fs_access_restriction_allowed_ip_addresses, ip_address: true
     end
 
     def set_file_resizing
@@ -35,8 +39,10 @@ module SS::Addon
       width = in_file_resizing_width.to_i
       height = in_file_resizing_height.to_i
 
-      width = 200 if width <= 200
-      height = 200 if height <= 200
+      width = MIN_FILE_RESIZING if width < MIN_FILE_RESIZING
+      height = MIN_FILE_RESIZING if height < MIN_FILE_RESIZING
+      width = MAX_FILE_RESIZING if width > MAX_FILE_RESIZING
+      height = MAX_FILE_RESIZING if height > MAX_FILE_RESIZING
 
       self.file_resizing = [ width, height ]
     end
@@ -94,7 +100,7 @@ module SS::Addon
       end
 
       def match?(request)
-        remote_addr = request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
+        remote_addr = SS.remote_addr(request)
         result = @ip_addresses.any? { |addr| addr.include?(remote_addr) }
         Rails.logger.warn { "remote address '#{remote_addr}' is not allowed" } unless result
         result

@@ -30,7 +30,7 @@ $('[name="item[in_image1040]"]').on("change", function(){
     <dt><%= @model.t "image#{size}_id" %><%= @model.tt "image#{size}_id" %></dt>
     <dd>
       <% if @item.send("image#{size}") %>
-        <div style="padding: 5px 0px 10px 0px;">
+        <div style="padding: 5px 0 10px 0;">
           <%= @item.send("image#{size}").name %>
         </div>
       <% end %>

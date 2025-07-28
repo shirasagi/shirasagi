@@ -19,32 +19,29 @@ describe "member_blogs", type: :feature, dbscope: :example, js: true do
       end
 
       visit "#{path}/new"
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in_ckeditor "item[html]", with: "sample"
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       visit "#{path}/#{item.id}/edit"
-
-      wait_cbox_open do
-        click_on I18n.t("ss.buttons.upload")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      within "form#item-form" do
+        ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: "#addon-member-agents-addons-file"
+        expect(page).to have_css("#addon-member-agents-addons-file .file-view", text: "keyvisual.jpg")
+        click_on I18n.t("ss.buttons.publish_save")
       end
-
-      wait_for_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-        wait_for_ajax
-
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.attach")
-        wait_for_ajax
-      end
-      click_on I18n.t("ss.buttons.publish_save")
-
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_text('keyvisual.jpg')
 
       visit logs_path

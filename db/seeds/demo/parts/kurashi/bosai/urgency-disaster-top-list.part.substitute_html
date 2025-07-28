@@ -1,0 +1,1 @@
+<li class="head-content__item"><span class="date">#{date.long}</span><a href="#{url}" class="head-content__item-link">#{index_name}</a></li>

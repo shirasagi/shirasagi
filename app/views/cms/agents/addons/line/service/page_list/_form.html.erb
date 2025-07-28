@@ -5,7 +5,7 @@
   <dt><%= @model.t :no_image_id %><%= @model.tt :no_image_id %></dt>
   <dd>
     <% if @item.no_image %>
-      <div style="padding: 5px 0px 10px 0px;">
+      <div style="padding: 5px 0 10px 0;">
         <label>
           <%= @item.no_image.name %>
           <%= f.check_box :rm_no_image %><%= t "ss.buttons.delete" %>
@@ -16,7 +16,7 @@
   </dd>
 
   <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
-  <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+  <dd><%= f.ss_lines_field :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
 
   <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
   <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 200px;" %></dd>

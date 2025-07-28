@@ -1,0 +1,4 @@
+<section class="head-content__area head-content__area--disaster">
+  <header class="head-content__header"><h2>防災情報</h2></header>
+  <div class="head-content__list-wrap">
+    <ul class="head-content__list">

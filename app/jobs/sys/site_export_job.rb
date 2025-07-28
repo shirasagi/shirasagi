@@ -1,14 +1,24 @@
 class Sys::SiteExportJob < SS::ApplicationJob
-  include Job::SS::TaskFilter
+  #include Job::SS::TaskFilter
 
   cattr_accessor :export_root
   self.export_root = "#{Rails.root}/private/export"
 
+  def mock_task
+    task = OpenStruct.new
+    def task.log(message)
+      Rails.logger.info(message)
+      puts message
+    end
+    task
+  end
+
   def perform(opts = {})
-    @src_site = Cms::Site.find(@task.source_site_id)
+    @src_site = Cms::Site.find(site.id)
+    @task = mock_task
 
     @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
-    @output_zip = "#{@output_dir}.zip"
+    @output_zip = "#{@output_dir}.ssr"
 
     exclude_models = opts[:exclude].to_s.split(",")
     @exclude_cms_pages = exclude_models.include?("cms_pages")
@@ -18,9 +28,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
     FileUtils.mkdir_p(@output_dir)
 
     @task.log("=== Site Export ===")
+    @task.log("Started at: #{I18n.l(Time.zone.now, format: :picker)}")
     @task.log("Site name: #{@src_site.name}")
     @task.log("Temporary directory: #{@output_dir}")
-    @task.log("Outout file: #{@output_zip}")
+    @task.log("Output file: #{@output_zip}")
 
     @ss_file_ids = []
 
@@ -42,11 +53,13 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_theme_templates
     invoke :export_cms_source_cleaner_templates
     invoke :export_cms_loop_settings
+    invoke :export_cms_check_links_ignore_urls
     invoke :export_ezine_columns
     invoke :export_inquiry_columns
     invoke :export_kana_dictionaries
     invoke :export_opendata_dataset_groups
     invoke :export_opendata_licenses
+    invoke :export_guide_diagram_point
 
     # files
     invoke :export_cms_files
@@ -56,7 +69,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :compress
 
     FileUtils.rm_rf(@output_dir)
-    @task.log("Completed.")
+    @task.log("Completed at #{I18n.l(Time.zone.now, format: :picker)}.")
+  rescue => e
+    puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+    raise
   end
 
   private
@@ -64,14 +80,15 @@ class Sys::SiteExportJob < SS::ApplicationJob
   def compress
     FileUtils.rm(@output_zip) if File.exist?(@output_zip)
 
-    zip = Sys::SiteExport::Zip.new(@output_zip, exclude_public_files: @exclude_public_files)
-    zip.output_dir = @output_dir
-    zip.site_dir = @src_site.path
+    zip = Sys::SiteExport::Zip.new(
+      path: @output_zip, exclude_public_files: @exclude_public_files,
+      output_dir: @output_dir, site_dir: @src_site.path, task: @task
+    )
     zip.compress
   end
 
   def invoke(method)
-    @task.log("- " + method.to_s.sub('_', ' '))
+    @task.log("- #{method.to_s.sub('_', ' ')} at #{I18n.l(Time.zone.now, format: :picker)}")
     send(method)
   end
 
@@ -207,6 +224,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
     export_documents "cms_loop_settings", Cms::LoopSetting
   end
 
+  def export_cms_check_links_ignore_urls
+    export_documents "cms_check_links_ignore_urls", Cms::CheckLinks::IgnoreUrl
+  end
+
   def export_ezine_columns
     export_documents "ezine_columns", Ezine::Column
   end
@@ -227,8 +248,12 @@ class Sys::SiteExportJob < SS::ApplicationJob
     export_documents "opendata_licenses", Opendata::License
   end
 
+  def export_guide_diagram_point
+    export_documents "guide_diagram_point", Guide::Diagram::Point
+  end
+
   def export_cms_files
-    @ss_file_ids += Cms::File.site(@src_site).where(model: "cms/file").pluck(:id)
+    @ss_file_ids += Cms::File.site(@src_site).where(model: Cms::File::FILE_MODEL).pluck(:id)
   end
 
   def export_ss_files

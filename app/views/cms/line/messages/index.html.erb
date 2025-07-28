@@ -1,11 +1,11 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= t("ss.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+  <span class="datetime"><%= t("ss.views.index.updated", updated: I18n.l(item.updated, format: :picker)) %></span>
   <% if item.ready? && item.deliver_date %>
-    <span class="datetime"><%= t("ss.views.index.reserved", time: item.deliver_date.strftime("%Y/%m/%d %H:%M")) %></span>
+    <span class="datetime"><%= t("ss.views.index.reserved", time: I18n.l(item.deliver_date, format: :picker)) %></span>
   <% end %>
   <% if item.completed.present? %>
-    <span class="datetime"><%= t("ss.views.index.delivered", time: item.completed.strftime("%Y/%m/%d %H:%M")) %></span>
+    <span class="datetime"><%= t("ss.views.index.delivered", time: I18n.l(item.completed, format: :picker)) %></span>
   <% end %>
   <span class="state state-<%= item.deliver_state %>"><%= item.label :deliver_state %></span>
 <% end %>

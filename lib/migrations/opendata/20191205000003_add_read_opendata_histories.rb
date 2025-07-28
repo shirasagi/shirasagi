@@ -6,12 +6,12 @@ class SS::Migration20191205000003
   def change
     each_target_role do |role|
       add_permission_to_role(role, "read_opendata_reports")
-      role.save
+      role.without_record_timestamps { role.save }
     end
 
     each_admin_role do |role|
       add_permission_to_role(role, "read_opendata_histories")
-      role.save
+      role.without_record_timestamps { role.save }
     end
   end
 

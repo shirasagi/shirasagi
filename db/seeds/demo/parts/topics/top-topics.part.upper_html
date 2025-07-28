@@ -1,0 +1,5 @@
+<section id="topics" class="sec-cmn-top-02 sec-cmn-top-02--topics">
+  <header class="sec-cmn-top-02__header">
+  	<h2 class="sec-cmn-top-02__header-title">街の話題</h2>
+  </header><!-- .sec-cmn-top-02__header -->
+  <ul class="topics-list">

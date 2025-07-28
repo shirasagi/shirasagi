@@ -20,13 +20,13 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "generates voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         file.reload
         expect(file.exists?).to be_truthy
         expect(file.same_identity?).to be_truthy
         expect(file.latest?).to be_truthy
-        expect(file.lock_until).to eq ::Time::EPOCH
+        expect(file.lock_until).to eq SS::EPOCH_TIME
         expect(file.error).to be_nil
         expect(file.has_error).to eq 0
         expect(file.age).to be > 0
@@ -50,7 +50,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "does not generate voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -74,7 +74,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "does not generate voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -98,7 +98,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "does not generate voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -123,7 +123,7 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "does not generate voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         expect { file.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
@@ -149,11 +149,11 @@ describe Voice::SynthesisJob, dbscope: :example do
       end
 
       it "generates voice file" do
-        Voice::SynthesisJob.bind(site_id: site).perform_now(file.id.to_s)
+        ss_perform_now(Voice::SynthesisJob.bind(site_id: site), file.id.to_s)
 
         file.reload
         expect(file.page_identity).not_to be_nil
-        expect(file.lock_until).to eq ::Time::EPOCH
+        expect(file.lock_until).to eq SS::EPOCH_TIME
         expect(file.error).to be_nil
         expect(file.has_error).to eq 0
         expect(file.age).to be > 0

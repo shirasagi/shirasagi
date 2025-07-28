@@ -1,7 +1,6 @@
 puts "# parts"
 
 def save_part(data)
-  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -11,13 +10,7 @@ def save_part(data)
   lower_html ||= File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
   item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
-  if html
-    if SS::Lgwan.enabled?
-      html.gsub!('<li class="sight"><a href="/kanko-info/">観光情報</a></li>', '')
-      html.gsub!('<li><a href="/mypage/">安否確認</a></li>', '')
-    end
-    item.html = html
-  end
+  item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
@@ -89,7 +82,7 @@ save_part route: "key_visual/swiper_slide", filename: "kanko-info/photo/slide.pa
 save_part route: "member/photo_search", filename: "kanko-info/photo/search/search.part.html", name: "スライド", mobile_view: "hide"
 save_part route: "member/blog_page", filename: "kanko-info/blog/recent.part.html", name: "新着ブログ", mobile_view: "hide"
 save_part route: "member/login", filename: "login/login.part.html", name: "ログイン", mobile_view: "hide", ajax_view: "enabled"
-save_part route: "member/invited_group", filename: "invited_group.part.html", name: "招待されたグループ",
+save_part route: "member/invited_group", filename: "invited-group.part.html", name: "招待されたグループ",
   mobile_view: "hide", ajax_view: "enabled"
 save_part route: "cms/calendar_nav", filename: "docs/archive/calendar.part.html", name: "カレンダー"
 save_part route: "cms/monthly_nav", filename: "docs/archive/month.part.html", name: "月次", periods: 12

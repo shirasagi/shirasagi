@@ -9,8 +9,10 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
-  <span class="filename"><%= item.data['filename'] %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
+  <% if item.model && item.model.ancestors.include?(Cms::Content) %>
+    <span class="filename"><%= item.data['filename'] %></span>
+  <% end %>
   <% if item.data['route'].present? %>
     <span class="route"><%= t "modules.#{item.data['route'].sub(/\/.*/, '')}" %></span>
   <% elsif item.data['owner_item_type'].present? %>

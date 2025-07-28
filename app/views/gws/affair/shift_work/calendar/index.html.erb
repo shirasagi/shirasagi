@@ -1,0 +1,80 @@
+<%= jquery do %>
+new Gws_Affair_ShiftRecords(".gws-affair-shift-records", {
+  shiftRecordUrl: <%== url_for(action: :shift_record, day: ':day', user: ':user', ref: request.fullpath).to_json %>,
+  editable: '<%== editable_shift_record? %>'
+});
+<% end %>
+
+<% holiday_calendar = Gws::Affair::DefaultHolidayCalendar.new(cur_site: @cur_site) %>
+
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%= form_tag({ action: :index }, { method: "GET" }) do %>
+        <%= select_tag :group_id, options_for_select(group_options, selected: @group.id) %>
+        <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+        <%= link_to t("ss.buttons.reset"), gws_affair_shift_work_calendar_path, class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="gws-attendance gws-affair-shift-table gws-affair-shift-records">
+  <div class="attendance-box daily">
+    <div class="attendance-box-main">
+    <%= render partial: 'time_card_nav' %>
+    <% if @users.present? %>
+      <div class="wrap-table" style="overflow-x: auto; padding-bottom: 10px;">
+        <table class="index working-time">
+          <thead>
+            <tr>
+              <th class="name"><%= Gws::User.t :name %></th>
+              <% date = @cur_month %>
+              <% while date <= @cur_month.end_of_month %>
+                <% th_css_classes = %w(day) %>
+                <% th_css_classes << "day-#{date.day}" %>
+                <% th_css_classes << 'holiday' if holiday_calendar.holiday?(date) %>
+                <% th_css_classes << 'sunday' if date.wday == 0 %>
+                <% th_css_classes << 'saturday' if date.wday == 6 %>
+                <th class="<%= th_css_classes.join(" ") %>"><%=br l(date, format: "%1d\n%a") %></th>
+                <% date += 1.day %>
+              <% end %>
+            </tr>
+          </thead>
+          <tbody>
+            <% @users.each do |user|%>
+              <tr>
+                <td class="name"><%= user.long_name %></td>
+                <%
+                  date = @cur_month
+                  duty_calendar = user.effective_duty_calendar(@cur_site)
+                %>
+                <% while date <= @cur_month.end_of_month %>
+                  <td class="shift-record <%= duty_calendar.shift_exists?(date) ? "shift" : "" %>"
+                      data-day="<%= date.day %>"
+                      data-user="<%= user.id %>">
+                    <% if duty_calendar.leave_day?(date) %>
+                      <div class="affair"><%= "休" %></div>
+                    <% else %>
+                      <div class="affair">
+                        <%= "出#{duty_calendar.affair_start(date).strftime("%-H:%M")}" %><br>
+                        <%= "退#{duty_calendar.affair_end(date).strftime("%-H:%M")}" %>
+                      </div>
+                    <% end %>
+                  </td>
+                  <% date += 1.day %>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div class="cell-toolbar">
+        <a href="#" class="edit ajax-box"><%= t('ss.links.edit') %></a>
+      </div>
+    <% else %>
+      <%= t("gws/affair.notice.not_found_shift_work") %>
+    <% end %>
+    </div>
+  </div>
+</div>

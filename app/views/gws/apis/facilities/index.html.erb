@@ -8,10 +8,8 @@
       <dd><%= select_tag("s[category]", options_for_select(@categories.to_options, @category.try(:id)), include_blank: true, class: "submit-on-change") %></dd>
 
       <dt><%= @model.t :name %></dt>
-      <dd>
-        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-        <%= f.submit  t("ss.buttons.search"), class: :btn %>
-      </dd>
+      <dd><%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %></dd>
+      <dd><%= f.submit t("ss.buttons.search"), class: :btn %></dd>
     </dl>
   <% end %>
 </div>
@@ -38,7 +36,7 @@
           <% @time_search.hours.each do |hour| %>
             <% next if @plan.facility_ids_was.to_a.include?(item.id) %>
             <% next if hours[1][item.id].present? && hours[1][item.id].include?(hour) %>
-            <% next unless @hour_range[date].include?(hour) %>
+            <% next unless @hour_range[date].present? && @hour_range[date].include?(hour) %>
             <% hours[2].dig(item.id, hour).try(:each) do |plan| %>
               <% users << plan[:user_long_name] %>
             <% end %>

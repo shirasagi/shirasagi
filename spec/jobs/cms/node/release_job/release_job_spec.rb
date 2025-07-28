@@ -17,7 +17,7 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
 
       expect(node1.state).to eq "ready"
       expect(node2.state).to eq "public"
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(node1.name)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(node1.name)).to_stdout
     end
 
     it do

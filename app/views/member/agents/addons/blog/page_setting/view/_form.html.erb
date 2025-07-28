@@ -18,14 +18,14 @@
 
 <dl class="column">
   <dt><%= @model.t :genres %></dt>
-  <dd><%= f.text_area :genres %></dd>
+  <dd><%= f.ss_lines_field :genres %></dd>
 </dl>
 
 <% if @locations.present? %>
 <dl class="column">
   <dt><%= @model.t :blog_page_locations %></dt>
   <dd>
-    <%= f.hidden_field "blog_page_location_ids[]", value: "" %>
+    <%= f.hidden_field "blog_page_location_ids[]", value: "", id: nil %>
     <% @locations.each do |loc| %>
       <label>
         <%= f.check_box("blog_page_location_ids[]", {}, loc.id) %>

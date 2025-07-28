@@ -1,9 +1,14 @@
-<dl class="see">
+<%= code_editor ".mod-cms-line-deliver_categories .html", mode: :html %>
+
+<dl class="see mod-cms-line-deliver_categories">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :filename %><%= @model.tt :filename %></dt>
   <dd><%= f.text_field :basename %></dd>
+
+  <dt><%= @model.t :category_html %><%= @model.tt :category_html %></dt>
+  <dd><%= f.text_area :category_html, class: "html", style: "height: 150px;" %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>

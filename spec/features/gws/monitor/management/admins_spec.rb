@@ -27,8 +27,8 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
   end
   let(:download_filenames) do
     [
-      "#{g1.order.to_i}_#{g1.trailing_name}_#{group_ss_file.filename}",
-      "own_#{cur_group.order.to_i}_#{cur_group.trailing_name}_#{own_ss_file.filename}"
+      "#{g1.order || 0}_#{g1.trailing_name}_#{group_ss_file.name}",
+      "own_#{cur_group.order || 0}_#{cur_group.trailing_name}_#{own_ss_file.name}"
     ]
   end
 
@@ -47,12 +47,12 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
       topic1
       visit gws_monitor_management_admins_path(site)
       expect(page).to have_content(topic1.name)
-      expect(page).to have_content('回答状況(1/2)')
+      expect(page).to have_content("#{I18n.t('gws/monitor.topic.answer_state')}(1/2)")
     end
 
     it "#edit" do
       visit edit_gws_monitor_management_admin_path(site, topic1)
-      expect(page).to have_content('基本情報')
+      expect(page).to have_content(I18n.t("ss.basic_info"))
     end
 
     it "#show" do
@@ -75,7 +75,7 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
         entry_names = []
         Zip::File.open(file.path) do |entries|
           entries.each do |entry|
-            entry_names << entry.name.encode("utf-8", "cp932")
+            entry_names << NKF.nkf("-w", entry.name)
           end
         end
         expect(entry_names).to match_array(download_filenames)

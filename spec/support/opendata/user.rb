@@ -50,6 +50,7 @@ def login_opendata_member(site, node, member = opendata_member(site: site))
 
   visit login_url
   click_link "Twitter ID でログイン"
+  expect(page).to have_no_text("Twitter ID でログイン")
 end
 
 def logout_opendata_member(site, node, member = opendata_member(site: site))

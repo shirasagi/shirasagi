@@ -26,11 +26,11 @@ class SS::Migration20200221000000
           # sr_user_title.activation_date = user_title.activation_date
           # sr_user_title.expiration_date = user_title.expiration_date
           sr_user_title.remark = user_title.remark
-          sr_user_title.save
+          sr_user_title.without_record_timestamps { sr_user_title.save }
         end
         if sr_user_title.active?
           user.title_ids = [sr_user_title.id]
-          user.save
+          user.without_record_timestamps { user.save }
         end
       end
     end

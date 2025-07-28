@@ -5,6 +5,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
 
   before_action :set_mode
   before_action :set_folders
+  before_action :set_child_count
   before_action :set_root_folder
   before_action :set_cur_folder
   before_action :set_items
@@ -18,15 +19,28 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
 
   def set_folders
     @folders ||= begin
-      if @cur_mode == 'manageable'
+      case @cur_mode
+      when 'manageable'
         @model.for_post_manager(@cur_site, @cur_user)
-      elsif @cur_mode == 'editable'
+      when 'editable'
         @model.for_post_editor(@cur_site, @cur_user)
-      elsif @cur_mode == 'readable'
+      when 'readable', 'calendar'
         @model.for_post_reader(@cur_site, @cur_user)
       else
         @model.none
       end
+    end
+  end
+
+  def set_child_count
+    @child_count = Hash.new(0)
+    @folders.pluck(:name, :depth).each do |name, depth|
+      next if depth == 1
+      parts = name.split("/")
+      child = parts.pop
+      parent = parts.join("/")
+      @child_count[parent] ||= 0
+      @child_count[parent] += 1
     end
   end
 
@@ -45,7 +59,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
       conds = []
       # root folders
       if @root_folder.present?
-        conds << { name: /#{::Regexp.escape(@root_folder.name)}\//, depth: @root_folder.depth + 1 }
+        conds << { name: /^#{::Regexp.escape(@root_folder.name)}\//, depth: @root_folder.depth + 1 }
       else
         conds << { depth: 1 }
       end
@@ -59,7 +73,7 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
           full_name << '/'
           depth += 1
 
-          conds << { name: /#{::Regexp.escape(full_name)}/, depth: depth + 1 }
+          conds << { name: /^#{::Regexp.escape(full_name)}/, depth: depth + 1 }
         end
       end
 

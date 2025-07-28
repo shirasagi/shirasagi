@@ -2,21 +2,28 @@ module Gws::Addon::Portal::Portlet
   module AdFile
     extend ActiveSupport::Concern
     extend SS::Addon
+    include Fs::FilePreviewable
 
     set_addon_type :gws_portlet
 
     DEFAULT_AD_FILE_LIMIT = 5
 
     included do
-      attr_accessor :link_urls
+      embeds_many :ad_links, class_name: "SS::LinkItem", cascade_callbacks: true, validate: true
 
-      embeds_ids :ad_files, class_name: "SS::File"
-      permit_params ad_file_ids: [], link_urls: {}
+      permit_params ad_links: %i[id name url file_id target state]
 
-      validate :validate_files_limit
+      after_find do
+        if __selected_fields.nil? || __selected_fields.key?("ad_links")
+          @_ad_links_before_change = ad_links.map(&:dup)
+        end
+      end
 
-      before_save :save_files
-      after_destroy :destroy_files
+      before_validation :normalize_ad_links
+
+      validates :ad_links, length: { maximum: ad_file_limit }
+
+      before_save :ad_delete_unlinked_files
     end
 
     module ClassMethods
@@ -30,33 +37,55 @@ module Gws::Addon::Portal::Portlet
       end
     end
 
+    def ad_links_was
+      return [] if new_record?
+      @_ad_links_before_change || []
+    end
+
     private
 
-    def save_files
-      ids = []
-      ad_files.each do |file|
-        file = file.becomes_with(SS::LinkFile)
-        file.update!(
-          model: model_name.i18n_key, state: "closed", owner_item: self,
-          link_url: link_urls[file.id.to_s]
-        )
-        ids << file.id
-      end
-      self.ad_file_ids = ids
+    def normalize_ad_links
+      return if ad_links.blank?
 
-      del_ids = ad_file_ids_was.to_a - ids
-      SS::LinkFile.all.unscoped.in(id: del_ids).destroy_all
+      self.ad_links = ad_links.reject { blank_ad_link?(_1) }
     end
 
-    def destroy_files
-      SS::LinkFile.all.unscoped.in(id: ad_file_ids).destroy_all
+    def blank_ad_link?(ad_link)
+      ad_link.name.blank? && ad_link.url.blank? && ad_link.file.blank?
     end
 
-    def validate_files_limit
-      limit = self.class.ad_file_limit
-      if ad_files.count > limit
-        errors.add :ad_files, :too_many_files, limit: limit
+    def file_previewable?(file, site:, user:, member:)
+      if user.blank?
+        return super
       end
+
+      ad_link = ad_links.where(file_id: file.id).first
+      unless ad_link
+        return super
+      end
+
+      ad_link.state == "show"
+    end
+
+    def ad_delete_unlinked_files
+      return if new_record?
+
+      file_ids_is = []
+      self.ad_links.each do |ad_link|
+        file_ids_is << ad_link.file_id
+      end
+      file_ids_is.compact!
+      file_ids_is.uniq!
+
+      file_ids_was = []
+      self.ad_links_was.each do |ad_link|
+        file_ids_was << ad_link.file_id
+      end
+      file_ids_was.compact!
+      file_ids_was.uniq!
+
+      unlinked_file_ids = file_ids_was - file_ids_is
+      Cms::Reference::Files::Utils.delete_files(self, unlinked_file_ids)
     end
   end
 end

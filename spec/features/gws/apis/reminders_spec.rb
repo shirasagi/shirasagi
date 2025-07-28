@@ -3,6 +3,7 @@ require 'spec_helper'
 describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:path) { gws_schedule_plan_path site, item }
+  let(:now) { Time.zone.now.beginning_of_minute }
 
   before { login_gws_user }
 
@@ -10,8 +11,8 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
     let(:item) do
       create(
         :gws_schedule_plan,
-        start_at: 1.hour.from_now.strftime('%Y/%m/%d %H:%M'),
-        end_at: 2.hours.from_now.strftime('%Y/%m/%d %H:%M')
+        start_at: now + 1.hour,
+        end_at: now + 2.hours
       )
     end
 
@@ -26,7 +27,7 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('gws/reminder.buttons.register_reminder')
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      wait_for_notice I18n.t('gws/reminder.notification.created')
       expect(Gws::Reminder.where(item_id: item.id).count).to eq 1
     end
   end
@@ -38,8 +39,8 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
     let(:item) do
       create(
         :gws_schedule_plan,
-        start_at: 1.hour.from_now.strftime('%Y/%m/%d %H:%M'),
-        end_at: 2.hours.from_now.strftime('%Y/%m/%d %H:%M'),
+        start_at: now + 1.hour,
+        end_at: now + 2.hours,
         in_reminder_conditions: [ reminder_condition ]
       )
     end
@@ -54,7 +55,7 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('gws/reminder.buttons.register_reminder')
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      wait_for_notice I18n.t('gws/reminder.notification.created')
       expect(Gws::Reminder.where(item_id: item.id).count).to eq 0
     end
   end

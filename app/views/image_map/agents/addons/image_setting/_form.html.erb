@@ -1,0 +1,30 @@
+<%= jquery do %>
+  var sort = new SS_SortableForm('.mod-image_map-image_setting .area-states', { limit: 20 });
+  sort.renderItems(<%== @item.area_states.to_json %>);
+<% end %>
+
+<dl class="see mod-image_map-image_setting">
+  <dt><%= @model.t :image_id %><%= @model.tt :image_id %></dt>
+  <dd><%= f.ss_file_field :image %></dd>
+
+  <dt><%= @item.t :area_states %><%= @item.tt :area_states %></dt>
+  <dd>
+    <table class="index area-states form-index">
+      <thead>
+        <tr>
+          <th><%= @item.t :area_state_name %><%= @item.tt :area_state_name %></th>
+          <th><%= @item.t :area_state_value %><%= @item.tt :area_state_value %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-base="true">
+          <td><%= text_field_tag "item[area_states][][name]", nil, placeholder: @item.t(:area_state_name) %></td>
+          <td><%= text_field_tag "item[area_states][][value]", nil, placeholder: @item.t(:area_state_value) %></td>
+        </tr>
+      </tbody>
+    </table>
+  </dd>
+
+  <dt><%= @model.t :supplement_state %><%= @model.tt :supplement_state %></dt>
+  <dd><%= f.select :supplement_state, @item.supplement_state_options %></dd>
+</dl>

@@ -1,0 +1,20 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :year %></dt>
+  <dd><%= @item.year %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :memo %></dt>
+  <dd><%= br @item.memo %></dd>
+
+  <dt><%= @model.t :daily_report_group_id %></dt>
+  <dd>
+    <% if @item.daily_report_group.present? %>
+      <span><%= @item.daily_report_group.trailing_name %></span>
+    <% end %>
+  </dd>
+</dl>

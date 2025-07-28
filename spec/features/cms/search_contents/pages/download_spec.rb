@@ -36,11 +36,11 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
       it do
         visit cms_search_contents_pages_path(site: site1)
 
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.apis.categories.index")
         end
-        wait_for_cbox do
-          wait_cbox_close do
+        within_cbox do
+          wait_for_cbox_closed do
             click_on site1_category1.name
           end
         end
@@ -58,7 +58,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
         expect(csv.length).to eq 1
         expect(csv[0][Article::Page.t(:filename)]).to eq ::File.basename(site1_article_page.filename)
-        expect(csv[0][Article::Page.t(:category_ids)]).to eq site1_category1.name
+        expect(csv[0][Article::Page.t(:category_ids)]).to eq "#{site1_category1.name} (#{site1_category1.filename})"
       end
     end
 
@@ -66,11 +66,11 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
       it do
         visit cms_search_contents_pages_path(site: site2)
 
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.apis.categories.index")
         end
-        wait_for_cbox do
-          wait_cbox_close do
+        within_cbox do
+          wait_for_cbox_closed do
             click_on site2_category1.name
           end
         end
@@ -88,7 +88,7 @@ describe "cms_search_contents_pages", type: :feature, dbscope: :example, js: tru
         csv = ::CSV.read(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
         expect(csv.length).to eq 1
         expect(csv[0][Article::Page.t(:filename)]).to eq ::File.basename(site2_article_page.filename)
-        expect(csv[0][Article::Page.t(:category_ids)]).to eq site2_category1.name
+        expect(csv[0][Article::Page.t(:category_ids)]).to eq "#{site2_category1.name} (#{site2_category1.filename})"
       end
     end
   end

@@ -23,7 +23,6 @@ class Cms::Form::DocsController < ApplicationController
 
   def set_form
     @form = @db.form
-    @column_names = @form.column_names
   end
 
   def fix_params

@@ -47,7 +47,7 @@ ja:
       browsed_state:
         read: 既読
         unread: 未読
-        both: 両方
+        both: 全て表示
       severity:
         normal: 通常
         important: 重要

@@ -1,0 +1,65 @@
+en:
+  job:
+    main: Job
+    log: Run history
+    task: Task
+    reservation: Run reservation
+    status: Status
+    save_term:
+      day: 1 day
+      month: 1 month
+      year: 1 year
+      all_save: Save all
+      all_delete: Delete all
+    view_diff: View differences
+    restore: Restore
+    download_log: Log download
+    download_perf_log: Download performance log
+    log_notice: Showing up to %{count} items.
+    confirm:
+      restore: Are you sure you want to restore it?
+    notice:
+      restore: If the system versions are different, it may not work properly.
+      restored: Restored.
+      reseted_state: State initialized.
+      size_limit_exceeded: The number of jobs that can run at the same time has been exceeded.
+    buttons:
+      restore: Restore
+      reset: Stop
+    state:
+      stop: Stop
+      start: Start
+      running: Running
+      completed: Complete
+      failed: Failed
+      ready: Waiting
+    queue_adapter_errors:
+      header: Please check your ActiveJob settings.
+      body: Please check the following items.
+      adapter_is_not_shirasagi:
+        - ActiveJob's queue_adapter setting is not set to “shirasagi”.
+        - This screen displays the tasks that were reserved to run when the queue_adapter is set to “shirasagi”.
+    job_stucked:
+      header: The job seems to be stuck.
+      body: Please check the following items.
+      notice:
+        - If mode is “Service”, make sure the job service is running. To do this, log in to the server with SSH, etc., and use the ps command, etc. to check if the service is running.
+        - If any of the tasks on the list do not have a status of “stop” or “completed”, delete them.
+        - If that does not work, delete the tasks in the task list with the task name “job:service”.
+        - If that also does not work, delete everything on the task list.
+    task_manager: Task manager
+
+  modules:
+    job: Job
+
+  mongoid:
+    models:
+      job/log: Job execution history
+      job/task: Task
+    attributes:
+      job/log:
+        site_id: Site
+      job/task:
+        node_id: Folder
+        group_id: Group
+        at: Run reservation date and time

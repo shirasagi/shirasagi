@@ -7,15 +7,18 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     let(:sys) { Gws::User.find_by uid: 'sys' }
     let!(:user1) do
       Gws::User.create name: "一般ユーザー1", uid: "user1", email: "user1@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user2) do
       Gws::User.create name: "一般ユーザー2", uid: "user2", email: "user2@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user3) do
       Gws::User.create name: "一般ユーザー3", uid: "user3", email: "user3@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let(:item) { create :gws_workflow_file }
     let(:show_path) { gws_workflow_file_path(site, item, state: 'all') }
@@ -51,13 +54,13 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-        click_on I18n.t("workflow.search_approvers.index")
+        wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user1.long_name)
         find("tr[data-id=\"1,#{user1.id}\"] input[type=checkbox]").click
         find("tr[data-id=\"1,#{user2.id}\"] input[type=checkbox]").click
-        click_on I18n.t("workflow.search_approvers.select")
+        wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
       end
       within ".mod-workflow-request" do
         fill_in "workflow[comment]", with: workflow_comment
@@ -76,7 +79,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
       expect(SS::Notification.count).to eq 2
-      notice1 = SS::Notification.all.reorder(created: -1).first
+      notice1 = SS::Notification.all.where(member_ids: user1.id).reorder(created: -1).first
       expect(notice1.group_id).to eq site.id
       expect(notice1.member_ids).to eq [ user1.id ]
       expect(notice1.user_id).to eq gws_user.id
@@ -91,7 +94,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(notice1.reply_module).to be_blank
       expect(notice1.reply_model).to be_blank
       expect(notice1.reply_item_id).to be_blank
-      SS::Notification.all.reorder(created: -1).second.tap do |notice|
+      SS::Notification.all.where(member_ids: user2.id).reorder(created: -1).first.tap do |notice|
         expect(notice.group_id).to eq site.id
         expect(notice.member_ids).to eq [ user2.id ]
         expect(notice.user_id).to eq gws_user.id
@@ -121,8 +124,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user1: 申請を承認する
       #
-      login_user user1
-      visit show_path
+      login_user user1, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment1
@@ -137,7 +139,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
         include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
 
@@ -147,8 +152,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: 申請を承認する
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment2
@@ -163,9 +167,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 2
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: remand_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2, file_ids: nil})
+        include({
+          level: 1, user_id: user2.id, editable: '', state: 'approve', comment: remand_comment2, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
 
       expect(SS::Notification.count).to eq 3
       notice3 = SS::Notification.all.reorder(created: -1).first

@@ -7,6 +7,7 @@ class Facility::Map
   include Cms::Addon::Release
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
+  include Cms::Lgwan::Page
 
   default_scope ->{ where(route: "facility/map") }
   validate :center_position_validate, if: -> { set_center_position.present? }
@@ -17,7 +18,7 @@ class Facility::Map
   private
 
   def save_facility
-    parent.becomes_with_route.save rescue nil
+    parent.save rescue nil
   end
 
   def serve_static_file?

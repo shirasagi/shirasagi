@@ -1,0 +1,18 @@
+<%= form_for :item, url: { action: :sync }, html: { method: :post, multipart: true } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("ldap.confirm.sync") %></h2></header>
+
+    <dl class="see">
+      <dt><%= @model.t :created %></dt>
+      <dd><%= ss_time_tag @item.created %></dd>
+    </dl>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ldap.buttons.sync"), class: "save" %>
+    <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
+  </footer>
+<% end %>
+

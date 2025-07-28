@@ -1,0 +1,8 @@
+<div class="gws-workload-navi">
+  <% dropdowns.each do |dropdown| %>
+    <%= render partial: "gws/workload/main/dropdown/#{dropdown}" %>
+  <% end %>
+  <%= link_to({ action: :index, year: '-', group: '-', user: '-', category: '-', client: '-' }) do %>
+    <%= md_icons.filled "clear", tag: :i, size: 18, class: "md-dark" %>
+  <% end %>
+</div>

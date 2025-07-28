@@ -5,10 +5,6 @@ module SS::AuthFilter
     cattr_accessor(:user_class) { SS::User }
   end
 
-  def sesession_lieftime_of_user(user)
-    user.session_lifetime.presence || SS.config.sns.session_lifetime
-  end
-
   def get_user_by_session
     session_user = session[:user]
     return nil if session_user.blank?
@@ -23,7 +19,7 @@ module SS::AuthFilter
     return nil if user.disabled?
 
     # is session expired?
-    end_of_session_time = last_logged_in + sesession_lieftime_of_user(user)
+    end_of_session_time = last_logged_in + SS.session_lifetime_of_user(user)
     return nil if Time.zone.now.to_i > end_of_session_time
 
     user.decrypted_password = SS::Crypto.decrypt(session[:user]["password"])
@@ -71,11 +67,6 @@ module SS::AuthFilter
 
       [ user, token ]
     end
-  end
-
-  def set_locale_and_timezone
-    # I18n.locale = @cur_user.lang.to_sym if @cur_user.try(:lang).present?
-    # Time.zone = Time.find_zone(@cur_user.timezone) if @cur_user.try(:timezone).present?
   end
 
   def set_last_logged_in(timestamp = Time.zone.now.to_i)

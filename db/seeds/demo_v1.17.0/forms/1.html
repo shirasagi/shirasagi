@@ -1,0 +1,24 @@
+<article class="tourist-spot">
+    <p class="img">{{ values["メイン画像"] }}</p>
+    <p class="about">{{ values["説明文"] }}</p>
+    <table>
+    <caption>ご案内</caption>
+        <tbody>
+        <tr><th scope="row">所在地</th><td>{{ values["所在地"] }}</td></tr>
+        <tr><th scope="row">アクセス</th><td>{{ values["アクセス"] }}</td></tr>
+        <tr><th scope="row">営業時間</th><td>{{ values["営業時間"] }}</td></tr>
+        <tr><th scope="row">休業日</th><td>{{ values["休業日"] }}</td></tr>
+        <tr><th scope="row">料金</th><td>{{ values["料金"] }}</td></tr>
+        <tr><th scope="row">電話番号</th><td>{{ values["電話番号"] }}</td></tr>
+        <tr><th scope="row">E-mail</th><td>{{ values["E-mail"] }}</td></tr>
+        <tr><th scope="row">ホームページ</th><td>{{ values["ホームページ"] }}</td></tr>
+        </tbody>
+    </table>
+    <div class="photos">
+        {{ values["写真1"] }}
+        {{ values["写真2"] }}
+        {{ values["写真3"] }}
+        {{ values["写真4"] }}
+        {{ values["写真5"] }}
+    </div>
+</article>

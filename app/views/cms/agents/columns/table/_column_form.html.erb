@@ -8,7 +8,7 @@
   <label class="column-table-caption"><%= I18n.t("cms.column_table.caption") %><input type="text" class="caption" style="width:50%;" data-check-presence="<%= I18n.t("cms.column_table.caption") %>" /></label>
   <button type="button" class="create-table"><%= I18n.t("cms.column_table.create") %></button><br />
 
-  <div class="table-editor">
+  <div class="table-editor" data-syntax-check="table" data-syntax-check-name="<%= column.name %>">
     <% if value.try(:value).present? %>
       <%= value.value.html_safe %>
     <% end %>
@@ -32,21 +32,5 @@
 
   <%= jquery do %>
     var table = Cms_Column_Table.render("#<%= id %>");
-
-    Cms_Form.addSyntaxCheck("<%= id %>", {
-      resolve: "text",
-      type: "array",
-      name: "<%= column.name %>",
-      getContent: function () {
-        var array = [];
-        array.push(table.caption());
-        array.push(table.tableHtml());
-        return array;
-      },
-      setContent: function (content) {
-        table.caption(content[0]);
-        table.tableHtml(content[1]);
-      }
-    });
   <% end %>
 <% end %>

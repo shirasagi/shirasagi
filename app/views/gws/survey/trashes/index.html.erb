@@ -3,4 +3,9 @@
   <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 <% end %>
 
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= @model.t(:updated) %>:<%= ss_time_tag item.updated %></span>
+  <span class="datetime"><%= @model.t(:created) %>:<%= ss_time_tag item.created %></span>
+<% end %>
+
 <%= render template: 'gws/crud/index' %>

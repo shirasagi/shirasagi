@@ -93,7 +93,7 @@ class Gws::Circular::CommentsController < ApplicationController
 
     @post.cur_user = @cur_user
     @post.cur_site = @cur_site
-    render_create @item.save && @post.set_seen(@cur_user).save
+    render_create @item.save && @post.set_seen!(@cur_user)
   end
 
   def update
@@ -103,7 +103,7 @@ class Gws::Circular::CommentsController < ApplicationController
 
     @post.cur_user = @cur_user
     @post.cur_site = @cur_site
-    render_update @item.update && @post.set_seen(@cur_user).save
+    render_update @item.update && @post.set_seen!(@cur_user)
   end
 
   def destroy

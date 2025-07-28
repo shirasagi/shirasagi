@@ -1,0 +1,37 @@
+<dl class="see">
+  <dt><%= @model.t :year_id %></dt>
+  <dd><%= @item.year.name %></dd>
+
+  <dt><%= @model.t :article_code %><%= @model.tt :article_code %></dt>
+  <dd><%= f.number_field :article_code %></dd>
+
+  <dt><%= @model.t :section_code %><%= @model.tt :section_code %></dt>
+  <dd><%= f.number_field :section_code %></dd>
+
+  <dt><%= @model.t :subsection_code %><%= @model.tt :subsection_code %></dt>
+  <dd><%= f.number_field :subsection_code %></dd>
+
+  <dt><%= @model.t :item_code %><%= @model.tt :item_code %></dt>
+  <dd><%= f.number_field :item_code %></dd>
+
+  <dt><%= @model.t :subitem_code %><%= @model.tt :subitem_code %></dt>
+  <dd><%= f.number_field :subitem_code %></dd>
+
+  <dt><%= @model.t :project_code %><%= @model.tt :project_code %></dt>
+  <dd><%= f.number_field :project_code %></dd>
+
+  <dt><%= @model.t :detail_code %><%= @model.tt :detail_code %></dt>
+  <dd><%= f.number_field :detail_code %></dd>
+
+  <dt><%= @model.t :project_name %><%= @model.tt :project_name %></dt>
+  <dd><%= f.text_field :project_name %></dd>
+
+  <dt><%= @model.t :description_name %><%= @model.tt :description_name %></dt>
+  <dd><%= f.text_field :description_name %></dd>
+
+  <dt><%= @model.t :item_name %><%= @model.tt :item_name %></dt>
+  <dd><%= f.text_field :item_name %></dd>
+
+  <dt><%= @model.t :subitem_name %><%= @model.tt :subitem_name %></dt>
+  <dd><%= f.text_field :subitem_name %></dd>
+</dl>

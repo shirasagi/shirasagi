@@ -41,6 +41,14 @@ class Gws::Survey::Form
   validates :file_state, inclusion: { in: %w(closed public), allow_blank: true }
   validates :file_edit_state, inclusion: { in: %w(disabled enabled enabled_until_due_date), allow_blank: true }
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::SurveyFormJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::SurveyFormJob.callback
+  update_form do |form|
+    skip = form.columns.last.try(:skip_elastic)
+    ::Gws::Elasticsearch::Indexer::SurveyFormJob.around_save(form) { true } unless skip
+  end
+
   scope :and_public, ->(date = Time.zone.now) {
     date = date.dup
     where("$and" => [
@@ -48,6 +56,18 @@ class Gws::Survey::Form
       { "$or" => [ { release_date: nil }, { :release_date.lte => date } ] },
       { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
     ])
+  }
+
+  scope :custom_order, ->(key) {
+    if key.start_with?('created_')
+      all.reorder(created: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('updated_')
+      all.reorder(updated: key.end_with?('_asc') ? 1 : -1)
+    elsif key.start_with?('due_date')
+      all.reorder(due_date: key.end_with?('_asc') ? 1 : -1)
+    else
+      all
+    end
   }
 
   class << self
@@ -151,54 +171,5 @@ class Gws::Survey::Form
 
   def new_flag?
     (release_date.presence || created) > Time.zone.now - site.survey_new_days.day
-  end
-
-  def new_clone(opts = {})
-    dest_site = opts[:site] || site
-    dest_user = opts[:user] || user
-    dest_name = opts[:name] || name
-    dest_anonymous_state = opts[:anonymous_state]
-    dest_file_state = opts[:file_state]
-
-    dest = self.class.new
-    dest.site = dest_site
-    dest.user = dest_user
-    dest.name = dest_name
-    dest.description = description
-    dest.file_edit_state = file_edit_state
-    dest.due_date = due_date
-    dest.release_date = release_date
-    dest.close_date = close_date
-    dest.memo = memo
-    dest.category_ids = category_ids
-    dest.contributor_model = dest_user.class.to_s
-    dest.contributor_id = dest_user.id
-    dest.contributor_name = dest_user.long_name
-    dest.readable_setting_range = readable_setting_range
-    dest.readable_custom_group_ids = readable_custom_group_ids
-    dest.readable_group_ids = readable_group_ids
-    dest.readable_member_ids = readable_member_ids
-    dest.custom_group_ids = custom_group_ids
-    dest.group_ids = group_ids
-    dest.user_ids = user_ids
-    dest.permission_level = permission_level
-    dest.state = "closed"
-
-    dest.anonymous_state = dest_anonymous_state if dest_anonymous_state.present?
-    dest.file_state = dest_file_state if dest_file_state.present?
-
-    return dest unless dest.valid?
-
-    dest_columns = self.columns.map do |column|
-      attr = column.attributes.except("_id", "_type", "form_id", "site_id", "created", "updated")
-      dest_column = column.class.new attr
-      dest_column.site = dest_site
-      dest_column.form = dest
-      dest_column.save
-      dest_column
-    end
-    dest.columns = dest_columns
-
-    dest
   end
 end

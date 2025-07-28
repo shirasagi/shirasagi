@@ -44,9 +44,35 @@ module SS::FileFactory
         item.sync_stats
       end
 
-      item.update_variants if item.respond_to?(:update_variants)
+      if SS::SvgSanitizer.sanitize(item.path, content_type: item.content_type)
+        item.sync_stats
+      end
+
+      item.update_variants if options.fetch(:variant_processing, true) && item.respond_to?(:update_variants)
 
       item
+    end
+
+    def create_from_zip_entry!(zip_entry, site: nil, user: nil, node: nil, **options)
+      basename = options.delete(:basename) || begin
+        name = ::SS::Zip.safe_zip_entry_name(zip_entry)
+        ::File.basename(name)
+      end
+
+      attr = { model: options.delete(:model) || "ss/temp_file", name: basename, filename: basename }
+      attr[:site_id] = site.id if site
+      if user
+        attr[:cur_user] = user
+        attr[:user_id] = user.id
+      end
+      attr[:node_id] = node.id if node
+      attr[:content_type] = options.delete(:content_type) || ::Fs.content_type(basename)
+
+      create_empty!(attr.update(options)) do |ss_file|
+        zip_entry.get_input_stream do |io|
+          ::IO.copy_stream(io, ss_file.path)
+        end
+      end
     end
   end
 

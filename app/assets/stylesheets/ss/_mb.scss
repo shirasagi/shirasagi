@@ -268,23 +268,6 @@
       margin-top: 0;
     }
   }
-  // -------------------------------------------------------------------------------------------------
-  // features
-
-  #http-tester .buttons {
-    width: 100% !important;
-    float: none !important;
-    @include clear;
-    button {
-      display: inline-block !important;
-      width: auto !important;
-      margin-right: 10px !important;
-      float: left !important;
-    }
-  }
-  #http-tester .view {
-    margin: 0 !important;
-  }
 
   // -------------------------------------------------------------------------------------------------
 }

@@ -6,5 +6,5 @@
   <dd><%= f.select :show_email, @item.show_email_options, include_blank: true %></dd>
 
   <dt><%= @model.t :deny_ips %><%= @model.tt :deny_ips %></dt>
-  <dd><%= f.text_area :deny_ips, value: @item.deny_ips.join("\n") %></dd>
+  <dd><%= f.ss_lines_field :deny_ips, value: @item.deny_ips.join("\n") %></dd>
 </dl>

@@ -1,6 +1,6 @@
 <dl class="see">
   <dd class="wide">
-    <%= f.hidden_field "st_page_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "st_page_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%
       page_params = {}
       page_params[:s] = { statuses: %w(public) }
@@ -16,7 +16,7 @@
       <tbody>
         <% @item.st_pages.each do |page| %>
         <tr data-id="<%= page.id %>">
-          <td><%= f.hidden_field "st_page_ids[]", value: page.id %> <%= page.name %></td>
+          <td><%= f.hidden_field "st_page_ids[]", value: page.id, id: nil %> <%= page.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>

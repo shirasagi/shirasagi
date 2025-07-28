@@ -2,17 +2,24 @@ this.Opendata_Point = (function () {
   function Opendata_Point() {
   }
 
+  Opendata_Point.dispatchEvent = function (el, name) {
+    el.dispatchEvent(new CustomEvent(name, { bubbles: true, cancelable: true, composed: true }));
+  };
+
   Opendata_Point.render = function (url) {
-    return $.ajax({
+    $.ajax({
       url: url,
       success: function (data) {
-        return $(".point").html(data);
+        var $point = $(".point");
+        $point.html(data);
+        Opendata_Point.pointLoaded = true;
+        $point[0].dispatchEvent(new CustomEvent("opendata:pointLoaded", { bubbles: true, cancelable: true, composed: true }));
       }
     });
   };
 
   Opendata_Point.renderButton = function () {
-    return $(".point .update").on("click", function (event) {
+    $(".point .update").on("click", function (event) {
       var data, url;
       url = event.target.href;
       data = {
@@ -23,10 +30,13 @@ this.Opendata_Point = (function () {
         data: data,
         type: "POST",
         success: function (data) {
-          return $(".point").html(data);
+          var $point = $(".point");
+          $point.html(data);
+          Opendata_Point.pointLoaded = true;
+          $point[0].dispatchEvent(new CustomEvent("opendata:pointLoaded", { bubbles: true, cancelable: true, composed: true }));
         }
       });
-      return event.preventDefault();
+      event.preventDefault();
     });
   };
 

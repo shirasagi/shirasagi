@@ -15,7 +15,7 @@ return if @important_notices.blank? && @normal_notices.blank?
     <li class="list-item">
       <div class="info">
         <%= link_to item.name, cms_public_notice_path(id: item), class: "title notice-severity-high" %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+        <span class="datetime"><%= ss_time_tag item.released %></span>
       </div>
     </li>
     <% end %>
@@ -24,7 +24,7 @@ return if @important_notices.blank? && @normal_notices.blank?
     <li class="list-item">
       <div class="info">
         <%= link_to item.name, cms_public_notice_path(id: item), class: "title notice-severity-normal" %>
-        <span class="datetime"><%= item.released.strftime("%Y/%m/%d %H:%M") %></span>
+        <span class="datetime"><%= ss_time_tag item.released %></span>
       </div>
     </li>
     <% end %>

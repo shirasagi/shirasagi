@@ -1,0 +1,29 @@
+<dl class="see">
+  <dt><%= @model.t :image_id %></dt>
+  <dd><%= show_image_info @item.image %></dd>
+
+  <dt><%= @item.t :area_states %></dt>
+  <dd>
+    <% if @item.area_states.present? %>
+      <table class="index area-states form-index">
+        <thead>
+          <tr>
+            <th><%= @item.t :area_state_name %></th>
+            <th><%= @item.t :area_state_value %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @item.area_state_options.each do |name, value| %>
+            <tr>
+              <td><%= name %></td>
+              <td><%= value %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :supplement_state %></dt>
+  <dd><%= @item.label :supplement_state %></dd>
+</dl>

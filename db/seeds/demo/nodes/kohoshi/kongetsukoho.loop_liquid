@@ -1,0 +1,5 @@
+{% for page in pages %}
+<article class="body">
+{{ page.html}}
+</article>
+{% endfor %}

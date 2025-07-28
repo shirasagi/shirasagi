@@ -8,7 +8,6 @@ class Uploader::File
   validates :path, presence: true
   validates :filename, length: { maximum: 2000 }
   validate :validate_filename
-  validate :validate_scss
   validate :validate_coffee
   validate :validate_size
 
@@ -22,11 +21,11 @@ class Uploader::File
       directory? ? Fs.mkdir_p(path) : Fs.binwrite(path, binary)
     end
     @saved_path = @path
-    compile_scss if @css
+    compile_scss
     compile_coffee if @js
     return true
   rescue => e
-    errors.add :path, ":" + e.message
+    errors.add :base, e.message
     return false
   end
 
@@ -125,6 +124,7 @@ class Uploader::File
   end
 
   def initialize(attributes = {})
+    attributes = attributes.with_indifferent_access
     saved_path = attributes.delete :saved_path
     @saved_path = saved_path unless saved_path.nil?
 
@@ -134,8 +134,8 @@ class Uploader::File
   end
 
   def auto_compile
-    if validate_scss
-      compile_scss
+    if compile_scss
+      # nothing to do because css file is created
     elsif validate_coffee
       compile_coffee
     end
@@ -169,30 +169,16 @@ class Uploader::File
     !saved_path || path != saved_path
   end
 
-  def validate_scss
+  def compile_scss
     return if ext != ".scss"
     return if ::File.basename(@path)[0] == "_"
 
-    opts = Rails.application.config.sass
-    load_paths = opts.load_paths[1..-1] || []
-    load_paths << "#{Rails.root}/vendor/assets/stylesheets"
-    load_paths << Fs::GridFs::CompassImporter.new(::File.dirname(@path)) if Fs.mode == :grid_fs
+    Rails.logger.tagged(::File.basename(@path)) do
+      output_path = output_css_path
+      Cms.compile_scss(@path, output_path, basedir: site.try(:path))
+    end
 
-    sass = Sass::Engine.new(
-      @binary.force_encoding("utf-8"),
-      cache: false,
-      debug_info: true,
-      filename: @path,
-      inline_source_maps: true,
-      load_paths: load_paths,
-      style: :expanded,
-      syntax: :scss
-    )
-    @css = sass.render
-  rescue Sass::SyntaxError => e
-    msg = e.backtrace[0].sub(/.*?\/_\//, "")
-    msg = "[#{msg}] #{e}"
-    errors.add :scss, msg
+    true
   end
 
   def validate_coffee
@@ -212,9 +198,8 @@ class Uploader::File
       limit: ActiveSupport::NumberHelper.number_to_human_size(limit_size)
   end
 
-  def compile_scss
-    path = @saved_path.sub(/(\.css)?\.scss$/, ".css")
-    Fs.binwrite path, @css
+  def output_css_path
+    @output_css_path ||= @saved_path.sub(/(\.css)?\.scss$/, ".css")
   end
 
   def compile_coffee

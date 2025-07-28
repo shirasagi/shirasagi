@@ -3,25 +3,31 @@ namespace :ss do
   # 5 0 * * * bundle exec rake ss:daily
   #
   task daily: :environment do
+    # 空ディレクトリの削除
+    ::Tasks::SS.invoke_task("ss:delete_empty_directories")
+
     # 一時ファイルの削除（エクスポート）
     ::Tasks::SS.invoke_task("ss:delete_download_files")
 
     # 一時ファイルの削除（CMSお問い合わせ）
     ::Tasks::SS.invoke_task("inquiry:delete_inquiry_temp_files")
 
-    # 一時ファイルの削除（アクセストークン）
+    # アクセストークンの掃除
     ::Tasks::SS.invoke_task("ss:delete_access_tokens")
 
-    # SSO トークン
+    # SSOトークンの掃除
     ::Tasks::SS.invoke_task("ss:delete_sso_tokens")
 
     # history_backupの削除
     ::Tasks::SS.invoke_task("history:backup:sweep")
 
-    # history_backupの削除
+    # taskの削除
     ::Tasks::SS.invoke_task("ss:task:sweep")
 
-    # 動的パーツキャッシュの削除
+    # sys_mail_logの削除
+    ::Tasks::SS.invoke_task("sys:mail_log:sweep")
+
+    # ファイルキャッシュ掃除ジョブ
     ::Tasks::SS.invoke_task("ss:cleanup_file_store_cache")
 
     # FormDB URL インポート
@@ -34,12 +40,19 @@ namespace :ss do
       # history_logの削除
       ::Tasks::SS.invoke_task("history:history_log:purge")
 
+      # translate_access_logの削除
+      ::Tasks::SS.invoke_task("translate:access_log:purge")
+
       # 期限の切れた公開ページのお知らせ
       ::Tasks::SS.invoke_task("cms:expiration_notices")
 
       ::Tasks::Cms.each_sites do |site|
         # クローリングリソースの更新
         ::Tasks::SS.invoke_task("opendata:crawl", site.host)
+
+        if ::SS.config.opendata.dig("assoc_job", "realtime").blank?
+          ::Tasks::SS.invoke_task("opendata:assoc_job:perform", site.host)
+        end
 
         # スコア計算（リコメンド機能）
         ::Tasks::SS.invoke_task("recommend:create_similarity_scores", site.host) if ::SS.config.recommend.disable.blank?
@@ -54,6 +67,9 @@ namespace :ss do
         ::Tasks::SS.invoke_task("opendata:report:generate_download", site.host)
         ::Tasks::SS.invoke_task("opendata:report:generate_access", site.host)
         ::Tasks::SS.invoke_task("opendata:report:generate_preview", site.host)
+
+        # LINE統計情報の更新
+        ::Tasks::SS.invoke_task("cms:line:update_statistics", site.host)
       end
 
       # 各種使用率の更新
@@ -69,6 +85,12 @@ namespace :ss do
 
       # グループツリーなど一部の HTML はキャッシュされている。それを更新する
       ::Tasks::SS.invoke_task("gws:cache:rebuild")
+
+      # 時間外振替の通知
+      ::Tasks::SS.invoke_task("gws:affair:notification:deliver")
+
+      # 集計グループの更新
+      ::Tasks::SS.invoke_task("gws:aggregation:group:update")
     end
   end
 end

@@ -37,7 +37,7 @@ module Opendata::Resource::HistoryCsvModel
   def to_csv_value(item, key)
     value = item.send(key)
     if value.is_a?(Time) || value.is_a?(Date)
-      I18n.l(value)
+      I18n.l(value, format: :picker)
     elsif value.is_a?(Array)
       value.join("\n")
     else

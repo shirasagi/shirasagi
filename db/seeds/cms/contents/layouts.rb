@@ -37,15 +37,13 @@ save_layout filename: "ezine.layout.html", name: "メールマガジン"
 save_layout filename: "urgency-layout/top-level1.layout.html", name: "緊急災害1：トップページ"
 save_layout filename: "urgency-layout/top-level2.layout.html", name: "緊急災害2：トップページ"
 save_layout filename: "urgency-layout/top-level3.layout.html", name: "緊急災害3：トップページ"
-if !SS::Lgwan.enabled?
-  save_layout filename: "kanko-info.layout.html", name: "写真データベース、ブログ"
-  save_layout filename: "kanko-info-top.layout.html", name: "観光情報"
-  save_layout filename: "kanko-info-photo.layout.html", name: "写真データベース：検索"
-  save_layout filename: "login.layout.html", name: "ログイン"
-  save_layout filename: "kanko-info/blog/blog1.layout.html", name: "ブログレイアウト1"
-  save_layout filename: "kanko-info/blog/blog2.layout.html", name: "ブログレイアウト2"
-  save_layout filename: "mypage.layout.html", name: "マイページ"
-end
+save_layout filename: "kanko-info.layout.html", name: "写真データベース、ブログ"
+save_layout filename: "kanko-info-top.layout.html", name: "観光情報"
+save_layout filename: "kanko-info-photo.layout.html", name: "写真データベース：検索"
+save_layout filename: "login.layout.html", name: "ログイン"
+save_layout filename: "kanko-info/blog/blog1.layout.html", name: "ブログレイアウト1"
+save_layout filename: "kanko-info/blog/blog2.layout.html", name: "ブログレイアウト2"
+save_layout filename: "mypage.layout.html", name: "マイページ"
 
 array = Cms::Layout.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*/, ""), m] }
 @layouts = Hash[*array.flatten]

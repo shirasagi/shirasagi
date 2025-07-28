@@ -29,10 +29,12 @@ Rails.application.routes.draw do
         match :copy, on: :member, via: [:get, :post]
         get :preview, on: :member
         get :print, on: :member
-        resources :columns, concerns: :deletion
+        resources :columns, only: %i[index create] do
+          post :reorder, on: :collection
+        end
         resources :files, controller: 'editable_files', only: [:index] do
           match :download_all, on: :collection, via: [:get, :post]
-          match :zip_all_files, on: :collection, via: [:get, :post]
+          post :zip_all_files, on: :collection
           match :notification, on: :collection, via: [:get, :post]
           get :summary, on: :collection
         end

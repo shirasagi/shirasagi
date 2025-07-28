@@ -1,0 +1,266 @@
+en:
+  modules:
+    gws/portal: Portal
+    addons:
+      gws/portal/portlet/free: Free format
+      gws/portal/portlet/link: Link settings
+      gws/portal/portlet/reminder: Reminder settings
+      gws/portal/portlet/schedule: Schedule settings
+      gws/portal/portlet/todo: To-do settings
+      gws/portal/portlet/bookmark: Favorites settings
+      gws/portal/portlet/board: Bulletin board settings
+      gws/portal/portlet/faq: FAQ settings
+      gws/portal/portlet/qna: Q&A settings
+      gws/portal/portlet/circular: Settings for circulars
+      gws/portal/portlet/monitor: Inquiry and response settings
+      gws/portal/portlet/share: Shared file settings
+      gws/portal/portlet/report: Report settings
+      gws/portal/portlet/workflow: Workflow settings
+      gws/portal/portlet/attendance: Attendance settings
+      gws/portal/portlet/notice: Announcement settings
+      gws/portal/portlet/presence: Presence management settings
+      gws/portal/portlet/survey: Questionnaires
+      gws/portal/portlet/ad: Advertisements
+      gws/portal/portlet/ad_file: Advertising images
+      gws/portal/notice_setting: Announcement settings
+      gws/portal/monitor_setting: Inquiry and response settings
+      gws/portal/link_setting: Links settings
+      gws/portal/attendance_setting: Attendance setting
+
+  gws/portal:
+    self_portal: Personal
+    user_portal: Personal portal
+    group_portal: Department portal
+    create_portlets_for_reset: Portlets to be created
+    delete_portlets_for_reset: Portlets to be deleted
+    other_config: Settings for others persons and departments
+    tabs:
+      user_portal: Personal
+      root_portal: All agencies
+    portlets:
+      header:
+        name: Portlet type
+        text: Explanation
+      free:
+        name: Free format
+        text: Freely describe what content you would like to see displayed.
+      links:
+        name: Links
+        text: Creates a collection of links.
+      reminder:
+        name: Reminders
+        text: Displays reminders.
+      schedule:
+        name: Schedule
+        text: "Displays this week's schedule."
+      todo:
+        name: ToDo
+        text: Displays the responsible persons for to-do tasks.
+      bookmark:
+        name: Favorites
+        text: Displays favorites.
+      board:
+        name: Bulletin board
+        text: Displays new posts.
+      faq:
+        name: FAQ
+        text: Displays new posts.
+      qna:
+        name: Q&A
+        text: Displays new posts.
+      circular:
+        name: Circular boards
+        text: Displays new circulars.
+      monitor:
+        name: Inquiries and responses
+        text: Displays new inquiries and responses.
+      share:
+        name: Shared files
+        text: Displays new shared files.
+      report:
+        name: Reports
+        text: Displays new reports.
+      workflow:
+        name: Workflows
+        text: Displays new workflows.
+      attendance:
+        name: Attendance
+        text: Displays today’s attendance and clocks the time.
+      notice:
+        name: Announcements
+        text: Displays new announcements.
+      presence:
+        name: Presence management
+        text: Displays the status of users in a group.
+      survey:
+        name: Questionnaires
+        text: Displays questionnaires that are new or near expiration.
+      ad:
+        name: Advertisements
+        text: Displays advertisements.
+    links:
+      manage_portlets: Manage portlets
+      arrange_portlets: Portlet deployment
+      settings: Portal settings
+      edit_portlet: Edit portlet
+    buttons:
+      save_layouts: Save deployment
+    options:
+      reminder_filter:
+        all: Show all
+        future: Future days only
+    messages:
+      no_portlets: Create a portlet.
+      closed_portlet: This portlet cannot be viewed.
+      no_portals: Create a portal.
+
+  gws/portal/ad:
+    autoplay_disabled: No autoplay
+
+  gws_role:
+    use_gws_portal_user_settings: Use of personal portals
+    use_gws_portal_group_settings: Use of department portals
+    use_gws_portal_organization_settings: Use of organization portals
+    read_other_gws_portal_user_settings: View personal portal settings (all)
+    read_private_gws_portal_user_settings: View personal portal settings (own)
+    edit_other_gws_portal_user_settings: Edit personal portal settings (all)
+    edit_private_gws_portal_user_settings: Edit personal portal settings (own)
+    delete_other_gws_portal_user_settings: Delete personal portal settings (all)
+    delete_private_gws_portal_user_settings: Delete personal portal settings (own)
+    read_other_gws_portal_group_settings: View organization and department portal settings (all)
+    read_private_gws_portal_group_settings: View department portal settings (own)
+    edit_other_gws_portal_group_settings: Edit organization and department portal settings (all)
+    edit_private_gws_portal_group_settings: Edit department portal settings (own)
+    delete_other_gws_portal_group_settings: Delete organization and department portal settings (all)
+    delete_private_gws_portal_group_settings: Delete department portal settings (own)
+
+  mongoid:
+    models:
+      gws/portal/group_portlet: Department portal settings
+      gws/portal/group_setting: Department portlet
+      gws/portal/user_portlet: Personal portal settings
+      gws/portal/user_setting: Personal portlet
+    attributes:
+      gws/portal/user_setting:
+        name: Portal name
+        portal_user_id: Portal user
+      gws/portal/group_setting:
+        name: Portal name
+        portal_group_id: Portal group
+      gws/portal/portlet_model:
+        setting_id: Portal ID
+        name: Portlet name
+        portlet_model: Portlet type
+        limit: Number of items displayed
+        grid_data: Deployment information
+        links: Link
+      gws/addon/portal/portlet/free:
+        html: Content
+      gws/addon/portal/portlet/reminder:
+        reminder_filter: Display range
+      gws/addon/portal/portlet/schedule:
+        schedule_member_mode: Display mode
+        schedule_member_ids: Display user
+      gws/addon/portal/portlet/todo:
+        todo_state: Display status
+      gws/addon/portal/portlet/bookmark:
+        bookmark_folder_id: Folder
+        bookmark_model: Functional display range
+      gws/addon/portal/portlet/board:
+        board_severity: Importance
+        board_browsed_state: Read/Unread
+        board_category_ids: Category
+      gws/addon/portal/portlet/faq:
+        faq_category_ids: Category
+      gws/addon/portal/portlet/qna:
+        qna_category_ids: Category
+      gws/addon/portal/portlet/circular:
+        circular_category_ids: Category
+        circular_article_state: Display type
+        circular_sort: Order
+      gws/addon/portal/portlet/monitor:
+        monitor_category_ids: Category
+        monitor_answerable_article: Display range
+      gws/addon/portal/portlet/share:
+        share_category_ids: Category
+        share_folder_id: Folder
+      gws/addon/portal/portlet/workflow:
+        workflow_state: Display range
+      gws/addon/portal/portlet/notice:
+        notice_severity: Importance
+        notice_browsed_state: Read/Unread
+        notice_category_ids: Category
+        notice_folder_ids: Folder
+      gws/addon/portal/portlet/presence:
+        group_id: Group
+        custom_group_id: Custom groups
+      gws/addon/portal/portlet/survey:
+        survey_answered_state: Answered/Unanswered
+        survey_sort: Order
+        survey_category_ids: Category
+      gws/addon/portal/portlet/attendance:
+        timecard_module: Timecard
+      gws/addon/portal/portlet/ad:
+        ad_width: Width
+        ad_speed: Slide time
+        ad_pause: Pause time
+      gws/addon/portal/portlet/ad_file:
+        ad_files: Advertising images
+        ad_file_ids: Advertising images
+      gws/addon/portal/notice_setting:
+        portal_notice_state: Show/Hide
+        portal_notice_browsed_state: Unread/Read
+        portal_notice_severity: Severity
+      gws/addon/portal/monitor_setting:
+        portal_monitor_state: Show/Hide
+      gws/addon/portal/link_setting:
+        portal_link_state: Show/Hide
+    errors:
+      models:
+        gws/addon/portal/portlet/ad_file:
+          attributes:
+            ad_files:
+              too_many_files: "Up to %{limit} can be attached."
+
+  tooltip:
+    gws/portal/user_setting:
+    gws/portal/group_setting:
+    gws/portal/portlet_model:
+      name: Enter a portlet name.
+      #circular_article_state:
+      #  - <b>Unread</b> - Show only unread items in the portal.
+      #  - <b>Show all</b> - Show all read and unread items in the portal.
+      circular_article_state:
+        - Select display type of circular boards.
+      circular_sort:
+        - Select order of circular boards.
+      survey_answered_state:
+        - Select display type of surveys.
+      survey_sort:
+        - Select order of surveys.
+      survey_category_ids:
+        - Select categories.
+      limit:
+        - Enter the display limit for surveys.
+    gws/addon/portal/notice_setting:
+      portal_notice_state:
+        - Select whether or not to show an announcement in the portal.
+      portal_notice_browsed_state:
+        - "When you choose to show announcements in the portal, select to show only unread or both unread and read announcements."
+      portal_notice_severity:
+        - "When you choose to show announcements in the portal, select to show severity announcements."
+    gws/addon/portal/monitor_setting:
+      portal_monitor_state:
+        - Select whether or not to show inquiries and responses in the portal.
+    gws/addon/portal/link_setting:
+      portal_link_state:
+        - Select whether or not to display links.
+        - "If you select Show, the links appear at the bottom of the side menu."
+    gws/addon/portal/portlet/schedule:
+      schedule_member_ids:
+        - Select the users to display in the schedule portlet.
+        -
+        - "<b>Default</b>: Displays default user schedules. Displays individual schedules for a personal portlet; for department portlets, the schedules of users directly under that department are shown."
+        - "<b>Current user</b>: Displays one’s own schedule when logged in."
+        - "<b>Users under current group</b>: Shows the schedules for one’s own groups."
+        - "<b>Specified users</b>: Shows the schedule for the users specified below."

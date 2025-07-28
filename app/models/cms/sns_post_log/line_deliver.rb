@@ -23,6 +23,8 @@ class Cms::SnsPostLog::LineDeliver < Cms::SnsPostLog::Line
   private
 
   def set_in_members
+    return if in_members.blank?
+
     if deliver_mode == "main"
       self.member_ids = in_members.map(&:id)
     elsif deliver_mode == "test"

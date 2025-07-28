@@ -23,8 +23,8 @@ ja:
     exclude_dates: 除外日
     dates:
       setting: 開催期間
-      start_date: 開始
-      close_date: 終了
+      start_date: 開催期間開始
+      close_date: 開催期間終了
     category:
       setting: カテゴリー
     search:
@@ -69,8 +69,7 @@ ja:
       event_display:
         list: リスト形式
         table: 表形式
-        list_only: リスト形式のみ
-        table_only: 表形式のみ
+        map: 地図形式
         simple_table: 表形式(簡易)
         detail_table: 表形式(詳細)
       ical_refresh_method:
@@ -79,6 +78,9 @@ ja:
       ical_sync_method:
         full: 完全
         add_only: 追加
+    calender:
+      info_text: 除外日の指定
+      info_usage: "下のカレンダー上にて、あなたが指定したイベント期間の日付が<span class=\"event__date\"></span>で色付けされています。<br>こちらの色付けされたイベント期間の日付のうち、イベント日から除外したい日をクリックするとその日が<span class=\"exclusion-date\"></span>で色付けされイベント日から除外されます。<br>※色がついていない日はイベント期間外です。こちらをイベント期間に追加する場合は記事編集画面にてイベント日に追加するようにしてください"
 
     apis:
       repeat_dates:
@@ -128,6 +130,8 @@ ja:
     move_private_event_pages: ページの移動（所有）
     release_other_event_pages: ページの公開（全て）
     release_private_event_pages: ページの公開（所有）
+    close_other_event_pages: ページの非公開（全て）
+    close_private_event_pages: ページの非公開（所有）
     approve_other_event_pages: ページの承認（全て）
     approve_private_event_pages: ページの承認（所有）
     reroute_other_event_pages: ページの承認経路変更（全て）
@@ -142,6 +146,8 @@ ja:
       event/page: イベントページ
       event/search: イベント検索ページ
     errors:
+      messages:
+        blank_where_having_event_name: を入力してください（イベントタイトルが設定されている場合は必須です）。
       models:
         event/page:
           invalid_csv_or_ical: CSV形式のファイルまたはiCal形式のファイルを選択してください。
@@ -161,10 +167,11 @@ ja:
       event/addon/date:
         event_name: イベントタイトル
         event_dates: イベント日
-        event_recurrences: 定期開催
+        event_recurrences: 開催日
         event_deadline: 申込締切
       event/addon/calendar_list:
         event_display: 表示形式
+        event_display_tabs: 表示タブ
       event/addon/ical_import:
         ical_import_url: iCal配信URL
         ical_basic_certs: ベーシック認証
@@ -196,8 +203,8 @@ ja:
 
   job:
     models:
-      event/page/import_job: イベントページインポート
-      event/ical/import_job: iCalインポート
+      event/page/import_job: イベント/イベントページインポート
+      event/ical/import_job: イベント/iCalインポート
 
   tooltip:
     event/addon/date:
@@ -208,7 +215,9 @@ ja:
         - イベントページにリンクを表示する場合はイベントの期間を入力します。
         - 「日付フォームを追加する」を選択することで複数の期間を設定することが可能です。
       event_recurrences:
-        - 定期開催イベントを入力します。
+        - イベント開催日を入力します。
+        - 終了日に開始日の翌日以降を指定すると期間指定となります。期間指定後に「除外日」をクリックすると入力した連日開催期間のうち指定日を除外できます。
+        - また下のチェックボックスにて、指定期間のうち曜日または祝日のみの開催を設定することができます。
       event_deadline:
         - イベントの申し込み締切日を入力します。
     event/addon/body:
@@ -227,6 +236,7 @@ ja:
     event/addon/page_list:
       sort:
         - リストの並び替え方法を指定します。
+        - イベント日については、現時点のステータスが非公開の記事にイベント日が設定されていても、未来のプレビューでは表示されません。
       loop_html:
         - 自動生成されたリスト表示部分のHTMLを指定することが可能です。
         - |-
@@ -281,6 +291,8 @@ ja:
     event/addon/calendar_list:
       event_display:
         - イベントカレンダーの表示形式を指定します。
+      event_display_tabs:
+        - イベントカレンダーの表示タブを指定します。
       substitute_html:
         - イベントがない時に表示するテキストをHTMLで記述することが可能です。
       upper_html:

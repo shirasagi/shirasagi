@@ -15,6 +15,7 @@ module Board::Node
     include Board::Addon::FileSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "board/post") }
   end
@@ -26,6 +27,7 @@ module Board::Node
     include Board::Addon::AnpiList
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "board/anpi_post") }
   end

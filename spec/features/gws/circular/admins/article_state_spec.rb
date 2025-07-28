@@ -13,8 +13,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
   end
 
   before do
-    post1.set_seen(user1)
-    post1.save!
+    post1.set_seen!(user1)
     post1.reload
   end
 
@@ -31,16 +30,16 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         msg = I18n.t('gws/circular.seen_user_info.format', count: count, total: total)
         expect(page).to have_css("dd", text: msg)
 
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t('gws/circular.seen_user_info.more')
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         within "table.index [data-user-id='#{user1.id}']" do
           seen_at = post1.seen_at(user1)
           expect(page).to have_css("td.browsed", text: I18n.t('gws/board.options.browsed_state.read'))
-          expect(page).to have_css("td.browsed", text: I18n.l(seen_at))
+          expect(page).to have_css("td.browsed", text: I18n.l(seen_at, format: :picker))
         end
         within "table.index [data-user-id='#{gws_user.id}']" do
           expect(page).to have_css("td.browsed", text: I18n.t('gws/circular.post.unseen'))

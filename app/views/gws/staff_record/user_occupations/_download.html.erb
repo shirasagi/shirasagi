@@ -1,0 +1,11 @@
+<dl class="see">
+  <dt><%= @model.t :in_csv_encoding %><%= @model.tt :in_csv_encoding %></dt>
+  <dd>
+    <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[in_csv_encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
+        <%= t("ss.options.csv_encoding.#{encoding}") %>
+      </label>
+    <% end %>
+  </dd>
+</dl>

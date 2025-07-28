@@ -65,7 +65,7 @@ Cms_ConditionForms.prototype.clearAndSetColumnList = function(data) {
 
     $.each(columnNames, function() {
       var value = this.toString();
-      var $option = $("<option />", { value: value, selected: currentValue === value }).html(value);
+      var $option = $("<option />", { value: value, selected: currentValue === value }).text(value);
       $select.append($option);
     });
   });

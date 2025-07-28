@@ -1,0 +1,18 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox"/></label>
+
+  <div class="list-head-action">
+    <%= render template: "_list_head_tags" %>
+    <span class="list-head-action-destroy">
+      <button class="soft-destroy-all btn" data-ss-list-head-method="delete" data-ss-list-head-action="<%= url_for(action: :destroy_all) %>" data-ss-confirmation="<%= t('ss.confirm.delete') %>"><%= t :"ss.links.delete" %></button>
+    </span>
+
+    <% if params[:state] == "approve" %>
+    <span class="list-head-action-approve">
+      <button class="approve-all btn" data-ss-list-head-method="post" data-ss-list-head-action="<%= url_for(action: :approve_all) %>" data-ss-confirmation="<%= t("ss.confirm.approve") %>"><%= t("ss.links.approve") %></button>
+    </span>
+    <% end %>
+  </div>
+
+  <%= render template: "_search" %>
+</div>

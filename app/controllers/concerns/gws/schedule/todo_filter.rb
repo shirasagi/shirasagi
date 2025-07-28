@@ -47,9 +47,16 @@ module Gws::Schedule::TodoFilter
   end
 
   def pre_params
+    if params[:start].present?
+      start = params[:start].to_s.in_time_zone rescue nil
+    end
+    start ||= Time.zone.now.change(min: 0)
+
     super.keep_if { |key| %i[facility_ids].exclude?(key) }.merge(
-      start_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
-      end_at: params[:start] || Time.zone.now.strftime('%Y/%m/%d %H:00'),
+      start_at: start,
+      end_at: start,
+      start_on: start.to_date,
+      end_on: start.to_date,
       member_ids: [@cur_user.id]
     )
   end
@@ -60,10 +67,10 @@ module Gws::Schedule::TodoFilter
 
   def crud_redirect_url
     path = params.dig(:calendar, :path)
-    if path.present?
-      uri = URI(path)
-      uri.query = redirection_calendar_params.to_param
-      uri.to_s
+    if path.present? && trusted_url?(path)
+      uri = ::Addressable::URI.parse(path)
+      uri.query = redirection_calendar_query.to_param
+      uri.request_uri
     else
       nil
     end
@@ -103,8 +110,11 @@ module Gws::Schedule::TodoFilter
   end
 
   def show
-    raise '403' if !item_readable?
-    render
+    if item_readable?
+      render template: 'show'
+    else
+      render template: 'gws/schedule/plans/private_plan'
+    end
   end
 
   def popup
@@ -125,6 +135,7 @@ module Gws::Schedule::TodoFilter
       return
     end
 
+    @item.record_timestamps = false
     @item.edit_range = params.dig(:item, :edit_range)
     @item.todo_action = params[:action]
     @item.deleted = Time.zone.now
@@ -253,6 +264,16 @@ module Gws::Schedule::TodoFilter
   def copy
     set_item
     @item = @item.new_clone
-    render template: "new"
+    if request.get? || request.head?
+      render template: "copy"
+      return
+    end
+
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    return render_update(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    result = @item.save
+    render_update result, location: url_for(action: :show, id: @item.id)
   end
 end

@@ -3,8 +3,9 @@ module SS::Model::Group
   extend SS::Translation
   include SS::Document
   include SS::Scope::ActivationDate
-  include Ldap::Addon::Group
+  include SS::Addon::Ldap::Group
   include SS::Fields::DependantNaming
+  include SS::Liquidization
 
   attr_accessor :in_password
 
@@ -12,6 +13,8 @@ module SS::Model::Group
     store_in collection: "ss_groups"
     index({ name: 1 }, { unique: true })
     index({ domains: 1 }, { unique: true, sparse: true })
+
+    define_model_callbacks :chorg
 
     seqid :id
     field :name, type: String
@@ -21,7 +24,11 @@ module SS::Model::Group
     field :domains, type: SS::Extensions::Words
     field :gws_use, type: String
     field :upload_policy, type: String
+    # 書き出しパスのID; public/gws/ 以下のフォルダー名Add commentMore actions
+    field :path_id, type: String
+
     permit_params :name, :order, :activation_date, :expiration_date, :domains, :gws_use
+    permit_params :path_id
 
     default_scope -> { order_by(order: 1, name: 1) }
 
@@ -31,25 +38,54 @@ module SS::Model::Group
     validates :activation_date, datetime: true
     validates :expiration_date, datetime: true
     validates :gws_use, inclusion: { in: %w(enabled disabled), allow_blank: true }
+    validates :path_id, format: { with: /\A[a-z][a-z0-9]+\z/, allow_blank: true }
     validate :validate_name
     validate :validate_domains, if: ->{ domains.present? }
 
-    scope :in_group, ->(group) {
-      where(name: /^#{::Regexp.escape(group.name)}(\/|$)/)
-    }
-    scope :organizations, ->{
-      where(:name.not => /\//)
-    }
-    scope :and_gws_use, ->{
+    liquidize do
+      export as: :to_s do
+        name
+      end
+      export :id
+      export :name
+      export :full_name
+      export :section_name
+      export :trailing_name
+      export :last_name do
+        name.split("/").last
+      end
+    end
+  end
+
+  module ClassMethods
+    def root
+      "#{Rails.public_path}/gws"
+    end
+    def in_group(group)
+      all.where("$and" => [{ name: /^#{::Regexp.escape(group.name)}(\/|$)/ }])
+    end
+
+    def in_groups(groups)
+      return none if groups.blank?
+      return in_group(groups.first) if groups.count == 1
+
+      names = groups.pluck(:name)
+      conditions = names.map { { name: /^#{::Regexp.escape(_1)}(\/|$)/ } }
+      all.where("$and" => [{ "$or" => conditions }])
+    end
+
+    def organizations
+      all.where("$and" => [{ :name.not => /\// }])
+    end
+
+    def and_gws_use
       conditions = [
         { :gws_use.exists => false },
         { :gws_use.ne => "disabled" },
       ]
-      where("$and" => [{ "$or" => conditions }])
-    }
-  end
+      all.where("$and" => [{ "$or" => conditions }])
+    end
 
-  module ClassMethods
     def search(params)
       criteria = self.where({})
       return criteria if params.blank?
@@ -121,8 +157,9 @@ module SS::Model::Group
 
   # Soft delete
   def disable
-    super
+    return false unless super
     descendants.each { |item| item.disable }
+    true
   end
 
   def depth
@@ -165,12 +202,21 @@ module SS::Model::Group
   end
 
   # Cast
+  def cms_group
+    is_a?(Cms::Group) ? self : Cms::Group.find(id)
+  end
+
   def gws_group
     is_a?(Gws::Group) ? self : Gws::Group.find(id)
   end
 
   def webmail_group
     is_a?(Webmail::Group) ? self : Webmail::Group.find(id)
+  end
+
+  def root_path
+    return if path_id.blank?
+    "#{self.class.root}/#{path_id}"
   end
 
   private

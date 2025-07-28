@@ -1,0 +1,86 @@
+<%
+  now = Time.zone.now
+  ymd = params[:ymd]
+  if ymd.present?
+    origin = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
+    next_day = origin + 1.day
+    prev_day = origin - 1.day
+  else
+    next_day = now.beginning_of_day + 1.day
+    prev_day = now.beginning_of_day - 1.day
+  end
+%>
+
+<%= jquery do %>
+  $('.list-head-action input[name="ymd"]').datetimepicker({
+    onChangeDateTime: function(dp, $input) {
+      var ymd = $input.val();
+      ymd = ymd.replace(/\//g, '');
+
+      var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
+      url = url.replace(':ymd', ymd);
+      url = url.replace('//', '/')
+
+      location.href = url;
+    }
+  });
+  $('.list-head select[name="s[class_name]"]').on("change", function() {
+    $(this).closest("form").submit();
+  });
+<% end %>
+
+<div class="gws-tabs">
+  <% @cur_user.groups.in_group(@cur_site).each do |group| %>
+    <%= link_to gws_daily_report_group_reports_path(group: group.id), class: "#{'current' if group.id == @group.id}" do %>
+      <span class="tab-name"><%= group.trailing_name %></span>
+    <% end %>
+  <% end %>
+</div>
+
+<section class="main-box gws-daily-report-box">
+  <header>
+    <h2>
+      <%= @group.trailing_name %>
+    </h2>
+    <nav>
+      <%= render template: '_search' %>
+    </nav>
+  </header>
+  <%= form_tag({ action: :index }, { method: "GET", class: :search }) do %>
+    <div class="list-head-action">
+      <% pressed = origin && now.to_date == origin.to_date %>
+      <%= ss_button_to(t('gws.history.days.today'), url_for(action: :index, ymd: now.strftime('%Y%m%d')), method: "GET", class: "btn", style: 'margin-right: 12px;', aria: { pressed: pressed }, disabled: pressed) %>
+      <%= ss_button_to(t('gws.history.days.prev_day'), url_for(action: :index, ymd: prev_day.strftime('%Y%m%d')), method: "GET", class: "btn") %>
+      <%= text_field_tag("ymd", origin.try { |value| value.strftime('%Y/%m/%d') }, id: nil, class: 'datetime js-date', data: { min_date: @min_updated.strftime('%Y/%m/%d'), max_date: now.strftime('%Y/%m/%d')}) %>
+      <%= ss_button_to(t('gws.history.days.next_day'), url_for(action: :index, ymd: next_day.strftime('%Y%m%d')), method: "GET", class: "btn", disabled: now < next_day) %>
+    </div>
+  <% end %>
+  <div class="table-wrap">
+    <table class="index">
+      <thead>
+        <tr>
+          <th><%= Gws::User.t(:name) %></th>
+          <% if @forms.present? %>
+            <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+              <th class="limited-access"><%= @model.t(:limited_access) %></th>
+            <% end %>
+            <th><%= @model.t(:small_talk) %></th>
+            <% @forms.first.columns.each do |column| %>
+              <th><%= column.name %></th>
+            <% end %>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% @users.each do |user| %>
+          <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
+          <tr>
+            <% %w(name limited_access small_talk column_values).each do |path| %>
+              <%= render partial: path, locals: { column_value: nil, date: @cur_date, print: false, report: report, user: user } %>
+            <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
+</section>

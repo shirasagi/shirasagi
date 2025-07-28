@@ -58,7 +58,7 @@ class SS::Migration20180228000000
         notification.delivered_at = Time.zone.at(0)
       end
 
-      reminder.save
+      reminder.without_record_timestamps { reminder.save }
     end
   end
 end

@@ -48,17 +48,20 @@ module Opendata::Addon
           category_ids estat_category_ids area_ids
           dataset_group_ids
           released
-          contact_state contact_group contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
+          contact_state contact_group contact_group_name contact_charge contact_tel contact_fax contact_email
+          contact_postal_code contact_address contact_link_url contact_link_name
           related_pages
           groups
         )
       end
 
       def to_csv
-        csv = CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            data << csv_line(item)
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              data << csv_line(item)
+            end
           end
         end
       end
@@ -84,15 +87,18 @@ module Opendata::Addon
           item.dataset_groups.pluck(:name).join("\n"),
 
           # released
-          item.released.try(:strftime, "%Y/%m/%d %H:%M"),
+          item.released.try { |time| I18n.l(time, format: :picker) },
 
           # contact
           item.contact_state,
           item.contact_group.try(:name),
+          item.contact_group_name,
           item.contact_charge,
           item.contact_tel,
           item.contact_fax,
           item.contact_email,
+          item.contact_postal_code,
+          item.contact_address,
           item.contact_link_url,
           item.contact_link_name,
 

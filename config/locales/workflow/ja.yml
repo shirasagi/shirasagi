@@ -2,6 +2,9 @@ ja:
   workflow:
     name: ワークフロー
     request: 承認申請
+    public_request: 「公開」の承認申請
+    closed_request: 「非公開」の承認申請
+    replace_request: 「差し替え」の承認申請
     request_to: 申請先
     selectable_users: 選択候補
     pages: 承認
@@ -21,8 +24,10 @@ ja:
     comment: コメント
     state_remind_suffix: （督促）
     state:
-      request: 申請中
-      approve: 承認
+      draft: 下書き
+      request: 申請中 (承認待ち)
+      approve: 承認済
+      approve_without_approval: 即時承認済
       pending: 下位承認待ち
       remand: 差し戻し
       cancelled: 申請キャンセル
@@ -70,6 +75,10 @@ ja:
       on_remand:
         back_to_init: 最初に戻る
         back_to_previous: 直前に戻る
+      kind:
+        public: 公開
+        closed: 非公開
+        replace: 差し替え
     required_count_label:
       all: 全員の承認が必要
       minimum: "%{required_count} 人の承認が必要"
@@ -96,16 +105,16 @@ ja:
         text: |-
           %{from_name}さんより次の記事について承認依頼が届きました。
           承認作業を行ってください。
-          
+
           - タイトル
           %{page_name}
-          
+
           - 申請者
           %{from_name}
-          
+
           - 申請者コメント
           %{workflow_comment}
-          
+
           - 記事URL
           %{show_path}
       content_remind:
@@ -121,6 +130,8 @@ ja:
       approvers_or_circulations: 承認者・回覧者
     agent_name: "（代理: %{long_name}）"
     agent_name_with_email: "（代理: %{long_name}(%{email})）"
+    agent_value: "%{long_name}"
+    agent_value_with_email: "%{long_name}(%{email})"
 
   modules:
     workflow: ワークフロー
@@ -142,10 +153,12 @@ ja:
     models:
       workflow/route: 承認経路
     attributes:
-      workflow/addon/approver:
+      workflow/approver:
         workflow_user_id: 申請者
+        workflow_agent_id: 申請者（代理）
         workflow_member_id: 申請メンバー
         workflow_state: 承認状態
+        workflow_kind: 承認の種類
         workflow_comment: 申請コメント
         workflow_pull_up: 引き上げ承認
         workflow_on_remand: 差し戻し時
@@ -196,9 +209,16 @@ ja:
       forced_update: "メールアドレスが未設定でも実行する。"
       no_approvers: 承認者がみつかりません。
       branch_is_already_existed: 差し替えページが作成されています。
+      accessibility_check_required: "アクセシビリティエラーが存在します。エラーを修正するか、アクセシビリティチェックを無視する権限が必要です。"
 
   tooltip:
-    workflow/addon/approver:
+    workflow/approver:
+      workflow_kind:
+        - 承認の種類が表示されます。
+        - 「公開」は、承認後、このページを公開状態にします。
+        - 「非公開」は、承認後、このページを非公開状態にします。
+        - 「差し替え」は、承認後、差し替え元ページを差し替えページで上書きします。
+        - 上書きしたタイミングで差し替えページはなくなります。
       workflow_comment:
         - 申請理由など承認者に対するコメントをを記述してください。
       workflow_approvers:
@@ -238,4 +258,4 @@ ja:
 
   job:
     models:
-      workflow/reminder_job: 承認督促
+      workflow/reminder_job: ワークフロー/承認督促

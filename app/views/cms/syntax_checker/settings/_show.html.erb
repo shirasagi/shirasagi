@@ -1,0 +1,4 @@
+<dl class="see">
+  <dt><%= @model.t :syntax_check %></dt>
+  <dd><%= @item.label(:syntax_check) || (@item.syntax_check_enabled? ? t("ss.options.state.enabled") : t("ss.options.state.disabled") ) %></dd>
+</dl>

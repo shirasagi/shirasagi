@@ -1,22 +1,32 @@
 name: reviewdog
 on: [pull_request]
+env:
+  DISABLE_SPRING: 1
 jobs:
   reviewdog:
     name: reviewdog
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     # uncomment blow line if you don't want to run reviewdog on your repository
     # if: ${{ github.repository == 'shirasagi/shirasagi' }}
-    timeout-minutes: 10
+    timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
+      - name: Install pre requisites
+        run: |
+          sudo apt-get update
+          sudo apt-get -y install libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
       - uses: ruby/setup-ruby@v1
         with:
-          ruby-version: 2.7
+          ruby-version: '3.3'
           bundler-cache: true
       - uses: actions/setup-node@v3
         with:
-          node-version: 18
+          node-version: 20
           cache: npm
+      - name: ruby -v
+        run: ruby -v
+      - name: node -v
+        run: node -v
       - name: Install yarn
         run: npm install -g yarn
       - name: Install node modules
@@ -25,8 +35,23 @@ jobs:
         run: npx stylelint -v
       - name: eslint -v
         run: npx eslint -v
+      - name: Install MeCab Ruby
+        run: |
+          tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
+          cd mecab-ruby-0.996 && bundle exec ruby extconf.rb && make && sudo make install
       - uses: reviewdog/action-setup@v1
-      - name: Run reviewdog
+      #- name: reviewdog -list
+      #  run: reviewdog -list
+      - name: Run reviewdog - brakeman, eslint, stylelint, locale
         env:
           REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: reviewdog -reporter=github-pr-review
+          RAILS_ENV: development
+        run: reviewdog -reporter=github-pr-review -runners "brakeman,eslint,stylelint,locale"
+        continue-on-error: true
+      # rubocopが報告するエラーが多すぎるためか、.reviewdog.ymlからrubocopを実行するとバッファー超過などのエラーになるようで正常に終了せず、
+      # タイムアウトまで実行を続けてしまう。そこでrubocopを個別に実行することにする。
+      - name: Run reviewdog - rubocop
+        env:
+          REVIEWDOG_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          bundle exec rubocop | reviewdog -f rubocop -name rubocop -reporter=github-pr-review

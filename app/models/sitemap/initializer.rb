@@ -12,6 +12,8 @@ module Sitemap
     Cms::Role.permission :move_other_sitemap_pages
     Cms::Role.permission :release_other_sitemap_pages
     Cms::Role.permission :release_private_sitemap_pages
+    Cms::Role.permission :close_other_sitemap_pages
+    Cms::Role.permission :close_private_sitemap_pages
     Cms::Role.permission :approve_other_sitemap_pages
     Cms::Role.permission :approve_private_sitemap_pages
     Cms::Role.permission :reroute_other_sitemap_pages

@@ -19,9 +19,15 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
   let(:file) do
     tmp_ss_file site: site, cur_user: user1, contents: "#{Rails.root}/spec/fixtures/ss/logo.png", model: "article/page"
   end
+  let(:map_point1) do
+    {
+      "name" => unique_id, "loc" => [ rand(130..140), rand(30..40) ], "text" => "",
+      "image" => "/assets/img/googlemaps/marker#{rand(0..9)}.png"
+    }
+  end
   let!(:item) do
     create :article_page, cur_user: user1, cur_site: site, cur_node: node, layout_id: layout.id, file_ids: [ file.id ],
-           html: "<a href=\"#{file.url}\">#{file.humanized_name}</a>"
+           html: "<a href=\"#{file.url}\">#{file.humanized_name}</a>", map_points: [ map_point1 ]
   end
 
   describe "#perform" do
@@ -38,7 +44,7 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       expect(item.files.first.id).to eq file.id
 
       # perform
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(item.full_url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(item.full_url)).to_stdout
     end
 
     it do
@@ -97,7 +103,7 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
       expect(copy.html).to include(copy.files.first.url)
 
       # perform
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(copy.full_url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(copy.full_url)).to_stdout
     end
 
     it do
@@ -115,6 +121,8 @@ describe Cms::Page::ReleaseJob, dbscope: :example do
 
       # there are no pages in trash
       expect(History::Trash.all.count).to eq 0
+
+      expect(Map::Geolocation.all.count).to eq 1
     end
   end
 end

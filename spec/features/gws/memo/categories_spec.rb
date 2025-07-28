@@ -31,7 +31,7 @@ describe 'gws_memo_categories', type: :feature, dbscope: :example, js: true do
         fill_in 'item[name]', with: name1
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Memo::Category.all.count).to eq 1
       Gws::Memo::Category.all.first.tap do |list|
@@ -42,13 +42,16 @@ describe 'gws_memo_categories', type: :feature, dbscope: :example, js: true do
       visit gws_memo_categories_path(site: site)
       fill_in 's[keyword]', with: name1
       click_on I18n.t('ss.buttons.search')
-      find('.list-item .info').click
-      click_on I18n.t('ss.links.edit')
+      wait_for_js_ready
+      find('.list-item .info .meta .datetime').click
+      within ".tap-menu" do
+        click_on I18n.t('ss.links.edit')
+      end
       within 'form#item-form' do
         fill_in 'item[name]', with: name2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Memo::Category.all.count).to eq 1
       Gws::Memo::Category.all.first.tap do |list|
@@ -61,10 +64,10 @@ describe 'gws_memo_categories', type: :feature, dbscope: :example, js: true do
       within '.list-item .tap-menu' do
         click_on I18n.t('ss.links.delete')
       end
-      within 'form' do
+      within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Memo::Category.all.count).to eq 0
     end

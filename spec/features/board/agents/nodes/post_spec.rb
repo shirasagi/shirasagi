@@ -55,7 +55,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
           fill_in "item[delete_key]", with: "test"
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.order_by(id: -1).first.captcha_text
         end
         click_button '投稿'
       end
@@ -100,7 +100,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
           fill_in "item[delete_key]", with: "pass"
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.order_by(id: -1).first.captcha_text
         end
         click_button '投稿'
       end
@@ -142,7 +142,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
           fill_in "item[delete_key]", with: "pass"
         end
         within 'div.simple-captcha' do
-          fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
+          fill_in "answer[captcha_answer]", with: SS::Captcha.order_by(id: -1).first.captcha_text
         end
         click_button '削除'
       end
@@ -150,7 +150,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
       expect(page).to have_content I18n.t("ss.notice.deleted")
     end
 
-    it "faild to delete with blank at required" do
+    it "failed to delete with blank at required" do
       visit index_url
       expect(status_code).to eq 200
       within 'div.board-post-form' do

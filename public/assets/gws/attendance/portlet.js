@@ -33,11 +33,11 @@ Gws_Attendance_Portlet.prototype.punch = function($button, fieldName) {
     method: 'POST',
     data: { ref: this.options.ref },
     dataType: 'json',
-    success: function(data) {
+    success: function(_data) {
       alert(_this.options.successMessage);
       location.reload();
     },
-    error: function(xhr, status, error) {
+    error: function(xhr, _status, _error) {
       alert(xhr.responseJSON.join("\n"));
     },
     complete: function() {
@@ -50,9 +50,10 @@ Gws_Attendance_Portlet.prototype.edit = function($button, fieldName) {
   $button.attr('disabled', 'disabled');
 
   var url = this.options.editUrl.replace(':TYPE', fieldName);
-  $a = $('<a/>', { href: url });
+  var $a = $('<a/>', { href: url });
   $a.colorbox({
     open: true,
+    width: '90%',
     onClosed: function() { $button.removeAttr('disabled'); }
   });
 };

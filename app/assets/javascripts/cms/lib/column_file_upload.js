@@ -33,7 +33,7 @@ Cms_Column_FileUpload.prototype.getTempFileOptions = function() {
     return self.getFileUploadPath();
   };
 
-  ret.select = function(files, dropArea) {
+  ret.select = function(files, _dropArea) {
     if (! files[0]) {
       return;
     }
@@ -52,7 +52,7 @@ Cms_Column_FileUpload.prototype.getTempFileOptions = function() {
         $fileView.html(error);
       },
       complete: function() {
-        $fileView.removeClass("hide");
+        $fileView.removeClass("hide").trigger("change");
       }
     });
   };
@@ -103,12 +103,12 @@ Cms_Column_FileUpload.prototype.selectFile = function($item) {
     },
     error: function(xhr, status, error) {
       if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-        return alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+        return alert(["== Error(ColumnFileUpload) =="].concat(xhr.responseJSON).join("\n"));
       }
       $fileView.html(error);
     },
     complete: function() {
-      $fileView.removeClass("hide");
+      $fileView.removeClass("hide").trigger("change");
     }
   });
 };

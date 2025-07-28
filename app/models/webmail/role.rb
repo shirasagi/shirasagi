@@ -10,34 +10,25 @@ class Webmail::Role
 
   attr_accessor :cur_user
 
-  field :permission_level, type: Integer, default: 1
-
-  permit_params :permission_level
-
-  validates :permission_level, presence: true
-
   class << self
     def csv_headers
-      %w(id name permissions permission_level)
+      %w(id name permissions)
     end
 
     def to_csv
-      CSV.generate do |data|
-        data << csv_headers.map { |k| t k }
-        criteria.each do |item|
-          line = []
-          line << item.id
-          line << item.name
-          line << item.localized_permissions.join("\n")
-          line << item.permission_level
-          data << line
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << csv_headers.map { |k| t k }
+          criteria.each do |item|
+            line = []
+            line << item.id
+            line << item.name
+            line << item.localized_permissions.join("\n")
+            data << line
+          end
         end
       end
     end
-  end
-
-  def permission_level_options
-    [%w(1 1), %w(2 2), %w(3 3)]
   end
 
   def localized_permissions

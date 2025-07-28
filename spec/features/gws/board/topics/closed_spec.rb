@@ -30,12 +30,13 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         visit index_path
         click_on I18n.t("ss.navi.editable")
         click_on I18n.t("ss.links.new")
-        click_on I18n.t("gws.apis.categories.index")
-        wait_for_cbox do
-          click_on category.name
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
+        within_cbox do
+          wait_for_cbox_closed { click_on category.name }
         end
 
         within "form#item-form" do
+          expect(page).to have_css("#addon-gws-agents-addons-board-category .ajax-selected", text: category.name)
           within "#addon-basic" do
             fill_in "item[name]", with: "name"
           end
@@ -49,14 +50,14 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
             select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
           end
 
+          ensure_addon_opened "#addon-ss-agents-addons-release"
           within "#addon-ss-agents-addons-release" do
-            first(".addon-head h2").click
             select I18n.t("ss.options.state.closed"), from: "item[state]"
           end
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
 
         item = Gws::Board::Topic.site(site).first
         expect(item.name).to eq "name"
@@ -97,7 +98,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
             fill_in "item[name]", with: "modify"
             click_on I18n.t("ss.buttons.save")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+          wait_for_notice I18n.t("ss.notice.saved")
 
           item.reload
           expect(item.name).to eq "modify"
@@ -118,11 +119,13 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           visit index_path
           click_on I18n.t("ss.navi.editable")
           click_on item.name
-          click_on I18n.t("ss.links.delete")
-          within "form" do
+          within ".nav-menu" do
+            click_on I18n.t("ss.links.delete")
+          end
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.delete")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+          wait_for_notice I18n.t("ss.notice.deleted")
 
           item.reload
           expect(item.notification_noticed_at).to be_blank
@@ -147,11 +150,13 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           visit index_path
           click_on I18n.t("ss.links.trash")
           click_on item.name
-          click_on I18n.t("ss.links.delete")
-          within "form" do
+          within ".nav-menu" do
+            click_on I18n.t("ss.links.delete")
+          end
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.delete")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+          wait_for_notice I18n.t("ss.notice.deleted")
 
           expect { item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
           expect(SS::Notification.all.count).to eq 0
@@ -174,10 +179,10 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           click_on I18n.t("ss.links.trash")
           click_on item.name
           click_on I18n.t("ss.links.restore")
-          within "form" do
+          within "form#item-form" do
             click_button I18n.t("ss.buttons.restore")
           end
-          expect(page).to have_css("#notice", text: I18n.t("ss.notice.restored"))
+          wait_for_notice I18n.t("ss.notice.restored")
 
           item.reload
           expect(item.notification_noticed_at).to be_blank

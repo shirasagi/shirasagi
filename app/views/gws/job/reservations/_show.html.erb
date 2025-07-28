@@ -6,5 +6,5 @@
   <dd><span class="state"><%= @item.state %></span></dd>
 
   <dt><%= @model.t :at %></dt>
-  <dd><%= tryb { Time.zone.at(@item.at).strftime('%Y/%m/%d %H:%M') } %></dd>
+  <dd><%= ss_time_tag Time.zone.at(@item.at) %></dd>
 </dl>

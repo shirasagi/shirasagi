@@ -3,7 +3,7 @@ module Cms::Addon::OpendataRef::Resource
   extend ActiveSupport::Concern
 
   included do
-    field :opendata_resources, type: Hash, metadata: { on_copy: :clear, branch: false }
+    field :opendata_resources, type: Hash, metadata: { on_copy: :clear }
 
     permit_params opendata_resources: {}
 
@@ -21,7 +21,7 @@ module Cms::Addon::OpendataRef::Resource
     file_id = file.id.to_s
     self.opendata_resources ||= {}
     self.opendata_resources[file_id] ||= {}
-    self.opendata_resources[file_id][:state] ||= 'none'
+    self.opendata_resources[file_id]['state'] ||= 'none'
   end
 
   def update_opendata_resources!(file_id, key_values)

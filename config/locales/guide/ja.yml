@@ -4,7 +4,10 @@ ja:
     question: 質問
     procedure: 手続き
     transition: 選択肢
+    transition_settings: 選択肢の設定
     importer: インポート
+    explanation: 説明
+    diagnostic: 診断
     apis:
       questions:
         index: 質問項目を選択する
@@ -37,6 +40,10 @@ ja:
       import_procedures: 手続きのインポート
       import_questions: 質問のインポート
       import_transitions: 選択肢のインポート
+      import_combinations: 統合インポート
+      import_partials: 個別インポート
+      necessary: 必要
+      optional_necessary: 任意必要
     views:
       choose_yes_no: 次の項目に該当しますか？
       procedures_needed: "%{count}件の手続きが必要です。"
@@ -44,8 +51,10 @@ ja:
       your-answers: あなたの回答
       all_procedure: 全ての手続き
       input_choices_question: 選択肢の質問を入力
+      input_explanation: 説明を入力
     notice:
       import_summary: 以下の順番にインポートを実施してください。
+      import_combination: データが統合された１ファイルを利用します。（列は変更しないで下さい。）
     options:
       question_type:
         yes_no: 'はい・いいえ'
@@ -57,7 +66,7 @@ ja:
       not_found_procedure: "手続きが見つかりませんでした。(%{id})"
       not_found_question: "質問が見つかりませんでした。(%{id})"
       not_found_transition: "選択肢が見つかりませんでした。(%{id})"
-      save_faild: "保存に失敗しました。%{message}"
+      save_failed: "保存に失敗しました。%{message}"
       already_registered: "[質問] %{name} は別の質問の選択肢に設定されています。"
 
   cms_role:
@@ -104,9 +113,16 @@ ja:
         procedure_applicant: 手続き申請者
         remarks: 備考
         order: 並び順
+        cond_yes_edge_values: 選択肢(YES)
+        cond_no_edge_values: 選択肢(NO)
+        cond_or_edge_values: 選択肢(OR)
+        cond_yes_question_ids: 質問(YES)
+        cond_no_question_ids: 質問(NO)
+        cond_or_question_ids: 質問(OR)
       guide/question:
         name: 表示名
         id_name: 管理名
+        explanation: 説明
         select_options: 選択肢
         question_type: 質問の形式
         check_type: 選択肢の形式
@@ -139,6 +155,8 @@ ja:
       id_name:
         - 管理用のタイトルを入力します。
         - この目的別ガイド内で重複しない名称を入力する必要があります。
+      explanation:
+        - 質問の説明を入力します。
       question:
         - 質問を入力します。
       select_options:
@@ -169,6 +187,18 @@ ja:
         - 備考を入力します。
       order:
         - 並び順を入力します。
+      cond_yes_edge_values:
+        - 選択肢(YES)を入力します。
+      cond_no_edge_values:
+        - 選択肢(NO)を入力します。
+      cond_or_edge_values:
+        - 選択肢(OR)を入力します。
+      cond_yes_question_ids:
+        - 質問(YES)を入力します。
+      cond_no_question_ids:
+        - 質問(NO)を入力します。
+      cond_or_question_ids:
+        - 質問(OR)を入力します。
     guide/addon/question:
       question_ids:
         - 該当する場合に必要な手続きとして表示させる条件を選択します。
@@ -234,4 +264,4 @@ ja:
 
   job:
     models:
-      guide/procedure/import_job: 手続きインポート
+      guide/procedure/import_job: 目的別ガイド/手続きインポート

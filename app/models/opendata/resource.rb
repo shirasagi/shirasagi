@@ -6,27 +6,28 @@ class Opendata::Resource
   include Opendata::Addon::RdfStore
   include Opendata::Addon::CmsRef::AttachmentFile
   include Opendata::Addon::Harvest::Resource
+  include Opendata::Addon::Metadata::Resource
+  include History::Addon::Backup
 
   DOWNLOAD_CACHE_LIFETIME = 10.minutes
 
-  attr_accessor :workflow, :status
+  attr_accessor :workflow, :status, :in_update_dataset
 
-  embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resource
+  embedded_in :dataset, class_name: "Opendata::Dataset", inverse_of: :resources
   field :order, type: Integer, default: 0
   field :downloaded_count_cache, type: Hash
 
-  permit_params :name, :text, :format, :license_id, :source_url, :order
-
-  validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
-  validates :format, presence: true
-  #validates :source_url, format: /\A#{URI::regexp(%w(https http))}$\z/, if: ->{ source_url.present? }
+  permit_params :state, :name, :text, :format, :license_id, :source_url, :order, :in_update_dataset
 
   before_validation :set_source_url, if: ->{ source_url.present? }
   before_validation :set_filename, if: ->{ in_file.present? }
-  before_validation :escape_source_url, if: ->{ source_url.present? }
   before_validation :validate_in_file, if: ->{ in_file.present? }
   before_validation :validate_in_tsv, if: ->{ in_tsv.present? }
   before_validation :set_format
+
+  validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
+  validates :format, presence: true
+  validates :source_url, url: true, if: ->{ source_url.present? }
 
   after_save :save_dataset
   after_destroy :compression_dataset
@@ -105,7 +106,7 @@ class Opendata::Resource
     end
 
     report_criteria = Opendata::ResourceDownloadReport.site(dataset.site)
-    report_criteria = report_criteria.where(dataset_id: dataset.id, resource_filename: filename)
+    report_criteria = report_criteria.where(dataset_id: dataset.id, resource_id: id)
     counts = report_criteria.pluck(*Opendata::Resource::ReportModel::DAY_COUNT_FIELDS).flatten.compact
     count = counts.sum
 
@@ -126,11 +127,6 @@ class Opendata::Resource
   def set_filename
     self.filename = in_file.original_filename
     self.format = filename.sub(/.*\./, "").upcase if format.blank?
-  end
-
-  def escape_source_url
-    return if source_url.ascii_only?
-    self.source_url = ::Addressable::URI.escape(source_url)
   end
 
   def validate_in_file
@@ -157,8 +153,11 @@ class Opendata::Resource
     self.workflow ||= {}
     dataset.cur_site = dataset.site
     dataset.apply_status(status, workflow) if status.present?
+    dataset.updated = updated if in_update_dataset.present?
     dataset.released ||= Time.zone.now
     dataset.save(validate: false)
+    dataset.send(:generate_file) unless dataset.changed?
+    # dataset.send(:save_backup)
   end
 
   def set_source_url
@@ -167,6 +166,7 @@ class Opendata::Resource
     else
       self.filename = nil
       self.file.destroy if file
+      self.source_url = ::Addressable::URI.escape(source_url) if !source_url.ascii_only?
     end
   end
 

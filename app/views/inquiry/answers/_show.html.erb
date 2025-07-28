@@ -16,7 +16,7 @@
   <dt><%= @item.t :state %></dt>
   <dd>
     <span class="answer-state state-<%= @item.state %>"><%= @item.label :state %></span>
-    <% if @item.closed %><%= "(#{@item.closed.strftime("%Y/%m/%d %H:%M")})" %><% end %>
+    <% if @item.closed %>(<%= ss_time_tag @item.closed %>)<% end %>
   </dd>
 
   <% if @item.comment.present? %>

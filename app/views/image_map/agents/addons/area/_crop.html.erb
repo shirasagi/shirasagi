@@ -1,0 +1,25 @@
+<%= jquery do %>
+new Cms_Image_Map_Area_Cropper(".line-crop-area", <%== { readonly: readonly }.to_json%>);
+<% end %>
+
+<% @item.parse_in_area %>
+<div class="line-crop-area">
+  <div class="image-warp">
+    <%= image_tag(@cur_node.image.url, class: "image") %>
+  </div>
+  <div class="area-form">
+    <div class="areas">
+      <div class="area">
+        <div class="points">
+          <label class="point">X <%= number_field_tag "item[in_area][x]", @item.in_area.x, readonly: "readonly" %></label>
+          <label class="point">Y <%= number_field_tag "item[in_area][y]", @item.in_area.y, readonly: "readonly" %></label>
+          <label class="point">W <%= number_field_tag "item[in_area][width]", @item.in_area.width, readonly: "readonly" %></label>
+          <label class="point">H <%= number_field_tag "item[in_area][height]", @item.in_area.height, readonly: "readonly" %></label>
+          <% if !readonly %>
+            <%= link_to t("ss.buttons.reset"), "", class: "btn reset-area" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

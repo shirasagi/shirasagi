@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :jwt %></dt>
+  <dd><%= @item.to_jwt %></dd>
+
+  <dt><%= @model.t :jwt_id %></dt>
+  <dd><%= @item.jwt_id %></dd>
+
+  <dt><%= @model.t :expiration_date %></dt>
+  <dd><%= @item.expiration_date_label %></dd>
+
+  <dt><%= @model.t :audience_id %></dt>
+  <dd><%= @item.audience.name %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+</dl>

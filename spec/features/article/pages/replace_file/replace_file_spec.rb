@@ -31,41 +31,34 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "replace" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         # original file upload
+        ss_upload_file before_csv
         within "form#item-form" do
           within "#addon-cms-agents-addons-file" do
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.upload")
-            end
+            expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
           end
+          click_on I18n.t("ss.buttons.publish_save")
         end
-
-        wait_for_cbox do
-          attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
-        within "#addon-cms-agents-addons-file" do
-          expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
-        end
-        click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
 
         file = item.class.find(item.id).attached_files.first
 
         # open replace file dialog
+        wait_for_js_ready
         within "#addon-cms-agents-addons-file" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
+          wait_for_js_ready
 
           expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -107,6 +100,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.replace_save')
         end
         wait_for_notice I18n.t('ss.notice.replace_saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -135,51 +130,50 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "replace" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column1.name
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
-        within ".column-value-cms-column-free" do
-          wait_cbox_open do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-        wait_for_cbox do
-          attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file before_csv, addon: ".column-value-cms-column-free"
         within ".column-value-cms-column-free" do
           expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         file = item.class.find(item.id).attached_files.first
 
         # open replace file dialog
         within ".column-value-cms-column-free" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
+          wait_for_js_ready
 
           expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -221,6 +215,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.replace_save')
         end
         wait_for_notice I18n.t('ss.notice.replace_saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -249,9 +245,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "replace" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
@@ -259,42 +257,37 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column2.name
           end
         end
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          wait_cbox_open do
-            click_on I18n.t("ss.buttons.upload")
-          end
         end
-        wait_for_cbox do
-          attach_file "item[in_files][]", before_csv
-          wait_cbox_close do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file before_csv, addon: ".column-value-cms-column-fileupload"
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: ::File.basename(before_csv))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         file = item.class.find(item.id).attached_files.first
 
         # open replace file dialog
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
+          wait_for_js_ready
 
           expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -337,6 +330,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.replace_save')
         end
         wait_for_notice I18n.t('ss.notice.replace_saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -365,56 +360,58 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "replace" do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
-          wait_event_to_fire("ss:formActivated") do
+          wait_for_event_fired("ss:formActivated") do
             page.accept_confirm(I18n.t("cms.confirm.change_form")) do
               select form.name, from: 'in_form_id'
             end
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column3.name
           end
         end
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within ".column-value-cms-column-fileupload" do
           fill_in "item[column_values][][in_wrap][file_label]", with: "label"
-          wait_cbox_open do
-            click_on I18n.t("ss.buttons.upload")
-          end
         end
-        wait_for_cbox do
-          attach_file "item[in_files][]", before_image
-          wait_cbox_close do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ss_upload_file before_image, addon: ".column-value-cms-column-fileupload"
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: ::File.basename(before_image))
         end
         click_on I18n.t("ss.buttons.publish_save")
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         file = item.class.find(item.id).attached_files.first
         expect(file.filename).to eq ::File.basename(before_image)
         expect(file.name).to eq file.filename
         expect(file.state).to eq "public"
-        expect(file.thumb.image_dimension).to eq [ 120, 35 ]
+        expect(file.thumb.image_dimension).to eq [ 360, 106 ]
 
         # open replace file dialog
+        wait_for_js_ready
         within ".column-value-cms-column-fileupload" do
           expect(page).to have_css('.file-view', text: file.name)
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.buttons.replace_file")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.replace_file"))
           expect(page).to have_css('.tab-name', text: I18n.t("ss.buttons.file_histories"))
+          wait_for_js_ready
 
           expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -456,6 +453,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.replace_save')
         end
         wait_for_notice I18n.t('ss.notice.replace_saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         expect(SS::ReplaceTempFile.count).to eq 0
 
@@ -467,7 +466,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(replaced_file.filename).to eq ::File.basename(after_image)
         expect(replaced_file.name).to eq "replaced"
         expect(replaced_file.state).to eq "public"
-        expect(replaced_file.thumb.image_dimension).to eq [ 90, 90 ]
+        expect(replaced_file.thumb.image_dimension).to eq [ 160, 160 ]
         #expect(Fs.cmp(replaced_file.path, after_image)).to be true
 
         # history files

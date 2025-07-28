@@ -2,38 +2,28 @@
 
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 <%= jquery do %>
-  if ($('#item_loop_html').length) {
-    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
-  }
-
   var $addon = $("<%= "##{addon[:id]}" %>");
-  $addon.find("select[name='item[sort]']").on("change", function() {
-    var $selected = $(this).find("option:selected");
-    if (!$selected[0] || !$selected.data("description")) {
-      $addon.find(".sort-description").html("").addClass("hide");
-    } else {
-      $addon.find(".sort-description").html($selected.data("description")).removeClass("hide");
-    }
-  }).trigger("change");
+  var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
+  if ($loopFormatSelect.length) {
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
-  <% if @model.use_liquid %>
-  var changeLoopFormat = function() {
-    var format = $addon.find("select[name='item[loop_format]']").val();
-    if (format === "liquid") {
-      $addon.find(".loop-format-shirasagi").addClass("hide");
-      $addon.find(".loop-format-liquid").removeClass("hide");
-      $("#addon-cms-agents-addons-child_list").addClass("hide");
-    } else {
-      $addon.find(".loop-format-shirasagi").removeClass("hide");
-      $addon.find(".loop-format-liquid").addClass("hide");
-      $("#addon-cms-agents-addons-child_list").removeClass("hide");
-    }
-  };
+    <% if @model.use_liquid %>
+    var changeLoopFormat = function() {
+      var format = $loopFormatSelect.val();
+      if (format === "liquid") {
+        $addon.find(".loop-format-shirasagi").addClass("hide");
+        $addon.find(".loop-format-liquid").removeClass("hide");
+      } else {
+        $addon.find(".loop-format-shirasagi").removeClass("hide");
+        $addon.find(".loop-format-liquid").addClass("hide");
+      }
+    };
 
-  changeLoopFormat();
+    changeLoopFormat();
 
-  $addon.find("select[name='item[loop_format]']").on("change", changeLoopFormat);
-  <% end %>
+    $loopFormatSelect.on("change", changeLoopFormat);
+    <% end %>
+  }
 
   <% if @model == Cms::Node::Archive %>
     var changeArchiveView = function() {
@@ -54,7 +44,7 @@
 <% if @model.use_conditions %>
   <dl class="see">
     <dt><%= @model.t :conditions %><%= @model.tt :conditions %></dt>
-    <dd><%= f.text_area :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
+    <dd><%= f.ss_lines_field :conditions, value: @item.conditions.join("\n"), style: "height: 100px;" %></dd>
   </dl>
 <% end %>
 
@@ -66,8 +56,10 @@
   <% if @model.use_sort %>
     <dt class="sort"><%= @model.t :sort %><%= @model.tt :sort %></dt>
     <dd class="sort">
-      <%= f.select :sort, @item.sort_options, include_blank: " " %>
-      <span class="sort-description hide"></span>
+      <%= ss_stimulus_tag "ss/select_with_description" do %>
+        <%= f.select :sort, @item.sort_options, include_blank: " " %>
+        <span class="description hide"></span>
+      <% end %>
     </dd>
   <% end %>
 
@@ -79,7 +71,7 @@
     <dd class="new-days short"><%= f.number_field :new_days %> <span class="postfix"><%= t "datetime.prompts.day" %></span></dd>
   <% end %>
 
-  <% if @model.use_loop_settings && @model.use_liquid %>
+  <% if @model.use_loop_settings && @model.use_loop_formats.present? %>
     <dt class="loop_format"><%= @model.t :loop_format %><%= @model.tt :loop_format %></dt>
     <dd class="loop_format"><%= f.select :loop_format, @item.loop_format_options %></dd>
   <% end %>

@@ -17,7 +17,7 @@ describe Gws::CompressJob, dbscope: :example do
   before do
     ActionMailer::Base.deliveries.clear
 
-    Gws::CompressJob.bind(site_id: site, user_id: user).perform_now(zip.serialize)
+    Gws::CompressJob.bind(site_id: site.id, user_id: user.id).perform_now(zip.serialize)
 
     expect(Job::Log.count).to eq 1
     Job::Log.first.tap do |log|

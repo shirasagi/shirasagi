@@ -1,0 +1,7 @@
+<% return node_navi unless params[:controller].starts_with?('image_map/') %>
+
+<%= node_navi :image_map do %>
+
+<h3><%= link_to t("image_map.page"), image_map_pages_path %></h3>
+
+<% end %>

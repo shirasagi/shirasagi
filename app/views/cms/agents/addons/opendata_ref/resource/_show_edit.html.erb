@@ -50,7 +50,7 @@
 </div>
 
 <%
-  update_opendata_resources_path = request.path.dup
+  update_opendata_resources_path = SS.request_path(request).dup
   update_opendata_resources_path << "/" unless update_opendata_resources_path.end_with?("/")
   update_opendata_resources_path << "update_opendata_resources.json"
 %>
@@ -108,10 +108,10 @@
         resultNode.html(SS.loading);
       },
       success: function (res, status) {
-        resultNode.html("<%= t('ss.notice.saved') %>");
+        resultNode.text("<%= t('ss.notice.saved') %>");
       },
       error: function (xhr, status, error) {
-        resultNode.html(["== Error =="].concat(xhr.responseJSON).join("<br>"));
+        resultNode.text(["== Error =="].concat(xhr.responseJSON).join("<br>"));
       }
     });
 

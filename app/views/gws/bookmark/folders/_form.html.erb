@@ -1,0 +1,40 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= text_field_tag "#{f.object_name}[in_basename]", @item.name.try { |name| ::File.basename(name) }, autofocus: pc_browser? %></dd>
+
+  <% if @item.new_record? %>
+    <dt><%= @model.t :in_parent %><%= @model.tt :in_parent %></dt>
+    <dd>
+      <%= f.hidden_field :in_parent, value: '', id: nil, class: 'hidden-ids' %>
+      <%= link_to t('gws/share.apis.folders.index'), gws_bookmark_apis_folders_path(single: true), class: 'ajax-box' %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= @model.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+        <%
+          in_parent = @model.find(@item.in_parent) rescue nil
+          in_parent ||= @root_folder
+        %>
+        <tr data-id="<%= in_parent.id %>">
+          <td><%= f.hidden_field :in_parent, value: in_parent.id, id: nil %> <%= in_parent.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), '#', class: 'deselect btn' %></td>
+        </tr>
+        </tbody>
+      </table>
+    </dd>
+  <% else %>
+    <% if @parent %>
+    <dt><%= @model.t :in_parent %></dt>
+    <dd><%= f.hidden_field :in_parent, value: @parent.id, id: nil %> <%= @parent.name %></dd>
+    <% end %>
+  <% end %>
+
+  <% if @item.specified_folder? %>
+    <dt><%= @model.t :order %></dt>
+    <dd><%= @item.order %></dd>
+  <% else %>
+    <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+    <dd><%= f.number_field :order %></dd>
+  <% end %>
+</dl>

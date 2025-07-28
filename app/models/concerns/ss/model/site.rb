@@ -22,12 +22,14 @@ module SS::Model::Site
     field :mypage_domain, type: String
     field :upload_policy, type: String
     embeds_ids :groups, class_name: "SS::Group"
-    belongs_to :parent, class_name: "SS::Site"
+
+    belongs_to :parent, class_name: "SS::Site", inverse_of: :children
+    has_many :children, class_name: "SS::Site", inverse_of: :parent, dependent: nil
 
     attr_accessor :cur_domain
 
     permit_params :name, :host, :domains, :subdir, :parent_id, :https, :document_root, group_ids: []
-    permit_params :mypage_scheme, :mypage_domain
+    permit_params :mypage_scheme, :mypage_domain, :deleted
     validates :name, presence: true, length: { maximum: 40 }
     validates :host, uniqueness: true, presence: true, length: { minimum: 3, maximum: 16 }
     validates :domains, presence: true, domain: true
@@ -37,6 +39,25 @@ module SS::Model::Site
     validate :validate_domains, if: ->{ domains.present? }
 
     after_save :move_public_file
+
+    scope :state, ->(state) {
+      return without_deleted if state.blank? || state == 'enabled'
+      return only_deleted if state == 'disabled'
+      return where({})
+    }
+
+    def disable
+      now = Time.zone.now
+      if deleted.blank? || deleted > now
+        update(deleted: now.utc)
+      else
+        true
+      end
+    end
+
+    def search_state_options
+      %w(enabled disabled all).map { |m| [ I18n.t("ss.options.state.#{m}"), m ] }
+    end
 
     def domain
       cur_domain || domains[0]

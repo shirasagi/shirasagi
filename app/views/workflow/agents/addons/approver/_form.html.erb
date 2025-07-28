@@ -13,12 +13,15 @@
     js_options[:publish_save] = t("ss.buttons.publish_save")
   end
   if %w(ready public).include?(@item.state) && @item.persisted?
-    if @item.allowed?(:release, @cur_user, site: @cur_site)
+    if @item.allowed?(:close, @cur_user, site: @cur_site)
       # 警告する意味でボタンのラベルを別のものにする
+      js_options[:draft_save] = t("ss.buttons.withdraw")
+    elsif @item.is_a?(Workflow::Addon::Branch) && @item.branch?
+      # 差し替えページは公開権限がなくても取り下げ保存が可能
       js_options[:draft_save] = t("ss.buttons.withdraw")
     end
 
-    if @item.is_a?(Workflow::Addon::Branch) && @item.branches.blank?
+    if @item.is_a?(Workflow::Addon::Branch) && @item.master? && @item.branches.blank?
       # そして「差替保存」を表示する
       js_options[:branch_save] = t("cms.buttons.save_as_branch")
       js_options[:branch_save_url] = branch_create_workflow_page_path(id: @item.id)

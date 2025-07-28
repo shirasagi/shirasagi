@@ -19,7 +19,7 @@ class Uploader::JobFile
 
   def sanitizer_input_path
     filename = "#{SS.config.ss.sanitizer_file_prefix}_uploader_#{id}_#{created.to_i}#{::File.extname(basename)}"
-    "#{Rails.root}/#{SS.config.ss.sanitizer_input}/#{filename}"
+    "#{SS::UploadPolicy.sanitizer_input_path}/#{filename}"
   end
 
   def sanitizer_save

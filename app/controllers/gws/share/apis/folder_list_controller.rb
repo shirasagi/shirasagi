@@ -4,9 +4,11 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   model Gws::Share::Folder
 
   def index
-    @limit = 100
+    @limit = SS.config.gws.share["folder_navi_limit"]
     @type = params[:type].presence || 'gws/share/files'
     @item = @model.find(params[:id]) if params[:id].present?
+
+    set_child_count
 
     if params[:only_children]
       items = []
@@ -26,6 +28,7 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   private
 
   def append_items(items, add_items, pos_item = nil)
+    add_items = add_items.to_a
     return items if add_items.blank?
     pos_item ||= add_items.first
 
@@ -39,39 +42,73 @@ class Gws::Share::Apis::FolderListController < ApplicationController
   end
 
   def append_tree_items(items)
-    if @type == 'gws/share/files'
+    case @type
+    when 'gws/share/files'
       @item.parents.each do |item|
-        next unless item.allowed?(:read, @cur_user, site: @cur_site)
-        items = append_items(items, item.children.readable(@cur_user, site: @cur_site).limit(@limit).entries, item)
+        next unless item.readable?(@cur_user, site: @cur_site)
+        children = item.children.readable(@cur_user, site: @cur_site)
+        children = children.limit(@limit) if @limit
+        items = append_items(items, children, item)
       end
-    elsif @type == 'gws/share/management/files'
+    when 'gws/share/management/files'
       @item.parents.each do |item|
         next unless item.allowed?(:read, @cur_user, site: @cur_site)
-        items = append_items(items, item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit).entries, item)
+        children = item.children.allow(:read, @cur_user, site: @cur_site)
+        children = children.limit(@limit) if @limit
+        items = append_items(items, children, item)
       end
     end
     items
   end
 
   def root_items
-    if @type == 'gws/share/files'
-      @model.site(@cur_site).where(depth: 1).readable(@cur_user, site: @cur_site).limit(@limit)
-    elsif @type == 'gws/share/management/files'
-      @model.site(@cur_site).where(depth: 1).allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    case @type
+    when 'gws/share/files'
+      items = @model.site(@cur_site).where(depth: 1).readable(@cur_user, site: @cur_site)
+      items = items.limit(@limit) if @limit
+      items
+    when 'gws/share/management/files'
+      items = @model.site(@cur_site).where(depth: 1).allow(:read, @cur_user, site: @cur_site)
+      items = items.limit(@limit) if @limit
+      items
     end
   end
 
   def child_items
-    if @type == 'gws/share/files'
-      @item.children.readable(@cur_user, site: @cur_site).limit(@limit)
-    elsif @type == 'gws/share/management/files'
-      @item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
+    case @type
+    when 'gws/share/files'
+      items = @item.children.readable(@cur_user, site: @cur_site)
+      items = items.limit(@limit) if @limit
+      items
+    when 'gws/share/management/files'
+      items = @item.children.allow(:read, @cur_user, site: @cur_site)
+      items = items.limit(@limit) if @limit
+      items
+    end
+  end
+
+  def set_child_count
+    @child_count = Hash.new(0)
+    case @type
+    when 'gws/share/files'
+      items = @model.site(@cur_site).readable(@cur_user, site: @cur_site).pluck(:name, :depth)
+    when 'gws/share/management/files'
+      items = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site).pluck(:name, :depth)
+    end
+    items.each do |name, depth|
+      next if depth == 1
+      parts = name.split("/")
+      child = parts.pop
+      parent = parts.join("/")
+      @child_count[parent] ||= 0
+      @child_count[parent] += 1
     end
   end
 
   def items_hash(items)
     items = items.compact.map do |item|
       {
+        id: item.id,
         name: item.trailing_name,
         filename: item.name,
         order: item.depth == 1 ? item.order : item.parents.where(depth: 1).first.order,
@@ -79,15 +116,21 @@ class Gws::Share::Apis::FolderListController < ApplicationController
         url: item_url(item),
         tree_url: gws_share_apis_folder_list_path(id: item.id, type: @type, category: params[:category]),
         is_current: (@item.present? && item.id == @item.id),
-        is_parent: (@item.present? && @item.name.start_with?("#{item.name}/"))
+        is_parent: (@item.present? && @item.name.start_with?("#{item.name}/")),
+        child_count: @child_count[item.name]
       }
     end
     items.uniq
   end
 
   def item_url(item)
-    return gws_share_folder_files_path(folder: item.id, category: params[:category]) if @type == 'gws/share/files'
-    return gws_share_management_folder_files_path(folder: item.id, category: params[:category]) if @type == 'gws/share/management/files'
-    return gws_share_folder_path(id: item.id) if @type == 'gws/share/folders'
+    case @type
+    when 'gws/share/files'
+      gws_share_folder_files_path(folder: item.id, category: params[:category])
+    when 'gws/share/management/files'
+      gws_share_management_folder_files_path(folder: item.id, category: params[:category])
+    when 'gws/share/folders'
+      gws_share_folder_path(id: item.id)
+    end
   end
 end

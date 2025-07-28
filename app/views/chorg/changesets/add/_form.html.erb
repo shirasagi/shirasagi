@@ -1,6 +1,0 @@
-<dl class="see">
-  <% @model::GROUP_ATTRIBUTES.each do |k| %>
-    <dt><%= t "chorg.views.#{params[:type]}_changesets.#{k}" %><%= tt "chorg.views.#{params[:type]}_changesets.#{k}" %></dt>
-    <dd><%= f.text_field "destinations[][#{k}]", value: @item.destinations.try(:first).try(:send, :[], k) %></dd>
-  <% end %>
-</dl>

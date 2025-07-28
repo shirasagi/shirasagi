@@ -16,7 +16,7 @@ module Cms::PageFilter
     super
     return unless @cur_node
     return if (@item.filename =~ /^#{::Regexp.escape(@cur_node.filename)}\//) && (@item.depth == @cur_node.depth + 1)
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def default_form(node)
@@ -55,8 +55,14 @@ module Cms::PageFilter
   end
 
   def set_contains_urls_items
-    return Cms::Page.none if !@item.is_a?(Cms::Model::Page) || @item.try(:branch?)
-    @contains_urls = Cms::Page.all.site(@cur_site).and_linking_pages(@item).page(params[:page]).per(50)
+    @contains_urls ||= begin
+      if params[:branch_save].present?
+        pages = Cms::Page.none
+      else
+        pages = Cms.contains_urls(@item, site: @cur_site)
+      end
+      pages.page(params[:page]).per(50)
+    end
   end
 
   def deny_update_with_contains_urls
@@ -95,24 +101,11 @@ module Cms::PageFilter
 
     @item.state = "ready" if @item.try(:release_date).present?
 
-    result = nil
-    if @item.try(:master_id).present?
-      task = SS::Task.find_or_create_for_model(@item.master, site: @cur_site)
-      rejected = -> { @item.errors.add :base, :other_task_is_running }
-      task.run_with(rejected: rejected) do
-        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
-        result = @item.save
-      end
-    else
-      result = @item.save
-    end
+    result = save_with_task(@item)
 
     location = nil
-    if result && @item.try(:branch?) && @item.state == "public"
+    if result && destroy_merged_branch(@item)
       location = { action: :index }
-      @item.file_ids = nil if @item.respond_to?(:file_ids)
-      @item.skip_history_trash = true if @item.respond_to?(:skip_history_trash)
-      @item.destroy
     end
 
     # If page is failed to update, page is going to show in edit mode with update errors
@@ -124,6 +117,28 @@ module Cms::PageFilter
     end
 
     render_update result, location: location
+  end
+
+  def save_with_task(item)
+    return item.save if item.try(:master_id).nil?
+
+    task = SS::Task.find_or_create_for_model(item.master, site: @cur_site)
+    rejected = -> { item.errors.add :base, :other_task_is_running }
+    task.run_with(rejected: rejected) do
+      task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+      item.save
+    end
+    item.errors.blank?
+  end
+
+  def destroy_merged_branch(item)
+    return false if !item.try(:branch?)
+    return false if item.state != "public"
+
+    item.file_ids = nil if item.respond_to?(:file_ids)
+    item.skip_history_trash = true if item.respond_to?(:skip_history_trash)
+    item.destroy
+    true
   end
 
   def save_as_branch
@@ -145,6 +160,12 @@ module Cms::PageFilter
         copy = @item.new_clone
         copy.master = @item
         result = copy.save
+        if result
+          task.log "created #{copy.filename}(#{copy.id})"
+        else
+          task.log "failed\n#{copy.errors.full_messages.join("\n")}"
+        end
+        result
       end
     end
 
@@ -153,10 +174,39 @@ module Cms::PageFilter
       render_opts[:location] = url_for(action: :show, id: copy)
       render_opts[:notice] = I18n.t("workflow.notice.created_branch_page")
     elsif copy && copy.errors.present?
-      @item.errors.messages[:base] += copy.errors.full_messages
+      SS::Model.copy_errors(copy, @item)
     end
 
     render_update result, render_opts
+  end
+
+  def change_items_state
+    raise "400" if @selected_items.blank?
+
+    entries = @selected_items.entries
+    @items = []
+
+    role_action = :edit
+    if @model.include?(Cms::Addon::Release)
+      role_action = :release if @change_state == 'public'
+      role_action = :close if @change_state == 'closed'
+    end
+
+    entries.each do |item|
+      if item.allowed?(role_action, @cur_user, site: @cur_site, node: @cur_node)
+        item.cur_user = @cur_user if item.respond_to?(:cur_user)
+        item.state = @change_state if item.respond_to?(:state)
+
+        if save_with_task(item)
+          destroy_merged_branch(item)
+          next
+        end
+      else
+        item.errors.add :base, :auth_error
+      end
+      @items << item
+    end
+    entries.size != @items.size
   end
 
   public
@@ -205,8 +255,12 @@ module Cms::PageFilter
     end
 
     if %w(ready public).include?(@item.state_was)
-      # 公開ページだった場合、非公開とするには公開権限が必要
-      raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
+      if @item.is_a?(Workflow::Addon::Branch) && @item.branch?
+        # 差し替えページは公開権限がなくても取り下げ保存が可能
+      elsif !@item.allowed?(:close, @cur_user, site: @cur_site, node: @cur_node)
+        # 公開ページだった場合、非公開とするには非公開権限が必要
+        raise "403"
+      end
     end
 
     draft_save
@@ -221,35 +275,47 @@ module Cms::PageFilter
 
     if request.get? || request.head?
       @filename = @item.filename
-    elsif confirm
+      return
+    end
+    raise "400" if @item.respond_to?(:branch?) && @item.branch?
+
+    if confirm
       @source = "/#{@item.filename}"
       @item.validate_destination_filename(destination)
       @item.filename = destination
       @link_check = @item.errors.empty?
+      return
+    end
+
+    @source = "/#{@item.filename}"
+    raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
+
+    node = Cms::Node.site(@cur_site).filename(::File.dirname(destination)).first
+
+    if node.blank?
+      location = move_cms_page_path id: @item.id, source: @source, link_check: true
+    elsif @item.route == "cms/page"
+      location = move_node_page_path cid: node.id, id: @item.id, source: @source, link_check: true
     else
-      @source = "/#{@item.filename}"
-      raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
+      location = { cid: node.id, action: :move, source: @source, link_check: true }
+    end
 
-      node = Cms::Node.site(@cur_site).filename(::File.dirname(destination)).first
+    task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
 
-      if node.blank?
-        location = move_cms_page_path id: @item.id, source: @source, link_check: true
-      elsif @item.route == "cms/page"
-        location = move_node_page_path cid: node.id, id: @item.id, source: @source, link_check: true
+    rejected = -> do
+      @item.errors.add :base, :other_task_is_running
+      render
+    end
+
+    task.run_with(rejected: rejected) do
+      task.log "# #{I18n.t("ss.buttons.move")}"
+      task.log "#{@item.filename}(#{@item.id})"
+      result = @item.move(destination)
+      render_update result, location: location, render: { template: "move" }, notice: t('ss.notice.moved')
+      if result
+        task.log "moved to #{destination}"
       else
-        location = { cid: node.id, action: :move, source: @source, link_check: true }
-      end
-
-      task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
-
-      rejected = -> do
-        @item.errors.add :base, :other_task_is_running
-        render
-      end
-
-      task.run_with(rejected: rejected) do
-        task.log "# #{I18n.t("ss.buttons.move")}"
-        render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
+        task.log "failed\n#{@item.errors.full_messages.join("\n")}"
       end
     end
   end
@@ -273,7 +339,14 @@ module Cms::PageFilter
 
       @item.attributes = get_params
       @copy = @item.new_clone
-      render_update @copy.save, location: { action: :index }, render: { template: "copy" }
+      result = @copy.save
+      render_update result, location: { action: :index }, render: { template: "copy" }
+
+      if result
+        task.log "created #{@copy.filename}(#{@copy.id})"
+      else
+        task.log "failed\n#{@copy.errors.full_messages.join("\n")}"
+      end
     end
   end
 
@@ -335,5 +408,18 @@ module Cms::PageFilter
     end
 
     render_update true, location: { action: :index }, render: { template: "index" }
+  end
+
+  def resume_new
+    @item = @model.new get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    render template: 'new'
+  end
+
+  def resume_edit
+    set_item
+    @item.attributes = get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    render template: 'edit'
   end
 end

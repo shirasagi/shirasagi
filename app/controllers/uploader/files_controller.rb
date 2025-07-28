@@ -14,6 +14,8 @@ class Uploader::FilesController < ApplicationController
   before_action :deny_sanitizing_file, only: [:update, :destroy]
   after_action :save_job, only: [:create, :update, :destroy, :destroy_all]
 
+  helper_method :editable_with_upload_policy?
+
   navi_view "uploader/main/navi"
 
   private
@@ -30,7 +32,11 @@ class Uploader::FilesController < ApplicationController
       url = ::File.join(url, name)
       @crumbs << [name, url]
     end
-    @crumbs.pop if params[:do].present?
+    if %w(show edit delete check).include?(params[:do])
+      # do=show などの場合、@crumbs の末尾にはファイル名が入っている。
+      # pop することで、ぱんクズにファイル名を表示しないようにする。
+      @crumbs.pop
+    end
   end
 
   def create_folder
@@ -86,8 +92,8 @@ class Uploader::FilesController < ApplicationController
       job_file.upload(@item.path) if @file
     elsif action == 'destroy'
       paths = [@path_was]
-      paths = @paths.map { |name| "#{@path_was}/#{name}" } if @paths.present?
-      job_file.bind_rm(paths).save_job
+      paths = @paths if @paths
+      job_file.bind_rm(paths).save_job if paths.present?
     end
   end
 
@@ -136,6 +142,10 @@ class Uploader::FilesController < ApplicationController
     raise "400"
   end
 
+  def editable_with_upload_policy?
+    SS::UploadPolicy.upload_policy != "sanitizer" && SS::UploadPolicy.upload_policy != "restricted"
+  end
+
   public
 
   def file
@@ -147,7 +157,7 @@ class Uploader::FilesController < ApplicationController
 
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-    return redirect_to("#{request.path}?do=show") unless @item.directory?
+    return redirect_to("#{SS.request_path(request)}?do=show") unless @item.directory?
     set_items(@item.path)
     Uploader::File.set_sanitizer_state(@items, { site_id: @cur_site.id })
     render :index
@@ -155,7 +165,13 @@ class Uploader::FilesController < ApplicationController
 
   def edit
     raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
-    render :edit
+
+    if editable_with_upload_policy?
+      render :edit
+    else
+      @item.errors.add :base, :edit_restricted
+      render :edit_restricted
+    end
   end
 
   def show
@@ -197,6 +213,7 @@ class Uploader::FilesController < ApplicationController
   def update
     set_params(:filename, :files, :text, :file)
     raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless editable_with_upload_policy?
     raise "400" unless @filename
 
     if !@item.directory?
@@ -243,35 +260,28 @@ class Uploader::FilesController < ApplicationController
   end
 
   def destroy_all
-    @selected_items = @model.search(@item.path, params[:s]).select do |file|
-      params[:ids].include?(File.basename(file.saved_path))
+    # initialize items
+    @selected_items = @model.search(@item.path, params[:s])
+    @selected_items.each { |item| item.site = @cur_site }
+    Uploader::File.set_sanitizer_state(@selected_items, { site_id: @cur_site.id })
+
+    # check ids, path
+    @selected_items = @selected_items.select do |item|
+      params[:ids].include?(item.basename) && item.path.start_with?(@cur_node.path)
     end
 
-    if params[:destroy_all]
-      render_confirmed_all(destroy_items, location: "#{uploader_files_path}/#{@item.filename}")
+    if params[:destroy_all].blank?
+      render :destroy_all
       return
     end
 
-    respond_to do |format|
-      format.html { render "cms/crud/destroy_all" }
-      format.json { head json: errors }
-    end
-  end
-
-  def destroy_items
-    entries = @selected_items.entries
-    @items = []
-
-    params[:ids].each do |path|
-      target_path = File.expand_path("#{@cur_site.path}/#{path}")
-      next if !target_path.start_with?(@cur_node.path)
-
-      item = @model.file(target_path)
+    @deleted_items, @undeleted_items = @selected_items.partition do |item|
+      # deny_sanitizing_file
+      next false if item.sanitizer_state == 'wait' #&& updated condition
       item.destroy
-      @items << item
     end
-
-    entries.size != @items.size
+    @paths = @deleted_items.map(&:path)
+    render_confirmed_all @undeleted_items.blank?, location: "#{uploader_files_path}/#{@item.filename}"
   end
 
   def render_confirmed_all(result, opts = {})
@@ -279,9 +289,9 @@ class Uploader::FilesController < ApplicationController
     if result
       notice = { notice: opts[:notice].presence || t("ss.notice.deleted") }
     else
-      notice = { notice: t("ss.notice.unable_to_delete", items: @items.pluck(:name).join("、")) }
+      notice = { notice: t("ss.notice.unable_to_delete", items: @undeleted_items.map(&:basename).join("、")) }
     end
-    errors = @items.map { |item| [item.path, item.errors.full_messages] }
+    errors = @selected_items.map { |item| [item.path, item.errors.full_messages] }
 
     respond_to do |format|
       format.html { redirect_to location, notice }

@@ -15,19 +15,21 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       # Create
       #
       visit gws_notice_folders_path(site: site)
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name
         fill_in "item[order]", with: order
 
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.apis.users.index")
           end
         end
       end
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on gws_user.name
         end
       end
@@ -38,7 +40,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Notice::Folder.all.count).to eq 1
       Gws::Notice::Folder.all.first.tap do |folder|
@@ -53,12 +55,14 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_notice_folders_path(site: site)
       click_on name
-      click_on I18n.t("ss.links.edit")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Notice::Folder.all.count).to eq 1
       Gws::Notice::Folder.all.first.tap do |cate|
@@ -71,11 +75,13 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_notice_folders_path(site: site)
       click_on name2
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect(Gws::Notice::Folder.all.count).to eq 0
     end
@@ -93,33 +99,35 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         # Create
         #
         visit gws_notice_folders_path(site: site)
-        click_on I18n.t("ss.links.new")
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.new")
+        end
         within "form#item-form" do
           fill_in "item[in_basename]", with: name
           fill_in "item[order]", with: order
           within "#addon-basic" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("gws/share.apis.folders.index")
             end
           end
         end
-        wait_for_cbox do
-          wait_cbox_close do
+        within_cbox do
+          wait_for_cbox_closed do
             click_on folder0.name
           end
         end
         within "form#item-form" do
           within "#addon-basic" do
-            expect(page).to have_css(".ajax-selected", text: folder0.name)
+            expect(page).to have_css(".ajax-selected [data-id='#{folder0.id}']", text: folder0.name)
           end
           within "#addon-gws-agents-addons-member" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.apis.users.index")
             end
           end
         end
-        wait_for_cbox do
-          wait_cbox_close do
+        within_cbox do
+          wait_for_cbox_closed do
             click_on gws_user.name
           end
         end
@@ -130,7 +138,7 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(Gws::Notice::Folder.all.count).to eq 2
         Gws::Notice::Folder.all.reorder(created: -1).first.tap do |folder|
@@ -145,12 +153,14 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_notice_folders_path(site: site)
         click_on "#{folder0.name}/#{name}"
-        click_on I18n.t("ss.links.edit")
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.edit")
+        end
         within "form#item-form" do
           fill_in "item[in_basename]", with: name2
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(Gws::Notice::Folder.all.count).to eq 2
         Gws::Notice::Folder.all.reorder(created: -1).first.tap do |cate|
@@ -163,11 +173,13 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_notice_folders_path(site: site)
         click_on "#{folder0.name}/#{name2}"
-        click_on I18n.t("ss.links.delete")
-        within "form" do
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.delete")
+        end
+        within "form#item-form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+        wait_for_notice I18n.t("ss.notice.deleted")
 
         expect(Gws::Notice::Folder.all.count).to eq 1
       end
@@ -176,18 +188,20 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
     context "when parent folder is not exist" do
       it do
         visit gws_notice_folders_path(site: site)
-        click_on I18n.t("ss.links.new")
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.new")
+        end
         within "form#item-form" do
           fill_in "item[in_basename]", with: "#{unique_id}/#{unique_id}"
 
           within "#addon-gws-agents-addons-member" do
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("ss.apis.users.index")
             end
           end
         end
-        wait_for_cbox do
-          wait_cbox_close do
+        within_cbox do
+          wait_for_cbox_closed do
             click_on gws_user.name
           end
         end
@@ -199,10 +213,11 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.save")
         end
         within "#errorExplanation" do
-          error = [
-            I18n.t("mongoid.attributes.gws/model/folder.name"),
-            I18n.t("mongoid.errors.models.gws/model/folder.invalid_chars_as_name")
-          ].join
+          error = I18n.t(
+            "errors.format",
+            attribute: I18n.t("mongoid.attributes.gws/model/folder.name"),
+            message: I18n.t("mongoid.errors.models.gws/model/folder.invalid_chars_as_name")
+          )
           expect(page).to have_css("li", text: error)
           expect(page).to have_css("li", text: I18n.t("mongoid.errors.models.gws/model/folder.not_found_parent"))
         end
@@ -219,26 +234,28 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_notice_folders_path(site: site)
       click_on item.name
-      click_on I18n.t("ss.links.move")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.move")
+      end
       within "form#item-form" do
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("gws/share.apis.folders.index")
           end
         end
       end
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on folder1.name
         end
       end
       within "form#item-form" do
         within "#addon-basic" do
-          expect(page).to have_css(".ajax-selected", text: folder1.name)
+          expect(page).to have_css(".ajax-selected [data-id='#{folder1.id}']", text: folder1.name)
         end
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.moved"))
+      wait_for_notice I18n.t("ss.notice.moved")
 
       item.reload
       expect(item.name).to eq "#{folder1.name}/#{name}"
@@ -271,11 +288,11 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       expect(SS::File.in(id: item.notices.pluck(:file_ids).flatten).sum(:size)).to be > 0
 
       first("button[name='reclaim_total_size']").click
-      expect(page).to have_css("#notice", text: I18n.t("gws/notice.notice.reclaimed"))
+      wait_for_notice I18n.t("gws/notice.notice.reclaimed")
 
-      usage1 = I18n.t("gws/notice.total_body_size_current_stats", size: post.text.size.to_s(:human_size), percentage: "0.00%")
+      usage1 = I18n.t("gws/notice.total_body_size_current_stats", size: post.text.size.to_fs(:human_size), percentage: "0.00%")
       expect(page).to have_content(usage1)
-      usage2 = I18n.t("gws/notice.total_body_size_current_stats", size: file.size.to_s(:human_size), percentage: "0.04%")
+      usage2 = I18n.t("gws/notice.total_body_size_current_stats", size: file.size.to_fs(:human_size), percentage: "0.04%")
       expect(page).to have_content(usage2)
     end
   end

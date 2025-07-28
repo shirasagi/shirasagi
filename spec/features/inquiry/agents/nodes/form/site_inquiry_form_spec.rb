@@ -3,14 +3,22 @@ require 'spec_helper'
 describe "inquiry_form", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:group) { cms_group }
-  let!(:group1) { create :cms_group, name: "#{group.name}/#{unique_id}", contact_email: unique_email }
-  let!(:group2) { create :cms_group, name: "#{group.name}/#{unique_id}", contact_email: unique_email }
+  let!(:group1) do
+    create(
+      :cms_group, name: "#{group.name}/#{unique_id}",
+      contact_groups: [{ name: unique_id, contact_email: unique_email, main_state: "main" }])
+  end
+  let!(:group2) do
+    create(
+      :cms_group, name: "#{group.name}/#{unique_id}",
+      contact_groups: [{ name: unique_id, contact_email: unique_email, main_state: "main" }])
+  end
 
   let(:layout) { create_cms_layout page_name: true }
   let!(:inquiry_form) do
     create(
       :inquiry_node_form, cur_site: site, layout: layout, state: "public", inquiry_captcha: "disabled",
-      notice_state: "enabled", notice_content: "link_only", notice_email: unique_email,
+      notice_state: "enabled", notice_content: "link_only", notice_emails: [unique_email],
       from_name: unique_id, from_email: unique_email, reply_state: "disabled", aggregation_state: "disabled",
       group_ids: [ group.id ]
     )
@@ -23,10 +31,9 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
     site.inquiry_form = inquiry_form
     site.save!
 
-    if group.contact_email.blank?
-      group.contact_email = unique_email
-      group.save!
-    end
+    group.contact_groups = [{ name: unique_id, contact_email: unique_email, main_state: "main" }]
+    group.save!
+    expect(group.contact_email).to be_present
 
     inquiry_form.columns.create! attributes_for(:inquiry_column_name).reverse_merge(cur_site: site)
   end
@@ -53,7 +60,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq name
+          expect(find("[name='item[1]']")['value']).to eq name
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
@@ -72,7 +79,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       ActionMailer::Base.deliveries.first.tap do |mail|
         expect(mail.from.first).to eq inquiry_form.from_email
-        expect(mail.to.first).to eq inquiry_form.notice_email
+        expect(mail.to.first).to eq inquiry_form.notice_emails.first
         expect(mail.subject).to eq "[自動通知]#{inquiry_form.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
         expect(mail.body.raw_source).to include("「#{inquiry_form.name}」に入力がありました。")
@@ -104,7 +111,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq name
+          expect(find("[name='item[1]']")['value']).to eq name
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
@@ -145,7 +152,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
@@ -160,7 +167,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
@@ -175,13 +182,13 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
   context "without group's contact_email" do
     before do
-      group1.contact_email = nil
+      group1.contact_groups = nil
       group1.save!
 
       article_page.contact_group = group1
@@ -190,7 +197,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 end

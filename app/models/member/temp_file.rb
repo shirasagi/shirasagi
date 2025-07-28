@@ -2,6 +2,7 @@ class Member::TempFile
   include SS::Model::File
   include Cms::Reference::Member
   include Cms::MemberPermission
+  include Cms::Lgwan::File
 
   default_scope ->{ where(model: "member/temp_file") }
 

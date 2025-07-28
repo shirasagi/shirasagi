@@ -26,4 +26,8 @@ namespace :cms do
   task expiration_notices: :environment do
     ::Tasks::Cms.expiration_notices
   end
+
+  task remove_improper_htmls: :environment do
+    ::Tasks::Cms.remove_improper_htmls
+  end
 end

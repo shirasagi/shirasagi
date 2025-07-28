@@ -1,0 +1,14 @@
+<% if SS.config.kana.disable.blank? %>
+  <nav class="mod-navi">
+    <h2><%= t "modules.kana" %></h2>
+
+    <% if Kana::Dictionary.allowed?(:read, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t("kana.dictionary"), kana_dictionaries_path %></h3>
+    <% end %>
+    <% if Kana::Dictionary.allowed?(:build, @cur_user, site: @cur_site) %>
+      <h3><%= link_to t("kana.diagnostic"), kana_diagnostic_path %></h3>
+    <% end %>
+  </nav>
+<% end %>
+
+<%= render partial: "cms/main/conf_navi" %>

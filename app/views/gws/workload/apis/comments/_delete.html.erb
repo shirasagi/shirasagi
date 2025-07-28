@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :achievement_rate %></dt>
+  <dd><% if @item.achievement_rate.present? %><%= t("gws/schedule/todo.achievement_rate", count: @item.achievement_rate) %><% end %></dd>
+
+  <dt><%= @model.t :worktime_minutes %></dt>
+  <dd><%= @item.worktime_label %></dd>
+
+  <dt><%= @model.t :text %></dt>
+  <dd><%= @item.html %></dd>
+</dl>

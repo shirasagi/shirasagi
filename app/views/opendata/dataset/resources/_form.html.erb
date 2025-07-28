@@ -5,31 +5,26 @@ licenses = Opendata::License.site(@cur_site).and_public.sort(order: 1).map { |c|
 <%= javascript_include_tag "opendata/form" %>
 
 <%= jquery do %>
-<% if @dataset.allowed?(:release, @cur_user, site: @cur_site) %>
+
+<% if @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
+$("<input />").attr("type", "submit").attr("name", "publish_save").attr("class", "publish_save").
+  attr("value", '<%= t("ss.buttons.publish_save") %>').insertAfter("#item-form input.save");
+<% end %>
+
+<% if @item.allowed?(:close, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
 $(".save").val("<%= t("ss.buttons.closed_save") %>");
-$("<input />").attr("type", "submit")
-  .attr("name", "publish_save")
-  .attr("value", "<%= t("ss.buttons.publish_save") %>")
-  .attr("class", "publish_save")
-  .insertAfter("#item-form input.save");
+<% else %>
+$(".save").remove();
 <% end %>
 
 $(".save").on("click", function(e){
-  $("<input />").attr("type", "hidden")
-    .attr("name", "item[state]")
-    .attr("value", "closed")
-    .appendTo("#item-form")
+  $("<input />").attr("type", "hidden").attr("name", "item[state]").attr("value", "closed").appendTo("#item-form")
 });
 $(".publish_save").on("click", function(e){
-  $("<input />").attr("type", "hidden")
-    .attr("name", "item[state]")
-    .attr("value", "public")
-    .appendTo("#item-form")
-  $("<input />").attr("type", "hidden")
-    .attr("name", "item[workflow_reset]")
-    .attr("value", "1")
-    .appendTo("#item-form")
+  $("<input />").attr("type", "hidden").attr("name", "item[state]").attr("value", "public").appendTo("#item-form")
+  $("<input />").attr("type", "hidden").attr("name", "item[workflow_reset]").attr("value", "1").appendTo("#item-form")
 });
+
 <% end %>
 
 <dl class="see">
@@ -59,4 +54,12 @@ $(".publish_save").on("click", function(e){
   <% if @item.tsv_id %>
   <dd class="in_tsv"><label><%= f.check_box :rm_tsv %><%= t "ss.buttons.delete" %> (<%= @item.tsv.filename %>)</label></dd>
   <% end %>
+
+  <dt></dt>
+  <dd>
+    <%= f.label(:in_update_dataset, title: t('opendata.labels.update_dataset')) do %>
+      <%= f.check_box(:in_update_dataset, { checked: false }, true, false) %>
+      <%= t('opendata.labels.update_dataset') %>
+    <% end %>
+  </dd>
 </dl>

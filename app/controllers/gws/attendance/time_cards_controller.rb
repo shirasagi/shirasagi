@@ -23,7 +23,12 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def crud_redirect_url
-    params[:ref].presence || super
+    ref = params[:ref]
+    if ref.present? && trusted_url?(ref)
+      ref = ::Addressable::URI.parse(ref)
+      return ref.request_uri
+    end
+    super
   end
 
   def create_new_time_card_if_necessary

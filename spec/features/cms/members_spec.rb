@@ -66,21 +66,54 @@ describe "cms_members", type: :feature do
         fill_in "item[in_password]", with: "abc123"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
+      member = Cms::Member.site(site).find_by(name: "sample")
+      expect(member.name).to eq "sample"
+      expect(member.email).to eq "member_sample@example.jp"
+      expect(member.password).to eq SS::Crypto.crypt("abc123")
+      expect(member.state).to eq "disabled"
+
+      #
+      # keyword search
+      #
       visit index_path
-      expect(page).to have_css(".list-items .info", text: "sample")
+      expect(page).to have_css(".list-item", count: 1)
+      expect(page).to have_css(".list-item .info", text: member.name)
+      expect(page).to have_css(".list-item .state", text: I18n.t("cms.options.member_state.#{member.state}"))
 
       within ".index-search" do
         fill_in "s[keyword]", with: "abc123"
         click_button I18n.t("ss.buttons.search")
       end
-      expect(page).to have_no_css(".list-items .info", text: "sample")
+      expect(page).to have_css(".list-item", count: 0)
 
       within ".index-search" do
-        fill_in "s[keyword]", with: "sample"
+        fill_in "s[keyword]", with: member.name
         click_button I18n.t("ss.buttons.search")
       end
-      expect(page).to have_css(".list-items .info", text: "sample")
+      expect(page).to have_css(".list-item", count: 1)
+      expect(page).to have_css(".list-item .info", text: member.name)
+
+      #
+      # state search
+      #
+      visit index_path
+      expect(page).to have_css(".list-items .info", text: member.name)
+
+      within ".index-search" do
+        select I18n.t("cms.options.member_state.#{member.state}"), from: "s[state]"
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-item", count: 1)
+      expect(page).to have_css(".list-item .info", text: member.name)
+
+      within ".index-search" do
+        state = (%w(disabled enabled temporary) - [ member.state ]).sample
+        select I18n.t("cms.options.member_state.#{state}"), from: "s[state]"
+        click_button I18n.t("ss.buttons.search")
+      end
+      expect(page).to have_css(".list-item", count: 0)
     end
   end
 end

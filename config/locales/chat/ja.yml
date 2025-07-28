@@ -97,7 +97,7 @@ ja:
       chat/history:
         session_id: セッションID
         request_id: リクエストID
-        text: 文章
+        text: 問い合わせ内容
         question: フィードバック
         result: 返答
         suggest: サジェスト
@@ -195,4 +195,4 @@ ja:
 
   job:
     models:
-      chat/intent/import_job: シナリオインポート
+      chat/intent/import_job: チャット/シナリオインポート

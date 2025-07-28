@@ -15,7 +15,7 @@
     Cms_Column_Select_Page.render("#<%= id %>");
   <% end %>
   <%= link_to t("cms.apis.pages.index"), cms_apis_pages_children_path(page_params), class: "ajax-box btn", style: "margin-bottom: 10px;" %>
-  <%= hidden_field_tag name, page_id, class: "hidden-ids" %>
+  <%= hidden_field_tag name, page_id, id: nil, class: "hidden-ids" %>
   <table class="index ajax-selected">
     <thead>
       <tr>

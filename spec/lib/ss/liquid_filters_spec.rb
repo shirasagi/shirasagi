@@ -140,6 +140,21 @@ describe SS::LiquidFilters, dbscope: :example do
       let(:value) { -2_756 }
       it { is_expected.to eq "-2,756" }
     end
+
+    context "with integer string" do
+      let(:value) { "2756" }
+      it { is_expected.to eq "2,756" }
+    end
+
+    context "with float string" do
+      let(:value) { "2756.98" }
+      it { is_expected.to eq "2,756.98" }
+    end
+
+    context "with non-numeric string" do
+      let(:value) { "hello" }
+      it { is_expected.to eq "hello" }
+    end
   end
 
   describe "human_size" do
@@ -172,7 +187,7 @@ describe SS::LiquidFilters, dbscope: :example do
 
     context "with -10M" do
       let(:value) { - 10 * 1_024 * 1_024 }
-      it { is_expected.to eq "-10485760バイト" }
+      it { is_expected.to eq "-10MB" }
     end
   end
 
@@ -248,6 +263,53 @@ describe SS::LiquidFilters, dbscope: :example do
     context "with <script> which is unsafe" do
       let(:value) { "<script>alert('hello')</script>" }
       it { is_expected.to eq "alert('hello')" }
+    end
+  end
+
+  describe "search_column_value" do
+    let(:source) do
+      templ = []
+      templ << '{% assign column1 = value | search_column_value: "column1" %}'
+      templ << '{% if column1 %}'
+      templ << '<p>{{ column1.value }}</p>'
+      templ << '{% endif %}'
+      templ.join("\n")
+    end
+
+    context "with blank" do
+      let(:value) { "" }
+      it do
+        is_expected.not_to include("column_value1")
+        is_expected.not_to include("column_value2")
+        is_expected.not_to include("column_value3")
+      end
+    end
+
+    context "with page1" do
+      let(:value) { page1 }
+      it do
+        is_expected.to include("column_value1")
+        is_expected.not_to include("column_value2")
+        is_expected.not_to include("column_value3")
+      end
+    end
+
+    context "with page2" do
+      let(:value) { page2 }
+      it do
+        is_expected.not_to include("column_value1")
+        is_expected.to include("column_value2")
+        is_expected.not_to include("column_value3")
+      end
+    end
+
+    context "with page3" do
+      let(:value) { page3 }
+      it do
+        is_expected.not_to include("column_value1")
+        is_expected.not_to include("column_value2")
+        is_expected.to include("column_value3")
+      end
     end
   end
 

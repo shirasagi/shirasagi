@@ -14,8 +14,14 @@ module Cms::Extensions::ColumnValuesRelation
       if id_or_name.is_a?(Integer)
         @delegatee[id_or_name]
       else
-        @delegatee.find { |val| [val.id.to_s, val.name].include?(id_or_name) }
+        @delegatee.find { |val| [val.id.to_s, val.name, escape(val.name)].include?(id_or_name) }
       end
+    end
+
+    def escape(name)
+      return name if !name.is_a?(String)
+
+      name.tr('{}"\'[]/', '_')
     end
 
     delegate :each, to: :@delegatee

@@ -1,0 +1,111 @@
+<%
+  options = {
+    holidayUrl: gws_affair_overtime_apis_check_holiday_path(uid: "UID", year_month_day: "YMD"),
+    capitalUrl: gws_affair_overtime_apis_effective_capital_path(uid: "UID")
+  }
+%>
+<%= jquery do %>
+  new Gws_Affair_OvertimeFile(<%== options.to_json %>)
+<% end %>
+<%
+  duty_calendar = @cur_user.effective_duty_calendar(@cur_site)
+  duty_hour = duty_calendar.default_duty_hour
+  @item.start_at_date ||= Time.zone.now.strftime("%Y/%m/%d")
+  @item.start_at_hour ||= duty_hour.affair_end_at_hour
+  @item.start_at_minute ||= duty_hour.affair_end_at_minute
+  @item.end_at_date ||= Time.zone.now.strftime("%Y/%m/%d")
+  @item.end_at_hour ||= duty_hour.affair_end_at_hour + 1
+  @item.end_at_minute ||= duty_hour.affair_end_at_minute
+%>
+
+<dl class="see select-capital">
+  <%= f.hidden_field "capital_id", value: "", class: "hidden-ids" %>
+  <%= f.hidden_field "capital_state", value: "normal", class: "capital-state" %>
+
+  <dt><%= @model.t :capital_id %><%= @model.tt :capital_id %></dt>
+  <dd class="selected-capital">
+    <% if @item.capital && @item.capital_emergency? %>
+      <div class="capital emergency" data-id="<%= @item.id %>">
+        <%= f.hidden_field "capital_id", value: @item.capital_id, class: "hidden-ids" %>
+        <%= "#{@item.capital.name}（緊急）" %>
+        <a class="deselect btn" href="#"><%= "取消" %></a>
+      </div>
+    <% end %>
+  </dd>
+  <dd>
+    <%= link_to t("gws/affair.apis.capitals.index"), gws_affair_overtime_apis_capitals_path, class: "ajax-box" %>
+  </dd>
+
+  <dt><%= @model.t :overtime_name %><%= @model.tt :overtime_name %></dt>
+  <dd><%= f.text_field :overtime_name %></dd>
+
+  <dt><%= @model.t :start_at %><%= @model.tt :start_at %></dt>
+  <dd>
+    <%= f.text_field :start_at_date, class: "date js-date" %>
+    <%= f.select :start_at_hour, @item.start_at_hour_options %>
+    <%= f.select :start_at_minute, @item.start_at_minute_options %>
+    <%= t("ss.wave_dash") %>
+    <%= f.text_field :end_at_date, class: "date js-date" %>
+    <%= f.select :end_at_hour, @item.end_at_hour_options %>
+    <%= f.select :end_at_minute, @item.end_at_minute_options %>
+    <span class="overtime-date" style="padding-left: 5px;"></span>
+  </dd>
+
+  <% if @item.week_in_compensatory_minute_options.present? %>
+    <dt class="default-compensatory week-in-compensatory" style="display: none;">
+      <%= @model.t :week_in_compensatory_minute %><%= @model.tt :week_in_compensatory_minute %>
+    </dt>
+    <dd class="default-compensatory week-in-compensatory" style="display: none;">
+      <%= f.select :week_in_compensatory_minute, @item.week_in_compensatory_minute_options, { include_blank: true }, { class: "select-compensatory" } %>
+      <a class="open-compensatory btn" style="margin-left: 2px;"><%= t("gws/affair.links.open_compensatory") %></a>
+      <span class="compensatory-with-date" style="display: none; margin-top: 10px;">
+        <%= f.text_field :week_in_start_at_date, class: "date js-date" %>
+        <%= f.select :week_in_start_at_hour, @item.start_at_hour_options %>
+        <%= f.select :week_in_start_at_minute, @item.start_at_minute_options %>
+        <%= t("ss.wave_dash") %>
+        <%= f.text_field :week_in_end_at_date, class: "date js-date" %>
+        <%= f.select :week_in_end_at_hour, @item.end_at_hour_options %>
+        <%= f.select :week_in_end_at_minute, @item.end_at_minute_options %>
+      </span>
+    </dd>
+  <% end %>
+
+  <% if @item.week_out_compensatory_minute_options.present? %>
+    <dt class="default-compensatory week-out-compensatory" style="display: none;">
+      <%= @model.t :week_out_compensatory_minute %><%= @model.tt :week_out_compensatory_minute %>
+    </dt>
+    <dd class="default-compensatory week-out-compensatory" style="display: none;">
+      <%= f.select :week_out_compensatory_minute, @item.week_out_compensatory_minute_options, { include_blank: true }, { class: "select-compensatory" } %>
+      <a class="open-compensatory btn" style="margin-left: 2px;"><%= t("gws/affair.links.open_compensatory") %></a>
+      <span class="compensatory-with-date" style="display: none; margin-top: 10px;">
+        <%= f.text_field :week_out_start_at_date, class: "date js-date" %>
+        <%= f.select :week_out_start_at_hour, @item.start_at_hour_options %>
+        <%= f.select :week_out_start_at_minute, @item.start_at_minute_options %>
+        <%= t("ss.wave_dash") %>
+        <%= f.text_field :week_out_end_at_date, class: "date js-date" %>
+        <%= f.select :week_out_end_at_hour, @item.end_at_hour_options %>
+        <%= f.select :week_out_end_at_minute, @item.end_at_minute_options %>
+      </span>
+    </dd>
+  <% end %>
+
+  <% if @item.holiday_compensatory_minute_options.present? %>
+    <dt class="holiday-compensatory" style="display: none;"><%= @model.t :holiday_compensatory_minute %><%= @model.tt :holiday_compensatory_minute %></dt>
+    <dd class="holiday-compensatory" style="display: none;">
+      <%= f.select :holiday_compensatory_minute, @item.holiday_compensatory_minute_options, { include_blank: true }, { class: "select-compensatory" } %>
+      <a class="open-compensatory btn" style="margin-left: 2px;"><%= t("gws/affair.links.open_compensatory") %></a>
+      <span class="compensatory-with-date" style="display: none; margin-top: 10px;">
+        <%= f.text_field :holiday_compensatory_start_at_date, class: "date js-date" %>
+        <%= f.select :holiday_compensatory_start_at_hour, @item.start_at_hour_options %>
+        <%= f.select :holiday_compensatory_start_at_minute, @item.start_at_minute_options %>
+        <%= t("ss.wave_dash") %>
+        <%= f.text_field :holiday_compensatory_end_at_date, class: "date js-date" %>
+        <%= f.select :holiday_compensatory_end_at_hour, @item.end_at_hour_options %>
+        <%= f.select :holiday_compensatory_end_at_minute, @item.end_at_minute_options %>
+      </span>
+    </dd>
+  <% end %>
+
+  <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>
+  <dd><%= f.text_area :remark %></dd>
+</dl>

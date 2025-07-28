@@ -33,19 +33,16 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
 
   before do
     travel_to(now - 1.hour) do
-      post1.name = "name-#{unique_id}"
-      post1.set_seen(gws_user)
-      post1.save!
+      post1.update!(name: "name-#{unique_id}")
+      post1.set_seen!(gws_user)
     end
 
     travel_to(now - 3.hours) do
-      post2.name = "name-#{unique_id}"
-      post2.save!
+      post2.update!(name: "name-#{unique_id}")
     end
 
     travel_to(now - 2.hours) do
-      post3.name = "name-#{unique_id}"
-      post3.save!
+      post3.update!(name: "name-#{unique_id}")
     end
   end
 

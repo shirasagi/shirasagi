@@ -53,7 +53,7 @@ end
 %>
 <dl class="see category-form mod-opendata-category">
   <dd class="wide allowed-categories">
-    <%= f.hidden_field "estat_category_ids[]", value: "" %>
+    <%= f.hidden_field "estat_category_ids[]", value: "", id: nil %>
 
     <% @estat_categories.each do |cate| %>
       <div class="parent">

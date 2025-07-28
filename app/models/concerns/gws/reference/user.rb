@@ -44,7 +44,7 @@ module Gws::Reference
       self.user_uid  = @cur_user.uid unless self[:user_uid]
       self.user_name = @cur_user.name unless self[:user_name]
 
-      group = @cur_user.gws_default_group
+      group = @cur_user.try(:gws_default_group)
       self.user_group_id   = group.id if group
       self.user_group_name = group.name if group
     end

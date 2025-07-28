@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ja">
+<html lang="<%= I18n.locale %>">
 <head>
   <title><%= @item.name %></title>
   <link type="text/css" rel="stylesheet" href="/assets/js/ckeditor/contents.css">
@@ -9,7 +9,7 @@
   <%= sanitize(@item.html) %>
 </body>
 
-<%= javascript_tag(defer: true) do %>
+<%= javascript_tag do %>
   var linkTemplate = <%== sns_redirect_path(ref: "_ref_").to_json %>
   var viaSnsRedirect = function(ev) {
     var href = encodeURIComponent(this.href);

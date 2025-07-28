@@ -11,7 +11,7 @@
   </div>
 </div>
 
-<footer class="send">
+<footer class="send ss-sticky ss-sticky-bottom">
   <%= submit_tag t("opendata.links.build_rdf"), class: "save btn-primary", onclick: "location.href='#{url_for(action: :header_size)}'; return false;" %>
   <%= button_tag t("ss.buttons.cancel"), type: :reset, class: "btn-default", onclick: "location.href='#{url_for(controller: :resources, action: :show, id: @cur_resource)}'; return false;" %>
 </footer>

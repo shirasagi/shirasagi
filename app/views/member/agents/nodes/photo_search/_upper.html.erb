@@ -1,5 +1,5 @@
-<% controller.javascript "/assets/js/jquery.colorbox.js" %>
-<% controller.stylesheet "/assets/css/colorbox/colorbox.css" %>
+<% controller.javascript "colorbox" %>
+<% controller.stylesheet "colorbox" %>
 
 <dl class="condition">
   <dt class="keyword"><%= t('member.view.keyword') %></dt>
@@ -34,10 +34,20 @@
   </ul>
 </nav>
 
+<div class="hide" style="display: none;">
+  <div class="colorbox-dialog">
+    <%= render(partial: "modal", locals: { search_path: "" }) %>
+  </div>
+</div>
+
 <%= jquery do %>
+  var $dialog = $(".colorbox-dialog");
   $(".ajax-box").on("click", function () {
     $.colorbox({
-      html: '<%=j render(partial: "modal", locals: { search_path: "" }) %>'
+      inline: true,
+      href: $dialog,
+      maxWidth: "80%",
+      maxHeight: "80%"
     });
     return false;
   });

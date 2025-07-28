@@ -3,17 +3,17 @@
   <legend>
     <%= @model.t :name %>
   </legend>
-  <dd>
+  <div>
     <%= @item.name %>
-  </dd>
+  </div>
 </fieldset>
 
 <fieldset class="column subscribe-line-message">
   <legend>
     <%= @model.t(:subscribe_line_message) %>
   </legend>
-  <dd>
+  <div>
     <%= f.select :subscribe_line_message, @item.subscribe_line_message_options %>
     <%= remarks :subscribe_line_message %>
-  </dd>
+  </div>
 </fieldset>

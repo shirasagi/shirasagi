@@ -29,16 +29,19 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.links.new')
 
       within 'form#item-form' do
-        within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+        within 'dl.see.all' do
+          wait_for_cbox_opened { click_on I18n.t('gws.organization_addresses') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(recipient.name)
-        click_on recipient.name
+        wait_for_cbox_closed { click_on recipient.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: recipient.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: text
 
@@ -65,16 +68,19 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       click_on I18n.t('ss.links.new')
 
       within 'form#item-form' do
-        within 'dl.see.to' do
-          click_on I18n.t('gws.organization_addresses')
+        within 'dl.see.all' do
+          wait_for_cbox_opened { click_on I18n.t('gws.organization_addresses') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(recipient.name)
-        click_on recipient.name
+        wait_for_cbox_closed { click_on recipient.name }
       end
 
       within 'form#item-form' do
+        within 'dl.see.to' do
+          expect(page).to have_css(".index", text: recipient.name)
+        end
         fill_in 'item[subject]', with: subject
         fill_in 'item[text]', with: text
 
@@ -82,7 +88,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           click_on I18n.t('ss.buttons.send')
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+      wait_for_notice I18n.t('ss.notice.sent')
     end
   end
 end

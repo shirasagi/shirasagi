@@ -32,7 +32,7 @@ graph.render("line", name, labels, datasets);
 var types = <%== @item.preview_graph_types.to_json %>;
 var headers = <%== graph.headers.to_json %>;
 graph.renderController(types, headers, function(type) {
-  var url = "<%= request.path %>";
+  var url = "<%= SS.request_path(request) %>";
   url += "?type=" + type + "&graph=1";
 
   graph.destroy();
@@ -43,14 +43,14 @@ graph.renderController(types, headers, function(type) {
       $("#cboxLoadedContent").html(data);
     },
     error: function (data, status) {
-      $("#cboxLoadedContent").html("== Error ==");
+      $("#cboxLoadedContent").text("== Error ==");
     }
   });
   return false;
 });
 <% end %>
 
-<div class="resource-content">
+<div class="resource-content" data-graph-style="line">
   <nav class="tabs">
     <ul>
       <li class="tab list <%= params[:graph] ? "" : "current" %>">

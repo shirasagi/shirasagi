@@ -67,18 +67,23 @@ Rails.application.routes.draw do
 
   namespace "webmail", path: ".webmail" do
     get "/" => "main#index", as: :main
-    match "logout" => "login#logout", as: :logout, via: [:get]
-    match "login"  => "login#login", as: :login, via: [:get, :post]
+    get "logout" => "login#logout", as: :logout
+    match "login" => "login#login", as: :login, via: [:get, :post]
+    get "mfa_login" => "mfa_login#login", as: :mfa_login
+    post "otp_login" => "mfa_login#otp_login"
+    post "otp_setup" => "mfa_login#otp_setup"
 
-    resources :groups, concerns: [:deletion, :export] do
+    resources :groups, concerns: [:deletion] do
+      match :download_all, on: :collection, via: %i[get post]
       get :download_template, on: :collection
-      resource :account, controller: "group_accounts", except: [:new, :create] do
-        get :delete, on: :member
+      match :import, on: :collection, via: %i[get post]
+      resources :accounts, concerns: [:deletion], controller: "group_accounts" do
         post :test_connection, on: :collection
       end
     end
     resources :users, concerns: [:deletion, :export] do
       get :download_template, on: :collection
+      post :reset_mfa_otp, on: :member
       resources :accounts, concerns: [:deletion], controller: "user_accounts" do
         post :test_connection, on: :collection
       end
@@ -98,26 +103,33 @@ Rails.application.routes.draw do
     end
     resources :address_groups, concerns: [:deletion]
 
+    get "multi_checkboxes" => "multi_checkboxes#index", as: "multi_checkboxes_main"
+    resources :multi_checkboxes, path: "multi_checkboxes/:group", concerns: [:deletion, :export] do
+      get :add, on: :collection
+      put :move, path: 'move/:group_id', group_id: /\d+/, on: :collection
+    end
+
     resource :account, only: [:show, :edit, :update], path: ':webmail_mode-:account/account',
-      webmail_mode: /[a-z]+/, account: /\d+/, defaults: { webmail_mode: 'account' } do
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, defaults: { webmail_mode: 'account' } do
       post :test_connection, on: :member
     end
     resources :mails, concerns: [:deletion, :mail], path: ':webmail_mode-:account/mails/:mailbox',
-      webmail_mode: /[a-z]+/, account: /\d+/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
     resources :mailboxes, path: ':webmail_mode-:account/mailboxes',
-      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion, :mailbox], defaults: { webmail_mode: 'account' }
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, concerns: [:deletion, :mailbox], defaults: { webmail_mode: 'account' }
     resources :signatures, path: ':webmail_mode-:account/signatures',
-      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, concerns: [:deletion], defaults: { webmail_mode: 'account' }
     resources :filters, path: ':webmail_mode-:account/filters',
-      webmail_mode: /[a-z]+/, concerns: [:deletion, :export, :filter], defaults: { webmail_mode: 'account' }
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, concerns: [:deletion, :export, :filter],
+      defaults: { webmail_mode: 'account' }
     resource :cache_setting, path: ':webmail_mode-:account/cache_setting', only: [:show, :update],
-      webmail_mode: /[a-z]+/, defaults: { webmail_mode: 'account' }
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, defaults: { webmail_mode: 'account' }
     resources :import_mails, only: :index, path: ':webmail_mode-:account/import_mails',
-      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' } do
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, concerns: [:deletion], defaults: { webmail_mode: 'account' } do
       put :import, on: :collection
     end
     resources :export_mails, only: :index, path: ':webmail_mode-:account/export_mails',
-      webmail_mode: /[a-z]+/, account: /\d+/, concerns: [:deletion], defaults: { webmail_mode: 'account' } do
+      webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, concerns: [:deletion], defaults: { webmail_mode: 'account' } do
       put :export, on: :collection
       get :start_export, on: :collection
     end
@@ -128,16 +140,23 @@ Rails.application.routes.draw do
 
     namespace "apis" do
       get ":webmail_mode-:account/recent" => "imap#recent",
-        webmail_mode: /[a-z]+/, account: /\d+/, as: :recent, defaults: { webmail_mode: 'account' }
+        webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, as: :recent, defaults: { webmail_mode: 'account' }
       get ":webmail_mode-:account/latest/(:mailbox)" => "imap#latest",
-        webmail_mode: /[a-z]+/, account: /\d+/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
+        webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, mailbox: /[^\/]+/, defaults: { webmail_mode: 'account', mailbox: 'INBOX' }
       get ":webmail_mode-:account/quota" => "imap#quota",
-        webmail_mode: /[a-z]+/, account: /\d+/, as: :quota, defaults: { webmail_mode: 'account' }
+        webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, as: :quota, defaults: { webmail_mode: 'account' }
       get ":webmail_mode-:account/mails" => "mails#index",
-        webmail_mode: /[a-z]+/, account: /\d+/, as: :mails, defaults: { webmail_mode: 'account' }
+        webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, as: :mails, defaults: { webmail_mode: 'account' }
       get ":webmail_mode-:account/mails/imap_error" => "mails#imap_error",
-        webmail_mode: /[a-z]+/, account: /\d+/, as: :mails_imap_error, defaults: { webmail_mode: 'account' }
+        webmail_mode: /[a-z]+/, account: /\d+(\.\d+)?/, as: :mails_imap_error, defaults: { webmail_mode: 'account' }
       get "addresses" => "addresses#index"
+      get "multi_checkboxes" => "multi_checkboxes#index"
+    end
+
+    namespace :frames do
+      namespace :user_navigation do
+        resource :menu, only: %i[show]
+      end
     end
   end
 end

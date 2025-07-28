@@ -14,16 +14,6 @@
           <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
           <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
-          <% if @model.collection_name == :cms_nodes %>
-            <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>
-            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-            <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank, rel: "noopener") if @cur_site.mobile_enabled? %>
-          <% elsif @model.collection_name == :cms_pages %>
-            <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>
-            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-            <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank, rel: "noopener") if @cur_site.mobile_enabled? %>
-          <% end %>
-
           <% if item.try(:image) %>
             <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
           <% elsif item.try(:image?) %>
@@ -46,7 +36,7 @@
             <% else %>
               <span class="id">#<%= item.id %></span>
               <% if item.try(:updated) %>
-                <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+                <span class="datetime"><%= ss_time_tag item.updated %></span>
               <% end %>
               <% if item.try(:filename) %>
                 <span class="filename"><%= File.basename item.filename %></span>

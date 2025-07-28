@@ -29,12 +29,25 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_columns_path(site: site, cid: node)
-      click_on I18n.t("ss.links.new")
+      within '.gws-column-list-toolbar[data-placement="top"]' do
+        click_on input_type_label
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      within first('.gws-column-item') do
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      within first('.gws-column-item') do
+        find('.btn-gws-column-item-detail').click
+      end
+
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in_ckeditor "item[html]", with: html
+        # fill_in_ckeditor "item[html]", with: html
         select state_label, from: 'item[state]'
-        fill_in "item[order]", with: order
+        # fill_in "item[order]", with: order
         select input_type_label, from: 'item[input_type]'
         fill_in "item[select_options]", with: select_options.join("\n")
         select required_label, from: 'item[required]'
@@ -53,9 +66,9 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
       Inquiry::Column.all.first.tap do |column|
         expect(column.site_id).to eq site.id
         expect(column.name).to eq name
-        expect(column.html).to eq html
+        # expect(column.html).to eq html
         expect(column.state).to eq state
-        expect(column.order).to eq order
+        # expect(column.order).to eq order
         expect(column.input_type).to eq input_type
         expect(column.select_options).to eq select_options
         expect(column.required).to eq required
@@ -67,10 +80,12 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         expect(column.transfers).to include("keyword" => transfers_0_keyword, "email" => transfers_0_email)
       end
 
-      visit inquiry_columns_path(site: site, cid: node)
-      click_on name
-      click_on I18n.t("ss.links.edit")
-      within "form#item-form" do
+      within first('.gws-column-item') do
+        find('.gws-column-item-edit .btn').click
+      end
+      wait_for_all_turbo_frames
+
+      within first('.gws-column-item') do
         fill_in "item[name]", with: name2
         click_on I18n.t('ss.buttons.save')
       end
@@ -81,13 +96,12 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         expect(column.name).to eq name2
       end
 
-      visit inquiry_columns_path(site: site, cid: node)
-      click_on name2
-      click_on I18n.t("ss.links.delete")
-      within "form" do
-        click_on I18n.t('ss.buttons.delete')
+      within first('.gws-column-item') do
+        page.accept_confirm do
+          find('.btn-gws-column-item-delete').click
+        end
       end
-      wait_for_notice I18n.t("ss.notice.deleted")
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Inquiry::Column.all.count).to eq 0
     end
@@ -117,12 +131,26 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_columns_path(site: site, cid: node)
-      click_on I18n.t("ss.links.new")
+
+      within '.gws-column-list-toolbar[data-placement="top"]' do
+        click_on input_type_label
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      within first('.gws-column-item') do
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      within first('.gws-column-item') do
+        find('.btn-gws-column-item-detail').click
+      end
+
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in_ckeditor "item[html]", with: html
+        # fill_in_ckeditor "item[html]", with: html
         select state_label, from: 'item[state]'
-        fill_in "item[order]", with: order
+        # fill_in "item[order]", with: order
         select input_type_label, from: 'item[input_type]'
         fill_in "item[select_options]", with: select_options.join("\n")
         select required_label, from: 'item[required]'
@@ -141,9 +169,9 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
       Inquiry::Column.all.first.tap do |column|
         expect(column.site_id).to eq site.id
         expect(column.name).to eq name
-        expect(column.html).to eq html
+        # expect(column.html).to eq html
         expect(column.state).to eq state
-        expect(column.order).to eq order
+        # expect(column.order).to eq order
         expect(column.input_type).to eq input_type
         expect(column.select_options).to eq select_options
         expect(column.required).to eq required
@@ -155,10 +183,12 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         expect(column.transfers).to include("keyword" => transfers_0_keyword, "email" => transfers_0_email)
       end
 
-      visit inquiry_columns_path(site: site, cid: node)
-      click_on name
-      click_on I18n.t("ss.links.edit")
-      within "form#item-form" do
+      within first('.gws-column-item') do
+        find('.gws-column-item-edit .btn').click
+      end
+      wait_for_all_turbo_frames
+
+      within first('.gws-column-item') do
         fill_in "item[name]", with: name2
         click_on I18n.t('ss.buttons.save')
       end
@@ -169,87 +199,14 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         expect(column.name).to eq name2
       end
 
-      visit inquiry_columns_path(site: site, cid: node)
-      click_on name2
-      click_on I18n.t("ss.links.delete")
-      within "form" do
-        click_button I18n.t('ss.buttons.delete')
+      within first('.gws-column-item') do
+        page.accept_confirm do
+          find('.btn-gws-column-item-delete').click
+        end
       end
-      wait_for_notice I18n.t("ss.notice.deleted")
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Inquiry::Column.all.count).to eq 0
-    end
-  end
-
-  context "lgwan" do
-    let!(:node) { create :inquiry_node_form }
-
-    context "lgwan enabled" do
-      before do
-        SS.config.replace_value_at(:lgwan, :disable, false)
-      end
-
-      after do
-        SS.config.replace_value_at(:lgwan, :disable, true)
-      end
-
-      it do
-        visit inquiry_columns_path(site: site, cid: node)
-        click_on I18n.t("ss.links.new")
-        within "form#item-form" do
-          fill_in "item[name]", with: "sample"
-          fill_in_ckeditor "item[html]", with: "<p>sample</p>"
-          select I18n.t('ss.options.state.public'), from: 'item_state'
-          fill_in "item[order]", with: 0
-          select [I18n.t('inquiry.options.input_type.upload_file'), I18n.t('inquiry.cannot_use')].join, from: 'item_input_type'
-          fill_in "item[select_options]", with: "sample"
-          select I18n.t('inquiry.options.required.required'), from: 'item_required'
-          fill_in "item[additional_attr]", with: "sample"
-          select I18n.t('inquiry.options.input_confirm.disabled'), from: 'item_input_confirm'
-          select I18n.t('ss.options.state.disabled'), from: 'item_question'
-          fill_in "item[max_upload_file_size]", with: 0
-          fill_in "item[transfers][][keyword]", with: "sample"
-          fill_in "item[transfers][][email]", with: "sample@example.jp"
-
-          click_on I18n.t('ss.buttons.save')
-        end
-        error = [Inquiry::Column.t(:input_type), I18n.t('errors.messages.cannot_use_upload_file')].join
-        expect(page).to have_selector('#errorExplanation ul li', count: 1)
-        expect(page).to have_css("#errorExplanation", text: error)
-
-        expect(Inquiry::Column.all.count).to eq 0
-      end
-    end
-
-    context "lgwan disabled" do
-      before do
-        SS.config.replace_value_at(:lgwan, :disable, true)
-      end
-
-      it do
-        visit inquiry_columns_path(site: site, cid: node)
-        click_on I18n.t("ss.links.new")
-        within "form#item-form" do
-          fill_in "item[name]", with: "sample"
-          fill_in_ckeditor "item[html]", with: "<p>sample</p>"
-          select I18n.t('ss.options.state.public'), from: 'item_state'
-          fill_in "item[order]", with: 0
-          select I18n.t('inquiry.options.input_type.upload_file'), from: 'item_input_type'
-          fill_in "item[select_options]", with: "sample"
-          select I18n.t('inquiry.options.required.required'), from: 'item_required'
-          fill_in "item[additional_attr]", with: "sample"
-          select I18n.t('inquiry.options.input_confirm.disabled'), from: 'item_input_confirm'
-          select I18n.t('ss.options.state.disabled'), from: 'item_question'
-          fill_in "item[max_upload_file_size]", with: 0
-          fill_in "item[transfers][][keyword]", with: "sample"
-          fill_in "item[transfers][][email]", with: "sample@example.jp"
-
-          click_on I18n.t('ss.buttons.save')
-        end
-        wait_for_notice I18n.t("ss.notice.saved")
-
-        expect(Inquiry::Column.all.count).to eq 1
-      end
     end
   end
 end

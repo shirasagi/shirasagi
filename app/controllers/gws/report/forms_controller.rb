@@ -18,6 +18,17 @@ class Gws::Report::FormsController < ApplicationController
 
   public
 
+  def create
+    @item = @model.new get_params
+    return render_create(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
+
+    result = @item.save
+
+    create_opts = {}
+    create_opts[:location] = gws_report_form_columns_path(form_id: @item) if result
+    render_create result, create_opts
+  end
+
   def publish
     set_item
     raise "404" unless @item.allowed?(:read, @cur_user, site: @cur_site)
@@ -46,5 +57,29 @@ class Gws::Report::FormsController < ApplicationController
     @item.state = 'closed'
     render_opts = { render: { template: "depublish" }, notice: t('ss.notice.depublished') }
     render_update @item.save, render_opts
+  end
+
+  def copy
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if request.get? || request.head?
+      prefix = t("gws/notice.prefix.copy")
+      @item.name = "#{prefix} #{@item.name}"
+      render
+      return
+    end
+
+    service = Gws::Column::CopyService.new(cur_site: @cur_site, cur_user: @cur_user, model: @model, item: @item)
+    service_params = params.require(:item).permit(:name)
+    service_params[:state] = "closed"
+    service.overwrites = service_params
+    result = service.call
+    if result
+      @item = service.new_item
+    else
+      SS::Model.copy_errors(service, @item)
+    end
+    render_create result, render: { template: "copy" }, notice: t("ss.notice.copied")
   end
 end

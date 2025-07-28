@@ -1,10 +1,14 @@
 module Opendata::Resource::Model
   extend ActiveSupport::Concern
   include SS::Relation::File
-  include Opendata::AllowableAny
+  include SS::Reference::User
+  include Cms::Addon::GroupPermission
 
   included do
+    set_permission_name "opendata_resources"
+
     seqid :id
+    field :state, type: String, default: "public"
     field :name, type: String
     field :filename, type: String
     field :text, type: String
@@ -17,6 +21,8 @@ module Opendata::Resource::Model
 
     validates :name, presence: true
     validates :license_id, presence: true
+
+    scope :and_public, -> { where state: "public" }
   end
 
   def url
@@ -66,6 +72,13 @@ module Opendata::Resource::Model
     end
 
     file
+  end
+
+  def state_options
+    [
+      [I18n.t('ss.options.state.public'), 'public'],
+      [I18n.t('ss.options.state.closed'), 'closed'],
+    ]
   end
 
   module ClassMethods

@@ -10,7 +10,9 @@ module Cms::Addon
       permit_params :high_contrast_mode, :font_color, :background_color
 
       validates :font_color, presence: true, if: -> { high_contrast_mode_enabled? }
+      validates :font_color, "ss/color" => true
       validates :background_color, presence: true, if: -> { high_contrast_mode_enabled? }
+      validates :background_color, "ss/color" => true
     end
 
     def high_contrast_mode_enabled?

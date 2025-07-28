@@ -1,0 +1,26 @@
+<dl class="see">
+  <dt><%= t "chorg.views.move_changesets.name" %><%= tt "chorg.views.move_changesets.before_name" %></dt>
+  <dd>
+    <%= f.hidden_field "sources[][id]", value: "", id: nil, class: "hidden-ids" %>
+    <%= link_to t("chorg.views.move_changesets.select_group"), cms_apis_groups_path(single: 1), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Cms::Group.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% source = @item.sources.try(:first) %>
+      <% if source.present? %>
+        <tr data-id="<%= source["id"] %>">
+          <td><%= f.hidden_field "sources[][id]", value: source["id"], id: nil %> <%= source["name"] %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

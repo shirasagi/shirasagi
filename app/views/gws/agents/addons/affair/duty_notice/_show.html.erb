@@ -1,0 +1,5 @@
+<% return if @item.duty_notices.blank? %>
+<dl class="see">
+  <dt><%= @model.t :duty_notice_ids %></dt>
+  <dd><%= br @item.duty_notices.pluck(:name).join("\n") %></dd>
+</dl>

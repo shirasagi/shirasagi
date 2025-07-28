@@ -22,7 +22,7 @@ module SS::Copy::CmsParts
     }
   end
 
-  def before_copy_cms_part(src_part)
+  def before_copy_cms_part(src_part, dest_part)
     Rails.logger.debug("#{src_part.filename}(#{src_part.id}): パーツのコピーを開始します。")
   end
 

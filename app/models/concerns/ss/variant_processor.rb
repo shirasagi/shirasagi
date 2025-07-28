@@ -27,7 +27,7 @@ module SS::VariantProcessor
     variants[:thumb]
   end
 
-  delegate :url, to: :thumb, prefix: true
+  delegate :url, :no_cache_url, to: :thumb, prefix: true
 
   def update_variants
     return if in_disable_variant_processing.present?
@@ -45,6 +45,8 @@ module SS::VariantProcessor
       variant = variants[variant_name]
       variant.create!
     end
+  rescue MiniMagick::Error => e
+    Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
 
   class VariantCollection

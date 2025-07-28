@@ -5,7 +5,7 @@
 <div class="search-ui-form">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
     <% @inherit_keys.each do |key| %>
-      <%= hidden_field_tag key, params[key] %>
+      <%= hidden_field_tag key, params[key], id: nil %>
     <% end %>
 
     <dl class="see">
@@ -17,10 +17,8 @@
       </dd>
 
       <dt><%= t "ss.keyword" %></dt>
-      <dd>
-        <%= f.text_field :keyword, value: params.dig(:s, :keyword) %>
-        <%= f.submit  t("ss.buttons.search"), class: :btn %>
-      </dd>
+      <dd><%= f.text_field :keyword, value: params.dig(:s, :keyword) %></dd>
+      <dd><%= f.submit  t("ss.buttons.search"), class: :btn %></dd>
     </dl>
   <% end %>
 </div>

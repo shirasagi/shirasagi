@@ -11,6 +11,14 @@ class Gws::Memo::MessageImporter
   end
 
   def import_messages
+    I18n.with_locale(I18n.default_locale) do
+      _import_messages
+    end
+  end
+
+  private
+
+  def _import_messages
     @datetime = Time.zone.now
     @zip_filename = File.basename(in_file.original_filename, ".zip")
     @ss_files_map = {}
@@ -21,7 +29,7 @@ class Gws::Memo::MessageImporter
       entries.each do |entry|
         next if entry.directory? || entry.name.blank?
 
-        normalized = NKF.nkf("-Ww", entry.name)
+        normalized = SS::Zip.safe_zip_entry_name(entry)
         next if normalized.blank? || !normalized.end_with?(".eml")
 
         basename = File.basename(normalized)
@@ -36,8 +44,6 @@ class Gws::Memo::MessageImporter
       end
     end
   end
-
-  private
 
   # rubocop:disable Lint/DuplicateBranch
   def ensure_to_have_folder(entry)

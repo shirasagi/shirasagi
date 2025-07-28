@@ -11,7 +11,7 @@
         <h3 class="title"><%= item.target_label %> : <%= item.action %></h3>
         <div class="meta">
           <span class="id">#<%= item.id %></span>
-          <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="datetime"><%= ss_time_tag item.created %></span>
           <span class="filename"><%= item.url %></span>
           <span class="user"><%= item.user ? link_to(item.user_label, sys_user_path(item.user)) : item.user_id %></span>
           <% if item.group_ids %>

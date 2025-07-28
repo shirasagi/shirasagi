@@ -25,7 +25,7 @@ module Opendata::ListHelper
           ih << '  <header>'
           ih << '    <time datetime="#{date.iso}">#{date.long}</time>'
           ih << '    <h2>'
-          ih << '      <a href="#{url}">#{name}</a>'
+          ih << '      <a href="#{url}">#{index_name}</a>'
           if item.parent.show_point?
             ih << "      <span class=\"point\">\#{#{item.route.sub(/^.*\//, '')}_point}</span>"
           end

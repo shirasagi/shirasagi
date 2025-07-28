@@ -20,8 +20,8 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
       filename(@dataset_path).
       first
 
-    raise "404" unless @dataset
-    raise '404' if !@preview && !@dataset.public?
+    raise SS::NotFoundError unless @dataset
+    raise SS::NotFoundError if !@preview && !@dataset.public?
   end
 
   def set_apps
@@ -31,11 +31,11 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
       filename(@dataset_app_path).
       first
 
-    raise "404" unless @dataset_app
-    raise '404' if !@preview && !@dataset_app.public?
+    raise SS::NotFoundError unless @dataset_app
+    raise SS::NotFoundError if !@preview && !@dataset_app.public?
 
     cond = { site_id: @cur_site.id, dataset_ids: @dataset_app.id }
-    @apps = Opendata::App.where(cond).and_public.order_by(:updated.asc)
+    @apps = Opendata::App.where(cond).and_public(@cur_date).order_by(:updated.asc)
   end
 
   def set_ideas
@@ -45,17 +45,17 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
       filename(@dataset_idea_path).
       first
 
-    raise "404" unless @dataset_idea
-    raise '404' if !@preview && !@dataset_idea.public?
+    raise SS::NotFoundError unless @dataset_idea
+    raise SS::NotFoundError if !@preview && !@dataset_idea.public?
 
     cond = { site_id: @cur_site.id, dataset_ids: @dataset_idea.id }
-    @ideas = Opendata::Idea.where(cond).and_public.order_by(:updated.asc)
+    @ideas = Opendata::Idea.where(cond).and_public(@cur_date).order_by(:updated.asc)
   end
 
   public
 
   def pages
-    Opendata::Dataset.site(@cur_site).and_public
+    Opendata::Dataset.site(@cur_site).and_public(@cur_date)
   end
 
   def index
@@ -102,7 +102,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
 
   def add_point
     @cur_node.layout = nil
-    raise "403" unless logged_in?(redirect: false)
+    raise SS::ForbiddenError unless logged_in?(redirect: false)
 
     cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }
 
@@ -139,7 +139,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
     @model = Opendata::Dataset
     # SHIRASAGI uses 50 for default page size.
     # but datasetsets search uses 20 for its page size because IE is very slow if page size sets to 50,
-    @items = @model.site(@cur_site).search(params[:s]).and_public.
+    @items = @model.site(@cur_site).search(params[:s]).and_public(@cur_date).
       order_by(_id: -1).
       page(params[:page]).
       per(20)
@@ -159,8 +159,8 @@ class Opendata::Agents::Nodes::Dataset::DatasetController < ApplicationControlle
   def add_favorite
     @dataset = Opendata::Dataset.site(@cur_site).where(id: params[:dataset]).first
 
-    raise "404" unless @dataset
-    raise '404' if !@preview && !@dataset.public?
+    raise SS::NotFoundError unless @dataset
+    raise SS::NotFoundError if !@preview && !@dataset.public?
 
     if logged_in?
       cond = { site_id: @cur_site.id, member_id: @cur_member.id, dataset_id: @dataset.id }

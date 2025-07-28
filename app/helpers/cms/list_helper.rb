@@ -3,7 +3,7 @@ module Cms::ListHelper
     ih = []
     ih << '<article class="item-#{class} #{current}">'
     ih << '  <header>'
-    ih << '     <h2><a href="#{url}">#{name}</a></h2>'
+    ih << '     <h2><a href="#{url}">#{index_name}</a></h2>'
     ih << '  </header>'
     ih << '</article>'
     ih.join("\n").freeze
@@ -116,6 +116,12 @@ module Cms::ListHelper
     end
     if @cur_node
       assigns["node"] = @cur_node
+    end
+    if @cur_page
+      assigns["page"] = @cur_page
+    end
+    if @origin
+      assigns["origin"] = @origin
     end
 
     template.render(assigns).html_safe

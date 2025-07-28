@@ -10,7 +10,7 @@ class Rdf::Builders::LangLiteralHandler < Rdf::Builders::BaseHandler
         lang = object.language
         lang ||= :invariant
         value = object.object
-        @context.attributes[@key] = {} unless @context.attributes.key?(@key)
+        @context.attributes[@key] = {}.with_indifferent_access unless @context.attributes.key?(@key)
         if overwrite? || @context.attributes[@key][lang].blank?
           @context.attributes[@key][lang] = value
         end

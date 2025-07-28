@@ -12,7 +12,7 @@
 
   <%= error_messages_for :item %>
 
-  <footer class="send">
+  <footer class="send ss-sticky ss-sticky-bottom">
     <%= f.submit creates_branch? ? t("cms.buttons.save_as_branch") : t("ss.buttons.save"), name: "save_if_no_alerts", class: 'btn-primary save' %>
     <%= f.button t("ss.buttons.close"), name: "cancel", class: 'btn-default btn-cancel', type: :reset %>
   </footer>

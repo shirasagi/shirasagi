@@ -35,11 +35,15 @@ class Cms::Line::DeliverPlan
     %w(ready completed expired).map { |k| [I18n.t("cms.options.deliver_state.#{k}"), k] }
   end
 
+  def root_owned?(user)
+    true
+  end
+
   private
 
   def set_name
     return if deliver_date.blank?
-    self.name = "#{deliver_date.strftime("%Y/%m/%d %H:%M")} (#{I18n.t("date.abbr_day_names")[deliver_date.wday]})"
+    self.name = "#{I18n.l(deliver_date, format: :picker)} (#{I18n.t("date.abbr_day_names")[deliver_date.wday]})"
   end
 
   def set_state

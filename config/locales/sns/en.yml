@@ -1,0 +1,25 @@
+en:
+  modules:
+    sns: SNS
+    sns/notification: Notification
+
+  sns:
+    profile: Profile
+    file: File
+    user_file: User file
+    group_file: Group file
+    account: Account
+    connection: Connection information
+    file_attach: Paste attachment
+    image_paste: Paste image
+    thumb_paste: Thumbnail
+    filename: File name
+    w_h: Width x Height
+    size: Size
+    datetime: Posting date and time
+    user: Contributor
+    errors:
+      invalid_login: You were unable log in.
+    message:
+      notification:
+        no_recents: No new messages.

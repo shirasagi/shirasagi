@@ -4,7 +4,7 @@ os: linux
 dist: focal
 sudo: false
 rvm:
-  - 3.0.2
+  - 3.1.3
 
 cache:
   apt: true

@@ -14,7 +14,7 @@ class Gws::StaffRecord::UserOccupationsController < ApplicationController
   def set_crumbs
     set_year
     @crumbs << [
-      "#{@cur_year.name} " + t("mongoid.models.gws/staff_record/occupation_ids"),
+      "#{@cur_year.name} " + t("mongoid.models.gws/staff_record/user_occupation"),
       gws_staff_record_user_occupations_path
     ]
   end
@@ -29,7 +29,7 @@ class Gws::StaffRecord::UserOccupationsController < ApplicationController
       page(params[:page]).per(50)
   end
 
-  def download
+  def download_all
     if request.get? || request.head?
       @item = @model.new(fix_params)
       return

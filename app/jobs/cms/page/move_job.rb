@@ -44,6 +44,7 @@ class Cms::Page::MoveJob < Cms::ApplicationJob
   def each_item(&block)
     or_conds = []
     or_conds += Cms::ApiFilter::Contents::HTML_FIELDS.map { |field| { field => /#{::Regexp.escape(@src)}/ } }
+    or_conds += Cms::ApiFilter::Contents::CONTACT_FIELDS.map { |field| { field => /#{::Regexp.escape(@src)}/ } }
     or_conds += Cms::ApiFilter::Contents::ARRAY_FIELDS.map { |field| { field => /\A#{::Regexp.escape(@src)}/ } }
     or_conds << {
       column_values: {
@@ -66,7 +67,7 @@ class Cms::Page::MoveJob < Cms::ApplicationJob
         klass.site(@site).in(id: ids).to_a.each(&block)
       end
 
-      @task.log "#{all_ids.size.to_s(:delimited)} items loaded"
+      @task.log "#{all_ids.size.to_fs(:delimited)} items loaded"
     end
   end
 
@@ -77,6 +78,15 @@ class Cms::Page::MoveJob < Cms::ApplicationJob
 
       value = replace_string_urls(value)
       item.send("#{k}=", value)
+    end
+    unless item.try(:contact_group_related?)
+      Cms::ApiFilter::Contents::CONTACT_FIELDS.each do |k|
+        value = item.try(k)
+        next if value.blank?
+
+        value = replace_string_urls(value)
+        item.send("#{k}=", value)
+      end
     end
   end
 

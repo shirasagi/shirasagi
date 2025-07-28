@@ -3,7 +3,7 @@ class Opendata::Agents::Nodes::Dataset::SearchDatasetGroupController < Applicati
   helper Opendata::UrlHelper
 
   def index
-    @items = Opendata::DatasetGroup.site(@cur_site).and_public.
+    @items = Opendata::DatasetGroup.site(@cur_site).and_public(@cur_date).
       search(params[:s]).
       order_by(sort_hash).
       page(params[:page]).

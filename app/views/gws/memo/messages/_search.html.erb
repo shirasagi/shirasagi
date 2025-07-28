@@ -1,15 +1,17 @@
 <%
   @s = OpenStruct.new params[:s]
-  style = @s.to_h.values.flatten.select(&:present?).present? ? '' : 'style="display:none;"'
 %>
 
-<%= jquery do %>
-$('[name="s[priorities][]"]').on("click", function () {
-  $('[name="s[priorities][]"][value!="' + $(this).val() + '"]').prop('checked', false);
-});
+<% if label = searched_label(@s.to_h) %>
+<div class="gws-memo-search-label">
+  <%= label %>
+  <div class="gws-memo-search-label-reset">
+    <%= link_to t('ss.buttons.reset'), { action: :index }, { class: 'btn reset' } %>
+  </div>
+</div>
 <% end %>
 
-<div class="gws-memo-search" <%== style %>>
+<div class="gws-memo-search">
   <%= form_for :s, url: '', html: { method: :get } do |f| %>
     <dl class="see">
       <dt><%= @model.t :from_member_name %></dt>
@@ -22,8 +24,8 @@ $('[name="s[priorities][]"]').on("click", function () {
       <dd><%= f.text_field :text %></dd>
       <dt><%= @model.t :send_date %></dt>
       <dd>
-        <%= f.text_field :since, class: "date js-date" %>
-        - <%= f.text_field :before, class: "date js-date" %>
+        <%= f.ss_date_field :since %>
+        - <%= f.ss_date_field :before %>
       </dd>
       <dt><%= @model.t :flags %></dt>
       <dd>
@@ -40,7 +42,7 @@ $('[name="s[priorities][]"]').on("click", function () {
       <dd>
         <% @model.new.priority_options.each do |k, v| %>
           <label class="flag">
-            <%= f.check_box_tag "s[priorities][]", v, params.dig(:s, :priorities).to_a.include?(v) %>
+            <%= f.radio_button_tag "s[priorities][]", v, params.dig(:s, :priorities).to_a.include?(v), id: nil %>
             <%= k %>
           </label>
         <% end %>

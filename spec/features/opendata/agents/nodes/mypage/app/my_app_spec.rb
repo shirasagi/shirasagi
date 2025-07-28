@@ -46,6 +46,11 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
   end
 
   describe "basic crud" do
+    let!(:node_search_dateset) { create_once :opendata_node_search_dataset }
+    21.times do |i|
+      let!(:"dataset#{i + 1}") { create :opendata_dataset, cur_node: node_dataset }
+    end
+
     it do
       visit "http://#{site.domain}#{index_path}"
       expect(current_path).to eq index_path
@@ -56,8 +61,18 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         fill_in "item[text]", with: "せつめい"
         fill_in "item[license]", with: "MIT"
         check category.name
+        click_link I18n.t("opendata.search_datasets.index")
+      end
+      within_cbox do
+        click_link I18n.t('views.pagination.next')
+        wait_for_cbox_closed do
+          click_link dataset1.name
+        end
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
       expect(current_path).to eq index_path
 
       click_link "あぷり"
@@ -66,6 +81,8 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         expect(page).to have_content "あぷり"
         expect(page).to have_content "せつめい"
         expect(page).to have_content "MIT"
+        expect(page).to have_content dataset1.name
+        expect(page).to have_no_content dataset2.name
       end
 
       click_link I18n.t("ss.buttons.edit")
@@ -74,17 +91,31 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         fill_in "item[text]", with: "こうしん"
         fill_in "item[license]", with: "GPL"
         check category.name
+        click_link I18n.t("opendata.search_datasets.index")
+      end
+      within_cbox do
+        fill_in "s[name]", with: dataset2.name
+        click_button I18n.t("opendata.search_datasets.search")
+        wait_for_cbox_closed do
+          click_link dataset2.name
+        end
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
       within "table.opendata-app" do
         expect(page).to have_content "あぷり2"
         expect(page).to have_content "こうしん"
         expect(page).to have_content "GPL"
+        expect(page).to have_content dataset1.name
+        expect(page).to have_content dataset2.name
       end
 
       click_link I18n.t('ss.buttons.delete')
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t("ss.notice.deleted"), selector: "#ss-notice"
       expect(current_path).to eq index_path
 
       within "table.opendata-app" do
@@ -161,7 +192,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
         check category.name
         click_on I18n.t("ss.buttons.request")
       end
-      expect(page).to have_css("#ss-notice", text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
       click_link item_name
       expect(page).to have_css(".name .input", text: item_name)

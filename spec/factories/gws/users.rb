@@ -11,10 +11,39 @@ FactoryBot.define do
     name { "name-#{unique_id}" }
     uid { "uid-#{unique_id}" }
     email { "#{uid}@example.jp" }
-    in_password { "pass" }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [SS::Model::User::LOGIN_ROLE_DBPASSWD] }
+
+    lang { SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s }
   end
 
-  factory :gws_user, class: Gws::User, traits: [:gws_user_base]
+  factory :gws_user, class: Gws::User, traits: [:gws_user_base] do
+    in_password { "pass" }
+  end
+
+  factory :gws_ldap_user2, class: Gws::User, traits: [:gws_user_base] do
+    name { "user2" }
+    uid { "user2" }
+    email { "#{uid}@example.jp" }
+    type { SS::Model::User::TYPE_LDAP }
+    ldap_dn { "uid=user2, ou=002001管理課, ou=002危機管理部, dc=example, dc=jp" }
+  end
+
+  factory :gws_sso_user, class: Gws::User, traits: [:gws_user_base] do
+    name { unique_id }
+    uid { name }
+    email { "#{uid}@example.jp" }
+    type { SS::Model::User::TYPE_SSO }
+  end
+
+  trait :gws_workflow_notice do
+    notice_workflow_user_setting { "notify" }
+    notice_workflow_email_user_setting { "notify" }
+    send_notice_mail_addresses { unique_email }
+  end
+
+  trait :gws_tabular_notice do
+    notice_tabular_user_setting { "notify" }
+    notice_tabular_email_user_setting { "notify" }
+    send_notice_mail_addresses { "#{unique_id}@example.jp" }
+  end
 end

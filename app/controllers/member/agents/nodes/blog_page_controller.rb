@@ -9,7 +9,7 @@ class Member::Agents::Nodes::BlogPageController < ApplicationController
   private
 
   def pages
-    @model.site(@cur_site).node(@cur_node).and_public
+    @model.site(@cur_site).node(@cur_node).and_public(@cur_date)
   end
 
   def render_blog_layout

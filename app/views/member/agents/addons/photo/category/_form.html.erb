@@ -1,7 +1,7 @@
 <dl class="see mod-category">
   <dt><%= @model.t :photo_categories %><%= @model.tt :photo_categories %></dt>
   <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field "photo_category_ids[]", value: "" %>
+    <%= f.hidden_field "photo_category_ids[]", value: "", id: nil %>
     <% if @categories.present? %>
       <% @categories.each do |cate| %>
         <label>

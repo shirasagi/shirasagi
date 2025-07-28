@@ -58,7 +58,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
         click_button I18n.t("ss.buttons.move")
       end
       expect(status_code).to eq 200
-      expect(page).to have_css("form#item-form h2", text: "destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "destination.html")
 
       item.reload
       expect(item.name).to eq "modify"
@@ -70,7 +70,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
         click_button I18n.t("ss.buttons.move")
       end
       expect(status_code).to eq 200
-      expect(page).to have_css("form#item-form h2", text: "sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "sample.html")
 
       item.reload
       expect(item.name).to eq "modify"
@@ -84,8 +84,8 @@ describe "cms/pages", type: :feature, dbscope: :example do
         click_button I18n.t("ss.buttons.save")
       end
       expect(status_code).to eq 200
-      expect(page).to have_css("a", text: "[複製] modify")
-      expect(page).to have_css(".state", text: "非公開")
+      expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] modify")
+      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
 
       expect(Cms::Page.count).to eq 4
 
@@ -115,7 +115,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
           click_on I18n.t("ss.buttons.delete")
         end
         expect(current_path).to eq index_path
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
 
       it "not permited and contains_urls" do
@@ -135,7 +135,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
           click_on I18n.t("ss.buttons.delete")
         end
         expect(current_path).to eq index_path
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
     end
   end
@@ -173,7 +173,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       it "not permited and contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(edit_private_cms_pages edit_other_cms_pages
-                                    release_private_cms_pages release_other_cms_pages))
+                                    release_private_cms_pages release_other_cms_pages
+                                    close_private_cms_pages close_other_cms_pages))
         visit edit_path2
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")
@@ -185,7 +186,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
       it "not permited and not contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(edit_private_cms_pages edit_other_cms_pages
-                                    release_private_cms_pages release_other_cms_pages))
+                                    release_private_cms_pages release_other_cms_pages
+                                    close_private_cms_pages close_other_cms_pages))
         visit edit_path3
         within "form" do
           click_on I18n.t("ss.buttons.withdraw")

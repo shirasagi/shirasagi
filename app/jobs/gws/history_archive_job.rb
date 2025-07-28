@@ -22,7 +22,7 @@ class Gws::HistoryArchiveJob < Gws::ApplicationJob
   end
 
   def put_histories
-    @csv_generator = Gws::HistoryCsv.new(cur_site: site)
+    @csv_generator = Gws::HistoryCsv.new(site: site, criteria: Gws::History.none).enum_csv(encoding: "UTF-8")
 
     all_ids = @histories.order_by(created: 1).pluck(:id)
     all_ids.each_slice(100) do |ids|
@@ -35,6 +35,14 @@ class Gws::HistoryArchiveJob < Gws::ApplicationJob
 
     @last_open_file = nil
     @last_open_file_handle = nil
+  end
+
+  def csv_header
+    @csv_generator.draw_header
+  end
+
+  def csv_row(history)
+    @csv_generator.draw_data(history)
   end
 
   def create_empty_archive_file(name, filename, &block)

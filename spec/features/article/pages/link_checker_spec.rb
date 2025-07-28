@@ -16,6 +16,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   let(:success_url1) { ss_file1.url }
   let(:success_url2) { ::File.join(site.full_url, ss_file2.url) }
   let(:success_url3) { "https://success.example.jp" }
+  let(:success_url4) { "https://success.example.jp/?キー=値" }
 
   let(:failed_url1) { "/fs/1/_/failed.txt" }
   let(:failed_url2) { ::File.join(site.full_url, "/fs/2/_/2.pdf") }
@@ -38,6 +39,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
   before do
     stub_request(:get, success_url3).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
+    stub_request(:get, success_url4).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
     stub_request(:get, failed_url3).to_return(body: "", status: 404, headers: { 'Content-Type' => 'text/html' })
 
     stub_request(:get, redirection_url0).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
@@ -61,6 +63,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
         h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
         h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
+        h << "<a href=\"#{success_url4}\">#{success_url4}</a>"
         h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
         h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
         h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
@@ -73,7 +76,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           click_on I18n.t("ss.buttons.publish")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         article = Article::Page.first
         expect(article.public?).to be_truthy
@@ -84,13 +87,14 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           success_full_url1 = ::File.join(site.full_url, success_url1)
           failed_full_url1 = ::File.join(site.full_url, failed_url1)
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
@@ -104,7 +108,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t("ss.buttons.ignore_alert")
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -117,13 +121,14 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           success_full_url1 = ::File.join(site.full_url, success_url1)
           failed_full_url1 = ::File.join(site.full_url, failed_url1)
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
@@ -139,6 +144,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
         h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
         h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
+        h << "<a href=\"#{success_url4}\">#{success_url4}</a>"
         h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
         h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
         h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
@@ -151,7 +157,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           click_on I18n.t("ss.buttons.publish")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         article = Article::Page.first
         expect(article.public?).to be_truthy
@@ -160,7 +166,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
         visit edit_path
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column.name
           end
         end
@@ -169,13 +175,14 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           success_full_url1 = ::File.join(site.full_url, success_url1)
           failed_full_url1 = ::File.join(site.full_url, failed_url1)
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
@@ -189,7 +196,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.withdraw")
         end
         click_on I18n.t("ss.buttons.ignore_alert")
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -200,7 +207,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
         visit edit_path
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column.name
           end
         end
@@ -209,13 +216,14 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         end
         within "#addon-cms-agents-addons-form-page" do
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           success_full_url1 = ::File.join(site.full_url, success_url1)
           failed_full_url1 = ::File.join(site.full_url, failed_url1)
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+          expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_full_url1}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
@@ -238,7 +246,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html
           click_button I18n.t("cms.link_check")
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{redirection_url5}")
           expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{redirection_self_url}")

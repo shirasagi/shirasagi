@@ -1,0 +1,28 @@
+<div class="mod-map-search_setting">
+  <dl class="see">
+    <dt><%= @model.t :map_cluster_setting %><%= @model.tt :map_cluster_setting %></dt>
+    <dd><%= f.select :map_cluster_setting, @item.map_cluster_setting_options %></dd>
+
+    <dt><%= @item.t :map_center %><%= @item.tt :map_center %></dt>
+    <dd>
+      <% @item.map_center_setting_options.each do |k, v| %>
+        <label>
+          <%= f.radio_button :map_center_setting, v %>
+          <%= k %>
+        </label>
+      <% end %>
+      <%= f.text_field :map_center, value: @item.map_center.to_s, class: "center-input", id: nil, style: "width: 260px;" %>
+    </dd>
+
+    <dt><%= @item.t :map_zoom_level %><%= @item.tt :map_zoom_level %></dt>
+    <dd>
+      <% @item.map_zoom_setting_options.each do |k, v| %>
+        <label>
+          <%= f.radio_button :map_zoom_setting, v %>
+          <%= k %>
+        </label>
+      <% end %>
+      <%= f.number_field :map_zoom_level, min: 1, max: 21, class: "zoom-input", id: nil %>
+    </dd>
+  </dl>
+</div>

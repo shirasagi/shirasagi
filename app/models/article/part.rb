@@ -27,6 +27,6 @@ module Article::Part
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
 
-    default_scope ->{ where(route: "faq/search") }
+    default_scope ->{ where(route: "article/search") }
   end
 end

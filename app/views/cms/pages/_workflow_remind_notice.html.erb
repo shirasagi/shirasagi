@@ -1,7 +1,7 @@
 <%
   return if !@cur_site.try(:approve_remind_state_enabled?)
-  return if @item.workflow_state != Workflow::Approver::WORKFLOW_STATE_REQUEST
   return if @cur_site.approve_remind_later.blank?
+  return if @item.try(:workflow_state) != Workflow::Approver::WORKFLOW_STATE_REQUEST
 
   duration = SS::Duration.parse(@cur_site.approve_remind_later) rescue nil
   return if duration.blank?

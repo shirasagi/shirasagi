@@ -1,0 +1,26 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd>
+    <%= @item.trailing_name %>
+    <%= "(#{@item.name})" if @item.depth > 1 %>
+  </dd>
+
+  <dt><%= @model.t :in_parent %><%= @model.tt :in_parent %></dt>
+  <dd>
+    <%= f.hidden_field :in_parent, value: '', id: nil, class: 'hidden-ids' %>
+    <%= link_to t('gws/share.apis.folders.index'), gws_bookmark_apis_folders_path(single: true, except: @excepts), class: 'ajax-box' %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= @model.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% if @item.parent.present? %>
+        <tr data-id="<%= @item.parent.id %>">
+          <td><%= f.hidden_field :in_parent, value: @item.parent.id, id: nil %> <%= @item.parent.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), '#', class: 'deselect btn' %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

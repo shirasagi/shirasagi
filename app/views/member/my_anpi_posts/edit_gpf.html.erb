@@ -7,7 +7,7 @@
     <% end %>
   </div>
 
-  <footer class="send">
+  <footer class="send ss-sticky ss-sticky-bottom">
     <%= f.submit t("member.buttons.register"), class: 'btn-danger delete' %>
     <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;" %>
   </footer>

@@ -1,0 +1,7 @@
+<dl class="see gws-addon-workload-graph">
+  <dt><%= @model.t :graph_state %><%= @model.tt :graph_state %></dt>
+  <dd><%= f.select :graph_state, @item.graph_state_options %></dd>
+
+  <dt><%= @model.t :color %><%= @model.tt :color %></dt>
+  <dd><%= f.ss_color_picker :color %></dd>
+</dl>

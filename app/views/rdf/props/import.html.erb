@@ -7,13 +7,13 @@
   <% end %>
 </div>
 
-<%= scss do %>
+<style media="all">
 table.rdf-props {
   th.name, th.range {
     width: 20%;
   }
 }
-<% end %>
+</style>
 
 <%= form_for :item, url: { action: :import }, html: { id: "item-form", method: :post, multipart: true, autocomplete: :off } do |f| %>
   <table class="index">
@@ -34,7 +34,7 @@ table.rdf-props {
         <td class="name"><%= "#{item.vocab.prefix}:#{item.name}" %></td>
         <td class="range"><%= item.range.try(:preferred_label) %></td>
         <td class="comments"><%= item.comments.try(:preferred_value) %></td>
-        <td class="datetime"><%= item.updated.strftime("%Y/%m/%d") %></td>
+        <td class="datetime"><%= ss_time_tag(item.updated, type: :date) %></td>
       </tr>
     <% end %>
     </tbody>

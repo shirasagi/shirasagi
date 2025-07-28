@@ -8,11 +8,60 @@
   <dd><%= f.text_area :procedure_location %></dd>
 
   <dt><%= @model.t :belongings %><%= @model.tt :belongings %></dt>
-  <dd><%= f.text_area :belongings %></dd>
+  <dd><%= f.ss_lines_field :belongings %></dd>
 
   <dt><%= @model.t :procedure_applicant %><%= @model.tt :procedure_applicant %></dt>
-  <dd><%= f.text_area :procedure_applicant %></dd>
+  <dd><%= f.ss_lines_field :procedure_applicant %></dd>
 
   <dt><%= @model.t :remarks %><%= @model.tt :remarks %></dt>
   <dd><%= f.text_area :remarks %></dd>
+
+  <% %w(yes no or).each do |cond| %>
+    <dl class="see mod-guide-procedure" style="margin-top: 10px;">
+      <dt><%= @model.t :"cond_#{cond}_edge_values" %><%= @model.tt :"cond_#{cond}_edge_values" %></dt>
+      <dd>
+        <%= hidden_field_tag "item[cond_#{cond}_edge_values][][question_id]", '', id: nil, class: "hidden-ids" %>
+        <%= hidden_field_tag "item[cond_#{cond}_edge_values][][edge_value]", '', id: nil, class: "hidden-ids" %>
+        <%= hidden_field_tag "item[cond_#{cond}_question_ids][]", '', id: nil, class: "hidden-ids" %>
+        <%= link_to t("ss.links.select"), guide_apis_edges_path(nid: @cur_node.id, id: @item.id), class: "ajax-box", data: { template: "#{addon[:id]}-template-#{cond}" } %>
+      </dd>
+      <dd>
+        <table class="index ajax-selected">
+          <thead>
+            <tr>
+              <th class="name"><%= @model.t :name %></th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @item.send(:"cond_#{cond}_questions").each do |question| %>
+              <% question.edges.in(value: @item.send(:"cond_#{cond}_edge_values").select { |v| v[:question_id].to_s == question.id.to_s }.collect { |v| v[:edge_value] }).each do |edge| %>
+                <tr data-id="<%= question.id %>:<%= edge.id %>">
+                  <td>
+                    <%= hidden_field_tag "item[cond_#{cond}_edge_values][][question_id]", question.id, id: nil %>
+                    <%= hidden_field_tag "item[cond_#{cond}_edge_values][][edge_value]", edge.value, id: nil %>
+                    <%= hidden_field_tag "item[cond_#{cond}_question_ids][]", question.id, id: nil %>
+                    <%= question.name %><%= edge.value %>
+                  </td>
+                  <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+
+        <%= tag.script id: "#{addon[:id]}-template-#{cond}", type: "text/ejs" do %>
+          <tr data-id="<%= ejs_template("data.id") %>">
+            <td>
+              <%= hidden_field_tag "item[cond_#{cond}_edge_values][][question_id]", ejs_template("data.questionId"), id: nil %>
+              <%= hidden_field_tag "item[cond_#{cond}_edge_values][][edge_value]", ejs_template("data.edgeValue"), id: nil %>
+              <%= hidden_field_tag "item[cond_#{cond}_question_ids][]", ejs_template("data.questionId"), id: nil %>
+              <%= ejs_template("data.name") %>
+            </td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+      </dd>
+    </dl>
+  <% end %>
 </dl>

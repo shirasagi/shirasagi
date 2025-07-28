@@ -5,13 +5,18 @@ class Gws::Share::FilesController < ApplicationController
 
   model Gws::Share::File
 
-  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :delete, :lock, :unlock, :disable]
+  before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :delete, :lock, :disable]
   before_action :set_selected_items, only: [:disable_all, :download_all]
   before_action :set_categories, only: [:index]
   before_action :set_category
   before_action :set_folder
   before_action :set_tree_navi, only: [:index]
   before_action :set_default_readable_setting, only: [:new]
+
+  # テスト時 unlock 実行前に database cleaner が実行されてしまい、
+  # unlock → edit へリダイレクト → unlock  → edit へリダイレクトと無限ループにハマってしまう。
+  # それを防ぐために、logged_in? でログイン判定をせずに自前で判定するようにする。
+  skip_before_action :logged_in?, only: [:unlock]
 
   after_action :update_folder_file_info, only: [:create, :update]
 
@@ -228,6 +233,13 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def unlock
+    login_by_oauth2_token || login_by_session
+    unless @cur_user
+      head :unauthorized
+      return
+    end
+
+    set_item
     unless @item.locked?
       respond_to do |format|
         format.html { redirect_to(action: :edit) }
@@ -236,7 +248,10 @@ class Gws::Share::FilesController < ApplicationController
       return
     end
 
-    raise "403" if !@item.lock_owned? && !@item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node)
+    if !@item.lock_owned? && !@item.allowed?(:unlock, @cur_user, site: @cur_site, node: @cur_node)
+      head :unauthorized
+      return
+    end
 
     unless @item.locked?
       respond_to do |format|

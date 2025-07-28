@@ -21,13 +21,13 @@
       <div class="info">
         <%= sanitizer_status(item) %>
         <%= link_to opts.merge(action: :show), class: "title" do %>
-          <i class="material-icons md-18 md-dark title-icon">&#xE24D;</i>
+          <%= md_icons.filled "folder_open", tag: :i, size: 18, class: "md-dark title-icon" %>
           <%= item.name %>
         <% end %>
 
         <div class="meta">
           <span class="id">#<%= item.id %></span>
-          <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+          <span class="datetime"><%= ss_time_tag item.updated %></span>
           <span class="gws-share-categories">
           <span class="gws-category-label" style="background-color: gray; color: #ffffff;"><%= t('gws/share.files.disabled_items') %></span>
           <% item.categories.compact.each do |category| %>

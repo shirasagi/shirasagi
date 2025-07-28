@@ -29,9 +29,11 @@ describe "faq_pages", type: :feature, js: true do
         fill_in "item[name]", with: "sample"
         click_on I18n.t("ss.links.input")
         fill_in "item[basename]", with: "sample"
+        fill_in_ckeditor "item[question]", with: "<p>question</p>"
+        fill_in_ckeditor "item[html]", with: "<p>body</p>"
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
@@ -40,15 +42,19 @@ describe "faq_pages", type: :feature, js: true do
     it "#show" do
       visit show_path
       expect(page).to have_css("#addon-basic", text: item.name)
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
     end
 
     it "#edit" do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
+        fill_in_ckeditor "item[question]", with: "<p>modified question</p>"
+        fill_in_ckeditor "item[html]", with: "<p>modified body</p>"
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
     end
 
     it "#move" do
@@ -58,14 +64,14 @@ describe "faq_pages", type: :feature, js: true do
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/destination.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/destination.html")
 
       within "form" do
         fill_in "destination", with: "docs/sample"
         click_button I18n.t('ss.buttons.move')
       end
       expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form h2", text: "docs/sample.html")
+      expect(page).to have_css("form#item-form .current-filename", text: "docs/sample.html")
     end
 
     it "#copy" do
@@ -74,8 +80,8 @@ describe "faq_pages", type: :feature, js: true do
         click_button I18n.t('ss.buttons.save')
       end
       expect(current_path).to eq index_path
-      expect(page).to have_css("a", text: "[複製] modify")
-      expect(page).to have_css(".state", text: "非公開")
+      expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] modify")
+      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
     end
 
     it "#delete" do
@@ -85,7 +91,7 @@ describe "faq_pages", type: :feature, js: true do
         click_on I18n.t("ss.buttons.delete")
       end
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     it "#contains_urls" do
@@ -123,16 +129,20 @@ describe "faq_pages", type: :feature, js: true do
 
     it "permited and contains_urls" do
       visit edit_path2
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_for_event_fired("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
 
     it "permited and not contains_urls" do
       visit edit_path
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_for_event_fired("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end
@@ -140,10 +150,13 @@ describe "faq_pages", type: :feature, js: true do
     it "not permited and contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_faq_pages edit_other_faq_pages
-                                  release_private_faq_pages release_other_faq_pages))
+                                  release_private_faq_pages release_other_faq_pages
+                                  close_private_faq_pages close_other_faq_pages))
       visit edit_path2
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_for_event_fired("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
       expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -152,10 +165,13 @@ describe "faq_pages", type: :feature, js: true do
     it "not permited and not contains_urls" do
       role = user.cms_roles[0]
       role.update(permissions: %w(edit_private_faq_pages edit_other_faq_pages
-                                  release_private_faq_pages release_other_faq_pages))
+                                  release_private_faq_pages release_other_faq_pages
+                                  close_private_faq_pages close_other_faq_pages))
       visit edit_path
-      within "form" do
-        click_on I18n.t("ss.buttons.withdraw")
+      wait_for_event_fired("ss:formAlertFinish") do
+        within "form" do
+          click_on I18n.t("ss.buttons.withdraw")
+        end
       end
       expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
     end

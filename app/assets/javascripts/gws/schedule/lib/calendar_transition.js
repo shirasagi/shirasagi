@@ -24,3 +24,15 @@ Gws_Schedule_CalendarTransition.prototype.renderLinks = function(selector) {
     $(this).attr('href', href);
   });
 };
+
+Gws_Schedule_CalendarTransition.prototype.renderCancelButton = function(selector, link) {
+  var url = $(link).attr("href");
+  $(selector).each(function() {
+    if (url) {
+      $(this).attr("onclick", "$(window).off('beforeunload')");
+      $(this).on("click", function(){
+        location.href= url;
+      });
+    }
+  });
+};

@@ -1,6 +1,6 @@
 module SS
   module DownloadHelpers
-    TIMEOUT = 1
+    TIMEOUT = ENV.fetch("DOWNLOAD_MAX_WAIT_TIME", 1).to_i
 
     module_function
 
@@ -35,6 +35,9 @@ module SS
     end
 
     def enable_headless_chrome_download(driver)
+      return unless driver.is_a?(Capybara::Selenium::Driver)
+      return unless driver.options[:browser] == :chrome
+
       @enabled_chromes ||= {}
 
       bridge = driver.browser.send(:bridge)

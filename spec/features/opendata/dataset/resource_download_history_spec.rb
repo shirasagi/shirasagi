@@ -23,6 +23,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
       within ".list-head-action" do
         click_on I18n.t('gws.history.days.prev_day')
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_css(".list-item .dataset", text: history2.dataset_name)
@@ -33,6 +34,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
       within ".list-head-action" do
         click_on I18n.t('gws.history.days.prev_day')
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_no_css(".list-item .dataset", text: history2.dataset_name)
@@ -43,6 +45,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
       within ".list-head-action" do
         click_on I18n.t('gws.history.days.next_day')
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_css(".list-item .dataset", text: history2.dataset_name)
@@ -53,6 +56,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
       within ".list-head-action" do
         click_on I18n.t('gws.history.days.today')
       end
+      wait_for_js_ready
       expect(page).to have_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_no_css(".list-item .dataset", text: history2.dataset_name)
@@ -61,8 +65,9 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
       expect(page).to have_no_css(".list-item .resource", text: history3.resource_name)
 
       within ".list-head-action" do
-        fill_in "ymd", with: (now - 1.day).strftime("%Y/%m/%d") + "\n"
+        fill_in_date "ymd", with: now - 1.day
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
       expect(page).to have_css(".list-item .dataset", text: history2.dataset_name)
@@ -90,7 +95,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
       expect(table.headers.length).to eq expected_headers.length
       expect(table.headers).to include(*expected_headers)
 
-      expect(table[0][Opendata::ResourceDownloadHistory.t(:downloaded)]).to eq I18n.l(history1.downloaded)
+      expect(table[0][Opendata::ResourceDownloadHistory.t(:downloaded)]).to eq I18n.l(history1.downloaded, format: :picker)
       expect(table[0][Opendata::ResourceDownloadHistory.t(:downloaded_by)]).to eq history1.label(:downloaded_by)
       expect(table[0][Opendata::ResourceDownloadHistory.t(:full_url)]).to eq history1.full_url
       expect(table[0][Opendata::ResourceDownloadHistory.t(:dataset_id)]).to eq history1.dataset_id.to_s
@@ -116,6 +121,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
         fill_in "s[keyword]", with: history1.resource_name
         click_on I18n.t("ss.buttons.search")
       end
+      wait_for_js_ready
       expect(page).to have_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_css(".list-item .resource", text: history1.resource_name)
 
@@ -123,6 +129,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
         fill_in "s[keyword]", with: history1.dataset_name
         click_on I18n.t("ss.buttons.search")
       end
+      wait_for_js_ready
       expect(page).to have_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_css(".list-item .resource", text: history1.resource_name)
 
@@ -130,6 +137,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
         fill_in "s[keyword]", with: history1.dataset_areas.first
         click_on I18n.t("ss.buttons.search")
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
 
@@ -137,6 +145,7 @@ describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature,
         fill_in "s[keyword]", with: unique_id
         click_on I18n.t("ss.buttons.search")
       end
+      wait_for_js_ready
       expect(page).to have_no_css(".list-item .dataset", text: history1.dataset_name)
       expect(page).to have_no_css(".list-item .resource", text: history1.resource_name)
     end

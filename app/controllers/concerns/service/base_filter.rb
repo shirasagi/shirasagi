@@ -27,18 +27,30 @@ module Service::BaseFilter
     @stylesheets || []
   end
 
-  def stylesheet(path)
+  def stylesheet(path, **options)
     @stylesheets ||= []
-    @stylesheets << path unless @stylesheets.include?(path)
+    return if @stylesheets.any? { |maybe_array| maybe_array.is_a?(Array) ? maybe_array[0] == path : maybe_array == path }
+
+    if options.present?
+      @stylesheets << [ path, options ]
+    else
+      @stylesheets << path
+    end
   end
 
   def javascripts
     @javascripts || []
   end
 
-  def javascript(path)
+  def javascript(path, **options)
     @javascripts ||= []
-    @javascripts << path unless @javascripts.include?(path)
+    return if @javascripts.any? { |maybe_array| maybe_array.is_a?(Array) ? maybe_array[0] == path : maybe_array == path }
+
+    if options.present?
+      @javascripts << [ path, options ]
+    else
+      @javascripts << path
+    end
   end
 
   private
@@ -52,9 +64,13 @@ module Service::BaseFilter
   end
 
   def set_ss_assets
-    SS.config.ss.stylesheets.each { |m| stylesheet(m) } if SS.config.ss.stylesheets.present?
-    SS.config.ss.javascripts.each { |m| javascript(m) } if SS.config.ss.javascripts.present?
-    stylesheet("/assets/css/colorbox/colorbox.css")
+    if SS.config.ss.stylesheets.present?
+      SS.config.ss.stylesheets.each { |path, options| options ? stylesheet(path, **options.symbolize_keys) : stylesheet(path) }
+    end
+    if SS.config.ss.javascripts.present?
+      SS.config.ss.javascripts.each { |path, options| options ? javascript(path, **options.symbolize_keys) : javascript(path) }
+    end
+    stylesheet("/colorbox.css")
   end
 
   def logged_in?
@@ -64,6 +80,7 @@ module Service::BaseFilter
     end
 
     @cur_user = SS.current_user = get_user_by_session
+    SS.change_locale_and_timezone(SS.current_user)
     if @cur_user
       set_last_logged_in
       return @cur_user
@@ -77,7 +94,7 @@ module Service::BaseFilter
     end
   end
 
-  def set_user(user, opts = {})
+  def set_user(user, **opts)
     if opts[:session]
       reset_session if SS.config.sns.logged_in_reset_session
       session[:service_account] = {
@@ -92,6 +109,7 @@ module Service::BaseFilter
     end
     redirect_to service_main_path if opts[:redirect]
     @cur_user = SS.current_user = user
+    SS.change_locale_and_timezone(SS.current_user)
   end
 
   def rescue_action(exception)

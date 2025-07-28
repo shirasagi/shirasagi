@@ -1,0 +1,59 @@
+<dl class="see">
+  <dt><%= @model.t :member_group_id %><%= @model.tt :member_group_id %></dt>
+  <dd>
+    <%= f.hidden_field "member_group_id", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path(single: 1), class: "btn ajax-box" %>
+    <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
+    <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% if params[:action] =~ /new/ && !@item.member_group %>
+        <tr data-id="<%= @cur_group.id %>">
+          <td><%= f.hidden_field "member_group_id", value: @cur_group.id, id: nil %> <%= @cur_group.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% elsif @item.member_group %>
+        <tr data-id="<%= @item.member_group.id %>">
+          <td><%= f.hidden_field "member_group_id", value: @item.member_group.id, id: nil %> <%= @item.member_group.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<% if @model.use_member_ids? %>
+<dl class="see">
+  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+  <dd>
+    <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
+    <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
+    <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+        <% if params[:action] =~ /new/ && @item.members.blank? %>
+        <tr data-id="<%= @cur_user.id %>">
+          <td><%= f.hidden_field "member_ids[]", value: @cur_user.id, id: nil %> <%= @cur_user.long_name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+        <% else %>
+          <% @item.members.each do |member| %>
+            <tr data-id="<%= member.id %>">
+              <td><%= f.hidden_field "member_ids[]", value: member.id, id: nil %> <%= member.long_name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+<% end %>

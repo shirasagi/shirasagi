@@ -12,5 +12,5 @@
   <dd><%= @item.client_secret %> <%= f.hidden_field :client_secret %></dd>
 
   <dt><%= @model.t :redirect_uris %><%= @model.tt :redirect_uris %></dt>
-  <dd><%= f.text_area :redirect_uris %></dd>
+  <dd><%= f.ss_lines_field :redirect_uris %></dd>
 </dl>

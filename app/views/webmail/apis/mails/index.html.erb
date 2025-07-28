@@ -14,10 +14,8 @@
       </dd>
 
       <dt><%= @model.t :subject %></dt>
-      <dd>
-        <%= f.text_field :subject, value: params.dig(:s, :subject) %>
-        <%= f.submit  t("ss.buttons.search"), class: :btn %>
-      </dd>
+      <dd><%= f.text_field :subject, value: params.dig(:s, :subject) %></dd>
+      <dd><%= f.submit t("ss.buttons.search"), class: :btn %></dd>
     </dl>
   <% end %>
 </div>
@@ -27,7 +25,7 @@
     <tr>
       <th class="checkbox"><input type="checkbox" /></th>
       <th class="from">
-        <i class="material-icons md-15" style="visibility: hidden;">&#xE226;</i>
+        <%= md_icons.filled "attach_file", tag: :i, size: 15, style: "visibility: hidden;" %>
         <%= @model.t :from %>
       </th>
       <th class="name"><%= @model.t :subject %></th>
@@ -42,15 +40,15 @@
         data-attachments="<%= item.attachments? ? 1 : nil %>"
         data-from="<%= item.from[0] %>"
         data-name="<%= item.subject %>"
-        data-send_date="<%= item.internal_date.strftime("%Y/%m/%d %H:%M") %>"
+        data-send_date="<%= tryb { item.internal_date.iso8601 } %>"
         data-display_size="<%= item.display_size %>">
         <td class="checkbox"><input type="checkbox" name="ids[]" value="<%= item.id %>" /></td>
         <td>
-          <i class="material-icons md-15" <%== item.attachments? ? '' : 'style="visibility: hidden;"' %>>&#xE226;</i>
+          <%= md_icons.filled "attach_file", tag: :i, size: 15, style: item.attachments? ? nil : "visibility: hidden;" %>
           <%= item.from[0] %>
         </td>
         <td><%= link_to item.subject, "#", class: @multi ? "select-item" : "select-single-item" %></td>
-        <td><%= item.internal_date.strftime("%Y/%m/%d %H:%M") %></td>
+        <td><%= ss_time_tag item.internal_date %></td>
         <td><%= item.display_size %></td>
       </tr>
     <% end %>

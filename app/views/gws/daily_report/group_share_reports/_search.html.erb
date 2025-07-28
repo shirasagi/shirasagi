@@ -1,0 +1,10 @@
+<div class="operations">
+  <%= ss_button_to t("ss.buttons.csv"), url_for(action: :download), model: @model, class: "btn btn-download btn-list-head-action", method: "get", confirm: t("ss.confirm.download") %>
+  <%= ss_button_to t('ss.buttons.print'), url_for(action: :print), model: @model, class: "btn btn-print btn-list-head-action", method: "get" %>
+</div>
+
+<% @s = OpenStruct.new params[:s] %>
+<%= form_for :s, url: "", html: { method: :get, class: :search } do |f| %>
+  <%= f.text_field :keyword, style: "width: 140px;" %>
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+<% end %>

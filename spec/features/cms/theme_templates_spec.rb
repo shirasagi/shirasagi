@@ -31,8 +31,8 @@ describe "cms_theme_templates", type: :feature, dbscope: :example do
           select "公開", from: "item_state"
 
           select "有効", from: "item_high_contrast_mode"
-          fill_in "item[font_color]", with: "html-#{unique_id}"
-          fill_in "item[background_color]", with: "html-#{unique_id}"
+          fill_in "item[font_color]", with: unique_color
+          fill_in "item[background_color]", with: unique_color
 
           click_button I18n.t('ss.buttons.save')
         end

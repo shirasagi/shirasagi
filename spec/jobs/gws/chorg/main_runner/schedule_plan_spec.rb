@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe Gws::Chorg::MainRunner, dbscope: :example do
   let(:site) { create(:gws_group) }
-  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group_id: site) }
+  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group: site) }
   let(:job_opts) { {} }
 
   context 'with unify' do
-    let!(:group1) { create(:gws_revision_new_group) }
-    let!(:group2) { create(:gws_revision_new_group) }
+    let!(:group1) { create(:gws_revision_new_group, order: 10) }
+    let!(:group2) { create(:gws_revision_new_group, order: 20) }
     let!(:user1) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
     let!(:user2) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
     let!(:revision) { create(:gws_revision, site_id: site.id) }
@@ -24,8 +24,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -34,10 +34,17 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
-      expect(Gws::Group.where(id: group1.id).first.active?).to be_falsey
+      expect(Gws::Chorg::Task.all.count).to eq 1
+      Gws::Chorg::Task.all.first.tap do |task|
+        path = task.perf_log_file_path
+        expect(::File.size(path)).to be > 0
+      end
+
+      expect(Gws::Group.where(id: group1.id).first.active?).to be_truthy
       expect(Gws::Group.where(id: group2.id).first.active?).to be_falsey
       new_group = Gws::Group.where(name: changeset.destinations.first['name']).first
       expect(new_group.active?).to be_truthy
+      expect(new_group.id).to eq group1.id
 
       plan.reload
       expect(plan.group_ids).to eq [new_group.id]
@@ -49,9 +56,9 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
   end
 
   context 'with division' do
-    let!(:group0) { create(:gws_revision_new_group) }
-    let!(:group1) { build(:gws_revision_new_group) }
-    let!(:group2) { build(:gws_revision_new_group) }
+    let!(:group0) { create(:gws_revision_new_group, order: 10) }
+    let!(:group1) { build(:gws_revision_new_group, order: 20) }
+    let!(:group2) { build(:gws_revision_new_group, order: 30) }
     let!(:user) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group0.id]) }
     let!(:revision) { create(:gws_revision, site_id: site.id) }
     let!(:changeset) do
@@ -69,12 +76,13 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, user_id: user, task_id: task)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site.id, user_id: user.id, task_id: task.id)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
 
-      expect(Gws::Group.where(id: group0.id).first.active?).to be_falsey
+      expect(Gws::Group.where(id: group0.id).first.active?).to be_truthy
       new_group1 = Cms::Group.where(name: changeset.destinations[0]['name']).first
       expect(new_group1.active?).to be_truthy
+      expect(new_group1.id).to eq group0.id
       new_group2 = Cms::Group.where(name: changeset.destinations[1]['name']).first
       expect(new_group2.active?).to be_truthy
 
@@ -98,8 +106,8 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site.id, task_id: task.id)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
       expect(Gws::Group.where(id: group.id).first.active?).to be_falsey
 

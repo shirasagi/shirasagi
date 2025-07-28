@@ -4,4 +4,4 @@ json._id @item._id
 json.lock_owner gws_public_user_long_name(@item.lock_owner.long_name)
 json.lock_owner_id @item.lock_owner_id
 json.lock_until_epoch @item.lock_until.to_i
-json.lock_until_pretty @item.lock_until.strftime("%Y/%m/%d %H:%M")
+json.lock_until_pretty I18n.l(@item.lock_until, format: :picker)

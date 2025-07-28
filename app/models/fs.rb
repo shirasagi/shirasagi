@@ -4,13 +4,85 @@ module Fs
   DEFAULT_HEAD_LOGS = SS.config.job.head_logs || 1_000
   DEFAULT_TAIL_BYTES = 16 * 1_024
 
-  if SS.config.env.storage == "grid_fs"
-    include ::Fs::GridFs
-  else
-    include ::Fs::File
+  module_function
+
+  def mode
+    :file
   end
 
-  module_function
+  def exist?(path)
+    FileTest.exist? path
+  end
+
+  def file?(path)
+    FileTest.file? path
+  end
+
+  def directory?(path)
+    FileTest.directory? path
+  end
+
+  def read(path)
+    ::File.read path
+  end
+
+  def binread(path)
+    ::File.binread path
+  end
+
+  def write(path, data)
+    FileUtils.mkdir_p ::File.dirname(path)
+    ::File.write path, data
+  end
+
+  def binwrite(path, data)
+    FileUtils.mkdir_p ::File.dirname(path)
+    ::File.binwrite path, data
+  end
+
+  def stat(path)
+    ::File.stat(path)
+  end
+
+  def size(path)
+    ::File.size(path)
+  end
+
+  def content_type(path, default = nil)
+    ::SS::MimeType.find(path, default)
+  end
+
+  def mkdir_p(path)
+    FileUtils.mkdir_p path
+  end
+
+  def mv(src, dest)
+    FileUtils.mv src, dest
+  end
+
+  def rm_rf(path)
+    FileUtils.rm_rf path
+  end
+
+  def glob(path)
+    Dir.glob(path)
+  end
+
+  def to_io(path, &block)
+    ::File.open(path, "rb", &block)
+  end
+
+  def cp(src, dest)
+    ::FileUtils.cp(src, dest, preserve: true)
+  end
+
+  def cmp(src, dest)
+    ::FileUtils.cmp(src, dest)
+  end
+
+  def upload(dst, src)
+    ::IO.copy_stream(src, dst)
+  end
 
   if RUBY_VERSION > "2.4"
     def new_buffer(buff_size)
@@ -145,5 +217,38 @@ module Fs
   rescue => e
     Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     ""
+  end
+
+  def zip_safe_name(name)
+    return name if name.blank?
+
+    if Zip.unicode_names
+      SS::FilenameUtils.convert_to_url_safe_japanese(name, normalize: false)
+    else
+      name.encode('cp932', invalid: :replace, undef: :replace, replace: "_")
+    end
+  end
+
+  def zip_safe_path(name)
+    return name if name.blank?
+    name.split("/").map { |part| Fs.zip_safe_name(part) }.join("/")
+  end
+
+  def safe_create(path, binary: false, &block)
+    path = ::File.expand_path(path, Rails.root)
+
+    basename = ::File.basename(path)
+    dirname = ::File.dirname(path)
+    ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
+
+    tmp_path = "#{dirname}/.#{basename}.tmp"
+    options = binary ? "wb" : "w"
+    ::File.open(tmp_path, options, &block)
+
+    ::FileUtils.mv(tmp_path, path, force: true)
+  ensure
+    if tmp_path
+      ::FileUtils.rm_f(tmp_path) rescue nil
+    end
   end
 end

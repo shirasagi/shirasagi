@@ -8,10 +8,10 @@
         <tr>
           <th rowspan="2" class="name"><%= @model.t :name %></th>
           <th rowspan="2" class="kind"><%= I18n.t('gws/facility.usage.type') %></th>
-          <th colspan="<%= @days.count %>" class="days"><%= I18n.t('gws/facility.usage.usage_day') %></th>
+          <th colspan="<%= days.count %>" class="days"><%= I18n.t('gws/facility.usage.usage_day') %></th>
         </tr>
         <tr>
-          <% @days.each do |day| %>
+          <% days.each do |day| %>
           <th class="day day-<%= day[1] %>"><%= day[1] %></th>
           <% end %>
         </tr>
@@ -22,7 +22,7 @@
             <tr id="facility-<%= item.id %>-hours">
               <td rowspan="2" class="name"><%= item.name %></td>
               <td class="kind"><%= I18n.t('gws/facility.usage.hours') %></td>
-              <% @days.each do |day| %>
+              <% days.each do |day| %>
                 <td class="day day-<%= day[1] %>">
                   <%= format_usage_hours(item, @target_time.year, @target_time.month, day[1]) %>
                 </td>
@@ -30,7 +30,7 @@
             </tr>
             <tr id="facility-<%= item.id %>-times">
               <td class="kind"><%= I18n.t('gws/facility.usage.times') %></td>
-              <% @days.each do |day| %>
+              <% days.each do |day| %>
                 <td class="day day-<%= day[1] %>">
                   <%= format_usage_count(item, @target_time.year, @target_time.month, day[1]) %>
                 </td>

@@ -1,7 +1,7 @@
 <dl class="see mod-mail_page-arrival_plan">
   <dt><%= @model.t :arrival_start_date %><%= @model.tt :arrival_start_date %></dt>
-  <dd><%= f.text_field :arrival_start_date, class: "datetime js-datetime", value: tryb { @item.arrival_start_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :arrival_start_date %></dd>
 
   <dt><%= @model.t :arrival_close_date %><%= @model.tt :arrival_close_date %></dt>
-  <dd><%= f.text_field :arrival_close_date, class: "datetime js-datetime", value: tryb { @item.arrival_close_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :arrival_close_date %></dd>
 </dl>

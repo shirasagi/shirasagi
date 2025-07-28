@@ -37,12 +37,10 @@
             <%== user_presence_state_selector(item) %>
           </td>
           <td class="no-overflow">
-            <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-            <i class="material-icons editicon presence-plan" style="font-size: inherit">&#xE254;</i>
+            <%= render_edit_presence_plan(item) %>
           </td>
           <td class="no-overflow">
-            <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-            <i class="material-icons editicon presence-memo" style="font-size: inherit">&#xE254;</i>
+            <%= render_edit_presence_memo(item) %>
           </td>
           <% if send_message %>
             <td class="no-overflow">
@@ -110,12 +108,10 @@ Gws_Presence_User_Reload.render({
               <%== user_presence_state_selector(item) %>
             </td>
             <td class="no-overflow">
-              <%= ajax_text_field_tag :presence_plan, user_presence.plan, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-              <i class="material-icons editicon presence-plan" style="font-size: inherit">&#xE254;</i>
+              <%= render_edit_presence_plan(item) %>
             </td>
             <td class="no-overflow">
-              <%= ajax_text_field_tag :presence_memo, user_presence.memo, item.id, (gws_presence_apis_user_path(id: item.id) + ".json") %>
-              <i class="material-icons editicon presence-memo" style="font-size: inherit">&#xE254;</i>
+              <%= render_edit_presence_memo(item) %>
             </td>
             <% if send_message %>
               <td class="no-overflow"><%= link_to t("ss.links.new"), new_gws_memo_message_path(to: item.id) %></td>

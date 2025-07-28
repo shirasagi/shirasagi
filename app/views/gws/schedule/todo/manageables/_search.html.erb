@@ -7,7 +7,7 @@
 <% end %>
 
 <%= form_for :s, url: '', html: { method: :get, class: %w(search schedule-todo-search) } do |f| %>
-  <%= button_tag "担当者", name: "担当者", type: "button", class: "btn schedule-todo-member-select-btn", data: { href: gws_apis_users_path } %>
+  <%= button_tag t("gws/schedule/todo.member"), name: t("gws/schedule/todo.member"), type: "button", class: "btn schedule-todo-member-select-btn", data: { href: gws_apis_users_path } %>
   <% selected_members = Gws::User.active.in(id: Array[@s.member_ids].flatten.compact.map(&:to_i)) %>
   <span class="schedule-todo-selected-members <% if selected_members.blank? %>hide<% end %>" style="font-weight: normal">
     <% selected_members.each do |user| %>

@@ -13,7 +13,7 @@
       <tbody>
       <% @item.entity_sites.each do |key, item| %>
         <tr>
-          <td><%= link_to item["label"], { controller: :entity_logs, action: :show_models, entity_site: key } %></td>
+          <td><%= link_to item["label"], url_for(controller: :entity_logs, action: :show_models, entity_site: key) %></td>
           <td><%= "#{item["count"]}件" %></td>
         </tr>
       <% end %>
@@ -21,6 +21,6 @@
     </table>
   </dd>
   <dd class="wide">
-    <%= link_to t("ss.links.download"), { controller: :entity_logs, action: :download }, class: "btn" %>
+    <%= link_to t("ss.links.download"), url_for(controller: :entity_logs, action: :download), class: "btn", method: :post %>
   </dd>
 </dl>

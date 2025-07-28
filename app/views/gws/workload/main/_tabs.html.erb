@@ -1,0 +1,15 @@
+<%= jquery do %>
+Gws_Tab.renderTabs('.gws-workload-tabs');
+<% end %>
+
+<div class="gws-tabs gws-workload-tabs">
+  <%= link_to({ controller: 'works', action: 'index' }, { class: 'work' }) do %>
+    <span class="tab-name"><%= t('gws/workload.tabs.work') %></span>
+  <% end %>
+  <%= link_to({ controller: 'admins', action: 'index' }, { class: 'admin' }) do %>
+    <span class="tab-name"><%= t('gws/workload.tabs.admin') %></span>
+  <% end %>
+  <%= link_to({ controller: 'trashes', action: 'index' }, { class: 'trash' }) do %>
+    <span class="tab-name"><%= t('gws/workload.tabs.trash') %></span>
+  <% end %>
+</div>

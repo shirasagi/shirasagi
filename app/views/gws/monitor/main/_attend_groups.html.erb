@@ -19,47 +19,19 @@
         </thead>
         <tbody>
         <% if params[:controller] =~ /admin/ %>
-            <% attend_groups = @item.attend_groups.to_a %>
-            <% attend_groups.each do |group| %>
-                <% post = @item.children.where(user_group_id: group.id).last %>
-                <td class="state"><%= @item.answer_state_name(group) %></td>
-                <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
-                <td class="udpate_at"><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
-                <td class="group"><%= group.name %></td>
-                <td class="user"><%= post.try { |p| gws_public_user_long_name(p.contributor_name) } || '' %></td>
-                <td class="contents"><%= post ? post.try(:text) : '' %></td>
-                <td class="file">
-                  <% if post && post.file_ids.present? %>
-                      <img src="/assets/img/gws/ic-file.png" alt="" /><%= post.file_ids.count %>
-                  <% else %>
-                      <%=  '' %>
-                  <% end %>
-                </td>
-                </tr>
-            <% end %>
+          <% attend_groups = @item.attend_groups.to_a %>
+          <% attend_groups.each do |group| %>
+            <%= render "gws/monitor/main/attend_group_tr", group: group %>
+          <% end %>
         <% else %>
-            <% if @item.spec_config == 'my_group' %>
-                <% attend_groups = @item.attend_groups.where(id: @cur_group.id) %>
-            <% else %>
-                <% attend_groups = @item.attend_groups.to_a %>
-            <% end %>
-            <% attend_groups.each do |group| %>
-                <% post = @item.children.where(user_group_id: group.id).last %>
-                <td class="state"><%= @item.answer_state_name(group) %></td>
-                <td class="mark_at"><%= post ? post.try(:created).strftime('%Y/%m/%d %H:%M') : '' %></td>
-                <td class="udpate_at"><%= post ? post.try(:updated).strftime('%Y/%m/%d %H:%M') : '' %></td>
-                <td class="group"><%= group.name %></td>
-                <td class="user"><%= post.try { |p| gws_public_user_long_name(p.contributor_name) } || '' %></td>
-                <td class="contents"><%= post && @item.spec_config != 'other_groups' ? post.try(:text) : '' %></td>
-                <td class="file">
-                  <% if post && post.file_ids.present? && @item.spec_config != 'other_groups' %>
-                      <img src="/assets/img/gws/ic-file.png" alt="" /><%= post.file_ids.count %>
-                  <% else %>
-                      <%=  '' %>
-                  <% end %>
-                </td>
-                </tr>
-            <% end %>
+          <% if @item.spec_config == 'my_group' %>
+            <% attend_groups = @item.attend_groups.where(id: @cur_group.id) %>
+          <% else %>
+            <% attend_groups = @item.attend_groups.to_a %>
+          <% end %>
+          <% attend_groups.each do |group| %>
+            <%= render "gws/monitor/main/attend_group_tr", group: group %>
+          <% end %>
         <% end %>
         </tbody>
       </table>

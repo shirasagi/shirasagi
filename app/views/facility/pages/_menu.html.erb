@@ -23,12 +23,6 @@
     <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.delete'), action: :delete, id: @item %>
     <% end %>
-    <% if @cur_site.mobile_enabled? %>
-      <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: @item.preview_path), target: :_blank, rel: "noopener" %>
-      <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: @item.mobile_preview_path), target: :_blank, rel: "noopener") %>
-    <% else %>
-      <%= link_to t('ss.links.preview'), cms_preview_path(path: @item.preview_path), target: :_blank, rel: "noopener" %>
-    <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

@@ -26,36 +26,24 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-      end
 
-      # attach file
-      within "form#item-form" do
-        within "#addon-gws-agents-addons-file" do
-          wait_cbox_open do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-      end
-      wait_for_cbox do
-        attach_file "item[in_files][]", file_path
-        click_on I18n.t("ss.buttons.attach")
-      end
+        # attach file
+        ss_upload_file file_path, addon: "#addon-gws-agents-addons-file"
 
-      # choose member
-      within "form#item-form" do
+        # choose member
         within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
-        click_on user1.name
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.name }
       end
 
       # save as draft
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       Gws::Circular::Post.all.topic.first.tap do |topic|
@@ -87,29 +75,17 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in "item[name]", with: name
-      end
 
-      # attach file
-      within "form#item-form" do
-        within "#addon-gws-agents-addons-file" do
-          wait_cbox_open do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-      end
-      wait_for_cbox do
-        attach_file "item[in_files][]", file_path
-        click_on I18n.t("ss.buttons.attach")
-      end
+        # attach file
+        ss_upload_file file_path, addon: "#addon-gws-agents-addons-file"
 
-      # choose member
-      within "form#item-form" do
+        # choose member
         within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
-        click_on user1.name
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.name }
       end
 
       # save as draft
@@ -118,7 +94,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       end
       msg = I18n.t(
         "mongoid.errors.models.gws/circular/post.file_size_limit",
-        size: file_size.to_s(:human_size), limit: limit.to_s(:human_size)
+        size: file_size.to_fs(:human_size), limit: limit.to_fs(:human_size)
       )
       expect(page).to have_css("#errorExplanation", text: msg)
 

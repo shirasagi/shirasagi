@@ -38,46 +38,55 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       #
       # [manager] create folders
       #
-      login_user manager
-      visit gws_notice_folders_path(site: site)
+      login_user manager, to: gws_notice_folders_path(site: site)
       click_on I18n.t('ss.links.new')
 
       within 'form#item-form' do
         fill_in 'item[in_basename]', with: folder_name
 
         within '.gws-addon-member' do
-          click_on I18n.t('ss.apis.users.index')
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(site.name)
         find('.dd-group button.dropdown.btn').click
         within '.dd-group .dropdown-container' do
           click_on site.name
         end
+      end
+      within_cbox do
         expect(page).to have_content(editor.name)
-        click_on editor.name
+        wait_for_cbox_closed { click_on editor.name }
       end
       within 'form#item-form' do
         within '.gws-addon-readable-setting' do
           click_on I18n.t('ss.buttons.delete')
-          click_on I18n.t('ss.apis.users.index')
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(site.name)
         find('.dd-group button.dropdown.btn').click
         within '.dd-group .dropdown-container' do
           click_on site.name
         end
+      end
+      within_cbox do
         expect(page).to have_content(reader.name)
-        click_on reader.name
+        wait_for_cbox_closed { click_on reader.name }
       end
       within 'form#item-form' do
+        within "#addon-gws-agents-addons-member" do
+          expect(page).to have_css("[data-id='#{editor.id}']", text: editor.name)
+        end
+        within "#addon-gws-agents-addons-readable_setting" do
+          expect(page).to have_css("[data-id='#{reader.id}']", text: reader.name)
+        end
         click_on I18n.t('ss.buttons.save')
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Notice::Folder.all.count).to eq 1
       folder = Gws::Notice::Folder.all.first
@@ -92,8 +101,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       #
       # [editor] create posts
       #
-      login_user editor
-      visit gws_notice_main_path(site: site)
+      login_user editor, to: gws_notice_main_path(site: site)
       click_on I18n.t('ss.navi.editable')
       within '.tree-navi' do
         click_on folder_name
@@ -103,17 +111,19 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: notice_name
         fill_in 'item[text]', with: notice_text
-        click_on I18n.t("gws.apis.categories.index")
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
-        expect(page).to have_content(cate.name)
-        click_on cate.name
+      within_cbox do
+        wait_for_cbox_closed { click_on cate.name }
       end
       within 'form#item-form' do
+        within "#addon-gws-agents-addons-notice-category" do
+          expect(page).to have_css("[data-id='#{cate.id}']", text: cate.name)
+        end
         click_on I18n.t('ss.buttons.save')
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Notice::Post.all.count).to eq 1
       Gws::Notice::Post.all.first.tap do |post|
@@ -130,8 +140,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       #
       # [reader] read posts
       #
-      login_user reader
-      visit gws_notice_main_path(site: site)
+      login_user reader, to: gws_notice_main_path(site: site)
       expect(page).to have_css('.tree-navi', text: folder_name)
       expect(page).to have_css('.list-items', text: notice_name)
 

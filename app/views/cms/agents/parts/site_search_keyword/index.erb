@@ -1,0 +1,18 @@
+<% return if @node.nil? %>
+<% return if @cur_part.site_search_keywords.blank? %>
+
+<%== @cur_part.upper_html if @cur_part.upper_html.present?  %>
+<ul>
+  <% @cur_part.site_search_keywords.each do |keyword| %>
+    <%
+      if keyword.include?(',')
+        url = keyword.split(',').last
+        keyword = keyword.split(',').first
+      else
+        url = @node.url + "?" + { s: { keyword: keyword } }.to_query
+      end
+    %>
+    <li><%= link_to keyword, url, rel: :nofollow %></li>
+  <% end %>
+</ul>
+<%== @cur_part.lower_html if @cur_part.lower_html.present? %>

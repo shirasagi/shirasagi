@@ -4,6 +4,9 @@ module Gws::Addon
     extend SS::Addon
 
     included do
+      cattr_accessor :show_history, instance_accessor: false
+      self.show_history = true
+
       after_find :save_history_for_find
       after_save :save_history_for_save
       after_destroy :save_history_for_destroy
@@ -36,12 +39,13 @@ module Gws::Addon
     end
 
     def save_history_for_save
-      return if @db_changes.blank?
+      field_changes = changes.presence || previous_changes
+      return if field_changes.blank?
 
-      if @db_changes.key?('_id')
+      if field_changes.key?('_id')
         save_history mode: 'create'
       else
-        save_history mode: 'update', updated_fields: @db_changes.keys.reject { |s| s =~ /_hash$/ }
+        save_history mode: 'update', updated_fields: field_changes.keys.reject { |s| s =~ /_hash$/ }
       end
     end
 

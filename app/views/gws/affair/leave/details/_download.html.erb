@@ -1,0 +1,28 @@
+<dl class="see">
+  <dt><%= "期間" %></dt>
+  <dd><%= @cur_month.strftime("%Y年%-m月") %></dd>
+
+  <dt><%= t("gws.group") %></dt>
+  <dd><%= @group.name %></dd>
+
+  <dt><%= "対象ユーザー" %></dt>
+  <dd>
+    <% %w(users descendants).each do |target_users| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[target_users]", target_users, target_users == 'users', { id: nil } %>
+        <%= t("gws/affair.options.target_users.#{target_users}") %>
+      </label>
+    <% end %>
+  </dd>
+
+  <dt><%= t('ss.encoding') %><%= tt(:encoding, scope: 'gws/attendance.tooltips') %></dt>
+  <dd>
+    <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+      <label>
+        <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
+        <%= t("ss.options.csv_encoding.#{encoding}") %>
+      </label>
+    <% end %>
+  </dd>
+</dl>
+

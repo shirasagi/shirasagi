@@ -44,6 +44,10 @@ namespace :gws do
       ::Tasks::Gws::Es.feed_all_qnas
     end
 
+    task feed_all_surveys: :environment do
+      ::Tasks::Gws::Es.feed_all_surveys
+    end
+
     task feed_all_circulars: :environment do
       ::Tasks::Gws::Es.feed_all_circulars
     end
@@ -60,9 +64,17 @@ namespace :gws do
       ::Tasks::Gws::Es.feed_all_workflows
     end
 
+    task feed_all_workflows2: :environment do
+      ::Tasks::Gws::Es.feed_all_workflows2
+    end
+
     task feed_all_files: :environment do
       ::Tasks::Gws::Es.feed_all_files
     end
+
+    #task feed_all_workloads: :environment do
+    #  ::Tasks::Gws::Es.feed_all_workloads
+    #end
 
     namespace :ingest do
       task drop: :environment do

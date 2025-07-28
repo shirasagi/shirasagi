@@ -7,12 +7,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     let!(:user1) do
       Gws::User.create(
         name: "name-#{unique_id}", uid: "uid-#{unique_id}", email: unique_email, in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ])
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s)
     end
     let!(:user2) do
       Gws::User.create(
         name: "name-#{unique_id}", uid: "uid-#{unique_id}", email: unique_email, in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ])
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s)
     end
     let!(:item) do
       create(

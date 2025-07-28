@@ -14,6 +14,7 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && params['action'] == 'show' %>
       <%= link_to t('gws/monitor.links.forward'), forward_gws_monitor_admin_path(id: @item) %>
     <% end %>
+    <%= link_to t('ss.links.print'), action: :print, id: @item %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% end %>
 </nav>

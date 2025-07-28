@@ -3,8 +3,9 @@ module SS::ZipFileImport
 
   def perform(temp_file_id)
     @cur_file = SS::File.find(temp_file_id)
-
-    import_file
+    Rails.logger.tagged(@cur_file.filename) do
+      import_file
+    end
   ensure
     if @cur_file && @cur_file.model == 'ss/temp_file'
       @cur_file.destroy
@@ -22,7 +23,7 @@ module SS::ZipFileImport
             uploaded_file.binmode
             uploaded_file.write(entry.get_input_stream.read)
             uploaded_file.rewind
-            uploaded_file.original_filename = NKF.nkf('-w', entry.name)
+            uploaded_file.original_filename = SS::Zip.safe_zip_entry_name(entry)
             uploaded_file.content_type = 'text/csv'
 
             temp_file = SS::TempFile.new

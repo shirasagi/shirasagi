@@ -9,6 +9,8 @@ class Cms::Apis::NodeTreeController < ApplicationController
     @type = params[:type].presence || 'cms_nodes'
     @item = @model.find(params[:id]) if params[:id] != '0'
 
+    set_child_count
+
     if params[:only_children]
       items = child_items if @item
     else
@@ -25,7 +27,7 @@ class Cms::Apis::NodeTreeController < ApplicationController
   def root_items
     if params[:root_items]
       ids = params[:root_items].to_a.map(&:to_i) rescue []
-      @model.site(@cur_site).in(id: ids).
+      @model.in(id: ids).site(@cur_site).
         allow(:read, @cur_user, site: @cur_site).limit(@limit)
     else
       @model.site(@cur_site).where(depth: 1).
@@ -44,6 +46,19 @@ class Cms::Apis::NodeTreeController < ApplicationController
     @item.children.allow(:read, @cur_user, site: @cur_site).limit(@limit)
   end
 
+  def set_child_count
+    @child_count = Hash.new(0)
+    items = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+    items.pluck(:filename, :depth).each do |filename, depth|
+      next if depth == 1
+      parts = filename.split("/")
+      child = parts.pop
+      parent = parts.join("/")
+      @child_count[parent] ||= 0
+      @child_count[parent] += 1
+    end
+  end
+
   def items_hash(items)
     items = items.map do |item|
       {
@@ -54,7 +69,8 @@ class Cms::Apis::NodeTreeController < ApplicationController
         url: item_url(item),
         tree_url: cms_apis_node_tree_path(id: item.id, type: @type),
         is_current: (@item.present? && item.id == @item.id),
-        is_parent: (@item.present? && @item.filename.start_with?("#{item.filename}\/"))
+        is_parent: (@item.present? && @item.filename.start_with?("#{item.filename}\/")),
+        child_count: @child_count[item.filename]
       }
     end
     items.compact.uniq.sort{ |a, b| a[:filename].tr('/', "\0") <=> b[:filename].tr('/', "\0") }

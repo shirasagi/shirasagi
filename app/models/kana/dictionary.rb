@@ -45,6 +45,12 @@ class Kana::Dictionary
       self.master_root + "/" + site_id.to_s.chars.join("/") + "/_/user.dic"
     end
 
+    def master_dic_timestamp(site_id)
+      master_file = master_dic(site_id)
+      return unless ::File.exist?(master_file)
+      ::File.mtime(master_file)
+    end
+
     def build_dic(site_id, item_ids)
       mecab_indexer = SS.config.kana.mecab_indexer
       mecab_dicdir = SS.config.kana.mecab_dicdir
@@ -126,14 +132,9 @@ class Kana::Dictionary
       mecab_indexer = SS.config.kana.mecab_indexer
       mecab_dicdir = SS.config.kana.mecab_dicdir
 
-      cmd = Shellwords.escape(mecab_indexer)
-      cmd << " -d #{Shellwords.escape(mecab_dicdir)}"
-      cmd << " -u #{Shellwords.escape(output_file)}"
-      cmd << " -f UTF-8 -t UTF-8"
-      cmd << " #{Shellwords.escape(input_file)}"
-      logger.info("system(#{cmd})")
-      system(cmd)
-      raise I18n.t("kana.build_fail.index") if $CHILD_STATUS.exitstatus != 0
+      status = SS::Command.run(
+        mecab_indexer, "-d", mecab_dicdir, "-u", output_file, "-f", "UTF-8", "-t", "UTF-8", input_file)
+      raise I18n.t("kana.build_fail.index") if status.exitstatus != 0
     end
   end
 end

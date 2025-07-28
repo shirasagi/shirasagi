@@ -42,17 +42,17 @@ describe "gws_monitor_management_trashes", type: :feature, dbscope: :example do
 
     before do
       item1
-      item1.create_download_directory(File.dirname(item1.zip_path))
-      File.open(item1.zip_path, "w").close
+      ::FileUtils.mkdir_p(File.dirname(item1.zip_path))
+      ::File.open(item1.zip_path, "w").close
     end
 
     it "#delete" do
       expect(FileTest.exist?(item1.zip_path)).to be_truthy
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(FileTest.exist?(item1.zip_path)).to be_falsey
     end
   end

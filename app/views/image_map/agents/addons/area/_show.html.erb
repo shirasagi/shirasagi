@@ -1,0 +1,18 @@
+<% return if @cur_node.image.nil? %>
+
+<dl class="see">
+  <dt><%= @item.t :in_area %></dt>
+  <dd><%= render template: "image_map/agents/addons/area/_crop", locals: { readonly: true } %></dd>
+
+  <dt><%= @model.t :link_url %></dt>
+  <dd>
+    <% if @item.link_url.present? %>
+      <%= link_to @item.link_url, @item.link_url, target: "_blank", rel: "noopener" %>
+    <% end %>
+  </dd>
+
+  <% if @item.area_state_options.present? %>
+    <dt><%= @model.t :area_state %></dt>
+    <dd><%= @item.label :area_state %></dd>
+  <% end %>
+</dl>

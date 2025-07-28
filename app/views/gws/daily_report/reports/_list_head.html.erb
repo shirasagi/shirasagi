@@ -1,0 +1,13 @@
+<div class="list-head">
+  <label class="check"><input type="checkbox"/></label>
+
+  <div class="list-head-action">
+    <%= render template: "_list_head_tags" %>
+    <div class="list-head-action-destroy">
+      <%= ss_button_to t("ss.links.delete"), url_for(action: :destroy_all), model: @model, class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.soft_delete') %>
+      <%= ss_button_to t("ss.buttons.download"), url_for(action: :download_all_comments), model: @model, class: "btn btn-download btn-list-head-action", method: "post", confirm: t("ss.confirm.download") %>
+    </div>
+  </div>
+
+  <%= render template: "_search" %>
+</div>

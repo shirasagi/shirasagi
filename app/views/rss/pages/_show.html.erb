@@ -8,9 +8,9 @@
     <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %>
   </dd>
 
-  <% if @item.send(:layout_id).present? %>
+  <% if @item.layout %>
   <dt><%= @model.t :layout_id %></dt>
-  <dd><%= tryb{@item.layout.name} %></dd>
+  <dd><%= link_to_layout(@item.layout) %></dd>
   <% end %>
 
   <dt><%= @model.t :order %></dt>

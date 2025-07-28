@@ -8,6 +8,7 @@ class Member::BlogPage
   include Member::Addon::Blog::Location
   include Cms::Addon::GroupPermission
   include Cms::Addon::Release
+  include Cms::Lgwan::Page
 
   set_permission_name "member_blogs"
 

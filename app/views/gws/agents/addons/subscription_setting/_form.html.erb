@@ -10,7 +10,7 @@
   <dl class="see gws-addon-subscription-setting-custom-group">
     <dt><%= @model.t :subscribed_custom_group_ids %><%= @model.tt :subscribed_custom_group_ids %></dt>
     <dd>
-      <%= f.hidden_field "subscribed_custom_group_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "subscribed_custom_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "ajax-box" %>
     </dd>
     <dd>
@@ -32,7 +32,7 @@
   <dl class="see gws-addon-subscription-setting-group">
     <dt><%= @model.t :subscribed_group_ids %><%= @model.tt :subscribed_group_ids %></dt>
     <dd>
-      <%= f.hidden_field "subscribed_group_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "subscribed_group_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
@@ -55,7 +55,7 @@
   <dl class="see gws-addon-subscription-setting-member">
     <dt><%= @model.t :subscribed_member_ids %><%= @model.tt :subscribed_member_ids %></dt>
     <dd>
-      <%= f.hidden_field "subscribed_member_ids[]", value: "", class: "hidden-ids" %>
+      <%= f.hidden_field "subscribed_member_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
       <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>

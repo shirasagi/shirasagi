@@ -6,7 +6,7 @@ this.Chat_Chart = (function() {
       var dataColumns = $.parseJSON($(this).attr("data-columns"));
       var labels = dataColumns[0];
       var data = dataColumns[1];
-      var borderColor = [dataColumns[2]];
+      var color = [dataColumns[2]];
 
       new Chart(this, {
         type: 'bar',
@@ -17,20 +17,14 @@ this.Chat_Chart = (function() {
               type: 'line',
               label: $(this).attr("data-name"),
               data: data,
-              borderColor : borderColor,
+              borderColor: color,
+              backgroundColor: color,
               fill: false
              },
            ],
         },
         options: {
-          responsive: true,
-          // scales: {
-          //   yAxes: [{
-          //     ticks: {
-          //       stepSize: 1
-          //     },
-          //   }],
-          // }
+          responsive: true
         }
       });
     });

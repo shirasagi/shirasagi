@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       scope ":nid/:id" do
         get "questions" => "questions#index"
         get "procedures" => "procedures#index"
+        get "edges" => "edges#index"
       end
     end
   end
@@ -35,7 +36,14 @@ Rails.application.routes.draw do
       post :import_transitions, on: :collection
 
       get :download_template, on: :collection
+
+      get :download_combinations, on: :collection
+      get :import_combinations, on: :collection
+      post :import_combinations, on: :collection
+
+      get :download_combination_template, on: :collection
     end
+    resource :diagnostic, only: %i[show]
   end
 
   node "guide" do

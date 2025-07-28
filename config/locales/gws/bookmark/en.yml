@@ -1,0 +1,61 @@
+en:
+  gws/bookmark:
+    all: All bookmarks
+    notice:
+      save: Saved in Favorites
+      edit: Edit the favorite
+    options:
+      bookmark_model:
+        external_link: External link
+        other: Other
+
+  modules:
+    gws/bookmark: Favorites
+
+  mongoid:
+    models:
+      gws/bookmark/item: Favorites
+      gws/bookmark/folder: Folder
+    errors:
+      models:
+        gws/bookmark/folder:
+          same_folder_exists: The destination folder already exists
+          subfolder_of_itself: The destination folder contains its own folder.
+    attributes:
+      gws/bookmark/item:
+        name: Name
+        order: Order
+        url: URL
+        link_target: Target
+        bookmark_model: Functions
+        folder_id: Folder
+      gws/bookmark/folder:
+        name: Folder name
+        depth: Hierarchy
+        order: Order
+        state: Status
+        in_basename: Folder name
+        in_parent: Parent folder
+
+  tooltip:
+    gws/bookmark/item:
+      name:
+        - Enter a name.
+      order:
+        - Enter the order of bookmark.
+      url:
+        - Enter the URL.
+      link_target:
+        - Select the target of link.
+      bookmark_model:
+        - Select the function you want to link to.
+      folder_id:
+        - Select the folder.
+    gws/bookmark/folder:
+      name:
+        - Enter the folder name.
+        - 'The following characters cannot be used for folder names: \ / : * ? " &lt; > |'
+      order:
+        - Enter the order.
+      in_parent:
+        - Select the parent folder.

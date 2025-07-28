@@ -39,6 +39,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit facility_pages_path(site: site, cid: node)
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
 
         #
         # Create Facility::Node::Page
@@ -81,7 +82,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
 
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
         expect(page).to have_no_css("form#item-form")
 
         expect(Facility::Node::Page.all.count).to eq 1
@@ -115,7 +116,10 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         expect(page_node.new_days).to eq new_days
 
         visit facility_pages_path(site.id, node)
-        click_on name
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
+        within ".list-items" do
+          click_on name
+        end
         expect(page).to have_css("#facility-info", text: name)
 
         #
@@ -126,7 +130,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: name2
           click_button I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         page_node.reload
         expect(page_node.name).to eq name2
@@ -135,12 +139,16 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         # Delete Facility::Node::Page
         #
         visit facility_pages_path(site.id, node)
-        click_on name2
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
+        within ".list-items" do
+          click_on name2
+        end
         click_on I18n.t("ss.links.delete")
         within "form" do
           click_on I18n.t('ss.buttons.delete')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
 
         expect { page_node.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       end
@@ -193,7 +201,7 @@ describe "facility_node_pages", type: :feature, dbscope: :example, js: true do
         fill_in "item[basename]", with: "sample"
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_no_css("form#item-form")
 
       expect(Facility::Node::Page.all.count).to eq 1

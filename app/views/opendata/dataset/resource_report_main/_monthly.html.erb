@@ -1,3 +1,5 @@
+<% return if @items.blank? %>
+
 <div class="index">
   <% @items.group_by { |item| item["_id"]["year"] }.each do |year, year_items| %>
     <%
@@ -36,7 +38,7 @@
               </td>
               <% months.times do |month| %>
                 <% count = item["month#{month}_count"] || 0 %>
-                <th><%= count.to_s(:delimited) %></th>
+                <th><%= count.to_fs(:delimited) %></th>
               <% end %>
             </tr>
           <% end %>

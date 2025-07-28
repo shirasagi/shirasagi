@@ -44,24 +44,23 @@ class Jmaxml::Renderer::Base < AbstractController::Base
     @_page = self.class.page_class.new
   end
 
-  def page(attributes = {}, &block)
-    @_page.attributes = attributes.except(:parts_order, :content_type, :body, :template_name, :template_path)
-    responses = collect_responses(attributes, &block)
+  def page(template_path:, template_name: nil)
+    responses = collect_responses(template_path: template_path, template_name: template_name)
     @_page.html = responses.first[:html]
     @_page
   end
 
-  def collect_responses(headers, &block)
+  def collect_responses(template_path: nil, template_name: nil, html: nil)
     responses = []
 
-    if headers[:html]
+    if html.present?
       responses << {
-        html: headers.delete(:html),
+        html: html,
         content_type: self.class.default[:content_type] || "text/html"
       }
     else
-      templates_path = headers.delete(:template_path) || self.class.renderer_name
-      templates_name = headers.delete(:template_name) || action_name
+      templates_path = template_path.presence || self.class.renderer_name
+      templates_name = template_name.presence || action_name
 
       each_template(Array(templates_path), templates_name) do |template|
         responses << {

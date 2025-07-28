@@ -7,19 +7,17 @@
   <label class="check">
     <% if is_changeable || action == "destroy_all" %>
       <%= f.check_box_tag 'ids[]', item.id.to_s, checked: true %>
-    <% elsif item.is_a?(Uploader::File) %>
-      <%= f.check_box_tag 'ids[]', item.path.sub(@cur_site.path, ""), checked: true %>
     <% else %>
       <%= f.check_box_tag 'ids[]', false, false, { disabled: true } %>
     <% end %>
   </label>
   <div class="info">
     <% if is_changeable %>
-      <%= f.hidden_field_tag 'ids[]', item.id.to_s %>
+      <%= f.hidden_field_tag 'ids[]', item.id.to_s, id: nil %>
     <% end %>
-    <% if item.is_a?(Uploader::File)%>
-      <% filename = item.path.sub("#{@cur_site.path}/", "") %>
-      <%= link_to filename, action: :file, filename: filename, do: :show, class: "title", target: "_blank", rel: "noopener" %>
+    <% show_path = url_for(action: :show, id: item) rescue nil %>
+    <% if show_path %>
+      <%= link_to item.try(:name), show_path, class: "title", target: "_blank", rel: "noopener" %>
     <% else %>
       <%= link_to item.try(:name), { action: :show, id: item }, class: "title", target: "_blank", rel: "noopener" %>
     <% end %>

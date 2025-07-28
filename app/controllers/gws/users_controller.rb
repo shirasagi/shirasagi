@@ -148,14 +148,26 @@ class Gws::UsersController < ApplicationController
     disable_all
   end
 
-  def download
-    @items = @model.unscoped.site(@cur_site).order_by_title(@cur_site)
+  def download_all
+    if request.get? || request.head?
+      @item = SS::DownloadParam.new
+      render
+      return
+    end
+
+    @item = SS::DownloadParam.new params.require(:item).permit(:encoding)
+    if @item.invalid?
+      render
+      return
+    end
+
+    items = @model.unscoped.site(@cur_site).order_by_title(@cur_site)
     filename = "gws_users_#{Time.zone.now.to_i}.csv"
     webmail_support = params[:webmail_support].present?
     response.status = 200
     send_enum(
-      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site, webmail_support: webmail_support),
-      type: 'text/csv; charset=Shift_JIS', filename: filename
+      Gws::UserCsv::Exporter.enum_csv(items, site: @cur_site, encoding: @item.encoding, webmail_support: webmail_support),
+      type: "text/csv; charset=#{@item.encoding}", filename: filename
     )
   end
 
@@ -222,5 +234,13 @@ class Gws::UsersController < ApplicationController
       @items << item
     end
     render_confirmed_all(entries.size != @items.size, notice: t('ss.notice.unlock_user_all'))
+  end
+
+  def reset_mfa_otp
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    @item.unset(:mfa_otp_secret, :mfa_otp_enabled_at)
+    redirect_to url_for(action: :show), notice: t("ss.notice.reset_mfa_otp")
   end
 end

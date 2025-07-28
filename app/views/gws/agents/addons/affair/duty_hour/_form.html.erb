@@ -1,0 +1,20 @@
+<dl class="see">
+  <dt><%= @model.t :duty_hour_ids %></dt>
+  <dd>
+    <%= f.hidden_field "duty_hour_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("gws/affair.apis.duty_hours.index"), gws_affair_apis_duty_hours_path(single: 1), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead><tr><th class="name"><%= Gws::Affair::DutyHour.t :name %></th><th class="deselect"></th></tr></thead>
+      <tbody>
+      <% @item.duty_hours.each do |duty_hour| %>
+        <tr data-id="<%= duty_hour.id %>">
+          <td><%= f.hidden_field "duty_hour_ids[]", value: duty_hour.id, id: nil %> <%= duty_hour.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

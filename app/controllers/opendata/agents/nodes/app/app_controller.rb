@@ -18,8 +18,8 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
       filename(@app_path).
       first
 
-    raise "404" unless @app
-    raise '404' if !@preview && !@app.public?
+    raise SS::NotFoundError unless @app
+    raise SS::NotFoundError if !@preview && !@app.public?
   end
 
   def set_ideas
@@ -29,11 +29,11 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
       filename(@app_idea_path).
       first
 
-    raise "404" unless @app_idea
-    raise '404' if !@preview && !@app_idea.public?
+    raise SS::NotFoundError unless @app_idea
+    raise SS::NotFoundError if !@preview && !@app_idea.public?
 
     cond = { site_id: @cur_site.id, app_ids: @app_idea.id }
-    @ideas = Opendata::Idea.where(cond).and_public.order_by(:updated.asc)
+    @ideas = Opendata::Idea.where(cond).and_public(@cur_date).order_by(:updated.asc)
   end
 
   def set_file
@@ -47,7 +47,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
   public
 
   def pages
-    Opendata::App.site(@cur_site).and_public
+    Opendata::App.site(@cur_site).and_public(@cur_date)
   end
 
   def index
@@ -97,7 +97,7 @@ class Opendata::Agents::Nodes::App::AppController < ApplicationController
 
   def add_point
     @cur_node.layout = nil
-    raise "403" unless logged_in?(redirect: false)
+    raise SS::ForbiddenError unless logged_in?(redirect: false)
 
     cond = { site_id: @cur_site.id, member_id: @cur_member.id, app_id: @app.id }
 

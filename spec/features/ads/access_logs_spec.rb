@@ -33,12 +33,12 @@ describe "ads_access_logs", type: :feature, dbscope: :example do
 
         html = page.html.encode("UTF-8")
         expect(html).to include("アクセス日,リンクURL,アクセス数")
-        expect(html).to include("#{access_log0.date.strftime("%Y-%m-%d")},#{access_log0.link_url},#{access_log0.count}")
-        expect(html).to include("#{access_log1.date.strftime("%Y-%m-%d")},#{access_log1.link_url},#{access_log1.count}")
-        expect(html).to include("#{access_log2.date.strftime("%Y-%m-%d")},#{access_log2.link_url},#{access_log2.count}")
-        expect(html).to include("#{access_log3.date.strftime("%Y-%m-%d")},#{access_log3.link_url},#{access_log3.count}")
-        expect(html).to include("#{access_log4.date.strftime("%Y-%m-%d")},#{access_log4.link_url},#{access_log4.count}")
-        expect(html).to include("#{access_log5.date.strftime("%Y-%m-%d")},#{access_log5.link_url},#{access_log5.count}")
+        expect(html).to include("#{I18n.l(access_log0.date, format: :picker)},#{access_log0.link_url},#{access_log0.count}")
+        expect(html).to include("#{I18n.l(access_log1.date, format: :picker)},#{access_log1.link_url},#{access_log1.count}")
+        expect(html).to include("#{I18n.l(access_log2.date, format: :picker)},#{access_log2.link_url},#{access_log2.count}")
+        expect(html).to include("#{I18n.l(access_log3.date, format: :picker)},#{access_log3.link_url},#{access_log3.count}")
+        expect(html).to include("#{I18n.l(access_log4.date, format: :picker)},#{access_log4.link_url},#{access_log4.count}")
+        expect(html).to include("#{I18n.l(access_log5.date, format: :picker)},#{access_log5.link_url},#{access_log5.count}")
       end
     end
 

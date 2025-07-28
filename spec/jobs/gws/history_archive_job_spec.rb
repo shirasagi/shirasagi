@@ -58,7 +58,7 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
       it do
         expect(Gws::History.site(site).count).to eq 3
         Timecop.freeze(now) do
-          described_class.bind(site_id: site).perform_now
+          described_class.bind(site_id: site.id).perform_now
         end
         expect(Gws::History.site(site).count).to eq 2
 
@@ -106,7 +106,7 @@ describe Gws::HistoryArchiveJob, dbscope: :example do
       it do
         expect(Gws::History.site(site).count).to eq 8
         Timecop.freeze(now) do
-          described_class.bind(site_id: site).perform_now
+          described_class.bind(site_id: site.id).perform_now
         end
         expect(Gws::History.site(site).count).to eq 1
 

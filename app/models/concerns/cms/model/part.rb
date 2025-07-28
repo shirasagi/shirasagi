@@ -6,6 +6,8 @@ module Cms::Model::Part
   included do
     include Cms::Model::PartDiscriminatorRetrieval
 
+    cattr_accessor(:ajax_view_only, instance_accessor: false) { false }
+
     store_in collection: "cms_parts"
     set_permission_name "cms_parts"
 
@@ -14,6 +16,8 @@ module Cms::Model::Part
     field :ajax_view, type: String, default: "disabled"
     field :ajax_view_expire_seconds, type: Integer
     permit_params :mobile_view, :ajax_view, :ajax_view_expire_seconds
+
+    before_save :set_view_options
 
     liquidize do
       export as: :html do |context|
@@ -40,7 +44,11 @@ module Cms::Model::Part
   end
 
   def route_options
-    Cms::Part.plugins.select { |name, path, enabled| enabled }.map { |name, path, enabled| [name, path] }
+    Cms::Part.plugins.select { |plugin| plugin.enabled? }.map { |plugin| [plugin.name, plugin.path] }
+  end
+
+  def route_label
+    Cms::Part.plugins.find { |plugin| plugin.path == route }.try(:name)
   end
 
   def becomes_with_route(name = nil)
@@ -106,6 +114,11 @@ module Cms::Model::Part
   end
 
   private
+
+  def set_view_options
+    return unless self.class.ajax_view_only
+    self.ajax_view = "enabled"
+  end
 
   def fix_extname
     ".part.html"

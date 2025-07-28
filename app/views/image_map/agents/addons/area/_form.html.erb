@@ -1,0 +1,17 @@
+<%
+  return if !@cur_node.is_a?(ImageMap::Node::Page)
+  return if @cur_node.image.nil?
+%>
+
+<dl class="see">
+  <dt><%= @item.t :in_area %><%= @item.tt :in_area %></dt>
+  <dd><%= render template: "image_map/agents/addons/area/_crop", locals: { f: f, readonly: false } %></dd>
+
+  <dt><%= @model.t :link_url %><%= @model.tt :link_url %></dt>
+  <dd><%= f.text_field :link_url %></dd>
+
+  <% if @item.area_state_options.present? %>
+    <dt><%= @model.t :area_state %><%= @model.tt :area_state %></dt>
+    <dd><%= f.select :area_state, @item.area_state_options, include_blank: true %></dd>
+  <% end %>
+</dl>

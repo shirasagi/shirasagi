@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "gws_report_categories", type: :feature, dbscope: :example do
+describe "gws_report_categories", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
 
   context "basic crud" do
@@ -17,14 +17,17 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
       #
       # create
       #
-      click_on I18n.t('ss.links.new')
-
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.new')
+      end
+      wait_for_all_color_pickers_ready
       within "form#item-form" do
         fill_in "item[name]", with: name
-        fill_in "item[color]", with: color + "\n"
+        fill_in_color "item[color]", with: color
         fill_in "item[order]", with: order
         click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       category = Gws::Report::Category.site(site).find_by(name: name)
       expect(category.name).to eq name
@@ -36,12 +39,15 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
       #
       # edit
       #
-      click_link I18n.t('ss.links.edit')
-
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.edit')
+      end
+      wait_for_all_color_pickers_ready
       within "form#item-form" do
         fill_in "item[name]", with: name2
         click_on I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       category.reload
       expect(category.name).to eq name2
@@ -53,7 +59,9 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
       #
       # index
       #
-      click_link I18n.t('ss.links.back_to_index')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.back_to_index')
+      end
       within "div.info" do
         expect(page).to have_css("a.title", text: name2)
         click_link name2
@@ -62,8 +70,11 @@ describe "gws_report_categories", type: :feature, dbscope: :example do
       #
       # delete
       #
-      click_link I18n.t('ss.links.delete')
+      within ".nav-menu" do
+        click_link I18n.t('ss.links.delete')
+      end
       click_button I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       category = Gws::Report::Category.site(site).where(name: name).first
       expect(category).to be_nil

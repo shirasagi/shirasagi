@@ -4,7 +4,7 @@
   </div>
   <div class="options">
     <%= f.select :format, @item.format_options, selected: @item.format %>
-    <%= f.select :signature, Webmail::Signature.signature_options(@imap), include_blank: t('mongoid.models.webmail/signature') %>
+    <%= f.select :signature, Webmail::Signature.signature_options(@imap), include_blank: t('webmail.buttons.select_signature') %>
   </div>
   <div class="body-content body-text">
     <%= f.text_area :text, style: "height: 400px;", placeholder: @model.t(:body) %>

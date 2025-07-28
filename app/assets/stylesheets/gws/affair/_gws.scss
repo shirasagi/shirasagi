@@ -1,0 +1,146 @@
+// gws/affair
+
+.overtime-results {
+  margin-bottom: 10px;
+  tr.item-head {
+    background: #f2f2f2 !important;
+    color: #999 !important;
+  }
+  tr.item {
+    background: #fff !important;
+    th:hover, td:hover {
+      background: #fff !important;
+    }
+  }
+  th.time, td.time {
+    text-align: center;
+  }
+  tr:not(:last-child) {
+    th, td {
+      border-bottom: 1px solid #dcdcdc !important;
+    }
+  }
+}
+.overtime-aggregate {
+  height: 50px;
+  .title {
+    display: inline-block;
+    margin-top: 6px;
+    vertical-align: middle;
+  }
+}
+.aggregate-capitals {
+  th, td {
+    white-space: nowrap;
+  }
+  .time {
+    text-align: center;
+  }
+  .capital {
+    width: 200px;
+  }
+}
+.gws-affair-overtime-aggregate-tabs {
+  @include clear;
+  margin-top: -1px;
+  padding: 0 10px;
+  a {
+    display: block;
+    margin: 1px 6px -1px 0;
+    float: left;
+    border: 1px solid $gray4;
+    border-left: 3px solid #bbb;
+    border-radius: 0 4px 0 0;
+    background-color: $gray5;
+    color: #000;
+    @include mb {
+      margin: 1px 6px 6px 0;
+      border-radius: 4px;
+    }
+    .tab-name {
+      display: block;
+      padding: 5px 8px;
+      text-align: center;
+    }
+    &:hover {
+      border-left-color: $orange;
+      background-color: #fff;
+      text-decoration: none;
+    }
+    &.current {
+      border-bottom-color: #fff;
+      border-left-color: $orange;
+      background-color: #fff;
+      @include mb {
+        border-bottom-color: #bbb;
+      }
+    }
+  }
+}
+
+table.affair-overtime-aggregate {
+  width: 200px;
+  .total {
+    border-top: 1px solid #d0d0d0;
+  }
+}
+
+.leave-file-tooltip {
+  display: inline-block;
+  position: relative;
+  width: 16px;
+  height: 16px;
+  background: $orange;
+  color: $white;
+  line-height: 1.1;
+  @include border-radius(8px);
+  text-align: center;
+  cursor: pointer;
+}
+
+.gws-affair-shift-records {
+  .year-navi {
+    display: inline-block;
+  }
+  .month-navi {
+    display: inline-block;
+  }
+
+  tr.shift {
+    background-color: #ffe4c3;
+  }
+}
+
+.gws-affair-shift-table {
+  .working-time {
+    .name {
+      min-width: 16.5em;
+    }
+    .day {
+      text-align: center;
+      white-space: nowrap;
+      &.saturday {
+        color: #00f;
+      }
+      &.sunday {
+        color: #f00;
+      }
+      &.holiday {
+        color: #f00;
+      }
+    }
+    .shift-record {
+      .affair {
+        font-size: 80%;
+        text-align: center;
+        white-space: nowrap;
+      }
+      &.shift {
+        background-color: #ffe4c3;
+      }
+      &.focus {
+        background-color: #f2a950;
+      }
+    }
+  }
+}

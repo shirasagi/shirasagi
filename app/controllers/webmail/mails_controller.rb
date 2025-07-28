@@ -76,12 +76,30 @@ class Webmail::MailsController < ApplicationController
   def index
     @sys_notices = Sys::Notice.and_public.webmail_admin_notice.reorder(notice_severity: 1, released: -1).page(1).per(5)
 
+    @sort_hash = @cur_user.webmail_message_sort_hash(
+      params[:webmail_mode], params[:account], @mailbox, params[:sort], params[:order])
     @items = @imap.mails.
       mailbox(@mailbox).
       search(params[:s]).
+      reorder(@sort_hash).
       page(params[:page]).
       per(50).
       all
+
+    uid_list = []
+    @items.each do |item|
+      uid_list << item.uid
+    end
+
+    webmail_uid_list_session = {}
+    webmail_uid_list_session['uid_list'] = uid_list
+    if params[:s]
+      webmail_uid_list_session['search'] = params[:s].to_unsafe_h
+    else
+      webmail_uid_list_session['search'] = nil
+    end
+    webmail_uid_list_session['page'] = params[:page]
+    session[:webmail_uid_list] = webmail_uid_list_session
   end
 
   def show
@@ -89,6 +107,31 @@ class Webmail::MailsController < ApplicationController
       @imap.select(@mailbox)
       @item.set_seen
       @mailboxes = @imap.mailboxes.update_status
+    end
+
+    # 念の為初期化する（本アクションで設定するメンバー変数一覧を明示的に示す意図もある）
+    @uid_list = nil
+    @uid_index = nil
+    @next_uid = nil
+    @prev_uid = nil
+    @search = nil
+    @page = 1
+    webmail_uid_list_session = session[:webmail_uid_list]
+    return if webmail_uid_list_session.blank?
+
+    @uid_list = webmail_uid_list_session['uid_list']
+    @search = webmail_uid_list_session['search']
+    @page = webmail_uid_list_session['page']
+    return if @uid_list.blank?
+
+    @uid_index = @uid_list.index(@item.uid)
+    return if @uid_index.blank?
+
+    if @uid_index > 0
+      @prev_uid = @uid_list[@uid_index - 1]
+    end
+    if @uid_index < @uid_list.size
+      @next_uid = @uid_list[@uid_index + 1]
     end
   end
 
@@ -187,7 +230,9 @@ class Webmail::MailsController < ApplicationController
 
   def parts_batch_download
     io = ::StringIO.new('')
-    io.set_encoding(Encoding::CP932)
+    unless Zip.unicode_names
+      io.set_encoding(Encoding::CP932)
+    end
 
     buffer = Zip::OutputStream.write_buffer(io) do |out|
       @item.attachments.each do |part|
@@ -197,12 +242,12 @@ class Webmail::MailsController < ApplicationController
           file = @imap.mails.find_part params[:id], part.section
         end
 
-        out.put_next_entry(part.filename.encode('cp932', invalid: :replace, undef: :replace, replace: "_"))
+        out.put_next_entry(::Fs.zip_safe_name(part.filename))
         out.write file.decoded
       end
     end
 
-    send_data buffer.string, filename: "#{@item.subject}.zip",
+    send_data buffer.string, filename: "#{::Fs.zip_safe_name(@item.subject)}.zip",
               content_type: 'application/zip', disposition: :attachment
   end
 
@@ -212,6 +257,7 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply(@ref, params[:without_body].present?)
@@ -225,6 +271,7 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply_all(@ref, params[:without_body].present?)
@@ -238,9 +285,10 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_forward(@ref)
+    @item.new_forward(@ref, webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index)
     @dedicated = true
     render :new, layout: "ss/dedicated"
   end
@@ -251,9 +299,10 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_edit(@ref)
+    @item.new_edit(@ref, webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index)
     @dedicated = true
     render :new, layout: "ss/dedicated"
   end
@@ -367,9 +416,9 @@ class Webmail::MailsController < ApplicationController
     location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
     respond_to do |format|
-      notice = t("webmail.notice.#{action}", default: nil)
-      notice ||= t("ss.notice.#{action}", default: nil)
-      notice ||= t("ss.notice.saved")
+      notice = I18n.t("webmail.notice.#{action}", default: nil)
+      notice ||= I18n.t("ss.notice.#{action}", default: nil)
+      notice ||= I18n.t("ss.notice.saved")
       format.html { redirect_to location, notice: notice }
       format.json { render json: { action: params[:action], notice: notice } }
     end

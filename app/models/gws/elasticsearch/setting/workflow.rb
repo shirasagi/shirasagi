@@ -5,7 +5,8 @@ class Gws::Elasticsearch::Setting::Workflow
   self.model = Gws::Workflow::File
 
   def menu_label
-    cur_site.menu_workflow_label.presence || I18n.t('modules.gws/workflow')
+    workflow_label = cur_site.menu_workflow_label.presence || I18n.t('modules.gws/workflow')
+    "#{workflow_label}/#{I18n.t('mongoid.models.gws/workflow/file')}"
   end
 
   def search_types

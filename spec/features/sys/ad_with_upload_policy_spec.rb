@@ -17,32 +17,24 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
 
       # update
       within "form#item-form" do
-        fill_in "item[time]", with: rand(1..10)
-        fill_in "item[width]", with: rand(1..100)
-        wait_cbox_open do
-          find('a.btn', text: I18n.t('ss.buttons.upload')).click
-        end
-      end
-      wait_for_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
-      end
-      expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
-      expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
+        fill_in "item[time]", with: rand(5..10)
+        fill_in "item[width]", with: rand(300..400)
 
-      wait_cbox_close do
-        find(".select").click
-      end
-      within '.column-thumb' do
-        expect(page).to have_css('.name', text: SS::File.find_by(name: 'keyvisual.jpg').humanized_name)
-        expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
-      end
-      within "form#item-form" do
+        within first("[data-index]") do
+          fill_in "item[ad_links][][url]", with: unique_url
+          upload_to_ss_file_field "item[ad_links][][file_id]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        end
+
+        within first("[data-index]") do
+          expect(page).to have_css('.humanized-name', text: SS::File.find_by(name: 'keyvisual.jpg').humanized_name)
+          expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
+        end
+
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
-      file = SS::LinkFile.all.first
+      file = SS::File.find_by(name: 'keyvisual.jpg')
       expect(file.sanitizer_state).to eq 'wait'
       expect(Fs.exist?(file.path)).to be_truthy
       expect(Fs.exist?(file.sanitizer_input_path)).to be_truthy
@@ -53,9 +45,11 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
       expect(Fs.exist?(restored_file.path)).to be_truthy
 
       visit sys_ad_path
-      expect(page).to have_css('#selected-files .sanitizer-complete')
+      expect(page).to have_css('.file-view .sanitizer-complete', text: I18n.t('ss.options.sanitizer_state.complete'))
       click_on I18n.t("ss.links.edit")
-      expect(page).to have_css('.index.ajax-selected .sanitizer-complete')
+      within first("[data-index]") do
+        expect(page).to have_css('.sanitizer-complete', text: I18n.t('ss.options.sanitizer_state.complete'))
+      end
     end
   end
 
@@ -74,20 +68,42 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
 
       # update
       within "form#item-form" do
-        fill_in "item[time]", with: rand(1..10)
-        fill_in "item[width]", with: rand(1..100)
-        wait_cbox_open do
-          find('a.btn', text: I18n.t('ss.buttons.upload')).click
+        fill_in "item[time]", with: rand(5..10)
+        fill_in "item[width]", with: rand(200..300)
+        within first("[data-index]") do
+          fill_in "item[ad_links][][url]", with: unique_url
+          wait_for_cbox_opened { click_on I18n.t('ss.buttons.upload') }
         end
       end
-      wait_for_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        click_button I18n.t("ss.buttons.save")
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+        end
       end
-      page.accept_alert do
-        expect(page).to have_no_css('.file-view')
+      within_dialog do
+        within "form" do
+          within first(".index tbody tr") do
+            expect(page).to have_css(".errors", text: I18n.t("errors.messages.upload_restricted"))
+          end
+        end
       end
-      expect(SS::LinkFile.all.count).to eq 0
+      page.execute_script('$(".errors").html("");')
+
+      # エラーが表示されているが、それでもアップロードしてみる。
+      within_dialog do
+        within "form" do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        within "form" do
+          within first(".index tbody tr") do
+            expect(page).to have_css(".errors", text: I18n.t("errors.messages.upload_restricted"))
+          end
+        end
+      end
+
+      expect(SS::File.all.count).to eq 0
     end
   end
 end

@@ -13,6 +13,7 @@ module Tasks
             ::Gws::Notice::NotificationJob.bind(site_id: site.id).perform_now
             ::Gws::Survey::NotificationJob.bind(site_id: site.id).perform_now
             ::Gws::Board::NotificationJob.bind(site_id: site.id).perform_now
+            ::Gws::Affair::NotifyCompensatoryFileJob.bind(site_id: site.id).perform_now
           end
         end
 

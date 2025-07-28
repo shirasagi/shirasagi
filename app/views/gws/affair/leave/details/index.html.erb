@@ -1,0 +1,33 @@
+<%
+  group_options = @groups.map { |g| [g.name, g.id] }
+%>
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%= form_tag({ action: :index }, { method: "GET" }) do %>
+        <%= select_tag :group_id, options_for_select(group_options, selected: @group.id), { data: { controller: "ss--submit-on-change" } } %>
+        <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+        <%= link_to t("ss.buttons.reset"), { action: :index }, class: "btn" %>
+        <% if @model.allowed_aggregate?(:manage, @cur_user, @cur_site) %>
+          <%= link_to t("ss.links.download"), { action: :download, group_id: @group.id }, class: "btn", style: "float: right;" %>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <table class="index">
+    <thead>
+      <tr>
+        <th><%= Gws::User.t :name %></th>
+        <th><%= Gws::User.t :organization_uid %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |item| %>
+        <tr>
+          <td><%= link_to item.long_name, { action: :show, group_id: @group.id, uid: item.id } %></td>
+          <td><%= item.organization_uid %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

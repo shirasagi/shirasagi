@@ -17,6 +17,11 @@ Rails.application.routes.draw do
     scope path: ':folder_id/:category_id' do
       resources :readables, only: [:index, :show] do
         post :toggle_browsed, on: :member
+        get :print, on: :member
+      end
+      resources :calendars, only: [:index, :show] do
+        get :events, on: :collection
+        get :print, on: :collection
       end
       resources :editables, concerns: [:soft_deletion], except: [:destroy] do
         match :move, on: :member, via: [:get, :post]
@@ -40,7 +45,7 @@ Rails.application.routes.draw do
       get ":folder_id/:category_id/:mode/folder_list" => "folder_list#index", as: "folder_list"
       scope path: ':notice_id' do
         get 'members' => 'members#index'
-        resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+        resources :comments, concerns: [:deletion], except: [:index, :new, :show]
       end
     end
   end

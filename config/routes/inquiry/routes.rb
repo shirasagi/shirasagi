@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   end
 
   concern :change_state do
-    get :state, on: :member
     put :change_state_all, on: :collection, path: ''
   end
 
@@ -20,13 +19,25 @@ Rails.application.routes.draw do
     get "/" => redirect { |p, req| "#{req.path}/columns" }, as: :main
     resources :nodes, concerns: [:deletion, :change_state]
     resources :forms, only: [:index]
-    resources :columns, concerns: :deletion
+    resources :columns, concerns: [:deletion] do
+      post :reorder, on: :collection
+    end
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :edit, :update, :destroy] do
       get :download_afile, on: :member, path: "/fileid/:fid/download"
     end
     get "results" => "results#index", as: :results
     get "results/download" => "results#download", as: :results_download
     resources :feedbacks, only: [:index, :show]
+
+    namespace :frames do
+      resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
+    end
+
+    namespace "apis" do
+      resources :columns, only: %i[edit update]
+    end
   end
 
   node "inquiry" do

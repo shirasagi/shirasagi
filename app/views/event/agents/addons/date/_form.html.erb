@@ -7,15 +7,15 @@
 
 <% render_recurrence = proc do |recurr, index| %>
   <div class="event-recurrence">
-    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1" %>
+    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1", id: nil %>
     <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_all_day]", "1", id: nil %>
 
     <div class="event-recurrence-row">
       <%= button_tag t("ss.buttons.delete"), type: "button", class: "btn event-recurrence-delete-btn" %>
       <div class="event-recurrence-date">
-        <%= text_field_tag "#{f.object_name}[event_recurrences][][in_start_on]", recurr.start_date.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+        <%= ss_date_field_tag "#{f.object_name}[event_recurrences][][in_start_on]", recurr.start_date, {}, { id: nil, class: "event-recurrence-date-start-on" } %>
         <%= t("ss.wave_dash") %>
-        <%= text_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on.try { |time| I18n.l(time.to_date, format: :picker) }, class: "date js-date", id: nil %>
+        <%= ss_date_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on, {}, { id: nil, class: "event-recurrence-date-until-on" } %>
       </div>
 
       <% if false %>
@@ -35,7 +35,7 @@
 
       <div class="event-recurrence-excludes">
         <% disp = recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>
-        <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_exclude_dates]", disp %>
+        <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_exclude_dates]", disp, id: nil %>
         <%= button_tag t("event.exclude_dates"), type: "button", class: "btn event-recurrence-exclude-dates-btn", data: { url: event_apis_edit_exclude_dates_path } %>
         <div class="event-recurrence-excludes-summary" title="<%= disp %>"><%= disp %></div>
       </div>
@@ -43,10 +43,11 @@
 
     <div class="event-recurrence-row">
       <div class="event-recurrence-wdays">
+        <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_by_days][]", nil, id: nil %>
         <% week_days.each_with_index do |wday, index| %>
-          <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", index, recurr.by_days && recurr.by_days.include?(index) %><%= wday %></label>
+          <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", index, recurr.by_days && recurr.by_days.include?(index), id: nil %><%= wday %></label>
         <% end %>
-        <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", "holiday", recurr.includes_holiday %><%= "祝日" %></label>
+        <label><%= check_box_tag "#{f.object_name}[event_recurrences][][in_by_days][]", "holiday", recurr.includes_holiday, id: nil %><%= "祝日" %></label>
       </div>
     </div>
   </div>
@@ -54,10 +55,13 @@
 
 <dl class="see mod-event">
   <dt><%= @model.t :event_name %><%= @model.tt :event_name %></dt>
-  <dd><%= f.text_field :event_name %></dd>
+  <dd><%= f.text_field :event_name, id: nil %></dd>
 
   <dt><%= @model.t :event_recurrences %><%= @model.tt :event_recurrences %></dt>
   <dd>
+    <%# for removing all %>
+    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", nil, id: nil %>
+
     <% @item.event_recurrences.each_with_index do |recurr, index| %>
       <% render_recurrence.call recurr, index %>
     <% end %>
@@ -76,7 +80,7 @@
   </dd>
 
   <dt><%= @model.t :event_deadline %><%= @model.tt :event_deadline %></dt>
-  <dd><%= f.text_field :event_deadline, class: "datetime js-datetime", value: tryb { @item.event_deadline.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :event_deadline, {}, { id: nil } %></dd>
 </dl>
 
 <%= jquery do%>

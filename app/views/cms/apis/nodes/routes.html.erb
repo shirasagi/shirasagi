@@ -1,0 +1,34 @@
+<%= jquery do %>
+  <% if params[:layout] == "iframe" %>
+    window.top.SS_SearchUI.modal({ $el: $(".ss-ajax-in-iframe-content") });
+  <% else %>
+    SS_SearchUI.modal();
+  <% end %>
+<% end %>
+
+<table class="index">
+  <thead class="list-head">
+  <tr>
+    <% if @multi %>
+      <th class="checkbox"><input type="checkbox" /></th>
+    <% end %>
+    <th class="name"><%= t("mongoid.attributes.cms/model/node.route") %></th>
+  </tr>
+  </thead>
+  <tbody class="items">
+  <% @items.each do |name, path| %>
+    <tr data-id="<%= path %>" class="list-item">
+      <% if @multi %>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= path %>" />
+        </td>
+      <% end %>
+      <td class="name"><%= link_to name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+
+<div class="search-ui-select">
+  <%= button_tag t("cms.apis.nodes_routes.select"), { type: :button, class: "select-items btn" } %>
+</div>

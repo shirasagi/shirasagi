@@ -13,10 +13,10 @@
   }
 }
 .gws-board-flag-new {
-  margin-right: 8px;
+  //margin-right: 8px;
   color: #d00;
   font-weight: bold;
-  &:after { content: "New!"; }
+  &:after { content: "New"; }
 }
 
 // show
@@ -39,6 +39,10 @@
     }
     .body {
       @include box-body;
+
+      .meta {
+        text-align: right;
+      }
     }
     .files, .links {
       margin: 10px;
@@ -48,8 +52,8 @@
     }
     .files a, .link-item {
       line-height: 1.5;
-      word-break: normal;
       word-wrap: normal;
+      word-break: normal;
     }
     .status {
       padding: 15px;
@@ -62,17 +66,25 @@
     }
   }
   .menu {
-    padding: 0 5px 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    padding: 0 10px 10px;
     text-align: right;
-    a {
-      margin: 0 4px;
+    .btn:has(.material-icons-outlined) {
+      display: flex;
+      align-items: center;
+      gap: 2px;
     }
     a.primary {
       @include grd-orange;
     }
   }
   .comments {
-    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px;
   }
 
   .subscribed-users {

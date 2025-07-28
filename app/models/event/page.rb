@@ -26,10 +26,11 @@ class Event::Page
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
   include Cms::Addon::ForMemberPage
+  include Cms::Lgwan::Page
 
   set_permission_name "event_pages"
 
-  after_save :new_size_input, if: ->{ @db_changes }
+  after_save :new_size_input, if: ->{ changes.present? || previous_changes.present? }
 
   default_scope ->{ where(route: "event/page") }
 end

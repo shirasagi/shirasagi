@@ -11,28 +11,9 @@
     <% if @item.question_type == "choices" %>
       <dt><%= "#{t("guide.labels.choices")}#{no + 1}" %></dt>
       <dd><%= edge.value %></dd>
-    <% else %>
-      <dt><%= edge.value %></dt>
-    <% end %>
-
-    <dd>
-      <% if edge.points.present? %>
-        <table class="index">
-          <tbody>
-          <% edge.points.each do |point| %>
-            <tr>
-              <td>
-                <% if point.question? %>
-                  <%= link_to point.name_with_type, guide_question_path(id: point.id) %>
-                <% elsif point.procedure? %>
-                  <%= link_to point.name_with_type, guide_procedure_path(id: point.id) %>
-                <% end %>
-              </td>
-            </tr>
-          <% end %>
-          </tbody>
-        </table>
+      <% if edge.explanation.present? %>
+        <dd><%= edge.explanation %></dd>
       <% end %>
-    </dd>
+    <% end %>
   <% end %>
 </dl>

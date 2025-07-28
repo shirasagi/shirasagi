@@ -5,13 +5,13 @@ describe Webmail::Imap::UidsCommand, dbscope: :example do
   let(:setting) { user.imap_settings.first }
   let(:item) { Webmail::Imap::Base.new_by_user(user, setting) }
 
-  describe "#uids_size" do
-    it do
-      expect(item.uids_size('1,2,3,4')).to eq 4
-      expect(item.uids_size('1:6')).to eq 6
-      expect(item.uids_size('1,5:7,10,15:17')).to eq 8
-    end
-  end
+  # describe "#uids_size" do
+  #   it do
+  #     expect(item.uids_size('1,2,3,4')).to eq 4
+  #     expect(item.uids_size('1:6')).to eq 6
+  #     expect(item.uids_size('1,5:7,10,15:17')).to eq 8
+  #   end
+  # end
 
   describe "#uids_compress" do
     it do

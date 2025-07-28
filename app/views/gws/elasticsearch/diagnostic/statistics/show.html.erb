@@ -1,0 +1,9 @@
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "addon-stats", head: "Stats", toggle: true } do %>
+    <%= render "show_stats", addon: { id: "addon-stats", head: "Stats", toggle: true } %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "addon-segments", head: "Segments", toggle: true } do %>
+    <%= render "show_segments", addon: { id: "addon-segments", head: "Segments", toggle: true } %>
+  <% end %>
+</div>

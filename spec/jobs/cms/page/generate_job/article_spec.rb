@@ -65,7 +65,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(page1.url, page2.url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(page1.url, page2.url)).to_stdout
     end
 
     it do
@@ -99,6 +99,27 @@ describe Cms::Page::GenerateJob, dbscope: :example do
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
+
+      Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_pages').first.tap do |task|
+        Cms::GenerationReportCreateJob.bind(site_id: site.id).perform_now(task.id)
+
+        expect(Job::Log.count).to eq 2
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(Cms::GenerationReport::Title.all.count).to eq 1
+        title = Cms::GenerationReport::Title.all.first
+        expect(title.site_id).to eq site.id
+        expect(title.name).to include("generate page performance log")
+        expect(title.task_id).to eq task.id
+        expect(title.sha256_hash).to be_present
+        expect(title.generation_type).to eq "pages"
+
+        expect(Cms::GenerationReport::History[title].all.count).to eq 5
+        expect(Cms::GenerationReport::Aggregation[title].all.count).to eq 1
+      end
     end
   end
 
@@ -114,7 +135,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      expect { described_class.bind(site_id: site, node_id: node).perform_now }.to \
+      expect { described_class.bind(site_id: site.id, node_id: node.id).perform_now }.to \
         output(include(page1.url, page2.url)).to_stdout
     end
 
@@ -165,7 +186,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       Fs.rm_rf ss_file3.public_path
       Fs.rm_rf ss_file4.public_path
 
-      expect { described_class.bind(site_id: site).perform_now }.to \
+      expect { described_class.bind(site_id: site.id).perform_now }.to \
         output(include(I18n.t("mongoid.attributes.ss/addon/generate_lock.generate_locked"))).to_stdout
     end
 
@@ -223,7 +244,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
     end
 
     it do
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(page1.url, page2.url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.to output(include(page1.url, page2.url)).to_stdout
 
       expect(File.size(page1.path)).to be > 0
       expect(File.size(ss_file1.public_path)).to be > 0
@@ -235,7 +256,7 @@ describe Cms::Page::GenerateJob, dbscope: :example do
       site.file_fs_access_restriction_state = "enabled"
       site.save!
 
-      expect { described_class.bind(site_id: site).perform_now }.not_to output(include(page1.url, page2.url)).to_stdout
+      expect { described_class.bind(site_id: site.id).perform_now }.not_to output(include(page1.url, page2.url)).to_stdout
 
       expect(File.size(page1.path)).to be > 0
       expect(File.exist?(ss_file1.public_path)).to be_falsey

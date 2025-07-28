@@ -68,10 +68,10 @@ describe Rss::Page, dbscope: :example do
       expect(Cms::Page.and_public.pluck(:id)).to include(page1.id, page3.id)
 
       # at current
-      expect(described_class.and_public(current).count).to eq 1
-      expect(described_class.and_public(current).pluck(:id)).to include(page1.id)
-      expect(Cms::Page.and_public(current).count).to eq 1
-      expect(Cms::Page.and_public(current).pluck(:id)).to include(page1.id)
+      expect(described_class.and_public(current).count).to eq 2
+      expect(described_class.and_public(current).pluck(:id)).to include(page1.id, page3.id)
+      expect(Cms::Page.and_public(current).count).to eq 2
+      expect(Cms::Page.and_public(current).pluck(:id)).to include(page1.id, page3.id)
 
       # at current + 1.day
       expect(described_class.and_public(current + 1.day).count).to eq 2

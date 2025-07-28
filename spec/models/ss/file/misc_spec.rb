@@ -228,7 +228,7 @@ describe SS::File, dbscope: :example do
     context "when js file is uploaded with application/octet-stream" do
       let(:filename) { "a.js" }
       let(:mime_type_map) { {} }
-      its(:content_type) { is_expected.to eq "application/javascript" }
+      its(:content_type) { is_expected.to eq "text/javascript" }
     end
 
     context "when jtd file is uploaded with application/octet-stream" do
@@ -396,7 +396,7 @@ describe SS::File, dbscope: :example do
       let(:src) do
         tmp_ss_file(
           Cms::File,
-          site: site, user: user1, model: "cms/file", contents: "#{Rails.root}/spec/fixtures/ss/logo.png",
+          site: site, user: user1, model: Cms::File::FILE_MODEL, contents: "#{Rails.root}/spec/fixtures/ss/logo.png",
           group_ids: user1.group_ids
         )
       end
@@ -440,7 +440,7 @@ describe SS::File, dbscope: :example do
         file = SS::UserFile.new
         Fs::UploadedFile.create_from_file("spec/fixtures/cms/all_contents_1.csv") do |upload_file|
           file.in_file = upload_file
-          file.model = "ss/user_file"
+          file.model = SS::UserFile::FILE_MODEL
           file.save!
         end
         file
@@ -459,7 +459,7 @@ describe SS::File, dbscope: :example do
         Fs::UploadedFile.create_from_file("spec/fixtures/cms/all_contents_1.csv") do |upload_file|
           file.cur_site = site
           file.in_file = upload_file
-          file.model = "cms/file"
+          file.model = Cms::File::FILE_MODEL
           file.save!
         end
         file
@@ -662,10 +662,11 @@ describe SS::File, dbscope: :example do
     context "when rfc3986's sub-delims symbol is given to name" do
       let(:rfc3986_sub_delims) { %w(! $ & ' ( ) * + , ; =) }
       let(:filesystem_unsafe_on_windows) { %w(\\ / : * ? " < > |) }
+      let(:rails_escaped) { rfc3986_sub_delims.reject { |ch| CGI.escapeHTML(ch) == ch } }
 
       it do
         # sub delims are not escaped
-        subject.name = "a#{(rfc3986_sub_delims - filesystem_unsafe_on_windows).join}b.txt"
+        subject.name = "a#{(rfc3986_sub_delims - filesystem_unsafe_on_windows - rails_escaped).join}b.txt"
         expect(subject.url).to eq "/fs/#{subject.id}/_/#{subject.name}"
       end
     end
@@ -690,7 +691,7 @@ describe SS::File, dbscope: :example do
       tmp_ss_file(Board::File, site: site, user: user, model: "board/post", contents: file_path, basename: "logo3.png")
     end
     let!(:file4) do
-      tmp_ss_file(Cms::File, site: site, user: user, model: "cms/file", contents: file_path, basename: "logo4.png")
+      tmp_ss_file(Cms::File, site: site, user: user, model: Cms::File::FILE_MODEL, contents: file_path, basename: "logo4.png")
     end
     let!(:file5) do
       tmp_ss_file(Member::PhotoFile, site: site, user: user, model: "member/photo", contents: file_path, basename: "logo5.png")

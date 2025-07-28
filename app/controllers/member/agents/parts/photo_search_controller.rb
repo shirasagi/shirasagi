@@ -5,8 +5,8 @@ class Member::Agents::Parts::PhotoSearchController < ApplicationController
     @node = @cur_part.parent
     return head :ok unless @node
 
-    @locations  = Member::Node::PhotoLocation.site(@cur_site).and_public
-    @categories = Member::Node::PhotoCategory.site(@cur_site).and_public
+    @locations  = Member::Node::PhotoLocation.site(@cur_site).and_public(@cur_date)
+    @categories = Member::Node::PhotoCategory.site(@cur_site).and_public(@cur_date)
     @query      = {
       keyword: "",
       contributor: "",

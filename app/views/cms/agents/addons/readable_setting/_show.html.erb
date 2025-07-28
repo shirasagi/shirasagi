@@ -12,10 +12,10 @@
     <dl class="see">
 
       <dt><%= @model.t :readable_group_ids %></dt>
-      <dd><%=br @item.readable_group_names %></dd>
+      <dd><%= br @item.readable_groups.site(@cur_site).pluck(:name) %></dd>
 
       <dt><%= @model.t :readable_member_ids %></dt>
-      <dd><%=br @item.readable_member_names %></dd>
+      <dd><%=br @item.readable_members.site(@cur_site).pluck(:name) %></dd>
     </dl>
   </div>
 </div>

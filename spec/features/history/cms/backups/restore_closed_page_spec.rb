@@ -1,16 +1,16 @@
 require 'spec_helper'
 
 describe "history_cms_backups able to restore only closed page", type: :feature, dbscope: :example do
-  let(:site) { cms_site }
-  let(:user) { cms_user }
+  let!(:site) { cms_site }
+  let!(:user) { cms_user }
 
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
-  let(:ss_file1) { create_once :ss_file, user: user }
-  let(:page_item1) do
+  let!(:node) { create :article_node_page, cur_site: site }
+  let!(:page_item1) do
     page_item = create(:article_page, cur_node: node, user: user)
     Timecop.travel(1.day.from_now) do
       page_item.name = "first update"
       page_item.state = "closed"
+      ss_file1 = tmp_ss_file user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       page_item.file_ids = [ss_file1.id]
       page_item.update
     end
@@ -21,12 +21,12 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
     end
     page_item
   end
-  let(:ss_file2) { create_once :ss_file, user: user }
-  let(:page_item2) do
+  let!(:page_item2) do
     page_item = create(:article_page, cur_node: node, user: user)
     Timecop.travel(1.day.from_now) do
       page_item.name = "first update"
       page_item.state = "public"
+      ss_file2 = tmp_ss_file user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png"
       page_item.file_ids = [ss_file2.id]
       page_item.update
     end
@@ -67,7 +67,10 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
 
-      click_link I18n.l(backup_item1.created)
+      within "[data-id='#{backup_item1.id}']" do
+        expect(page).to have_content(I18n.l(backup_item1.data[:updated].in_time_zone, format: :picker))
+        click_on I18n.t("ss.links.show")
+      end
       expect(current_path).not_to eq sns_login_path
 
       expect(page).not_to have_link(I18n.t("history.restore"))
@@ -82,7 +85,10 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       basic_values = page.all("#addon-basic dd").map(&:text)
       expect(basic_values.index("second update")).to be_truthy
 
-      click_link I18n.l(backup_item2.created)
+      within "[data-id='#{backup_item2.id}']" do
+        expect(page).to have_content(I18n.l(backup_item2.data[:updated].in_time_zone, format: :picker))
+        click_on I18n.t("ss.links.show")
+      end
       expect(current_path).not_to eq sns_login_path
 
       click_link I18n.t("history.restore")
@@ -91,7 +97,7 @@ describe "history_cms_backups able to restore only closed page", type: :feature,
       click_button I18n.t("history.buttons.restore")
       expect(current_path).to eq show2_path
 
-      click_link "詳細を見る"
+      click_link I18n.t('ss.links.back')
       expect(current_path).to eq page2_path
 
       basic_values = page.all("#addon-basic dd").map(&:text)

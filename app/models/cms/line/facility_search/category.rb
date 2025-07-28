@@ -35,12 +35,12 @@ class Cms::Line::FacilitySearch::Category
     state == 'public'
   end
 
-  def file_previewable?(file, user:, member:)
+  def file_previewable?(file, site:, user:, member:)
     public?
   end
 
   class << self
-    def and_public
+    def and_public(_date = nil)
       where(state: "public")
     end
 

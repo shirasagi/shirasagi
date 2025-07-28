@@ -36,7 +36,7 @@ ja:
       notify_message: "ダウンロードの準備が完了しました。\n下記のURLからダウンロードしてください。\n\n%{link}"
       start_message: "エクスポート処理を開始しました。\nエクスポート処理が完了次第、ダウンロードリンクが通知されます。"
     export_failed:
-      subject: '[メッセージ] エクスポートが失敗しました。'
+      subject: '[メール] エクスポートが失敗しました。'
       notify_message: "エクスポートが失敗しました。失敗の原因はタスク・マネージャーから確認することができます。"
       empty_mails: エクスポート対象のメールが見つかりませんでした。
     import:
@@ -77,6 +77,7 @@ ja:
       send_mdn: 開封確認を送付する
       ignore_mdn: 要求を無視する
       batch_download: 一括ダウンロード
+      select_signature: 署名を選択
     options:
       action:
         copy: コピーする
@@ -214,6 +215,7 @@ ja:
       webmail/addon/group_extension:
         imap_setting_name: アカウント名
         from: 名前
+        account_index: アカウント番号
         address: メールアドレス
         imap_host: IMAP/ホスト
         imap_port: IMAP/ポート
@@ -226,6 +228,7 @@ ja:
         imap_draft_box: 下書きフォルダー
         imap_trash_box: ゴミ箱フォルダー
         threshold_mb: 警告表示
+        imap_default_index: IMAP/既定アカウント
       webmail/user:
         in_file: ファイル
         account_index: アカウント番号
@@ -384,11 +387,7 @@ ja:
       imap_default_index:
         - このアカウントを既定のアカウントにするか選択します。
 
-    webmail/role:
-      permission_level:
-        - 権限レベルを設定します。
-
   job:
     models:
-      webmail/history_archive_job: 操作履歴アーカイブ作成
-      webmail/role_import_job: ロール/権限インポート
+      webmail/history_archive_job: ウェブメール/操作履歴アーカイブ作成
+      webmail/role_import_job: ウェブメール/ロール・権限インポート

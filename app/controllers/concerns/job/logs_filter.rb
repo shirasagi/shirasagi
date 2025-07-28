@@ -42,7 +42,13 @@ module Job::LogsFilter
 
   def min_updated
     keep_logs = SS.config.job.keep_logs
-    Time.zone.now - keep_logs
+    min1 = Time.zone.now - keep_logs
+    min2 = log_criteria.min(:created)
+    if min2
+      min1 < min2 ? min1 : min2
+    else
+      min1
+    end
   end
 
   def class_name_options
@@ -53,15 +59,16 @@ module Job::LogsFilter
         _id: "$class_name",
         count: { "$sum" => 1 }
       } }
-      pipes << { "$sort" => { "count" => -1, "_id" => 1 } }
 
       data = @model.collection.aggregate(pipes)
-      data.map do |d|
+      options = data.map do |d|
         id = d["_id"]
         count = d["count"]
         humanized_id = I18n.t("job.models.#{id.underscore}", default: id)
-        [ "#{humanized_id} (#{count.to_s(:delimited)})", id ]
+        [ "#{humanized_id} (#{count.to_fs(:delimited)})", id ]
       end
+      options.sort!
+      options
     end
   end
 
@@ -69,6 +76,14 @@ module Job::LogsFilter
 
   def index
     @items = log_criteria.search(@s).order_by(updated: -1).page(params[:page]).per(50)
+
+    render_opts = {}
+    if request.headers.key?("HTTP_TURBO_FRAME")
+      @frame_id = request.headers["HTTP_TURBO_FRAME"]
+      render_opts[:layout] = "ss/item_frame"
+    end
+
+    render template: 'index', **render_opts
   end
 
   def show
@@ -132,18 +147,21 @@ module Job::LogsFilter
 
   def build_csv(items)
     require "csv"
-    CSV.generate do |data|
-      data << %w(ClassName Started Closed State Args Logs)
-      items.each do |item|
-        class_name = item.class_name.underscore
-        data << [
-          t(class_name, scope: "job.models", default: class_name.humanize),
-          item.start_label,
-          item.closed_label,
-          t(item.state, scope: "job.state"),
-          item.args,
-          item.joined_jobs
-        ]
+
+    I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << %w(ClassName Started Closed State Args Logs)
+        items.each do |item|
+          class_name = item.class_name.underscore
+          data << [
+            t(class_name, scope: "job.models", default: class_name.humanize),
+            item.start_label,
+            item.closed_label,
+            t(item.state, scope: "job.state"),
+            item.args,
+            item.joined_jobs
+          ]
+        end
       end
     end
   end

@@ -1,0 +1,16 @@
+<% return unless report.share_column_ids.include?(column_value.column.id.to_s) %>
+
+<td class="share-cell">
+  <div class="share-cell-in">
+    <div class="user-name"><%= gws_public_user_long_name(report.user.long_name) %></div>
+    <div class="report-value-wrap">
+      <div class="report-value">
+        <div class="report-name">【<%= column_value.column.try(:name) %>】</div>
+        <%= br column_value.value %>
+      </div>
+    </div>
+    <% report.column_comments(column_value.column_id).each do |comment| %>
+      <div class="comment-value"><%= br comment.body %>(<%= comment.user.try(:name) %>)</div>
+    <% end %>
+  </div>
+</td>

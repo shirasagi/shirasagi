@@ -7,7 +7,7 @@ module Gws::Monitor::TopicFilter
 
     before_action :set_item, only: %i[
       show edit update delete destroy public preparation question_not_applicable answered disable active publish
-      close open download file_download all_topic_files
+      close open download file_download all_topic_files print
     ]
 
     before_action :set_selected_items, only: %i[
@@ -27,10 +27,8 @@ module Gws::Monitor::TopicFilter
 
   def set_category
     @categories = Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).tree_sort
-    if category_id = params[:category].presence
-      if category_id != '-'
-        @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
-      end
+    if (category_id = params[:category].presence) && category_id != '-'
+      @category ||= Gws::Monitor::Category.site(@cur_site).readable(@cur_user, site: @cur_site).where(id: category_id).first
     end
   end
 
@@ -85,6 +83,31 @@ module Gws::Monitor::TopicFilter
     @item.ref_file_ids = @source.file_ids
 
     render template: "new"
+  end
+
+  def copy
+    set_item
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if request.get? || request.head?
+      @item.name = "[#{I18n.t("workflow.cloned_name_prefix")}] #{@item.name}".truncate(80)
+      return
+    end
+
+    @new_item = @item.new_clone
+    @new_item.attributes = get_params
+
+    result = @new_item.save
+    if !result
+      SS::Model.copy_errors(@new_item, @item)
+    end
+
+    render_opts = {}
+    render_opts[:render] = { template: "copy" }
+    if result
+      render_opts[:location] = gws_monitor_admin_path(id: @new_item)
+    end
+    render_update result, render_opts
   end
 
   # 受け取り済みにする
@@ -147,44 +170,36 @@ module Gws::Monitor::TopicFilter
   def download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
-    send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
+    if request.get? || request.head?
+      render
+      return
+    end
+
+    exporter = Gws::Monitor::TopicExporter.new(cur_site: @cur_site, cur_user: @cur_user, item: @item)
+
+    csv_params = params.require(:item).permit(:encoding, :download_comment)
+    csv_params = csv_params.to_h.symbolize_keys
+    enumerable = exporter.enum_csv(**csv_params)
+
+    filename = @model.to_s.tableize.tr("/", "_")
+    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   # 添付ファイル一括ダウンロード
   def file_download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    @download_file_group_ssfile_ids = []
-    @item.attend_groups.each do |group|
-      next if @item.comment(group.id).blank?
-
-      download_file_ids = @item.comment(group.id)[0]
-      order = group.order || 0
-      filename = "#{order}_#{File.basename(download_file_ids.user_group_name)}"
-      @download_file_group_ssfile_ids << [filename, download_file_ids.file_ids]
+    component = Gws::Monitor::TopicZipCreator.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, topic: @item)
+    if component.create_zip
+      filename = SS::FilenameUtils.convert_to_url_safe_japanese("#{@item.name}.zip")
+      send_file component.zip_path, type: 'application/zip', filename: filename,
+               disposition: 'attachment', x_sendfile: true
+    else
+      redirect_to url_for(action: :show), notice: component.errors.full_messages.join("\n")
     end
-
-    download_file_group_ssfile_ids_hash = @download_file_group_ssfile_ids.to_h
-    @group_ssfile = []
-    download_file_group_ssfile_ids_hash.each do |group_fileids|
-      group_fileids[1].each do |fileids|
-        @group_ssfile << [group_fileids[0], SS::File.find_by(id: fileids)]
-      end
-    end
-
-    @owner_ssfile = []
-    @item.file_ids.each do |fileids|
-      order = @cur_group.order || 0
-      filename = "#{order}_#{File.basename(@cur_group.name)}"
-      @owner_ssfile << [filename, SS::File.find_by(id: fileids)]
-    end
-
-    zipfile = @item.name + ".zip"
-
-    @item.create_download_directory(File.dirname(@item.zip_path))
-    @item.create_zip(@item.zip_path, @group_ssfile, @owner_ssfile)
-    send_file(@item.zip_path, type: 'application/zip', filename: zipfile, disposition: 'attachment', x_sendfile: true)
   end
 
   # ファイル一括ダンロード（トピック）
@@ -268,4 +283,10 @@ module Gws::Monitor::TopicFilter
   #   end
   #   render_destroy_all(@items.blank?, notice: t("gws/monitor.notice.active"))
   # end
+
+  def print
+    raise "403" unless @item.attended?(@cur_group) || @item.allowed?(:read, @cur_user, site: @cur_site)
+
+    render template: "print_#{@item.mode}", layout: 'ss/print'
+  end
 end

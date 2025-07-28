@@ -1,10 +1,13 @@
 module ApplicationHelper
-  include Category::CategoryHelper
   include SS::AutoLink
   include SS::ButtonToHelper
   include SS::ColorPickerHelper
+  include SS::DateTimeHelper
   include SS::ErrorMessagesFor
+  include SS::StimulusHelper
+  include SS::InputGuide
   include Workflow::ViewHelper
+  include SS::MaterialIconsHelper
 
   def tryb(&block)
     begin
@@ -52,6 +55,10 @@ module ApplicationHelper
     ApplicationController.helpers.sanitize(html, options)
   end
 
+  def sanitize_easy(html)
+    sanitize_with html, tags: %w(font b u i br)
+  end
+
   def current_url?(url)
     current = @cur_path.sub(/\?.*/, "")
     current = current.sub(@cur_site.mobile_location, '') if @cur_site.mobile_enabled?
@@ -72,8 +79,8 @@ module ApplicationHelper
   end
 
   def jquery(&block)
-    javascript_tag(defer: true) do
-      "$(function() {\n#{capture(&block)}\n});".html_safe
+    javascript_tag do
+      "SS.ready(function() {\n#{capture(&block)}\n});".html_safe
     end
   end
 
@@ -84,57 +91,36 @@ module ApplicationHelper
     end
   end
 
-  # @deprecated
-  def scss(&block)
-    opts = Rails.application.config.sass
-    load_paths = opts.load_paths[1..-1] || []
-    load_paths << "#{Rails.root}/vendor/assets/stylesheets"
-
-    sass = Sass::Engine.new(
-      "@import 'compass-mixins/lib/compass';\n" + capture(&block),
-      cache: false,
-      debug_info: false,
-      inline_source_maps: false,
-      load_paths: load_paths,
-      style: :compressed,
-      syntax: :scss
-    )
-
-    h = []
-    h << "<style>"
-    h << sass.render
-    h << "</style>"
-    h.join("\n").html_safe
-  end
+  # # @deprecated
+  # def scss(&block)
+  #   tag.style(media: :all, &block)
+  # end
 
   def tt(key, *args)
     opts = args.extract_options!
+    symbol = opts.delete(:symbol) || "?"
 
     html_wrap = args.shift
-    html_wrap = opts[:html_wrap] if html_wrap.nil?
+    html_wrap = opts.delete(:html_wrap) if html_wrap.nil?
     html_wrap = true if html_wrap.nil?
 
     msg = nil
-    Array(opts[:scope]).flatten.each do |scope|
-      msg = I18n.t(key, default: '', scope: scope)
+    Array(opts.delete(:scope)).flatten.each do |scope|
+      msg = I18n.t(key, **opts.merge(default: '', scope: scope))
       break if msg.present?
     end
-    msg = I18n.t(key, default: '', scope: 'tooltip') if msg.blank?
+    msg = I18n.t(key, **opts.merge(default: '', scope: 'tooltip')) if msg.blank?
     return msg if msg.blank? || !html_wrap
     msg = [msg] if msg.class.to_s == "String"
     list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }
 
     h = []
-    h << %(<div class="tooltip">?)
+    h << %(<div class="tooltip">#{symbol})
     h << %(<ul class="tooltip-content">)
     h << list
     h << %(</ul>)
     h << %(</div>)
     h.join("\n").html_safe
-  end
-
-  def render_agent(controller_name, action)
-    controller.render_agent(controller_name, action).body.html_safe
   end
 
   def mail_to_entity(email_address, name = nil, html_options = {}, &block)
@@ -229,11 +215,11 @@ module ApplicationHelper
     options[:style] ||= "vertical-align:middle"
     options[:alt] ||= "loading.."
     options[:border] ||= 0
-    options[:widtth] ||= 16
+    options[:width] ||= 16
     options[:height] ||= 11
     options[:class] ||= %w(ss-base-loading)
 
-    # '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" widtth="16" height="11" />'
+    # '<img style="vertical-align:middle" src="/assets/img/loading.gif" alt="loading.." border="0" width="16" height="11" />'
     image_tag("/assets/img/loading.gif", options)
   end
 
@@ -264,26 +250,49 @@ module ApplicationHelper
     end
   end
 
-  def render_application_logo(site = nil)
+  def ss_application_name
+    @cur_site.try(:logo_application_name).presence || SS.config.ss.application_name
+  end
+
+  def render_application_logo(site: nil, url: nil)
     site ||= @cur_site
-    return SS.config.ss.application_logo_html.html_safe if site.blank?
+    logo_url = url || sns_mypage_path
+
+    if site.blank?
+      return link_to_application_logo(logo_url) { SS.config.ss.application_logo_html.html_safe }
+    end
 
     name = site.logo_application_name
     image = site.logo_application_image
-    return SS.config.ss.application_logo_html.html_safe if name.blank? && image.blank?
+    logo_url = url || site.logo_application_url
 
-    content_tag(:div, class: "ss-logo-wrap") do
-      if image.present?
-        output_buffer << image_tag(image.url, alt: name || SS.config.ss.application_name)
-      end
-      if name.present?
-        output_buffer << content_tag(:span, name, class: "ss-logo-application-name")
-      end
+    if name.blank? && image.blank?
+      return link_to_application_logo(logo_url) { SS.config.ss.application_logo_html.html_safe }
     end
+
+    logo_html = "".html_safe
+    if image.present?
+      logo_html += image_tag(image.url, alt: name.presence || SS.config.ss.application_name)
+    end
+    if name.present?
+      logo_html += tag.span(name, class: "ss-logo-application-name")
+    end
+
+    link_to_application_logo(logo_url) do
+      tag.div(logo_html, class: "ss-logo-wrap")
+    end
+  end
+
+  def link_to_application_logo(url, &block)
+    ("<h1 class=\"application-name\"><a href=\"#{url}\">" + yield + "</a></h1>").html_safe
   end
 
   def required_label
     %(<div class="required">&lt;#{I18n.t('ss.required')}&gt;</div>).html_safe
+  end
+
+  def required_mark
+    %(<span class="required" title="#{I18n.t('ss.required')}">*</span>).html_safe
   end
 
   def sanitizer_status(item)
@@ -291,5 +300,37 @@ module ApplicationHelper
     label = SS::UploadPolicy.sanitizer_state_label(value)
     h = %(<div class="sanitizer-status sanitizer-#{value}">#{label}</div>)
     h.html_safe
+  end
+
+  def ejs_template(str)
+    "<%= #{str} %>".html_safe
+  end
+
+  def ss_truncate(text, **options)
+    tag.span truncate(text, options), title: text
+  end
+
+  def ss_lines_field(object_name, method, options = {})
+    if !options.key?(:value)
+      object = options[:object] || instance_variable_get("@#{object_name}")
+      if object && object.respond_to?(method)
+        value = object.public_send(method)
+      end
+      if value
+        options[:value] = value.join("\n")
+      end
+    end
+
+    text_area(object_name, method, options)
+  end
+
+  def stylesheet_link_options(options)
+    return { media: "all" } if options.blank?
+    return options if options.key?(:media)
+    options.merge(media: "all")
+  end
+
+  def main_navi_closed?
+    cookies["ss-navi"] == "closed"
   end
 end

@@ -1,0 +1,9 @@
+<dl class="see">
+  <% if @item.name.present? %>
+    <dt><%= @model.t :name %></dt>
+    <dd><%= @item.name %></dd>
+  <% end %>
+
+  <dt><%= @model.t :daily_report_date %><%= @model.tt :daily_report_date %></dt>
+  <dd><%= f.text_field :daily_report_date, class: "date js-date", value: tryb{ (@item.daily_report_date.presence || Time.zone.today).strftime("%Y/%m/%d") } %></dd>
+</dl>

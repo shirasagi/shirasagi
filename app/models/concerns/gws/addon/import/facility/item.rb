@@ -14,60 +14,63 @@ module Gws::Addon::Import::Facility
 
     module ClassMethods
       def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| header_value_to_text(k) }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            add_category(line, item)
-            line << item.order
-            line << item.min_minutes_limit
-            line << item.max_minutes_limit
-            line << item.max_days_limit
-            line << datetime_to_text(item.reservation_start_date)
-            line << datetime_to_text(item.reservation_end_date)
-            line << datetime_to_text(item.activation_date)
-            line << datetime_to_text(item.expiration_date)
-            line << approval_check_state_datas_value_to_text(item.approval_check_state)
-            line << type_datas_value_to_text(item.text_type)
-            line << item.text
-            attrs = %i(
-              id
-              class_name
-              name
-              order
-              required
-              tooltips
-              prefix_label
-              postfix_label
-              input_type
-              min_decimal
-              max_decimal
-              initial_decimal
-              scale
-              minus_type
-              max_length
-              place_holder
-              additional_attr
-              select_options
-              upload_file_count
-            )
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| header_value_to_text(k) }
+            criteria.each do |item|
+              line = []
+              line << item.id
+              line << item.name
+              add_category(line, item)
+              line << item.order
+              line << item.min_minutes_limit
+              line << item.max_minutes_limit
+              line << item.max_days_limit
+              line << datetime_to_text(item.reservation_start_date)
+              line << datetime_to_text(item.reservation_end_date)
+              line << datetime_to_text(item.activation_date)
+              line << datetime_to_text(item.expiration_date)
+              line << approval_check_state_datas_value_to_text(item.approval_check_state)
+              line << update_approved_state_datas_value_to_text(item.update_approved_state)
+              line << type_datas_value_to_text(item.text_type)
+              line << item.text
+              attrs = %i(
+                id
+                class_name
+                name
+                order
+                required
+                tooltips
+                prefix_label
+                postfix_label
+                input_type
+                min_decimal
+                max_decimal
+                initial_decimal
+                scale
+                minus_type
+                max_length
+                place_holder
+                additional_attr
+                select_options
+                upload_file_count
+              )
 
-            columns_max.times do |i|
-              attrs.each do |attr|
-                line << output_line(attr, item.columns[i])
+              columns_max.times do |i|
+                attrs.each do |attr|
+                  line << output_line(attr, item.columns[i])
+                end
               end
+              line << item.default_members.map(&:long_name).join("\n")
+              line << item.reservable_group_names.join("\n")
+              line << item.reservable_member_names.join("\n")
+              line << readable_setting_range_datas_value_to_text(item.readable_setting_range)
+              line << item.readable_group_names.join("\n")
+              line << item.readable_member_names.join("\n")
+              line << item.group_names.join("\n")
+              line << item.user_names.join("\n")
+              data << line
             end
-            line << item.reservable_group_names.join("\n")
-            line << item.reservable_member_names.join("\n")
-            line << readable_setting_range_datas_value_to_text(item.readable_setting_range)
-            line << item.readable_group_names.join("\n")
-            line << item.readable_member_names.join("\n")
-            line << item.group_names.join("\n")
-            line << item.user_names.join("\n")
-            line << item.permission_level
-            data << line
           end
         end
       end
@@ -76,12 +79,14 @@ module Gws::Addon::Import::Facility
         headers = %w(
           id name category_id order min_minutes_limit max_minutes_limit
           max_days_limit reservation_start_date reservation_end_date
-          activation_date expiration_date approval_check_state type html
+          activation_date expiration_date approval_check_state update_approved_state
+          type html
         )
         headers += columns_headers
+        headers += %w(default_member_names)
         headers += %w(
           reservable_group_names reservable_member_names readable_setting_range
-          readable_group_names readable_member_names group_names user_names permission_level
+          readable_group_names readable_member_names group_names user_names
         )
         headers
       end
@@ -163,6 +168,11 @@ module Gws::Addon::Import::Facility
         I18n.t("gws/facility/item.csv.approval_check_state_datas.#{approval_check_state}")
       end
 
+      def update_approved_state_datas_value_to_text(update_approved_state)
+        return if update_approved_state.blank?
+        I18n.t("gws/facility/item.csv.update_approved_state_datas.#{update_approved_state}")
+      end
+
       def readable_setting_range_datas_value_to_text(readable_setting_range)
         return if readable_setting_range.blank?
         I18n.t("gws/facility/item.csv.readable_setting_range_datas.#{readable_setting_range}")
@@ -174,8 +184,10 @@ module Gws::Addon::Import::Facility
       validate_import
       return false unless errors.empty?
 
-      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+          update_row(row, i + 2)
+        end
       end
       errors.blank?
     end
@@ -207,7 +219,9 @@ module Gws::Addon::Import::Facility
       activation_date = row[header_t("activation_date")].to_s.strip
       expiration_date = row[header_t("expiration_date")].to_s.strip
       approval_check_state = row[header_t("approval_check_state")].to_s.strip
+      update_approved_state = row[header_t("update_approved_state")].to_s.strip
 
+      default_member_names = row[header_t("default_member_names")].to_s.strip.split("\n")
       reservable_group_names = row[header_t("reservable_group_names")].to_s.strip.split("\n")
       reservable_member_names = row[header_t("reservable_member_names")].to_s.strip.split("\n")
       readable_setting_range = row[header_t("readable_setting_range")].to_s.strip
@@ -215,7 +229,6 @@ module Gws::Addon::Import::Facility
       readable_member_names = row[header_t("readable_member_names")].to_s.strip.split("\n")
       group_names = row[header_t("group_names")].to_s.strip.split("\n")
       user_names = row[header_t("user_names")].to_s.strip.split("\n")
-      permission_level = row[header_t("permission_level")].to_s.strip
       text_type = row[header_value_to_text("type")].to_s.strip
       text = row[header_value_to_text("html")].to_s.strip
 
@@ -247,6 +260,7 @@ module Gws::Addon::Import::Facility
       item.activation_date = activation_date
       item.expiration_date = expiration_date
 
+      item.default_member_ids = user_names_to_ids(default_member_names)
       item.reservable_group_ids = group_names_to_ids(reservable_group_names)
       item.reservable_member_ids = user_names_to_ids(reservable_member_names)
 
@@ -259,9 +273,9 @@ module Gws::Addon::Import::Facility
       item.readable_member_ids = user_names_to_ids(readable_member_names)
       item.group_ids = group_names_to_ids(group_names)
       item.user_ids = user_names_to_ids(user_names)
-      item.permission_level = permission_level
 
       item.approval_check_state = approval_check_state_datas_text_to_value(approval_check_state)
+      item.update_approved_state = update_approved_state_datas_text_to_value(update_approved_state)
       if item.save
         @imported += 1
         @cur_form = item
@@ -393,15 +407,11 @@ module Gws::Addon::Import::Facility
 
     def column_model(type)
       return if type.blank?
-      type_text_to_value(type).sub('/', '/column/').classify.constantize
-    end
 
-    def type_text_to_value(text)
-      return if text.blank?
-      k, _v = I18n.t("gws.columns").find do |key, value|
-        text.match(value)
-      end
-      k.to_s
+      plugin = Gws::Column.plugins.find { |plugin| type.match(plugin.name_only) }
+      return unless plugin
+
+      plugin.model_class
     end
 
     def input_type_datas_text_to_value(text)
@@ -436,6 +446,13 @@ module Gws::Addon::Import::Facility
     def approval_check_state_datas_text_to_value(approval_check_state_datas)
       k, _v = I18n.t("gws/facility/item.csv.approval_check_state_datas").find do |key, value|
         approval_check_state_datas.match(value)
+      end
+      k.to_s
+    end
+
+    def update_approved_state_datas_text_to_value(update_approved_state_datas)
+      k, _v = I18n.t("gws/facility/item.csv.update_approved_state_datas").find do |key, value|
+        update_approved_state_datas.match(value)
       end
       k.to_s
     end

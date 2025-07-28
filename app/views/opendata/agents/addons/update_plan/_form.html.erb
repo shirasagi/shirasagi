@@ -4,7 +4,7 @@
 
   <dt><%= @model.t :update_plan_date %><%= @model.tt :update_plan_date %></dt>
   <dd>
-    <%= f.text_field :update_plan_date, value: tryb{@item.update_plan_date.strftime("%Y/%m/%d")}, class: "date js-date" %>
+    <%= f.ss_date_field :update_plan_date %>
     <%= "-" %>
     <%= f.select :update_plan_unit, @item.update_plan_unit_options, include_blank: true %>
   </dd>

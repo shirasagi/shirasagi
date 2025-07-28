@@ -9,7 +9,7 @@
 <% if @item.new_record? %>
   <dt><%= @model.t :in_parent %><%= @model.tt :in_parent %></dt>
   <dd>
-    <%= f.hidden_field :in_parent, value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field :in_parent, value: '', id: nil, class: 'hidden-ids' %>
     <%= link_to t('gws/share.apis.folders.index'), gws_share_apis_folders_path(mode: 'manageable', single: true), class: 'ajax-box' %>
   </dd>
   <dd>

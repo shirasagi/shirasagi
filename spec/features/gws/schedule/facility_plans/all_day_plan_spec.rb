@@ -14,14 +14,15 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
     it do
       visit gws_schedule_facility_plans_path(site: site, facility: facility)
       click_on I18n.t("gws/schedule.links.add_plan")
+      wait_for_js_ready
       within "form#item-form" do
         fill_in "item[name]", with: name
         check "item_allday"
-        fill_in "item[start_on]", with: I18n.l(start_on, format: :picker) + "\n"
-        fill_in "item[end_on]", with: I18n.l(end_on, format: :picker) + "\n"
+        fill_in_date "item[start_on]", with: start_on
+        fill_in_date "item[end_on]", with: end_on
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css(".fc-title", text: name)
 
       expect(Gws::Schedule::Plan.all.count).to eq 1

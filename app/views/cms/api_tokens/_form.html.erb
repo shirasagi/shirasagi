@@ -1,0 +1,44 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :expiration_date %></dt>
+  <dd>
+    <% if @item.new_record? %>
+      <%= f.text_field :expiration_date, class: "datetime js-datetime" %>
+    <% else %>
+      <%= @item.expiration_date_label %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :audience_id %></dt>
+  <% if @item.new_record? %>
+    <dd>
+      <%= hidden_field_tag "item[audience_id]", nil, id: nil, class: "hidden-ids" %>
+      <%= link_to t("cms.apis.users.index"), cms_apis_users_path(single: 1), class: "btn ajax-box" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead>
+        <tr>
+          <th class="name"><%= @model.t :audience_id %></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+          <% if @item.audience %>
+            <tr data-id="<%= @item.audience.id %>">
+              <td><%= hidden_field_tag "item[audience_id]", @item.audience.id, id: nil %> <%= @item.audience.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  <% else %>
+    <dd><%= @item.audience.try(:name) %></dd>
+  <% end %>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>

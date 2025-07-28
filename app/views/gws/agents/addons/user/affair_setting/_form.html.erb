@@ -1,0 +1,59 @@
+<dl class="see mod-gws-user-affair_setting">
+  <dt><%= @model.t :staff_category %><%= @model.tt :staff_category %></dt>
+  <dd><%= f.select :staff_category, @item.staff_category_options %></dd>
+
+  <dt><%= @model.t :staff_address_uid %><%= @model.tt :staff_address_uid %></dt>
+  <dd><%= f.text_field :staff_address_uid %></dd>
+</dl>
+
+<dl class="see mod-gws-user-affair_setting" style="margin-top: 20px;">
+  <dt><%= @model.t :gws_superior_group_ids %><%= @model.tt :gws_superior_group_ids %></dt>
+  <dd>
+    <%= f.hidden_field "in_gws_superior_group_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Group.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.find_gws_superior_groups.each do |group| %>
+        <tr data-id="<%= group.id %>">
+          <td><%= f.hidden_field "in_gws_superior_group_ids[]", value: group.id %> <%= group.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>
+
+<dl class="see mod-gws-user-affair_setting">
+  <dt><%= @model.t :gws_superior_user_ids %><%= @model.tt :gws_superior_user_ids %></dt>
+  <dd>
+    <%= f.hidden_field "in_gws_superior_user_ids[]", value: "", class: "hidden-ids" %>
+    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Group.t :name %></th>
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <% @item.find_gws_superior_users.each do |user| %>
+        <tr data-id="<%= user.id %>">
+          <td><%= f.hidden_field "in_gws_superior_user_ids[]", value: user.id %> <%= user.name %></td>
+          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

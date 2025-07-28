@@ -20,17 +20,17 @@ class Gws::Schedule::UserPlansController < ApplicationController
     super.merge member_ids: [@user.id]
   end
 
-  def redirection_view
-    return 'month' if params.dig(:calendar, :view) == 'timelineDay'
-    super
-  end
+  #def redirection_view
+  #  return 'month' if params.dig(:calendar, :view) == 'timelineDay'
+  #  super
+  #end
 
   def set_items
     set_user
     @items ||= begin
       Gws::Schedule::Plan.site(@cur_site).without_deleted.
         member(@user).
-        search(params[:s])
+        search(@search_plan)
     end
   end
 
@@ -39,7 +39,7 @@ class Gws::Schedule::UserPlansController < ApplicationController
   def events
     @items = Gws::Schedule::Plan.site(@cur_site).without_deleted.
       member(@user).
-      search(params[:s])
+      search(@search_plan)
 
     todo_search = OpenStruct.new(params[:s])
     todo_search.category_id = nil if todo_search.category_id.present?
@@ -47,5 +47,8 @@ class Gws::Schedule::UserPlansController < ApplicationController
     @todos = Gws::Schedule::Todo.site(@cur_site).without_deleted.
       member(@user).
       search(todo_search)
+
+    @works = Gws::Workload::Work.site(@cur_site).without_deleted.
+      member(@user)
   end
 end

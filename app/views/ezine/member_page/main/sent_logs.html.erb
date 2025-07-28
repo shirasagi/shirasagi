@@ -11,7 +11,7 @@
       <% @items.each do |item| %>
         <tr>
           <td><%= item.email %></td>
-          <td><%= item.created.strftime("%Y/%m/%d %H:%M") %></td>
+          <td><%= ss_time_tag item.created %></td>
         </tr>
       <% end %>
     </tbody>

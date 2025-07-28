@@ -36,7 +36,7 @@
 
 <% end %>
 
-<% route_options = Workflow::Route.site(@cur_site).route_options(@cur_user) %>
+<% route_options = Workflow::Route.site(@cur_site).route_options(@cur_user, site: @cur_site) %>
 <% if route_options.present? %>
 <dl class="see">
   <dt><%= t("workflow.route") %><%= @model.tt :workflow_routes %></dt>

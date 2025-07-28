@@ -2,26 +2,27 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_search_dataset", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
-  let(:node_dataset) { create_once :opendata_node_dataset }
-  let(:node_area) { create :opendata_node_area }
-  let(:category_folder) { create_once(:cms_node_node, filename: "category") }
+  let(:layout) { create_cms_layout }
+  let(:area) { create :opendata_node_area, layout: layout, filename: "opendata_area_1" }
+  let(:node_dataset) { create :opendata_node_dataset, layout: layout }
+  let(:node_area) { create :opendata_node_area, layout: layout }
+  let(:category_folder) { create(:cms_node_node, layout: layout, filename: "category") }
   let(:category) do
-    create_once(
-      :opendata_node_category,
+    create(
+      :opendata_node_category, layout: layout,
       filename: "#{category_folder.filename}/opendata_category1",
       depth: category_folder.depth + 1)
   end
   let!(:node_search_dataset) do
-    create_once(
-      :opendata_node_search_dataset,
+    create(
+      :opendata_node_search_dataset, layout: layout,
       filename: "#{node_dataset.filename}/search",
       depth: node_dataset.depth + 1)
   end
-  let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset, area_ids: [ node_area.id ]) }
+  let!(:page_dataset) { create(:opendata_dataset, layout: layout, cur_node: node_dataset, area_ids: [ node_area.id ]) }
   let!(:node_dataset_category) do
-    create_once(
-      :opendata_node_dataset_category,
+    create(
+      :opendata_node_dataset_category, layout: layout,
       filename: "#{node_dataset.filename}/category",
       depth: node_dataset.depth + 1)
   end
@@ -68,15 +69,37 @@ describe "opendata_agents_nodes_search_dataset", type: :feature, dbscope: :examp
   end
 
   it "#rss" do
+    layout.html = <<~HTML
+      <html>
+      <body>
+        <br><br><br>
+        <h1 id="ss-page-name">\#{page_name}</h1><br>
+        <div id="main" class="page">
+          {{ yield }}
+          <div class="list-footer">
+            <a href="#{rss_path}" download>RSS</a>
+          </div>
+        </div>
+      </body>
+      </html>
+    HTML
+    layout.save!
+
     page.driver.browser.with_session("public") do |session|
       session.env("HTTP_X_FORWARDED_HOST", site.domain)
-      visit rss_path
-      expect(current_path).to eq rss_path
-      expect(page).to have_xpath('//rss/channel/item')
-      expect(page).to have_xpath('//rss/channel/item/title')
-      expect(page).to have_xpath('//rss/channel/item/link')
-      # expect(page).to have_xpath('//rss/channel/item/pubDate')
-      # expect(page).to have_xpath('//rss/channel/item/dc:date')
+
+      visit index_path
+      within ".list-footer" do
+        click_on "RSS"
+      end
+
+      xmldoc = REXML::Document.new(page.html)
+      title = REXML::XPath.first(xmldoc, "/rss/channel/title/text()").to_s.strip
+      expect(title).to start_with(node_search_dataset.name)
+      link = REXML::XPath.first(xmldoc, "/rss/channel/link/text()").to_s.strip
+      expect(link).to end_with(node_search_dataset.url)
+      items = REXML::XPath.match(xmldoc, "/rss/channel/item")
+      expect(items).to have(1).items
     end
   end
 end

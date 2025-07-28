@@ -1,0 +1,45 @@
+<%= jquery do %>
+$('select[name="s[sort]"]').on("change", function(){
+  $(this).closest("form").submit();
+});
+$('select[name="s[work_state]"]').on("change", function(){
+  $(this).closest("form").submit();
+});
+$('select[name="category"]').on("change", function(){
+  var id = $(this).val();
+  if (!id) {
+    id = "-";
+  }
+  var url = "<%= url_for(category: "CATEGORYID") %>";
+  var query = "<%= request.query_string %>";
+  url = url.replace("CATEGORYID", id);
+  if (query) {
+    url += "?" + query;
+  }
+  location.href = url;
+  return false;
+});
+$('select[name="client"]').on("change", function(){
+  var id = $(this).val();
+  if (!id) {
+    id = "-";
+  }
+  var url = "<%= url_for(client: "CLIENTID") %>";
+  var query = "<%= request.query_string %>";
+  url = url.replace("CLIENTID", id);
+  if (query) {
+    url += "?" + query;
+  }
+  location.href = url;
+  return false;
+});
+<% end %>
+
+<%= form_for :s, url: '', html: { method: :get, class: :search } do |f| %>
+  <%= f.select :sort, @model.new.sort_options %>
+  <%= f.select :work_state, @model.new.work_state_options %>
+  <%= select_tag "category", options_for_select(category_options, @category.try(:id)), include_blank: ('// ' + @model.t(:category_id)), id: nil %>
+  <%= select_tag "client", options_for_select(client_options, @client.try(:id)), include_blank: ('// ' + @model.t(:client_id)), id: nil %>
+  <%= f.text_field :keyword, style: 'width: 140px;' %>
+  <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+<% end %>

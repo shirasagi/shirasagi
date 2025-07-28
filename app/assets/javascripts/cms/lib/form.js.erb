@@ -74,20 +74,6 @@ this.Cms_Form = (function () {
     }
   };
 
-  // activate syntax checks
-  Cms_Form.syntaxChecks = {};
-  Cms_Form.addSyntaxCheck = function (id, check) {
-    Cms_Form.syntaxChecks[id] = check;
-  };
-  Cms_Form.activateSyntaxChecks = function () {
-    Syntax_Checker.resetChecks();
-    $.each(Cms_Form.syntaxChecks, function(id, check) {
-      var ele = $('#' + id)[0];
-      if (ele && $(ele).is(':visible')) {
-        Syntax_Checker.addCheck(id, check);
-      }
-    });
-  };
   Cms_Form.afterSyntaxCheck = function () {
     // emptyAttributesCheck
     $("[data-check-presence]").each(function () {

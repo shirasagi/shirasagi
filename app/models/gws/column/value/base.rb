@@ -33,6 +33,7 @@ class Gws::Column::Value::Base
     value
   end
 
+  # This method is unused
   def import_csv(values)
     values.each do |sub_key, value|
       if sub_key.blank? && self.respond_to?("value=")

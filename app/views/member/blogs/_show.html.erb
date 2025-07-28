@@ -3,15 +3,11 @@
   <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :basename %></dt>
-  <dd>
-    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %>
-    (
-    <%= link_to t("ss.links.pc_preview"), cms_preview_path(path: @item.preview_path), target: "_blank", rel: "noopener" %>
-    |
-    <%= link_to t("ss.links.mobile_preview"), cms_preview_path(path: @item.mobile_preview_path), target: "_blank", rel: "noopener" %>
-    )
-  </dd>
+  <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %></dd>
+  <dd><div class="cms-preview-links"><%= safe_join cms_preview_links(@item), '|' %></div></dd>
 
+  <% if @item.layout %>
   <dt><%= @model.t :layout_id %></dt>
-  <dd><%= @item.layout.name %></dd>
+  <dd><%= link_to_layout(@item.layout) %></dd>
+  <% end %>
 </dl>

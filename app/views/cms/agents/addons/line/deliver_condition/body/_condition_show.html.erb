@@ -16,7 +16,7 @@
     <%= t("cms.member") %><%= @item.extract_deliver_members.size %><%= t("ss.units.count") %>
     <%= link_to "確認する", cms_apis_line_deliver_members_path(id: @item, model: model), { class: "btn ajax-box" } %>
     <div style="padding-top: 10px; color: red;">
-      ※<%= Time.zone.now.strftime("%Y/%m/%d %H:%M") %> 時点での対象メンバーです。
+      ※<%= ss_time_tag(Time.zone.now) %> 時点での対象メンバーです。
     </div>
   <% end %>
 </dd>

@@ -29,24 +29,25 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
-      click_on I18n.t('ss.links.new')
-
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.new')
+      end
       within 'form#item-form' do
         fill_in 'item[name]', with: name
         fill_in 'item[text]', with: text
 
         within '#addon-gws-agents-addons-readable_setting' do
-          click_on I18n.t('ss.apis.users.index')
+          wait_for_cbox_opened { click_on I18n.t('ss.apis.users.index') }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(recipient1.name)
-        click_on recipient1.name
+        wait_for_cbox_closed { click_on recipient1.name }
       end
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Notice::Post.all.count).to eq 1
       Gws::Notice::Post.all.first.tap do |item|
@@ -57,7 +58,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
 
       # send notification
-      Gws::Notice::NotificationJob.bind(site_id: site).perform_now
+      Gws::Notice::NotificationJob.bind(site_id: site.id).perform_now
 
       # job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -73,7 +74,9 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
         expect(SS::Notification.count).to eq 1
         SS::Notification.first.tap do |message|
-          expect(message.subject).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
+          I18n.t('gws_notification.gws/notice/post.subject', name: notice.name, locale: I18n.default_locale).tap do |subject|
+            expect(message.subject).to eq subject
+          end
           expect(message.url).to eq "/.g#{site.id}/notice/-/-/readables/#{notice.id}"
         end
       end

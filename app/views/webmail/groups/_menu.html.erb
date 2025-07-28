@@ -2,8 +2,8 @@
   <div>
     <% if params[:action] =~ /index/ %>
       <%= link_to t('ss.links.new'), action: :new if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to(t('ss.links.import'), { action: :import }, class: :import) if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <%= link_to(t('ss.links.download'), { action: :download }, class: :download) if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to(t('ss.links.download'), url_for(action: :download_all), class: :download) if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to(t('ss.links.import'), url_for(action: :import), class: :import) if @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <% elsif params[:action] =~ /new|create|import|download|destroy_all/ %>
       <%= link_to t('ss.links.back_to_index'), action: :index %>
     <% elsif params[:action] =~ /edit|update|delete/ %>

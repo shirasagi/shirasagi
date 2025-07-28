@@ -42,9 +42,12 @@ describe "Article::PagesController", type: :request, dbscope: :example do
 
     describe "POST /pages.json" do
       it do
-        params = { 'authenticity_token' => @auth_token,
-                   'item[name]' => '記事タイトル',
-                   'item[basename]' => "filename#{rand(0xffffffff).to_s(36)}" }
+        params = {
+          'authenticity_token' => @auth_token,
+          'item[name]' => '記事タイトル',
+          'item[basename]' => "filename#{rand(0xffffffff).to_s(36)}",
+          'item[contact_group_id]' => group.id
+        }
         post index_path, params: params
         expect(response.status).to eq 201
         page = JSON.parse(response.body)
@@ -143,17 +146,21 @@ describe "Article::PagesController", type: :request, dbscope: :example do
     end
 
     context "article download" do
+      let!(:cate_node) { create(:category_node_page, cur_site: site, cur_node: node, name: "くらしのガイド") }
+      let!(:layout) { create(:cms_layout, cur_site: site, name: "記事レイアウト", filename: "page.layout.html") }
+      let!(:group) { create(:ss_group, name: "シラサギ市/企画政策部/政策課") }
+      let(:released) { Time.zone.now }
+      let(:release_date) { Time.zone.now.advance(hours: 1) }
+      let(:close_date) { Time.zone.now.advance(hours: 2) }
+
       before do
-        #create(:article_page, cur_site: site, cur_node: node, name: 'test1_article')
-        cate_node = create(:category_node_page, cur_site: site, cur_node: node, name: "くらしのガイド")
-        layout = create(:cms_layout, cur_site: site, name: "記事レイアウト")
-        group = create(:ss_group, name: "シラサギ市/企画政策部/政策課")
         create(:article_page, cur_site: site, cur_node: node,
           name: 'test1_article',
           filename: 'test1_filename.html',
           layout: layout.id,
           order: 0,
           keywords: 'test1_keywords',
+          description_setting: 'auto',
           description: 'test1_description',
           summary_html: 'test1_summary_html',
           html: 'test1_html',
@@ -163,17 +170,19 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           event_recurrences: [{ kind: "date", start_at: "2016/07/06", frequency: "daily", until_on: "2016/07/06" }],
           contact_state: 'show',
           contact_group: group.id,
+          contact_group_name: 'test1_contact_name',
           contact_charge: 'test1_contact_charge',
           contact_tel: 'test1_contact_tel',
           contact_fax: 'test1_contact_fax',
           contact_email: 'test1_contact_email',
+          contact_postal_code: 'test1_contact_postal_code',
+          contact_address: 'test1_contact_address',
           contact_link_url: 'test1_contact_link_url',
           contact_link_name: 'test1_contact_link_name',
-          released: "2016/7/6 0:0:0",
-          release_date: "2016/7/6 1:1:1",
-          close_date: "2016/7/6 2:2:2",
-          group_ids: [group.id],
-          permission_level: 1)
+          released: released,
+          release_date: release_date,
+          close_date: close_date,
+          group_ids: [group.id])
       end
 
       describe "POST /.s{site}/article{cid}/pages/download_all" do
@@ -187,39 +196,40 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           }
           post download_pages_path, params: params
           expect(response.status).to eq 200
-          expect(response.headers["Cache-Control"]).to include "no-store"
-          expect(response.headers["Transfer-Encoding"]).to eq "chunked"
-          body = ::SS::ChunkReader.new(response.body).to_a.join
+          body = response.body
           body = body.encode("UTF-8", "SJIS")
 
-          expect(body).to include "test1_article"
-          expect(body).to include "test1_filename.html"
-          expect(body).to include "記事レイアウト"
-          expect(body).to include "記事レイアウト,,,0"
-          expect(body).to include "test1_keywords"
-          expect(body).to include "test1_description"
-          expect(body).to include "test1_summary_html"
-          expect(body).to include "test1_html"
-          expect(body).to include "くらしのガイド"
-          expect(body).to include "test1_parent_crumb_urls"
-          expect(body).to include "test1_event_name"
-          expect(body).to include "2016/07/06"
-          expect(body).to include "表示"
-          expect(body).to include "表示,シラサギ市/企画政策部/政策課"
-          expect(body).to include "test1_contact_charge"
-          expect(body).to include "test1_contact_tel"
-          expect(body).to include "test1_contact_fax"
-          expect(body).to include "test1_contact_email"
-          expect(body).to include "test1_contact_link_url"
-          expect(body).to include "test1_contact_link_name"
-          expect(body).to include "2016/07/06 00:00"
-          expect(body).to include "2016/07/06 01:01"
-          expect(body).to include "2016/07/06 02:02"
-          expect(body).to include "02:02,シラサギ市/企画政策部/政策課"
-          if SS.config.ss.disable_permission_level
-            expect(body).to include "政策課,非公開"
-          else
-            expect(body).to include "政策課,1,非公開"
+          csv = ::CSV.parse(body, headers: true)
+          expect(csv.length).to eq 1
+          expect(csv.headers).to include(Cms::Page.t(:filename), Cms::Page.t(:name), Cms::Page.t(:layout_id))
+          csv[0].tap do |row|
+            expect(row[Cms::Page.t(:filename)]).to eq "test1_filename.html"
+            expect(row[Cms::Page.t(:name)]).to eq "test1_article"
+            expect(row[Cms::Page.t(:layout_id)]).to eq "記事レイアウト (#{layout.filename})"
+            expect(row[Cms::Page.t(:keywords)]).to eq "test1_keywords"
+            expect(row[Cms::Page.t(:description)]).to eq "test1_description"
+            expect(row[Cms::Page.t(:summary_html)]).to eq "test1_summary_html"
+            expect(row[Cms::Page.t(:html)]).to eq "test1_html"
+            expect(row[Cms::Page.t(:category_ids)]).to eq "#{cate_node.name} (#{cate_node.filename})"
+            expect(row[Cms::Page.t(:parent_crumb)]).to eq "test1_parent_crumb_urls"
+            expect(row[Cms::Page.t(:event_name)]).to eq "test1_event_name"
+            expect(row["#{Cms::Page.t(:event_recurrences)}_1_開始日"]).to eq "2016/07/06"
+            expect(row["#{Cms::Page.t(:event_recurrences)}_1_終了日"]).to eq "2016/07/06"
+            expect(row[Cms::Page.t(:contact_state)]).to eq I18n.t("ss.options.state.show")
+            expect(row[Cms::Page.t(:contact_group)]).to eq group.name
+            expect(row[Cms::Page.t(:contact_group_name)]).to eq "test1_contact_name"
+            expect(row[Cms::Page.t(:contact_charge)]).to eq "test1_contact_charge"
+            expect(row[Cms::Page.t(:contact_tel)]).to eq "test1_contact_tel"
+            expect(row[Cms::Page.t(:contact_fax)]).to eq "test1_contact_fax"
+            expect(row[Cms::Page.t(:contact_email)]).to eq "test1_contact_email"
+            expect(row[Cms::Page.t(:contact_postal_code)]).to eq "test1_contact_postal_code"
+            expect(row[Cms::Page.t(:contact_address)]).to eq "test1_contact_address"
+            expect(row[Cms::Page.t(:contact_link_url)]).to eq "test1_contact_link_url"
+            expect(row[Cms::Page.t(:contact_link_name)]).to eq "test1_contact_link_name"
+            expect(row[Cms::Page.t(:released)]).to eq released.strftime("%Y/%m/%d %H:%M")
+            expect(row[Cms::Page.t(:release_date)]).to eq release_date.strftime("%Y/%m/%d %H:%M")
+            expect(row[Cms::Page.t(:close_date)]).to eq close_date.strftime("%Y/%m/%d %H:%M")
+            expect(row[Cms::Page.t(:group_ids)]).to eq group.name
           end
         end
       end

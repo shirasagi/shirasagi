@@ -1,9 +1,7 @@
 <% if item.try(:updated) %>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
 <% end %>
-<% if item.is_a?(Uploader::File) %>
-  <span class="filename"><%= item.path.sub("#{@cur_site.path}/", "") %></span>
-<% elsif item.try(:filename) %>
+<% if item.try(:filename) %>
   <% if params.dig(:s, :target) == 'descendant' %>
     <span class="filename"><%= item.filename %></span>
   <% else %>

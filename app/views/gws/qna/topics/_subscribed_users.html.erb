@@ -58,10 +58,10 @@
         dataType: 'json',
         success: function(data) {
           var browsedAt = formatDate(new Date(data.browsed_at));
-          $('tr[data-user-id=<%= @cur_user.id %>] span.browsed').html('<%= I18n.t('gws/qna.options.browsed_state.read') %><time>' + browsedAt + '</time>');
+          $('tr[data-user-id=<%= @cur_user.id %>] span.browsed').text('<%= I18n.t('gws/qna.options.browsed_state.read') %><time>' + browsedAt + '</time>');
         },
         error: function(req, status, error) {
-          $('tr[data-user-id=<%= @cur_user.id %>] span.browsed').html(error);
+          $('tr[data-user-id=<%= @cur_user.id %>] span.browsed').text(error);
         }
       });
     }, <%= @cur_site.qna_browsed_delay * 1_000 %>);

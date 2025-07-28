@@ -1,0 +1,61 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name_with_code, { action: :show, id: item }, class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+
+  <% if Gws::Affair::Capital.allowed?(:read, @cur_user, site: @cur_site) %>
+    <%= link_to t("modules.gws/affair/capital"), gws_affair_capitals_path(year: item.id) %>
+    <%= "|" %>
+    <% if Gws::Affair::Capital.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t("gws/affair.user_setting"), import_member_gws_affair_capitals_path(year: item.id) %>
+    <% else %>
+      <%= t("gws/affair.user_setting") %>
+    <% end %>
+    <%= "|" %>
+    <% if Gws::Affair::Capital.allowed?(:edit, @cur_user, site: @cur_site) %>
+      <%= link_to t("gws/affair.group_setting"), import_group_gws_affair_capitals_path(year: item.id) %>
+    <% else %>
+      <%= t("gws/affair.group_setting") %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<table class="index data-table">
+  <thead>
+    <tr>
+      <th><%= t("gws/affair.year_id") %></th>
+      <th><%= t("gws/affair.term") %></th>
+      <th><%= t("gws/affair.capital") %></th>
+      <th><%= t("gws/affair.leave_setting") %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @items.each do |item| %>
+      <tr>
+        <td><%= link_to item.name_with_code, { action: :show, id: item }, class: "title" %></td>
+        <td>
+          <%= item.start_date.strftime("%Y/%m/%d") %>
+          <%= t("ss.wave_dash") %>
+          <%= item.close_date.strftime("%Y/%m/%d") %>
+        </td>
+        <td>
+          <%= link_to t("modules.gws/affair/capital"), gws_affair_capitals_path(year: item) %>
+          |
+          <%= link_to t("gws/affair.user_setting"), import_member_gws_affair_capitals_path(year: item) %>
+          |
+          <%= link_to t("gws/affair.group_setting"), import_group_gws_affair_capitals_path(year: item) %>
+        </td>
+        <td>
+          <%= link_to t("gws/affair.leave_setting"), gws_affair_leave_settings_path(year: item) %>
+          |
+          <%= link_to t("gws/affair.user_setting"), import_member_gws_affair_leave_settings_path(year: item) %>
+          |
+          <%= link_to t("gws/affair.download_day_count"), download_yearly_gws_affair_leave_settings_path(year: item) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

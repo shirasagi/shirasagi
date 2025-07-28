@@ -56,11 +56,11 @@ this.SS_AjaxFile = (function () {
         success: function(html) {
           fileViews.push({ name: filename, html: html });
         },
-        error: function(xhr, status, data) {
+        error: function(xhr, _status, _data) {
           if (xhr.responseJSON && Array.isArray(xhr.responseJSON)) {
-            alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+            alert(["== Error(AjaxFile) =="].concat(xhr.responseJSON).join("\n"));
           } else {
-            alert(["== Error =="].concat(xhr.statusText).join("\n"));
+            alert(["== Error(AjaxFile) =="].concat(xhr.statusText).join("\n"));
           }
         }
       }));
@@ -74,7 +74,7 @@ this.SS_AjaxFile = (function () {
       });
 
       for (var i = 0; i < fileViews.length; i++) {
-        $("#selected-files").prepend(fileViews[i].html);
+        $("#selected-files").prepend(fileViews[i].html).trigger("change");
       }
 
       $.colorbox.close();
@@ -94,14 +94,14 @@ this.SS_AjaxFile = (function () {
       var params = {
         url: $form.attr("action") + ".json",
         dataType: "json",
-        success: function(data, textStatus, xhr) {
+        success: function(data, _textStatus, _xhr) {
           self.submitSuccess(submitted, data);
         },
-        error: function (xhr, status, error) {
+        error: function (xhr, _status, _error) {
           self.submitError(xhr);
         },
-        complete: function (xhr, status) {
-          $.rails.enableFormElements($form);
+        complete: function (_xhr, _status) {
+          SS.enableFormElementsOnTimeoutSubmit();
         }
       };
 
@@ -170,6 +170,8 @@ this.SS_AjaxFile = (function () {
 
       if (submitted === "attach") {
         self.attachFiles(data);
+      } else {
+        $.rails.enableFormElements(self.$el.find('form.user-file'));
       }
     });
   };
@@ -191,15 +193,18 @@ this.SS_AjaxFile = (function () {
   };
 
   SS_AjaxFile.prototype.submitError = function(xhr) {
+    var self = this;
     if (xhr.status === 413) {
-      alert(["== Error =="].concat(SS_AjaxFile.errors.entityTooLarge).join("\n"));
+      alert(["== Error(AjaxFile) =="].concat(SS_AjaxFile.errors.entityTooLarge).join("\n"));
     } else {
       try {
-        alert(["== Error =="].concat(xhr.responseJSON).join("\n"));
+        alert(["== Error(AjaxFile) =="].concat(xhr.responseJSON).join("\n"));
       } catch(_error) {
-        alert(["== Error =="].concat(xhr.statusText).join("\n"));
+        alert(["== Error(AjaxFile) =="].concat(xhr.statusText).join("\n"));
       }
     }
+
+    $.rails.enableFormElements(self.$el.find('form.user-file'));
   };
 
   SS_AjaxFile.prototype.selectFiles = function() {
@@ -226,7 +231,7 @@ this.SS_AjaxFile = (function () {
   };
 
   SS_AjaxFile.prototype.deleteFile = function(el) {
-    if (!confirm(SS.confirm.delete)) {
+    if (!confirm(i18next.t('ss.confirm.delete'))) {
       return false;
     }
 
@@ -254,8 +259,8 @@ this.SS_AjaxFile = (function () {
           }
         });
       },
-      error: function (data, status) {
-        alert(["== Error =="].concat(data.responseJSON).join("\n"));
+      error: function (data, _status) {
+        alert(["== Error(AjaxFile) =="].concat(data.responseJSON).join("\n"));
       }
     });
   };

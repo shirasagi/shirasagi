@@ -10,15 +10,18 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
 
     let!(:user1) do
       Gws::User.create name: "一般ユーザー1", uid: "user1", email: "user1@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user2) do
       Gws::User.create name: "一般ユーザー2", uid: "user2", email: "user2@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user3) do
       Gws::User.create name: "一般ユーザー3", uid: "user3", email: "user3@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
 
     let(:workflow_comment) { unique_id }
@@ -37,7 +40,8 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         fill_in "custom[#{column1.id}]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       #
       # admin: 代理で申請する（承認者 1 名＋回覧者 1 名）
@@ -50,27 +54,27 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         click_on I18n.t("workflow.buttons.select")
 
         choose "agent_type_agent"
-        click_on I18n.t("gws/workflow.search_delegatees.index")
+        wait_for_cbox_opened { click_on I18n.t("gws/workflow.search_delegatees.index") }
       end
-      wait_for_cbox do
-        expect(page).to have_content(user1.long_name)
-        click_on user1.long_name
-      end
-      within ".mod-workflow-request" do
-        click_on I18n.t("workflow.search_approvers.index")
-      end
-      wait_for_cbox do
-        expect(page).to have_content(user2.long_name)
-        click_on user2.long_name
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.long_name }
       end
       within ".mod-workflow-request" do
-        click_on I18n.t("workflow.search_circulations.index")
+        expect(page).to have_css(".agent-type-agent", text: user1.long_name)
+        wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
       end
-      wait_for_cbox do
-        expect(page).to have_content(user3.long_name)
-        click_on user3.long_name
+      within_cbox do
+        wait_for_cbox_closed { click_on user2.long_name }
       end
       within ".mod-workflow-request" do
+        expect(page).to have_css(".index.approvers", text: user2.long_name)
+        wait_for_cbox_opened { click_on I18n.t("workflow.search_circulations.index") }
+      end
+      within_cbox do
+        wait_for_cbox_closed { click_on user3.long_name }
+      end
+      within ".mod-workflow-request" do
+        expect(page).to have_css(".index.circulations", text: user3.long_name)
         fill_in "workflow[comment]", with: workflow_comment
         click_on I18n.t("workflow.buttons.request")
       end
@@ -102,8 +106,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: 申請を承認する
       #
-      login_user user2
-      visit gws_workflow_files_path(site: site, state: "all")
+      login_user user2, to: gws_workflow_files_path(site: site, state: "all")
       click_on file_name
 
       within ".mod-workflow-approve" do
@@ -120,7 +123,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+          include({
+            level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_circulations.count).to eq 1
         expect(item.workflow_circulations).to \
           include({level: 1, user_id: user3.id, state: 'unseen', comment: ''})
@@ -143,15 +149,16 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user3: 申請を確認する
       #
-      login_user user3
-      visit gws_workflow_files_path(site: site, state: "all")
+      login_user user3, to: gws_workflow_files_path(site: site, state: "all")
       click_on file_name
+      expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment2
         click_on I18n.t("workflow.links.set_seen")
       end
 
+      expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
       expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(circulation_comment2)}/)
 
       Gws::Workflow::File.all.first.tap do |item|
@@ -161,7 +168,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+          include({
+            level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
         expect(item.workflow_circulations.count).to eq 1
         expect(item.workflow_circulations).to \
           include({level: 1, user_id: user3.id, state: 'seen', comment: circulation_comment2})

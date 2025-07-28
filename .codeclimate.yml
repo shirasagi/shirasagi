@@ -8,7 +8,7 @@ plugins:
   brakeman:
     enabled: true
     config:
-      file: .brakeman.yml # not supported
+      file: config/brakeman.yml # not supported
   bundler-audit:
     enabled: true
   csslint:

@@ -13,6 +13,7 @@ module Opendata::Resource::ReportModel
 
   included do
     index({ site_id: 1, year_month: 1 })
+    index({ site_id: 1, dataset_id: 1, resource_id: 1 })
 
     set_permission_name "opendata_reports", :read
 
@@ -298,7 +299,7 @@ module Opendata::Resource::ReportModel
       target = Time.new(item.year_month / 100, item.year_month % 100, 1).in_time_zone
       days = target.end_of_month.day
       days.times do |day|
-        data << (item["day#{day}_count"] || 0).to_s(:delimited)
+        data << (item["day#{day}_count"] || 0).to_fs(:delimited)
       end
 
       data
@@ -311,7 +312,7 @@ module Opendata::Resource::ReportModel
       if time == UNCERTAIN_DELETED_TIME
         I18n.t("ss.options.state.deleted")
       else
-        "削除: #{I18n.l(time.to_date)}"
+        "削除: #{I18n.l(time.to_date, format: :picker)}"
       end
     end
 
@@ -394,7 +395,7 @@ module Opendata::Resource::ReportModel
       ]
 
       12.times do |month|
-        data << (result["month#{month}_count"] || 0).to_s(:delimited)
+        data << (result["month#{month}_count"] || 0).to_fs(:delimited)
       end
 
       data
@@ -458,7 +459,7 @@ module Opendata::Resource::ReportModel
       ey = Time.zone.today.year
       sy = ey - TARGET_YEAR_RANGE + 1
       (sy..ey).each do |year|
-        data << (result["year#{year}_count"] || 0).to_s(:delimited)
+        data << (result["year#{year}_count"] || 0).to_fs(:delimited)
       end
 
       data

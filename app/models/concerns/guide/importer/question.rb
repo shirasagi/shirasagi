@@ -16,20 +16,27 @@ module Guide::Importer::Question
 
   def questions_enum
     Enumerator.new do |y|
-      headers = %w(id_name name order question_type check_type).map { |v| Guide::Question.t(v) }
+      headers = %w(id_name name explanation order question_type check_type).map { |v| Guide::Question.t(v) }
       edge_size = Guide::Question.site(cur_site).node(cur_node).map { |item| item.edges.size }.max
-      edge_size.times { |i| headers << "#{I18n.t("guide.transition")}#{i + 1}" } if edge_size
+      if edge_size
+        edge_size.times do |i|
+          headers << "#{I18n.t("guide.transition")}#{i + 1}"
+          headers << "#{I18n.t("guide.explanation")}#{i + 1}"
+        end
+      end
 
       y << encode_sjis(headers.to_csv)
       Guide::Question.site(cur_site).node(cur_node).each do |item|
         row = []
         row << item.id_name
         row << item.name
+        row << item.explanation
         row << item.order
         row << item.label(:question_type)
         row << item.label(:check_type)
         item.edges.each do |edge|
           row << edge.value
+          row << edge.explanation
         end
         y << encode_sjis(row.to_csv)
       end
@@ -46,7 +53,7 @@ module Guide::Importer::Question
     item.cur_user = cur_user
     item.id_name = id_name
 
-    headers = %w(name order)
+    headers = %w(name explanation order)
     headers.each do |k|
       v = @row[Guide::Question.t(k)]
       item.send("#{k}=", v)
@@ -64,7 +71,7 @@ module Guide::Importer::Question
 
     if item.invalid?
       message = item.errors.full_messages.join("\n")
-      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_faild", message: message)}"
+      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_failed", message: message)}"
       return false
     end
 
@@ -73,19 +80,13 @@ module Guide::Importer::Question
 
       # yes
       idx = 0
-      in_edges[idx]||= begin
-        edge = item.edges[idx]
-        edge ? OpenStruct.new(point_ids: edge.point_ids) : OpenStruct.new
-      end
+      in_edges[idx] = OpenStruct.new
       in_edges[idx][:question_type] = question_type
       in_edges[idx][:value] = I18n.t("guide.links.applicable")
 
       # no
       idx = 1
-      in_edges[idx]||= begin
-        edge = item.edges[idx]
-        edge ? OpenStruct.new(point_ids: edge.point_ids) : OpenStruct.new
-      end
+      in_edges[idx] = OpenStruct.new
       in_edges[idx][:question_type] = question_type
       in_edges[idx][:value] = I18n.t("guide.links.not_applicable")
 
@@ -96,14 +97,17 @@ module Guide::Importer::Question
         v = @row[v]
         next if v.blank?
 
-        in_edges[idx] ||= begin
-          edge = item.edges[idx]
-          edge ? OpenStruct.new(point_ids: edge.point_ids) : OpenStruct.new
-        end
+        in_edges[idx] = OpenStruct.new
         in_edges[idx][:question_type] = question_type
         in_edges[idx][:value] = v
       end
 
+      explanation_headers.each do |v, idx|
+        v = @row[v]
+        next if v.blank?
+
+        in_edges[idx][:explanation] = v
+      end
     end
 
     item.in_edges = in_edges
@@ -111,7 +115,7 @@ module Guide::Importer::Question
       true
     else
       message = item.errors.full_messages.join("\n")
-      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_faild", message: message)}"
+      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_failed", message: message)}"
       false
     end
   end

@@ -1,0 +1,5 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /show|download/ %>
+    <%= link_to t('ss.links.back'), action: :index, group_id: @group.id %>
+  <% end %>
+</nav>

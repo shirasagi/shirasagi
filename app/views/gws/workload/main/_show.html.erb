@@ -1,0 +1,28 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :year %></dt>
+  <dd><%= @item.year %></dd>
+
+  <dt><%= @model.t :due_date %></dt>
+  <dd class="due-date"><%= tryb { @item.due_date.strftime('%Y/%m/%d') } %></dd>
+
+  <dt><%= @model.t :due_start_on %></dt>
+  <dd class="due-start-on"><%= tryb { @item.due_start_on.strftime('%Y/%m/%d') } %></dd>
+
+  <dt><%= @model.t :due_end_on %></dt>
+  <dd class="due-end-on"><%= tryb { @item.due_end_on.strftime('%Y/%m/%d') } %></dd>
+
+  <dt><%= @model.t :category_id %></dt>
+  <dd><%= tryb { @item.category.name } %></dd>
+
+  <dt><%= @model.t :client_id %></dt>
+  <dd><%= tryb { @item.client.name } %></dd>
+
+  <dt><%= @model.t :cycle_id %></dt>
+  <dd><%= tryb { @item.cycle.name } %></dd>
+
+  <dt><%= @model.t :load_id %></dt>
+  <dd><%= tryb { @item.load.name } %></dd>
+</dl>

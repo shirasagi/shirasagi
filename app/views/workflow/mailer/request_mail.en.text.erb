@@ -1,0 +1,20 @@
+<% message.subject = @subject %>
+<%= @from_user.name %> <% if @agent_user %>（Proxy: <%= @agent_user.name %>）<% end %> sent a request for approval of the following article.
+Please go through the approval process.
+
+- Title
+  <%= @page.name %>
+
+<% if @page.workflow_user.present? %>
+- Applicant
+  <%= @page.workflow_user.name %>
+  <% if @page.workflow_agent %>
+  （Proxy: <%= @page.workflow_agent.name %>）
+  <% end %>
+<% end %>
+
+- Applicant Comments
+  <%= @comment %>
+
+- Article URL
+  <%= @url %>

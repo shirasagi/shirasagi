@@ -61,11 +61,11 @@ describe "ezine_members", type: :feature do
         @column1 = create(:ezine_column, node: node, name: "text_field", input_type: "text_field", state: "public")
         @column2 = create(:ezine_column, node: node, name: "text_area", input_type: "text_area", state: "public")
         @column3 = create(:ezine_column, node: node, name: "radio_button", input_type: "radio_button",
-                          select_options: 'radio_button1 radio_button2', state: "public")
+                          select_options: %w(radio_button1 radio_button2), state: "public")
         @column4 = create(:ezine_column, node: node, name: "select", input_type: "select",
-                          select_options: 'select1 select2', state: "public")
+                          select_options: %w(select1 select2), state: "public")
         @column5 = create(:ezine_column, node: node, name: "check_box", input_type: "check_box",
-                          select_options: 'check_box1 check_box2', state: "public")
+                          select_options: %w(check_box1 check_box2), state: "public")
       end
 
       it "#new" do

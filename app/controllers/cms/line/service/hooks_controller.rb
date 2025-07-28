@@ -47,7 +47,7 @@ class Cms::Line::Service::HooksController < ApplicationController
 
   def crop
     set_item
-    return if request.get?
+    return if request.get? || request.head?
 
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)

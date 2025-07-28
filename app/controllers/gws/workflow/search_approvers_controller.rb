@@ -15,6 +15,7 @@ class Gws::Workflow::SearchApproversController < ApplicationController
     else
       @group = @cur_group
       @group ||= @cur_user.groups.active.in_group(@cur_site).first
+      @group = @cur_superior_groups.last if @cur_superior_groups.present?
     end
   end
 

@@ -1,0 +1,57 @@
+<div class="mod-gws-affair_file_target">
+  <dl class="see mod-gws-affair_file_target_group">
+    <dt><%= @model.t :target_group_id %><%= @model.tt :target_group_id %></dt>
+    <dd>
+      <%= f.hidden_field "target_group_id", value: "", class: "hidden-ids" %>
+      <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path(single: 1), class: "btn ajax-box" %>
+      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
+      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+          <% if params[:action] =~ /new/ && !@item.target_group %>
+          <tr data-id="<%= @cur_group.id %>">
+            <td><%= f.hidden_field "target_group_id", value: @cur_group.id, id: nil %> <%= @cur_group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% elsif @item.target_group %>
+          <tr data-id="<%= @item.target_group.id %>">
+            <td><%= f.hidden_field "target_group_id", value: @item.target_group.id, id: nil %> <%= @item.target_group.name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+
+  <dl class="see mod-gws-affair_file_target_user">
+    <dt><%= @model.t :target_user_id %><%= @model.tt :target_user_id %></dt>
+    <dd>
+      <%= f.hidden_field "target_user_id", value: "", class: "hidden-ids" %>
+      <%= link_to t("ss.apis.users.index"), gws_apis_users_path(single: 1), class: "btn ajax-box" %>
+      <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
+      <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
+    </dd>
+    <dd>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+          <% if params[:action] =~ /new/ && !@item.target_user %>
+          <tr data-id="<%= @cur_user.id %>">
+            <td><%= f.hidden_field "target_user_id", value: @cur_user.id, id: nil %> <%= @cur_user.long_name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% elsif @item.target_user %>
+          <tr data-id="<%= @item.target_user.id %>">
+            <td><%= f.hidden_field "target_user_id", value: @item.target_user_id, id: nil %> <%= @item.target_user.long_name %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </dd>
+  </dl>
+</div>

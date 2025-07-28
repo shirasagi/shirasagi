@@ -1,6 +1,6 @@
-<div class="guide-lists">
+<div class="guide__lists">
   <h2>#{name}</h2>
-  <div class="procedure-wrap">
+  <div class="procedure__wrap">
     <dl class="procedure item-#{id}">
       <dt>リンク URL</dt>
       <dd><a href="#{link_url}">#{link_url}</a></dd>

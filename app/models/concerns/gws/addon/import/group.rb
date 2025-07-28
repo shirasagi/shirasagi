@@ -17,18 +17,20 @@ module Gws::Addon::Import
       end
 
       def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            line << item.domains
-            line << item.order
-            line << item.ldap_dn
-            line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
-            line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
-            data << line
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              line = []
+              line << item.id
+              line << item.name
+              line << item.domains
+              line << item.order
+              line << item.ldap_dn
+              line << (item.activation_date.present? ? I18n.l(item.activation_date) : nil)
+              line << (item.expiration_date.present? ? I18n.l(item.expiration_date) : nil)
+              data << line
+            end
           end
         end
       end
@@ -39,8 +41,10 @@ module Gws::Addon::Import
       validate_import
       return false unless errors.empty?
 
-      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+          update_row(row, i + 2)
+        end
       end
       return errors.empty?
     end

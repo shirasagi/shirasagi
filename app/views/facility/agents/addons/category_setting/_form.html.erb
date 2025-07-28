@@ -1,7 +1,7 @@
 <dl class="see mod-facility-category">
   <dt><%= t("facility.category.setting") %><%= @model.tt :st_categories %></dt>
   <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field "st_category_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "st_category_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("facility.category.index"), facility_apis_categories_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -15,7 +15,7 @@
       <tbody>
         <% @item.st_categories.each do |cate| %>
         <tr data-id="<%= cate.id %>">
-          <td><%= f.hidden_field "st_category_ids[]", value: cate.id %> <%= cate.name %></td>
+          <td><%= f.hidden_field "st_category_ids[]", value: cate.id, id: nil %><%= cate.name %> (<%= cate.filename %>)</td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
         <% end %>

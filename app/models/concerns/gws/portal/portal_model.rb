@@ -32,6 +32,13 @@ module Gws::Portal::PortalModel
     false
   end
 
+  def notice_calendar_params(item)
+    {
+      site: site, folder_id: '-', category_id: '-',
+      calendar: { date: item.start_at.to_date.to_s }
+    }
+  end
+
   def save_default_portlets(settings = [])
     default_portlets(settings).each do |item|
       user_ids = [@cur_user.id]

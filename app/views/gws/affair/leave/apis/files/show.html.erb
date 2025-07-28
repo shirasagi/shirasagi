@@ -1,0 +1,42 @@
+<%= render "ss/crud/addon", addon: { id: "gws-affair-leave-apis-file", head: false } do %>
+  <dl class="see">
+    <dt><%= @model.t :name %></dt>
+    <dd><%= @item.name %></dd>
+
+    <dt><%= @model.t :start_at %></dt>
+    <dd><%= tryb { @item.start_at.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+    <dt><%= @model.t :end_at %></dt>
+    <dd><%= tryb { @item.end_at.strftime("%Y/%m/%d %H:%M") } %></dd>
+
+    <dt><%= @model.t :leave_type %></dt>
+    <dd><%= @item.label :leave_type %></dd>
+
+    <% if @item.leave_type == "paidleave" && @item.special_leave.present? %>
+      <dt><%= @model.t :special_leave_id %></dt>
+      <dd><%= @item.special_leave.name %></dd>
+    <% end %>
+
+    <% if @item.week_in_compensatory_file %>
+      <dt><%= @model.t :week_in_compensatory_file_id %></dt>
+      <dd><%= @item.week_in_compensatory_file.name %></dd>
+    <% end %>
+
+    <% if @item.week_out_compensatory_file %>
+      <dt><%= @model.t :week_out_compensatory_file_id %></dt>
+      <dd><%= @item.week_out_compensatory_file.name %></dd>
+    <% end %>
+
+    <dt><%= @model.t :reason %></dt>
+    <dd><%= br @item.reason %></dd>
+
+    <% if @item.files.present? %>
+      <dt><%= @model.t :file_ids %></dt>
+      <dd>
+        <% @item.files.each do |file| %>
+          <%= link_to file.name, file.url %>
+        <% end %>
+      </dd>
+    <% end %>
+  </dl>
+<% end %>

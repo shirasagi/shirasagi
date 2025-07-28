@@ -8,7 +8,7 @@ module Workflow::Addon
 
       define_model_callbacks :merge_branch
 
-      belongs_to :master, foreign_key: "master_id", class_name: self.to_s
+      belongs_to :master, class_name: self.to_s
       has_many :branches, foreign_key: "master_id", class_name: self.to_s, dependent: :destroy
 
       permit_params :master_id
@@ -60,6 +60,10 @@ module Workflow::Addon
         item.lock_until = nil
       end
 
+      if item.is_a?(Workflow::Addon::Branch)
+        item.master_id = nil
+      end
+
       if item.is_a?(Cms::Addon::TwitterPoster)
         item.twitter_auto_post = "expired"
         item.twitter_edit_auto_post = "disabled"
@@ -93,7 +97,8 @@ module Workflow::Addon
     end
 
     def clone_file(source_file)
-      file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: SS::Model.container_of(self))
+      owner_item = SS::Model.container_of(self)
+      file = SS::File.clone_file(source_file, cur_site: @cur_site, cur_user: @cur_user, owner_item: owner_item)
       update_html_with_clone_file(source_file, file)
       file
     end
@@ -158,10 +163,19 @@ module Workflow::Addon
       master.cur_site = @cur_site
       master.in_branch = self
       if !master.merge_branch
+        SS::Model.copy_errors(master, self)
         Rails.logger.error("merge_branch : master save failed #{master.errors.full_messages.join(",")}")
+        return
       end
 
       master.generate_file
+
+      # 差し替えページを公開したので、更新履歴の転送を指示
+      @transfer_history_backup = true
+
+      # この後、差し替えページは削除されるので履歴を作成しても無意味なので履歴作成を抑制する。
+      # また、更新履歴が二重に作成されるのを防ぐ意味もある。
+      @skip_history_backup = true
     end
 
     private

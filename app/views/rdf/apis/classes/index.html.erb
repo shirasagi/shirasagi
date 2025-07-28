@@ -1,8 +1,8 @@
-<%= scss do %>
+<style media="all">
 .name {
   width: 200px;
 }
-<% end %>
+</style>
 
 <div class="rdf-search-classes-search-form" style="margin-bottom: 20px; padding: 10px; border: 1px solid #ddd;">
 <%= form_for :s, url: { action: :index, target: @target }, html: { method: "GET", class: :search, multipart: true } do |f| %>

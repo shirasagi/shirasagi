@@ -22,7 +22,7 @@ class Cms::ThemeTemplate
   after_save :check_default, if: ->{ default? }
 
   default_scope -> { order_by(order: 1, name: 1) }
-  scope :and_public, ->{ where state: "public" }
+  scope :and_public, ->(_date = nil){ where state: "public" }
 
   def state_options
     [

@@ -1,0 +1,10 @@
+<% @index_title = proc do |item| %>
+  <% title = "#{item.name} (#{item.url})" %>
+  <%= link_to title, { action: :show, id: item }, class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
+<% end %>
+
+<%= render template: 'cms/crud/index' %>

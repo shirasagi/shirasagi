@@ -1,0 +1,12 @@
+<%
+  index ||= 0
+  destination = @item.destinations.present? ? @item.destinations[index] : nil
+%>
+
+<dl class="see">
+  <dt><%= t "chorg.views.#{type}_changesets.name" %></dt>
+  <dd><%= destination ? destination[:name] : nil %></dd>
+
+  <dt><%= t "chorg.views.#{type}_changesets.order" %></dt>
+  <dd><%= destination ? destination[:order] : nil %></dd>
+</dl>

@@ -1,0 +1,7 @@
+<dl class="see mod-gws-group-affair_setting">
+  <dt><%= @model.t :superior_group_ids %></dt>
+  <dd><%=br @item.superior_groups.pluck(:name) %></dd>
+
+  <dt><%= @model.t :superior_user_ids %></dt>
+  <dd><%=br @item.superior_users.map { |item| item.long_name } %></dd>
+</dl>

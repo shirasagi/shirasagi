@@ -1,0 +1,90 @@
+<% render_leave_dates = proc do |file| %>
+  <%
+    leave_dates = file.leave_dates_in_query
+
+    if leave_dates.size == 1
+      leave_dates_term = leave_dates.first.date.strftime("%Y/%m/%d")
+    elsif leave_dates.size > 1
+      leave_dates_term = "#{leave_dates.first.date.strftime("%Y/%m/%d")}#{I18n.t("ss.wave_dash")}#{leave_dates.last.date.strftime("%Y/%m/%d")}"
+    end
+  %>
+  <% if leave_dates.size >= 1 %>
+    <%= jquery do %>
+    $(".leave-dates-<%= file.id %>").on("click", function(){
+      var dates = $(this).next("div");
+      $.colorbox({ html: dates.html(), width: "80%", height: "80%" });
+      return false;
+    });
+    <% end %>
+    <%= link_to leave_dates_term, "", class: "leave-dates-#{file.id}" %>
+    <div style="display: none;">
+      <div class="addon-views">
+        <div class="addon-body">
+          <dl class="see">
+            <dd class="wide">
+              <table class="index">
+                <thead>
+                  <tr>
+                    <th><%= Gws::Affair::LeaveFile.t :leave_dates %></th>
+                    <th><%= t("gws/affair.labels.leave_hours") %></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <% leave_dates.each do |leave_date| %>
+                    <tr>
+                      <td>
+                        <%= leave_date.date.strftime("%Y/%m/%d") %>
+                        <%= "#{leave_date.start_at.strftime("%-H:%M")}〜#{leave_date.end_at.strftime("%-H:%M")}" %>
+                      </td>
+                      <td><%= Gws::Affair::Utils.leave_minutes_label(leave_date.minute) %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            </dd>
+          </dl>
+        </div>
+      </div>
+    </div>
+  <% end %>
+<% end %>
+
+<% minutes = @leave_files.map(&:leave_minutes_in_query).sum %>
+<dt><%= t("gws/affair.labels.leave_hours") %></dt>
+<dd class="leave-minutes"><%= Gws::Affair::Utils.leave_minutes_label(minutes) %></dd>
+
+<dt><%= t("gws/affair.labels.leave_files") %></dt>
+<% if @leave_files.present? %>
+  <dd class="wide">
+    <table class="index leave-files">
+      <thead>
+        <tr>
+          <th><%= Gws::Affair::LeaveFile.t :name %></th>
+          <th><%= Gws::Affair::LeaveFile.t :leave_type %></th>
+          <th><%= Gws::Affair::LeaveFile.t :special_leave_id %></th>
+          <th><%= Gws::Affair::LeaveFile.t :leave_dates %></th>
+          <th><%= t("gws/affair.labels.leave_hours") %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @leave_files.each do |file| %>
+          <tr>
+            <td>
+              <% if file.allowed?(:read, @cur_user, site: @cur_site) %>
+                <%= link_to file.name, file.private_show_path %>
+              <% else %>
+                <%= file.name %>
+              <% end %>
+            </td>
+            <td><%= file.label :leave_type %></td>
+            <td><%= file.special_leave.try(:name) %></td>
+            <td><% render_leave_dates.call(file) %></td>
+            <td><%= Gws::Affair::Utils.leave_minutes_label(file.leave_minutes_in_query) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+<% else %>
+  <dd><%= t("gws/affair.notice.not_found_leave_files") %></dd>
+<% end %>

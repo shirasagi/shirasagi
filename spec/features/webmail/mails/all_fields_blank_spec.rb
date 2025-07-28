@@ -8,6 +8,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     shared_examples "webmail/mails all email fields are blank flow" do
       before do
         webmail_import_mail(user, msg)
+        Webmail.imap_pool.disconnect_all
 
         ActionMailer::Base.deliveries.clear
         login_user(user)
@@ -19,11 +20,14 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
       it do
         visit index_path
+        wait_for_js_ready
         first("li.list-item").click
+        wait_for_js_ready
         expect(page).to have_css("#addon-basic .subject", text: I18n.t("webmail.no_subjects"))
         expect(page).to have_css("#addon-basic .body--text", text: "message-47ma7vziwcu")
 
         click_on I18n.t("ss.links.delete")
+        wait_for_js_ready
         expect(page).to have_css("#addon-basic", text: I18n.t("webmail.no_subjects"))
       end
     end

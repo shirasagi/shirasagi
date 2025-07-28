@@ -14,12 +14,14 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       # Create
       #
       visit gws_share_folders_path(site: site)
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Share::Folder.all.count).to eq 1
       folder = Gws::Share::Folder.all.first
@@ -36,19 +38,20 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       expect(folder.group_ids).to eq folder.readable_group_ids
       expect(folder.user_ids).to eq folder.readable_member_ids
       expect(folder.custom_group_ids).to be_blank
-      expect(folder.permission_level).to eq 1
 
       #
       # Update
       #
       visit gws_share_folders_path(site: site)
       click_on name
-      click_on I18n.t("ss.links.edit")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       within "form#item-form" do
         fill_in "item[in_basename]", with: name2
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       folder.reload
       expect(folder.name).to eq name2
@@ -58,11 +61,13 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       #
       visit gws_share_folders_path(site: site)
       click_on name2
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::Share::Folder.find(folder.id) }.to raise_error Mongoid::Errors::DocumentNotFound
     end
@@ -93,22 +98,28 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
     context 'basic crud' do
       it do
         visit gws_share_folders_path(site: site)
-        click_on I18n.t('ss.links.new')
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.new')
+        end
 
         #
         # Create
         #
         within 'form#item-form' do
           fill_in 'item[in_basename]', with: subfolder_name1
-          click_on I18n.t('gws/share.apis.folders.index')
+          wait_for_cbox_opened do
+            click_on I18n.t('gws/share.apis.folders.index')
+          end
         end
 
-        wait_for_cbox do
-          expect(page).to have_content(item.name)
-          click_on item.name
+        within_cbox do
+          wait_for_cbox_closed do
+            click_on item.name
+          end
         end
 
         within 'form#item-form' do
+          expect(page).to have_css(".ajax-selected", text: item.name)
           click_on I18n.t('ss.buttons.save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
@@ -127,8 +138,9 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name1}"
-        click_on I18n.t('ss.links.edit')
-
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.edit')
+        end
         within 'form#item-form' do
           fill_in 'item[in_basename]', with: subfolder_name2
           click_on I18n.t('ss.buttons.save')
@@ -143,12 +155,13 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
         #
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name2}"
-        click_on I18n.t('ss.links.delete')
-
-        within 'form' do
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.delete')
+        end
+        within 'form#item-form' do
           click_on I18n.t('ss.buttons.delete')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
 
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 0
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name2}").count).to eq 0
@@ -161,19 +174,20 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       it do
         visit gws_share_folders_path(site: site)
         click_on "#{item.name}/#{subfolder_name1}"
-        click_on I18n.t('ss.links.move')
-
-        within 'form#item-form' do
-          click_on I18n.t('gws/share.apis.folders.index')
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.move')
         end
-        wait_for_cbox do
+        within 'form#item-form' do
+          wait_for_cbox_opened { click_on I18n.t('gws/share.apis.folders.index') }
+        end
+        within_cbox do
           expect(page).to have_content(item2.name)
-          click_on item2.name
+          wait_for_cbox_closed { click_on item2.name }
         end
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 0
         expect(Gws::Share::Folder.site(site).where(name: "#{item2.name}/#{subfolder_name1}").count).to eq 1
@@ -186,19 +200,20 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       it do
         visit gws_share_folders_path(site: site)
         find("a.title[href=\"#{gws_share_folder_path(site, item)}\"]").click
-        click_on I18n.t('ss.links.move')
-
-        within 'form#item-form' do
-          click_on I18n.t('gws/share.apis.folders.index')
+        within ".nav-menu" do
+          click_on I18n.t('ss.links.move')
         end
-        wait_for_cbox do
+        within 'form#item-form' do
+          wait_for_cbox_opened { click_on I18n.t('gws/share.apis.folders.index') }
+        end
+        within_cbox do
           expect(page).to have_content(item2.name)
-          click_on item2.name
+          wait_for_cbox_closed { click_on item2.name }
         end
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         expect(Gws::Share::Folder.site(site).where(name: item.name).count).to eq 0
         expect(Gws::Share::Folder.site(site).where(name: "#{item.name}/#{subfolder_name1}").count).to eq 0
@@ -252,7 +267,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
             click_on I18n.t("ss.buttons.download")
           end
         end
-        expect(page).to have_css("#notice", text: I18n.t('gws.notice.delay_download_with_message').split("\n").first)
+        wait_for_notice I18n.t('gws.notice.delay_download_with_message').split("\n").first
 
         expect(enqueued_jobs.size).to eq 1
         enqueued_jobs.first.tap do |enqueued_job|

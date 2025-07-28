@@ -38,12 +38,10 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     site.save!
   end
 
-  before { login_user user }
-
   describe 'download' do
     context "with no users" do
       it do
-        visit gws_attendance_main_path(site)
+        login_user user, to: gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')
         end
@@ -55,14 +53,18 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.download")
         end
 
-        msg = Gws::Attendance::DownloadParam.t(:user_ids) + I18n.t("errors.messages.blank")
+        msg = I18n.t(
+          "errors.format",
+          attribute: Gws::Attendance::DownloadParam.t(:user_ids),
+          message: I18n.t("errors.messages.blank")
+        )
         expect(page).to have_css("#errorExplanation", text: msg)
       end
     end
 
     context "with user1" do
       it do
-        visit gws_attendance_main_path(site)
+        login_user user, to: gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')
         end
@@ -72,10 +74,10 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
-        wait_for_cbox do
-          click_on user1.long_name
+        within_cbox do
+          wait_for_cbox_closed { click_on user1.long_name }
         end
         within "form#item-form" do
           click_on I18n.t("ss.buttons.download")
@@ -83,14 +85,16 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true)
-        expect(csv.length).to eq this_month.end_of_month.day
-        expect(csv[0][0]).to eq user1.uid
-        expect(csv[0][1]).to eq user1.name
-        expect(csv[0][2]).to eq this_month.to_date.iso8601
-        expect(csv[-1][0]).to eq user1.uid
-        expect(csv[-1][1]).to eq user1.name
-        expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true)
+          expect(csv.length).to eq this_month.end_of_month.day
+          expect(csv[0][0]).to eq user1.uid
+          expect(csv[0][1]).to eq user1.name
+          expect(csv[0][2]).to eq this_month.to_date.iso8601
+          expect(csv[-1][0]).to eq user1.uid
+          expect(csv[-1][1]).to eq user1.name
+          expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        end
       end
     end
 
@@ -99,7 +103,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       let(:to_time) { this_month + 13.days }
 
       it do
-        visit gws_attendance_main_path(site)
+        login_user user, to: gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')
         end
@@ -109,33 +113,35 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
-        wait_for_cbox do
-          click_on user1.long_name
+        within_cbox do
+          wait_for_cbox_closed { click_on user1.long_name }
         end
         within "form#item-form" do
-          fill_in "item[from_date]", with: I18n.l(from_time.to_date, format: :picker)
-          fill_in "item[to_date]", with: I18n.l(to_time.to_date, format: :picker)
+          fill_in_date "item[from_date]", with: from_time
+          fill_in_date "item[to_date]", with: to_time
           click_on I18n.t("ss.buttons.download")
         end
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true)
-        expect(csv.length).to eq prev_month.end_of_month.day
-        expect(csv[0][0]).to eq user1.uid
-        expect(csv[0][1]).to eq user1.name
-        expect(csv[0][2]).to eq from_time.to_date.iso8601
-        expect(csv[-1][0]).to eq user1.uid
-        expect(csv[-1][1]).to eq user1.name
-        expect(csv[-1][2]).to eq to_time.to_date.iso8601
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true)
+          expect(csv.length).to eq prev_month.end_of_month.day
+          expect(csv[0][0]).to eq user1.uid
+          expect(csv[0][1]).to eq user1.name
+          expect(csv[0][2]).to eq from_time.to_date.iso8601
+          expect(csv[-1][0]).to eq user1.uid
+          expect(csv[-1][1]).to eq user1.name
+          expect(csv[-1][2]).to eq to_time.to_date.iso8601
+        end
       end
     end
 
     context "with user2 and UTF-8" do
       it do
-        visit gws_attendance_main_path(site)
+        login_user user, to: gws_attendance_main_path(site)
         within first(".mod-navi") do
           click_on I18n.t('modules.gws/attendance/management/time_card')
         end
@@ -145,10 +151,10 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
         end
 
         within "form#item-form" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
-        wait_for_cbox do
-          click_on user2.long_name
+        within_cbox do
+          wait_for_cbox_closed { click_on user2.long_name }
         end
         within "form#item-form" do
           first("input[value='UTF-8']").click
@@ -157,14 +163,62 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
 
         wait_for_download
 
-        csv = ::CSV.read(downloads.first, headers: true)
-        expect(csv.length).to eq this_month.end_of_month.day
-        expect(csv[0][0]).to eq user2.uid
-        expect(csv[0][1]).to eq user2.name
-        expect(csv[0][2]).to eq this_month.to_date.iso8601
-        expect(csv[-1][0]).to eq user2.uid
-        expect(csv[-1][1]).to eq user2.name
-        expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true)
+          expect(csv.length).to eq this_month.end_of_month.day
+          expect(csv[0][0]).to eq user2.uid
+          expect(csv[0][1]).to eq user2.name
+          expect(csv[0][2]).to eq this_month.to_date.iso8601
+          expect(csv[-1][0]).to eq user2.uid
+          expect(csv[-1][1]).to eq user2.name
+          expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        end
+      end
+    end
+
+    context "with user granted minimum permissions to download" do
+      let(:min_permissions_to_download) do
+        %w(use_gws_attendance_time_cards edit_gws_attendance_time_cards manage_private_gws_attendance_time_cards)
+      end
+      let!(:role) { create :gws_role, cur_site: site, permissions: min_permissions_to_download }
+
+      before do
+        user.update!(gws_role_ids: [ role.id ])
+        user.reload
+      end
+
+      it do
+        login_user user, to: gws_attendance_main_path(site)
+        within first(".mod-navi") do
+          click_on I18n.t('modules.gws/attendance/management/time_card')
+        end
+
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.download")
+        end
+
+        within "form#item-form" do
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
+        end
+        within_cbox do
+          wait_for_cbox_closed { click_on user1.long_name }
+        end
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.download")
+        end
+
+        wait_for_download
+
+        I18n.with_locale(I18n.default_locale) do
+          csv = ::CSV.read(downloads.first, headers: true)
+          expect(csv.length).to eq this_month.end_of_month.day
+          expect(csv[0][0]).to eq user1.uid
+          expect(csv[0][1]).to eq user1.name
+          expect(csv[0][2]).to eq this_month.to_date.iso8601
+          expect(csv[-1][0]).to eq user1.uid
+          expect(csv[-1][1]).to eq user1.name
+          expect(csv[-1][2]).to eq this_month.end_of_month.to_date.iso8601
+        end
       end
     end
   end

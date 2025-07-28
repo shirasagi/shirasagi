@@ -1,0 +1,25 @@
+<dl class="see">
+  <dt><%= @model.t :message_id %></dt>
+  <dd>
+    <% message = @item.message %>
+    <% if message && message.allowed?(:read, @cur_user, site: @cur_site) %>
+      <%= link_to @item.name, message.private_show_path %>
+    <% else %>
+      <%= @item.name %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :condition_state %></dt>
+  <dd><%= @item.label :condition_state %></dd>
+
+  <% if @item.condition_label.present? %>
+    <dt><%= @model.t :condition_label %></dt>
+    <dd><%=br @item.condition_label %></dd>
+  <% end %>
+
+  <dt><%= @model.t :created %></dt>
+  <dd><%=l @item.created %></dd>
+
+  <dt><%= @model.t :updated %></dt>
+  <dd><%=l @item.updated %></dd>
+</dl>

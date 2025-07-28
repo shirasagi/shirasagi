@@ -3,8 +3,6 @@ ja:
     menu:
       my_account: アカウント情報
       accounts: アカウント一覧
-    buttons:
-      reload: 更新
     errors:
       invalid_login: ログインできませんでした。
     messages:

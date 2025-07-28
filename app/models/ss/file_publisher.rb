@@ -37,7 +37,10 @@ class SS::FilePublisher
       return if ::Fs.exist?(dest) && ::Fs.compare_file_head(src, dest)
 
       ::Fs.rm_rf(dest)
-      ::Fs.cp(src, dest)
+      # it sometimes causes errors as files are copying over the network
+      Retriable.retriable { ::Fs.cp(src, dest) }
+    rescue => e
+      Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     end
   end
 
@@ -75,6 +78,8 @@ class SS::FilePublisher
 
       ::FileUtils.rm_rf(dest)
       ::FileUtils.ln_s(src, dest)
+    rescue => e
+      Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     end
   end
 

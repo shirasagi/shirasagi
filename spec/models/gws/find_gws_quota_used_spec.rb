@@ -34,7 +34,7 @@ describe Gws, type: :model, dbscope: :example do
 
   context "when gws/bookmark is created" do
     it do
-      expect { create(:gws_bookmark, cur_site: site, cur_user: user) }.to \
+      expect { create(:gws_bookmark_item, cur_site: site, cur_user: user) }.to \
         change { Gws.find_gws_quota_used(Gws::Group.where(id: site.id)) }.by_at_least(200)
     end
   end

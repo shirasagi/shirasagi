@@ -49,18 +49,11 @@ else
     end
   end
 
-  if ENV["GUARD_SCSS_LINT"]
-    guard :scss_lint, all_on_start: false do
-      watch(%r{^app/assets/stylesheets/(.+)\.s?css$})
-      watch(%r{^spec/fixtures/(.+)\.s?css$})
-      watch(%r{^db/seeds/(.+)\.s?css$})
-    end
-  end
-
   if ENV["GUARD_STYLELINT"]
     require_relative "./lib/guard/stylelint"
     guard :stylelint, all_on_start: false do
       watch(%r{^app/assets/stylesheets/(.+)\.s?css$})
+      watch(%r{^app/javascript/(.+)\.s?css$})
       watch(%r{^spec/fixtures/(.+)\.s?css$})
       watch(%r{^db/seeds/(.+)\.s?css$})
     end
@@ -70,6 +63,7 @@ else
     require_relative "./lib/guard/eslint"
     guard :eslint, all_on_start: false do
       watch(%r{^app/assets/(.+)\.(js|js\.erb)$})
+      watch(%r{^app/javascript/(.+)\.js$})
       watch(%r{^db/seeds/(.+)\.(js|js\.erb)$})
     end
   end

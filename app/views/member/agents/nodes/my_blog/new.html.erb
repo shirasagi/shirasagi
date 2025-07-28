@@ -13,7 +13,7 @@
     <% end %>
     <dl class="column">
       <dt><%= @model.t :released %></dt>
-      <dd><%= f.text_field :released, class: "datetime js-datetime", value: tryb { @item.released.strftime("%Y/%m/%d %H:%M") } %></dd>
+      <dd><%= f.ss_datetime_field :released %></dd>
     </dl>
     <dl class="column">
       <dt><%= @model.t :state %></dt>

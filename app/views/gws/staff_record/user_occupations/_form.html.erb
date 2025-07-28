@@ -13,10 +13,10 @@
 
   <% if false %>
     <dt><%= @model.t :activation_date %><%= @model.tt :activation_date %></dt>
-    <dd><%= f.text_field :activation_date, class: 'datetime js-datetime', value: tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+    <dd><%= f.ss_datetime_field :activation_date %></dd>
 
     <dt><%= @model.t :expiration_date %><%= @model.tt :expiration_date %></dt>
-    <dd><%= f.text_field :expiration_date, class: 'datetime js-datetime', value: tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+    <dd><%= f.ss_datetime_field :expiration_date %></dd>
   <% end %>
 
   <dt><%= @model.t :remark %><%= @model.tt :remark %></dt>

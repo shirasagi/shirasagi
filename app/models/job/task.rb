@@ -10,7 +10,7 @@ class Job::Task
   field :app_type, type: String
   field :args, type: Array
   field :priority, type: Integer, default: -> { Time.zone.now.to_i }
-  field :at, type: Integer, default: -> { Time.zone.now.to_i }
+  field :at, type: Integer, default: -> { Time.zone.now.to_i }, overwrite: true
   field :active_job, type: Hash
 
   belongs_to :site, class_name: "SS::Site"
@@ -90,7 +90,7 @@ class Job::Task
       job_log.closed = Time.zone.now
       Rails.logger.info("Completed Job #{id} in #{time * 1000} ms")
     ensure
-      Job::TaskLogger.detach(job_log)
+      Job::TaskLogger.detach
       job_log.save
     end
     ret

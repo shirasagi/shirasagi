@@ -7,7 +7,8 @@ module Gws::Schedule::CalendarFormat
     data = { id: id.to_s, start: start_at, end: end_at, allDay: allday? }
 
     #data[:readable] = allowed?(:read, user, site: site)
-    data[:readable] = readable?(user, site: site)
+    data[:readable] = readable?(user, site: site, only: :private) ||
+                      (readable_setting_range == 'private' && readable?(user, site: site, only: :other))
     data[:editable] = allowed?(:edit, user, site: site)
 
     data[:title] = I18n.t("gws/schedule.private_plan")
@@ -48,7 +49,7 @@ module Gws::Schedule::CalendarFormat
       data[:className] += ' fc-event-repeat'
     end
 
-    if (data[:readable] && private_plan?(user)) || data[:title] == I18n.t("gws/schedule.private_plan")
+    if readable_setting_range == 'private'
       data[:className] += ' fc-event-private'
     end
 
@@ -69,7 +70,7 @@ module Gws::Schedule::CalendarFormat
     data
   end
 
-  def set_attendance_classes(data, cur_user, attendance_user_id)
+  def set_attendance_classes(data, user_id)
     return data if !attendance_check_plan?
 
     if attendance_absence_all?
@@ -77,16 +78,9 @@ module Gws::Schedule::CalendarFormat
       return data
     end
 
-    attendance = attendances.where(user_id: attendance_user_id).order_by(created: 1).first
+    attendance = attendances.where(user_id: user_id).order_by(created: 1).first
     attendance_state = attendance.try(:attendance_state) || 'unknown'
     data[:className] += " fc-event-user-attendance-#{attendance_state}"
-
-    if attendance_state == "absence"
-      return nil if cur_user.id != attendance_user_id
-
-      data[:className] += ' hide'
-    end
-
     data
   end
 end

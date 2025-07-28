@@ -1,0 +1,9 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="user"><%= item.target_user.try(:name) %></span>
+<% end %>
+
+<div class="gws-workflow">
+  <%= render template: 'gws/crud/index' %>
+</div>

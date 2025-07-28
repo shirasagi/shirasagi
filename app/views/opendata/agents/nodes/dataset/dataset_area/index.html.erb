@@ -1,11 +1,9 @@
 <%= jquery do %>
-$(".crumbs .page:last").html('<%= @area_node ? @area_node.name : @cur_node.name %>');
+$(".crumbs .page:last").text('<%= @area_node ? @area_node.name : @cur_node.name %>');
 <% end %>
 
-
-<link href="/assets/css/colorbox/colorbox.css" media="all" rel="stylesheet" />
-<script src="/assets/js/jquery.colorbox.js"></script>
-
+<%= stylesheet_link_tag "colorbox", media: 'all' %>
+<%= javascript_include_tag "colorbox", defer: true %>
 
 <%= jquery do %>
 SS_Tabs.render("#opendata-tabs-<%= @cur_node.id %>");

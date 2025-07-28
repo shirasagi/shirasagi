@@ -32,34 +32,41 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       visit gws_survey_main_path(site: site)
       click_on I18n.t("ss.navi.editable")
-      click_on I18n.t("ss.links.new")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
 
       within "form#item-form" do
         fill_in "item[name]", with: form_name
         choose I18n.t("gws.options.readable_setting_range.public")
-        click_on I18n.t("gws.apis.categories.index")
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(cate.name)
-        click_on cate.name
+        wait_for_cbox_closed { click_on cate.name }
       end
       within "form#item-form" do
+        expect(page).to have_css("#addon-gws-agents-addons-survey-category [data-id='#{cate.id}']", text: cate.name)
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Gws::Survey::Form.all.count).to eq 1
+      survey_form = Gws::Survey::Form.all.first
+      expect(survey_form.name).to eq form_name
 
-      click_on(I18n.t('gws/workflow.columns.index'))
+      expect(page).to have_css(".gws-column-new-form-notice-item", count: 3)
+      expect(page).to have_css(".gws-column-new-form-notice-item", text: I18n.t("gws/column.new_form_notice").first)
 
-      click_on(I18n.t("ss.links.new"))
-      click_on(I18n.t("mongoid.models.gws/column/radio_button"))
-      within "form#item-form" do
+      within ".gws-column-list-toolbar[data-placement='top']" do
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/radio_button") }
+      end
+      within first(".gws-column-item") do
         fill_in "item[name]", with: column_name
         fill_in "item[select_options]", with: column_options.join("\n")
-        click_on(I18n.t("ss.buttons.save"))
+        click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       # click print
       click_on(form_name)
@@ -72,22 +79,26 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       click_on form_name
       click_on I18n.t("gws/workflow.links.publish")
 
-      within "form" do
+      within "form#item-form" do
         click_on(I18n.t("ss.buttons.save"))
       end
+      wait_for_notice I18n.t("ss.notice.published")
 
       expect(Gws::Survey::Form.all.count).to eq 1
       form = Gws::Survey::Form.all.site(site).find_by(name: form_name)
 
       expect(Gws::Job::Log.all.where(class_name: Gws::Survey::NotificationJob.name).count).to eq 1
-      Gws::Job::Log.all.first(class_name: Gws::Survey::NotificationJob.name).tap do |log|
+      Gws::Job::Log.all.where(class_name: Gws::Survey::NotificationJob.name).first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
 
       expect(SS::Notification.all.count).to eq 1
       SS::Notification.all.first.tap do |notice|
-        subject = I18n.t("gws_notification.#{Gws::Survey::Form.model_name.i18n_key}.subject", name: form.name, default: form.name)
+        subject = I18n.t(
+          "gws_notification.#{Gws::Survey::Form.model_name.i18n_key}.subject",
+          name: form.name, default: form.name, locale: I18n.default_locale
+        )
         expect(notice.subject).to eq subject
         expect(notice.member_ids).to include(user1.id, user2.id)
       end
@@ -95,8 +106,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       # answer by user1
       #
-      login_user user1
-      visit gws_survey_main_path(site: site)
+      login_user user1, to: gws_survey_main_path(site: site)
       click_on form_name
 
       # click print
@@ -108,15 +118,26 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         within ".mod-gws-survey-custom_form" do
           choose column_options.sample
         end
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.answer")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.answered")
+
+      expect(Gws::Survey::File.all.count).to eq 1
+      survey_file1 = Gws::Survey::File.all.first
+      expect(survey_file1.site_id).to eq site.id
+      expect(survey_file1.user_id).to eq user1.id
+      expect(survey_file1.form_id).to eq form.id
+      expect(survey_file1.name).to be_present
+      expect(survey_file1.anonymous_state).to eq survey_form.anonymous_state
+      expect(survey_file1.column_values.count).to eq 1
+      survey_file1.column_values.first.tap do |column_value|
+        expect(column_value.value).to be_present
+      end
 
       #
       # answer by user2
       #
-      login_user user2
-      visit gws_survey_main_path(site: site)
+      login_user user2, to: gws_survey_main_path(site: site)
       click_on form_name
 
       # click print
@@ -128,9 +149,21 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         within ".mod-gws-survey-custom_form" do
           choose column_options.sample
         end
-        click_on I18n.t("ss.buttons.save")
+        click_on I18n.t("ss.buttons.answer")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.answered")
+
+      expect(Gws::Survey::File.all.count).to eq 2
+      survey_file2 = Gws::Survey::File.all.reorder(id: -1).first
+      expect(survey_file2.site_id).to eq site.id
+      expect(survey_file2.user_id).to eq user2.id
+      expect(survey_file2.form_id).to eq form.id
+      expect(survey_file2.name).to be_present
+      expect(survey_file2.anonymous_state).to eq survey_form.anonymous_state
+      expect(survey_file2.column_values.count).to eq 1
+      survey_file2.column_values.first.tap do |column_value|
+        expect(column_value.value).to be_present
+      end
 
       #
       # check answers
@@ -178,7 +211,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       # delete_all
       #
       within ".current-navi" do
-        click_on "管理一覧"
+        click_on I18n.t("ss.navi.editable")
       end
 
       within ".list-items" do
@@ -188,10 +221,10 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
       within '.list-head' do
         page.accept_confirm do
-          click_button I18n.t('ss.links.delete')
+          click_button I18n.t('ss.buttons.delete')
         end
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+      wait_for_notice I18n.t("ss.notice.deleted")
     end
   end
 end

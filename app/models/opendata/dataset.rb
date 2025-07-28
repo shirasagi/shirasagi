@@ -17,14 +17,18 @@ class Opendata::Dataset
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage
   include Opendata::Addon::Harvest::Dataset
+  include Opendata::Addon::Metadata::Dataset
   include Cms::Addon::GroupPermission
+  include History::Addon::Backup
   include Workflow::MemberPermission
   include Opendata::DatasetSearchable
   include Opendata::DatasetTemplateVariables
   include Opendata::DatasetCopy
   include Opendata::Addon::Harvest::EditLock
+  include Opendata::Addon::Metadata::EditLock
   include Opendata::Addon::ZipDataset
   include Opendata::Addon::ExportPublicEntityFormat
+  include Cms::Lgwan::Page
 
   set_permission_name "opendata_datasets"
 
@@ -63,7 +67,7 @@ class Opendata::Dataset
   permit_params :text, :creator_name, :tags, tags: []
 
   before_save :seq_filename, if: ->{ basename.blank? }
-  after_save :on_state_changed, if: ->{ state_changed? }
+  after_save :on_state_changed, if: ->{ state_changed? || state_previously_changed? }
 
   default_scope ->{ where(route: "opendata/dataset") }
 
@@ -87,7 +91,7 @@ class Opendata::Dataset
     get_url(url, "/favorite.html")
   end
 
-  def contact_present?
+  def show_contact?
     return false if member_id.present?
     super
   end
@@ -122,6 +126,16 @@ class Opendata::Dataset
 
   def no
     format("%010d", id.to_i)
+  end
+
+  def file_previewable?(file, site:, user:, member:)
+    return false unless super
+
+    resource = resources.where(file_id: file.id).first
+    resource ||= resources.where(tsv_id: file.id).first
+    return false unless resource
+    return false if resource.state != "public"
+    true
   end
 
   private

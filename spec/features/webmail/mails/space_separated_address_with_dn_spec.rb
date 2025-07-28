@@ -8,6 +8,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     shared_examples "webmail/mails with space separated address with DN flow" do
       before do
         webmail_import_mail(user, msg)
+        Webmail.imap_pool.disconnect_all
 
         ActionMailer::Base.deliveries.clear
         login_user(user)
@@ -19,7 +20,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
       it do
         visit index_path
+        wait_for_js_ready
         first("li.list-item").click
+        wait_for_js_ready
         expect(page).to have_css("#addon-basic .subject", text: "たちつてと")
         expect(page).to have_css("#addon-basic .body--text", text: "なにぬねの")
       end

@@ -44,7 +44,7 @@ module SS::Reference::UserExpiration
     return if deletion_locked?
 
     now = Time.zone.now
-    update_attributes(account_expiration_date: now) if account_expiration_date.blank? || account_expiration_date > now
+    update(account_expiration_date: now) if account_expiration_date.blank? || account_expiration_date > now
   end
 end
 

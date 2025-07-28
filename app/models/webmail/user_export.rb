@@ -31,6 +31,8 @@ class Webmail::UserExport
     { key: 'remark', label: Webmail::User.t('remark') }.freeze,
     # Ldap::Addon::Group
     { key: 'ldap_dn', label: Webmail::User.t('ldap_dn') }.freeze,
+    # SS::Addon::MFA::UserSetting
+    { key: 'mfa_otp_enabled_at', label: Webmail::User.t('mfa_otp_enabled_at') }.freeze,
     # Webmail::Addon::Role
     { key: 'webmail_role_ids', label: I18n.t("mongoid.attributes.ss/model/user.webmail_role_ids") }.freeze,
     # Sys::Reference::Role
@@ -59,14 +61,16 @@ class Webmail::UserExport
   permit_params :in_file
 
   def export_csv(items)
-    csv = CSV.generate do |data|
-      data << EXPORT_DEF.map { |export_def| export_def[:label] }
-      items.each do |item|
-        item.imap_settings.each_with_index do |setting, i|
-          line = EXPORT_DEF.map do |export_def|
-            export_field(item, i, setting, export_def)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << EXPORT_DEF.map { |export_def| export_def[:label] }
+        items.each do |item|
+          item.imap_settings.each_with_index do |setting, i|
+            line = EXPORT_DEF.map do |export_def|
+              export_field(item, i, setting, export_def)
+            end
+            data << line
           end
-          data << line
         end
       end
     end
@@ -74,14 +78,16 @@ class Webmail::UserExport
   end
 
   def export_template_csv(items)
-    csv = CSV.generate do |data|
-      data << EXPORT_DEF.map { |export_def| export_def[:label] }
-      items.each do |item|
-        setting = Webmail::ImapSetting.default
-        line = EXPORT_DEF.map do |export_def|
-          export_field(item, 0, setting, export_def)
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        data << EXPORT_DEF.map { |export_def| export_def[:label] }
+        items.each do |item|
+          setting = Webmail::ImapSetting.default
+          line = EXPORT_DEF.map do |export_def|
+            export_field(item, 0, setting, export_def)
+          end
+          data << line
         end
-        data << line
       end
     end
     csv.encode("SJIS", invalid: :replace, undef: :replace)
@@ -260,6 +266,14 @@ class Webmail::UserExport
 
   def get_item_group_ids(item, index, setting)
     item.groups.pluck(:name).join("\n")
+  end
+
+  def get_item_mfa_otp_enabled_at(item, index, setting)
+    if item.mfa_otp_secret.present?
+      I18n.t("ss.mfa_otp_enabled_at", time: I18n.l(item.mfa_otp_enabled_at, format: :picker))
+    else
+      I18n.t("ss.mfa_otp_not_enabled_yet")
+    end
   end
 
   def get_item_webmail_role_ids(item, index, setting)

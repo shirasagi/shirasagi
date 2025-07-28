@@ -49,12 +49,12 @@ this.Link_Checker = (function () {
 
   ResultBox.prototype.showResult = function (links) {
     var $ul = $("<ul/>");
-    $.each(links, function(link, msg) {
-      $ul.append('<li>' + msg + '</li>');
+    $.each(links, function(link, msgHtml) {
+      $ul.append($('<li/>').html(msgHtml));
     });
 
     this.$elBody.html("");
-    this.$elBody.append("<p>" + Link_Checker.message["checkLinks"] + "</p>");
+    this.$elBody.append($("<p/>").text(Link_Checker.message["checkLinks"]));
     this.$elBody.append($ul);
 
     return this.moveLast();

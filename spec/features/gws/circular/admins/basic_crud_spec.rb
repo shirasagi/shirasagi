@@ -20,16 +20,16 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
-        click_on user1.name
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -52,7 +52,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name2
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic.reload
@@ -61,6 +61,9 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       expect(topic.member_ids).to include(user1.id)
       expect(topic.state).to eq "public"
       expect(topic.deleted).to be_blank
+
+      save_updated = topic.updated
+      save_created = topic.created
 
       expect(SS::Notification.all.count).to eq 1
       SS::Notification.all.reorder(id: -1).first.tap do |notice|
@@ -85,30 +88,67 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       #
       visit gws_circular_admins_path(site)
       click_on topic.name
-      click_on I18n.t("ss.links.delete")
-
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       topic.reload
       expect(topic.deleted).to be_present
+      expect(topic.updated).to eq save_updated
+      expect(topic.created).to eq save_created
 
       # no notifications are send on deleting circular
       expect(SS::Notification.all.count).to eq 1
 
       #
-      # Delete (hard delete)
+      # Restore (Undo delete)
       #
       visit gws_circular_admins_path(site)
       click_on I18n.t("ss.links.trash")
       click_on topic.name
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.restore")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.restore")
+      end
+      wait_for_notice I18n.t('ss.notice.restored')
+
+      topic.reload
+      expect(topic.deleted).to be_blank
+      expect(topic.updated).to eq save_updated
+      expect(topic.created).to eq save_created
+
+      # no notifications are send on deleting circular
+      expect(SS::Notification.all.count).to eq 1
+
+      #
+      # Delete (sort delete --> hard delete)
+      #
+      visit gws_circular_admins_path(site)
+      click_on topic.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
+
+      visit gws_circular_admins_path(site)
+      click_on I18n.t("gws/circular.tabs.trash")
+      click_on topic.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 0
       expect { Gws::Circular::Post.all.find(topic.id) }.to raise_error Mongoid::Errors::DocumentNotFound
@@ -137,26 +177,26 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         within "#addon-gws-agents-addons-circular-category" do
-          click_on I18n.t('gws.apis.categories.index')
+          wait_for_cbox_opened { click_on I18n.t('gws.apis.categories.index') }
         end
       end
-      wait_for_cbox do
-        click_on cate1.name
+      within_cbox do
+        wait_for_cbox_closed { click_on cate1.name }
       end
 
       within "form#item-form" do
         within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
-        click_on user1.name
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.name }
       end
 
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -186,16 +226,16 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
-        click_on user1.name
+      within_cbox do
+        wait_for_cbox_closed { click_on user1.name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -232,7 +272,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -278,21 +318,21 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: name
         within "#addon-gws-agents-addons-member" do
-          click_on I18n.t("ss.apis.users.index")
+          wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         # click_on user1.name
         first("[data-id='#{user1.id}'] input[type='checkbox']").click
         # click_on user2.name
         first("[data-id='#{user2.id}'] input[type='checkbox']").click
 
-        click_on I18n.t("ss.links.select")
+        wait_for_cbox_closed { click_on I18n.t("ss.links.select") }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first
@@ -335,7 +375,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t("ss.buttons.publish_save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 1
       topic = Gws::Circular::Post.all.topic.first

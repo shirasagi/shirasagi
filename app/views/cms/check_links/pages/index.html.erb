@@ -1,7 +1,7 @@
 <div class="index">
   <div class="list-head">
     <div style="line-height: 20px;">
-      <%=br t("cms.notices.check_links_report", time: @cur_report.created.strftime("%Y/%m/%d %H:%M")).join("\n") %>
+      <%= br t("cms.notices.check_links_report", time: I18n.l(@cur_report.created, format: :picker)).join("\n") %>
     </div>
     <div style="padding-top: 2px; color: red;"><%= t("cms.notices.check_links_report_annotation") %></div>
   </div>

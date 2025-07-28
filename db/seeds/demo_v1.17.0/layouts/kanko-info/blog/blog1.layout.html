@@ -1,0 +1,53 @@
+<html>
+<head>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0,user-scalable=yes,minimum-scale=1.0,maximum-scale=2.0">
+  <link href="/css/style.css" media="all" rel="stylesheet" />
+  <script src="/js/common.js"></script>
+</head>
+<body>
+<div id="page" class="blog1 blog">
+
+{{ part "/tool" }}
+{{ part "/head" }}
+{{ part "/navi" }}
+
+<div id="wrap">
+  {{ part "/breadcrumb" }}
+  <div id="main">
+    <header><h1 id="ss-page-name">ブログ</h1></header>
+    <div class="blog-center">
+    {{ yield }}
+    </div>
+    <div class="blog-left">
+      <div class="blog-profile">
+        #{thumb}
+      </div>
+      <div class="blog-genres">
+        #{genres}
+      </div>
+    </div>
+    {{ part "/page-top" }}
+  </div>
+  <div id="side">
+    {{ part "/login/login" }}
+    <a class="registration" href="/registration/">会員登録</a>
+    {{ part "/kanko-info/photo/recent" }}
+    {{ part "/kanko-info/blog/recent" }}
+  </div>
+</div>
+
+<section id="chat">
+  <div class="chat-close">
+    <p>チャットボット</p>
+  </div>
+  <div class="chat-open">
+    <header><h2>チャットボット</h2><span class="close-btn"><img src="/img/chat-close.png" alt="閉じる" /></span></header>
+    {{ part "/bot" }}
+  </div>
+</section>
+
+{{ part "/foot" }}
+
+</div>
+</body>
+</html>

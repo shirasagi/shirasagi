@@ -3,6 +3,8 @@ module Cms::ChildList
   include SS::TemplateVariable
 
   included do
+    attr_accessor :child_list_limit
+
     template_variable_handler :category_nodes, :template_variable_handler_child_items
     template_variable_handler :category_pages, :template_variable_handler_child_items
     template_variable_handler :child_nodes, :template_variable_handler_child_items
@@ -10,40 +12,42 @@ module Cms::ChildList
     template_variable_handler :child_items, :template_variable_handler_child_items
   end
 
-  def child_list_limit
-    parent ? parent[:child_limit].to_i : self[:child_limit].to_i
-  end
-
   def category_nodes
-    Cms::Node.site(site).and_public.
-      where({ filename: /^#{::Regexp.escape(self.filename)}\//, route: /^category\// }).
-      where(self.condition_hash).
-      order_by(self.sort_hash).
-      limit(child_list_limit)
+    @_child_list_category_nodes ||= begin
+      items = Category::Node::Base.site(site).and_public
+      items = items.where(self.condition_hash)
+      items = items.order_by(self.sort_hash)
+      items = items.limit(child_list_limit)
+      items.to_a
+    end
   end
 
   def category_pages
-    Cms::Page.site(site).and_public.
-      in({ category_ids: self.id }).
-      where(self.condition_hash).
-      order_by(self.sort_hash).
-      limit(child_list_limit)
+    @_child_list_category_pages ||= begin
+      items = Cms::Page.public_list(site: site, node: self)
+      items = items.order_by(self.sort_hash)
+      items = items.limit(child_list_limit)
+      items.to_a
+    end
   end
 
   def child_pages
-    Cms::Page.site(site).and_public.
-      where({ filename: /^#{::Regexp.escape(self.filename)}\// }).
-      where(self.condition_hash).
-      order_by(self.sort_hash).
-      limit(child_list_limit)
+    @_child_list_pages ||= begin
+      items = Cms::Page.public_list(site: site, node: self)
+      items = items.order_by(self.sort_hash)
+      items = items.limit(child_list_limit)
+      items.to_a
+    end
   end
 
   def child_nodes
-    Cms::Node.site(site).and_public.
-      where({ filename: /^#{::Regexp.escape(self.filename)}\// }).
-      where(self.condition_hash).
-      order_by(self.sort_hash).
-      limit(child_list_limit)
+    @_child_list_nodes ||= begin
+      items = Cms::Node.site(site).and_public
+      items = items.where(self.condition_hash)
+      items = items.order_by(self.sort_hash)
+      items = items.limit(child_list_limit)
+      items.to_a
+    end
   end
 
   def child_items
@@ -53,8 +57,8 @@ module Cms::ChildList
     return child_pages if child_nodes.blank?
 
     items = []
-    nodes = child_nodes.to_a
-    pages = child_pages.to_a
+    nodes = child_nodes
+    pages = child_pages
     child_list_limit.times do
       cmp = 0
       self.sort_hash.each do |k, v|
@@ -81,20 +85,19 @@ module Cms::ChildList
   end
 
   def template_variable_handler_child_items(name, issuer)
-    items = self.send(name)
-    parent_node = parent
-    html = ''
-    html << parent_node.child_upper_html.to_s
-    if parent_node.child_loop_html.present?
-      items.each do |item|
-        html << parent_node.render_child_loop_html(item)
-      end
-    end
-    html << parent_node.child_lower_html.to_s
-    html.html_safe
-  end
+    self.child_list_limit = issuer.child_limit.to_i
+    items = self.child_items
 
-  def render_child_loop_html(item, opts = {})
-    item.render_template(opts[:html] || child_loop_html, self)
+    issuer.instance_exec(items) do |items|
+      html = []
+      html << child_upper_html.to_s
+      if child_loop_html.present?
+        items.each do |item|
+          html << item.render_template(child_loop_html, self)
+        end
+      end
+      html << child_lower_html.to_s
+      html.join("\n").html_safe
+    end
   end
 end

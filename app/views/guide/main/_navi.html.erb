@@ -4,8 +4,11 @@
   <% end %>
   <% if Guide::Question.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <h3><%= link_to t("guide.question"), guide_questions_path %></h3>
-  <% end %>
-  <% if Guide::Question.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
     <h3><%= link_to t("guide.importer"), guide_importers_path %></h3>
+    <% if Rails.env.development? %>
+      <h3><%= link_to t("guide.diagnostic"), guide_diagnostic_path %></h3>
+    <% else %>
+      <!--<h3><%= link_to t("guide.diagnostic"), guide_diagnostic_path %></h3>-->
+    <% end %>
   <% end %>
 <% end %>

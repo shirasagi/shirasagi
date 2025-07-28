@@ -1,4 +1,11 @@
 class Map::Extensions::Loc < Array
+  include SS::Liquidization
+
+  liquidize do
+    export :lat
+    export :lng
+  end
+
   def to_s
     join(", ")
   end

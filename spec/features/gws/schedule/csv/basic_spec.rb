@@ -59,8 +59,8 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
         let!(:plan_to_csv) do
           Gws::Schedule::Plan.create!(
             cur_site: site, cur_user: user,
-            name: unique_id, start_at: now, end_at: now + 1.hour, category: category1, priority: priority, color: unique_id,
-            member_ids: [user.id]
+            name: unique_id, start_at: now, end_at: now + 1.hour, category: category1, priority: priority,
+            color: unique_color, member_ids: [user.id]
           )
         end
 
@@ -86,7 +86,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
           Gws::Schedule::Plan.create!(
             cur_site: site, cur_user: user, name: unique_id,
             start_at: now, end_at: now + 1.hour, start_on: now.tomorrow.beginning_of_day, end_on: now.tomorrow.beginning_of_day, allday: "allday",
-            category: category1, priority: priority, color: unique_id,
+            category: category1, priority: priority, color: unique_color,
             member_ids: [user.id]
           )
         end
@@ -388,13 +388,10 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
 
       let(:custom_group1) { create :gws_custom_group, member_ids: [ user3.id ], member_group_ids: [ group2.id ] }
 
-      let(:permission_level) { rand(1..3) }
-
       let!(:plan_to_csv) do
         Gws::Schedule::Plan.create!(
           cur_site: site, cur_user: user,
           name: unique_id, start_at: now, end_at: now + 1.hour, member_ids: [user.id],
-          permission_level: permission_level,
           user_ids: [ user.id, user1.id ], group_ids: [ group1.id ], custom_group_ids: [ custom_group1.id ]
         )
       end
@@ -408,7 +405,6 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
           expect(plan.start_at).to eq plan_to_csv.start_at
           expect(plan.end_at).to eq plan_to_csv.end_at
           expect(plan.member_ids).to include(user.id)
-          expect(plan.permission_level).to eq permission_level
           expect(plan.user_ids).to include(user.id, user1.id)
           expect(plan.group_ids).to include(group1.id)
           expect(plan.custom_group_ids).to include(custom_group1.id)

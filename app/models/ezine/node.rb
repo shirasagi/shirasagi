@@ -16,6 +16,7 @@ module Ezine::Node
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     has_many :columns, class_name: "Ezine::Column"
 
@@ -41,6 +42,7 @@ module Ezine::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     has_many :members, class_name: "Cms::Member"
 
@@ -63,6 +65,7 @@ module Ezine::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "ezine/backnumber") }
   end
@@ -81,6 +84,7 @@ module Ezine::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "ezine/category_node") }
   end

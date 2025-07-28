@@ -1,0 +1,8 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-ss-workflow-setting">
+  <dt><%= @model.t :workflow_my_group %><%= @model.tt :workflow_my_group %></dt>
+  <dd><%= f.select :workflow_my_group, @item.workflow_my_group_options %></dd>
+</dl>

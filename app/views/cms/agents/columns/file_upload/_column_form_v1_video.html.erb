@@ -1,0 +1,3 @@
+<% name = "#{f.object_name}[][in_wrap][text]" %>
+
+<%= text_area_tag(name, value.try(:text), id: nil, placeholder: t("cms.column_file_upload.video.text_place_holder"), data: { syntax_check: "value", syntax_check_name: column.name, "check-presence": t("cms.column_file_upload.video.text") }) %>

@@ -27,6 +27,10 @@ FactoryBot.define do
     route { "cms/node" }
   end
 
+  factory :cms_part_node2, class: Cms::Part::Node2, traits: [:cms_part] do
+    route { "cms/node2" }
+  end
+
   factory :cms_part_page, class: Cms::Part::Page, traits: [:cms_part] do
     route { "cms/page" }
   end
@@ -49,5 +53,26 @@ FactoryBot.define do
 
   factory :cms_part_monthly_nav, class: Cms::Part::MonthlyNav, traits: [:cms_part] do
     route { "cms/monthly_nav" }
+    periods { rand(16..24) }
+  end
+
+  factory :cms_part_site_search_keyword, class: Cms::Part::SiteSearchKeyword, traits: [:cms_part] do
+    route { "cms/site_search_keyword" }
+  end
+
+  factory :cms_part_print, class: Cms::Part::Print, traits: [:cms_part] do
+    route { "cms/print" }
+  end
+
+  factory :cms_part_clipboard_copy, class: Cms::Part::ClipboardCopy, traits: [:cms_part] do
+    route { "cms/clipboard_copy" }
+  end
+
+  factory :cms_part_site_search_history, class: Cms::Part::SiteSearchHistory, traits: [:cms_part] do
+    route { "cms/site_search_history" }
+  end
+
+  factory :cms_part_history_list, class: Cms::Part::HistoryList, traits: [:cms_part] do
+    route { "cms/history_list" }
   end
 end

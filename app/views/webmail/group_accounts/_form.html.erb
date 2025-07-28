@@ -24,7 +24,7 @@
   <dd><%= f.text_field :imap_account, placeholder: @defaults[:account], class: :imap_account %></dd>
 
   <dt><%= @model.t :in_imap_password %><%= @model.tt :in_imap_password %></dt>
-  <dd><%= f.password_field :in_imap_password, placeholder: @defaults[:password], class: :in_imap_password %></dd>
+  <dd><%= f.password_field :in_imap_password, autocomplete: "new-password", placeholder: @defaults[:password], class: :in_imap_password %></dd>
 
   <dt><%= @model.t :imap_sent_box %><%= @model.tt :imap_sent_box %></dt>
   <dd><%= f.text_field :imap_sent_box %></dd>
@@ -37,6 +37,9 @@
 
   <dt><%= @model.t :threshold_mb %><%= @model.tt :threshold_mb %></dt>
   <dd><%= f.number_field :threshold_mb, min: 0 %> <%= t "ss.units.mega_byte" %></dd>
+
+  <dt><%= @model.t :imap_default_index %><%= @model.tt :imap_default_index %></dt>
+  <dd><%= f.check_box :default, { checked: (@group.imap_default_index == @index), class: "default-index" }, "1", nil %></dd>
 
   <dt></dt>
   <dd>
@@ -71,7 +74,7 @@
       },
       beforeSend: function(data) {
         btn.attr("disabled", true);
-        dl.find('.imap-test-resp').html('Connecting ...');
+        dl.find('.imap-test-resp').text('Connecting ...');
       },
       success: function(data) {
         btn.attr("disabled", false);
@@ -79,7 +82,7 @@
       },
       error: function(data) {
         btn.attr("disabled", false);
-        dl.find('.imap-test-resp').html('Error');
+        dl.find('.imap-test-resp').text('Error');
       }
     });
   });

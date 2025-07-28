@@ -18,7 +18,7 @@ module Cms::HistoryListHelper
 
   def default_loop_html
     ih = []
-    ih << '<li class="current"><a href="#{url}">#{name}</a></li>'
+    ih << '<li class="current"><a href="#{url}">#{index_name}</a></li>'
     ih.join("\n").freeze
   end
 
@@ -39,7 +39,6 @@ module Cms::HistoryListHelper
     return unless @item
 
     # @item is page or node only
-    @item = @item.becomes_with_route
     @items = [@item]
     @items = [] if controller.preview_path?
 

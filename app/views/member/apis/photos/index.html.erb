@@ -2,19 +2,21 @@
 
 <div class="search-ui-form">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
-    <%= f.text_field :name, value: params[:s].try(:[], :name) %>
-    <%= f.submit t("member.links.search"), class: :btn %>
+    <div class="input-group">
+      <%= f.text_field :name, value: params[:s].try(:[], :name), placeholder: t("ss.keyword") %>
+      <%= f.submit t("member.links.search"), class: :btn %>
+    </div>
   <% end %>
 </div>
 
 <div class="items index user-files">
   <% @items.each do |item| %>
     <article class="file-view member-photo" data-id="<%= item.id %>" data-file-id="<%= item.id %>">
-      <%= hidden_field_tag "item[member_photo_ids][]", item.id, class: "photo-id" %>
+      <%= hidden_field_tag "item[member_photo_ids][]", item.id, id: nil, class: "photo-id" %>
       <a class="thumb select-item" href="#"><%= image_tag item.image.thumb_url, alt: item.name %></a>
       <label style="display: flex; align-items: center;">
         <input type="checkbox" />
-        <div class="name"><%= item.name %></div>
+        <span class="name"><%= item.name %></span>
       </label>
       <div class="action delete" style="display: none;">
         <%= link_to t("ss.buttons.delete"), "#", onclick: "deleteContent('#{item.id}'); return false;" %>

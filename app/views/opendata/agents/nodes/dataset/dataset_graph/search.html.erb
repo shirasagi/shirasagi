@@ -9,7 +9,7 @@ var cboxLoad = function() {
       $("#cboxLoadedContent").html(data);
     },
     error: function (data, status) {
-      $("#cboxLoadedContent").html("== Error ==");
+      $("#cboxLoadedContent").text("== Error ==");
     }
   });
   return false;
@@ -22,7 +22,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
 %>
 <div class="search-ui-form">
   <%= form_for :s, url: "#{@cur_node.url}search.html", html: { method: "GET", class: :search } do |f| %>
-    <%= f.text_field :keyword %>
+    <%= f.text_field :keyword, title: t("ss.keyword") %>
     <div class="submitters">
       <%= f.submit t("ss.buttons.search"), class: :btn %>
       <%= link_to t("ss.buttons.reset"), "#{@cur_node.url}search.html", class: :btn %>
@@ -45,7 +45,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
     <tr data-id="<%= item.id %>" class="list-item">
       <td class="checkbox">
         <label for="<%= "ch-d-#{item.id}" %>">
-          <input type="checkbox" name="ids[]" value="<%= item.id %>" class="set-dataset", id="<%= "ch-d-#{item.id}" %>" />
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" class="set-dataset" id="<%= "ch-d-#{item.id}" %>" />
         </label>
       </td>
       <td class="no">
@@ -80,7 +80,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
         <%= resources.map { |r| r[:resource].name }.join(", ") %>
       </td>
       <td class="updated">
-        <%= item.updated.strftime("%Y/%m/%d") %>
+        <%= ss_time_tag item.updated, type: :date %>
       </td>
     </tr>
   <% end %>

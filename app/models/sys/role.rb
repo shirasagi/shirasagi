@@ -8,17 +8,27 @@ class Sys::Role
 
   validates :permissions, presence: true
 
+  def privileged?
+    permissions.any? { |perm| self.class.privileged_permission_names.include?(perm) }
+  end
+
   def general?
-    (permissions - self.class.general_permission_names).select(&:present?).blank?
+    !privileged?
   end
 
   class << self
+    GENERAL_PERMISSION_NAMES = %w(use_cms use_gws use_webmail).freeze
+
+    def privileged_permission_names
+      @privileged_permission_names ||= permission_names - general_permission_names
+    end
+
     def general_permission_names
-      %w(use_cms use_gws use_webmail)
+      GENERAL_PERMISSION_NAMES
     end
 
     def and_general
-      self.nin(permissions: (permission_names - general_permission_names))
+      self.nin(permissions: privileged_permission_names)
     end
   end
 end

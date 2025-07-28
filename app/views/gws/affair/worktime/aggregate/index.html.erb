@@ -1,0 +1,29 @@
+<%
+  def format_minute(minute)
+    (minute.to_i > 0) ? "#{minute / 60}:#{format("%02d", (minute % 60))}" : "--:--"
+  end
+%>
+
+<div class="gws-attendance">
+  <%= render partial: 'search' %>
+
+  <table class="index overtime-results">
+    <thead>
+      <tr>
+        <th><%= Gws::User.t :name %></th>
+        <th><%= Gws::User.t :organization_uid %></th>
+        <th class="time"><%= t("gws/attendance.views.total_working_minute") %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @users.each do |user| %>
+      <% time_card = @time_cards[user.id] %>
+      <tr>
+        <td><%= user.long_name %></td>
+        <td><%= user.organization_uid %></td>
+        <td class="time"><%= format_minute(time_card.try(:total_working_minute)) %></td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>

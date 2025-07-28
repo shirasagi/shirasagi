@@ -33,26 +33,19 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         visit index_path
         new_window = window_opened_by { click_on I18n.t('ss.links.new') }
         within_window new_window do
+          wait_for_document_loading
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user.email + "\n"
             fill_in "item[subject]", with: item_subject
             fill_in "item[text]", with: item_texts.join("\n")
 
-            wait_cbox_open do
-              click_on I18n.t("ss.links.upload")
-            end
-          end
-          wait_for_cbox do
-            wait_cbox_close do
-              click_on file.name
-            end
-          end
-          within "form#item-form" do
-            expect(page).to have_css(".file-view", text: file.name)
+            ss_select_file file, addon: "#addon-webmail-agents-addons-mail_file"
+
             click_on I18n.t('ss.buttons.send')
           end
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+        wait_for_notice I18n.t('ss.notice.sent')
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|

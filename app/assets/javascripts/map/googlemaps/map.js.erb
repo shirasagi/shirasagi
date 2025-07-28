@@ -33,7 +33,7 @@ this.Googlemaps_Map = (function () {
   Googlemaps_Map.mapsSearchUrl = "<%= SS.config.map.googlemaps_search_end_point %>";
 
   Googlemaps_Map.attachMessage = function (id) {
-    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (event) {
+    google.maps.event.addListener(Googlemaps_Map.markers[id]["marker"], 'click', function (_event) {
       if (Googlemaps_Map.openedInfo) {
         Googlemaps_Map.openedInfo.close();
       }
@@ -42,7 +42,7 @@ this.Googlemaps_Map = (function () {
       }
       Googlemaps_Map.openedInfo = Googlemaps_Map.markers[id]["window"];
     });
-    return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (event) {
+    return google.maps.event.addListener(Googlemaps_Map.markers[id]["window"], 'closeclick', function (_event) {
       Googlemaps_Map.openedInfo = null;
     });
   };
@@ -124,53 +124,48 @@ this.Googlemaps_Map = (function () {
     }
   };
 
-  Googlemaps_Map.setMarkers = function (markers, opts) {
-    if (!opts) {
-      opts = {};
-    }
-    var markerBounds, zoomChangeBoundsListener;
+  Googlemaps_Map.setMarkers = function (markers, opts = {}) {
+    let markerBounds;
     Googlemaps_Map.markers = markers;
     markerBounds = new google.maps.LatLngBounds();
-    $.each(Googlemaps_Map.markers, function (id, value) {
-      var name, text, opts;
 
-      opts = {
-        position: new google.maps.LatLng(value["loc"][1], value["loc"][0]),
-        map: Googlemaps_Map.map
+    Object.entries(Googlemaps_Map.markers).forEach(([id, value]) => {
+      const position = new google.maps.LatLng(value["loc"][1], value["loc"][0]);
+      const markerOpts = {
+        position: position,
+        map: Googlemaps_Map.map,
+        icon: value["image"] || Googlemaps_Map.markerIcon
       };
-      if (value["image"]) {
-        opts["icon"] = value["image"];
-      } else {
-        opts["icon"] = Googlemaps_Map.markerIcon;
-      }
-      Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(opts);
-      markerBounds.extend(new google.maps.LatLng(value["loc"][1], value["loc"][0]));
 
-      var markerHtml = "";
-      if (value["html"]) {
-        markerHtml = value["html"];
-      } else if (value["name"] || value["text"]) {
-        name = value["name"];
-        text = value["text"];
-        markerHtml = '<div class="marker-info">';
-        if (name && name !== "") {
-          markerHtml += '<p>' + name + '</p>';
-          if (text && text !== "") {
-            $.each(text.split(/[\r\n]+/), function () {
-              if (this.match(/^https?:\/\//)) {
-                return markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
-              } else {
-                return markerHtml += '<p>' + this + '</p>';
-              }
-            });
-          }
+      Googlemaps_Map.markers[id]["marker"] = new google.maps.Marker(markerOpts);
+      markerBounds.extend(position);
+
+      let markerHtml = "";
+      if (value['html']) {
+        markerHtml = value['html'];
+      } else if (value['name'] || value['text']) {
+        const $markerContent = $("<div/>", { class: "marker marker-info" });
+        if (value['name']) {
+          $markerContent.append($("<p/>", { class: "marker-name" }).text(value['name']));
         }
-        markerHtml += '</div>';
+        if (value['text']) {
+          const $explanation = $("<div/>", { class: "marker-explanation" });
+          value['text'].split(/[\r\n]+/).forEach(line => {
+            if (/^https?:\/\//.test(line)) {
+              $explanation.append($("<p/>", { class: "marker-link" }).html($("<a />", { href: line }).text(line)));
+            } else {
+              $explanation.append($("<p/>").text(line));
+            }
+          });
+          $markerContent.append($explanation);
+        }
+        markerHtml = $markerContent.html();
       }
 
       if (Googlemaps_Map.showGoogleMapsSearch) {
-        markerHtml += Googlemaps_Map.getMapsSearchHtml(value["loc"][1], value["loc"][0]);
+        markerHtml += Googlemaps_Map.getMapsSearchHtml(value['loc'][1], value['loc'][0]);
       }
+
       if (markerHtml) {
         Googlemaps_Map.markers[id]["window"] = new google.maps.InfoWindow({
           content: markerHtml,
@@ -183,13 +178,11 @@ this.Googlemaps_Map = (function () {
     if (opts['markerCluster']) {
       Googlemaps_Map.renderMarkerCluster();
     }
-    Googlemaps_Map.adjustMarkerBounds(Googlemaps_Map.markers.length, markerBounds);
+    Googlemaps_Map.adjustMarkerBounds(Object.keys(Googlemaps_Map.markers).length, markerBounds);
   };
 
   Googlemaps_Map.renderMarkerCluster = function () {
-    var clusterMarkers = $.map(Googlemaps_Map.markers, function(data) {
-      return data.marker;
-    });
+    const clusterMarkers = Object.values(Googlemaps_Map.markers).map(data => data.marker);
     Googlemaps_Map.markerClusterer = new MarkerClusterer(Googlemaps_Map.map, clusterMarkers, {
       // averageCenter: true,
       ignoreHiddenMarkers: true,
@@ -197,24 +190,21 @@ this.Googlemaps_Map = (function () {
       // zoomOnClick: false,
     });
 
-    google.maps.event.addListener(Googlemaps_Map.map, 'zoom_changed', function() {
+    google.maps.event.addListener(Googlemaps_Map.map, 'zoom_changed', () => {
       Googlemaps_Map.closeMarkerClusterInfo();
     });
 
     ClusterIcon.prototype.triggerClusterClick = function(event) {
-      var cluster = this.cluster_;
-      var markers = cluster.getMarkers();
-      var positions = markers.map(function(marker) {
-        return marker.position.toUrlValue();
-      });
-      var clusterMarkers = Googlemaps_Map.markers.filter(function(marker) {
-        return positions.indexOf([marker.loc[1], marker.loc[0]].toString()) !== -1;
-      });
-      var contents = clusterMarkers.map(function(marker){
-        return marker.html;
-      });
-      var infoWindow = new google.maps.InfoWindow({
-        content: '<div class="marker-cluster-info">' + contents.join('') + '</div>',
+      const cluster = this.cluster_;
+      const markers = cluster.getMarkers();
+      const positions = markers.map(marker => marker.position.toUrlValue());
+
+      const clusterMarkers = Object.values(Googlemaps_Map.markers).filter(marker =>
+        positions.includes([marker.loc[1], marker.loc[0]].toString())
+      );
+      const contents = clusterMarkers.map(marker => marker.html || "");
+      const infoWindow = new google.maps.InfoWindow({
+        content: `<div class="marker-cluster-info">${contents.join('')}</div>`,
         position: markers[0].position,
         pixelOffset: new google.maps.Size(0, -15),
         markerType: 'cluster', // custom parameter
@@ -277,6 +267,7 @@ this.Googlemaps_Map = (function () {
       // marker exists
       // set manually options or do fit
       var manuallyAdjust = false;
+      var idleAdjuster = function() {};
 
       if (Googlemaps_Map.center) {
         var center = Googlemaps_Map.getCenter();
@@ -290,14 +281,14 @@ this.Googlemaps_Map = (function () {
       }
 
       if (!manuallyAdjust) {
-        google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", function(){
+        idleAdjuster = function() {
           if (Googlemaps_Map.map.getZoom() > Googlemaps_Map.getZoom()) {
             Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
           }
-          Googlemaps_Map.hideMarkers();
-        })
+        };
         Googlemaps_Map.map.fitBounds(bounds);
       }
+      google.maps.event.addListenerOnce(Googlemaps_Map.map, "idle", idleAdjuster);
     } else {
       // marker not exists
       // set manually or default options
@@ -305,20 +296,6 @@ this.Googlemaps_Map = (function () {
       Googlemaps_Map.map.setCenter(new google.maps.LatLng(center[0], center[1]));
       Googlemaps_Map.map.setZoom(Googlemaps_Map.getZoom());
     }
-  };
-
-  Googlemaps_Map.hideMarkers = function() {
-    $('.map-search-condition .category-settings').each(function() {
-      var settings = $(this).attr('data-category-settings');
-      if (!settings) return false;
-
-      $('.map-search-index .filters a').each(function() {
-        var $btn = $(this);
-        if (!settings.includes($btn.text())) {
-          $btn.click();
-        }
-      });
-    })
   };
 
   Googlemaps_Map.validateZoom = function (zoom) {
@@ -338,8 +315,8 @@ this.Googlemaps_Map = (function () {
   };
 
   Googlemaps_Map.getMapsSearchHtml = function(lat, lng) {
-    var url = Googlemaps_Map.mapsSearchUrl + lat + "," + lng;
-    return '<p><a href="' + url + '">' + <%= I18n.t("map.links.google_maps_search").to_json %> + '</a></p>';
+    const url = `${Googlemaps_Map.mapsSearchUrl}${lat},${lng}`;
+    return `<p class="marker-link"><a href="${url}"><%= I18n.t("map.links.google_maps_search") %></a></p>`;
   };
 
   return Googlemaps_Map;

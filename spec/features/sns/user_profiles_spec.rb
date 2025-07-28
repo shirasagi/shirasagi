@@ -27,7 +27,7 @@ describe "sns_user_profies", type: :feature, dbscope: :example do
     end
   end
 
-  context "with auth and recieve json" do
+  context "with auth and receive json" do
     before { login_ss_user }
 
     it "show" do

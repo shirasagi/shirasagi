@@ -34,16 +34,23 @@
 
 <%= render partial: 'gws/elasticsearch/search/main/tabs' %>
 
-<div class="index">
-  <div class="list-head">
-    <%= render template: '_search' %>
+
+<div class="gws-elasticsearch">
+  <div class="index">
+    <div class="list-head">
+      <%= render template: '_search' %>
+    </div>
+
+    <% if @result.present? %>
+      <%= render template: '_result' %>
+    <% end %>
   </div>
 
+  <% if has_more? %>
+    <%= paginate to_kaminari %>
+  <% end %>
+
   <% if @result.present? %>
-    <%= render template: '_result' %>
+    <%= render template: '_external' %>
   <% end %>
 </div>
-
-<% if has_more? %>
-  <%= paginate to_kaminari %>
-<% end %>

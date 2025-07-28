@@ -1,0 +1,20 @@
+<% posts ||= @item.children.where(user_group_id: group.id).reorder(created: -1) %>
+<% first_post = posts.last %>
+<% last_post = posts.first %>
+<tr>
+  <td class="state"><%= @item.answer_state_name(group) %></td>
+  <td class="mark_at"><%= ss_time_tag first_post.try(:created) %></td>
+  <td class="udpate_at"><%= ss_time_tag last_post.try(:updated) %></td>
+  <td class="group"><%= group.name %></td>
+  <td class="user"><%= last_post.try(:contributor_name).try { |contributor_name| gws_public_user_long_name(contributor_name) } || '' %></td>
+  <td class="contents"><%= br(truncate(last_post.try(:text) || '')) %></td>
+  <td class="file">
+    <% posts.pluck(:file_ids).flatten.uniq.compact.tap do |file_ids| %>
+      <% if file_ids.present? %>
+        <img src="/assets/img/gws/ic-file.png" alt=""/><%= file_ids.length %>
+      <% else %>
+        <%= '' %>
+      <% end %>
+    <% end %>
+  </td>
+</tr>

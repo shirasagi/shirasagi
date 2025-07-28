@@ -51,7 +51,7 @@ describe Facility::ImportJob, dbscope: :example do
     context "with site" do
       before do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site, node_id: node).perform_later(ss_file.id)
+          described_class.bind(site_id: site.id, node_id: node.id).perform_later(ss_file.id)
         end
       end
 

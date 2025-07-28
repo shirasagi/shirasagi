@@ -58,17 +58,19 @@ class Board::Post
 
   class << self
     def to_csv
-      csv = CSV.generate do |data|
-        data << %w(name poster text email poster_url delete_key)
-        criteria.each do |item|
-          line = []
-          line << item.name
-          line << item.poster
-          line << item.text
-          line << item.email
-          line << item.poster_url
-          line << item.delete_key
-          data << line
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(name poster text email poster_url delete_key)
+          criteria.each do |item|
+            line = []
+            line << item.name
+            line << item.poster
+            line << item.text
+            line << item.email
+            line << item.poster_url
+            line << item.delete_key
+            data << line
+          end
         end
       end
     end

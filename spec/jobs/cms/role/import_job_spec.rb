@@ -16,7 +16,7 @@ describe Cms::Role::ImportJob, dbscope: :example do
   end
 
   before do
-    described_class.bind(site_id: site).perform_now(ss_file.id)
+    described_class.bind(site_id: site.id).perform_now(ss_file.id)
   end
 
   it ".perform_now" do
@@ -25,9 +25,15 @@ describe Cms::Role::ImportJob, dbscope: :example do
       expect(log.logs).to include(/INFO -- : .* Started Job/)
       expect(log.logs).to include(/INFO -- : .* Completed Job/)
 
-      expect(Cms::Role.find(role1.id).permissions.present?).to be_truthy
-      expect(Cms::Role.find(role2.id).permissions.present?).to be_truthy
-      expect(Cms::Role.find(role3.id).permissions.present?).to be_falsey
+      Cms::Role.find(role1.id).tap do |role|
+        expect(role.permissions).to be_present
+      end
+      Cms::Role.find(role2.id).tap do |role|
+        expect(role.permissions).to be_present
+      end
+      Cms::Role.find(role3.id).tap do |role|
+        expect(role.permissions).to be_blank
+      end
     end
   end
 end

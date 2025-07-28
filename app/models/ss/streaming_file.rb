@@ -1,5 +1,6 @@
 class SS::StreamingFile
   include SS::Model::File
+  include Cms::Lgwan::File
 
   attr_accessor :in_remote_url, :in_size_limit, :in_remote_basic_authentication
 

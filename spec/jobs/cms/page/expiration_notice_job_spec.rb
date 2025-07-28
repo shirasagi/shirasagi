@@ -24,7 +24,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
     let(:expiration_state) { "disabled" }
 
     it do
-      described_class.bind(site_id: site).perform_now
+      described_class.bind(site_id: site.id).perform_now
 
       Job::Log.first.tap do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -37,13 +37,22 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
   context "when page_expiration_state is enabled" do
     let(:expiration_state) { "enabled" }
     let(:group1) do
-      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create(
+        :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
+      )
     end
     let(:group2) do
-      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create(
+        :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
+      )
     end
     let(:group3) do
-      create :cms_group, name: "#{site.groups.first.name}/#{unique_id}", contact_email: unique_email
+      create(
+        :cms_group, name: "#{site.groups.first.name}/#{unique_id}",
+        contact_groups: [{ main_state: "main", name: unique_id, contact_email: unique_email }]
+      )
     end
 
     context "with cms/page on root" do
@@ -62,7 +71,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -98,7 +107,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -134,7 +143,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
       end
 
       it do
-        described_class.bind(site_id: site).perform_now
+        described_class.bind(site_id: site.id).perform_now
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -150,6 +159,37 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
           expect(mail.body.raw_source).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
           expect(mail.body.raw_source).to include(page2.name, page2.private_show_path)
         end
+      end
+    end
+
+    context "with article/page have expiration_setting_type 'never'" do
+      let!(:node) { create :article_node_page, cur_site: site, group_ids: [ group1.id, group2.id ] }
+      let!(:page1) do
+        create(:article_page, cur_site: site, cur_node: node, group_ids: [ group1.id ], expiration_setting_type: 'never')
+      end
+      let!(:page2) do
+        Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
+          create(:article_page, cur_site: site, cur_node: node, group_ids: [ group2.id ], expiration_setting_type: 'never')
+        end
+      end
+      let!(:page3) do
+        Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
+          create(
+            :article_page, cur_site: site, cur_node: node, group_ids: [ group3.id ], state: "closed",
+            expiration_setting_type: 'never')
+        end
+      end
+
+      it do
+        described_class.bind(site_id: site).perform_now
+
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/公開期限警告が無効です。/)
+        end
+
+        expect(ActionMailer::Base.deliveries.length).to eq 0
       end
     end
   end

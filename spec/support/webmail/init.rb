@@ -32,7 +32,7 @@ module SS::WebmailSupport
 
   def docker_conf_auth_type
     @docker_conf_imap_auth_type ||= begin
-      SS::WebmailSupport.docker_conf["auth_type"].presence || "CRAM-MD5"
+      SS::WebmailSupport.docker_conf["auth_type"].presence || "PLAIN"
     end
   end
 
@@ -158,7 +158,7 @@ module SS::WebmailSupport
 
     status = container.json["State"]["Status"]
     if status != "running"
-      print "staring container .. "
+      print "starting container \"#{SS::WebmailSupport.docker_conf_container_id}\" .. "
       container.start
       sleep(5)
       puts "done"
@@ -240,7 +240,8 @@ def webmail_new_disposition(conf)
 end
 
 def webmail_load_mail(name)
-  yaml = YAML.load_file("#{Rails.root}/spec/fixtures/webmail/mail/#{name}")
+  path = "#{Rails.root}/spec/fixtures/webmail/mail/#{name}"
+  yaml = YAML.safe_load_file(path, permitted_classes: [Symbol])
 
   data = Net::IMAP::FetchData.new
   data.attr = yaml.dup
@@ -270,13 +271,22 @@ def webmail_load_mail(name)
   item
 end
 
-def webmail_import_mail(user, mail_or_msg, account: 0, date: Time.zone.now, mailbox: 'INBOX')
+def webmail_import_mail(user_or_group, mail_or_msg, account: 0, date: Time.zone.now, mailbox: 'INBOX')
   msg = mail_or_msg.is_a?(String) ? mail_or_msg : mail_or_msg.to_s
 
   # Use IMAP api directly to import none-sanitized eml message.
-  imap_setting = user.imap_settings[account]
-  imap = Webmail::Imap::Base.new_by_user(user, imap_setting)
-  imap.login
+  imap_setting = user_or_group.imap_settings[account]
+  if user_or_group.is_a?(Webmail::Addon::GroupExtension)
+    imap = Webmail::Imap::Base.new_by_group(user_or_group, imap_setting)
+  else
+    imap = Webmail::Imap::Base.new_by_user(user_or_group, imap_setting)
+  end
+  unless imap.login?
+    result = imap.login
+    unless result
+      raise "failed to log-in"
+    end
+  end
   imap.examine(mailbox)
   imap.conn.append(mailbox, msg, [:Seen], date)
 end
@@ -284,6 +294,11 @@ end
 def webmail_reload_mailboxes(user, account: 0)
   imap_setting = user.imap_settings[account]
   imap = Webmail::Imap::Base.new_by_user(user, imap_setting)
-  imap.login
+  unless imap.login?
+    result = imap.login
+    unless result
+      raise "failed to log-in"
+    end
+  end
   imap.mailboxes.reload
 end

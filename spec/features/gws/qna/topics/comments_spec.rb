@@ -129,7 +129,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         within "#post-#{comment.id}" do
           click_on I18n.t("ss.links.delete")
         end
-        within "form" do
+        within "form#item-form" do
           click_button I18n.t('ss.buttons.delete')
         end
 
@@ -315,7 +315,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         within "#post-#{comment2.id}" do
           click_on I18n.t("ss.links.delete")
         end
-        within "form" do
+        within "form#item-form" do
           click_button I18n.t('ss.buttons.delete')
         end
 

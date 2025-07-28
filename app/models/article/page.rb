@@ -18,6 +18,7 @@ class Article::Page
   include Cms::Addon::ParentCrumb
   include Event::Addon::Date
   include Map::Addon::Page
+  include Event::Addon::Facility
   include Cms::Addon::RelatedPage
   include Contact::Addon::Page
   include Cms::Addon::Tag
@@ -32,8 +33,9 @@ class Article::Page
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
   include Cms::Addon::ForMemberPage
+  include Cms::Lgwan::Page
 
-  after_save :new_size_input, if: ->{ @db_changes }
+  after_save :new_size_input, if: ->{ changes.present? || previous_changes.present? }
 
   set_permission_name "article_pages"
 

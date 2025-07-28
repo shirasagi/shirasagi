@@ -7,5 +7,4 @@ Gws_Elasticsearch_Highlighter.prototype = {
       $(location.hash).css('border', '1px solid red');
     }
   }
-}
-;
+};

@@ -7,6 +7,7 @@ class MailPage::Page
   include Cms::Addon::Meta
   include Cms::Addon::Body
   include Cms::Addon::File
+  include Category::Addon::Category
   include Map::Addon::Page
   include Cms::Addon::RelatedPage
   include MailPage::Addon::ArrivalPlan
@@ -14,6 +15,7 @@ class MailPage::Page
   include Cms::Addon::ReleasePlan
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  include Cms::Lgwan::Page
 
   set_permission_name "article_pages"
 

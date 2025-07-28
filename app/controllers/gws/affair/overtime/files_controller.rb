@@ -1,0 +1,32 @@
+class Gws::Affair::Overtime::FilesController < ApplicationController
+  include Gws::BaseFilter
+  include Gws::CrudFilter
+  include Gws::Affair::PermissionFilter
+  include Gws::Affair::FileFilter
+  include Gws::Affair::WorkflowFilter
+
+  model Gws::Affair::OvertimeFile
+
+  navi_view "gws/affair/main/navi"
+
+  def week_in_compensatory
+    render layout: false
+  end
+
+  private
+
+  def set_crumbs
+    @crumbs << [@cur_site.menu_affair_label || t('modules.gws/affair'), gws_affair_main_path]
+    @crumbs << [t('modules.gws/affair/overtime'), gws_affair_overtime_main_path]
+    if %w(mine approve all).include?(params[:state])
+      @crumbs << [
+        t("modules.gws/affair/overtime/file/#{params[:state]}"),
+        gws_affair_overtime_files_path(state: params[:state])
+      ]
+    end
+  end
+
+  def fix_params
+    { cur_user: @cur_user, cur_site: @cur_site }
+  end
+end

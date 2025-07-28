@@ -1,9 +1,14 @@
 <%
-  ymd = params[:ymd]
-  origin = Time.zone.local(ymd[0..3].to_i, ymd[4..5].to_i, ymd[6..7].to_i)
+  min = max = nil
+  @items.aggregates(:created).tap do |aggregates|
+    min = aggregates["min"]
+    max = aggregates["max"]
+  end
+  min ||= Time.zone.today
+  max ||= Time.zone.today
 %>
 
-<%= form_for :item, url: { action: :download }, html: { method: :post } do |f| %>
+<%= form_for :item, url: { action: :download }, html: { method: :post, id: "item-form" } do |f| %>
     <%= error_messages_for :item %>
 
     <section class="main-box">
@@ -11,8 +16,21 @@
 
       <dl class="see">
         <dt><%= Gws::History.model_name.human %></dt>
-        <dd><%= I18n.l(origin.to_date, format: :long) %></dd>
-        <dd><%= @items.count.to_s(:delimited) %> <%= t('ss.units.count') %></dd>
+        <dd>
+          <%= f.ss_date_field :from, min_date: min, max_date: max %>
+          <%= t("ss.wave_dash") %>
+          <%= f.ss_date_field :to, min_date: min, max_date: max %>
+        </dd>
+
+        <dt><%= t('ss.encoding') %></dt>
+        <dd>
+          <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+            <label>
+              <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', {id: nil} %>
+              <%= t("ss.options.csv_encoding.#{encoding}") %>
+            </label>
+          <% end %>
+        </dd>
       </dl>
     </section>
 

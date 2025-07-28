@@ -19,13 +19,18 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       # create_branch
       visit show_path
       within "#addon-workflow-agents-addons-branch" do
-        click_button I18n.t('workflow.create_branch')
+        wait_for_turbo_frame "#workflow-branch-frame"
+        wait_for_event_fired "turbo:frame-load" do
+          click_button I18n.t('workflow.create_branch')
+        end
 
         # wait branch created
+        expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
         expect(page).to have_css('.see.branch', text: old_name)
         click_link old_name
       end
       within "#addon-workflow-agents-addons-branch" do
+        wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
       end
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
@@ -37,6 +42,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect(item.master?).to be_truthy
       expect(item.branch?).to be_falsey
       expect(item.branches.count).to eq 1
+      expect(item.backups.count).to eq 1
 
       branch = item.branches.first
       expect(branch.name).to eq item.name
@@ -44,6 +50,7 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect(branch.state).to eq "closed"
       expect(branch.master?).to be_falsey
       expect(branch.branch?).to be_truthy
+      expect(branch.backups.count).to eq 1
 
       if item.class.fields.key?("file_ids")
         expect(branch.files.count).to eq item.files.count
@@ -55,30 +62,41 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         expect(branch.html).to eq item.html
       end
 
+      History::Log.unscoped.where(controller: "workflow/frames/branches", action: "create").first.tap do |history_log|
+        expect(history_log.target_class).to eq branch.class.name
+        expect(history_log.target_id).to eq branch.id.to_s
+      end
+
       # draft save
       click_on I18n.t('ss.links.edit')
       within "#item-form" do
         fill_in "item[name]", with: new_name
-        fill_in "item[index_name]", with: ""
+        fill_in "item[index_name]", with: "" if !item.is_a?(ImageMap::Page)
         click_on I18n.t('ss.buttons.draft_save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_turbo_frame "#workflow-branch-frame"
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       item.reload
       branch.reload
 
       expect(item.state).to eq "public"
+      expect(item.backups.count).to eq 1
       expect(branch.name).not_to eq item.name
       expect(branch.name).to eq new_name
-      expect(branch.index_name).not_to eq item.index_name
-      expect(branch.index_name).to be_blank
+      if !item.is_a?(ImageMap::Page)
+        expect(branch.index_name).not_to eq item.index_name
+        expect(branch.index_name).to be_blank
+      end
       expect(branch.state).to eq "closed"
+      expect(branch.backups.count).to eq 2
       expect(item.branches.first.id).to eq(branch.id)
 
       # publish_branch
       branch_url = show_path.sub(/\/\d+$/, "/#{branch.id}")
       visit branch_url
+      wait_for_turbo_frame "#workflow-branch-frame"
       expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -109,7 +127,9 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect { branch.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       item.reload
       expect(item.name).to eq branch.name
-      expect(item.index_name).to eq branch.index_name
+      if !item.is_a?(ImageMap::Page)
+        expect(item.index_name).to eq branch.index_name
+      end
       if item.class.fields.key?("html")
         expect(item.html).to eq new_html
       end
@@ -117,12 +137,12 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       if item.class.fields.key?("file_ids")
         expect(item.file_ids).to eq branch.file_ids
       end
+      expect(item.backups.count).to eq 4
+      expect(item.backups.where("data._id" => branch.id).count).to eq 2
       expect(item.class.all.size).to eq 1
 
       if item.route == "cms/page"
-        within "#content-navi" do
-          expect(page).to have_css(".material-icons", text: "refresh")
-        end
+        wait_for_turbo_frame "#cms-nodes-tree-frame"
       end
     end
   end
@@ -249,6 +269,25 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     it_behaves_like "create_branch"
   end
 
+  context "image_map page" do
+    let(:file) do
+      tmp_ss_file(site: site, user: cms_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png")
+    end
+    let(:html) do
+      [
+        "<p>テスト</p>",
+        "<p><a class=\"icon-png attachment\" href=\"#{file.url}\">#{file.humanized_name}</a></p>"
+      ].join("\r\n\r\n")
+    end
+    let!(:item) do
+      create(:image_map_page, cur_node: node, name: old_name, index_name: old_index_name,
+        html: html, file_ids: [ file.id ])
+    end
+    let!(:node) { create :image_map_node_page, filename: "image-map", name: "image-map" }
+    let(:show_path) { image_map_page_path site, node, item }
+    it_behaves_like "create_branch"
+  end
+
   context "duplicated creating branch protection" do
     let!(:item) { create :article_page, filename: "docs/page.html", name: old_name, index_name: old_index_name }
     let!(:node) { create :article_node_page, filename: "docs", name: "article" }
@@ -267,7 +306,10 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         visit show_path
 
         within "#addon-workflow-agents-addons-branch" do
-          click_button I18n.t('workflow.create_branch')
+          wait_for_turbo_frame "#workflow-branch-frame"
+          wait_for_event_fired "turbo:frame-load" do
+            click_button I18n.t('workflow.create_branch')
+          end
         end
         within "#addon-workflow-agents-addons-branch" do
           expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
@@ -290,13 +332,18 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         visit show_path
 
         within "#addon-workflow-agents-addons-branch" do
-          click_button I18n.t('workflow.create_branch')
+          wait_for_turbo_frame "#workflow-branch-frame"
+          wait_for_event_fired "turbo:frame-load" do
+            click_button I18n.t('workflow.create_branch')
+          end
 
           # wait branch created
+          expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
           expect(page).to have_css('.see.branch', text: old_name)
           click_link old_name
         end
         within "#addon-workflow-agents-addons-branch" do
+          wait_for_turbo_frame "#workflow-branch-frame"
           expect(page).to have_css('.see.master', text: I18n.t('workflow.branch_message'))
         end
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))

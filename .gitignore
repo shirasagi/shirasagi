@@ -4,12 +4,16 @@
 /.bundle
 /.project
 /.ruby-version
+/.tool-versions
 /.vscode
 
+/app/assets/builds
 /config/*.yml
+/config/*.yml.enc
 /config/after_initializers
 /config/commands
 /config/environments
+/config/master.key
 /config/unicorn.rb
 /config/puma.rb
 /config/nginx.conf
@@ -18,7 +22,9 @@
 /log
 /tmp
 /private
+/public/assets-dev
 /public/sites
+/public/gws
 /sanitizer_input
 /sanitizer_output
 
@@ -43,8 +49,12 @@ ehthumbs.db
 
 # Dotenv
 /.env
+/.env.*
 
 # test-queue
 .test_queue_stats
 
 /node_modules
+
+# デバッグ用
+.rdbgrc.breakpoints

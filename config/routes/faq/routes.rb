@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   end
 
   concern :change_state do
-    get :state, on: :member
     put :change_state_all, on: :collection, path: ''
   end
 
@@ -59,7 +58,12 @@ Rails.application.routes.draw do
 
   content "faq" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :download, :import, :command, :contains_urls, :tag, :michecker, :change_state]
+    resources :pages, concerns: %i[deletion copy move lock download import command contains_urls tag michecker change_state] do
+      post :resume_new, on: :collection
+      post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
+    end
     resources :searches, concerns: :deletion
   end
 
@@ -75,7 +79,7 @@ Rails.application.routes.draw do
   node "faq" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
-
+    get "page/rss-recent.xml" => "public#rss_recent", cell: "nodes/page", format: "xml"
     get "search/(index.:format)" => "public#index", cell: "nodes/search"
   end
 

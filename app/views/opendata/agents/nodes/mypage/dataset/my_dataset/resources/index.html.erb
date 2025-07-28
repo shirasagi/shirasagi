@@ -7,6 +7,7 @@
     <tr>
       <th class="name"><%= I18n.t("opendata.labels.resource_name") %></th>
       <th class="updated"><%= I18n.t("opendata.labels.update_datetime") %></th>
+      <th class="state"><%= I18n.t("opendata.labels.state") %></th>
       <th class="format"><%= I18n.t("opendata.labels.format") %></th>
       <th class="size"><%= I18n.t("opendata.labels.size") %></th>
     </tr>
@@ -16,6 +17,7 @@
     <tr>
       <td><%= link_to item.name, "#{@item_url}#{item.id}/" %></td>
       <td><%= tryb{item.updated.strftime("%Y年%1m月%1d日 %1H時%1M分")} %></td>
+      <td><%= item.label(:state) %></td>
       <td><%= item.format %></td>
       <td>
         <% if item.source_url.present? %>

@@ -22,6 +22,7 @@ module Inquiry::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     has_many :columns, foreign_key: :node_id, class_name: "Inquiry::Column"
     has_many :answers, foreign_key: :node_id, class_name: "Inquiry::Answer"
@@ -42,6 +43,7 @@ module Inquiry::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "inquiry/node") }
 

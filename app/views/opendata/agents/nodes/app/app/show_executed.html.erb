@@ -11,7 +11,10 @@ if (add === true) {
     },
     type: "POST",
     success: function (data) {
-      $("#executed").html(data);
+      var $executed = $("#executed");
+      $executed.html(data);
+      Opendata_Point.executedLoaded = true;
+      $executed.trigger("opendata:executedLoaded");
     }
   });
 }

@@ -10,12 +10,23 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     let(:item_texts) { Array.new(rand(1..10)) { "message-#{unique_id}" } }
 
     shared_examples "webmail/mails forward flow" do
+      let(:attachment1_name) { "logo-#{unique_id}.png" }
+      let(:attachment2_name) { "shirasagi-#{unique_id}.pdf" }
       let(:item) do
-        Mail.new(from: item_from, to: item_tos + [ address ], cc: item_ccs, subject: item_subject, body: item_texts.join("\n"))
+        Mail.new do |m|
+          m.from = item_from
+          m.to = item_tos + [ address ]
+          m.cc = item_ccs
+          m.subject = item_subject
+          m.body = item_texts.join("\n")
+          m.add_file(filename: attachment1_name, content: File.binread("#{Rails.root}/spec/fixtures/ss/logo.png"))
+          m.add_file(filename: attachment2_name, content: File.binread("#{Rails.root}/spec/fixtures/ss/shirasagi.pdf"))
+        end
       end
 
       before do
         webmail_import_mail(user, item)
+        Webmail.imap_pool.disconnect_all
 
         ActionMailer::Base.deliveries.clear
         login_user(user)
@@ -28,15 +39,19 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       it do
         # forward
         visit index_path
+        wait_for_js_ready
         click_link item_subject
+        wait_for_js_ready
         new_window = window_opened_by { click_link I18n.t('webmail.links.forward') }
         within_window new_window do
+          wait_for_document_loading
+          wait_for_js_ready
           within "form#item-form" do
             fill_in "to", with: user.email + "\n"
           end
           click_button I18n.t('ss.buttons.send')
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.sent'))
+        wait_for_notice I18n.t('ss.notice.sent')
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
@@ -45,8 +60,14 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.to.first).to eq user.email
           expect(mail.cc).to be_nil
           expect(mail.subject).to eq "Fw: #{item_subject}"
-          expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
+          expect(mail.body.multipart?).to be_truthy
+          expect(mail.body.parts).to have(3).items
+          expect(mail.body.parts[0].content_type).to eq "text/plain; charset=utf-8"
+          expect(mail.body.parts[0].decoded).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
+          expect(mail.body.parts[1].filename).to eq attachment1_name
+          expect(mail.body.parts[1].content_type).to eq "image/png; filename=#{attachment1_name}"
+          expect(mail.body.parts[2].filename).to eq attachment2_name
+          expect(mail.body.parts[2].content_type).to eq "application/pdf; filename=#{attachment2_name}"
         end
       end
     end

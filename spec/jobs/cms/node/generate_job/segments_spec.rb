@@ -64,7 +64,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   describe "#perform without segment" do
     before do
       Fs.rm_rf site.path
-      described_class.bind(site_id: site).perform_now
+      described_class.bind(site_id: site.id).perform_now
     end
 
     it do
@@ -78,7 +78,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   describe "#perform with web01" do
     before do
       Fs.rm_rf site.path
-      described_class.bind(site_id: site).perform_now(segment: "web01")
+      described_class.bind(site_id: site.id).perform_now(segment: "web01")
     end
 
     it do
@@ -92,7 +92,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   describe "#perform with web02" do
     before do
       Fs.rm_rf site.path
-      described_class.bind(site_id: site).perform_now(segment: "web02")
+      described_class.bind(site_id: site.id).perform_now(segment: "web02")
     end
 
     it do
@@ -106,7 +106,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
   describe "#perform with web03" do
     before do
       Fs.rm_rf site.path
-      described_class.bind(site_id: site).perform_now(segment: "web03")
+      described_class.bind(site_id: site.id).perform_now(segment: "web03")
     end
 
     it do

@@ -22,23 +22,19 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       it do
         Timecop.freeze(now) do
-          login_user user
-
-          visit gws_schedule_facility_plans_path(site: site, facility: facility)
+          login_user user, to: gws_schedule_facility_plans_path(site: site, facility: facility)
           click_on I18n.t("gws/schedule.links.add_plan")
+          wait_for_js_ready
 
           within "#item-form" do
             fill_in "item[name]", with: plan_name
-            fill_in "item[start_at]", with: I18n.l(start_at, format: :picker)
-            # !!!be cafeful!!!
-            # it is required to input twice
-            fill_in "item[end_at]", with: I18n.l(end_at, format: :picker)
-            fill_in "item[end_at]", with: I18n.l(end_at, format: :picker)
+            fill_in_datetime "item[start_at]", with: start_at
+            fill_in_datetime "item[end_at]", with: end_at
             click_on I18n.t("ss.buttons.save")
           end
-          expect(page).to have_css(css_class, text: message)
-          # wait for ajax
-          expect(page).to have_content(plan_name)
+          Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+            expect(page).to have_css(css_class, text: message)
+          end
         end
       end
     end
@@ -61,7 +57,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       context "when end_at is over the facility limit" do
         let(:start_at) { end_at - 1.hour }
         let(:end_at) { now + facility.max_days_limit.days + 1.minute }
-        let(:css_class) { '#errorExplanation' }
+        let(:css_class) { '.reservation-error' }
         let(:message) { I18n.t("gws/schedule.errors.faciliy_day_lte", count: facility.max_days_limit) }
 
         it_behaves_like "a facility plan reservation"

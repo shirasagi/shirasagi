@@ -27,13 +27,8 @@
         <% if item.allowed?(:read, @cur_user, site: @cur_site, node: item.parent) %>
         <nav class="tap-menu">
           <%= link_to t("cms.content"), item.private_show_path %>
-          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
-          <% if @cur_site.mobile_enabled? %>
-            <%= link_to t('ss.links.pc_preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-            <%= link_to(t('ss.links.mobile_preview'), cms_preview_path(path: item.mobile_preview_path), target: :_blank, rel: "noopener") %>
-          <% else %>
-            <%= link_to t('ss.links.preview'), cms_preview_path(path: item.preview_path), target: :_blank, rel: "noopener" %>
-          <% end %>
+          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>
+          <%= safe_join cms_preview_links(item) %>
         </nav>
         <% end %>
 
@@ -46,7 +41,7 @@
 
           <div class="meta">
             <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="datetime"><%= ss_time_tag item.updated %></span>
             <span class="filename"><%= item.filename %></span>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
             <% if item.user %>
@@ -56,8 +51,12 @@
               <%= t("ss.state.#{item.status}") %>
               <%
                 term = []
-                term << "開始:" + item.release_date.strftime("%Y/%m/%d %H:%M") if item.try(:release_date)
-                term << "終了:" + item.close_date.strftime("%Y/%m/%d %H:%M") if item.try(:close_date)
+                if item.respond_to?(:release_date) && item.release_date
+                  term << "開始:" + I18n.l(item.release_date, format: :picker)
+                end
+                if item.respond_to?(:close_date) && item.close_date
+                  term << "終了:" + I18n.l(item.close_date, format: :picker)
+                end
               %>
               <%= "( #{term.join(", ")} )" if term.present? %>
             </span>

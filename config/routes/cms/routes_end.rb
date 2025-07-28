@@ -13,6 +13,7 @@ Rails.application.routes.draw do
   concern :move do
     get :move, on: :member
     put :move, on: :member
+    put :move_confirm, on: :member
   end
 
   concern :template do
@@ -78,16 +79,37 @@ Rails.application.routes.draw do
   end
 
   concern :change_state do
-    get :state, on: :member
     put :change_state_all, on: :collection, path: ''
   end
 
   namespace "cms", path: ".s:site" do
     get "/" => "main#index", as: :main
-    match "logout" => "login#logout", as: :logout, via: [:get]
+    get "logout" => "login#logout", as: :logout
     match "login" => "login#login", as: :login, via: [:get, :post]
+    get "mfa_login" => "mfa_login#login", as: :mfa_login
+    post "otp_login" => "mfa_login#otp_login"
+    post "otp_setup" => "mfa_login#otp_setup"
     get "preview(:preview_date)/(*path)" => "preview#index", as: :preview
     post "preview(:preview_date)/(*path)" => "preview#form_preview", as: :form_preview, format: false
+
+    namespace :frames do
+      resources :nodes_trees, only: %i[index] do
+        post '', action: :super_reload, on: :collection
+      end
+      namespace :user_navigation do
+        resource :menu, only: %i[show]
+      end
+      scope "node:cid/:setting", setting: /-|([A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+\.[A-Za-z0-9_\-]+)/ do
+        namespace :temp_files do
+          resources :uploads, only: %i[index new create] do
+            post :preview, on: :collection
+          end
+          resources :files, only: %i[index edit update destroy] do
+            get :select, on: :member
+          end
+        end
+      end
+    end
   end
 
   namespace "cms", path: ".s:site/cms" do
@@ -97,38 +119,62 @@ Rails.application.routes.draw do
     resources :users, concerns: [:deletion, :download, :import] do
       post :lock_all, on: :collection
       post :unlock_all, on: :collection
+      post :reset_mfa_otp, on: :member
     end
-    resources :groups, concerns: [:deletion, :role, :download, :import]
-    resources :members, concerns: [:deletion, :download] do
+    resources :groups, concerns: [:deletion, :role, :import] do
+      match :download_all, on: :collection, via: %i[get post]
+      resources :pages, path: ":contact_id/pages", only: %i[index], controller: "group_pages"
+    end
+    resources :members, concerns: [:deletion, :download, :import] do
       get :verify, on: :member
       post :verify, on: :member
     end
     resources :contents, path: "contents/(:mod)"
 
-    resources :nodes, concerns: [:deletion, :command, :change_state] do
+    resources :nodes, concerns: [:deletion, :command, :change_state, :import] do
       get :routes, on: :collection
+      match :download, on: :collection, via: %i[get post]
     end
 
     resources :parts, concerns: :deletion do
       get :routes, on: :collection
     end
 
-    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker, :change_state]
+    resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker, :change_state] do
+      post :resume_new, on: :collection
+      post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
+    end
     resources :layouts, concerns: :deletion
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :loop_settings, concerns: :deletion
+    resources :api_tokens, concerns: :deletion
     resources :command_settings, concerns: :deletion do
       post :run, on: :member
     end
     resources :theme_templates, concerns: [:deletion, :template]
     resources :source_cleaner_templates, concerns: [:deletion, :template]
-    resources :word_dictionaries, concerns: [:deletion, :template]
+    namespace 'syntax_checker' do
+      get "/" => redirect { |p, req| "#{req.path}/word_dictionaries" }, as: :main
+      resources :word_dictionaries, concerns: [:deletion, :template]
+      resource :setting, only: %i[show edit update]
+      resource :url_scheme, only: %i[show edit update]
+    end
+    resource :user_profile, only: [:show, :edit, :update] do
+      get :edit_password, on: :member
+      post :edit_password, on: :member, action: :update_password
+    end
 
     scope module: "form" do
-      resources :forms, concerns: [:deletion, :change_state] do
-        resources :init_columns, concerns: [:deletion]
-        resources :columns, concerns: [:deletion]
+      resources :forms, concerns: [:deletion, :download, :import, :change_state] do
+        resources :columns, concerns: [:deletion] do
+          post :reorder, on: :collection
+        end
+        resources :init_columns, concerns: [:deletion] do
+          post :reorder, on: :collection
+        end
 
         get :column_names, on: :collection
       end
@@ -142,6 +188,15 @@ Rails.application.routes.draw do
           match :download_all, via: [:get, :post], on: :collection
           match :import_url, via: [:get, :post], on: :collection
         end
+      end
+    end
+
+    namespace :frames do
+      resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
+      resources :init_columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
       end
     end
 
@@ -172,6 +227,10 @@ Rails.application.routes.draw do
       get "/" => redirect { |p, req| "#{req.path}/text_caches" }, as: :main
       resources :text_caches, concerns: :deletion
       resources :langs, concerns: [:deletion, :download, :import]
+      resources :access_logs, only: [:index, :show] do
+        get :download, on: :collection
+        post :download, on: :collection
+      end
       resource :site_setting
     end
 
@@ -205,6 +264,12 @@ Rails.application.routes.draw do
         resources :categories, concerns: :deletion, controller: "deliver_category/categories"
       end
 
+      # statistics
+      resources :statistics, concerns: [:deletion, :download]
+
+      # mail hanlders
+      resources :mail_handlers, concerns: :deletion
+
       # services
       namespace "richmenu" do
         resources :groups, concerns: :deletion do
@@ -230,8 +295,6 @@ Rails.application.routes.draw do
       resources :event_sessions, only: [:index, :show, :destroy], concerns: :deletion
     end
 
-    get "check_links" => "check_links#index"
-    post "check_links" => "check_links#run"
     get "generate_nodes" => "generate_nodes#index"
     get "generate_nodes/segment/:segment" => "generate_nodes#index", as: :segment_generate_nodes
     post "generate_nodes" => "generate_nodes#run"
@@ -242,6 +305,20 @@ Rails.application.routes.draw do
     post "generate_pages" => "generate_pages#run"
     get "generate_pages/download_logs" => "generate_pages#download_logs"
     post "generate_pages/segment/:segment" => "generate_pages#run"
+    namespace "generation_report", path: "generation_report" do
+      get "/" => redirect { |p, req| "#{req.path}/nodes/titles" }, as: :main
+      get "/nodes" => redirect { |p, req| "#{req.path}/titles" }, as: :nodes
+      get "/pages" => redirect { |p, req| "#{req.path}/titles" }, as: :pages
+    end
+    namespace "generation_report", path: "generation_report/:type" do
+      resources :titles, only: %i[index new create destroy], concerns: :deletion
+      resources :histories, path: "titles/:title/histories", only: %i[index show] do
+        match :download_all, on: :collection, via: %i[get post]
+      end
+      resources :aggregations, path: "titles/:title/aggregations", only: %i[index] do
+        match :download_all, on: :collection, via: %i[get post]
+      end
+    end
     get "import" => "import#import"
     post "import" => "import#import"
     get "import/download_logs" => "import#download_logs"
@@ -250,19 +327,23 @@ Rails.application.routes.draw do
     get "all_contents(.:format)" => redirect { |p, req| "#{req.path}/download_all" }, as: "all_contents"
     get "all_contents/download_all(.:format)" => "all_contents#download_all", as: "all_contents_download"
     match "all_contents/import(.:format)" => "all_contents#import", via: [:get, :post], as: "all_contents_import"
+    get "all_contents/sampling_all(.:format)" => "all_contents#sampling_all", as: "all_contents_sampling"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
+    delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/files" => "search_contents/files#index"
     get "search_contents/sitemap" => "search_contents/sitemap#index"
     get "search_contents/sitemap/download_all(.:format)" => "search_contents/sitemap#download_all", as: "folder_csv_download"
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
-    delete "search_contents/pages" => "search_contents/pages#destroy_all"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
-    delete "search_contents/:id" => "search_contents/pages#destroy_all_pages"
+    delete "search_contents/:id" => "page_search_contents#destroy_all"
     resource :generate_lock
 
+    get "check_links" => redirect { |p, req| "#{req.path}/reports" }, as: :check_links
     namespace "check_links" do
+      get "run" => "run#index"
+      post "run" => "run#run"
       resources :reports, concerns: [:deletion], only: [:show, :index] do
         resources :pages, only: [:show, :index] do
           get :download, on: :collection
@@ -272,11 +353,31 @@ Rails.application.routes.draw do
         end
       end
       resources :ignore_urls, concerns: :deletion
+      resource :site_setting
     end
+
+    namespace 'ldap' do
+      get '/' => redirect { |p, req| "#{req.path}/setting" }, as: :main
+      resource :setting, only: %i[show edit update]
+      get "server" => "servers#main", as: "server_main"
+      resource :server, only: [:show], path: "server/:dn" do
+        get :group
+        get :user
+      end
+      resources :imports, concerns: :deletion, only: [:index, :show, :destroy] do
+        get :import_confirmation, on: :collection
+        post :import, on: :collection
+        get :sync_confirmation, on: :member
+        post :sync, on: :member
+      end
+      resources :result, only: [:index]
+    end
+    resources :page_expiration_settings, only: [:index, :show, :edit, :update]
 
     namespace "apis" do
       get "groups" => "groups#index"
       get "nodes" => "nodes#index"
+      get "nodes/routes" => "nodes#routes"
       get "pages" => "pages#index"
       get "pages/children" => "pages/children#index"
       get "pages/categorized" => "pages/categorized#index"
@@ -286,9 +387,11 @@ Rails.application.routes.draw do
       get "contents/html" => "contents/html#index"
       get "members" => "members#index"
       get "sites" => "sites#index"
+      get "layouts" => "layouts#index"
       put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
+      get "qr_codes" => "qr_codes#index"
       get "forms" => "forms#index"
       get "forms/temp_file/:id/select" => "forms#select_temp_file", as: :form_temp_file_select
       get "forms/:id/form" => "forms#form", as: :form
@@ -302,7 +405,9 @@ Rails.application.routes.draw do
       put "finalize" => "large_file_upload#finalize"
       post "run" => "large_file_upload#run"
       delete "delete_init_files" => "large_file_upload#delete_init_files"
+      get "content_quota_navi" => "content_quota_navi#index"
 
+      resources :columns, only: %i[edit update]
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
@@ -324,6 +429,9 @@ Rails.application.routes.draw do
         post :restore, on: :member
         post :destroy, on: :member
       end
+      resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy] do
+        get :delete, on: :member
+      end
       scope "node:cid/cms", as: "node", cid: /\w+/ do
         resources :temp_files, controller: 'node/temp_files', concerns: [:deletion, :file_api] do
           get :contrast_ratio, on: :collection
@@ -335,6 +443,9 @@ Rails.application.routes.draw do
           get :download, on: :member
           post :restore, on: :member
           post :destroy, on: :member
+        end
+        resources :delete_unused_files, path: ":owner_item_id/delete_unused_files", only: [:destroy] do
+          get :delete, on: :member
         end
       end
       namespace "opendata_ref" do
@@ -384,8 +495,10 @@ Rails.application.routes.draw do
       end
 
       namespace "line" do
-        get "deliver_members/:model/:id" => "deliver_members#index", model: /message|deliver_condition|line_deliver/, as: :deliver_members
-        get "deliver_members/:model/:id/download" => "deliver_members#download", model: /message|deliver_condition|line_deliver/
+        get "deliver_members/:model/:id" => "deliver_members#index",
+          model: /message|deliver_condition|line_deliver/, as: :deliver_members
+        get "deliver_members/:model/:id/download" => "deliver_members#download",
+          model: /message|deliver_condition|line_deliver/
         get "temp_files/:id" => "temp_files#select", as: :select_temp_file
       end
 
@@ -419,9 +532,16 @@ Rails.application.routes.draw do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
-    resources :image_resizes, concerns: :deletion
-    resources :nodes, concerns: [:deletion, :change_state]
-    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state]
+    resource :image_resize, except: %i[new create destroy]
+    resources :nodes, concerns: [:deletion, :change_state, :import] do
+      match :download, on: :collection, via: %i[get post]
+    end
+    resources :pages, concerns: [:deletion, :copy, :move, :lock, :command, :contains_urls, :michecker, :change_state] do
+      post :resume_new, on: :collection
+      post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
+    end
     resources :import_pages, concerns: [:deletion, :convert, :change_state]
     resources :import_nodes, concerns: [:deletion, :change_state]
     get "/group_pages" => redirect { |p, req| "#{req.path.sub(/\/group_pages$/, "")}/nodes" }
@@ -433,6 +553,7 @@ Rails.application.routes.draw do
     resources :form_searches, only: [:index]
     get "search_contents/:id" => "page_search_contents#show", as: "page_search_contents"
     get "search_contents/:id/download" => "page_search_contents#download", as: "download_page_search_contents"
+    delete "search_contents/:id" => "page_search_contents#destroy_all"
     resources :line_hubs, only: [:index]
   end
 
@@ -440,24 +561,33 @@ Rails.application.routes.draw do
     get "node/(index.:format)" => "public#index", cell: "nodes/node"
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
+    get "page/rss-recent.xml" => "public#rss_recent", cell: "nodes/page", format: "xml"
     get "group_page/(index.:format)" => "public#index", cell: "nodes/group_page"
     get "group_page/rss.xml" => "public#rss", cell: "nodes/group_page", format: "xml"
+    get "group_page/rss-recent.xml" => "public#rss_recent", cell: "nodes/group_page", format: "xml"
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
-    get "import_node/rss.xml" => "public#rss", cell: "nodes/import_node", format: "xml"
-    get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
-    get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
+    get "archive/:ymd/(index.:format)" => "public#yearly", cell: "nodes/archive", ymd: /\d{4}/
+    get "archive/:ymd/(index.:format)" => "public#monthly", cell: "nodes/archive", ymd: /\d{6}/
+    get "archive/:ymd/(index.:format)" => "public#daily", cell: "nodes/archive", ymd: /\d{8}/
+    get "archive" => "public#index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
-    get "line_hub/line" => "public#index", cell: "nodes/line_hub"
-    post "line_hub/line" => "public#index", cell: "nodes/line_hub"
-    get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
-    get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
+    #get "site_search/article_nodes(.:format)" => "public#article_nodes", cell: "nodes/site_search"
+    #get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
     get "form_search/(index.:format)" => "public#index", cell: "nodes/form_search"
+    get "line_hub/(index.:format)" => "public#index", cell: "nodes/line_hub"
+    get "line_hub/line" => "public#line", cell: "nodes/line_hub"
+    post "line_hub/line" => "public#line", cell: "nodes/line_hub"
+    get "line_hub/image-map/:id/:size" => "public#image_map", cell: "nodes/line_hub"
+    get "line_hub/mail/:filename" => "public#mail", cell: "nodes/line_hub"
+    post "line_hub/mail/:filename" => "public#mail", cell: "nodes/line_hub"
+    get "line_hub/dump_garbage/:id/:size" => "public#dump_garbage", cell: "nodes/line_hub"
   end
 
   part "cms" do
     get "free" => "public#index", cell: "parts/free"
     get "node" => "public#index", cell: "parts/node"
+    get "node2" => "public#index", cell: "parts/node2"
     get "page" => "public#index", cell: "parts/page"
     get "tabs" => "public#index", cell: "parts/tabs"
     get "crumb" => "public#index", cell: "parts/crumb"
@@ -466,6 +596,9 @@ Rails.application.routes.draw do
     get "monthly_nav" => "public#index", cell: "parts/monthly_nav"
     get "site_search_history" => "public#index", cell: "parts/site_search_history"
     get "history_list" => "public#index", cell: "parts/history_list"
+    get "site_search_keyword" => "public#index", cell: "parts/site_search_keyword"
+    get "print" => "public#index", cell: "parts/print"
+    get "clipboard_copy" => "public#index", cell: "parts/clipboard_copy"
   end
 
   page "cms" do

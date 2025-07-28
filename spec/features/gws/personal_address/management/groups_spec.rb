@@ -15,14 +15,15 @@ describe "gws_personal_address_management_groups", type: :feature, dbscope: :exa
   context "with a user who is allowed only to use personal address" do
     let(:role) do
       Gws::Role.create!(
-        name: unique_id, site_id: gws_site.id, permissions: %w(edit_gws_personal_addresses), permission_level: 1
+        name: unique_id, site_id: gws_site.id, permissions: %w(edit_gws_personal_addresses)
       )
     end
     let(:uid) { unique_id }
     let(:user) do
       Gws::User.create!(
         name: uid, uid: uid, email: "#{uid}@example.jp", in_password: "pass",
-        group_ids: [gws_site.id], gws_role_ids: [role.id]
+        group_ids: [gws_site.id], gws_role_ids: [role.id],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
       )
     end
 

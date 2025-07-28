@@ -86,7 +86,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         within "#post-#{comment.id}" do
           click_on I18n.t("ss.links.delete")
         end
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t('ss.buttons.delete')
         end
 
@@ -185,7 +185,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         within "#post-#{comment.id}" do
           click_on I18n.t("ss.links.delete")
         end
-        within "form" do
+        within "form#item-form" do
           click_on I18n.t('ss.buttons.delete')
         end
 

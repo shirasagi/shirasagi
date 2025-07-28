@@ -77,20 +77,16 @@ describe History::Trash, type: :model, dbscope: :example do
 
     context "with cms/twitter_poster" do
       let(:twitter_auto_post) { %w(expired active).sample }
-      # let(:twitter_post_format) { %w(thumb_and_page files_and_page page_only).sample }
-      let(:twitter_post_format) { %w(files_and_page page_only).sample }
       let(:twitter_edit_auto_post) { %w(disabled enabled).sample }
       let!(:item) do
         create(
           :article_page, cur_user: user, cur_site: site, cur_node: node,
-          twitter_auto_post: twitter_auto_post, twitter_post_format: twitter_post_format,
-          twitter_edit_auto_post: twitter_edit_auto_post
+          twitter_auto_post: twitter_auto_post, twitter_edit_auto_post: twitter_edit_auto_post
         )
       end
 
       it do
         expect(item.twitter_auto_post).to eq twitter_auto_post
-        expect(item.twitter_post_format).to eq twitter_post_format
         expect(item.twitter_edit_auto_post).to eq twitter_edit_auto_post
       end
     end
@@ -424,17 +420,22 @@ describe History::Trash, type: :model, dbscope: :example do
     context "with contact/page" do
       let!(:contact_state) { %w(show hide).sample }
       let!(:contact_group) { create :cms_group, name: "#{cms_site.groups.first.name}/#{unique_id}" }
+      let(:contact_group_name) { "contact_group_name-#{unique_id}" }
       let(:contact_charge) { "contact_charge-#{unique_id}" }
       let(:contact_tel) { "contact_tel-#{unique_id}" }
       let(:contact_fax) { "contact_fax-#{unique_id}" }
       let(:contact_email) { unique_email }
+      let(:contact_postal_code) { "contact_postal_code-#{unique_id}" }
+      let(:contact_address) { "contact_address-#{unique_id}" }
       let(:contact_link_url) { "/#{unique_id}/" }
       let(:contact_link_name) { "contact_link_name-#{unique_id}" }
       let!(:item) do
         create(
           :article_page, cur_user: user, cur_site: site, cur_node: node,
-          contact_state: contact_state, contact_group_id: contact_group.id, contact_charge: contact_charge,
+          contact_state: contact_state, contact_group_id: contact_group.id,
+          contact_group_name: contact_group_name, contact_charge: contact_charge,
           contact_tel: contact_tel, contact_fax: contact_fax, contact_email: contact_email,
+          contact_postal_code: contact_postal_code, contact_address: contact_address,
           contact_link_url: contact_link_url, contact_link_name: contact_link_name
         )
       end
@@ -444,10 +445,13 @@ describe History::Trash, type: :model, dbscope: :example do
 
         expect(item.contact_state).to eq contact_state
         expect(item.contact_group_id).to eq contact_group.id
+        expect(item.contact_group_name).to eq contact_group_name
         expect(item.contact_charge).to eq contact_charge
         expect(item.contact_tel).to eq contact_tel
         expect(item.contact_fax).to eq contact_fax
         expect(item.contact_email).to eq contact_email
+        expect(item.contact_postal_code).to eq contact_postal_code
+        expect(item.contact_address).to eq contact_address
         expect(item.contact_link_url).to eq contact_link_url
         expect(item.contact_link_name).to eq contact_link_name
       end
@@ -456,7 +460,7 @@ describe History::Trash, type: :model, dbscope: :example do
     context "with cms/release and cms/release_plan" do
       let!(:released_type) { %w(fixed same_as_updated same_as_created same_as_first_released).sample }
       let!(:released) { Time.zone.now.change(usec: 0) }
-      let!(:release_date) { released - rand(3..5).hours }
+      let!(:release_date) { released + rand(1..2).hours }
       let!(:close_date) { release_date + rand(3..5).hours }
       let!(:item) do
         Timecop.freeze(released) do

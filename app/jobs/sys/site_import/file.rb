@@ -21,12 +21,19 @@ module Sys::SiteImport::File
       end
 
       if item.save
-        src = SS::File.new(id: id, filename: item.filename)
+        src = SS::File.new(id: id, name: data["name"], filename: data["filename"])
         src = src.becomes_with_model
+
         @ss_files_map[id] = item.id
         @ss_files_url[src.url] = item.url
         FileUtils.mkdir_p(File.dirname(item.path))
         FileUtils.cp(path, item.path) # FileUtils.mv
+
+        if Fs.to_io(path) { |io| SS::ImageConverter.image?(io) }
+          @ss_files_url[src.thumb_url] = item.thumb_url
+          item.in_disable_variant_processing = false
+          item.update_variants
+        end
       else
         @task.log "[#{item.class}##{item.id}] " + item.errors.full_messages.join(' ')
       end
@@ -65,11 +72,13 @@ module Sys::SiteImport::File
   end
 
   def replace_html_with_url(src, dst)
-    src_path = /="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/
+    src_path = "=\"#{src}"
     dst_path = "=\"#{dst}"
 
-    fields = Cms::ApiFilter::Contents::HTML_FIELDS
-    cond = { "$or" => fields.map { |field| { field => src_path } } }
+    # html fields
+    fields = Cms::ApiFilter::Contents::HTML_FIELDS + Cms::ApiFilter::Contents::CONTACT_FIELDS
+    path = "=\"#{::Regexp.escape(src)}"
+    cond = { "$or" => fields.map { |field| { field => /#{path}/ } } }
 
     criterias = [
       Cms::Page.in(id: @cms_pages_map.values),
@@ -85,6 +94,23 @@ module Sys::SiteImport::File
           attr[field] = html if item[field] != html
         end
         item.set(attr) if attr.present?
+      end
+    end
+
+    # column_values
+    criteria = Cms::Page.in(id: @cms_pages_map.values)
+    criteria = criteria.where(column_values: { "$exists" => true, "$ne" => [] })
+    criteria.each do |item|
+      next if !item.respond_to?(:column_values)
+      next if item.column_values.blank?
+
+      item.column_values.each do |column_value|
+        next if !column_value.respond_to?(:value)
+        next if column_value.value.blank?
+
+        value = column_value.value
+        new_value = value.gsub(src_path, dst_path)
+        column_value.set(value: new_value) if new_value != value
       end
     end
   end

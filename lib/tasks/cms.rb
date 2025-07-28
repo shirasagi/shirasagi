@@ -60,10 +60,10 @@ module Tasks
         each_sites do |site|
           if ENV.key?("node")
             with_node(site, ENV["node"]) do |node|
-              perform_job(::Cms::CheckLinksJob, site: site, node: node, email: ENV["email"], meta: ENV["meta"])
+              perform_job(::Cms::CheckLinksJob, site: site, node: node, email: ENV["email"], meta: ENV["display_meta"])
             end
           else
-            perform_job(::Cms::CheckLinksJob, site: site, email: ENV["email"], meta: ENV["meta"])
+            perform_job(::Cms::CheckLinksJob, site: site, email: ENV["email"], meta: ENV["display_meta"])
           end
         end
       end
@@ -80,13 +80,15 @@ module Tasks
         end
       end
 
+      def remove_improper_htmls
+        each_sites do |site|
+          perform_job(::Cms::RemoveImproperHtmlsJob, site: site, email: ENV["email"], dry_run: ENV["dry_run"])
+        end
+      end
+
       def export_site
         with_site(ENV['site']) do |site|
-          job = ::Sys::SiteExportJob.new
-          job.task = mock_task(
-            source_site_id: site.id
-          )
-          job.perform(exclude: ENV['exclude'])
+          ::Sys::SiteExportJob.bind(site_id: site).perform_now(exclude: ENV['exclude'])
         end
       end
 
@@ -97,12 +99,7 @@ module Tasks
           file = ENV['file']
           puts "File not found: #{ENV['file']}" or break unless ::File.exist?(file)
 
-          job = ::Sys::SiteImportJob.new
-          job.task = mock_task(
-            target_site_id: site.id,
-            import_file: file
-          )
-          job.perform
+          ::Sys::SiteImportJob.bind(site_id: site).perform_now(file)
         end
       end
 
@@ -111,7 +108,7 @@ module Tasks
         each_sites do |site|
           begin
             puts "#{site.host}: #{site.name}"
-            site.reload_usage!
+            Cms::ReloadSiteUsageJob.bind(site_id: site).perform_now
           rescue => e
             Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
             puts("Failed to update usage: #{site.host}")
@@ -146,11 +143,10 @@ module Tasks
       end
 
       def each_sites(&block)
-        name = ENV['site']
-        if name
-          all_ids = ::Cms::Site.where(host: name).pluck(:id)
-        elsif ENV.key?('include_sites')
-          names = ENV['include_sites'].split(/[, 　、\r\n]+/)
+        names = []
+        names += ENV['site'].split(/[, 　、\r\n]+/) if ENV.key?('site')
+        names += ENV['include_sites'].split(/[, 　、\r\n]+/) if ENV.key?('include_sites')
+        if names.present?
           all_ids = ::Cms::Site.in(host: names).pluck(:id)
         else
           all_ids = ::Cms::Site.all.pluck(:id)
@@ -160,6 +156,11 @@ module Tasks
           names = ENV['exclude_sites'].split(/[, 　、\r\n]+/)
           exclude_ids = ::Cms::Site.in(host: names).pluck(:id)
           all_ids -= exclude_ids
+        end
+
+        if all_ids.blank?
+          puts "There are no sites on which task executes"
+          return
         end
 
         all_ids.each_slice(20) do |ids|
@@ -244,7 +245,7 @@ module Tasks
 
               item.send("#{attr}=", gsub_path(item.send(attr), site))
             end
-            item.save!
+            item.without_record_timestamps { item.save! }
 
             puts item.name
           end

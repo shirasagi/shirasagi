@@ -8,7 +8,7 @@ Rails.application.routes.draw do
   end
 
   concern :export do
-    get :download, on: :collection
+    post :download, on: :collection
     get :import, on: :collection
     post :import, on: :collection
   end
@@ -34,17 +34,23 @@ Rails.application.routes.draw do
     resource :password_policy, only: [:show, :edit, :update]
     resource :ad, only: [:show, :edit, :update]
 
-    resources :users, concerns: [:deletion, :lock_and_unlock]
+    resources :users, concerns: [:deletion, :lock_and_unlock] do
+      match :download_all, on: :collection, via: %i[get post]
+      post :reset_mfa_otp, on: :member
+    end
     resources :notice, concerns: :deletion
-    resources :groups, concerns: [:deletion, :role]
+    resources :groups, concerns: [:deletion, :role] do
+      match :download_all, on: :collection, via: %i[get post]
+      match :import, on: :collection, via: %i[get post]
+    end
     resources :sites, concerns: :deletion
     resources :roles, concerns: :deletion
     resources :max_file_sizes, concerns: :deletion
-    resources :image_resizes, concerns: :deletion
+    resource :image_resize, except: %i[new create destroy]
     resources :postal_codes, concerns: [:deletion, :export]
     resources :prefecture_codes, concerns: [:deletion, :export]
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
-    resources :mail_logs, concerns: :deletion, only: [ :index, :show, :delete, :destroy ] do
+    resources :mail_logs, concerns: :deletion, only: [ :index, :show, :destroy ] do
       get :decode, on: :member
       put :decode, on: :member, action: :commit_decode
     end
@@ -59,6 +65,7 @@ Rails.application.routes.draw do
         match :show, on: :member, via: [:get, :post, :put, :delete]
       end
       resource :app_log, only: [:show]
+      resource :certificate, only: [:show, :update]
     end
 
     namespace "apis" do
@@ -96,6 +103,7 @@ Rails.application.routes.draw do
       end
       resources :environments, concerns: :deletion
       resources :oauth2_applications, concerns: :deletion
+      resource :setting, only: [:show, :edit, :update]
     end
   end
 

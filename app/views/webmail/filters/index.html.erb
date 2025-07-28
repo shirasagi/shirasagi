@@ -9,12 +9,12 @@
 <% end %>
 
 <% @index_meta = proc do |item| %>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="state"><%= item.label :state %></span>
   <span class="order"><%= item.order %></span>
   <span class="summary"><%= item.conditions_summary.first %></span>
   <% if item.filter_errors.present? %>
-    <span class="webmail-category-label webmail-error"><%= item.filter_errors.first.truncate(60) %></span>
+    <span class="webmail-category-label webmail-error"><%= ss_truncate(item.filter_errors.first, length: 60) %></span>
   <% end %>
 <% end %>
 

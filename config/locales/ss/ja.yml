@@ -17,10 +17,14 @@ ja:
     export_log: エクスポートログ
     login: ログイン
     logout: ログアウト
+    menu: メニュー
     module: モジュール
     operation: 操作
+    organization: 組織
+    qr_code: QRコード
     regexp: 正規表現
     resize_image: 画像リサイズ
+    no_resize_image: 画像リサイズしない
     role: ロール
     role_setting: ロール一括設定
     required: 必須入力
@@ -36,6 +40,10 @@ ja:
     quota: 容量
     encoding: 文字コード
     text_zoom: 文字サイズ
+    font_size:
+      small: 小さく
+      medium: 標準
+      large: 大きく
     default_here_label: "詳細はこちら⇒"
     dash: ー
     wave_dash: ～
@@ -46,6 +54,7 @@ ja:
     replace: 差し替え
     before_replace: 差し替え前
     after_replace: 差し替え後
+    unused_file: 未使用
     broken_link: リンク切れ
     auto_reload: 自動更新
     quality: 画質
@@ -55,6 +64,24 @@ ja:
     large_file_upload: 大容量アップロード
     upload_status: アップロード状況
     under_maintenance_mode: 現在メンテナンス中です。
+    pagination: ページネーション
+    hours: 時間
+    minutes: 分
+    remark: 備考
+    before: 前
+    after: 後
+    time: 時間
+    fiscal_year: 年度
+    test_deliver: テスト配信
+    target: 対象
+    unlimited: 制限無し
+    mfa: 多要素認証
+    mfa_otp: ワンタイムパスワード
+    mfa_otp_enabled_at: "%{time}に有効化されました。"
+    mfa_otp_not_enabled_yet: "有効化されていません。"
+    system_operation: "-- システムによる操作 --"
+    upload_or_select_from_list: ファイルアップロードまたは一覧から選択
+    auto_resizing_label: "%{size}（システム設定）"
 
     views:
       login/login:
@@ -62,12 +89,16 @@ ja:
         password: パスワード
         organization_uid: 職員番号またはメールアドレス
       index:
+        created: "作成日時：%{created}"
         updated: "更新日時：%{updated}"
         released: "公開日時：%{released}"
         approved: "承認日時：%{approved}"
         reserved: "予約日時：%{time}"
         delivered: "配信日時：%{time}"
         term: "期間：%{term}"
+        openrate: "開封率：%{openrate}"
+        expiration_date: "期限切れ日時：%{expiration_date}"
+        close_date: "公開終了日: "
       oauth2/application:
         header:
           name: アプリケーション種別
@@ -78,12 +109,17 @@ ja:
         service:
           name: サービス
           text: OAuth 2.0 サービス・アプリケーションを作成します。サーバー間での認証を有効にします。
+      line:
+        test_deliver:
+          - テストメンバー宛に本文を配信します。
+          - 配信するボタンを押下するとテスト配信処理が開始されます。
     navi:
       readable: 閲覧一覧
       editable: 管理一覧
       unseen: 未読一覧
       seen: 既読一覧
       trash: ゴミ箱
+      calendar: カレンダー
     links:
       add: 追加する
       cms: サイト管理
@@ -150,7 +186,17 @@ ja:
       copy_email_address: メールアドレスをコピー
       closed_save: 非公開にする
       edit_password: パスワード変更
+      registration: 登録する
+      approve: 承認する
+      remand: 差し戻し
+      prev: 前へ
+      next: 次へ
+      update: 更新する
+      open_in_new_tab: 別タブで開く
+      navi_open: サイドメニューを開く
+      navi_close: サイドメニューを閉じる
     buttons:
+      answer: 回答
       save: 保存
       saving: 保存中
       new: 新規作成
@@ -219,6 +265,22 @@ ja:
       file_name_order: 名前順
       file_upload_order: アップロード順
       make_them_closed: 非公開にする
+      update: 更新
+      prev: 前
+      next: 次
+      simple: 簡易
+      advanced: 詳細
+      match_all: すべての条件に一致
+      match_any_of: いずれかの条件に一致
+      include_all_of: すべてを含む
+      include_any_of: いずれかを含む
+      include_none_of: いずれも含まない
+      decide: 決定
+      reset_mfa_otp: ワンタイムパスワードの初期化
+      select_from_list: 一覧から選択
+      select_files: ファイル選択
+      cancel_upload: アップロード取消
+      do_access_to_unreliable_site: 外部サイトへ進む
     confirm:
       change_state: 公開状態を変更してよろしいですか？
       delete: 削除してよろしいですか？
@@ -245,28 +307,44 @@ ja:
       delete_file_histories: ファイル履歴を削除してもよろしいですか？
       contains_url_expect: このページにリンクを貼っているページがあるため、処理を中断します。貼っているリンクを全て解除してから操作を続行してください。
       contains_links_in_file: このページに対して、リンクを貼っている他のページがあるため削除できません
+      contains_links_in_file_close: このページに対して、リンクを貼っている他のページがあるため非公開にできません
       contains_links_in_file_ignoring_alert: 被リンクを確認の上、チェックボックスをクリックして削除してください。
+      contains_links_in_file_ignoring_alert_close: 被リンクを確認の上、チェックボックスをクリックして非公開にしてください。
       not_contains_links_in_file: 被リンクがないので削除できます。
       target_to_delete: 削除対象の確認
       target_to_public: 公開対象の確認
       target_to_closed: 非公開対象の確認
+      approve: 承認してよろしいですか？
+      test_deliver: テスト配信を開始してよろしいですか？
+      resume_editing: 自動保存された内容があります。編集を直前から再開しますか？
+      reset_mfa_otp: ワンタイムパスワードを初期化しますが、よろしいですか？
+      unable_to_delete_due_to_branch_page: 差し替えページが作成されているため削除できません。
+      not_allowed_to_publish: このページを公開することは許可されていません
+      not_allowed_to_close: このページを非公開にすることは許可されていません
+      submit_image_canvas: 画像のリサイズを確定するにはツールバーの ✓ をクリックしてください。
+
     notice:
       saved: 保存しました。
+      not_saved_successfully: 正常に保存できませんでした。
       deleted: 削除しました。
       unable_to_delete: '%{items} を削除できませんでした。'
       changed: 変更しました。
       unable_to_change: '%{items} を変更できませんでした。'
       copied: 複製しました。
       imported: インポートしました。
+      approved: 承認しました。
+      answered: 回答しました。
       started_import: インポートを開始しました。
+      started_export: エクスポートを開始しました。
       started_upload: アップロードを開始しました。
       started_deliver: 配信を開始しました。
       started_test_deliver: テスト配信を開始しました。
       started_apply: 反映処理を開始しました。
+      started_purge: 削除処理を開始しました。
       sent: 送信しました。
       posted: 投稿しました。
       initialized: 初期化しました。
-      file_droppable: ファイルをドロップすることでアップロードできます。
+      file_droppable: ここにファイルをドロップすることでアップロードできます。
       uploading: アップロードしています。
       lock_user_all: 利用を停止しました。
       unlock_user_all: 利用停止を解除しました。
@@ -296,6 +374,12 @@ ja:
         - "サーバ設定でファイルのアップロード容量の上限が %{human_size} に設定されています。"
         - これを超える制限サイズを設定しても有効に機能しません。
         - サーバ設定の変更を希望される場合はシステム管理者にお問い合わせください。
+      updated: 更新しました。
+      ordered_by_file_name_order: 名前順で並び変えました。
+      ordered_by_file_upload_order: アップロード順で並び変えました。
+      reset_mfa_otp: ワンタイムパスワードを初期化しました。
+      wait_to_upload: アップロードの待機中。
+      finished_uploading: アップロードしました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。
@@ -306,13 +390,16 @@ ja:
       ie_browser: ご利用のブラウザ（IE）では大容量アップロードを実行できません。他のブラウザ（Google Chrome等）をご利用ください。
     warning:
       initial_password: 初期パスワードを変更してください。
-      session_timeout: セッションの有効期限が切れました。
+      session_timeout: |-
+        長時間操作されていなかったため、セキュリティの都合上システムから自動でログアウトしました。
+        このメッセージを閉じるとログイン画面に戻りますので、再度システムへログインをして作業を再開してください。
       password_expired: パスワードの有効期限が切れました。パスワードを変更してください。
       password_neary_expired: もうすぐパスワードの有効期限が切れます。パスワードを変更してください。
     errors:
       import:
         blank_file: ファイルを入力してください。
         invalid_file_type: 不正なファイル形式です。
+      failed_to_resume_editing: 編集の再開に失敗しました。
     apis:
       groups:
         index: グループを選択する
@@ -400,6 +487,9 @@ ja:
         768x1024: 768x1024 (XGA縦)
         1280x720: 1280x720 (HD横)
         720x1280: 720x1280 (HD縦)
+        380x380: 380x380 (3カラムレイアウトに最適)
+        580x580: 580x580 (2カラムレイアウトに最適)
+        1200x1200: 1200x1200 (一般的なページに最適)
       text_type:
         plain: テキスト形式
         markdown: Markdown形式
@@ -467,6 +557,8 @@ ja:
         zoom_in: '+'
         zoom_out: '-'
         reset: 標準
+        smaller: 小さく
+        larger: 大きく
       datetime_unit:
         day: 日
         week: 週
@@ -514,6 +606,27 @@ ja:
           end_with: が次で終わる
           include_any_of: が次を含む
           include_none_of: が次を含まない
+      lang:
+        ja: 日本語
+        en: English (Experimental)
+      link_target:
+        _self: 同じタブで開く
+        _blank: 新しいタブで開く
+      user_type:
+        sns: SNSユーザー
+        ldap: LDAPユーザー
+        sso: SSOユーザー
+      mfa_use:
+        always: 使用する
+        untrusted: アクセス元が信頼できない場合に使用する
+        none: 使用しない
+      logo_application_link:
+        mypage: "マイページ"
+        portal: "ポータル"
+      show_google_maps_search_in_view:
+        hide: 非表示
+        show_first: 先頭1件のみ表示
+        show_all: 全て表示
 
     tasks:
       started: 開始しました。
@@ -534,6 +647,13 @@ ja:
         head: お探しのページは見つかりません
         body: お探しのページは見つかりませんでした。<br>一時的にアクセスできない状態になっているか、URLが変更・削除されたのかもしれません。
 
+    swiper_slide:
+      first_slide_message: "最初のスライド"
+      last_slide_message: "最後のスライド"
+      prev_slide_message: "前のスライド"
+      next_slide_message: "次のスライド"
+      pagination_bullet_message: "{{index}}番目のスライドへ移動"
+
   modules:
     addons:
       ss/body: 本文
@@ -545,31 +665,37 @@ ja:
       ss/kana_setting: かな設定
       ss/open_graph_setting: OpenGraph設定
       ss/facebook_setting: Facebook設定
-      ss/twitter_setting: Twitter設定
+      ss/twitter_setting: X(旧Twitter)設定
       ss/line_setting: LINE設定
       ss/kintone_setting: kintone設定
       ss/approve_setting: 承認設定
       ss/editor_setting: エディタ設定
       ss/mail_setting: メール設定
       ss/trash_setting: ゴミ箱設定
-      ss/link_file: ファイル
       ss/notification/reply:
         discussion: 電子会議室
       ss/elasticsearch/site_setting: サイト内検索設定
       ss/translate/site_setting: 自動翻訳
       ss/site_usage: 使用量
-      ss/logo_setting: ロゴ設定
       ss/release: 公開設定
       ss/generate_lock: 書き出し停止
       ss/partner_site: 提携サイト設定
       ss/inquiry_setting: お問い合わせフォーム設定
+      ss/workflow_setting: ワークフロー設定
       ss/maintenance_mode: メンテナンスモード
       ss/oauth2/sys_permission: システム権限
       ss/oauth2/cms_permission: CMS権限
       ss/oauth2/gws_permission: グループウェア権限
       ss/oauth2/webmail_permission: メール権限
+      ss/locale_setting: 言語設定
+      ss/mfa/user_setting: MFA設定
+      ss/check_links_setting: メール通知設定
 
   activemodel:
+    errors:
+      models:
+        ss/password_update_service:
+          ldap_password_modify_error: "LDAPパスワードの変更に失敗しました。"
     attributes:
       ss/download_param:
         encoding: 文字コード
@@ -579,6 +705,11 @@ ja:
         new_password: 新しいパスワード
         new_password_again: 新しいパスワード（入力確認）
         old_password: 現在のパスワード
+      ss/temp_file_creator:
+        in_file: ファイル
+        name: ファイル名
+        filename: ファイル名（英数）
+        resizing: リサイズ
 
   mongoid:
     models:
@@ -604,6 +735,7 @@ ja:
       ss/oauth2/application/base: OAuthアプリ
       ss/oauth2/application/confidential: クライアント
       ss/oauth2/application/service: サービス
+      ss/link_item: リンク項目
     errors:
       models:
         ss/model/group:
@@ -618,6 +750,7 @@ ja:
           disallow_datetime_by_system: の日時はシステムにより許可されていません。より短い日時を入力してください。
       messages:
         not_selected: を選択してください。
+        mfa_otp_code_verification_is_failed: 入力された確認コードが正しくありません。認証アプリに表示されている6桁の数値をよく確認の上、もう一度入力してください。
     attributes:
       ss/document:
         id: id
@@ -646,9 +779,6 @@ ja:
         group_ids: グループ
         domains_with_subdir: サブディレクトリを含めたドメイン
         upload_policy: アップロード制限
-        maintenance_mode: メンテナンスモード
-        maint_remark: メンテナンス備考
-        maint_excluded_user_ids: 除外ユーザー
       ss/model/user:
         name: 氏名
         kana: カナ
@@ -672,8 +802,6 @@ ja:
         webmail_roles: WEBMAILロール
         webmail_role_ids: WEBMAILロール
         type: ユーザータイプ
-        sns: SNSユーザー
-        ldap: LDAPユーザー
         account_start_date: 有効期限（開始）
         account_expiration_date: 有効期限（終了）
         initial_password_warning: 初期パスワード警告
@@ -685,7 +813,6 @@ ja:
         organization_id: 所属組織
         organization_uid: 職員番号
         switch_user_id: 切り替えユーザー
-        login_roles: ログイン種別
         last_loggedin: 最終ログイン日時
       ss/model/user_title:
         code: 役職コード
@@ -717,6 +844,7 @@ ja:
         domains: ドメイン
         gws_use: グループウェアの使用
         upload_policy: アップロード制限
+        path_id: 書き出しパスID
       ss/user_group_history:
         created: 異動日時
         cms_site_id: CMSサイト
@@ -737,6 +865,7 @@ ja:
         current_count: 処理件数
         logs: ログ
         segment: セグメント
+        log_sequence: シーケンス
       ss/model/file:
         in_file: ファイル
         in_files: ファイル
@@ -755,7 +884,6 @@ ja:
         site_id: サイト
       ss/model/role:
         name: ロール名
-        permission_level: 権限レベル
         permissions: 権限設定
       ss/model/address:
         member_id: ユーザー
@@ -794,7 +922,10 @@ ja:
         map_api: 地図API
         map_api_key: APIキー
         map_api_layer: 地図レイヤー
+        map_header_text: ヘッダーテキスト
         show_google_maps_search: Googleマップへのリンク
+        show_google_maps_search_in_marker: マーカー内
+        show_google_maps_search_in_view: 詳細画面
         map_api_mypage: 管理画面での地図表示
         map_center: 地図の中心座標
         map_max_number_of_markers: 最大地点数
@@ -811,10 +942,10 @@ ja:
         twitter_card: カード形式
         twitter_username: ユーザー名
         twitter_default_image_url: 既定の画像URL
-        twitter_consumer_key: コンシューマーキー
-        twitter_consumer_secret: コンシューマーシークレット
-        twitter_access_token: アクセストークン
-        twitter_access_token_secret: トークンシークレット
+        twitter_consumer_key: X API Key
+        twitter_consumer_secret: X API Key Secret
+        twitter_access_token: X Access token
+        twitter_access_token_secret: X Access Token secret
       ss/addon/line_setting:
         line_poster_state: ページ連携
         line_channel_secret: チャネルシークレット
@@ -824,7 +955,7 @@ ja:
         kintone_user: Basic認証ユーザー
         kintone_password: Basic認証パスワード
       ss/addon/site_auto_post_setting:
-        site_twitter_auto_post: Twitter自動投稿
+        site_twitter_auto_post: X(旧Twitter)自動投稿
         site_edit_auto_post: 編集時に自動投稿
       ss/addon/file_setting:
         file_resizing: 添付ファイルリサイズ
@@ -861,9 +992,11 @@ ja:
         order: 並び順
         state: 状態
       ss/model/image_resize:
-        max_width: 横幅
-        max_height: 縦幅
+        max_width: 最大の横幅
+        max_height: 最大の縦幅
+        size: バイト数
         quality: 画質
+        state: 状態
       ss/model/postal_code:
         code: 郵便番号
         prefecture: 都道府県
@@ -900,7 +1033,6 @@ ja:
       ss/model/editor_setting:
         color_button: 文字色変更ボタン
         editor_css_path: スタイルシートパス
-        syntax_check: アクセシビリティチェック
       ss/model/mail_setting:
         sender_name: 差出人名
         sender_email: 差出人メールアドレス
@@ -925,7 +1057,7 @@ ja:
         elasticsearch_deny: 除外パス
         elasticsearch_site_ids: サイト
         elasticsearch_indexes: インデックス
-        elasticsearch_outside: 外部サイト検索
+        elasticsearch_outside: 外部サイト検索(Fess)
       ss/addon/translate/site_setting:
         translate_state: ステータス
         translate_source_id: 元言語コード
@@ -934,6 +1066,7 @@ ja:
         translate_mock_api_request_count: APIリクエスト数
         translate_mock_api_request_word_count: APIリクエスト文字数
         translate_microsoft_api_key: "サブスクリプション キー"
+        translate_microsoft_api_region: リージョン
         translate_microsoft_api_request_count: APIリクエスト数
         translate_microsoft_api_request_word_count: APIリクエスト文字数
         translate_microsoft_api_request_metered_usage: "x-metered-usage"
@@ -943,6 +1076,8 @@ ja:
         translate_google_api_request_word_count: APIリクエスト文字数
         translate_api_request_word_limit: 文字数上限
         translate_api_limit_exceeded_html: 制限超過時の表示HTML
+        translate_referer_restriction: リファラーによる制限
+        translate_access_log_threshold: 履歴保持期間
       ss/addon/source_cleaner/site_setting:
         source_cleaner_unwrap_tag_state: 不要なタグの削除
         source_cleaner_remove_tag_state: 空のタグの削除
@@ -957,6 +1092,7 @@ ja:
         usage_calculated_at: 使用量計算日時
       ss/model/logo_setting:
         logo_application_name: アプリケーション名
+        logo_application_link: ロゴのリンク
         logo_application_image_id: ロゴ画像
         logo_application_template: ロゴHTML
       ss/addon/release:
@@ -971,6 +1107,9 @@ ja:
         partner_site_ids: 提携サイト
       ss/addon/inquiry_setting:
         inquiry_form_id: お問い合わせフォーム
+      ss/addon/check_links_setting:
+        check_links_email: 通知メールアドレス
+        check_links_message_format: フォーマット
       ss/oauth2/application/base:
         name: 名前
         state: ステータス
@@ -983,7 +1122,34 @@ ja:
         public_key_type: 公開鍵種別
         public_key: 公開鍵
         public_key_encrypted: 公開鍵
-
+      ss/addon/locale_setting:
+        lang: 言語
+        timezone: タイムゾーン
+      ss/addon/workflow_setting:
+        workflow_my_group: 自所属の表示
+      ss/api_token:
+        name: 名前
+        jwt_id: JWT ID (jti)
+        expiration_date: 期限切れ日時
+        audience_id: 利用ユーザー
+        jwt: APIトークン
+      ss/mfa/site_setting:
+        mfa_otp_use_state: ワンタイムパスワード
+        mfa_trusted_ip_addresses: 信頼できるアクセス元
+      ss/addon/mfa/user_setting:
+        mfa_otp_secret: ワンタイムパスワードシークレット
+        mfa_otp_enabled_at: ワンタイムパスワード有効化日時
+      ss/addon/maintenance_mode:
+        maintenance_mode: メンテナンスモード
+        maint_remark: メンテナンスお知らせ
+        maint_excluded_user_ids: 除外ユーザー
+      ss/link_item:
+        name: 表示名
+        url: URL
+        target: ターゲット
+        file: 画像
+        file_id: 画像
+        state: 状態
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1059,6 +1225,8 @@ ja:
         - 既定では、グループウェアを使用します。
       upload_policy:
         - ファイルアップロード時の動作を設定します。
+      path_id:
+        - 書き出しパスのIDを設定します。パスのIDとはpublic/gws/以下のフォルダー名で、英子文字と数字のみが利用できます。
     ss/document:
       title:
         - ページのタイトルに利用し、ブラウザのタイトルバーに表示されます。
@@ -1116,8 +1284,6 @@ ja:
       close_date:
         - 公開を終了する日時を指定します。
         - 指定した日時が来ると非公開になります。
-      permission_level:
-        - 編集を許可する権限レベルを指定します。
       group_ids:
         - 編集を許可するグループを選択します。
       user_ids:
@@ -1127,11 +1293,6 @@ ja:
       file_order:
         - 管理画面上でのファイルの並び順をリアルタイムで変更し、ファイルを見つけやすくします。
         - ただし、並び順は保存されません。
-      maintenance_mode:
-        - 除外ユーザーのみ操作可能になります。
-        - それ以外のユーザー操作できません。
-      maint_excluded_user_ids:
-        - メンテナンスモード時に操作することができるユーザーを選択します。
     ss/model/file:
       in_file:
         - ファイルを選択します。
@@ -1152,6 +1313,10 @@ ja:
         - 容量を超過している場合、あらかじめ設定している画質に変更されます。
         - 横幅、高さを超過している場合、収まるように縮小されます。
         - 自動リサイズをしたくない場合は、管理者に権限を付与してもらった後、左の「自動リサイズ有効」をクリックし「自動リサイズ無効」に設定してください。
+      user_file:
+        - チェックを入れるとユーザー単位でのファイルを表示します。このファイルはマイページのファイルで登録したファイルのことです。
+      cms_file:
+        - チェックを入れるとサイト内で共有されているファイルを表示します。
     ss/model/user_title:
       code: 役職コードを入力します。
       name: 役職名を入力します。
@@ -1251,8 +1416,10 @@ ja:
         - GoogleマップのAPIキーはこの項目に設定します。
       map_api_layer:
         - サイトで使用するOpenLayersのレイヤーを選択します。
+      map_header_text:
+        - ページ詳細画面の地図アドオンのヘッダーのテキストを設定できます。
       show_google_maps_search:
-        - 有効にすると、地図マーカーに「Googleマップで見る」リンクが表示されます。
+        - 有効にすると「Googleマップで見る」リンクが表示されます。
       map_api_mypage:
         - 管理画面で地図を表示するか設定します。
       map_center:
@@ -1274,7 +1441,7 @@ ja:
         - Open Graph 形式を選択します。
         - それぞれのSNSでシェアした場合の表示確認を以下のURLからできます。
         - Facebook share debugger：https://developers.facebook.com/tools/debug/sharing/
-        - Twitter Card Validator：https://cards-dev.twitter.com/validator/
+        - X(旧twitter) Card Validator：https://cards-dev.twitter.com/validator/
         - LINE Page Poker：https://poker.line.naver.jp/
       opengraph_defaul_image_url:
         - 既定の画像のURL を設定します。
@@ -1282,30 +1449,30 @@ ja:
         - ページに画像が含まれている場合、ここで設定した URL は使用されません。
     ss/addon/twitter_setting:
       twitter_poster_state:
-        - 有効にすると、ページ編集時にTwitter連携が表示されます。
+        - 有効にすると、ページ編集時にX(旧Twitter)連携が表示されます。
         - コンシューマーキーとアクセストークン、それぞれのシークレットキーを設定する必要があります。
       twitter_card:
-        - Twitter のカード形式を選択します。
-        - Twitter でどのような見え方をするかは「Twitter Card Validator（https://cards-dev.twitter.com/validator）」で確認することができます。
+        - X(旧twitter) のカード形式を選択します。
+        - X(旧twitter) でどのような見え方をするかは「X(旧twitter) Card Validator（https://cards-dev.twitter.com/validator）」で確認することができます。
       twitter_username:
-        - Twitter のユーザー名を設定します。
-        - 設定すると「Twitter Card Analytics」でアクセスを解析できるようになります。
+        - X(旧twitter) のユーザー名を設定します。
+        - 設定すると「X(旧twitter) Card Analytics」でアクセスを解析できるようになります。
       twitter_default_image_url:
         - 既定の画像のURL を設定します。
         - ページに画像が含まれていない場合、ここで設定した URL が twitter:image として使用されます。
         - ページに画像が含まれている場合、ここで設定した URL は使用されません。
       twitter_consumer_key:
-        - コンシューマーキー(APIキー, Consumer Key, API Key)を設定します。
-        - Twitterへの自動投稿に必須です。
+        - X API Keyを設定します。
+        - X への自動投稿に必須です。
       twitter_consumer_secret:
-        - コンシューマーシークレット(APIシークレット, Consumer Secret, API Secret)を設定します。
-        - Twitterへの自動投稿に必須です。
+        - X API Secretを設定します。
+        - X への自動投稿に必須です。
       twitter_access_token:
-        - アクセストークン(Access Token)を設定します。
-        - Twitterへの自動投稿に必須です。
+        - X Access Tokenを設定します。
+        - X への自動投稿に必須です。
       twitter_access_token_secret:
-        - アクセストークンシークレット(Access Token Secret)を設定します。
-        - Twitterへの自動投稿に必須です。
+        - X Access Token Secretを設定します。
+        - X への自動投稿に必須です。
     ss/addon/line_setting:
       line_poster_state:
         - 有効にすると、ページ編集時にLINE連携が表示されます。
@@ -1338,8 +1505,10 @@ ja:
       file_fs_access_restriction_env:
         - 許可する環境変数を設定します。
         -
-        - これが想定するユースケースですが、nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
-        - これらを nginx の proxy_set_header でシラサギへ伝播し、シラサギで設定内容を確認するというケースを想定しています。
+        - これが想定するユースケースですが、
+        - 1. nginx はクライアント証明書を認証すると、認証した Subject DN を $ssl_client_s_dn に、Issuer DN を $ssl_client_i_dn にセットします。
+        - 2. これらを nginx の proxy_set_header でシラサギへ伝播し、
+        - 3. シラサギで設定内容を確認するというケースを想定しています。
         -
         - "nginx の設定例:"
         - proxy_set_header X-SSL_CLIENT_S_DN \$ssl_client_s_dn
@@ -1371,20 +1540,25 @@ ja:
         - 制限の有効/無効を設定します
     ss/model/image_resize:
       max_width:
-        - 画像ファイルの横幅を設定可能です
+        - 画像の最大の横幅を設定します。
+        - ファイルアップロード時に、この設定値以下へ縮小します。
       max_height:
-        - 画像ファイルの縦幅を設定可能です
+        - 画像の最大の縦幅を設定します。
+        - ファイルアップロード時に、この設定値以下へ縮小します。
+      size:
+        - 画像ファイルのバイト数がこの設定値より大きい場合、画質を落とす処理を実行します。
+        - 画質を落としても画像のバイト数がこの設定値を超過する場合があります。
       quality:
-        - 画像ファイルの画質を0から100の間で設定可能です
-        - 最大ファイルサイズを超過した場合、画質に基づいて画像を圧縮します
-        - 画質が高い程劣化が少ないです
+        - 画像ファイルの画質を0から100の間で設定します。
+        - 画像ファイルのバイト数が「バイト数」に設定した値を超過した場合、この設定の画質に変更します。
+        - 画質が高い程劣化が少ないです。
+      state:
+        - 画像リサイズの有効/無効を設定します
     ss/model/editor_setting:
       color_button:
         - 文字色変更ボタンの表示を設定します。
       editor_css_path:
         - エディタ用スタイルシートのパスを設定します。
-      syntax_check:
-        - アクセシビリティチェックの有効無効を設定します。
 
     ss/model/mail_setting:
       sender_name:
@@ -1396,9 +1570,16 @@ ja:
         - システムから送信されるメールの既定の署名を入力します。
 
     ss/addon/elasticsearch/site_setting:
-      elasticsearch_deny:
-        - 検索対象から除外するページのパスを入力します。
-        - 改行区切りで入力します。
+      elasticsearch_deny: |-
+        検索対象から除外するページのパスを入力します。
+        改行区切りで入力します。
+
+        例：ページのURLを指定して除外
+        docs/123.html
+        404.html
+
+        変更後全文検索インデックスの更新が必要です。
+        https://shirasagi.github.io/updation/elasticsearch_index.html
       elasticsearch_site_ids:
         - 検索対象サイトを設定します。
         - 設定したサイトのページが表示されるようになります。
@@ -1408,6 +1589,7 @@ ja:
       elasticsearch_outside:
         - 外部サイト検索を設定します。
         - 検索フォームにプルダウンが表示され、外部サイト検索ができるようになります。
+        - Fess のインストールが必要です。
 
     ss/addon/source_cleaner/site_setting:
       source_cleaner_unwrap_tag_state:
@@ -1433,6 +1615,16 @@ ja:
       inquiry_form_id:
         - グループ共通のお問い合わせフォームを設定します。
 
+    ss/addon/check_links_setting:
+      check_links_email:
+        - メールアドレスを設定すると、リンクチェック実行後にエラー結果を通知します。
+      check_links_message_format:
+        - エラー結果をメール通知する際のフォーマットを選択します。
+
+    ss/addon/workflow_setting:
+      workflow_my_group:
+        - ページの公開申請時「自所属」を表示するか設定します。
+
     ss:
       contrast_ratio:
         - 7以上でAAA、4.5以上でAA
@@ -1456,7 +1648,46 @@ ja:
         -
         - public_key.pem が公開鍵ですので、この中身をペーストしてください。
 
+    ss/addon/locale_setting:
+      lang:
+        - 言語を選択してください。
+      timezone:
+        - タイムゾーンを選択してください。
+
+    ss/mfa/site_setting:
+      mfa_otp_use_state:
+        - ワンタイムパスワードを使用するかどうかを選択します。
+        - ""
+        - "・使用しない: ワンタイムパスワードを使用しません。"
+        - "・使用する: ワンタイムパスワードを使用します。"
+        - "・アクセス元が信頼できない場合に使用する: アクセス元が信頼できない場合にワンタイムパスワードを使用します。信頼できるアクセス元を下の「信頼できるアクセス元」に設定します。"
+        - ""
+        - ワンタイムパスワードはフォーム認証時に適用されます。外部の認証サーバーからのシングル・サイン・オン時には適用されません。外部の認証サーバー利用時にワンタイムパスワードを利用したい場合、外部の認証サーバー側をワンタイムパスワードを用いるように設定してください。
+      mfa_trusted_ip_addresses:
+        - 信頼できるアクセス元としてIPアドレスを設定します。ワンタイムパスワードの使用に「アクセス元が信頼できない場合に使用する」を選択した場合にアクセス元が信頼できるかどうかの判定に使用します。
+        - 複数の IP アドレスを設定する場合は、改行で区切って設定します。
+        - "\"192.168.10.0/24\" や \"192.168.10.0/255.255.255.0\" のようなネットワークアドレスも設定することができます。"
+
+    ss/addon/maintenance_mode:
+      maintenance_mode:
+        - メンテナンスモードを有効にするかどうかを選択します。
+        -
+        - メンテナンスモードを有効にすると、除外ユーザーに設定されたユーザーのみ操作可能になります。
+        - それ以外のユーザーでは操作することができなくなります。
+      maint_remark:
+        - メンテナンスモードの有効時、除外ユーザー以外がサイトへアクセスすると、ここで設定したメンテナンスお知らせが表示されます。
+      maint_excluded_user_ids:
+        - メンテナンスモード時に操作することができるユーザーを選択します。
+        - 除外ユーザー以外のユーザーでは操作することができなくなります。
+
   job:
     models:
-      ss/public_file_remover_job: 公開済みファイル削除ジョブ
-      ss/task_sweep_job: タスク削除ジョブ
+      ss/public_file_remover_job: システム/公開済みファイル削除ジョブ
+      ss/task_sweep_job: システム/タスク削除ジョブ
+      ss/delete_empty_directories_job: システム/空ディレクトリ削除ジョブ
+      ss/delete_download_files_job: システム/一時ファイル削除（エクスポート）ジョブ
+      ss/delete_access_tokens_job: システム/アクセストークン掃除ジョブ
+      ss/delete_sso_tokens_job: システム/SSOトークン掃除ジョブ
+      ss/delete_ss_o_tokens_job: システム/SSOトークン掃除ジョブ
+      ss/cleanup_file_store_cache_job: システム/ファイルキャッシュ掃除ジョブ
+      ss/remove_site_job: システム/サイト削除

@@ -13,7 +13,7 @@ class SS::Migration20191205000000
       end
 
       if modified
-        site.save
+        site.without_record_timestamps { site.save }
       end
     end
   end

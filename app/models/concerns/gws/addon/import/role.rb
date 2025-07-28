@@ -13,19 +13,20 @@ module Gws::Addon::Import
 
     module ClassMethods
       def csv_headers
-        %w(id name permissions permission_level)
+        %w(id name permissions)
       end
 
       def to_csv
-        CSV.generate do |data|
-          data << csv_headers.map { |k| t k }
-          criteria.each do |item|
-            line = []
-            line << item.id
-            line << item.name
-            line << item.localized_permissions.join("\n")
-            line << item.permission_level
-            data << line
+        I18n.with_locale(I18n.default_locale) do
+          CSV.generate do |data|
+            data << csv_headers.map { |k| t k }
+            criteria.each do |item|
+              line = []
+              line << item.id
+              line << item.name
+              line << item.localized_permissions.join("\n")
+              data << line
+            end
           end
         end
       end
@@ -36,8 +37,10 @@ module Gws::Addon::Import
       validate_import
       return false unless errors.empty?
 
-      SS::Csv.foreach_row(in_file, headers: true) do |row, i|
-        update_row(row, i + 2)
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.foreach_row(in_file, headers: true) do |row, i|
+          update_row(row, i + 2)
+        end
       end
       return errors.empty?
     end
@@ -85,7 +88,6 @@ module Gws::Addon::Import
       id               = row[t("id")].to_s.strip
       name             = row[t("name")].to_s.strip
       permissions      = row[t("permissions")].to_s.strip.split("\n")
-      permission_level = row[t("permission_level")].to_s.strip.to_i
 
       if id.present?
         item = self.class.unscoped.site(cur_site).where(id: id).first
@@ -105,7 +107,6 @@ module Gws::Addon::Import
 
       item.name             = name
       item.permissions      = item.normalized_permissions(permissions)
-      item.permission_level = (permission_level == 0) ? 1 : permission_level
       item.site_id          = cur_site.id
 
       if item.save

@@ -8,7 +8,6 @@ Rails.application.routes.draw do
   end
 
   concern :change_state do
-    get :state, on: :member
     put :change_state_all, on: :collection, path: ''
   end
 
@@ -66,7 +65,12 @@ Rails.application.routes.draw do
     resources :pages, concerns: [
       :deletion, :copy, :move, :lock, :download_all, :import, :command,
       :opendata_ref, :contains_urls, :tag, :michecker, :change_state
-    ]
+    ] do
+      post :resume_new, on: :collection
+      post :resume_edit, on: :member
+      put :publish_all, on: :collection
+      put :close_all, on: :collection
+    end
     resources :form_exports, only: [:index]
     resources :map_searches, only: [:index]
     resources :searches, concerns: :deletion
@@ -84,6 +88,7 @@ Rails.application.routes.draw do
   node "article" do
     get "page/(index.:format)" => "public#index", cell: "nodes/page"
     get "page/rss.xml" => "public#rss", cell: "nodes/page", format: "xml"
+    get "page/rss-recent.xml" => "public#rss_recent", cell: "nodes/page", format: "xml"
     get "form_export/:filename.:format" => "public#index", cell: "nodes/form_export"
     get "map_search/(index.:format)" => "public#index", cell: "nodes/map_search"
     get "map_search/(map.:format)" => "public#map", cell: "nodes/map_search"

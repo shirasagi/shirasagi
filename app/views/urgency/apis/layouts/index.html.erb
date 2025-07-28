@@ -2,9 +2,11 @@
 
 <div class="search-ui-form">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
-    <%= f.text_field :name, value: params[:s].try(:[], :name) %>
     <%= hidden_field_tag :single, params[:single] if params[:single].present? %>
-    <%= f.submit t("urgency.apis.layouts.search"), class: :btn %>
+    <div class="input-group">
+      <%= f.text_field :name, value: params[:s].try(:[], :name), placeholder: t("ss.keyword") %>
+      <%= f.submit t("urgency.apis.layouts.search"), class: :btn %>
+    </div>
   <% end %>
 </div>
 
@@ -29,7 +31,7 @@
       <% end %>
       <td class="name"><%= link_to item.name, "#", class: @multi ? "select-item" : "select-single-item" %></td>
       <td class="filename"><%= item.filename %></td>
-      <td class="updated"><%= tryb { item.updated.strftime("%Y/%m/%d %H:%M") } %></td>
+      <td class="updated"><%= ss_time_tag item.updated %></td>
     </tr>
   <% end %>
   </tbody>

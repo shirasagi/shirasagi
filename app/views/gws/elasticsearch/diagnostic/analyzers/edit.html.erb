@@ -1,0 +1,12 @@
+<%= tag.turbo_frame id: "turbo-frame" do %>
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "addon-setting", head: "Analyze", toggle: true } do %>
+      <%= render "form_setting", addon: { id: "addon-setting", head: "Analyze", toggle: true } %>
+    <% end %>
+    <% if @result %>
+      <%= render "ss/crud/addon", addon: { id: "addon-result", head: "Result", toggle: true } do %>
+        <%= render "show_result", addon: { id: "addon-result", head: "Result", toggle: true } %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

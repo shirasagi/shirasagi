@@ -48,20 +48,22 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
 
       wait_for_download
 
-      csv = ::CSV.open(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
-      csv_table = csv.read
-      expect(csv_table.headers.length).to be > 10
-      expect(csv_table.headers).to include(*expected_basic_headers)
-      expect(csv_table.headers).to include("#{facility.name}/#{column0.name}")
-      expect(csv_table.headers).to include("#{facility.name}/#{column1.name}")
-      expect(csv_table.length).to eq 2
+      I18n.with_locale(I18n.default_locale) do
+        csv = ::CSV.open(downloads.first, headers: true, encoding: 'SJIS:UTF-8')
+        csv_table = csv.read
+        expect(csv_table.headers.length).to be > 10
+        expect(csv_table.headers).to include(*expected_basic_headers)
+        expect(csv_table.headers).to include("#{facility.name}/#{column0.name}")
+        expect(csv_table.headers).to include("#{facility.name}/#{column1.name}")
+        expect(csv_table.length).to eq 2
 
-      # start_at order
-      expect(csv_table[0][Gws::Schedule::Plan.t(:name)]).to eq plan0.name
+        # start_at order
+        expect(csv_table[0][Gws::Schedule::Plan.t(:name)]).to eq plan0.name
 
-      expect(csv_table[1][Gws::Schedule::Plan.t(:name)]).to eq plan1.name
-      expect(csv_table[1]["#{facility.name}/#{column0.name}"]).to eq plan1.facility_column_values[0].value
-      expect(csv_table[1]["#{facility.name}/#{column1.name}"]).to eq plan1.facility_column_values[1].value
+        expect(csv_table[1][Gws::Schedule::Plan.t(:name)]).to eq plan1.name
+        expect(csv_table[1]["#{facility.name}/#{column0.name}"]).to eq plan1.facility_column_values[0].value
+        expect(csv_table[1]["#{facility.name}/#{column1.name}"]).to eq plan1.facility_column_values[1].value
+      end
     end
   end
 end

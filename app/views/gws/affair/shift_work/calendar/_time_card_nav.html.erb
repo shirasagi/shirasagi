@@ -1,0 +1,15 @@
+<%= jquery do %>
+var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH', group_id: @group.id }).to_json %>;
+$('.nav-menu select[name="year_month"]').on('change', function() {
+  var ym = $('.nav-menu select[name="year_month"]').val();
+  location.href = baseUrl.replace(':YEAR_MONTH', ym);
+});
+<% end %>
+
+<div class="nav-group" style="padding-bottom: 10px;">
+  <nav class="nav-menu">
+    <%= select_tag(:year_month, options_for_select(year_month_options, @cur_month.strftime('%Y%m'))) %>
+    <%= link_to(t('gws/attendance.prev_month'), prev_month, class: :btn) if prev_month %>
+    <%= link_to(t('gws/attendance.next_month'), next_month, class: :btn) if next_month %>
+  </nav>
+</div>

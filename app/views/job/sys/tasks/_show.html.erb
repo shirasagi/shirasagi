@@ -12,7 +12,7 @@
       type: "POST",
       url: "<%= url_for(action: :reset_state, format: :json) %>",
       success: function(data) {
-        $(".state").html(data.state)
+        $(".state").text(data.state)
         if ($(".state").html().match(/(ready|running)/)) {
           $(".reset-state").show();
         } else {
@@ -64,6 +64,7 @@
   <dt><%= @model.t :current_count %></dt>
   <dd><%= @item.current_count %></dd>
 
+  <% if false %>
   <dt><%= @model.t :logs %></dt>
   <dd>
     <%= t('job.log_notice', count: limit) %>
@@ -71,6 +72,73 @@
     <% if ::File.exist?(@item.log_file_path) %>
       <%= link_to(t('job.download_log'), { action: :download }, { class: :btn }) %>
     <% end %>
+  </dd>
+  <% end %>
+</dl>
+
+<dl class="see">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <table class="index" style="display: grid; grid-template-columns: auto 1fr auto;">
+      <tbody style="display: contents;">
+      <% @item.log_items.each_with_index do |log, index| %>
+        <tr data-sequence="<%= log.log_sequence %>" style="display: contents;">
+          <td>
+            <%= index + 1 %>
+          </td>
+          <td>
+            <details<% if index == 0 %> open<% end %>>
+              <summary><%= @model.t :logs %></summary>
+              <div>
+                <%= t('job.log_notice', count: limit) %>
+                <%= text_area_tag :logs, safe_join(log.head_logs(limit), "\n"), readonly: true, style: "height: 100px" %>
+                <%=
+                  if ::File.exist?(log.log_file_path)
+                    link_to(t('job.download_log'), { action: :download, log_sequence: log.log_sequence }, { class: :btn })
+                  end
+                %>
+                <%=
+                  if ::File.exist?(log.perf_log_file_path)
+                    link = link_to(t('job.download_perf_log'), { action: :download_perf, log_sequence: log.log_sequence }, { class: [ "btn", Rails.env.development? ? nil : "hide" ] }) rescue nil
+                    if link
+                      link
+                    end
+                  end
+                %>
+              </div>
+            </details>
+          </td>
+          <td>
+            <details<% if index == 0 %> open<% end %>>
+              <summary><%= t("ss.links.show") %></summary>
+              <div>
+                <%=
+                  if log.meta && log.meta["process_id"]
+                    "#{log.meta["process_id"]} @ #{log.meta["hostname"]}(#{log.meta["ip_address"]})"
+                  end
+                %>
+                <%=
+                  if log.meta && log.meta["session_id"]
+                    tag.div do
+                      output_buffer << tag.span(log.meta["session_id"], data: { session_id: log.meta["session_id"] })
+                      output_buffer << tag.br
+                      output_buffer << tag.span(log.meta["request_id"], data: { request_id: log.meta["request_id"] })
+                      if log.meta["method"]
+                        output_buffer << tag.br
+                        controller_action = "#{log.meta["method"]} #{log.meta["controller"]}##{log.meta["action"]}"
+                        output_buffer << tag.span(controller_action, data: { method: log.meta["method"], controller: log.meta["controller"], action: log.meta["action"] })
+                      end
+                    end
+                  end
+                %>
+                <div><%= ss_time_tag ::File.mtime(log.log_file_path).in_time_zone rescue nil %></div>
+              </div>
+            </details>
+          </td>
+        </tr>
+      <% end %>
+      </tbody>
+    </table>
   </dd>
 </dl>
 

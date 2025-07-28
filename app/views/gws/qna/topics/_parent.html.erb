@@ -3,6 +3,6 @@
 -->
 <div class="body markdown-body"><%= item.text %></div>
 <div class="meta">
-  <span class="datetime"><%= item.created.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.created %></span>
   <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
 </div>

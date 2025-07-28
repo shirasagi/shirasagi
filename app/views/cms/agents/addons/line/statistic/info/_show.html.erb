@@ -1,0 +1,26 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see">
+  <dt><%= @model.t :action %></dt>
+  <dd><%= @item.action %></dd>
+
+  <% if @item.broadcast? %>
+    <dt><%= @model.t :request_id %></dt>
+    <dd><%= @item.request_id %></dd>
+  <% else %>
+    <dt><%= @model.t :aggregation_unit %></dt>
+    <dd><%= @item.aggregation_unit %></dd>
+
+    <dt><%= @model.t :aggregation_units_by_month %></dt>
+    <dd><%= @item.aggregation_units_by_month %></dd>
+  <% end %>
+
+  <dt><%= @model.t :statistics %></dt>
+  <dd>
+    <% if @item.statistics.present? %>
+      <%= text_area_tag :tatistics, JSON.pretty_generate(@item.statistics), style: "height: 200px;  margin-bottom: 12px;" %>
+    <% end %>
+  </dd>
+</dl>

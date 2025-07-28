@@ -22,6 +22,10 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
       # we have already 1 notification
       expect(SS::Notification.all.count).to eq 1
 
+      item.reload
+      save_updated = item.updated
+      save_created = item.created
+
       #
       # Create
       #
@@ -36,9 +40,11 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
         expect(find('#item_browsing_authority_all')).to be_checked
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
+      expect(item.updated).to eq save_updated
+      expect(item.created).to eq save_created
       expect(item.comments.count).to eq 1
       comment = item.comments.first
       expect(comment.text).to eq texts.join("\r\n")
@@ -65,8 +71,12 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
         choose 'item_browsing_authority_author_or_commenter'
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
+      item.reload
+      expect(item.updated).to eq save_updated
+      expect(item.created).to eq save_created
+      expect(item.comments.count).to eq 1
       comment.reload
       expect(comment.text).to eq texts2.join("\r\n")
       expect(comment.browsing_authority).to eq 'author_or_commenter'
@@ -83,12 +93,14 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.delete")
       end
 
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
+      expect(item.updated).to eq save_updated
+      expect(item.created).to eq save_created
       expect(item.comments.count).to eq 0
       expect { item.comments.find(comment.id) }.to raise_error Mongoid::Errors::DocumentNotFound
 

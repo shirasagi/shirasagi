@@ -20,12 +20,9 @@ module SS::Addon
       field :translate_api_request_word_limit, type: Integer, default: 0
       field :translate_api_limit_exceeded_html, type: String
 
-      # mock
-      field :translate_mock_api_request_count, type: Integer, default: 0
-      field :translate_mock_api_request_word_count, type: Integer, default: 0
-
       # microsoft translator text api
       field :translate_microsoft_api_key, type: String
+      field :translate_microsoft_api_region, type: String
       field :translate_microsoft_api_request_count, type: Integer, default: 0
       field :translate_microsoft_api_request_word_count, type: Integer, default: 0
       field :translate_microsoft_api_request_metered_usage, type: Integer, default: 0
@@ -35,6 +32,10 @@ module SS::Addon
       belongs_to_file :translate_google_api_credential_file, static_state: "closed"
       field :translate_google_api_request_count, type: Integer, default: 0
       field :translate_google_api_request_word_count, type: Integer, default: 0
+
+      # access log
+      field :translate_referer_restriction, type: String, default: "disabled"
+      field :translate_access_log_threshold, type: Integer, default: 60
 
       permit_params :translate_state
       permit_params :translate_source_id
@@ -47,6 +48,7 @@ module SS::Addon
       permit_params :translate_mock_api_request_word_count
 
       permit_params :translate_microsoft_api_key
+      permit_params :translate_microsoft_api_region
       permit_params :translate_microsoft_api_request_count
       permit_params :translate_microsoft_api_request_word_count
       permit_params :translate_microsoft_api_request_metered_usage
@@ -54,6 +56,9 @@ module SS::Addon
       permit_params :translate_google_api_project_id
       permit_params :translate_google_api_request_count
       permit_params :translate_google_api_request_word_count
+
+      permit_params :translate_referer_restriction
+      permit_params :translate_access_log_threshold
 
       validates :translate_api, presence: true, if: -> { translate_enabled? }
       validate :validate_translate_source, if: -> { translate_api.present? }
@@ -91,9 +96,6 @@ module SS::Addon
     public
 
     def reset_translate_api_count!
-      # mock
-      self.translate_mock_api_request_count = 0
-      self.translate_mock_api_request_word_count = 0
       # microsoft translator text api
       self.translate_microsoft_api_request_count = 0
       self.translate_microsoft_api_request_word_count = 0
@@ -119,20 +121,23 @@ module SS::Addon
       translate_state == "enabled"
     end
 
-    def translate_path(target)
-      ::File.join(path, "translate", target)
-    end
-
     def translate_location
       @translate_location ||= SS.config.translate.location
     end
 
-    def translate_path
-      ::File.join(url, translate_location)
-    end
-
     def translate_url
       ::File.join(url, translate_location, "/")
+    end
+
+    def translate_referer_restriction_options
+      [
+        [I18n.t("translate.options.referer_restriction.disabled"), "disabled"],
+        [I18n.t("translate.options.referer_restriction.enabled"), "enabled"],
+      ]
+    end
+
+    def translate_deny_no_refererr?
+      translate_referer_restriction == "enabled"
     end
 
     def find_translate_target(code)

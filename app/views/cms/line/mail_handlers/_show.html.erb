@@ -1,0 +1,22 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @model.t :filename %></dt>
+  <dd><%= @item.filename %></dd>
+
+  <dt><%= @model.t :from_conditions %></dt>
+  <dd><%=br @item.from_conditions %></dd>
+
+  <dt><%= @model.t :to_conditions %></dt>
+  <dd><%=br @item.to_conditions %></dd>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :statistic_state %></dt>
+  <dd><%= @item.label :statistic_state %></dd>
+
+  <dt><%= @model.t :handle_state %></dt>
+  <dd><%= @item.label :handle_state %></dd>
+</dl>

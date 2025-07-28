@@ -4,7 +4,6 @@ module Sns::LoginFilter
   included do
     protect_from_forgery except: :remote_login
     before_action :set_organization
-    after_action :user_logged_in, only: [:login]
     after_action :user_logged_out, only: [:logout]
     skip_before_action :verify_authenticity_token, raise: false unless SS.config.env.protect_csrf
     prepend_view_path "app/views/sns/login"
@@ -23,12 +22,12 @@ module Sns::LoginFilter
     SS.config.sns.logged_in_page
   end
 
-  def render_login(user, email_or_uid, opts = {})
+  def render_login(user, email_or_uid, **opts)
     alert = opts.delete(:alert).presence || t("sns.errors.invalid_login")
 
     if user
       opts[:session] ||= true
-      set_user user, opts
+      set_user user, **opts
 
       respond_to do |format|
         format.html { redirect(true) }
@@ -54,10 +53,6 @@ module Sns::LoginFilter
     @cur_organization = SS.current_organization = organizations.first
   end
 
-  def user_logged_in
-    @cur_user.logged_in if @cur_user
-  end
-
   def user_logged_out
     @cur_user.logged_out if @cur_user
   end
@@ -66,8 +61,8 @@ module Sns::LoginFilter
     return unless url.respond_to?(:scheme)
     return unless %w(http https).include?(url.scheme)
 
-    url.fragment = nil
-    url.query = nil
+    # url.fragment = nil
+    # url.query = nil
     url
   end
 
@@ -75,8 +70,8 @@ module Sns::LoginFilter
     back_to = params[:back_to].to_s
     return default_logged_in_path if back_to.blank?
 
-    @request_url ||= URI.parse(request.url)
-    back_to_url = URI.join(@request_url, back_to) rescue nil
+    @request_url ||= ::Addressable::URI.parse(request.url)
+    back_to_url = ::Addressable::URI.join(@request_url, back_to) rescue nil
     return default_logged_in_path if back_to_url.blank?
 
     back_to_url = normalize_url(back_to_url)
@@ -85,7 +80,68 @@ module Sns::LoginFilter
     back_to_url.to_s
   end
 
+  def login_path
+    sns_login_path
+  end
+
+  def logout_path
+    sns_logout_path
+  end
+
+  def mfa_login_path
+    sns_mfa_login_path
+  end
+
   public
+
+  def login
+    if !request.post?
+      # retrieve parameters from get parameter. this is bookmark support.
+      @item = self.user_class.new email: params[:email]
+      return render(template: :login)
+    end
+
+    safe_params     = get_params
+    email_or_uid    = safe_params[:email].presence || safe_params[:uid]
+    password        = safe_params[:password]
+    encryption_type = safe_params[:encryption_type]
+
+    if encryption_type.present?
+      password = SS::Crypto.decrypt(password, type: encryption_type) rescue nil
+    end
+
+    @item = begin
+      if @cur_organization
+        self.user_class.organization_authenticate(@cur_organization, email_or_uid, password) rescue nil
+      elsif @cur_site
+        self.user_class.site_authenticate(@cur_site, email_or_uid, password) rescue nil
+      else
+        self.user_class.authenticate(email_or_uid, password) rescue nil
+      end
+    end
+    if @item.blank? || @item.disabled? || @item.locked?
+      render_login(
+        nil, email_or_uid, session: true, password: password, login_path: login_path, logout_path: logout_path)
+      return
+    end
+    if Sys::Auth::Setting.instance.mfa_otp_use?(request)
+      session[:authenticated_in_1st_step] = {
+        user_id: @item.id,
+        password: password,
+        ref: params[:ref].to_s,
+        login_path: login_path,
+        logout_path: logout_path,
+        authenticated_at: Time.zone.now.to_i
+      }
+      redirect_to mfa_login_path
+      return
+    end
+
+    @item = @item.try_switch_user || @item
+
+    render_login(
+      @item, email_or_uid, session: true, password: password, login_path: login_path, logout_path: logout_path)
+  end
 
   def logout
     put_history_log
@@ -104,8 +160,8 @@ module Sns::LoginFilter
       return
     end
 
-    @request_url = URI.parse(request.url)
-    @url = URI.join(@request_url, ref) rescue nil
+    @request_url = ::Addressable::URI.parse(request.url)
+    @url = ::Addressable::URI.join(@request_url, ref) rescue nil
     if @url.blank?
       redirect_to back_to_url
       return

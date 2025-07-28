@@ -1,0 +1,17 @@
+en:
+  modules:
+    gws/slack: Slack
+    addons:
+      gws/slack: Slack
+
+  mongoid:
+    models:
+      gws/slack: Slack
+    attributes:
+      gws/addon/slack:
+        slack_oauth_token: Slack OAuth Token
+
+  tooltip:
+    gws/addon/slack:
+      slack_oauth_token:
+        - Set the tokens required when sending messages using the Slack API.

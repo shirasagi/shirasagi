@@ -3,8 +3,6 @@ module Member::Addon
     extend SS::Addon
     extend ActiveSupport::Concern
 
-    CHILD_MAX_SIZE = 5
-
     included do
       field :first_registered, type: DateTime
       field :subscribe_line_message, type: String, default: "active"
@@ -18,7 +16,7 @@ module Member::Addon
     end
 
     def each_deliver_categories
-      Cms::Line::DeliverCategory::Category.site(site).each_public do |root, children|
+      Cms::Line::DeliverCategory::Base.site(site).each_public do |root, children|
         categories = children.select { |child| deliver_category_ids.include?(child.id) }
         yield(root, categories)
       end
@@ -57,7 +55,7 @@ module Member::Addon
 
         roots = []
         category_ids = []
-        Cms::Line::DeliverCategory::Category.site(site).each_public do |root, children|
+        Cms::Line::DeliverCategory::Base.site(site).each_public do |root, children|
           roots << root
           category_ids << children.map(&:id)
         end

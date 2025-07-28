@@ -34,7 +34,7 @@ class Workflow::WizardController < ApplicationController
   end
 
   def set_routes
-    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item)
+    @route_options ||= Workflow::Route.site(@cur_site).route_options(@cur_user, item: @item, site: @cur_site)
   end
 
   public

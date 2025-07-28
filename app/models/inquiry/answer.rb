@@ -3,7 +3,6 @@ class Inquiry::Answer
   include SS::Reference::Site
   include Inquiry::Addon::Answer::Body
   include Inquiry::Addon::KintoneApp::Answer
-  include SS::Captchable
   include Cms::Addon::GroupPermission
 
   attr_accessor :cur_node
@@ -112,6 +111,7 @@ class Inquiry::Answer
         values = value.values
         value  = value.map { |k, v| v }.join("\n")
       elsif value.kind_of? ActionDispatch::Http::UploadedFile
+        result = false
         client_name = Inquiry::Answer.persistence_context.send(:client_name)
         ss_file = SS::File.with(client: client_name) do |model|
           ss_file = model.new
@@ -120,11 +120,19 @@ class Inquiry::Answer
           ss_file.state = "closed"
           ss_file.model = "inquiry/temp_file"
           ss_file.sanitizer_skip unless self.class.default_client?
-          ss_file.save
+          result = ss_file.save
           ss_file
         end
-        values = [ ss_file._id, ss_file.filename, ss_file.name, ss_file.size ]
-        value = ss_file._id
+        if result
+          values = [ ss_file._id, ss_file.filename, ss_file.name, ss_file.size ]
+          value = ss_file._id
+        else
+          ss_file.errors.full_messages.each do |message|
+            self.errors.add :base, "#{Inquiry::Column.find(key).name}#{message}"
+          end
+          values = []
+          value  = nil
+        end
       elsif value.kind_of? SS::File
         ss_file = value
         values = [ ss_file._id, ss_file.filename, ss_file.name, ss_file.size ]
@@ -151,7 +159,7 @@ class Inquiry::Answer
 
   def source_full_url
     if source_url.present?
-      uri = URI.parse(site.full_url)
+      uri = ::Addressable::URI.parse(site.full_url)
       uri.path = source_url
       uri.to_s
     end
@@ -163,7 +171,7 @@ class Inquiry::Answer
 
   def inquiry_page_full_url
     if inquiry_page_url.present?
-      uri = URI.parse(site.full_url)
+      uri = ::Addressable::URI.parse(site.full_url)
       uri.path = inquiry_page_url
       uri.to_s
     end

@@ -44,7 +44,7 @@ class Opendata::Harvest::Importer
   private
 
   def validate_host
-    self.source_host = ::URI.parse(source_url).host
+    self.source_host = ::Addressable::URI.parse(source_url).host
   rescue => e
     errors.add :source_host, :invalid
   end
@@ -66,6 +66,10 @@ class Opendata::Harvest::Importer
     %w(enabled disabled).map do |v|
       [ I18n.t("ss.options.state.#{v}"), v ]
     end
+  end
+
+  def enabled?
+    state == "enabled"
   end
 
   def basicauth_state_options

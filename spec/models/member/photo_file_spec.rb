@@ -22,11 +22,12 @@ describe Member::PhotoFile, dbscope: :example do
         it do
           expect(subject).to be_persisted
           expect(subject).to be_valid
-          expect(::Fs.size(subject.path)).to be > 0
+          expect(Fs.size(subject.path)).to be > 0
           expect(subject.site_id).to eq cms_site.id
           expect(subject.user_id).to eq cms_user.id
           expect(subject.model).to eq "member/photo"
           expect(subject.image_dimension).to eq [ 712, 210 ]
+          expect(subject.content_type).to eq "image/jpeg"
 
           # variant test
           expect(subject.variants.count).to eq 2
@@ -50,7 +51,7 @@ describe Member::PhotoFile, dbscope: :example do
             expect(variant.name).to be_present
             expect(variant.filename).to be_present
             expect(variant.size).to be_present
-            expect(variant.image_dimension).to eq [ 160, 47 ]
+            expect(variant.image_dimension).to eq [ 360, 106 ]
           end
           subject.variants[:detail].tap do |variant|
             expect(variant).to be_present
@@ -88,7 +89,7 @@ describe Member::PhotoFile, dbscope: :example do
           subject.variants[0].tap do |variant|
             expect(variant).to be_nil
           end
-          subject.variants[{ width: 160, height: 120 }].tap do |variant|
+          subject.variants[{ width: 360, height: 360 }].tap do |variant|
             expect(variant).to be_present
             expect(variant.variant_name).to eq :thumb
           end
@@ -130,13 +131,13 @@ describe Member::PhotoFile, dbscope: :example do
           expect(subject.site_id).to be_blank
           expect(subject.user_id).to be_blank
           expect(subject.model).to eq "member/photo"
-          expect(::Fs.size(subject.path)).to be > 0
+          expect(Fs.size(subject.path)).to be > 0
           expect(subject.image_dimension).to eq [ 180, 53 ]
 
           expect(subject.variants.count).to eq 2
           expect(subject.variants[:thumb]).to be_present
           expect(subject.variants[:thumb].url).to be_present
-          expect(subject.variants[:thumb].image_dimension).to eq [ 160, 47 ]
+          expect(subject.variants[:thumb].image_dimension).to eq [ 180, 53 ]
           expect(subject.variants[:detail]).to be_present
           expect(subject.variants[:detail].url).to be_present
           expect(subject.variants[:detail].image_dimension).to eq [ 180, 53 ]
@@ -144,23 +145,7 @@ describe Member::PhotoFile, dbscope: :example do
       end
     end
 
-    context "with ImageMagick6" do
-      around do |example|
-        MiniMagick.with_cli(:imagemagick) do
-          example.run
-        end
-      end
-
-      include_context "member/photo_file is"
-    end
-
-    context "with GraphicsMagick" do
-      around do |example|
-        MiniMagick.with_cli(:graphicsmagick) do
-          example.run
-        end
-      end
-
+    context "with ImageMagick6/7" do
       include_context "member/photo_file is"
     end
   end

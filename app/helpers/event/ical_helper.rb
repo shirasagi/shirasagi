@@ -29,12 +29,12 @@ module Event::IcalHelper
       parent_uid = nil
       item.event_recurrences.each_with_index do |recurrence, index|
         calendar.event do |event|
-          if index == 0 && item.ical_uid.present?
+          if index == 0 && item.respond_to?(:ical_uid) && item.ical_uid.present?
             uid = item.ical_uid
           else
             # BE CAREFUL: uid specification is updated in RFC-7986
             uid = "#{site.domain}#{item.url}@#{index}".sub(/\.html$/, '').gsub(NONE_IANA_TOKENS_RE, "-")
-            uid += Rails.application.secrets.secret_key_base
+            uid += SS::Crypto.salt
             uid = Digest::MD5.hexdigest(uid)
           end
           event.uid = uid
@@ -89,7 +89,7 @@ module Event::IcalHelper
     if categories
       names = categories.and_public.map { |cate| cate.name }
       if names.present?
-        event.categories = ::Icalendar::Values::Array.new(names, ::Icalendar::Values::Text, {}, { delimiter: "," })
+        event.categories = ::Icalendar::Values::Helpers::Array.new(names, ::Icalendar::Values::Text, {}, { delimiter: "," })
       end
     end
   end

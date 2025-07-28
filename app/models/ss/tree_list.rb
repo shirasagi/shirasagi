@@ -25,7 +25,7 @@ class SS::TreeList
 
   class << self
     def build(model, options)
-      items = model.all.to_a
+      items = model.is_a?(Array) ? model : model.all.to_a
 
       items = items.map do |item|
         [ item, *part_order_array(items, item).transpose ]

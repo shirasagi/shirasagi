@@ -1,0 +1,42 @@
+<%= jquery do %>
+  var baseUrl = <%== url_for({ action: :index, year_month: ':YEAR_MONTH' }).to_json %>;
+  $('.gws-daily-report-year-month-navi select[name=year_month]').on('change', function() {
+    var val = $(this).val();
+    location.href = baseUrl.replace(':YEAR_MONTH', val);
+  });
+<% end %>
+
+<% @tap_menu = proc do |item| %>
+  <%= link_to(t('ss.links.show'), action: :show, id: item) if item.readable?(@cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.edit'), action: :edit, id: item) if item.editable?(@cur_user, site: @cur_site) %>
+  <%= link_to(t('ss.links.delete'), action: :delete, id: item) if item.destroyable?(@cur_user, site: @cur_site) %>
+
+  <% if item.try(:image) %>
+    <%= link_to image_tag(item.image.thumb_url), item.image.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
+  <% elsif item.try(:image?) %>
+    <%= link_to image_tag(item.thumb_url), item.url, { class: "thumb", target: "_blank", rel: "noopener" } %>
+  <% end %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <% if item.form.present? %>
+  <span class="form"><%= t('gws/daily_report.labels.form') %>: <%= item.form.name %></span>
+  <% end %>
+  <span class="user"><%= t('gws/daily_report.labels.user') %>: <%= item.user_name %></span>
+<% end %>
+
+<div class="gws-category-navi gws-daily-report-year-month-navi">
+  <%= select_tag(:year_month, options_for_select(year_month_options, params[:year_month])) %>
+  <% if @cur_month.last_month >= @active_year_range.first %>
+    <%= link_to(t('gws/attendance.prev_month'), { action: :index, year_month: @cur_month.last_month.strftime('%Y%m') }, class: :btn) %>
+  <% end %>
+  <% if @cur_month.next_month <= @active_year_range.last %>
+    <%= link_to(t('gws/attendance.next_month'), { action: :index, year_month: @cur_month.next_month.strftime('%Y%m') }, class: :btn) %>
+  <% end %>
+</div>
+
+<div class="gws-daily-report">
+  <%= render template: 'gws/crud/index' %>
+</div>

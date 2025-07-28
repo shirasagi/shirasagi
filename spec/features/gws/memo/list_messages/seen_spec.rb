@@ -29,7 +29,7 @@ describe 'gws_memo_list_messages', type: :feature, dbscope: :example do
 
       within "tr[data-id='#{sender.id}']" do
         expect(page).to have_content(sender.long_name)
-        expect(page).to have_content(seen_at.strftime('%Y/%m/%d %H:%M'))
+        expect(page).to have_content(I18n.l(seen_at, format: :picker))
       end
       within "tr[data-id='#{recipient.id}']" do
         expect(page).to have_content(recipient.long_name)

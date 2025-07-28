@@ -1,7 +1,7 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <% if item.try(:updated) %>
-    <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+    <span class="datetime"><%= ss_time_tag item.updated %></span>
   <% end %>
   <% if item.try(:filename) %>
     <span class="filename"><%= File.basename item.filename %></span>

@@ -33,7 +33,7 @@ module Gws::Model::Folder
 
     before_destroy :validate_children
 
-    after_save :rename_children, if: ->{ @db_changes }
+    after_save :rename_children, if: ->{ changes.present? || previous_changes.present? }
 
     default_scope ->{ order_by depth: 1, order: 1, name: 1 }
 
@@ -173,11 +173,12 @@ module Gws::Model::Folder
   end
 
   def rename_children
-    return unless @db_changes["name"]
-    return unless @db_changes["name"][0]
+    name_changes = changes["name"].presence || previous_changes["name"]
+    return unless name_changes
+    return unless name_changes[0]
 
-    src = @db_changes["name"][0]
-    dst = @db_changes["name"][1]
+    src = name_changes[0]
+    dst = name_changes[1]
 
     folder_ids = dependant_scope.where(name: /^#{::Regexp.escape(src)}\//).pluck(:id)
     folder_ids.each do |id|

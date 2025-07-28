@@ -4,15 +4,8 @@ module Cms::PublicFilter::Page
 
   private
 
-  def find_page(path)
-    page = Cms::Page.site(@cur_site).filename(path).first
-    return unless page
-    @preview || (page.public? && page.public_node?) ? page : nil
-  end
-
   def render_page(page, env = {})
-    path = "/.s#{@cur_site.id}/pages/#{page.route}/#{page.basename}"
-    spec = recognize_agent path, env
+    spec = recognize_page(page, env)
     return unless spec
 
     @cur_page = page
@@ -25,16 +18,23 @@ module Cms::PublicFilter::Page
 
   public
 
+  def find_page(path)
+    page = Cms::Page.site(@cur_site).filename(path).first
+    return unless page
+    @preview || (page.public? && page.public_node?) ? page : nil
+  end
+
+  def recognize_page(page, env = {})
+    path = "/.s#{@cur_site.id}/pages/#{page.route}/#{page.basename}"
+    recognize_agent path, env
+  end
+
   def generate_page(page)
     @cur_site      = page.site
     @cur_path      = page.url
     @cur_main_path = @cur_path.sub(@cur_site.url, "/")
     @csrf_token    = false
     @generate_page = true
-
-    # self.params   = ActionController::Parameters.new format: "html"
-    # self.request  = ActionDispatch::Request.new method: "GET"
-    # self.response = ActionDispatch::Response.new
 
     agent = SS::Agent.new self.class
     self.params   = agent.controller.params
@@ -45,8 +45,7 @@ module Cms::PublicFilter::Page
       response.body = render_page page
       response.content_type ||= "text/html"
     rescue StandardError => e
-      return if e.to_s == "404"
-      return if e.is_a? Mongoid::Errors::DocumentNotFound
+      return if SS.not_found_error?(e)
       raise e
     end
 

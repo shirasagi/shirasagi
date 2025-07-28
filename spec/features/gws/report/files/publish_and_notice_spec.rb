@@ -49,17 +49,16 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   context "publish and notification" do
     it do
       # publish
-      login_user user0
-      visit gws_report_files_main_path(site: site)
+      login_user user0, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.closed')
       end
       click_on subject.name
       click_on I18n.t("gws/report.links.publish")
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.published'))
+      wait_for_notice I18n.t('gws/report.notice.published')
 
       subject.reload
       expect(subject.state).to eq "public"
@@ -69,7 +68,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       expect(notice.group_id).to eq site.id
       expect(notice.member_ids).to eq [ user1.id ]
       expect(notice.user_id).to eq user0.id
-      expect(notice.subject).to eq "[#{Gws::Report::File.model_name.human}] 「#{subject.name}」が届きました。"
+      title = "[#{Gws::Report::File.model_name.human(locale: I18n.default_locale)}] 「#{subject.name}」が届きました。"
+      expect(notice.subject).to eq title
       expect(notice.text).to be_blank
       expect(notice.html).to be_blank
       expect(notice.format).to eq "text"
@@ -85,7 +85,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       ActionMailer::Base.deliveries.first.tap do |mail|
         expect(mail.from.first).to eq site.sender_address
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
-        expect(mail.subject).to eq "[#{Gws::Report::File.model_name.human}] 「#{subject.name}」が届きました。"
+        title = "[#{Gws::Report::File.model_name.human(locale: I18n.default_locale)}] 「#{subject.name}」が届きました。"
+        expect(mail.subject).to eq title
         expect(mail.decoded.to_s).to include(mail.subject)
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(notice_url)
@@ -93,8 +94,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
 
       # user1 is able to read in inbox
-      login_user user1
-      visit gws_report_files_main_path(site: site)
+      login_user user1, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.inbox')
       end
@@ -104,8 +104,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
 
       # user2 is able to read in readable
-      login_user user2
-      visit gws_report_files_main_path(site: site)
+      login_user user2, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.readable')
       end
@@ -115,17 +114,16 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
 
       # depublish
-      login_user user0
-      visit gws_report_files_main_path(site: site)
+      login_user user0, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.sent')
       end
       click_on subject.name
       click_on I18n.t("gws/report.links.depublish")
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.depublished'))
+      wait_for_notice I18n.t('gws/report.notice.depublished')
 
       subject.reload
       expect(subject.state).to eq "closed"
@@ -135,7 +133,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       expect(notice.group_id).to eq site.id
       expect(notice.member_ids).to eq [ user1.id ]
       expect(notice.user_id).to eq user0.id
-      expect(notice.subject).to eq "[#{Gws::Report::File.model_name.human}] 「#{subject.name}」の送信が取り消されました。"
+      title = "[#{Gws::Report::File.model_name.human(locale: I18n.default_locale)}] 「#{subject.name}」の送信が取り消されました。"
+      expect(notice.subject).to eq title
       expect(notice.text).to be_blank
       expect(notice.html).to be_blank
       expect(notice.format).to eq "text"
@@ -167,17 +166,16 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
     end
 
     it do
-      login_user user0
-      visit gws_report_files_main_path(site: site)
+      login_user user0, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.closed')
       end
       click_on subject.name
       click_on I18n.t("gws/report.links.publish")
-      within "form" do
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.published'))
+      wait_for_notice I18n.t('gws/report.notice.published')
 
       subject.reload
       expect(subject.state).to eq "public"
@@ -197,17 +195,18 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
     end
 
     it do
-      login_user user0
-      visit gws_report_files_main_path(site: site)
+      login_user user0, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.sent')
       end
       click_on subject.name
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       subject.reload
       expect(subject.deleted).to be_present

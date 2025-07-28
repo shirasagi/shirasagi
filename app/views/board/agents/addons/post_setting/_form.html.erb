@@ -15,8 +15,8 @@
   <dd><%= f.select :deny_url, @item.deny_url_options %></dd>
 
   <dt><%= @model.t :banned_words %><%= @model.tt :banned_words %></dt>
-  <dd><%= f.text_area :banned_words, value: @item.banned_words.join("\n") %></dd>
+  <dd><%= f.ss_lines_field :banned_words, value: @item.banned_words.join("\n") %></dd>
 
   <dt><%= @model.t :deny_ips %><%= @model.tt :deny_ips %></dt>
-  <dd><%= f.text_area :deny_ips, value: @item.deny_ips.join("\n") %></dd>
+  <dd><%= f.ss_lines_field :deny_ips, value: @item.deny_ips.join("\n") %></dd>
 </dl>

@@ -1,5 +1,5 @@
 <% @index_meta = proc do |item| %>
-  <span class="datetime"><%= t("ss.views.index.updated", updated: item.updated.strftime("%Y/%m/%d %H:%M")) %></span>
+  <span class="datetime"><%= t("ss.views.index.updated", updated: I18n.l(item.updated, format: :picker)) %></span>
 <% end %>
 
 <%= render template: "cms/crud/index" %>

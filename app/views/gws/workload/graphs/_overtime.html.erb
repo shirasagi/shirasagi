@@ -1,0 +1,71 @@
+<%= jquery do %>
+var labels = <%== @aggregation.month_labels.to_json %>;
+var datasets = <%== @aggregation.overtime_datasets.to_json %>;
+var canvas = $("canvas.overtime-graph");
+var numberWithCommas = function (x) {
+  return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+new Chart(canvas, {
+  type: 'bar',
+  plugins: [ChartDataLabels],
+  data: {
+    labels: labels,
+    datasets: datasets
+  },
+  options: {
+    responsive: true,
+    animation: false,
+    //maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        anchor: 'right',
+        align: 'right',
+        padding: {
+          right: 30
+        },
+        font: {
+          size: 12
+        },
+        formatter: function (value, context) {
+          if (value <= 1) {
+            return "";
+          }
+          return numberWithCommas(value);
+        }
+      }
+    },
+    scales: {
+      x: {
+        title: {
+          display: true,
+          text: "<%= t("gws/workload.graph.overtime.x") %>",
+          font: {
+            size: 16
+          }
+        },
+        stacked: true,
+        grid: {
+          display: false
+        }
+      },
+      y: {
+        title: {
+          display: true,
+          text: "<%= t("gws/workload.graph.overtime.y") %>",
+          font: {
+            size: 16
+          }
+        },
+        stacked: true,
+        ticks: {
+          min: 0,
+          suggestedMin: 0,
+          suggestedMax: 300,
+        }
+      }
+    }
+  }
+});
+<% end %>
+<h2><%= t("gws/workload.graph.overtime.title") %></h2>
+<canvas class="overtime-graph"></canvas>

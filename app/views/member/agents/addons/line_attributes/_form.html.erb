@@ -4,7 +4,7 @@
 
 <dl class="see mod-line-member-additional-attributes">
   <dt><%= @item.t(:first_registered) %></dt>
-  <dd><%= f.text_field :first_registered, class: 'datetime js-datetime', value: tryb{ @item.first_registered.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :first_registered %></dd>
 
   <dt><%= @item.t(:subscribe_richmenu_id) %></dt>
   <dd><%= f.text_field :subscribe_richmenu_id %></dd>
@@ -13,8 +13,8 @@
   <dd style="margin-bottom: 10px;"><%= f.select :subscribe_line_message, @item.subscribe_line_message_options %></dd>
 </dl>
 
-<%= hidden_field_tag "#{f.object_name}[deliver_category_ids][]", nil %>
-<% Cms::Line::DeliverCategory::Category.site(@cur_site).each_public do |root, children| %>
+<%= hidden_field_tag "#{f.object_name}[deliver_category_ids][]", nil, id: nil %>
+<% Cms::Line::DeliverCategory::Base.site(@cur_site).each_public do |root, children| %>
   <dl class="see deliver-category" <%== root.data_required_html %> style="padding-bottom: 10px;">
     <dt><%= root.name %></dt>
     <dd>

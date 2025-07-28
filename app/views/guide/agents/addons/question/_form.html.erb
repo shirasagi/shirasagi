@@ -1,6 +1,7 @@
 <%= jquery do %>
+var template = $("#addon-guide-agents-addons-question .form-template").html();
 var toggleQuestionEdges = function() {
-var type = $('[name="item[question_type]"]:checked').val();
+  var type = $('[name="item[question_type]"]:checked').val();
   $(".question-edges").hide();
   $(".question-edges." + type).show();
 };
@@ -59,12 +60,41 @@ $('.add-edge').on("click", function() {
 
   $(".question-edges.choices .edge:last").after(edge);
 
+  edge.find(".ajax-box").data("on-select", function($item) {
+    var $data = $item.closest("[data-id]");
+    var formId = $data.data('id');
+    var formName = $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
+    if (! formId || !formName) {
+      return;
+    }
+
+    var html = template.replace(/:id/g, formId).replace(/:name/g, formName);
+
+    var $tbody = SS_SearchUI.anchorAjaxBox.closest('dd').next('dd').find('tbody');
+    $tbody.prepend(html);
+    $tbody.find(".deselect").on("click", SS_SearchUI.deselect);
+  });
+
   setEdgeNo();
   return false;
 });
 
 // deselect edge
 $(".deselect-edge").on("click", deselectEdge);
+
+$("#addon-guide-agents-addons-question a.ajax-box").data("on-select", function($item) {
+  var $data = $item.closest("[data-id]");
+  var formId = $data.data('id');
+  var formName = $data.data("name") || $data.find(".select-item").text() || $item.text() || $data.text();
+  if (! formId || !formName) {
+    return;
+  }
+
+  var html = template.replace(/:id/g, formId).replace(/:name/g, formName);
+
+  var $tbody = SS_SearchUI.anchorAjaxBox.closest('dd').next('dd').find('tbody');
+  $tbody.prepend(html);
+});
 
 <% end %>
 <%
@@ -90,7 +120,7 @@ $(".deselect-edge").on("click", deselectEdge);
       OpenStruct.new(
         question_type: edge.question_type,
         value: edge.value,
-        point_ids: edge.point_ids
+        explanation: edge.explanation
       )
     end
   end

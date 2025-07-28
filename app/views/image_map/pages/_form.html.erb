@@ -1,0 +1,18 @@
+<style>
+.form-preview-rendered {
+  display: none;
+}
+</style>
+
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :title %></dt>
+  <dd><%= f.text_field :name %></dd>
+
+  <dt><%= @model.t :layout_id %><%= @model.tt :layout_id %></dt>
+  <dd><%= f.select :layout_id, ancestral_layouts(@item.parent, @item.layout), include_blank: " " %></dd>
+
+  <%= render 'cms/pages/form_template_form', f: f %>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>

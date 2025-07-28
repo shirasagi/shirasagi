@@ -172,6 +172,7 @@ SS_Workflow.prototype = {
 
     var uri = this.composeWorkflowUrl('pages');
     uri += "/" + updatetype + "_update";
+    var workflow_kind = $("#workflow_kind").prop("value");
     var workflow_comment = $("#workflow_comment").prop("value");
     var workflow_pull_up = $("#workflow_pull_up").prop("value");
     var workflow_on_remand = $("#workflow_on_remand").prop("value");
@@ -195,6 +196,7 @@ SS_Workflow.prototype = {
       type: "POST",
       url: uri,
       data: {
+        workflow_kind: workflow_kind,
         workflow_comment: workflow_comment,
         workflow_pull_up: workflow_pull_up,
         workflow_on_remand: workflow_on_remand,
@@ -235,13 +237,13 @@ SS_Workflow.prototype = {
 
         location.reload();
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         try {
           var errors = $.parseJSON(xhr.responseText);
-          alert(["== Error =="].concat(errors).join("\n"));
+          alert(["== Error(Workflow) =="].concat(errors).join("\n"));
         }
         catch (ex) {
-          alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+          alert(["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n"));
         }
         $this.prop("disabled", false);
         SS_Workflow.updateDisabled = false;
@@ -282,13 +284,13 @@ SS_Workflow.prototype = {
           location.reload();
         }
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
-          msg = ["== Error =="].concat(errors).join("\n");
+          msg = ["== Error(Workflow) =="].concat(errors).join("\n");
         } catch (ex) {
-          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
+          msg = ["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n");
         }
         alert(msg);
       },
@@ -305,19 +307,21 @@ SS_Workflow.prototype = {
     $.ajax({
       type: "GET",
       url: uri,
-      success: function(html, status) {
+      success: function(html, _status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
-          msg = ["== Error =="].concat(errors).join("\n");
+          msg = ["== Error(Workflow) =="].concat(errors).join("\n");
         } catch(ex) {
-          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
+          msg = ["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n");
         }
         pThis.$el.find(".workflow-partial-section").html('<div class="error">' + msg + '</div>');
-        alert(msg);
+        if (SS.env !== 'test') {
+          alert(msg);
+        }
       }
     });
   },
@@ -331,19 +335,21 @@ SS_Workflow.prototype = {
       type: "POST",
       url: uri,
       data: data,
-      success: function(html, status) {
+      success: function(html, _status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
           msg = errors.join("\n");
         } catch (ex) {
-          msg = ["== Error =="].concat(xhr["statusText"]).join("\n");
+          msg = ["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n");
         }
         pThis.$el.find(".workflow-partial-section").html(msg);
-        alert(msg);
+        if (SS.env !== 'test') {
+          alert(msg);
+        }
       }
     });
   },
@@ -375,15 +381,15 @@ SS_Workflow.prototype = {
           type: 'POST',
           url: uri,
           data: data,
-          success: function(html, status) {
+          success: function(_html, _status) {
             location.reload();
           },
-          error: function(xhr, status) {
+          error: function(xhr, _status) {
             try {
               var errors = $.parseJSON(xhr.responseText);
               alert(errors.join("\n"));
             } catch (ex) {
-              alert(["== Error =="].concat(xhr["statusText"]).join("\n"));
+              alert(["== Error(Workflow) =="].concat(xhr["statusText"]).join("\n"));
             }
           }
         });
@@ -398,11 +404,11 @@ SS_Workflow.prototype = {
     var pThis = this;
     $.ajax({
       url: this.fileSelectViewUrl($item.closest("[data-id]").data("id")),
-      success: function(data, status, xhr) {
+      success: function(data, _status, _xhr) {
         pThis.renderFileHtml(data);
       },
-      error: function (xhr, status, error) {
-        alert("== Error ==");
+      error: function (_xhr, _status, _error) {
+        alert("== Error(Workflow) ==");
       }
     });
   },
@@ -418,12 +424,12 @@ SS_Workflow.prototype = {
     $html.find(".action .action-attach").remove();
     $html.find(".action .action-paste").remove();
     $html.find(".action .action-thumb").remove();
-    $("#selected-files").append($html);
+    $("#selected-files").append($html).trigger("change");
   },
   deleteUploadedFile: function($a) {
     $a.closest("div[data-file-id]").remove();
   },
-  onDropFile: function(files, dropArea) {
+  onDropFile: function(files, _dropArea) {
     var pThis = this;
     for (var j = 0, len = files.length; j < len; j++) {
       var file = files[j];
@@ -431,11 +437,11 @@ SS_Workflow.prototype = {
       var url = pThis.fileSelectViewUrl(id);
       $.ajax({
         url: url,
-        success: function(data, status, xhr) {
+        success: function(data, _status, _xhr) {
           pThis.renderFileHtml(data);
         },
-        error: function (xhr, status, error) {
-          alert("== Error ==");
+        error: function (_xhr, _status, _error) {
+          alert("== Error(Workflow) ==");
         }
       });
     }
@@ -454,8 +460,8 @@ SS_WorkflowRerouteBox = function (el, options) {
       success: function (data) {
         pThis.$el.closest("#cboxLoadedContent").html(data);
       },
-      error: function (data, status) {
-        alert("== Error ==");
+      error: function (_data, _status) {
+        alert("== Error(Workflow) ==");
       }
     });
 
@@ -464,9 +470,9 @@ SS_WorkflowRerouteBox = function (el, options) {
 
   this.$el.find('.pagination a').on("click", function(e) {
     var url = $(this).attr("href");
-    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, xhr) {
+    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, _xhr) {
       if (status === 'error') {
-        alert("== Error ==");
+        alert("== Error(Workflow) ==");
       }
     });
 
@@ -564,6 +570,8 @@ SS_WorkflowApprover.prototype.render = function () {
   if (self.options.draft_save) {
     $(".save")
       .val(self.options.draft_save)
+      .attr("name", "draft_save")
+      .attr("class", "btn-primary save draft_save")
       .attr("data-disable-with", null)
       .attr("data-disable", "")
       .on("click", function (_ev) {

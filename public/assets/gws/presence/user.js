@@ -11,9 +11,11 @@ this.Gws_Presence_User = (function () {
       return false;
     });
     $(".presence-state-selector [data-value]").on("click", function() {
-      var id = $(this).closest(".presence-state-selector").attr("data-id");
-      var url = $(this).closest(".presence-state-selector").attr("data-url");
-      var value = $(this).attr("data-value");
+      var $this = $(this);
+      var $presenceState = $this.closest(".presence-state-selector");
+      var id = $presenceState.attr("data-id");
+      var url = $presenceState.attr("data-url");
+      var value = $this.attr("data-value");
       $.ajax({
         url: url,
         type: "POST",
@@ -26,7 +28,7 @@ this.Gws_Presence_User = (function () {
           Gws_Presence_User.changedState(id, data);
           $(".presence-state-selector").hide();
         },
-        error: function (xhr, status, error) {
+        error: function (xhr, _status, _error) {
           alert(xhr.responseJSON.join("\n"));
         },
       });
@@ -40,6 +42,7 @@ this.Gws_Presence_User = (function () {
       return false;
     });
     // ajax-text-field
+    /*
     $(".ajax-text-field").on("click", function(){
       Gws_Presence_User.toggleForm(this);
       return false;
@@ -48,6 +51,7 @@ this.Gws_Presence_User = (function () {
       $(this).prev(".ajax-text-field").trigger('click');
       return false;
     })
+    */
   };
 
   Gws_Presence_User.changedState = function (id, data) {
@@ -66,13 +70,15 @@ this.Gws_Presence_User = (function () {
     selector.find('[data-value!="' + presence_state + '"] .selected-icon').css('visibility', 'hidden');
   }
 
+  // ajax-text-field
+  /*
   Gws_Presence_User.toggleForm = function (ele) {
     var state = $(ele).attr("data-tag-state");
     var original = $(ele).attr("data-original-tag");
     var form = $(ele).attr("data-form-tag");
     var value = $(ele).text() || $(ele).val();
     var name = $(form).attr("name");
-    var id = $(form).attr("data-id");
+    // var id = $(form).attr("data-id");
     var url = $(form).attr("data-url");
     var errorOccurred = false;
 
@@ -81,7 +87,7 @@ this.Gws_Presence_User = (function () {
       form.attr("data-original-tag", $(ele).attr("data-original-tag"));
       form.attr("data-form-tag", $(ele).attr("data-form-tag"));
       form.val(value);
-      form.focusout(function (e) {
+      form.on("focusout", function (_e) {
         if (errorOccurred) {
           return true;
         }
@@ -98,14 +104,14 @@ this.Gws_Presence_User = (function () {
             $(form).val(data[name]);
             Gws_Presence_User.toggleForm(form);
           },
-          error: function (xhr, status, error) {
+          error: function (xhr, _status, _error) {
             alert(xhr.responseJSON.join("\n"));
             errorOccurred = true;
           },
         });
         return false;
       });
-      form.keypress(function (e) {
+      form.on("keypress", function (e) {
         if (e.which == SS.KEY_ENTER) {
           var data = {
             _method: 'put',
@@ -120,7 +126,7 @@ this.Gws_Presence_User = (function () {
               $(form).val(data[name]);
               Gws_Presence_User.toggleForm(form);
             },
-            error: function (xhr, status, error) {
+            error: function (xhr, _status, _error) {
               alert(xhr.responseJSON.join("\n"));
               errorOccurred = true;
             },
@@ -147,6 +153,7 @@ this.Gws_Presence_User = (function () {
       $(".ajax-text-field[data-id='" + original.attr("data-id") + "'][data-name='" + original.attr("data-name") + "']").text(value);
     }
   };
+  */
 
   return Gws_Presence_User;
 })();
@@ -164,7 +171,7 @@ this.Gws_Presence_User_Reload = (function () {
     var page = opts["page"];
 
     $(".group-users .reload").on("click", function () {
-      param = $.param({
+      var param = $.param({
         "s": {"keyword": $(".group-users [name='s[keyword]']").val()},
         "paginate_params": paginate_params,
         "page": page
@@ -183,7 +190,7 @@ this.Gws_Presence_User_Reload = (function () {
       });
     });
     $(".group-users .list-head .search").on("submit", function () {
-      param = $.param({
+      var param = $.param({
         "s": {"keyword": $(".group-users [name='s[keyword]']").val()},
         "paginate_params": paginate_params,
       });
@@ -198,7 +205,7 @@ this.Gws_Presence_User_Reload = (function () {
           $(".group-users .list-head time").replaceWith(time);
           time.show();
         },
-        error: function (xhr, status, error) {
+        error: function (_xhr, _status, _error) {
           $(".group-users .data-table-wrap").html("");
         }
       });

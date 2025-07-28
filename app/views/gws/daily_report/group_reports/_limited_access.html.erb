@@ -1,0 +1,11 @@
+<% return if !@model.allowed?(:access, @cur_user, site: @cur_site) %>
+
+<% if report %>
+  <td>
+    <div class="report-value-wrap">
+      <div class="report-value"><%= br report.limited_access %></div>
+    </div>
+  </td>
+<% elsif @forms.present? %>
+  <td></td>
+<% end %>

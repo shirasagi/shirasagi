@@ -5,23 +5,56 @@ ja:
     tel: 電話番号
     fax: ファックス番号
     email: メールアドレス
+    address: 住所
     link_url: リンクURL
     link_name: リンク名
-    search_groups:
-      index: 連絡先グループを選択する
-      search: 連絡先グループを検索
-      select: 連絡先グループを設定する
-    state:
-      show: 表示
-      hide: 非表示
+    postal_code: "〒%{code}"
+    pages_used_label: ページ数
+    pages_used:
+      zero: なし
+      one: "%{count}"
+      other: "%{count}"
+    apis:
+      contacts:
+        index: 連絡先グループを選択する
+        search: 連絡先グループを検索
+        select: 連絡先グループを設定する
     view:
       title: お問い合わせ
       tel: 電話
       fax: Fax
       email: E-Mail
+      address: 住所
       link_url: リンクURL
       link_name: リンク名
       inquiry_form: お問い合わせフォーム
+    options:
+      main_state:
+        main: 主
+      relation:
+        related:
+          title: グループと連動する
+          description: |-
+            グループの連絡先が更新されたらそれに連動しページの連絡先も自動的に更新されるモードです。
+            未選択の場合、「グループと連動する」が選択されているものとみなします。
+        unrelated:
+          title: グループと連動しない
+          description: |-
+            グループの連絡先が更新されてもページの連絡先は更新されません。
+            このページだけの特別な連絡先を設定する場合、このモードを選択してください。
+            通常は「グループと連動する」を選択してください。
+    links:
+      unify_to_main: 主の連絡先に一括統合する
+    buttons:
+      select: 選択
+      unify: 統合
+    notices:
+      unchanged_contacts: "連絡先グループが変更されましたが、「グループと連動しない」に設定されているため「担当」〜「リンク名」は変更されません。"
+      group_page_notice_html: |-
+        %{site}の閲覧可能なページのみが表示されています。<br>
+        対して、グループ明細に表示されているページ数には、閲覧できなページと他にもサイトがある場合、他サイトのページが含まれています。
+        このため、本一覧に表示されているページの件数と、グループ明細に表示されているページ数とが異なる場合があります。
+      unified: 統合しました。
 
   modules:
     contact: 連絡先
@@ -30,56 +63,156 @@ ja:
       contact/group: 連絡先
 
   mongoid:
+    models:
+      ss/contact: 連絡先
+    errors:
+      models:
+        ss/contact:
+          in_use: 連絡先は使用中です。
     attributes:
       cms/model/page: &cmspage
         contact_state: 表示設定
         contact_group_id: 所属
         contact_group: 所属
-        contact_charge: 担当
+        contact_charge: 担当部署・係
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
         contact_link_url: リンクURL
         contact_link_name: リンク名
-        contact_group_name: 担当部署
+        contact_group_name: 表示用グループ名
+        contact_group_name_id: 表示用グループ名
+        contact_group_contact: 連絡先
+        contact_group_relation: 連絡先連動設定
+        contact_sub_group_ids: 所属(組織一覧用)
       contact/addon/group:
-        <<: *cmspage
+        contact_group_name: 表示用グループ名
+        contact_charge: 担当部署・係
+        contact_tel: 電話番号
+        contact_fax: ファックス番号
+        contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
+        contact_link_url: リンクURL
+        contact_link_name: リンク名
       contact/addon/page:
         <<: *cmspage
+      ss/contact:
+        name: 識別名
+        contact_group_name: 表示用グループ名
+        contact_charge: 担当部署・係
+        contact_tel: 電話番号
+        contact_fax: ファックス番号
+        contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
+        contact_link_url: リンクURL
+        contact_link_name: リンク名
+        main_state: 主
 
   tooltip:
     contact/addon/page:
       contact_state:
-        - 公開画面への表示、非表示を選択します。
+        - 公開画面へ連絡先を表示するかどうかを選択します。
       contact_group_id:
-        - 連絡先に表示する担当部署を選択します。
-      contact_charge:
-        - 連絡先に表示する担当者名または部署名を記入します。
-      contact_tel:
-        - 連絡先に表示する部署または担当者の電話番号を記入します。
-      contact_fax:
-        - 連絡先に表示する部署のファックス番号を記入します。
-      contact_email:
-        - 連絡先に表示する部署または担当者のメールアドレスを記入します。
-      contact_link_url:
-        - 連絡先に表示する部署のリンクURLを記入します。
-      contact_link_name:
-        - 連絡先に表示する部署のリンク名を記入します。
-    contact/addon/group:
+        - 連絡先に表示するグループを選択します。
       contact_group_name:
-        - 連絡先に表示する担当部署を記入します。
+        - 連絡先に表示する表示用グループ名を記入します。
+        - 省略した場合、グループ名が表示されます。
+      contact_charge:
+        - 連絡先に表示する部署名、係名、担当者名などを記入します。
+        - 省略した場合、担当部署・係は表示されません。
+      contact_tel:
+        - 連絡先に表示する部署・係・担当者の電話番号を記入します。
+        - 省略した場合、電話番号は表示されません。
+      contact_fax:
+        - 連絡先に表示する部署・係・担当者のファックス番号を記入します。
+        - 省略した場合、ファックス番号は表示されません。
+      contact_email:
+        - 連絡先に表示する部署・係・担当者のメールアドレスを記入します。
+        - 省略した場合、メールアドレスは表示されません。
+      contact_postal_code:
+        - 連絡先に表示する部署・係・担当者の郵便番号を記入します。
+        - 省略した場合、郵便番号は表示されません。
+      contact_address:
+        - 連絡先に表示する部署・係・担当者の住所を記入します。
+        - 省略した場合、住所は表示されません。
+      contact_link_url:
+        - 連絡先に表示する部署・係・担当者のリンクURLを記入します。
+        - 省略した場合、リンクURLは表示されません。
+      contact_link_name:
+        - 連絡先に表示する部署・係・担当者のリンク名を記入します。
+        - 省略した場合、リンクURLが表示されます。
+      contact_group_relation:
+        - グループの連絡先と連動するかどうかを選択します。
+        - 未選択の場合、「グループと連動する」が選択されているものとみなします。
+      contact_sub_group_ids:
+        - 組織一覧のページリストにて表示されるページの所属を選択します。
+    ss/contact:
+      name:
+        - CSV インポート時のキーとなる名前を記入します。他の連絡先と重複しない名前を記入してください。
+      contact_group_name:
+        - 連絡先に表示する表示用グループ名を記入します。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、グループ名が表示されます。
+      contact_charge:
+        - 連絡先に表示する担当部署・係・担当者名を記入します。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、担当部署・係は表示されません。
       contact_tel:
         - グループの電話番号を記入します。
-        - ページ作成時に連絡先として自動で挿入されます。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、電話番号は表示されません。
       contact_fax:
         - グループのファックス番号を記入します。
-        - ページ作成時に連絡先として自動で挿入されます。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、ファックス番号は表示されません。
       contact_email:
         - グループのメールアドレスを記入します。
-        - ページ作成時に連絡先として自動で挿入されます。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、メールアドレスは表示されません。
+      contact_postal_code:
+        - グループの郵便番号を記入します。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、郵便番号は表示されません。
+      contact_address:
+        - グループの住所を記入します。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、住所は表示されません。
       contact_link_url:
         - グループのリンクURLを記入します。
-        - ページ作成時に連絡先として自動で挿入されます。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、リンクURLは表示されません。
       contact_link_name:
         - グループのリンク名を記入します。
-        - ページ作成時に連絡先として自動で挿入されます。
+        - ページの連絡先に自動で挿入されます。
+        - 省略した場合、リンクURLが表示されます。
+      main_state:
+        - 「主」に設定した連絡先が、メールフォームの通知、期限切れページの通知やWebメールのグループメールのログインアカウントなどとして用いられます。
+
+    contact/page_count_service:
+      page_count_notice:
+        - "ページ数は%{expire_in}前の情報を表示している可能性があります。"
+        - 他にもサイトがある場合、他サイトのページもページ数には含まれています。
+        - 現況とは異なる可能性がある点に留意してください。
+
+    contact/addon/group:
+      main:
+        - 1グループがいくつかのページでそれぞれ異なる連絡先を使用している場合、識別名がナンバリングされ、連絡先を複数所持している状態になります。（グループ 1,グループ2…）
+        - 使用中の連絡先は削除することができませんので、主の連絡先に一括統合することで連絡先をまとめるか、ページの編集画面を開き別の連絡先を設定することで連絡先を個別に変更してください。
+        - " "
+        - "主の連絡先に一括統合する場合:"
+        - 1. 統合したい連絡先の「主」を選択する。
+        - 2. 「連携している連絡先を主の連絡先に一括統合する」をクリックし、画面の指示にしたがって統合する。
+        - " "
+        - "連絡先を個別に変更する場合:"
+        - 1. 変更したい連絡先のページ数のリンクをクリックする。クリックすると使用中のページが一覧表示されます。
+        - 2. 一覧に表示されているすべてのページの連絡先をページの編集画面で変更します。
+        - 3. 複数のサイトがある場合、他のサイトで連絡先を利用している場合があります。他のサイトの連絡先をブラウザで開いて、同様の操作を繰り返してください。
+
+  job:
+    models:
+      contact/page_count_job: 連絡先/使用数計数ジョブ
+      contact/unify_job: 連絡先/統合ジョブ

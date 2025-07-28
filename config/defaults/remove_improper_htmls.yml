@@ -1,0 +1,10 @@
+# remove_improper_htmls
+
+production: &production
+  ignore_paths: []
+
+test:
+  <<: *production
+
+development:
+  <<: *production

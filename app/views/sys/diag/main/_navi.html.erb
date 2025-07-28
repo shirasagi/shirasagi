@@ -5,6 +5,7 @@
     links << link_to("HTTP Test", sys_diag_https_path)
   end
   links << link_to("Server Info", sys_diag_server_path)
+  links << link_to("SSL/TLS Certificate", sys_diag_certificate_path)
 %>
 
 <% if links.length > 1 %>

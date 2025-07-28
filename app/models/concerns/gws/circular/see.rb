@@ -21,14 +21,12 @@ module Gws::Circular::See
     seen.exclude?(user.id.to_s)
   end
 
-  def set_seen(user)
-    self.seen[user.id.to_s] = Time.zone.now.utc
-    self
+  def set_seen!(user)
+    persist_atomic_operations('$set' => { "seen.#{user.id}" => Time.zone.now.utc })
   end
 
-  def unset_seen(user)
-    self.seen.delete(user.id.to_s)
-    self
+  def unset_seen!(user)
+    persist_atomic_operations('$unset' => { "seen.#{user.id}" => '' })
   end
 
   def see_action_label(user)

@@ -1,0 +1,36 @@
+<%
+  controller.stylesheet "swiper", media: "all"
+  controller.javascript "swiper", defer: true
+%>
+
+<div class="ss-swiper-slide" style="width: <%= width %>px;">
+  <%
+    slide_options.merge!(class: "swiper-container ss-swiper-slide-container ss-swiper-slide-main")
+  %>
+  <%= tag.swiper_container **slide_options do %>
+    <% links.each do |link| %>
+      <swiper-slide class="swiper-slide ss-swiper-slide-item" data-ss-file-id="<%= link.file_id %>">
+        <%
+          if link.file.sanitizer_state == 'wait'
+            inner_html = tag.div(class: "ss-swiper-slide-item-image") { tag.div(sanitizer_status(link.file), class: "mx-2 my-2") }
+          else
+            inner_html = image_tag(link.file.url, width: width, alt: link.name.presence || link.file.name, class: "ss-swiper-slide-item-image", loading: "lazy")
+          end
+        %>
+
+        <% if link.url.present? %>
+          <%=
+            if link.target == "_blank"
+              target_options = { target: "_blank", rel: "noopener" }
+            else
+              target_options = {}
+            end
+            link_to inner_html, sns_redirect_path(ref: link.url, back_to: request.url), class: "ss-swiper-slide-item-link", **target_options
+          %>
+        <% else %>
+          <%= inner_html %>
+        <% end %>
+      </swiper-slide>
+    <% end %>
+  <% end %>
+</div>

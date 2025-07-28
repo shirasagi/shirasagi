@@ -2,29 +2,45 @@ module History::Model::Data
   extend ActiveSupport::Concern
   extend SS::Translation
   include SS::Document
-  include SS::Reference::User
 
   included do
     store_in_repl_master
     index({ created: -1 })
-    index({ ref_coll: 1, "data._id" => 1, created: -1 })
+    index({ ref_coll: 1, ref_id: 1, created: -1 })
 
     cattr_reader(:max_age) { SS.config.ss.history_max_age || 20 }
 
+    belongs_to :user, class_name: "SS::User"
+    field :user_uid, type: String
+    field :user_name, type: String
+
+    belongs_to :member, class_name: "Cms::Member"
+    field :member_name, type: String
+
     field :version, type: String, default: SS.version
     field :ref_coll, type: String
+    field :ref_id, type: Object
     field :ref_class, type: String
     field :data, type: Hash
     field :state, type: String
     field :action, type: String, default: 'save'
+    field :host_info, type: Hash
+    field :request_info, type: Hash
 
     validates :ref_coll, presence: true
     validates :data, presence: true
+
+    before_save :copy_user_attrs
+    before_save :copy_member_attrs
   end
 
   module ClassMethods
     def root
       "#{SS::Application.private_root}/trash"
+    end
+
+    def user(user)
+      all.where(user_id: user.id)
     end
   end
 
@@ -38,6 +54,17 @@ module History::Model::Data
   end
 
   private
+
+  def copy_user_attrs
+    return unless user_id_changed?
+    self.user_uid = user.try(:uid)
+    self.user_name = user.try(:name)
+  end
+
+  def copy_member_attrs
+    return unless member_id_changed?
+    self.member_name = member.try(:name)
+  end
 
   def restore_data(data, opts = {})
     model.relations.each do |k, relation|

@@ -4,6 +4,7 @@ module Opendata::Resource::HistoryArchiveFileModel
   include SS::Model::File
   include Cms::Reference::Site
   include Cms::SitePermission
+  include Cms::Lgwan::File
 
   included do
     set_permission_name "opendata_histories", :read

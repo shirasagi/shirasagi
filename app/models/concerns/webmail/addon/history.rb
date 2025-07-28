@@ -18,12 +18,13 @@ module Webmail::Addon::History
   private
 
   def save_history_for_save
-    return if @db_changes.blank?
+    field_changes = changes.presence || previous_changes
+    return if field_changes.blank?
 
-    if @db_changes.key?('_id')
+    if field_changes.key?('_id')
       save_history mode: 'create'
     else
-      save_history mode: 'update', updated_fields: @db_changes.keys.reject { |s| s =~ /_hash$/ }
+      save_history mode: 'update', updated_fields: field_changes.keys.reject { |s| s =~ /_hash$/ }
     end
   end
 

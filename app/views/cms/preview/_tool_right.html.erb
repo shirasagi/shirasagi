@@ -4,7 +4,7 @@
 
 <div class="ss-preview-wrap-row ss-preview-btn-group">
   <label for="ss-preview-date"><%= t("cms.preview_date") %></label>
-  <input type="text" id="ss-preview-date" class="ss-preview-date" value="<%= I18n.l(@cur_date, format: :picker)  %>" />
+  <input type="text" id="ss-preview-date" class="ss-preview-date" name="ss-preview-date" value="<%= I18n.l(@cur_date, format: :picker)  %>" />
   <% if @cur_site.mobile_enabled? %>
     <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-pc" value="<%= t("ss.links.pc") %>">
     <input type="button" class="ss-preview-btn ss-preview-btn-outline ss-preview-btn-mobile" value="<%= t("ss.links.mobile") %>">

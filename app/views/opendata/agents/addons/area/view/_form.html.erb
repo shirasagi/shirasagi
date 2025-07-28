@@ -25,7 +25,7 @@ end
 
 %>
 <fieldset class="area-form">
-  <%= f.hidden_field "area_ids[]", value: "" %>
+  <%= f.hidden_field "area_ids[]", value: "", id: nil %>
 
   <% categories.each do |cate| %>
   <div class="parent">

@@ -1,5 +1,5 @@
 <%
-  return unless Gws::Attendance::TimeCard.allowed?(:use, @cur_user, site: @cur_site)
+  return unless @portlet.time_card_allowed?(:use, @cur_user, site: @cur_site)
 
   break_times = SS.config.gws.attendance['max_break'].times.to_a.select do |i|
     @cur_site["attendance_break_time_state#{i + 1}"] == 'show'
@@ -40,7 +40,7 @@
 
   <div class="header">
     <%= I18n.l(Time.zone.now.to_date, format: :full) %>
-    <%= link_to t('ss.buttons.download'), download_gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}"), class: 'btn' %>
+    <%= link_to t('ss.buttons.download'), @portlet.download_path(site: @cur_site, year_month: "#{date.year}#{format('%02d', date.month)}"), class: 'btn' %>
   </div>
   <% if time_card.locked? %>
     <div><%= t('gws/attendance.already_locked') %></div>
@@ -82,8 +82,8 @@
     '.gws-attendance',
     {
       ref: <%== request.fullpath.to_json %>,
-      punchUrl: <%== "#{gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}")}/:TYPE".to_json %>,
-      editUrl: <%== time_gws_attendance_time_cards_path(year_month: "#{date.year}#{format('%02d', date.month)}", day: format('%02d', date.day), type: ':TYPE', ref: request.fullpath).to_json %>,
+      punchUrl: <%== "#{@portlet.punch_path(site: @cur_site, year_month: "#{date.year}#{format('%02d', date.month)}")}/:TYPE".to_json %>,
+      editUrl: <%== @portlet.edit_path(site: @cur_site, year_month: "#{date.year}#{format('%02d', date.month)}", day: format('%02d', date.day), type: ':TYPE', ref: request.fullpath).to_json %>,
       confirmMessage: <%== t('gws/attendance.confirm.punch').to_json %>,
       successMessage: <%== t('gws/attendance.notice.punched').to_json %>
     }

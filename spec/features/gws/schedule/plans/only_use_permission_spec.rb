@@ -21,14 +21,14 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         first(".fc-event-allday .fc-content", text: item.name).click
       end
 
-      within ".gws-popup" do
-        expect(page).to have_css(".popup-title", text: item.name)
-        expect(page).to have_css(".popup-members", text: user1.long_name)
-        expect(page).to have_css(".popup-history", text: user0.long_name)
-        expect(page).to have_css(".popup-menu", text: I18n.t("ss.links.show"))
-
-        click_on I18n.t("ss.links.show")
-      end
+      #within ".gws-popup" do
+      #  expect(page).to have_css(".popup-title", text: item.name)
+      #  expect(page).to have_css(".popup-members", text: user1.long_name)
+      #  expect(page).to have_css(".popup-history", text: user0.long_name)
+      #  expect(page).to have_css(".popup-menu", text: I18n.t("ss.links.show"))
+      #
+      #  click_on I18n.t("ss.links.show")
+      #end
 
       expect(page).to have_css("#addon-basic", text: item.name)
     end

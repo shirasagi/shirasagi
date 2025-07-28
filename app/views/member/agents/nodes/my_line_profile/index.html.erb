@@ -16,7 +16,12 @@
       <% if root.effective_with?(@item.deliver_category_ids) %>
         <dl class="column column--<%= root.filename %>">
           <dt><%= root.name %></dt>
-          <dd><%= children.map(&:name).join(", ") %></dd>
+          <dd>
+            <%= children.map(&:name).join(", ") %>
+            <% if root.category_html.present? %>
+              <%== root.category_html.html_safe %>
+            <% end %>
+          </dd>
         </dl>
       <% end %>
     <% end %>

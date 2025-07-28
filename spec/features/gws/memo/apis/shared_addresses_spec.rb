@@ -46,16 +46,14 @@ describe Gws::Memo::Apis::SharedAddressesController, type: :feature, dbscope: :e
   end
 
   before do
-    @save = described_class::MAX_ITEMS_PER_PAGE
-    described_class.send(:remove_const, :MAX_ITEMS_PER_PAGE)
-    described_class.const_set(:MAX_ITEMS_PER_PAGE, 5)
+    @save = SS.max_items_per_page
+    SS.max_items_per_page = 5
 
     login_gws_user
   end
 
   after do
-    described_class.send(:remove_const, :MAX_ITEMS_PER_PAGE)
-    described_class.const_set(:MAX_ITEMS_PER_PAGE, @save)
+    SS.max_items_per_page = @save
   end
 
   describe "tab and pagination" do
@@ -63,57 +61,47 @@ describe Gws::Memo::Apis::SharedAddressesController, type: :feature, dbscope: :e
       visit gws_memo_messages_path(site: site, folder: "INBOX")
       click_on I18n.t("ss.links.new")
 
-      within "dl.to" do
-        click_on I18n.t("modules.gws/shared_address")
+      within 'dl.see.all' do
+        wait_for_cbox_opened { click_on I18n.t("modules.gws/shared_address") }
       end
 
       within "#ajax-box" do
         expect(page).to have_css(".gws-tabs .current", text: Gws::SharedAddress::Address.model_name.human)
-      end
-      within "#gws-memo-persona-address-personal" do
-        expect(page).to have_css(".list-item", text: shared_address1.name)
-        expect(page).to have_css(".pagination .current", text: "1")
-      end
+        within "#gws-memo-persona-address-personal" do
+          expect(page).to have_css(".list-item", text: shared_address1.name)
+          expect(page).to have_css(".pagination .current", text: "1")
+        end
 
-      # change tab to group
-      within "#ajax-box" do
-        first(".gws-tabs a[href='#gws-memo-persona-address-group']").click
-      end
+        # change tab to group
+        js_click first(".gws-tabs a[href='#gws-memo-persona-address-group']")
 
-      within "#ajax-box" do
         expect(page).to have_css(".gws-tabs .current", text: Gws::SharedAddress::Group.model_name.human)
-      end
-      within "#gws-memo-persona-address-group" do
-        expect(page).to have_css(".list-item", text: shared_address_group1.name)
-        expect(page).to have_css(".pagination .current", text: "1")
-      end
+        within "#gws-memo-persona-address-group" do
+          expect(page).to have_css(".list-item", text: shared_address_group1.name)
+          expect(page).to have_css(".pagination .current", text: "1")
+        end
 
-      # move next page on group
-      within "#gws-memo-persona-address-group" do
-        first(".pagination .next a").click
-      end
+        # move next page on group
+        within "#gws-memo-persona-address-group" do
+          js_click first(".pagination .next a")
+        end
 
-      # selected tab is kept
-      within "#ajax-box" do
+        # selected tab is kept
         expect(page).to have_css(".gws-tabs .current", text: Gws::SharedAddress::Group.model_name.human)
-      end
-      within "#gws-memo-persona-address-group" do
-        expect(page).to have_css(".list-item", text: shared_address_group6.name)
-        expect(page).to have_css(".pagination .current", text: "2")
-      end
+        within "#gws-memo-persona-address-group" do
+          expect(page).to have_css(".list-item", text: shared_address_group6.name)
+          expect(page).to have_css(".pagination .current", text: "2")
+        end
 
-      # back tab to address
-      within "#ajax-box" do
-        first(".gws-tabs a[href='#gws-memo-persona-address-personal']").click
-      end
+        # back tab to address
+        js_click first(".gws-tabs a[href='#gws-memo-persona-address-personal']")
 
-      within "#ajax-box" do
         expect(page).to have_css(".gws-tabs .current", text: Gws::SharedAddress::Address.model_name.human)
-      end
-      # current page is still at 1
-      within "#gws-memo-persona-address-personal" do
-        expect(page).to have_css(".list-item", text: shared_address1.name)
-        expect(page).to have_css(".pagination .current", text: "1")
+        # current page is still at 1
+        within "#gws-memo-persona-address-personal" do
+          expect(page).to have_css(".list-item", text: shared_address1.name)
+          expect(page).to have_css(".pagination .current", text: "1")
+        end
       end
     end
   end

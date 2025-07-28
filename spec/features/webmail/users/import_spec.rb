@@ -41,7 +41,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/accounts_1-1.csv"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       user1.reload
       expect(user1).to have(1).imap_settings
@@ -58,7 +58,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
       expect(user1.organization.name).to eq "シラサギ市"
       expect(user1.group_ids).to eq [ SS::Group.find_by(name: "シラサギ市/企画政策部/政策課").id ]
       expect(user1.webmail_role_ids).to eq [ Webmail::Role.find_by(name: "管理者").id ]
-      expect(user1.sys_role_ids).to eq [ Sys::Role.and_general.first.id ]
+      expect(user1.sys_role_ids).to eq [ sys_role1.id ]
       user1.imap_settings.first.tap do |imap_setting|
         expect(imap_setting.name).to eq '規定の設定1'
         expect(imap_setting.from).to eq 'テスト・ユーザー1'
@@ -109,7 +109,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/accounts_1-1.csv"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       visit webmail_users_path
       within ".nav-menu" do
@@ -119,7 +119,7 @@ describe "webmail_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/webmail/accounts_1-2.csv"
         click_button I18n.t("ss.import")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       user1.reload
       expect(user1).to have(1).imap_settings

@@ -15,13 +15,13 @@ $('.mod-photo a.ajax-box').data('on-select', function($item) {
 
 <dl class="see mod-photo spot">
   <dd class="wide">
-    <%= f.hidden_field "member_photo_ids[]", value: "" %>
+    <%= f.hidden_field "member_photo_ids[]", value: "", id: nil %>
     <%= link_to t("member.view.select_page"), member_apis_photos_path(@cur_site), class: "ajax-box btn" %>
 
     <div id="selected-files">
       <% @item.member_photos.each do |item| %>
         <article class="file-view member-photo" data-id="<%= item.id %>" data-file-id="<%= item.id %>">
-          <%= hidden_field_tag "item[member_photo_ids][]", item.id, class: "photo-id" %>
+          <%= hidden_field_tag "item[member_photo_ids][]", item.id, id: nil, class: "photo-id" %>
           <%= link_to item.image.url, class: :thumb, target: "_blank", rel: "noopener" do %>
             <%= image_tag item.image.thumb_url, alt: item.name %>
           <% end %>

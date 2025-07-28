@@ -37,8 +37,12 @@ class Fs::FilesController < ApplicationController
   def cur_user
     @cur_user ||= begin
       user, _login_path, _logout_path = get_user_by_access_token
+      unless user
+        user, _token = get_user_by_oauth2_token
+      end
       user ||= get_user_by_session
       SS.current_user = user
+      SS.change_locale_and_timezone(SS.current_user)
       user
     end
   end
@@ -68,7 +72,7 @@ class Fs::FilesController < ApplicationController
     variant = item.variants.from_filename(name_or_filename)
     if !variant
       Rails.logger.warn { "name or filename '#{name_or_filename}' is mismatched" }
-      raise "404"
+      raise SS::NotFoundError
     end
 
     @cur_item = item
@@ -89,7 +93,10 @@ class Fs::FilesController < ApplicationController
         cms_sites.first
       else
         # リクエスト・ホストから一意にサイトが決まらないケース
-        owner_item = cur_item.send(:effective_owner_item)
+        if cur_item.respond_to?(:effective_owner_item)
+          # Gws::Share::File は #effective_owner_item に応答しない
+          owner_item = cur_item.effective_owner_item
+        end
         if owner_item.try(:site) && owner_item.site.is_a?(SS::Model::Site)
           # owner_item is a cms object.
           cms_sites.find { |site| site.id == owner_item.site_id }
@@ -101,8 +108,17 @@ class Fs::FilesController < ApplicationController
     end
   end
 
+  def cur_member
+    return @cur_member if instance_variable_defined?(:@cur_member)
+
+    @cur_member = begin
+      cur_site # ensure to set "@cur_site" member variable
+      get_member_by_session
+    end
+  end
+
   def deny
-    member = get_member_by_session
+    member = cur_member
 
     tags = []
     tags << "file:#{cur_item.id}(#{cur_item.filename})" if cur_item
@@ -111,7 +127,7 @@ class Fs::FilesController < ApplicationController
     tags << "member:#{member.id}(#{member.name})" if member
 
     Rails.logger.tagged(*tags) do
-      raise "404" unless cur_item.previewable?(site: cur_site, user: cur_user, member: member)
+      raise SS::NotFoundError unless cur_item.previewable?(site: cur_site, user: cur_user, member: member)
       set_last_logged_in
     end
   end
@@ -144,17 +160,24 @@ class Fs::FilesController < ApplicationController
     Fs.exist?(file) ? file : "#{Rails.public_path}/.error_pages/500.html"
   end
 
-  def send_item(disposition = :inline)
+  def send_item(disposition = nil)
     path = cur_variant ? cur_variant.path : cur_item.path
     cur_variant.create! if cur_variant
-    raise "404" unless Fs.file?(path)
+    raise SS::NotFoundError unless Fs.file?(path)
 
     set_last_modified
 
     content_type = cur_variant ? cur_variant.content_type : cur_item.content_type
     content_type = content_type.presence || SS::MimeType::DEFAULT_MIME_TYPE
+
+    disposition = :attachment unless SS::MimeType.safe_for_inline?(content_type)
+    disposition ||= :inline
+
     download_filename = cur_variant ? cur_variant.download_filename : cur_item.download_filename
     ss_send_file cur_variant || cur_item, type: content_type, filename: download_filename, disposition: disposition
+  rescue MiniMagick::Error => e
+    Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
+    head :not_found
   end
 
   public
@@ -174,7 +197,7 @@ class Fs::FilesController < ApplicationController
       @cur_variant = cur_item.variants[{ width: width, height: height }]
     elsif size.present? && (variant = cur_item.variants[size.to_s.to_sym])
       @cur_variant = variant
-    else
+    elsif cur_item.respond_to?(:variants)
       @cur_variant = cur_item.variants[:thumb]
     end
 

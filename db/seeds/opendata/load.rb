@@ -82,10 +82,6 @@ def save_layout(data)
 
   item = Cms::Layout.find_or_initialize_by(cond)
   item.attributes = data.merge html: html
-  if SS::Lgwan.enabled?
-    html.gsub!('{{ part "mypage-login" }}', '')
-    html.gsub!('{{ part "mypage-tabs" }}', '')
-  end
   item.cur_user = @user
   item.save
   item.add_to_set group_ids: @site.group_ids
@@ -104,9 +100,7 @@ save_layout filename: "dataset-top.layout.html", name: "データ：トップ"
 save_layout filename: "idea-bunya.layout.html", name: "アイデア：分野、アイデア検索"
 save_layout filename: "idea-page.layout.html", name: "アイデア：詳細ページ"
 save_layout filename: "idea-top.layout.html", name: "アイデア：トップ"
-if !SS::Lgwan.enabled?
-  save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
-end
+save_layout filename: "mypage-page.layout.html", name: "マイページ：詳細"
 save_layout filename: "mypage-top.layout.html", name: "マイページ：トップ、メンバー、SPARQL"
 save_layout filename: "portal-event.layout.html", name: "ポータル：イベント"
 save_layout filename: "portal-general.layout.html", name: "ポータル：汎用"
@@ -119,7 +113,6 @@ layouts = Hash[*array.flatten]
 puts "# nodes"
 
 def save_node(data)
-  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename], route: data[:route] }
 
@@ -145,6 +138,7 @@ end
 save_node filename: "css", name: "CSS", route: "uploader/file"
 save_node filename: "js", name: "Javascript", route: "uploader/file"
 save_node filename: "img", name: "画像", route: "uploader/file"
+save_node filename: "materials", name: "資料", route: "uploader/file"
 save_node filename: "ads", name: "広告", route: "ads/banner"
 
 save_node filename: "docs", name: "お知らせ", route: "article/page", shortcut: "show",
@@ -202,25 +196,23 @@ save_node filename: "api", name: "API", route: "opendata/api"
 save_node filename: "member", name: "ユーザー", route: "opendata/member",
   layout_id: layouts["mypage-top"].id
 
-if !SS::Lgwan.enabled?
-  save_node filename: "auth", name: "ログイン", route: "member/login",
-    layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
-    twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
-    google_oauth2_oauth: "enabled", github_oauth: "enabled"
+save_node filename: "auth", name: "ログイン", route: "member/login",
+  layout_id: layouts["mypage-top"].id, redirect_url: "/mypage/", form_auth: "enabled",
+  twitter_oauth: "enabled", facebook_oauth: "enabled", yahoojp_oauth: "enabled",
+  google_oauth2_oauth: "enabled", github_oauth: "enabled"
 
-  save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
-    layout_id: layouts["mypage-top"].id
-  save_node filename: "mypage/favorite", name: "マイリスト", route: "opendata/my_favorite_dataset",
-    layout_id: layouts["mypage-page"].id, order: 10
-  save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
-    layout_id: layouts["mypage-page"].id, order: 20
-  save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
-    layout_id: layouts["mypage-page"].id, order: 30
-  save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
-    layout_id: layouts["mypage-page"].id, order: 40
-  save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
-    layout_id: layouts["mypage-page"].id, order: 50
-end
+save_node filename: "mypage", name: "マイページ", route: "opendata/mypage",
+  layout_id: layouts["mypage-top"].id
+save_node filename: "mypage/favorite", name: "マイリスト", route: "opendata/my_favorite_dataset",
+  layout_id: layouts["mypage-page"].id, order: 10
+save_node filename: "mypage/dataset", name: "データカタログ", route: "opendata/my_dataset",
+  layout_id: layouts["mypage-page"].id, order: 20
+save_node filename: "mypage/app", name: "アプリマーケット", route: "opendata/my_app",
+  layout_id: layouts["mypage-page"].id, order: 30
+save_node filename: "mypage/idea", name: "アイデアボックス", route: "opendata/my_idea",
+  layout_id: layouts["mypage-page"].id, order: 40
+save_node filename: "mypage/profile", name: "プロフィール", route: "opendata/my_profile",
+  layout_id: layouts["mypage-page"].id, order: 50
 
 save_node filename: "bunya", name: "分野", route: "cms/node"
 save_node filename: "bunya/kanko", name: "観光・文化・スポーツ", route: "opendata/category", order: 1
@@ -320,6 +312,9 @@ save_node filename: "chiiki/shirasagi", name: "シラサギ市", route: "opendat
   save_node filename: "chiiki/shirasagi/#{data[1]}", name: data[0], route: "opendata/area", order: idx + 1
 end
 
+array   = Cms::Node.where(site_id: @site._id).map { |m| [m.filename.sub(/\..*$/, '\1'), m] }
+nodes = Hash[*array.flatten]
+
 # inquiry
 
 def save_inquiry_column(data)
@@ -355,7 +350,6 @@ save_inquiry_column node_id: inquiry_node.id, name: "お問い合わせ内容", 
 puts "# parts"
 
 def save_part(data)
-  return if SS::Lgwan.enabled? && data[:route].start_with?('member/')
   puts data[:name]
   cond = { site_id: @site._id, filename: data[:filename] }
 
@@ -365,17 +359,7 @@ def save_part(data)
   lower_html = File.read("parts/" + data[:filename].sub(/\.html$/, ".lower_html")) rescue nil
 
   item = data[:route].sub("/", "/part/").camelize.constantize.unscoped.find_or_initialize_by(cond)
-  if html
-    if SS::Lgwan.enabled?
-      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリ登録</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/app/">アプリを登録する</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセット登録</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/dataset/">データセットを登録する</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデア登録</a></li>', '')
-      html.gsub!('<li><a class="entry" href="/mypage/idea/">アイデアを登録する</a></li>', '')
-    end
-    item.html = html
-  end
+  item.html = html if html
   item.upper_html = upper_html if upper_html
   item.loop_html = loop_html if loop_html
   item.lower_html = lower_html if lower_html
@@ -405,11 +389,9 @@ save_part filename: "idea-attention.part.html", name: "アイデア：注目順"
   route: "opendata/idea", limit: 10, sort: "attention"
 save_part filename: "idea-head.part.html", name: "アイデア：ヘッダー", route: "cms/free"
 save_part filename: "idea-kv.part.html", name: "アイデア：キービジュアル", route: "cms/free"
-if !SS::Lgwan.enabled?
-  save_part filename: "mypage-login.part.html", name: "ログイン", \
-    route: "opendata/mypage_login", ajax_view: "enabled"
-  save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
-end
+save_part filename: "mypage-login.part.html", name: "ログイン", \
+  route: "opendata/mypage_login", ajax_view: "enabled"
+save_part filename: "mypage-tabs.part.html", name: "マイページ：タブ", route: "cms/free"
 save_part filename: "portal-about.part.html", name: "ポータル：Our Open Dateとは", route: "cms/free"
 save_part filename: "portal-app.part.html", name: "ポータル：オープンアプリマーケット", \
   route: "opendata/app", limit: 5, sort: "released"
@@ -448,31 +430,38 @@ def save_page(data)
   item
 end
 
-contact_group = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
+contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
 contact_group_id = contact_group.id rescue nil
-contact_charge = contact_group_id ? "オープンデータ担当" : nil
-contact_email = contact_group_id ? "admin@example.jp" : nil
-contact_tel = contact_group_id ? "000-000-0000" : nil
-contact_fax = contact_group_id ? "000-000-0000" : nil
-contact_link_url = contact_group_id ? link_url : nil
-contact_link_name = contact_group_id ? link_url : nil
+contact = contact_group.contact_groups.first
 
 save_page route: "cms/page", filename: "index.html", name: "トップページ", layout_id: layouts["portal-top"].id
 save_page route: "cms/page", filename: "tutorial-data.html", name: "データ登録手順", layout_id: layouts["portal-general"].id
 save_page route: "cms/page", filename: "tutorial-app.html", name: "アプリ登録手順", layout_id: layouts["portal-general"].id
 save_page route: "cms/page", filename: "tutorial-idea.html", name: "アイデア登録手順", layout_id: layouts["portal-general"].id
-page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id, \
-  map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([34.067022, 134.589982])}]), \
-  contact_group_id: contact_group_id, contact_charge: contact_charge, contact_email: contact_email, \
-  contact_tel: contact_tel, contact_fax: contact_fax, contact_link_url: contact_link_url, contact_link_name: contact_link_name
-page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。", \
-  layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
-  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
-  contact_link_url: contact_link_url, contact_link_name: contact_link_name
-page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。", \
-  layout_id: layouts["portal-general"].id, contact_group_id: contact_group_id, contact_charge: contact_charge, \
-  contact_email: contact_email, contact_tel: contact_tel, contact_fax: contact_fax,
-  contact_link_url: contact_link_url, contact_link_name: contact_link_name
+page0 = save_page route: "article/page", filename: "docs/1.html", name: "○○が公開されました。", layout_id: layouts["portal-general"].id,
+  map_points: Map::Extensions::Points.new([{loc: Map::Extensions::Loc.mongoize([134.589982, 34.067022])}]),
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name
+page1 = save_page route: "article/page", filename: "docs/2.html", name: "○○○○○○が公開されました。",
+  layout_id: layouts["portal-general"].id,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name
+page2 = save_page route: "article/page", filename: "docs/3.html", name: "○○○○○○○○が公開されました。",
+  layout_id: layouts["portal-general"].id,
+  contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name
 recurrence = { kind: "date", start_at: Time.zone.today + 7, frequency: "daily", until_on: Time.zone.today + 18 }
 event0 = save_page route: "event/page", filename: "event/4.html", name: "オープンデータイベント", \
   layout_id: layouts["portal-event"].id,
@@ -534,7 +523,7 @@ license_file6 = save_ss_files "fixtures/cc-by-nc-nd.png", filename: "cc-by-nc-nd
 license_file7 = save_ss_files "fixtures/cc-zero.png", filename: "cc-zero.png", model: "opendata/license"
 
 license_cc_by = save_license name: "表示（CC BY）", file_id: license_file1.id, order: 1,
-  default_state: 'default', uid: "cc-by"
+  default_state: 'default', uid: "cc-by", metadata_uid: 'CC BY 4.0'
 save_license name: "表示-継承（CC BY-SA）", file_id: license_file2.id, order: 2, uid: "cc-by-sa"
 save_license name: "表示-改変禁止（CC BY-ND）", file_id: license_file3.id, order: 3, uid: "cc-by-nd"
 save_license name: "表示-非営利（CC BY-NC）", file_id: license_file4.id, order: 4, uid: "cc-by-nc"
@@ -678,6 +667,331 @@ end
     app_ids: Opendata::App.site(@site).pluck(:_id).sample(1),
     area_ids: Opendata::Node::Area.site(@site).pluck(:_id).sample(1)
 end
+
+## -------------------------------------
+puts "# opendata metadata"
+
+def save_metadata_importer(data)
+  puts data[:name]
+  cond = { site_id: @site._id, name: data[:name] }
+
+  item = Opendata::Metadata::Importer.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+@metadata_importer = save_metadata_importer cur_node: nodes['dataset'], cur_user: @user, name: 'シラサギ市',
+  source_url: ::Addressable::URI.join(@site.full_url, 'materials/shirasagi_test_date.csv'),
+  default_area_ids: [nodes['chiiki/shirasagi'].id], notice_user_ids: [@user.id]
+
+def save_estat_category_setting(data)
+  puts data[:category].name
+  cond = { site_id: @site._id, importer_id: data[:importer].id, category_id: data[:category].id }
+
+  item = Opendata::Metadata::Importer::EstatCategorySetting.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+Opendata::Node::EstatCategory.site(@site).each do |node|
+  save_estat_category_setting cur_user: @user, importer: @metadata_importer,
+    category: node, order: 0,
+    conditions: [{ type: 'metadata_estat_category', value: node.name, operator: 'match' }.with_indifferent_access]
+end
+
+def save_metadata_report(data)
+  puts data[:name]
+  cond = { site_id: @site._id, importer_id: data[:importer_id] }
+
+  item = Opendata::Metadata::Importer::Report.find_or_create_by cond
+  puts item.errors.full_messages unless item.update data
+  item
+end
+
+@metadata_report = save_metadata_report importer: @metadata_importer
+
+def save_metadata_dataset(idx, data)
+  dataset_report = @metadata_report.new_dataset
+  cond = { site_id: @site.id, filename: data[:filename] }
+
+  item = Opendata::Dataset.find_or_create_by cond
+  attributes = data[:metadata_imported_attributes]
+  data.merge!(
+    {
+      created: Time.zone.parse(attributes['データセット_公開日']),
+      updated: Time.zone.parse(attributes['データセット_最終更新日']),
+      released: Time.zone.parse(attributes['データセット_公開日']),
+      name: attributes['データセット_タイトル'],
+      text: attributes['データセット_概要'],
+      estat_category_ids: Opendata::Node::EstatCategory.site(@site).where(name: attributes['データセット_分類']).pluck(:id),
+      area_ids: @metadata_importer.default_area_ids,
+      metadata_importer_id: @metadata_importer.id,
+      metadata_imported: Time.zone.now,
+      metadata_source_url: attributes['データセット_URL'],
+      metadata_host: @metadata_importer.source_host,
+      metadata_dataset_id: attributes['データセット_ID'].to_s.gsub(/\R|\s|\u00A0|　/, ''),
+      metadata_japanese_local_goverment_code: attributes['全国地方公共団体コード'],
+      metadata_local_goverment_name: attributes['地方公共団体名'],
+      metadata_dataset_keyword: attributes['データセット_キーワード'],
+      metadata_dataset_released: Time.zone.parse(attributes['データセット_公開日']),
+      metadata_dataset_updated: Time.zone.parse(attributes['データセット_最終更新日']),
+      metadata_dataset_url: attributes['データセット_URL'],
+      metadata_dataset_update_frequency: attributes['データセット_更新頻度'],
+      metadata_dataset_follow_standards: attributes['データセット_準拠する標準'],
+      metadata_dataset_related_document: attributes['データセット_関連ドキュメント'],
+      metadata_dataset_target_period: attributes['データセット_対象期間'],
+      metadata_dataset_creator: attributes['データセット_作成者'],
+      metadata_dataset_contact_name: attributes['データセット_連絡先名称'],
+      metadata_dataset_contact_email: attributes['データセット_連絡先メールアドレス'],
+      metadata_dataset_contact_tel: attributes['データセット_連絡先電話番号'],
+      metadata_dataset_contact_ext: attributes['データセット_連絡先内線番号'],
+      metadata_dataset_contact_form_url: attributes['データセット_連絡先FormURL'],
+      metadata_dataset_contact_remark: attributes['データセット_連絡先備考（その他、SNSなど）'],
+      metadata_dataset_remark: attributes['データセット_備考']
+    }
+  )
+  def item.set_updated; end
+  puts item.errors.full_messages unless item.update data
+  save_metadata_resource(idx, item, dataset_report, data)
+  puts item.errors.full_messages unless item.save
+  dataset_report.set_reports(
+    item, item.metadata_imported_attributes, @metadata_importer.source_url, idx
+  )
+  dataset_report.save
+end
+
+def save_metadata_resource(idx, dataset, report, data)
+  url = data[:metadata_imported_attributes]['ファイル_ダウンロードURL']
+  license = @metadata_importer.send(
+    :get_license_from_metadata_uid, data[:metadata_imported_attributes]['ファイル_ライセンス']
+  )
+  report_resource = report.new_resource
+  resource = dataset.resources.select { |r| r.source_url == url }.first
+  if resource.nil?
+    resource = Opendata::Resource.new
+    dataset.resources << resource
+  end
+  filename = data[:metadata_imported_attributes]['ファイル_タイトル'].to_s + ::File.extname(url.to_s)
+  resource_data = {
+    source_url: url,
+    name: data[:metadata_imported_attributes]['ファイル_タイトル'].presence || filename,
+    text: data[:metadata_imported_attributes]['ファイル_説明'],
+    filename: filename,
+    format: data[:metadata_imported_attributes]['ファイル形式'],
+    license: license,
+    updated: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_最終更新日']),
+    created: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_公開日']),
+    metadata_importer: @metadata_importer,
+    metadata_host: @metadata_importer.source_host,
+    metadata_imported: Time.zone.now,
+    metadata_imported_url: @metadata_importer.source_url,
+    metadata_imported_attributes: data[:metadata_imported_attributes],
+    metadata_file_access_url: data[:metadata_imported_attributes]['ファイル_アクセスURL'],
+    metadata_file_download_url: data[:metadata_imported_attributes]['ファイル_ダウンロードURL'],
+    metadata_file_released: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_公開日']),
+    metadata_file_updated: Time.zone.parse(data[:metadata_imported_attributes]['ファイル_最終更新日']),
+    metadata_file_terms_of_service: data[:metadata_imported_attributes]['ファイル_利用規約'],
+    metadata_file_related_document: data[:metadata_imported_attributes]['ファイル_関連ドキュメント'],
+    metadata_file_follow_standards: data[:metadata_imported_attributes]['ファイル_準拠する標準'],
+    metadata_file_copyright: data[:metadata_imported_attributes]['ファイル_著作権表記']
+  }
+  def resource.set_updated; end
+  puts resource.errors.full_messages unless resource.update resource_data
+  report_resource.set_reports(resource, dataset.metadata_imported_attributes, idx)
+end
+
+save_metadata_dataset 0, filename: "dataset/metadata_dataset1.html", route: "opendata/dataset",
+  layout_id: layouts["dataset-page"].id,
+  metadata_imported_attributes: {
+    'データセット_ID': "1111111111",
+    '全国地方公共団体コード': "111111",
+    '地方公共団体名': "オオワシ県シラサギ市",
+    'データセット_タイトル': "指定管理者制度導入施設一覧",
+    'データセット_サブタイトル': "指定管理者制度導入施設一覧",
+    'データセット_概要': "シラサギ市の指定管理者制度導入施設一覧",
+    'データセット_キーワード': "指定管理",
+    'データセット_分類': "行財政",
+    'データセット_ユニバーサルメニュー': "観光情報;観光名所;自然;レジャー",
+    'データセット_公開日': "2024/2/1",
+    'データセット_最終更新日': "2024/7/1",
+    'データセット_バージョン': "A1.0",
+    'データセット_言語': "ja",
+    'データセット_URL': "https://opendata.demo.ss-proj.org/",
+    'データセット_更新頻度': "1年に1回",
+    'データセット_準拠する標準': "自治体標準オープンデータセット",
+    'データセット_関連ドキュメント': "http://www.test.jp/doc.html",
+    'データセット_来歴情報': "2024年2月11日：3件新規追加",
+    'データセット_対象地域': "オオワシ県シラサギ市",
+    'データセット_対象期間': "開始年月日/終了年月日 : 2024年2月1日/2024年7月1日",
+    'データセット_作成者': "○○課○○係○○担当",
+    'データセット_連絡先名称': "シラサギ市 企画制作部 広報課",
+    'データセット_連絡先メールアドレス': "koho@example.jp",
+    'データセット_連絡先電話番号': "111-111-1111",
+    'データセット_連絡先内線番号': "111-111-1111",
+    'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
+    'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
+    'データセット_備考': "特になし",
+    'ファイル_タイトル': "manager-system.csv",
+    'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_説明': "シラサギ市の指定管理者制度導入施設一覧",
+    'ファイル形式': "csv",
+    'ファイル_ライセンス': "CC BY 4.0",
+    'ファイル_ステータス': "配信中",
+    'ファイル_サイズ': "8053",
+    'ファイル_公開日': "2024/2/1",
+    'ファイル_最終更新日': "2024/7/1",
+    'ファイル_利用規約': "https://opendata.demo.ss-proj.org/",
+    'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
+    'ファイル_言語': "ja",
+    'ファイル_準拠する標準': "自治体標準オープンデータセット",
+    'ファイル_API対応有無': "有",
+    'ファイル_著作権表記': "株式会社〇〇"
+  }.with_indifferent_access
+save_metadata_dataset 1, filename: "dataset/metadata_dataset1.html", route: "opendata/dataset",
+  layout_id: layouts["dataset-page"].id,
+  metadata_imported_attributes: {
+    'データセット_ID': "1111111111",
+    '全国地方公共団体コード': "111111",
+    '地方公共団体名': "オオワシ県シラサギ市",
+    'データセット_タイトル': "指定管理者制度導入施設一覧",
+    'データセット_サブタイトル': "指定管理者制度導入施設一覧",
+    'データセット_概要': "シラサギ市の指定管理者制度導入施設一覧",
+    'データセット_キーワード': "指定管理",
+    'データセット_分類': "行財政",
+    'データセット_ユニバーサルメニュー': "観光情報;観光名所;自然;レジャー",
+    'データセット_公開日': "2024/2/1",
+    'データセット_最終更新日': "2024/7/1",
+    'データセット_バージョン': "A1.0",
+    'データセット_言語': "ja",
+    'データセット_URL': "https://opendata.demo.ss-proj.org/",
+    'データセット_更新頻度': "1年に1回",
+    'データセット_準拠する標準': "自治体標準オープンデータセット",
+    'データセット_関連ドキュメント': "http://www.test.jp/doc.html",
+    'データセット_来歴情報': "2024年2月11日：3件新規追加",
+    'データセット_対象地域': "オオワシ県シラサギ市",
+    'データセット_対象期間': "開始年月日/終了年月日 : 2024年2月1日/2024年7月1日",
+    'データセット_作成者': "○○課○○係○○担当",
+    'データセット_連絡先名称': "シラサギ市 企画制作部 広報課",
+    'データセット_連絡先メールアドレス': "koho@example.jp",
+    'データセット_連絡先電話番号': "111-111-1111",
+    'データセット_連絡先内線番号': "111-111-1111",
+    'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
+    'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
+    'データセット_備考': "特になし",
+    'ファイル_タイトル': "manager-system2.csv",
+    'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/dataset/",
+    'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/dataset/",
+    'ファイル_説明': "シラサギ市の指定管理者制度導入施設一覧2",
+    'ファイル形式': "csv",
+    'ファイル_ライセンス': "CC BY 4.0",
+    'ファイル_ステータス': "配信中",
+    'ファイル_サイズ': "8053",
+    'ファイル_公開日': "2024/2/1",
+    'ファイル_最終更新日': "2024/7/1",
+    'ファイル_利用規約': "https://opendata.demo.ss-proj.org/",
+    'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
+    'ファイル_言語': "ja",
+    'ファイル_準拠する標準': "自治体標準オープンデータセット",
+    'ファイル_API対応有無': "有",
+    'ファイル_著作権表記': "株式会社〇〇"
+  }.with_indifferent_access
+save_metadata_dataset 2, filename: "dataset/metadata_dataset2.html", route: "opendata/dataset",
+  layout_id: layouts["dataset-page"].id,
+  metadata_imported_attributes: {
+    'データセット_ID': "2222222222",
+    '全国地方公共団体コード': "222222",
+    '地方公共団体名': "オオワシ県シラサギ市",
+    'データセット_タイトル': "観光施設",
+    'データセット_サブタイトル': "観光施設",
+    'データセット_概要': "シラサギ市の観光施設一覧",
+    'データセット_キーワード': "観光",
+    'データセット_分類': "運輸・観光",
+    'データセット_ユニバーサルメニュー': "観光情報;観光名所;自然;レジャー",
+    'データセット_公開日': "2024/7/1",
+    'データセット_最終更新日': "2024/8/1",
+    'データセット_バージョン': "A1.0",
+    'データセット_言語': "ja",
+    'データセット_URL': "https://opendata.demo.ss-proj.org/",
+    'データセット_更新頻度': "1年に1回",
+    'データセット_準拠する標準': "自治体標準オープンデータセット",
+    'データセット_関連ドキュメント': "http://www.test.jp/doc.html",
+    'データセット_来歴情報': "2024年7月11日：3件新規追加",
+    'データセット_対象地域': "オオワシ県シラサギ市",
+    'データセット_対象期間': "開始年月日/終了年月日 : 2024年7月1日/2024年8月1日",
+    'データセット_作成者': "○○課○○係○○担当",
+    'データセット_連絡先名称': "シラサギ市 企画政策部 政策課",
+    'データセット_連絡先メールアドレス': "seisaku@example.jp",
+    'データセット_連絡先電話番号': "111-111-1111",
+    'データセット_連絡先内線番号': "111-111-1111",
+    'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
+    'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
+    'データセット_備考': "特になし",
+    'ファイル_タイトル': "tourist-facilities.csv",
+    'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_説明': "シラサギ市観光施設一覧",
+    'ファイル形式': "csv",
+    'ファイル_ライセンス': "CC BY 4.0",
+    'ファイル_ステータス': "配信中",
+    'ファイル_サイズ': "8053",
+    'ファイル_公開日': "2024/7/1",
+    'ファイル_最終更新日': "2024/8/1",
+    'ファイル_利用規約': "https://opendata.demo.ss-proj.org/",
+    'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
+    'ファイル_言語': "ja",
+    'ファイル_準拠する標準': "自治体標準オープンデータセット",
+    'ファイル_API対応有無': "無",
+    'ファイル_著作権表記': "株式会社〇〇"
+  }.with_indifferent_access
+save_metadata_dataset 3, filename: "dataset/metadata_dataset3.html", route: "opendata/dataset",
+  layout_id: layouts["dataset-page"].id,
+  metadata_imported_attributes: {
+    'データセット_ID': "3333333333",
+    '全国地方公共団体コード': "333333",
+    '地方公共団体名': "オオワシ県シラサギ市",
+    'データセット_タイトル': "地域・年齢別人口",
+    'データセット_サブタイトル': "地域・年齢別人口",
+    'データセット_概要': "シラサギ市の観光施設一覧",
+    'データセット_キーワード': "人口",
+    'データセット_分類': "人口・世帯",
+    'データセット_ユニバーサルメニュー': "観光情報;観光名所;自然;レジャー",
+    'データセット_公開日': "2024/8/1",
+    'データセット_最終更新日': "2024/9/1",
+    'データセット_バージョン': "A1.0",
+    'データセット_言語': "ja",
+    'データセット_URL': "https://opendata.demo.ss-proj.org/",
+    'データセット_更新頻度': "1年に1回",
+    'データセット_準拠する標準': "自治体標準オープンデータセット",
+    'データセット_関連ドキュメント': "http://www.test.jp/doc.html",
+    'データセット_来歴情報': "2024年8月11日：3件新規追加",
+    'データセット_対象地域': "オオワシ県シラサギ市",
+    'データセット_対象期間': "開始年月日/終了年月日 : 2024年9月1日/2024年9月1日",
+    'データセット_作成者': "○○課○○係○○担当",
+    'データセット_連絡先名称': "シラサギ市 企画政策部 政策課",
+    'データセット_連絡先メールアドレス': "seisaku@example.jp",
+    'データセット_連絡先電話番号': "111-111-1111",
+    'データセット_連絡先内線番号': "111-111-1111",
+    'データセット_連絡先FormURL': "http://www.test.jp/doc.html",
+    'データセット_連絡先備考（その他、SNSなど）': "http://www.test.jp/doc.html",
+    'データセット_備考': "特になし",
+    'ファイル_タイトル': "population.csv",
+    'ファイル_アクセスURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_ダウンロードURL': "https://opendata.demo.ss-proj.org/",
+    'ファイル_説明': "シラサギ市地域・年齢別人口",
+    'ファイル形式': "csv",
+    'ファイル_ライセンス': "CC BY 4.0",
+    'ファイル_ステータス': "配信中",
+    'ファイル_サイズ': "8053",
+    'ファイル_公開日': "2024/7/1",
+    'ファイル_最終更新日': "2024/9/1",
+    'ファイル_利用規約': "https://opendata.demo.ss-proj.org/",
+    'ファイル_関連ドキュメント': "http://www.test.jp/doc.html",
+    'ファイル_言語': "ja",
+    'ファイル_準拠する標準': "自治体標準オープンデータセット",
+    'ファイル_API対応有無': "有",
+    'ファイル_著作権表記': "株式会社〇〇"
+  }.with_indifferent_access
 
 ## -------------------------------------
 puts "# rdf vocabs"

@@ -16,8 +16,8 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".file-view", text: name)
         expect(page).to have_css(".file-view", text: item1.name)
         image_element_info(first(".file-view img[alt='#{file.name}']")).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 120
+          expect(info[:height]).to eq SS.file_upload_dialog == :v1 ? 120 : 90
         end
       end
     end
@@ -32,8 +32,8 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".file-view", text: name)
         expect(page).to have_css(".file-view", text: item1.name)
         image_element_info(first(".file-view img[alt='#{file.name}']")).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 120
+          expect(info[:height]).to eq SS.file_upload_dialog == :v1 ? 120 : 90
         end
 
         # by page's name
@@ -44,8 +44,8 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".file-view", text: name)
         expect(page).to have_css(".file-view", text: item1.name)
         image_element_info(first(".file-view img[alt='#{file.name}']")).tap do |info|
-          expect(info[:width]).to eq 90
-          expect(info[:height]).to eq 90
+          expect(info[:width]).to eq 120
+          expect(info[:height]).to eq SS.file_upload_dialog == :v1 ? 120 : 90
         end
 
         within "form.search" do
@@ -60,9 +60,11 @@ describe "cms_search_contents_files", type: :feature, dbscope: :example, js: tru
     describe "transfer to appropriate path after click on file" do
       it do
         visit cms_search_contents_files_path(site: site)
-        click_on item1.name
+        # click_on item1.name
+        js_click find(:link_or_button, item1.name)
 
         switch_to_window(windows.last)
+        wait_for_document_loading
         expect(current_path).to eq item1.private_show_path
         expect(current_path).to eq article_page_path(site: site, cid: node, id: item1)
       end

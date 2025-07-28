@@ -24,7 +24,7 @@ class SS::Migration20181015000001
           role.permissions += ADMIN_PERMISSIONS
         end
         role.permissions.uniq!
-        role.save!
+        role.without_record_timestamps { role.save! }
       end
     end
   end

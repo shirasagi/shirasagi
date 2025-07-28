@@ -1,6 +1,6 @@
 <header id="head">
   <div class="wrap">
-    <h1 class="application-name"><%= link_to sns_mypage_path do %><%= render_application_logo %><% end %></h1>
+    <%= render_application_logo %>
 
     <div class="sp-menu-button">
       <a href="#" class="">
@@ -8,6 +8,14 @@
         <span></span>
         <span></span>
       </a>
+    </div>
+
+    <div class="side-navi-toggle">
+      <% if main_navi_closed? %>
+        <%= link_to t("ss.menu"), "", { id: "toggle-navi", class: "closed", "aria-label": t("ss.links.navi_open") } %>
+      <% else %>
+        <%= link_to t("ss.menu"), "", { id: "toggle-navi", class: "opened", "aria-label": t("ss.links.navi_close") } %>
+      <% end %>
     </div>
 
     <div class="application-menu">
@@ -42,6 +50,10 @@
         </div>
       <% end %>
     </div>
+
+    <% if @ss_mode == :gws %>
+      <%= render "layouts/ss/head_gws_search_form", local_assigns %>
+    <% end %>
 
     <% if @cur_user %>
       <%= render "layouts/ss/head_user", local_assigns %>

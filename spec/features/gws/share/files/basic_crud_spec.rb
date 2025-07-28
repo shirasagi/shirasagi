@@ -13,36 +13,34 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     it do
       visit gws_share_files_path(site)
       click_on folder.name
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
 
       #
       # Create
       #
-      click_on I18n.t("ss.links.new")
-      click_on I18n.t("gws.apis.categories.index")
-      wait_for_cbox do
-        click_on category.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
       end
       within "form#item-form" do
-        within "#addon-basic" do
-          wait_cbox_open do
-            click_on I18n.t('ss.buttons.upload')
-          end
-        end
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
       end
-      wait_for_cbox do
-        expect(page).to have_content(ss_file.name)
-        click_on ss_file.name
+      within_cbox do
+        wait_for_cbox_closed { click_on category.name }
       end
       within "form#item-form" do
+        expect(page).to have_css("#addon-gws-agents-addons-share-category [data-id='#{category.id}']", text: category.name)
+        ss_select_file ss_file, addon: "#addon-basic"
         fill_in "item[memo]", with: "new test"
       end
       within "footer.send" do
         click_on I18n.t('ss.buttons.upload')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within ".tree-navi" do
-        expect(page).to have_content(folder.name)
+        expect(page).to have_css(".item-name", text: folder.name)
       end
 
       expect(Gws::Share::File.all.count).to eq 1
@@ -70,7 +68,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(history.model).to eq file.class.model_name.i18n_key.to_s
         expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
         expect(history.item_id).to eq file.id.to_s
-        expect(::Fs.file?(history.path)).to be_truthy
+        expect(Fs.file?(history.path)).to be_truthy
       end
 
       folder.reload
@@ -82,19 +80,20 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       #
       visit gws_share_files_path(site)
       click_on folder.name
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on file.name
       expect(page).to have_content(file.memo)
-      click_on I18n.t("ss.links.edit")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
+      end
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         fill_in "item[memo]", with: "edited"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-
-      # within ".tree-navi" do
-      #   expect(page).to have_content(folder.name)
-      # end
+      wait_for_notice I18n.t('ss.notice.saved')
 
       file.reload
       expect(file.name).to eq "modify"
@@ -111,7 +110,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(history.model).to eq file.class.model_name.i18n_key.to_s
         expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
         expect(history.item_id).to eq file.id.to_s
-        expect(::Fs.file?(history.path)).to be_truthy
+        expect(Fs.file?(history.path)).to be_truthy
         expect(history.path).to eq file.histories.last.path
       end
 
@@ -120,15 +119,20 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       #
       visit gws_share_files_path(site)
       click_on folder.name
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on file.name
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       within ".tree-navi" do
-        expect(page).to have_content(folder.name)
+        expect(page).to have_css(".item-name", text: folder.name)
       end
 
       file.reload
@@ -141,7 +145,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(history.model).to eq file.class.model_name.i18n_key.to_s
         expect(history.model_name).to eq I18n.t("mongoid.models.#{file.class.model_name.i18n_key}")
         expect(history.item_id).to eq file.id.to_s
-        expect(::Fs.file?(history.path)).to be_truthy
+        expect(Fs.file?(history.path)).to be_truthy
         expect(history.path).to eq file.histories.last.path
       end
 
@@ -153,27 +157,32 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       # Hard Delete
       #
       history_paths = file.histories.map(&:path)
-      expect(history_paths.all? { |path| ::Fs.file?(path) }).to be_truthy
+      expect(history_paths.all? { |path| Fs.file?(path) }).to be_truthy
       visit gws_share_files_path(site)
       click_on I18n.t("ss.links.trash")
       click_on folder.name
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on file.name
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::Share::File.find(file.id) }.to raise_error Mongoid::Errors::DocumentNotFound
       expect(file.histories.count).to eq 0
-      expect(history_paths.any? { |path| ::Fs.file?(path) }).to be_falsey
+      expect(history_paths.any? { |path| Fs.file?(path) }).to be_falsey
 
       folder.reload
       expect(folder.descendants_files_count).to eq 0
       expect(folder.descendants_total_file_size).to eq 0
 
-      within "#content-navi" do
-        expect(page).to have_css(".tree-item", text: folder.name)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
       end
     end
   end

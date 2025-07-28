@@ -7,6 +7,7 @@ class Rss::WeatherXmlPage
   include Cms::Addon::Release
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  #include Cms::Lgwan::Page
 
   set_permission_name "article_pages"
   set_show_path "rss_weather_xml"

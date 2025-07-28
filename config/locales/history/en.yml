@@ -1,0 +1,105 @@
+en:
+  history:
+    log: Operation history
+    user: User
+    target: Operation target
+    action: Action
+    backup: Backup
+    current_version: Latest version
+    backup_version: Version at time of backup
+    compare_to_state_html: Compare to %{version}
+    current_state_html: Selected %{latest_notice}
+    view_diff: View differences
+    compare_backup_to_latest: Compare to the latest
+    compare_backup_to_previsous: Compare to the previous
+    current_backup_notice_html: |-
+      <p>Showing the selected version %{version} の内容を表示しています。</p>
+    compare_to_backup_notice_html: |-
+      <p>Settings that have changed compared to the previous history %{version} are indicated with a different background color.</p>
+    this_is_latest_html: |-
+      Latest (%{time})
+    editor_name: Editor name
+    restore: Restore
+    n_out_of_m: "Showing %{n} out of %{m}."
+    confirm:
+      restore: Are you sure you want to restore it?
+    notice:
+      restore: If the system versions are different, it may not work properly.
+      restored: Restored.
+    buttons:
+      restore: Restore
+    options:
+      target:
+        restore: Restore
+        unrestore: Do not restore
+      action:
+        save: Save
+        replace_urls: Update with link tracking
+      duration:
+        all_save: Save all
+        all_delete: Delete all
+    behavior:
+      paste: Paste text
+      attachment: Attached file
+      restore: Restore
+      delete: Delete
+
+  cms_role:
+    read_history_trashes: Browse trash
+    edit_history_trashes: Restore trash
+    delete_history_trashes: Permanently delete trash
+
+  modules:
+    history: History
+    addons:
+      history/backup: Update history
+
+  activemodel:
+    models:
+      history/download_param: Download parameters
+      history/delete_param: Deletion parameters
+    attributes:
+      history/download_param:
+        encoding: Character code
+        save_term: Save term
+        user_ids: User
+      history/delete_param:
+        delete_term: Term
+
+  mongoid:
+    models:
+      history/log: Operation history
+      history/trash: Trash
+    errors:
+      models:
+        history/backup:
+          unable_to_restore_branch_page_history: unable to restore histories of branch page.
+    attributes:
+      history/log:
+        session_id: Session ID
+        request_id: Request ID
+        created: Created
+        user_name: User
+        model_name: Model name
+        action: Action
+        path: URL
+        page_url: Page URL
+        behavior: Behavior
+        group: Group
+      history/model/data:
+        version: Version
+        ref_coll: Saved collection
+        ref_class: Saved class
+        data: Saved data
+        parent: Parent folder
+        children: Subordinate content
+        state: Status
+        action: Action
+
+  job:
+    models:
+      history/trash/trash_purge_job: GWS History/Empty trash
+      history/history_log/purge_job: GWS History/Delete operation history
+      history/backup/sweep_job: GWS History/Clear update history
+      history/backup/restore_job: GWS History/Restore update history
+      history/trash/restore_job: GWS History/Restore trash

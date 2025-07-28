@@ -23,13 +23,13 @@
   <dd><%= f.select :file_edit_state, @item.file_edit_state_options %></dd>
 
   <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
-  <dd><%= f.text_field :due_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.due_date) } %></dd>
+  <dd><%= f.ss_datetime_field :due_date %></dd>
 
   <dt><%= @model.t :release_date %><%= @model.tt :release_date %></dt>
-  <dd><%= f.text_field :release_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.release_date) } %></dd>
+  <dd><%= f.ss_datetime_field :release_date %></dd>
 
   <dt><%= @model.t :close_date %><%= @model.tt :close_date %></dt>
-  <dd><%= f.text_field :close_date, class: 'datetime js-datetime', value: tryb { I18n.l(@item.close_date) } %></dd>
+  <dd><%= f.ss_datetime_field :close_date %></dd>
 
   <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
   <dd><%= f.text_area :memo %></dd>

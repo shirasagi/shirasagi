@@ -38,7 +38,6 @@ module Kana::Converter
         end
       end
       text.gsub!(/\\u003c.*?\\u003e/m) { |m| mpad(m) } #<>
-      text.gsub!(/%[^%]{2}/m, '   ')
       text.gsub!(/<!--[^>]*?\s#{skip_marks[0]}\s[^>]*?-->(.*?)<!--[^>]*?\s#{skip_marks[1]}\s[^>]*?-->/im) do |m|
         "\r" * m.bytes.length
       end

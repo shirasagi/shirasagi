@@ -1,0 +1,30 @@
+<%
+  index ||= 0
+  destination = @item.destinations.present? ? @item.destinations[index] : nil
+%>
+
+<dl class="see">
+  <dt><%= t "chorg.views.#{type}_changesets.name" %><%= tt "chorg.views.#{type}_changesets.name" %></dt>
+  <dd>
+    <%=
+      if @reload
+        value = first_source_group.try(:name)
+      else
+        value = destination ? destination[:name] : nil
+      end
+      text_field_tag "#{f.object_name}[destinations][][name]", value, id: nil
+    %>
+  </dd>
+
+  <dt><%= t "chorg.views.#{type}_changesets.order" %><%= tt "chorg.views.#{type}_changesets.order" %></dt>
+  <dd>
+    <%=
+      if @reload
+        value = first_source_group.try(:order)
+      else
+        value = destination ? destination[:order] : nil
+      end
+      number_field_tag "#{f.object_name}[destinations][][order]", value, id: nil
+    %>
+  </dd>
+</dl>

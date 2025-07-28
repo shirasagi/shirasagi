@@ -1,0 +1,45 @@
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%= form_tag({ action: :index }, { method: "GET" }) do %>
+        <%= select_tag :group_id, options_for_select(group_options, selected: @group.id) %>
+        <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+        <%= link_to t("ss.buttons.reset"), { action: :index }, class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<div class="gws-attendance gws-affair-working-time">
+  <table class="index">
+    <thead>
+      <tr>
+        <th><%= Gws::User.t :name %></th>
+        <th><%= t("modules.gws/affair/shift_work/shift_calendar") %></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% @users.each do |user|%>
+      <% shift_calendar = user.shift_calendar(@cur_site) %>
+      <tr>
+        <td class="name"><%= user.long_name %></td>
+        <td>
+          <% if shift_calendar %>
+            <span style="color: #435bba;"><%= t("ss.options.state.enabled") %></span>
+          <% else %>
+            <span><%= t("ss.options.state.disabled") %></span>
+          <% end %>
+          |
+          <% if editable_shift_record? %>
+            <% if shift_calendar %>
+              <%= link_to t("ss.links.show"), gws_affair_shift_work_shift_calendar_shift_record_main_path(group_id: @group.id, user: user, shift_calendar_id: shift_calendar) %>
+            <% else %>
+              <%= link_to t("ss.links.new"), { group_id: @group.id, action: :new, user: user } %>
+            <% end %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>

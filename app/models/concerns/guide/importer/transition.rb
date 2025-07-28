@@ -26,10 +26,11 @@ module Guide::Importer::Transition
         row << item.id_name
         row << item.name
         item.edges.map do |edge|
+          edge.parent = item
           labels = []
           labels << edge.export_label
           edge.points.each do |point|
-            labels << point.export_label
+            labels << point.export_label(edge)
           end
           row << labels.join("\n")
         end
@@ -47,50 +48,43 @@ module Guide::Importer::Transition
       return false
     end
 
-    in_edges = item.edges.map do |edge|
-      OpenStruct.new(
-        question_type: edge.question_type,
-        value: edge.value,
-        point_ids: edge.point_ids
-      )
-    end
-
     edge_headers.each do |v, idx|
       v = @row[v]
       next if v.blank?
 
-      if !in_edges[idx]
-        errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.not_found_transition", id: "#{I18n.t("guide.transition")}#{idx + 1}")}"
+      if !item.edges[idx]
+        errors.add :base,
+          "#{@row_index}: #{I18n.t("guide.errors.not_found_transition", id: "#{I18n.t("guide.transition")}#{idx + 1}")}"
         return false
       end
 
-      point_ids = []
       v.split(/\n/).each do |line|
         line.scan(/^\[(.+?)\](.+?)$/).each do |type, id_name|
           id_name = id_name.squish
           type = type.squish
 
-          case type
-          when I18n.t("guide.transition")
-          when I18n.t("guide.procedure")
-            point = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: id_name).first
-            point_ids << point.id if point
-          when I18n.t("guide.question")
-            point = Guide::Question.site(cur_site).node(cur_node).where(id_name: id_name).first
-            point_ids << point.id if point
+          next unless type.match?(/#{::Regexp.escape(I18n.t("guide.procedure"))}/)
+
+          point = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: id_name).first
+          point.add_to_set(
+            cond_yes_question_ids: item.id,
+            cond_yes_edge_values: { question_id: item.id.to_s, edge_value: item.edges[idx][:value] }
+          )
+          if type.match?(I18n.t("guide.labels.not_applicable"))
+            point.add_to_set(
+              cond_no_question_ids: item.id,
+              cond_no_edge_values: { question_id: item.id.to_s, edge_value: initem.edges_edges[idx][:value] }
+            )
           end
+          if type.match?(I18n.t("guide.labels.optional_necessary"))
+            point.add_to_set(
+              cond_or_question_ids: item.id,
+              cond_or_edge_values: { question_id: item.id.to_s, edge_value: item.edges[idx][:value] }
+            )
+          end
+          point
         end
       end
-      in_edges[idx][:point_ids] = point_ids
-    end
-
-    item.in_edges = in_edges
-    if item.save
-      true
-    else
-      message = item.errors.full_messages.join("\n")
-      errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.save_faild", message: message)}"
-      false
     end
   end
 end

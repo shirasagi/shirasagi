@@ -9,55 +9,59 @@ describe Cms::Form::InitColumnsController, type: :feature, dbscope: :example, js
 
   context 'basic crud' do
     it do
-      #
-      # Create
-      #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_init_columns')
-      click_on I18n.t('ss.links.new')
-      click_on column.name
 
-      within 'form#item-form' do
-        fill_in 'item[order]', with: 1
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::InitColumn.form(form).count).to eq 1
-      Cms::InitColumn.form(form).first.tap do |item|
-        expect(item.order).to eq 1
-      end
-
-      #
-      # Read & Update
-      #
-      visit cms_form_init_columns_path(site, form)
-      within 'ul.list-items' do
+      within '.gws-column-list-toolbar[data-placement="top"]' do
         click_on column.name
       end
-      click_on I18n.t('ss.links.edit')
-      within 'form#item-form' do
-        fill_in 'item[order]', with: 2
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::InitColumn.form(form).count).to eq 1
-      Cms::InitColumn.form(form).first.tap do |item|
-        expect(item.order).to eq 2
-      end
+      wait_for_notice I18n.t('ss.notice.saved')
 
-      #
-      # Delete
-      #
-      visit cms_form_init_columns_path(site, form)
-      within 'ul.list-items' do
+      page.accept_confirm do
+        find('.btn-gws-column-item-delete').click
+      end
+      wait_for_notice I18n.t('ss.notice.deleted')
+      expect(Cms::InitColumn.site(site).where(form_id: form.id).count).to eq 0
+    end
+  end
+
+  context 'when column is destroyed' do
+    it do
+      visit cms_form_path(site, form)
+      click_on I18n.t('cms.buttons.manage_init_columns')
+
+      within '.gws-column-list-toolbar[data-placement="top"]' do
         click_on column.name
       end
-      click_on I18n.t('ss.links.delete')
-      within 'form' do
-        click_on I18n.t('ss.buttons.delete')
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      column.destroy
+
+      visit cms_form_init_columns_path(site, form)
+      expect(page).to have_no_css('.gws-column-item', text: column.name)
+    end
+  end
+
+  context 'when column is unset' do
+    it do
+      visit cms_form_path(site, form)
+      click_on I18n.t('cms.buttons.manage_init_columns')
+
+      within '.gws-column-list-toolbar[data-placement="top"]' do
+        click_on column.name
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      expect(Cms::InitColumn.form(form).count).to eq 0
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      Cms::InitColumn.form(form).first.unset(:column_id)
+
+      visit cms_form_init_columns_path(site, form)
+      expect(page).to have_css('.gws-column-item .header', text: I18n.t('cms.init_column.not_found_column'))
+
+      page.accept_confirm do
+        find('.btn-gws-column-item-delete').click
+      end
+      wait_for_notice I18n.t('ss.notice.deleted')
+      expect(Cms::InitColumn.site(site).where(form_id: form.id).count).to eq 0
     end
   end
 end

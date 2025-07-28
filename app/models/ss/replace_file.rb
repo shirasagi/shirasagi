@@ -3,6 +3,7 @@ class SS::ReplaceFile
   include SS::Reference::Site
   include SS::Relation::FileHistory
   include SS::Liquidization
+  include Cms::Lgwan::File
 
   # for backward compatibility
   self.site_required = false

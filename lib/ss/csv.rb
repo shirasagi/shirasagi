@@ -19,12 +19,14 @@ class SS::Csv
     attr_reader :cur_site, :cur_user, :encoding, :columns
 
     def each
-      yield draw_header
-      @criteria.each do |item|
-        item.cur_site = @cur_site if item.respond_to?(:cur_site=)
-        item.cur_user = @cur_user if item.respond_to?(:cur_user=)
-        item.cur_node = @cur_node if item.respond_to?(:cur_node=)
-        yield draw_data(item)
+      I18n.with_locale(I18n.default_locale) do
+        yield draw_header
+        @criteria.each do |item|
+          item.cur_site = @cur_site if item.respond_to?(:cur_site=)
+          item.cur_user = @cur_user if item.respond_to?(:cur_user=)
+          item.cur_node = @cur_node if item.respond_to?(:cur_node=)
+          yield draw_data(item)
+        end
       end
     end
 
@@ -32,19 +34,22 @@ class SS::Csv
       "text/csv; charset=#{@encoding}"
     end
 
+    def headers
+      @columns.map do |column|
+        head_proc = column[:head]
+        if head_proc.blank?
+          label = @model_class.t(column[:id])
+        else
+          label = @context.instance_exec(&head_proc)
+        end
+        [ label, column[:id] ]
+      end
+    end
+
     private
 
     def _draw_header
-      terms = @columns.map do |column|
-        head_proc = column[:head]
-        if head_proc.blank?
-          @model_class.t column[:id]
-        else
-          @context.instance_exec(&head_proc)
-        end
-      end
-
-      terms.to_csv
+      headers.map { |label, _key| label }.to_csv
     end
 
     def _draw_data(item)
@@ -112,7 +117,10 @@ class SS::Csv
       UTF8_BOM + _draw_header
     end
 
-    alias draw_data _draw_data
+    # public #draw_data is required
+    def draw_data(item)
+      _draw_data(item)
+    end
   end
 
   class DSLExporter
@@ -160,6 +168,20 @@ class SS::Csv
       ret.instance_variable_set(:@context, @context)
       ret.instance_variable_set(:@columns, @columns)
       ret
+    end
+
+    def headers(criteria, **options)
+      encoding = options[:encoding]
+      if encoding && encoding.casecmp("UTF-8") == 0
+        klass = UTF8Exporter
+      else
+        klass = ShiftJisExporter
+      end
+
+      ret = klass.new(criteria, options)
+      ret.instance_variable_set(:@context, @context)
+      ret.instance_variable_set(:@columns, @columns)
+      ret.headers
     end
   end
 
@@ -251,13 +273,13 @@ class SS::Csv
       @row = row
       @item = item
 
-      head_value_array = row.headers.map { |h| [ h.split("/"), row[h].try(:strip) ] }
+      head_value_array = row.headers.map { |h| [ SS::Csv.split_column_name_for_csv(h), row[h].try(:strip) ] }
 
       head_value_array.slice_when { |lhs, rhs| lhs.first.first != rhs.first.first }.each do |chunk|
         heads, value = chunk.first
 
         if chunk.length == 1
-          import_simple_column(row, item, heads.first, value)
+          import_simple_column(row, item, SS::Csv.unescape_column_name_for_csv(heads.first), value)
           next
         end
 
@@ -281,7 +303,9 @@ class SS::Csv
           end
         end
 
-        item.send("#{@options.dig(:fields, :column_values) || "column_values"}=", column_values)
+        field_name = @options.dig(:fields, :column_values) || "column_values"
+        field_setter = "#{field_name}="
+        item.send(field_setter, column_values) if item.respond_to?(field_setter)
       end
     end
 
@@ -294,7 +318,8 @@ class SS::Csv
       if config[:callback]
         @dsl.context.instance_exec(row, item, head, value, &config[:callback])
       else
-        item.send("#{config[:key]}=", value)
+        setter = "#{config[:key]}="
+        item.send(setter, value) if item.respond_to?(setter)
       end
     end
 
@@ -323,7 +348,11 @@ class SS::Csv
       else
         ret = DSLImporter.new(options)
       end
-      ret.draw(&block) if block
+      if block
+        I18n.with_locale(I18n.default_locale) do
+          ret.draw(&block)
+        end
+      end
       ret
     end
 
@@ -392,6 +421,20 @@ class SS::Csv
       false
     end
 
+    def split_column_name_for_csv(name)
+      name.split(/(?<!\\)\//, 2)
+    end
+
+    def escape_column_name_for_csv(name)
+      return name if name.blank?
+      name.gsub("/", '\/')
+    end
+
+    def unescape_column_name_for_csv(name)
+      return name if name.blank?
+      name.gsub('\/', "/")
+    end
+
     private
 
     def with_keeping_io_position(io)
@@ -409,6 +452,7 @@ class SS::Csv
 
     def _detect_encoding(io)
       bom = io.read(3)
+      return Encoding::ASCII_8BIT if bom.blank?
       return Encoding::UTF_8 if utf8_bom?(bom)
 
       body = bom + io.read(997)
@@ -444,6 +488,14 @@ class SS::Csv
         pos = io.pos
         bom = io.read(3)
         io.pos = pos if !utf8_bom?(bom)
+      end
+
+      if io.is_a?(StringIO) && io.pos > 0
+        # gem "csv" 内で StringIO#string を呼び出している箇所がある。
+        # StringIO#string は BOM 付きの文字列を返すので、うまく動作しない。
+        # そこで、BOM無しにしてやる
+        source = io.read
+        io = StringIO.new(source)
       end
 
       csv = CSV.new(io, headers: headers)

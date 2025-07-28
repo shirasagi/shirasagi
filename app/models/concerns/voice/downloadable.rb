@@ -86,7 +86,7 @@ module Voice::Downloadable
 
   module ClassMethods
     def find_or_create_by_url(url)
-      url = ::URI.parse(url.to_s) unless url.respond_to?(:host)
+      url = ::Addressable::URI.parse(url.to_s) unless url.respond_to?(:host)
       if url.host.blank? || url.path.blank?
         # path must not be either nil, empty.
         return nil

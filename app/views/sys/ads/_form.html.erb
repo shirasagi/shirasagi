@@ -1,12 +1,19 @@
 <dl class="see">
   <dt class="depth-1"><%= @model.t :time %></dt>
   <dd class="depth-1">
-    <%= f.number_field :time %>
+    <%= f.number_field :time, placeholder: "#{t('webmail.default_settings')} / #{Sys::Ad::DEFAULT_SLIDE_PAUSE.to_fs(:delimited)}" %>
     <span><%= t("datetime.prompts.second") %></span>
   </dd>
   <dt class="depth-1"><%= @model.t :width %></dt>
   <dd class="depth-1">
-    <%= f.number_field :width %>
+    <%= f.number_field :width, placeholder: "#{t('webmail.default_settings')} / #{Sys::Ad::DEFAULT_SLIDE_WIDTH.to_fs(:delimited)}" %>
     <span>px</span>
+  </dd>
+</dl>
+
+<dl class="see">
+  <dt class="wide"></dt>
+  <dd class="wide">
+    <%= render "sys/ads/form_link_items", link_items: @item.ad_links, max_count: Sys::Ad::MAX_AD_LINK_COUNT, attribute_name: @model.t(:ad_links), field_name_prefix: "#{f.object_name}[ad_links][]", accepts: SS::File::IMAGE_FILE_EXTENSIONS %>
   </dd>
 </dl>

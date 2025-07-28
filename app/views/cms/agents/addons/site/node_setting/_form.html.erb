@@ -1,0 +1,8 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:display_body] = "hide"
+%>
+<dl class="see mod-cms-site-node-setting">
+  <dt><%= @model.t :rss_recent_state %><%= @model.tt :rss_recent_state %></dt>
+  <dd><%= f.select :rss_recent_state, @item.rss_recent_state_options %></dd>
+</dl>

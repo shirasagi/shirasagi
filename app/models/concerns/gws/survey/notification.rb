@@ -11,7 +11,7 @@ module Gws::Survey::Notification
     before_validation :clear_notification_noticed_at, if: ->{ state_was != state }
     validates :notification_notice_state, presence: true, inclusion: { in: %w(enabled disabled), allow_blank: true }
 
-    after_save :send_notification, if: -> { state_was != state && state == "public" }
+    after_save :send_notification, if: -> { state_previously_was != state && state == "public" }
   end
 
   def notification_notice_state_options

@@ -1,0 +1,34 @@
+<%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index } ]] %>
+
+<div class="addon-views sheet gws-daily-report-print">
+  <div class="addon-view print" id="addon-basic">
+    <div class="addon-body print">
+      <table class="index">
+        <thead>
+          <tr>
+            <th><%= Gws::User.t(:name) %></th>
+            <% if @forms.present? %>
+              <% if @model.allowed?(:access, @cur_user, site: @cur_site) %>
+                <th class="limited-access"><%= @model.t(:limited_access) %></th>
+              <% end %>
+              <th><%= @model.t(:small_talk) %></th>
+              <% @forms.first.columns.each do |column| %>
+                <th><%= column.name %></th>
+              <% end %>
+            <% end %>
+          </tr>
+        </thead>
+        <tbody>
+          <% @users.each do |user| %>
+            <% report = @items.where(user_id: user, form_id: @forms.first.try(:id), daily_report_date: @cur_date.to_date).first %>
+            <tr>
+              <% %w(name limited_access small_talk column_values).each do |path| %>
+                <%= render partial: path, locals: { column_value: nil, date: @cur_date, print: true, report: report, user: user } %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

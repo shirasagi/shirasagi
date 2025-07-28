@@ -6,14 +6,12 @@ Rails.application.routes.draw do
     delete :destroy_all, on: :collection, path: ''
   end
 
-  concern :download do
-    get :download, on: :member
-    get :download_sample_csv, on: :collection
-  end
-
   gws 'chorg' do
     get '/' => redirect { |p, req| "#{req.path}/revisions" }, as: :main
-    resources :revisions, concerns: [:deletion, :download]
+    resources :revisions, concerns: [:deletion] do
+      post :download_changesets, on: :member
+      get :download_sample_csv, on: :collection
+    end
     resources :changesets, path: 'revisions/:rid/:type/changesets', concerns: [:deletion]
     resource :result, path: 'revisions/:rid/:type/results', only: [:show] do
       post :interrupt, on: :member
@@ -23,7 +21,7 @@ Rails.application.routes.draw do
       get :show_models, on: :collection, path: 'show_models/:entity_site'
       get :show_entities, on: :collection, path: 'show_entities/:entity_site/:entity_model'
       get :show_entity, on: :collection, path: 'show_entity/:entity_site/:entity_model/:entity_index'
-      get :download, on: :collection
+      post :download, on: :collection
     end
     get 'revisions/:rid/:type/run' => 'run#confirmation'
     post 'revisions/:rid/:type/run' => 'run#run'

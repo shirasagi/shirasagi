@@ -53,12 +53,14 @@ Rails.application.routes.draw do
     resources :photo_locations, concerns: :deletion
     resources :photo_spots, concerns: [:deletion, :command]
     resources :registrations, only: [:index]
+    resources :bookmarks, only: [:index], concerns: :deletion
 
     # resources :groups, concerns: :deletion do
     #   resources :members, controller: :group_members, concerns: :deletion
     # end
 
     resources :my_line_profiles, concerns: :deletion
+    resources :line_first_registrations, concerns: :deletion
   end
 
   node "member" do
@@ -66,6 +68,7 @@ Rails.application.routes.draw do
     match "login/(index.:format)" => "public#login", via: [:get, :post], cell: "nodes/login"
     match "login/login.html" => "public#login", via: [:get, :post], cell: "nodes/login"
     get "login/logout.html" => "public#logout", cell: "nodes/login"
+    post "login/:provider" => "public#init", cell: "nodes/login"
     get "login/:provider/callback" => "public#callback", cell: "nodes/login"
     get "login/failure" => "public#failure", cell: "nodes/login"
 
@@ -104,9 +107,11 @@ Rails.application.routes.draw do
     get "my_line_profile/leave(.:format)" => "public#leave", cell: "nodes/my_line_profile"
     post "my_line_profile/confirm_leave(.:format)" => "public#confirm_leave", cell: "nodes/my_line_profile"
     post "my_line_profile/complete_leave(.:format)" => "public#complete_leave", cell: "nodes/my_line_profile"
+    get "line_first_registration/(index.:format)" => "public#index", cell: "nodes/line_first_registration"
+    put "line_first_registration/(index.:format)" => "public#index", cell: "nodes/line_first_registration"
 
     scope "my_blog" do
-      resource :setting, controller: "public", cell: "nodes/my_blog/setting", except: [:index, :show, :destroy]
+      resource :setting, controller: "public", cell: "nodes/my_blog/setting", except: [:show, :destroy]
     end
     get "my_blog(index.:format)" => "public#index", cell: "nodes/my_blog"
     resources :my_blog, concerns: :deletion, controller: "public", cell: "nodes/my_blog", except: :index
@@ -128,6 +133,10 @@ Rails.application.routes.draw do
       get "reject(.:format)", action: :reject, on: :member
       post "reject(.:format)", action: :reject, on: :member
     end
+
+    get "bookmark/(index.:format)" => "public#index", cell: "nodes/bookmark"
+    post "bookmark/register(index.:format)" => "public#register", cell: "nodes/bookmark"
+    post "bookmark/cancel(index.:format)" => "public#cancel", cell: "nodes/bookmark"
 
     ## registration
     get "registration/(index.html)" => "public#new", cell: "nodes/registration"
@@ -161,6 +170,7 @@ Rails.application.routes.draw do
     get "photo_slide" => "public#index", cell: "parts/photo_slide"
     get "photo_search" => "public#index", cell: "parts/photo_search"
     get "invited_group" => "public#index", cell: "parts/invited_group"
+    get "bookmark" => "public#index", cell: "parts/bookmark"
   end
 
   namespace "member", path: ".m:member", member: /\d+/ do

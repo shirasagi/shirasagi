@@ -1,0 +1,73 @@
+<div class="gws-attendance">
+  <div class="attendance-box">
+    <div class="attendance-box-main">
+      <%
+        current = Time.zone.now
+        year_options = ((current.year - 5)..(current.year)).map { |y| [t("gws/attendance.year", count: y), y] }.reverse
+        month_options = (1..12).map { |m| [t("gws/attendance.month", count: m), m] }
+      %>
+      <%= form_tag({ action: :show }, { method: "GET" }) do %>
+        <%= select_tag :year, options_for_select(year_options, selected: @cur_month.year) %>
+        <%= select_tag :month, options_for_select(month_options, selected: @cur_month.month) %>
+        <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+        <%= link_to t("ss.buttons.reset"), { action: :show }, class: "btn" %>
+      <% end %>
+    </div>
+  </div>
+</div>
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @user.t :name %></dt>
+        <dd><%= @user.long_name %></dd>
+
+        <dt><%= @user.t :organization_uid %></dt>
+        <dd><%= @user.organization_uid %></dd>
+      </dl>
+    </div>
+  </div>
+  <% if @item %>
+    <div class="addon-view" id="annual-leave-setting">
+      <% @leave_files = @item.annual_leave_files %>
+      <div class="addon-head">
+        <h2>
+          <%= t("modules.addons.gws/affair/annual_leave_setting") %>
+          <%= t("ss.buttons.setting") %>
+          (<%= @item.year.name %>)
+        </h2>
+        <div class="addon-body">
+         <dl class="see">
+           <%= render template: "gws/agents/addons/affair/annual_leave_setting/_setting" %>
+          </dl>
+        </div>
+      </div>
+    </div>
+    <div class="addon-view" id="annual-leave">
+      <div class="addon-head">
+        <h2><%= t("modules.addons.gws/affair/annual_leave_setting") %></h2>
+      </div>
+      <div class="addon-body">
+        <% @leave_files = @item.annual_leave_files(month: @cur_month) %>
+        <dl class="see">
+          <%= render template: "gws/agents/addons/affair/annual_leave_setting/_leave_files" %>
+        </dl>
+      </div>
+    </div>
+    <div class="addon-view" id="paid-leave">
+      <div class="addon-head">
+        <h2><%= t("modules.addons.gws/affair/paid_leave_setting") %></h2>
+      </div>
+      <div class="addon-body">
+        <% @leave_files = @item.paid_leave_files(month: @cur_month) %>
+        <dl class="see">
+          <%= render template: "gws/agents/addons/affair/paid_leave_setting/_leave_files" %>
+        </dl>
+      </div>
+    </div>
+  <% else %>
+    <div class="addon-view">
+      <div class="addon-body"><%= t("gws/affair.notice.not_found_leave_setting") %></div>
+    </div>
+  <% end %>
+</div>

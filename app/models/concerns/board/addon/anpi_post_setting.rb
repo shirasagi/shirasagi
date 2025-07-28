@@ -6,7 +6,7 @@ module Board::Addon
     included do
       field :text_size_limit, type: Integer, default: 100
       field :show_email, type: String
-      field :deny_ips, type: SS::Extensions::Words
+      field :deny_ips, type: SS::Extensions::Lines
 
       validates :text_size_limit, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 400 }
       validates :show_email, inclusion: { in: %w(enabled disabled) }, if: ->{ show_email.present? }

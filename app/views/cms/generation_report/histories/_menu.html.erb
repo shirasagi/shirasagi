@@ -1,0 +1,19 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% download_url = url_for(action: :download_all) rescue (url_for(action: :download) rescue nil) %>
+      <% if download_url %>
+        <%= link_to(t('ss.links.download'), download_url, class: :download) %>
+      <% end %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|download|import|destroy_all|change_state_all/ %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% elsif params[:action] =~ /edit|update|delete|copy|move|command|contains_urls/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.back_to_show'), { action: :show, id: @item }, class: "back-to-show" %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% else %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% end %>
+</nav>

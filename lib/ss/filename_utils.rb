@@ -14,6 +14,11 @@ class SS::FilenameUtils
     # space(' ') is not on url safe, but it is worth to support
     codes << ' '
 
+    # "&" -> "&amp;" のように変化する文字を除外する。
+    # HTML 内にリンクURLとしてセットされると、"&" -> "&amp;" のように変化してしまう。
+    # このように変化したのを知らずリンクURLを置換しようとして、マッチせず、置換に失敗してしまう場合がある。
+    codes.select! { |code| CGI.escapeHTML(code) == code }
+
     codes.sort!
     codes.map!(&:freeze)
     codes
@@ -106,7 +111,7 @@ class SS::FilenameUtils
       str.each_char.all? { |ch| url_safe_japanese_char?(ch) }
     end
 
-    def convert_to_url_safe_japanese(str)
+    def convert_to_url_safe_japanese(str, normalize: true)
       chars = normalize(str).each_char.map do |ch|
         next ch if url_safe_japanese_char?(ch)
 
@@ -120,6 +125,7 @@ class SS::FilenameUtils
       end
 
       ret = chars.join
+      return ret if !normalize
 
       #
       # 様々な案件を考慮して、なんとなく納得感のある正規化を ret に対して実施する。

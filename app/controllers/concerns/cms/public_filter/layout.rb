@@ -10,6 +10,7 @@ module Cms::PublicFilter::Layout
 
   included do
     helper_method :render_layout_parts
+    helper_method :render_template_variables
   end
 
   private
@@ -22,6 +23,10 @@ module Cms::PublicFilter::Layout
 
   def filter_include?(key)
     filters.any? { |f| f == key || f.is_a?(Hash) && f.key?(key) }
+  end
+
+  def filter_include_any?(*keys)
+    keys.any? { |key| filter_include?(key) }
   end
 
   def filter_options(key)
@@ -39,7 +44,7 @@ module Cms::PublicFilter::Layout
 
   def render_part(part, opts = {})
     part_perf_log(part) do
-      return part.html if part.route == "cms/free"
+      return [ {}, part.html ] if part.route == "cms/free"
 
       path = "/.s#{@cur_site.id}/parts/#{part.route}"
       spec = recognize_agent path, method: "GET"
@@ -73,7 +78,7 @@ module Cms::PublicFilter::Layout
         end
 
         @cur_part = nil
-        body
+        [ resp.headers, body ]
       end
     end
   end
@@ -104,7 +109,7 @@ module Cms::PublicFilter::Layout
       if previewable
         layout_info = {
           id: @cur_layout.id, name: @cur_layout.name, filename: @cur_layout.filename,
-          path: cms_layout_path(site: @cur_site, id: @cur_layout)
+          path: @cur_layout.private_show_path
         }
         data_attrs = layout_info.map { |k, v| "data-layout-#{k}=\"#{CGI.escapeHTML(v.to_s)}\"" }
         html = html.sub(/<body/, %(<body #{data_attrs.join(" ")}))
@@ -132,21 +137,36 @@ module Cms::PublicFilter::Layout
   end
 
   def render_body_class(html)
+    body_cls = body_class(@cur_main_path)
+    body_id = body_id(@cur_main_path)
+
     html.sub(/<body.*?>/) do |m|
-      m = m.sub(/ class="/, %( class="#{body_class(@cur_main_path)} )     ) if m =~ / class="/
-      m = m.sub(/<body/,    %(<body class="#{body_class(@cur_main_path)}")) unless m =~ / class="/
-      m = m.sub(/<body/,    %(<body id="#{body_id(@cur_main_path)}")      ) unless m =~ / id="/
+      if m.include?(' class="')
+        m = m.sub(' class="', %( class="#{body_cls} ))
+      else
+        m = m.sub('<body', %(<body class="#{body_cls}"))
+      end
+      m = m.sub('<body', %(<body id="#{body_id}")) unless m.include?(' id="')
       m
     end
   end
 
   def render_template_variables(html)
+    return html if html.blank?
     html.gsub!('#{page_name}') do
       ERB::Util.html_escape(@cur_item.name)
     end
 
     html.gsub!('#{parent_name}') do
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
+    end
+
+    html.gsub!('#{description}') do
+      if @cur_item.respond_to?(:template_variable_handler_description)
+        @cur_item.template_variable_handler_description("description", self)
+      else
+        @cur_item.description if @cur_item.respond_to?(:description)
+      end
     end
 
     template = %w(
@@ -175,9 +195,13 @@ module Cms::PublicFilter::Layout
       convert_date
     end
 
-    html = render_conditional_tag(html)
+    html.gsub!('#{page_thumb.src}') do
+      thumb_src = ERB::Util.html_escape(Cms::Addon::Body::DEFAULT_IMG_SRC)
+      thumb_src = @cur_item.thumb.url if @cur_item.is_a?(Cms::Addon::Thumb) && @cur_item.thumb
+      thumb_src
+    end
 
-    html
+    render_conditional_tag(html)
   end
 
   def render_layout_parts(html, opts = {})
@@ -195,7 +219,7 @@ module Cms::PublicFilter::Layout
     criteria = criteria.where(mobile_view: "show") if filters.include?(:mobile)
     criteria.each { |part| @parts[part.filename] = part }
 
-    return html.gsub(/\{\{ part "(.*?)" \}\}/) do
+    html.gsub(/\{\{ part "(.*?)" \}\}/) do
       path = $1
       part = @parts[path]
       part ? render_layout_part(part, opts) : ''
@@ -203,10 +227,10 @@ module Cms::PublicFilter::Layout
   end
 
   def render_layout_part(part, opts = {})
-    if !opts[:previewable].nil?
-      previewable = opts[:previewable] && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-    else
+    if opts[:previewable].nil?
       previewable = @preview && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+    else
+      previewable = opts[:previewable] && part.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
     end
     html = []
     if previewable
@@ -226,7 +250,8 @@ module Cms::PublicFilter::Layout
     if part.ajax_view == "enabled" && !filters.include?(:mobile) && !@preview
       html << part.ajax_html
     else
-      html << render_part(part)
+      _header, body = render_part(part)
+      html << body
     end
     if previewable
       html << "</div>"
@@ -259,15 +284,24 @@ module Cms::PublicFilter::Layout
   end
 
   def render_kana_tool(html)
+    replaced = html.gsub(/<div[^>]*data-tool="ss-kana"[^>]*data-tool-type="button"[^>]*>.*?<\/div>/m) do |match|
+      match
+    end
     label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
-    html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+    replaced = replaced.gsub(/(<div[^>]+id="ss-kana"(?![^>]*data-tool-type="button")[^>]*>)(.*?)(<\/div>)/m) do
+      "#{$1}#{label}#{$3}"
+    end
+    replaced.gsub(/(<div[^>]+data-tool="ss-kana"(?![^>]*data-tool-type="button")[^>]*>)(.*?)(<\/div>)/m) do
       "#{$1}#{label}#{$3}"
     end
   end
 
   def render_theme_tool(html)
     template = Cms::ThemeTemplate.template(@cur_site)
-    html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+    html = html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{template}#{$3}"
+    end
+    html.gsub(/(<.+? data-tool="ss-theme".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{template}#{$3}"
     end
   end
@@ -304,18 +338,30 @@ module Cms::PublicFilter::Layout
     @stylesheets || []
   end
 
-  def stylesheet(path)
+  def stylesheet(path, **options)
     @stylesheets ||= []
-    @stylesheets << path unless @stylesheets.include?(path)
+    return if @stylesheets.any? { |maybe_array| maybe_array.is_a?(Array) ? maybe_array[0] == path : maybe_array == path }
+
+    if options.blank?
+      @stylesheets << path
+    else
+      @stylesheets << [ path, options ]
+    end
   end
 
   def javascripts
     @javascripts || []
   end
 
-  def javascript(path)
+  def javascript(path, **options)
     @javascripts ||= []
-    @javascripts << path unless @javascripts.include?(path)
+    return if @javascripts.any? { |maybe_array| maybe_array.is_a?(Array) ? maybe_array[0] == path : maybe_array == path }
+
+    if options.blank?
+      @javascripts << path
+    else
+      @javascripts << [ path, options ]
+    end
   end
 
   def javascript_configs

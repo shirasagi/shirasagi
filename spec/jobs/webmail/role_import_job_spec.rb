@@ -19,10 +19,10 @@ describe Webmail::RoleImportJob, dbscope: :example do
       temp_file.save!
 
       job = Webmail::RoleImportJob.bind(user_id: ss_user)
-      job.perform_now(temp_file.id)
+      ss_perform_now(job, temp_file.id)
 
       Job::Log.first.tap do |log|
-        expect(log.attributes[:logs]).to be_empty
+        expect(log.attributes["logs"]).to be_empty
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
         expect(log.logs).to include(match(/2行目:.*インポートしました。/))
@@ -32,6 +32,11 @@ describe Webmail::RoleImportJob, dbscope: :example do
         expect(log.logs).to include(match(/6行目:.*エラーが発生しました。/))
       end
       expect(Job::Log.count).to eq 1
+
+      expect(Webmail::Role.all.count).to eq 3
+      Webmail::Role.all.find_by(name: "管理者").tap do |role|
+        expect(role.name).to eq "管理者"
+      end
     end
   end
 end

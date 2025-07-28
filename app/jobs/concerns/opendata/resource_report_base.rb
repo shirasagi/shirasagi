@@ -156,7 +156,7 @@ module Opendata::ResourceReportBase
         if resources.blank?
           [ [ dataset_id, -1 ] ]
         else
-          resources.map { |hash| [ dataset_id, hash["_id"] ] }
+          resources.map { |resource_id| [ dataset_id, resource_id ] }
         end
       end
       available_dataset_and_resources.flatten!(1)
@@ -214,7 +214,7 @@ module Opendata::ResourceReportBase
     year_month = @start_at.year * 100 + @start_at.month
     criteria = self.class.report_model.site(site).where(year_month: year_month).exists(deleted: false)
     not_exist_ids = available_dataset_and_resources - criteria.pluck(:dataset_id, :resource_id)
-    Rails.logger.info "found #{not_exist_ids.length.to_s(:delimited)} datasets/resources with no history"
+    Rails.logger.info "found #{not_exist_ids.length.to_fs(:delimited)} datasets/resources with no history"
 
     dataset_ids = not_exist_ids.map { |dataset_id, _resource_id| dataset_id }.uniq
     datasets = Opendata::Dataset.site(site).in(id: dataset_ids).to_a

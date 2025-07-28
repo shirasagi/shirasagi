@@ -19,7 +19,7 @@
   <% end %>
   <span class="state"><%= item.state %></span>
   <span class="label"><%= @model.t(:at) %></span>
-  <span class="at"><%= tryb { Time.zone.at(item.at).strftime('%Y/%m/%d %H:%M') } %></span>
+  <span class="at"><%= ss_time_tag Time.zone.at(item.at) %></span>
 <% end %>
 
 <%= render "job/main/queue_adapter_warning" %>

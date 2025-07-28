@@ -46,6 +46,9 @@ class Chorg::RunController < ApplicationController
   public
 
   def confirmation
+    if @cur_revision.changesets.blank? && @cur_revision.user_csv_file.blank? && @cur_revision.content_csv_file.blank?
+      @item.errors.add :base, :chorg_empty_all
+    end
   end
 
   def run

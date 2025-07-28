@@ -109,6 +109,7 @@ ja:
         order: 並び順
       gws/addon/workflow/group_setting:
         workflow_new_days: 新着表示期間
+        workflow_my_group: 自所属の表示
 
   tooltip:
     gws/workflow/file:
@@ -136,6 +137,8 @@ ja:
     gws/addon/workflow/group_setting:
       workflow_new_days:
         - 新着表示期間を入力します。
+      workflow_my_group:
+        - ページの公開申請時「自所属」を表示するか設定します。
 
   job:
     models:

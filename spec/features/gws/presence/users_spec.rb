@@ -1,10 +1,12 @@
 require 'spec_helper'
 
-describe 'gws_presence_users', type: :feature, dbscope: :example do
-  context "basic crud", js: true do
+describe 'gws_presence_users', type: :feature, dbscope: :example, js: true do
+  context "basic crud" do
     let!(:site) { gws_site }
     let!(:index_path) { gws_presence_users_path site }
     let!(:presence_states) { Gws::UserPresence.new.state_options.map(&:reverse).to_h }
+    let!(:plan) { unique_id }
+    let!(:memo) { unique_id }
 
     before { login_gws_user }
 
@@ -12,24 +14,43 @@ describe 'gws_presence_users', type: :feature, dbscope: :example do
       visit index_path
       expect(current_path).not_to eq sns_login_path
 
-      find(".editable-users").click_on gws_user.name
-      find('.editable-users span', text: presence_states["available"]).click
-      wait_for_ajax
+      within ".editable-users" do
+        wait_for_all_turbo_frames
 
-      find(".editable-users .editicon.presence-plan").click
-      native_fill_in "presence_plan", with: "modified_plan\n"
-      wait_for_ajax
+        click_on gws_user.name
+        find('span', text: presence_states["available"]).click
+        expect(page).to have_css(".presence-state", text: presence_states["available"])
 
-      find(".editable-users .editicon.presence-memo").click
-      native_fill_in "presence_memo", with: "modified_memo\n"
-      wait_for_ajax
+        find(".presence-plan .editicon").click
+        wait_for_all_turbo_frames
+        within "form" do
+          fill_in "item[plan]", with: plan
+        end
 
-      find(".group-users .list-head-title .editicon").click
-      wait_for_ajax
-      expect(current_path).to eq index_path
+        find(".presence-memo .editicon").click
+        wait_for_all_turbo_frames
+        within "form" do
+          fill_in "item[memo]", with: memo
+        end
+      end
 
-      expect(page).to have_text('modified_plan')
-      expect(page).to have_text('modified_memo')
+      within ".group-users .list-head-title" do
+        find(".reload").click
+        wait_for_all_turbo_frames
+      end
+
+      within ".editable-users" do
+        within "tr[data-id='#{gws_user.id}']" do
+          expect(page).to have_text plan
+          expect(page).to have_text memo
+        end
+      end
+      within ".group-users" do
+        within "tr[data-id='#{gws_user.id}']" do
+          expect(page).to have_text plan
+          expect(page).to have_text memo
+        end
+      end
     end
   end
 end

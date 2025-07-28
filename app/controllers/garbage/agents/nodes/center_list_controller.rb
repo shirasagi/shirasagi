@@ -3,7 +3,7 @@ class Garbage::Agents::Nodes::CenterListController < ApplicationController
   helper Cms::ListHelper
 
   def index
-    @items = Garbage::Node::Center.site(@cur_site).and_public.
+    @items = Garbage::Node::Center.site(@cur_site).and_public(@cur_date).
       where(@cur_node.condition_hash).
       order_by(@cur_node.sort_hash).
       page(params[:page]).

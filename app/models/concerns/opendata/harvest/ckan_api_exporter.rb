@@ -8,6 +8,11 @@ module Opendata::Harvest::CkanApiExporter
   end
 
   def export
+    if !enabled?
+      put_log "not enabled #{url}"
+      return
+    end
+
     put_log "export to #{url} (Ckan API)"
 
     @package = ::Opendata::Harvest::CkanPackage.new(url)
@@ -23,7 +28,6 @@ module Opendata::Harvest::CkanApiExporter
       next unless dataset
 
       dataset_relation = export_dataset(dataset, d_idx)
-      sleep 1
       next unless dataset_relation
 
       @dataset_relations[dataset_relation.rel_id] = dataset_relation
@@ -34,7 +38,6 @@ module Opendata::Harvest::CkanApiExporter
       resources_relations = []
       dataset.resources.each_with_index do |resource, r_idx|
         resources_relation = export_resource(resource, dataset_relation, exported_resources, d_idx, r_idx)
-        sleep 1
         next unless resources_relation
 
         @resource_relations[resources_relation.rel_id] = resources_relation
@@ -104,8 +107,7 @@ module Opendata::Harvest::CkanApiExporter
         attributes = {
           uuid: resource.uuid,
           revision_id: resource.revision_id,
-          rel_id: resource_relation.rel_id,
-          rel_revision_id: resource.revision_id
+          rel_id: resource_relation.rel_id
         }
       else
         put_log "#{d_idx}-#{r_idx} : update resource #{resource.name} #{resource.uuid}"
@@ -121,8 +123,7 @@ module Opendata::Harvest::CkanApiExporter
         attributes = {
           uuid: resource.uuid,
           revision_id: resource.revision_id,
-          rel_id: result["id"],
-          rel_revision_id: result["revision_id"]
+          rel_id: result["id"]
         }
       end
       resource_relation.attributes = attributes
@@ -144,8 +145,7 @@ module Opendata::Harvest::CkanApiExporter
         rel_dataset: dataset_relation,
         uuid: resource.uuid,
         revision_id: resource.revision_id,
-        rel_id: result["id"],
-        rel_revision_id: result["revision_id"]
+        rel_id: result["id"]
       }
       resource_relation.attributes = attributes
       resource_relation.save!
@@ -275,10 +275,15 @@ module Opendata::Harvest::CkanApiExporter
     params
   end
 
+  def resource_url_param(resource)
+    return resource.file.filename if resource.source_url.blank?
+    resource.source_url.sub(/\?.*$/, "")
+  end
+
   def resource_create_params(resource)
     params = {
       name: resource.name,
-      url: (resource.source_url.presence || resource.file.filename),
+      url: resource_url_param(resource),
       description: resource.text,
       format: resource.format
     }
@@ -288,7 +293,7 @@ module Opendata::Harvest::CkanApiExporter
   def resource_update_params(resource)
     params = {
       name: resource.name,
-      url: (resource.source_url.presence || resource.file.filename),
+      url: resource_url_param(resource),
       description: resource.text,
       format: resource.format
     }

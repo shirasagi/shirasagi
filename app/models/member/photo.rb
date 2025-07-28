@@ -9,6 +9,7 @@ class Member::Photo
   include Member::Addon::Photo::License
   include Cms::Addon::GroupPermission
   include History::Addon::Backup
+  include Cms::Lgwan::Page
 
   set_permission_name "member_photos"
 

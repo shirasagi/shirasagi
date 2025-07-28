@@ -1,6 +1,7 @@
 class Webmail::History::ArchiveFile
   include SS::Model::File
   include Webmail::Permission
+  include Cms::Lgwan::File
 
   set_permission_name 'webmail_histories'
 

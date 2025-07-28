@@ -12,10 +12,14 @@ Rails.application.routes.draw do
     post :command, on: :member
   end
 
+  concern :change_state do
+    put :change_state_all, on: :collection, path: ''
+  end
+
   content "opendata" do
     resources :app_categories, concerns: :deletion, module: :app
     resources :search_apps, concerns: :deletion, module: :app
-    resources :apps, concerns: [:deletion, :command], module: :app do
+    resources :apps, concerns: [:deletion, :command, :change_state], module: :app do
       resources :appfiles, concerns: :deletion do
         get "file" => "appfiles#download"
       end
@@ -24,7 +28,7 @@ Rails.application.routes.draw do
 
   node "opendata" do
     get "app_category/" => "public#index", cell: "nodes/app/app_category"
-    get "app_category/rss.xml" => "public#index", cell: "nodes/app/app_category"
+    get "app_category/rss.xml" => "public#rss", cell: "nodes/app/app_category"
     get "app_category/:name/" => "public#index", cell: "nodes/app/app_category"
     get "app_category/:name/rss.xml" => "public#rss", cell: "nodes/app/app_category"
     # get "app_category/:name/areas" => "public#index_areas", cell: "nodes/app/app_category"

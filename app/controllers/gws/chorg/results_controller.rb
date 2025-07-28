@@ -43,7 +43,7 @@ class Gws::Chorg::ResultsController < ApplicationController
   end
 
   def interrupt
-    @item.update_attributes interrupt: 'stop'
+    @item.update interrupt: 'stop'
     respond_to do |format|
       format.html { redirect_to({ action: :show }, { notice: t('ss.tasks.interrupted') }) }
       format.json { head :no_content }

@@ -1,0 +1,11 @@
+<div class="gws-schedule-tabs">
+  <%= link_to({ action: :total, s: @s.to_h }, { class: (params[:action] == "total" ? "current" : "") }) do %>
+    <span class="tab-name">時間外合計</span>
+  <% end %>
+  <%= link_to({ action: :under, s: @s.to_h }, { class: (params[:action] == "under" ? "current" : "") }) do %>
+    <span class="tab-name">通常分</span>
+  <% end %>
+  <%= link_to({ action: :over, s: @s.to_h }, { class: (params[:action] == "over" ? "current" : "") }) do %>
+    <span class="tab-name">割合引上対象分（<%= "#{threshold_hour}時間超過" %>）</span>
+  <% end %>
+</div>

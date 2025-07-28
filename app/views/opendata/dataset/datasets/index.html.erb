@@ -1,6 +1,6 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="filename"><%= File.basename item.filename %></span>
   <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
   <%= colored_state_label(item) %>
@@ -8,6 +8,10 @@
 
   <% if item.harvest_imported %>
     <span class="opendata-harvest"><%= item.harvest_importer ? item.harvest_importer.name : t("opendata.links.deleted") %></span>
+  <% end %>
+
+  <% if item.metadata_imported %>
+    <span class="opendata-harvest"><%= item.metadata_importer ? item.metadata_importer.name : t("opendata.links.deleted") %></span>
   <% end %>
 <% end %>
 

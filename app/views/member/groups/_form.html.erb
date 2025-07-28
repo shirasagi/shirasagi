@@ -8,15 +8,15 @@
   <% if @item.new_record? %>
   <dt><%= @model.t :in_admin_member_ids %><%= @model.tt :in_admin_member_ids %></dt>
   <dd>
-    <%= f.hidden_field "in_admin_member_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "in_admin_member_ids[]", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.members.index"), cms_apis_members_path, class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">
       <thead>
       <tr>
-        <th class="name"><%= Cms::Member.t :name %></th>
-        <th></th>
+        <th class="name" scope="col"><%= Cms::Member.t :name %></th>
+        <th scope="col"></th>
       </tr>
       </thead>
       <tbody>

@@ -15,13 +15,13 @@ describe "gws_sites", type: :feature, dbscope: :example do
       expect(current_path).to eq index_path
 
       click_on I18n.t("ss.buttons.edit")
-      within "form" do
+      within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[domains]", with: domain
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       site.reload
       expect(site.name).to eq name

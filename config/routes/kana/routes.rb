@@ -11,5 +11,6 @@ Rails.application.routes.draw do
     get "dictionaries/build_confirmation" => "dictionaries#build_confirmation"
     post "dictionaries/build" => "dictionaries#build"
     resources :dictionaries, concerns: :deletion
+    resource :diagnostic, only: %i[show update]
   end
 end

@@ -25,7 +25,7 @@ module SS::Config
     end
 
     def load_yml(file, section = nil)
-      conf = YAML.load_file(file)
+      conf = YAML.safe_load_file(file, aliases: true, permitted_classes: [Symbol])
       section ? conf[section] : conf
     end
 
@@ -35,7 +35,7 @@ module SS::Config
     end
 
     def respond_to?(name, *args)
-      @@config.key?(name)
+      @@config.key?(name.to_sym)
     end
 
     def respond_to_missing?(*args)

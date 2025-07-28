@@ -1,0 +1,58 @@
+<dl class="see" data-controller="gws--tabular--text-field-column">
+  <script type="application/json" data-gws--tabular--text-field-column-target="option">
+    {
+      "radioConfiguration": {
+        "single": {
+          "item[validation_type]": { "disabled": false },
+          "item[i18n_state]": { "disabled": false }
+        },
+        "multi": {
+          "item[validation_type]": { "value": "none", "disabled": true },
+          "item[i18n_state]": { "value": "disabled", "disabled": true }
+        },
+        "multi_html": {
+          "item[validation_type]": { "value": "none", "disabled": true },
+          "item[i18n_state]": { "value": "disabled", "disabled": true }
+        }
+      }
+    }
+  </script>
+
+  <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
+  <dd><%= f.select :input_type, @item.input_type_options, {}, { data: { "gws--tabular--text-field-column-target" => "inputType" } } %></dd>
+
+  <dt><%= @model.t :max_length %><%= @model.tt :max_length %></dt>
+  <dd><%= f.number_field :max_length %></dd>
+
+  <dt><%= @model.t :i18n_default_value %><%= @model.tt :i18n_default_value %></dt>
+  <% if I18n.available_locales.length == 1 %>
+    <dd><%= f.text_field :i18n_default_value %></dd>
+  <% else %>
+    <dd></dd>
+    <% SS.locales_in_order.each_with_index do |lang, index| %>
+      <dt class="depth-2 i18n_default_value"><%= @model.t(:"i18n_default_value_#{lang}", default: t("ss.options.lang.#{lang}", default: lang.to_s)) %></dt>
+      <dd class="depth-2 i18n_default_value">
+        <%= text_field_tag "#{f.object_name}[i18n_default_value_translations][#{lang}]", @item.i18n_default_value_translations[lang] %>
+      </dd>
+    <% end %>
+  <% end %>
+
+  <% disabled_by_input_type = %w(multi multi_html).include?(@item.input_type) %>
+  <dt><%= @model.t :validation_type %><%= @model.tt :validation_type %></dt>
+  <dd>
+    <%=
+      # this hidden is submitted when all radio buttons are disabled because disabled input won't be submitted.
+      f.hidden_field :validation_type, value: "none", id: nil
+    %>
+    <%= f.select :validation_type, @item.validation_type_options, {}, { disabled: disabled_by_input_type } %>
+  </dd>
+
+  <dt><%= @model.t :i18n_state %><%= @model.tt :i18n_state %></dt>
+  <dd>
+    <%=
+      # this hidden is submitted when all radio buttons are disabled because disabled input won't be submitted.
+      f.hidden_field :i18n_state, value: "disabled", id: nil
+    %>
+    <%= f.select :i18n_state, @item.i18n_state_options, {}, { disabled: disabled_by_input_type } %>
+  </dd>
+</dl>

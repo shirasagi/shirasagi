@@ -19,11 +19,11 @@ describe "article_agents_nodes_page rss", type: :feature, dbscope: :example do
       visit "#{node.url}rss.xml"
       expect(page).to have_content(item1.full_url)
       expect(page).to have_content(item1.index_name)
-      expect(page).not_to have_content(item1.name)
+      expect(page).to have_no_content(item1.name)
 
       expect(page).to have_content(item2.full_url)
       expect(page).to have_content(item2.index_name)
-      expect(page).not_to have_content(item2.name)
+      expect(page).to have_no_content(item2.name)
 
       expect(page).to have_content(item3.full_url)
       expect(page).to have_content(item3.name)

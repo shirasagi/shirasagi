@@ -1,11 +1,10 @@
 /**
- *= require jquery.datetimepicker
+ *= require jquery-datetimepicker/build/jquery.datetimepicker.min.css
+ *= require_self
  */
-@import "../voice/public";
 @import "../map/public";
 @import "ss/ckeditor";
 @import "./search";
-@import "../key_visual/public";
 
 #ss-loading {
   display: none;
@@ -18,9 +17,9 @@
 
 .youtube-auto-width {
   position: relative;
-  padding-bottom: 56.25%;
-  padding-top: 30px;
   height: 0;
+  padding-top: 30px;
+  padding-bottom: 56.25%;
   overflow: hidden;
 }
 .youtube-auto-width iframe {

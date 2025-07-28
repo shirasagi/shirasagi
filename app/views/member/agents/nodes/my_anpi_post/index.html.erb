@@ -21,10 +21,10 @@
 <table class="index mypage-index member-anpi-post">
   <thead>
   <tr>
-    <th class="name"><%= @model.t :name %></th>
-    <th class="text"><%= @model.t :text %></th>
-    <th class="register"><%= t "member.view.registered_person" %></th>
-    <th class="datetime updated"><%= @model.t :updated %></th>
+    <th class="name" scope="col"><%= @model.t :name %></th>
+    <th class="text" scope="col"><%= @model.t :text %></th>
+    <th class="register" scope="col"><%= t "member.view.registered_person" %></th>
+    <th class="datetime updated" scope="col"><%= @model.t :updated %></th>
   </tr>
   </thead>
   <tbody>
@@ -32,7 +32,7 @@
     <tr>
       <td class="item name"><%= link_to item.name, "#{@cur_node.url}#{item.id}/" %></td>
       <td class="item text">
-        <%= truncate(item.text.squish, length: 100, separator: /\w/, omission: "&hellip;") %>
+        <%= ss_truncate(item.text.squish, length: 100, separator: /\w/, omission: "&hellip;") %>
       </td>
       <td class="item register"><%= item.member.name %></td>
       <td class="item datetime updated"><%=tryb { I18n.l(item.updated, format: :long) } %></td>

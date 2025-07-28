@@ -6,20 +6,35 @@
   <% end %>
 
   <div class="addon-head">
-      <span class="icon-star <%= @item.star?(@cur_user) ? 'on' : 'off' %>">
-        <%= link_to({ action: :show, id: @item.id }) do %>
-          <i class="material-icons md-18">&#xE838;</i>
+    <div class="d-flex">
+      <h2 class="subject">
+        <%= @item.display_subject %>
+        <% if @item.attachments? %>
+          <span class="icon-attachment"><i class="material-icons">attach_file</i></span>
         <% end %>
-      </span>
-
-    <h2 class="subject">
-      <%= @item.display_subject %>
-      <span class="icon-attachment">
-          <i class="material-icons"><%== @item.attachments? ? '&#xE226;' : '' %></i>
+      </h2>
+      <div class="d-flex ml-auto">
+        <% if @id_index.present? %>
+          <div class="move-tool-wrap">
+            <div class="page-order"><span class="current"><%= @id_index + 1 %></span> / <span class="total"><%= @id_list.length %></span></div>
+            <div class="move-tool">
+              <%= move_to_prev_tag %>
+              <%= move_to_next_tag %>
+            </div>
+          </div>
+        <% end %>
+        <span class="icon-star <%= @item.star?(@cur_user) ? 'on' : 'off' %>">
+          <%= link_to(url_for(action: :show, id: @item.id)) do %>
+            <i class="material-icons md-18">star</i>
+          <% end %>
         </span>
-    </h2>
-    <div class="from"><%= gws_public_user_long_name(@item.from_member_name) || t('gws/memo.no_senders') %></div>
-    <div class="date"><%= @item.display_send_date %></div>
+      </div>
+    </div>
+
+    <div class="d-flex">
+      <div class="from"><%= gws_public_user_long_name(@item.from_member_name) || t('gws/memo.no_senders') %></div>
+      <div class="date"><%= @item.display_send_date %></div>
+    </div>
   </div>
 
   <% show_to_section = @item.to_members? %>
@@ -68,7 +83,7 @@
       <% @item.attachments.each do |part| %>
         <div class="file">
           <%= link_to({action: :parts, section: part.section}, target: part.link_target) do %>
-            <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
+            <i class="material-icons md-18"><%= part.image? ? 'image' : 'insert_drive_file' %></i>
             <%= part.filename %>
           <% end %>
         </div>

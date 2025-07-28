@@ -45,12 +45,25 @@ this.Cms_Michecker = (function () {
     return null;
   }
 
+  function isFrameLoaded(frame) {
+    var frameDoc = frame.contentDocument || frame.contentWindow.document;
+    if (!frameDoc || !frameDoc.readyState) {
+      return false;
+    }
+
+    return frameDoc.readyState === "complete";
+  }
+
   Cms_Michecker.prototype.init = function() {
     var self = this;
 
-    this.$frame.on("load", function(ev) {
-      self.onFrameLoaded(ev);
-    });
+    if (isFrameLoaded(self.frame)) {
+      self.onFrameLoaded();
+    } else {
+      this.$frame.one("load", function (_ev) {
+        self.onFrameLoaded();
+      });
+    }
 
     this.$btnStart.on("click", function(ev) {
       self.onBtnMicheckerStartClicked(ev);

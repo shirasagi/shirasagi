@@ -16,8 +16,6 @@ module Gws::Addon::Schedule::Facility
     scope :facility, ->(item) { where facility_ids: item.id }
   end
 
-  private
-
   def validate_facility_time
     duration = end_at.to_i - start_at.to_i
     min_minutes_limit = facilities.pluck(:min_minutes_limit).compact.max
@@ -109,13 +107,12 @@ module Gws::Addon::Schedule::Facility
     end
   end
 
-  public
-
   def facility_double_booking_plans
     plans = self.class.ne(id: id).
       without_deleted.
       exists(duplicate_registered: false).
       where(site_id: site_id).
+      ne(approval_state: "deny").
       any_in(facility_ids: facility_ids)
     if allday?
       plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)
@@ -123,5 +120,32 @@ module Gws::Addon::Schedule::Facility
       plans = plans.where(:end_at.gt => start_at, :start_at.lt => end_at)
     end
     plans
+  end
+
+  def reservation_errors
+    return self.class.new.errors if facilities.blank?
+
+    temp_errors = errors.dup
+    errors.copy!(self.class.new.errors)
+    validate_facility_time
+    validate_reservable_members
+    validate_facility_double_booking
+    validate_facility_hours
+    reservation_errors = errors.dup
+    errors.copy!(temp_errors)
+    reservation_errors
+  end
+
+  def reservation_status
+    return 'free' if facilities.blank?
+    return 'exist' if reservation_errors.present?
+    return 'free' if facility_double_booking_plans.blank?
+
+    user = cur_user || self.user
+    site = cur_site || self.site
+
+    return 'registered' if user.gws_role_permit_any?(site, :duplicate_private_gws_facility_plans)
+
+    'exist'
   end
 end

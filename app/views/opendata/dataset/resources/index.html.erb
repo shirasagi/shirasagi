@@ -6,16 +6,8 @@
     <li class="list-item">
       <nav class="tap-menu">
         <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-        <% if @dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-          <% if item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-            <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <% end %>
-        <% end %>
-        <% if @dataset.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
-          <% if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
-            <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
-          <% end %>
-        <% end %>
+        <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+        <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
       </nav>
 
       <% if @dataset.harvest_imported.blank? %>
@@ -29,7 +21,7 @@
         <div class="meta">
           <span class="id">#<%= item.id %></span>
           <% if item.try(:updated) %>
-            <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+            <span class="datetime"><%= ss_time_tag item.updated %></span>
           <% end %>
           <% if item.try(:filename) %>
             <% if params.dig(:s, :target) == 'descendant' %>
@@ -41,8 +33,8 @@
           <% if item.try(:route) %>
             <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
           <% end %>
-          <% if item.try(:status) %>
-            <span class="state"><%= t "ss.state.#{item.status}" %></span>
+          <% if item.try(:state) %>
+            <span class="state"><%= t "ss.state.#{item.state}" %></span>
           <% end %>
           <% if item.try(:tags) %>
             <span class="tags"><%= item.tags.join(",") %></span>

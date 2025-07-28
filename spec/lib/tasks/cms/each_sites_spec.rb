@@ -115,8 +115,8 @@ describe Tasks::Cms, dbscope: :example do
         end
 
         # only 'site' is effective
-        expect(site_ids.length).to eq 1
-        expect(site_ids).to include(site1.id)
+        expect(site_ids.length).to eq 2
+        expect(site_ids).to include(site1.id, site2.id)
       end
     end
 

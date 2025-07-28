@@ -5,5 +5,5 @@
 
 <dl class="see mod-ezine-delivere-plan">
   <dt><%= @model.t :deliver_date %><%= @model.tt :deliver_date %></dt>
-  <dd><%= f.text_field :deliver_date, class: "datetime js-datetime", value: tryb { @item.deliver_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= f.ss_datetime_field :deliver_date %></dd>
 </dl>

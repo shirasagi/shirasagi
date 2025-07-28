@@ -1,6 +1,6 @@
 class Member::Agents::Nodes::MyLineProfileController < ApplicationController
   include Cms::NodeFilter::View
-  include Member::LoginFilter
+  include Member::Line::LoginFilter
   include Cms::PublicFilter::Crud
 
   model Cms::Member

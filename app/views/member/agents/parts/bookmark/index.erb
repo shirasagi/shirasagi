@@ -1,0 +1,31 @@
+<%
+  opts = {}
+  if controller.preview_path?
+    name = t("member.links.register_bookmark")
+    url = @cur_path
+    opts[:class] = "redirect-to-login"
+    opts[:onclick] = "return false;"
+  elsif @cur_member
+    item = controller.find_content(@cur_site, @cur_path)
+    if item.nil?
+      return
+    elsif @cur_member.bookmark_registerd?(item)
+      name = t("member.links.cancel_bookmark")
+      opts[:class] = "favorite-cancel"
+      opts[:method] = :post
+      url = @bookmark_node.url + "cancel?" + { path: @cur_path }.to_query
+    else
+      name = t("member.links.register_bookmark")
+      opts[:class] = "favorite-register"
+      opts[:method] = :post
+      url = @bookmark_node.url + "register?" + { path: @cur_path }.to_query
+    end
+  else
+    name = t("member.links.register_bookmark")
+    url = @redirect_path
+    opts[:class] = "redirect-to-login"
+  end
+%>
+<div class="favorite">
+  <%= link_to name, url, opts %>
+</div>

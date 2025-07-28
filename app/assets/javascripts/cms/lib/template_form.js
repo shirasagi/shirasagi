@@ -46,7 +46,7 @@ Cms_TemplateForm.createElementFromHTML = function(html) {
   var div = document.createElement('div');
   div.innerHTML = html.trim();
 
-  return div.firstChild;
+  return div.firstElementChild;
 };
 
 Cms_TemplateForm.prototype.render = function() {
@@ -122,10 +122,15 @@ Cms_TemplateForm.prototype.deleteEditors = function() {
 
 Cms_TemplateForm.prototype.loadForm = function(html) {
   this.deleteEditors();
-  this.$formPage.html($(html).html());
+
+  var $html = $(html);
+  var $siblings = $html.siblings();
+  $html = $siblings.length > 0 ? $siblings.first() : $html;
+
+  this.$formPage.html($html.html());
   // SS.render();
   SS.renderAjaxBox();
-  SS.renderDateTimePicker();
+  SS_DateTimePicker.render();
 };
 
 Cms_TemplateForm.prototype.showError = function(msg) {
@@ -141,7 +146,6 @@ Cms_TemplateForm.prototype.activateForm = function(formId) {
   $("#item_body_layout_id").parent('dd').prev('dt').addClass('hide');
   $("#item_body_layout_id").parent('dd').addClass('hide');
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
-  Cms_Form.activateSyntaxChecks();
 
   this.$formIdInput.val(formId);
   this.$formChangeBtn.trigger("ss:formActivated");
@@ -157,7 +161,6 @@ Cms_TemplateForm.prototype.deactivateForm = function() {
   $("#item_body_layout_id").parent('dd').prev('dt').removeClass('hide');
   $("#item_body_layout_id").parent('dd').removeClass('hide');
   Cms_Form.addonSelector = ".mod-cms-body";
-  Cms_Form.activateSyntaxChecks();
 
   this.$formIdInput.val('');
   this.$formChangeBtn.trigger("ss:formDeactivated");
@@ -178,19 +181,19 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
   this.$el = $(el);
 
   var self = this;
-  this.$el.on("change", ".column-value-controller-move-position", function(ev) {
+  this.$el.on("change", ".column-value-controller-move-position", function(_ev) {
     self.movePosition($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-move-up", function(ev) {
+  this.$el.on("click", ".column-value-controller-move-up", function(_ev) {
     self.moveUp($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-move-down", function(ev) {
+  this.$el.on("click", ".column-value-controller-move-down", function(_ev) {
     self.moveDown($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-delete", function(ev) {
+  this.$el.on("click", ".column-value-controller-delete", function(_ev) {
     self.remove($(this));
   });
 
@@ -206,7 +209,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
     // $this.trigger("ss:columnAdding");
     $.ajax({
       url: Cms_TemplateForm.paths.formColumn.replace(/:formId/, formId).replace(/:columnId/, columnId),
-      success: function(data, status, xhr) {
+      success: function(data, _status, _xhr) {
         var newColumnElement = Cms_TemplateForm.createElementFromHTML(data);
         var $palette = $this.closest(".column-value-palette");
         $palette.before(newColumnElement);
@@ -216,8 +219,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
         // use "setTimeout" to consume events in browser.
         setTimeout(function() {
           SS.renderAjaxBox();
-          SS.renderDateTimePicker();
-          Cms_Form.activateSyntaxChecks();
+          SS_DateTimePicker.render();
 
           setTimeout(function() {
             $this.trigger("ss:columnAdded", newColumnElement);
@@ -227,7 +229,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       error: function(xhr, status, error) {
         $this.closest(".column-value-palette").find(".column-value-palette-error").html(error).removeClass("hide");
       },
-      complete: function(xhr, status) {
+      complete: function(_xhr, _status) {
         $this.css('cursor', "pointer");
         $this.closest("fieldset").prop("disabled", false);
       }
@@ -248,7 +250,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       stop: function (ev, ui) {
         ui.item.trigger("column:afterMove");
       },
-      update: function (ev, ui) {
+      update: function (_ev, _ui) {
         self.resetOrder();
       }
     });
@@ -407,17 +409,17 @@ Cms_TemplateForm.insertElement = function($source, $destination, completion) {
       return;
     }
 
-    var sourceBottom = source.offsetTop + source.offsetHeight;
+    // var sourceBottom = source.offsetTop + source.offsetHeight;
     var prev = source.previousElementSibling;
     var prevBottom = prev.offsetTop + prev.offsetHeight;
 
     sourceDisplacement = destination.offsetTop - source.offsetTop;
-    destinationDisplacement = sourceBottom - prevBottom;
+    destinationDisplacement = source.offsetTop + source.offsetHeight - prevBottom;
 
-    var el = destination;
-    while (el !== source) {
-      intermediateElements.push(el);
-      el = el.nextElementSibling;
+    var nextEl = destination;
+    while (nextEl !== source) {
+      intermediateElements.push(nextEl);
+      nextEl = nextEl.nextElementSibling;
     }
   } else if (destination.offsetTop > source.offsetTop) {
     // moveDown
@@ -427,16 +429,15 @@ Cms_TemplateForm.insertElement = function($source, $destination, completion) {
     }
 
     var destinationBottom = destination.offsetTop + destination.offsetHeight;
-    var sourceBottom = source.offsetTop + source.offsetHeight;
     var next = source.nextElementSibling;
 
-    sourceDisplacement = destinationBottom - sourceBottom;
+    sourceDisplacement = destinationBottom - (source.offsetTop + source.offsetHeight);
     destinationDisplacement = source.offsetTop - next.offsetTop;
 
-    var el = destination;
-    while (el !== source) {
-      intermediateElements.push(el);
-      el = el.previousElementSibling;
+    var prevEl = destination;
+    while (prevEl !== source) {
+      intermediateElements.push(prevEl);
+      prevEl = prevEl.previousElementSibling;
     }
   }
 
@@ -478,7 +479,6 @@ Cms_TemplateForm.prototype.remove = function($evTarget) {
     }
     $columnValue.remove();
     self.resetOrder();
-    Cms_Form.activateSyntaxChecks();
 
     self.$el.trigger("ss:columnDeleted");
   });

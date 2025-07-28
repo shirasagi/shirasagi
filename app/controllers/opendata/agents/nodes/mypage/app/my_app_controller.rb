@@ -14,7 +14,7 @@ class Opendata::Agents::Nodes::Mypage::App::MyAppController < ApplicationControl
 
   def app_node
     @app_node ||= begin
-      node = Opendata::Node::App.site(@cur_site).and_public.first
+      node = Opendata::Node::App.site(@cur_site).and_public(@cur_date).first
       node = Opendata::Node::App.site(@cur_site).first if node.blank?
       node
     end

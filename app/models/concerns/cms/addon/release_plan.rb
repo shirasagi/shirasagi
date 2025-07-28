@@ -16,10 +16,20 @@ module Cms::Addon
     end
 
     def validate_release_date
+      return if respond_to?(:new_clone?) && new_clone? && respond_to?(:master?) && master?
+
       self.released ||= release_date if respond_to?(:released)
 
       if close_date.present? && release_date.present? && release_date >= close_date
         errors.add :close_date, :greater_than, count: t(:release_date)
+      end
+      # release_dat が now 以前でもシステム的には問題ないので、エラーにするには厳しすぎる。
+      # しいて言うなら警告だけど、警告を実現する方法がないので、チェックしないようにする。
+      # if release_date.present? && release_date <= Time.zone.now
+      #   errors.add :release_date, :greater_than, count: I18n.l(Time.zone.now)
+      # end
+      if close_date.present? && close_date <= Time.zone.now
+        errors.add :close_date, :greater_than, count: I18n.l(Time.zone.now)
       end
     end
 
@@ -27,8 +37,12 @@ module Cms::Addon
       return if errors.present?
 
       if try(:state) == "public"
-        self.state = "ready" if release_date && release_date > Time.zone.now
-        self.state = "closed" if close_date && close_date <= Time.zone.now
+        now = Time.zone.now
+        self.state = "ready" if release_date && release_date > now
+        # 差し替えページのマージ処理は state == "public" の場合に動作する
+        # 「公開終了日時(予約)」が過去日に設定された差し替えページを公開保存した場合、
+        # 適切にマージ処理を実行させるため、差し替えページの場合 state を変更しないようにする。
+        self.state = "closed" if close_date && close_date <= now && !try(:branch?)
       end
     end
 
@@ -72,6 +86,10 @@ module Cms::Addon
       site = self.try(:cur_site)
       site = Cms::Site.find(site.id) if site.present? && !site.is_a?(Cms::Site)
       return calc_beginning_of_day(now, site.default_close_days_after) if site.try(:default_release_plan_enabled?)
+    end
+
+    def expired_close_date?
+      close_date && close_date <= Time.zone.now
     end
 
     private

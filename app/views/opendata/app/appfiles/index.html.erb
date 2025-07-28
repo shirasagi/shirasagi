@@ -1,31 +1,33 @@
-<%= render template: "_search" %>
+<div class="main-box">
+  <%= render template: "_search" %>
 
-<table class="index">
-  <thead>
-    <tr>
-      <th class="checkbox"><input type="checkbox" /></th>
-      <th class="filename"><%= @model.t :filename %></th>
-      <th class="text"><%= @model.t :text %></th>
-      <th class="datetime"><%= @model.t :updated %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @items.each do |item| %>
-    <tr>
-      <td class="checkbox">
-        <input type="checkbox" name="ids[]" value="<%= item.id %>" />
-        <nav class="tap-menu">
-          <%= link_to t('ss.links.show'), { action: :show, id: item } %>
-          <%= link_to t('ss.links.edit'), { action: :edit, id: item } %>
-          <%= link_to t('ss.links.delete'), { action: :delete, id: item } %>
-        </nav>
-      </td>
-      <td class="filename"><%= link_to item.filename, { action: :show, id: item } %></td>
-      <td class="text"><%= item.text %></td>
-      <td class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+  <table class="index">
+    <thead>
+      <tr>
+        <th class="checkbox"><input type="checkbox" /></th>
+        <th class="filename"><%= @model.t :filename %></th>
+        <th class="text"><%= @model.t :text %></th>
+        <th class="datetime"><%= @model.t :updated %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @items.each do |item| %>
+      <tr>
+        <td class="checkbox">
+          <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+          <nav class="tap-menu">
+            <%= link_to t('ss.links.show'), { action: :show, id: item } %>
+            <%= link_to t('ss.links.edit'), { action: :edit, id: item } %>
+            <%= link_to t('ss.links.delete'), { action: :delete, id: item } %>
+          </nav>
+        </td>
+        <td class="filename"><%= link_to item.filename, { action: :show, id: item } %></td>
+        <td class="text"><%= item.text %></td>
+        <td class="datetime"><%= ss_time_tag item.updated %></td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
 
-<%= paginate @items if @items.try(:current_page) %>
+  <%= paginate @items if @items.try(:current_page) %>
+</div>

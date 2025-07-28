@@ -1,14 +1,22 @@
-<% return if addons.blank? %>
+<%
+  return if addons.blank?
 
-<% css_classes ||= [] %>
-<% css_classes = Array(css_classes).flatten.compact %>
-<% addons.each do |addon| %>
-  <% addon_options = { id: "addon-#{addon.id}", head: addon.name, class: css_classes.dup, toggle: true } %>
+  css_classes ||= []
+  css_classes = Array(css_classes).flatten.compact
+  addons.each do |addon|
+    addon_options = { id: "addon-#{addon.id}", head: addon.name, class: css_classes.dup, toggle: true }
+    buf = render addon.form_partial_path, f: f, addon: addon_options if addon.form_partial_path
+    next if buf.blank?
 
-  <% buf = render addon.form_partial_path, f: f, addon: addon_options if addon.form_partial_path %>
-  <% next if buf.blank? %>
+    if addon_options[:stimulus]
+      case addon_options[:stimulus]
+      when Hash
+        data = SS::StimulusHelper::Utils.convert_to_data_params(addon.klass.name.underscore => addon_options[:stimulus])
+      else # true
+        data = SS::StimulusHelper::Utils.convert_to_data_params(addon.klass.name.underscore)
+      end
+    end
 
-  <%= render "ss/crud/addon", addon: addon_options do %>
-    <%= buf %>
-  <% end %>
-<% end %>
+    output_buffer << render("ss/crud/addon", addon: addon_options, data: data) { buf }
+  end
+%>

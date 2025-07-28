@@ -11,6 +11,9 @@
     <dd><%= link_to @item.source_url, @item.source_url, target: "_blank", rel: "noopener" %></dd>
   <% end %>
 
+  <dt><%= @model.t :state %></dt>
+  <dd><%= @item.label :state %></dd>
+
   <dt><%= @model.t :name %></dt>
   <dd><%= @item.send :name %></dd>
 

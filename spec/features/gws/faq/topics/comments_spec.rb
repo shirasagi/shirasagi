@@ -18,7 +18,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
         expect(page).to have_css("article.topic .body", text: topic.text)
 
         within "article.topic div.menu" do
-          click_on "返信する"
+          click_on I18n.t("gws/faq.links.comment")
         end
 
         within "form#item-form" do
@@ -48,7 +48,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
         expect(page).to have_css("article.topic .body", text: topic.text)
 
         within "article.topic div.menu" do
-          click_on "返信する"
+          click_on I18n.t("gws/faq.links.comment")
         end
 
         within "form#item-form" do
@@ -66,7 +66,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example do
         expect(comment.text).to eq text
 
         within "aside.comment div.menu" do
-          click_on "返信する"
+          click_on I18n.t("gws/faq.links.comment")
         end
 
         within "form#item-form" do

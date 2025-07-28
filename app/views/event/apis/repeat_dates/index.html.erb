@@ -1,10 +1,4 @@
 <%= jquery do %>
-  $(".event-repeat-js-date").datetimepicker({
-    lang: "ja",
-    timepicker: false,
-    format: "Y/m/d"
-  });
-
   $("form.event-repeat-dates").on("submit", function (e) {
     $(this).ajaxSubmit({
       url: $(this).attr("action"),
@@ -23,15 +17,15 @@
   <div class="event-repeat-dates-ui-form">
     <dl class="see">
       <dt><%= t("event.apis.repeat_dates.start") %></dt>
-      <dd><%= text_field_tag :repeat_start, "", class: "date event-repeat-js-date repeat_start" %></dd>
+      <dd><%= ss_date_field_tag :repeat_start, nil, {}, { class: "event-repeat-js-date repeat_start" } %></dd>
 
       <dt><%= t("event.apis.repeat_dates.end") %></dt>
-      <dd><%= text_field_tag :repeat_end, "", class: "date event-repeat-js-date repeat_end" %></dd>
+      <dd><%= ss_date_field_tag :repeat_end, nil, {}, { class: "event-repeat-js-date repeat_end" } %></dd>
 
       <dt><%= t("event.apis.repeat_dates.wdays") %></dt>
       <dd>
         <table>
-          <%= hidden_field_tag "wdays[]", "" %>
+          <%= hidden_field_tag "wdays[]", "", id: nil %>
           <tr>
           <% (0..6).each do |i| %>
             <td><label><%= check_box_tag "wdays[]", i.to_s, false %> <%= t("date.abbr_day_names")[i] %></label></td>
@@ -42,7 +36,7 @@
 
       <dt><%= t("event.apis.repeat_dates.days") %></dt>
       <dd>
-        <%= hidden_field_tag "days[]", "" %>
+        <%= hidden_field_tag "days[]", "", id: nil %>
         <table>
           <% [(1..7), (8..14), (15..21), (22..28), (29..31)].each do |w| %>
             <tr>

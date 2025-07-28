@@ -55,7 +55,7 @@ this.Mobile_Size_Checker = (function () {
     this.$elBody.html('');
     for (var j = 0, len = ref.length; j < len; j++) {
       var err = ref[j];
-      this.$elBody.append('<p class="error">' + err + '</p>');
+      this.$elBody.append($('<p/>', { class: "error" }).html(err));
     }
 
     return this.moveLast();

@@ -1,6 +1,6 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <span class="order"><%= item.order %></span>
   <% if item.category %>
     <span class="class"><%= item.category.name %></span>

@@ -8,6 +8,6 @@
     <% end %>
   </dd>
   <% if Cms::GenerateLock.allowed?(:edit, @cur_user, site: @cur_site) %>
-    <dd><%= f.text_field :generate_lock_until, class: 'datetime js-datetime', value: tryb { @item.generate_lock_until.strftime("%Y/%m/%d %H:%M") }, 'data-step': '15' %></dd>
+    <dd><%= f.ss_datetime_field :generate_lock_until, { step: 15 } %></dd>
   <% end %>
 </dl>

@@ -1,11 +1,20 @@
 <% @s = OpenStruct.new params[:s] %>
 <div class="opendata-datasets datasets">
   <%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-datasets-form", method: :get } do |f| %>
-    <label><%= f.label(:sort, I18n.t("opendata.labels.sort")) %></label>
-    <%= f.select :sort, Opendata::Dataset.sort_options %>
-    <%= f.text_field :keyword, placeholder: t("opendata.labels.keyword") %>
-    <%= submit_tag(t("ss.buttons.search"), name: :search) %>
-    <%= render template: "_download" %>
+    <dl>
+      <dt><%= f.label :sort, t("opendata.labels.sort") %></dt>
+      <dd><%= f.select :sort, Opendata::Dataset.sort_options %></dd>
+    </dl>
+    <dl>
+      <dt><%= f.label :keyword, t("opendata.labels.keyword") %></dt>
+      <dd><%= f.text_field :keyword %></dd>
+    </dl>
+    <div class="send">
+      <%= submit_tag(t("ss.buttons.search"), name: :search) %>
+    </div>
+    <div class="bulk-download">
+      <%= render template: "_download" %>
+    </div>
   <% end %>
 
   <% if @items.present? %>
@@ -17,7 +26,7 @@
       </tr>
       <% @items.each do |item| %>
         <tr>
-          <td class="created"><%= l(item.released, format: t("opendata.labels.updated")) %></td>
+          <td class="released"><%= I18n.l(item.released, format: t("opendata.labels.updated")) %></td>
           <td class="name">
             <% if item.public? %>
               <%= link_to item.name, item.url %>

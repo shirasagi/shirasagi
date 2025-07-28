@@ -33,6 +33,7 @@ class Gws::Schedule::Todo
 
   before_validation :set_todo_state
 
+  validates :color, "ss/color" => true
   validates :todo_state, inclusion: { in: %w(unfinished progressing finished), allow_blank: true }
   validates :achievement_rate, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 100, allow_blank: true }
 
@@ -120,6 +121,11 @@ class Gws::Schedule::Todo
     else
       self.todo_state = "progressing"
     end
+  end
+
+  def validate_datetimes_at
+    return if allday?
+    errors.add :end_at, :greater_than, count: t(:start_at) if start_at > end_at
   end
 
   class << self

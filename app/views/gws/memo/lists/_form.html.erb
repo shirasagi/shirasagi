@@ -10,7 +10,7 @@
 
   <dt><%= @model.t :category_ids %><%= @model.tt :category_ids %></dt>
   <dd>
-    <%= f.hidden_field 'category_ids[]', value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field 'category_ids[]', value: '', id: nil, class: 'hidden-ids' %>
     <%= link_to t('gws.apis.categories.index'), gws_memo_apis_categories_path, class: 'ajax-box' %>
   </dd>
   <dd>

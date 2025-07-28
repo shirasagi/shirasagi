@@ -1,5 +1,7 @@
 <%= jquery do %>
-Gws_Schedule_View.renderTabs('.gws-schedule-tabs');
+  $(document).on("gws:calendarInitialized", function() {
+    Gws_Schedule_View.renderTabs('.gws-schedule-tabs');
+  });
 <% end %>
 
 <% menus = capture do %>

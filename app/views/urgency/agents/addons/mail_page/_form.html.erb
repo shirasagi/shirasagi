@@ -4,7 +4,7 @@
 
   <dt><%= @item.t :urgency_node_id %><%= @model.tt :urgency_node_id %></dt>
   <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field "urgency_node_id", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "urgency_node_id", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1, model: "Urgency::Node::Layout"), class: "ajax-box" %>
   </dd>
   <dd>
@@ -18,7 +18,8 @@
       <tbody>
       <% if @item.urgency_node %>
         <tr data-id="<%= @item.urgency_node_id %>">
-          <td><%= f.hidden_field "urgency_node_id", value: @item.urgency_node_id %> <%= @item.urgency_node.name %></td>
+          <td><%= f.hidden_field "urgency_node_id", value: @item.urgency_node_id, id: nil %>
+            <%= @item.urgency_node.name %> (<%= @item.urgency_node.filename %>)</td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "btn deselect" %></td>
         </tr>
       <% end %>

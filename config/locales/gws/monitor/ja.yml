@@ -115,6 +115,9 @@ ja:
         '15.months': 15ヶ月
         '18.months': 18ヶ月
         '24.months': 24ヶ月
+      download_comment:
+        last: 最新のみ
+        all: 全て
     links:
       back_to_thread: 戻る
       comment: 回答する

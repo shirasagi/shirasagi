@@ -126,31 +126,33 @@ class Ads::AccessLogsController < ApplicationController
   end
 
   def send_total(filename = "ads_access_logs_#{Time.zone.now.to_i}.csv")
-    csv = CSV.generate do |data|
-      title = "#{@year}#{t('datetime.prompts.year')}"
-      title = "#{title}#{@month}#{t('datetime.prompts.month')}" if @month
-      data << [title]
+    csv = I18n.with_locale(I18n.default_locale) do
+      CSV.generate do |data|
+        title = "#{@year}#{t('datetime.prompts.year')}"
+        title = "#{title}#{@month}#{t('datetime.prompts.month')}" if @month
+        data << [title]
 
-      suffix = @month ? I18n.t('datetime.prompts.day') : I18n.t('datetime.prompts.month')
-      header = []
-      header << I18n.t("mongoid.attributes.ads/access_log.link_url")
-      (1..@max_cell).each do |day|
-        header << "#{day}#{suffix}"
-      end
-      header << I18n.t("ads.total")
-      data << header
-
-      @totals.each do |link_url, counts|
-        total = 0
-        row = []
-        row << link_url
+        suffix = @month ? I18n.t('datetime.prompts.day') : I18n.t('datetime.prompts.month')
+        header = []
+        header << I18n.t("mongoid.attributes.ads/access_log.link_url")
         (1..@max_cell).each do |day|
-          count = counts[day].to_i
-          total += count
-          row << count
+          header << "#{day}#{suffix}"
         end
-        row << total
-        data << row
+        header << I18n.t("ads.total")
+        data << header
+
+        @totals.each do |link_url, counts|
+          total = 0
+          row = []
+          row << link_url
+          (1..@max_cell).each do |day|
+            count = counts[day].to_i
+            total += count
+            row << count
+          end
+          row << total
+          data << row
+        end
       end
     end
 

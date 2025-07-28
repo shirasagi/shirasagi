@@ -68,8 +68,7 @@ describe Opendata::Dataset::AccessReportsController, type: :feature, dbscope: :e
       end
       click_on I18n.t("ss.links.download")
 
-      expect(page.response_headers["Transfer-Encoding"]).to eq "chunked"
-      csv = ::SS::ChunkReader.new(page.html).to_a.join
+      csv = page.html
       csv = csv.encode("UTF-8", "SJIS")
 
       table = ::CSV.parse(csv, headers: true)
@@ -106,7 +105,7 @@ describe Opendata::Dataset::AccessReportsController, type: :feature, dbscope: :e
       expect(table[3][2]).to be_blank
       expect(table[3][I18n.t("ss.url")]).to be_blank
       expect(table[3][Opendata::Dataset.t("area_ids")]).to be_blank
-      expect(table[3][Opendata::Dataset.t("state")]).to eq "削除: #{I18n.l(report2.deleted.to_date)}"
+      expect(table[3][Opendata::Dataset.t("state")]).to eq "削除: #{I18n.l(report2.deleted.to_date, format: :picker)}"
     end
   end
 end

@@ -9,7 +9,7 @@
   <ul class="portlets"></ul>
 
   <% @items.each do |item| %>
-  <div class="portlet-html portlet-model-<%= item.portlet_model %>" data-id="<%= item.id %>">
+  <div class="portlet-html <%= item.portlet_id_class %> <%= item.portlet_model_class %>" data-id="<%= item.id %>">
     <% if @portal_user.present? %>
       <%= link_to t('ss.links.edit'), gws_portal_user_portlet_path(id: item), class: 'edit-portlet' %>
     <% else %>

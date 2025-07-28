@@ -50,7 +50,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
 
     it "#delete" do
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
       expect(current_path).to eq index_path
@@ -136,7 +136,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
 
       context "child does'nt have any message" do
         it "has destroyed" do
-          within "form" do
+          within "form#item-form" do
             expect{ click_button I18n.t('ss.buttons.delete') }.to change { Gws::Memo::Folder.count }.by(-2)
           end
           expect(current_path).to eq index_path
@@ -152,7 +152,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
         end
 
         it "both child and parent are not destroyed" do
-          within "form" do
+          within "form#item-form" do
             expect { click_button I18n.t('ss.buttons.delete') }.not_to(change { Gws::Memo::Folder.count })
           end
         end
@@ -165,7 +165,7 @@ describe 'gws_memo_folders', type: :feature, dbscope: :example do
         end
 
         it "are not destroyed" do
-          within "form" do
+          within "form#item-form" do
             expect{ click_button I18n.t('ss.buttons.delete') }.not_to(change { Gws::Memo::Folder.count })
           end
         end

@@ -16,7 +16,7 @@ class Opendata::Harvest::Importer
     default_scope ->{ order_by created: -1 }
 
     def name
-      "#{created.try("strftime", "%Y/%m/%d %H:%M")} (#{number_to_human_size(size)})"
+      "#{created.try { |time| I18n.l(time, format: :picker) }} (#{number_to_human_size(size)})"
     end
 
     def set_size
@@ -30,31 +30,33 @@ class Opendata::Harvest::Importer
     end
 
     def to_csv
-      CSV.generate do |data|
-        data << %w(
-          resouce_no
-          dataset_no
-          dataset_name
-          category_ids
-          estat_category_ids
-          area_ids
-          resouce_name
-        ).map { |k| t(k) }
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(
+            resouce_no
+            dataset_no
+            dataset_name
+            category_ids
+            estat_category_ids
+            area_ids
+            resouce_name
+          ).map { |k| t(k) }
 
-        no = 0
-        datasets.each_with_index do |dataset, d_idx|
-          dataset.resources.each do |resource|
-            line = []
-            line << no + 1
-            line << d_idx + 1
-            line << dataset.name
-            line << dataset.categories.pluck(:name).join("\n")
-            line << dataset.estat_categories.pluck(:name).join("\n")
-            line << dataset.areas.pluck(:name).join("\n")
-            line << resource.filename
-            data << line
+          no = 0
+          datasets.each_with_index do |dataset, d_idx|
+            dataset.resources.each do |resource|
+              line = []
+              line << no + 1
+              line << d_idx + 1
+              line << dataset.name
+              line << dataset.categories.pluck(:name).join("\n")
+              line << dataset.estat_categories.pluck(:name).join("\n")
+              line << dataset.areas.pluck(:name).join("\n")
+              line << resource.filename
+              data << line
 
-            no += 1
+              no += 1
+            end
           end
         end
       end

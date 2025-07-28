@@ -9,7 +9,7 @@ module Cms::SyntaxChecker
   AL_NUM_SP_PAT = "#{AL_NUM_PAT}#{SP}".freeze
   AL_NUM_REGEX = /[#{AL_NUM_PAT}]([#{AL_NUM_SP_PAT}]*[#{AL_NUM_PAT}])?/.freeze
 
-  CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors)
+  CheckerContext = Struct.new(:cur_site, :cur_user, :contents, :errors, :header_check, :h_level_check) #checkを追加
   CorrectorContext = Struct.new(:cur_site, :cur_user, :content, :params, :result) do
     def set_result(ret)
       if content["type"] == "array"
@@ -34,6 +34,7 @@ module Cms::SyntaxChecker
     Cms::SyntaxChecker::AdjacentAChecker,
     Cms::SyntaxChecker::AreaAltChecker,
     Cms::SyntaxChecker::EmbeddedMediaChecker,
+    Cms::SyntaxChecker::IframeTitleChecker,
     Cms::SyntaxChecker::ImgAltChecker,
     Cms::SyntaxChecker::ImgDataUriSchemeChecker,
     Cms::SyntaxChecker::LinkTextChecker,
@@ -52,7 +53,7 @@ module Cms::SyntaxChecker
   ]
 
   def check(cur_site:, cur_user:, contents:)
-    context = Cms::SyntaxChecker::CheckerContext.new(cur_site, cur_user, contents, [])
+    context = Cms::SyntaxChecker::CheckerContext.new(cur_site, cur_user, contents, [], false, 0)
 
     contents.each do |content|
       if content["resolve"] == "html"
@@ -72,6 +73,15 @@ module Cms::SyntaxChecker
       end
     end
 
+    if context.errors.present?
+      if !cur_user.cms_role_permit_any?(cur_site, "edit_cms_ignore_syntax_check")
+        context.errors.unshift(
+          {
+            msg: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check')
+          }
+        )
+      end
+    end
     context
   end
 

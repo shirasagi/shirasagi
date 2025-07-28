@@ -6,8 +6,8 @@
   <dd><%= f.number_field :code %></dd>
 
   <dt><%= @model.t :start_date %><%= @model.tt :start_date %></dt>
-  <dd><%= f.text_field :start_date, class: 'datetime js-date', value: tryb { @item.start_date.strftime("%Y/%m/%d") } %></dd>
+  <dd><%= f.ss_date_field :start_date %></dd>
 
   <dt><%= @model.t :close_date %><%= @model.tt :close_date %></dt>
-  <dd><%= f.text_field :close_date, class: 'datetime js-date', value: tryb { @item.close_date.strftime("%Y/%m/%d") } %></dd>
+  <dd><%= f.ss_date_field :close_date %></dd>
 </dl>

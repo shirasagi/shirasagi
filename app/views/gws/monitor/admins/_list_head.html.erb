@@ -6,7 +6,7 @@
   <label class="check"><input type="checkbox" /></label>
 
   <div class="list-head-action">
-    <%= ss_button_to t("ss.links.delete"), url_for(action: :soft_delete_all), model: @model, class: "soft-delete-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete') %>
+    <%= ss_button_to t("ss.links.delete"), url_for(action: :soft_delete_all), class: "soft-delete-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete') %>
   </div>
 
   <%= render template: '_search' %>

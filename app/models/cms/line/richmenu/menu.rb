@@ -18,7 +18,8 @@ module Cms::Line::Richmenu
     field :width, type: Integer
     field :height, type: Integer
     field :chat_bar_text, type: String
-    permit_params :name, :order, :target, :area_size, :width, :height, :chat_bar_text
+    field :selected, type: String, default: "show"
+    permit_params :name, :order, :target, :area_size, :width, :height, :chat_bar_text, :selected
 
     belongs_to :group, class_name: "Cms::Line::Richmenu::Group", inverse_of: :richmenus
     belongs_to_file :image, class_name: "Cms::Line::File"
@@ -35,12 +36,23 @@ module Cms::Line::Richmenu
 
     default_scope -> { order_by(order: 1) }
 
+    def owned_files
+      SS::File.where(owner_item_type: self.class.name, owner_item_id: id).to_a
+    end
+
+    def selected_options
+      [
+        [ I18n.t("ss.options.state.show"), "show"],
+        [ I18n.t("ss.options.state.hide"), "hide"]
+      ]
+    end
+
     private
 
     def set_updated
       super
       # 画像、タップ領域に変更を加えた際に、updated を更新して、APIに新規登録したい
-      self.updated = updated ? Time.zone.now : created if in_image
+      self.updated = updated ? Time.zone.now : created if in_image || in_areas
     end
 
     def validate_target
@@ -72,7 +84,7 @@ module Cms::Line::Richmenu
       true
     end
 
-    def file_previewable?(file, user:, member:)
+    def file_previewable?(file, site:, user:, member:)
       true
     end
 
@@ -94,7 +106,7 @@ module Cms::Line::Richmenu
           width: width,
           height: height
         },
-        selected: false,
+        selected: (selected != "hide"),
         name: name,
         chatBarText: chat_bar_text,
         areas: richmenu_areas.map { |area| area.richmenu_object }

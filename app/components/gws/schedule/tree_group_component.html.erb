@@ -34,8 +34,8 @@
     </table>
   </section>
 
-  <%= javascript_tag(defer: true) do %>
-    $(function() {
+  <%= javascript_tag do %>
+    SS.ready(function() {
       var tree = SS_TreeUI.render(".index.groups", { descendants_check: true });
       $(".expand-all").on("click", function() {
         tree.expandAll();

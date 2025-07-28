@@ -27,8 +27,8 @@ model = Gws::Schedule::RepeatPlan
   <% end %>
 
   <dt><%= model.t :repeat_start %></dt>
-  <dd><%= tryb{@item.repeat_start.strftime("%Y/%m/%d")} %></dd>
+  <dd><%= ss_time_tag(@item.repeat_start, type: :date) %></dd>
 
   <dt><%= model.t :repeat_end %></dt>
-  <dd><%= tryb{@item.repeat_end.strftime("%Y/%m/%d")} %></dd>
+  <dd><%= ss_time_tag(@item.repeat_end, type: :date) %></dd>
 </dl>

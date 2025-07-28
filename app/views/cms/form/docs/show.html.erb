@@ -21,12 +21,12 @@
       </td>
     </tr>
 
-    <% @column_names.each do |col_name| %>
-      <% values = @db.collect_values(@item, col_name) %>
+    <% @form.columns.each do |col| %>
+      <% values = @db.collect_values(@item, col) %>
 
       <tr>
         <th class="td-icon"></th>
-        <td class="text-break"><%= col_name %></td>
+        <td class="text-break"><%= col.name %></td>
         <td class="text-break"><%= values[:type] %></td>
         <td class="text-break">
           <pre class="pre-value"><%= values[:full] %></pre>

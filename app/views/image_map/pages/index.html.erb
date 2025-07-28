@@ -1,0 +1,9 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
+  <span class="order"><%= item.order %></span>
+  <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+  <%= colored_state_label(item) %>
+<% end %>
+
+<%= render template: 'cms/crud/index' %>

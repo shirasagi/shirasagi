@@ -82,8 +82,16 @@
   header {
     @include clear;
     line-height: 1.4;
+    .approval-check {
+      margin-left: 6px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background-color: #84e;
+      color: #fff;
+      font-weight: normal;
+    }
     .add-plan {
-      margin-left: 8px;
+      margin-left: 6px;
       padding: 2px 5px;
       border-radius: 4px;
       background-color: #f40;
@@ -154,21 +162,21 @@
   .sun {
     color: #e00;
   }
-  .label, .facility, .hour-wrap, .reservation {
+  .label, .member, .facility, .hour-wrap, .reservation {
     display: table-cell;
   }
   .label {
-    min-width: 146px;
+    width: 12rem;
     margin: 1px 0;
     padding: 5px 1px;
   }
-  .facility {
-    min-width: 160px;
+  .member, .facility {
+    width: 16rem;
     margin: 1px 0;
-    padding: 5px 1px;
+    padding: 5px 10px 5px 1px;
   }
   .hour-wrap {
-    padding: 5px 2px;
+    padding: 5px 1px;
   }
   .reservation {
     min-width: 4.5em;
@@ -177,8 +185,8 @@
   }
   .hour {
     display: inline-block;
-    min-width: 2em;
-    padding: 1px 4px;
+    min-width: 1.9em;
+    padding: 1px 2px;
     border: $white 1px solid;
     border-radius: 3px;
     background-color: #d4d4d4;
@@ -239,6 +247,12 @@
     padding-left: 10px;
     color: $orange;
   }
+  .duplicate-register-message {
+    color: #e00;
+  }
+  .reservation-errors {
+    color: $orange;
+  }
 }
 #addon-gws-agents-addons-schedule-comments {
   .list-items {
@@ -250,9 +264,6 @@
 }
 
 // Form
-.gws-schedule-plan .dates-field {
-  display: none;
-}
 .gws-schedule-repeat-submit {
   padding: 20px;
   input {
@@ -264,9 +275,9 @@
     height: 15px;
   }
 }
-//
-// FullCalendar
-//
+/*
+ * FullCalendar
+ */
 .fc-toolbar h2 {
   margin: 2px 0 -2px;
   border-bottom: 1px solid #333;
@@ -320,14 +331,6 @@
 .fc-view-container {
   background-color: #fff;
 }
-.print-preview {
-  .fc-unthemed {
-    th, td {
-      border-style: solid;
-      border-color: #000;
-    }
-  }
-}
 @include mb {
   .fc-right {
     margin: 0 0 10px;
@@ -374,16 +377,23 @@
   color: $white;
 }
 .fc-event {
+  overflow: visible;
   border: 0;
   border-radius: 0;
+  border-radius: 3px;
   font-size: 90%;
+  cursor: pointer;
   &:hover {
     color: $black;
   }
   .fc-content {
-    word-wrap: normal;
+    word-wrap: break-word;
     word-break: normal;
     white-space: normal;
+    .fc-date + .fc-title {
+      margin-left: 0;
+      padding-left: 4px;
+    }
     .fc-category {
       @include fc_event_prefix;
       background-color: $orange;
@@ -400,15 +410,17 @@
 }
 .fc-time-grid-event {
   margin-bottom: 1px;
+  background-color: #2eb0f2;
+  color: $black;
+  &:hover {
+    color: $black;
+  }
 }
 .fc-time-grid-event .fc-content:before {
   float: left;
 }
 .fc-time-grid-event .fc-time, .fc-time-grid-event.fc-short .fc-title {
   font-size: 90%;
-}
-.fc-event-allday {
-  border-right: 2px solid #000;
 }
 .fc-time-grid-event .fc-resizer {
   display: none;
@@ -425,28 +437,20 @@
     text-decoration: underline;
   }
 }
-.fc-time-grid-event {
-  background-color: #2eb0f2;
-  color: $black;
-  &:hover {
-    color: $black;
-  }
-}
-.fc-time-grid-event {
-  background-color: #2eb0f2;
-}
 .fc-event-range {
   padding: 1px 2px;
-  border-color: #966;
   background-color: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
   &:hover { color: #000; text-decoration: underline; }
   .fc-content {
-    @include ellipsis;
+    //@include ellipsis;
     .fc-title,.fc-facility {
-      display: inline;
+       display: inline;
     }
+  }
+  &.fc-resizable {
+    border-right: 2px solid #966;
   }
 }
 .fc-agenda-view .fc-day-grid .fc-event-point {
@@ -499,16 +503,27 @@
   &:hover { color: #000; }
 }
 
+.fc-event-work {
+  border-right: 0px;
+}
+
 // View: agendaDay
 .fc-agendaDay-view {
   .fc-time-grid-event {
     margin-right: 5px;
   }
   .fc-event {
-    .fc-title {
-      overflow: hidden;
-      text-overflow: ellipsis;
+    div.fc-title {
+      display: flex;
       white-space: nowrap;
+      .fc-event-name {
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .fc-facility {
+        padding-right: 5px;
+        padding-left: 5px;
+      }
     }
   }
 }
@@ -581,8 +596,12 @@
     border-bottom: 1px solid #d8d8d8;
   }
   .fc-timeline-event {
+    min-width: calc(1em + 5px);
     background: #2eb0f2;
     color: $black;
+    .fc-title {
+      max-height: 230px;
+    }
   }
 }
 // View: basicHour
@@ -612,8 +631,34 @@
     border-left: 1px solid #555;
   }
 }
+.fc-list-format {
+  .info {
+    a {
+      padding: 2px;
+      .fc-content {
+        .fc-title {
+          display: inline-block;
+        }
+        .fc-facility {
+          display: inline-block;
+          padding-left: 10px;
+        }
+      }
+    }
+    .summary {
+      margin-top: 2px;
+      padding: 2px;
+    }
+  }
+}
 // Print View
 .print-preview {
+  .fc-unthemed {
+    th, td {
+      border-style: solid;
+      border-color: #000;
+    }
+  }
   .fc-listMonth-view-table {
     .tr {
       border-bottom: 1px solid #000;
@@ -641,10 +686,6 @@
 // popup
 .fc-agenda-view .fc-day-grid {
   z-index: 0;
-}
-.fc-event {
-  overflow: visible;
-  border-radius: 3px;
 }
 .fc-popup {
   position: relative;
@@ -715,9 +756,9 @@
   }
 }
 
-//
-// original settings
-//
+/*
+ * original settings
+ */
 .fc-loading {
   display: inline-block;
   position: absolute;
@@ -728,7 +769,7 @@
 }
 
 // multiple calendar
-#calendar-controller {
+.calendar-controller {
   .fc-view-container .fc-timelineDay-view {
     height: 35px;
     overflow: hidden;
@@ -750,8 +791,15 @@
     color: #444;
     &:hover { color: $orange; }
   }
+  .approval-check {
+    margin-left: 6px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background-color: #84e;
+    color: #fff;
+  }
   .add-plan {
-    margin-left: 8px;
+    margin-left: 6px;
     padding: 1px 5px;
     border-radius: 4px;
     background-color: #f40;
@@ -827,7 +875,7 @@ dl.gws-schedule-repeat {
   }
 }
 
-.gws-schedule-todo-achievement-bar {
+.gws-achievement-bar {
   display: inline-block;
   width: 6em;
 }
@@ -844,6 +892,12 @@ dl.gws-schedule-repeat {
 
   .main {
     flex: 1;
+  }
+
+  .list-item-switch {
+    display: inline-block;
+    width: 26px;
+    text-align: center;
   }
 }
 
@@ -864,19 +918,17 @@ dl.gws-schedule-repeat {
   }
 }
 
-.gws-schedule-todo-index {
-  .list-item-switch {
-    display: inline-block;
-    width: 26px;
-    text-align: center;
-  }
-}
-
-#addon-gws-agents-addons-schedule-todo-comment_post {
+.gws-comment-post {
   .comment {
     margin: 5px 0;
     padding: 0 5px;
     border-bottom: $border-gray1;
+  }
+
+  .total {
+    padding: 10px;
+    border-radius: 3px;
+    background: #f2f2f2;
   }
 
   .row {
@@ -890,6 +942,14 @@ dl.gws-schedule-repeat {
   }
 
   .achievement-rate {
+    margin-right: 10px;
+  }
+
+  .worktime-minutes {
+    margin-right: 10px;
+  }
+
+  .overtime-minutes {
     margin-right: 10px;
   }
 

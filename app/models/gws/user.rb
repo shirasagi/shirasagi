@@ -5,6 +5,8 @@ class Gws::User
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::User::PublicDuty
+  include Gws::Addon::User::AffairSetting
+  include Gws::Addon::User::DutyHour
   include Gws::Addon::User::CustomForm
   include Gws::Addon::User::Presence
   include Gws::Addon::Memo::MessageSort
@@ -120,6 +122,37 @@ class Gws::User
     main_group
   end
   alias gws_main_group find_gws_main_group
+
+  def find_bookmark(site, url, cond = {})
+    items = ::Gws::Bookmark::Item.site(site).user(self).where(url: url)
+    items = items.where(cond) if cond.present?
+    items.first
+  end
+
+  def bookmark_root_folder(site)
+    @bookmark_root_folder ||= {}
+    @bookmark_root_folder[site.id] ||= begin
+      item = ::Gws::Bookmark::Folder.find_or_initialize_by(site_id: site.id, user_id: id, depth: 1, folder_type: "specified")
+      if item.new_record? || item.name.blank? || item.order != 0
+        item.in_basename = ::Gws::Bookmark::Folder.default_root_name
+        item.order = 0
+        item.save!
+      end
+      item
+    end
+  end
+
+  def bookmark_folders(site)
+    @bookmark_folders ||= {}
+    @bookmark_folders[site.id] ||= begin
+      root_folder = bookmark_root_folder(site)
+      if root_folder
+        ::Gws::Bookmark::Folder.site(site).user(self).tree_sort
+      else
+        []
+      end
+    end
+  end
 
   private
 

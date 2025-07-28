@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe "gws_share_files", type: :feature, dbscope: :example, js: true do
-  let(:site) { gws_site }
+  let!(:site) { gws_site }
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
   let(:index_path) { gws_share_folder_files_path site, folder }
-  let(:filepath) { tmpfile { |file| file.write('0123456789') } }
+  let!(:filepath) { tmpfile { |file| file.write('0123456789') } }
   let(:filesize) { ::File.size(filepath) }
 
   before { login_gws_user }
@@ -23,27 +23,20 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on I18n.t("ss.links.new")
 
       within "form#item-form" do
-        within "#addon-basic" do
-          click_on I18n.t("ss.links.upload")
-        end
-      end
-
-      wait_for_ajax do
-        attach_file "item[in_files][]", filepath
-        click_on I18n.t("ss.buttons.attach")
-      end
-
-      within "form#item-form" do
+        ss_upload_file filepath, addon: "#addon-basic"
         fill_in "item[memo]", with: unique_id
         within "footer.send" do
-          click_on I18n.t("ss.links.upload")
+          click_on I18n.t("ss.buttons.upload")
         end
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       within "#gws-share-file-folder-list" do
         expect(page).to have_css(".tree-item", text: folder.name)
@@ -55,23 +48,16 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     shared_examples "over a quota" do
       it do
         visit index_path
+        within ".tree-navi" do
+          expect(page).to have_css(".item-name", text: folder.name)
+        end
         click_on I18n.t("ss.links.new")
 
         within "form#item-form" do
-          within "#addon-basic" do
-            click_on I18n.t("ss.links.upload")
-          end
-        end
-
-        wait_for_ajax do
-          attach_file "item[in_files][]", filepath
-          click_on I18n.t("ss.buttons.attach")
-        end
-
-        within "form#item-form" do
+          ss_upload_file filepath, addon: "#addon-basic"
           fill_in "item[memo]", with: unique_id
           within "footer.send" do
-            click_on I18n.t("ss.links.upload")
+            click_on I18n.t("ss.buttons.upload")
           end
         end
 
@@ -83,7 +69,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       let(:msg) do
         I18n.t(
           "mongoid.errors.models.gws/share/file.file_size_exceeds_limit",
-          size: filesize.to_s(:human_size), limit: folder.share_max_file_size.to_s(:human_size)
+          size: filesize.to_fs(:human_size), limit: folder.share_max_file_size.to_fs(:human_size)
         )
       end
 
@@ -99,7 +85,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       let(:msg) do
         I18n.t(
           "mongoid.errors.models.gws/share/file.file_size_exceeds_folder_limit",
-          size: filesize.to_s(:human_size), limit: folder.share_max_folder_size.to_s(:human_size)
+          size: filesize.to_fs(:human_size), limit: folder.share_max_folder_size.to_fs(:human_size)
         )
       end
 
@@ -115,7 +101,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       let(:msg) do
         I18n.t(
           "mongoid.errors.models.gws/share/file.file_size_exceeds_limit",
-          size: filesize.to_s(:human_size), limit: site.share_max_file_size.to_s(:human_size)
+          size: filesize.to_fs(:human_size), limit: site.share_max_file_size.to_fs(:human_size)
         )
       end
 
@@ -131,7 +117,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       let(:msg) do
         I18n.t(
           "mongoid.errors.models.gws/share/file.file_size_exceeds_capacity",
-          size: filesize.to_s(:human_size), limit: site.share_files_capacity.to_s(:human_size)
+          size: filesize.to_fs(:human_size), limit: site.share_files_capacity.to_fs(:human_size)
         )
       end
 
@@ -150,7 +136,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     let(:msg) do
       I18n.t(
         "mongoid.errors.models.gws/share/file.file_size_exceeds_capacity",
-        size: filesize2.to_s(:human_size), limit: site.share_files_capacity.to_s(:human_size)
+        size: filesize2.to_fs(:human_size), limit: site.share_files_capacity.to_fs(:human_size)
       )
     end
 
@@ -170,6 +156,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
     it do
       visit index_path
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
       click_on ::File.basename(filepath)
       click_on I18n.t("ss.links.edit")
 

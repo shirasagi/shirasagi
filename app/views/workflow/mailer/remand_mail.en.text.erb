@@ -1,0 +1,20 @@
+<% message.subject = @subject %>
+<%= @from_user.name %> sent back your request for approval of the following article.
+Please make appropriate corrections and submit the request for approval again.
+
+- Title
+  <%= @page.name %>
+
+<% if @page.workflow_user.present? %>
+- Applicant
+  <%= @page.workflow_user.name %>
+  <% if @page.workflow_agent %>
+  （Proxy: <%= @page.workflow_agent.name %>）
+  <% end %>
+<% end %>
+
+- Back comments
+  <%= @comment %>
+
+- Article URL
+  <%= @url %>

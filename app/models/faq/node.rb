@@ -9,6 +9,7 @@ module Faq::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::Thumb
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeTwitterPostSetting
     include Cms::Addon::NodeLinePostSetting
@@ -21,6 +22,7 @@ module Faq::Node
     include Cms::Addon::ImageResizeSetting
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "faq/page") }
   end
@@ -34,6 +36,7 @@ module Faq::Node
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
+    include Cms::Lgwan::Node
 
     default_scope ->{ where(route: "faq/search") }
 

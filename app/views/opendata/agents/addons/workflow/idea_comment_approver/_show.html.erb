@@ -81,7 +81,6 @@ $(".workflow-partial-section").each(function () {
     type: "get",
     url: uri,
     success: function (html, status) {
-      $(html).find("#xxxxxx").html();
       $(".workflow-partial-section").html(html);
     },
     error: function (msg, status) {

@@ -14,6 +14,7 @@ def login_member(site, node, member = cms_member(site: site))
     fill_in 'item[password]', with: member.in_password
     click_button 'ログイン'
   end
+  expect(page).to have_no_css('.member-login-box [name="item[password]"]')
 rescue => e
   Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   puts("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")

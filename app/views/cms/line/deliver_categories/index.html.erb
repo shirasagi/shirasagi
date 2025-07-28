@@ -5,7 +5,7 @@
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
   <% if item.try(:updated) %>
-    <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+    <span class="datetime"><%= ss_time_tag item.updated %></span>
   <% end %>
   <span class="type"><%= item.label :type %></span>
   <span class="state state-<%= item.state %>"><%= t("ss.state.#{item.state}") %></span>

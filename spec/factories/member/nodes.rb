@@ -2,7 +2,7 @@ FactoryBot.define do
   factory :member_node_login, class: Member::Node::Login, traits: [:cms_node] do
     cur_site { cms_site }
     route { "member/login" }
-    filename { SS.config.oauth.prefix_path.sub(/^\//, '') || "auth" }
+    filename { unique_id }
     twitter_oauth { "enabled" }
     twitter_client_id { unique_id }
     twitter_client_secret { unique_id }
@@ -69,5 +69,9 @@ FactoryBot.define do
     route { "member/my_group" }
     sender_name { unique_id }
     sender_email { "#{sender_name}@example.jp" }
+  end
+
+  factory :member_node_bookmark, class: Member::Node::Bookmark, traits: [:cms_node] do
+    route { "member/bookmark" }
   end
 end

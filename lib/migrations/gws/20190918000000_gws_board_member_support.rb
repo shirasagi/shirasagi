@@ -24,12 +24,12 @@ class SS::Migration20190918000000
         next
       end
 
-      item.save
+      item.without_record_timestamps { item.save }
     end
 
     each_role do |role|
       role.permissions = role.permissions.map { |permission| permission.sub("_gws_board_posts", "_gws_board_topics") }
-      role.save
+      role.without_record_timestamps { role.save }
     end
   end
 

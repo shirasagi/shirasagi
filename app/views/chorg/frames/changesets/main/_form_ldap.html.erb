@@ -1,0 +1,18 @@
+<%
+  index ||= 0
+  destination = @item.destinations.present? ? @item.destinations[index] : nil
+%>
+
+<dl class="see">
+  <dt><%= t "chorg.views.#{type}_changesets.ldap_dn" %><%= tt "chorg.views.#{type}_changesets.ldap_dn" %></dt>
+  <dd>
+    <%=
+      if @reload
+        value = first_source_group.try(:ldap_dn)
+      else
+        value = destination ? destination[:ldap_dn] : nil
+      end
+      text_field_tag "#{f.object_name}[destinations][][ldap_dn]", value, id: nil
+    %>
+  </dd>
+</dl>

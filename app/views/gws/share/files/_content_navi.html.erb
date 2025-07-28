@@ -13,7 +13,7 @@
     <% url = @folder ? gws_share_folder_files_path(folder: @folder.id) : gws_share_files_path %>
     <%= link_to url, class: 'btn dropdown-toggle' do %>
       <%= @category.try(:trailing_name) || t('gws.category') %>
-      <i class="material-icons md-13">&#xE313;</i>
+      <i class="material-icons md-13">keyboard_arrow_down</i>
     <% end %>
     <div class="dropdown-menu dropdown-menu--white"></div>
   </div>

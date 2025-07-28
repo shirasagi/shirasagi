@@ -8,7 +8,7 @@
 
 <% @index_meta = proc do |item| %>
   <span class="id">#<%= item.id %></span>
-  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="datetime"><%= ss_time_tag item.updated %></span>
   <% if attr = item.label(:notice_severity).presence %>
     <span class="severity label"><%= attr %></span>
   <% end %>

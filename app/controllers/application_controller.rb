@@ -7,33 +7,10 @@ class ApplicationController < ActionController::Base
   # before_action -> { FileUtils.touch "#{Rails.root}/Gemfile" } if Rails.env.to_s == "development"
   before_action :set_cache_buster
 
-  before_action :clear_secure_option_of_session_on_ie11
+  before_action :clear_secure_option_of_session
 
-  class CloseableChunkedBody < Rack::Chunked::Body
-    def initialize(*args)
-      super
-      @closed = false
-    end
-
-    def each(&block)
-      super
-    ensure
-      unless @closed
-        close
-        @closed = true
-      end
-    end
-
-    def close
-      return unless @body.respond_to?(:close)
-
-      if @body.method(:close).arity == 0
-        @body.close
-      else
-        # Tempfile support
-        @body.close(true)
-      end
-    end
+  if SS.config.env.set_received_by
+    before_action :set_received_by
   end
 
   def new_agent(controller_name)
@@ -42,14 +19,6 @@ class ApplicationController < ActionController::Base
     agent.controller.request = request
     agent.controller.instance_variable_set :@controller, self
     agent
-  end
-
-  def render_agent(controller_name, action)
-    new_agent(controller_name).render(action)
-  end
-
-  def invoke_agent(controller_name, action)
-    new_agent(controller_name).invoke(action)
   end
 
   def send_enum(enum, options = {})
@@ -63,21 +32,19 @@ class ApplicationController < ActionController::Base
       headers['Content-Disposition'] = disposition
     end
 
-    # nginx doc: Setting this to "no" will allow unbuffered responses suitable for Comet and HTTP streaming applications
-    headers['X-Accel-Buffering'] = 'no'
-    headers['Cache-Control'] = 'no-store'
-    headers['Transfer-Encoding'] = 'chunked'
-    headers.delete('Content-Length')
-
-    # Unfortunately Rack::ETag (https://github.com/rack/rack/blob/master/lib/rack/etag.rb#L54) above 2.2
-    # forcibly calculate etag even though the response is streaming. So, streaming response doesn't work properly.
-    # To fix this issue, you must set "Last-Modified" header explicitly
-    #
-    # see: https://qiita.com/snaka/items/133edf3e1a4cabd9ce45
-    headers['Last-Modified'] = Time.zone.now.rfc2822
-
-    # output csv by streaming
-    self.response_body = CloseableChunkedBody.new(enum)
+    enum.each do |chunk|
+      response.stream.write(chunk)
+    end
+    response.stream.close
+  ensure
+    if enum.respond_to?(:close)
+      if enum.method(:close).arity == 0
+        enum.close rescue nil
+      else
+        # Tempfile support
+        enum.close(true) rescue nil
+      end
+    end
   end
 
   def send_file_headers!(options)
@@ -121,12 +88,10 @@ class ApplicationController < ActionController::Base
         ss_send_file_grid_fs(*args)
       end
     end
+  elsif Fs.mode == :file
+    alias ss_send_file ss_send_file_file
   else
-    if Fs.mode == :file
-      alias ss_send_file ss_send_file_file
-    else
-      alias ss_send_file ss_send_file_grid_fs
-    end
+    alias ss_send_file ss_send_file_grid_fs
   end
 
   def json_content_type
@@ -140,7 +105,7 @@ class ApplicationController < ActionController::Base
   end
 
   def request_path
-    request.env["REQUEST_PATH"] || request.path
+    @request_path ||= SS.request_path(request)
   end
 
   def protect_csrf?
@@ -148,7 +113,7 @@ class ApplicationController < ActionController::Base
   end
 
   def remote_addr
-    request.env["HTTP_X_REAL_IP"].presence || request.remote_addr
+    SS.remote_addr(request)
   end
 
   def pc_browser?
@@ -184,6 +149,18 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def set_received_by
+    # set first received time to received-at
+    response.headers["X-SS-Received-At"] ||= Time.zone.now.to_i
+
+    controller_name = params[:controller].presence
+    action_name = params[:action].presence
+    if controller_name && action_name
+      # set last controller and action to received-by
+      response.headers["X-SS-Received-By"] = "#{request.method} #{controller_name}##{action_name}"
+    end
+  end
+
   def trusted_url?(url)
     url = ::Addressable::URI.parse(url.to_s)
 
@@ -205,13 +182,31 @@ class ApplicationController < ActionController::Base
   end
   helper_method :trusted_url!
 
-  def clear_secure_option_of_session_on_ie11
-    return unless browser.ie?("<= 11")
-
-    # IE11 利用時、CMS のページのプレビュー表示での印刷時に画像が表示されないという障害がある。
-    # その障害は Set-Cookie レスポンスの SameSite=Lax が原因。
-    # Set-Cookie レスポンスに SameSite=Lax がついていない場合、Firefox などの一部のブラウザの開発者ツールで警告が表示されるし、
-    # SameSite=Lax は付いておいた方がよいので、IE11 の場合だけ無効にする。
-    request.session_options[:same_site] = nil if request.session_options[:same_site].present?
+  def clear_secure_option_of_session
+    if browser.ie?("<= 11")
+      # IE11 利用時、CMS のページのプレビュー表示での印刷時に画像が表示されないという障害がある。
+      # その障害は Set-Cookie レスポンスの SameSite=Lax が原因。
+      # Set-Cookie レスポンスに SameSite=Lax がついていない場合、Firefox などの一部のブラウザの開発者ツールで警告が表示されるし、
+      # SameSite=Lax は付いておいた方がよいので、IE11 の場合だけ無効にする。
+      request.session_options[:same_site] = nil if request.session_options[:same_site].present?
+    end
+    if browser.ua.to_s.include?("Electron/")
+      # シラサギデスクトップアプリは SameSite属性 を削除しないとセッションが維持できない。
+      # なお session_options[:same_site] に nil を代入すると、SameSite属性が消える。（Laxが付与されるわけではない）
+      request.session_options[:same_site] = nil
+    end
   end
+
+  def remaining_user_session_lifetime
+    session_user = session[:user]
+    return unless session_user
+
+    last_logged_in = session_user["last_logged_in"]
+    return unless last_logged_in
+
+    end_of_session_time = last_logged_in + SS.session_lifetime_of_user(@cur_user)
+    life = end_of_session_time - Time.zone.now.to_i
+    life > 0 ? life : 0
+  end
+  helper_method :remaining_user_session_lifetime
 end

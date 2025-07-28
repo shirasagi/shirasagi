@@ -27,8 +27,7 @@ describe "sys_users", type: :feature, dbscope: :example do
     let(:title) { "403 Forbidden | SHIRASAGI" }
 
     before do
-      login_user user
-      visit sys_users_path
+      login_user user, to: sys_users_path
     end
 
     include_context "shows sys/sns error page"

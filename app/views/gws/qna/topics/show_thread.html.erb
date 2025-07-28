@@ -15,7 +15,7 @@
       </h2>
       <nav class="meta">
         <span class="user"><%= gws_public_user_long_name(@item.contributor_name.presence || @item.user_long_name) %></span>
-        <span class="datetime"><%= @item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+        <span class="datetime"><%= ss_time_tag @item.updated %></span>
       </nav>
     </header>
 
@@ -48,17 +48,19 @@
 
     <% if !@item.resolved? && @item.permit_comment? && @model.allowed?(:edit, @cur_user, site: @cur_site) %>
     <div class="menu">
-      <%= link_to(t('gws/qna.links.comment'), new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id),
-        class: "btn primary") %>
+      <%= link_to(new_gws_qna_topic_parent_comment_path(topic_id: @item.id, parent_id: @item.id), class: "btn primary") do %>
+        <%= md_icons.outlined "reply", size: 15 %>
+        <span class="button-label"><%= t('gws/qna.links.comment') %></span>
+      <% end %>
     </div>
     <% end %>
-  </article>
 
-  <% if @item.children.present? %>
-  <div class="comments">
-    <%= render partial: 'gws/qna/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
-  </div>
-  <% end %>
+    <% if @item.children.present? %>
+      <div class="comments">
+        <%= render partial: 'gws/qna/comments/comment', collection: @item.descendants, locals: { parent: @item, recursion: false } %>
+      </div>
+    <% end %>
+  </article>
 
   <% if @item.subscribed_users.present? %>
   <%= render partial: 'gws/qna/topics/subscribed_users' %>

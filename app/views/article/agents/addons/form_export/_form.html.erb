@@ -28,7 +28,7 @@
 
   <dt><%= @model.t :export_columns %><%= @model.tt :export_columns %></dt>
   <dd>
-    <%= f.text_area :export_columns, placeholder: t('ss.all'),
+    <%= f.ss_lines_field :export_columns, placeholder: t('ss.all'),
       style: 'margin: 0 .25rem .25rem 0; width: 20rem; height: 16rem;' %>
     <%= text_area_tag 'example_export_columns', '', readonly: true,
       style: 'margin: 0 .25rem .25rem 0; width: 20rem; height: 16rem; background: #f2f2f2;' %>

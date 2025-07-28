@@ -13,9 +13,9 @@
 </div>
 <ul class="list-items">
   <% @result['hits']['hits'].each do |hit| %>
-    <li class="list-item">
+    <% source = hit['_source'] %>
+    <li class="list-item <%= source['collection_name'] %>" data-id="<%= hit['_id'] %>">
       <div class="info">
-        <% source = hit['_source'] %>
         <% title = source['name'] %>
         <% if source.dig('file', 'extname').present? %>
           <% title = "#{title} (#{source.dig('file', 'extname').upcase} #{number_to_human_size(source.dig('file', 'size'))})" %>
@@ -30,7 +30,7 @@
           <% if source['categories'].present? %>
           <span class="categories">
             <% source['categories'].each do |es_category| %>
-              <% category, category_path = @setting.translate_category(hit['_type'], es_category) %>
+              <% category, category_path = @setting.translate_category(hit['_type'], es_category, { mode: hit.dig("_source", "mode") }) %>
               <% next unless category %>
               <%= link_to(
                     category.trailing_name,

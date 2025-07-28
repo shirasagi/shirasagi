@@ -1,3 +1,3 @@
 <nav class="nav-menu">
-  <%= link_to(t('ss.links.back_to_show'), URI.parse(params[:redirect_to].to_s).path) %>
+  <%= link_to(t('ss.links.back_to_show'), ::Addressable::URI.parse(params[:redirect_to].to_s).request_uri) %>
 </nav>

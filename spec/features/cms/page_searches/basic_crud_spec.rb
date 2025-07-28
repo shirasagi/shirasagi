@@ -35,7 +35,7 @@ describe "cms_page_search", type: :feature, dbscope: :example do
         expect(item.search_name).to eq search_name
       end
 
-      click_on cms_site.name
+      visit cms_contents_path(site: site)
       expect(page).to have_css("nav.main-navi h2 a.icon-search", text: name)
 
       visit index_path
@@ -54,7 +54,7 @@ describe "cms_page_search", type: :feature, dbscope: :example do
         expect(item.search_name).to eq search_name
       end
 
-      click_on cms_site.name
+      visit cms_contents_path(site: site)
       expect(page).to have_css("nav.main-navi h2 a.icon-search", text: name2)
 
       visit index_path

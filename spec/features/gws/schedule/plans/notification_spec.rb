@@ -52,11 +52,12 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.#{notify_state}"), from: "item_notify_state" rescue nil
       end
 
-      if select_target == :group
+      case select_target
+      when :group
         gws_select_member_group(member_group)
-      elsif select_target == :cg_by_user
+      when :cg_by_user
         gws_select_member_custom_group(member_cg_by_user)
-      elsif select_target == :cg_by_group
+      when :cg_by_group
         gws_select_member_custom_group(member_cg_by_group)
       else # select_target == :user
         gws_select_member(member_user)
@@ -162,7 +163,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.save")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     context "with notify_state disabled" do
@@ -270,10 +271,10 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
   context "#soft_delete plan" do
     def delete_plan
       visit delete_path
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       click_on I18n.t("ss.links.trash")
       within ".list-items" do
@@ -388,12 +389,14 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit gws_schedule_main_path(site: site)
       click_on I18n.t("ss.links.trash")
       click_on item.name
-      click_on I18n.t("ss.links.delete")
-      within "form" do
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
         click_button I18n.t("ss.buttons.delete")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
 
     context "with notify_state disabled" do
@@ -460,11 +463,11 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.trash")
       click_on item.name
       click_on I18n.t("ss.links.restore")
-      within "form" do
+      within "form#item-form" do
         click_button I18n.t("ss.buttons.restore")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+      wait_for_notice I18n.t('ss.notice.restored')
     end
 
     context "with notify_state disabled" do

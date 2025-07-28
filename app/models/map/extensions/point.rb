@@ -1,12 +1,44 @@
 class Map::Extensions::Point < Hash
-  # convert to mongoid native type
+  include SS::Liquidization
+
+  liquidize do
+    export :name
+    export :loc
+    export :text
+    export :zoom_level
+    export :image
+  end
+
+  def initialize(*args)
+    super
+    if args.first.is_a?(Hash)
+      args.first.each do |key, value|
+        self[key] = value
+      end
+    end
+    sanitize_existing_data
+  end
+
+  def []=(key, value)
+    if key.to_s == "name" || key.to_s == "text"
+      value = sanitize_value(value)
+    end
+    super
+  end
+
   def mongoize
     loc = self.loc
     return {} if loc.nil?
 
     ret = { "loc" => loc.mongoize }
+    ret["name"] = name if name.present?
+    ret["text"] = text if text.present?
     ret["zoom_level"] = zoom_level if zoom_level.present?
     ret
+  end
+
+  def name
+    self["name"].presence || self[:name]
   end
 
   def loc
@@ -19,8 +51,16 @@ class Map::Extensions::Point < Hash
     value
   end
 
+  def text
+    self["text"].presence || self[:text]
+  end
+
   def zoom_level
     self["zoom_level"].presence || self[:zoom_level]
+  end
+
+  def image
+    self["image"].presence || self[:image]
   end
 
   def empty?
@@ -28,6 +68,21 @@ class Map::Extensions::Point < Hash
     loc.blank?
   end
   alias blank? empty?
+
+  private
+
+  def sanitize_value(value)
+    return value unless value.present?
+    value.to_s.gsub(/<script[^>]*>.*?<\/script>/i, '')
+  end
+
+  def sanitize_existing_data
+    %w[name text].each do |key|
+      if self[key].present?
+        self[key] = sanitize_value(self[key])
+      end
+    end
+  end
 
   class << self
     # convert mongoid native type to its custom type(this class)

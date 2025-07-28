@@ -64,7 +64,11 @@ class SS::SortEmulator
   end
 
   def generic_ruby_sort(&block)
-    all_id_with_values = @model_class.all.where(@selector).reorder(id: 1).pluck(:id, *sort_hash.keys)
+    if length > 0
+      all_id_with_values = @model_class.all.where(@selector).reorder(id: 1).pluck(:id, *sort_hash.keys)
+    else
+      all_id_with_values = []
+    end
     all_id_with_values.sort! { |lhs, rhs| page_id_sort_proc(lhs, rhs) }
 
     _ruby_sort(all_id_with_values, &block)

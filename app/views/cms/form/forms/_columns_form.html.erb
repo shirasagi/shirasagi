@@ -9,7 +9,7 @@
   end
 %>
 
-<%= hidden_field_tag "#{f.object_name}[column_values][]", ""  %>
+<%= hidden_field_tag "#{f.object_name}[column_values][]", "", id: nil  %>
 
 <% if form.sub_type_static? %>
   <%= render 'cms/form/forms/columns_form_static', local_assigns %>
@@ -20,7 +20,9 @@
 <div class="my-2">
   <%= button_tag(t("cms.syntax_check"), name: nil, type: "button", class: "btn syntax-check") if syntax_check %>
   <%= button_tag(t("cms.mobile_size_check"), name: nil, type: "button", class: "btn mobile-size-check") if @cur_site.mobile_enabled? %>
-  <%= button_tag(t("cms.link_check"), name: nil, type: "button", class: "btn link-check") %>
+  <% if !SS::Lgwan.enabled? || SS::Lgwan.web? %>
+    <%= button_tag(t("cms.link_check"), name: nil, type: "button", class: "btn link-check") %>
+  <% end %>
   <% if !@preview %>
     <%= button_tag(t("cms.preview"), name: nil, type: "button", class: "btn preview") %>
   <% end %>
@@ -30,7 +32,6 @@
   Cms_Form.addonSelector = "#addon-cms-agents-addons-form-page .addon-body";
   Cms_Form.form_html_path = <%== cms_apis_form_html_path(id: form).to_json %>;
   Cms_Form.form_link_check_path = <%== cms_apis_form_link_check_path(id: form).to_json %>;
-  Cms_Form.activateSyntaxChecks();
 
   <% if !@preview %>
   Form_Preview.page_route        = "<%= @item_route %>";

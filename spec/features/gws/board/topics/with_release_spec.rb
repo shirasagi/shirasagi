@@ -29,10 +29,12 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_board_topics_path(site: site, mode: '-', category: '-')
-      click_on I18n.t("ss.links.new")
-      click_on I18n.t("gws.apis.categories.index")
-      wait_for_cbox do
-        click_on category.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
+      wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
+      within_cbox do
+        wait_for_cbox_closed { click_on category.name }
       end
 
       within "form#item-form" do
@@ -41,16 +43,15 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
 
         select I18n.t("ss.options.state.enabled"), from: "item[notify_state]"
 
+        ensure_addon_opened "#addon-ss-agents-addons-release"
         within "#addon-ss-agents-addons-release" do
-          first(".addon-head h2").click
-
-          fill_in "item[release_date]", with: I18n.l(release_date, format: :picker) + "\n"
-          fill_in "item[close_date]", with: I18n.l(close_date, format: :picker) + "\n"
+          fill_in_datetime "item[release_date]", with: release_date
+          fill_in_datetime "item[close_date]", with: close_date
         end
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       item = Gws::Board::Topic.site(site).first
       expect(item.name).to eq "name"
@@ -90,7 +91,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         expect(notice.group_id).to eq site.id
         expect(notice.member_ids).to eq [ user1.id ]
         expect(notice.user_id).to be_nil
-        expect(notice.subject).to eq I18n.t("gws_notification.gws/board/topic.subject", name: item.name)
+        I18n.t("gws_notification.gws/board/topic.subject", name: item.name, locale: I18n.default_locale).tap do |subject|
+          expect(notice.subject).to eq subject
+        end
         expect(notice.text).to be_blank
         expect(notice.html).to be_blank
         expect(notice.format).to eq "text"

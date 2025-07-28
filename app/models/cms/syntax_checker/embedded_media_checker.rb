@@ -43,7 +43,7 @@ class Cms::SyntaxChecker::EmbeddedMediaChecker
   private
 
   def media_src?(src)
-    url = Addressable::URI.parse(src) rescue nil
+    url = ::Addressable::URI.parse(src) rescue nil
     return false if !url
 
     return true if url.hostname.present? && MEDIA_HOSTS.include?(url.hostname)

@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :year_id %></dt>
+  <dd><%= @item.year.try(:name) %></dd>
+
+  <dt><%= @model.t :target_user_id %></dt>
+  <dd><%= @item.target_user.try(:name) %></dd>
+</dl>

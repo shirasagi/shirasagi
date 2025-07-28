@@ -18,6 +18,8 @@ module Cms::Content
     cattr_accessor(:default_released_type, instance_accessor: false)
     self.default_released_type = "fixed"
 
+    define_model_callbacks :chorg
+
     seqid :id
     field :state, type: String, default: "public"
     field :name, type: String
@@ -25,9 +27,9 @@ module Cms::Content
     field :filename, type: String
     field :depth, type: Integer
     field :order, type: Integer, default: 0
-    field :released, type: DateTime
+    field :released, type: DateTime, metadata: { branch: false }
     field :released_type, type: String, default: ->{ self.class.default_released_type }
-    field :first_released, type: DateTime
+    field :first_released, type: DateTime, metadata: { branch: false }
     field :imported, type: DateTime
     field :md5, type: String
 
@@ -60,16 +62,26 @@ module Cms::Content
       end
     end
 
-    def and_public(date = nil)
-      if date.nil?
-        all.where(state: "public")
-      else
-        date = date.dup
-        all.where("$and" => [
-          { "$or" => [ { state: "public", :released.lte => date }, { :release_date.lte => date } ] },
-          { "$or" => [ { close_date: nil }, { :close_date.gt => date } ] },
-        ])
+    def and_public_selector(date)
+      # dateがnilかどうかでプレビューかどうかを判定している。が、悪手かも。
+      in_preview = !date.nil?
+      date = date ? date.dup : Time.zone.now
+      conditions = []
+      conditions << { state: "public", release_date: nil, close_date: nil }
+      conditions << { state: "public", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
+      conditions << { state: "public", release_date: nil, close_date: { "$gt" => date } }
+      conditions << { state: "public", release_date: { "$lte" => date }, close_date: nil }
+      if in_preview
+        # previewの場合、readyのページにアクセスできるので条件に含めてもOK。
+        # しかし、previewでない場合、readyのページにはアクセスできないので、条件から除外する。
+        conditions << { state: "ready", release_date: { "$lte" => date }, close_date: { "$gt" => date } }
+        conditions << { state: "ready", release_date: { "$lte" => date }, close_date: nil }
       end
+      { "$and" => [{ "$or" => conditions }] }
+    end
+
+    def and_public(date = nil)
+      all.where(and_public_selector(date))
     end
 
     def split_path(path)
@@ -96,22 +108,20 @@ module Cms::Content
       date = opts[:date]
 
       # condition_hash
-      if parent_item
+      if parent_item && parent_item.respond_to?(:condition_hash)
+        # list addon included
         ids = []
-        if parent_item.respond_to?(:condition_hash)
-          # list addon included
-          condition_hash = parent_item.condition_hash(opts.slice(*Cms::Addon::List::Model::WELL_KONWN_CONDITION_HASH_OPTIONS))
-          criteria = self.unscoped.where(condition_hash)
-          if parent_item.respond_to?(:condition_forms) && parent_item.condition_forms.present?
-            extra_conditions = parent_item.condition_forms.to_mongo_query
-            if extra_conditions.length == 1
-              criteria = criteria.where(extra_conditions.first)
-            elsif extra_conditions.length > 1
-              criteria = criteria.where("$and" => [{ "$or" => extra_conditions }])
-            end
+        condition_hash = parent_item.condition_hash(opts.slice(*Cms::Addon::List::Model::WELL_KONWN_CONDITION_HASH_OPTIONS))
+        criteria = self.unscoped.where(condition_hash)
+        if parent_item.respond_to?(:condition_forms) && parent_item.condition_forms.present?
+          extra_conditions = parent_item.condition_forms.to_mongo_query
+          if extra_conditions.length == 1
+            criteria = criteria.where(extra_conditions.first)
+          elsif extra_conditions.length > 1
+            criteria = criteria.where("$and" => [{ "$or" => extra_conditions }])
           end
-          ids += criteria.distinct(:id)
         end
+        ids += criteria.distinct(:id)
         return self.none if ids.blank?
 
         ids.uniq!
@@ -130,10 +140,10 @@ module Cms::Content
             super(options, &block)
           end
         end
+      else
+        # default criteria (no list addon included)
+        criteria = self.all.site(site)
       end
-
-      # default criteria (no list addon included)
-      criteria = self.all.site(site) if criteria.blank?
 
       # and_public
       criteria.and_public(date)
@@ -142,10 +152,6 @@ module Cms::Content
     def private_root
       "#{SS::Application.private_root}/#{self.collection_name}"
     end
-  end
-
-  def name_for_index
-    index_name || name
   end
 
   def basename

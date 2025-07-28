@@ -10,7 +10,7 @@ module SS::Document
   attr_accessor :in_updated
 
   included do
-    field :created, type: DateTime, default: -> { Time.zone.now }
+    field :created, type: DateTime, default: -> { Time.zone.now }, metadata: { branch: false }
     field :updated, type: DateTime, default: -> { created }
     field :deleted, type: DateTime
     field :text_index, type: String
@@ -19,7 +19,6 @@ module SS::Document
     validates :created, datetime: true
     validates :updated, datetime: true
     validates :deleted, datetime: true
-    before_save :set_db_changes
     before_save :set_updated
     before_save :set_text_index
   end
@@ -57,9 +56,10 @@ module SS::Document
       sequence_field name
 
       if name == :id
-        replace_field "_id", Integer
+        field = replace_field "_id", Integer
+        field.default_val = 0
       else
-        field name, type: Integer
+        field name, type: Integer, default: 0
       end
     end
 
@@ -70,7 +70,7 @@ module SS::Document
       define_method(name) { opts[:class_name].constantize.where("$and" => [{ :_id.in => send(store) }]) }
       define_method("ordered_#{name}") do
         items = send(name).to_a
-        send(store).map { |id| items.find { |item| item.id == id } }
+        items.sort_by { |item| send(store).index(item.id) }
       end
     end
 
@@ -127,7 +127,7 @@ module SS::Document
 
     opts  = send("#{name}_options")
     opts += send("#{name}_private_options") if respond_to?("#{name}_private_options")
-    value = options.key?(:value) ? options[:value] : send(name)
+    value = options.key?(:value) ? options[:value] : try(name)
 
     if value.blank?
       opts.each { |m| return m if m[1].blank? }
@@ -146,12 +146,22 @@ module SS::Document
   end
 
   def record_timestamps
-    @record_timestamps = true if @record_timestamps.nil?
-    @record_timestamps
+    # 個別設定（@record_timestamps）が定義されている場合は個別設定
+    return @record_timestamps if instance_variable_defined?(:@record_timestamps)
+    # それ以外の場合はグローバル設定
+    SS::Model.record_timestamps?
   end
 
   def record_timestamps=(val)
     @record_timestamps = val
+  end
+
+  def without_record_timestamps
+    save_record_timestamps = record_timestamps
+    self.record_timestamps = false
+    yield
+  ensure
+    self.record_timestamps = save_record_timestamps
   end
 
   def becomes_with(klass)
@@ -164,10 +174,6 @@ module SS::Document
   end
 
   private
-
-  def set_db_changes
-    @db_changes = changes
-  end
 
   def set_updated
     return true if !changed?

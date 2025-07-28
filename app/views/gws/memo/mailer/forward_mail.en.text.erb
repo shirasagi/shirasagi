@@ -1,0 +1,15 @@
+The message has been arrived.
+
+Source: <%= gws_memo_message_url(protocol: @cur_site.canonical_scheme.presence || SS.config.gws.canonical_scheme, host: @cur_site.canonical_domain.presence || SS.config.gws.canonical_domain, site: @cur_site, folder: "REDIRECT", id: @item) %>
+Subject: <%= @item.name %>
+Sent At: <%= I18n.l(@item.send_date, format: :picker) rescue nil %>
+Sender: <%= format_email(@cur_user.name, @cur_user.email) %>
+To: <%= @to %>
+<% if @cc.present? %>
+CC: <%= @cc %>
+<% end -%>
+<% if @item.files.present? %>
+Attachment: <%= @item.files.pluck(:name).join(", ") %>
+<% end -%>
+
+<%= @item.text %>

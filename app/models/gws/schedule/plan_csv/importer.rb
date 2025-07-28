@@ -16,8 +16,10 @@ class Gws::Schedule::PlanCsv::Importer
 
   class << self
     def required_headers
-      %w(id name start_at end_at).map do |k|
-        Gws::Schedule::Plan.t(k)
+      I18n.with_locale(I18n.default_locale) do
+        %w(id name start_at end_at).map do |k|
+          Gws::Schedule::Plan.t(k)
+        end
       end
     end
   end
@@ -253,7 +255,6 @@ class Gws::Schedule::PlanCsv::Importer
 
       item.user_ids = criteria.pluck(:id)
     end
-    drawer.simple_column :permission_level
   end
 
   def readable_facilities

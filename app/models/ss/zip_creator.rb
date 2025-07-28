@@ -15,13 +15,15 @@ class SS::ZipCreator
   end
 
   def add_file(file)
-    create_entry(::Fs.sanitize_filename(file.name)) do |f|
-      ::IO.copy_stream(file.path, f)
-    end
+    name = file.name
+    name = ::Fs.sanitize_filename(name)
+    name = ::Fs.zip_safe_name(name)
+    zip.add(name, file.path)
   end
 
   def create_entry(entry_name, &block)
-    zip.get_output_stream(sjis_clean(entry_name), &block)
+    entry_name = ::Fs.zip_safe_path(entry_name)
+    zip.get_output_stream(entry_name, &block)
   end
 
   def close
@@ -42,11 +44,5 @@ class SS::ZipCreator
       ::FileUtils.rm_rf(@tmp_path)
       ::Zip::File.open(@tmp_path, Zip::File::CREATE)
     end
-  end
-
-  def sjis_clean(name)
-    return name if name.blank?
-
-    name.encode('cp932', invalid: :replace, undef: :replace, replace: "_").encode("UTF-8")
   end
 end

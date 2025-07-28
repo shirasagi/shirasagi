@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :name %></dt>
+  <dd>
+    <%= @item.trailing_name %>
+    <%= "(#{@item.name})" if @item.depth > 1 %>
+  </dd>
+
+  <% if @item.parent.present? %>
+  <dt><%= @model.t :in_parent %></dt>
+  <dd><%= @item.parent.name %></dd>
+  <% end %>
+
+  <dt><%= @model.t :order %></dt>
+  <dd><%= @item.order %></dd>
+</dl>
+
+<%= jquery do %>
+  $('#addon-gws-agents-addons-member .addon-head h2').text('<%= I18n.t('gws/notice.gws_addon_member_head') %>');
+<% end %>

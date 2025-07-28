@@ -40,6 +40,9 @@ class Gws::Schedule::PlansController < ApplicationController
     @todos = Gws::Schedule::Todo.site(@cur_site).without_deleted.
       member(@cur_user).
       search(todo_search)
+
+    @works = Gws::Workload::Work.site(@cur_site).without_deleted.
+      member(@cur_user)
   end
 
   def download

@@ -42,7 +42,11 @@ module SS::Scope::ActivationDate
 
   def disable
     now = Time.zone.now
-    update_attributes(expiration_date: now) if expiration_date.blank? || expiration_date > now
+    if expiration_date.blank? || expiration_date > now
+      update(expiration_date: now.utc)
+    else
+      true
+    end
   end
 end
 

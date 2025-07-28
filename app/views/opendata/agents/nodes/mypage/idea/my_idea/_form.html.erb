@@ -32,7 +32,7 @@
   <tr class="parent-row">
     <td class="field"><%= @model.t :dataset_id %></td>
     <td class="input">
-    <%= f.hidden_field "dataset_ids[]", value: params[:dataset] %>
+    <%= f.hidden_field "dataset_ids[]", value: params[:dataset], id: nil %>
     <% if @item.dataset_ids.length > 0 %>
       <% if @item.datasets.length > 0 %>
       <%= @item.datasets[0].send :name %>
@@ -48,7 +48,7 @@
   <tr class="parent-row">
     <td class="field"><%= @model.t :app_id %></td>
     <td class="input">
-    <%= f.hidden_field "app_ids[]", value: params[:app] %>
+    <%= f.hidden_field "app_ids[]", value: params[:app], id: nil %>
     <% if @item.app_ids.length > 0 %>
       <% if @item.apps.length > 0 %>
       <%= @item.apps[0].send :name %>

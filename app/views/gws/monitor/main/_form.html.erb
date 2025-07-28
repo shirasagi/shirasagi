@@ -1,7 +1,3 @@
-<%= jquery do %>
-  Gws_Monitor_Topic.renderForm({ maxDate: "<%= @cur_site.schedule_max_at.strftime('%Y/%m/%d') %>" });
-<% end %>
-
 <dl class="see">
   <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
@@ -13,7 +9,7 @@
   <dd><%= f.select :notice_state, @item.notice_state_options, include_blank: t('gws/monitor.options.notice_state.none') %></dd>
 
   <dt><%= @model.t :due_date %><%= @model.tt :due_date %></dt>
-  <dd><%= f.text_field :due_date, class: 'datetime', value: tryb { @item.due_date.strftime('%Y/%m/%d %H:%M') } %></dd>
+  <dd><%= f.ss_datetime_field :due_date, max_date: @cur_site.schedule_max_at %></dd>
 
   <dt><%= @model.t :mode %><%= @model.tt :mode %></dt>
   <dd><%= f.select :mode, @item.mode_options %></dd>

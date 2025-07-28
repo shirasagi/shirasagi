@@ -11,19 +11,19 @@
   <dt><%= @model.t :minutes_limit %></dt>
   <dd>
     <% if @item.min_minutes_limit %>
-    <%= @item.min_minutes_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.minutes') %>
+    <%= @item.min_minutes_limit.to_fs(:delimited) %><%= I18n.t('gws/facility.prompts.minutes') %>
     <% end %>
     <% if @item.min_minutes_limit || @item.max_minutes_limit %>
     <%= t("ss.wave_dash") %>
     <% end %>
     <% if @item.max_minutes_limit %>
-      <%= @item.max_minutes_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.minutes') %>
+      <%= @item.max_minutes_limit.to_fs(:delimited) %><%= I18n.t('gws/facility.prompts.minutes') %>
     <% end %>
   </dd>
 
   <% if @item.max_days_limit %>
   <dt><%= @model.t :max_days_limit %></dt>
-  <dd><%= @item.max_days_limit.to_s(:delimited) %><%= I18n.t('gws/facility.prompts.days') %></dd>
+  <dd><%= @item.max_days_limit.to_fs(:delimited) %><%= I18n.t('gws/facility.prompts.days') %></dd>
     <% end %>
 
   <% if @item.reservation_start_date.present? %>
@@ -38,14 +38,17 @@
 
   <% if @item.activation_date.present? %>
   <dt><%= @model.t :activation_date %></dt>
-  <dd><%= tryb { @item.activation_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= ss_time_tag @item.activation_date %></dd>
   <% end %>
 
   <% if @item.expiration_date.present? %>
   <dt><%= @model.t :expiration_date %></dt>
-  <dd><%= tryb { @item.expiration_date.strftime("%Y/%m/%d %H:%M") } %></dd>
+  <dd><%= ss_time_tag @item.expiration_date %></dd>
   <% end %>
 
   <dt><%= @model.t :approval_check_state %></dt>
   <dd><%= @item.label :approval_check_state %></dd>
+
+  <dt><%= @model.t :update_approved_state %></dt>
+  <dd><%= @item.label :update_approved_state %></dd>
 </dl>

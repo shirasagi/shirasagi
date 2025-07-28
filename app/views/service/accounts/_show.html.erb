@@ -6,10 +6,10 @@
   <dd><%= @item.send :account %></dd>
 
   <dt><%= @model.t :account_start_date %></dt>
-  <dd><%= tryb{@item.account_start_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <dd><%= ss_time_tag @item.account_start_date %></dd>
 
   <dt><%= @model.t :account_expiration_date %></dt>
-  <dd><%= tryb{@item.account_expiration_date.strftime("%Y/%m/%d %H:%M")} %></dd>
+  <dd><%= ss_time_tag @item.account_expiration_date %></dd>
 
   <dt><%= @model.t :organization_ids %><%= @model.tt :organization_ids %></dt>
   <dd><%= br @item.organizations.map { |m| m.name } %></dd>

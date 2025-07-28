@@ -1,0 +1,23 @@
+<%= form_for :item, url: { action: :copy_year }, html: { method: :post } do |f| %>
+<%= error_messages_for :item %>
+
+<div class="addon-views">
+  <div class="addon-view" id="addon-basic">
+    <div class="addon-head"><h2><%= t('gws/daily_report.confirm.copy_year') %></h2></div>
+    <div class="addon-body">
+      <dl class="see">
+        <dt><%= @model.t :src_year %><%= @model.tt :src_year %></dt>
+        <dd><%= f.number_field :src_year, value: @src_year %></dd>
+
+        <dt><%= @model.t :dest_year %><%= @model.tt :dest_year %></dt>
+        <dd><%= f.number_field :dest_year, value: @dest_year %></dd>
+      </dl>
+    </div>
+  </div>
+</div>
+
+<footer class="send">
+  <%= f.submit t('ss.buttons.run'), class: 'btn-primary run', data: { disable_with: t("ss.buttons.running") } %>
+  <%= f.button t('ss.buttons.cancel'), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
+</footer>
+<% end %>

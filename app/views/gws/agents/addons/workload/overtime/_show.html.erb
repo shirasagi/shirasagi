@@ -1,0 +1,6 @@
+<dl class="see">
+  <% @cur_site.fiscal_months.each do |m| %>
+    <dt><%= "#{m}#{t("datetime.prompts.month")}" %></dt>
+    <dd><%= @item.send("month#{m}_label") %></dd>
+  <% end %>
+</dl>

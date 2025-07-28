@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Gws::Chorg::TestRunner, dbscope: :example do
   let(:site) { create(:gws_group) }
-  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group_id: site) }
+  let(:task) { Gws::Chorg::Task.create!(name: unique_id, group: site) }
   let(:job_opts) { {} }
 
   context 'with add' do
@@ -13,8 +13,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(revision).not_to be_nil
       expect(changeset).not_to be_nil
 
-      job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site.id, task_id: task.id)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -43,8 +43,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
 
       # check for not changed
-      job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site.id, task_id: task.id)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -61,15 +61,13 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(task.entity_logs.count).to eq 1
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
       expect(task.entity_logs[0]['id']).to eq group.id.to_s
-      expect(task.entity_logs[0]['changes']).to include(
-        'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_link_url', 'contact_link_name'
-      )
+      expect(task.entity_logs[0]['changes']).to include('name')
     end
   end
 
   context 'with unify' do
-    let(:group1) { create(:gws_revision_new_group) }
-    let(:group2) { create(:gws_revision_new_group) }
+    let(:group1) { create(:gws_revision_new_group, order: 10) }
+    let(:group2) { create(:gws_revision_new_group, order: 20) }
     let(:user1) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
     let(:user2) { create(:gws_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
     let(:revision) { create(:gws_revision, site_id: site.id) }
@@ -83,8 +81,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
 
       # check for not changed
-      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -105,15 +103,13 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
 
       task.reload
       expect(task.state).to eq 'completed'
-      expect(task.entity_logs.count).to eq 3
+      expect(task.entity_logs.count).to eq 2
       expect(task.entity_logs[0]['model']).to eq 'Gws::Group'
-      expect(task.entity_logs[0]['creates']).to include('name')
+      expect(task.entity_logs[0]['id']).to eq group1.id.to_s
+      expect(task.entity_logs[0]['changes']).to include('name')
       expect(task.entity_logs[1]['model']).to eq 'Gws::Group'
-      expect(task.entity_logs[1]['id']).to eq group1.id.to_s
+      expect(task.entity_logs[1]['id']).to eq group2.id.to_s
       expect(task.entity_logs[1]['deletes']).to include('name')
-      expect(task.entity_logs[2]['model']).to eq 'Gws::Group'
-      expect(task.entity_logs[2]['id']).to eq group2.id.to_s
-      expect(task.entity_logs[2]['deletes']).to include('name')
     end
   end
 
@@ -127,8 +123,8 @@ describe Gws::Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
 
       # change group.
-      job = described_class.bind(site_id: site, task_id: task)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site.id, task_id: task.id)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1

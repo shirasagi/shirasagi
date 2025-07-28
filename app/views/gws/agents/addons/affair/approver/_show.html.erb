@@ -1,0 +1,9 @@
+
+<% if @item.state == "approve" && @item.workflow_state == "approve" %>
+<%= jquery do %>
+// 確認済みになったら承認の再申請を非表示
+$("#addon-gws-agents-addons-affair-approver .mod-workflow-request").hide();
+<% end %>
+<% end %>
+
+<%= render template: "workflow/agents/addons/approver/_show" %>

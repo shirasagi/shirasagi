@@ -1,0 +1,13 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= t("ss.views.index.created", created: I18n.l(item.created, format: :picker)) %></span>
+  <span class="datetime"><%= t("ss.views.index.updated", updated: I18n.l(item.updated, format: :picker)) %></span>
+  <span class="openrate"><%= t("ss.views.index.openrate", openrate: item.with_null_label(:overview_openrate_label)) %></span>
+<% end %>
+
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), { action: :show, id: item } if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+<% end %>
+
+<%= render template: "cms/crud/index" %>

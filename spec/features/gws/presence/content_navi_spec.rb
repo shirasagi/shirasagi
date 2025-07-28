@@ -20,11 +20,13 @@ describe 'gws_presence_content_navi', type: :feature, dbscope: :example, js: tru
           expect(find('td', text: group2.trailing_name)).not_to be_visible
 
           find('button.expand-all').click
+          wait_for_js_ready
           expect(find('td', text: site.trailing_name)).to be_visible
           expect(find('td', text: group1.trailing_name)).to be_visible
           expect(find('td', text: group2.trailing_name)).to be_visible
 
           find('button.collapse-all').click
+          wait_for_js_ready
           expect(find('td', text: site.trailing_name)).to be_visible
           expect(find('td', text: group1.trailing_name)).not_to be_visible
           expect(find('td', text: group2.trailing_name)).not_to be_visible
@@ -59,12 +61,15 @@ describe 'gws_presence_content_navi', type: :feature, dbscope: :example, js: tru
       it 'should display only selected group tree' do
         within 'div.tree-groups' do
           find('td', text: group1.trailing_name).find('img').click
+          wait_for_js_ready
           find('td', text: group3.trailing_name).find('img').click
+          wait_for_js_ready
 
           expect(find('td', text: group2.trailing_name)).to be_visible
           expect(find('td', text: group4.trailing_name)).to be_visible
 
           click_link group2.trailing_name
+          wait_for_js_ready
 
           expect(find('td', text: group2.trailing_name)).to be_visible
           expect(find('td', text: group4.trailing_name)).not_to be_visible
@@ -83,6 +88,7 @@ describe 'gws_presence_content_navi', type: :feature, dbscope: :example, js: tru
     it do
       within 'div.tree-groups' do
         find('td', text: group1.trailing_name).find('img').click
+        wait_for_js_ready
         expect(all('tr[data-depth="2"]')[0].text).to eq group2.trailing_name
         expect(all('tr[data-depth="2"]')[1].text).to eq group4.trailing_name
         expect(all('tr[data-depth="2"]')[2].text).to eq group5.trailing_name

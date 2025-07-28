@@ -74,8 +74,8 @@ describe "webapi", dbscope: :example, type: :request do
             body_parts: %w(<div>part0</div> <div>part1</div> <div>part2</div>),
             layout_id: 1,
             body_layout_id: 1,
-            release_date: "2015/11/13 11:00:00",
-            close_date: "2015/11/13 12:00:00"
+            release_date: I18n.l(Time.zone.now.advance(hours: 1), format: format),
+            close_date: I18n.l(Time.zone.now.advance(hours: 2), format: format)
           }
         }
 

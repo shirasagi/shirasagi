@@ -1,0 +1,48 @@
+<%
+  @search_targets ||= Gws::SearchForm::Target.site(@cur_site).and_enabled.to_a
+  return if @search_targets.blank?
+%>
+<div class="application-menu">
+  <%= jquery do %>
+    Gws_SearchForm.render();
+  <% end %>
+
+  <div class="dropdown gws-search">
+    <% @search_targets.each_with_index do |target, idx| %>
+      <%
+        opts = { multipart: true, method: "get", "data-target": target.name, style: "display: none;" }
+        opts[:target] = "_blank" if target.search_external?
+      %>
+      <%= form_tag target.url, opts do %>
+        <div class="input-group">
+          <%= text_field_tag target.keyword_name, "", { class: "keyword", placeholder: target.place_holder } %>
+          <% target.other_query.each do |k, v| %>
+            <%= hidden_field_tag k, v, id: nil %>
+          <% end %>
+          <span class="input-group-append">
+            <button type="submit">
+              <i class="material-icons md-18">search</i>
+            </button>
+            <% if @search_targets.size >= 2 %>
+              <button type="button" class="dropdown-toggle">
+                <i class="material-icons md-18">settings</i>
+              </button>
+            <% end %>
+          </span>
+        </div>
+      <% end %>
+    <% end %>
+    <% if @search_targets.size >= 2 %>
+      <ul class="dropdown-menu">
+        <% @search_targets.each do |target, idx| %>
+          <li>
+            <label>
+              <%= radio_button_tag "target", target.name, nil, { id: nil } %>
+              <%= target.place_holder %>
+            </label>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+</div>

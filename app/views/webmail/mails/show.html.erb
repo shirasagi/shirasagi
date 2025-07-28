@@ -1,43 +1,63 @@
-<% addons = @item ? @item.class.addons : [] %>
+<%
+  addons = @item ? @item.class.addons : []
 
-<%= jquery do %>
-  Webmail_Mail_Address.render({
+  render_opts = {
     lang: {
-      send: "<%= t('webmail.links.address.send') %>",
-      entry: "<%= t('webmail.links.address.entry') %>",
-      copy: "<%= t('webmail.links.address.copy') %>"
+      send: t('webmail.links.address.send'),
+      entry: t('webmail.links.address.entry'),
+      copy: t('webmail.links.address.copy')
     },
     urls: {
-      send: "<%= new_webmail_mail_path %>",
-      add: "<%= add_webmail_addresses_path(group: "-") %>"
-    }
-  });
+      send: new_webmail_mail_path,
+      add: add_webmail_addresses_path(group: "-")
+    },
+    new_window_width: SS.config.webmail.mail_edit_screen_width
+  }
+%>
+
+<%= jquery do %>
+  Webmail_Mail_Address.render(<%== render_opts.to_json %>);
   Webmail_Mail_List.renderListStars();
 <% end %>
 
 <div class="addon-views">
   <div class="addon-view webmail-mail" id="addon-basic">
     <div class="addon-head">
-      <span class="icon-star <%= @item.star? ? 'on' : 'off' %>">
-        <%= link_to action: :show do %>
-          <i class="material-icons">&#xE838;</i>
-        <% end %>
-      </span>
-      <h2 class="subject">
-        <%= @item.display_subject %>
-      </h2>
-      <div class="from">
-        <% if @item.display_sender.present? %>
-          <span class="address-item dropdown webmail-dropdown dropdown-toggle"
-            data-name="<%= @item.display_sender.name %>" data-email="<%= @item.display_sender.email %>">
-            <%= @item.display_sender.address %>
-            <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+      <div class="d-flex">
+        <h2 class="subject">
+          <%= @item.display_subject %>
+        </h2>
+        <div class="d-flex ml-auto">
+          <% if @uid_index.present? %>
+            <div class="move-tool-wrap">
+              <div class="page-order"><span class="current"><%= @uid_index + 1 %></span> / <span class="total"><%= @uid_list.length %></span></div>
+              <div class="move-tool">
+                <%= move_to_prev_tag %>
+                <%= move_to_next_tag %>
+              </div>
+            </div>
+          <% end %>
+          <span class="icon-star <%= @item.star? ? 'on' : 'off' %>">
+            <%= link_to action: :show do %>
+              <i class="material-icons">star</i>
+            <% end %>
           </span>
-        <% else %>
-          <span><%= t("webmail.no_senders") %></span>
-        <% end %>
+        </div>
       </div>
-      <div class="date"><%= tryb { @item.internal_date.strftime("%Y/%m/%d %H:%M") } %></div>
+      <div class="d-flex">
+        <div class="from">
+          <% if @item.display_sender.present? %>
+            <div class="address-item dropdown webmail-dropdown dropdown-toggle"
+              data-name="<%= @item.display_sender.name %>" data-email="<%= @item.display_sender.email %>">
+              <span><%= @item.display_sender.address %></span>
+              <ul class="dropdown-menu webmail-dropdown-menu"></ul>
+            </div>
+          <% else %>
+            <span><%= t("webmail.no_senders") %></span>
+          <% end %>
+        </div>
+        <div class="date ml-auto"><%= ss_time_tag @item.internal_date %></div>
+      </div>
     </div>
 
     <% if (@item.to + @item.cc + @item.bcc).present? %>
@@ -47,11 +67,11 @@
         <div class="label"><%= @model.t :to %></div>
         <div class="value">
           <% @item.display_to.each do |addr| %>
-            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+            <div class="address-item dropdown webmail-dropdown dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
-              <%= addr.name %>
+              <span><%= addr.name %></span>
               <ul class="dropdown-menu webmail-dropdown-menu"></ul>
-            </span>
+            </div>
           <% end %>
         </div>
       </div>
@@ -62,11 +82,11 @@
         <div class="label"><%= @model.t :cc %></div>
         <div class="value">
           <% @item.display_cc.each do |addr| %>
-            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+            <div class="address-item dropdown webmail-dropdown dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
-              <%= addr.name %>
+              <span><%= addr.name %></span>
               <ul class="dropdown-menu webmail-dropdown-menu"></ul>
-            </span>
+            </div>
           <% end %>
         </div>
       </div>
@@ -77,11 +97,11 @@
         <div class="label"><%= @model.t :bcc %></div>
         <div class="value">
           <% @item.display_bcc.each do |addr| %>
-            <span class="address-item dropdown webmail-dropdown dropdown-toggle"
+            <div class="address-item dropdown webmail-dropdown dropdown-toggle"
               data-name="<%= addr.name %>" data-email="<%= addr.email %>">
-              <%= addr.name %>
+              <span><%= addr.name %></span>
               <ul class="dropdown-menu webmail-dropdown-menu"></ul>
-            </span>
+            </div>
           <% end %>
         </div>
       </div>
@@ -96,8 +116,8 @@
         <span><%= t("webmail.notice.requested_mdn") %></span>
       </span>
       <span class="action">
-        <%= button_tag t("webmail.buttons.send_mdn"), "class" => "send-mdn", "href" => send_mdn_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index) %>
-        <%= button_tag t("webmail.buttons.ignore_mdn"), "class" => "ignore-mdn", "href" => ignore_mdn_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index) %>
+        <%= button_tag t("webmail.buttons.send_mdn"), "class" => "send-mdn", "href" => send_mdn_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: @mailbox.try(:original_name).presence || params[:mailbox]) %>
+        <%= button_tag t("webmail.buttons.ignore_mdn"), "class" => "ignore-mdn", "href" => ignore_mdn_webmail_mail_path(webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index, mailbox: @mailbox.try(:original_name).presence || params[:mailbox]) %>
       </span>
     </div>
     <% end %>
@@ -107,7 +127,7 @@
       <% @item.attachments.each do |part| %>
         <div class="file">
           <%= link_to({ action: :parts, section: part.section }, target: part.link_target) do %>
-            <i class="material-icons md-18"><%== part.image? ? '&#xE3F4;' : '&#xE24D;' %></i>
+            <%= md_icons.filled((part.image? ? "image" : "insert_drive_file"), tag: :i, size: 18) %>
             <%= part.filename %>
           <% end %>
           <%= "( #{number_to_human_size(part.size)} )" %>

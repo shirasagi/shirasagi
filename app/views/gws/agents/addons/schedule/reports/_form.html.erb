@@ -4,7 +4,7 @@
 <dl class="see mod-gws-schedule-reports">
   <dt class="wide"></dt>
   <dd class="wide">
-    <%= f.hidden_field 'in_report_ids[]', value: '', class: 'hidden-ids' %>
+    <%= f.hidden_field 'in_report_ids[]', value: '', id: nil, class: 'hidden-ids' %>
     <%= link_to t('gws/report.apis.files.index'), gws_report_apis_files_path, class: 'ajax-box' %>
   </dd>
   <dd class="wide">
@@ -15,7 +15,7 @@
         <% report_ids << report.id %>
         <tr data-id="<%= report.id %>">
           <td>
-            <%= f.hidden_field 'in_report_ids[]', value: report.id %>
+            <%= f.hidden_field 'in_report_ids[]', id: nil, value: report.id %>
             <%= report.name %>
           </td>
           <td><%= link_to t('ss.buttons.delete'), '#', class: 'deselect btn' %></td>
@@ -26,7 +26,7 @@
   </dd>
 </dl>
 
-<%= f.hidden_field 'in_initial_report_ids[]', value: '' %>
+<%= f.hidden_field 'in_initial_report_ids[]', value: '', id: nil %>
 <% report_ids.each do |report_id| %>
-<%= f.hidden_field 'in_initial_report_ids[]', value: report_id %>
+<%= f.hidden_field 'in_initial_report_ids[]', value: report_id, id: nil %>
 <% end %>

@@ -63,7 +63,7 @@ this.Cms_Editor_CodeMirror = (function () {
 
   Cms_Editor_CodeMirror.lock = function (selector, target) {
     Cms_Editor_CodeMirror.setOption(selector, target);
-    return $(document).on('change', selector, function (e) {
+    return $(document).on('change', selector, function (_ev) {
       return Cms_Editor_CodeMirror.setOption(selector, target);
     });
   };
@@ -88,15 +88,14 @@ this.Cms_Editor_CKEditor = (function () {
   function Cms_Editor_CKEditor() {
   }
 
-  Cms_Editor_CKEditor.render = function (selector, opts, js_opts) {
-    //Render CKEditor
-    if (opts == null) {
-      opts = {};
+  var onceInitialized = false;
+
+  Cms_Editor_CKEditor.initializeOnce = function () {
+    if (onceInitialized) {
+      return;
     }
-    var editor = $(selector).ckeditor(opts).editor;
-    editor.on("change", function() {
-      SS.formChanged = true;
-    });
+
+    onceInitialized = true;
 
     CKEDITOR.on('dialogDefinition', function (ev) {
       var def, info, name, text;
@@ -126,17 +125,51 @@ this.Cms_Editor_CKEditor = (function () {
     });
 
     // fix. CKEditor Paste Dialog: github.com/ckeditor/ckeditor4/issues/469
-    CKEDITOR.on('instanceReady', function (ev) {
-      ev.editor.on("beforeCommandExec", function(event) {
+    CKEDITOR.on('instanceReady', function (outerEv) {
+      var elemet = outerEv.editor.element.$;
+      outerEv.editor.on("change", function () {
+        var event = new CustomEvent("ss:change", { bubbles: true, cancelable: true, composed: true });
+        elemet.dispatchEvent(event);
+      });
+      outerEv.editor.on("beforeCommandExec", function(innerEv) {
         // Show the paste dialog for the paste buttons and right-click paste
-        if (event.data.name === "paste") {
-          event.editor._.forcePasteDialog = true;
+        if (innerEv.data.name === "paste") {
+          innerEv.editor._.forcePasteDialog = true;
         }
         // Don't show the paste dialog for Ctrl+Shift+V
-        if (event.data.name === "pastetext" && event.data.commandData.from === "keystrokeHandler") {
-          event.cancel();
+        if (innerEv.data.name === "pastetext" && innerEv.data.commandData.from === "keystrokeHandler") {
+          innerEv.cancel();
         }
       });
+    });
+  }
+
+  Cms_Editor_CKEditor.render = function (selector, opts, _jsOpts) {
+    //Render CKEditor
+    if (opts == null) {
+      opts = {};
+    }
+
+    // $(selector).ckeditor(opts);
+    $(selector).each(function() {
+      var $this = $(this);
+      SS.justOnce(this, "ss-editor", function() {
+        $this.ckeditor(opts);
+      });
+    });
+
+    Cms_Editor_CKEditor.initializeOnce();
+  };
+
+  Cms_Editor_CKEditor.destroy = function (selector) {
+    $(selector).each(function() {
+      var $this = $(this);
+      var editor = $this.data("ckeditorInstance");
+      if (editor) {
+        editor.destroy();
+      }
+
+      SS.deleteJustOnce(this, "ss-editor");
     });
   };
 

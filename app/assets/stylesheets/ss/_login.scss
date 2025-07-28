@@ -34,6 +34,7 @@
   header {
     h2 {
       display: inline-block;
+      width: 300px;
     }
     .version {
       padding: 2px;
@@ -60,6 +61,9 @@
   footer.send {
     margin: 20px;
     padding: 0;
+    input.btn-primary {
+      @include btn-red;
+    }
   }
   .sso {
     width: 100%;
@@ -122,8 +126,6 @@
 }
 
 .login-image-box {
-  @import "swiper/dist/css/swiper";
-
   margin: 20px 10px;
   float: left;
 
@@ -148,6 +150,7 @@
   }
 
   .ss-swiper-slide-item-image {
+    display: block;
     width: 100%;
   }
 
@@ -188,6 +191,67 @@
     }
     li {
       width: 215px;
+    }
+  }
+}
+
+.otp-setup {
+  .otp-setup-notice {
+    margin-top: 10px;
+  }
+
+  .otp-setup-step2 {
+    .addon-body {
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-rows: auto auto;
+      gap: 5px;
+    }
+
+    .otp-setup-qrcode {
+      width: 200px;
+      height: 200px;
+    }
+
+    .otp-setup-registration-instruction {
+      margin: 0;
+      padding: 10px 20px;
+
+      li {
+        padding: 5px 0;
+      }
+    }
+
+    .otp-setup-registration-without-qrcode {
+      grid-column: 1 / span 2;
+      border: 1px solid #ccc;
+    }
+
+    .otp-setup-registration-without-qrcode-title {
+      margin: 10px;
+      cursor: pointer;
+    }
+
+    .otp-setup-registration-without-qrcode-body {
+      margin: 10px;
+      line-height: 2;
+    }
+  }
+
+  .otp-setup-step3 {
+    .otp-setup-verification-code-box {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin: 10px 0;
+    }
+
+    #item_code {
+      width: 8em;
+    }
+
+    footer {
+      margin: 10px 0;
     }
   }
 }

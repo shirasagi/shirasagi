@@ -1,0 +1,59 @@
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "results", head: t("ldap.views.import/sync.header"), toggle: true } do %>
+    <% if @items.present? %>
+      <dl class="see">
+        <dt><%= t "ldap.views.import/sync.group" %></dt>
+        <dd></dd>
+        <dt><%= t "ldap.views.import/sync.success" %></dt>
+        <dd><%= @items["group"]["successed"] %></dd>
+        <dt><%= t "ldap.views.import/sync.delete" %></dt>
+        <dd><%= @items["group"]["deleted"] %></dd>
+        <dt><%= t "ldap.views.import/sync.fail" %></dt>
+        <dd><%= @items["group"]["failed"] %></dd>
+        <% if @items["group"]["errors"].present? %>
+          <dt><%= t "ldap.views.import/sync.error" %></dt>
+          <dd><%= br @items["group"]["errors"] %></dd>
+        <% end %>
+        <% if @items["group"]["warnings"].present? %>
+          <dt><%= t "ldap.views.import/sync.warning" %></dt>
+          <dd><%= br @items["group"]["warnings"] %></dd>
+        <% end %>
+        <dt><%= t "ldap.views.import/sync.user" %></dt>
+        <dd></dd>
+        <dt><%= t "ldap.views.import/sync.success" %></dt>
+        <dd><%= @items["user"]["successed"] %></dd>
+        <dt><%= t "ldap.views.import/sync.delete" %></dt>
+        <dd><%= @items["user"]["deleted"] %></dd>
+        <dt><%= t "ldap.views.import/sync.fail" %></dt>
+        <dd><%= @items["user"]["failed"] %></dd>
+        <% if @items["user"]["errors"].present? %>
+          <dt><%= t "ldap.views.import/sync.error" %></dt>
+          <dd><%= br @items["user"]["errors"] %></dd>
+        <% end %>
+        <% if @items["user"]["warnings"].present? %>
+          <dt><%= t "ldap.views.import/sync.warning" %></dt>
+          <dd><%= br @items["user"]["warnings"] %></dd>
+        <% end %>
+      </dl>
+    <% else %>
+      <%= t "ldap.views.import/sync.no_results" %>
+    <% end %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: "task-info", head: t("ldap.views.import/sync.task_info"), toggle: true } do %>
+    <dl class="see">
+      <dt><%= @model.t :state %></dt>
+      <dd class="state"><%= @task.state %></dd>
+      <dt><%= @model.t :started %></dt>
+      <dd class="started"><%= ss_time_tag @task.started %></dd>
+      <dt><%= @model.t :closed %></dt>
+      <dd class="closed"><%= ss_time_tag @task.closed %></dd>
+    </dl>
+
+    <dl class="see">
+      <dd class="wide">
+        <textarea class="log" readonly="readonly"><%= @task.logs.join("\n") %></textarea>
+      </dd>
+    </dl>
+  <% end %>
+</div>

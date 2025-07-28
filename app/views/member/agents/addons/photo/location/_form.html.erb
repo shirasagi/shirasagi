@@ -1,7 +1,7 @@
 <dl class="see mod-location">
   <dt><%= @model.t :photo_locations %><%= @model.tt :photo_locations %></dt>
   <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field "photo_location_ids[]", value: "" %>
+    <%= f.hidden_field "photo_location_ids[]", value: "", id: nil %>
     <% if @locations.present? %>
       <% @locations.each do |loc| %>
         <label>

@@ -43,7 +43,7 @@ describe "sys/auth/open_id_connects", type: :feature, dbscope: :example do
 
       click_on I18n.t("ss.buttons.save")
     end
-    expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+    wait_for_notice I18n.t("ss.notice.saved")
 
     expect(Sys::Auth::OpenIdConnect.count).to eq 1
     Sys::Auth::OpenIdConnect.first.tap do |item|
@@ -75,7 +75,7 @@ describe "sys/auth/open_id_connects", type: :feature, dbscope: :example do
 
       click_on I18n.t("ss.buttons.save")
     end
-    expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+    wait_for_notice I18n.t("ss.notice.saved")
 
     expect(Sys::Auth::OpenIdConnect.count).to eq 1
     Sys::Auth::OpenIdConnect.first.tap do |item|
@@ -100,11 +100,13 @@ describe "sys/auth/open_id_connects", type: :feature, dbscope: :example do
     #
     visit sys_auth_open_id_connects_path
     click_on name
-    click_on I18n.t("ss.links.delete")
+    within ".nav-menu" do
+      click_on I18n.t("ss.links.delete")
+    end
     within "form" do
       click_on I18n.t("ss.buttons.delete")
     end
-    expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+    wait_for_notice I18n.t("ss.notice.deleted")
 
     expect(Sys::Auth::OpenIdConnect.count).to eq 0
   end

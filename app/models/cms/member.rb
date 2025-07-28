@@ -3,11 +3,14 @@ class Cms::Member
   include ::Member::ExpirableSecureId
   include ::Member::Addon::AdditionalAttributes
   include ::Member::Addon::LineAttributes
+  include ::Member::Addon::Bookmark
   include Ezine::Addon::Subscription
 
   EMAIL_REGEX = /\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i.freeze
 
   index({ site_email: 1 }, { unique: true, sparse: true })
+
+  attr_accessor :cur_user
 
   class << self
     def create_auth_member(auth, site)
@@ -39,43 +42,138 @@ class Cms::Member
     end
 
     def search(params = {})
-      criteria = self.where({})
-      return criteria if params.blank?
+      all.search_name(params).search_keyword(params).search_state(params)
+    end
 
-      if params[:name].present?
-        criteria = criteria.search_text params[:name]
-      end
-      if params[:keyword].present?
-        criteria = criteria.keyword_in params[:keyword], :name, :email, :kana, :organization_name, :job, :tel, :postal_code, :addr
-      end
-      criteria
+    def search_name(params)
+      return all if params.blank? || params[:name].blank?
+      all.search_text params[:name]
+    end
+
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in params[:keyword], :name, :email, :kana, :organization_name, :job, :tel, :postal_code, :addr
+    end
+
+    def search_state(params)
+      return all if params.blank? || params[:state].blank?
+      all.where(state: params[:state])
     end
 
     def to_csv
-      CSV.generate do |data|
-        data << %w(
-          id state name email kana organization_name job tel
-          postal_code addr sex birthday updated created
-        ).map { |k| t(k) }
+      I18n.with_locale(I18n.default_locale) do
+        CSV.generate do |data|
+          data << %w(
+            id state name email password kana organization_name job tel
+            postal_code addr sex birthday last_loggedin updated created
+          ).map { |k| t(k) }
 
-        criteria.each do |item|
-          line = []
-          line << item.id
-          line << (item.state.present? ? I18n.t("cms.options.member_state.#{item.state}") : '')
-          line << item.name
-          line << item.email
-          line << item.kana
-          line << item.organization_name
-          line << item.job
-          line << item.tel
-          line << item.postal_code
-          line << item.addr
-          line << (item.sex.present? ? I18n.t("member.options.sex.#{item.sex}") : '')
-          line << item.birthday.try(:strftime, "%Y/%m/%d")
-          line << item.updated.strftime("%Y/%m/%d %H:%M")
-          line << item.created.strftime("%Y/%m/%d %H:%M")
-          data << line
+          criteria.each do |item|
+            line = []
+            line << item.id
+            line << (item.state.present? ? I18n.t("cms.options.member_state.#{item.state}") : '')
+            line << item.name
+            line << item.email
+            line << nil
+            line << item.kana
+            line << item.organization_name
+            line << item.job
+            line << item.tel
+            line << item.postal_code
+            line << item.addr
+            line << (item.sex.present? ? I18n.t("member.options.sex.#{item.sex}") : '')
+            line << item.birthday.try { |time| I18n.l(time.to_date, format: :picker) }
+            line << item.last_loggedin.try { |time| I18n.l(time, format: :picker) }
+            line << I18n.l(item.updated, format: :picker)
+            line << I18n.l(item.created, format: :picker)
+            data << line
+          end
         end
+      end
+    end
+
+    def import_csv(import_param)
+      Rails.logger.debug { "[Cms::Member/import_csv] Starting import: #{import_param.inspect} (class: #{import_param.class})" }
+
+      importer = build_importer.create
+      all_success = true
+
+      SS::Csv.foreach_row(import_param.in_file.path, headers: true) do |row|
+        next if row.blank? || !row.respond_to?(:[])
+        result = process_csv_row(row, importer, import_param.cur_site, import_param.cur_user)
+        unless result[:success]
+          all_success = false
+          import_param.errors.add(:base, result[:error])
+        end
+      end
+
+      Rails.logger.debug { "[Cms::Member/import_csv] CSV import completed #{all_success ? 'successfully' : 'with errors'}" }
+      { success: all_success }
+    rescue => e
+      Rails.logger.error { "[Cms::Member/import_csv] CSV import failed: #{e.message}" }
+      import_param.errors.add(:base, :malformed_csv)
+      { success: false }
+    end
+
+    private
+
+    def process_csv_row(row, importer, cur_site, cur_user)
+      Rails.logger.debug { "Processing row: #{row.inspect} (class: #{row.class})" }
+      member = find_or_initialize_member(row, cur_site)
+      importer.import_row(row, member)
+
+      member.cur_site = cur_site
+      member.cur_user = cur_user
+
+      unless member.save
+        error_message = member.errors.full_messages.join(", ")
+        Rails.logger.error { "[SS::Csv/foreach_row] Failed to save member id #{row['id']}: #{error_message}" }
+        return { success: false, error: "id: #{row['id']} : #{error_message}" }
+      end
+
+      Rails.logger.debug { "[SS::Csv/foreach_row] Saved member: #{member.id}" }
+      { success: true }
+    end
+
+    def build_importer
+      SS::Csv.draw(:import, context: self, model: self) do |importer|
+        importer.simple_column :state do |row, member, head, value|
+          mapping = {
+            I18n.t("cms.options.member_state.enabled")   => "enabled",
+            I18n.t("cms.options.member_state.disabled")  => "disabled",
+            I18n.t("cms.options.member_state.temporary") => "temporary"
+          }
+          member.state = mapping[value] || value
+        end
+        importer.simple_column :name
+        importer.simple_column :email
+        importer.simple_column :password do |row, member, head, value|
+          password = value.to_s.strip
+          member.in_password = password if password.present?
+        end
+        importer.simple_column :kana
+        importer.simple_column :organization_name
+        importer.simple_column :job
+        importer.simple_column :tel
+        importer.simple_column :postal_code
+        importer.simple_column :addr
+        importer.simple_column :sex do |row, member, head, value|
+          mapping = {
+            I18n.t("member.options.sex.male")   => "male",
+            I18n.t("member.options.sex.female") => "female"
+          }
+          member.sex = mapping[value] || value
+        end
+        importer.simple_column :birthday
+        importer.simple_column :last_loggedin
+      end
+    end
+
+    def find_or_initialize_member(row, cur_site)
+      if row['id'].present?
+        Cms::Member.site(cur_site).where(id: row['id']).first || Cms::Member.new
+      else
+        Cms::Member.new
       end
     end
   end

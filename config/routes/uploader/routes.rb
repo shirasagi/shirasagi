@@ -10,7 +10,7 @@ Rails.application.routes.draw do
   end
 
   node "uploader" do
-    get "file/(index.:format)" => "public#index", cell: "nodes/file"
+    get "file/(*filename)" => "public#index", cell: "nodes/file", format: false
   end
 
 end

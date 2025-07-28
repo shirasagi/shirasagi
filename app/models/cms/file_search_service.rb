@@ -1,10 +1,10 @@
 class Cms::FileSearchService
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :cur_user, :s, :page, :limit
+  attr_accessor :cur_site, :cur_user, :keyword, :page, :limit
 
   STAGE_BUILDERS = %i[
-    stage_files_attached_to_page stage_lookup_pages stage_search stage_permissions stage_projection stage_pagination
+    stage_files_attached_to_page stage_lookup_pages stage_search stage_permissions stage_pagination
   ].freeze
 
   class << self
@@ -21,6 +21,7 @@ class Cms::FileSearchService
 
   def call
     @stages = []
+    @stage_facet_contains = false
     STAGE_BUILDERS.each do |builder|
       send(builder)
     end
@@ -29,19 +30,34 @@ class Cms::FileSearchService
     results = SS::File.collection.aggregate(@stages)
     return [] if results.blank?
 
-    result = results.first
-    return [] if result.blank?
+    if @stage_facet_contains
+      result = results.first
+      return [] if result.blank?
 
-    items = parse_results(result)
+      items = parse_results(result)
+      total_count = parse_total_count(result)
+    else
+      items = results.map do |data|
+        [
+          Mongoid::Factory.from_db(SS::File, data.except("page")),
+          Mongoid::Factory.from_db(Cms::Page, data["page"].first)
+        ]
+      end
+      total_count = results.count
+    end
     return [] if items.blank?
 
-    total_count = parse_total_count(result)
-    Kaminari.paginate_array(items, limit: limit, offset: offset, total_count: total_count)
+    if @stage_facet_contains
+      items = Kaminari.paginate_array(items, limit: limit, offset: offset, total_count: total_count)
+    end
+
+    items
   end
 
   private
 
   def offset
+    return if !page.numeric? || !limit.numeric?
     page * limit
   end
 
@@ -54,9 +70,9 @@ class Cms::FileSearchService
   end
 
   def stage_search
-    return if s.blank? || s[:keyword].blank?
+    return if keyword.blank?
 
-    words = s[:keyword].to_s.split(/[\s　]+/).uniq.select(&:present?)
+    words = keyword.to_s.split(/[\s　]+/).uniq.select(&:present?)
     return if words.blank?
 
     words = words.take(4).map { |w| /#{::Regexp.escape(w)}/i }
@@ -79,12 +95,11 @@ class Cms::FileSearchService
     end
   end
 
-  def stage_projection
-    @stages << { "$project" => SS::File.fields.keys.index_with { 1 } }
-  end
-
   def stage_pagination
+    return if !offset.numeric? || !limit.numeric?
+
     # pagination: see https://stackoverflow.com/questions/20348093/mongodb-aggregation-how-to-get-total-records-count
+    @stage_facet_contains = true
     @stages << {
       "$facet" => {
         "paginatedResults" => [{ "$skip" => offset }, { "$limit" => limit }],
@@ -97,7 +112,12 @@ class Cms::FileSearchService
     results = data["paginatedResults"]
     return [] if results.blank?
 
-    results.map { |data| SS::File.new(data) }
+    results.map do |data|
+      [
+        Mongoid::Factory.from_db(SS::File, data.except("page")),
+        Mongoid::Factory.from_db(Cms::Page, data["page"].first)
+      ]
+    end
   end
 
   def parse_total_count(data)

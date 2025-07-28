@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "cms_translate_text_caches", type: :feature, dbscope: :example do
+describe "cms_translate_text_caches", type: :feature, dbscope: :example, translate: true do
   let(:site) { cms_site }
   let(:index_path) { cms_translate_text_caches_path site.id }
   let(:new_path) { new_cms_translate_text_cach_path site.id }
@@ -24,11 +24,23 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
 
   context "basic crud" do
     before do
+      @net_connect_allowed = WebMock.net_connect_allowed?
+      WebMock.disable_net_connect!(allow_localhost: true)
+      WebMock.reset!
+
+      install_google_stubs
+
       site.translate_state = "enabled"
-      site.translate_api = "mock"
       site.translate_source = lang_ja
       site.translate_target_ids = [lang_en, lang_ko, lang_zh_CN, lang_zh_TW].map(&:id)
-      site.update!
+
+      site.translate_api = "google_translation"
+      site.translate_google_api_project_id = "shirasagi-dev"
+      "#{Rails.root}/spec/fixtures/translate/gcp_credential.json".tap do |path|
+        site.translate_google_api_credential_file = tmp_ss_file(contents: path)
+      end
+
+      site.save!
 
       lang_ja = Translate::Lang.site(site).find_by(code: source)
       lang_en = Translate::Lang.site(site).find_by(code: target)
@@ -36,6 +48,11 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
       item.convert(html)
 
       login_cms_user
+    end
+
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect! if @net_connect_allowed
     end
 
     it "#index" do
@@ -65,7 +82,7 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
         fill_in "item[target]", with: target
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show" do
@@ -96,7 +113,7 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
         fill_in "item[target]", with: item.target
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#delete" do
@@ -104,7 +121,7 @@ describe "cms_translate_text_caches", type: :feature, dbscope: :example do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 end

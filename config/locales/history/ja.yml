@@ -7,11 +7,20 @@ ja:
     backup: バックアップ
     current_version: 現在のバージョン
     backup_version: バックアップ時のバージョン
-    current_state: 現在の状態
-    before_state: 変更前の状態
+    compare_to_state_html: 比較した履歴%{version}
+    current_state_html: 選択した履歴%{current_notice}
     view_diff: 差分を見る
-    compare_before_state: 変更前の状態と比較
+    compare_backup_to_latest: 最新版との比較
+    compare_backup_to_previsous: 直前との比較
+    current_backup_notice_html: |-
+      <p>選択した履歴%{version}の内容を表示しています。</p>
+    compare_to_backup_notice_html: |-
+      <p>直前の履歴%{version}と比較して変更がある項目については、背景の色を変えて表示しています。</p>
+    this_is_latest_html: |-
+      最新版 (%{time})
+    editor_name: 操作ユーザー名
     restore: 復元する
+    n_out_of_m: "%{m}件中%{n}件を表示しています。"
     confirm:
       restore: 復元してよろしいですか？
     notice:
@@ -61,6 +70,10 @@ ja:
     models:
       history/log: 操作履歴
       history/trash: ゴミ箱
+    errors:
+      models:
+        history/backup:
+          unable_to_restore_branch_page_history: 差し替えページの履歴を復元することはできません。
     attributes:
       history/log:
         session_id: セッションID
@@ -85,8 +98,8 @@ ja:
 
   job:
     models:
-      history/trash/trash_purge_job: ゴミ箱掃除
-      history/history_log/purge_job: 操作履歴削除
-      history/backup/sweep_job: 更新履歴掃除
-      history/backup/restore_job: 更新履歴復元
-      history/trash/restore_job: ゴミ箱復元
+      history/trash/trash_purge_job: GWS履歴/ゴミ箱掃除
+      history/history_log/purge_job: GWS履歴/操作履歴削除
+      history/backup/sweep_job: GWS履歴/更新履歴掃除
+      history/backup/restore_job: GWS履歴/更新履歴復元
+      history/trash/restore_job: GWS履歴/ゴミ箱復元

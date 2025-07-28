@@ -15,6 +15,18 @@
   <dt class="depth-2"><%= @model.t :schedule_max_years %><%= @model.tt :schedule_max_years %></dt>
   <dd><%= f.select :schedule_max_years, @item.schedule_max_years_options %> <%= t("datetime.prompts.year") %></dd>
 
+  <dt><%= @model.t :schedule_hours %><%= @model.tt :schedule_hours %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :schedule_min_hour %><%= @model.tt :schedule_min_hour %></dt>
+  <dd><%= f.select :schedule_min_hour, @item.schedule_min_hour_options %> <%= t("datetime.prompts.hour") %></dd>
+
+  <dt class="depth-2"><%= @model.t :schedule_max_hour %><%= @model.tt :schedule_max_hour %></dt>
+  <dd><%= f.select :schedule_max_hour, @item.schedule_max_hour_options %> <%= t("datetime.prompts.hour") %></dd>
+
+  <dt><%= @model.t :schedule_first_wday %><%= @model.tt :schedule_first_wday %></dt>
+  <dd><%= f.select :schedule_first_wday, @item.schedule_first_wday_options %></dd>
+
   <dt><%= @model.t :schedule_attachment_state %><%= @model.tt :schedule_attachment_state %></dt>
   <dd><%= f.select :schedule_attachment_state, @item.schedule_attachment_state_options %></dd>
 

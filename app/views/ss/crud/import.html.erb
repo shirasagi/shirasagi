@@ -20,7 +20,7 @@
     </div>
   </div>
 
-  <footer class="send">
+  <footer class="send ss-sticky ss-sticky-bottom">
     <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
     <%= f.button t("ss.buttons.cancel"), onclick: "location.href='#{url_for(action: :index)}'; return false;", class: "btn-default" %>
   </footer>

@@ -1,0 +1,13 @@
+<dl class="see">
+  <dt class="required"><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt class="required"><%= @model.t :year %><%= @model.tt :year %></dt>
+  <dd><%= f.number_field :year %></dd>
+
+  <dt class="required"><%= @model.t :coefficient %><%= @model.tt :coefficient %></dt>
+  <dd><%= f.number_field :coefficient %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+</dl>

@@ -29,8 +29,14 @@ class Gws::Monitor::AnswersController < ApplicationController
   end
 
   def check_attended
-    if @item
-      raise '403' unless @item.attended?(@cur_group)
+    return unless @item
+    return if @item.attended?(@cur_group)
+
+    if @item.allowed?(:read, @cur_user, site: @cur_site)
+      redirect_to gws_monitor_management_admin_path(id: @item)
+      return
     end
+
+    raise '403'
   end
 end

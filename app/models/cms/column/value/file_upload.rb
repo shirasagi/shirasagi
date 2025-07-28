@@ -4,18 +4,20 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   field :html_tag, type: String
   field :html_additional_attr, type: String, default: ''
   belongs_to :file, class_name: 'SS::File'
+  field :file_name, type: String
   field :file_label, type: String
   field :text, type: String
   field :image_html_type, type: String
   field :link_url, type: String
 
-  permit_values :file_id, :file_label, :text, :image_html_type, :link_url
+  permit_values :file_id, :file_name, :file_label, :text, :image_html_type, :link_url
 
   before_parent_save :before_save_file
   after_parent_destroy :destroy_file
 
   liquidize do
     export :file
+    export :file_name
     export :file_label
     export :text
     export :image_html_type
@@ -67,6 +69,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def history_summary
     h = []
+    h << "#{t("file_name")}: #{file_name}" if file_name.present?
     h << "#{t("file_label")}: #{file_label}" if file_label.present?
     h << "#{t("image_html_type")}: #{I18n.t("cms.options.column_image_html_type.#{image_html_type}")}" if image_html_type.present?
     h << "#{t("text")}: #{text}" if text.present?
@@ -120,23 +123,24 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && file.blank?
-      self.errors.add(:file_id, :blank)
+      self.errors.add(:file_id, :blank) unless skip_required?
     end
 
     if column.required? && column.file_type == 'banner' && link_url.blank?
-      self.errors.add(:link_url, :blank)
+      self.errors.add(:link_url, :blank) unless skip_required?
     end
 
-    return if file.blank?
+    self.file_name = file.name if file
   end
 
   def copy_column_settings
     super
 
+    return if self.html_tag.present? && self.html_additional_attr.present?
     return if column.blank?
 
-    self.html_tag = column.html_tag
-    self.html_additional_attr = column.html_additional_attr
+    self.html_tag ||= column.html_tag
+    self.html_additional_attr ||= column.html_additional_attr
   end
 
   def file_icon
@@ -175,8 +179,13 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
     return unless Cms::Reference::Files::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
 
+    cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
+    cur_site ||= owner_item.site if owner_item.respond_to?(:site)
+    cur_site ||= SS.current_site
+    cur_site = nil unless cur_site.is_a?(SS::Model::Site)
     cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
-    new_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item) do |new_file|
+    cur_user ||= SS.current_user
+    new_file = SS::File.clone_file(file, cur_site: cur_site, cur_user: cur_user, owner_item: owner_item) do |new_file|
       # history_files
       if @merge_values
         new_file.history_file_ids = file.history_file_ids
@@ -259,7 +268,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def to_default_html_attachment
     label = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l) }
     label ||= file.name.sub(/\.[^.]+$/, '')
-    label = "#{label} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
+    label = "#{label} (#{file.extname.upcase} #{file.size.to_fs(:human_size)})"
     ApplicationController.helpers.link_to(label, file.url)
   end
 

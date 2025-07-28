@@ -1,11 +1,10 @@
 <% addon ||= local_assigns.fetch(:addon, {}) %>
-<%= code_editor "##{addon[:id]} .map-html", mode: :html %>
+<%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <dl class="see mod-article-map-search-result">
-  <dt><%= @model.t :map_html%><%= @model.tt :map_html %></dt>
+  <dt><%= @model.t :map_html %><%= @model.tt :map_html %></dt>
   <dd>
-    <%= f.text_area :map_html, style: "height: 200px", class: "map-html" %>
-
+    <%= f.text_area :map_html, style: "height: 200px", class: "html" %>
     <% if example = @item.form_example_map_html %>
       <div class="form-example">
         <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
@@ -13,4 +12,26 @@
       </div>
     <% end %>
   </dd>
- </dl>
+
+  <dt><%= @model.t :sidebar_loop_liquid %><%= @model.tt :sidebar_loop_liquid %></dt>
+  <dd>
+    <%= f.text_area :sidebar_loop_liquid, style: "height: 200px", class: "html" %>
+    <% if example = @item.form_example_sidebar_loop_liquid %>
+      <div class="form-example">
+        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
+        <div class="form-example-body example-layout-html"><%= example %></div>
+      </div>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :map_marker_liquid %><%= @model.tt :map_marker_liquid %></dt>
+  <dd>
+    <%= f.text_area :map_marker_liquid, style: "height: 200px", class: "html" %>
+    <% if example = @item.form_example_map_marker_liquid %>
+      <div class="form-example">
+        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
+        <div class="form-example-body example-layout-html"><%= example %></div>
+      </div>
+    <% end %>
+  </dd>
+</dl>

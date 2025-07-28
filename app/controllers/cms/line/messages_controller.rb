@@ -25,7 +25,7 @@ class Cms::Line::MessagesController < ApplicationController
 
   def copy
     set_item
-    if request.get?
+    if request.get? || request.head?
       prefix = I18n.t("workflow.cloned_name_prefix")
       @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
       return
@@ -37,7 +37,7 @@ class Cms::Line::MessagesController < ApplicationController
 
   def deliver
     set_item
-    return if request.get?
+    return if request.get? || request.head?
 
     if @item.deliver
       redirect_to({ action: :show }, { notice: I18n.t("ss.notice.started_deliver") })
@@ -46,18 +46,22 @@ class Cms::Line::MessagesController < ApplicationController
 
   def test_deliver
     set_item
-    return if request.get?
 
-    @test_member_ids = params.dig(:item, :test_member_ids).to_a.map(&:to_i)
-    @test_members = Cms::Line::TestMember.site(@cur_site).in(id: @test_member_ids).to_a
+    @test_members = Cms::Line::TestMember.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
 
-    if @test_members.blank?
-      @item.errors.add :base, "テストメンバーが選択されていません。"
-      return
-    end
+    if request.get? || request.head?
+      @checked_ids = @test_members.and_default_checked.pluck(:id)
+    else
+      @checked_ids = params.dig(:item, :test_member_ids).to_a.map(&:to_i) rescue []
+      @deliver_members = @test_members.in(id: @checked_ids).to_a
 
-    if @item.test_deliver(@test_members)
-      redirect_to({ action: :show }, { notice: I18n.t("ss.notice.started_test_deliver") })
+      if @deliver_members.blank?
+        @item.errors.add :base, I18n.t("errors.messages.not_found_test_members")
+        return
+      end
+      if @item.test_deliver(@deliver_members)
+        redirect_to({ action: :show }, { notice: I18n.t("ss.notice.started_test_deliver") })
+      end
     end
   end
 end

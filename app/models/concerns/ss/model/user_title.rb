@@ -28,14 +28,17 @@ module SS::Model::UserTitle
     validates :expiration_date, datetime: true
 
     index({ group_id: 1, order: 1 })
+  end
 
-    scope :search, ->(params) {
-      criteria = where({})
-      return criteria if params.blank?
+  module ClassMethods
+    def search(params = {})
+      all.search_keyword(params)
+    end
 
-      criteria = criteria.keyword_in params[:keyword], :code, :name if params[:keyword].present?
-      criteria
-    }
+    def search_keyword(params)
+      return all if params.blank? || params[:keyword].blank?
+      all.keyword_in params[:keyword], :code, :name, :remark
+    end
   end
 
   def name_with_code

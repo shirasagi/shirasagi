@@ -6,19 +6,23 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     let(:admin) { gws_user }
     let!(:user1) do
       Gws::User.create name: "一般ユーザー1", uid: "user1", email: "user1@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user2) do
       Gws::User.create name: "一般ユーザー2", uid: "user2", email: "user2@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user3) do
       Gws::User.create name: "一般ユーザー3", uid: "user3", email: "user3@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
     let!(:user4) do
       Gws::User.create name: "一般ユーザー4", uid: "user4", email: "user4@example.jp", in_password: "pass",
-        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ]
+        group_ids: [ admin.groups.first.id ], gws_role_ids: [ Gws::Role.first.id ],
+        lang: SS::LocaleSupport.current_lang ? SS::LocaleSupport.current_lang.to_s : I18n.locale.to_s
     end
 
     let(:route_name) { unique_id }
@@ -89,8 +93,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user1: 申請を承認する
       #
-      login_user user1
-      visit show_path
+      login_user user1, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment1
@@ -105,7 +108,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'unseen', comment: ''})
@@ -131,8 +137,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: 申請を確認する
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment2
@@ -147,7 +152,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2})
@@ -167,8 +175,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user3: 申請を確認する
       #
-      login_user user3
-      visit show_path
+      login_user user3, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment3
@@ -183,7 +190,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2})
@@ -209,8 +219,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user4: 申請を確認する
       #
-      login_user user4
-      visit show_path
+      login_user user4, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment4
@@ -225,7 +234,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 3
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2})

@@ -13,7 +13,7 @@
       <dt><%= @model.t :lock_owner %><%= @model.tt :lock_owner %></dt>
       <dd class="lock_owner"><%= @item.lock_owner.try { |owner| owner.long_name } %></dd>
       <dt><%= @model.t :lock_until %></dt>
-      <dd class="lock_until"><%= @item.lock_until.try { |time| time.strftime("%Y/%m/%d %H:%M") } %></dd>
+      <dd class="lock_until"><%= ss_time_tag @item.lock_until %></dd>
     </dl>
   <% end %>
 <% end %>

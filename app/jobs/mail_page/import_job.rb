@@ -1,4 +1,6 @@
 class MailPage::ImportJob < Cms::ApplicationJob
+  queue_as :external
+
   def put_log(message)
     Rails.logger.warn(message)
   end
@@ -29,7 +31,5 @@ class MailPage::ImportJob < Cms::ApplicationJob
         put_log("switch layout")
       end
     end
-
-    Fs.rm_rf file
   end
 end

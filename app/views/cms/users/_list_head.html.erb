@@ -4,7 +4,8 @@
   <div class="list-head-action">
     <%= render template: "_list_head_tags" %>
     <div class="list-head-action-destroy">
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+      <%# CMS の一括削除では特別な削除確認画面が表示されるので confirmation は不要 %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
       <%= ss_button_to t("ss.links.lock_user"), url_for(action: :lock_all), class: "lock-all btn btn-list-head-action", method: "post" %>
       <%= ss_button_to t("ss.links.unlock_user"), url_for(action: :unlock_all), class: "unlock-all btn btn-list-head-action", method: "post" %>
     </div>

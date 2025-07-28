@@ -3,6 +3,14 @@ require 'spec_helper'
 describe Workflow::ReminderJob, dbscope: :example do
   let!(:site) { cms_site }
 
+  before do
+    ActionMailer::Base.deliveries = []
+  end
+
+  after do
+    ActionMailer::Base.deliveries = []
+  end
+
   context "when approve_remind_state is disabled" do
     before do
       site.approve_remind_state = nil
@@ -11,7 +19,7 @@ describe Workflow::ReminderJob, dbscope: :example do
     end
 
     it do
-      expect { Workflow::ReminderJob.bind(site_id: site).perform_now }.to output.to_stdout
+      expect { ss_perform_now Workflow::ReminderJob.bind(site_id: site) }.to output.to_stdout
 
       expect(Job::Log.all.count).to eq 1
       Job::Log.all.first.tap do |log|
@@ -40,8 +48,6 @@ describe Workflow::ReminderJob, dbscope: :example do
     let!(:page2) { create :article_page, cur_site: site, cur_node: node, state: "closed" }
 
     before do
-      ActionMailer::Base.deliveries = []
-
       site.mypage_domain = unique_domain
       site.approve_remind_state = "enabled"
       site.approve_remind_later = "1.day"
@@ -52,13 +58,9 @@ describe Workflow::ReminderJob, dbscope: :example do
       page2.set(updated: page2.updated.change(usec: 0).utc)
     end
 
-    after do
-      ActionMailer::Base.deliveries = []
-    end
-
     context "there are no requested pages" do
       it do
-        expect { Workflow::ReminderJob.bind(site_id: site).perform_now }.to output.to_stdout
+        expect { ss_perform_now Workflow::ReminderJob.bind(site_id: site) }.to output.to_stdout
 
         expect(Job::Log.all.count).to eq 1
         Job::Log.all.first.tap do |log|
@@ -104,7 +106,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
         it do
           Timecop.freeze(time) do
-            expect { Workflow::ReminderJob.bind(site_id: site).perform_now }.to output.to_stdout
+            expect { ss_perform_now Workflow::ReminderJob.bind(site_id: site) }.to output.to_stdout
           end
 
           expect(Job::Log.all.count).to eq 1
@@ -138,7 +140,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
         it do
           Timecop.freeze(time) do
-            expect { Workflow::ReminderJob.bind(site_id: site).perform_now }.to output(include(user2.long_name)).to_stdout
+            expect { ss_perform_now Workflow::ReminderJob.bind(site_id: site) }.to output(include(user2.long_name)).to_stdout
           end
 
           expect(Job::Log.all.count).to eq 1
@@ -205,7 +207,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
         it do
           Timecop.freeze(time) do
-            expect { Workflow::ReminderJob.bind(site_id: site).perform_now }.to output.to_stdout
+            expect { ss_perform_now Workflow::ReminderJob.bind(site_id: site) }.to output.to_stdout
           end
 
           expect(Job::Log.all.count).to eq 1
@@ -247,7 +249,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
         it do
           Timecop.freeze(time) do
-            expect { Workflow::ReminderJob.bind(site_id: site).perform_now }.to output(include(user2.long_name)).to_stdout
+            expect { ss_perform_now Workflow::ReminderJob.bind(site_id: site) }.to output(include(user2.long_name)).to_stdout
           end
 
           expect(Job::Log.all.count).to eq 1
@@ -322,7 +324,7 @@ describe Workflow::ReminderJob, dbscope: :example do
 
         it do
           Timecop.freeze(time) do
-            expect { Workflow::ReminderJob.bind(site_id: site).perform_now }.to output(include(user3.long_name)).to_stdout
+            expect { ss_perform_now Workflow::ReminderJob.bind(site_id: site) }.to output(include(user3.long_name)).to_stdout
           end
 
           expect(Job::Log.all.count).to eq 1

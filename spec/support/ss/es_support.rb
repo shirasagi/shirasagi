@@ -5,7 +5,12 @@ module SS
     module_function
 
     def es_port
+      # @es_port ||= 9200
       @es_port ||= rand(29_200..39_200)
+    end
+
+    def es_port=(port)
+      @es_port = port
     end
 
     def es_url
@@ -14,6 +19,14 @@ module SS
 
     def docker_image_id
       @docker_image_id ||= "shirasagi/elasticsearch"
+    end
+
+    def docker_container_borrowed
+      @docker_borrowed
+    end
+
+    def docker_container_borrowed=(borrowed)
+      @docker_borrowed = borrowed
     end
 
     def docker_container
@@ -32,6 +45,23 @@ module SS
     end
 
     def before_example
+      container = SS::EsSupport.docker_container
+      return if container.present? # already running
+
+      ENV["ES_CONTAINER_ID"].try do |container_id|
+        if container_id.present?
+          container = Docker::Container.get(container_id) rescue nil
+        end
+        if container
+          SS::EsSupport.docker_container_borrowed = true
+          SS::EsSupport.docker_container = container
+          es_port = container.info["HostConfig"]["PortBindings"]["9200/tcp"][0]["HostPort"].to_i
+          SS::EsSupport.es_port = es_port
+
+          puts "use container '#{container.id[0, 12]}' as '#{SS::EsSupport.docker_image_id}' listening on #{es_port}"
+        end
+      end
+
       container = SS::EsSupport.docker_container
       return if container.present? # already running
 
@@ -63,6 +93,7 @@ module SS
         end
       end
 
+      SS::EsSupport.docker_container_borrowed = false
       SS::EsSupport.docker_container = container
       puts "image '#{image_id}' successfully launched as container '#{container.id[0, 12]}' listening on #{es_port}"
     rescue => e
@@ -79,9 +110,11 @@ module SS
       return if container.blank?
 
       SS::EsSupport.docker_container = nil
-      container.stop
-      container.delete(force: true)
-      puts "container '#{container.id[0, 12]}' is deleted"
+      unless SS::EsSupport.docker_container_borrowed
+        container.stop
+        container.delete(force: true)
+        puts "container '#{container.id[0, 12]}' is deleted"
+      end
     end
 
     module Hooks

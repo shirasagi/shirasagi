@@ -2,6 +2,8 @@ class Guide::Question < Guide::Diagram::Point
   include Cms::SitePermission
   include Guide::Addon::Question
 
+  attr_accessor :row_index, :tmp_edges # for import
+
   set_permission_name "guide_questions"
 
   seqid :id
@@ -13,7 +15,7 @@ class Guide::Question < Guide::Diagram::Point
   end
 
   def name_with_type
-    I18n.t("guide.labels.question_name", name: name)
+    I18n.t("guide.labels.question_name", name: id_name)
   end
 
   class << self

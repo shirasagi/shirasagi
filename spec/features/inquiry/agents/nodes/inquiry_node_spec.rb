@@ -75,11 +75,11 @@ describe "inquiry_agents_nodes_node", type: :feature, dbscope: :example, js: tru
     it do
       visit node.full_url
 
-      expect(page).not_to have_content(node.upper_html)
+      expect(page).to have_no_content(node.upper_html)
       expect(page).to have_css("a", text: child_node1.name)
       expect(page).to have_css("a", text: child_node2.name)
       expect(page).to have_css("a", text: child_node3.name)
-      expect(page).not_to have_content(node.lower_html)
+      expect(page).to have_no_content(node.lower_html)
     end
   end
 end

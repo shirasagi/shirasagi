@@ -13,9 +13,13 @@ class Translate::Api::MicrosoftTranslator
     if @site.translate_microsoft_api_key.present?
       @key = @site.translate_microsoft_api_key
     end
+    if @site.translate_microsoft_api_region.present?
+      @region = @site.translate_microsoft_api_region
+    end
 
     @key = opts[:key] if opts[:key]
     @url = opts[:url] if opts[:url]
+    @region = opts[:region] if opts[:region]
   end
 
   def request_word_limit
@@ -45,6 +49,7 @@ class Translate::Api::MicrosoftTranslator
     request['Content-type'] = 'application/json'
     request['Content-length'] = content.length
     request['Ocp-Apim-Subscription-Key'] = @key
+    request['Ocp-Apim-Subscription-Region'] = @region if @region.present?
     request['X-ClientTraceId'] = SecureRandom.uuid
     request.body = content
 

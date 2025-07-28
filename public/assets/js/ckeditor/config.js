@@ -26,6 +26,8 @@ CKEDITOR.editorConfig = function( config ) {
 		{ name: 'about' }
 	];
 
+	config.language = 'ja';
+
 	// Remove some buttons provided by the standard plugins, which are
 	// not needed in the Standard(s) toolbar.
 	// config.removeButtons = 'Underline,Subscript,Superscript';
@@ -51,5 +53,16 @@ CKEDITOR.editorConfig = function( config ) {
 	// 	  styles: { color: '#(color)' }
 	// };
 
+	config.coreStyles_underline = {
+		element: 'span',
+		attributes: { 'class': 'ss-cke-underline' }
+	};
+
+	config.coreStyles_strike = {
+		element: 'del'
+	};
+
 	config.templates_replaceContent = false;
+
+	config.stylesSet = 'ss-styles:/assets/js/ckeditor/ss-styles.js'
 };

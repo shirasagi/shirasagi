@@ -30,9 +30,9 @@ module Inquiry::ListHelper
       ih << "</td>"
       ih << "<td>"
       if item.reception_start_date.present?
-        ih << item.reception_start_date.strftime(t("date.formats.long"))
+        ih << I18n.l(item.reception_start_date.to_date, format: :long)
         ih << t("inquiry.from")
-        ih << item.reception_close_date.strftime(t("date.formats.long"))
+        ih << I18n.l(item.reception_close_date.to_date, format: :long)
       end
       ih << "</td>"
       if show_aggregation

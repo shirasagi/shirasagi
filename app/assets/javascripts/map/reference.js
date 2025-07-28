@@ -33,8 +33,8 @@ Map_Reference.prototype.reload = function() {
   var $formAddon = $("#addon-cms-agents-addons-form-page");
   $formAddon.find(".column-value-cms-column-selectpage").each(function() {
     var $columnSelectPage = $(this);
-    var firstLabel = $columnSelectPage.find(".column-value-header label")[0];
-    var label = firstLabel.textContent;
+    var $firstLabel = $columnSelectPage.find(".column-value-header label .column-name");
+    var label = $firstLabel.text();
     if (label) {
       label = label.trim();
     }
@@ -46,7 +46,7 @@ Map_Reference.prototype.reload = function() {
   console.log(selectOptions);
   $.each(selectOptions, function() {
     var value = this.toString();
-    var $option = $("<option />", { value: value }).html(value);
+    var $option = $("<option />", { value: value }).text(value);
     if (value === selected) {
       $option.prop("selected", true);
     }

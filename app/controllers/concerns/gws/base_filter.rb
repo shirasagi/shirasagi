@@ -3,8 +3,7 @@ module Gws::BaseFilter
   include SS::BaseFilter
 
   included do
-    cattr_accessor(:user_class) { Gws::User }
-
+    self.user_class = Gws::User
     self.log_class = Gws::History
 
     helper Gws::LayoutHelper
@@ -17,7 +16,8 @@ module Gws::BaseFilter
     before_action :set_current_site
     before_action :set_gws_logged_in, if: ->{ @cur_user }
     before_action :set_current_group, if: ->{ @cur_user }
-    before_action :set_account_menu, if: ->{ @cur_user }
+    # SS::BaseFilter#set_model の呼び出しはここ。set_current_site の後ろで set_crumbs の前
+    before_action :set_model
     before_action :set_crumbs
     after_action :put_history_log, if: ->{ @cur_user }
     navi_view "gws/main/navi"
@@ -25,30 +25,34 @@ module Gws::BaseFilter
 
   private
 
+  # override SS::BaseFilter#logout_path
+  def logout_path
+    # グループウェア利用時、常に /.g?/logout がログアウトのパスとなるようにする
+    @logout_path = gws_logout_path(site: @cur_site)
+  end
+
   def validate_gws
     raise '404' if SS.config.gws.disable.present?
   end
 
   def set_gws_assets
-    SS.config.gws.stylesheets.each { |m| stylesheet(m) }
-    SS.config.gws.javascripts.each { |m| javascript(m) }
+    SS.config.gws.stylesheets.each { |path, options| options ? stylesheet(path, **options.symbolize_keys) : stylesheet(path) }
+    SS.config.gws.javascripts.each { |path, options| options ? javascript(path, **options.symbolize_keys) : javascript(path) }
   end
 
   def set_current_site
     @ss_mode = :gws
-    @cur_site = SS.current_site = Gws::Group.find params[:site]
+    @cur_site = SS.current_site = Gws::Group.find(params[:site])
     @cur_user.cur_site = @cur_site if @cur_user
     @crumbs << [@cur_site.name, gws_portal_path]
   end
 
   def set_current_group
-    @cur_group = @cur_user.gws_default_group
+    @cur_group = SS.current_user_group = @cur_user.gws_default_group
     raise "403" unless @cur_group
-  end
 
-  def set_account_menu
-    @account_menu = []
-    @account_menu << [I18n.t("mongoid.models.gws/user_setting"), gws_user_setting_path]
+    @cur_superior_users = @cur_user.gws_superior_users(@cur_site)
+    @cur_superior_groups = @cur_user.gws_superior_groups(@cur_site)
   end
 
   def set_gws_logged_in
@@ -58,7 +62,7 @@ module Gws::BaseFilter
     gws_session[@cur_site.id.to_s]['last_logged_in'] ||= begin
       Gws::History.info!(
         :controller, @cur_user, @cur_site,
-        path: request.path, controller: self.class.name.underscore, action: action_name,
+        path: SS.request_path(request), controller: self.class.name.underscore, action: action_name,
         model: Gws::User.name.underscore, item_id: @cur_user.id, mode: 'login', name: @cur_user.name
       ) rescue nil
       Time.zone.now.to_i
@@ -84,7 +88,7 @@ module Gws::BaseFilter
     if history_method
       Gws::History.send(
         history_method, :controller, @cur_user, @cur_site,
-        path: request.path, controller: self.class.name.underscore, action: action_name,
+        path: SS.request_path(request), controller: self.class.name.underscore, action: action_name,
         message: "#{exception.class} (#{exception.message})"
       ) rescue nil
     end

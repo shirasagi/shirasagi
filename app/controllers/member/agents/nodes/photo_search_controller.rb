@@ -10,8 +10,8 @@ class Member::Agents::Nodes::PhotoSearchController < ApplicationController
   private
 
   def set_query
-    @locations  = Member::Node::PhotoLocation.site(@cur_site).and_public
-    @categories = Member::Node::PhotoCategory.site(@cur_site).and_public
+    @locations  = Member::Node::PhotoLocation.site(@cur_site).and_public(@cur_date)
+    @categories = Member::Node::PhotoCategory.site(@cur_site).and_public(@cur_date)
     @query      = query
   end
 

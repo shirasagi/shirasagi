@@ -6,11 +6,11 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
 
   before do
     # cms:es:ingest:init
-    ::Cms::Elasticsearch.init_ingest(site: site)
+    Cms::Elasticsearch.init_ingest(site: site)
     # cms:es:drop
-    ::Cms::Elasticsearch.drop_index(site: site) rescue nil
+    Cms::Elasticsearch.drop_index(site: site) rescue nil
     # cms:es:create_indexes
-    ::Cms::Elasticsearch.create_index(site: site)
+    Cms::Elasticsearch.create_index(site: site)
   end
 
   context "with regular page" do
@@ -42,7 +42,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
 
       expect(Job::Log.all.count).to eq 2
       Job::Log.all.each do |log|
@@ -80,9 +80,9 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
       # wait for indexing
-      ::Cms::Elasticsearch.refresh_index(site: site)
+      Cms::Elasticsearch.refresh_index(site: site)
 
       expect(Job::Log.all.count).to eq 4
       Job::Log.all.each do |log|
@@ -101,7 +101,8 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
         es_docs["hits"]["hits"][1].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq page.url
+          expect(source['url']).to eq file.url
+          expect(source['page_url']).to eq page.url
         end
       end
 
@@ -129,9 +130,9 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
       # wait for indexing
-      ::Cms::Elasticsearch.refresh_index(site: site)
+      Cms::Elasticsearch.refresh_index(site: site)
 
       expect(Job::Log.all.count).to eq 6
       Job::Log.all.each do |log|
@@ -206,7 +207,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
 
       expect(Job::Log.all.count).to eq 2
       Job::Log.all.each do |log|
@@ -244,9 +245,9 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
       # wait for indexing
-      ::Cms::Elasticsearch.refresh_index(site: site)
+      Cms::Elasticsearch.refresh_index(site: site)
 
       expect(Job::Log.all.count).to eq 4
       Job::Log.all.each do |log|
@@ -265,17 +266,20 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
         es_docs["hits"]["hits"][1].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file1.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq page.url
+          expect(source['url']).to eq file1.url
+          expect(source['page_url']).to eq page.url
         end
         es_docs["hits"]["hits"][2].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file2.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq page.url
+          expect(source['url']).to eq file2.url
+          expect(source['page_url']).to eq page.url
         end
         es_docs["hits"]["hits"][3].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file3.id}"
           source = es_doc["_source"]
-          expect(source['url']).to eq page.url
+          expect(source['url']).to eq file3.url
+          expect(source['page_url']).to eq page.url
         end
       end
 
@@ -303,9 +307,9 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
       end
 
       # cms:es:fee_releases タスクに相当するジョブ（毎時実行する処理）を実行
-      expect { described_class.bind(site_id: site).perform_now }.to output(include(site.name)).to_stdout
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(include(site.name)).to_stdout
       # wait for indexing
-      ::Cms::Elasticsearch.refresh_index(site: site)
+      Cms::Elasticsearch.refresh_index(site: site)
 
       expect(Job::Log.all.count).to eq 6
       Job::Log.all.each do |log|

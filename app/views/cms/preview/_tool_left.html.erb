@@ -49,7 +49,7 @@
         <% end %>
       <% end %>
 
-      <% if page.state == "closed" %>
+      <% if page.state == "closed" && page.is_a?(Workflow::Approver) %>
         <div class="ss-preview-btn-group">
           <% if page.allowed?(:edit, @cur_user, site: @cur_site) %>
             <% if page.workflow_requested? %>

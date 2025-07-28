@@ -3,12 +3,12 @@ class Facility::Agents::Nodes::PageController < ApplicationController
   helper Cms::ListHelper
 
   def map_pages
-    Facility::Map.site(@cur_site).and_public.
+    Facility::Map.site(@cur_site).and_public(@cur_date).
       where(filename: /^#{::Regexp.escape(@cur_node.filename)}\//, depth: @cur_node.depth + 1).order_by(order: 1)
   end
 
   def image_pages
-    Facility::Image.site(@cur_site).and_public.
+    Facility::Image.site(@cur_site).and_public(@cur_date).
       where(filename: /^#{::Regexp.escape(@cur_node.filename)}\//, depth: @cur_node.depth + 1).order_by(order: 1)
   end
 
@@ -43,17 +43,17 @@ class Facility::Agents::Nodes::PageController < ApplicationController
       end
     end
 
-    @items = @cur_node.notices.and_public.limit(@cur_node.notice_limit)
+    @items = @cur_node.notices.and_public(@cur_date).limit(@cur_node.notice_limit)
   end
 
   def notices
-    @items = @cur_node.notices.and_public.
+    @items = @cur_node.notices.and_public(@cur_date).
       page(params[:page]).
       per(@cur_node.limit)
   end
 
   def rss
-    @items = @cur_node.notices.and_public.
+    @items = @cur_node.notices.and_public(@cur_date).
       reorder(released: -1).
       limit(@cur_node.limit)
 

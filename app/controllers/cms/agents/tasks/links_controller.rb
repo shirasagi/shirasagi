@@ -11,6 +11,10 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   def set_params
   end
 
+  def ignore_urls
+    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrl.site(@site).pluck(:name)
+  end
+
   def create_report
     @report_max_age = (SS.config.cms.check_links["report_max_age"].presence || 5).to_i
     return if @report_max_age <= 0
@@ -42,13 +46,12 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   # Checks the URLs by task.
   def check
     @task.log "# #{@site.name}"
-    @ref_string = Cms::CheckLinks::RefString
 
     @base_url = @site.full_url.sub(/^(https?:\/\/.*?\/).*/, '\\1')
 
-    @urls    = { @ref_string.new(@site.url) => %w(Site) }
+    @urls    = { Cms::CheckLinks::RefString.new(@site.url) => %w(Site) }
     @results = {}
-    @errors  = {}
+    @errors  = Cms::CheckLinks::Errors.new(@base_url, display_meta: @display_meta.present?)
 
     @html_request_timeout = SS.config.cms.check_links["html_request_timeout"] rescue 10
     @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
@@ -62,27 +65,10 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       @task.count
     end
 
-    msg = ["[#{@errors.size} errors]"]
-    @errors.map do |ref, urls|
-      ref = File.join(@base_url, ref) if ref[0] == "/"
-      msg << ref
-      msg << urls.map do |url|
-        meta = @meta.present? ? url.meta : ""
-        url = File.join(@base_url, url) if url[0] == "/"
-        "  - #{url} #{meta}"
-      end
-    end
-    msg = msg.join("\n")
+    @task.log @errors.to_message
 
-    @task.log msg
-
-    if @email.present?
-      ActionMailer::Base.mail(
-        from: "shirasagi@" + @site.domain.sub(/:.*/, ""),
-        to: @email,
-        subject: "[#{@site.name}] Link Check: #{@errors.size} errors",
-        body: msg
-      ).deliver_now
+    if to_email.present?
+      Cms::Mailer.link_errors(@site, to_email, @errors).deliver_now
     end
 
     create_report
@@ -92,12 +78,16 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   # Checks the url.
   def check_url(url, refs)
     Rails.logger.info("#{url}: check by referer: #{refs.join(", ")}")
-    uri = URI.parse(url)
+    uri = ::Addressable::URI.parse(url)
     if uri.path.match?(/(\/|\.html?)$/)
       check_html(url, refs)
     else
       check_file(url, refs)
     end
+  end
+
+  def to_email
+    @email.presence || @site.check_links_email
   end
 
   private
@@ -112,8 +102,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     @results[url] = 0
 
     refs.each do |ref|
-      @errors[ref] ||= []
-      @errors[ref] << url
+      @errors.add_error(ref, url)
     end
   end
 
@@ -176,9 +165,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
         internal = (next_url[0] != "/" && next_url !~ /^https?:/)
         next_url = File.expand_path next_url, url.sub(/[^\/]*?$/, "") if internal
-        next_url = URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/?:@&=+$,%#]/)
-
-        next_url = @ref_string.new(next_url, offset: offset, inner_yield: inner_yield)
+        next_url = Addressable::URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/?:@&=+$,%#]/)
+        next_url = Cms::CheckLinks::RefString.new(next_url, offset: offset, inner_yield: inner_yield)
 
         if @results[next_url] == 1
           next
@@ -189,18 +177,21 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
           @urls[next_url] << url
         end
       end
-    rescue
+    rescue => e
+      Rails.logger.error(e.message)
       add_invalid_url(url, refs)
     end
   end
 
   def valid_url(url)
     return false if url.blank?
-    return false if url.match?(/\.(css|js|json)$/)
+    return false if url.match?(/\.(css|js|json)(\?\d+)?$/)
     return false if url.match?(/\.p\d+\.html$/)
     return false if url.match?(/\/2\d{7}\.html$/) # calendar
     return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
     return false if url.match?(/\/https?:/) # b.hatena
+    return false if url.match?(/\/\/twitter\.com/) # twitter.com
+    return false if ignore_urls.include?(url)
     true
   end
 

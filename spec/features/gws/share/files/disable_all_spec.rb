@@ -15,7 +15,10 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       expect(item.histories.count).to eq 1
 
       visit index_path
-      find('.list-head label.check input').set(true)
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
+      end
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       within ".list-head-action" do
         page.accept_confirm do
           # find('.disable-all').click
@@ -23,9 +26,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      within "#gws-share-file-folder-list .tree-navi" do
-        expect(page).to have_css(".tree-item", text: folder.name)
+      wait_for_notice I18n.t('ss.notice.deleted')
+      within ".tree-navi" do
+        expect(page).to have_css(".item-name", text: folder.name)
       end
 
       item.reload
@@ -38,7 +41,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(history.model).to eq item.class.model_name.i18n_key.to_s
         expect(history.model_name).to eq I18n.t("mongoid.models.#{item.class.model_name.i18n_key}")
         expect(history.item_id).to eq item.id.to_s
-        expect(::Fs.file?(history.path)).to be_truthy
+        expect(Fs.file?(history.path)).to be_truthy
         expect(history.path).to eq item.histories.last.path
       end
     end

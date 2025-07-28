@@ -14,7 +14,7 @@
       success: function (data) {
         SS.notice('<%= t('ss.notice.saved') %>');
         $.each(data, function(i, value) {
-          $('.group[data-id=' + value['id'] + ']').html(value['name']);
+          $('.group[data-id=' + value['id'] + ']').text(value['name']);
         });
       }
     });
@@ -27,11 +27,11 @@
   <div class="list-head-action webmail-address-head">
     <%= render template: "_list_head_tags" %>
     <div class="list-head-action-destroy">
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", model: @model, method: "delete", confirm: t('ss.confirm.delete') %>
+      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
     </div>
     <div class="dropdown dropdown-toggle">
       <button class="btn move" data-href="#">
-        <%= t :"webmail.links.move" %> <i class="material-icons md-13">&#xE313;</i>
+        <%= t :"webmail.links.move" %> <i class="material-icons md-13">keyboard_arrow_down</i>
       </button>
       <ul class="dropdown-menu webmail-address-dropdown-menu">
         <% @group_navi.each do |item| %>

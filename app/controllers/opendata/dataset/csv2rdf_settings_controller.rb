@@ -191,7 +191,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
       copy[@column_index] = found
     end
 
-    @item.attributes = { column_types: copy }
+    @item.attributes["column_types"] = copy
     render_update @item.update
   end
 end

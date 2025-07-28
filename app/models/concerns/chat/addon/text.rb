@@ -5,7 +5,7 @@ module Chat::Addon
 
     included do
       field :first_text, type: String
-      field :first_suggest, type: SS::Extensions::Words
+      field :first_suggest, type: SS::Extensions::Lines
       field :exception_text, type: String
       field :response_template, type: String
       field :question, type: String

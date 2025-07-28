@@ -1,0 +1,41 @@
+@mixin ss-sticky {
+  position: sticky;
+  z-index: 10;
+  margin: 0 -10px;
+  padding: 20px 0;
+  border: 1px solid #ccc;
+  background-color: rgba(220, 220, 220, 0.8);
+
+  &:hover {
+    background-color: rgb(220, 220, 220)
+  }
+
+  @media screen and (max-width: 768px) {
+    margin: 0 auto;
+  }
+}
+
+.ss-sticky {
+  @include ss-sticky;
+
+  &.ss-sticky-top {
+    top: 0;
+  }
+
+  &.ss-sticky-right {
+    right: 0;
+  }
+
+  &.ss-sticky-bottom {
+    bottom: 0;
+  }
+
+  &.ss-sticky-left {
+    left: 0;
+  }
+}
+
+// footer.send の padding に負けないように
+footer.send.ss-sticky {
+  @include ss-sticky;
+}
