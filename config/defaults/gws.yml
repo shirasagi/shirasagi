@@ -186,6 +186,12 @@ production: &production
     search_times:
       max_facilities: 20
 
+  # 設備予約の所有判定
+  # plan : 予定自身を所有しているか(既定)
+  # facility : 予定自身だけでなく設備の管理者であれば所有しているものとみなす
+  facility_plans:
+    owned: plan
+
   # Default state and style label in user presence
   presence:
     state:
@@ -255,8 +261,18 @@ production: &production
     #  - "Gws::Schedule::Plan"
     #  - "Gws::Schedule::Todo"
 
+  notice_comment_setting:
+    comment_state: disabled
+
   aggregation:
     first_activation_date: "2000/1/1"
+
+  # サービスアカウント（運用業者アカウント）を設定します。
+  # サービスアカウントには、一部の高度な機能が有効になります。
+  service_account:
+    users:
+      - sys
+      #- admin
 
 test:
   <<: *production

@@ -80,3 +80,58 @@
 .ss-dialog-close {
   margin-left: auto;
 }
+
+.ss-dnd-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  gap: 5px
+}
+
+.ss-dnd-list-vertical {
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+  -ms-flex-direction: column;
+  flex-direction: column
+}
+
+.ss-dnd-list-item {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  gap: 5px;
+  padding: 5px;
+  border: 1px solid #dcdcdc;
+  cursor: -webkit-grab;
+  cursor: grab
+}
+
+.ss-dnd-grid {
+  display: grid;
+  gap: 5px 0
+}
+
+.ss-dnd-grid-item {
+  display: contents
+}
+
+.ss-dnd-grid-item>* {
+  padding: 5px;
+  border-top: 1px solid #dcdcdc;
+  border-bottom: 1px solid #dcdcdc
+}
+
+.ss-dnd-grid-item>*:first-child {
+  border-left: 1px solid #dcdcdc
+}
+
+.ss-dnd-grid-item>*:last-child {
+  border-right: 1px solid #dcdcdc
+}

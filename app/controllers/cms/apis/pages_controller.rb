@@ -9,7 +9,7 @@ class Cms::Apis::PagesController < ApplicationController
   private
 
   def set_partner_sites
-    @partner_sites ||= Cms::Site.all.where(partner_site_ids: @cur_site.id).to_a
+    @partner_sites ||= Cms::Site.without_deleted.where(partner_site_ids: @cur_site.id).to_a
   end
 
   public

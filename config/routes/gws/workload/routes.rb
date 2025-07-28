@@ -60,7 +60,7 @@ Rails.application.routes.draw do
 
     namespace "apis" do
       scope path: ':work_id' do
-        resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+        resources :comments, concerns: [:deletion], except: [:index, :new, :show]
       end
       scope path: ':year/:group' do
         get 'work/:id' => "works#form_options", as: :work_form_options

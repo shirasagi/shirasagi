@@ -59,7 +59,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".gws-column-new-form-notice-item", text: I18n.t("gws/column.new_form_notice").first)
 
       within ".gws-column-list-toolbar[data-placement='top']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/radio_button") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/radio_button") }
       end
       within first(".gws-column-item") do
         fill_in "item[name]", with: column_name
@@ -106,8 +106,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       # answer by user1
       #
-      login_user user1
-      visit gws_survey_main_path(site: site)
+      login_user user1, to: gws_survey_main_path(site: site)
       click_on form_name
 
       # click print
@@ -138,8 +137,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       #
       # answer by user2
       #
-      login_user user2
-      visit gws_survey_main_path(site: site)
+      login_user user2, to: gws_survey_main_path(site: site)
       click_on form_name
 
       # click print

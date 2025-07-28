@@ -7,7 +7,9 @@ module Cms::PublicFilter::Node
   def init_context
     self.params   = ActionController::Parameters.new
     self.request  = ActionDispatch::Request.new("rack.input" => "", "REQUEST_METHOD" => "GET")
-    self.response = ActionDispatch::Response.new
+    self.response = ActionDispatch::Response.new.tap do |res|
+      res.request = self.request
+    end
 
     @site.reload if @site.changed?
     @node.reload if @node.changed?
@@ -86,8 +88,7 @@ module Cms::PublicFilter::Node
       response.content_type ||= "text/html"
     rescue StandardError => e
       @exists = false
-      return if e.to_s == "404"
-      return if e.is_a? Mongoid::Errors::DocumentNotFound
+      return if SS.not_found_error?(e)
       raise e
     end
 

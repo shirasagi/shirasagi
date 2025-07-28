@@ -31,8 +31,7 @@ module Gws
       role = Gws::Role.find_or_create_by(
         name: I18n.t('gws.roles.admin'),
         site_id: site.id,
-        permissions: Gws::Role.permission_names,
-        permission_level: 3
+        permissions: Gws::Role.permission_names
       )
       Gws::User.create(name: "管理者", uid: "sup", in_password: "pass",
         group_ids: [site.id], gws_role_ids: [role.id], organization_id: site.id,

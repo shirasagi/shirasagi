@@ -21,12 +21,13 @@ module Webmail::MailHelper
   def group_options(path_helper)
     return [] if !@cur_user.webmail_user.webmail_permitted_all?(:use_webmail_group_imap_setting)
 
-    groups = @cur_user.webmail_user.groups.exists(imap_settings: true)
-    groups = groups.select do |group|
-      imap_setting = group.imap_setting
-      imap_setting.present? && imap_setting.imap_account.present? && imap_setting.imap_password.present?
+    options = []
+    @cur_user.group_accounts.each do |group_id, settings|
+      settings.each_with_index do |(group, imap_setting), i|
+        options << [imap_setting.name, send(path_helper, webmail_mode: :group, account: "#{group_id}.#{i}")]
+      end
     end
-    groups.map { |group| [group.imap_setting.name, send(path_helper, webmail_mode: :group, account: group.id)] }
+    options
   end
 
   def webmail_other_account?(path_helper)

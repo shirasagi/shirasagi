@@ -1,0 +1,39 @@
+<% return if reference_form.nil? %>
+
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% if type == :form %>
+    <% api_path = gws_tabular_apis_files_path(space: reference_form.space_id, form: reference_form, view: '-', single: reference_type == "one_to_one" ? true : nil) %>
+    <div class="ss-multi-select-box" data-controller="ss--select-box" data-ss--select-box-api-value="<%= api_path %>" data-ss--select-box-dialog-type-value="cbox" data-ss--select-box-selection-type-value="<%= reference_type == "one_to_one" ? "replace" : "append" %>">
+      <div class="ss-multi-select-box-row ss-multi-select-box-action-list">
+        <%= hidden_field_tag "#{form.object_name}[col_#{column.id}_ids][]", "", id: nil, class: "hidden-ids" %>
+        <%= button_tag t("gws/tabular.apis.files.index", name: reference_form.name), type: :button, class: "btn", data: { action: "ss--select-box#openDialog" } %>
+      </div>
+      <div class="ss-multi-select-box-row list-scroll">
+        <table class="index grid ajax-selected" data-ss--select-box-target="ajaxTable">
+          <thead><tr><th class="name" colspan="2"><%= reference_form.name %></th></tr></thead>
+          <tbody data-ss--select-box-target="result">
+          <% if value %>
+            <% reference_items.each do |item| %>
+              <tr data-id="<%= item.id %>">
+                <td>
+                  <%= hidden_field_tag "#{form.object_name}[col_#{column.id}_ids][]", item.id, id: nil %>
+                  <%= reference_item_title(item) %>
+                </td>
+                <td><%= button_tag t("ss.buttons.delete"), name: "deselect", type: :button, class: "deselect btn" %></td>
+              </tr>
+            <% end %>
+          <% end %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  <% elsif type == :show -%>
+    <% if reference_items.present? -%>
+      <% reference_items.each do |item| -%>
+        <%= reference_item_title(item) -%><br>
+      <% end -%>
+    <% end -%>
+  <% else -%>
+    <%= reference_items.map { |item| reference_item_title(item, type: type) }.join("\n").html_safe -%>
+  <% end -%>
+<% end -%>

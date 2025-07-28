@@ -38,6 +38,9 @@
   <dt><%= @model.t :threshold_mb %><%= @model.tt :threshold_mb %></dt>
   <dd><%= f.number_field :threshold_mb, min: 0 %> <%= t "ss.units.mega_byte" %></dd>
 
+  <dt><%= @model.t :imap_default_index %><%= @model.tt :imap_default_index %></dt>
+  <dd><%= f.check_box :default, { checked: (@group.imap_default_index == @index), class: "default-index" }, "1", nil %></dd>
+
   <dt></dt>
   <dd>
     <%= button_tag t('webmail.buttons.test_connection'), class: 'btn btn-imap-test', type: :button %>

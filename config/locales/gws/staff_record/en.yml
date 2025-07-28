@@ -168,4 +168,4 @@ en:
 
   job:
     models:
-      gws/staff_record/copy_situation_job: Copy job for electronic employee record current status
+      gws/staff_record/copy_situation_job: Staff Records/Copy job for electronic employee record current status

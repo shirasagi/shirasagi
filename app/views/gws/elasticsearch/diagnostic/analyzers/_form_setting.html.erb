@@ -3,7 +3,7 @@
 %>
 <%= tag.div id: "#{addon[:id]}-frame" do %>
   <%= form_with scope: :item, url: url_for(action: :update), html: { method: "put", id: "#{addon[:id]}-form", data: { turbo: true } } do |f| %>
-    <div>
+    <div class="input-group">
       <%= f.text_field :text %>
       <%= button_tag "Analyze", name: "analyze", type: :submit, class: 'btn' %>
     </div>

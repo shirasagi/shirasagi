@@ -35,50 +35,61 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
   context "move with buttons" do
     it do
-      login_user user
-      visit job_sns_logs_path(site: site)
-      within ".list-head" do
-        click_on I18n.t('gws.history.days.today')
+      login_user user, to: job_sns_logs_path(site: site)
+      wait_for_event_fired "turbo:frame-load" do
+        within ".list-head" do
+          click_on I18n.t('gws.history.days.today')
+        end
       end
 
       expect(page).to have_no_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
       expect(page).to have_no_content(I18n.t(log2.class_name.underscore, scope: "job.models"))
       expect(page).to have_content(I18n.t(log3.class_name.underscore, scope: "job.models"))
 
-      within ".list-head" do
-        click_on I18n.t('gws.history.days.prev_day')
+      wait_for_event_fired "turbo:frame-load" do
+        within ".list-head" do
+          click_on I18n.t('gws.history.days.prev_day')
+        end
       end
 
       expect(page).to have_no_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
       expect(page).to have_content(I18n.t(log2.class_name.underscore, scope: "job.models"))
       expect(page).to have_no_content(I18n.t(log3.class_name.underscore, scope: "job.models"))
 
-      within ".list-head" do
-        click_on I18n.t('gws.history.days.prev_day')
+      wait_for_event_fired "turbo:frame-load" do
+        within ".list-head" do
+          click_on I18n.t('gws.history.days.prev_day')
+        end
       end
 
       expect(page).to have_no_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
       expect(page).to have_no_content(I18n.t(log2.class_name.underscore, scope: "job.models"))
       expect(page).to have_no_content(I18n.t(log3.class_name.underscore, scope: "job.models"))
 
-      within ".list-head" do
-        click_on I18n.t('gws.history.days.prev_day')
+      wait_for_event_fired "turbo:frame-load" do
+        within ".list-head" do
+          click_on I18n.t('gws.history.days.prev_day')
+        end
       end
 
       expect(page).to have_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
       expect(page).to have_no_content(I18n.t(log2.class_name.underscore, scope: "job.models"))
       expect(page).to have_no_content(I18n.t(log3.class_name.underscore, scope: "job.models"))
 
-      within ".list-head" do
-        click_on I18n.t('gws.history.days.prev_day')
+      wait_for_event_fired "turbo:frame-load" do
+        within ".list-head" do
+          click_on I18n.t('gws.history.days.prev_day')
+        end
       end
 
       expect(page).to have_no_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
       expect(page).to have_no_content(I18n.t(log2.class_name.underscore, scope: "job.models"))
       expect(page).to have_no_content(I18n.t(log3.class_name.underscore, scope: "job.models"))
 
-      within ".list-head" do
-        click_on I18n.t('gws.history.days.next_day')
+      wait_for_event_fired "turbo:frame-load" do
+        within ".list-head" do
+          click_on I18n.t('gws.history.days.next_day')
+        end
       end
 
       expect(page).to have_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
@@ -89,11 +100,12 @@ describe "sns_job_logs", type: :feature, dbscope: :example, js: true do
 
   context "move with directly inputting date value" do
     it do
-      login_user user
-      visit job_sns_logs_path(site: site)
+      login_user user, to: job_sns_logs_path(site: site)
 
-      within ".list-head" do
-        fill_in_date "ymd", with: now.ago(3.days)
+      wait_for_event_fired "turbo:frame-load" do
+        within ".list-head" do
+          fill_in_date "ymd", with: now.ago(3.days)
+        end
       end
 
       expect(page).to have_content(I18n.t(log1.class_name.underscore, scope: "job.models"))

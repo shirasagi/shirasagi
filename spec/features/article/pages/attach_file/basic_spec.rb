@@ -20,8 +20,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     permissions << "edit_cms_ignore_alert"
     permissions
   end
-  let!(:role) { create :cms_role, name: "role", permissions: permissions, permission_level: 3, cur_site: site }
+  let!(:role) { create :cms_role, name: "role", permissions: permissions, cur_site: site }
   let(:user2) { create :cms_user, uid: unique_id, name: unique_id, group_ids: [cms_group.id], cms_role_ids: [role.id] }
+
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
 
   context "attach file from upload" do
     before { login_cms_user }
@@ -47,7 +56,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within '#selected-files' do
+      within '.file-view' do
         expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
         expect(page).to have_css('.name', text: 'keyvisual.gif')
       end
@@ -79,7 +88,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within '#selected-files' do
+      within '.file-view' do
         expect(page).to have_css('.name', text: 'modify.jpg')
       end
     end
@@ -111,7 +120,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "form#item-form" do
-        within '#selected-files' do
+        within '.file-view' do
           expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
           expect(page).to have_css('.name', text: 'keyvisual.gif')
         end
@@ -134,9 +143,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context "with cms addon file" do
       context "when file is attached / saved on the modal dialog" do
         it do
-          login_user(user2)
-
-          visit edit_path
+          login_user(user2, to: edit_path)
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
@@ -158,7 +165,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
 
           within "form#item-form" do
-            within '#selected-files' do
+            within '.file-view' do
               expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
               expect(page).to have_css('.name', text: 'keyvisual.gif')
             end
@@ -185,15 +192,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           # cms/file is created by cms_user
           tmp_ss_file(
             Cms::File,
-            site: site, user: cms_user, model: "cms/file", name: name, basename: file_name,
+            site: site, user: cms_user, model: Cms::File::FILE_MODEL, name: name, basename: file_name,
             contents: "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg",
             group_ids: cms_user.group_ids
           )
         end
 
         it do
-          login_user(user2)
-          visit edit_path
+          login_user(user2, to: edit_path)
           ensure_addon_opened("#addon-cms-agents-addons-file")
           within "form#item-form" do
             within "#addon-cms-agents-addons-file" do
@@ -258,9 +264,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     context "with entry form" do
       it "#edit" do
-        login_user(user2)
-
-        visit edit_path
+        login_user(user2, to: edit_path)
 
         within 'form#item-form' do
           wait_for_event_fired("ss:formActivated") do

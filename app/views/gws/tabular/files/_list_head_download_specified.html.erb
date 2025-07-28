@@ -1,0 +1,38 @@
+<div class="list-head-action-update list-head-action-download" data-controller="gws--tabular--download-specified">
+  <%= button_tag type: :button, name: "download_specified", class: "btn btn-inline-flex", disabled: true, data: { action: "gws--tabular--download-specified#downloadAll", "ss--list-action-enabler-target" => "button", "gws--tabular--download-specified-href-param" => download_specified_path } do %>
+    <%= "CSV / ZIP" %>
+    <%= md_icons.outlined "open_in_new", size: 15 %>
+    <span class="badge" data-count="0"></span>
+  <% end %>
+  <template data-gws--tabular--download-specified-target="dialog">
+    <form method="dialog">
+      <%= render("ss/crud/addon", addon: { head: t("ss.confirm.download"), toggle: false }) do %>
+        <dl class="see">
+          <dt><%= t('gws/tabular.format') %></dt>
+          <dd>
+            <% %w(zip csv).each do |format| %>
+              <label>
+                <%= radio_button_tag "item[format]", format, format == 'csv', { id: nil } %>
+                <%= t("gws/tabular.options.format.#{format}") %>
+              </label>
+            <% end %>
+          </dd>
+
+          <dt><%= t('ss.encoding') %></dt>
+          <dd>
+            <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+              <label>
+                <%= radio_button_tag "item[encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
+                <%= t("ss.options.csv_encoding.#{encoding}") %>
+              </label>
+            <% end %>
+          </dd>
+        </dl>
+
+        <div class="buttons">
+          <%= button_tag t("ss.buttons.download"), name: :download, value: "download", class: "btn-primary" %>
+        </div>
+      <% end %>
+    </form>
+  </template>
+</div>

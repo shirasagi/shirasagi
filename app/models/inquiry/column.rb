@@ -4,10 +4,19 @@ class Inquiry::Column
   include Cms::SitePermission
   include Inquiry::Addon::InputSetting
   include Inquiry::Addon::KintoneApp::Column
+  include Inquiry::Addon::ExpandColumn
   include Cms::Addon::GroupPermission
+
+  include SS::PluginRepository
+
+  plugin_class Inquiry::Plugin
+  plugin_type 'column'
 
   INPUT_TYPE_VALIDATION_HANDLERS = [
     [ :email_field, :validate_email_field ].freeze,
+    [ :number_field, :validate_number_field ].freeze,
+    [ :date_field, :validate_date_field ].freeze,
+    [ :datetime_field, :validate_datetime_field ].freeze,
     [ :radio_button, :validate_radio_button ].freeze,
     [ :select, :validate_select ].freeze,
     [ :check_box, :validate_check_box ].freeze,
@@ -71,6 +80,38 @@ class Inquiry::Column
       unless Cms::Member::EMAIL_REGEX.match?(data.value)
         answer.errors.add :base, "#{name}#{I18n.t('errors.messages.email')}"
       end
+    end
+  end
+
+  def validate_number_field(answer, data)
+    if data.blank? || data.value.blank?
+      unless data.value.numeric?
+        answer.errors.add :base, "#{name}#{I18n.t('errors.messages.not_a_number')}"
+      end
+    end
+  end
+
+  def validate_date_field(answer, data)
+    return if data.blank? || data.value.blank?
+    begin
+      DateTime.iso8601(data.value)
+      data.values.map do |value|
+        DateTime.iso8601(value)
+      end
+    rescue => e
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.not_a_date')}"
+    end
+  end
+
+  def validate_datetime_field(answer, data)
+    return if data.blank? || data.value.blank?
+    begin
+      DateTime.iso8601(data.value)
+      data.values.map do |value|
+        DateTime.iso8601(value)
+      end
+    rescue => e
+      answer.errors.add :base, "#{name}#{I18n.t('errors.messages.not_a_datetime')}"
     end
   end
 
