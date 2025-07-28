@@ -110,6 +110,7 @@
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
     <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+    <dd><%= f.select :loop_setting_id, ancestral_custom_html_settings, include_blank: t('cms.input_directly') %></dd>
     <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
 <% end %>
