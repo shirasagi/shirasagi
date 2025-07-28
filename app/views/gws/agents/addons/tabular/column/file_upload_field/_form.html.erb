@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :export_state %><%= @model.tt :export_state %></dt>
+  <dd><%= f.select :export_state, @item.export_state_options %></dd>
+
+  <dt><%= @model.t :allowed_extensions %><%= @model.tt :allowed_extensions %></dt>
+  <dd><%= f.text_field :allowed_extensions %></dd>
+</dl>

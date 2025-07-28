@@ -1,11 +1,11 @@
 require 'spec_helper'
 
 describe "gws_share_files", type: :feature, dbscope: :example, js: true do
-  let(:site) { gws_site }
+  let!(:site) { gws_site }
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
   let(:index_path) { gws_share_folder_files_path site, folder }
-  let(:filepath) { tmpfile { |file| file.write('0123456789') } }
+  let!(:filepath) { tmpfile { |file| file.write('0123456789') } }
   let(:filesize) { ::File.size(filepath) }
 
   before { login_gws_user }
@@ -29,21 +29,10 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.new")
 
       within "form#item-form" do
-        within "#addon-basic" do
-          wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
-        end
-      end
-
-      within_cbox do
-        attach_file "item[in_files][]", filepath
-        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-      end
-
-      within "form#item-form" do
-        expect(page).to have_css("#addon-basic .file-view", text: ::File.basename(filepath))
+        ss_upload_file filepath, addon: "#addon-basic"
         fill_in "item[memo]", with: unique_id
         within "footer.send" do
-          click_on I18n.t("ss.links.upload")
+          click_on I18n.t("ss.buttons.upload")
         end
       end
 
@@ -65,21 +54,10 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.links.new")
 
         within "form#item-form" do
-          within "#addon-basic" do
-            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", filepath
-          wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
-        end
-
-        within "form#item-form" do
-          expect(page).to have_css("#addon-basic .file-view", text: ::File.basename(filepath))
+          ss_upload_file filepath, addon: "#addon-basic"
           fill_in "item[memo]", with: unique_id
           within "footer.send" do
-            click_on I18n.t("ss.links.upload")
+            click_on I18n.t("ss.buttons.upload")
           end
         end
 

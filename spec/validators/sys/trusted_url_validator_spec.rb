@@ -71,6 +71,9 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.trusted_url?(unique_id)).to be_truthy
 
       expect(described_class.trusted_url?(unique_url)).to be_falsey
+
+      # invalid urls
+      expect(described_class.trusted_url?("https://●●")).to be_falsey
     end
   end
 
@@ -99,6 +102,9 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
+
+      # invalid urls
+      expect(described_class.valid_url?(::Addressable::URI.parse("//●●"))).to be_falsey
     end
   end
 

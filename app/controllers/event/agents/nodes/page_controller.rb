@@ -12,7 +12,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @date = Time.zone.today.beginning_of_month
     @year = @date.year
     @month = @date.month
-    raise '404' if !within_one_year?(@date) && !within_one_year?(@date.advance(months: 1, days: -1))
+    raise SS::NotFoundError if !within_one_year?(@date) && !within_one_year?(@date.advance(months: 1, days: -1))
 
     index_monthly
   end
@@ -21,8 +21,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @year = params[:year].to_i
     @month = params[:month].to_i
     @date = Date.new(@year, @month, 1) rescue nil
-    raise '404' if @date.nil?
-    raise '404' if !within_one_year?(@date) && !within_one_year?(@date.advance(months: 1, days: -1))
+    raise SS::NotFoundError if @date.nil?
+    raise SS::NotFoundError if !within_one_year?(@date) && !within_one_year?(@date.advance(months: 1, days: -1))
 
     index_monthly
   end
@@ -32,8 +32,8 @@ class Event::Agents::Nodes::PageController < ApplicationController
     @month = params[:month].to_i
     @day   = params[:day].to_i
     @date  = Date.new(@year, @month, @day) rescue nil
-    raise '404' if @date.nil?
-    raise '404' if !within_one_year?(@date)
+    raise SS::NotFoundError if @date.nil?
+    raise SS::NotFoundError if !within_one_year?(@date)
 
     index_daily
   end
@@ -49,7 +49,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
     if params[:display].present? && params[:display] != "index"
       @cur_display = params[:display]
     end
-    raise "404" if !@cur_node.event_display_tabs.include?(@cur_display)
+    raise SS::NotFoundError if !@cur_node.event_display_tabs.include?(@cur_display)
   end
 
   def index_monthly

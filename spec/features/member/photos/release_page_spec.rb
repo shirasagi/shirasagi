@@ -65,8 +65,7 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
         expect(mail.body.raw_source).to include(workflow_comment)
       end
 
-      login_user user
-      visit show_path
+      login_user user, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment

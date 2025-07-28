@@ -75,8 +75,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1

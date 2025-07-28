@@ -50,6 +50,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
     let(:circulation_comment3) { unique_id }
     let(:circulation_comment4) { unique_id }
 
+    before do
+      @save_file_upload_dialog = SS.file_upload_dialog
+      SS.file_upload_dialog = :v2
+    end
+
+    after do
+      SS.file_upload_dialog = @save_file_upload_dialog
+    end
+
     it do
       #
       # admin: 申請する（承認者 1 段、1 名＋回覧者 1 段、1 名）
@@ -60,7 +69,9 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       within ".mod-workflow-request" do
         select route_name, from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-
+      end
+      wait_for_js_ready
+      within ".mod-workflow-request" do
         fill_in "workflow[comment]", with: workflow_comment1
         click_on I18n.t("workflow.buttons.request")
       end
@@ -90,21 +101,12 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user1: 申請を承認する
       #
-      login_user user1
-      visit show_path
+      login_user user1, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment1
-        wait_for_cbox_opened do
-          click_on I18n.t("workflow.links.approver_file_upload")
-        end
       end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_for_cbox_closed do
-          click_on I18n.t("ss.buttons.attach")
-        end
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".mod-workflow-approve"
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.buttons.approve")
       end
@@ -152,21 +154,12 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: 申請を確認する
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment2
-        wait_for_cbox_opened do
-          click_on I18n.t("workflow.links.approver_file_upload")
-        end
       end
-      within_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/logo.png"
-        wait_for_cbox_closed do
-          click_on I18n.t("ss.buttons.attach")
-        end
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".mod-workflow-approve"
       within ".mod-workflow-approve" do
         click_on I18n.t("workflow.links.set_seen")
       end
@@ -188,14 +181,14 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.state).to eq "approve"
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 1
-      expect(item.workflow_approvers).to \
-        include({
-          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: [file1.id],
-          created: be_within(30.seconds).of(Time.zone.now)
-        })
+      expect(item.workflow_approvers).to include(
+        { level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: [file1.id],
+          created: be_within(30.seconds).of(Time.zone.now) }
+      )
       expect(item.workflow_circulations.count).to eq 1
-      expect(item.workflow_circulations).to \
-        include({level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2, file_ids: [file2.id]})
+      expect(item.workflow_circulations).to include(
+        { level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2, file_ids: [file2.id] }
+      )
 
       expect(SS::Notification.count).to eq 4
       SS::Notification.order_by(id: -1).first.tap do |memo|

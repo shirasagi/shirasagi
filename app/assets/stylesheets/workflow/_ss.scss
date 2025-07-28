@@ -17,6 +17,13 @@
   textarea {
     margin-bottom: 10px;
   }
+
+  .upload ~ .buttons {
+    margin-top: 20px;
+  }
+  .cms-addon-file ~ .buttons {
+    margin-top: 20px;
+  }
 }
 .workflow-level-header {
   margin: 20px 10px 0;

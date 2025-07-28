@@ -2,8 +2,10 @@
   <div class="search-ui-form">
     <%= form_for :s, url: gws_apis_groups_path(site: cur_site), html: { method: "GET", class: :search } do |f| %>
       <%= hidden_field_tag :single, nil %>
-      <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-      <%= f.submit t("ss.buttons.search"), class: :btn %>
+      <div class="input-group">
+        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), placeholder: t("ss.keyword") %>
+        <%= f.submit t("ss.buttons.search"), class: :btn %>
+      </div>
     <% end %>
   </div>
 

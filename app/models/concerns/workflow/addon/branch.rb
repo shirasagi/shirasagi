@@ -97,7 +97,8 @@ module Workflow::Addon
     end
 
     def clone_file(source_file)
-      file = SS::File.clone_file(source_file, cur_user: @cur_user, owner_item: SS::Model.container_of(self))
+      owner_item = SS::Model.container_of(self)
+      file = SS::File.clone_file(source_file, cur_site: @cur_site, cur_user: @cur_user, owner_item: owner_item)
       update_html_with_clone_file(source_file, file)
       file
     end
@@ -168,6 +169,13 @@ module Workflow::Addon
       end
 
       master.generate_file
+
+      # 差し替えページを公開したので、更新履歴の転送を指示
+      @transfer_history_backup = true
+
+      # この後、差し替えページは削除されるので履歴を作成しても無意味なので履歴作成を抑制する。
+      # また、更新履歴が二重に作成されるのを防ぐ意味もある。
+      @skip_history_backup = true
     end
 
     private

@@ -55,3 +55,6 @@ ehthumbs.db
 .test_queue_stats
 
 /node_modules
+
+# デバッグ用
+.rdbgrc.breakpoints

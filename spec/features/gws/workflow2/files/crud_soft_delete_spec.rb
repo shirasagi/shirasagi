@@ -47,7 +47,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.delete")
       end
 
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Gws::Workflow2::File.site(site).count).to eq 1
       Gws::Workflow2::File.site(site).first.tap do |workflow|
         expect(workflow.deleted).not_to be_nil

@@ -308,6 +308,7 @@ en:
         notice_discussion_user_setting: Electronic conference rooms
         notice_report_user_setting: Reports
         notice_announcement_user_setting: Announcements
+        notice_tabular_user_setting: Tabular
         notice_schedule_email_user_setting: Schedule notification e-mail forwarding
         notice_todo_email_user_setting: To-do notification e-mail forwarding
         notice_workload_email_user_setting: Workload notification e-mail forwarding
@@ -322,6 +323,7 @@ en:
         notice_discussion_email_user_setting: Electronic meeting room notification e-mail forwarding
         notice_report_email_user_setting: Report notification e-mail forwarding
         notice_announcement_email_user_setting: Information notification e-mail forwarding
+        notice_tabular_email_user_setting: Tabular notification e-mail forwarding
         send_notice_mail_addresses: Forwarding e-mail address
 
   activemodel:

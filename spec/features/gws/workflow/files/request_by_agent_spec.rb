@@ -106,8 +106,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: 申請を承認する
       #
-      login_user user2
-      visit gws_workflow_files_path(site: site, state: "all")
+      login_user user2, to: gws_workflow_files_path(site: site, state: "all")
       click_on file_name
 
       within ".mod-workflow-approve" do
@@ -150,8 +149,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user3: 申請を確認する
       #
-      login_user user3
-      visit gws_workflow_files_path(site: site, state: "all")
+      login_user user3, to: gws_workflow_files_path(site: site, state: "all")
       click_on file_name
       expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
 

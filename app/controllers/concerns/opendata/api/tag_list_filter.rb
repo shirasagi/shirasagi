@@ -1,6 +1,5 @@
 module Opendata::Api::TagListFilter
   extend ActiveSupport::Concern
-  include Opendata::Api
 
   def tag_list
     help = t("opendata.api.tag_list_help")

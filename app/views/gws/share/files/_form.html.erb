@@ -44,7 +44,7 @@
 
       <div class="btn-group">
         <div class="input-group">
-          <%= select_tag('size', options_for_select(@model.resizing_options), include_blank: true) %>
+          <%= select_tag('size', options_for_select(@model.resizing_options(user: @cur_user)), include_blank: true) %>
         </div>
       </div>
 
@@ -67,7 +67,7 @@
         </div>
       </div>
     </div>
-    <img src="<%= @item.url %>" class="target" data-format="<%= @item.content_type %>">
+    <img src="<%= @item.no_cache_url %>" class="target" data-format="<%= @item.content_type %>">
     <%= f.hidden_field :in_data_url, value: nil %>
   </div>
 

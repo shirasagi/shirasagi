@@ -8,22 +8,6 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
   before { login_gws_user }
 
-  def extract_image_info(filepath)
-    image = MiniMagick::Image.open(filepath)
-
-    {
-      filename: ::File.basename(filepath),
-      format: image.type,
-      width: image.width,
-      height: image.height,
-      colorspace: image.colorspace,
-      size: image.size,
-      resolution: { x: image.resolution[0], y: image.resolution[1] }
-    }
-  ensure
-    image.destroy! if image
-  end
-
   context "when editing image" do
     shared_examples "rotate image" do
       it do

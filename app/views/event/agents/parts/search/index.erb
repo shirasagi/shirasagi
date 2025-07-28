@@ -32,7 +32,7 @@
 
   <% if @parent_node.present? %>
     <fieldset class="event-sort">
-      <legend><%= label_tag :sort, t("event.sort") %></legend>
+      <legend><%= label_tag :sort, @parent_node.t(:sort) %></legend>
       <%= select_tag :sort, options_for_select(@parent_node.public_sort_options, selected: @sort), include_blank: true %>
     </fieldset>
   <% end %>

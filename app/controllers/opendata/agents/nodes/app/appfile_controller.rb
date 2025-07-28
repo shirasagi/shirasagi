@@ -14,7 +14,7 @@ class Opendata::Agents::Nodes::App::AppfileController < ApplicationController
       filename(@app_path).
       first
 
-    raise "404" unless @app
+    raise SS::NotFoundError unless @app
   end
 
   public

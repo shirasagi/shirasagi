@@ -308,6 +308,7 @@ ja:
         notice_discussion_user_setting: 電子会議室
         notice_report_user_setting: レポート
         notice_announcement_user_setting: お知らせ
+        notice_tabular_user_setting: 汎用DB
         notice_schedule_email_user_setting: スケジュール通知メール転送
         notice_todo_email_user_setting: ToDo通知メール転送
         notice_workload_email_user_setting: 業務見える化通知メール転送
@@ -322,6 +323,7 @@ ja:
         notice_discussion_email_user_setting: 電子会議室通知メール転送
         notice_report_email_user_setting: レポート通知メール転送
         notice_announcement_email_user_setting: お知らせ通知メール転送
+        notice_tabular_email_user_setting: 汎用DB通知メール転送
         send_notice_mail_addresses: 転送先メールアドレス
 
   activemodel:
