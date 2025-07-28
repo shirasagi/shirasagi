@@ -57,8 +57,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
   context "with editable approvers" do
     it do
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
 
       #
@@ -102,8 +101,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # user1: edit and approve
       #
-      login_user user1
-      visit show_path
+      login_user user1, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.request"))
@@ -173,8 +171,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       #
       # user2: edit and approve
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.request"))

@@ -1,0 +1,59 @@
+<% render_table_row = proc do |index, id, name, url, target, file, state| %>
+  <tr data-index="<%= index %>"<% if id %> data-id="<%= id %>"<% end %> data-ss--increase-decrease-target="item">
+    <td class="ss-link-item-name-cell">
+      <%= hidden_field_tag "#{field_name_prefix}[id]", id, id: nil if id %>
+      <%= text_field_tag "#{field_name_prefix}[name]", name, id: nil, placeholder: SS::LinkItem.t(:name) %>
+    </td>
+    <td class="ss-link-item-url-cell">
+      <%= text_field_tag "#{field_name_prefix}[url]", url, id: nil, placeholder: SS::LinkItem.t(:url) %>
+    </td>
+    <td class="ss-link-item-file-cell">
+      <%=
+        component = SS::FileFieldV2Component.new(
+          ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user,
+          item: nil, file: file, field_name: "#{field_name_prefix}[file_id]", element_id: nil, accepts: accepts)
+        render component
+      %>
+    </td>
+    <td class="ss-link-item-target-cell">
+      <%= select_tag "#{field_name_prefix}[target]", options_for_select(SS::LinkItem.target_options, selected: target || "_blank"), id: nil %>
+    </td>
+    <td class="ss-link-item-state-cell">
+      <%= select_tag "#{field_name_prefix}[state]", options_for_select(SS::LinkItem.state_options, selected: state), id: nil %>
+    </td>
+    <td class="ss-link-item-action-cell">
+      <%= button_tag md_icons.outlined("add", size: 13), type: "button", name: "add", class: "btn", title: t("ss.buttons.add"), data: { action: "ss--increase-decrease#increase" } %>
+      <%= button_tag md_icons.outlined("remove", size: 13), type: "button", name: "remove", class: "btn", title: t("ss.buttons.delete"), data: { action: "ss--increase-decrease#decrease" } %>
+    </td>
+  </tr>
+<% end %>
+
+<div data-controller="ss--increase-decrease" data-ss--increase-decrease-max-value="<%= max_count %>" data-ss--increase-decrease-attribute-value="<%= attribute_name %>">
+  <%# 全ての広告を削除すると ad_links がサーバーへ送られなくなるため、削除したのに削除されない現象が発生することを防ぐ目的でダミーを追加する %>
+  <%= hidden_field_tag "#{field_name_prefix}[$unused$]", "", id: nil %>
+
+  <table class="index ss-link-item-table ss-link-item-table-form">
+    <thead>
+    <tr>
+      <th class="ss-link-item-name-cell"><span><%= SS::LinkItem.t(:name) %></span></th>
+      <th class="ss-link-item-url-cell"><span><%= SS::LinkItem.t(:url) %></span></th>
+      <th class="ss-link-item-file-cell"><span><%= SS::LinkItem.t(:file_id) %></span></th>
+      <th class="ss-link-item-target-cell"><span><%= SS::LinkItem.t(:target) %></span></th>
+      <th class="ss-link-item-state-cell"><span><%= SS::LinkItem.t(:state) %></span></th>
+      <th class="ss-link-item-action-cell"></th>
+    </tr>
+    </thead>
+    <tbody data-ss--increase-decrease-target="container">
+    <% link_items.each_with_index do |link_item, index| %>
+      <% next if link_item.name.blank? && link_item.url.blank? && link_item.file.blank? %>
+      <% render_table_row.call(index, link_item.id, link_item.name, link_item.url, link_item.target, link_item.file, link_item.state) %>
+    <% end %>
+
+    <% render_table_row.call("new", nil, nil, nil, nil, nil, nil) %>
+    </tbody>
+  </table>
+
+  <template data-ss--increase-decrease-target="template">
+    <% render_table_row.call("new", nil, nil, nil, nil, nil, nil) %>
+  </template>
+</div>

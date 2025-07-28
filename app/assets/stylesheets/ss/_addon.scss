@@ -11,38 +11,3 @@
     float: right;
   }
 }
-
-// -------------------------------------------------------------------------------------------------
-// LinkFile
-
-.ss-addon-link_file {
-  .ajax-selected {
-    margin-top: 10px;
-  }
-
-  .column-thumb {
-    width: 120px;
-  }
-  .column-actions {
-    width: 100px;
-  }
-
-  .thumb {
-    max-width: 150px;
-    border: 0;
-    line-height: unset;
-
-    .name {
-      margin: 0;
-      padding: 5px;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      overflow-wrap: normal;
-      white-space: nowrap;
-    }
-  }
-
-  .link-url {
-    width: 100%;
-  }
-}

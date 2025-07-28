@@ -5,6 +5,15 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
   let!(:folder) { create :gws_share_folder }
   let!(:category) { create :gws_share_category }
 
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
+
   context "sanitizer setting" do
     before { login_gws_user }
 

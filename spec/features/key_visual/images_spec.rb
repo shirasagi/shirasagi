@@ -3,7 +3,10 @@ require 'spec_helper'
 describe "key_visual_images", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:node) { create_once :key_visual_node_image, name: "key_visual" }
+  let!(:item) { create :key_visual_image }
   let(:index_path) { key_visual_images_path site.id, node }
+  let(:show_path) { key_visual_image_path site.id, node, item }
+  let(:edit_path) { edit_key_visual_image_path site.id, node, item }
 
   context "with auth" do
     let!(:file) do
@@ -29,13 +32,8 @@ describe "key_visual_images", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[link_url]", with: "http://example.jp"
         fill_in_code_mirror "item[remark_html]", with: remark_html
-        wait_for_cbox_opened { first(".btn-file-upload").click }
-      end
-      within_cbox do
-        expect(page).to have_css(".file-view", text: file.name)
-        wait_for_cbox_closed { click_on file.name }
-      end
-      within "form#item-form" do
+        attach_to_ss_file_field "item[file_id]", file
+
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
@@ -62,6 +60,32 @@ describe "key_visual_images", type: :feature, dbscope: :example, js: true do
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_notice I18n.t("ss.notice.deleted")
+    end
+
+    it "#edit" do
+      visit edit_path
+      expect(item.display_remarks).to be_blank
+
+      within "form#item-form" do
+        first('[name="item[display_remarks][]"][value="title"]').check
+        first('[name="item[display_remarks][]"][value="remark_html"]').check
+        click_button I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      item.reload
+      expect(item.display_remarks).to match_array %w(title remark_html)
+
+      visit edit_path
+      within "form#item-form" do
+        first('[name="item[display_remarks][]"][value="title"]').uncheck
+        first('[name="item[display_remarks][]"][value="remark_html"]').uncheck
+        click_button I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      item.reload
+      expect(item.display_remarks).to be_blank
     end
   end
 end

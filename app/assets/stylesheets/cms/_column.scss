@@ -26,15 +26,9 @@
   @include mb {
     margin-top: 10px;
   }
-}
-
-.column-youtube-right {
-  text-align: right;
-}
-
-.column-youtube-left {
-  float: left;
-  text-align: left;
+  &:not(:has(.file-view)) {
+    display: none;
+  }
 }
 
 .column-value.ui-sortable-helper {

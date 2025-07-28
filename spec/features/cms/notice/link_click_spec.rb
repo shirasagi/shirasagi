@@ -1,6 +1,7 @@
 require 'spec_helper'
 
-describe "cms_notices", type: :feature, dbscope: :example, js: true do
+# chrome=133.0.6943.53 で PDF を開くと、モデルスペックであっても失敗するようになるので `js: true` を削除
+describe "cms_notices", type: :feature, dbscope: :example do
   let(:site) { cms_site }
   let(:user) { cms_user }
   let(:file) { tmp_ss_file(user: user, contents: "#{Rails.root}/spec/fixtures/ss/shirasagi.pdf") }
@@ -19,7 +20,6 @@ describe "cms_notices", type: :feature, dbscope: :example, js: true do
         click_on file.humanized_name
       end
 
-      # expect(page).to have_css("embed[type='application/pdf']")
       expect(page).to have_css("body")
     end
   end

@@ -1,0 +1,13 @@
+<% return if !@model.use_index_state && !@model.use_unique_state %>
+
+<dl class="see">
+  <% if @model.use_index_state %>
+    <dt><%= @model.t :index_state %><%= @model.tt :index_state %></dt>
+    <dd><%= f.select :index_state, @item.index_state_options %></dd>
+  <% end %>
+
+  <% if @model.use_unique_state %>
+    <dt><%= @model.t :unique_state %><%= @model.tt :unique_state %></dt>
+    <dd><%= f.select :unique_state, @item.unique_state_options %></dd>
+  <% end %>
+</dl>

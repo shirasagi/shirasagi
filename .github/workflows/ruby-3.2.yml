@@ -1,0 +1,155 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+# This workflow will download a prebuilt Ruby version, install dependencies and run tests with Rake
+# For more information see: https://github.com/marketplace/actions/setup-ruby-jruby-and-truffleruby
+
+name: Ruby-3.2
+
+on:
+  push:
+    branches: [ master, main ]
+
+env:
+  DISABLE_SPRING: 1
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 50
+    strategy:
+      fail-fast: false
+      matrix:
+        parallelism: [ 10 ]
+        id: [ 0,1,2,3,4,5,6,7,8,9 ]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Generate ja_JP.UTF-8
+        run: |
+          sudo locale-gen ja_JP
+          sudo update-locale LANG=ja_JP.UTF-8
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v2
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Start MongoDB
+        uses: supercharge/mongodb-github-action@1.3.0
+        with:
+          mongodb-version: 7.0
+      - name: Prepare Ldap
+        run: docker pull osixia/openldap
+      - name: Start Shirasagi Mail
+        run: |
+          docker pull ghcr.io/shirasagi/mail:latest
+          docker tag ghcr.io/shirasagi/mail:latest shirasagi/mail:latest
+          docker run --name test_mail -d -p 10143:143 -p 10587:587 shirasagi/mail
+      - name: Prepare Michecker
+        run: |
+          docker pull ghcr.io/shirasagi/michecker:latest
+          docker tag ghcr.io/shirasagi/michecker:latest shirasagi/michecker:latest
+      - name: Prepare Elasticsearch
+        run: |
+          docker pull ghcr.io/shirasagi/elasticsearch:latest
+          docker tag ghcr.io/shirasagi/elasticsearch:latest shirasagi/elasticsearch:latest
+      - name: Launch Elasticsearch
+        id: elasticsearch
+        run: |
+          container_id=$(docker run -d --name elasticsearch -p 9200:9200 -e discovery.type=single-node shirasagi/elasticsearch)
+          if [ $? -ne 0 ]; then
+            exit $?
+          fi
+          echo $container_id
+          echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
+      - name: Prepare Ckan
+        run: |
+          docker pull ghcr.io/shirasagi/ckan:latest
+          docker tag ghcr.io/shirasagi/ckan:latest shirasagi/ckan:latest
+      - name: Launch Ckan
+        id: ckan
+        run: |
+          container_id=$(docker run -d --name ckan -p 8080:80 shirasagi/ckan)
+          if [ $? -ne 0 ]; then
+            exit $?
+          fi
+          echo $container_id
+          echo "CONTAINER_ID=$container_id" >> $GITHUB_OUTPUT
+      - name: Install pre requisites
+        run: |
+          sudo apt update
+          sudo apt -y install imagemagick libmagick++-dev sox libsox-dev lame libmp3lame-dev mecab libmecab-dev mecab-ipadic-utf8 open-jtalk open-jtalk-mecab-naist-jdic graphicsmagick
+      - name: Google Chrome Version
+        run: |
+          which google-chrome
+          /usr/bin/google-chrome --version
+        continue-on-error: true
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: '3.2'
+          bundler-cache: true
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install node modules
+        run: yarn install
+      - name: Install MeCab Ruby
+        run: |
+          tar xzf vendor/mecab/mecab-ruby-0.996.tar.gz
+          cd mecab-ruby-0.996 && bundle exec ruby extconf.rb && make && sudo make install
+      #    - name: Prepare Assets
+      #      run: bash .travis.d/exec.sh before_script 05-bin-deploy
+      - name: Prepare Config
+        run: bash .travis.d/exec.sh before_script 10-copy-config
+      - name: Prepare kana.yml
+        run: |
+          cp config/defaults/kana.yml config/
+          sed -i "s#/usr/local/libexec/mecab/mecab-dict-index#/usr/lib/mecab/mecab-dict-index#" config/kana.yml
+          sed -i "s#/usr/local/lib/mecab/dic/ipadic#/usr/share/mecab/dic/ipadic#" config/kana.yml
+          diff -u config/defaults/kana.yml config/kana.yml || true
+      - name: Prepare voice.yml
+        run: |
+          cp config/defaults/voice.yml config/
+          sed -i "s#/usr/local/bin/open_jtalk#/usr/bin/open_jtalk#" config/voice.yml
+          sed -i "s#/usr/local/dic#/var/lib/mecab/dic/open-jtalk/naist-jdic#" config/voice.yml
+          sed -i "s#/usr/local/bin/sox#/usr/bin/sox#" config/voice.yml
+          sed -i "s#/usr/local/bin/lame#/usr/bin/lame#" config/voice.yml
+          diff -u config/defaults/voice.yml config/voice.yml || true
+      - name: Prepare ImageMagick-6 policy
+        run: |
+          cd /etc/ImageMagick-6
+          sudo sed -i "s#<policy domain=\"coder\" rights=\"none\" pattern=\"PDF\" />#<policy domain=\"coder\" rights=\"read\" pattern=\"PDF\" />#" policy.xml
+          echo "### /etc/ImageMagick-6/policy.xml ###"
+          cat policy.xml
+      - name: Running Docker Containers
+        run: docker ps -a
+      - name: Bundle assets
+        run: npx webpack-cli build
+      - name: Run tests
+        run: |
+          file_list=$(bundle exec ruby .travis.d/split_specs.rb -p ${{ matrix.parallelism }} -i ${{ matrix.id }})
+          if [ $? -ne 0 ]; then
+            exit 1
+          fi
+          echo $file_list | xargs bundle exec rspec
+        env:
+          TZ: "Asia/Tokyo"
+          LANG: ja_JP.UTF-8
+          LC_ALL: ja_JP.UTF-8
+          allow_open_jtalk: 1
+          LDAP_TEST: enable
+          ES_CONTAINER_ID: ${{ steps.elasticsearch.outputs.CONTAINER_ID }}
+          CKAN_CONTAINER_ID: ${{ steps.ckan.outputs.CONTAINER_ID }}
+          ANALYZE_COVERAGE: disabled
+          CAPYBARA_MAX_WAIT_TIME: 30
+          DOWNLOAD_MAX_WAIT_TIME: 10
+          driver: chrome
+          # driver: firefox
+          # driver: random
+          GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}

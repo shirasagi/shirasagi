@@ -9,7 +9,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetMapController < ApplicationContro
     @datasets = []
     @items.each do |item|
       resources = []
-      item.resources.each_with_index do |resource, idx|
+      item.resources.and_public.each_with_index do |resource, idx|
         resource.file.site = @cur_site if resource.file
 
         if resource.kml_present? || resource.geojson_present?

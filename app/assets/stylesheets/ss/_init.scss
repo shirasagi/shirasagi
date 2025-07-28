@@ -143,6 +143,7 @@ $border-white: 1px solid $white;
   color: $black;
   font-size: $px12;
   line-height: 1.4;
+  word-break: keep-all;
   vertical-align: middle;
   cursor: pointer;
   &:hover {
@@ -197,15 +198,10 @@ $border-white: 1px solid $white;
     font-size: $px14;
   }
 }
-@mixin btn-orange {
-  display: inline-block;
-  padding: 5px 12px;
+@mixin btn-orange-core {
   border: 1px solid #f2a950;
-  @include border-radius(6px);
   @include grd-orange;
-  filter: none \9;
   color: $black;
-  font-size: $px12;
   cursor: pointer;
   &:hover {
     background: #f2a950;
@@ -214,6 +210,14 @@ $border-white: 1px solid $white;
   &:disabled, &.btn-disabled {
     @include btn-disabled;
   }
+}
+@mixin btn-orange {
+  @include btn-orange-core;
+  display: inline-block;
+  padding: 5px 12px;
+  @include border-radius(6px);
+  filter: none \9;
+  font-size: $px12;
   @include mb {
     padding: 5px 12px;
     font-size: $px14;

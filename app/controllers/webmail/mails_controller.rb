@@ -257,6 +257,7 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply(@ref, params[:without_body].present?)
@@ -270,6 +271,7 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply_all(@ref, params[:without_body].present?)
@@ -283,9 +285,10 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_forward(@ref)
+    @item.new_forward(@ref, webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index)
     @dedicated = true
     render :new, layout: "ss/dedicated"
   end
@@ -296,9 +299,10 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_edit(@ref)
+    @item.new_edit(@ref, webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index)
     @dedicated = true
     render :new, layout: "ss/dedicated"
   end

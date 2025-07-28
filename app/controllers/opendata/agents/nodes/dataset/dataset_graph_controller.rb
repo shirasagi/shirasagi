@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetGraphController < ApplicationCont
     @datasets = []
     @items.each do |item|
       resources = []
-      item.resources.each_with_index do |resource, idx|
+      item.resources.and_public.each_with_index do |resource, idx|
         next unless resource.preview_graph_enabled?
 
         key = "#{item.id}_#{idx}"
@@ -70,7 +70,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetGraphController < ApplicationCont
     @dataset = @model.site(@cur_site).and_public(@cur_date).where(id: params[:dataset_id]).first
     raise SS::NotFoundError unless @dataset
 
-    @item = @dataset.resources.select { |r| r.id == params[:id].to_i }.first
+    @item = @dataset.resources.and_public.select { |r| r.id == params[:id].to_i }.first
     raise SS::NotFoundError unless @item
 
     type = params[:type].presence || @item.preview_graph_types.first

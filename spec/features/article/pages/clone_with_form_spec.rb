@@ -57,6 +57,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       it do
         visit new_article_page_path(site: site, cid: node, form_id: form.id)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within 'form#item-form' do
           fill_in 'item[name]', with: name
@@ -64,21 +66,19 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           # find("a[data-column-id=\"#{column2.id}\"]").click
           within first(".column-value-cms-column-fileupload") do
             fill_in "item[column_values][][in_wrap][file_label]", with: unique_id
-            wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
+            # wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
           end
-        end
 
-        within_cbox do
-          attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/logo.png"
-          wait_for_cbox_closed { click_on I18n.t('ss.buttons.attach') }
-        end
+          ss_upload_file "#{Rails.root}/spec/fixtures/ss/logo.png", addon: ".column-value-cms-column-fileupload"
 
-        within 'form#item-form' do
           expect(page).to have_css('.file-view', text: 'logo')
           click_on I18n.t('ss.buttons.publish_save')
         end
 
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         expect(Article::Page.all.count).to eq 1
         Article::Page.all.find_by(name: name).tap do |item|
           expect(item.column_values.length).to eq 2
@@ -90,6 +90,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         visit article_pages_path(site: site, cid: node)
         click_on name
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
         click_on I18n.t('ss.links.copy')
 
         within 'form#item-form' do

@@ -31,7 +31,6 @@ class Gws::Share::FileUploader
       item.readable_member_ids = readable_member_ids
       item.readable_custom_group_ids = readable_custom_group_ids
 
-      item.permission_level = permission_level
       item.group_ids = group_ids
       item.user_ids = user_ids
       item.custom_group_ids = custom_group_ids

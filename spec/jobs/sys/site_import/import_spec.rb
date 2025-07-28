@@ -30,20 +30,12 @@ describe Sys::SiteImportJob, dbscope: :example do
     SS::Sequence.create(_id: "sys_roles_id", value: rand(0..999) * base)
     SS::Sequence.create(_id: "workflow_routes_id", value: rand(0..999) * base)
 
-    task = OpenStruct.new(
-      target_site_id: destination_site.id,
-      import_file: file_path
-    )
-    def task.log(msg)
-    end
-
-    job = ::Sys::SiteImportJob.new
-    job.task = task
-    job.perform
+    job = Sys::SiteImportJob.new
+    job.bind("site_id" => destination_site.id).perform(file_path)
   end
 
   context 'with pages' do
-    let(:file_path) { "#{Rails.root}/spec/fixtures/sys/site-exports-1.zip" }
+    let(:file_path) { "#{Rails.root}/spec/fixtures/sys/site-exports-1.ssr" }
 
     context "when default multibyte_filename and file_url_with" do
       it do

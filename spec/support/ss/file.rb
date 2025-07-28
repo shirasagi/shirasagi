@@ -3,14 +3,14 @@ def root_dir
 end
 
 def clear_files
-  ::Fs.rm_rf(root_dir)
+  Fs.rm_rf(root_dir)
 end
 
 RSpec.configuration.before(:suite) do
   # load all models
   ::Rails.application.eager_load!
 
-  ::Fs.mkdir_p(root_dir)
+  Fs.mkdir_p(root_dir)
 
   SS::Application.private_root = root_dir
 

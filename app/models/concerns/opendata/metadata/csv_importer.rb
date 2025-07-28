@@ -73,6 +73,7 @@ module Opendata::Metadata::CsvImporter
               dataset.metadata_dataset_follow_standards = csv_row['データセット_準拠する標準']
               dataset.metadata_dataset_related_document = csv_row['データセット_関連ドキュメント']
               dataset.metadata_dataset_target_period = csv_row['データセット_対象期間']
+              dataset.metadata_dataset_creator = csv_row['データセット_作成者']
               dataset.metadata_dataset_contact_name = csv_row['データセット_連絡先名称']
               dataset.metadata_dataset_contact_email = csv_row['データセット_連絡先メールアドレス']
               dataset.metadata_dataset_contact_tel = csv_row['データセット_連絡先電話番号']
@@ -152,6 +153,7 @@ module Opendata::Metadata::CsvImporter
                   resource.metadata_file_terms_of_service = csv_row['ファイル_利用規約']
                   resource.metadata_file_related_document = csv_row['ファイル_関連ドキュメント']
                   resource.metadata_file_follow_standards = csv_row['ファイル_準拠する標準']
+                  resource.metadata_file_copyright = csv_row['ファイル_著作権表記']
 
                   if resource.updated_changed?
                     put_log("-- resource : #{resource.new_record? ? "create" : "update"} #{resource.name}")

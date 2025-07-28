@@ -57,8 +57,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
     context "when alternate is approved" do
       it do
-        login_user user1
-        visit gws_workflow2_files_main_path(site: site)
+        login_user user1, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-request" do
@@ -115,8 +114,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # user2: 申請を承認する（代理承認者 ）
         #
-        login_user user2
-        visit gws_workflow2_files_main_path(site: site)
+        login_user user2, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-view" do
@@ -167,8 +165,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
     context "when original is approved" do
       it do
-        login_user user1
-        visit gws_workflow2_files_main_path(site: site)
+        login_user user1, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-request" do
@@ -225,8 +222,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # admin: 申請を承認する（本来の承認者 ）
         #
-        login_user admin
-        visit gws_workflow2_files_main_path(site: site)
+        login_user admin, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-view" do
@@ -284,8 +280,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
     context "when alternate is approved" do
       it do
-        login_user user1
-        visit gws_workflow2_files_main_path(site: site)
+        login_user user1, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-request" do
@@ -344,8 +339,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # user2: 申請を承認する（代理承認者 ）
         #
-        login_user user2
-        visit gws_workflow2_files_main_path(site: site)
+        login_user user2, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-view" do
@@ -391,8 +385,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         #
         # admin: 申請を承認する
         #
-        login_user admin
-        visit gws_workflow2_files_main_path(site: site)
+        login_user admin, to: gws_workflow2_files_main_path(site: site)
         click_on item.name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-view" do
@@ -446,8 +439,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
   context "when superior isn't existed" do
     it do
-      login_user user1
-      visit gws_workflow2_files_main_path(site: site)
+      login_user user1, to: gws_workflow2_files_main_path(site: site)
       click_on item.name
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-request" do
@@ -489,8 +481,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
     it do
       # user1: 申請する
-      login_user user1
-      visit gws_workflow2_files_main_path(site: site)
+      login_user user1, to: gws_workflow2_files_main_path(site: site)
       click_on item.name
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-request" do
@@ -557,8 +548,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       end
 
       # user2: 申請を承認する（代理承認者 ）
-      login_user user2
-      visit gws_workflow2_files_main_path(site: site)
+      login_user user2, to: gws_workflow2_files_main_path(site: site)
       click_on item.name
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do
@@ -602,8 +592,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       expect(SS::Notification.count).to eq 1
 
       # user3: 申請を承認する
-      login_user user3
-      visit gws_workflow2_files_main_path(site: site)
+      login_user user3, to: gws_workflow2_files_main_path(site: site)
       click_on item.name
       wait_for_turbo_frame "#workflow-approver-frame"
       within ".mod-workflow-view" do

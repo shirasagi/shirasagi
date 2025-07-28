@@ -41,8 +41,10 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
 
   def each_page_with_rescue(&block)
     each_page do |page|
-      rescue_with(rescue_p: rescue_p) do
-        yield page
+      Rails.logger.tagged(page.filename) do
+        rescue_with(rescue_p: rescue_p) do
+          yield page
+        end
       end
     end
   end
@@ -53,18 +55,20 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
     @task.log "# #{@site.name}"
     @task.performance.header(name: "generate page performance log at #{Time.zone.now.iso8601}")
     @task.performance.collect_site(@site) do
-      if @site.generate_locked?
-        @task.log(@site.t(:generate_locked))
-        return
-      end
+      Rails.logger.tagged(@site.host) do
+        if @site.generate_locked?
+          @task.log(@site.t(:generate_locked))
+          return
+        end
 
-      each_page_with_rescue do |page|
-        next unless page
+        each_page_with_rescue do |page|
+          next unless page
 
-        @task.performance.collect_page(page) do
-          result = page.generate_file(release: false, task: @task)
+          @task.performance.collect_page(page) do
+            result = page.generate_file(release: false, task: @task)
 
-          @task.log page.url if result
+            @task.log page.url if result
+          end
         end
       end
     end

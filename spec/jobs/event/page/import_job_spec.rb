@@ -81,11 +81,7 @@ describe Event::Page::ImportJob, dbscope: :example do
         expect(item.released_type).to eq released_type
         expect(item.released).to eq released.in_time_zone
         expect(item.groups.pluck(:name)).to match_array [ group.name ]
-        unless SS.config.ss.disable_permission_level
-          expect(item.permission_level).to be 2
-        end
         expect(item.state).to eq state
-        expect(item.permission_level).to be_numeric
       end
     end
   end

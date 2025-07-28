@@ -93,7 +93,10 @@ class Fs::FilesController < ApplicationController
         cms_sites.first
       else
         # リクエスト・ホストから一意にサイトが決まらないケース
-        owner_item = cur_item.send(:effective_owner_item)
+        if cur_item.respond_to?(:effective_owner_item)
+          # Gws::Share::File は #effective_owner_item に応答しない
+          owner_item = cur_item.effective_owner_item
+        end
         if owner_item.try(:site) && owner_item.site.is_a?(SS::Model::Site)
           # owner_item is a cms object.
           cms_sites.find { |site| site.id == owner_item.site_id }

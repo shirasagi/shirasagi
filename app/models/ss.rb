@@ -3,6 +3,10 @@
 module SS
   module_function
 
+  EMPTY_ARRAY = [].freeze
+  EMPTY_HASH = {}.freeze
+  EMPTY_SET = Set.new.freeze
+
   EPOCH_TIME = Time.at(0).utc
 
   SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
@@ -14,6 +18,14 @@ module SS
   HTTP_STATUS_CODE_NOT_FOUND = "404"
 
   mattr_accessor(:max_items_per_page) { 50 }
+
+  mattr_accessor(:max_files_per_page) { 20 }
+
+  mattr_accessor(:file_upload_dialog) { :v2 }
+
+  # 200 = 80 for japanese name + 120 for english name
+  # 日本語タイトルと英語タイトルとをスラッシュで連結して、一つのページとして運用することを想定
+  mattr_reader(:max_name_length, default: 200)
 
   # 403
   class ForbiddenError < RuntimeError
@@ -122,6 +134,19 @@ module SS
     SS::Duration.parse("#{DEFAULT_TRASH_THRESHOLD}.#{DEFAULT_TRASH_THRESHOLD_UNIT}")
   end
 
+  def memorize(caller, key, expires_in:)
+    now = Time.zone.now
+    memorized_at = caller.instance_variable_get("@#{key}_memorized_at")
+    if memorized_at && now <= memorized_at + expires_in
+      return caller.instance_variable_get("@#{key}")
+    end
+
+    value = yield
+    caller.instance_variable_set("@#{key}", value)
+    caller.instance_variable_set("@#{key}_memorized_at", now)
+    value
+  end
+
   def parse_threshold!(now, threshold, site:)
     return now - site.trash_threshold_in_days if threshold.nil?
     case threshold
@@ -140,5 +165,14 @@ module SS
     return true if ActionDispatch::ExceptionWrapper.status_code_for_exception(err.class.name) == 404
     return true if err.to_s == HTTP_STATUS_CODE_NOT_FOUND
     false
+  end
+
+  def update_const(mod, constant_name, constant)
+    mod.module_eval do
+      remove_const(constant_name) if const_defined?(constant_name)
+      const_set(constant_name, constant)
+    end
+
+    constant
   end
 end

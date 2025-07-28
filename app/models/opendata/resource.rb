@@ -19,16 +19,15 @@ class Opendata::Resource
 
   permit_params :state, :name, :text, :format, :license_id, :source_url, :order, :in_update_dataset
 
-  validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
-  validates :format, presence: true
-  #validates :source_url, format: /\A#{URI::regexp(%w(https http))}$\z/, if: ->{ source_url.present? }
-
   before_validation :set_source_url, if: ->{ source_url.present? }
   before_validation :set_filename, if: ->{ in_file.present? }
-  before_validation :escape_source_url, if: ->{ source_url.present? }
   before_validation :validate_in_file, if: ->{ in_file.present? }
   before_validation :validate_in_tsv, if: ->{ in_tsv.present? }
   before_validation :set_format
+
+  validates :in_file, presence: true, if: ->{ file_id.blank? && source_url.blank? }
+  validates :format, presence: true
+  validates :source_url, url: true, if: ->{ source_url.present? }
 
   after_save :save_dataset
   after_destroy :compression_dataset
@@ -107,7 +106,7 @@ class Opendata::Resource
     end
 
     report_criteria = Opendata::ResourceDownloadReport.site(dataset.site)
-    report_criteria = report_criteria.where(dataset_id: dataset.id, resource_filename: filename)
+    report_criteria = report_criteria.where(dataset_id: dataset.id, resource_id: id)
     counts = report_criteria.pluck(*Opendata::Resource::ReportModel::DAY_COUNT_FIELDS).flatten.compact
     count = counts.sum
 
@@ -128,11 +127,6 @@ class Opendata::Resource
   def set_filename
     self.filename = in_file.original_filename
     self.format = filename.sub(/.*\./, "").upcase if format.blank?
-  end
-
-  def escape_source_url
-    return if source_url.ascii_only?
-    self.source_url = ::Addressable::URI.escape(source_url)
   end
 
   def validate_in_file
@@ -162,6 +156,7 @@ class Opendata::Resource
     dataset.updated = updated if in_update_dataset.present?
     dataset.released ||= Time.zone.now
     dataset.save(validate: false)
+    dataset.send(:generate_file) unless dataset.changed?
     # dataset.send(:save_backup)
   end
 
@@ -171,10 +166,12 @@ class Opendata::Resource
     else
       self.filename = nil
       self.file.destroy if file
+      self.source_url = ::Addressable::URI.escape(source_url) if !source_url.ascii_only?
     end
   end
 
   def compression_dataset
     dataset.compression_dataset
+    dataset.send(:generate_file)
   end
 end

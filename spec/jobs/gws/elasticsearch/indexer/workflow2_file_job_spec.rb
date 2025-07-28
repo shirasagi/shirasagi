@@ -40,8 +40,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "treated"
         )
-        item.update_workflow_user(site, user)
-        item.update_workflow_agent(site, nil)
+        item.update_workflow_user(site, user, nil)
+        item.update_workflow_agent(site, nil, nil)
         item.save!
         item.class.find(item.id)
       end
@@ -97,8 +97,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "treated"
         )
-        item.update_workflow_user(site, delegatee_user)
-        item.update_workflow_agent(site, user)
+        item.update_workflow_user(site, delegatee_user, delegatee_group)
+        item.update_workflow_agent(site, user, nil)
         item.save!
         item.class.find(item.id)
       end
@@ -154,8 +154,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "untreated"
         )
-        item.update_workflow_user(site, delegatee_user)
-        item.update_workflow_agent(site, user)
+        item.update_workflow_user(site, delegatee_user, delegatee_group)
+        item.update_workflow_agent(site, user, nil)
         item.save!
         item.class.find(item.id)
       end
@@ -268,8 +268,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
       end
 
       omittable_fields = %i[
-        id mode text categories custom_group_ids permission_level member_ids member_group_ids member_custom_group_ids
-        readable_member_ids readable_group_ids readable_custom_group_ids
+        id mode text categories custom_group_ids member_ids member_group_ids member_custom_group_ids
+        readable_member_ids readable_group_ids readable_custom_group_ids groups group_names
         text_index site_id attachment
       ]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
@@ -291,11 +291,11 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
       site.save!
 
       # gws:es:ingest:init
-      ::Gws::Elasticsearch.init_ingest(site: site)
+      Gws::Elasticsearch.init_ingest(site: site)
       # gws:es:drop
-      ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+      Gws::Elasticsearch.drop_index(site: site) rescue nil
       # gws:es:create_indexes
-      ::Gws::Elasticsearch.create_index(site: site)
+      Gws::Elasticsearch.create_index(site: site)
     end
 
     context 'when model was created' do
@@ -312,7 +312,7 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -354,7 +354,7 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -391,7 +391,7 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|
@@ -423,7 +423,7 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
         end
 
         # wait for indexing
-        ::Gws::Elasticsearch.refresh_index(site: site)
+        Gws::Elasticsearch.refresh_index(site: site)
 
         expect(Gws::Job::Log.count).to eq 1
         Gws::Job::Log.first.tap do |log|

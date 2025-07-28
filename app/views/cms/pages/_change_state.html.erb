@@ -5,12 +5,20 @@
     <div class="addon-view" id="addon-basic">
       <div class="addon-head">
         <h2><%= t("ss.confirm.target_to_#{@change_state}") %></h2>
+        <div class="cms-accessibility-notice">
+          <%= t('cms.notices.batch_accessibility_check_notice') %>
+        </div>
       </div>
+
       <div class="addon-body">
         <div class="index">
           <ul class="list-items list-items-grid">
             <% @selected_items.each do |item| %>
-              <%= render "cms/pages/confirm_all", item: item, f: f, permitted: item.allowed?(:release, @cur_user, site: @cur_site), message: message %>
+              <% if @change_state == "closed" %>
+                <%= render "cms/pages/confirm_all", item: item, f: f, permitted: item.allowed?(:close, @cur_user, site: @cur_site), message: message %>
+              <% else %>
+                <%= render "cms/pages/confirm_all", item: item, f: f, permitted: item.allowed?(:release, @cur_user, site: @cur_site), message: message %>
+              <% end %>
             <% end %>
           </ul>
         </div>

@@ -52,11 +52,9 @@ describe Article::Page::ImportJob, dbscope: :example do
         expect(Article::Page.site(site).count).to eq 2
         Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
           expect(page).to be_present
-          expect(page.permission_level).to be_numeric
         end
         Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
           expect(page).to be_present
-          expect(page.permission_level).to be_numeric
         end
       end
     end
@@ -372,16 +370,13 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            group_ids: cms_user.group_ids, permission_level: rand(1..3), contact_group: group1
+            group_ids: cms_user.group_ids, contact_group: group1
           )
         end
 
         it do
           Article::Page.site(site).node(dest_node).first.tap do |page|
             expect(page.group_ids).to eq source_page.group_ids
-            unless SS.config.ss.disable_permission_level
-              expect(page.permission_level).to eq source_page.permission_level
-            end
           end
         end
       end
@@ -429,11 +424,9 @@ describe Article::Page::ImportJob, dbscope: :example do
 
         Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
           expect(page).to be_present
-          expect(page.permission_level).to be_numeric
         end
         Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
           expect(page).to be_present
-          expect(page.permission_level).to be_numeric
         end
       end
     end

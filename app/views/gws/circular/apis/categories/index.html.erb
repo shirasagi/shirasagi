@@ -8,10 +8,8 @@
       <dd><%= select_tag("s[category]", options_for_select(@categories.to_options(depth: 0), @category.try(:id)), include_blank: true, class: "submit-on-change") %></dd>
 
       <dt><%= @model.t :name %></dt>
-      <dd>
-        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-        <%= f.submit  t("ss.buttons.search"), class: :btn %>
-      </dd>
+      <dd><%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %></dd>
+      <dd><%= f.submit t("ss.buttons.search"), class: :btn %></dd>
     </dl>
   <% end %>
 </div>

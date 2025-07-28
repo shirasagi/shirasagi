@@ -36,10 +36,6 @@ module Cms::PublicFilter::Page
     @csrf_token    = false
     @generate_page = true
 
-    # self.params   = ActionController::Parameters.new format: "html"
-    # self.request  = ActionDispatch::Request.new method: "GET"
-    # self.response = ActionDispatch::Response.new
-
     agent = SS::Agent.new self.class
     self.params   = agent.controller.params
     self.request  = agent.controller.request

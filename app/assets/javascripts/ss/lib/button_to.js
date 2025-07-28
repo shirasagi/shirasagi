@@ -21,7 +21,7 @@ SS_ButtonTo.invokeAction = function(ev) {
   method = method.toString().toLowerCase();
   var turbo = $button.data('turbo');
 
-  var $form = $("<form/>", { action: action, method: method === "get" ? "get" : "post", turbo: !!turbo });
+  var $form = $("<form/>", { action: action, method: method === "get" ? "get" : "post" });
   if (method !== "get") {
     $form.append($("<input/>", {
       name: "authenticity_token", value: $('meta[name="csrf-token"]').attr('content'), type: "hidden"
@@ -29,6 +29,9 @@ SS_ButtonTo.invokeAction = function(ev) {
   }
   if (method !== 'get' && method !== 'post') {
     $form.append($("<input/>", { name: "_method", value: method, type: "hidden" }));
+  }
+  if (turbo) {
+    $form.attr("data-turbo", true);
   }
 
   var params = $button.data('ss-button-to-params');
@@ -56,5 +59,17 @@ SS_ButtonTo.invokeAction = function(ev) {
   }
 
   ev.preventDefault();
-  $form.appendTo(document.body)[0].requestSubmit();
+
+  var appendTo;
+  if (turbo) {
+    var $turboFrameElement = $button.closest("turbo-frame");
+    if ($turboFrameElement[0]) {
+      appendTo = $turboFrameElement[0];
+    }
+  }
+  if (!appendTo) {
+    appendTo = document.body;
+  }
+
+  $form.appendTo(appendTo)[0].requestSubmit();
 };

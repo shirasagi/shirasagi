@@ -16,6 +16,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       it do
         visit new_gws_schedule_facility_plan_path(site: site, facility: facility)
+        wait_for_js_ready
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in_datetime "item[start_at]", with: start_at
@@ -48,6 +49,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       it do
         visit new_gws_schedule_facility_plan_path(site: site, facility: facility)
+        wait_for_js_ready
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in_datetime "item[start_at]", with: start_at
@@ -73,6 +75,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       it do
         visit new_gws_schedule_facility_plan_path(site: site, facility: facility)
+        wait_for_js_ready
         within "form#item-form" do
           fill_in "item[name]", with: name
           fill_in_datetime "item[start_at]", with: start_at

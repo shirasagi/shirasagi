@@ -80,19 +80,13 @@ module Guide::Importer::Question
 
       # yes
       idx = 0
-      in_edges[idx]||= begin
-        edge = item.edges[idx]
-        edge ? OpenStruct.new(point_ids: edge.point_ids) : OpenStruct.new
-      end
+      in_edges[idx] = OpenStruct.new
       in_edges[idx][:question_type] = question_type
       in_edges[idx][:value] = I18n.t("guide.links.applicable")
 
       # no
       idx = 1
-      in_edges[idx]||= begin
-        edge = item.edges[idx]
-        edge ? OpenStruct.new(point_ids: edge.point_ids) : OpenStruct.new
-      end
+      in_edges[idx] = OpenStruct.new
       in_edges[idx][:question_type] = question_type
       in_edges[idx][:value] = I18n.t("guide.links.not_applicable")
 
@@ -103,10 +97,7 @@ module Guide::Importer::Question
         v = @row[v]
         next if v.blank?
 
-        in_edges[idx] ||= begin
-          edge = item.edges[idx]
-          edge ? OpenStruct.new(point_ids: edge.point_ids) : OpenStruct.new
-        end
+        in_edges[idx] = OpenStruct.new
         in_edges[idx][:question_type] = question_type
         in_edges[idx][:value] = v
       end

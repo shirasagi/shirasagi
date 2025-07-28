@@ -5,7 +5,7 @@ require:
 
 AllCops:
   # be sure to set minimal support version
-  TargetRubyVersion: 3.1
+  TargetRubyVersion: 3.2
   NewCops: enable
   Exclude:
     - Gemfile
@@ -130,6 +130,7 @@ Metrics/ModuleLength:
 # Configuration parameters: Max, CountKeywordArgs.
 Metrics/ParameterLists:
   MaxOptionalParameters: 4
+  CountKeywordArgs: false
 
 # Offense count: 628
 # Configuration parameters: AllowedMethods, AllowedPatterns.
@@ -195,6 +196,9 @@ Style/PercentLiteralDelimiters:
     '%I': '[]'
     '%r': '{}'
 
+Style/RedundantConstantBase:
+  Enabled: false
+
 # Cop supports --auto-correct.
 # Configuration parameters: EnforcedStyle, SupportedStyles.
 Style/SignalException:
@@ -226,3 +230,9 @@ Style/WordArray:
   MinSize: 0
   # The regular expression `WordRegex` decides what is considered a word.
   WordRegex: !ruby/regexp '/\A[\p{Word}\n\t]+\z/'
+
+# Cop supports --auto-correct.
+# Configuration parameters: EnforcedStyle.
+# SupportedStyles: forbid_for_all_comparison_operators, forbid_for_equality_operators_only, require_for_all_comparison_operators, require_for_equality_operators_only
+Style/YodaCondition:
+  EnforcedStyle: forbid_for_all_comparison_operators
