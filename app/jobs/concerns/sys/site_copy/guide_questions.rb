@@ -132,7 +132,7 @@ node_id: resolve_node_reference(src_content.node_id)).first
     end
 
     Rails.logger.debug{ "[copy_guide_question_edges] エッジコピー終了: #{src_question.id_name}" }
-end
+  end
 
   def copy_guide_question_in_edges(src_in_edges)
     return [] if src_in_edges.blank?
