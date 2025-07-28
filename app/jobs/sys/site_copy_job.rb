@@ -20,6 +20,8 @@ class Sys::SiteCopyJob < SS::ApplicationJob
   include Sys::SiteCopy::TranslateLangs
   include Sys::SiteCopy::TranslateTextCaches
   include Sys::SiteCopy::WordDictionaries
+  include Sys::SiteCopy::GuideProcedures
+  include Sys::SiteCopy::GuideQuestions
 
   self.task_class = Sys::SiteCopyTask
   self.task_name = "sys::site_copy"
@@ -57,6 +59,8 @@ class Sys::SiteCopyJob < SS::ApplicationJob
     copy_cms_nodes
     copy_cms_parts
     copy_cms_pages
+    copy_guide_questions
+    copy_guide_procedures
     copy_cms_files if @copy_contents.include?("files")
     copy_cms_editor_templates if @copy_contents.include?("editor_templates")
     copy_kana_dictionaries if @copy_contents.include?("dictionaries")

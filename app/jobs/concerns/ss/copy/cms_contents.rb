@@ -61,6 +61,10 @@ module SS::Copy::CmsContents
       :editor_template
     elsif ancestors.include?(Guide::Diagram::Point)
       :guide_diagram_point
+    elsif klass == Guide::Procedure
+      :guide_procedure
+    elsif klass == Guide::Question
+      :guide_question
     elsif klass == Opendata::DatasetGroup
       :opendata_dataset_group
     elsif klass == Opendata::License
@@ -158,6 +162,10 @@ module SS::Copy::CmsContents
       resolve_opendata_dataset_group_reference(id_or_ids)
     when :opendata_license
       resolve_opendata_license_reference(id_or_ids)
+    when :guide_procedure
+      resolve_guide_procedure_reference(id_or_ids)
+    when :guide_question
+      resolve_guide_question_reference(id_or_ids)
     end
   end
 end
