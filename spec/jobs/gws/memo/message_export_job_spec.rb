@@ -53,7 +53,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         export_message.call
         expect(@exported.size).to eq 1
 
-        basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+        basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
         expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
         @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -109,7 +109,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         export_message.call
         expect(@exported.size).to eq 1
 
-        basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+        basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
         expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
         @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -129,7 +129,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         export_message.call
         expect(@exported.size).to eq 1
 
-        basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+        basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
         expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
         @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -163,7 +163,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -237,7 +237,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox_sent")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox_sent")}/#{basename}.eml"].tap do |mail|
@@ -301,7 +301,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -373,7 +373,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|
@@ -430,7 +430,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
       export_message.call
       expect(@exported.size).to eq 1
 
-      basename = ::Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
+      basename = Fs.sanitize_filename("#{message.id}_#{message.display_subject}")
       expect(@exported.key?("#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml")).to be_truthy
 
       @exported["#{I18n.t("gws/memo/folder.inbox")}/#{basename}.eml"].tap do |mail|

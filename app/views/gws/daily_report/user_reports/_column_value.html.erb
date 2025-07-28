@@ -26,7 +26,7 @@
       <% if !print && user.id != @cur_user.id %>
         <div class="comment-link">
           <%= link_to({ controller: "#{controller_path}/comments", action: :new, report: report.id, column: column_value.column_id }, { class: 'add-plan' }) do %>
-            <i class="material-icons editicon" style="font-size: inherit"></i>
+            <%= md_icons.filled "mode_edit", tag: :i, class: "editicon", style: "font-size: inherit" %>
           <% end %>
         </div>
       <% end %>

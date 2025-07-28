@@ -18,9 +18,9 @@
           <% if @tap_menu %>
             <% @tap_menu.call item %>
           <% else %>
-            <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
-            <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-            <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:delete, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.show'), action: :show, id: item rescue nil if item.allowed?(:read, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.edit'), action: :edit, id: item rescue nil if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.delete'), action: :delete, id: item rescue nil if item.allowed?(:delete, @cur_user, site: @cur_site) %>
 
             <% if %i(cms_nodes cms_pages).include?(@model.collection_name) %>
               <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" if item.public? %>

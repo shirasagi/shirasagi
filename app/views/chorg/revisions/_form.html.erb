@@ -1,13 +1,3 @@
-<%= jquery do %>
-$('#item-form').submit(function(){
-  if ($("#item_in_revision_csv_file").val()) {
-    if (!confirm('<%= I18n.t("chorg.messages.import_revision_file_confirmation") %>')) {
-      return false;
-    }
-  }
-});
-<% end %>
-
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>
@@ -18,52 +8,10 @@ $('#item-form').submit(function(){
     <dd><%= link_to t("ss.links.download_sample_csv"), { action: :download_sample_csv } %></dd>
   <% end %>
 
-  <dt><%= @model.t :user_csv_file_id %><%= @model.tt :user_csv_file_id %></dt>
-  <dd><%= f.file_field :in_user_csv_file %></dd>
-  <% if @item.user_csv_file %>
-  <dd><label><%= f.check_box :rm_user_csv_file %><%= t('ss.buttons.delete') %> (<%= @item.user_csv_file.filename %>)</label></dd>
-  <% end %>
-
-  <% if @ss_mode == :cms %>
-    <dt><%= @model.t :content_csv_file_id %><%= @model.tt :content_csv_file_id %></dt>
-    <dd><%= f.file_field :in_content_csv_file %></dd>
-    <% if @item.content_csv_file %>
-    <dd><label><%= f.check_box :rm_content_csv_file %><%= t('ss.buttons.delete') %> (<%= @item.content_csv_file.filename %>)</label></dd>
-    <% end %>
-
-    <dt><%= @model.t :target_site_ids %><%= @model.tt :target_site_ids %></dt>
-    <dd>
-      <%= f.hidden_field "target_site_ids[]", value: "", id: nil, class: "hidden-ids" %>
-      <%= link_to t("cms.apis.sites.index"), cms_apis_sites_path, class: "ajax-box" %>
-    </dd>
-    <dd>
-      <table class="index ajax-selected">
-        <thead>
-        <tr>
-          <th class="name"><%= t("mongoid.models.cms/site") %></th>
-          <th></th>
-        </tr>
-        </thead>
-        <tbody>
-          <% @item.target_sites.each do |site| %>
-            <tr data-id="<%= site.id %>">
-              <td><%= f.hidden_field "target_site_ids[]", value: site.id, id: nil %> <%= site.host %></td>
-              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </dd>
+  <% if @model == ::Chorg::Revision %>
+    <%= render "site_notice", local_assigns %>
   <% end %>
 
   <dt><%= @model.t :delete_method %><%= @model.tt :delete_method %></dt>
   <dd><%= f.select :delete_method, @item.delete_method_options %></dd>
 </dl>
-
-<% @crud_buttons = proc do |f| %>
-  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
-  <% if @ss_mode == :cms %>
-      <%= f.submit t("chorg.buttons.save_and_import_changesets"), name: 'save_and_import_changesets', class: 'btn-primary save', data: { disable_with: t("chorg.buttons.save_and_import_changesets") } %>
-  <% end %>
-  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{url_for(action: :index)}'; return false;" %>
-<% end %>

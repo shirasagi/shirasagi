@@ -130,7 +130,7 @@ this.SS_Popup = (function () {
     });
   };
 
-  SS_Popup.prototype.showError = function(xhr, status, error) {
+  SS_Popup.prototype.showError = function(_xhr, _status, _error) {
     this.el._tippy.setContent("[==Error==]");
   };
 

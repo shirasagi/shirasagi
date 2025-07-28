@@ -14,15 +14,17 @@ describe Webmail::HistoryArchiveJob, dbscope: :example, imap: true do
 
   describe ".perform" do
     before do
-      mail_count.times do
+      mail_count.times do |i|
         webmail_import_mail(user, mail)
       end
       webmail_reload_mailboxes(user)
+
+      Webmail.imap_pool.disconnect_all
     end
 
     it do
       job_class = Webmail::MailExportJob.bind(user_id: user, user_password: SS::Crypto.encrypt("pass"))
-      job_class.perform_now(mail_ids: [], root_url: "#{%w(http https).sample}://#{unique_domain}/", account: "0")
+      ss_perform_now(job_class, mail_ids: [], root_url: "#{%w(http https).sample}://#{unique_domain}/", account: "0")
 
       expect(Gws::Job::Log.count).to eq 1
       Job::Log.first.tap do |log|

@@ -1,3 +1,16 @@
+<%
+  def v2s(value)
+    if value == nil
+      "NULL"
+    elsif value == ""
+      "''"
+    elsif value.is_a?(Time)
+      value.in_time_zone.iso8601
+    else
+      value
+    end
+  end
+%>
 <table class="index">
   <thead>
     <tr>
@@ -10,7 +23,7 @@
     <% @item.each do |key, val| %>
     <tr>
       <th style="width: 160px; color: #b38; font-weight: bold;"><%= key %></th>
-      <td><%= val %></td>
+      <td><%= v2s(val) %></td>
     </tr>
     <% end %>
   </tbody>

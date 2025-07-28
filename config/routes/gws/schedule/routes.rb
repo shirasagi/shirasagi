@@ -29,7 +29,7 @@ Rails.application.routes.draw do
     get 'facilities/print' => 'facilities#print'
     get 'search' => redirect { |p, req| "#{req.path}/users" }, as: :search
     get 'search/users' => 'search/users#index', as: :search_users
-    get 'search/times' => 'search/times#index', as: :search_times
+    match 'search/times' => 'search/times#index', via: %i[get post], as: :search_times
     match 'search/reservations' => 'search/reservations#index', via: %i[get post], as: :search_reservations
     get 'csv' => 'csv#index', as: :csv
     post 'csv/import' => 'csv#import', as: :import_csv
@@ -43,6 +43,10 @@ Rails.application.routes.draw do
     resources :group_plans, path: 'groups/:group/plans', concerns: :plans
     resources :custom_group_plans, path: 'custom_groups/:group/plans', concerns: :plans
     resources :facility_plans, path: 'facilities/:facility/plans', concerns: [:plans, :export]
+    resources :facility_approval_plans, path: 'facilities/approval_plans' do
+      match :soft_delete, on: :member, via: [:get, :post]
+      post :soft_delete_all, on: :collection
+    end
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
       match :undo_delete, on: :member, via: [:get, :post]
     end
@@ -67,6 +71,7 @@ Rails.application.routes.draw do
         # post :finish_all, on: :collection
         # post :revert_all, on: :collection
         # post :soft_delete_all, on: :collection
+        post :copy, on: :member
       end
       resources :trashes, concerns: :deletion do
         match :undo_delete, on: :member, via: %i[get post]
@@ -76,7 +81,7 @@ Rails.application.routes.draw do
 
       namespace "apis" do
         scope path: ':todo_id' do
-          resources :comments, concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+          resources :comments, concerns: [:deletion], except: [:index, :new, :show]
         end
         get "categories" => "categories#index"
       end

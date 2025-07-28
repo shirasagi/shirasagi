@@ -1,0 +1,14 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+  if @item.respond_to?(:form) && @item.form.present?
+    css_class = Array(addon[:class])
+    addon[:class] = css_class + %w(hide)
+  end
+%>
+
+<%=
+  component = SS::FileSelectBoxComponent.new(
+    ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, page: @page, item: @item
+  )
+  render component
+%>

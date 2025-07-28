@@ -8,7 +8,7 @@ this.Cms_History = (function () {
     this.listIdentity = listIdentity;
     this.limit = opts["limit"] ? opts["limit"] : 5;
     this.render();
-  };
+  }
 
   Cms_History.prototype.storageKey = function (key) {
     return "ss_cms_history_" + this.listIdentity + "_" + key;

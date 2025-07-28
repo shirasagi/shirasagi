@@ -2,24 +2,33 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 6.1.0'
+gem 'rails', '~> 8.0.0'
 gem 'sprockets'
 gem 'jsbundling-rails'
-gem 'sass-rails'
-gem 'sass' # app/models/fs/grid_fs/compass_importer.rb で require しているので必要
+gem 'sprockets-rails' # Rails 7.1 以降では明示的な組み込みが必要
+gem 'dartsass-sprockets'
+# gem 'sass' # app/models/fs/grid_fs/compass_importer.rb で require しているので必要
 gem 'uglifier'
 gem 'coffee-rails'
 gem 'jbuilder'
 gem 'sdoc', group: :doc
+# rdoc 6.4 以降にアップデートすると依存関係に 'psych' と 'stringio' が組み込まれる。
+# 'psych' と 'stringio' が組み込まれると 'bin/rails' コマンドや 'bin/rake' コマンドが動作しなくなり、
+# 'bundle exec rails' や 'bundle exec rake' を使用しなければならなくなるので、バージョンを固定する。
+gem 'rdoc', '~> 6.3.0', group: :doc #
 
-# Server
+# Server (currently supported)
+gem 'puma'
+gem 'puma_worker_killer'
+
+# Server (currently not recommended)
 gem 'unicorn'
 gem 'unicorn-worker-killer'
+
 
 # Database
 gem 'mongoid'
 gem 'mongo_session_store'
-gem 'mongoid-grid_fs'
 
 # Assets
 gem 'autosize-rails'
@@ -38,6 +47,7 @@ gem 'browser'
 gem 'clam_scan'
 gem 'diff-lcs'
 gem 'diffy'
+gem 'dotenv-rails'
 gem 'fast_blank'
 gem 'fastimage'
 gem 'geocoder'
@@ -50,8 +60,10 @@ gem 'kaminari-mongoid'
 gem 'kramdown'
 gem 'kramdown-parser-gfm'
 gem 'liquid'
+gem 'mail' # must load 'mail' before loading 'mail-iso-2022-jp'
 gem 'mail-iso-2022-jp'
 gem 'marcel'
+gem 'mime-types'
 gem 'mini_magick'
 gem 'mongoid-geospatial'
 gem 'net-ldap'
@@ -60,13 +72,14 @@ gem 'net-pop'
 gem 'net-smtp'
 gem 'non-stupid-digest-assets'
 gem 'oj'
-gem 'psych', '< 4.0.0'
 gem 'rails_autolink'
 gem 'retriable'
 gem 'rexml'
 gem 'romaji'
 gem 'roo'
 #gem 'roo-xls', git: "https://github.com/roo-rb/roo-xls.git"
+gem 'rotp'
+gem 'rqrcode'
 gem 'rss'
 gem 'rubyzip', '~> 2.3.0'
 gem 'shortuuid'
@@ -82,12 +95,13 @@ gem 'omniauth-facebook'
 gem 'omniauth-github'
 gem 'omniauth-google-oauth2'
 gem 'omniauth-twitter'
+gem 'omniauth-twitter2'
 gem 'omniauth-yahoojp'
 gem 'omniauth-line'
 gem 'omniauth-rails_csrf_protection'
 
 # SNS
-gem 'twitter'
+gem 'x'
 
 # SAML
 gem 'ruby-saml'
@@ -109,44 +123,39 @@ gem 'faraday'
 gem 'elasticsearch', '~> 7'
 
 # line
-gem 'line-bot-api'
+gem 'line-bot-api', '~> 1.29'
 
 # kintone
 gem 'kintone', git: "https://github.com/jue58/kintone.git"
 
 group :development, :test do
   gem 'brakeman', require: false
-  gem 'dotenv-rails'
   gem 'capybara', require: false
-  gem 'debase', require: false
+  gem 'debug', require: false
   gem 'factory_bot_rails', require: false
   gem 'fuubar', require: false
   gem 'guard', require: false
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-rubocop', require: false
-  gem 'guard-scss_lint', require: false
   gem 'mongoid-rspec', require: false
   gem 'pry-byebug', require: false
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
   gem 'pry-stack_explorer', require: false
-  gem 'puma', require: false
   gem 'rails-controller-testing', require: false
   gem 'rspec', require: false
   gem 'rspec-collection_matchers', require: false
   gem 'rspec-its', require: false
   gem 'rspec-rails', require: false
-  gem 'rubocop', '1.18.4', require: false
+  gem 'rubocop', '~> 1.66', require: false
   gem 'rubocop-performance', require: false
   gem 'rubocop-rspec', require: false
-  gem 'rubocop-rails', '2.11.3', require: false
-  gem 'scss_lint', require: false
-  gem 'selenium-webdriver', '~> 4.11', require: false
+  gem 'rubocop-rails', '~> 2.26', require: false
+  gem 'selenium-webdriver', require: false
   gem 'simplecov', require: false
   gem 'simplecov-csv', require: false
   gem 'simplecov-html', require: false
   gem 'simplecov-lcov', require: false
-  gem 'spring', '~> 2.0.2', require: false
   gem 'test-queue', require: false
   gem 'timecop', require: false
 end

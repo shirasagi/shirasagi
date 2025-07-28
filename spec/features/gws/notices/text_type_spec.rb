@@ -32,7 +32,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(post.name).to eq name
         expect(post.text_type).to eq text_type
         expect(post.text).to eq texts.join("\r\n")
-        expect(post.html).to eq texts.join("<br />")
+        expect(post.html).to eq "<p>" + texts.join("<br />") + "</p>"
       end
     end
   end
@@ -62,7 +62,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(post.name).to eq name
         expect(post.text_type).to eq text_type
         expect(post.text).to eq texts.join("\r\n")
-        expect(post.html).to eq "<p>" + texts.join("<br>\n") + "</p>\n"
+        expect(post.html).to eq "<p>" + texts.join("<br>\n") + "</p>"
       end
     end
   end
@@ -80,7 +80,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.new")
       within "#item-form" do
         fill_in "item[name]", with: name
-        wait_event_to_fire("ss:editorActivated") do
+        wait_for_event_fired("ss:editorActivated") do
           select text_type_label, from: "item[text_type]"
         end
         fill_in_ckeditor "item[text]", with: texts.join("\n")
@@ -125,7 +125,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(post.name).to eq name
         expect(post.text_type).to eq "markdown"
         expect(post.text).to eq script
-        expect(post.html).to eq "alert('xss');\n\n"
+        expect(post.html).to eq "alert('xss');"
       end
     end
   end
@@ -154,7 +154,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         expect(post.name).to eq name
         expect(post.text_type).to eq "plain"
         expect(post.text).to eq script
-        expect(post.html).to eq "&lt;script&gt;alert(&#39;xss&#39;);&lt;/script&gt;"
+        # expect(post.html).to eq "<p>&lt;script&gt;alert(&#39;xss&#39;);&lt;/script&gt;</p>"
+        expect(post.html).to eq "<p>alert('xss');</p>"
       end
     end
   end
@@ -174,7 +175,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.text_type.plain"), from: "item[text_type]"
         fill_in "item[text]", with: script
 
-        wait_event_to_fire("ss:editorActivated") do
+        wait_for_event_fired("ss:editorActivated") do
           select I18n.t("ss.options.text_type.cke"), from: "item[text_type]"
         end
 

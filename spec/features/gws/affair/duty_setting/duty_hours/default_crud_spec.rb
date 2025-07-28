@@ -33,7 +33,7 @@ describe "gws_affair_duty_hours", type: :feature, dbscope: :example, js: true do
         select in_attendance_time_change_hour, from: "item[in_attendance_time_change_hour]"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Affair::DutyHour.all.count).to eq 0
       expect(page).to have_css("#addon-basic dd", text: label2)

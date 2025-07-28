@@ -1,0 +1,16 @@
+<% return unless @item.metadata_importer %>
+
+<dl class="see">
+  <dd class="wide">
+    <% source_url = @item.metadata_source_url.present? ? @item.metadata_source_url : @item.metadata_importer.source_url %>
+    <%= link_to @item.metadata_importer.name, source_url, target: "_blank", rel: "noopener" %>
+    <%= t("opendata.messages.harvest_imported_dataset") %>
+  </dd>
+</dl>
+
+<%= jquery do %>
+  var self = $('#addon-opendata-agents-addons-metadata-edit_lock');
+  var top = $('#addon-basic');
+  top.before(self);
+<% end %>
+

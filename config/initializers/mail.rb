@@ -4,9 +4,9 @@ require 'mail/field_list'
 
 module Mail
   class Field
-    alias new_field_without_shirasagi new_field
+    alias parse_field_without_shirasagi parse_field
 
-    def new_field(name, value, charset)
+    def parse_field(name, value, charset)
       if !value.is_a?(Array)
         value = value.to_s
         if value.encoding == Encoding::ASCII_8BIT
@@ -14,7 +14,7 @@ module Mail
         end
       end
 
-      new_field_without_shirasagi(name, value, charset)
+      parse_field_without_shirasagi(name, value, charset)
     end
   end
 end

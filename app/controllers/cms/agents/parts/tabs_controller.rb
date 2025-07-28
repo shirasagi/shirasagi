@@ -21,37 +21,17 @@ class Cms::Agents::Parts::TabsController < ApplicationController
 
       @tabs << tab = { name: node.name, url: node.url, rss: nil, pages: [] }
 
-      rest = content_or_path.sub(/^#{::Regexp.escape(node.filename)}/, "")
-      spec = recognize_agent "/.s#{site.id}/nodes/#{node.route}#{rest}", method: "GET"
+      spec, rss_spec = recognize_node_content(site, node, content_or_path)
       next unless spec
 
-      node_class = node.route.sub(/\/.*/, "/agents/#{spec[:cell]}")
-      set_agent(node_class)
-
-      pages = nil
-
-      if @agent.controller.class.method_defined?(:index)
-        begin
-          @cur_site = site
-          @cur_node = node
-          pages = call_node_index
-        ensure
-          @cur_site = save_site
-          @cur_node = save_node
-        end
+      if node.class.method_defined?(:condition_hash)
+        pages = Cms::Page.public_list(site: site, node: node, date: @cur_date)
+      else
+        pages = Cms::Page.site(site).and_public(@cur_date).node(node)
       end
-
-      if pages.nil?
-        if node.class.method_defined?(:condition_hash)
-          pages = Cms::Page.public_list(site: site, node: node, date: @cur_date)
-        else
-          pages = Cms::Page.site(site).and_public(@cur_date).node(node)
-        end
-      end
-
       pages = pages ? pages.order_by(released: -1).limit(@cur_part.limit) : []
       tab[:pages] = pages.to_a
-      tab[:rss]   = "#{node.url}rss.xml" if @agent.controller.class.method_defined?(:rss)
+      tab[:rss] = "#{node.url}rss.xml" if rss_spec
     end
 
     render
@@ -59,25 +39,14 @@ class Cms::Agents::Parts::TabsController < ApplicationController
 
   private
 
-  def set_agent(node_class)
-    @agent = new_agent(node_class)
-    @agent.controller.params = {}
-    @agent.controller.extend(SS::ImplicitRenderFilter)
-  end
+  def recognize_node_content(site, node, content_or_path)
+    rest = content_or_path.sub(/^#{::Regexp.escape(node.filename)}/, "")
+    path = "/.s#{site.id}/nodes/#{node.route}#{rest}"
+    spec = recognize_agent path, method: "GET"
 
-  def call_node_index
-    pages = nil
+    rss_path = "#{path}/rss.xml"
+    rss_spec = recognize_agent rss_path, method: "GET"
 
-    begin
-      @agent.invoke :index
-      pages = @agent.instance_variable_get(:@items)
-      pages = nil if pages && !pages.respond_to?(:current_page)
-      pages = nil if pages && !pages.klass.include?(Cms::Model::Page)
-    rescue => e
-      logger.error $ERROR_INFO
-      logger.error $ERROR_INFO.backtrace.join("\n")
-    end
-
-    pages
+    [spec, rss_spec]
   end
 end

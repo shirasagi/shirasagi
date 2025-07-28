@@ -1,0 +1,43 @@
+<% @footer = proc do %>
+  <footer class="send">
+    <%= button_tag t("ss.buttons.search"), type: :submit, name: nil, class: "btn-primary save btn-search" %>
+  </footer>
+<% end %>
+
+<%= render "ss/crud/addon", addon: { id: nil } do %>
+  <% if mode == "by_keyword" %>
+    <%= form_for :s, url: url_for(action: :index), html: { method: :get } do |f| %>
+      <dl class="see">
+        <dt><%= t('ss.keyword') %></dt>
+        <dd><%= text_field_tag "s[keyword]", @s.keyword, id: nil %></dd>
+        <dd>
+          <% Gws::Workflow2.keyword_operator_options.each do |label, value| %>
+            <label><%= radio_button_tag "s[keyword_operator]", value, @s.keyword_operator == value %> <%= label %></label>
+          <% end %>
+        </dd>
+      </dl>
+
+      <% if @footer %>
+        <% @footer.call %>
+      <% end %>
+    <% end %>
+  <% end %>
+
+  <% if mode == "by_purpose" %>
+    <dl class="see">
+      <dt class="wide"><%= t("gws/workflow2.find_by_purpose") %></dt>
+      <dd class="wide">
+        <% Gws::Workflow2::Form::Purpose.site(@cur_site).readable(@cur_user, site: @cur_site).reorder(order: 1, name: 1).to_a.group_by { |purpose| purpose.name.split("/", 2).first }.each do |name, purposes| %>
+          <div class="application-by-purpose-list">
+            <div class="application-by-purpose-list-title"><%= name %></div>
+            <div class="application-by-purpose-list-items">
+              <% purposes.each do |purpose| %>
+                <div class="application-by-purpose-list-item"><%= link_to purpose.name.split("/", 2).last, gws_workflow2_select_forms_path(s: { purpose_id: purpose }) %></div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </dd>
+    </dl>
+  <% end %>
+<% end %>

@@ -19,9 +19,13 @@
 .event-recurrence-excludes {
   display: flex;
   align-items: center;
+  margin-left: 10px;
+  padding: 5px 10px;
+  background: #f2f2f2;
 }
 .event-recurrence-excludes-summary {
   max-width: 20em;
+  margin-left: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -84,4 +88,41 @@ dl.see > dd .event-recurrence input {
       }
     }
   }
+}
+
+.information {
+  margin: 0 20px;
+}
+
+.information__text {
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.information__usage {
+  width: 100%;
+  margin-top: 20px;
+  padding: 20px;
+  border: 2px solid #ccc;
+  border-radius: 10px;
+}
+
+.event__date {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0 5px;
+  border-radius: 100%;
+  background-color: #b3e5fc;
+  vertical-align: text-bottom;
+}
+
+.exclusion-date {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  margin: 0 5px;
+  border-radius: 100%;
+  background-color: #cfd8dc;
+  vertical-align: text-bottom;
 }

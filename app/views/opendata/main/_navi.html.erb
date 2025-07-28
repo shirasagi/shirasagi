@@ -81,6 +81,9 @@
         <li><%= link_to t("ss.links.export"), opendata_harvest_exporters_path, class: "icon-node" %></li>
       </ul>
     <% end %>
+    <% if Opendata::Metadata::Importer.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <h3><%= link_to t("opendata.metadata"), opendata_metadata_importers_path, class: "icon-node" %></h3>
+    <% end %>
   <% elsif @cur_node.route == "opendata/app" %>
     <h3><span><%= t "workflow.pages" %></span></h3>
     <ul class="narrow-page">

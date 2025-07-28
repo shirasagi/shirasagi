@@ -5,12 +5,13 @@ module Webmail::Addon::GroupExtension
   included do
     attr_accessor :default_imap_setting
 
+    field :imap_default_index, type: Integer, default: 0
     field :imap_settings, type: Webmail::Extensions::ImapSettings, default: []
     permit_params imap_settings: %i(
       name from address imap_host imap_port imap_ssl_use
       imap_auth_type imap_account in_imap_password
       imap_sent_box imap_draft_box imap_trash_box
-      threshold_mb
+      threshold_mb default
     )
 
     validate :validate_imap_settings
@@ -51,19 +52,31 @@ module Webmail::Addon::GroupExtension
     end
   end
 
-  def initialize_imap
-    Webmail::Imap::Base.new_by_group(self, imap_settings.first)
+  def initialize_imap(account_index)
+    setting = imap_settings[account_index]
+    return if setting.nil?
+    Webmail::Imap::Base.new_by_group(self, setting)
   end
 
   private
 
   def validate_imap_settings
-    return self.imap_settings = [] if !default_imap_setting_changed?
-    imap_setting[:imap_port] = (imap_setting.imap_port.to_i > 0) ? imap_setting.imap_port.to_i : nil
-    imap_setting[:threshold_mb] = (imap_setting.threshold_mb.to_i > 0) ? imap_setting.threshold_mb.to_i : nil
-    imap_setting.set_imap_password
-    self.imap_settings = [imap_setting]
-    return if imap_setting.valid?(:group)
-    SS::Model.copy_errors(imap_setting, self)
+    self.imap_settings = self.imap_settings.map.with_index do |setting, i|
+      if setting[:default]
+        self.imap_default_index = i
+        setting.delete(:default)
+      end
+      setting[:imap_port] = (setting.imap_port.to_i > 0) ? setting.imap_port.to_i : nil
+      setting[:threshold_mb] = (setting.threshold_mb.to_i > 0) ? setting.threshold_mb.to_i : nil
+      setting.set_imap_password
+      setting
+    end
+    self.imap_default_index = 0 if imap_settings[imap_default_index].nil?
+    self.imap_settings.each_with_index do |setting, i|
+      setting.valid?(:group)
+      if setting.errors.present?
+        SS::Model.copy_errors(setting, self, prefix: "#{I18n.t("webmail.account_setting")}#{i + 1}: ")
+      end
+    end
   end
 end

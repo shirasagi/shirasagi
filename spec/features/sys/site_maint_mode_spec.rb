@@ -29,12 +29,12 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.state.enabled"), from: "item[maintenance_mode]"
         fill_in "item[maint_remark]", with: maint_remark
 
-        wait_cbox_open { click_on I18n.t("ss.apis.users.index") }
+        wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
       end
     end
-    wait_for_cbox do
+    within_cbox do
       within ".items" do
-        wait_cbox_close { click_on user1.name }
+        wait_for_cbox_closed { click_on user1.name }
       end
     end
     within "#item-form" do
@@ -50,23 +50,21 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     expect(site1.maint_remark).to eq maint_remark
 
     # 除外ユーザーでログイン
-    login_user user1
-    visit sns_mypage_path
+    login_user user1, to: sns_mypage_path
     expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
     expect(page).to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")
     click_on site1.name
     expect(page).to have_no_css(".maint-mode-text")
 
     # 除外ユーザーではないユーザーでログイン
-    login_user user2
-    visit sns_mypage_path
+    login_user user2, to: sns_mypage_path
     expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
     expect(page).to have_no_link(site1.name, href: "/.s#{site1.id}/cms/contents")
     visit cms_contents_path(site: site1)
     expect(page).to have_css(".maint-mode-text", text: site1.maint_remark)
 
     visit cms_contents_path(site: site2)
-    expect(page).to have_css(".list-head", text: I18n.t("cms.content", locale: I18n.default_locale))
+    expect(page).to have_css(".list-head", text: I18n.t("cms.shortcut", locale: I18n.default_locale))
     expect(page).to have_no_css(".maint-mode-text")
     expect(page).to have_no_text(site1.maint_remark)
   end

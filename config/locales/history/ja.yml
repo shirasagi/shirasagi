@@ -70,6 +70,10 @@ ja:
     models:
       history/log: 操作履歴
       history/trash: ゴミ箱
+    errors:
+      models:
+        history/backup:
+          unable_to_restore_branch_page_history: 差し替えページの履歴を復元することはできません。
     attributes:
       history/log:
         session_id: セッションID
@@ -94,8 +98,8 @@ ja:
 
   job:
     models:
-      history/trash/trash_purge_job: ゴミ箱掃除
-      history/history_log/purge_job: 操作履歴削除
-      history/backup/sweep_job: 更新履歴掃除
-      history/backup/restore_job: 更新履歴復元
-      history/trash/restore_job: ゴミ箱復元
+      history/trash/trash_purge_job: GWS履歴/ゴミ箱掃除
+      history/history_log/purge_job: GWS履歴/操作履歴削除
+      history/backup/sweep_job: GWS履歴/更新履歴掃除
+      history/backup/restore_job: GWS履歴/更新履歴復元
+      history/trash/restore_job: GWS履歴/ゴミ箱復元

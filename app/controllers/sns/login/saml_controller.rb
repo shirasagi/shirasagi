@@ -18,7 +18,6 @@ class Sns::Login::SamlController < ApplicationController
     @settings ||= OneLogin::RubySaml::Settings.new.tap do |settings|
       settings.assertion_consumer_service_url = sns_login_saml_url(id: @item.filename).sub(/\/init$/, "/consume")
       settings.issuer = sns_login_saml_url(id: @item.filename).sub(/\/init$/, "")
-      settings.authn_context = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
 
       settings.idp_entity_id = @item.entity_id
       settings.name_identifier_format = @item.name_id_format
@@ -27,6 +26,11 @@ class Sns::Login::SamlController < ApplicationController
       settings.idp_cert = SS::Crypto.decrypt(@item.x509_cert)
       settings.idp_cert_fingerprint = @item.fingerprint
       settings.force_authn = true if @item.force_authn?
+      if @item.authn_context
+        settings.authn_context = @model::AUTHN_CONTEXT_MAP[@item.authn_context] || @model::DEFAULT_AUTHN_CONTEXT
+      else
+        settings.authn_context = @model::DEFAULT_AUTHN_CONTEXT
+      end
     end
   end
 
@@ -64,7 +68,7 @@ class Sns::Login::SamlController < ApplicationController
     end
     login_path = login_path.to_s if login_path.present?
 
-    sso_token = SS::SsoToken.create_token!(ref: ref, login_path: login_path)
+    sso_token = SS::SSOToken.create_token!(ref: ref, login_path: login_path)
     redirect_to(request.create(settings, RelayState: sso_token.token, ForceAuthn: "true"))
   end
 
@@ -72,7 +76,7 @@ class Sns::Login::SamlController < ApplicationController
     state = params[:RelayState]
     raise "404" if state.blank?
 
-    sso_token = SS::SsoToken.where(token: state).first
+    sso_token = SS::SSOToken.where(token: state).first
     raise "404" if sso_token.blank?
 
     sso_token.destroy

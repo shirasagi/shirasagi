@@ -39,6 +39,18 @@
     <% end %>
   </div>
 
+  <div class="addon-views">
+    <%
+      addon_options = {}
+      addon_options[:id] = "addon-basic"
+      addon_options[:head] = I18n.t("translate.views.api_access_restriction")
+    %>
+    <% buf = render template: "_form_access_restriction", locals: { f: f, addon: addon_options } %>
+    <%= render "ss/crud/addon", addon: addon_options do %>
+      <%= buf %>
+    <% end %>
+  </div>
+
   <footer class="send ss-sticky ss-sticky-bottom">
     <% if @crud_buttons %>
       <% @crud_buttons.call f %>

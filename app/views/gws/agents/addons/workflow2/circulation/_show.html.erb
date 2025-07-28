@@ -1,0 +1,20 @@
+<%
+  return if @item.workflow_state != @model::WORKFLOW_STATE_APPROVE
+
+  workflow_circulations = @item.workflow_circulations
+  return if workflow_circulations.blank?
+
+  workflow_circulation = workflow_circulations.find do |circulation|
+    circulation[:user_id] == @cur_user.id && circulation[:state] == 'unseen'
+  end
+  return if workflow_circulation.blank?
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:head] = "#{addon[:head]}#{@model.tt :circulation_step}".html_safe
+  addon[:toggle] = false
+  addon[:location] = { before: "addon-basic" }
+%>
+
+<turbo-frame id="workflow-circulation-frame">
+  <%= render template: "gws/workflow2/frames/circulations/edit", locals: local_assigns.merge(ref: SS.request_path(request), workflow_circulation: workflow_circulation) %>
+</turbo-frame>

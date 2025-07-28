@@ -14,13 +14,13 @@ end
 <% end %>
 
 <nav class="main-navi main-navi-md webmail-navi webmail-navi-mailboxes">
-  <%= link_to webmail_apis_recent_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), class: "reload" do %>
-    <i class="material-icons md-dark">&#xE5D5;</i>
+  <%= link_to webmail_apis_recent_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), class: "reload", title: t("ss.buttons.reload") do %>
+    <%= md_icons.filled "refresh", tag: :i, class: "md-dark" %>
   <% end if @mailboxes  %>
 
   <h2>
     <%= link_to webmail_mails_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), data: { name: 'INBOX', uidnext: @mailboxes ? @mailboxes.inbox.uidnext : nil }, class: 'mail-droppable mailbox-droppable' do %>
-      <i class="material-icons">&#xE0E1;</i><%= t('webmail.box.inbox') %>
+      <%= md_icons.filled "mail_outline", tag: :i %><%= t('webmail.box.inbox') %>
       <% if @mailboxes && inbox = @mailboxes.inbox %>
         <span class="unseen count<%= inbox.unseen %>">(<%= inbox.unseen %>)</span>
       <% end %>
@@ -47,7 +47,7 @@ end
         <% end %>
       >
         <%== "<span class='pad'></span>" * padd %>
-        <i class="material-icons md-18"><%== box.icon %></i>
+        <%= md_icons.filled box.icon, tag: :i, size: 18 %>
         <span class="mailbox-name"><%= ss_truncate(name, length: 12) %></span>
         <span class="unseen count<%= box.unseen %>">(<%= box.unseen %>)</span>
       </a>
@@ -74,7 +74,7 @@ end
   <h2><%= t('mongoid.models.webmail/quota') %></h2>
 
   <%= link_to webmail_apis_quota_path(account: params[:account] || @cur_user.imap_default_index, webmail_mode: @webmail_mode), class: "reload" do %>
-    <i class="material-icons md-dark">&#xE5D5;</i>
+    <%= md_icons.filled "refresh", tag: :i, class: "md-dark" %>
   <% end if @quota.quota?  %>
 
   <div class="ss-quota-bar">

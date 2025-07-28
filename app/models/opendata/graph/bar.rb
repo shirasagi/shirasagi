@@ -9,12 +9,10 @@ class Opendata::Graph::Bar < Opendata::Graph::Base
         @labels = column.dup
         @labels.shift
       else
-        data = column.dup
-        label = data.shift
-        @datasets << {
-          label: label,
-          data: format_data(data)
-        }
+        values = column.dup
+        label = values.shift
+        values = format_values(values)
+        @datasets << { label: label, data: values }
       end
     end
   end

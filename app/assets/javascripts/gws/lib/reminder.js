@@ -33,14 +33,14 @@ this.Gws_Reminder = (function () {
           item_name: item.data('name'),
           date: item.data('date')
         },
-        success: function (data) {
+        success: function (_data) {
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .updated, .more-btn').hide();
           item.find('.dropdown-menu').removeClass('active');
           item.find('.restore').show();
           item.find('.notification').hide();
           return false;
         },
-        error: function (data) {
+        error: function (_data) {
           return alert('Error');
         }
       });
@@ -59,7 +59,7 @@ this.Gws_Reminder = (function () {
           item_name: item.data('name'),
           date: item.data('date')
         },
-        success: function (data) {
+        success: function (_data) {
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .more-btn').show();
           item.find('.restore').hide();
           if (item.find('.notification')[0]) {
@@ -68,7 +68,7 @@ this.Gws_Reminder = (function () {
           item.find('.notification').show();
           return false;
         },
-        error: function (data) {
+        error: function (_data) {
           return alert('Error');
         }
       });

@@ -1,0 +1,9 @@
+<dl class="see">
+  <dt><%= @model.t :category_ids %></dt>
+  <dd>
+    <% @item.categories.site(@cur_site).readable(@cur_user, site: @cur_site).reorder(order: 1, name: 1).each do |category| %>
+      <% next unless category %>
+      <span class="gws-category-label" style="<%= category_label_css(category) %>"><%= category.trailing_name %></span>
+    <% end %>
+  </dd>
+</dl>

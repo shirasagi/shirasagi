@@ -1,17 +1,13 @@
 # frozen_string_literal: true
 
 class Cms::GenerationReportCreateJob < Cms::ApplicationJob
-  include Job::SS::Binding::Task
-
-  self.task_class = Cms::Task
-
-  def perform
-    if !::File.exist?(task.perf_log_file_path) || ::File.size(task.perf_log_file_path).zero?
-      Rails.logger.info { "#{task.perf_log_file_path} is not found" }
+  def perform(*args)
+    if !::File.exist?(generation_task.perf_log_file_path) || ::File.size(generation_task.perf_log_file_path).zero?
+      Rails.logger.info { "#{generation_task.perf_log_file_path} is not found" }
       return
     end
 
-    Rails.logger.tagged(::File.basename(task.perf_log_file_path)) do
+    Rails.logger.tagged(::File.basename(generation_task.perf_log_file_path)) do
       reader.each_line do |line|
         line.strip!
         performance_info = JSON.parse(line)
@@ -28,27 +24,48 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       @reader.close rescue nil
       @reader = nil
     end
+    if @tmp_file
+      @tmp_file.close rescue nil
+      ::FileUtils.rm_f(@tmp_file.path) rescue nil
+      @tmp_file = nil
+    end
   end
 
   private
 
+  def generation_task
+    @generation_task ||= Cms::Task.all.site(site).find(arguments[0])
+  end
+
   def generation_type
     @generation_type ||= begin
-      case task.name
+      case generation_task.name
       when "cms:generate_pages"
-        :page
+        :pages
       when "cms:generate_nodes"
-        :node
+        :nodes
       end
+    end
+  end
+
+  def tmp_file
+    @tmp_file ||= begin
+      tmp = ::Tempfile.create("json", "#{Rails.root}/tmp")
+      Retriable.retriable { ::FileUtils.cp(generation_task.perf_log_file_path, tmp.path) }
+      tmp
     end
   end
 
   def reader
     @reader ||= begin
-      reader = Zlib::GzipReader.open(task.perf_log_file_path)
+      reader = Zlib::GzipReader.open(tmp_file.path)
       @header_line = reader.readline
       reader
     end
+  end
+
+  def digest
+    Cms::GenerationReport.sha256_hash(tmp_file.path)
   end
 
   def title
@@ -85,16 +102,19 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       end
     end
     unless title_name
-      title_name = task.started ? "Performance Report at #{I18n.l(task.started, format: :long)}" : ""
-      if generation_type
-        title_name = "Pages Generation #{title_name}".strip
-      else
-        title_name = "Nodes Generation #{title_name}".strip
+      title_name = generation_task.started ? "performance log at #{generation_task.started.iso8601}" : "performance log"
+      case generation_type
+      when :pages
+        title_name = "generate page #{title_name}".strip
+      when :nodes
+        title_name = "generate node #{title_name}".strip
       end
     end
 
     title = Cms::GenerationReport::Title.new(
-      cur_site: site, name: title_name, task: task, sha256_hash: Cms::GenerationReport.sha256_hash(task.perf_log_file_path))
+      cur_site: site, name: title_name,
+      task: generation_task, task_started: generation_task.started, task_closed: generation_task.closed,
+      sha256_hash: digest, generation_type: generation_type)
     title.save!
     title
   end
@@ -104,7 +124,7 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
     return unless content
 
     history = Cms::GenerationReport::History[title].new(
-      cur_site: site, site: site, task: task, title: title, history_type: performance_info["type"],
+      cur_site: site, site: site, task: generation_task, title: title, history_type: performance_info["type"],
       content: content, content_name: performance_info["name"], content_filename: performance_info["filename"],
       db: performance_info["db"], view: performance_info["view"], elapsed: performance_info["elapsed"],
       total_db: performance_info["db"], total_view: performance_info["view"], total_elapsed: performance_info["elapsed"])
@@ -188,7 +208,7 @@ class Cms::GenerationReportCreateJob < Cms::ApplicationJob
       next unless %(part layout).include?(result["_id"]["history_type"])
 
       aggregation = Cms::GenerationReport::Aggregation[title].new(
-        cur_site: site, site: site, task: task, title: title, history_type: result["_id"]["history_type"],
+        cur_site: site, site: site, task: generation_task, title: title, history_type: result["_id"]["history_type"],
         content_id: result["_id"]["content_id"], content_type: result["_id"]["content_type"],
         content_name: result["_id"]["content_name"], content_filename: result["_id"]["content_filename"], count: result["count"],
         db: result["db"], view: result["view"], elapsed: result["elapsed"],

@@ -8,7 +8,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   context 'when v1.7.0 post is given' do
     V170_FIELDS = %w(
       _id close_date created custom_group_ids custom_groups_hash deleted email_notification group_ids
-      groups_hash message_notification name notification_noticed permission_level readable_custom_group_ids
+      groups_hash message_notification name notification_noticed readable_custom_group_ids
       readable_custom_groups_hash readable_group_ids readable_groups_hash readable_member_ids
       readable_members_hash readable_setting_range release_date released severity site_id state text
       text_index text_type updated user_group_id user_group_name user_id user_ids user_name user_uid users_hash
@@ -52,18 +52,21 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       expect(page).to have_content(v170_item.name)
 
       # move post to appropriate folder
-      click_on I18n.t('ss.links.move')
-      within 'form#item-form' do
-        wait_cbox_open { click_on I18n.t('gws/share.apis.folders.index') }
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.move")
       end
-      wait_for_cbox do
+      within 'form#item-form' do
+        open_dialog I18n.t('gws/share.apis.folders.index')
+      end
+      within_cbox do
         expect(page).to have_content(folder.name)
-        click_on folder.name
+        wait_for_cbox_closed { click_on folder.name }
       end
       within 'form#item-form' do
+        expect(page).to have_css("#addon-basic .ajax-selected [data-id='#{folder.id}']", text: folder.name)
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # check post
       visit gws_notice_main_path(site: site)
