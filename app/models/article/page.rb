@@ -18,6 +18,7 @@ class Article::Page
   include Cms::Addon::ParentCrumb
   include Event::Addon::Date
   include Map::Addon::Page
+  include Event::Addon::Facility
   include Cms::Addon::RelatedPage
   include Contact::Addon::Page
   include Cms::Addon::Tag

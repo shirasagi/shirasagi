@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Chorg::MainRunner, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [ root_group.id ]) }
   let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site.id) }
@@ -9,14 +10,20 @@ describe Chorg::MainRunner, dbscope: :example do
   context "with delete" do
     let!(:source_group) { create(:revision_new_group) }
     let!(:revision) { create(:revision, site_id: site.id) }
-    let!(:source_page) { create(:revision_page, cur_site: site, group: source_group) }
+    let!(:source_page) do
+      Timecop.freeze(now - 2.weeks) do
+        page = create(:revision_page, cur_site: site, group: source_group)
+        ::FileUtils.rm_f(page.path)
+        Cms::Page.find(page.id)
+      end
+    end
     let!(:changeset) { create(:delete_changeset, revision_id: revision.id, source: source_group) }
 
     context 'with default delete_method (disable_if_possible)' do
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -36,12 +43,16 @@ describe Chorg::MainRunner, dbscope: :example do
           main_source_contact = source_group.contact_groups.where(main_state: "main").first
           expect(page_after_delete.contact_group_contact_id).to eq main_source_contact.id
           expect(page_after_delete.contact_group_relation).to eq "related"
+          expect(page_after_delete.contact_group_name).to eq source_page.contact_group_name
           expect(page_after_delete.contact_charge).to eq source_page.contact_charge
           expect(page_after_delete.contact_tel).to eq source_page.contact_tel
           expect(page_after_delete.contact_fax).to eq source_page.contact_fax
           expect(page_after_delete.contact_email).to eq source_page.contact_email
+          expect(page_after_delete.contact_postal_code).to eq source_page.contact_postal_code
+          expect(page_after_delete.contact_address).to eq source_page.contact_address
           expect(page_after_delete.contact_link_url).to eq source_page.contact_link_url
           expect(page_after_delete.contact_link_name).to eq source_page.contact_link_name
+          expect(page_after_delete.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         task.reload
@@ -63,7 +74,7 @@ describe Chorg::MainRunner, dbscope: :example do
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -83,12 +94,16 @@ describe Chorg::MainRunner, dbscope: :example do
           main_source_contact = source_group.contact_groups.where(main_state: "main").first
           expect(page_after_delete.contact_group_contact_id).to eq main_source_contact.id
           expect(page_after_delete.contact_group_relation).to eq "related"
+          expect(page_after_delete.contact_group_name).to eq source_page.contact_group_name
           expect(page_after_delete.contact_charge).to eq source_page.contact_charge
           expect(page_after_delete.contact_tel).to eq source_page.contact_tel
           expect(page_after_delete.contact_fax).to eq source_page.contact_fax
           expect(page_after_delete.contact_email).to eq source_page.contact_email
+          expect(page_after_delete.contact_postal_code).to eq source_page.contact_postal_code
+          expect(page_after_delete.contact_address).to eq source_page.contact_address
           expect(page_after_delete.contact_link_url).to eq source_page.contact_link_url
           expect(page_after_delete.contact_link_name).to eq source_page.contact_link_name
+          expect(page_after_delete.updated.in_time_zone).to eq source_page.updated.in_time_zone
         end
 
         task.reload

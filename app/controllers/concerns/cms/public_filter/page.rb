@@ -36,10 +36,6 @@ module Cms::PublicFilter::Page
     @csrf_token    = false
     @generate_page = true
 
-    # self.params   = ActionController::Parameters.new format: "html"
-    # self.request  = ActionDispatch::Request.new method: "GET"
-    # self.response = ActionDispatch::Response.new
-
     agent = SS::Agent.new self.class
     self.params   = agent.controller.params
     self.request  = agent.controller.request
@@ -49,8 +45,7 @@ module Cms::PublicFilter::Page
       response.body = render_page page
       response.content_type ||= "text/html"
     rescue StandardError => e
-      return if e.to_s == "404"
-      return if e.is_a? Mongoid::Errors::DocumentNotFound
+      return if SS.not_found_error?(e)
       raise e
     end
 

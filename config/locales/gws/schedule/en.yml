@@ -8,11 +8,17 @@ en:
     search_users: Search users
     search_times: Search available times
     today_wday: Today's week day
+    views:
+      approval_state: Approval state
+      request: Request
+      approve: Approve
+      deny: Deny
     navi:
       holiday: Holiday settings
       category: Type settings
       todo: To-do list
       trash: Trash
+      approve_facility_plan: approval of facility plans
     tabs:
       personal: Personal
       personal_list: Plan list
@@ -30,7 +36,7 @@ en:
         withAbsence: Absence
       titleFormat:
         month: "%m/%Y"
-        week: "(%a, %m/%d/%Y)"
+        week: "%a, %m/%d/%Y"
         day: "%a, %m/%d/%Y"
       columnFormat:
         month: "%a"
@@ -586,5 +592,5 @@ en:
 
   job:
     models:
-      gws/schedule/trash_purge_job: Empty plan trash
-      gws/schedule/todo_trash_purge_job: Empty to-do trash
+      gws/schedule/trash_purge_job: Schedule/Empty plan trash
+      gws/schedule/todo_trash_purge_job: ToDo/Empty to-do trash

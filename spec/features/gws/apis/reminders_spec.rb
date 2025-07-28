@@ -27,7 +27,7 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('gws/reminder.buttons.register_reminder')
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      wait_for_notice I18n.t('gws/reminder.notification.created')
       expect(Gws::Reminder.where(item_id: item.id).count).to eq 1
     end
   end
@@ -55,7 +55,7 @@ describe "gws_apis_reminders", type: :feature, dbscope: :example, js: true do
         end
         click_on I18n.t('gws/reminder.buttons.register_reminder')
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      wait_for_notice I18n.t('gws/reminder.notification.created')
       expect(Gws::Reminder.where(item_id: item.id).count).to eq 0
     end
   end

@@ -3,6 +3,7 @@ class Gws::Chorg::Runner < Gws::ApplicationJob
   include Chorg::Loggable
   include Chorg::MongoidSupport
   include Chorg::PrimitiveRunner
+  include Gws::Chorg::NoticeSupport
   include Chorg::Runner::Base
 
   self.ss_mode = :gws

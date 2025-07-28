@@ -59,6 +59,16 @@ module Gws::Addon
       run_callbacks(:clone_files) do
         ids = {}
         files.each do |f|
+          if f.model == "ss/temp_file" || f.owner_item_id.blank?
+            # 所有されていないファイルのため複製を抑制することで効率化を図る
+            f.user_id = @cur_user.id if @cur_user
+            f.owner_item = self if f.respond_to?(:owner_item=)
+            f.save(validate: false)
+
+            ids[f.id] = f.id
+            next
+          end
+
           attributes = Hash[f.attributes]
           attributes.slice!(*f.fields.keys)
 

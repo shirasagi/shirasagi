@@ -21,20 +21,20 @@ describe Uploader::FilesJob, dbscope: :example do
 
       # create
       perform_enqueued_jobs do
-        job.perform_now([{ mkdir: [dir1_path] }])
+        ss_perform_now(job, [{ mkdir: [dir1_path] }])
       end
       expect(Dir.exist?(dir1_path)).to be_truthy
 
       # update
       perform_enqueued_jobs do
-        job.perform_now([{ mv: [dir1_path, dir2_path] }])
+        ss_perform_now(job, [{ mv: [dir1_path, dir2_path] }])
       end
       expect(Dir.exist?(dir1_path)).to be_falsey
       expect(Dir.exist?(dir2_path)).to be_truthy
 
       # delete
       perform_enqueued_jobs do
-        job.perform_now([{ rm: [dir2_path] }])
+        ss_perform_now(job, [{ rm: [dir2_path] }])
       end
       expect(Dir.exist?(dir2_path)).to be_falsey
     end
@@ -64,14 +64,14 @@ describe Uploader::FilesJob, dbscope: :example do
       # update
       FileUtils.rm(css_path)
       perform_enqueued_jobs do
-        job.perform_now([{ text: [rel_path, text_data] }])
+        ss_perform_now(job, [{ text: [rel_path, text_data] }])
       end
       expect(Fs.read(file_path)).to eq text_data
       expect(Fs.size(css_path)).to be > 0
 
       # delete
       perform_enqueued_jobs do
-        job.perform_now([{ rm: [rel_path] }])
+        ss_perform_now(job, [{ rm: [rel_path] }])
       end
       expect(Fs.exist?(file_path)).to be_falsey
     end
@@ -101,14 +101,14 @@ describe Uploader::FilesJob, dbscope: :example do
       # update
       FileUtils.rm(js_path)
       perform_enqueued_jobs do
-        job.perform_now([{ text: [rel_path, text_data] }])
+        ss_perform_now(job, [{ text: [rel_path, text_data] }])
       end
       expect(Fs.read(file_path)).to eq text_data
       expect(Fs.size(js_path)).to be > 0
 
       # delete
       perform_enqueued_jobs do
-        job.perform_now([{ rm: [rel_path] }])
+        ss_perform_now(job, [{ rm: [rel_path] }])
       end
       expect(Fs.exist?(file_path)).to be_falsey
     end
@@ -134,7 +134,7 @@ describe Uploader::FilesJob, dbscope: :example do
 
       # delete
       perform_enqueued_jobs do
-        job.perform_now([{ rm: [rel_path] }])
+        ss_perform_now(job, [{ rm: [rel_path] }])
       end
       expect(Fs.exist?(file_path)).to be_falsey
     end

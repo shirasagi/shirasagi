@@ -10,12 +10,44 @@
     <%= f.text_field :keywords, opts %>
   </dd>
 
-  <dt><%= @model.t :description %><%= @model.tt :description %></dt>
-  <dd>
+  <dt><%= @model.t :description %></dt>
+  <dd></dd>
+
+  <dt class="depth-2"><%= @model.t :description_setting %><%= @model.tt :description_setting %></dt>
+  <dd class="depth-2">
+    <%= f.radio_button :description_setting, "manual", checked: @item.description_setting_manual? %>
+    <%= f.label :description_setting, t("cms.options.description_setting.description_setting_manual"), value: "manual" %>
+
+    <%= f.radio_button :description_setting, "auto", checked: @item.description_setting_auto? %>
+    <%= f.label :description_setting, t("cms.options.description_setting.description_setting_auto"), value: "auto" %>
+  </dd>
+
+  <dt class="depth-2"><%= @model.t :description_body %><%= @model.tt :description_body %></dt>
+  <dd class="depth-2">
     <% opts = @cur_site.auto_description_enabled? ? {} : { class: "presence" } %>
+    <% opts[:readonly] = @item.description_setting_auto? %>
     <%= f.text_area :description, opts %>
   </dd>
 
   <dt><%= @model.t :summary_html %><%= @model.tt :summary_html %></dt>
   <dd><%= f.text_area :summary_html %></dd>
 </dl>
+
+<%= javascript_tag do %>
+  $(function() {
+  const descriptionField = $('#item_description');
+
+  // 初期状態のクラス設定
+  if (descriptionField.prop('readonly')) {
+    descriptionField.addClass('readonly');
+  }
+
+  $('input[name="item[description_setting]"]').on('change', function() {
+    const currentSetting = $(this).val();
+
+    // 読み取り専用状態とクラスの切り替え
+    descriptionField.prop('readonly', currentSetting === 'auto');
+    descriptionField.toggleClass('readonly', currentSetting === 'auto');
+  });
+});
+<% end %>

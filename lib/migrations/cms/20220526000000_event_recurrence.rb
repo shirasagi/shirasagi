@@ -17,7 +17,8 @@ class SS::Migration20220526000000
       end
 
       page.event_recurrences = recurrences
-      unless page.save
+      result = page.without_record_timestamps { page.save }
+      unless result
         puts page.errors.full_messages.join("\n")
         Rails.logger.error { page.errors.full_messages.join("\n") }
       end

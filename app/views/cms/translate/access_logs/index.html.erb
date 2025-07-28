@@ -1,0 +1,37 @@
+<div class="index">
+  <div class="list-head">
+    <%= render template: "_search" %>
+  </div>
+
+  <ul class="list-items">
+    <% @items.each do |item| %>
+    <li class="list-item">
+      <nav class="tap-menu">
+        <%= link_to t('ss.links.show'), action: :show, id: item if item.allowed?(:read, @cur_user, site: @cur_site) %>
+      </nav>
+
+      <div class="info">
+        <span class="title">
+          <%= link_to item.path, { action: :show, id: item } %>
+        </span>
+
+        <div class="meta">
+          <span class="datetime"><%= ss_time_tag item.created %></span>
+          <span class="label"><%= @model.t :remote_addr %></span>
+          <span class="remote_addr"><%= item.remote_addr %></span>
+          <span class="label"><%= @model.t :user_agent %></span>
+          <span class="user_agent"><%= item.user_agent %></span>
+          <span class="label"><%= @model.t :referer %></span>
+          <span class="referer"><%= item.referer %></span>
+          <% if item.deny_message.present? %>
+            <span class="label"><%= @model.t :deny_message %></span>
+            <span class="deny-message" style="color: #b90000;"><%= item.deny_message %></span>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

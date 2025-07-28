@@ -13,7 +13,8 @@ class SS::Migration20150619114301
         if SS::FilenameUtils::NON_ASCII_RE.match?(item.filename)
           item.name = SS::FilenameUtils.convert_to_url_safe_japanese(item.filename) if item.name.blank? && item.filename.present?
           item.filename = SS::FilenameUtils.convert(SS::FilenameUtils.normalize(item.filename), id: item.id)
-          unless item.save
+          result = item.without_record_timestamps { item.save }
+          unless result
             Rails.logger.fatal("ss_file save failed #{id}: #{item.errors.full_messages}")
           end
         end

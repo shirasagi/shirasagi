@@ -18,6 +18,16 @@ describe "gws_schedule_todo_manageables", type: :feature, dbscope: :example, js:
       click_on I18n.t('gws/schedule.tabs.manageable_todo')
       expect(page).to have_no_content(item1.name)
       expect(page).to have_content(item2.name)
+
+      # copy
+      click_on item2.name
+      within "#menu" do
+        click_on I18n.t("ss.links.copy")
+      end
+      within 'form#item-form' do
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
     end
   end
 end

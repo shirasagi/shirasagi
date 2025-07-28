@@ -58,13 +58,12 @@ module Webmail::Mail::Parser
   def parse_address_field(field)
     return [] if field.blank?
 
-    # !!!Be Careful!!!
-    # Usually, field contains inner "field"
-    # and `address_list` method is private method of inner "field"
-    # So it needs to supply "true" to second arguments.
-    if field.respond_to?(:address_list, true)
-      # private `address_list` method is able to call as public method via outer "field"
-      field.address_list.addresses.map do |addr|
+    case field
+    when ::Mail::Field
+      # field contains inner "field" and it's a field we want to access
+      parse_address_field(field.field)
+    when ::Mail::CommonAddressField
+      field.element.addresses.map do |addr|
         decode_jp(addr.decoded)
       end
     else

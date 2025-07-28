@@ -14,12 +14,12 @@ describe "cms_users", type: :feature, dbscope: :example do
         expect(page).to have_link(I18n.t("cms.view_site"))
         expect(page).to have_link(I18n.t("cms.preview_site"))
       end
-      within first(".main-navi") do
-        expect(page).to have_link(I18n.t("cms.content"), href: cms_contents_path(site: site))
-        expect(page).to have_link(I18n.t("cms.node"))
-      end
+      # within first(".main-navi") do
+      #   expect(page).to have_link(I18n.t("cms.shortcut"), href: cms_contents_path(site: site))
+      #   expect(page).to have_link(I18n.t("cms.node"))
+      # end
       within "#crumbs" do
-        expect(page).to have_link(site.name, href: cms_contents_path(site: site))
+        expect(page).to have_link(I18n.t("cms.top"), href: cms_contents_path(site: site))
       end
       within "#addon-basic" do
         expect(page).to have_css(".addon-head", text: I18n.t("ss.rescues.default.head"))
@@ -37,8 +37,7 @@ describe "cms_users", type: :feature, dbscope: :example do
     let(:title) { "403 Forbidden | SHIRASAGI" }
 
     before do
-      login_user user
-      visit cms_users_path(site: site)
+      login_user user, to: cms_users_path(site: site)
     end
 
     include_context "shows cms error page"

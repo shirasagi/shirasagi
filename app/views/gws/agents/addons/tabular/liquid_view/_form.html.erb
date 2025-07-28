@@ -1,0 +1,33 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+
+  column_options = Gws::Tabular.build_column_options(@item.form, site: @cur_site)
+%>
+<dl class="see" data-field-name="template_html">
+  <dt><%= @model.t :template_html %><%= @model.tt :template_html %></dt>
+  <dd><%= f.text_area :template_html, style: "height: 400px", class: "html" %></dd>
+</dl>
+
+<dl class="see" data-field-name="template_style">
+  <dt><%= @model.t :template_style %><%= @model.tt :template_style %></dt>
+  <dd><%= f.text_area :template_style, style: "height: 400px", class: "html" %></dd>
+</dl>
+
+<dl class="see" data-field-name="orders">
+  <dt><%= @model.t :orders %><%= @model.tt :orders %></dt>
+  <dd>
+    <%=
+      order_column_options = Gws::Tabular.filter_column_options(column_options, :order)
+      component = Gws::Tabular::DndOrderFormComponent.new(
+        object_name: f.object_name, method_name: :orders, options: order_column_options, selected: @item.orders)
+      render component
+    %>
+  </dd>
+</dl>
+
+<dl class="see" data-field-name="limit_count">
+  <dt><%= @model.t :limit_count %><%= @model.tt :limit_count %></dt>
+  <dd><%= f.number_field :limit_count %></dd>
+</dl>
+
+<%= code_editor "##{addon[:id]} .html", mode: :html %>

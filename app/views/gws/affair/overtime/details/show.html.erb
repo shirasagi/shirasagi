@@ -130,48 +130,50 @@
 
       <dl class="see">
         <dt><%= "累計（30分未満切り捨て、30分以上切り上げ）" %></dt>
-        <table class="index overtime-results">
-          <thead>
-            <tr class="item-head">
-              <th><%= "割増率" %></th>
-              <th class="time"><%= "累計時間" %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr class="item">
-              <th><%= "25/100" %></th>
-              <td class="time"><%= format_round_minute(rate_total_025_100) %></td>
-            </tr>
-            <tr class="item">
-              <th><%= "50/100" %></th>
-              <td class="time"><%= format_round_minute(rate_total_050_100) %></td>
-            </tr>
-            <tr class="item">
-              <th><%= "100/100" %></th>
-              <td class="time"><%= format_round_minute(rate_total_100_100) %></td>
-            </tr>
-            <tr class="item">
-              <th><%= "125/100" %></th>
-              <td class="time"><%= format_round_minute(rate_total_125_100) %></td>
-            </tr>
-            <tr class="item">
-              <th><%= "135/100" %></th>
-              <td class="time"><%= format_round_minute(rate_total_135_100) %></td>
-            </tr>
-            <tr class="item">
-              <th><%= "150/100" %></th>
-              <td class="time"><%= format_round_minute(rate_total_150_100) %></td>
-            </tr>
-            <tr class="item">
-              <th><%= "160/100" %></th>
-              <td class="time"><%= format_round_minute(rate_total_160_100) %></td>
-            </tr>
-            <tr class="item">
-              <th><%= "175/100" %></th>
-              <td class="time"><%= format_round_minute(rate_total_175_100) %></td>
-            </tr>
-          </tbody>
-        </table>
+        <dd>
+          <table class="index overtime-results">
+            <thead>
+              <tr class="item-head">
+                <th><%= "割増率" %></th>
+                <th class="time"><%= "累計時間" %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr class="item">
+                <th><%= "25/100" %></th>
+                <td class="time"><%= format_round_minute(rate_total_025_100) %></td>
+              </tr>
+              <tr class="item">
+                <th><%= "50/100" %></th>
+                <td class="time"><%= format_round_minute(rate_total_050_100) %></td>
+              </tr>
+              <tr class="item">
+                <th><%= "100/100" %></th>
+                <td class="time"><%= format_round_minute(rate_total_100_100) %></td>
+              </tr>
+              <tr class="item">
+                <th><%= "125/100" %></th>
+                <td class="time"><%= format_round_minute(rate_total_125_100) %></td>
+              </tr>
+              <tr class="item">
+                <th><%= "135/100" %></th>
+                <td class="time"><%= format_round_minute(rate_total_135_100) %></td>
+              </tr>
+              <tr class="item">
+                <th><%= "150/100" %></th>
+                <td class="time"><%= format_round_minute(rate_total_150_100) %></td>
+              </tr>
+              <tr class="item">
+                <th><%= "160/100" %></th>
+                <td class="time"><%= format_round_minute(rate_total_160_100) %></td>
+              </tr>
+              <tr class="item">
+                <th><%= "175/100" %></th>
+                <td class="time"><%= format_round_minute(rate_total_175_100) %></td>
+              </tr>
+            </tbody>
+          </table>
+        </dd>
       </dl>
     </div>
   </div>

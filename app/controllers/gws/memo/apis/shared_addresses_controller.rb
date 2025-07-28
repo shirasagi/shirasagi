@@ -1,8 +1,6 @@
 class Gws::Memo::Apis::SharedAddressesController < ApplicationController
   include Gws::ApiFilter
 
-  MAX_ITEMS_PER_PAGE = 50
-
   model Gws::SharedAddress::Address
 
   before_action :set_fragment
@@ -46,8 +44,8 @@ class Gws::Memo::Apis::SharedAddressesController < ApplicationController
       without_deleted.
       search(s_params).
       page(params[:page]).
-      per(MAX_ITEMS_PER_PAGE)
+      per(SS.max_items_per_page)
 
-    @group_items = @groups.search(s_group_params).page(params[:group_page]).per(MAX_ITEMS_PER_PAGE)
+    @group_items = @groups.search(s_group_params).page(params[:group_page]).per(SS.max_items_per_page)
   end
 end

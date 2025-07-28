@@ -28,16 +28,14 @@ describe Gws::Memo::Apis::PersonalAddressesController, type: :feature, dbscope: 
   end
 
   before do
-    @save = described_class::MAX_ITEMS_PER_PAGE
-    described_class.send(:remove_const, :MAX_ITEMS_PER_PAGE)
-    described_class.const_set(:MAX_ITEMS_PER_PAGE, 5)
+    @save = SS.max_items_per_page
+    SS.max_items_per_page = 5
 
     login_gws_user
   end
 
   after do
-    described_class.send(:remove_const, :MAX_ITEMS_PER_PAGE)
-    described_class.const_set(:MAX_ITEMS_PER_PAGE, @save)
+    SS.max_items_per_page = @save
   end
 
   describe "tab and pagination" do
@@ -46,11 +44,11 @@ describe Gws::Memo::Apis::PersonalAddressesController, type: :feature, dbscope: 
       click_on I18n.t("ss.links.new")
       wait_for_js_ready
 
-      within "dl.to" do
-        wait_cbox_open { click_on I18n.t("mongoid.models.webmail/address") }
+      within 'dl.see.all' do
+        wait_for_cbox_opened { click_on I18n.t("mongoid.models.webmail/address") }
       end
 
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".gws-tabs .current", text: Webmail::Address.model_name.human)
         within "#gws-memo-persona-address-personal" do
           expect(page).to have_css(".list-item", text: address1.name)

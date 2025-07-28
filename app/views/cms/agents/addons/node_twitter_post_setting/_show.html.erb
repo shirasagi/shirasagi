@@ -1,11 +1,11 @@
 <% return "" unless @cur_site.twitter_poster_enabled? %>
 
 <dl class="see mod-ss-node-auto-post-setting">
+  <dt><%= @model.t :node_twitter_poster_state %></dt>
+  <dd><%= @item.label :node_twitter_poster_state %></dd>
+
   <dt><%= @model.t :node_twitter_auto_post %></dt>
   <dd><%= @item.label :node_twitter_auto_post %></dd>
-
-  <dt><%= @model.t :node_twitter_post_format %></dt>
-  <dd><%= @item.label :node_twitter_post_format %></dd>
 
   <dt><%= @model.t :node_twitter_edit_auto_post %></dt>
   <dd><%= @item.label :node_twitter_edit_auto_post %></dd>

@@ -102,11 +102,4 @@
       </table>
     </dd>
   </dl>
-
-  <% unless SS.config.ss.disable_permission_level %>
-    <dl class="see mod-gws-owner_permission-level">
-      <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
-      <dd><%= f.select :permission_level, (1..@cur_user.gws_role_level(@cur_site)).map { |i| [i, i] } %></dd>
-    </dl>
-  <% end %>
 </div>

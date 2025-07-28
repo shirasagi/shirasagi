@@ -10,7 +10,7 @@
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) && @cur_node.try(:ical_refresh_enabled?) %>
       <%= link_to t('event.links.ical_refresh'), { action: :ical_refresh } %>
     <% end %>
-  <% elsif params[:action] =~ /new|create|lock|import|download|ical_refresh|destroy_all|change_state_all/ %>
+  <% elsif params[:action] =~ /new|create|lock|import|download|ical_refresh|destroy_all|change_state_all|publish_all|close_all/ %>
     <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
   <% elsif params[:action] =~ /edit|update|delete|move|command/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>

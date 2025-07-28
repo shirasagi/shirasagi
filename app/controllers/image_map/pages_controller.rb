@@ -15,7 +15,7 @@ class ImageMap::PagesController < ApplicationController
   end
 
   def set_items
-    @items = @model.site(@cur_site).
+    @items = @model.site(@cur_site).node(@cur_node).
       allow(:read, @cur_user, site: @cur_site).order_by(order: 1)
   end
 end

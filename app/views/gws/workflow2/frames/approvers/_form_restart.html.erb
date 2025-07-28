@@ -1,0 +1,19 @@
+<%
+  return if @item.deleted?
+  return unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+  return if route_options.blank?
+%>
+
+<%= form_with scope: :item, url: url_for(action: :update), html: { method: "put", id: "workflow-route", autocomplete: :off, data: { turbo: true } } do |f| %>
+  <%= hidden_field_tag :ref, ref, id: nil %>
+  <%= error_messages_for :item %>
+
+  <dl class="see route_id">
+    <dt><%= t("workflow.request") %><%= @model.tt :workflow_routes %></dt>
+    <dd>
+      <%= hidden_field_tag "#{f.object_name}[route_id]", "restart", id: nil %>
+      <%= f.submit t("workflow.restart_workflow"), name: "route", class: "btn" %>
+    </dd>
+    <dd><%= ss_input_guide :restart_notice, model: @model %></dd>
+  </dl>
+<% end %>

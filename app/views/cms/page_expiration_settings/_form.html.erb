@@ -1,0 +1,20 @@
+<dl class="see">
+  <dt><%= @item.class.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @item.class.t :basename %></dt>
+  <dd><%= @item.basename %></dd>
+
+  <dt><%= @item.class.t :layout_id %></dt>
+  <dd><%= @item.layout.try(:name) %></dd>
+
+  <dt><%= @item.class.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :expiration_setting_type %><%= @model.tt :expiration_setting_type %></dt>
+  <dd>
+    <%= f.hidden_field :expiration_setting_type, value: "", id: nil %>
+    <label><%= f.radio_button :expiration_setting_type, "site" %> <%= t("cms.options.expiration_setting_type.site") %></label>
+    <label><%= f.radio_button :expiration_setting_type, "never" %> <%= t("cms.options.expiration_setting_type.never") %></label>
+  </dd>
+</dl>

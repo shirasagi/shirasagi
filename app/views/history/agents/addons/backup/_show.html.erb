@@ -1,46 +1,100 @@
 <%
   return render(plain: "") if @item.backups.size == 0
-  source = ERB::Util.url_encode(request.path)
-  before = @item.before_backup || @item.backups.last
+  source = ERB::Util.url_encode(SS.request_path(request))
+  top_backups = @item.backups.limit(History.max_histories).to_a
 %>
-<dl class="see mod-history-backup">
-  <% if before %>
-    <dd>
-      <%= link_to I18n.t('history.compare_before_state'), history_cms_change_path(source: source, id: before.id), class: 'btn' %>
-    </dd>
-  <% end %>
-  <% @item.backups.limit(10).each do |item| %>
-    <dd data-id="<%= item.id %>">
-      <%=
-        content = ss_time_tag item.created
-        if @item.allowed?(:edit, @cur_user, site: @cur_site)
-          content = link_to content, history_cms_backup_path(source: ERB::Util.url_encode(request.path), id: item.id)
-        end
-        content
-      %>
+<dl class="see">
+  <table class="index history-backup-table">
+    <thead class="list-head">
+      <tr>
+        <th class="created"><%= @model.t :updated %></th>
+        <% if @item.is_a?(Cms::Model::Page) %>
+          <th class="branch"></th>
+        <% end %>
+        <th class="name"><%= t("history.editor_name") %></th>
+        <th class="links"></th>
+      </tr>
+    </thead>
+    <tbody>
+    <% top_backups.each_with_index do |backup, index| %>
+      <tr class="list-item" data-id="<%= backup.id %>">
+        <td class="created">
+          <%=
+            # history/backup#updated は不意に変更される可能性がある。
+            # 更新日時として history/backup#created を表示するのが適切。
+            time_tag = ss_time_tag(backup.created)
 
-      <%=
-        if item.action == 'replace_urls'
-          id = t("history.options.action.#{item.action}")
-        else
-          if item.user_id
-            # ユーザーが作成した履歴
-            group = item.user ? Cms::Group.site(@cur_site).in(id: item.user.group_ids).first : nil
-            if group
-              id = "#{group.trailing_name} #{item.user_name || item.user.try(:name)}"
-            else
-              id = item.user_name || item.user.try(:name)
+            # マイグレーション実行時、組織変更実行時、全コンテンツインポート時など、シラサギにはタイムスタンプを変更せずにDBを更新する処理がいくつある。
+            # 以前はアイテムの更新日時と編集履歴の更新日時とを比較して同じなら最新としていたが、これは適切ではない。
+            # 編集履歴を created の降順に並べ、先頭のものを最新とする
+            latest_backup = index == 0
+            if latest_backup
+              time_tag = t("history.this_is_latest_html", time: time_tag)
             end
-          elsif item.member_id
-            # メンバーが作成した履歴
-            id = "#{Cms::Member.model_name.human}: #{item.member_name}"
-          end
-        end
+            time_tag
+          %>
+        </td>
+        <% if @item.is_a?(Cms::Model::Page) %>
+          <td class="branch">
+            <%=
+              if backup.ref_id != backup.data["_id"]
+                "#{t("workflow.branch_page")}(#{backup.data["_id"]})"
+              end
+            %>
+          </td>
+        <% end %>
+        <td class="name">
+          <%=
+            if backup.action == 'replace_urls'
+              id = t("history.options.action.#{backup.action}")
+            else
+              if backup.user_id
+                # ユーザーが作成した履歴
+                group = backup.user ? Cms::Group.site(@cur_site).in(id: backup.user.group_ids).first : nil
+                if group
+                  id = "#{group.trailing_name} #{backup.user_name || backup.user.try(:name)}"
+                else
+                  id = backup.user_name || backup.user.try(:name)
+                end
+              elsif backup.member_id
+                # メンバーが作成した履歴
+                id = "#{Cms::Member.model_name.human}: #{backup.member_name}"
+              else
+                id = t("ss.system_operation")
+              end
+            end
 
-        if id
-          tag.span id, style: "margin-left: 0.5em;"
-        end
-      %>
-    </dd>
-  <% end %>
+            if id
+              tag.span id
+            end
+          %>
+        </td>
+        <td class="links">
+          <%= link_to t("ss.links.show"), history_cms_backup_path(source: source, id: backup.id, compare_to: top_backups[index + 1].try(:id)), class: "btn" %>
+          <%=
+            if top_backups[index + 1]
+              link_to(t('history.compare_backup_to_previsous'), history_cms_change_path(source: source, id: backup.id, compare_to: top_backups[index + 1].id), class: 'btn')
+            end
+          %>
+          <!--
+          <%=
+            # 隠し機能として以前の機能を残しておく
+            unless latest_backup
+              link_to(t('history.compare_backup_to_latest'), history_cms_change_path(source: source, id: backup.id), class: 'btn')
+            end
+          %>
+          -->
+        </td>
+      </tr>
+    <% end %>
+    </tbody>
+  </table>
+  <%=
+    backup_count = @item.backups.count
+    if backup_count > History.max_histories
+      t("history.n_out_of_m", n: History.max_histories, m: backup_count)
+    else
+      t("history.n_out_of_m", n: backup_count, m: backup_count)
+    end
+  %>
 </dl>

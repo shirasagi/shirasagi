@@ -19,7 +19,7 @@ class SS::Migration20190204000000
           else # "a+img"
             column.file_type = "image"
           end
-          column.save
+          column.without_record_timestamps { column.save }
         end
       end
     end

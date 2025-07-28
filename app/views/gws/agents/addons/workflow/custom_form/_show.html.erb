@@ -1,24 +1,52 @@
 <% return if @item.column_values.blank? %>
 
-<dl class="see mod-gws-workflow-custom_form">
-<% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
-  <% column = value.column %>
-  <% if column.present? && column.column_show_partial_path.present? %>
-    <%= render column.column_show_partial_path, column: column, value: value %>
-  <% else %>
-    <dt><%= value.name %></dt>
-    <dd>
-      <%= column.try(:prefix_label) %>
-      <%= br value.value %>
-      <%= column.try(:postfix_label) %>
-    </dd>
+<dl class="see gws-column-see mod-gws-workflow-custom_form">
+  <% @item.column_values.order_by(order: 1, name: 1).each do |value| %>
+    <% column = value.column %>
+    <% if column.present? && column.column_show_partial_path.present? %>
+      <%= render column.column_show_partial_path, column: column, value: value %>
+    <% elsif column.class == Gws::Column::Section %>
+      <!-- none -->
+    <% elsif column.class == Gws::Column::Title %>
+      <dt class="wide">
+        <% if column.title.present? %>
+          <div class="column-title"><%= column.title %></div>
+        <% end %>
+        <% if column.explanation.present? %>
+          <div class="column-explanation"><%= sanitize_easy column.explanation %></div>
+        <% end %>
+      </dt>
+      <dd class="m-0 p-0"></dd>
+    <% elsif %w(Gws::Column::CheckBox Gws::Column::RadioButton Gws::Column::Select).include?(column.class.to_s) %>
+      <dt><%= value.name %></dt>
+      <dd>
+        <%= column.try(:prefix_label) %>
+        <% if value.try(:other_value?) %>
+          : <%= value.other_value_text %>
+        <% else %>
+          <%= br value.value %>
+        <% end %>
+        <%= column.try(:postfix_label) %>
+      </dd>
+    <% else %>
+      <dt><%= value.name %></dt>
+      <dd>
+        <%= column.try(:prefix_label) %>
+        <%= br value.value %>
+        <%= column.try(:postfix_label) %>
+      </dd>
+    <% end %>
   <% end %>
-<% end %>
 </dl>
 
+<%
+  title = @cur_form.try(:name) || "(#{Gws::Workflow::Form.model_name.human})"
+  title = I18n.t('ss.buttons.confirm') if %w(cancelled remand).include?(@item.workflow_state)
+  title = I18n.t('ss.buttons.confirm') if @item.workflow_state.nil?
+%>
 <%= jquery do %>
   $('#addon-ss-agents-addons-markdown').hide();
   $('#addon-gws-agents-addons-file').hide();
   $('#addon-gws-agents-addons-workflow-custom_form .addon-head h2')
-    .text(<%== (@cur_form.try(:name) || "(#{Gws::Workflow::Form.model_name.human})").to_json %>);
+    .text(<%== title.to_json %>);
 <% end %>

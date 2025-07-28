@@ -16,9 +16,19 @@ module SS::PluginRepository
       self._plugin_type = type.singularize
     end
 
-    def plugin(path)
-      self.plugins << ret = _plugin_class.new(plugin_type: self._plugin_type, path: path)
+    def plugin(path_or_plugin)
+      if path_or_plugin.is_a?(_plugin_class)
+        ret = path_or_plugin
+      else
+        ret = _plugin_class.new(plugin_type: self._plugin_type, path: path_or_plugin)
+      end
+      self.plugins << ret
+      ret.registory = self if ret.respond_to?(:registory=)
       ret
+    end
+
+    def find_plugin_by_path(path)
+      plugins.find { |plugin| plugin.path == path }
     end
 
     def plugin_enabled?(path)

@@ -85,6 +85,31 @@ module Gws::Monitor::TopicFilter
     render template: "new"
   end
 
+  def copy
+    set_item
+    raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    if request.get? || request.head?
+      @item.name = "[#{I18n.t("workflow.cloned_name_prefix")}] #{@item.name}".truncate(80)
+      return
+    end
+
+    @new_item = @item.new_clone
+    @new_item.attributes = get_params
+
+    result = @new_item.save
+    if !result
+      SS::Model.copy_errors(@new_item, @item)
+    end
+
+    render_opts = {}
+    render_opts[:render] = { template: "copy" }
+    if result
+      render_opts[:location] = gws_monitor_admin_path(id: @new_item)
+    end
+    render_update result, render_opts
+  end
+
   # 受け取り済みにする
   def public
     @item.attributes = fix_params
@@ -145,8 +170,22 @@ module Gws::Monitor::TopicFilter
   def download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
-    send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
+    if request.get? || request.head?
+      render
+      return
+    end
+
+    exporter = Gws::Monitor::TopicExporter.new(cur_site: @cur_site, cur_user: @cur_user, item: @item)
+
+    csv_params = params.require(:item).permit(:encoding, :download_comment)
+    csv_params = csv_params.to_h.symbolize_keys
+    enumerable = exporter.enum_csv(**csv_params)
+
+    filename = @model.to_s.tableize.tr("/", "_")
+    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   # 添付ファイル一括ダウンロード

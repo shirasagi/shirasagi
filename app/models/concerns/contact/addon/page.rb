@@ -4,15 +4,19 @@ module Contact::Addon::Page
 
   included do
     field :contact_state, type: String
+    field :contact_group_name, type: String
     field :contact_charge, type: String
     field :contact_tel, type: String
     field :contact_fax, type: String
     field :contact_email, type: String
+    field :contact_postal_code, type: String
+    field :contact_address, type: String
     field :contact_link_url, type: String
     field :contact_link_name, type: String
     belongs_to :contact_group, class_name: "Cms::Group"
     belongs_to :contact_group_contact, class_name: "SS::Contact"
     field :contact_group_relation, type: String
+    embeds_ids :contact_sub_groups, class_name: "Cms::Group" # 組織一覧用サブグループ
 
     before_validation :update_contacts
 
@@ -20,18 +24,22 @@ module Contact::Addon::Page
     validates :contact_link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
     validates :contact_group_relation, inclusion: { in: %w(related unrelated), allow_blank: true }
 
-    permit_params :contact_state, :contact_group_id, :contact_charge
-    permit_params :contact_tel, :contact_fax, :contact_email
+    permit_params :contact_state, :contact_group_id, :contact_group_name, :contact_charge
+    permit_params :contact_tel, :contact_fax, :contact_email, :contact_postal_code, :contact_address
     permit_params :contact_link_url, :contact_link_name
     permit_params :contact_group_contact_id, :contact_group_relation
+    permit_params contact_sub_group_ids: []
 
     if respond_to? :liquidize
       liquidize do
         export :contact_state
+        export :contact_group_name
         export :contact_charge
         export :contact_tel
         export :contact_fax
         export :contact_email
+        export :contact_postal_code
+        export :contact_address
         export :contact_link_url
         export :contact_link_name
         export as: :contact_group do
@@ -72,10 +80,13 @@ module Contact::Addon::Page
 
   def contact_present?
     %i[
+      contact_group_name
       contact_charge
       contact_tel
       contact_fax
       contact_email
+      contact_postal_code
+      contact_address
       contact_link_url
       contact_link_name
       contact_group
@@ -85,7 +96,8 @@ module Contact::Addon::Page
   private
 
   CONTACT_ATTRIBUTES = %w[
-    contact_charge contact_tel contact_fax contact_email contact_link_url contact_link_name
+    contact_group_name contact_charge contact_tel contact_fax contact_email
+    contact_postal_code contact_address contact_link_url contact_link_name
   ].freeze
 
   def remove_contact_attributes_to_update
@@ -112,10 +124,13 @@ module Contact::Addon::Page
       return
     end
 
-    self.contact_charge = contact.contact_group_name
+    self.contact_group_name = contact.contact_group_name
+    self.contact_charge = contact.contact_charge
     self.contact_tel = contact.contact_tel
     self.contact_fax = contact.contact_fax
     self.contact_email = contact.contact_email
+    self.contact_postal_code = contact.contact_postal_code
+    self.contact_address = contact.contact_address
     self.contact_link_url = contact.contact_link_url
     self.contact_link_name = contact.contact_link_name
   end

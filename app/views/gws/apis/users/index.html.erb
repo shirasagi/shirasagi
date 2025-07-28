@@ -1,3 +1,6 @@
+<%
+  selectedItems = params.permit(selected: [])[:selected]
+%>
 <%= jquery do %>
   SS_SearchUI.modal();
 <% end %>
@@ -45,10 +48,8 @@
       <% end %>
 
       <dt><%= t "ss.keyword" %></dt>
-      <dd>
-        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), style: 'max-width: 20rem;' %>
-        <%= f.submit  t("ss.buttons.search"), class: 'btn my-0' %>
-      </dd>
+      <dd><%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %></dd>
+      <dd><%= f.submit  t("ss.buttons.search"), class: 'btn' %></dd>
     </dl>
   <% end %>
 </div>
@@ -57,7 +58,7 @@
   <thead class="list-head">
     <tr>
       <% if @multi %>
-      <th class="checkbox"><input type="checkbox" /></th>
+      <th class="checkbox-all"><input type="checkbox" /></th>
       <% end %>
       <th class="name"><%= @model.t :name %></th>
       <th><%= @model.t :group_ids %></th>
@@ -71,10 +72,19 @@
       <%= content_tag("tr", class: "list-item", data: data) do %>
         <% if @multi %>
           <td class="checkbox">
-            <input type="checkbox" name="ids[]" value="<%= item.id %>" />
+            <%= check_box_tag "ids[]", item.id, false, id: nil, disabled: selectedItems && selectedItems.include?(item.id.to_s) %>
           </td>
         <% end %>
-        <td><%= link_to gws_public_user_long_name(item.long_name), "#", class: @multi ? "select-item" : "select-single-item" %></td>
+        <td>
+          <%=
+            name = gws_public_user_long_name(item.long_name)
+            if selectedItems && selectedItems.include?(item.id.to_s)
+              tag.span name, class: "select-item", style: "color: #888;"
+            else
+              link_to name, "#", class: @multi ? "select-item" : "select-single-item"
+            end
+          %>
+        </td>
         <td><%= tryb { item.gws_main_group(@cur_site).trailing_name } %></td>
         <td><%= tryb { item.title(@cur_site).name } %></td>
         <td><%= tryb { item.occupation(@cur_site).name } %></td>

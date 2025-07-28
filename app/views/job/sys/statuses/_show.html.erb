@@ -12,7 +12,7 @@
   <dd><%= @item.try(:name) %></dd>
 
   <dt><%= @model.t :current_count %></dt>
-  <dd><%= @item.try(:current_count).try { |num| num.to_s(:delimited) } %></dd>
+  <dd><%= @item.try(:current_count).try { |num| num.to_fs(:delimited) } %></dd>
 
   <dt><%= @model.t :updated %></dt>
   <dd><%= @item.try(:updated).try { |time| I18n.l(time, format: :picker) } %></dd>

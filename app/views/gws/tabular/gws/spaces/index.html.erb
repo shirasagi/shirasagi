@@ -1,0 +1,45 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), url_for(action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%=
+    if item.allowed?(:edit, @cur_user, site: @cur_site)
+      link_to t('ss.links.edit'), url_for(action: :edit, id: item) rescue nil
+    end
+  %>
+<% end %>
+
+<% @index_check = proc { |_item| } %>
+
+<% @index_title = proc do |item| %>
+  <% title = item.try(:name) || item.try(:title) || item.try(:filename) || "##{item.id}" %>
+  <%= link_to title, gws_tabular_gws_forms_path(space: item), class: "title" %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <span class="datetime">
+    <%=
+      if item.deleted?
+        ss_time_tag item.deleted
+      else
+        ss_time_tag item.updated
+      end
+    %>
+  </span>
+  <span class="state"><%= item.state_label %></span>
+  <span class="order"><%= item.order %></span>
+<% end %>
+
+<% @index_extra = proc do |item| %>
+  <div class="mt-1 mr-3 ml-1">
+    <%= link_to gws_tabular_gws_forms_path(space: item), class: 'btn btn-orange btn-inline-flex' do %>
+      <%= tag.span("settings", class: "material-icons-outlined md-15") %>
+      <%= t('gws/tabular.buttons.manage_space') %>
+    <% end %>
+    <%=
+      if item.allowed?(:read, @cur_user, site: @cur_site)
+        link_to tag.span("tune", class: "material-icons-outlined md-15"), url_for(action: :show, id: item), title: t('ss.links.show'), class: 'btn'
+      end
+    %>
+  </div>
+<% end %>
+
+<%= render template: "gws/crud/index" %>

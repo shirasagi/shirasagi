@@ -2,7 +2,7 @@
 
 
 // save jQuery3
-var $jQuery3 = $;
+var $jQuery3 = $; // eslint-disable-line;
 /*!
  * jQuery JavaScript Library v1.12.4
  * http://jquery.com/
@@ -28833,7 +28833,7 @@ detectWarningInContainer = function(containerEl) {
 
 });
 // save jQuery1
-var $jQuery1 = jQuery.noConflict();
+var $jQuery1 = jQuery.noConflict(); // eslint-disable-line
 window.jQuery = window.$ = $jQuery3;
 SS.ready(function() {
   window.Gws_Schedule_Calendar = (function ($) {
@@ -28863,6 +28863,9 @@ SS.ready(function() {
         opts.eventSources[i]['error'] = function() { $(selector).data('resource-error', true); }
       }
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       $(selector).fullCalendar(params);
       this.renderInitialize(selector, init);
       this.overrideAddLink(selector);
@@ -28952,6 +28955,7 @@ SS.ready(function() {
         },
         contentHeight: 'auto',
         displayEventEnd: {
+          month: true,
           basicWeek: true
         },
         endParam: 's[end]',
@@ -28967,12 +28971,16 @@ SS.ready(function() {
         slotLabelFormat: 'HH:mm',
         startParam: 's[start]',
         timeFormat: 'HH:mm',
+        // '(' と ')' とで囲むと「2025年 1月 26日（日） — 2025年 2月 1日（土）」のような表示になり、
+        // '(' と ')' とで囲まない場合、共通部分が collapse され「2025年 1月 26日（日） — 2月 1日（土）」のような表示になる。
+        // しかし、日本語の場合、FullCalendarの formatRange バグ（？）で、うまく collapse されないので、week の場合は collapse 禁止、それ以外は collapse 許可。
+        // 参考: https://fullcalendar.io/docs/v3/formatRange
         titleFormat: {
           month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.month')),
-          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')),
+          week: '(' + SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')) + ')',
           day: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.day'))
         },
-        loading: function (isLoading, view) {
+        loading: function (isLoading, _view) {
           var target = $(selector).hasClass("fc-list-format") ? $(this).find('.fc-view') : $(this).find('.fc-widget-content').eq(0)
 
           $(this).find('.fc-loading').remove();
@@ -29004,16 +29012,16 @@ SS.ready(function() {
             if (event.start.format(format) === end.format(format)) {
               content = end.format(format);
             }
-            var span = $('<span></span>').addClass(fcClass).append(content);
-            element.find('.fc-title').before(span);
+            var dateTimeSpan = $('<span></span>').addClass(fcClass).append(content);
+            element.find('.fc-title').before(dateTimeSpan);
           }
           if (event.category) {
-            var span = $('<span class="fc-category"></span>').append(event.category);
-            element.find('.fc-title').prepend(span);
+            var categorySpan = $('<span class="fc-category"></span>').append(event.category);
+            element.find('.fc-title').prepend(categorySpan);
           }
           if (event.facility) {
-            var span = $('<span class="fc-facility"></span>').append(event.facility);
-            element.find('.fc-title').append(span);
+            var facilitySpan = $('<span class="fc-facility"></span>').append(event.facility);
+            element.find('.fc-title').append(facilitySpan);
           }
           if (event.className.includes('fc-event-work')) {
             $(element).find(".fc-date").remove();
@@ -29034,7 +29042,9 @@ SS.ready(function() {
           attendance = $('.fc .fc-withAbsence-button');
           if (attendance.length) {
             if (attendance.hasClass('fc-state-active')) {
-              $('.fc .fc-event-user-attendance-absence').removeClass("hide")
+              $('.fc .fc-event-user-attendance-absence').removeClass('hide');
+            } else {
+              $('.fc .fc-event-user-attendance-absence').addClass('hide');
             }
           }
           Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));
@@ -29044,11 +29054,20 @@ SS.ready(function() {
     };
 
     Gws_Schedule_Calendar.viewStateQuery = function (view) {
-      var attendance, format, todo;
+      var attendance, format, todo, path;
       format = view.el.closest(".fc").hasClass('fc-list-format') ? 'list' : 'default';
       todo = $('.fc .fc-withTodo-button').hasClass("fc-state-active") ? 'active' : 'inactive';
       attendance = $('.fc .fc-withAbsence-button').hasClass("fc-state-active") ? 'active' : 'inactive';
-      return "calendar[path]=" + location.pathname + "&calendar[view]=" + view.name + "&calendar[viewFormat]=" + format + "&calendar[viewTodo]=" + todo + "&calendar[viewAttendance]=" + attendance;
+
+      path = "calendar[path]=" + location.pathname;
+      path += "&calendar[view]=" + view.name;
+      path += "&calendar[viewFormat]=" + format;
+      path += "&calendar[viewTodo]=" + todo;
+      path += "&calendar[viewAttendance]=" + attendance;
+      if ($('[name="s[facility_category_id]"]').val()) {
+        path += "&calendar[facilityCategory]=" + $('[name="s[facility_category_id]"]').val();
+      }
+      return path
     };
 
     Gws_Schedule_Calendar.tapMenuParams = function (selector, opts) {
@@ -29164,12 +29183,12 @@ SS.ready(function() {
               },
               authenticity_token: token
             },
-            success: function (data, dataType) {
+            success: function (_data, _dataType) {
               var viewId;
               viewId = view.el.closest('.calendar').attr('id');
               return $('.calendar.multiple').not("#" + viewId).fullCalendar('refetchEvents');
             },
-            error: function (xhr, status, error) {
+            error: function (xhr, _status, _error) {
               alert(xhr.responseJSON.join("\n"));
               return revertFunc();
             }
@@ -29187,12 +29206,12 @@ SS.ready(function() {
               },
               authenticity_token: token
             },
-            success: function (data, dataType) {
+            success: function (_data, _dataType) {
               var viewId;
               viewId = view.el.closest('.calendar').attr('id');
               return $('.calendar.multiple').not("#" + viewId).fullCalendar('refetchEvents');
             },
-            error: function (xhr, status, error) {
+            error: function (xhr, _status, _error) {
               alert(xhr.responseJSON.join("\n"));
               return revertFunc();
             }
@@ -29253,7 +29272,6 @@ SS.ready(function() {
      * BasicHour View
      */
     var FC = $.fullCalendar;
-    var View = FC.View;
 
     BasicHourView = FC.views.basicHour = FC.BasicView.extend({
 
@@ -29320,7 +29338,6 @@ SS.ready(function() {
 SS.ready(function() {
   (function ($) {
     var FC = $.fullCalendar;
-    var View = FC.View;
     var installedWithTodoClick = false;
 
     var firstOrCreateView = function () {
@@ -29354,7 +29371,6 @@ SS.ready(function() {
 
         var view = clearView(firstOrCreateView());
         var table = $('<div class="fc-listMonth-view-table"></div>');
-        var eventCount = 0;
 
         var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>')
         $('<div class="tr"></div>').appendTo(table).append(noPlan);
@@ -29381,7 +29397,6 @@ SS.ready(function() {
           var date = $('<div class="td date"></div>').text(event.startDateLabel);
           var time = $('<div class="td time"></div>').text(event.startTimeLabel);
           if (event.allDay) time.text(event.allDayLabel);
-          eventCount++;
 
           var tr = $('<div class="tr"></div>').appendTo(table).append(date).append(time).append(info);
           if (event.className.indexOf('fc-event-todo') !== -1) {
@@ -29397,7 +29412,7 @@ SS.ready(function() {
 
         if (!installedWithTodoClick) {
           installedWithTodoClick = true;
-          $('.fc-withTodo-button').on('click', function (e) {
+          $('.fc-withTodo-button').on('click', function (_e) {
             var viewName = $('#calendar').fullCalendar('getView').name;
             if (!viewName) {
               viewName = $('#calendar-controller').fullCalendar('getView').name;
@@ -29420,109 +29435,109 @@ SS.ready(function() {
     };
   })($jQuery1);
 });
-SS.ready(function() {
-  (function ($) {
-    var FC = $.fullCalendar;
-
-    var renderTitle = function (event) {
-      if (!event.title) {
-        return '';
-      }
-
-      var commonPart = '<div class="fc-title">' + FC.htmlEscape('[' + event.title + ']');
-      if (event.sanitizedHtml) {
-        return commonPart + ' ' + FC.htmlEscape(event.sanitizedHtml) + '</div>';
-      } else {
-        return commonPart + '</div>';
-      }
-    };
-
-    var SS_TimeGrid = FC.TimeGrid.extend({
-      fgSegHtml: function (seg, disableResizing) {
-        var view = this.view;
-        var event = seg.event;
-        var isDraggable = view.isEventDraggable(event);
-        var isResizableFromStart = !disableResizing && seg.isStart && view.isEventResizableFromStart(event);
-        var isResizableFromEnd = !disableResizing && seg.isEnd && view.isEventResizableFromEnd(event);
-        var classes = this.getSegClasses(seg, isDraggable, isResizableFromStart || isResizableFromEnd);
-        var skinCss = FC.cssToStr(this.getSegSkinCss(seg));
-        var timeText;
-        var fullTimeText; // more verbose time text. for the print stylesheet
-        var startTimeText; // just the start time text
-
-        classes.unshift('fc-time-grid-event', 'fc-v-event');
-
-        if (view.isMultiDayEvent(event)) { // if the event appears to span more than one day...
-          // Don't display time text on segments that run entirely through a day.
-          // That would appear as midnight-midnight and would look dumb.
-          // Otherwise, display the time text for the *segment's* times (like 6pm-midnight or midnight-10am)
-          if (seg.isStart || seg.isEnd) {
-            timeText = this.getEventTimeText(seg);
-            fullTimeText = this.getEventTimeText(seg, 'LT');
-            startTimeText = this.getEventTimeText(seg, null, false); // displayEnd=false
-          }
-        } else {
-          // Display the normal time text for the *event's* times
-          timeText = this.getEventTimeText(event);
-          fullTimeText = this.getEventTimeText(event, 'LT');
-          startTimeText = this.getEventTimeText(event, null, false); // displayEnd=false
-        }
-
-        return '<a class="' + classes.join(' ') + '"' +
-          (event.url ?
-              ' href="' + FC.htmlEscape(event.url) + '"' :
-              ''
-          ) +
-          (skinCss ?
-              ' style="' + skinCss + '"' :
-              ''
-          ) +
-          '>' +
-          '<div class="fc-content">' +
-          (timeText ?
-              '<div class="fc-time"' +
-              ' data-start="' + FC.htmlEscape(startTimeText) + '"' +
-              ' data-full="' + FC.htmlEscape(fullTimeText) + '"' +
-              '>' +
-              '<span>' + FC.htmlEscape(timeText) + '</span>' +
-              '</div>' :
-              ''
-          ) +
-          renderTitle(event) +
-          '</div>' +
-          '<div class="fc-bg"/>' +
-          /* TODO: write CSS for this
-          (isResizableFromStart ?
-              '<div class="fc-resizer fc-start-resizer" />' :
-              ''
-              ) +
-          */
-          (isResizableFromEnd ?
-              '<div class="fc-resizer fc-end-resizer" />' :
-              ''
-          ) +
-          '</a>';
-      }
-    });
-
-    var SS_AgendaView = FC.AgendaView.extend({
-      timeGridClass: SS_TimeGrid
-    });
-
-    // FC.views.agendaDay = {
-    //   'class': SS_AgendaView,
-    //   defaults: {
-    //     allDaySlot: true,
-    //     allDayText: 'all-day',
-    //     slotDuration: '00:30:00',
-    //     minTime: '00:00:00',
-    //     maxTime: '24:00:00',
-    //     slotEventOverlap: false // a bad name. confused with overlap/constraint system
-    //   },
-    //   duration: { days: 1 }
-    // };
-  })($jQuery1);
-});
+// SS.ready(function() {
+//   (function ($) {
+//     var FC = $.fullCalendar;
+//
+//     var renderTitle = function (event) {
+//       if (!event.title) {
+//         return '';
+//       }
+//
+//       var commonPart = '<div class="fc-title">' + FC.htmlEscape('[' + event.title + ']');
+//       if (event.sanitizedHtml) {
+//         return commonPart + ' ' + FC.htmlEscape(event.sanitizedHtml) + '</div>';
+//       } else {
+//         return commonPart + '</div>';
+//       }
+//     };
+//
+//     var SS_TimeGrid = FC.TimeGrid.extend({
+//       fgSegHtml: function (seg, disableResizing) {
+//         var view = this.view;
+//         var event = seg.event;
+//         var isDraggable = view.isEventDraggable(event);
+//         var isResizableFromStart = !disableResizing && seg.isStart && view.isEventResizableFromStart(event);
+//         var isResizableFromEnd = !disableResizing && seg.isEnd && view.isEventResizableFromEnd(event);
+//         var classes = this.getSegClasses(seg, isDraggable, isResizableFromStart || isResizableFromEnd);
+//         var skinCss = FC.cssToStr(this.getSegSkinCss(seg));
+//         var timeText;
+//         var fullTimeText; // more verbose time text. for the print stylesheet
+//         var startTimeText; // just the start time text
+//
+//         classes.unshift('fc-time-grid-event', 'fc-v-event');
+//
+//         if (view.isMultiDayEvent(event)) { // if the event appears to span more than one day...
+//           // Don't display time text on segments that run entirely through a day.
+//           // That would appear as midnight-midnight and would look dumb.
+//           // Otherwise, display the time text for the *segment's* times (like 6pm-midnight or midnight-10am)
+//           if (seg.isStart || seg.isEnd) {
+//             timeText = this.getEventTimeText(seg);
+//             fullTimeText = this.getEventTimeText(seg, 'LT');
+//             startTimeText = this.getEventTimeText(seg, null, false); // displayEnd=false
+//           }
+//         } else {
+//           // Display the normal time text for the *event's* times
+//           timeText = this.getEventTimeText(event);
+//           fullTimeText = this.getEventTimeText(event, 'LT');
+//           startTimeText = this.getEventTimeText(event, null, false); // displayEnd=false
+//         }
+//
+//         return '<a class="' + classes.join(' ') + '"' +
+//           (event.url ?
+//               ' href="' + FC.htmlEscape(event.url) + '"' :
+//               ''
+//           ) +
+//           (skinCss ?
+//               ' style="' + skinCss + '"' :
+//               ''
+//           ) +
+//           '>' +
+//           '<div class="fc-content">' +
+//           (timeText ?
+//               '<div class="fc-time"' +
+//               ' data-start="' + FC.htmlEscape(startTimeText) + '"' +
+//               ' data-full="' + FC.htmlEscape(fullTimeText) + '"' +
+//               '>' +
+//               '<span>' + FC.htmlEscape(timeText) + '</span>' +
+//               '</div>' :
+//               ''
+//           ) +
+//           renderTitle(event) +
+//           '</div>' +
+//           '<div class="fc-bg"/>' +
+//           /* TODO: write CSS for this
+//           (isResizableFromStart ?
+//               '<div class="fc-resizer fc-start-resizer" />' :
+//               ''
+//               ) +
+//           */
+//           (isResizableFromEnd ?
+//               '<div class="fc-resizer fc-end-resizer" />' :
+//               ''
+//           ) +
+//           '</a>';
+//       }
+//     });
+//
+//     var SS_AgendaView = FC.AgendaView.extend({
+//       timeGridClass: SS_TimeGrid
+//     });
+//
+//     // FC.views.agendaDay = {
+//     //   'class': SS_AgendaView,
+//     //   defaults: {
+//     //     allDaySlot: true,
+//     //     allDayText: 'all-day',
+//     //     slotDuration: '00:30:00',
+//     //     minTime: '00:00:00',
+//     //     maxTime: '24:00:00',
+//     //     slotEventOverlap: false // a bad name. confused with overlap/constraint system
+//     //   },
+//     //   duration: { days: 1 }
+//     // };
+//   })($jQuery1);
+// });
 SS.ready(function() {
   (function ($) {
     var fullCalendar_renderListEvents = function (segs) {
@@ -29549,7 +29564,6 @@ SS.ready(function() {
       var calendar = this.calendar;
       var view = clearView(firstOrCreateView());
       var table = $('<div class="fc-listMonth-view-table"></div>');
-      var eventCount = 0;
       var duplicateCheck = [];
 
       var noPlan = $('<div class="td no-plan" style="display: none;">' + Gws_Schedule_Calendar.messages.noPlan + '</div>');
@@ -29615,18 +29629,18 @@ SS.ready(function() {
         if (event.sanitizedHtml) {
           info.append($('<p class="summary"/>').html(event.sanitizedHtml));
         }
+        var startLabel, endLabel;
         if (event.allDay) {
-          var startLabel = event.startDateLabel + ' ' + event.allDayLabel;
-          var endLabel = event.endDateLabel + ' ' + event.allDayLabel;
+          startLabel = event.startDateLabel + ' ' + event.allDayLabel;
+          endLabel = event.endDateLabel + ' ' + event.allDayLabel;
         } else {
-          var startLabel = event.startDateLabel + ' ' + event.startTimeLabel;
-          var endLabel = event.endDateLabel + ' ' + event.endTimeLabel;
+          startLabel = event.startDateLabel + ' ' + event.startTimeLabel;
+          endLabel = event.endDateLabel + ' ' + event.endTimeLabel;
         }
         var startAt = $('<div class="td startAt"></div>').text(startLabel);
         var delimiter = $('<div class="td delimiter"></div>').text('-');
         var endAt = $('<div class="td endAt"></div>').text(endLabel);
         var tr = $('<div class="tr"></div>').appendTo(table).append(startAt).append(delimiter).append(endAt).append(info);
-        eventCount++;
         if (event.className.indexOf('fc-event-todo') !== -1) {
           tr.addClass('fc-event-todo');
         }
@@ -29771,6 +29785,9 @@ SS.ready(function() {
       $.extend(true, params, this.defaultParams(selector, opts));
       $.extend(true, params, this.contentParams(selector, opts));
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       // To render gridster and/or other frames first, all fullCalendar initializations is delayed.
       // And a calendar is individually rendered from top to bottom.
       setTimeout(function () {
@@ -29879,6 +29896,23 @@ SS.ready(function() {
           }
         },
         eventAfterAllRender: function (_view) {
+          var attendance, todo;
+          todo = $('.fc .fc-withTodo-button');
+          if (todo.length) {
+            if (todo.hasClass('fc-state-active')) {
+              $('.fc .fc-event-todo').show();
+            } else {
+              $('.fc .fc-event-todo').hide();
+            }
+          }
+          attendance = $('.fc .fc-withAbsence-button');
+          if (attendance.length) {
+            if (attendance.hasClass('fc-state-active')) {
+              $('.fc .fc-event-user-attendance-absence').removeClass('hide');
+            } else {
+              $('.fc .fc-event-user-attendance-absence').addClass('hide');
+            }
+          }
           $(window).trigger('resize');
         }
       };
@@ -29886,7 +29920,7 @@ SS.ready(function() {
     //view.el.find(".fctoolbar, .fc-head").remove("")
 
     Gws_Schedule_Multiple_Calendar.renderController = function (selector, opts, init) {
-      var controller, params;
+      var controller, controllerWrap, params;
       if (opts == null) {
         opts = {};
       }
@@ -29897,30 +29931,34 @@ SS.ready(function() {
       $.extend(true, params, this.defaultParams(selector, opts));
       $.extend(true, params, this.controllerParams(selector, opts));
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       $(selector).fullCalendar(params);
       Gws_Schedule_Calendar.renderInitialize(selector, init);
       Gws_Schedule_Calendar.overrideAddLink(selector);
       controller = $(selector);
+      controllerWrap = controller.parent();
       controller.find('.fc-today-button').on("click", function () {
-        return $('.calendar.multiple .fc-today-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-today-button').trigger("click");
       });
       controller.find('.fc-prev-button').on("click", function () {
-        return $('.calendar.multiple .fc-prev-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-prev-button').trigger("click");
       });
       controller.find('.fc-next-button').on("click", function () {
-        return $('.calendar.multiple .fc-next-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-next-button').trigger("click");
       });
       controller.find('.fc-basicWeek-button').on("click", function () {
-        return $('.calendar.multiple .fc-basicWeek-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-basicWeek-button').trigger("click");
       });
       controller.find('.fc-timelineDay-button').on("click", function () {
-        return $('.calendar.multiple .fc-timelineDay-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-timelineDay-button').trigger("click");
       });
       controller.find('.fc-basicHour-button').on("click", function () {
-        return $('.calendar.multiple .fc-basicHour-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-basicHour-button').trigger("click");
       });
       controller.find('.fc-reload-button').on("click", function () {
-        return $('.calendar.multiple .fc-reload-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-reload-button').trigger("click");
       });
     };
 
@@ -30142,6 +30180,7 @@ SS.ready(function() {
         },
         contentHeight: 'auto',
         displayEventEnd: {
+          month: true,
           basicWeek: true
         },
         endParam: 's[end]',
@@ -30157,9 +30196,13 @@ SS.ready(function() {
         slotLabelFormat: 'HH:mm',
         startParam: 's[start]',
         timeFormat: 'HH:mm',
+        // '(' と ')' とで囲むと「2025年 1月 26日（日） — 2025年 2月 1日（土）」のような表示になり、
+        // '(' と ')' とで囲まない場合、共通部分が collapse され「2025年 1月 26日（日） — 2月 1日（土）」のような表示になる。
+        // しかし、日本語の場合、FullCalendarの formatRange バグ（？）で、うまく collapse されないので、week の場合は collapse 禁止、それ以外は collapse 許可。
+        // 参考: https://fullcalendar.io/docs/v3/formatRange
         titleFormat: {
           month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.month')),
-          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week'))
+          week: '(' + SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')) + ')'
         },
         loading: function (isLoading, _view) {
           var target = $(selector).hasClass("fc-list-format") ? $(this).find('.fc-view') : $(this).find('.fc-widget-content').eq(0)

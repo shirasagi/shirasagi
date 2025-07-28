@@ -21,15 +21,17 @@
           select_options[:include_blank] = "回答無し" if !root.required?
         %>
         <%= select_tag "#{f.object_name}[deliver_category_ids][]", options_for_select(category_options, selected), select_options %>
+        <% if root.category_html.present? %>
+          <%== root.category_html.html_safe %>
+        <% end %>
         <% children.each do |child| %>
           <% if child.remarks.present? %>
             <div class="remark-text-link">
-              <a class="remark-<%= child.id %> deliver-remarks remarks-button"><%= I18n.t("cms.open_remark") %></a>
+              <a class="remark-<%= child.id %> deliver-remarks remarks-button"><%= t("cms.links.open_remark") %></a>
             </div>
             <p class="remark-<%= child.id %>-text deliver-remarks"><%=br child.remarks %></p>
           <% end %>
         <% end %>
-
       <% elsif root.select_type == "checkbox" %>
         <% children.each do |category| %>
           <label class="category-<%= category.order %>">

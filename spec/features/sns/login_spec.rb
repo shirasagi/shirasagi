@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "sns_login", type: :feature, dbscope: :example do
+describe "sns_login", type: :feature, dbscope: :example, js: true do
   it "invalid login" do
     visit sns_login_path
     within "form" do
@@ -20,11 +20,18 @@ describe "sns_login", type: :feature, dbscope: :example do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
-        expect(find('#head .logout')[:href]).to eq sns_logout_path
+        I18n.with_locale(sys_user.lang.to_sym) do
+          within ".user-navigation" do
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
+            expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
+            click_on I18n.t("ss.logout")
+          end
+        end
 
-        find('#head .logout').click
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -37,30 +44,43 @@ describe "sns_login", type: :feature, dbscope: :example do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_cur_user_profile_path
         expect(page).to have_no_css(".login-box")
-        expect(find('#head .logout')[:href]).to eq sns_logout_path
-
-        find('#head .logout').click
+        I18n.with_locale(sys_user.lang.to_sym) do
+          within ".user-navigation" do
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
+            expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
+            click_on I18n.t("ss.logout")
+          end
+        end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
 
     context "when internal url is given at `ref` parameter" do
+      let(:capybara_server) { Capybara.current_session.server }
+      let(:ref) { sns_cur_user_profile_url(host: "#{capybara_server.host}:#{capybara_server.port}") }
+
       it do
-        visit sns_login_path(ref: sns_cur_user_profile_url)
+        visit sns_login_path(ref: ref)
         within "form" do
           fill_in "item[email]", with: sys_user.email
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_cur_user_profile_path
         expect(page).to have_no_css(".login-box")
-        expect(find('#head .logout')[:href]).to eq sns_logout_path
-
-        find('#head .logout').click
+        I18n.with_locale(sys_user.lang.to_sym) do
+          within ".user-navigation" do
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
+            expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
+            click_on I18n.t("ss.logout")
+          end
+        end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -84,12 +104,17 @@ describe "sns_login", type: :feature, dbscope: :example do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
-        expect(find('#head .logout')[:href]).to eq sns_logout_path
-
-        find('#head .logout').click
+        I18n.with_locale(sys_user.lang.to_sym) do
+          within ".user-navigation" do
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
+            expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
+            click_on I18n.t("ss.logout")
+          end
+        end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -105,6 +130,7 @@ describe "sns_login", type: :feature, dbscope: :example do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: subject.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
       end
@@ -119,6 +145,7 @@ describe "sns_login", type: :feature, dbscope: :example do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: subject.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
       end
@@ -133,12 +160,23 @@ describe "sns_login", type: :feature, dbscope: :example do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        within ".login-box" do
+          expect(page).to have_css(".error-message", text: I18n.t("service.errors.invalid_login"))
+        end
         expect(current_path).not_to eq sns_mypage_path
       end
 
       context "with cms_group domains" do
+        let(:domain) { 'www.example.com' }
+        let(:decorator) do
+          proc do |env|
+            env["HTTP_X_FORWARDED_HOST"] = domain
+          end
+        end
+
         before do
-          cms_group.set(domains: ['www.example.com'])
+          cms_group.set(domains: [domain])
+          add_request_decorator Sns::LoginController, decorator
         end
 
         it "valid login" do
@@ -162,6 +200,14 @@ describe "sns_login", type: :feature, dbscope: :example do
     let(:password) { "pass" }
     subject { create(:cms_ldap_user, ldap_dn: user_dn, group: group) }
 
+    before do
+      auth_setting = Sys::Auth::Setting.instance
+      auth_setting.ldap_url = "ldap://localhost:#{SS::LdapSupport.docker_ldap_port}/"
+      auth_setting.save!
+    end
+
+    after { ActiveSupport::CurrentAttributes.reset_all }
+
     it "valid login" do
       visit sns_login_path
       within "form" do
@@ -169,6 +215,7 @@ describe "sns_login", type: :feature, dbscope: :example do
         fill_in "item[password]", with: password
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css("nav.user .user-name", text: subject.name)
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
     end
@@ -180,25 +227,14 @@ describe "sns_login", type: :feature, dbscope: :example do
     # bookmark support
     it "valid login" do
       visit sns_login_path(email: user.email)
-      expect(status_code).to eq 200
       expect(find("#item_email").value).to eq(user.email)
       within "form" do
         fill_in "item[password]", with: user.in_password
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css("nav.user .user-name", text: user.name)
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
-    end
-  end
-
-  context 'loggedin status' do
-    it do
-      visit sns_login_status_path
-      expect(status_code).to eq 403
-
-      login_sys_user
-      visit sns_login_status_path
-      expect(status_code).to eq 200
     end
   end
 
@@ -206,7 +242,6 @@ describe "sns_login", type: :feature, dbscope: :example do
     context "with internal path" do
       it do
         visit sns_redirect_path(ref: cms_main_path(site: cms_site))
-        expect(status_code).to eq 200
         expect(current_path).to eq sns_login_path
       end
     end
@@ -225,9 +260,27 @@ describe "sns_login", type: :feature, dbscope: :example do
 
       it do
         visit sns_redirect_path(ref: "https://www.google.com/")
-        expect(status_code).to eq 200
         expect(current_path).to eq sns_redirect_path
         expect(page).to have_link("https://www.google.com/", href: "https://www.google.com/")
+      end
+    end
+
+    context "with japanese in url's path" do
+      before do
+        @save_url_type = SS.config.sns.url_type
+        SS.config.replace_value_at(:sns, :url_type, "restricted")
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      after do
+        SS.config.replace_value_at(:sns, :url_type, @save_url_type)
+        Sys::TrustedUrlValidator.send(:clear_trusted_urls)
+      end
+
+      it do
+        visit sns_redirect_path(ref: "https://sns.example.jp/fs/日本語.pdf")
+        expect(current_path).to eq sns_redirect_path
+        expect(page).to have_link("https://sns.example.jp/fs/日本語.pdf", href: "https://sns.example.jp/fs/日本語.pdf")
       end
     end
   end

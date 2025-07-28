@@ -57,7 +57,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
 
       # 解除できたか確認
       # リマインダーは非同期で解除される。
-      expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      wait_for_notice I18n.t('gws/reminder.notification.created')
       expect(page).to have_css('.reminder-conditions tr', count: 1)
 
       # 解除できたら、ドキュメントは存在しないはず
@@ -82,7 +82,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # 登録できたか確認
       # リマインダーは非同期で登録される。
       # capybara は element が存在しない場合、しばらく待機するので、以下の確認は登録を待機する意味もある
-      expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      wait_for_notice I18n.t('gws/reminder.notification.created')
       expect(page).to have_css('.reminder-conditions tr', count: 1)
 
       expect(Gws::Reminder.count).to eq 1
@@ -155,7 +155,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       # 登録できたか確認
       # リマインダーは非同期で登録される。
       # capybara は element が存在しない場合、しばらく待機するので、以下の確認は登録を待機する意味もある
-      expect(page).to have_css('#notice', text: I18n.t('gws/reminder.notification.created'))
+      wait_for_notice I18n.t('gws/reminder.notification.created')
       expect(page).to have_css('.reminder-conditions tr', count: 1)
 
       expect(Gws::Reminder.count).to eq 1

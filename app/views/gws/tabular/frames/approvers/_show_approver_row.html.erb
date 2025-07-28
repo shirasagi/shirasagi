@@ -1,0 +1,73 @@
+<%
+  approver_id = workflow_approver[:user_id]
+  approver = Gws::User.site(@cur_site).where(id: approver_id).first
+  state = workflow_approver[:state]
+  comment = workflow_approver[:comment].presence
+  file_ids = workflow_approver[:file_ids].presence
+%>
+<tr data-level="<%= level %>" data-approver-id="<%= approver_id %>">
+  <% if index == 0 %>
+    <td rowspan="<%= count %>">
+      <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+    </td>
+    <td rowspan="<%= count %>">
+      <% required_count = @item.workflow_required_counts[level - 1] %>
+      <% if required_count %>
+        <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
+      <% else %>
+        <%= t('workflow.required_count_label.all') %>
+      <% end %>
+    </td>
+  <% end %>
+  <td>
+    <% if approver %>
+      <% if @item.route_my_group_alternate? && index == 1 %>
+        <%= t('gws/workflow2.labels.approver_alternator') %>
+      <% end %>
+      <%= workflow_user_profile(approver) %>
+    <% else %>
+      <%= t("workflow.user_deleted") %>
+    <% end %>
+  </td>
+  <td>
+    <span class="workflow_approvers_state"><%= t("workflow.state.#{state}") %></span>
+    <% if workflow_approver[:created] %>
+      <span class="workflow_approvers_created">(<%= ss_time_tag workflow_approver[:created] %>)</span>
+    <% end %>
+    <% if has_dailog && (file_ids || comment) %>
+      <div data-controller="ss--dialog">
+        <%= button_tag md_icons.filled("chat", size: 15), type: :button, class: "btn", style: "padding: 2px 4px;", aria: { label: t('workflow.comment') }, data: { action: "ss--dialog#open" } %>
+        <%= tag.template data: { "ss--dialog-target" => "content" } do %>
+          <div class="mod-workflow-view gws-workflow-view">
+            <table class="index">
+              <tbody>
+              <%=
+                # 注意: has_dialog を false に設定して自分自身を呼び出す
+                render "show_approver_row", level: level, count: 1, index: 0, workflow_approver: workflow_approver, has_dailog: false
+              %>
+              </tbody>
+            </table>
+            <br>
+            <div style="padding: 10px 30px;">
+              <% if comment %>
+                <div class="approver-comment">
+                  <%= br comment %>
+                </div>
+              <% end %>
+              <% if comment && file_ids %>
+                <br>
+              <% end %>
+              <% if file_ids %>
+                <div class="approver-files">
+                  <% SS::File.each_file(file_ids) do |file| %>
+                    <%= show_image_info(file) %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </td>
+</tr>

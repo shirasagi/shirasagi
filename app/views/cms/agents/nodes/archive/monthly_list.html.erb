@@ -1,0 +1,19 @@
+<div class="cms-pages pages">
+  <nav class="archive-list">
+    <header><%= t("cms.monthly_archive") %></header>
+    <% if @months.present? %>
+      <div class="months">
+        <% @months.each do |year, month| %>
+          <%
+            ymd = "#{year}#{format('%02d', month)}"
+            cls = "#{ymd} #{ymd == params[:ymd] ? "current" : ""}"
+          %>
+          <%= link_to "#{year}#{t_date('year')}#{month}#{t_date('month')}", "#{@cur_node.url}#{ymd}/", class: cls %>
+        <% end %>
+      </div>
+    <% end %>
+  </nav>
+  <%= render_page_list %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

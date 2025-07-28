@@ -23,7 +23,7 @@ class SS::Migration20190830000000
 
       next if attr.blank?
       node.attributes = attr
-      node.save
+      node.without_record_timestamps { node.save }
     end
   end
 end

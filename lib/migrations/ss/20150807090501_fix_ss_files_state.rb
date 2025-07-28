@@ -10,12 +10,14 @@ class SS::Migration20150807090501
       criteria.in(id: ids).to_a.each do |page|
         if page.respond_to?(:files)
           page.files.where(state: 'public').each do |f|
-            f.update(state: page.state)
+            f.without_record_timestamps { f.update(state: page.state) }
           end
         end
 
         if page.route == 'facility/image' && page.image.try(:state) == "public"
-          page.image.update(state: page.state)
+          page.image.tap do |image|
+            image.without_record_timestamps { image.update(state: page.state) }
+          end
         end
       end
     end

@@ -16,14 +16,14 @@
     <%= error_messages_for :answer, header_message: false %>
     <%= render partial: "form", locals: { f: f, confirm: true }  %>
     <% if params[:preview] %>
-      <%= hidden_field_tag "preview", params[:preview] %>
+      <%= hidden_field_tag "preview", params[:preview], id: nil %>
     <% end %>
-    <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url %>
+    <%= hidden_field_tag "#{f.object_name}[source_url]", @answer.source_url, id: nil %>
     <% if @cur_node.captcha_enabled? %>
       <%= show_captcha %>
     <% end %>
-    <%= hidden_field_tag "group", @group.id if @group %>
-    <%= hidden_field_tag "page", @page.id if @page %>
+    <%= hidden_field_tag "group", @group.id, id: nil if @group %>
+    <%= hidden_field_tag "page", @page.id, id: nil if @page %>
     <footer class="send">
       <%= f.submit t('inquiry.cancel'), name: :cancel %>
       <%= f.submit t('inquiry.submit'), name: :submit %>

@@ -13,8 +13,8 @@
 
           <div class="meta">
             <span class="ss-quota-bar gws-achievement-bar">
-              <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></div>
-              <div class="usage " style="width: <%= item.achievement_rate || 0 %>%"></div>
+              <span class="label"><%= t("gws/schedule/todo.achievement_rate", count: item.achievement_rate || 0) %></span>
+              <span class="usage " style="width: <%= item.achievement_rate || 0 %>%"></span>
             </span>
             <span class="datetime">
               <%= Gws::Schedule::Todo.t(:term) %>: <%= ss_time_tag item.end_at %>

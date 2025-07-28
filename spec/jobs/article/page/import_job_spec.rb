@@ -2,6 +2,7 @@ require 'spec_helper'
 
 describe Article::Page::ImportJob, dbscope: :example do
   let!(:site) { cms_site }
+  let!(:group1) { create :cms_group, name: "#{cms_group.name}/g1" }
 
   describe ".valid_csv?" do
     context "with csv file" do
@@ -39,7 +40,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -49,8 +50,12 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         expect(Article::Page.site(site).count).to eq 2
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_present
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_present
+        Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
+          expect(page).to be_present
+        end
+        Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
+          expect(page).to be_present
+        end
       end
     end
 
@@ -74,7 +79,7 @@ describe Article::Page::ImportJob, dbscope: :example do
         end
 
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: dest_node.id, user_id: cms_user.id)
-        expect { job.perform_now(csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, csv_file.id) }.to output(include("import start #{csv_file.name}\n")).to_stdout
 
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -88,7 +93,8 @@ describe Article::Page::ImportJob, dbscope: :example do
         let!(:source_page) do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
-            name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100)
+            name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
+            contact_group: group1
           )
         end
 
@@ -108,7 +114,8 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            keywords: [ unique_id ], description: unique_id, summary_html: unique_id
+            keywords: [ unique_id ], description: unique_id, summary_html: unique_id,
+            contact_group: group1
           )
         end
 
@@ -126,7 +133,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            html: unique_id
+            html: unique_id, contact_group: group1
           )
         end
 
@@ -142,7 +149,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            category_ids: [ category_node.id ]
+            category_ids: [ category_node.id ], contact_group: group1
           )
         end
 
@@ -218,7 +225,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            related_page_ids: [ related_page.id ], related_page_sort: related_page_sort
+            related_page_ids: [ related_page.id ], related_page_sort: related_page_sort, contact_group: group1
           )
         end
 
@@ -235,7 +242,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            parent_crumb_urls: [ unique_id, unique_id ]
+            parent_crumb_urls: [ unique_id, unique_id ], contact_group: group1
           )
         end
 
@@ -251,8 +258,10 @@ describe Article::Page::ImportJob, dbscope: :example do
         let!(:source_page) do
           cms_group.update(contact_groups: [
             {
-              main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+              main_state: "main", name: "name-#{unique_id}",
+              contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
               contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+              contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
               contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
             }
           ])
@@ -261,8 +270,9 @@ describe Article::Page::ImportJob, dbscope: :example do
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
             contact_state: contact_state, contact_group: cms_group, contact_group_contact_id: cms_group.contact_groups.first.id,
-            contact_group_relation: contact_group_relation, contact_charge: unique_id, contact_tel: unique_id,
-            contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
+            contact_group_relation: contact_group_relation, contact_group_name: unique_id, contact_charge: unique_id,
+            contact_tel: unique_id, contact_fax: unique_id, contact_email: "#{unique_id}@example.jp",
+            contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}/", contact_link_name: unique_id
           )
         end
@@ -276,10 +286,13 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_group_id).to eq source_page.contact_group_id
               expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
               expect(page.contact_group_relation).to eq contact_group_relation
+              expect(page.contact_group_name).to eq source_page.contact_group_name
               expect(page.contact_charge).to eq source_page.contact_charge
               expect(page.contact_tel).to eq source_page.contact_tel
               expect(page.contact_fax).to eq source_page.contact_fax
               expect(page.contact_email).to eq source_page.contact_email
+              expect(page.contact_postal_code).to eq source_page.contact_postal_code
+              expect(page.contact_address).to eq source_page.contact_address
               expect(page.contact_link_url).to eq source_page.contact_link_url
               expect(page.contact_link_name).to eq source_page.contact_link_name
             end
@@ -296,10 +309,13 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
               expect(page.contact_group_relation).to eq contact_group_relation
               cms_group.contact_groups.first.tap do |contact|
-                expect(page.contact_charge).to eq contact.contact_group_name
+                expect(page.contact_group_name).to eq contact.contact_group_name
+                expect(page.contact_charge).to eq contact.contact_charge
                 expect(page.contact_tel).to eq contact.contact_tel
                 expect(page.contact_fax).to eq contact.contact_fax
                 expect(page.contact_email).to eq contact.contact_email
+                expect(page.contact_postal_code).to eq contact.contact_postal_code
+                expect(page.contact_address).to eq contact.contact_address
                 expect(page.contact_link_url).to eq contact.contact_link_url
                 expect(page.contact_link_name).to eq contact.contact_link_name
               end
@@ -316,10 +332,13 @@ describe Article::Page::ImportJob, dbscope: :example do
               expect(page.contact_group_id).to eq source_page.contact_group_id
               expect(page.contact_group_contact_id).to eq cms_group.contact_groups.first.id
               expect(page.contact_group_relation).to eq contact_group_relation
+              expect(page.contact_group_name).to eq source_page.contact_group_name
               expect(page.contact_charge).to eq source_page.contact_charge
               expect(page.contact_tel).to eq source_page.contact_tel
               expect(page.contact_fax).to eq source_page.contact_fax
               expect(page.contact_email).to eq source_page.contact_email
+              expect(page.contact_postal_code).to eq source_page.contact_postal_code
+              expect(page.contact_address).to eq source_page.contact_address
               expect(page.contact_link_url).to eq source_page.contact_link_url
               expect(page.contact_link_name).to eq source_page.contact_link_name
             end
@@ -351,16 +370,13 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            group_ids: cms_user.group_ids, permission_level: rand(1..3)
+            group_ids: cms_user.group_ids, contact_group: group1
           )
         end
 
         it do
           Article::Page.site(site).node(dest_node).first.tap do |page|
             expect(page.group_ids).to eq source_page.group_ids
-            unless SS.config.ss.disable_permission_level
-              expect(page.permission_level).to eq source_page.permission_level
-            end
           end
         end
       end
@@ -370,7 +386,7 @@ describe Article::Page::ImportJob, dbscope: :example do
           Article::Page.create!(
             cur_site: site, cur_node: source_node, cur_user: cms_user,
             name: unique_id, index_name: unique_id, basename: "#{unique_id}.html", layout: layout, order: rand(1..100),
-            state: %w(public ready closed).sample
+            state: %w(public ready closed).sample, contact_group: group1
           )
         end
 
@@ -395,7 +411,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -406,8 +422,12 @@ describe Article::Page::ImportJob, dbscope: :example do
 
         expect(Article::Page.site(site).count).to eq 2
 
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_1.html")).to be_present
-        expect(Article::Page.site(site).where(filename: "#{node.filename}/test_2.html")).to be_present
+        Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
+          expect(page).to be_present
+        end
+        Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
+          expect(page).to be_present
+        end
       end
     end
 
@@ -424,7 +444,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do
@@ -482,7 +502,7 @@ describe Article::Page::ImportJob, dbscope: :example do
 
       before do
         job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
-        expect { job.perform_now(ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
       end
 
       it do

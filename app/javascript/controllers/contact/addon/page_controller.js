@@ -2,7 +2,8 @@ import { Controller } from "@hotwired/stimulus"
 import i18next from 'i18next'
 
 const CONTACT_ATTRIBUTES = [
-  "contact_charge", "contact_tel", "contact_fax", "contact_email", "contact_link_url", "contact_link_name"
+  "contact_group_name", "contact_charge", "contact_tel", "contact_fax", "contact_email",
+  "contact_postal_code", "contact_address", "contact_link_url", "contact_link_name"
 ]
 
 export default class extends Controller {
@@ -31,7 +32,10 @@ export default class extends Controller {
     }
 
     const groupName = $data.data("contact-group-name")
-    $el.find('[name="item[contact_charge]"]').val(groupName || '');
+    $el.find('[name="item[contact_group_name]"]').val(groupName || '');
+
+    const chargeName = $data.data("contact-charge")
+    $el.find('[name="item[contact_charge]"]').val(chargeName || '');
 
     const tel = $data.data("contact-tel")
     $el.find('[name="item[contact_tel]"]').val(tel || '');
@@ -41,6 +45,12 @@ export default class extends Controller {
 
     const email = $data.data("contact-email");
     $el.find('[name="item[contact_email]"]').val(email || '');
+
+    const postalCode = $data.data("contact-postal-code");
+    $el.find('[name="item[contact_postal_code]"]').val(postalCode || '');
+
+    const address = $data.data("contact-address");
+    $el.find('[name="item[contact_address]"]').val(address || '');
 
     const linkUrl = $data.data("contact-link-url");
     $el.find('[name="item[contact_link_url]"]').val(linkUrl || '');

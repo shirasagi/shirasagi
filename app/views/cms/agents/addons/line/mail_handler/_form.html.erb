@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :subject_state %><%= @model.tt :subject_state %></dt>
+  <dd><%= f.select :subject_state, @item.subject_state_options %></dd>
+
+  <dt><%= @model.t :start_line %><%= @model.tt :start_line %></dt>
+  <dd><%= f.text_field :start_line %></dd>
+
+  <dt><%= @model.t :terminate_line %><%= @model.tt :terminate_line %></dt>
+  <dd><%= f.text_field :terminate_line %></dd>
+</dl>

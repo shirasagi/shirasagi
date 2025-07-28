@@ -1,12 +1,22 @@
 <% file = item.file %>
 <% return unless file %>
 
-<div class="swiper-slide ss-swiper-slide-item" data-ss-page-id="<%= item.id %>">
+<swiper-slide class="ss-swiper-slide-item" data-ss-page-id="<%= item.id %>" lazy="true">
   <% if item.link_url.present? %>
     <%= link_to item.link_url, class: "ss-swiper-slide-item-link", target: @cur_part.link_target, rel: @cur_part.link_target.present? ? "noopener" : nil do %>
-      <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image" %>
+      <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image", loading: "lazy" %>
     <% end %>
   <% else %>
-    <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image" %>
+    <%= image_tag file.url, alt: item.name, class: "ss-swiper-slide-item-image", loading: "lazy" %>
   <% end %>
-</div>
+  <% if item.display_remarks.present? %>
+    <div class="slide-remark">
+      <% if item.display_title? %>
+        <div class="title"><%= item.name %></div>
+      <% end %>
+      <% if item.display_remark_html? && item.remark_html.present? %>
+        <%== item.remark_html.html_safe %>
+      <% end %>
+    </div>
+  <% end %>
+</swiper-slide>

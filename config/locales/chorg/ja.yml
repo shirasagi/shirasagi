@@ -39,10 +39,13 @@ ja:
       add_changesets: &group_props
         name: グループ名
         order: 表示順
-        contact_group_name: 担当部署
+        contact_group_name: 表示用グループ名
+        contact_charge: 担当部署・係
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
         contact_link_url: リンクURL
         contact_link_name: リンク名
         ldap_dn: DN
@@ -80,7 +83,7 @@ ja:
         more: もっと見る
         close: 閉じる
     labels:
-      all_sites: 全てのサイト
+      this_site: このサイト
     menus:
       revisions:
         add: 新設を追加する
@@ -97,6 +100,7 @@ ja:
       test_run: テスト実行
       import_revision_file_confirmation: 組織変更操作をCSVからインポートします。\n既に操作が登録されている場合は削除されます。\n実行してよろしいですか？
       import_changesets_notice: CSV に含まれる変更内容は常に追加されます。CSV をインポートしても既存の変更内容は何ら変更しません。
+      chorg_sites_can_be_changed_in_sys_sites: 組織変更の対象サイトは、システム管理画面のサイト設定で設定することができます。設定する場合、システム管理者へご連絡ください。
     options:
       changeset_type:
         add: 新設
@@ -107,6 +111,8 @@ ja:
       delete_method:
         disable_if_possible: 無効にし、後で回復できるようにする
         always_delete: 常に物理削除する
+    links:
+      chorg_sites_can_be_changed_in_sys_sites: 組織変更の対象サイトは、システム管理画面のサイト設定で設定することができます。
     buttons:
       reset_after_move: 移動先の再設定
       reset_after_unify: 統合先の再設定
@@ -126,6 +132,8 @@ ja:
         contact_tel: 電話番号
         contact_fax: ファックス番号
         contact_email: メールアドレス
+        contact_postal_code: 郵便番号
+        contact_address: 住所
         contact_link_url: リンクURL
         contact_link_name: リンク名
         ldap_dn: DN
@@ -134,10 +142,13 @@ ja:
         nth_destination_ldap_dn: "操作先%{dest_seq}_DN"
         nth_destination_contact_main_state: "操作先%{dest_seq}_連絡先%{contact_seq}_主"
         nth_destination_contact_name: "操作先%{dest_seq}_連絡先%{contact_seq}_識別名"
-        nth_destination_contact_contact_group_name: "操作先%{dest_seq}_連絡先%{contact_seq}_担当部署"
+        nth_destination_contact_contact_group_name: "操作先%{dest_seq}_連絡先%{contact_seq}_表示用グループ名"
+        nth_destination_contact_contact_charge: "操作先%{dest_seq}_連絡先%{contact_seq}_担当部署"
         nth_destination_contact_contact_tel: "操作先%{dest_seq}_連絡先%{contact_seq}_電話番号"
         nth_destination_contact_contact_fax: "操作先%{dest_seq}_連絡先%{contact_seq}_ファックス番号"
         nth_destination_contact_contact_email: "操作先%{dest_seq}_連絡先%{contact_seq}_メールアドレス"
+        nth_destination_contact_contact_postal_code: "操作先%{dest_seq}_連絡先%{contact_seq}_郵便番号"
+        nth_destination_contact_contact_address: "操作先%{dest_seq}_連絡先%{contact_seq}_住所"
         nth_destination_contact_contact_link_url: "操作先%{dest_seq}_連絡先%{contact_seq}_リンクURL"
         nth_destination_contact_contact_link_name: "操作先%{dest_seq}_連絡先%{contact_seq}_リンク名"
     errors:
@@ -152,6 +163,7 @@ ja:
     chorg: 組織変更
     addons:
       chorg/entity_log: 変更履歴
+      chorg/option: オプション
 
   cms_role:
     edit_chorg_revisions: 組織変更の管理
@@ -171,6 +183,7 @@ ja:
       models:
         chorg/run_params:
           job_mode_is_not_service: ジョブサービスの実行モードがserviceではないため、予約実行できません。システム管理者にお問い合わせください。
+          chorg_empty_all: 「組織変更のデータ（新設、移動など）」「ユーザーCSV」「コンテンツCSV」のどれもが設定されていません。
         chorg/changeset:
           blank_contact_group_name: の連絡先に識別名が空欄のものがあります。
           duplicate_contact_group_name: "の連絡先に識別名 \"%{name}\" が重複しています。"
@@ -194,15 +207,18 @@ ja:
         reservation: 予約実行
       chorg/revision:
         content_csv_file_id: コンテンツCSVファイル
-        target_site_ids: 対象サイト
+      chorg/site_setting:
+        chorg_site_ids: 組織変更の対象サイト
 
   tooltip:
     chorg/model/revision:
       name:
         - 組織変更の名称を入力します。
       user_csv_file_id:
-        - 組織変更実行後にユーザーの異動を行うためのユーザーCSVファイルを選択します。
-        - ユーザーCSVには異動後のグループ名や役職を設定してください。
+        - 組織変更実行後にユーザーの異動（登録情報の変更など）を行うためのユーザーCSVファイルを選択します。
+        -
+        - ユーザーCSVは「サイト設定＞ユーザー」からダウンロードしたCSVを使用してください。
+        - ユーザーCSVには異動後のグループ名や役職を設定してください。<b>適切に異動後のグループの名称に変更されていない場合は、CSVの変更内容が無効になります。</b>
         -
         - ファイルを選択しない場合、組織変更実行後にユーザーは異動しませんので手動でユーザーを異動させてください。
       revision_csv_file_id:
@@ -218,10 +234,9 @@ ja:
     chorg/revision:
       content_csv_file_id:
         - 組織変更実行後にパーツ、レイアウト、ページ、フォルダーの異動を行うためのコンテンツCSVファイルを選択します。
-        - コンテンツCSVには異動後のグループ名などを設定してください。
-      target_site_ids:
-        - 組織変更の対象となるサイトを選択します。
-        - 指定がない場合は全サイトが対象となります。
+        -
+        - コンテンツCSVは「全コンテンツ」からダウンロードしたCSVを使用してください。
+        - コンテンツCSVには異動後のグループ名などを設定してください。<b>適切に異動後のグループの名称に変更されていない場合は、CSVの変更内容が無効になります。</b>
     chorg/run_params:
       reservation:
         - 実行する時間を予約できます。
@@ -234,13 +249,19 @@ ja:
             - グループ画面での表示順を入力します。
             - 数字が小さいほど上位に表示されます。
           contact_group_name:
-            - 新設するグループの担当部署を入力します。
+            - 新設するグループの表示用グループ名を入力します。
+          contact_charge:
+            - 新設するグループの担当部署・係を入力します。
           contact_tel:
             - 新設するグループの電話番号を入力します。
           contact_fax:
             - 新設するグループのファックス番号を入力します。
           contact_email:
             - 新設するグループのメールアドレスを入力します。
+          contact_postal_code:
+            - 新設するグループの郵便番号を入力します。
+          contact_address:
+            - 新設するグループの住所を入力します。
           contact_link_url:
             - 新設するグループのリンクURLを入力します。
           contact_link_name:
@@ -257,13 +278,19 @@ ja:
             - グループ画面での表示順を入力します。
             - 数字が小さいほど上位に表示されます。
           contact_group_name:
-            - 分割後のグループの担当部署を入力します。
+            - 分割後のグループの表示用グループ名を入力します。
+          contact_charge:
+            - 分割後のグループの担当部署・係を入力します。
           contact_tel:
             - 分割後のグループの電話番号を入力します。
           contact_fax:
             - 分割後のグループのファックス番号を入力します。
           contact_email:
             - 分割後のグループのメールアドレスを入力します。
+          contact_postal_code:
+            - 分割後のグループの郵便番号を入力します。
+          contact_address:
+            - 分割後のグループの住所を入力します。
           contact_link_url:
             - 分割後のグループのリンクURLを入力します。
           contact_link_name:
@@ -279,13 +306,19 @@ ja:
             - グループ画面での表示順を入力します。
             - 数字が小さいほど上位に表示されます。
           contact_group_name:
-            - 移動先グループの担当部署を入力します。
+            - 移動先グループの表示用グループ名を入力します。
+          contact_charge:
+            - 移動先グループの担当部署・係を入力します。
           contact_tel:
             - 移動先グループの電話番号を入力します。
           contact_fax:
             - 移動先グループのファックス番号を入力します。
           contact_email:
             - 移動先グループのメールアドレスを入力します。
+          contact_postal_code:
+            - 移動先グループの郵便番号を入力します。
+          contact_address:
+            - 移動先グループの住所を入力します。
           contact_link_url:
             - 移動先グループのリンクURLを入力します。
           contact_link_name:
@@ -301,13 +334,19 @@ ja:
             - グループ画面での表示順を入力します。
             - 数字が小さいほど上位に表示されます。
           contact_group_name:
-            - 統合先グループの担当部署を入力します。
+            - 統合先グループの表示用グループ名を入力します。
+          contact_charge:
+            - 統合先グループの担当部署・係を入力します。
           contact_tel:
             - 統合先グループの電話番号を入力します。
           contact_fax:
             - 統合先グループのファックス番号を入力します。
           contact_email:
             - 統合先グループのメールアドレスを入力します。
+          contact_postal_code:
+            - 統合先グループの郵便番号を入力します。
+          contact_address:
+            - 統合先グループの住所を入力します。
           contact_link_url:
             - 統合先グループのリンクURLを入力します。
           contact_link_name:
@@ -316,3 +355,8 @@ ja:
             - LDAPを利用している場合は統合先グループの識別子(DN)を入力します。
           before_name:
             - 統合元のグループ名を選択します。
+    chorg/site_setting:
+      chorg_site_ids:
+        - 組織変更の対象となるサイトを設定します。
+        - 未設定の場合、自サイトのみを対象に組織変更を実施します。
+        - 自サイト以外に、対象となるサイトがある場合、そのサイトを設定します。

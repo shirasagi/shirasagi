@@ -11,9 +11,9 @@ module Cms::FeedFilter
         summary = node.send(m) if summary.blank? && node.respond_to?(m)
       end
 
-      rss.channel.title       = sanitize("#{node.name} - #{node.site.name}")
+      rss.channel.title       = _sanitize_rss("#{node.name} - #{node.site.name}")
       rss.channel.link        = node.full_url
-      rss.channel.description = sanitize(summary)
+      rss.channel.description = _sanitize_rss(summary)
       rss.channel.about       = node.full_url
       rss.channel.language    = "ja"
       # rss.channel.pubDate     = date.to_s
@@ -27,11 +27,11 @@ module Cms::FeedFilter
 
         rss.items.new_item do |entry|
           title = item.try(:index_name).presence || item.name
-          title = sanitize(title)
+          title = _sanitize_rss(title)
 
           entry.title       = title
           entry.link        = item.full_url
-          entry.description = sanitize(summary) if summary.present?
+          entry.description = _sanitize_rss(summary) if summary.present?
           entry.pubDate     = date.to_s if date.present?
         end
       end
@@ -43,7 +43,8 @@ module Cms::FeedFilter
     render xml: rss.to_xml, content_type: "application/xml"
   end
 
-  def sanitize(html_or_text)
+  def _sanitize_rss(html_or_text)
+    html_or_text = html_or_text.gsub(/[[:cntrl:]]/, '')
     view_context.sanitize html_or_text
   end
 end

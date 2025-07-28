@@ -50,8 +50,8 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
 
   def history_summary
     h = []
-    h << "#{t("file_label")}: #{file_label}" if file_label.present?
-    h << "#{t("image_html_type")}: #{I18n.t("cms.options.column_image_html_type.#{image_html_type}")}"
+    h << "#{t("date")}: #{I18n.l(date.to_date, format: :long)}" if date.present?
+    h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
     h.join(",")
   end
 
@@ -75,7 +75,7 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
   private
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || skip_required?
 
     if column.required? && date.blank?
       self.errors.add(:date, :blank)
@@ -87,10 +87,11 @@ class Cms::Column::Value::DateField < Cms::Column::Value::Base
   def copy_column_settings
     super
 
+    return if self.html_tag.present? && self.html_additional_attr.present?
     return if column.blank?
 
-    self.html_tag = column.html_tag
-    self.html_additional_attr = column.html_additional_attr
+    self.html_tag ||= column.html_tag
+    self.html_additional_attr ||= column.html_additional_attr
   end
 
   # override Cms::Column::Value::Base#to_default_html

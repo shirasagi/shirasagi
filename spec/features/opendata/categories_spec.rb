@@ -31,15 +31,22 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
 
       # create
       visit node_nodes_path(site, parent_node)
+      wait_for_all_turbo_frames
       click_on I18n.t('ss.links.new')
-      click_on I18n.t('ss.links.change')
-      within 'article.mod-opendata' do
-        click_on I18n.t('cms.nodes.opendata/category')
+      within "form#item-form" do
+        wait_for_cbox_opened { click_on I18n.t('ss.links.change') }
       end
-      fill_in 'item[name]', with: name
-      fill_in 'item[basename]', with: basename
-      click_on I18n.t('ss.buttons.save')
-      wait_for_ajax
+      within_cbox do
+        within 'article.mod-opendata' do
+          click_on I18n.t('cms.nodes.opendata/category')
+        end
+      end
+      within "form#item-form" do
+        fill_in 'item[name]', with: name
+        fill_in 'item[basename]', with: basename
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Opendata::Node::Category.count).to eq 1
       Opendata::Node::Category.first.tap do |node|
@@ -50,6 +57,7 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
 
       # read
       click_on I18n.t('ss.links.back_to_index')
+      wait_for_all_turbo_frames
       within '.list-items' do
         click_on name
       end
@@ -57,10 +65,12 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
 
       # update
       click_on I18n.t('ss.links.edit')
-      ensure_addon_opened("#addon-cms-agents-addons-meta")
-      fill_in 'item[keywords]', with: keywords.join(' ')
-      click_on I18n.t('ss.buttons.save')
-      wait_for_ajax
+      within "form#item-form" do
+        ensure_addon_opened("#addon-cms-agents-addons-meta")
+        fill_in 'item[keywords]', with: keywords.join(' ')
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
       Opendata::Node::Category.first.tap do |node|
         expect(node.name).to eq name
         expect(node.filename).to end_with basename
@@ -70,8 +80,11 @@ describe "opendata_categories", type: :feature, dbscope: :example, js: true do
       # delete
       click_on I18n.t('cms.node_config')
       click_on I18n.t('ss.links.delete')
-      click_on I18n.t('ss.buttons.delete')
-      wait_for_ajax
+      within "form#item-form" do
+        click_on I18n.t('ss.buttons.delete')
+      end
+      wait_for_notice I18n.t("ss.notice.deleted")
+      wait_for_all_turbo_frames
       expect(Opendata::Node::Category.count).to eq 0
     end
   end

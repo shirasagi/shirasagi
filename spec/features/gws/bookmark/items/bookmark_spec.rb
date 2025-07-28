@@ -10,12 +10,12 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
   shared_examples "bookmark main" do
     it do
       visit bookmark_path
-      within ".gws-bookmark" do
+      within ".gws-bookmark-head" do
         expect(page).to have_css("i.inactive")
         expect(page).to have_no_css(".bookmark-notice")
       end
-      first(".gws-bookmark").click
-      within ".gws-bookmark" do
+      first(".gws-bookmark-head").click
+      within ".gws-bookmark-head" do
         expect(page).to have_css("i.active")
         expect(page).to have_selector(".bookmark-notice", visible: true)
       end
@@ -27,17 +27,17 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
       end
 
       visit bookmark_path
-      within ".gws-bookmark" do
+      within ".gws-bookmark-head" do
         expect(page).to have_css("i.active")
         expect(page).to have_selector(".bookmark-notice", visible: false)
       end
-      first(".gws-bookmark").click
-      within ".gws-bookmark" do
+      first(".gws-bookmark-head").click
+      within ".gws-bookmark-head" do
         expect(page).to have_css("i.active")
         expect(page).to have_selector(".bookmark-notice", visible: true)
         click_on I18n.t("ss.buttons.delete")
       end
-      within ".gws-bookmark" do
+      within ".gws-bookmark-head" do
         expect(page).to have_css("i.inactive")
         expect(page).to have_no_css(".bookmark-notice")
       end

@@ -16,8 +16,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       name = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit new_path
+        login_user(user638, to: new_path)
 
         within "form#item-form" do
           expect(page).to have_css(".selected-capital", text: user638.effective_capital(site).name)
@@ -44,8 +43,7 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       workflow_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
 
         click_on item.name
         wait_for_js_ready
@@ -54,12 +52,12 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+          wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
-          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           expect(page).to have_css(".approvers [data-id='1,#{user545.id}']", text: user545.long_name)
@@ -82,14 +80,13 @@ describe "gws_affair_overtime_files", type: :feature, dbscope: :example, js: tru
       item = request_file(item)
 
       Timecop.freeze(start_at) do
-        login_user(user545)
-        visit approve_path
+        login_user(user545, to: approve_path)
 
         within ".list-items" do
           expect(page).to have_link item.name
         end
 
-        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
         within ".list-head" do
           page.accept_alert do
             click_button I18n.t('ss.links.approve')

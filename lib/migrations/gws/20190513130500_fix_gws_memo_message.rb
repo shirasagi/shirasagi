@@ -18,7 +18,7 @@ class SS::Migration20190513130500
         seen_at ||= message[:seen].try(:[], member_id.to_s)
         { 'user_id' => member_id, 'path' => message.in_path[member_id.to_s], 'seen_at' => seen_at }
       end
-      message.update
+      message.without_record_timestamps { message.save }
     end
   end
 end

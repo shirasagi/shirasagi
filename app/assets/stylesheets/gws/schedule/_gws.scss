@@ -82,8 +82,16 @@
   header {
     @include clear;
     line-height: 1.4;
+    .approval-check {
+      margin-left: 6px;
+      padding: 1px 5px;
+      border-radius: 4px;
+      background-color: #84e;
+      color: #fff;
+      font-weight: normal;
+    }
     .add-plan {
-      margin-left: 8px;
+      margin-left: 6px;
       padding: 2px 5px;
       border-radius: 4px;
       background-color: #f40;
@@ -163,9 +171,9 @@
     padding: 5px 1px;
   }
   .member, .facility {
-    min-width: 200px;
+    width: 16rem;
     margin: 1px 0;
-    padding: 5px 1px;
+    padding: 5px 10px 5px 1px;
   }
   .hour-wrap {
     padding: 5px 1px;
@@ -267,9 +275,9 @@
     height: 15px;
   }
 }
-//
-// FullCalendar
-//
+/*
+ * FullCalendar
+ */
 .fc-toolbar h2 {
   margin: 2px 0 -2px;
   border-bottom: 1px solid #333;
@@ -323,14 +331,6 @@
 .fc-view-container {
   background-color: #fff;
 }
-.print-preview {
-  .fc-unthemed {
-    th, td {
-      border-style: solid;
-      border-color: #000;
-    }
-  }
-}
 @include mb {
   .fc-right {
     margin: 0 0 10px;
@@ -377,8 +377,10 @@
   color: $white;
 }
 .fc-event {
+  overflow: visible;
   border: 0;
   border-radius: 0;
+  border-radius: 3px;
   font-size: 90%;
   cursor: pointer;
   &:hover {
@@ -408,6 +410,11 @@
 }
 .fc-time-grid-event {
   margin-bottom: 1px;
+  background-color: #2eb0f2;
+  color: $black;
+  &:hover {
+    color: $black;
+  }
 }
 .fc-time-grid-event .fc-content:before {
   float: left;
@@ -429,16 +436,6 @@
     color: #f25a38;
     text-decoration: underline;
   }
-}
-.fc-time-grid-event {
-  background-color: #2eb0f2;
-  color: $black;
-  &:hover {
-    color: $black;
-  }
-}
-.fc-time-grid-event {
-  background-color: #2eb0f2;
 }
 .fc-event-range {
   padding: 1px 2px;
@@ -656,6 +653,12 @@
 }
 // Print View
 .print-preview {
+  .fc-unthemed {
+    th, td {
+      border-style: solid;
+      border-color: #000;
+    }
+  }
   .fc-listMonth-view-table {
     .tr {
       border-bottom: 1px solid #000;
@@ -683,10 +686,6 @@
 // popup
 .fc-agenda-view .fc-day-grid {
   z-index: 0;
-}
-.fc-event {
-  overflow: visible;
-  border-radius: 3px;
 }
 .fc-popup {
   position: relative;
@@ -757,9 +756,9 @@
   }
 }
 
-//
-// original settings
-//
+/*
+ * original settings
+ */
 .fc-loading {
   display: inline-block;
   position: absolute;
@@ -770,7 +769,7 @@
 }
 
 // multiple calendar
-#calendar-controller {
+.calendar-controller {
   .fc-view-container .fc-timelineDay-view {
     height: 35px;
     overflow: hidden;
@@ -792,8 +791,15 @@
     color: #444;
     &:hover { color: $orange; }
   }
+  .approval-check {
+    margin-left: 6px;
+    padding: 1px 5px;
+    border-radius: 4px;
+    background-color: #84e;
+    color: #fff;
+  }
   .add-plan {
-    margin-left: 8px;
+    margin-left: 6px;
     padding: 1px 5px;
     border-radius: 4px;
     background-color: #f40;
@@ -887,6 +893,12 @@ dl.gws-schedule-repeat {
   .main {
     flex: 1;
   }
+
+  .list-item-switch {
+    display: inline-block;
+    width: 26px;
+    text-align: center;
+  }
 }
 
 .gws-schedule-todo-categoy-navi {
@@ -903,14 +915,6 @@ dl.gws-schedule-repeat {
       padding-left: 3px;
       background: #f25a38;
     }
-  }
-}
-
-.gws-schedule-todo-index {
-  .list-item-switch {
-    display: inline-block;
-    width: 26px;
-    text-align: center;
   }
 }
 

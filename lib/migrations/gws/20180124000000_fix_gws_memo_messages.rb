@@ -8,7 +8,7 @@ class SS::Migration20180124000000
     Gws::Memo::Message.each do |message|
       if message.member_ids.present? && message.to_member_ids.blank?
         message.to_member_ids = message.member_ids
-        message.update
+        message.without_record_timestamps { message.save }
       end
     end
   end

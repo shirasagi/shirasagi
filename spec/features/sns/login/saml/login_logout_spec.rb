@@ -25,87 +25,124 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
     Capybara.app_host = @save_app_host
   end
 
-  context "when email is given" do
-    it do
-      visit sns_mypage_path
-      click_on name
+  shared_examples "saml login is" do
+    context "when email is given" do
+      it do
+        visit sns_mypage_path
+        click_on name
 
-      #
-      # blow form is outside of SHIRASAGI. it's sampling (https://capriza.github.io/samling/samling.html)
-      #
-      within "form#samlProps" do
-        fill_in "nameIdentifier", with: sys_user.email
-        click_on "Next"
-      end
+        #
+        # blow form is outside of SHIRASAGI. it's sampling (https://capriza.github.io/samling/samling.html)
+        #
+        within "form#samlProps" do
+          fill_in "nameIdentifier", with: user.email
+          click_on "Next"
+        end
 
-      within "form#samlResponseForm" do
-        click_on "Post Response!"
-      end
+        within "form#samlResponseForm" do
+          click_on "Post Response!"
+        end
 
-      #
-      # Now back to SHIRASAGI
-      #
-      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
-        # confirm a user has been logged-in
-        expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+        #
+        # Now back to SHIRASAGI
+        #
+        I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+          # confirm a user has been logged-in
+          expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+        end
 
-        # do logout
-        within "nav.user" do
-          find("span.name").click
-          # click_on I18n.t("ss.logout")
-          js_click find(:link_or_button, I18n.t("ss.logout"))
+        if user.type_sso?
+          I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+            # do logout
+            within ".user-navigation" do
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
+
+              expect(page).to have_no_link(I18n.t("ss.logout"))
+            end
+          end
+        else
+          I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+            # do logout
+            within ".user-navigation" do
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
+
+              click_on I18n.t("ss.logout")
+            end
+          end
+
+          # confirm a login form has been shown
+          expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
+          expect(page).to have_css("li", text: name)
         end
       end
+    end
 
-      # confirm a login form has been shown
-      expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
-      expect(page).to have_css("li", text: name)
+    context "when uid is given" do
+      it do
+        visit sns_mypage_path
+        click_on name
+
+        #
+        # blow form is outside of SHIRASAGI. it's sampling (https://capriza.github.io/samling/samling.html)
+        #
+        within "form#samlProps" do
+          fill_in "nameIdentifier", with: user.uid
+          click_on "Next"
+        end
+
+        within "form#samlResponseForm" do
+          click_on "Post Response!"
+        end
+
+        #
+        # Now back to SHIRASAGI
+        #
+        I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+          # confirm a user has been logged-in
+          expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+        end
+
+        if user.type_sso?
+          I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+            # do logout
+            within ".user-navigation" do
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
+              expect(page).to have_no_link(I18n.t("ss.logout"))
+            end
+          end
+        else
+          I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
+            # do logout
+            within ".user-navigation" do
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
+              click_on I18n.t("ss.logout")
+            end
+          end
+
+          # confirm a login form has been shown
+          expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
+          expect(page).to have_css("li", text: name)
+        end
+      end
     end
   end
 
-  context "when uid is given" do
-    before do
-      user = sys_user
-      user.uid = unique_id
-      user.save!
-    end
+  context "with sns user" do
+    let(:user) { create :ss_user, uid: unique_id }
 
-    it do
-      visit sns_mypage_path
-      click_on name
+    it_behaves_like "saml login is"
+  end
 
-      #
-      # blow form is outside of SHIRASAGI. it's sampling (https://capriza.github.io/samling/samling.html)
-      #
-      within "form#samlProps" do
-        fill_in "nameIdentifier", with: sys_user.uid
-        click_on "Next"
-      end
+  context "with ldap user" do
+    let(:user) { create :ss_ldap_user2 }
 
-      within "form#samlResponseForm" do
-        click_on "Post Response!"
-      end
+    it_behaves_like "saml login is"
+  end
 
-      #
-      # Now back to SHIRASAGI
-      #
-      I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
-        # confirm a user has been logged-in
-        expect(page).to have_css(".main-navi", text: I18n.t("sns.account"))
+  context "with sso user" do
+    let(:user) { create :ss_sso_user }
 
-        # do logout
-        within "nav.user" do
-          find("span.name").click
-          wait_for_js_ready
-          # click_on I18n.t("ss.logout")
-          js_click find(:link_or_button, I18n.t("ss.logout"))
-        end
-      end
-
-      # confirm a login form has been shown
-      expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
-      expect(page).to have_css("li", text: name)
-    end
+    it_behaves_like "saml login is"
   end
 
   context "when 'urn:oasis:names:tc:SAML:2.0:status:AuthnFailed' is responded" do
@@ -222,7 +259,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
       I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
         # confirm a user has been logged-in
-        expect(page).to have_css("nav.user .name", text: sys_user.name)
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         # confirm gws_portal is shown to user
         expect(page).to have_css("#head .application-menu .gws .current", text: I18n.t('ss.links.gws'))
       end

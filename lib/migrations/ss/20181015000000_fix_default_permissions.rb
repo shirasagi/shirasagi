@@ -14,7 +14,7 @@ class SS::Migration20181015000000
 
         role.permissions += DEFAULT_PERMISSIONS
         role.permissions.uniq!
-        role.save!
+        role.without_record_timestamps { role.save! }
       end
     end
 
@@ -34,7 +34,7 @@ class SS::Migration20181015000000
         end
 
         user.sys_role_ids = [ default_sys_role.id ]
-        user.save!
+        user.without_record_timestamps { user.save! }
       end
     end
   end

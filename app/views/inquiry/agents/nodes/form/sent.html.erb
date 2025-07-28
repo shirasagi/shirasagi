@@ -10,6 +10,23 @@
 <div class="inquiry-sent">
 <%= sanitize(@cur_node.inquiry_sent_html) %>
 </div>
+<% if @saved_params.present? %>
+  <div class="columns">
+    <% @columns.each do |column| %>
+      <%= inquiry_column_tag(column, confirm: true) do %>
+        <%
+          data = @saved_params.data[column.id.to_s]
+          if column.input_type =~ /date_field/
+            data = I18n.l(data.to_date, format: :picker) rescue data
+          elsif column.input_type =~ /datetime_field/
+            data = I18n.l(data.to_datetime, format: :picker) rescue data
+          end
+        %>
+        <%=br data %>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>
 <% if params[:ref].present? %>
-  <div class="back-to-ref"><%= link_to I18n.t("inquiry.links.back_to_page"), URI.parse(params[:ref].to_s).path %></div>
+  <div class="back-to-ref"><%= link_to I18n.t("inquiry.links.back_to_page"), ::Addressable::URI.parse(params[:ref].to_s).request_uri %></div>
 <% end %>

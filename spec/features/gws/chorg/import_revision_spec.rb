@@ -22,6 +22,8 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
         "contact_tel"=>"000-0000-0000",
         "contact_fax"=>"000-0000-0000",
         "contact_email"=>"sample1@example.jp",
+        "contact_postal_code"=>"0000000",
+        "contact_address"=>"大鷺県シラサギ市小鷺町1丁目1番地1号",
         "contact_link_url"=>"http://www.ss-proj.org/",
         "contact_link_name"=>"link1",
         "ldap_dn"=>"dn1"
@@ -37,6 +39,8 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
         "contact_tel"=>"000-0000-0000",
         "contact_fax"=>"000-0000-0000",
         "contact_email"=>"sample2@example.jp",
+        "contact_postal_code"=>"0000000",
+        "contact_address"=>"大鷺県シラサギ市小鷺町1丁目1番地1号",
         "contact_link_url"=>"http://www.ss-proj.org/",
         "contact_link_name"=>"link2",
         "ldap_dn"=>"dn2"
@@ -52,6 +56,8 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
         "contact_tel"=>"000-0000-0000",
         "contact_fax"=>"000-0000-0000",
         "contact_email"=>"sample3@example.jp",
+        "contact_postal_code"=>"0000000",
+        "contact_address"=>"大鷺県シラサギ市小鷺町1丁目1番地1号",
         "contact_link_url"=>"http://www.ss-proj.org/",
         "contact_link_name"=>"link3",
         "ldap_dn"=>"dn3"
@@ -67,6 +73,8 @@ describe "gws_chorg_import_revision", type: :feature, dbscope: :example do
         "contact_tel"=>"000-0000-0000",
         "contact_fax"=>"000-0000-0000",
         "contact_email"=>"sample4@example.jp",
+        "contact_postal_code"=>"0000000",
+        "contact_address"=>"大鷺県シラサギ市小鷺町1丁目1番地1号",
         "contact_link_url"=>"http://www.ss-proj.org/",
         "contact_link_name"=>"link4",
         "ldap_dn"=>"dn4"

@@ -45,9 +45,7 @@ describe "gws_schedule_csv", type: :feature, dbscope: :example, js: true do
     it do
       Gws::Schedule::Plan.all.destroy_all
 
-      login_user user
-
-      visit gws_schedule_csv_path(site: site)
+      login_user user, to: gws_schedule_csv_path(site: site)
       within "form#import_form" do
         attach_file "item[in_file]", csv_file
         page.accept_confirm do

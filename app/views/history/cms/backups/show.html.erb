@@ -1,12 +1,56 @@
+<% latest_backup = ref_item.try(:backups).try(:first) %>
 <div class="main-box">
+  <div>
+    <%=
+      current_notice = item.created.try do |updated|
+        time_tag = ss_time_tag(updated, format: :picker)
+        if latest_backup && latest_backup.id == item.id
+          "(#{t("history.this_is_latest_html", time: time_tag)})".html_safe
+        else
+          "(#{time_tag})".html_safe
+        end
+      end
+      t("history.current_backup_notice_html", version: current_notice)
+    %>
+
+    <%=
+      if compare_to_item
+        latest_notice = compare_to_item.created.try do |updated|
+          time_tag = ss_time_tag(updated, format: :picker)
+          if latest_backup && latest_backup.id == compare_to_item.id
+            t("history.this_is_latest_html", time: time_tag)
+          else
+            "(#{time_tag})".html_safe
+          end
+        end
+        t("history.compare_to_backup_notice_html", version: latest_notice)
+      end
+    %>
+  </div>
   <table class="see index history-backup">
-    <% @item.data.sort.each do |k, v| %>
-    <tr>
-      <th><%= k %></th>
-      <td class="<%= 'diff' if @data[k] != v %>">
-        <%= v.present? ? v.inspect : "" %>
-      </td>
-    </tr>
+    <tbody>
+    <% item.data.sort.each do |k, v| %>
+      <%
+        if ref_item
+          field_name = ref_item.class.t(k)
+        else
+          field_name = k
+        end
+      %>
+      <tr data-id="<%= k %>">
+        <th><%= field_name %></th>
+        <td class="<%= 'diff' if compare_to_item && compare_to_item.data[k] != v %>">
+          <%=
+            case v
+            when Time, DateTime
+              v.in_time_zone.iso8601
+            else
+              v.present? ? v.inspect : ""
+            end
+          %>
+        </td>
+      </tr>
     <% end %>
+    </tbody>
   </table>
 </div>

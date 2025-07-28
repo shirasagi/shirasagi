@@ -13,19 +13,27 @@ class Gws::Apis::GroupsController < ApplicationController
     end
   end
 
+  def set_items
+    @items = @model.site(@cur_site).active
+    @items = @items.search(search_params).
+      reorder(name: 1).
+      page(params[:page]).per(50)
+  end
+
   public
 
   def index
     @multi = params[:single].blank?
 
-    if search_params.blank?
-      render Gws::Apis::GroupsComponent.new(cur_site: @cur_site, multi: @multi)
-      return
+    respond_to do |format|
+      format.html do
+        if search_params.blank?
+          render Gws::Apis::GroupsComponent.new(cur_site: @cur_site, multi: @multi)
+        else
+          set_items
+        end
+      end
+      format.json { set_items }
     end
-
-    @items = @model.site(@cur_site).active
-    @items = @items.search(search_params).
-      reorder(name: 1).
-      page(params[:page]).per(50)
   end
 end

@@ -1,0 +1,10 @@
+<%
+  quota = @forum.forum_quota_model
+  return unless quota
+%>
+<%= render "ss/crud/addon", addon: { head: head, css_class: css_class, toggle: true } do %>
+  <div class="ss-quota-bar">
+    <div class="label"><%= quota.label %></div>
+    <div class="usage <%= quota.over? ? 'over-threshold' : '' %>" style="width: <%= quota.percentage %>%"></div>
+  </div>
+<% end %>

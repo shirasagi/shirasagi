@@ -12,7 +12,7 @@ module SS::LdapSupport
   end
 
   def docker_conf
-    @docker_conf ||= SS.config.ldap.test_docker || {}
+    @docker_conf ||= {}
   end
 
   def docker_conf_api_url
@@ -64,12 +64,22 @@ module SS::LdapSupport
     RSpec.configuration.after(:suite) do
       SS::LdapSupport.after_suite
     end
+    RSpec.configuration.include(SS::LdapSupport, js: true)
   rescue
     RSpec.configuration.filter_run_excluding(ldap: true)
   end
 
   def before_example
+    SS::LdapSupport.start_ldap_service
+  end
+
+  def after_suite
+    SS::LdapSupport.stop_ldap_service
+  end
+
+  def start_ldap_service
     container = SS::LdapSupport.docker_container
+    # already started
     return if container.present?
 
     image_id = SS::LdapSupport.docker_conf_image_id
@@ -108,16 +118,19 @@ module SS::LdapSupport
     SS::LdapSupport.docker_ldap_port = ldap_port
     SS::LdapSupport.docker_ldaps_port = ldaps_port
 
-    SS.config.replace_value_at(:ldap, :host, "localhost:#{ldap_port}")
+    ::Ldap.url = "ldap://localhost:#{ldap_port}/"
 
     puts "image '#{image_id}' successfully launched as container '#{container.id[0, 12]}' listening on #{ldap_port}"
   end
 
-  def after_suite
+  def stop_ldap_service
     container = SS::LdapSupport.docker_container
+    # already stopped
     return if container.blank?
 
     SS::LdapSupport.docker_container = nil
+    SS::LdapSupport.docker_ldap_port = nil
+    SS::LdapSupport.docker_ldaps_port = nil
     container.stop
     container.delete(force: true)
     puts "container '#{container.id[0, 12]}' is deleted"

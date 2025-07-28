@@ -8,11 +8,17 @@ ja:
     search_users: ユーザーを検索
     search_times: 空き時間を検索
     today_wday: 本日の曜日
+    views:
+      approval_state: 申請承認
+      request: 申請
+      approve: 承認
+      deny: 否認
     navi:
       holiday: 休日設定
       category: 種別設定
       todo: ToDo一覧
       trash: ゴミ箱
+      approve_facility_plan: 設備予約の承認
     tabs:
       personal: 個人
       personal_list: 予定リスト
@@ -30,7 +36,7 @@ ja:
         withAbsence: 欠席表示
       titleFormat:
         month: "%Y年 %1m月"
-        week: "(%Y年 %1m月 %1d日（%a）)"
+        week: "%Y年 %1m月 %1d日（%a）"
         day: "%Y年 %1m月 %1d日（%a）"
       columnFormat:
         month: "%a"
@@ -586,5 +592,5 @@ ja:
 
   job:
     models:
-      gws/schedule/trash_purge_job: 予定ゴミ箱の掃除
-      gws/schedule/todo_trash_purge_job: ToDoゴミ箱の掃除
+      gws/schedule/trash_purge_job: スケジュール/予定ゴミ箱の掃除
+      gws/schedule/todo_trash_purge_job: ToDo/ToDoゴミ箱の掃除

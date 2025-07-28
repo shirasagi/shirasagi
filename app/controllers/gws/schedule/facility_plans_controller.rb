@@ -6,6 +6,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
 
   before_action :set_facility
   before_action :set_download_url, only: :index
+  before_action :set_default_readable_setting, only: [:new]
 
   navi_view "gws/schedule/main/navi"
 
@@ -17,7 +18,15 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
   end
 
   def pre_params
-    super.merge facility_ids: [@facility.id]
+    h = super
+    h[:facility_ids] = [@facility.id]
+
+    member_ids = h[:member_ids].to_a
+    member_ids += @facility.default_member_ids
+    member_ids.uniq!
+
+    h[:member_ids] = member_ids
+    h
   end
 
   def set_download_url
@@ -28,7 +37,7 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
     set_facility
     @items ||= Gws::Schedule::Plan.site(@cur_site).without_deleted.
       facility(@facility).
-      search(params[:s])
+      search(@search_plan)
   end
 
   public
@@ -44,5 +53,19 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
       Gws::Schedule::PlanCsv::Exporter.enum_csv(@items, site: @cur_site, user: @cur_user),
       type: 'text/csv; charset=Shift_JIS', filename: filename
     )
+  end
+
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+  end
+
+  def set_default_readable_setting
+    @default_readable_setting = proc do
+      @item.readable_setting_range = @facility.readable_setting_range
+      @item.readable_group_ids = @facility.readable_group_ids
+      @item.readable_member_ids = @facility.readable_member_ids
+      @item.readable_custom_group_ids = @facility.readable_custom_group_ids
+    end
   end
 end

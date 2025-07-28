@@ -26,7 +26,7 @@ module Cms::NodeFilter::View
   end
 
   def render_with_pagination(items)
-    raise "404" if params[:page].to_i > 1 && items.empty?
+    raise SS::NotFoundError if params[:page].to_i > 1 && items.empty?
     render
   end
 end

@@ -92,11 +92,12 @@ RSpec.configure do |config|
   # the seed, which is printed after each run.
   #     --seed 1234
   #config.order = "random"
-  config.order = "order"
+  config.order = "defined"
   Kernel.srand config.seed
 
   config.include Rails.application.routes.url_helpers
   config.include Capybara::DSL
+  config.include RSpec::Rails::RailsExampleGroup
   config.include ActiveJob::TestHelper
   config.include ActiveSupport::Testing::TimeHelpers
   config.include FactoryBot::Syntax::Methods
@@ -119,8 +120,6 @@ RSpec.configure do |config|
     ::Rails.application.eager_load!
     # `rake db:drop`
     ::Mongoid::Clients.default.database.drop
-    # clear logfile
-    File.write(Rails.logger.instance_variable_get(:@logdev).filename, '')
   end
 
   config.before(:context) do
@@ -144,12 +143,6 @@ RSpec.configure do |config|
     Rails.logger.debug(e.to_s)
   end
 
-  config.after(:suite) do
-    file = Rails.logger.instance_variable_get(:@logdev).filename
-    logs = File.read(file).split(/\R/).select { |s| s.index('FATAL --') && /FATAL -- : +\w./.match?(s) }
-    puts '', '-' * 50, '[test.log]', '', logs.join("\n"), '-' * 50 if logs.present?
-  end
-
   Capybara.configure do |config|
     config.ignore_hidden_elements = false
     # Capybara's default is 2, but it is too short. 60 is a bit long in daily use.
@@ -159,24 +152,26 @@ RSpec.configure do |config|
     config.server_host = "0.0.0.0"
   end
 
-  if ci? || ENV["rspec_retry"].present?
-    require 'rspec/retry'
+  ENV.fetch("rspec_retry", ci? ? 3 : nil).tap do |rspec_retry|
+    if rspec_retry.numeric? && rspec_retry.to_i > 0
+      require 'rspec/retry'
 
-    config.verbose_retry = true
-    config.display_try_failure_messages = true
-    config.around :each, :js do |example|
-      example.run_with_retry retry: 3
-    end
-
-    # callback to be run between retries
-    config.retry_callback = proc do |ex|
-      # run some additional clean up task - can be filtered by example metadata
-      if ex.metadata[:js]
-        Capybara.reset!
+      config.verbose_retry = true
+      config.display_try_failure_messages = true
+      config.around :each, :js do |example|
+        example.run_with_retry retry: rspec_retry.to_i
       end
-    end
 
-    puts "[RSpec] enabled rspec retry"
+      # callback to be run between retries
+      config.retry_callback = proc do |ex|
+        # run some additional clean up task - can be filtered by example metadata
+        if ex.metadata[:js]
+          Capybara.reset!
+        end
+      end
+
+      puts "[RSpec] enabled rspec retry"
+    end
   end
 end
 
@@ -207,6 +202,32 @@ end
 def unique_color
   @random_color ||= SS::RandomColor.new
   @random_color.next.to_rgb.to_s
+end
+
+def i18n_translations(prefix: nil, count: nil, join: nil, sep: nil, length: nil)
+  if prefix.present?
+    gen_value = proc do
+      ret = "#{prefix}#{sep || "-"}#{unique_id}"
+      length.numeric? && length > 0 ? ret[0, length] : ret
+    end
+  else
+    gen_value = proc do
+      ret = unique_id
+      length.numeric? && length > 0 ? ret[0, length] : ret
+    end
+  end
+  translations = {}.with_indifferent_access
+  I18n.available_locales.each do |lang|
+    if count
+      value = Array.new(count) { gen_value.call }
+      value = value.join(join) if join
+    else
+      value = gen_value.call
+    end
+
+    translations[lang.to_s] = value
+  end
+  translations
 end
 
 def ss_japanese_text(length: 10, separator: '')
@@ -243,6 +264,41 @@ def with_env(hash)
   end
 
   ret
+end
+
+def wait_for_notice(text, wait: nil, selector: nil)
+  if page.driver.is_a?(Capybara::Selenium::Driver)
+    wait_for_js_ready
+    options = { text: text }
+    options[:wait] = wait if wait
+    # CI で次のようなエラーが（たまに）観測される。
+    # unknown error: unhandled inspector error: {"code":-32000,"message":"Node with given id does not belong to the document"}
+    #
+    # おそらく #notice の変化を監視している最中にページ遷移したんだと想像。
+    # このようなエラーが発生した場合にリトライするようにしてみる。
+    Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+      expect(page).to have_css(selector || '#notice', **options)
+    end
+    page.execute_script("SS.clearNotice();")
+    wait_for_js_ready
+  else
+    expect(page).to have_css('#notice', text: text)
+  end
+end
+
+def wait_for_error(text, wait: nil, selector: nil)
+  if page.driver.is_a?(Capybara::Selenium::Driver)
+    wait_for_js_ready
+    options = { text: text }
+    options[:wait] = wait if wait
+    Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+      expect(page).to have_css(selector || '#errorExplanation', **options)
+    end
+    page.execute_script("SS.clearNotice();")
+    wait_for_js_ready
+  else
+    expect(page).to have_css('#errorExplanation', text: text)
+  end
 end
 
 # ref.

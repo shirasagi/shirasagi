@@ -2,6 +2,11 @@ this.SS_SearchUI = (function () {
   function SS_SearchUI() {
   }
 
+  var selectTable = null;
+  let toSelected = [], ccSelected = [], bcSelected = [];
+
+  SS_SearchUI.dialogType = 'colorbox';
+
   SS_SearchUI.anchorAjaxBox;
 
   SS_SearchUI.defaultTemplate = " \
@@ -13,10 +18,12 @@ this.SS_SearchUI = (function () {
       <td><a class=\"deselect btn\" href=\"#\"><%= label.delete %></a></td> \
     </tr>";
 
-  SS_SearchUI.defaultSelector = function ($item) {
-    var self = this;
+  SS_SearchUI.defaultSelector = function ($item, $prevSelected) {
+    if (!SS_SearchUI.anchorAjaxBox) {
+      return
+    }
 
-    var templateId = self.anchorAjaxBox.data("template");
+    var templateId = SS_SearchUI.anchorAjaxBox.data("template");
     var templateEl = templateId ? document.getElementById(templateId) : null;
     var template, attr;
     if (templateEl) {
@@ -25,8 +32,32 @@ this.SS_SearchUI = (function () {
     } else {
       template = SS_SearchUI.defaultTemplate;
 
-      var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
-      attr = { name: $input.attr("name"), type: $input.attr("type"), class: $input.attr("class").replace("hidden-ids", "") }
+      var $input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids");
+      if (selectTable === "to") {
+        attr = {
+          name: "item[in_to_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else if (selectTable === "cc") {
+        attr = {
+          name: "item[in_cc_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else if (selectTable === "bcc") {
+        attr = {
+          name: "item[in_bcc_members][]",
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      } else {
+        attr = {
+          name: $input.attr("name"),
+          type: $input.attr("type"),
+          class: $input.attr("class").replace("hidden-ids", "")
+        }
+      }
     }
 
     var $data = $item.closest("[data-id]");
@@ -35,11 +66,26 @@ this.SS_SearchUI = (function () {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
     }
 
-    var tr = ejs.render(template, { data: data, attr: attr, label: { delete: i18next.t("ss.buttons.delete") } });
+    var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});
+    var $tr = $(tr);
+    var $ajaxSelected;
+    if (selectTable === "to") {
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+    } else if (selectTable === "cc") {
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+    } else if (selectTable === "bcc") {
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
+    } else {
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected");
+    }
 
-    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
-    $ajaxSelected.find("tbody").prepend(tr);
+    if ($prevSelected) {
+      $prevSelected.after($tr);
+    } else {
+      $ajaxSelected.find("tbody").prepend($tr);
+    }
     $ajaxSelected.trigger("change");
+    return $tr;
   };
 
   SS_SearchUI.defaultDeselector = function (item) {
@@ -53,24 +99,80 @@ this.SS_SearchUI = (function () {
     table.trigger("change");
   };
 
-  SS_SearchUI.select = function (item) {
-    var selector = this.anchorAjaxBox.data('on-select');
-    if (selector) {
-      return selector(item);
+  SS_SearchUI.dispatchEvent = function (eventName, detail) {
+    var ajaxBox = document.getElementById("ajax-box");
+    if (ajaxBox) {
+      var event = new CustomEvent(eventName, { bubbles: true, cancelable: false, composed: true, detail: detail });
+      ajaxBox.dispatchEvent(event);
+    }
+  }
+
+  SS_SearchUI.select = function (item, prevSelected) {
+    if (SS_SearchUI.anchorAjaxBox) {
+      var selector = SS_SearchUI.anchorAjaxBox.data('on-select');
+      if (selector) {
+        return selector(item);
+      } else {
+        if (!selectTable) {
+          if (item.closest("[data-id]").find(".to-checkbox")[0]) {
+            selectTable = "to";
+          }
+        }
+        var result = this.defaultSelector(item, prevSelected);
+        if (selectTable === "to") {
+          SS_SearchUI.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
+        }
+        return result;
+      }
     } else {
-      return this.defaultSelector(item);
+      SS_SearchUI.dispatchEvent("ss:modal-select", { item: item })
     }
   };
 
   SS_SearchUI.selectItems = function ($el) {
-    if (! $el) {
+    if (!$el) {
       $el = $("#ajax-box");
     }
     var self = this;
-    $el.find(".items input:checkbox").filter(":checked").each(function () {
-      self.select($(this));
+    var $prevSelected = undefined;
+    $el.find(".items .to-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "to";
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
     });
-    self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+    if (selectTable === "to" && self.anchorAjaxBox) {
+      self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
+    }
+
+    $prevSelected = undefined;
+    $el.find(".items .cc-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "cc";
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
+    });
+    if (selectTable === "cc" && self.anchorAjaxBox) {
+      self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected").show();
+    }
+
+    $prevSelected = undefined;
+    $el.find(".items .bcc-checkbox input:checkbox").filter(":checked").each(function () {
+      selectTable = "bcc";
+      // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+      $prevSelected = self.select($(this), $prevSelected);
+    });
+    if (selectTable === "bcc" && self.anchorAjaxBox) {
+      self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
+    }
+    if (selectTable === null) {
+      $prevSelected = undefined;
+      $el.find(".items input:checkbox").filter(":checked").each(function () {
+        // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
+        $prevSelected = self.select($(this), $prevSelected);
+      });
+      if (self.anchorAjaxBox) {
+        self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      }
+    }
   };
 
   SS_SearchUI.deselect = function (e) {
@@ -85,7 +187,7 @@ this.SS_SearchUI = (function () {
   };
 
   SS_SearchUI.toggleSelectButton = function ($el) {
-    if (! $el) {
+    if (!$el) {
       $el = $("#ajax-box");
     }
 
@@ -96,22 +198,34 @@ this.SS_SearchUI = (function () {
     }
   };
 
-  SS_SearchUI.render = function () {
-    var self = this;
+  SS_SearchUI.onceRendered = false;
 
-    $(".ajax-selected").each(function () {
-      $(this).on("click", "a.deselect", self.deselect);
-      if ($(this).find("a.deselect").size() === 0) {
-        $(this).hide();
-      }
-    });
+  SS_SearchUI.renderOnce = function() {
+    if (SS_SearchUI.onceRendered) {
+      return;
+    }
 
     $(document)
-      .on("cbox_load", self.onColorBoxLoaded)
-      .on("cbox_cleanup", self.onColorBoxCleanedUp);
+      .on("cbox_load", SS_SearchUI.onColorBoxLoaded)
+      .on("cbox_cleanup", SS_SearchUI.onColorBoxCleanedUp);
+    SS_SearchUI.onceRendered = true;
   };
 
-  SS_SearchUI.onColorBoxLoaded = function (ev) {
+  SS_SearchUI.render = function (box) {
+    SS_SearchUI.renderOnce();
+
+    $(box || document).find(".ajax-selected").each(function () {
+      var $this = $(this);
+      SS.justOnce(this, "searchUI", function() {
+        $this.on("click", "a.deselect", SS_SearchUI.deselect);
+        if ($this.find("a.deselect").size() === 0) {
+          $this.hide();
+        }
+      });
+    });
+  };
+
+  SS_SearchUI.onColorBoxLoaded = function (_ev) {
     if (!SS_SearchUI.anchorAjaxBox) {
       // ファイル選択ダイアログの「編集」ボタンのクリックなどで別のモーダルが表示される場合がある。
       // 別のモーダルからキャンセルなどで戻ってきた際に、元々の anchor を利用したい。
@@ -120,8 +234,9 @@ this.SS_SearchUI = (function () {
     }
   };
 
-  SS_SearchUI.onColorBoxCleanedUp = function (ev) {
+  SS_SearchUI.onColorBoxCleanedUp = function (_ev) {
     SS_SearchUI.anchorAjaxBox = null;
+    selectTable = null;
   };
 
   SS_SearchUI.modal = function (options) {
@@ -133,24 +248,30 @@ this.SS_SearchUI = (function () {
     var colorbox = options.colorbox || $.colorbox;
     var $el = options.$el || $("#ajax-box");
 
+    if (SS_SearchUI.dialogType === 'ss') {
+      $el.find("form.search").attr("data-turbo", true)
+    }
+
     var isSameWindow = (window == $el[0].ownerDocument.defaultView)
     if (isSameWindow) {
       $el.find("form.search").on("submit", function (ev) {
-        var $div = $("<span />", { class: "loading" }).html(SS.loading);
+        var $div = $("<span />", {class: "loading"}).html(SS.loading);
         $el.find("[type=submit]").after($div);
 
-        $(this).ajaxSubmit({
-          url: $(this).attr("action"),
-          success: function (data) {
-            var $data = $("<div />").html(data);
-            $.colorbox.prep($data.contents());
-          },
-          error: function (data, status) {
-            $div.html("== Error ==");
-          }
-        });
-        ev.preventDefault();
-        return false;
+        if (SS_SearchUI.dialogType !== 'ss') {
+          $(this).ajaxSubmit({
+            url: $(this).attr("action"),
+            success: function (data) {
+              var $data = $("<div />").html(data);
+              $.colorbox.prep($data.contents());
+            },
+            error: function (_data, _status) {
+              $div.html("== Error ==");
+            }
+          });
+          ev.preventDefault();
+          return false;
+        }
       });
     }
     $el.find(".pagination a").on("click", function (ev) {
@@ -165,7 +286,7 @@ this.SS_SearchUI = (function () {
           success: function (data) {
             $el.closest("#cboxLoadedContent").html(data);
           },
-          error: function (data, status) {
+          error: function (_data, _status) {
             $el.find(".pagination").html("== Error ==");
           }
         });
@@ -176,32 +297,80 @@ this.SS_SearchUI = (function () {
         return true;
       }
     });
-    $el.find("#s_group").on("change", function (ev) {
+    $el.find("#s_group").on("change", function (_ev) {
       self.selectItems($el);
-      return $el.find("form.search").submit();
+      return $el.find("form.search")[0].requestSubmit();
     });
-    $el.find(".submit-on-change").on("change", function (ev) {
+    $el.find(".submit-on-change").on("change", function (_ev) {
       self.selectItems($el);
-      return $el.find("form.search").submit();
+      return $el.find("form.search")[0].requestSubmit();
     });
 
-    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
-    if (!$ajaxSelected.length) {
-      $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
-    }
-    $ajaxSelected.find("tr[data-id]").each(function () {
-      var id = $(this).data("id");
-      var tr = $("#colorbox .items [data-id='" + id + "']");
-      tr.find("input[type=checkbox]").remove();
-      tr.find(".select-item,.select-single-item").each(function() {
-        var $this = $(this);
-        var html = $this.html();
-
-        var disabledHtml = $("<span />", { class: $this.prop("class"), style: 'color: #888' }).html(html);
-        $this.replaceWith(disabledHtml);
+    if (self.anchorAjaxBox) {
+      var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+      var $toAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+      var $ccAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+      var $bcAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
+      if (!$ajaxSelected.length) {
+        $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+      }
+      if (!$toAjaxSelected.length) {
+        $toAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+      }
+      if (!$ccAjaxSelected.length) {
+        $ccAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
+      }
+      if (!$bcAjaxSelected.length) {
+        $bcAjaxSelected = self.anchorAjaxBox.parent().find("see.cc-bcc.bcc .ajax-selected");
+      }
+      $toAjaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        toSelected.push($("#colorbox .items [data-id='" + id + "']"));
       });
-    });
-    $el.find("table.index").each(function() {
+      $ccAjaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        ccSelected.push($("#colorbox .items [data-id='" + id + "']"));
+      });
+      $bcAjaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        bcSelected.push($("#colorbox .items [data-id='" + id + "']"));
+      });
+      $ajaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        var tr = $("#colorbox .items [data-id='" + id + "']");
+        var i;
+        for (i = 0; i < toSelected.length; i++) {
+          toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+        }
+        for (i = 0; i < ccSelected.length; i++) {
+          ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+        }
+        for (i = 0; i < bcSelected.length; i++) {
+          bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+        }
+        tr.find(".checkbox input[type=checkbox]").remove();
+        tr.find(".select-item,.select-single-item").each(function () {
+          var $this = $(this);
+          var html = $this.html();
+
+          var disabledHtml = $("<span />", {class: $this.prop("class"), style: 'color: #888'}).html(html);
+          $this.replaceWith(disabledHtml);
+        });
+      });
+      self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
+        var i;
+        for (i = 0; i < toSelected.length; i++) {
+          toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+        }
+        for (i = 0; i < ccSelected.length; i++) {
+          ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+        }
+        for (i = 0; i < bcSelected.length; i++) {
+          bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+        }
+      });
+    }
+    $el.find("table.index").each(function () {
       SS_ListUI.render(this);
     });
     $el.find("a.select-item").on("click", function (ev) {
@@ -209,12 +378,18 @@ this.SS_SearchUI = (function () {
         return false;
       }
       // self.select() を呼び出した際にダイアログが閉じられ self.anchorAjaxBox が null となる可能性があるので、事前に退避しておく。
-      var ajaxBox = self.anchorAjaxBox;
+      var ajaxBox = SS_SearchUI.anchorAjaxBox;
       //append newly selected item
       self.select($(this));
-      ajaxBox.closest("dl").find(".ajax-selected").show();
+      if (ajaxBox) {
+        ajaxBox.closest("dl").find(".ajax-selected").show();
+      }
       ev.preventDefault();
-      colorbox.close();
+      if (SS_SearchUI.dialogType === "ss") {
+        SS_SearchUI.dispatchEvent("ss:modal-close")
+      } else {
+        colorbox.close();
+      }
       return false;
     });
     //remove old items
@@ -223,17 +398,25 @@ this.SS_SearchUI = (function () {
         return false;
       }
       // self.select() を呼び出した際にダイアログが閉じられ self.anchorAjaxBox が null となる可能性があるので、事前に退避しておく。
-      var ajaxBox = self.anchorAjaxBox;
-      ajaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
-        if ($(this).find("input[value]").length) {
-          return $(this).remove();
-        }
-      });
+      var ajaxBox = SS_SearchUI.anchorAjaxBox;
+      if (ajaxBox) {
+        ajaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+          if ($(this).find("input[value]").length) {
+            return $(this).remove();
+          }
+        });
+      }
       //append newly selected item
       self.select($(this));
-      ajaxBox.closest("dl").find(".ajax-selected").show();
+      if (ajaxBox) {
+        ajaxBox.closest("dl").find(".ajax-selected").show();
+      }
       ev.preventDefault();
-      colorbox.close();
+      if (SS_SearchUI.dialogType === "ss") {
+        SS_SearchUI.dispatchEvent("ss:modal-close")
+      } else {
+        colorbox.close();
+      }
       return false;
     });
     $el.find(".select-items").on("click", function (ev) {
@@ -242,10 +425,14 @@ this.SS_SearchUI = (function () {
       }
       self.selectItems($el);
       ev.preventDefault();
-      colorbox.close();
+      if (SS_SearchUI.dialogType === "ss") {
+        SS_SearchUI.dispatchEvent("ss:modal-close")
+      } else {
+        colorbox.close();
+      }
       return false;
     });
-    $el.find(".index").on("change", function (ev) {
+    $el.find(".index").on("change", function (_ev) {
       return self.toggleSelectButton($el);
     });
     return self.toggleSelectButton($el);
@@ -254,4 +441,3 @@ this.SS_SearchUI = (function () {
   return SS_SearchUI;
 
 })();
-

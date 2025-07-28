@@ -12,9 +12,12 @@ FactoryBot.define do
               main_state: "main",
               name: "main",
               contact_group_name: "name-#{unique_id}",
+              contact_charge: "charge-#{unique_id}",
               contact_tel: unique_tel,
               contact_fax: unique_tel,
               contact_email: unique_email,
+              contact_postal_code: unique_id,
+              contact_address: "address-#{unique_id}",
               contact_link_url: "/#{unique_id}/",
               contact_link_name: "link-#{unique_id}",
             }.with_indifferent_access
@@ -42,9 +45,12 @@ FactoryBot.define do
               main_state: "main",
               name: "main",
               contact_group_name: "name-#{unique_id}",
+              contact_charge: "charge-#{unique_id}",
               contact_tel: unique_tel,
               contact_fax: unique_tel,
               contact_email: unique_email,
+              contact_postal_code: unique_id,
+              contact_address: "address-#{unique_id}",
               contact_link_url: "/#{unique_id}/",
               contact_link_name: "link-#{unique_id}",
             }.with_indifferent_access
@@ -73,9 +79,12 @@ FactoryBot.define do
               main_state: contact.main_state,
               name: contact.name,
               contact_group_name: contact.contact_group_name,
+              contact_charge: contact.contact_charge,
               contact_tel: contact.contact_tel,
               contact_fax: contact.contact_fax,
               contact_email: contact.contact_email,
+              contact_postal_code: contact.contact_postal_code,
+              contact_address: contact.contact_address,
               contact_link_url: contact.contact_link_url,
               contact_link_name: contact.contact_link_name,
             }.with_indifferent_access
@@ -99,10 +108,13 @@ FactoryBot.define do
             _id: contact.id.to_s,
             main_state: contact.main_state.presence,
             name: "name-#{unique_id}",
-            contact_group_name: "contact-#{unique_id}",
+            contact_group_name: "name-#{unique_id}",
+            contact_charge: "charge-#{unique_id}",
             contact_tel: unique_tel,
             contact_fax: unique_tel,
             contact_email: unique_email,
+            contact_postal_code: unique_id,
+            contact_address: "address-#{unique_id}",
             contact_link_url: "/#{unique_id}/",
             contact_link_name: "link-#{unique_id}",
           }.with_indifferent_access
@@ -133,7 +145,7 @@ FactoryBot.define do
         { id: group.id, name: group.name }.with_indifferent_access
       end
       if evaluator.destination.present? && entity.destinations.present? && entity.destinations[0].present?
-        entity.destinations[0][:name] = evaluator.destination.name
+        entity.destinations[0][:name] = evaluator.destination.name + " "
         entity.destinations[0][:order] = evaluator.destination.order
         entity.destinations[0][:ldap_dn] = evaluator.destination.ldap_dn
       end
@@ -162,7 +174,10 @@ FactoryBot.define do
               main_state: contact_group.main_state,
               name: contact_group.name,
               contact_group_name: contact_group.contact_group_name,
+              contact_charge: contact_group.contact_charge,
               contact_email: contact_group.contact_email,
+              contact_postal_code: contact_group.contact_postal_code,
+              contact_address: contact_group.contact_address,
               contact_tel: contact_group.contact_tel,
               contact_fax: contact_group.contact_fax,
               contact_link_url: contact_group.contact_link_url,

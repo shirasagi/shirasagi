@@ -33,8 +33,9 @@ module Workflow::Extensions::Route
         ret.compact!
         ret.each do |hash|
           hash[:level] = hash[:level].to_i if hash[:level].present?
-          hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
+          hash[:user_id] = normalize_user_id(hash[:user_id]) if hash[:user_id].present?
           hash[:editable] = hash[:editable].to_i if hash[:editable].present?
+          hash[:alternatable] = hash[:alternatable].to_i if hash[:alternatable].present?
         end
         ret.to_a.uniq
       end
@@ -49,10 +50,22 @@ module Workflow::Extensions::Route
         end
       end
 
+      # rubocop:disable Lint/DuplicateBranch
+      def normalize_user_id(user_id)
+        if BSON::ObjectId.legal?(user_id)
+          user_id
+        elsif user_id.numeric?
+          user_id.to_i
+        else
+          user_id
+        end
+      end
+      # rubocop:enable Lint/DuplicateBranch
+
       def convert_from_string(text)
         return nil if text.blank?
         begin
-          Hash[[:level, :user_id, :editable].zip(text.split(",").map(&:strip))]
+          Hash[[:level, :user_id, :editable, :alternatable].zip(text.split(",").map(&:strip))]
         rescue
           nil
         end
@@ -96,9 +109,7 @@ module Workflow::Extensions::Route
 
       def convert_from_item(item)
         begin
-          if "false" == item
-            false
-          elsif item.kind_of? FalseClass
+          if item == "false" || item.kind_of?(FalseClass)
             false
           else
             num = item.to_i
@@ -145,7 +156,7 @@ module Workflow::Extensions::Route
         ret.compact!
         ret.each do |hash|
           hash[:level] = hash[:level].to_i if hash[:level].present?
-          hash[:user_id] = hash[:user_id].to_i if hash[:user_id].present?
+          hash[:user_id] = normalize_user_id(hash[:user_id]) if hash[:user_id].present?
         end
         ret.to_a.uniq
       end
@@ -159,6 +170,18 @@ module Workflow::Extensions::Route
           nil
         end
       end
+
+      # rubocop:disable Lint/DuplicateBranch
+      def normalize_user_id(user_id)
+        if BSON::ObjectId.legal?(user_id)
+          user_id
+        elsif user_id.numeric?
+          user_id.to_i
+        else
+          user_id
+        end
+      end
+      # rubocop:enable Lint/DuplicateBranch
 
       def convert_from_string(text)
         return nil if text.blank?

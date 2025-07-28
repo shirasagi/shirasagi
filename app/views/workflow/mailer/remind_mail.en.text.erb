@@ -17,4 +17,4 @@ Please go through the approval process.
   <%= @page.workflow_comment %>
 
 - Article URL
-  <%= URI.join(@site.mypage_full_url, @page.private_show_path).to_s %>
+  <%= ::Addressable::URI.join(@site.mypage_full_url, @page.private_show_path).to_s %>

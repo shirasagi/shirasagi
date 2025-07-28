@@ -27,6 +27,7 @@ describe 'レイアウト検索', type: :feature, dbscope: :example, js: true do
     it do
       visit layout_show_path
       click_on I18n.t("modules.addons.cms/layout_search/btn")
+      expect(page).to have_css(".search-pages")
       expect(current_path).to eq search_index_path
 
       click_on I18n.t('ss.buttons.search')

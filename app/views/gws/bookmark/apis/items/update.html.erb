@@ -1,5 +1,5 @@
 <%= jquery do %>
-var bookmark = new Gws_Bookmark('.gws-bookmark', "<%= @bookmark_default_name %>")
+var bookmark = new Gws_Bookmark('.gws-bookmark-head', "<%= @bookmark_default_name %>")
 bookmark.renderUpdate();
 <% end %>
 <%
@@ -7,7 +7,7 @@ bookmark.renderUpdate();
     @bookmark_folders.map { |folder| [folder.trailing_name, folder.id] }
   end
 %>
-<div class="gws-bookmark dropdown dropdown-toggle">
+<div class="gws-bookmark-head dropdown dropdown-toggle">
   <span class="bookmark-icon">
     <i class="material-icons active">star</i>
   </span>

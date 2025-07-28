@@ -14,9 +14,12 @@ describe Chorg::MainRunner, dbscope: :example do
           main_state: "main",
           name: "main",
           contact_group_name: unique_id,
+          contact_charge: unique_id,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: unique_email,
+          contact_postal_code: unique_id,
+          contact_address: unique_id,
           contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id,
         }.with_indifferent_access
@@ -33,9 +36,12 @@ describe Chorg::MainRunner, dbscope: :example do
               main_state: "main",
               name: "main",
               contact_group_name: unique_id,
+              contact_charge: unique_id,
               contact_tel: unique_tel,
               contact_fax: unique_tel,
               contact_email: unique_email,
+              contact_postal_code: unique_id,
+              contact_address: unique_id,
               contact_link_url: "/#{unique_id}/",
               contact_link_name: unique_id,
             }.with_indifferent_access
@@ -51,10 +57,13 @@ describe Chorg::MainRunner, dbscope: :example do
       let!(:page1) do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
-          contact_charge: group1.contact_group_name,
+          contact_group_name: group1.contact_group_name,
+          contact_charge: group1.contact_charge,
           contact_tel: group1.contact_tel,
           contact_fax: group1.contact_fax,
           contact_email: group1.contact_email,
+          contact_postal_code: group1.contact_postal_code,
+          contact_address: group1.contact_address,
           contact_link_url: group1.contact_link_url,
           contact_link_name: group1.contact_link_name
         )
@@ -64,10 +73,13 @@ describe Chorg::MainRunner, dbscope: :example do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
           contact_group_relation: "unrelated",
+          contact_group_name: "",
           contact_charge: "",
           contact_tel: "",
           contact_fax: "",
           contact_email: "",
+          contact_postal_code: "",
+          contact_address: "",
           contact_link_url: "",
           contact_link_name: ""
         )
@@ -77,10 +89,13 @@ describe Chorg::MainRunner, dbscope: :example do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
           contact_group_relation: "unrelated",
+          contact_group_name: unique_id,
           contact_charge: unique_id,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: unique_email,
+          contact_postal_code: unique_id,
+          contact_address: unique_id,
           contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         )
@@ -89,7 +104,7 @@ describe Chorg::MainRunner, dbscope: :example do
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -100,9 +115,12 @@ describe Chorg::MainRunner, dbscope: :example do
 
         group1.reload
         expect(group1.contact_group_name).to eq destination[:contact_groups][0][:contact_group_name]
+        expect(group1.contact_charge).to eq destination[:contact_groups][0][:contact_charge]
         expect(group1.contact_tel).to eq destination[:contact_groups][0][:contact_tel]
         expect(group1.contact_fax).to eq destination[:contact_groups][0][:contact_fax]
         expect(group1.contact_email).to eq destination[:contact_groups][0][:contact_email]
+        expect(group1.contact_postal_code).to eq destination[:contact_groups][0][:contact_postal_code]
+        expect(group1.contact_address).to eq destination[:contact_groups][0][:contact_address]
         expect(group1.contact_link_url).to eq destination[:contact_groups][0][:contact_link_url]
         expect(group1.contact_link_name).to eq destination[:contact_groups][0][:contact_link_name]
 
@@ -112,10 +130,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page1.contact_group_id).to eq group1.id
         expect(page1.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page1.contact_group_relation).to eq "related"
-        expect(page1.contact_charge).to eq group1.contact_group_name
+        expect(page1.contact_group_name).to eq group1.contact_group_name
+        expect(page1.contact_charge).to eq group1.contact_charge
         expect(page1.contact_tel).to eq group1.contact_tel
         expect(page1.contact_fax).to eq group1.contact_fax
         expect(page1.contact_email).to eq group1.contact_email
+        expect(page1.contact_postal_code).to eq group1.contact_postal_code
+        expect(page1.contact_address).to eq group1.contact_address
         expect(page1.contact_link_url).to eq group1.contact_link_url
         expect(page1.contact_link_name).to eq group1.contact_link_name
 
@@ -124,10 +145,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page2.contact_group_id).to eq group1.id
         expect(page2.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page2.contact_group_relation).to eq "unrelated"
+        expect(page2.contact_group_name).to be_blank
         expect(page2.contact_charge).to be_blank
         expect(page2.contact_tel).to be_blank
         expect(page2.contact_fax).to be_blank
         expect(page2.contact_email).to be_blank
+        expect(page2.contact_postal_code).to be_blank
+        expect(page2.contact_address).to be_blank
         expect(page2.contact_link_url).to be_blank
         expect(page2.contact_link_name).to be_blank
 
@@ -136,10 +160,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page3.contact_group_id).to eq group1.id
         expect(page3.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page3.contact_group_relation).to eq "unrelated"
-        expect(page3.contact_charge).not_to eq group1.contact_group_name
+        expect(page3.contact_group_name).not_to eq group1.contact_group_name
+        expect(page3.contact_charge).not_to eq group1.contact_charge
         expect(page3.contact_tel).not_to eq group1.contact_tel
         expect(page3.contact_fax).not_to eq group1.contact_fax
         expect(page3.contact_email).not_to eq group1.contact_email
+        expect(page3.contact_postal_code).not_to eq group1.contact_postal_code
+        expect(page3.contact_address).not_to eq group1.contact_address
         expect(page3.contact_link_url).not_to eq group1.contact_link_url
         expect(page3.contact_link_name).not_to eq group1.contact_link_name
       end
@@ -151,9 +178,12 @@ describe Chorg::MainRunner, dbscope: :example do
           main_state: "main",
           name: "main",
           contact_group_name: "",
+          contact_charge: "",
           contact_tel: "",
           contact_fax: "",
           contact_email: "",
+          contact_postal_code: "",
+          contact_address: "",
           contact_link_url: "",
           contact_link_name: "",
         }.with_indifferent_access
@@ -170,9 +200,12 @@ describe Chorg::MainRunner, dbscope: :example do
               main_state: "main",
               name: "main",
               contact_group_name: unique_id,
+              contact_charge: unique_id,
               contact_tel: unique_tel,
               contact_fax: unique_tel,
               contact_email: unique_email,
+              contact_postal_code: unique_id,
+              contact_address: unique_id,
               contact_link_url: "/#{unique_id}/",
               contact_link_name: unique_id,
             }.with_indifferent_access
@@ -188,10 +221,13 @@ describe Chorg::MainRunner, dbscope: :example do
       let!(:page1) do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
-          contact_charge: group1.contact_group_name,
+          contact_group_name: group1.contact_group_name,
+          contact_charge: group1.contact_charge,
           contact_tel: group1.contact_tel,
           contact_fax: group1.contact_fax,
           contact_email: group1.contact_email,
+          contact_postal_code: group1.contact_postal_code,
+          contact_address: group1.contact_address,
           contact_link_url: group1.contact_link_url,
           contact_link_name: group1.contact_link_name
         )
@@ -205,6 +241,8 @@ describe Chorg::MainRunner, dbscope: :example do
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: unique_email,
+          contact_postal_code: unique_id,
+          contact_address: unique_id,
           contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         )
@@ -213,7 +251,7 @@ describe Chorg::MainRunner, dbscope: :example do
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -224,9 +262,12 @@ describe Chorg::MainRunner, dbscope: :example do
 
         group1.reload
         expect(group1.contact_group_name).to eq destination[:contact_groups][0][:contact_group_name]
+        expect(group1.contact_charge).to eq destination[:contact_groups][0][:contact_charge]
         expect(group1.contact_tel).to eq destination[:contact_groups][0][:contact_tel]
         expect(group1.contact_fax).to eq destination[:contact_groups][0][:contact_fax]
         expect(group1.contact_email).to eq destination[:contact_groups][0][:contact_email]
+        expect(group1.contact_postal_code).to eq destination[:contact_groups][0][:contact_postal_code]
+        expect(group1.contact_address).to eq destination[:contact_groups][0][:contact_address]
         expect(group1.contact_link_url).to eq destination[:contact_groups][0][:contact_link_url]
         expect(group1.contact_link_name).to eq destination[:contact_groups][0][:contact_link_name]
 
@@ -236,10 +277,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page1.contact_group_id).to eq group1.id
         expect(page1.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page1.contact_group_relation).to eq "related"
-        expect(page1.contact_charge).to eq group1.contact_group_name
+        expect(page1.contact_group_name).to eq group1.contact_group_name
+        expect(page1.contact_charge).to eq group1.contact_charge
         expect(page1.contact_tel).to eq group1.contact_tel
         expect(page1.contact_fax).to eq group1.contact_fax
         expect(page1.contact_email).to eq group1.contact_email
+        expect(page1.contact_postal_code).to eq group1.contact_postal_code
+        expect(page1.contact_address).to eq group1.contact_address
         expect(page1.contact_link_url).to eq group1.contact_link_url
         expect(page1.contact_link_name).to eq group1.contact_link_name
 
@@ -251,6 +295,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page2.contact_tel).not_to eq group1.contact_tel
         expect(page2.contact_fax).not_to eq group1.contact_fax
         expect(page2.contact_email).not_to eq group1.contact_email
+        expect(page2.contact_postal_code).not_to eq group1.contact_postal_code
+        expect(page2.contact_address).not_to eq group1.contact_address
         expect(page2.contact_link_url).not_to eq group1.contact_link_url
         expect(page2.contact_link_name).not_to eq group1.contact_link_name
       end
@@ -266,9 +312,12 @@ describe Chorg::MainRunner, dbscope: :example do
           main_state: "main",
           name: "main",
           contact_group_name: unique_id,
+          contact_charge: unique_id,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: unique_email,
+          contact_postal_code: unique_id,
+          contact_address: unique_id,
           contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id,
         }.with_indifferent_access
@@ -285,9 +334,12 @@ describe Chorg::MainRunner, dbscope: :example do
               main_state: "main",
               name: "main",
               contact_group_name: unique_id,
+              contact_charge: unique_id,
               contact_tel: unique_tel,
               contact_fax: unique_tel,
               contact_email: unique_email,
+              contact_postal_code: unique_id,
+              contact_address: unique_id,
               contact_link_url: "/#{unique_id}/",
               contact_link_name: unique_id,
             }.with_indifferent_access
@@ -303,10 +355,13 @@ describe Chorg::MainRunner, dbscope: :example do
       let!(:page1) do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
-          contact_charge: group1.contact_group_name,
+          contact_group_name: group1.contact_group_name,
+          contact_charge: group1.contact_charge,
           contact_tel: group1.contact_tel,
           contact_fax: group1.contact_fax,
           contact_email: group1.contact_email,
+          contact_postal_code: group1.contact_postal_code,
+          contact_address: group1.contact_address,
           contact_link_url: group1.contact_link_url,
           contact_link_name: group1.contact_link_name
         )
@@ -316,10 +371,13 @@ describe Chorg::MainRunner, dbscope: :example do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
           contact_group_relation: "unrelated",
+          contact_group_name: "",
           contact_charge: "",
           contact_tel: "",
           contact_fax: "",
           contact_email: "",
+          contact_postal_code: "",
+          contact_address: "",
           contact_link_url: "",
           contact_link_name: ""
         )
@@ -329,10 +387,13 @@ describe Chorg::MainRunner, dbscope: :example do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
           contact_group_relation: "unrelated",
+          contact_group_name: unique_id,
           contact_charge: unique_id,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: unique_email,
+          contact_postal_code: unique_id,
+          contact_address: unique_id,
           contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         )
@@ -341,7 +402,7 @@ describe Chorg::MainRunner, dbscope: :example do
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -352,9 +413,12 @@ describe Chorg::MainRunner, dbscope: :example do
 
         group1.reload
         expect(group1.contact_group_name).to eq destination[:contact_groups][0][:contact_group_name]
+        expect(group1.contact_charge).to eq destination[:contact_groups][0][:contact_charge]
         expect(group1.contact_tel).to eq destination[:contact_groups][0][:contact_tel]
         expect(group1.contact_fax).to eq destination[:contact_groups][0][:contact_fax]
         expect(group1.contact_email).to eq destination[:contact_groups][0][:contact_email]
+        expect(group1.contact_postal_code).to eq destination[:contact_groups][0][:contact_postal_code]
+        expect(group1.contact_address).to eq destination[:contact_groups][0][:contact_address]
         expect(group1.contact_link_url).to eq destination[:contact_groups][0][:contact_link_url]
         expect(group1.contact_link_name).to eq destination[:contact_groups][0][:contact_link_name]
 
@@ -364,10 +428,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page1.contact_group_id).to eq group1.id
         expect(page1.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page1.contact_group_relation).to eq "related"
-        expect(page1.contact_charge).to eq group1.contact_group_name
+        expect(page1.contact_group_name).to eq group1.contact_group_name
+        expect(page1.contact_charge).to eq group1.contact_charge
         expect(page1.contact_tel).to eq group1.contact_tel
         expect(page1.contact_fax).to eq group1.contact_fax
         expect(page1.contact_email).to eq group1.contact_email
+        expect(page1.contact_postal_code).to eq group1.contact_postal_code
+        expect(page1.contact_address).to eq group1.contact_address
         expect(page1.contact_link_url).to eq group1.contact_link_url
         expect(page1.contact_link_name).to eq group1.contact_link_name
 
@@ -376,10 +443,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page2.contact_group_id).to eq group1.id
         expect(page2.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page2.contact_group_relation).to eq "unrelated"
-        expect(page2.contact_charge).to eq group1.contact_group_name
+        expect(page2.contact_group_name).to eq group1.contact_group_name
+        expect(page2.contact_charge).to eq group1.contact_charge
         expect(page2.contact_tel).to eq group1.contact_tel
         expect(page2.contact_fax).to eq group1.contact_fax
         expect(page2.contact_email).to eq group1.contact_email
+        expect(page2.contact_postal_code).to eq group1.contact_postal_code
+        expect(page2.contact_address).to eq group1.contact_address
         expect(page2.contact_link_url).to eq group1.contact_link_url
         expect(page2.contact_link_name).to eq group1.contact_link_name
 
@@ -388,10 +458,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page3.contact_group_id).to eq group1.id
         expect(page2.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page2.contact_group_relation).to eq "unrelated"
-        expect(page2.contact_charge).to eq group1.contact_group_name
+        expect(page2.contact_group_name).to eq group1.contact_group_name
+        expect(page2.contact_charge).to eq group1.contact_charge
         expect(page3.contact_tel).to eq group1.contact_tel
         expect(page3.contact_fax).to eq group1.contact_fax
         expect(page3.contact_email).to eq group1.contact_email
+        expect(page3.contact_postal_code).to eq group1.contact_postal_code
+        expect(page3.contact_address).to eq group1.contact_address
         expect(page3.contact_link_url).to eq group1.contact_link_url
         expect(page3.contact_link_name).to eq group1.contact_link_name
       end
@@ -403,9 +476,12 @@ describe Chorg::MainRunner, dbscope: :example do
           main_state: "main",
           name: "main",
           contact_group_name: "",
+          contact_charge: "",
           contact_tel: "",
           contact_fax: "",
           contact_email: "",
+          contact_postal_code: "",
+          contact_address: "",
           contact_link_url: "",
           contact_link_name: "",
         }.with_indifferent_access
@@ -422,9 +498,12 @@ describe Chorg::MainRunner, dbscope: :example do
               main_state: "main",
               name: "main",
               contact_group_name: unique_id,
+              contact_charge: unique_id,
               contact_tel: unique_tel,
               contact_fax: unique_tel,
               contact_email: unique_email,
+              contact_postal_code: unique_id,
+              contact_address: unique_id,
               contact_link_url: "/#{unique_id}/",
               contact_link_name: unique_id,
             }.with_indifferent_access
@@ -440,10 +519,13 @@ describe Chorg::MainRunner, dbscope: :example do
       let!(:page1) do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
-          contact_charge: group1.contact_group_name,
+          contact_group_name: group1.contact_group_name,
+          contact_charge: group1.contact_charge,
           contact_tel: group1.contact_tel,
           contact_fax: group1.contact_fax,
           contact_email: group1.contact_email,
+          contact_postal_code: group1.contact_postal_code,
+          contact_address: group1.contact_address,
           contact_link_url: group1.contact_link_url,
           contact_link_name: group1.contact_link_name
         )
@@ -453,10 +535,13 @@ describe Chorg::MainRunner, dbscope: :example do
         create(
           :revision_page, cur_site: site, group: group1, filename: nil,
           contact_group_relation: "unrelated",
+          contact_group_name: unique_id,
           contact_charge: unique_id,
           contact_tel: unique_tel,
           contact_fax: unique_tel,
           contact_email: unique_email,
+          contact_postal_code: unique_id,
+          contact_address: unique_id,
           contact_link_url: "/#{unique_id}/",
           contact_link_name: unique_id
         )
@@ -465,7 +550,7 @@ describe Chorg::MainRunner, dbscope: :example do
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -476,9 +561,12 @@ describe Chorg::MainRunner, dbscope: :example do
 
         group1.reload
         expect(group1.contact_group_name).to eq destination[:contact_groups][0][:contact_group_name]
+        expect(group1.contact_charge).to eq destination[:contact_groups][0][:contact_charge]
         expect(group1.contact_tel).to eq destination[:contact_groups][0][:contact_tel]
         expect(group1.contact_fax).to eq destination[:contact_groups][0][:contact_fax]
         expect(group1.contact_email).to eq destination[:contact_groups][0][:contact_email]
+        expect(group1.contact_postal_code).to eq destination[:contact_groups][0][:contact_postal_code]
+        expect(group1.contact_address).to eq destination[:contact_groups][0][:contact_address]
         expect(group1.contact_link_url).to eq destination[:contact_groups][0][:contact_link_url]
         expect(group1.contact_link_name).to eq destination[:contact_groups][0][:contact_link_name]
 
@@ -488,10 +576,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page1.contact_group_id).to eq group1.id
         expect(page1.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page1.contact_group_relation).to eq "related"
-        expect(page1.contact_charge).to eq group1.contact_group_name
+        expect(page1.contact_group_name).to eq group1.contact_group_name
+        expect(page1.contact_charge).to eq group1.contact_charge
         expect(page1.contact_tel).to eq group1.contact_tel
         expect(page1.contact_fax).to eq group1.contact_fax
         expect(page1.contact_email).to eq group1.contact_email
+        expect(page1.contact_postal_code).to eq group1.contact_postal_code
+        expect(page1.contact_address).to eq group1.contact_address
         expect(page1.contact_link_url).to eq group1.contact_link_url
         expect(page1.contact_link_name).to eq group1.contact_link_name
 
@@ -500,10 +591,13 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page2.contact_group_id).to eq group1.id
         expect(page2.contact_group_contact_id).to eq group1.contact_groups.first.id
         expect(page2.contact_group_relation).to eq "unrelated"
-        expect(page2.contact_charge).to eq group1.contact_group_name
+        expect(page2.contact_group_name).to eq group1.contact_group_name
+        expect(page2.contact_charge).to eq group1.contact_charge
         expect(page2.contact_tel).to eq group1.contact_tel
         expect(page2.contact_fax).to eq group1.contact_fax
         expect(page2.contact_email).to eq group1.contact_email
+        expect(page2.contact_postal_code).to eq group1.contact_postal_code
+        expect(page2.contact_address).to eq group1.contact_address
         expect(page2.contact_link_url).to eq group1.contact_link_url
         expect(page2.contact_link_name).to eq group1.contact_link_name
       end

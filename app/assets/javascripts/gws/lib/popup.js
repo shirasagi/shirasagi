@@ -31,8 +31,6 @@ this.Gws_Popup = (function () {
     popup = $('.gws-popup');
     if ($(window).width() < popup.outerWidth() * 1.5) {
       popup.css('max-width', $(window).width() / 2);
-    } else {
-
     }
     //pop up.css(max'width',340 );
     pos_left = target.offset().left + (target.outerWidth() / 2) - (popup.outerWidth() / 2);

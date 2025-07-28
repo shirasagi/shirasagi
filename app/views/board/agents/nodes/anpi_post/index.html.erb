@@ -1,7 +1,7 @@
 <%= @cur_node.upper_html.to_s.html_safe %>
 <nav class="search-settings">
   <%= form_tag "#{@cur_node.url}", { method: :get, enforce_utf8: false } do %>
-    <h2><%= t('board.views.search_person') %></h2>
+    <h2><%= label_tag "keyword", t('board.views.search_person') %></h2>
     <%= remarks :search_person %>
     <%= text_field_tag :keyword, params[:keyword] %>
     <input type="submit" value="<%= t('board.buttons.search_person') %>" />

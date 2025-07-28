@@ -15,7 +15,7 @@ describe "gws_personal_address_management_groups", type: :feature, dbscope: :exa
   context "with a user who is allowed only to use personal address" do
     let(:role) do
       Gws::Role.create!(
-        name: unique_id, site_id: gws_site.id, permissions: %w(edit_gws_personal_addresses), permission_level: 1
+        name: unique_id, site_id: gws_site.id, permissions: %w(edit_gws_personal_addresses)
       )
     end
     let(:uid) { unique_id }

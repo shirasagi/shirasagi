@@ -227,8 +227,11 @@ puts "# articles"
 file1 = save_ss_files "ss_files/article/img2.jpg", filename: "img2.jpg", model: "article/page"
 page1 = save_page route: "article/page", filename: "docs/page2.html", name: "サンプル1", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   group_ids: [contact_group.id],
   html: "<p><img alt=\"パソコン\" src=\"#{file1.url}\" /></p>",
   map_points: [ { loc: [134.576147, 34.06126] } ],
@@ -237,8 +240,11 @@ page1 = save_page route: "article/page", filename: "docs/page2.html", name: "サ
 file2 = save_ss_files "ss_files/article/img3.jpg", filename: "img3.jpg", model: "article/page"
 page2 = save_page route: "article/page", filename: "docs/page3.html", name: "イベントがありました。", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   group_ids: [contact_group.id],
   html: "<p><img alt=\"森\" src=\"#{file2.url}\" /></p>",
   file_ids: [file2.id]
@@ -246,8 +252,11 @@ page2 = save_page route: "article/page", filename: "docs/page3.html", name: "イ
 file3 = save_ss_files "ss_files/article/img4.jpg", filename: "img4.jpg", model: "article/page"
 page3 = save_page route: "article/page", filename: "docs/page4.html", name: "結果を報告します。", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   group_ids: [contact_group.id],
   html: "<p><img alt=\"森\" src=\"#{file3.url}\" /></p>",
   file_ids: [file3.id]
@@ -255,8 +264,10 @@ page3 = save_page route: "article/page", filename: "docs/page4.html", name: "結
 file4 = save_ss_files "ss_files/article/img1.jpg", filename: "img1.jpg", model: "article/page"
 page4 = save_page route: "article/page", filename: "docs/page1.html", name: "お知らせが入ります。", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url,
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
   contact_link_name: contact.contact_link_name, group_ids: [contact_group.id],
   file_ids: [file4.id]
 
@@ -271,8 +282,11 @@ page4.update
 puts "# cms pages"
 top_page = save_page route: "cms/page", filename: "index.html", name: "LPサンプル", layout_id: layouts["top"].id,
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   contact_state: "hide",
   group_ids: [contact_group.id],
   map_points: [ { loc: [134.57611, 34.061264] } ]
@@ -282,8 +296,11 @@ page1.update
 file5 = save_ss_files "ss_files/article/img1.jpg", filename: "img1_2.jpg", model: "article/page"
 service_page = save_page route: "cms/page", filename: "service1/index.html", name: "サービス1", layout_id: layouts["general"].id,
   contact_group_id: contact_group_id, contact_group_contact_id: contact.id, contact_group_relation: "related",
-  contact_charge: contact.contact_group_name, contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
-  contact_email: contact.contact_email, contact_link_url: contact.contact_link_url, contact_link_name: contact.contact_link_name,
+  contact_group_name: contact.contact_group_name, contact_charge: contact.contact_charge,
+  contact_tel: contact.contact_tel, contact_fax: contact.contact_fax,
+  contact_email: contact.contact_email, contact_postal_code: contact.contact_postal_code,
+  contact_address: contact.contact_address, contact_link_url: contact.contact_link_url,
+  contact_link_name: contact.contact_link_name,
   group_ids: [contact_group.id],
   file_ids: [file5.id]
 service_page.html += "<p class=\"pull-left\"><img alt=\"ベンチ\" src=\"#{file5.url}\" /></p>"

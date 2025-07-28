@@ -20,7 +20,7 @@ class Cms::Line::Richmenu::GroupsController < ApplicationController
 
   def apply
     @task = Cms::Task.find_or_create_by name: "cms:line_apply_richmenu", site_id: @cur_site.id
-    @item = @model.active_group
+    @item = @model.site(@cur_site).active_group
 
     if request.get? || request.head?
       respond_to do |format|

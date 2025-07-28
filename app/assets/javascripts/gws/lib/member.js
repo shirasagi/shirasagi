@@ -6,27 +6,59 @@ this.Gws_Member = (function () {
 
   Gws_Member.users = null;
 
-  Gws_Member.render = function () {
+  Gws_Member.render = function (box) {
     if ($('.js-copy-groups').length < 2) {
-      $('.js-copy-groups').remove();
-      $('.js-paste-groups').remove();
+      $('.js-copy-groups').addClass("hide");
+      $('.js-paste-groups').addClass("hide");
+    } else {
+      $('.js-copy-groups').removeClass("hide");
+      $('.js-paste-groups').removeClass("hide");
     }
-    $('.js-copy-groups').on("click", function () {
-      return Gws_Member.copyGroups($(this));
-    });
-    $('.js-paste-groups').on("click", function () {
-      return Gws_Member.pasteGroups($(this));
-    });
     if ($('.js-copy-users').length < 2) {
-      $('.js-copy-users').remove();
-      $('.js-paste-users').remove();
+      $('.js-copy-users').addClass("hide");
+      $('.js-paste-users').addClass("hide");
+    } else {
+      $('.js-copy-users').removeClass("hide");
+      $('.js-paste-users').removeClass("hide");
     }
-    $('.js-copy-users').on("click", function () {
-      return Gws_Member.copyUsers($(this));
+
+    if (!box) {
+      box = document;
+    }
+    box = $(box);
+
+    box.find('.js-copy-groups').each(function() {
+      var $copyEl = $(this);
+      SS.justOnce(this, "copyGroups", function() {
+        $copyEl.on("click", function () {
+          return Gws_Member.copyGroups($copyEl);
+        });
+      });
     });
-    return $('.js-paste-users').on("click", function () {
-      return Gws_Member.pasteUsers($(this));
+    box.find('.js-paste-groups').each(function() {
+      var $pasteEl = $(this);
+      SS.justOnce(this, "pasteGroups", function() {
+        $pasteEl.on("click", function () {
+          return Gws_Member.pasteGroups($pasteEl);
+        });
+      });
     });
+    box.find('.js-copy-users').each(function() {
+      var $copyEl = $(this);
+      SS.justOnce(this, "copyUsers", function() {
+        $copyEl.on("click", function () {
+          return Gws_Member.copyUsers($copyEl);
+        });
+      });
+    });
+    box.find('.js-paste-users').each(function() {
+      var $pasteEl = $(this);
+      SS.justOnce(this, "pasteUsers", function() {
+        $pasteEl.on("click", function () {
+          return Gws_Member.pasteUsers($(this));
+        });
+      });
+    })
   };
 
   Gws_Member.confirmReadableSetting = function () {

@@ -1,13 +1,14 @@
-<% return "" unless @cur_site.twitter_poster_enabled? %>
+<%
+  return "" unless @cur_site.twitter_poster_enabled?
+  return "" unless @cur_node.try(:node_twitter_poster_enabled?)
+  return "" unless Cms::SnsPost::Twitter.allowed?(:use, @cur_user, site: @cur_site)
+%>
 
 <dl class="see mod-cms-twitter_poster">
   <dt><%= @model.t :twitter_auto_post %></dt>
   <dd><%= @item.label :twitter_auto_post %></dd>
 
   <% if @item.use_twitter_post? %>
-    <dt><%= @model.t :twitter_post_format %></dt>
-    <dd><%= @item.label :twitter_post_format %></dd>
-
     <% if @item.twitter_edit_auto_post_enabled? %>
       <dt><%= @model.t :twitter_edit_auto_post %></dt>
       <dd><%= @item.label :twitter_edit_auto_post %></dd>
@@ -18,17 +19,21 @@
     <dd>
       <table class="index">
         <thead>
+        <tr>
           <th><%= @item.t :twitter_posted_at %></th>
           <th><%= @item.t :twitter_posted_url %></th>
+        </tr>
         </thead>
         <% @item.twitter_posted.reverse.take(5).each do |posted| %>
           <tbody>
+          <tr>
             <td><%= ss_time_tag(posted[:posted_at]) %></td>
             <td>
               <a href="<%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>" target="_blank" rel="noopener">
                 <%= @item.twitter_url(posted[:twitter_post_id], posted[:twitter_user_id]) %>
               </a>
             </td>
+          </tr>
           </tbody>
         <% end %>
       </table>

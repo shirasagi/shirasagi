@@ -24,6 +24,9 @@ SS.ready(function() {
       $.extend(true, params, this.defaultParams(selector, opts));
       $.extend(true, params, this.contentParams(selector, opts));
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       // To render gridster and/or other frames first, all fullCalendar initializations is delayed.
       // And a calendar is individually rendered from top to bottom.
       setTimeout(function () {
@@ -132,6 +135,23 @@ SS.ready(function() {
           }
         },
         eventAfterAllRender: function (_view) {
+          var attendance, todo;
+          todo = $('.fc .fc-withTodo-button');
+          if (todo.length) {
+            if (todo.hasClass('fc-state-active')) {
+              $('.fc .fc-event-todo').show();
+            } else {
+              $('.fc .fc-event-todo').hide();
+            }
+          }
+          attendance = $('.fc .fc-withAbsence-button');
+          if (attendance.length) {
+            if (attendance.hasClass('fc-state-active')) {
+              $('.fc .fc-event-user-attendance-absence').removeClass('hide');
+            } else {
+              $('.fc .fc-event-user-attendance-absence').addClass('hide');
+            }
+          }
           $(window).trigger('resize');
         }
       };
@@ -139,7 +159,7 @@ SS.ready(function() {
     //view.el.find(".fctoolbar, .fc-head").remove("")
 
     Gws_Schedule_Multiple_Calendar.renderController = function (selector, opts, init) {
-      var controller, params;
+      var controller, controllerWrap, params;
       if (opts == null) {
         opts = {};
       }
@@ -150,30 +170,34 @@ SS.ready(function() {
       $.extend(true, params, this.defaultParams(selector, opts));
       $.extend(true, params, this.controllerParams(selector, opts));
       $.extend(true, params, opts);
+      if (init && init["date"]) {
+        params["defaultDate"] = init["date"];
+      }
       $(selector).fullCalendar(params);
       Gws_Schedule_Calendar.renderInitialize(selector, init);
       Gws_Schedule_Calendar.overrideAddLink(selector);
       controller = $(selector);
+      controllerWrap = controller.parent();
       controller.find('.fc-today-button').on("click", function () {
-        return $('.calendar.multiple .fc-today-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-today-button').trigger("click");
       });
       controller.find('.fc-prev-button').on("click", function () {
-        return $('.calendar.multiple .fc-prev-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-prev-button').trigger("click");
       });
       controller.find('.fc-next-button').on("click", function () {
-        return $('.calendar.multiple .fc-next-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-next-button').trigger("click");
       });
       controller.find('.fc-basicWeek-button').on("click", function () {
-        return $('.calendar.multiple .fc-basicWeek-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-basicWeek-button').trigger("click");
       });
       controller.find('.fc-timelineDay-button').on("click", function () {
-        return $('.calendar.multiple .fc-timelineDay-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-timelineDay-button').trigger("click");
       });
       controller.find('.fc-basicHour-button').on("click", function () {
-        return $('.calendar.multiple .fc-basicHour-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-basicHour-button').trigger("click");
       });
       controller.find('.fc-reload-button').on("click", function () {
-        return $('.calendar.multiple .fc-reload-button').trigger("click");
+        return controllerWrap.find('.calendar.multiple .fc-reload-button').trigger("click");
       });
     };
 

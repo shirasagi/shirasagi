@@ -52,7 +52,7 @@ class SS::Migration20200521000000
     return if missing_files.blank?
 
     page.file_ids = merge_array(page.file_ids, missing_files.map(&:id))
-    page.save(validate: false)
+    page.without_record_timestamps { page.save(validate: false) }
 
     associate_all_files_to(missing_files, page)
   end
@@ -85,7 +85,7 @@ class SS::Migration20200521000000
       column_value = page.column_values.where(id: column_value_id).first
       column_value.file_ids = merge_array(column_value.file_ids, file_ids).dup
     end
-    page.save(validate: false)
+    page.without_record_timestamps { page.save(validate: false) }
     associate_all_files_to(missing_files, page)
   end
 
@@ -112,7 +112,7 @@ class SS::Migration20200521000000
 
       file.owner_item = to_page
       file.model = to_page.class.model_name.i18n_key.to_s
-      file.save
+      file.without_record_timestamps { file.save }
     end
   end
 

@@ -16,7 +16,7 @@ module Cms::PageFilter
     super
     return unless @cur_node
     return if (@item.filename =~ /^#{::Regexp.escape(@cur_node.filename)}\//) && (@item.depth == @cur_node.depth + 1)
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def default_form(node)
@@ -55,8 +55,14 @@ module Cms::PageFilter
   end
 
   def set_contains_urls_items
-    @contains_urls = Cms::Page.none if !@item.is_a?(Cms::Model::Page) || @item.try(:branch?) || params[:branch_save].present?
-    @contains_urls ||= Cms::Page.all.site(@cur_site).and_linking_pages(@item).page(params[:page]).per(50)
+    @contains_urls ||= begin
+      if params[:branch_save].present?
+        pages = Cms::Page.none
+      else
+        pages = Cms.contains_urls(@item, site: @cur_site)
+      end
+      pages.page(params[:page]).per(50)
+    end
   end
 
   def deny_update_with_contains_urls
@@ -154,6 +160,12 @@ module Cms::PageFilter
         copy = @item.new_clone
         copy.master = @item
         result = copy.save
+        if result
+          task.log "created #{copy.filename}(#{copy.id})"
+        else
+          task.log "failed\n#{copy.errors.full_messages.join("\n")}"
+        end
+        result
       end
     end
 
@@ -162,7 +174,7 @@ module Cms::PageFilter
       render_opts[:location] = url_for(action: :show, id: copy)
       render_opts[:notice] = I18n.t("workflow.notice.created_branch_page")
     elsif copy && copy.errors.present?
-      @item.errors.messages[:base] += copy.errors.full_messages
+      SS::Model.copy_errors(copy, @item)
     end
 
     render_update result, render_opts
@@ -297,7 +309,14 @@ module Cms::PageFilter
 
     task.run_with(rejected: rejected) do
       task.log "# #{I18n.t("ss.buttons.move")}"
-      render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
+      task.log "#{@item.filename}(#{@item.id})"
+      result = @item.move(destination)
+      render_update result, location: location, render: { template: "move" }, notice: t('ss.notice.moved')
+      if result
+        task.log "moved to #{destination}"
+      else
+        task.log "failed\n#{@item.errors.full_messages.join("\n")}"
+      end
     end
   end
 
@@ -320,7 +339,14 @@ module Cms::PageFilter
 
       @item.attributes = get_params
       @copy = @item.new_clone
-      render_update @copy.save, location: { action: :index }, render: { template: "copy" }
+      result = @copy.save
+      render_update result, location: { action: :index }, render: { template: "copy" }
+
+      if result
+        task.log "created #{@copy.filename}(#{@copy.id})"
+      else
+        task.log "failed\n#{@copy.errors.full_messages.join("\n")}"
+      end
     end
   end
 
@@ -382,5 +408,18 @@ module Cms::PageFilter
     end
 
     render_update true, location: { action: :index }, render: { template: "index" }
+  end
+
+  def resume_new
+    @item = @model.new get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    render template: 'new'
+  end
+
+  def resume_edit
+    set_item
+    @item.attributes = get_params
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    render template: 'edit'
   end
 end

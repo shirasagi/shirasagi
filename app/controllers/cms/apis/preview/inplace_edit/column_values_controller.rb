@@ -444,7 +444,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       new_column_value
     end
 
-    @cur_column_value.valid?(%i[update])
+    @cur_column_value.valid?(%i[update form_check])
     if creates_branch? && @item.branches.present?
       @cur_column_value.errors.add(:base, :branch_is_already_existed)
     end

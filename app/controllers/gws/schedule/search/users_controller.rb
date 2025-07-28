@@ -16,12 +16,25 @@ class Gws::Schedule::Search::UsersController < ApplicationController
   public
 
   def index
+    max = SS.config.gws.schedule['search_users']['max_users']
+
     @items = []
     return if params.dig(:s, :keyword).blank?
+
+    count = Gws::User.site(@cur_site).active.
+      readable_users(@cur_user, site: @cur_site).
+      search(params[:s]).
+      count
 
     @items = Gws::User.site(@cur_site).active.
       readable_users(@cur_user, site: @cur_site).
       search(params[:s]).
-      order_by_title(@cur_site)
+      order_by_title(@cur_site).
+      limit(max)
+
+    if count > max
+      @item = Gws::Schedule::PlanSearch.new
+      @item.errors.add :base, t('gws.errors.plan_search.max_users', count: max)
+    end
   end
 end

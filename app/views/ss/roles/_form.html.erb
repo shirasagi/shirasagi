@@ -2,11 +2,6 @@
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
 
-  <% if !SS.config.ss.disable_permission_level && @item.respond_to?(:permission_level) %>
-  <dt><%= @model.t :permission_level %><%= @model.tt :permission_level %></dt>
-  <dd><%= f.select :permission_level, @item.permission_level_options %></dd>
-  <% end %>
-
   <dt><%= @model.t :permissions %><%= @model.tt :permissions %></dt>
   <dd class="role-permissions">
     <%= hidden_field_tag "item[permissions][]", id: nil %>

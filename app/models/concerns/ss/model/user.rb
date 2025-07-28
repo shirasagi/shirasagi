@@ -7,13 +7,20 @@ module SS::Model::User
   include SS::Reference::UserExpiration
   include SS::UserImportValidator
   include SS::Addon::LocaleSetting
-  include Ldap::Addon::User
+  include SS::Addon::Ldap::User
+  include SS::Addon::MFA::UserSetting
+  include SS::Addon::SSO::User
+  include SS::Liquidization
 
   TYPE_SNS = "sns".freeze
   TYPE_LDAP = "ldap".freeze
+  TYPE_SSO = "sso".freeze
+  TYPES = [ TYPE_SNS, TYPE_LDAP, TYPE_SSO ].freeze
 
-  LOGIN_ROLE_DBPASSWD = "dbpasswd".freeze
-  LOGIN_ROLE_LDAP = "ldap".freeze
+  # uidの制限をメールアドレスの"@"の左側（dot-atom-text）の仕様（RFC5322）に近づける
+  # 具体的にいうと、ALPHA | DIGIT | "-" | "-" が利用でき、"." は一度だけ利用できる
+  # => "." は複数回利用できるように改修
+  UID_MATCHER = /^[\w\-_\.]+?$/
 
   included do
     attr_accessor :cur_site, :cur_user
@@ -38,7 +45,6 @@ module SS::Model::User
     field :tel, type: String
     field :tel_ext, type: String
     field :type, type: String
-    field :login_roles, type: Array, default: [LOGIN_ROLE_DBPASSWD]
     field :last_loggedin, type: DateTime
     field :account_start_date, type: DateTime
     field :account_expiration_date, type: DateTime
@@ -62,24 +68,27 @@ module SS::Model::User
 
     embeds_ids :groups, class_name: "SS::Group"
 
-    permit_params :name, :kana, :uid, :email, :tel, :tel_ext, :type, :login_roles, :remark, group_ids: []
+    permit_params :name, :kana, :uid, :email, :tel, :tel_ext, :type, :remark, group_ids: []
     permit_params :account_start_date, :account_expiration_date, :session_lifetime
     permit_params :restriction, :lock_state, :deletion_lock_state
     permit_params :organization_id, :organization_uid, :switch_user_id
 
     validates :name, presence: true, length: { maximum: 40 }
     validates :kana, length: { maximum: 40 }
-    validates :uid, length: { maximum: 40 }
+    # メールアドレスの"@"の左側（local-part）の最大長は64文字とするのがデファクトっぽい
+    # 厳密にいうと、64文字という制限は存在せず、メールアドレス全体で254文字を超えてはいけないという制限があるのみ
+    # https://stackoverflow.com/questions/386294/what-is-the-maximum-length-of-a-valid-email-address
+    validates :uid, length: { maximum: 64 }
     validates :uid, uniqueness: true, if: ->{ uid.present? }
     validates :email, email: true, length: { maximum: 80 }
     validates :email, uniqueness: true, if: ->{ email.present? }
     validates :email, presence: true, if: ->{ uid.blank? && organization_uid.blank? }
+    validates :type, inclusion: { in: TYPES, allow_blank: true }
     validates :last_loggedin, datetime: true
     validates :account_start_date, datetime: true
     validates :account_expiration_date, datetime: true
     validates :organization_id, presence: true, if: ->{ organization_uid.present? }
     validates :organization_uid, uniqueness: { scope: :organization_id }, if: ->{ organization_uid.present? }
-    validate :validate_type
     validate :validate_uid
     validate :validate_account_expiration_date
 
@@ -97,6 +106,17 @@ module SS::Model::User
     end
     scope :and_unlocked, -> do
       self.and('$or' => [{ lock_state: 'unlocked' }, { :lock_state.exists => false }])
+    end
+
+    liquidize do
+      export :name
+      export :kana
+      export :uid
+      export :email
+      export :tel
+      export :tel_ext
+      export :organization_uid
+      export :lang
     end
   end
 
@@ -141,7 +161,9 @@ module SS::Model::User
       return nil if users.size != 1
 
       user = users.first
-      return user if user.send(:dbpasswd_authenticate, password)
+      auth_methods.each do |method|
+        return user if user.send(method, password, site: site)
+      end
       nil
     end
 
@@ -155,11 +177,14 @@ module SS::Model::User
       return nil if users.size != 1
 
       user = users.first
-      return user if user.send(:dbpasswd_authenticate, password)
+      auth_methods.each do |method|
+        return user if user.send(method, password, organization: organization)
+      end
       nil
     end
 
     SEARCH_HANDLERS = %i[search_name search_title_ids search_occupation_ids search_keyword].freeze
+    SEARCH_FIELDS = %i[name kana uid organization_uid email tel tel_ext remark].freeze
 
     def search(params)
       criteria = all
@@ -182,13 +207,13 @@ module SS::Model::User
       end
 
       if user_ids.blank?
-        return all.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark)
+        return all.keyword_in(params[:keyword], *SEARCH_FIELDS)
       end
 
       # before using `unscope`, we must duplicate current criteria because current contexts are all gone in `unscope`
       base_criteria = all.dup
 
-      selector = all.unscoped.keyword_in(params[:keyword], :name, :kana, :uid, :email, :remark).selector
+      selector = all.unscoped.keyword_in(params[:keyword], *SEARCH_FIELDS).selector
       base_criteria.where('$or' => [ selector, { :id.in => user_ids } ])
     end
 
@@ -208,7 +233,7 @@ module SS::Model::User
     end
 
     def type_options
-      [ [ t(TYPE_SNS), TYPE_SNS ], [ t(TYPE_LDAP), TYPE_LDAP ] ]
+      TYPES.map { |type| [ I18n.t("ss.options.user_type.#{type}"), type ] }
     end
 
     def labels
@@ -240,6 +265,18 @@ module SS::Model::User
 
   def type_options
     self.class.type_options
+  end
+
+  def type_sns?
+    self.type == TYPE_SNS || self.type.blank?
+  end
+
+  def type_ldap?
+    self.type == TYPE_LDAP
+  end
+
+  def type_sso?
+    self.type == TYPE_SSO
   end
 
   def enabled?
@@ -366,18 +403,13 @@ module SS::Model::User
 
   private
 
-  def dbpasswd_authenticate(in_passwd)
-    return false unless login_roles.include?(LOGIN_ROLE_DBPASSWD)
-    return false if password.blank?
+  def dbpasswd_authenticate(in_passwd, **_options)
+    return false if !type_sns? || password.blank?
     password == SS::Crypto.crypt(in_passwd)
   end
 
-  def validate_type
-    errors.add :type, :invalid unless type.blank? || type == TYPE_SNS || type == TYPE_LDAP
-  end
-
   def validate_uid
-    return if uid.blank? || /^[\w\-]+$/.match?(uid)
+    return if uid.blank? || UID_MATCHER.match?(uid)
     errors.add :uid, :invalid
   end
 

@@ -7,7 +7,7 @@
 </header>
 
 <% @s = OpenStruct.new params[:s] %>
-<%= form_for :s, url: gws_schedule_search_times_path, html: { method: :get, class: :search } do |f| %>
+<%= form_for :s, url: gws_schedule_search_times_path, html: { class: :search } do |f| %>
   <%= error_messages_for :time_search %>
   <dl class="see gws-schedule-search-field">
     <dt><%= Gws::Schedule::Plan.t :term %></dt>
@@ -56,7 +56,7 @@
     </dd>
   </dl>
 
-  <dl class="see gws-schedule-search-field">
+  <dl class="see gws-schedule-search-field gws-schedule-search-facilities">
     <dt>
       <%= f.hidden_field "facility_ids[]", value: "", id: nil, class: "hidden-ids" %>
       <%= link_to t("gws.apis.facilities.index"), gws_apis_facilities_path, class: "ajax-box btn" %>

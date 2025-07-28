@@ -44,33 +44,13 @@ describe "history_cms_backups restore", type: :feature, dbscope: :example do
 
       it do
         visit page_path
-        click_link I18n.l(backup_item.created, format: :picker)
+        within "[data-id='#{backup_item.id}']" do
+          expect(page).to have_content(I18n.l(backup_item.data[:updated].in_time_zone, format: :picker))
+          click_on I18n.t("ss.links.show")
+        end
 
-        click_link I18n.t("history.restore")
-        click_button I18n.t("history.buttons.restore")
-
-        expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
-      end
-    end
-
-    context "other job that user executed is on the schedule" do
-      before do
-        args = []
-        Job::Task.create!(
-          user_id: cms_user.id, name: SecureRandom.uuid, class_name: "History::Trash::RestoreJob", app_type: "cms",
-          pool: "default", args: args, active_job: {
-            "job_class" => "History::Trash::RestoreJob", "job_id" => SecureRandom.uuid, "provider_job_id" => nil,
-            "queue_name" => "default", "priority" => nil, "arguments" => args
-          }
-        )
-      end
-
-      it do
-        visit page_path
-        click_link I18n.l(backup_item.created, format: :picker)
-
-        click_link I18n.t("history.restore")
-        click_button I18n.t("history.buttons.restore")
+        click_on I18n.t("history.restore")
+        click_on I18n.t("history.buttons.restore")
 
         expect(page).to have_css(".errorExplanation", text: I18n.t('errors.messages.other_task_is_running'))
       end

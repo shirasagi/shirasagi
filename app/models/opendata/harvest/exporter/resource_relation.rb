@@ -9,11 +9,9 @@ class Opendata::Harvest::Exporter
 
     # relations
     field :rel_id, type: String
-    field :rel_revision_id, type: String
 
     validates :uuid, presence: true
     validates :revision_id, presence: true
     validates :rel_id, presence: true
-    validates :rel_revision_id, presence: true
   end
 end

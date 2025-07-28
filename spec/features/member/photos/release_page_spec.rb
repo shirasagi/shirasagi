@@ -27,13 +27,13 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("workflow.search_approvers.index")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user.long_name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on user.long_name
         end
       end
@@ -65,8 +65,7 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
         expect(mail.body.raw_source).to include(workflow_comment)
       end
 
-      login_user user
-      visit show_path
+      login_user user, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment
@@ -79,7 +78,10 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       expect(item.workflow_state).to eq "approve"
       expect(item.state).to eq "public"
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user.id, editable: '', state: 'approve', comment: approve_comment, file_ids: nil})
+        include({
+          level: 1, user_id: user.id, editable: '', state: 'approve', comment: approve_comment, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
 
       expect(Sys::MailLog.count).to eq 2
       expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count

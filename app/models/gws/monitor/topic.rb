@@ -1,6 +1,7 @@
 class Gws::Monitor::Topic
   include Gws::Referenceable
   include Gws::Monitor::Postable
+  include Gws::Monitor::Cloneable
   include Gws::Addon::Monitor::Group
   include Gws::Addon::Contributor
   include SS::Addon::Markdown
@@ -145,27 +146,6 @@ class Gws::Monitor::Topic
       end
     end
     "(0/0)"
-  end
-
-  def to_csv
-    I18n.with_locale(I18n.default_locale) do
-      CSV.generate do |data|
-        data << I18n.t('gws/monitor.csv')
-
-        attend_groups.each do |group|
-          post = comment(group.id).last
-          data << [
-              id,
-              name,
-              answer_state_name(group),
-              group.name,
-              post.try(:contributor_name),
-              post.try(:text),
-              post.try(:updated) ? I18n.l(post.updated, format: :picker) : ''
-          ]
-        end
-      end
-    end
   end
 
   def remove_zip

@@ -1,4 +1,5 @@
 SS_ImageEditor = function (el) {
+  var self = this;
   var pThis = this;
 
   this.$el = $(el);
@@ -6,13 +7,14 @@ SS_ImageEditor = function (el) {
     this.$el.find('img.target')[0],
     {
       zoomOnWheel: false,
-      ready: function(e) {
+      ready: function(_e) {
         pThis.updateInspect();
         pThis.chooseSize();
       },
-      cropmove: function(e) {
+      cropmove: function(_e) {
         pThis.updateInspect();
         pThis.chooseSize();
+        self.$el.find(".confirm").css('visibility', 'visible');
       }
     }
   );
@@ -21,9 +23,13 @@ SS_ImageEditor = function (el) {
     var func = $(this).data('func');
     if (func && pThis[func]) {
       pThis[func]();
-      pThis.updateInspect();
-      pThis.chooseSize();
-
+      if (func == "submit") {
+        self.$el.find(".confirm").hide();
+      } else {
+        pThis.updateInspect();
+        pThis.chooseSize();
+        self.$el.find(".confirm").css('visibility', 'visible');
+      }
       e.preventDefault();
       return false;
     }
