@@ -1,0 +1,15 @@
+<% if selected %>
+  <div class="ss-dnd-list ss-dnd-list-vertical">
+    <% selected.each do |selected_item| %>
+      <%
+        selected_item = selected_item.to_s
+        selected_option = options.find { |_label, value| value.to_s == selected_item }
+        next unless selected_option
+      %>
+
+      <div class="ss-dnd-list-item" data-column-id="<%= selected_item %>">
+        <span><%= selected_option[0] %></span>
+      </div>
+    <% end %>
+  </div>
+<% end %>

@@ -1,4 +1,4 @@
-FROM mcr.microsoft.com/devcontainers/ruby:3.2
+FROM mcr.microsoft.com/devcontainers/ruby:3.3
 
 RUN apt update && \
   apt install --no-install-recommends -y \

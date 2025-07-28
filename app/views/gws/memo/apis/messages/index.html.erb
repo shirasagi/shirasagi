@@ -17,10 +17,8 @@
       </dd>
 
       <dt><%= @model.t :subject %></dt>
-      <dd>
-        <%= f.text_field :subject, value: params.dig(:s, :subject) %>
-        <%= f.submit  t("ss.buttons.search"), class: :btn %>
-      </dd>
+      <dd><%= f.text_field :subject, value: params.dig(:s, :subject) %></dd>
+      <dd><%= f.submit t("ss.buttons.search"), class: :btn %></dd>
     </dl>
   <% end %>
 </div>

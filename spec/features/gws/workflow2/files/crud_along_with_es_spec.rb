@@ -73,8 +73,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         #
         # Create
         #
-        login_user gws_user
-        visit gws_workflow2_files_path(site, state: 'all')
+        login_user gws_user, to: gws_workflow2_files_path(site, state: 'all')
         within ".nav-menu" do
           click_link I18n.t('gws/workflow2.navi.find_by_keyword')
         end
@@ -84,7 +83,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         within "form#item-form" do
           within "#addon-gws-agents-addons-workflow2-custom_form" do
             fill_in "custom[#{column1.id}]", with: item_text
-            attach_to_ss_file_field "custom_#{column2.id}_0", file
+            attach_to_ss_file_field "custom[#{column2.id}][]", file
           end
           click_on I18n.t("ss.buttons.save")
         end
@@ -133,8 +132,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(agent_user, site: site)).to be_falsey
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: agent_user, state: 'all').count).to eq 0
 
-        login_user agent_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user agent_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -145,8 +143,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(approver_user, site: site)).to be_falsey
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: approver_user, state: 'all').count).to eq 0
 
-        login_user approver_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user approver_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -157,8 +154,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(circular_user, site: site)).to be_falsey
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: circular_user, state: 'all').count).to eq 0
 
-        login_user circular_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user circular_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -169,8 +165,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(dest_user, site: site)).to be_falsey
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: dest_user, state: 'all').count).to eq 0
 
-        login_user dest_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user dest_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -180,8 +175,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         #
         # 承認依頼（承認者 1 名＋回覧者 1 名）
         #
-        login_user gws_user
-        visit gws_workflow2_files_path(site, state: 'all')
+        login_user gws_user, to: gws_workflow2_files_path(site, state: 'all')
         click_on item_name
         wait_for_turbo_frame "#workflow-approver-frame"
 
@@ -238,8 +232,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(agent_user, site: site)).to be_truthy
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: agent_user, state: 'all').count).to eq 1
 
-        login_user agent_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user agent_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -261,8 +254,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(approver_user, site: site)).to be_truthy
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: approver_user, state: 'all').count).to eq 1
 
-        login_user approver_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user approver_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -284,8 +276,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(circular_user, site: site)).to be_falsey
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: circular_user, state: 'all').count).to eq 0
 
-        login_user circular_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user circular_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -296,8 +287,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(dest_user, site: site)).to be_falsey
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: dest_user, state: 'all').count).to eq 0
 
-        login_user dest_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user dest_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -307,8 +297,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         #
         # 承認する
         #
-        login_user approver_user
-        visit gws_workflow2_files_path(site, state: 'all')
+        login_user approver_user, to: gws_workflow2_files_path(site, state: 'all')
         click_on item_name
         wait_for_turbo_frame "#workflow-approver-frame"
         within ".mod-workflow-view" do
@@ -341,8 +330,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(gws_user, site: site)).to be_truthy
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: gws_user, state: 'all').count).to eq 1
 
-        login_user gws_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user gws_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -370,8 +358,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(agent_user, site: site)).to be_truthy
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: agent_user, state: 'all').count).to eq 1
 
-        login_user agent_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user agent_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -399,8 +386,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(approver_user, site: site)).to be_truthy
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: approver_user, state: 'all').count).to eq 1
 
-        login_user approver_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user approver_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -428,8 +414,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(circular_user, site: site)).to be_truthy
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: circular_user, state: 'all').count).to eq 1
 
-        login_user circular_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user circular_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -457,8 +442,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(dest_user, site: site)).to be_truthy
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: dest_user, state: 'all').count).to eq 1
 
-        login_user dest_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user dest_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -504,8 +488,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         #
         # Create
         #
-        login_user gws_user
-        visit gws_workflow2_files_path(site, state: 'all')
+        login_user gws_user, to: gws_workflow2_files_path(site, state: 'all')
         within ".nav-menu" do
           click_link I18n.t('gws/workflow2.navi.find_by_keyword')
         end
@@ -515,7 +498,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         within "form#item-form" do
           within "#addon-gws-agents-addons-workflow2-custom_form" do
             fill_in "custom[#{column1.id}]", with: item_text
-            attach_to_ss_file_field "custom_#{column2.id}_0", file
+            attach_to_ss_file_field "custom[#{column2.id}][]", file
           end
           click_on I18n.t("ss.buttons.save")
         end
@@ -566,8 +549,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(dest_user, site: site)).to be_falsey
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: dest_user, state: 'all').count).to eq 0
 
-        login_user dest_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user dest_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")
@@ -577,8 +559,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         #
         # 申請（承認なし）
         #
-        login_user gws_user
-        visit gws_workflow2_files_path(site, state: 'all')
+        login_user gws_user, to: gws_workflow2_files_path(site, state: 'all')
         click_on item_name
         wait_for_turbo_frame "#workflow-approver-frame"
 
@@ -624,8 +605,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true, es:
         expect(item.readable?(dest_user, site: site)).to be_truthy
         expect(Gws::Workflow2::File.search(cur_site: site, cur_user: dest_user, state: 'all').count).to eq 1
 
-        login_user dest_user
-        visit gws_elasticsearch_search_main_path(site: site)
+        login_user dest_user, to: gws_elasticsearch_search_main_path(site: site)
         within "form#item-form" do
           fill_in "s[keyword]", with: "*:*"
           click_on I18n.t("ss.buttons.search")

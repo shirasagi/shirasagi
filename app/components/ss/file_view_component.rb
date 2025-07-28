@@ -99,4 +99,17 @@ class SS::FileViewComponent < ApplicationComponent
   def default_copy_url_action
     link_to t("ss.buttons.copy_url"), "#file-#{file.id}", class: "action-copy-url"
   end
+
+  def file_type_label
+    return @file_type_label if instance_variable_defined?(:@file_type_label)
+
+    @file_type_label = begin
+      case file
+      when SS::UserFile
+        I18n.t("mongoid.models.ss/user_file")
+      when Cms::File
+        I18n.t("mongoid.models.cms/file")
+      end
+    end
+  end
 end

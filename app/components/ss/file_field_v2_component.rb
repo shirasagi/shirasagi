@@ -8,7 +8,7 @@ class SS::FileFieldV2Component < SS::FileFieldComponent
 
   def setting
     @setting ||= begin
-      JSON::JWT.new({ field_name: field_name, accepts: accepts }).sign(Rails.application.secret_key_base).to_s
+      JSON::JWT.new({ field_name: field_name, accepts: accepts }).sign(SS::Crypto.salt).to_s
     end
   end
 
@@ -32,5 +32,9 @@ class SS::FileFieldV2Component < SS::FileFieldComponent
         select_sns_frames_temp_files_file_path(user: cur_user, setting: setting, id: ':id', format: :json)
       end
     end
+  end
+
+  def file_view_tag(&block)
+    tag.div(class: [ "file-view", file ? nil : "hide" ], &block)
   end
 end

@@ -114,10 +114,18 @@ this.Map_Form = (function () {
       cln.find("input,textarea").val("");
       cln.find(".marker-name").val("");
       cln.find(".clear-marker").on('click', function () {
-        return Map_Form.clearPointForm(cln);
+        Map_Form.clearPointForm(cln);
+        return false;
       });
       cln.find(".set-marker").on('click', function () {
-        return Map_Form.clickSetMarker(cln);
+        Map_Form.clickSetMarker(cln);
+        return false;
+      });
+      cln.find(".marker-name, .marker-text").on("input", function() {
+        var value = $(this).val();
+        if (value.match(/<script[^>]*>.*?<\/script>/i)) {
+          $(this).val("");
+        }
       });
       cln.find(".marker-name").on('keypress', function (e) {
         if (e.which === SS.KEY_ENTER) {
@@ -405,6 +413,14 @@ this.Map_Form = (function () {
     });
     $(".mod-map .marker-setting .marker").each(function () {
       Map_Form.setMarkerThumb(this);
+    });
+
+    // スクリプトタグの入力を防ぐ
+    $(".mod-map .marker-name, .mod-map .marker-text").on("input", function() {
+      var value = $(this).val();
+      if (value.match(/<script[^>]*>.*?<\/script>/i)) {
+        $(this).val("");
+      }
     });
   };
 

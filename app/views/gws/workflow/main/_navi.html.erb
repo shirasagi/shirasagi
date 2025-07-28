@@ -1,5 +1,5 @@
 <nav class="mod-navi current-navi">
-  <h2><%= link_to @cur_site.menu_workflow_label || t('modules.gws/workflow'), gws_workflow_files_main_path, class: "icon-workflow" %></h2>
+  <%= gws_menu_icon(:workflow, 'modules.gws/workflow', gws_workflow_files_main_path) %>
   <h3><%= link_to t('ss.navi.readable'), gws_workflow_files_main_path %></h3>
   <h3><%= link_to t('gws/workflow.options.file_state.approve'), gws_workflow_files_path(state: :approve) %></h3>
   <h3><%= link_to t('gws/workflow.options.file_state.request'), gws_workflow_files_path(state: :request) %></h3>

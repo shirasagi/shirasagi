@@ -42,22 +42,20 @@ describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
       end
 
       it "#index" do
-        login_user(user)
-        visit index_path
+        login_user(user, to: index_path)
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
       end
 
       it "#import" do
-        login_user(user)
-        visit import_confirmation_path
+        login_user(user, to: import_confirmation_path)
         expect(current_path).to eq import_confirmation_path
         within "form#item-form" do
           click_button I18n.t('ss.buttons.import')
         end
+        wait_for_notice I18n.t("ldap.messages.import_started")
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
-        expect(page).to have_selector("aside#notice .wrap", text: I18n.t("ldap.messages.import_started"))
         expect(page).to have_selector("table.index tbody tr")
         expect(Cms::Ldap::Import.count).to eq 1
         item = Cms::Ldap::Import.last
@@ -118,9 +116,9 @@ describe "ldap_import", type: :feature, dbscope: :example, ldap: true do
         within "form#item-form" do
           click_button I18n.t('ss.buttons.import')
         end
+        wait_for_notice I18n.t("ldap.messages.import_started")
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
-        expect(page).to have_selector("aside#notice .wrap", text: I18n.t("ldap.messages.import_started"))
 
         # job should be failed
         expect(Job::Log.count).to eq 1

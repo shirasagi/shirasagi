@@ -1,18 +1,11 @@
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <%= link_to(t('ss.links.new'), { action: :new }, class: :new) if @model.allowed?(:edit, @cur_user) %>
-  <% elsif params[:action] =~ /new|create|destroy_all/ %>
-    <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
-  <% elsif params[:action] =~ /edit|update|delete/ %>
-    <% if @group.imap_settings.present? %>
-      <%= link_to(t('ss.links.back_to_show'), { action: :show }, class: "back-to-show") if @model.allowed?(:read, @cur_user) %>
-    <% end %>
-    <%= link_to(t('ss.links.back_to_index'), webmail_group_path(id: @group), class: "back-to-index") %>
+  <% elsif params[:action] =~ /new|create|edit|update|delete/ %>
+    <%= link_to(t('ss.links.back'), webmail_group_path(id: @group), class: "back-to-index") %>
   <% else %>
+    <%= link_to(t('ss.links.back'), webmail_group_path(id: @group), class: "back-to-index") %>
     <%= link_to(t('ss.links.edit'), { action: :edit }, class: :edit) if @model.allowed?(:edit, @cur_user) %>
-    <% if @group.imap_settings.present? %>
-      <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) if @model.allowed?(:delete, @cur_user) %>
-    <% end %>
-    <%= link_to(t('ss.links.back_to_index'), webmail_group_path(id: @group), class: "back-to-index") %>
+    <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) if @model.allowed?(:delete, @cur_user) %>
   <% end %>
 </nav>

@@ -218,6 +218,7 @@ ja:
       sys/ad:
         time: 画像切り替え時間
         width: 横幅
+        ad_links: 広告リンク
       sys/auth/setting:
         form_auth: フォーム認証
         form_key: フォーム認証利用時のキー

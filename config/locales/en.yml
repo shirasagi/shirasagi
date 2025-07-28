@@ -150,6 +150,8 @@ en:
       less_than_or_equal_to: Must be less than or equal to %{count}.
       not_a_number: Must be entered as a number.
       not_an_integer: Must be entered as an integer.
+      not_a_date: Must be entered as a date.
+      not_a_datetime: Must be entered as a datetime.
       odd: Must be an odd number.
       record_invalid: Validation failed. %{errors}
       restrict_dependent_destroy: Cannot be deleted because there is a %{record}.
@@ -221,6 +223,9 @@ en:
       password_include_kana: contains your reading.
       edit_approved: Approved plans cannot be changed.
       disallowed_domains: "Only the following domains are allowed: %{domains}"
+      tel: Must be a valid telephone number.
+      date: Must be a valid date.
+      datetime: Must be a valid datetime.
       unable_to_accept_file: "An unauthorized file has been selected. Uploadable files can be in %{allowed_format_list}."
     template:
       body: Please check the following items.

@@ -169,8 +169,12 @@ Rails.application.routes.draw do
 
     scope module: "form" do
       resources :forms, concerns: [:deletion, :download, :import, :change_state] do
-        resources :init_columns, concerns: [:deletion]
-        resources :columns, concerns: [:deletion]
+        resources :columns, concerns: [:deletion] do
+          post :reorder, on: :collection
+        end
+        resources :init_columns, concerns: [:deletion] do
+          post :reorder, on: :collection
+        end
 
         get :column_names, on: :collection
       end
@@ -184,6 +188,15 @@ Rails.application.routes.draw do
           match :download_all, via: [:get, :post], on: :collection
           match :import_url, via: [:get, :post], on: :collection
         end
+      end
+    end
+
+    namespace :frames do
+      resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
+      resources :init_columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
       end
     end
 
@@ -359,6 +372,7 @@ Rails.application.routes.draw do
       end
       resources :result, only: [:index]
     end
+    resources :page_expiration_settings, only: [:index, :show, :edit, :update]
 
     namespace "apis" do
       get "groups" => "groups#index"
@@ -391,7 +405,9 @@ Rails.application.routes.draw do
       put "finalize" => "large_file_upload#finalize"
       post "run" => "large_file_upload#run"
       delete "delete_init_files" => "large_file_upload#delete_init_files"
+      get "content_quota_navi" => "content_quota_navi#index"
 
+      resources :columns, only: %i[edit update]
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end
@@ -516,7 +532,7 @@ Rails.application.routes.draw do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
-    resources :image_resizes, concerns: :deletion
+    resource :image_resize, except: %i[new create destroy]
     resources :nodes, concerns: [:deletion, :change_state, :import] do
       match :download, on: :collection, via: %i[get post]
     end
@@ -550,11 +566,14 @@ Rails.application.routes.draw do
     get "group_page/rss.xml" => "public#rss", cell: "nodes/group_page", format: "xml"
     get "group_page/rss-recent.xml" => "public#rss_recent", cell: "nodes/group_page", format: "xml"
     get "import_node/(index.:format)" => "public#index", cell: "nodes/import_node"
-    get "archive/:ymd/(index.:format)" => "public#index", cell: "nodes/archive", ymd: /\d+/
-    get "archive" => "public#redirect_to_archive_index", cell: "nodes/archive"
+    get "archive/:ymd/(index.:format)" => "public#yearly", cell: "nodes/archive", ymd: /\d{4}/
+    get "archive/:ymd/(index.:format)" => "public#monthly", cell: "nodes/archive", ymd: /\d{6}/
+    get "archive/:ymd/(index.:format)" => "public#daily", cell: "nodes/archive", ymd: /\d{8}/
+    get "archive" => "public#index", cell: "nodes/archive"
     get "photo_album" => "public#index", cell: "nodes/photo_album"
     get "site_search/(index.:format)" => "public#index", cell: "nodes/site_search"
-    get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
+    #get "site_search/article_nodes(.:format)" => "public#article_nodes", cell: "nodes/site_search"
+    #get "site_search/categories(.:format)" => "public#categories", cell: "nodes/site_search"
     get "form_search/(index.:format)" => "public#index", cell: "nodes/form_search"
     get "line_hub/(index.:format)" => "public#index", cell: "nodes/line_hub"
     get "line_hub/line" => "public#line", cell: "nodes/line_hub"

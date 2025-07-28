@@ -57,29 +57,25 @@ describe "ldap_server", type: :feature, dbscope: :example do
 
     context "with auth" do
       it "#index" do
-        login_user(user, pass: "admin", login_path: cms_login_path(site: site))
-        visit index_path
+        login_user(user, pass: "admin", login_path: cms_login_path(site: site), to: index_path)
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
       end
 
       it "#index with dn" do
-        login_user(user, pass: "admin", login_path: cms_login_path(site: site))
-        visit index2_path
+        login_user(user, pass: "admin", login_path: cms_login_path(site: site), to: index2_path)
         expect(status_code).to eq 200
         expect(current_path).to eq index2_path
       end
 
       it "#group" do
-        login_user(user, pass: "admin", login_path: cms_login_path(site: site))
-        visit group_path
+        login_user(user, pass: "admin", login_path: cms_login_path(site: site), to: group_path)
         expect(status_code).to eq 200
         expect(current_path).to eq group_path
       end
 
       it "#user" do
-        login_user(user, pass: "admin", login_path: cms_login_path(site: site))
-        visit user_path
+        login_user(user, pass: "admin", login_path: cms_login_path(site: site), to: user_path)
         expect(status_code).to eq 200
         expect(current_path).to eq user_path
       end

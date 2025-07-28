@@ -12,7 +12,10 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
     let!(:name1) { unique_id }
     let!(:name2) { unique_id }
 
-    before { login_gws_user }
+    before do
+      site.update facility_min_hour: 0, facility_max_hour: 24
+      login_gws_user
+    end
 
     it "#index" do
       visit index_path

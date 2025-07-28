@@ -24,6 +24,8 @@ module History::Model::Data
     field :data, type: Hash
     field :state, type: String
     field :action, type: String, default: 'save'
+    field :host_info, type: Hash
+    field :request_info, type: Hash
 
     validates :ref_coll, presence: true
     validates :data, presence: true

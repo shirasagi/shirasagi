@@ -26,8 +26,12 @@ module SS::Copy::CmsNodes
     }
   end
 
-  def before_copy_cms_node(src_node)
+  def before_copy_cms_node(src_node, dest_node)
     Rails.logger.debug("#{src_node.filename}(#{src_node.id}): フォルダーのコピーを開始します。")
+    case dest_node.route
+    when "image_map/page"
+      dest_node.skip_image_validate_relation = true
+    end
   end
 
   def after_copy_cms_node(src_node, dest_node)
@@ -42,6 +46,9 @@ module SS::Copy::CmsNodes
       copy_ezine_columns(src_node, dest_node)
     when "category/page"
       dest_node.summary_page_id = nil unless @copy_contents.include?('pages')
+      dest_node.save!
+    when "image_map/page"
+      dest_node.image_id = resolve_file_reference(src_node.image_id) if src_node.image
       dest_node.save!
     when "rss/weather_xml"
       @task.log("#{src_node.filename}(#{src_node.id}): フォルダーのコピーをスキップします。")

@@ -16,6 +16,7 @@
 
   <dt><%= @model.t :display_remarks %><%= @model.tt :display_remarks %></dt>
   <dd>
+    <%= hidden_field_tag "#{f.object_name}[display_remarks][]", nil, id: nil %>
     <% t("key_visual.options.display_remarks").each do |k, v| %>
       <label>
         <%= check_box_tag "#{f.object_name}[display_remarks][]", k, @item.display_remarks.include?(k.to_s) %>

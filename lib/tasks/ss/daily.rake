@@ -21,8 +21,11 @@ namespace :ss do
     # history_backupの削除
     ::Tasks::SS.invoke_task("history:backup:sweep")
 
-    # history_backupの削除
+    # taskの削除
     ::Tasks::SS.invoke_task("ss:task:sweep")
+
+    # sys_mail_logの削除
+    ::Tasks::SS.invoke_task("sys:mail_log:sweep")
 
     # ファイルキャッシュ掃除ジョブ
     ::Tasks::SS.invoke_task("ss:cleanup_file_store_cache")

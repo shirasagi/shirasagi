@@ -17,6 +17,7 @@
 @import "init";
 @import "lib";
 @import "pc_mb";
+@import "shirasagi-icons";
 
 // core
 @import "github-markdown";
@@ -30,10 +31,12 @@
 @import "ss/tree";
 @import "ss/btn_group";
 @import "ss/file_field";
+@import "ss/link_item/ss";
 @import "sys/ss";
 @import "sns/ss";
 @import "cms/ss";
 @import "cms/column";
+@import "cms/column2";
 @import "cms/michecker";
 @import "cms/quick_edit";
 @import "cms/addon_file";

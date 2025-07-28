@@ -12,7 +12,7 @@ module SS::Relation::File
 
       belongs_to name.to_sym, class_name: class_name
 
-      attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing"
+      attr_accessor "in_#{name}", "rm_#{name}", "in_#{name}_resizing", "skip_#{name}_validate_relation"
 
       permit_params "#{name}_id", "in_#{name}", "rm_#{name}"
       permit_params "in_#{name}_resizing" => []
@@ -105,17 +105,18 @@ module SS::Relation::File
     end
 
     def validate_relation(item, name, presence:, accepts:)
-      file = item.send(name)
+      return if item.send("skip_#{name}_validate_relation")
+
+      file = item.send("in_#{name}") || item.send(name)
       if !file && presence
-        upload_file = item.send("in_#{name}")
-        if !upload_file
-          item.errors.add("#{name}_id", :blank)
-        end
+        item.errors.add("#{name}_id", :blank)
       end
-      if file && accepts.present?
-        ext = ::File.extname(file.filename)
-        ext = ext.downcase if ext.present?
-        unless accepts.include?(ext)
+      if file && accepts.present? && item.send("rm_#{name}").to_s != "1"
+        filename = ""
+        filename = file.filename if file.respond_to?(:filename)
+        filename = file.original_filename if file.respond_to?(:original_filename)
+        ext = ::File.extname(filename).downcase
+        if !accepts.include?(ext)
           item.errors.add("#{name}_id", :unable_to_accept_file, allowed_format_list: accepts.join(" / "))
         end
       end
@@ -238,8 +239,13 @@ module SS::Relation::File
       # ただし、ブランチが所有している場合を除く
       return file unless Cms::Reference::Files::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
 
+      cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
+      cur_site ||= owner_item.site if owner_item.respond_to?(:site)
+      cur_site ||= SS.current_site
+      cur_site = nil unless cur_site.is_a?(SS::Model::Site)
       cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
-      clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
+      cur_user ||= SS.current_user
+      clone_file = SS::File.clone_file(file, cur_site: cur_site, cur_user: cur_user, owner_item: owner_item)
       Changes.set_relation(item, name, clone_file)
       clone_file
     end

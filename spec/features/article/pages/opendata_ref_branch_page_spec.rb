@@ -127,7 +127,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       wait_for_all_turbo_frames
       within '#addon-workflow-agents-addons-branch' do
         expect do
-          wait_for_turbo_frame "#workflow-branch-frame"
           wait_for_event_fired "turbo:frame-load" do
             click_on I18n.t('workflow.create_branch')
           end
@@ -181,7 +180,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       within '#addon-workflow-agents-addons-branch' do
         expect do
-          wait_for_turbo_frame "#workflow-branch-frame"
           wait_for_event_fired "turbo:frame-load" do
             click_on I18n.t('workflow.create_branch')
           end
@@ -190,6 +188,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end.to output(/#{I18n.t("workflow.branch_page")}/).to_stdout
         click_on article_page.name
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       click_on I18n.t('ss.links.edit')
       wait_for_all_ckeditors_ready

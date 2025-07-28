@@ -10,7 +10,12 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
   let!(:file3) { tmp_ss_file Cms::TempFile, contents: content_path, basename: "logo-#{unique_id}.png", **bindings }
   let(:index_path) { ads_banners_path site.id, node }
 
-  before { login_cms_user }
+  before do
+    upload_policy_before_settings("sanitizer")
+    login_cms_user
+  end
+
+  after { upload_policy_after_settings }
 
   describe "ss_file_field" do
     it do
@@ -33,19 +38,19 @@ describe "ads_banners_with_upload_policy", type: :feature, dbscope: :example, js
         end
 
         # set wait
-        attach_to_ss_file_field "item_file_id", file1
+        attach_to_ss_file_field "item[file_id]", file1
         within "#item_file_id" do
           expect(page).to have_css(".sanitizer-wait")
         end
 
         # set error
-        attach_to_ss_file_field "item_file_id", file2
+        attach_to_ss_file_field "item[file_id]", file2
         within "#item_file_id" do
           expect(page).to have_css(".sanitizer-error")
         end
 
         # set none
-        attach_to_ss_file_field "item_file_id", file3
+        attach_to_ss_file_field "item[file_id]", file3
         within "#item_file_id" do
           expect(page).to have_css(".sanitizer-none", visible: false)
         end

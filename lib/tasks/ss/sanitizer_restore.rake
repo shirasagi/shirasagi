@@ -1,12 +1,12 @@
 namespace :ss do
-  # input: sanitizer_input/{PREFIX}_{TYPE}_{ID}_{TIMESTAMP}.ext
-  # output: sanitizer_output/{PREFIX}_{TYPE}_{ID}_{FILENAME}_{PID}_{SUFFIX}.ext
+  # input: #{Rails.root}/sanitizer_input/{PREFIX}_{TYPE}_{ID}_{TIMESTAMP}.ext
+  # output: #{Rails.root}/sanitizer_output/{PREFIX}_{TYPE}_{ID}_{FILENAME}_{PID}_{SUFFIX}.ext
   task sanitizer_restore: :environment do
-    return unless SS.config.ss.sanitizer_output
+    return unless SS::UploadPolicy.sanitizer_output_path
 
     allow_suffix = %w(marked marked.MSOfficeWithPassword withPassword withEncrypt sanitized)
 
-    ::Fs.glob("#{Rails.root}/#{SS.config.ss.sanitizer_output}/*").sort.each do |path|
+    ::Fs.glob("#{SS::UploadPolicy.sanitizer_output_path}/*").sort.each do |path|
       filename = ::File.basename(path)
       basename = ::File.basename(filename, '.*')
       next unless filename.start_with?("#{SS.config.ss.sanitizer_file_prefix}_")

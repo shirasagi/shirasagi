@@ -45,8 +45,19 @@
             end
           %>
           <div class="buttons">
-            <% if workflow_approver[:state] == 'request' %>
-              <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+            <% if workflow_approver[:state] == 'request'  %>
+              <% if @item.can_approve_with_accessibility_errors? %>
+                <% if @item.accessibility_errors?(@cur_user, @cur_site) %>
+                  <div class="error-message">
+                    <%= t("errors.messages.check_html") %>
+                  </div>
+                <% end %>
+                <%= button_tag t("workflow.buttons.approve"), updatetype: :approve, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>
+              <% else %>
+                <div class="error-message">
+                  <%= t("errors.messages.accessibility_check_required") %>
+                </div>
+              <% end %>
               <%= button_tag t("workflow.buttons.remand"), updatetype: :remand, class: "update-item btn-default", disabled: true, data: { disable: '' } %>
             <% elsif workflow_approver[:state] == 'pending' %>
               <%= button_tag t("workflow.buttons.pull_up"), updatetype: :pull_up, class: "update-item btn-primary", disabled: true, data: { disable: '' } %>

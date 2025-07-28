@@ -1,11 +1,13 @@
 class Inquiry::ColumnsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::ColumnFilter2
 
   model Inquiry::Column
+  self.form_model = Inquiry::Node::Form
 
-  append_view_path "app/views/cms/pages"
   navi_view "inquiry/main/navi"
+  append_view_path 'app/views/inquiry/columns2'
 
   before_action :check_permission
 
@@ -19,49 +21,66 @@ class Inquiry::ColumnsController < ApplicationController
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
   end
 
+  def cur_form
+    @cur_form ||= @cur_node if @cur_node.instance_of?(form_model)
+    @cur_form ||= @cur_node.becomes_with(form_model)
+  end
+
+  def column_route_options
+    Inquiry::Column.route_options
+  end
+
+  def set_model
+    model = self.class.model_class
+    @model = model
+  end
+
+  def set_default_attributes
+    if params[:type]
+      @item.input_type = params[:type].sub(/.*\//, '')
+      @item.name = I18n.t("inquiry.columns.#{params[:type]}", default: params[:type])
+      @item.required = "required"
+    end
+
+    case params[:type]
+    when 'inquiry/radio_button'
+      @item.select_options = I18n.t("gws/column.default_select_options").to_a
+    when 'inquiry/select'
+      @item.select_options = I18n.t("gws/column.default_select_options").to_a
+    when 'inquiry/check_box'
+      @item.select_options = I18n.t("gws/column.default_select_options").to_a
+    when 'inquiry/form_select'
+      @item.select_options = I18n.t("gws/column.default_select_options").to_a
+    end
+  end
+
   public
 
-  def index
-    @items = @model.site(@cur_site).
-      allow(:read, @cur_user).
-      where(node_id: @cur_node.id).
-      order_by(order: 1).
-      page(params[:page]).per(50)
-  end
+  def create
+    set_model
+    raise '403' unless cur_form.allowed?(:edit, @cur_user, site: @cur_site)
 
-  def show
-    raise "403" unless @item.allowed?(:read, @cur_user, site: @cur_site)
-    render
-  end
+    @item = Inquiry::Column.new(cur_site: @cur_site, site: @cur_site, node: @cur_node)
+    set_default_attributes
 
-  def edit
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
-  end
-
-  def delete
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render
-  end
-
-  def destroy
-    raise "403" unless @item.allowed?(:delete, @cur_user, site: @cur_site)
-    render_destroy @item.destroy
-  end
-
-  def destroy_all
-    raise "400" if @selected_items.blank?
-
-    entries = @selected_items
-    @items = []
-
-    entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.destroy
-      else
-        item.errors.add :base, :auth_error
-      end
-      @items << item
+    @item.order = placement == "bottom" ? cur_form.columns.max(:order).to_i + 10 : 10
+    # @item.required = cur_form.columns.reorder(order: -1).only(:required).first.try(:required) || "required"
+    unless @item.save
+      # json = { status: 422, errors: @item.errors.full_messages }
+      # render json: json, status: :unprocessable_entity, content_type: json_content_type
+      return render :create_error, layout: false
     end
-    render_confirmed_all(entries.size != @items.size)
+
+    if placement == "top"
+      next_order = 20
+      cur_form.columns.ne(id: @item.id).only(:id, :order).reorder(order: 1).to_a.each do |column|
+        column.set(order: next_order)
+        next_order += 10
+      end
+    end
+
+    @frame_id = "item-#{@item.id}"
+    locals = { ref: SS.request_path(request), model: @model, item: @item, new_item: true }
+    render template: "inquiry/frames/columns/edit", locals: locals, layout: "ss/item_frame"
   end
 end

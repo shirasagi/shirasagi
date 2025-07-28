@@ -56,7 +56,7 @@ module Gws::ReadableSetting
   end
 
   def readable_groups_hash
-    self[:readable_groups_hash].presence || readable_groups.map { |m| [m.id, m.name] }.to_h
+    self[:readable_groups_hash].presence || Gws.id_name_hash(readable_groups)
   end
 
   def readable_group_names
@@ -64,7 +64,7 @@ module Gws::ReadableSetting
   end
 
   def readable_members_hash
-    self[:readable_members_hash].presence || readable_members.map { |m| [m.id, m.long_name] }.to_h
+    self[:readable_members_hash].presence || Gws.id_name_hash(readable_members, name_method: :long_name)
   end
 
   def readable_member_names
@@ -72,7 +72,7 @@ module Gws::ReadableSetting
   end
 
   def readable_custom__groups_hash
-    self[:readable_custom_groups_hash].presence || readable_custom_groups.map { |m| [m.id, m.name] }.to_h
+    self[:readable_custom_groups_hash].presence || Gws.id_name_hash(readable_custom_groups)
   end
 
   def readable_custom_group_names
@@ -128,15 +128,18 @@ module Gws::ReadableSetting
   end
 
   def set_readable_groups_hash
-    self.readable_groups_hash = readable_groups.map { |m| [m.id, m.name] }.to_h
+    return unless readable_group_ids_changed?
+    self.readable_groups_hash = Gws.id_name_hash(readable_groups)
   end
 
   def set_readable_members_hash
-    self.readable_members_hash = readable_members.map { |m| [m.id, m.long_name] }.to_h
+    return unless readable_member_ids_changed?
+    self.readable_members_hash = Gws.id_name_hash(readable_members, name_method: :long_name)
   end
 
   def set_readable_custom_groups_hash
-    self.readable_custom_groups_hash = readable_custom_groups.map { |m| [m.id, m.name] }.to_h
+    return unless readable_custom_group_ids_changed?
+    self.readable_custom_groups_hash = Gws.id_name_hash(readable_custom_groups)
   end
 
   module ClassMethods

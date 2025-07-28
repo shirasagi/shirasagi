@@ -173,6 +173,68 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    describe "validation checks" do
+      it "prevents script tags in marker name" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][name]", with: "<script>alert('test')</script>"
+              expect(find_field("item[map_points][][name]").value).to eq ""
+            end
+          end
+        end
+      end
+
+      it "prevents script tags in marker text" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][text]", with: "<script>alert('test')</script>"
+              expect(find_field("item[map_points][][text]").value).to eq ""
+            end
+          end
+        end
+      end
+
+      it "removes HTML tags from marker name" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][name]", with: "テスト"
+              expect(find_field("item[map_points][][name]").value).to eq "テスト"
+            end
+          end
+        end
+      end
+
+      it "removes HTML tags from marker text" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][text]", with: "テスト"
+              expect(find_field("item[map_points][][text]").value).to eq "テスト"
+            end
+          end
+        end
+      end
+    end
   end
 
   context "with google map" do

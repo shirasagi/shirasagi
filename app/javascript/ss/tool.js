@@ -1,4 +1,6 @@
 // jQuery's fast is 200ms
+import i18next from "i18next";
+
 export const ANIMATE_FAST = "0.2s"
 
 // jQuery's normal is 400ms
@@ -9,13 +11,22 @@ export const ANIMATE_SLOW = "0.6s"
 
 export const LOADING = `<img src="/assets/img/loading.gif" width="16" height="11">`
 
-export function csrfToken() {
-  const el = document.querySelector('meta[name="csrf-token"]')
-  if (!el) {
+export const LIST_ITEM_SELECTOR = ".list-item[data-id]";
+export const CHECKED_LIST_ITEM_SELECTOR = ".list-item[data-id]:has(input:checked)";
+
+export function csrfToken(el) {
+  if (el && 'form' in el && el.form) {
+    const authenticityTokenEl = el.form.querySelector("[name='authenticity_token']")
+    if (authenticityTokenEl) {
+      return authenticityTokenEl.value
+    }
+  }
+  const csrfTokenEl = document.querySelector('meta[name="csrf-token"]')
+  if (!csrfTokenEl) {
     return
   }
 
-  return el.getAttribute('content')
+  return csrfTokenEl.getAttribute('content')
 }
 
 export function dispatchEvent(element, eventName, detail) {
@@ -134,11 +145,11 @@ function _cloneNode(htmlTextOrNode) {
   return dummyElement.content.cloneNode(true);
 }
 
-export function appendChildren(element, htmlTextOrNode) {
-  const dummyElement = _cloneNode(htmlTextOrNode);
-  dummyElement.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
-  element.appendChild(dummyElement);
+function _markScriptAsNew(element) {
+  element.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
+}
 
+function _executeNewScript(element) {
   element.querySelectorAll("script[data-new]").forEach((scriptElement) => {
     const newScriptElement = document.createElement("script");
     delete scriptElement.dataset.new;
@@ -148,16 +159,70 @@ export function appendChildren(element, htmlTextOrNode) {
   });
 }
 
+export function appendChildren(element, htmlTextOrNode) {
+  const dummyElement = _cloneNode(htmlTextOrNode);
+  _markScriptAsNew(dummyElement);
+
+  element.appendChild(dummyElement);
+  _executeNewScript(element);
+}
+
 export function prependChildren(element, htmlTextOrNode) {
   const dummyElement = _cloneNode(htmlTextOrNode);
-  dummyElement.querySelectorAll("script").forEach((scriptElement) => scriptElement.dataset.new = true);
-  element.prepend(dummyElement);
+  _markScriptAsNew(dummyElement);
 
-  element.querySelectorAll("script[data-new]").forEach((scriptElement) => {
-    const newScriptElement = document.createElement("script");
-    delete scriptElement.dataset.new;
-    Array.from(scriptElement.attributes).forEach(attr => newScriptElement.setAttribute(attr.name, attr.value));
-    newScriptElement.appendChild(document.createTextNode(scriptElement.innerHTML));
-    scriptElement.parentElement.replaceChild(newScriptElement, scriptElement);
-  });
+  element.prepend(dummyElement);
+  _executeNewScript(element);
+}
+
+export function appendAfter(element, htmlTextOrNode) {
+  if (!element.nextElementSibling) {
+    appendChildren(element.parentElement, htmlTextOrNode);
+    return;
+  }
+
+  const dummyElement = _cloneNode(htmlTextOrNode);
+  _markScriptAsNew(dummyElement);
+
+  element.parentElement.insertBefore(dummyElement, element.nextElementSibling)
+  _executeNewScript(element);
+}
+
+export function showErrorInListItem(listItemElement, fetchResponse, errorMessages) {
+  let ajaxResultElement = listItemElement.querySelector(".ss-ajax-result");
+  if (ajaxResultElement) {
+    ajaxResultElement.innerHTML = '';
+  } else {
+    ajaxResultElement = document.createElement("div");
+    ajaxResultElement.classList.add("ss-ajax-result");
+    listItemElement.appendChild(ajaxResultElement);
+  }
+  ajaxResultElement.classList.remove("ss-ajax-success");
+  ajaxResultElement.classList.add("ss-ajax-failure");
+
+  const errorContainerElement = document.createElement("div");
+  errorContainerElement.classList.add("errorExplanation");
+
+  const errorHeaderElement = document.createElement("h2");
+  errorHeaderElement.textContent = i18next.t("errors.template.header.one");
+  errorContainerElement.appendChild(errorHeaderElement);
+
+  const errorBodyElement = document.createElement("p");
+  errorBodyElement.textContent = i18next.t("errors.template.body");
+  errorContainerElement.appendChild(errorBodyElement);
+
+  const errorListElement = document.createElement("ul");
+  if (errorMessages && errorMessages.length > 0) {
+    errorMessages.forEach((error) => {
+      const errorElement = document.createElement("li");
+      errorElement.textContent = error;
+      errorListElement.appendChild(errorElement);
+    });
+  } else {
+    const errorElement = document.createElement("li");
+    errorElement.textContent = "error";
+    errorListElement.appendChild(errorElement);
+  }
+  errorContainerElement.appendChild(errorListElement);
+  ajaxResultElement.appendChild(errorContainerElement);
 }

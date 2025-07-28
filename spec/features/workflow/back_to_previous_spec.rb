@@ -74,8 +74,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -103,8 +102,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user2: remand request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -134,8 +132,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user1: approve request again
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -164,8 +161,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user2: approve request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -196,8 +192,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user3: approve request
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -266,8 +261,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -294,8 +288,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user2: approve request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -326,8 +319,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user3: remand request
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -356,8 +348,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user2: remand request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -390,8 +381,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user1: remand request; first user remand a request then document workflow status goes to remand
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -465,8 +455,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -494,8 +483,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user2: remand request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -525,8 +513,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user1: approve request again
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -555,8 +542,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user2: approve request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -587,8 +573,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user3: approve request
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -657,8 +642,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -683,8 +667,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user2: approve request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -715,8 +698,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user3: remand request
         #
-        login_user user3
-        visit show_path
+        login_user user3, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -749,8 +731,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user2: remand request
         #
-        login_user user2
-        visit show_path
+        login_user user2, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -783,8 +764,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
         #
         # user1: remand request; first user remand a request then document workflow status goes to remand
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)

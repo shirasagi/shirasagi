@@ -31,15 +31,6 @@
   }
 }
 
-.column-youtube-right {
-  text-align: right;
-}
-
-.column-youtube-left {
-  float: left;
-  text-align: left;
-}
-
 .column-value.ui-sortable-helper {
   @include box-shadow(0 1px 5px #666);
   @include opacity(.8);

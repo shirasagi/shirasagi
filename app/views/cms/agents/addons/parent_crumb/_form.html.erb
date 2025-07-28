@@ -26,8 +26,8 @@
   });
 
   $(".delete-crumb").on("click",function(){
-    var dd1 = $(this).closest("dd.crumb-urls");
-    var dd2 = $(dd1).next("dd.crumb-categories");
+    var dd2 = $(this).closest("dd.crumb-categories");
+    var dd1 = $(dd2).prev("dd.crumb-urls");
 
     var value = dd1.find("input").val();
     var deletion = true
@@ -44,7 +44,7 @@
         dd1.find("input").val("");
         dd2.find("select").val("");
       }
-      if ($(".parent-crumbs").length < 10){
+      if ($(".parent-crumbs").length < 10) {
         $(".add-crumb").show();
       }
     }
@@ -78,18 +78,26 @@
 
       <dd class="crumb-urls">
         <%= text_field_tag "item[parent_crumb_urls][]", url, class: :parent_crumb_urls %>
+      </dd>
+      <dd class="crumb-categories">
+        <select class="parent-crumbs">
+          <option value=""><%= t 'cms.options.parent_crumb.blank' %></option>
+        </select>
         <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn" } %>
       </dd>
-      <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
 
     <% end %>
   <% else %>
 
     <dd class="crumb-urls">
       <%= text_field_tag "item[parent_crumb_urls][]", "", class: :parent_crumb_urls %>
+    </dd>
+    <dd class="crumb-categories">
+      <select class="parent-crumbs">
+        <option value=""><%= t 'cms.options.parent_crumb.blank' %></option>
+      </select>
       <%= button_tag t("ss.buttons.delete"), { type: :button, class: "delete-crumb btn" } %>
     </dd>
-    <dd class="crumb-categories"><select class="parent-crumbs"><option value=""><%= t 'cms.options.parent_crumb.blank' %></option></select></dd>
 
   <% end %>
 

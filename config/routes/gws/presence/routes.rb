@@ -29,5 +29,10 @@ Rails.application.routes.draw do
     end
 
     resource :user_setting, only: [:show, :edit, :update]
+
+    namespace :frames do
+      resources :plans, only: [:show, :edit, :update]
+      resources :memos, only: [:show, :edit, :update]
+    end
   end
 end

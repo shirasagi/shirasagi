@@ -1,0 +1,314 @@
+ja:
+  gws/tabular:
+    auto_generated_icon_notice: "自動作成されたアイコンを表示しています"
+    csv_prefix: "システム/"
+    format: "ファイル形式"
+    import_notice_md: |-
+      ##### CSVのひな型について
+      - インポート用のCSVファイルまたはZIPファイルはダウンロードから取得してください。
+
+      ##### 添付ファイルについて
+      - 添付ファイルを含むデータをアップロードする場合は、CSVファイルと添付ファイルとをまとめて一つのZIPファイルに圧縮し、ZIPファイルをインポートしてください。
+      - 添付ファイルを含まない場合はCSVファイルのみをインポートすることができます。
+
+      ##### CSVの列について
+      - ID列は必須です。ID列は内部IDを表しており、ID列が空の行は常に新規レコードとしてインポートされ、ID列が設定されている行は既存のレコードが更新されます。ID列に設定したレコードが見つからない場合は新規レコードとしてインポートされます。
+      - ID列以外はCSVから削除することが可能です。インポートしない列を削除することで余計な変更や意図しない変更を防ぐことが可能です。
+      
+      ##### インポートできない列について
+      - ルックアップ型の項目はインポートできません。インポート時、参照型のデータが変更されたら対応するルックアップ型のデータが自動で変更されます。
+      - 以下の列はインポートできません。
+        - 申請日時列
+        - 申請コメント列
+        - 承認状態列
+        - ステータス列
+        - マイグレーションエラー列
+        - 更新日時列
+        - 作成日時列
+        他、システムの都合によりインポートできない列が存在する場合があります。
+      
+      ##### 制限
+      - 言語設定「英語」でダウンロードしても、ダウンロードされるCSVの中身は日本語で、日本語CSVのみインポートすることが可能です。
+    new_form_notice_md: |-
+      ツールバー内にある適切な入力項目のボタンをクリックし、%{name}の作成を完了させてください。
+      
+      ##### 操作方法
+      - 上部のツールバー内のボタンをクリックすると入力項目を先頭に追加することができます。
+      - 下部のツールバー内のボタンをクリックすると入力項目を末尾に追加することができます。
+
+      ##### 先頭の入力項目に関する注意点
+      - 先頭の入力項目は、ユニークになるようなテキスト型を設定するようにしてください。
+      - ユニークでない入力項目や、テキスト型ではない入力項目を設定した場合、CSVによるインポートに支障をきたす場合があります。特に、参照型のインポート時に、参照先の先頭の入力項目がユニークでない場合、正しくインポートすることはできません。
+    no_reference_fields: "参照型が追加されていません。ルックアップを使用するには、初めに参照型を追加し適切に設定してください。"
+    option_setting: オプション設定
+    sort_asc: "%{name}(昇順)"
+    sort_desc: "%{name}(降順)"
+    trash_notice_md: |-
+      ゴミ箱内の項目は%{expires_in}が経過すると削除されます。
+      ゴミ箱の保存期間は「組織情報」の「システム設定 - ゴミ箱保持期間」で変更することができます。
+    view_files: データ一覧
+    apis:
+      files:
+        index: "%{name}を選択する"
+      forms:
+        index: 定義を選択する
+    buttons:
+      manage_space: スペース管理
+    notice:
+      delay_download_with_message: |-
+        バックグランドでファイルを準備します。
+        ダウンロードの準備ができましたらメッセージでお知らせします。
+    options:
+      enum_input_type:
+        radio: ラジオボタン
+        checkbox: チェックボックス
+        select: ドロップダウン
+      export_state:
+        none: なし
+        public: publicへ書き出し
+      act:
+        approver: 承認依頼されているもの
+        applicant: 承認依頼したもの
+      format:
+        zip: "ZIP (添付ファイルを含む)"
+        csv: "CSV (テキスト情報のみ)"
+      number_field_type:
+        integer: 整数型
+        float: 浮動小数点型
+        decimal: 十進数型
+      order_direction:
+        none: なし
+        asc: 昇順
+        desc: 降順
+      reference_type:
+        one_to_one: "1対1"
+        one_to_many: "1対多"
+        many_to_many: "多対多"
+      state:
+        public: 公開
+        publishing: 公開作業中
+        closed: 非公開
+      text_input_type:
+        single: 一行入力
+        multi: 複数行入力
+        multi_html: 複数行入力 (HTML)
+      validation_type:
+        none: なし
+        email: メールアドレス
+        tel: 電話番号
+        url: URL入力
+        color: 色選択
+      column:
+        updated_or_deleted: 更新日時（ゴミ箱では削除日時）
+      authoring_permission:
+        read: 閲覧
+        edit: 新規作成・編集・コピー
+        delete: 削除
+        download_all: ダウンロード
+        import: インポート
+
+  gws_role:
+    use_gws_tabular: 汎用DBの利用
+
+    read_other_gws_tabular_spaces: スペースの閲覧（全て）
+    read_private_gws_tabular_spaces: スペースの閲覧（所有）
+    edit_other_gws_tabular_spaces: スペースの編集（全て）
+    edit_private_gws_tabular_spaces: スペースの編集（所有）
+    delete_other_gws_tabular_spaces: スペースの削除（全て）
+    delete_private_gws_tabular_spaces: スペースの削除（所有）
+
+    read_other_gws_tabular_forms: 定義の閲覧（全て）
+    read_private_gws_tabular_forms: 定義の閲覧（所有）
+    edit_other_gws_tabular_forms: 定義の編集（全て）
+    edit_private_gws_tabular_forms: 定義の編集（所有）
+    delete_other_gws_tabular_forms: 定義の削除（全て）
+    delete_private_gws_tabular_forms: 定義の削除（所有）
+
+    read_other_gws_tabular_views: ビューの閲覧（全て）
+    read_private_gws_tabular_views: ビューの閲覧（所有）
+    edit_other_gws_tabular_views: ビューの編集（全て）
+    edit_private_gws_tabular_views: ビューの編集（所有）
+    delete_other_gws_tabular_views: ビューの削除（全て）
+    delete_private_gws_tabular_views: ビューの削除（所有）
+
+    read_gws_tabular_files: データの閲覧
+    edit_gws_tabular_files: データの編集
+    delete_gws_tabular_files: データの削除
+    download_gws_tabular_files: データのダウンロード
+    import_gws_tabular_files: データのインポート
+
+  gws_notification:
+    gws/tabular/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+      request: "[%{form}]「%{name}」の承認申請が届きました。"
+      approve: "[%{form}]「%{name}」の最終承認が完了しました。"
+      remand: "[%{form}]「%{name}」の承認申請が差し戻されました。"
+      circular: "[%{form}]「%{name}」が届きました。"
+      comment: "[%{form}]「%{name}」にコメントがありました。"
+
+  modules:
+    gws/tabular: 汎用DB
+    addons:
+      gws/tabular/approver: 承認
+      gws/tabular/approver_print: 承認
+      gws/tabular/circulation: 回覧
+      gws/tabular/column_setting: 入力設定
+      gws/tabular/destination_state: 処理状態
+      gws/tabular/destination_view: 提出先
+      gws/tabular/inspection: 承認/差し戻し
+      gws/tabular/liquid_view: Liquid形式
+      gws/tabular/list_view: リスト形式
+      gws/tabular/workflow_setting: ワークフロー
+      gws/tabular/column/base: 汎用DB共通
+      gws/tabular/column/date_time_field: 日付時刻型
+      gws/tabular/column/enum_field: 列挙型
+      gws/tabular/column/file_upload_field: ファイルアップロード
+      gws/tabular/column/lookup_field: ルックアップ
+      gws/tabular/column/number_field: 数値型
+      gws/tabular/column/reference_field: 参照型
+      gws/tabular/column/text_field: テキスト型
+
+  activemodel:
+    errors:
+      models:
+        gws/tabular/file/import_param:
+          malformed_zip: ZIPの形式が正しくないかZIP内に必須ファイルfiles.csvが見つかりません。正しい形式のZIPファイルを選択してください。
+    attributes:
+      gws/tabular/gws/views_controller/new_prerequisite_params:
+        type: タイプ
+        form_id: 定義
+
+  mongoid:
+    models:
+      #gws/tabular/column/check_box: Checkbox
+      gws/tabular/column/date_time_field: 日付時刻型
+      gws/tabular/column/enum_field: 列挙型
+      gws/tabular/column/file_upload_field: ファイルアップロード
+      gws/tabular/column/lookup_field: ルックアップ
+      gws/tabular/column/number_field: 数値型
+      #gws/tabular/column/radio_button: Radio Button
+      gws/tabular/column/reference_field: 参照型
+      #gws/tabular/column/select: Dropdown
+      gws/tabular/column/text_field: テキスト型
+      gws/tabular/form: 定義
+      gws/tabular/space: スペース
+      gws/tabular/view/base: ビュー
+      gws/tabular/view/liquid: Liquid形式ビュー
+      gws/tabular/view/list: リスト形式ビュー
+    errors:
+      messages:
+        unable_to_delete_item_in_public: 公開しているので削除できません。
+    attributes:
+      gws/tabular/column/base:
+        index_state: インデックス
+        unique_state: ユニーク
+      gws/tabular/column/date_time_field:
+        input_type: 日付時刻種別
+      gws/tabular/column/enum_field:
+        select_options: 選択肢
+        input_type: 選択種別
+      gws/tabular/column/file_upload_field:
+        export_state: 書き出し設定
+        allowed_extensions: ファイル形式
+      gws/tabular/column/lookup_field:
+        reference_column: 参照入力項目
+        reference_column_id: 参照入力項目
+        lookup_column: 参照する入力項目
+        lookup_column_id: 参照する入力項目
+      gws/tabular/column/number_field:
+        field_type: 数値型
+        min_value: 最小値
+        max_value: 最大値
+        default_value: 既定値
+      gws/tabular/column/reference_field:
+        reference_form: 参照する定義
+        reference_form_id: 参照する定義
+        reference_type: 参照の種類
+      gws/tabular/column/text_field:
+        input_type: 入力種別
+        max_length: 最大長
+        i18n_default_value: 既定値
+        validation_type: 制約
+        i18n_state: 国際化
+        html_state: HTML入力
+      gws/tabular/file:
+        _id: ID
+        id: ID
+        migration_errors: マイグレーションエラー
+      gws/tabular/form:
+        name: タイトル
+        i18n_name: タイトル
+        description: 説明
+        i18n_description: 説明
+        order: 並び順
+        state: 公開状態
+        memo: 備考
+      gws/tabular/space:
+        name: タイトル
+        i18n_name: タイトル
+        description: 説明
+        i18n_description: 説明
+        order: 並び順
+        icon: アイコン画像
+        icon_id: アイコン画像
+        state: 公開状態
+        memo: 備考
+      gws/tabular/view/base:
+        name: タイトル
+        i18n_name: タイトル
+        order: 並び順
+        authoring_permissions: 制作権限
+        state: 公開状態
+        default_state: 既定のビュー
+        memo: 備考
+      gws/reference/tabular/space:
+        space: スペース
+        space_id: スペース
+      gws/reference/tabular/form:
+        form: 定義
+        form_id: 定義
+      gws/addon/tabular/liquid_view:
+        template_html: テンプレート
+        template_style: CSS/Style
+        orders: 並び順
+        limit_count: 表示件数
+      gws/addon/tabular/list_view:
+        title_column_ids: タイトル表示
+        meta_column_ids: 詳細表示
+        orders: 並び順
+        limit_count: 表示件数
+        filters: 抽出条件
+        aggregations: グルーピング・集計
+      gws/addon/tabular/workflow_setting:
+        workflow_state: ワークフローの使用
+
+  tooltip:
+    gws/tabular/column/file_upload_field:
+      export_state:
+        - 「なし」を選択すると、アップロードされたファイルを閲覧するたびに権限をチェックしますので、サーバーの性能が悪化する可能性があります。
+        - 「publicへ書き出し」を選択すると、サーバーのpublic/以下へアップロードされたファイルを書き出すようになります。この結果、サーバーの性能が向上する半面、URLを知っていれば権限のない人でもファイルを閲覧することができるようになります。
+      allowed_extensions:
+        - アップロード可能なファイルの拡張子を入力します。
+        - 拡張子を空白で区切ることで複数のファイル形式を指定することができます。
+        - "画像のみにする例: .gif .png .jpg .jpeg"
+        -
+        - 空白にすると、全てのファイルをアップロード可能となります。
+
+  input_guide:
+    gws/addon/tabular/approver:
+      restart_notice_html: |-
+        <p style="color: #e00;">再申請をすると、差し戻しコメント、差し戻し時の添付ファイルが消えます。</p>
+
+  job:
+    models:
+      gws/tabular/file/csv_import_job: 汎用DB/CSVインポート
+      gws/tabular/file/publish_upload_file_job: 汎用DB/アップロードファイル公開
+      gws/tabular/file/zip_export_job: 汎用DB/データのZIP化処理
+      gws/tabular/file/zip_import_job: 汎用DB/ZIPインポート
+      gws/tabular/form_publish_job: 汎用DB/定義の公開処理
+      gws/tabular/form_trash_purge_job: 汎用DB/定義ゴミ箱の掃除
+      gws/tabular/space_trash_purge_job: 汎用DB/スペースゴミ箱の掃除
