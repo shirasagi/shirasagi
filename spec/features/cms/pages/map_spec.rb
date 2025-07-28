@@ -29,6 +29,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
 
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
@@ -48,6 +49,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         item.reload
 
@@ -90,6 +93,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
 
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
@@ -134,6 +138,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         item.reload
 
@@ -157,11 +163,74 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         # re-open for edit
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
           within "#addon-map-agents-addons-page" do
             # add-marker button is not shown because number of markers reaches the limit
             expect(page).to have_no_css(".add-marker", visible: true)
+          end
+        end
+      end
+    end
+
+    describe "validation checks" do
+      it "prevents script tags in marker name" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][name]", with: "<script>alert('test')</script>"
+              expect(find_field("item[map_points][][name]").value).to eq ""
+            end
+          end
+        end
+      end
+
+      it "prevents script tags in marker text" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][text]", with: "<script>alert('test')</script>"
+              expect(find_field("item[map_points][][text]").value).to eq ""
+            end
+          end
+        end
+      end
+
+      it "removes HTML tags from marker name" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][name]", with: "テスト"
+              expect(find_field("item[map_points][][name]").value).to eq "テスト"
+            end
+          end
+        end
+      end
+
+      it "removes HTML tags from marker text" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][text]", with: "テスト"
+              expect(find_field("item[map_points][][text]").value).to eq "テスト"
+            end
           end
         end
       end
@@ -242,6 +311,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_cms_page_path(site: site, id: item)
+      wait_for_all_ckeditors_ready
 
       within "#item-form" do
         ensure_addon_opened("#addon-map-agents-addons-page")
@@ -258,6 +328,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_turbo_frame "#workflow-branch-frame"
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       item.reload
 

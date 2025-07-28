@@ -40,8 +40,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "treated"
         )
-        item.update_workflow_user(site, user)
-        item.update_workflow_agent(site, nil)
+        item.update_workflow_user(site, user, nil)
+        item.update_workflow_agent(site, nil, nil)
         item.save!
         item.class.find(item.id)
       end
@@ -97,8 +97,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "treated"
         )
-        item.update_workflow_user(site, delegatee_user)
-        item.update_workflow_agent(site, user)
+        item.update_workflow_user(site, delegatee_user, delegatee_group)
+        item.update_workflow_agent(site, user, nil)
         item.save!
         item.class.find(item.id)
       end
@@ -154,8 +154,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
           destination_group_ids: form.destination_group_ids, destination_user_ids: form.destination_user_ids,
           destination_treat_state: "untreated"
         )
-        item.update_workflow_user(site, delegatee_user)
-        item.update_workflow_agent(site, user)
+        item.update_workflow_user(site, delegatee_user, delegatee_group)
+        item.update_workflow_agent(site, user, nil)
         item.save!
         item.class.find(item.id)
       end
@@ -268,8 +268,8 @@ describe Gws::Elasticsearch::Indexer::Workflow2FileJob, dbscope: :example, es: t
       end
 
       omittable_fields = %i[
-        id mode text categories custom_group_ids permission_level member_ids member_group_ids member_custom_group_ids
-        readable_member_ids readable_group_ids readable_custom_group_ids
+        id mode text categories custom_group_ids member_ids member_group_ids member_custom_group_ids
+        readable_member_ids readable_group_ids readable_custom_group_ids groups group_names
         text_index site_id attachment
       ]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }

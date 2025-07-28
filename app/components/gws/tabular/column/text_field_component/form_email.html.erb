@@ -1,0 +1,14 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do %>
+  <% if column.i18n_state == "enabled" %>
+    <% SS.locales_in_order.each do |lang| %>
+      <div class="gws-tabular-column-group">
+        <div class="depth-2"><%= t("ss.options.lang.#{lang}", default: lang.to_s) %></div>
+        <div class="depth-2">
+          <%= email_field_tag("#{form.object_name}[col_#{column.id}_translations][#{lang}]", value.try(:[], lang), id: nil) %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <%= email_field_tag("#{form.object_name}[col_#{column.id}]", value, id: nil) %>
+  <% end %>
+<% end %>

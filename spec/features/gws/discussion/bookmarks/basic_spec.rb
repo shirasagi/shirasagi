@@ -13,9 +13,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example, js: true do
   let!(:index_path) { gws_discussion_forums_path(mode: '-', site: site) }
 
   it "bookmark from portal" do
-    login_user(user1)
-
-    visit index_path
+    login_user(user1, to: index_path)
     click_on forum.name
     within "#comment-#{topic.id}" do
       expect(page).to have_no_css(".bookmark-comment .active")
@@ -36,9 +34,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example, js: true do
     end
     expect(page).to have_css(".gws-discussion")
 
-    login_user(user2)
-
-    visit index_path
+    login_user(user2, to: index_path)
     click_on forum.name
     within "#comment-#{topic.id}" do
       expect(page).to have_no_css(".bookmark-comment .active")
@@ -61,9 +57,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example, js: true do
   end
 
   it "bookmark from comments" do
-    login_user(user1)
-
-    visit index_path
+    login_user(user1, to: index_path)
     click_on forum.name
     within ".gws-discussion-thread" do
       click_on topic.name
@@ -86,9 +80,7 @@ describe "gws_discussion_topics", type: :feature, dbscope: :example, js: true do
     end
     expect(page).to have_css(".gws-discussion")
 
-    login_user(user2)
-
-    visit index_path
+    login_user(user2, to: index_path)
     click_on forum.name
     within ".gws-discussion-thread" do
       click_on topic.name

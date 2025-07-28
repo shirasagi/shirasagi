@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 git_source(:github) { |repo_name| "https://github.com/#{repo_name}" }
 
-gem 'rails', '~> 7.1.0'
+gem 'rails', '~> 8.0.0'
 gem 'sprockets'
 gem 'jsbundling-rails'
 gem 'sprockets-rails' # Rails 7.1 以降では明示的な組み込みが必要
@@ -17,14 +17,18 @@ gem 'sdoc', group: :doc
 # 'bundle exec rails' や 'bundle exec rake' を使用しなければならなくなるので、バージョンを固定する。
 gem 'rdoc', '~> 6.3.0', group: :doc #
 
-# Server
+# Server (currently supported)
+gem 'puma'
+gem 'puma_worker_killer'
+
+# Server (currently not recommended)
 gem 'unicorn'
 gem 'unicorn-worker-killer'
+
 
 # Database
 gem 'mongoid'
 gem 'mongo_session_store'
-gem 'mongoid-grid_fs'
 
 # Assets
 gem 'autosize-rails'
@@ -56,8 +60,10 @@ gem 'kaminari-mongoid'
 gem 'kramdown'
 gem 'kramdown-parser-gfm'
 gem 'liquid'
+gem 'mail' # must load 'mail' before loading 'mail-iso-2022-jp'
 gem 'mail-iso-2022-jp'
 gem 'marcel'
+gem 'mime-types'
 gem 'mini_magick'
 gem 'mongoid-geospatial'
 gem 'net-ldap'
@@ -117,7 +123,7 @@ gem 'faraday'
 gem 'elasticsearch', '~> 7'
 
 # line
-gem 'line-bot-api'
+gem 'line-bot-api', '~> 1.29'
 
 # kintone
 gem 'kintone', git: "https://github.com/jue58/kintone.git"
@@ -136,7 +142,6 @@ group :development, :test do
   gem 'pry-doc', require: false
   gem 'pry-rails', require: false
   gem 'pry-stack_explorer', require: false
-  gem 'puma', require: false
   gem 'rails-controller-testing', require: false
   gem 'rspec', require: false
   gem 'rspec-collection_matchers', require: false

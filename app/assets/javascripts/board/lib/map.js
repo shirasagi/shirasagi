@@ -70,7 +70,7 @@ this.Board_Map = (function () {
   };
 
   Board_Map.prototype.initPopup = function () {
-    $("body").append('<div id="marker-popup"><div class="closer"></div><div class="content"></div></div>');
+    $("body").append('<div id="marker-popup"><button type="button" class="closer" aria-label="閉じる"></button><div class="content"></div></div>');
     this.popup = $('#marker-popup');
     this.popup.hide();
     this.popupOverlay = new ol.Overlay({

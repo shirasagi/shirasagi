@@ -15,10 +15,11 @@ SS_ButtonTo.render = function() {
 };
 
 SS_ButtonTo.invokeAction = function(ev) {
-  var $button = $(ev.target);
+  var $button = $(ev.currentTarget);
   var action = $button.data('ss-button-to-action');
   var method = $button.data('ss-button-to-method') || 'post';
   method = method.toString().toLowerCase();
+  var turbo = $button.data('turbo');
 
   var $form = $("<form/>", { action: action, method: method === "get" ? "get" : "post" });
   if (method !== "get") {
@@ -28,6 +29,9 @@ SS_ButtonTo.invokeAction = function(ev) {
   }
   if (method !== 'get' && method !== 'post') {
     $form.append($("<input/>", { name: "_method", value: method, type: "hidden" }));
+  }
+  if (turbo) {
+    $form.attr("data-turbo", true);
   }
 
   var params = $button.data('ss-button-to-params');
@@ -55,5 +59,17 @@ SS_ButtonTo.invokeAction = function(ev) {
   }
 
   ev.preventDefault();
-  $form.appendTo(document.body)[0].requestSubmit();
+
+  var appendTo;
+  if (turbo) {
+    var $turboFrameElement = $button.closest("turbo-frame");
+    if ($turboFrameElement[0]) {
+      appendTo = $turboFrameElement[0];
+    }
+  }
+  if (!appendTo) {
+    appendTo = document.body;
+  }
+
+  $form.appendTo(appendTo)[0].requestSubmit();
 };

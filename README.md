@@ -5,7 +5,6 @@ SHIRASAGI is Contents Management System.
 ## Code Status
 
 [![Ruby](https://github.com/shirasagi/shirasagi/actions/workflows/ruby.yml/badge.svg)](https://github.com/shirasagi/shirasagi/actions/workflows/ruby.yml)
-[![Coverage Status](https://coveralls.io/repos/shirasagi/shirasagi/badge.png)](https://coveralls.io/r/shirasagi/shirasagi)
 [![Code Climate](https://api.codeclimate.com/v1/badges/e6274965ec75ce8fd605/test_coverage)](https://codeclimate.com/github/shirasagi/shirasagi/test_coverage)
 [![GitHub version](https://badge.fury.io/gh/shirasagi%2Fshirasagi.svg)](http://badge.fury.io/gh/shirasagi%2Fshirasagi)
 
@@ -20,7 +19,7 @@ SHIRASAGI is Contents Management System.
 ## Platform
 
 - AlmaLinux, RockyLinux, Ubuntu
-- Ruby 3.1 or 3.2
+- Ruby 3.2 or 3.3
 - Ruby on Rails 7.1
 - MongoDB 6.0 or 7.0
 - Unicorn

@@ -118,6 +118,7 @@ ja:
         - データセット_来歴情報
         - データセット_対象地域
         - データセット_対象期間
+        - データセット_作成者
         - データセット_連絡先名称
         - データセット_連絡先メールアドレス
         - データセット_連絡先電話番号
@@ -128,6 +129,7 @@ ja:
         - ファイル_タイトル
         - ファイル_アクセスURL
         - ファイル_ダウンロードURL
+        - ファイル_説明
         - ファイル形式
         - ファイル_ライセンス
         - ファイル_ステータス
@@ -139,6 +141,7 @@ ja:
         - ファイル_言語
         - ファイル_準拠する標準
         - ファイル_API対応有無
+        - ファイル_著作権表記
     download_reports:
       dataset_data: データセット/データ名
     errors:
@@ -991,6 +994,7 @@ ja:
         metadata_dataset_follow_standards: 準拠する標準
         metadata_dataset_related_document: 関連ドキュメント
         metadata_dataset_target_period: 対象期間
+        metadata_dataset_creator: 作成者
         metadata_dataset_contact_name: 連絡先名称
         metadata_dataset_contact_email: 連絡先メールアドレス
         metadata_dataset_contact_tel: 連絡先電話番号
@@ -1006,6 +1010,7 @@ ja:
         metadata_file_terms_of_service: 利用規約
         metadata_file_related_document: 関連ドキュメント
         metadata_file_follow_standards: 準拠する標準
+        metadata_file_copyright: 著作権表記
       opendata/addon/profile_setting:
         edit_profile_state: プロフィールの編集
 
@@ -1364,17 +1369,22 @@ ja:
 
   job:
     models:
-      opendata/csv2rdf_converter/job: RDF変換ジョブ
-      opendata/facility/assoc_job: 施設CSV取り込みジョブ
-      opendata/cms_integration/assoc_job: 記事連携設定ジョブ
-      opendata/notify_dataset_plan_job: データセット更新通知ジョブ
-      opendata/dataset/export_job: データセットエクスポートジョブ
-      opendata/dataset/import_job: データセットインポートジョブ
-      opendata/resource_download_history_update_job: リソースダウンロード履歴更新ジョブ
-      opendata/resource_preview_history_update_job: リソースプレビュー履歴更新ジョブ
-      opendata/harvest/run_job: ハーベスト/実行ジョブ
-      opendata/harvest/export_job: ハーベスト/エクスポートジョブ
-      opendata/harvest/import_job: ハーベスト/インポートジョブ
-      opendata/harvest/purge_job: ハーベスト/データセット削除ジョブ
-      opendata/metadata/import_datasets_job: メタデータインポートジョブ
-      opendata/metadata/destroy_datasets_job: メタデータ関連データセット削除ジョブ
+      opendata/csv2rdf_converter/job: オープンデータ/RDF変換ジョブ
+      opendata/facility/assoc_job: オープンデータ/施設CSV取り込みジョブ
+      opendata/cms_integration/assoc_job: オープンデータ/記事連携設定ジョブ
+      opendata/notify_dataset_plan_job: オープンデータ/データセット更新通知ジョブ
+      opendata/dataset/export_job: オープンデータ/データセットエクスポートジョブ
+      opendata/dataset/import_job: オープンデータ/データセットインポートジョブ
+      opendata/resource_download_history_update_job: オープンデータ/リソースダウンロード履歴更新ジョブ
+      opendata/resource_preview_history_update_job: オープンデータ/リソースプレビュー履歴更新ジョブ
+      opendata/harvest/run_job: オープンデータ・ハーベスト/実行ジョブ
+      opendata/harvest/export_job: オープンデータ・ハーベスト/エクスポートジョブ
+      opendata/harvest/import_job: オープンデータ・ハーベスト/インポートジョブ
+      opendata/harvest/purge_job: オープンデータ・ハーベスト/データセット削除ジョブ
+      opendata/metadata/import_datasets_job: オープンデータ・メタデータ/インポートジョブ
+      opendata/metadata/destroy_datasets_job: オープンデータ・メタデータ/関連データセット削除ジョブ
+      opendata/dataset_access_report_job: オープンデータ/データセットアクセス履歴レポート
+      opendata/resource_download_history_archive_job: オープンデータ/リソースダウンロード履歴アーカイブ化
+      opendata/resource_download_report_job: オープンデータ/リソースダウンロード履歴レポート
+      opendata/resource_preview_history_archive_job: オープンデータ/リソースプレビュー履歴アーカイブ化
+      opendata/resource_preview_report_job: オープンデータ/リソースプレビュー履歴レポート

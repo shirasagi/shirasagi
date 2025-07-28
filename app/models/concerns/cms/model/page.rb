@@ -4,6 +4,7 @@ module Cms::Model::Page
   include Cms::Content
   include Cms::RedirectPage
   include Cms::Reference::Layout
+  include Cms::PageExpirationSetting
 
   included do
     include Cms::Model::PageDiscriminatorRetrieval

@@ -17,8 +17,8 @@ class KeyVisual::Image
   belongs_to_file :file
 
   validates :file_id, presence: true
-  validates :display_remarks, inclusion: { in: I18n.t("key_visual.options.display_remarks").keys.map(&:to_s) },
-    if: -> { display_remarks.present? }
+  validates :link_url, url: { absolute_path: true, allow_blank: true }
+  validate :validate_display_remark
 
   permit_params :link_url, :remark_html
   permit_params display_remarks: []
@@ -40,5 +40,12 @@ class KeyVisual::Image
     I18n.t("key_visual.options.display_remarks").select do |k, v|
       display_remarks.include?(k.to_s)
     end.values.join(", ")
+  end
+
+  def validate_display_remark
+    self.display_remarks = display_remarks.select(&:present?)
+    return if display_remarks.blank?
+    keys = I18n.t("key_visual.options.display_remarks").keys.map(&:to_s)
+    errors.add :display_remarks, :invalid if (display_remarks - keys).present?
   end
 end

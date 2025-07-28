@@ -1,7 +1,7 @@
 class Inquiry::Mailer < ApplicationMailer
   helper Inquiry::MailerHelper
 
-  def notify_mail(site, node, answer, notice_email)
+  def notify_mail(site, node, answer, email)
     @node = node
     @answer = answer
     @answer_url = ::File.join(
@@ -26,7 +26,7 @@ class Inquiry::Mailer < ApplicationMailer
     @answer_data = @answer_data.join("\n")
 
     from = Cms.sender_address(node, site)
-    mail(from: from, to: notice_email, message_id: Cms.generate_message_id(@node.cur_site || @node.site))
+    mail(from: from, to: email, message_id: Cms.generate_message_id(@node.cur_site || @node.site))
   end
 
   def reply_mail(site, node, answer)

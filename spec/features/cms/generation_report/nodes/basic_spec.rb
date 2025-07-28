@@ -115,7 +115,7 @@ describe Cms::GenerationReport::TitlesController, type: :feature, dbscope: :exam
             click_on I18n.t("ss.buttons.download")
           end
 
-          csv = SS::ChunkReader.new(page.html).to_a.join
+          csv = page.html
           csv.force_encoding("UTF-8")
           csv = csv[1..-1]
           SS::Csv.open(StringIO.new(csv)) do |csv|

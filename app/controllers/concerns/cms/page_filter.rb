@@ -16,7 +16,7 @@ module Cms::PageFilter
     super
     return unless @cur_node
     return if (@item.filename =~ /^#{::Regexp.escape(@cur_node.filename)}\//) && (@item.depth == @cur_node.depth + 1)
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def default_form(node)
@@ -160,6 +160,12 @@ module Cms::PageFilter
         copy = @item.new_clone
         copy.master = @item
         result = copy.save
+        if result
+          task.log "created #{copy.filename}(#{copy.id})"
+        else
+          task.log "failed\n#{copy.errors.full_messages.join("\n")}"
+        end
+        result
       end
     end
 
@@ -303,7 +309,14 @@ module Cms::PageFilter
 
     task.run_with(rejected: rejected) do
       task.log "# #{I18n.t("ss.buttons.move")}"
-      render_update @item.move(destination), location: location, render: { template: "move" }, notice: t('ss.notice.moved')
+      task.log "#{@item.filename}(#{@item.id})"
+      result = @item.move(destination)
+      render_update result, location: location, render: { template: "move" }, notice: t('ss.notice.moved')
+      if result
+        task.log "moved to #{destination}"
+      else
+        task.log "failed\n#{@item.errors.full_messages.join("\n")}"
+      end
     end
   end
 
@@ -326,7 +339,14 @@ module Cms::PageFilter
 
       @item.attributes = get_params
       @copy = @item.new_clone
-      render_update @copy.save, location: { action: :index }, render: { template: "copy" }
+      result = @copy.save
+      render_update result, location: { action: :index }, render: { template: "copy" }
+
+      if result
+        task.log "created #{@copy.filename}(#{@copy.id})"
+      else
+        task.log "failed\n#{@copy.errors.full_messages.join("\n")}"
+      end
     end
   end
 

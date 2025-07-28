@@ -26,10 +26,10 @@ describe "history_cms_logs", type: :feature, dbscope: :example do
       click_on I18n.t("ss.links.download")
       click_on I18n.t("ss.buttons.download")
 
-      csv_source = SS::ChunkReader.new(page.html).to_a.join
+      csv_source = page.html
       SS::Csv.open(StringIO.new(csv_source)) do |csv|
         table = csv.read
-        expect(table.length).to eq 7
+        expect(table.length).to eq 6
         expect(table.headers).to include(*csv_header)
         table[0].tap do |row|
           expect(row[History::Log.t(:created)]).to be_present

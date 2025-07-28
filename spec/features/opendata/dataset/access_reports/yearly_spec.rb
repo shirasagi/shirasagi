@@ -68,8 +68,7 @@ describe Opendata::Dataset::AccessReportsController, type: :feature, dbscope: :e
       end
       click_on I18n.t("ss.links.download")
 
-      expect(page.response_headers["Transfer-Encoding"]).to eq "chunked"
-      csv = SS::ChunkReader.new(page.html).to_a.join
+      csv = page.html
       csv = csv.encode("UTF-8", "SJIS")
 
       table = ::CSV.parse(csv, headers: true)

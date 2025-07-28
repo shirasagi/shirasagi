@@ -1,24 +1,39 @@
 class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
-  def perform(site_id, node_id, page_id, action)
+  def perform(site_id, node_id, page_ids, action)
     return unless self.site.dataset_enabled?
     @dataset_node = Opendata::Node::Dataset.site(self.site).first
     return if @dataset_node.blank?
 
     @cms_site = Cms::Site.find(site_id)
     @cms_node = Cms::Node.site(@cms_site).find(node_id)
-    @cur_page = Cms::Page.site(@cms_site).node(@cms_node).find(page_id)
+    page_ids = [page_ids].flatten.uniq.compact
+    pages = Cms::Page.site(@cms_site).node(@cms_node)
+    if page_ids.present?
+      pages = pages.in(id: page_ids)
+    end
+    all_ids = pages.distinct(:id)
 
     @file_goes_to = []
 
     case action.to_sym
     when :create_or_update
-      if @cur_page.opendata_dataset_state.present? && @cur_page.opendata_dataset_state != 'none'
-        create_or_update_associated_dataset
-      else
-        close_associated_dataset
+      all_ids.each_slice(20) do |ids|
+        Cms::Page.site(@cms_site).node(@cms_node).in(id: ids).each do |page|
+          @cur_page = page
+          if @cur_page.try(:opendata_dataset_state).present? && @cur_page.opendata_dataset_state != 'none'
+            create_or_update_associated_dataset
+          else
+            close_associated_dataset
+          end
+        end
       end
     when :destroy
-      close_associated_dataset
+      all_ids.each_slice(20) do |ids|
+        Cms::Page.site(@cms_site).node(@cms_node).in(id: ids).each do |page|
+          @cur_page = page
+          close_associated_dataset
+        end
+      end
     end
 
     true

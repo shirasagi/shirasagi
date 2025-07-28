@@ -4,7 +4,7 @@
   end
 %>
 <nav class="mod-navi current-navi">
-  <h2><%= link_to @cur_site.menu_workload_label || t('modules.gws/workload'), gws_workload_main_path, class: 'icon-workload' %></h2>
+  <%= gws_menu_icon(:workload, 'modules.gws/workload', gws_workload_main_path) %>
   <h3><%= link_to t('gws/workload.tabs.work'), gws_workload_works_path(link_params(:year, :category, :client)), { class: 'work' } %></h3>
   <h3><%= link_to t('gws/workload.tabs.admin'), gws_workload_admins_path(link_params(:year, :category, :group, :user, :client)), { class: 'admin' } %></h3>
   <h3><%= link_to t('gws/workload.tabs.overtime'), gws_workload_overtimes_path(link_params(:year, :category, :group)), { class: 'overtime' } %></h3>

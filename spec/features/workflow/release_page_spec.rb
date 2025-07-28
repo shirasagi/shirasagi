@@ -60,8 +60,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        # no backups are created while requesting approve
-        expect(item.backups.count).to eq 1
+        expect(item.backups.count).to eq 2
 
         expect(Sys::MailLog.count).to eq 1
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -78,8 +77,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -97,8 +95,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
             level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
             created: be_within(30.seconds).of(Time.zone.now)
           })
-        # backup is created
-        expect(item.backups.count).to eq 2
+        expect(item.backups.count).to eq 3
 
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -123,8 +120,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           { level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
             created: be_within(30.seconds).of(Time.zone.now) }
         )
-        # backup is created
-        expect(item.backups.count).to eq 2
+        expect(item.backups.count).to eq 3
       end
     end
 
@@ -163,8 +159,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(item.release_date).to eq release_date
           expect(item.workflow_approvers.count).to eq 1
           expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-          # no backups are created while requesting approve
-          expect(item.backups.count).to eq 1
+          expect(item.backups.count).to eq 2
 
           expect(Sys::MailLog.count).to eq 1
           expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -181,8 +176,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           #
           # user1: approve request
           #
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
 
           within ".mod-workflow-approve" do
             fill_in "remand[comment]", with: approve_comment1
@@ -200,8 +194,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
               level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
               created: be_within(30.seconds).of(Time.zone.now)
             })
-          # backup is created
-          expect(item.backups.count).to eq 2
+          expect(item.backups.count).to eq 3
 
           expect(Sys::MailLog.count).to eq 2
           expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -226,8 +219,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
             { level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
               created: be_within(30.seconds).of(Time.zone.now) }
           )
-          # backup is created
-          expect(item.backups.count).to eq 3
+          expect(item.backups.count).to eq 4
         end
       end
     end

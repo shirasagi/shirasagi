@@ -1,0 +1,16 @@
+<dl class="see">
+  <dt><%= @item.class.t :name %></dt>
+  <dd><%= @item.name %></dd>
+
+  <dt><%= @item.class.t :filename %></dt>
+  <dd><%= @item.filename %></dd>
+
+  <dt><%= @item.class.t :layout_id %></dt>
+  <dd><%= @item.layout.try(:name) %></dd>
+
+  <dt><%= @item.class.t :order %></dt>
+  <dd><%= @item.order %></dd>
+
+  <dt><%= @item.class.t :expiration_setting_type %></dt>
+  <dd><%= @item.label(:expiration_setting_type) %></dd>
+</dl>

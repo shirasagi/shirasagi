@@ -671,4 +671,4 @@ en:
 
   job:
     models:
-      gws/affair/notify_compensatory_file_job: Notify compensatory file
+      gws/affair/notify_compensatory_file_job: Affair/Notify compensatory file

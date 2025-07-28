@@ -20,7 +20,7 @@
     <dd>
       <%= f.file_field :in_file, required: :required %>
       <% if @item.image? %>
-        <%= f.select :resizing, @model.resizing_options, { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
+        <%= f.select :resizing, @model.resizing_options(user: @cur_user, site: @cur_site, node: @cur_node), { include_blank: t("ss.resize_image") }, { class: "image-size" } %>
       <% end %>
     </dd>
   </dl>

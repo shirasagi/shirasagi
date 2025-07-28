@@ -9,9 +9,6 @@
   <dd><%= @item.label :twitter_auto_post %></dd>
 
   <% if @item.use_twitter_post? %>
-    <dt><%= @model.t :twitter_post_format %></dt>
-    <dd><%= @item.label :twitter_post_format %></dd>
-
     <% if @item.twitter_edit_auto_post_enabled? %>
       <dt><%= @model.t :twitter_edit_auto_post %></dt>
       <dd><%= @item.label :twitter_edit_auto_post %></dd>

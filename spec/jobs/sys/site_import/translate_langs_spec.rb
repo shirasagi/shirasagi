@@ -9,8 +9,7 @@ describe Sys::SiteImportJob, dbscope: :example do
 
     begin
       job = Sys::SiteExportJob.new
-      job.task = Tasks::Cms.mock_task(source_site_id: source_site.id)
-      job.perform
+      job.bind("site_id" => source_site.id).perform
       output_zip = job.instance_variable_get(:@output_zip)
 
       output_zip
@@ -24,11 +23,10 @@ describe Sys::SiteImportJob, dbscope: :example do
 
     it do
       job = Sys::SiteImportJob.new
-      job.task = Tasks::Cms.mock_task(target_site_id: destination_site.id, import_file: file_path)
-      job.perform
+      job.bind("site_id" => destination_site.id).perform(file_path)
 
-      expect(Translate::Lang.site(destination_site).count).to eq 1
-      dest_translate_lang = Translate::Lang.site(destination_site).first
+      expect(::Translate::Lang.site(destination_site).count).to eq 1
+      dest_translate_lang = ::Translate::Lang.site(destination_site).first
       expect(dest_translate_lang.name).to eq source_lang.name
       expect(dest_translate_lang.code).to eq source_lang.code
       expect(dest_translate_lang.mock_code).to eq source_lang.mock_code

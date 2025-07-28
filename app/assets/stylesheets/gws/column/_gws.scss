@@ -142,11 +142,15 @@ dl.gws-column-see {
   > dd {
     margin: 0 0 0 calc((100% - 20px) * 0.3 + 20px);
     .prefix {
+      word-break: keep-all;
+
       &:empty {
         display: none;
       }
     }
     .postfix {
+      word-break: keep-all;
+
       &:empty {
         display: none;
       }
