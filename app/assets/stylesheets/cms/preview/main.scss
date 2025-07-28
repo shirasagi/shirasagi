@@ -212,7 +212,7 @@
   .ss-preview-overlay-tool {
     @include display-flex;
     position: absolute;
-    z-index: 999;
+    z-index: 99;
     bottom: 100%;
     left: -3px;
     box-sizing: border-box;

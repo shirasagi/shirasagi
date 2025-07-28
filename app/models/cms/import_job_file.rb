@@ -129,7 +129,7 @@ class Cms::ImportJobFile
   end
 
   def entry_to_filename(entry)
-    filename = entry.name.force_encoding("utf-8").scrub
+    filename = SS::Zip.safe_zip_entry_name(entry).scrub
     return if filename.blank?
 
     virtual_path = "/$"

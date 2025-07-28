@@ -1,11 +1,21 @@
 class Sys::SiteExportJob < SS::ApplicationJob
-  include Job::SS::TaskFilter
+  #include Job::SS::TaskFilter
 
   cattr_accessor :export_root
   self.export_root = "#{Rails.root}/private/export"
 
+  def mock_task
+    task = OpenStruct.new
+    def task.log(message)
+      Rails.logger.info(message)
+      puts message
+    end
+    task
+  end
+
   def perform(opts = {})
-    @src_site = Cms::Site.find(@task.source_site_id)
+    @src_site = Cms::Site.find(site.id)
+    @task = mock_task
 
     @output_dir = "#{self.class.export_root}/site-#{@src_site.host}"
     @output_zip = "#{@output_dir}.ssr"
@@ -43,11 +53,13 @@ class Sys::SiteExportJob < SS::ApplicationJob
     invoke :export_cms_theme_templates
     invoke :export_cms_source_cleaner_templates
     invoke :export_cms_loop_settings
+    invoke :export_cms_check_links_ignore_urls
     invoke :export_ezine_columns
     invoke :export_inquiry_columns
     invoke :export_kana_dictionaries
     invoke :export_opendata_dataset_groups
     invoke :export_opendata_licenses
+    invoke :export_guide_diagram_point
 
     # files
     invoke :export_cms_files
@@ -58,6 +70,9 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
     FileUtils.rm_rf(@output_dir)
     @task.log("Completed at #{I18n.l(Time.zone.now, format: :picker)}.")
+  rescue => e
+    puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+    raise
   end
 
   private
@@ -209,6 +224,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
     export_documents "cms_loop_settings", Cms::LoopSetting
   end
 
+  def export_cms_check_links_ignore_urls
+    export_documents "cms_check_links_ignore_urls", Cms::CheckLinks::IgnoreUrl
+  end
+
   def export_ezine_columns
     export_documents "ezine_columns", Ezine::Column
   end
@@ -227,6 +246,10 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
   def export_opendata_licenses
     export_documents "opendata_licenses", Opendata::License
+  end
+
+  def export_guide_diagram_point
+    export_documents "guide_diagram_point", Guide::Diagram::Point
   end
 
   def export_cms_files

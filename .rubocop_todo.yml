@@ -566,11 +566,6 @@ Lint/RedundantStringCoercion:
     - 'lib/tasks/ss/file.rake'
 
 # Offense count: 1
-Lint/SelfAssignment:
-  Exclude:
-    - 'app/models/concerns/fs/grid_fs.rb'
-
-# Offense count: 1
 Lint/ShadowedException:
   Exclude:
     - 'app/models/concerns/voice/downloadable.rb'
@@ -1810,11 +1805,6 @@ Style/RedundantCondition:
     - 'app/controllers/opendata/agents/nodes/mypage/mypage_controller.rb'
     - 'lib/ss/command.rb'
 
-# Offense count: 1706
-# This cop supports safe autocorrection (--autocorrect).
-Style/RedundantConstantBase:
-  Enabled: false
-
 # Offense count: 3
 # This cop supports safe autocorrection (--autocorrect).
 Style/RedundantCurrentDirectoryInPath:
@@ -2099,18 +2089,3 @@ Style/TrivialAccessors:
 Style/VariableInterpolation:
   Exclude:
     - 'app/models/board/post.rb'
-
-# Offense count: 13
-# This cop supports unsafe autocorrection (--autocorrect-all).
-# Configuration parameters: EnforcedStyle.
-# SupportedStyles: forbid_for_all_comparison_operators, forbid_for_equality_operators_only, require_for_all_comparison_operators, require_for_equality_operators_only
-Style/YodaCondition:
-  Exclude:
-    - 'app/controllers/opendata/workflow/idea_comments_controller.rb'
-    - 'app/controllers/workflow/wizard_controller.rb'
-    - 'app/models/concerns/board/addon/list.rb'
-    - 'app/models/concerns/cms/addon/list.rb'
-    - 'app/models/concerns/recommend/addon/content_list.rb'
-    - 'app/models/concerns/sitemap/addon/body.rb'
-    - 'app/models/gws/column/value/radio_button.rb'
-    - 'app/models/workflow/extensions/route.rb'

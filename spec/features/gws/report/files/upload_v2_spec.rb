@@ -51,7 +51,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within_dialog do
         wait_for_event_fired "turbo:frame-load" do
           within "form.search" do
-            check I18n.t("sns.user_file")
+            # check I18n.t("sns.user_file")
+            first("[name='s[types][]'][value='user_file']").click
           end
         end
       end

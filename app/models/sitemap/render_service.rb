@@ -2,8 +2,7 @@ class Sitemap::RenderService
   include ActiveModel::Model
 
   SITEMAP_XMLNS = "http://www.sitemaps.org/schemas/sitemap/0.9".freeze
-  REQUIRED_FIELDS = %i[id _id route name filename site_id depth order redirect_link rss_link].freeze
-  EMPTY_ARRAY = [].freeze
+  REQUIRED_FIELDS = %i[id _id route name filename site_id depth order redirect_link rss_link link_url].freeze
 
   attr_accessor :cur_site, :cur_node, :page
 
@@ -50,15 +49,27 @@ class Sitemap::RenderService
 
     attr_accessor :type, :id, :name, :filename, :url, :full_url, :depth, :order
 
+    EXCLUDE_PAGE_MODELS = [Ads::Banner].freeze
+
     class << self
-      def from_page(page, cur_site:, type: :page, url_item: nil)
+      def from_page(page, cur_site:, url_item: nil)
+        return nil if EXCLUDE_PAGE_MODELS.include?(page.class)
+
         new(
-          type: type, id: page.id, name: url_item.try(:name) || page.name, filename: page.filename,
+          type: :page, id: page.id, name: url_item.try(:name) || page.name, filename: page.filename,
           url: page.url, full_url: page.full_url, order: page.order, depth: page.depth)
+      rescue => e
+        Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+        nil
       end
 
       def from_node(node, cur_site:, url_item: nil)
-        from_page(node, cur_site: cur_site, type: :node, url_item: url_item)
+        new(
+          type: :node, id: node.id, name: url_item.try(:name) || node.name, filename: node.filename,
+          url: node.url, full_url: node.full_url, order: node.order, depth: node.depth)
+      rescue => e
+        Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+        nil
       end
 
       def from_node_sub_url(node, cur_site:, url_item:)
@@ -68,6 +79,9 @@ class Sitemap::RenderService
           type: :node_sub_url, id: node.id, name: url_item.try(:name) || node.name,
           filename: url_item.try(:filename) || node.filename,
           url: url_item.try(:url) || node.url, full_url: full_url, order: node.order, depth: node.depth)
+      rescue => e
+        Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+        nil
       end
     end
   end
@@ -112,17 +126,17 @@ class Sitemap::RenderService
   end
 
   def load_contents_with_urls
-    return EMPTY_ARRAY if page.sitemap_urls.blank?
+    return SS::EMPTY_ARRAY if page.sitemap_urls.blank?
 
     url_items = page.sitemap_urls.map { |url| UrlItem.parse(url) }
     url_items.compact!
-    return EMPTY_ARRAY if url_items.blank?
+    return SS::EMPTY_ARRAY if url_items.blank?
 
     url_items.select! do |url_item|
       next true if url_item.authority.blank?
       cur_site.domains.include?(url_item.authority)
     end
-    return EMPTY_ARRAY if url_items.blank?
+    return SS::EMPTY_ARRAY if url_items.blank?
 
     contents = url_items.map do |url_item|
       create_fake_content(url_item)
@@ -145,9 +159,6 @@ class Sitemap::RenderService
       node.cur_site = cur_site
       node.site = cur_site
       FakeContent.from_node(node, cur_site: cur_site)
-    rescue => e
-      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-      nil
     end
 
     if page.sitemap_page_state != "hide"
@@ -161,9 +172,6 @@ class Sitemap::RenderService
         page.cur_site = cur_site
         page.site = cur_site
         FakeContent.from_page(page, cur_site: cur_site)
-      rescue => e
-        Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-        nil
       end
     end
     entries.compact!
@@ -227,7 +235,7 @@ class Sitemap::RenderService
       rest = url_item.filename[filename.length..-1]
       path = "/.s#{cur_site.id}/nodes/#{node.route}#{rest}"
       spec = Rails.application.routes.recognize_path(path, method: "GET") rescue {}
-      return FakeContent.from_node_sub_url(node, cur_site: cur_site, url_item: url_item) if node if spec[:cell]
+      return FakeContent.from_node_sub_url(node, cur_site: cur_site, url_item: url_item) if spec[:cell]
     end
 
     nil

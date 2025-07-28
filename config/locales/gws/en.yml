@@ -99,6 +99,7 @@ en:
     buttons:
       unset: Cancel
       add_item: Add a new element
+      change_menu_icon: Change menu icon
     confirm:
       readable_setting:
         empty: "No viewer has been entered. \\n Are you sure you want everyone to see it?"
@@ -409,6 +410,10 @@ en:
         menu_contrast_state: Contrast
         menu_presence_label: Display presence management
         menu_presence_state: Display presence management
+        menu_tabular_label: Display general purpose database
+        menu_tabular_state: Display general purpose database
+        menu_conf_label: Display site settings
+        menu_conf_state: Display site settings
       gws/addon/system/notice_setting:
         notice_schedule_state: Schedule
         notice_todo_state: ToDo
@@ -424,6 +429,7 @@ en:
         notice_discussion_state: Electronic conference rooms
         notice_report_state: Reports
         notice_announcement_state: Announcements
+        notice_tabular_state: Tabular
         send_notice_email_state: Personal e-mail forwarding
       gws/addon/system/log_setting:
         log_save_days: Log retention days

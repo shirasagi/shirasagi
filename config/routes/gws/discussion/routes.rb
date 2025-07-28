@@ -66,7 +66,7 @@ Rails.application.routes.draw do
       get 'unseen/:id' => "unseen#index", id: /\d+/, as: :unseen
       scope path: 'forums/:forum_id/todos/:todo_id', as: :forum_todo do
         resources :comments, controller: "/gws/schedule/todo/apis/comments",
-                  concerns: [:deletion], except: [:index, :new, :show, :destroy_all]
+                  concerns: [:deletion], except: [:index, :new, :show]
       end
       post "bookmark/:forum_id/:id" => "bookmark#index", id: /\d+/, as: :bookmark
     end

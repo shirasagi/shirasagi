@@ -55,7 +55,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       expect(survey_form.name).to eq form_name
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/radio_button") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/radio_button") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: radio_name
@@ -68,7 +68,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       clear_notice
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/section") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/section") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: section1_name
@@ -78,7 +78,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       clear_notice
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/text_field") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/text_field") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: section1_text_name
@@ -88,7 +88,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       clear_notice
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/section") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/section") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: section2_name
@@ -98,7 +98,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       clear_notice
 
       within ".gws-column-list-toolbar[data-placement='bottom']" do
-        wait_for_event_fired("gws:column:added") { click_on I18n.t("gws.columns.gws/text_field") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/column/text_field") }
       end
       within "form.gws-column-form" do
         fill_in "item[name]", with: section2_text_name
@@ -366,47 +366,49 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
       end
       wait_for_download
 
-      SS::Csv.open(downloads.first) do |csv|
-        csv_table = csv.read
-        expect(csv_table.length).to eq 4
-        expect(csv_table.headers.length).to eq 6
-        expect(csv_table.headers).to include(radio_column.name, section1_text_column.name, section2_text_column.name)
-        csv_table[0].tap do |csv_row|
-          expect(csv_row.length).to eq 6
-          expect(csv_row[0]).to be_present
-          expect(csv_row[1]).to eq user1.name
-          expect(csv_row[2]).to eq user1.uid
-          expect(csv_row[3]).to eq radio_option0
-          expect(csv_row[4]).to be_blank
-          expect(csv_row[5]).to be_blank
-        end
-        csv_table[1].tap do |csv_row|
-          expect(csv_row.length).to eq 6
-          expect(csv_row[0]).to be_present
-          expect(csv_row[1]).to eq user2.name
-          expect(csv_row[2]).to eq user2.uid
-          expect(csv_row[3]).to eq radio_option1
-          expect(csv_row[4]).to eq section1_text_value
-          expect(csv_row[5]).to be_blank
-        end
-        csv_table[2].tap do |csv_row|
-          expect(csv_row.length).to eq 6
-          expect(csv_row[0]).to be_present
-          expect(csv_row[1]).to eq user3.name
-          expect(csv_row[2]).to eq user3.uid
-          expect(csv_row[3]).to eq radio_option2
-          expect(csv_row[4]).to be_blank
-          expect(csv_row[5]).to eq section2_text_value
-        end
-        csv_table[3].tap do |csv_row|
-          expect(csv_row.length).to eq 6
-          expect(csv_row[0]).to be_present
-          expect(csv_row[1]).to eq user4.name
-          expect(csv_row[2]).to eq user4.uid
-          option_value = with_default_locale { "#{I18n.t("gws/column.other_value")} : #{radio_other1}" }
-          expect(csv_row[3]).to eq option_value
-          expect(csv_row[4]).to be_blank
-          expect(csv_row[5]).to be_blank
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.open(downloads.first) do |csv|
+          csv_table = csv.read
+          expect(csv_table.length).to eq 4
+          expect(csv_table.headers.length).to eq 6
+          expect(csv_table.headers).to include(radio_column.name, section1_text_column.name, section2_text_column.name)
+          csv_table[0].tap do |csv_row|
+            expect(csv_row.length).to eq 6
+            expect(csv_row[0]).to be_present
+            expect(csv_row[1]).to eq user1.name
+            expect(csv_row[2]).to eq user1.uid
+            expect(csv_row[3]).to eq radio_option0
+            expect(csv_row[4]).to be_blank
+            expect(csv_row[5]).to be_blank
+          end
+          csv_table[1].tap do |csv_row|
+            expect(csv_row.length).to eq 6
+            expect(csv_row[0]).to be_present
+            expect(csv_row[1]).to eq user2.name
+            expect(csv_row[2]).to eq user2.uid
+            expect(csv_row[3]).to eq radio_option1
+            expect(csv_row[4]).to eq section1_text_value
+            expect(csv_row[5]).to be_blank
+          end
+          csv_table[2].tap do |csv_row|
+            expect(csv_row.length).to eq 6
+            expect(csv_row[0]).to be_present
+            expect(csv_row[1]).to eq user3.name
+            expect(csv_row[2]).to eq user3.uid
+            expect(csv_row[3]).to eq radio_option2
+            expect(csv_row[4]).to be_blank
+            expect(csv_row[5]).to eq section2_text_value
+          end
+          csv_table[3].tap do |csv_row|
+            expect(csv_row.length).to eq 6
+            expect(csv_row[0]).to be_present
+            expect(csv_row[1]).to eq user4.name
+            expect(csv_row[2]).to eq user4.uid
+            option_value = with_default_locale { "#{I18n.t("gws/column.other_value")} : #{radio_other1}" }
+            expect(csv_row[3]).to eq option_value
+            expect(csv_row[4]).to be_blank
+            expect(csv_row[5]).to be_blank
+          end
         end
       end
     end

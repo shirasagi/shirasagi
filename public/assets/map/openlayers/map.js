@@ -105,7 +105,7 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.initPopup = function () {
-    $("body").append('<div id="marker-popup"><div class="closer"></div><div class="content"></div></div>');
+    $("body").append('<div id="marker-popup"><button type="button" class="closer" aria-label="閉じる"></button><div class="content marker"></div></div>');
     this.popup = $('#marker-popup');
     this.popup.hide();
     this.popupOverlay = new ol.Overlay({
@@ -130,7 +130,7 @@ this.Openlayers_Map = (function () {
       };
     })(this));
     this.popup.find('.closer').on('click', (function (_this) {
-      return function (e) {
+      return function (_e) {
         _this.popupOverlay.setPosition(void 0);
         $(_this).blur();
         return false;
@@ -154,7 +154,7 @@ this.Openlayers_Map = (function () {
     this.map.on('click', (function (_this) {
       return function (e) {
         var feature;
-        feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
+        feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, _layer) {
           return feature;
         });
         if (feature) {
@@ -251,56 +251,65 @@ this.Openlayers_Map = (function () {
   };
 
   Openlayers_Map.prototype.renderMarkers = function (markers) {
-    var feature, iconSrc, id, marker, markerHtml, name, pos, style, text, html;
+    markers.forEach(marker => {
+      const iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
+      const style = this.createMarkerStyle(iconSrc);
 
-    for (id = 0; id < markers.length; id++) {
-      marker = markers[id];
-      iconSrc = marker['image'] || this.markerIcon || '/assets/img/openlayers/marker1.png';
-      style = this.createMarkerStyle(iconSrc);
+      const name = marker['name'];
+      const text = marker['text'];
+      const html = marker['html'];
+      const pos = [marker['loc'][0], marker['loc'][1]];
 
-      name = marker['name'];
-      text = marker['text'];
-      html = marker['html'];
-      pos = [marker['loc'][0], marker['loc'][1]];
-
-      markerHtml = "";
+      let markerHtml = "";
       if (html) {
         markerHtml = html;
       } else if (name || text) {
+        const $markerContent = $("<div/>");
         if (name) {
-          markerHtml += '<p>' + name + '</p>';
+          $markerContent.append($("<p/>", { class: "marker-name" }).text(name));
         }
         if (text) {
-          $.each(text.split(/[\r\n]+/), function () {
-            if (this.match(/^https?:\/\//)) {
-              markerHtml += '<p><a href="' + this + '">' + this + '</a></p>';
-            } else {
-              markerHtml += '<p>' + this + '</p>';
-            }
-          });
+          $markerContent.append(renderMarkerExplanation(text));
         }
+        markerHtml = $markerContent.html();
       }
       if (this.showGoogleMapsSearch) {
         markerHtml += Googlemaps_Map.getMapsSearchHtml(pos[1], pos[0]);
       }
 
-      feature = new ol.Feature({
+      const feature = new ol.Feature({
         geometry: new ol.geom.Point(ol.proj.transform(pos, "EPSG:4326", "EPSG:3857")),
         markerId: marker['id'],
         markerHtml: markerHtml,
         iconSrc: iconSrc,
         category: marker['category']
       });
+
       feature.setStyle(style);
+
       if (!this.markerLayer) {
         this.markerLayer = new ol.layer.Vector({
           source: new ol.source.Vector()
         });
-        this.map.addLayer(this.markerLayer)
+        this.map.addLayer(this.markerLayer);
       }
-      this.markerLayer.getSource().addFeature(feature)
-    }
+      this.markerLayer.getSource().addFeature(feature);
+    });
   };
+
+  function renderMarkerExplanation(text) {
+    const $markerExplanation = $("<div/>", { class: "marker-explanation" });
+    text.split(/[\r\n]+/).forEach((line) => {
+      let $element;
+      if (/^https?:\/\//.test(line)) {
+        $element = $("<p/>", { class: "marker-link" }).html($("<a />", { href: line }).text(line));
+      } else {
+        $element = $("<p/>").text(line);
+      }
+      $markerExplanation.append($element);
+    });
+    return $markerExplanation.html();
+  }
 
   Openlayers_Map.prototype.resize = function () {
     if (!this.markerLayer) {
@@ -340,7 +349,7 @@ this.Openlayers_Map = (function () {
     var vectorSource = new ol.source.Vector({
       format: new _olFormat(),
       loader: function(extent, resolution, projection) {
-        var proj = projection.getCode();
+        // var proj = projection.getCode();
         var xhr = new XMLHttpRequest();
         var onError = function() {
           console.warn("loadLayer error:" + url);

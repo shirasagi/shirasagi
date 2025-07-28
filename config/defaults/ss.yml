@@ -23,6 +23,10 @@ production: &production
   # 0 を設定すると無制限に保存
   keep_tasks: 14.days
 
+  # mail_log の保存期間を設定
+  # 0 を設定すると無制限に保存
+  keep_mail_logs: 14.days
+
   session:
     key: '_ss_session'
     same_site: 'Lax'
@@ -50,17 +54,28 @@ production: &production
   # history log saving days
   history_log_saving_days: 90
 
-  quality_options:
-    - label: 最高画質
-      quality: 85
-    - label: 高画質
-      quality: 60
-    - label: 中画質
-      quality: 55
-    - label: 低画質
-      quality: 40
-    - label: 最低画質
-      quality: 25
+  quality_option:
+    # quality options in the file upload dialog
+    # - disable: not to show quality options
+    # - custom: use custom quality options
+    type: "disable"
+    custom_options:
+      - label: 最高画質
+        quality: 85
+      - label: 高画質
+        quality: 60
+      - label: 中画質
+        quality: 55
+      - label: 低画質
+        quality: 40
+      - label: 最低画質
+        quality: 25
+
+  resizing_option:
+    # resizing options in the file upload dialog
+    # - legacy: legacy resizing options
+    # - digital_go: resizing options inspired by https://www.digital.go.jp/
+    type: "digital_go"
 
   markdown:
     help_url: "https://help.github.com/articles/basic-writing-and-formatting-syntax/"

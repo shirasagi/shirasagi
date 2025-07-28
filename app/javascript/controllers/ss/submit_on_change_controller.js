@@ -1,12 +1,21 @@
 import { Controller } from "@hotwired/stimulus"
 import { isSafari } from "../../ss/tool"
 
+const connected = new Set();
+
 export default class extends Controller {
   static values = {
     submitter: String
   }
 
   connect() {
+    // smooth-dnd と組み合わせて本コントローラーを用いると、1つのelementに対して2回connectが呼ばれる。
+    // 2重にイベントハンドラーを登録するのを避ける
+    if (connected.has(this.element)) {
+      return;
+    }
+
+    connected.add(this.element)
     this.element.addEventListener("change", (ev) => this.submit(ev.target))
   }
 

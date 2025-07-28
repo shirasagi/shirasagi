@@ -3,15 +3,30 @@
   addon[:display_body] = "hide"
 %>
 
+<%# 元々アイコンが設定されていないためスキップするメニュータイプ %>
+<% skip_icon_types = %w(staff_record links contrast) %>
+
 <% render_menu_setting = proc do |type, fallback_label| %>
   <dl class="see addon-gws-system-menu-setting">
     <dt><%= @model.t("menu_#{type}_state") %></dt>
     <dd>
-      <% if @item.send("menu_#{type}_visible?") %>
-        <%= @item.send("menu_#{type}_label") || fallback_label || t("modules.gws/#{type}") %>
-      <% else %>
-        <%= @item.label("menu_#{type}_state") %>
-      <% end %>
+      <div class="input-group gap-5 align-items-center">
+        <% unless skip_icon_types.include?(type.to_s) %>
+          <% if @item.send("menu_#{type}_icon_image").present? %>
+            <%= image_tag(@item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", style: "width: 32px; height: 32px;", aria: { hidden: true }) %> } %>
+          <% else %>
+            <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>" role="img" aria-hidden="true"></span>
+          <% end %>
+        <% end %>
+
+        <span>
+          <% if @item.send("menu_#{type}_visible?") %>
+            <%= @item.send("menu_#{type}_label") || fallback_label || t("modules.gws/#{type}") %>
+          <% else %>
+            <%= @item.label("menu_#{type}_state") %>
+          <% end %>
+        </span>
+      </div>
     </dd>
   </dl>
 <% end %>
@@ -44,4 +59,6 @@
 <% render_menu_setting.call(:staff_record, t('gws/staff_record.staff_records')) %>
 <% render_menu_setting.call(:links, t('mongoid.models.gws/link')) %>
 <% render_menu_setting.call(:contrast, t('mongoid.models.gws/contrast')) %>
+<% render_menu_setting.call(:tabular, t('modules.gws/tabular')) %>
 <% render_menu_setting.call(:elasticsearch) %>
+<% render_menu_setting.call(:conf, t('gws.site_config')) %>

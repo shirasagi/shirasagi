@@ -10,6 +10,7 @@ module Cms::PublicFilter::Layout
 
   included do
     helper_method :render_layout_parts
+    helper_method :render_template_variables
   end
 
   private
@@ -151,12 +152,21 @@ module Cms::PublicFilter::Layout
   end
 
   def render_template_variables(html)
+    return html if html.blank?
     html.gsub!('#{page_name}') do
       ERB::Util.html_escape(@cur_item.name)
     end
 
     html.gsub!('#{parent_name}') do
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
+    end
+
+    html.gsub!('#{description}') do
+      if @cur_item.respond_to?(:template_variable_handler_description)
+        @cur_item.template_variable_handler_description("description", self)
+      else
+        @cur_item.description if @cur_item.respond_to?(:description)
+      end
     end
 
     template = %w(
@@ -183,6 +193,12 @@ module Cms::PublicFilter::Layout
         next "<time datetime=\"#{date_convert(date, :iso, datetime)}\">#{convert_date}</time>"
       end
       convert_date
+    end
+
+    html.gsub!('#{page_thumb.src}') do
+      thumb_src = ERB::Util.html_escape(Cms::Addon::Body::DEFAULT_IMG_SRC)
+      thumb_src = @cur_item.thumb.url if @cur_item.is_a?(Cms::Addon::Thumb) && @cur_item.thumb
+      thumb_src
     end
 
     render_conditional_tag(html)

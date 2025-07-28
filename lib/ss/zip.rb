@@ -254,4 +254,21 @@ module SS::Zip
       io << comment
     end
   end
+
+  def unicode_names?(zip_entry)
+    zip_entry.gp_flags.allbits?(Zip::Entry::EFS)
+  end
+
+  def safe_zip_entry_name(zip_entry)
+    name = zip_entry.name
+    if unicode_names?(zip_entry)
+      # unicode_names
+      name = name.dup
+      name.force_encoding("UTF-8")
+    else
+      name = NKF.nkf('-w', name)
+    end
+    name = name.tr('\\', '/')
+    name
+  end
 end

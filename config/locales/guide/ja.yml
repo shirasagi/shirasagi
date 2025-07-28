@@ -113,6 +113,12 @@ ja:
         procedure_applicant: 手続き申請者
         remarks: 備考
         order: 並び順
+        cond_yes_edge_values: 選択肢(YES)
+        cond_no_edge_values: 選択肢(NO)
+        cond_or_edge_values: 選択肢(OR)
+        cond_yes_question_ids: 質問(YES)
+        cond_no_question_ids: 質問(NO)
+        cond_or_question_ids: 質問(OR)
       guide/question:
         name: 表示名
         id_name: 管理名
@@ -181,6 +187,18 @@ ja:
         - 備考を入力します。
       order:
         - 並び順を入力します。
+      cond_yes_edge_values:
+        - 選択肢(YES)を入力します。
+      cond_no_edge_values:
+        - 選択肢(NO)を入力します。
+      cond_or_edge_values:
+        - 選択肢(OR)を入力します。
+      cond_yes_question_ids:
+        - 質問(YES)を入力します。
+      cond_no_question_ids:
+        - 質問(NO)を入力します。
+      cond_or_question_ids:
+        - 質問(OR)を入力します。
     guide/addon/question:
       question_ids:
         - 該当する場合に必要な手続きとして表示させる条件を選択します。

@@ -1,0 +1,14 @@
+<%
+  policy = Gws::Tabular::Frames::InspectionsPolicy.new(
+    cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, model: @model, item: @item)
+  return unless policy.edit?
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:head] = "#{addon[:head]}#{@model.tt :approve_remand}".html_safe
+  addon[:toggle] = false
+  addon[:location] = { before: "addon-basic" }
+%>
+
+<turbo-frame id="workflow-inspection-frame" src="<%= edit_gws_tabular_frames_inspection_path(ref: request.path) %>">
+  <%= loading %>
+</turbo-frame>

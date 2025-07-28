@@ -345,7 +345,7 @@ module Cms
     # 注意: そうしないと sass コマンドがエラー終了する。
     commands << output_path
 
-    output = nil
+    output = error = nil
     wait_thr = Open3.popen3(*commands, { chdir: basedir }) do |stdin, stdout, stderr, wait_thr|
       # stdin.write source
       stdin.close
@@ -359,7 +359,14 @@ module Cms
       wait_thr
     end
 
-    raise ScssScriptError, "sass command exited in errors" unless wait_thr.value.success?
+    unless wait_thr.value.success?
+      ::File.join(basedir, output_path).tap do |full_output_path|
+        # エラー発生時、出力ファイルの内容はエラーが記録されていたりとCSSとしては異常なファイルとなる。
+        # 404 の方がマシなので、エラー発生時、出力ファイルを削除する。
+        FileUtils.rm_f full_output_path
+      end
+      raise ScssScriptError, error
+    end
 
     output
   end
@@ -390,37 +397,6 @@ module Cms
 
       # 3. height の大きい方が上位
       rhs_height <=> rhs_width
-    end
-
-    options
-  end
-
-  def self.file_resizing_options(user, site:, node: nil)
-    options = SS::File.system_resizing_options
-
-    site_resizing = site.file_resizing
-    if site_resizing.present?
-      site_resizing_label = site.t(:file_resizing_label, size: site_resizing.join("x"))
-      site_resizing_value = site_resizing.join(",")
-      site_resizing_option = options.find { |_label, value, _attr| value == site_resizing_value }
-      if site_resizing_option
-        site_resizing_option[0] = site_resizing_label
-        site_resizing_option[2] ||= {}
-        site_resizing_option[2][:selected] = true
-      else
-        options << [ site_resizing_label, site_resizing_value, { selected: true } ]
-        _sort_file_resizing_options(options)
-      end
-    end
-
-    attr = SS::File.image_resizes_min_attributes(user: user, node: node)
-    min_width = attr['max_width']
-    min_height = attr['max_height']
-    if min_width.present? || min_height.present?
-      options.select! do |_label, value, _attr|
-        width, height = value.split(',', 2).map(&:to_i)
-        width <= min_width && height <= min_height
-      end
     end
 
     options

@@ -7,9 +7,11 @@ class Gws::Survey::FileEnumerator < Enumerator
     @params = params
 
     super() do |y|
-      y << bom + encode(headers.to_csv)
-      @items.each do |item|
-        enum_record(y, item)
+      I18n.with_locale(I18n.default_locale) do
+        y << bom + encode(headers.to_csv)
+        @items.each do |item|
+          enum_record(y, item)
+        end
       end
     end
   end
@@ -83,7 +85,7 @@ class Gws::Survey::FileEnumerator < Enumerator
 
   def bom
     return '' if @encoding == 'Shift_JIS'
-    "\uFEFF"
+    SS::Csv::UTF8_BOM
   end
 
   def encode(str)

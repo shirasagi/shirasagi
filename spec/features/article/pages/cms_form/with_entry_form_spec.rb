@@ -73,6 +73,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column12_caption1) { unique_id }
   let(:column13_youtube_id1) { unique_id }
   let(:column13_url1) { "https://www.youtube.com/watch?v=#{column13_youtube_id1}" }
+  let(:column13_title1) { unique_id }
   let(:column14_page1) { [ selectable_page1, selectable_page2, selectable_page3 ].sample }
 
   let(:column1_value2) { unique_id }
@@ -94,6 +95,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let(:column12_caption2) { unique_id }
   let(:column13_youtube_id2) { unique_id }
   let(:column13_url2) { "https://www.youtube.com/watch?v=#{column13_youtube_id2}" }
+  let(:column13_title2) { unique_id }
   let(:column14_page2) { ([ selectable_page1, selectable_page2, selectable_page3 ] - [ column14_page1 ]).sample }
   let!(:body_layout) { create(:cms_body_layout) }
 
@@ -128,7 +130,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
               select form.name, from: 'in_form_id'
             end
           end
-
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
+          choose "item_description_setting_auto"
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
           expect(page).to have_no_selector('#item_body_layout_id', visible: true)
           click_on I18n.t('ss.buttons.draft_save')
@@ -141,6 +144,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
           expect(item.name).to eq name
+          expect(item.description_setting).to eq 'auto'
           expect(item.description).to eq form.html
           expect(item.summary).to eq form.html
           expect(item.column_values).to be_blank
@@ -310,6 +314,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           wait_for_all_turbo_frames
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url1
+            fill_in "item[column_values][][in_wrap][title]", with: column13_title1
           end
 
           within ".column-value-palette" do
@@ -361,6 +366,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list1
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id1
+          expect(item.column_values.find_by(column_id: column13.id).title).to eq column13_title1
           expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page1.id
 
           expect(item.backups.count).to eq 2
@@ -430,6 +436,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url2
+            fill_in "item[column_values][][in_wrap][title]", with: column13_title2
           end
 
           within ".column-value-cms-column-selectpage " do
@@ -478,6 +485,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list2
           expect(item.column_values.find_by(column_id: column12.id).value).to be_present
           expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id2
+          expect(item.column_values.find_by(column_id: column13.id).title).to eq column13_title2
           expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page2.id
 
           expect(item.backups.count).to eq 3
@@ -562,6 +570,8 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           end
 
           expect(page).to have_css("#addon-cms-agents-addons-form-page .addon-head", text: form.name)
+          ensure_addon_opened('#addon-cms-agents-addons-meta')
+          choose "item_description_setting_auto"
 
           within ".column-value-palette" do
             wait_for_event_fired("ss:columnAdded") do
@@ -718,6 +728,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           wait_for_all_turbo_frames
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url1
+            fill_in "item[column_values][][in_wrap][title]", with: column13_title1
           end
 
           within ".column-value-palette" do
@@ -750,6 +761,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
           expect(item.name).to eq name
+          expect(item.description_setting).to eq 'auto'
           expect(item.description).to eq form.html
           expect(item.summary).to eq form.html
           expect(item.column_values).to have(14).items

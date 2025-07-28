@@ -99,7 +99,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
@@ -132,7 +131,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
@@ -180,7 +178,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.files_and_page"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
@@ -220,7 +217,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.files_and_page"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
@@ -263,7 +259,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
 
@@ -291,7 +286,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
@@ -321,7 +315,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.disabled"), from: "item[twitter_edit_auto_post]"

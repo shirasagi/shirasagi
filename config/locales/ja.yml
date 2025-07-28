@@ -223,6 +223,9 @@ ja:
       password_include_kana: によみがなが含まれています。
       edit_approved: 承認済みの予約は変更できません。
       disallowed_domains: は %{domains} のみ許可されています。
+      tel: は有効な電話番号を入力してください。
+      date: は有効な日付を入力してください。
+      datetime: は有効な日時を入力してください。
       unable_to_accept_file: "には許可されていないファイルが選択されています。アップロードできるファイルは %{allowed_format_list} です。"
     template:
       body: 次の項目を確認してください。

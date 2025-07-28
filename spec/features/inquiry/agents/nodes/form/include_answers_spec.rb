@@ -11,13 +11,15 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       inquiry_captcha: 'enabled',
       notice_state: 'enabled',
       notice_content: 'include_answers',
-      notice_email: 'notice@example.jp',
+      notice_emails: ['notice@example.jp'],
       from_name: 'admin',
       from_email: 'admin@example.jp',
       reply_state: 'disabled')
   end
 
   before do
+    site.mobile_state = "enabled"
+    site.save!
     node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_optional).reverse_merge({cur_site: site})
     node.columns.create! attributes_for(:inquiry_column_transfers).reverse_merge({cur_site: site})

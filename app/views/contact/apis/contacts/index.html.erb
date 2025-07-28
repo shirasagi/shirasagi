@@ -5,11 +5,13 @@
 <% end %>
 
 <div class="search-ui-form">
-<%= form_for :s, url: url_for(action: :index), html: { method: "GET", class: :search } do |f| %>
-  <%= hidden_field_tag("single", params[:single], id: nil) %>
-  <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), id: nil %>
-  <%= f.submit  t("contact.apis.contacts.search"), class: :btn %>
-<% end %>
+  <%= form_for :s, url: url_for(action: :index), html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag("single", params[:single], id: nil) %>
+    <div class="input-group">
+      <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), id: nil, placeholder: t("ss.keyword") %>
+      <%= f.submit t("contact.apis.contacts.search"), class: :btn %>
+    </div>
+  <% end %>
 </div>
 
 <div class="table-wrap">

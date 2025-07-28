@@ -4,6 +4,10 @@
     grid-template-columns: 1fr 1fr auto auto auto;
     align-items: center;
 
+    &:not(:has([data-id])) {
+      display: none;
+    }
+
     .ss-link-item-name, .ss-link-item-url {
       display: -webkit-box;
       overflow: hidden;

@@ -111,7 +111,7 @@ Rails.application.routes.draw do
     put "line_first_registration/(index.:format)" => "public#index", cell: "nodes/line_first_registration"
 
     scope "my_blog" do
-      resource :setting, controller: "public", cell: "nodes/my_blog/setting", except: [:index, :show, :destroy]
+      resource :setting, controller: "public", cell: "nodes/my_blog/setting", except: [:show, :destroy]
     end
     get "my_blog(index.:format)" => "public#index", cell: "nodes/my_blog"
     resources :my_blog, concerns: :deletion, controller: "public", cell: "nodes/my_blog", except: :index

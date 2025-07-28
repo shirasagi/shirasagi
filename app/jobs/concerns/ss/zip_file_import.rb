@@ -23,7 +23,7 @@ module SS::ZipFileImport
             uploaded_file.binmode
             uploaded_file.write(entry.get_input_stream.read)
             uploaded_file.rewind
-            uploaded_file.original_filename = NKF.nkf('-w', entry.name)
+            uploaded_file.original_filename = SS::Zip.safe_zip_entry_name(entry)
             uploaded_file.content_type = 'text/csv'
 
             temp_file = SS::TempFile.new

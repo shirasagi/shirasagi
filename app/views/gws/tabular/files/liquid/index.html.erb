@@ -1,0 +1,9 @@
+<div class="gws-tabular-views-main-box">
+  <div class="index">
+    <div class="list-head">
+      <%= render template: "_search" %>
+    </div>
+
+    <%= render Gws::Tabular::View::LiquidComponent.new(cur_site: @cur_site, cur_space: cur_space, cur_form: cur_form, cur_view: cur_view, items: @items) %>
+  </div>
+</div>

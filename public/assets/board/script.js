@@ -1094,7 +1094,7 @@ this.Board_Map = (function () {
   };
 
   Board_Map.prototype.initPopup = function () {
-    $("body").append('<div id="marker-popup"><div class="closer"></div><div class="content"></div></div>');
+    $("body").append('<div id="marker-popup"><button type="button" class="closer" aria-label="閉じる"></button><div class="content"></div></div>');
     this.popup = $('#marker-popup');
     this.popup.hide();
     this.popupOverlay = new ol.Overlay({
@@ -1124,7 +1124,7 @@ this.Board_Map = (function () {
       };
     })(this));
     return this.popup.find('.closer').on('click', (function (_this) {
-      return function (e) {
+      return function (_e) {
         _this.popupOverlay.setPosition(void 0);
         $(_this).blur();
         return false;
@@ -1134,7 +1134,7 @@ this.Board_Map = (function () {
 
   Board_Map.prototype.showPopup = function (evt) {
     var feature, markerId;
-    feature = this.map.forEachFeatureAtPixel(evt.pixel, function (feature, layer) {
+    feature = this.map.forEachFeatureAtPixel(evt.pixel, function (feature, _layer) {
       return feature;
     });
     if (!feature) {

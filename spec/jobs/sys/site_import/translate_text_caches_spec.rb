@@ -14,9 +14,8 @@ describe Sys::SiteImportJob, dbscope: :example do
     Sys::SiteExportJob.export_root = tmpdir
 
     begin
-      job = ::Sys::SiteExportJob.new
-      job.task = ::Tasks::Cms.mock_task(source_site_id: source_site.id)
-      job.perform
+      job = Sys::SiteExportJob.new
+      job.bind("site_id" => source_site.id).perform
       output_zip = job.instance_variable_get(:@output_zip)
 
       output_zip
@@ -29,10 +28,9 @@ describe Sys::SiteImportJob, dbscope: :example do
     let!(:destination_site) { create :cms_site_unique }
 
     it do
-      job = ::Sys::SiteImportJob.new
-      job.task = ::Tasks::Cms.mock_task(target_site_id: destination_site.id, import_file: file_path)
-      job.perform
-      
+      job = Sys::SiteImportJob.new
+      job.bind("site_id" => destination_site.id).perform(file_path)
+
       expect(::Translate::TextCache.site(destination_site).count).to eq 1
       dest_translate_text_cache = ::Translate::TextCache.site(destination_site).first
       expect(dest_translate_text_cache.api).to eq translate_text_cache.api

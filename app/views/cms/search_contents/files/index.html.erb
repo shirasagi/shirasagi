@@ -4,8 +4,10 @@
     <dl class="see">
       <dt><%= t("cms.apis.contents.keyword") %><%= tt("search_contents.files.keyword") %></dt>
       <dd>
-        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
-        <%= f.submit t("ss.buttons.search"), name: nil, class: "search btn" %>
+        <div class="input-group">
+          <%= f.text_field :keyword, value: params[:s].try(:[], :keyword) %>
+          <%= f.submit t("ss.buttons.search"), name: nil, class: "search btn" %>
+        </div>
       </dd>
     </dl>
   </div>
@@ -19,7 +21,7 @@
             <%= sanitizer_status(file) %>
             <%= link_to page.private_show_path, class: :thumb, target: "_blank", rel: "noopener" do %>
               <% if file.image? %>
-                <%= image_tag file.thumb_url, alt: file.name %>
+                <%= image_tag file.thumb_url, alt: file.name, loading: "lazy" %>
               <% else %>
                 <span class="ext icon-<%= file.extname %>"><%= file.extname %></span>
               <% end %>
