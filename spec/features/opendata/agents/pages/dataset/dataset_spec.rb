@@ -49,6 +49,19 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       @rs2.format = "CSV"
       @rs2.save!
 
+      # a closed resource
+      @rs3 = page_dataset.resources.new
+      @rs3.license = license
+      @rs3.name = "shift_jis.csv"
+      @rs3.text = "resource3"
+      @rs3.state = "closed"
+      Fs::UploadedFile.create_from_file(csv_path, basename: "spec") do |file|
+        file.original_filename = "shift_jis.csv"
+
+        @rs3.in_file = file
+        @rs3.save!
+      end
+
       # a url resource
       @urs1 = page_dataset.url_resources.new
       @urs1.license = license
@@ -65,7 +78,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       end
 
       page_dataset.reload
-      expect(page_dataset.resources.count).to eq 2
+      expect(page_dataset.resources.count).to eq 3
       expect(page_dataset.url_resources.count).to eq 1
 
       Fs.rm_rf page_dataset.path
@@ -115,6 +128,8 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
             expect(page).to have_css(".icons .clipboard-wrap a.ss-clipboard-copy", text: I18n.t("opendata.links.copy_url"))
             expect(page).to have_css(".info .info__text", text: @rs2.text)
           end
+
+          expect(page).to have_no_css(".resource[data-uuid='#{@rs3.uuid}']")
 
           within ".url-resource[data-uuid='#{@urs1.uuid}']" do
             name = "#{@urs1.name} (#{@urs1.format} #{@urs1.size.to_fs(:human_size)})"

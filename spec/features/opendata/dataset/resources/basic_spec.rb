@@ -271,7 +271,7 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
 
           report.reload
           history1.reload
-          Timecop.freeze(now) do
+          Timecop.freeze(now + Opendata::Resource::DOWNLOAD_CACHE_LIFETIME + 1.minute) do
             expect(item.downloaded_count).to eq 2
           end
 
@@ -295,7 +295,7 @@ describe "opendata_dataset_resources", type: :feature, dbscope: :example do
           report.reload
           history1.reload
           history2.reload
-          Timecop.freeze(now + Opendata::Resource::DOWNLOAD_CACHE_LIFETIME + 1.minute) do
+          Timecop.freeze(now + (Opendata::Resource::DOWNLOAD_CACHE_LIFETIME * 2) + 2.minutes) do
             expect(item.downloaded_count).to eq 3
           end
         end
