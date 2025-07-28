@@ -40,12 +40,23 @@ node_id: resolve_node_reference(src_content.node_id)).first
 
       if dest_content.present?
         options[:before].call(src_content, dest_content) if options[:before]
+
+        # Guide::Questionの場合、in_edgesからedgesを作成するためにバリデーションを実行
+        if dest_content.is_a?(Guide::Question) && dest_content.in_edges.present?
+          dest_content.valid?
+        end
       else
         # at first, copy non-reference values and references which have no possibility of circular reference
         dest_content = klass.new(cur_site: @dest_site)
         dest_content.attributes = copy_basic_attributes(src_content, klass)
 
         options[:before].call(src_content, dest_content) if options[:before]
+
+        # Guide::Questionの場合、in_edgesからedgesを作成するためにバリデーションを実行
+        if dest_content.is_a?(Guide::Question) && dest_content.in_edges.present?
+          dest_content.valid?
+        end
+
         dest_content.save!
       end
       dest_content.id
@@ -56,6 +67,12 @@ node_id: resolve_node_reference(src_content.node_id)).first
     if dest_content
       # after create item, copy references which have possibility of circular reference
       dest_content.attributes = resolve_unsafe_references(src_content, klass)
+
+      # Guide::Questionの場合、既存のedgesをコピー
+      if src_content.is_a?(Guide::Question) && src_content.edges.present?
+        copy_guide_question_edges(src_content, dest_content)
+      end
+
       dest_content.save!
       options[:after].call(src_content, dest_content) if options[:after]
     end
@@ -83,6 +100,69 @@ node_id: resolve_node_reference(src_content.node_id)).first
     end
   end
 
+  def copy_guide_question_edges(src_question, dest_question)
+    Rails.logger.debug{ "[copy_guide_question_edges] エッジコピー開始: #{src_question.id_name}" }
+
+    src_question.edges.each do |src_edge|
+      # エッジの基本属性をコピー
+      edge_attributes = src_edge.attributes.except('_id', 'id')
+
+      # point_idsを新しいIDにマッピング
+      if src_edge.point_ids.present?
+        new_point_ids = src_edge.point_ids.map do |point_id|
+          # Guide::Diagram::Pointから該当するポイントを検索
+          src_point = Guide::Diagram::Point.site(@src_site).find(point_id) rescue nil
+          next nil if src_point.blank?
+
+          # 新しいサイトで同じid_nameを持つポイントを検索
+          dest_point = Guide::Diagram::Point.site(@dest_site).where(
+            id_name: src_point.id_name,
+            node_id: resolve_node_reference(src_point.node_id)
+          ).first
+
+          dest_point&.id
+        end.compact
+
+        edge_attributes['point_ids'] = new_point_ids
+      end
+
+      # 新しいエッジを作成
+      dest_edge = dest_question.edges.new(edge_attributes)
+      dest_edge.save!
+    end
+
+    Rails.logger.debug{ "[copy_guide_question_edges] エッジコピー終了: #{src_question.id_name}" }
+end
+
+  def copy_guide_question_in_edges(src_in_edges)
+    return [] if src_in_edges.blank?
+
+    src_in_edges.map do |src_edge|
+      new_edge = src_edge.deep_dup
+
+      # point_idsを新しいIDにマッピング
+      if new_edge[:point_ids].present?
+        new_point_ids = new_edge[:point_ids].map do |point_id|
+          # Guide::Diagram::Pointから該当するポイントを検索
+          src_point = Guide::Diagram::Point.site(@src_site).find(point_id) rescue nil
+          next nil if src_point.blank?
+
+          # 新しいサイトで同じid_nameを持つポイントを検索
+          dest_point = Guide::Diagram::Point.site(@dest_site).where(
+            id_name: src_point.id_name,
+            node_id: resolve_node_reference(src_point.node_id)
+          ).first
+
+          dest_point&.id
+        end.compact
+
+        new_edge[:point_ids] = new_point_ids
+      end
+
+      new_edge
+    end
+  end
+
   private
 
   def copy_guide_question_options
@@ -93,6 +173,12 @@ node_id: resolve_node_reference(src_content.node_id)).first
           dest_node_id = resolve_node_reference(src_question.node_id)
           Rails.logger.debug{ "[copy_guide_question_options] node_id: #{src_question.node_id} -> #{dest_node_id}" }
           dest_question.node_id = dest_node_id
+        end
+
+        # in_edges属性をコピー（Guide::Addon::Questionで処理される）
+        if src_question.respond_to?(:in_edges) && src_question.in_edges.present?
+          dest_question.in_edges = copy_guide_question_in_edges(src_question.in_edges)
+          Rails.logger.debug{ "[copy_guide_question_options] in_edges copied: #{src_question.in_edges.size} edges" }
         end
       end
     }
