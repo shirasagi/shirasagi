@@ -36,7 +36,7 @@ module Sys::SiteCopy::GuideProcedures
     id = cache(cache_id, src_content.id) do
       # Guide::Diagram::Pointはfilenameを持たないため、id_nameとnode_idで検索
       dest_content = klass.site(@dest_site).where(id_name: src_content.id_name,
-node_id: resolve_node_reference(src_content.node_id)).first
+        node_id: resolve_node_reference(src_content.node_id)).first
 
       if dest_content.present?
         options[:before].call(src_content, dest_content) if options[:before]
@@ -56,6 +56,12 @@ node_id: resolve_node_reference(src_content.node_id)).first
     if dest_content
       # after create item, copy references which have possibility of circular reference
       dest_content.attributes = resolve_unsafe_references(src_content, klass)
+
+      # Guide::Procedureの場合、条件付き質問を特別に処理
+      if src_content.is_a?(Guide::Procedure)
+        copy_guide_procedure_conditions(src_content, dest_content)
+      end
+
       dest_content.save!
       options[:after].call(src_content, dest_content) if options[:after]
     end
@@ -81,6 +87,38 @@ node_id: resolve_node_reference(src_content.node_id)).first
       Rails.logger.debug{ "[resolve_guide_procedure_reference] コピー後の dest_procedure: #{dest_procedure&.id}" }
       dest_procedure.try(:id)
     end
+  end
+
+  def copy_guide_procedure_conditions(src_procedure, dest_procedure)
+    Rails.logger.debug{ "[copy_guide_procedure_conditions] 条件付き質問コピー開始: #{src_procedure.id_name}" }
+
+    %w(yes no or).each do |cond|
+      # 条件付き質問IDを新しいIDにマッピング
+      if src_procedure.send("cond_#{cond}_question_ids").present?
+        new_question_ids = src_procedure.send("cond_#{cond}_question_ids").map do |question_id|
+          # Guide::Diagram::Pointから該当する質問を検索
+          src_question = Guide::Diagram::Point.site(@src_site).find(question_id) rescue nil
+          next nil if src_question.blank? || src_question._type != "Guide::Question"
+
+          # 新しいサイトで同じid_nameを持つ質問を検索
+          dest_question = Guide::Diagram::Point.site(@dest_site).where(
+            id_name: src_question.id_name,
+            node_id: resolve_node_reference(src_question.node_id)
+          ).first
+
+          dest_question&.id
+        end.compact
+
+        dest_procedure.send("cond_#{cond}_question_ids=", new_question_ids)
+      end
+
+      # エッジ値もコピー
+      if src_procedure.send("cond_#{cond}_edge_values").present?
+        dest_procedure.send("cond_#{cond}_edge_values=", src_procedure.send("cond_#{cond}_edge_values"))
+      end
+    end
+
+    Rails.logger.debug{ "[copy_guide_procedure_conditions] 条件付き質問コピー終了: #{src_procedure.id_name}" }
   end
 
   private
