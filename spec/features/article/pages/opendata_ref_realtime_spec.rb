@@ -48,11 +48,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     article_page.save!
   end
 
-  context "when realtime is true" do
+  context "when assoc_job mode is realtime" do
     before { login_cms_user }
 
     around do |example|
-      @save_config = SS.config.replace_value_at(:opendata, :assoc_job, { "realtime" => true, "perform" => 'later' })
+      @save_config = SS.config.replace_value_at(:opendata, :assoc_job, { "mode" => "realtime", "perform" => 'later' })
       perform_enqueued_jobs do
         example.run
       end
@@ -178,11 +178,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "when realtime is false" do
+  context "when assoc_job mode is skip" do
     before { login_cms_user }
 
     around do |example|
-      @save_config = SS.config.replace_value_at(:opendata, :assoc_job, { "realtime" => false, "perform" => 'later' })
+      @save_config = SS.config.replace_value_at(:opendata, :assoc_job, { "mode" => "skip", "perform" => 'later' })
       perform_enqueued_jobs do
         example.run
       end
@@ -239,7 +239,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     end
   end
 
-  context "when realtime is blank" do
+  context "when assoc_job mode is blank" do
     before { login_cms_user }
 
     around do |example|
