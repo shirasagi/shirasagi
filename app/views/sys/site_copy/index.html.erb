@@ -2,21 +2,22 @@
 
 <%= form_for :item, url: { action: :confirm }, html: { id: "item-form", autocomplete: :off } do |f| %>
 <%= error_messages_for :item %>
-
 <div class="addon-views">
   <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t('ss.basic_info'), toggle: true, display_body: @item.running? || @item.state == 'ready' ? "hide" : "show" } do %>
-    <%= render template: '_form', locals: { f: f } %>
+    <%= render template: '_form', locals: { f: f } unless (@item.running? || @item.state == 'ready') %>
+    <%= render "show" if (@item.running? || @item.state == 'ready') %>
   <% end %>
-  <%= render template: "_addons_form", locals: { f: f, addons: addons } if addons.size > 0 %>
+  <%= render template: "_addons_form", locals: { f: f, addons: addons } if ( addons.size > 0 && !(@item.running? || @item.state == 'ready'))  %>
 
   <%= render "ss/crud/addon", addon: { id: "task-form", head: t('sys.site_copy/task_status'), toggle: true, display_body: @item.running? || @item.state == 'ready' ? "show" : "hide" } do %>
     <%= render partial: 'task' %>
   <% end %>
 </div>
-
-<footer class="send ss-sticky ss-sticky-bottom">
-  <%= f.submit t("ss.buttons.confirm"), class: 'btn-primary save' %>
-</footer>
+<% unless (@item.running? || @item.state == 'ready') %>
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t("ss.buttons.confirm"), class: 'btn-primary save' %>
+  </footer>
+<% end %>
 <% end %>
 
 <%= jquery do %>

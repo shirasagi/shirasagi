@@ -7,7 +7,7 @@ class Member::Agents::Pages::BlogPageController < ApplicationController
   after_action :render_blog_layout
 
   def deny
-    raise "404" unless @cur_page.parent.public?
+    raise SS::NotFoundError unless @cur_page.parent.public?
   end
 
   def render_blog_layout

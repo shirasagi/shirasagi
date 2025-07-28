@@ -11,6 +11,7 @@ describe "js_date_time_format", type: :feature, dbscope: :example, js: true, loc
 
     it do
       visit sns_login_path
+      wait_for_js_ready
 
       '%Y-%1m-%1d (%a)'.tap do |format|
         val = page.evaluate_script(script, now.iso8601, format)
@@ -62,6 +63,7 @@ describe "js_date_time_format", type: :feature, dbscope: :example, js: true, loc
 
     it do
       visit sns_login_path
+      wait_for_js_ready
 
       val = page.evaluate_script(script, time)
       expect(val).to eq I18n.l(time.in_time_zone)
@@ -104,6 +106,7 @@ describe "js_date_time_format", type: :feature, dbscope: :example, js: true, loc
 
     it do
       visit sns_login_path
+      wait_for_js_ready
 
       val = page.evaluate_script(script, time)
       expect(val).to eq I18n.l(time.in_time_zone.to_date)

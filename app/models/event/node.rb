@@ -8,6 +8,7 @@ module Event::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::Thumb
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeTwitterPostSetting
     include Cms::Addon::NodeLinePostSetting
@@ -42,7 +43,7 @@ module Event::Node
 
   class Search
     include Cms::Model::Node
-    include Cms::Addon::PageList
+    include Event::Addon::PageList
     include Cms::Addon::Release
     include Cms::Addon::DefaultReleasePlan
     include Cms::Addon::GroupPermission

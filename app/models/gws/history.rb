@@ -50,11 +50,9 @@ class Gws::History
   }
 
   class << self
-    # rubocop:disable Rails::WhereExists
     def updated?
       where(mode: 'update').exists?
     end
-    # rubocop:enable Rails::WhereExists
 
     SEARCH_HANDLERS = %i[search_keyword search_ymd].freeze
     SEARCH_FIELDS = %i[
@@ -116,13 +114,11 @@ class Gws::History
       )
       item.attributes = attributes
 
-      # rubocop:disable Style::SoleNestedConditional
       if allowed_severity = cur_site.allowed_log_severity_for(item.module_key)
         if severity_to_num(severity) >= severity_to_num(allowed_severity)
           item.save!(context: context.to_sym)
         end
       end
-      # rubocop:enable Style::SoleNestedConditional
 
       try_invoke_archive(cur_user, cur_site)
     end
@@ -133,7 +129,7 @@ class Gws::History
 
       write!(
         severity, :controller, options[:cur_user], options[:cur_site],
-        path: request.path, controller: options[:controller], action: options[:action]
+        path: SS.request_path(request), controller: options[:controller], action: options[:action]
       )
     end
 

@@ -8,7 +8,7 @@ describe "gws_elasticsearch_search", type: :feature, dbscope: :example, js: true
   let(:requests) { [] }
 
   before do
-    login_gws_user
+    site.update(menu_workflow_state: 'show')
 
     create(:gws_board_category, name: 'Category')
     create(:gws_faq_category, name: 'Category')
@@ -50,6 +50,8 @@ describe "gws_elasticsearch_search", type: :feature, dbscope: :example, js: true
         }
       end
     end
+
+    login_gws_user
   end
 
   describe '#index' do

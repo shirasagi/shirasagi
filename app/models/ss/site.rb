@@ -14,14 +14,17 @@ class SS::Site
   include SS::Addon::ApproveSetting
   include Opendata::Addon::SiteSetting
   include SS::Addon::EditorSetting
-  include SS::Addon::LogoSetting
+  include Cms::Addon::LogoSetting
   include SS::Addon::Elasticsearch::SiteSetting
   include SS::Addon::Translate::SiteSetting
   include SS::Addon::PartnerSetting
   include SS::Addon::InquirySetting
+  include SS::Addon::CheckLinksSetting
   include SS::Addon::WorkflowSetting
   include SS::Addon::SourceCleaner::SiteSetting
   include SS::Addon::SiteUsage
   include SS::Addon::GenerateLock
   include SS::Addon::MaintenanceMode
+  include SS::Ldap::SiteSetting
+  include Chorg::SiteSetting
 end

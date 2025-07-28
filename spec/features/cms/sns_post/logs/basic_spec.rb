@@ -6,7 +6,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
   let(:node) { create :cms_node_page }
   let(:item) { create :cms_page, cur_node: node, state: "closed" }
 
-  let(:edit_path) { edit_cms_page_path site.id, node, item }
+  let(:edit_path) { edit_node_page_path site.id, node, item }
   let(:index_path) { cms_sns_post_logs_path site.id }
 
   let(:line_text_message) { unique_id }
@@ -15,12 +15,14 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
     before do
       site.line_channel_secret = unique_id
       site.line_channel_access_token = unique_id
+      site.line_poster_state = "enabled"
 
       site.twitter_username = unique_id
       site.twitter_consumer_key = unique_id
       site.twitter_consumer_secret = unique_id
       site.twitter_access_token = unique_id
       site.twitter_access_token_secret = unique_id
+      site.twitter_poster_state = "enabled"
       site.save!
 
       login_cms_user
@@ -41,19 +43,18 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
             ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
             within "#addon-cms-agents-addons-twitter_poster" do
               select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-              select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             end
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+                wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
               end
-              wait_for_cbox do
+              within_cbox do
                 have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
                 have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
                 click_on I18n.t("ss.buttons.ignore_alert")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             expect(Cms::SnsPostLog::Twitter.count).to eq 1
@@ -72,7 +73,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
             expect(page).to have_link item.name
             click_on I18n.t("ss.links.delete")
             click_on I18n.t("ss.buttons.delete")
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+            wait_for_notice I18n.t('ss.notice.deleted')
             expect(Cms::SnsPostLog::Twitter.count).to eq 1
             expect(Cms::SnsPostLog::Line.count).to eq 0
 
@@ -83,7 +84,7 @@ describe "cms_pages sns post", type: :feature, dbscope: :example, js: true do
             expect(page).to have_link item.name
             click_on I18n.t("ss.links.delete")
             click_on I18n.t("ss.buttons.delete")
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+            wait_for_notice I18n.t('ss.notice.deleted')
             expect(Cms::SnsPostLog::Twitter.count).to eq 0
             expect(Cms::SnsPostLog::Line.count).to eq 0
           end

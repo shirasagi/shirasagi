@@ -1,0 +1,25 @@
+<dl class="see">
+  <dt><%= @model.t :user_csv_file_id %><%= @model.tt :user_csv_file_id %></dt>
+  <dd><%= f.file_field :in_user_csv_file %></dd>
+  <% if @item.user_csv_file %>
+    <dd><label><%= f.check_box :rm_user_csv_file %><%= t('ss.buttons.delete') %> (<%= @item.user_csv_file.filename %>)</label></dd>
+  <% end %>
+
+  <% if @ss_mode == :cms %>
+    <dt><%= @model.t :content_csv_file_id %><%= @model.tt :content_csv_file_id %></dt>
+    <dd><%= f.file_field :in_content_csv_file %></dd>
+    <% if @item.content_csv_file %>
+      <dd><label><%= f.check_box :rm_content_csv_file %><%= t('ss.buttons.delete') %> (<%= @item.content_csv_file.filename %>)</label></dd>
+    <% end %>
+  <% end %>
+</dl>
+
+<%= jquery do %>
+  $('#item-form').submit(function(){
+    if ($("#item_in_revision_csv_file").val()) {
+      if (!confirm('<%= I18n.t("chorg.messages.import_revision_file_confirmation") %>')) {
+        return false;
+      }
+    }
+  });
+<% end %>

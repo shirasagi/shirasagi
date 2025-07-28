@@ -1,7 +1,7 @@
 <% main_group = @cur_user.gws_main_group(@cur_site) %>
 
 <nav class="mod-navi current-navi">
-  <h2><%= link_to t("modules.gws/presence"), gws_presence_main_path, class: "icon-presence" %></h2>
+  <%= gws_menu_icon(:presence, 'modules.gws/presence', gws_presence_main_path) %>
   <h3><%= link_to t("modules.gws/presence/users"), gws_presence_group_users_path(group: main_group) %></h3>
 </nav>
 

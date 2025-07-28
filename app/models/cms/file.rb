@@ -1,14 +1,18 @@
+# frozen_string_literal: true
+
 class Cms::File
   include SS::Model::File
   include SS::Reference::Site
   include Cms::Addon::GroupPermission
   include Cms::Lgwan::File
 
+  FILE_MODEL = "cms/file"
+
   attr_accessor :cur_group
 
   before_validation :set_group, if: ->{ cur_group }
 
-  default_scope ->{ where(model: "cms/file") }
+  default_scope ->{ where(model: FILE_MODEL) }
 
   private
 

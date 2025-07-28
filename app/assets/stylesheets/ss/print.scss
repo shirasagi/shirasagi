@@ -1,23 +1,23 @@
-@import "compass-mixins/lib/compass";
+@use "compass-mixins/lib/compass";
 
 .sheet {
   border: 0;
   border-radius: unset;
   background: #fff;
-  page-break-after: always;
+  break-inside: avoid;
 }
 
 .vertical {
   .sheet {
     width: 210mm;
-    height: 296mm; /* 1mm余裕をもたせる */
+    height: 294mm; /* 1mm余裕をもたせる */
   }
 }
 
 .horizontal {
   .sheet {
     width: 297mm;
-    height: 200mm;
+    height: 197mm;
   }
 }
 
@@ -31,7 +31,7 @@
 
   .sheet {
     margin: 5mm;
-    @include box-shadow(0 .5mm 2mm rgba(0, 0, 0, .3));
+    @include compass.box-shadow(0 .5mm 2mm rgba(0, 0, 0, .3));
   }
 }
 @media print {

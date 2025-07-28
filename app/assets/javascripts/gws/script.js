@@ -7,7 +7,6 @@
 //= require gws/lib/reminder
 //= require gws/lib/bookmark
 //= require gws/lib/readable_setting
-//= require gws/lib/contrast
 //= require gws/lib/workload
 //= require gws/lib/search_form
 //= require gws/schedule/lib/plan
@@ -32,6 +31,7 @@
 //= require gws/affair/menu
 //= require gws/affair/overtime_file
 //= require gws/affair/shift_records
+//= require gws/workflow2/approver
 
 SS.ready(function () {
   // external link
@@ -47,4 +47,11 @@ SS.ready(function () {
   });
 
   Gws_Member.render();
+
+  // user detail
+  $(".user-detail").colorbox({
+    maxWidth: "80%",
+    maxHeight: "80%",
+    fixed: true
+  });
 });

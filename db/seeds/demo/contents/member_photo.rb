@@ -55,7 +55,7 @@ photo_page5 = save_page route: "member/photo", filename: "kanko-info/photo/page5
   photo_location_ids: [@photo_l3.id, @photo_l4.id],
   in_image: Fs::UploadedFile.create_from_file("ss_files/key-visual/small/keyvisual05.jpg")
 
-photo_page6 = save_page route: "member/photo", filename: "kanko-info/photo/page6.html", name: "観光地６",
+photo_page6 = save_page route: "member/photo", filename: "kanko-info/photo/page6.html", name: "観光地6",
   member_id: @member_1.id,
   layout_id: @layouts["kanko-info"].id,
   map_points: [{ loc: [134.566899, 34.074214] }],

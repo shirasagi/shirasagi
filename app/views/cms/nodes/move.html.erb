@@ -1,42 +1,59 @@
-<%= jquery do %>
-new Cms_Move("form#item-form", "<%= cms_apis_contents_html_path %>", "<%= @source %>", <%= @link_check.present? %>);
-<% end %>
+<% show_confirmation ||= nil %>
 
-<%= form_for :item, url: { action: :move }, html: { id: "item-form", method: :put, multipart: true, autocomplete: :off } do |f| %>
+<%= form_with scope: :item, url: url_for(action: :move_confirm), id: "item-form", method: :put, html: { autocomplete: :off } do |f| %>
   <%= error_messages_for :item %>
 
   <section class="main-box">
     <header><h2><%= t("cms.move_node.title") %></h2></header>
 
     <div class="main-body">
-      <dl class="see">
+      <dl class="see source">
         <dt><%= t("cms.move_node.current_filename") %></dt>
-        <dd class="current-filename"><%= @filename %></dd>
-
-        <dt><%= t("cms.move_node.destination_filename") %><%= @model.tt :destination_filename %></dt>
-        <dd>
-          <%= text_field_tag :destination, "", value: @item.filename, class: :filename %>
-          <%= hidden_field_tag :filename, "", value: @filename %>
-          <%= hidden_field_tag :source, "", value: @source %>
-          <%= f.button t("cms.move_page.confirm"), name: :confirm, class: "confirm btn" %>
-        </dd>
+        <dd class="current-filename"><%= @item.source.filename %></dd>
       </dl>
 
-      <dl class="see" style="display: none;">
-        <dt class="wide">
-          <%= t("cms.move_page.message", source: @source) %>
-          <% if Cms::Site.allowed?(:edit, @cur_user, site: @cur_site) && !SS.config.cms.replace_urls_after_move %>
-            <span style="float: right; padding-right: 25px;"><%= link_to t("cms.move_page.link_to_replace"), cms_search_contents_html_path %></span>
-          <% end %>
-        </dt>
-        <dd class="result" style="height:300px; overflow:auto; border: 1px solid #cccccc; padding: 15px;"></dd>
+      <dl class="see destination">
+        <dt><%= t("cms.move_node.destination") %></dt>
+        <dd></dd>
+
+        <dt class="depth-2"><%= t("cms.move_node.destination_folder") %><%= tt "cms/move_node.destination_folder" %></dt>
+        <dd class="depth-2">
+          <%= f.hidden_field :destination_parent_node_id, value: "", id: nil, class: "hidden-ids" %>
+          <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(single: 1), class: "btn ajax-box" %>
+        </dd>
+        <dd class="depth-2">
+          <table class="index ajax-selected">
+            <thead>
+            <tr>
+              <th class="name"><%= Cms::Node.t :filename %></th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody>
+            <% if @item.destination_parent_node %>
+              <tr data-id="<%= @item.destination_parent_node.id %>">
+                <td><%= f.hidden_field :destination_parent_node_id, value: @item.destination_parent_node.id, id: nil %> <%= @item.destination_parent_node.name %></td>
+                <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+              </tr>
+            <% end %>
+            </tbody>
+          </table>
+        </dd>
+
+        <dt class="depth-2"><%= t("cms.move_node.destination_filename") %><%= tt "cms/move_node.destination_filename" %></dt>
+        <dd class="depth-2">
+          <%= f.text_field :destination_basename, class: "filename" %>
+        </dd>
       </dl>
     </div>
   </section>
 
   <footer class="send">
-    <%= f.submit t("ss.buttons.move"), class: "btn-primary", data: { disable_with: t("ss.buttons.moving") } %>
-    <%= f.button t("ss.buttons.cancel"), type: :reset, onclick: "location.href='#{url_for(action: :show)}'; return false;", class: "btn-default" %>
+    <%= f.submit t("ss.buttons.confirm"), class: "btn-primary", name: :confirm %>
+    <%= link_to t("ss.buttons.cancel"), url_for(action: :show), class: "btn-default" %>
   </footer>
+<% end %>
 
+<% if show_confirmation %>
+  <%= render template: "move_confirm" %>
 <% end %>

@@ -34,6 +34,7 @@ class Sys::SitesController < ApplicationController
   def index
     raise "403" unless @model.allowed?(:read, @cur_user)
     @items = @model.allow(:read, @cur_user).
+      state(params.dig(:s, :state)).
       search(@s).
       order_by(_id: -1)
   end
@@ -48,7 +49,6 @@ class Sys::SitesController < ApplicationController
         site_id: @item.id,
         name: I18n.t('cms.roles.admin'),
         permissions: Cms::Role.permission_names,
-        permission_level: 3
       }
       role = Cms::Role.find_or_create_by cond
 
@@ -57,5 +57,14 @@ class Sys::SitesController < ApplicationController
     end
 
     render_create result
+  end
+
+  def destroy
+    raise "403" unless @item.allowed?(:delete, @cur_user)
+    render_destroy @item.disable
+  end
+
+  def destroy_all
+    disable_all
   end
 end

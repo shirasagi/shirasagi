@@ -8,6 +8,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
   shared_examples "mdn reply" do
     before do
       webmail_import_mail(webmail_imap, mdn_mail, mailbox: mailbox ? mailbox.original_name : 'INBOX')
+      Webmail.imap_pool.disconnect_all
       login_user user
     end
 
@@ -88,7 +89,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
   describe "webmail_mode is group" do
     let!(:group) { create :webmail_group }
-    let!(:imap) { group.initialize_imap }
+    let!(:imap) { group.initialize_imap(0) }
     let!(:mdn_mail) do
       Mail.new(
         from: "from-#{unique_id}@example.jp",

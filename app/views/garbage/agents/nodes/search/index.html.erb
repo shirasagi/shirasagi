@@ -1,14 +1,14 @@
 <div class="content-box">
   <%= form_tag "#{@cur_node.url}result.html", multipart: true, method: "get" do %>
-    <div class="name">
-      <h2><%= t('garbage.item') %></h2>
+    <fieldset class="name">
+      <legend><%= label_tag :name, t('garbage.item') %></legend>
       <%= text_field_tag :name, @name %>
-    </div>
+    </fieldset>
 
-    <div class="category">
-      <h2><%= t("garbage.category.select") %></h2>
+    <fieldset class="category">
+      <legend><%= label_tag 'category_ids[]', t("garbage.category.select") %></legend>
       <%= select_tag 'category_ids[]',  options_for_select(@options, @category_ids.first), include_blank: "" %>
-    </div>
+    </fieldset>
 
     <footer class="send">
       <%= submit_tag t('garbage.submit.search'), name: nil %>

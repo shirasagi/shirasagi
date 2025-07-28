@@ -75,6 +75,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
         within 'form#item-form' do
           click_on I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
       end.to change { Gws::Notice::Post.count }.by(1)
         .and change { SS::File.count }.by(1)
 

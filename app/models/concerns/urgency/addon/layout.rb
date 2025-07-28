@@ -28,6 +28,10 @@ module Urgency::Addon
       return if layout.nil?
 
       index_page.layout_id = layout.id
+
+      if index_page.is_a?(Cms::Addon::EditLock) && index_page.locked?
+        index_page.release_lock(user: index_page.lock_owner, force: true)
+      end
       index_page.save
     end
   end

@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Chorg::MainRunner, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let!(:root_group) { create(:revision_root_group) }
   let!(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let!(:task) { Chorg::Task.create!(name: unique_id, site_id: site.id) }
@@ -8,25 +9,28 @@ describe Chorg::MainRunner, dbscope: :example do
 
   context "with move" do
     let!(:source_group) do
-      create(
-        :cms_group, name: "#{root_group.name}/#{unique_id}",
-        contact_groups: [
-          {
-            main_state: "main", name: "name-#{unique_id}",
-            contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
-            contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
-            contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
-            contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
-          },
-          {
-            main_state: nil, name: "name-#{unique_id}",
-            contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
-            contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
-            contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
-            contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
-          }
-        ]
-      )
+      Timecop.freeze(now - 4.weeks) do
+        group = create(
+          :cms_group, name: "#{root_group.name}/#{unique_id}",
+          contact_groups: [
+            {
+              main_state: "main", name: "name-#{unique_id}",
+              contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
+              contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+              contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+              contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+            },
+            {
+              main_state: nil, name: "name-#{unique_id}",
+              contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
+              contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+              contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+              contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+            }
+          ]
+        )
+        Cms::Group.find(group.id)
+      end
     end
 
     let!(:revision) { create(:revision, site_id: site.id) }
@@ -69,24 +73,73 @@ describe Chorg::MainRunner, dbscope: :example do
     let!(:article_page1) do
       main_contact = source_group.contact_groups.where(main_state: "main").first
 
-      create(
-        :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
-        contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-        contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-        contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
-        contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
-        contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+      Timecop.freeze(now - 2.weeks) do
+        page = create(
+          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ], released_type: "same_as_updated",
+          contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
+          contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+          contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+          contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
+          contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+        ::FileUtils.rm_f(page.path)
+        expect(page.backups.count).to eq 1
+        Cms::Page.find(page.id)
+      end
     end
     let!(:article_page2) do
       sub_contact = source_group.contact_groups.ne(main_state: "main").first
 
-      create(
-        :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
-        contact_group_id: source_group.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
-        contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
-        contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
-        contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
-        contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+      Timecop.freeze(now - 2.weeks) do
+        page = create(
+          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ], released_type: "same_as_updated",
+          contact_group_id: source_group.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
+          contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
+          contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
+          contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
+          contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+        ::FileUtils.rm_f(page.path)
+        expect(page.backups.count).to eq 1
+        Cms::Page.find(page.id)
+      end
+    end
+
+    # 無関係なノードとページ
+    let!(:irrelevant_node) do
+      Timecop.freeze(now - 3.weeks) do
+        node = create(:article_node_page, cur_site: site)
+        expect(node.backups.count).to eq 1
+        Cms::Node.find(node.id)
+      end
+    end
+    let!(:irrelevant_page1) do
+      Timecop.freeze(now - 2.weeks) do
+        page = create(
+          :article_page, cur_site: site, cur_node: irrelevant_node, group_ids: [ cms_group.id ],
+          released_type: "same_as_updated")
+        ::FileUtils.rm_f(page.path)
+        expect(page.backups.count).to eq 1
+        Cms::Page.find(page.id)
+      end
+    end
+
+    # 他サイトのノードとページ
+    let!(:other_site) { create(:cms_site_unique, group_ids: cms_site.group_ids) }
+    let!(:other_site_node) do
+      Timecop.freeze(now - 3.weeks) do
+        node = create(:article_node_page, cur_site: other_site)
+        expect(node.backups.count).to eq 1
+        Cms::Node.find(node.id)
+      end
+    end
+    let!(:other_site_page1) do
+      Timecop.freeze(now - 2.weeks) do
+        page = create(
+          :article_page, cur_site: other_site, cur_node: other_site_node, group_ids: other_site.group_ids,
+          released_type: "same_as_updated")
+        ::FileUtils.rm_f(page.path)
+        expect(page.backups.count).to eq 1
+        Cms::Page.find(page.id)
+      end
     end
 
     context "with all supported attributes" do
@@ -94,7 +147,7 @@ describe Chorg::MainRunner, dbscope: :example do
         it do
           # execute
           job = described_class.bind(site_id: site.id, task_id: task.id)
-          expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+          expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
@@ -103,12 +156,33 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(log.logs).to include(/INFO -- : .* Completed Job/)
           end
 
+          # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
+          Cms::Node.find(irrelevant_node.id).tap do |node|
+            expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+            expect(node.backups.count).to eq 1
+          end
+          Cms::Page.find(irrelevant_page1.id).tap do |page|
+            expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
+            expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+            expect(page.backups.count).to eq 1
+          end
+          Cms::Node.find(other_site_node.id).tap do |node|
+            expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+            expect(node.backups.count).to eq 1
+          end
+          Cms::Page.find(other_site_page1.id).tap do |page|
+            expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
+            expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
+            expect(page.backups.count).to eq 1
+          end
+
           # check group
           Cms::Group.where(id: source_group.id).first.tap do |group_after_move|
             expect(group_after_move.name).not_to eq source_group.name
             expect(group_after_move.name).to eq destination["name"]
             expect(group_after_move.order.to_s).to eq destination["order"]
             expect(group_after_move.ldap_dn).to eq destination["ldap_dn"]
+            expect(group_after_move.updated.in_time_zone).to eq source_group.updated.in_time_zone
 
             expect(group_after_move.contact_groups).to have(source_group.contact_groups.count).items
             group_after_move.contact_groups.where(main_state: "main").first.tap do |main_contact_after_move|
@@ -161,6 +235,27 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_address).to eq destination_contact1["contact_address"]
             expect(page_after_move.contact_link_url).to eq destination_contact1["contact_link_url"]
             expect(page_after_move.contact_link_name).to eq destination_contact1["contact_link_name"]
+            expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
+            expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
+
+            backups = page_after_move.backups.to_a
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["group_ids"]).to eq [ source_group.id ]
+              expect(backup.data["contact_group_id"]).to eq source_group.id
+              expect(backup.data["contact_group_contact_id"]).to eq main_source_contact.id
+              expect(backup.data["contact_group_name"]).to eq destination_contact1["contact_group_name"]
+              expect(backup.data["updated"].in_time_zone).to eq page_after_move.updated.in_time_zone
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["group_ids"]).to eq article_page1.group_ids
+              expect(backup.data["contact_group_id"]).to eq article_page1.contact_group_id
+              expect(backup.data["contact_group_contact_id"]).to eq article_page1.contact_group_contact_id
+              expect(backup.data["contact_group_name"]).to eq article_page1.contact_group_name
+              expect(backup.data["updated"].in_time_zone).to eq article_page1.updated.in_time_zone
+            end
           end
           Cms::Page.find(article_page2.id).tap do |page_after_move|
             expect(page_after_move.group_ids).to eq [ source_group.id ]
@@ -177,11 +272,32 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_address).to eq destination_contact2["contact_address"]
             expect(page_after_move.contact_link_url).to eq destination_contact2["contact_link_url"]
             expect(page_after_move.contact_link_name).to eq destination_contact2["contact_link_name"]
+            expect(page_after_move.released.in_time_zone).to eq article_page2.released.in_time_zone
+            expect(page_after_move.updated.in_time_zone).to eq article_page2.updated.in_time_zone
+
+            backups = page_after_move.backups.to_a
+            expect(backups.count).to eq 2
+            backups[0].tap do |backup|
+              expect(backup.state).to eq "current"
+              expect(backup.data["group_ids"]).to eq [ source_group.id ]
+              expect(backup.data["contact_group_id"]).to eq source_group.id
+              expect(backup.data["contact_group_contact_id"]).to eq sub_source_contact.id
+              expect(backup.data["contact_group_name"]).to eq destination_contact2["contact_group_name"]
+              expect(backup.data["updated"].in_time_zone).to eq page_after_move.updated.in_time_zone
+            end
+            backups[1].tap do |backup|
+              expect(backup.state).to eq "before"
+              expect(backup.data["group_ids"]).to eq article_page2.group_ids
+              expect(backup.data["contact_group_id"]).to eq article_page2.contact_group_id
+              expect(backup.data["contact_group_contact_id"]).to eq article_page2.contact_group_contact_id
+              expect(backup.data["contact_group_name"]).to eq article_page2.contact_group_name
+              expect(backup.data["updated"].in_time_zone).to eq article_page2.updated.in_time_zone
+            end
           end
 
           task.reload
           expect(task.state).to eq 'completed'
-          expect(task.entity_logs.count).to eq 4
+          expect(task.entity_logs.count).to eq 3
           task.entity_logs[0].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Group'
             expect(entity_log['class']).to eq 'Cms::Group'
@@ -189,12 +305,6 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(entity_log['changes']).to include('name')
           end
           task.entity_logs[1].tap do |entity_log|
-            expect(entity_log['model']).to eq 'Cms::Node'
-            expect(entity_log['class']).to eq 'Article::Node::Page'
-            expect(entity_log['id']).to eq article_node.id.to_s
-            expect(entity_log['changes']).to include('conditions')
-          end
-          task.entity_logs[2].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Page'
             expect(entity_log['class']).to eq 'Article::Page'
             expect(entity_log['id']).to eq article_page1.id.to_s
@@ -203,7 +313,7 @@ describe Chorg::MainRunner, dbscope: :example do
               'contact_link_url', 'contact_link_name'
             )
           end
-          task.entity_logs[3].tap do |entity_log|
+          task.entity_logs[2].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Page'
             expect(entity_log['class']).to eq 'Article::Page'
             expect(entity_log['id']).to eq article_page2.id.to_s
@@ -217,13 +327,19 @@ describe Chorg::MainRunner, dbscope: :example do
 
       context "contact_group_relation is 'unrelated'" do
         before do
-          article_page1.update!(contact_group_relation: "unrelated")
+          save_released = article_page1.released.in_time_zone
+          save_updated = article_page1.updated.in_time_zone
+          article_page1.without_record_timestamps do
+            article_page1.update!(contact_group_relation: "unrelated")
+          end
+          expect(article_page1.released).to eq save_released
+          expect(article_page1.updated).to eq save_updated
         end
 
         it do
           # execute
           job = described_class.bind(site_id: site.id, task_id: task.id)
-          expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+          expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
@@ -232,12 +348,29 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(log.logs).to include(/INFO -- : .* Completed Job/)
           end
 
+          # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
+          Cms::Node.find(irrelevant_node.id).tap do |node|
+            expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+          end
+          Cms::Page.find(irrelevant_page1.id).tap do |page|
+            expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
+            expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+          end
+          Cms::Node.find(other_site_node.id).tap do |node|
+            expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+          end
+          Cms::Page.find(other_site_page1.id).tap do |page|
+            expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
+            expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
+          end
+
           # check group
           Cms::Group.where(id: source_group.id).first.tap do |group_after_move|
             expect(group_after_move.name).not_to eq source_group.name
             expect(group_after_move.name).to eq destination["name"]
             expect(group_after_move.order.to_s).to eq destination["order"]
             expect(group_after_move.ldap_dn).to eq destination["ldap_dn"]
+            expect(group_after_move.updated.in_time_zone).to eq source_group.updated.in_time_zone
 
             expect(group_after_move.contact_groups).to have(source_group.contact_groups.count).items
             group_after_move.contact_groups.where(main_state: "main").first.tap do |main_contact_after_move|
@@ -274,11 +407,13 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(page_after_move.contact_address).to eq article_page1.contact_address
             expect(page_after_move.contact_link_url).to eq article_page1.contact_link_url
             expect(page_after_move.contact_link_name).to eq article_page1.contact_link_name
+            expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
+            expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
           end
 
           task.reload
           expect(task.state).to eq 'completed'
-          expect(task.entity_logs.count).to eq 4
+          expect(task.entity_logs.count).to eq 2
           task.entity_logs[0].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Group'
             expect(entity_log['class']).to eq 'Cms::Group'
@@ -286,18 +421,6 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(entity_log['changes']).to include('name')
           end
           task.entity_logs[1].tap do |entity_log|
-            expect(entity_log['model']).to eq 'Cms::Node'
-            expect(entity_log['class']).to eq 'Article::Node::Page'
-            expect(entity_log['id']).to eq article_node.id.to_s
-            expect(entity_log['changes']).to include('conditions')
-          end
-          task.entity_logs[2].tap do |entity_log|
-            expect(entity_log['model']).to eq 'Cms::Page'
-            expect(entity_log['class']).to eq 'Article::Page'
-            expect(entity_log['id']).to eq article_page1.id.to_s
-            expect(entity_log['changes']).to be_present
-          end
-          task.entity_logs[3].tap do |entity_log|
             expect(entity_log['model']).to eq 'Cms::Page'
             expect(entity_log['class']).to eq 'Article::Page'
             expect(entity_log['id']).to eq article_page2.id.to_s
@@ -313,13 +436,29 @@ describe Chorg::MainRunner, dbscope: :example do
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
+        Cms::Node.find(irrelevant_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+        end
+        Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+        end
+        Cms::Node.find(other_site_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+        end
+        Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
         # check group
@@ -336,6 +475,7 @@ describe Chorg::MainRunner, dbscope: :example do
             expect(group_after_move.contact_link_url).to eq source_group.contact_link_url
             expect(group_after_move.contact_link_name).to eq source_group.contact_link_name
             expect(group_after_move.ldap_dn).to eq source_group.ldap_dn
+            expect(group_after_move.updated.in_time_zone).to eq source_group.updated.in_time_zone
           end
         end
 
@@ -355,33 +495,17 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_address).to eq main_source_contact.contact_address
           expect(page_after_move.contact_link_url).to eq main_source_contact.contact_link_url
           expect(page_after_move.contact_link_name).to eq main_source_contact.contact_link_name
+          expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
+          expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 1
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['id']).to eq source_group.id.to_s
           expect(entity_log['changes']).to include("name")
-        end
-        task.entity_logs[1].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq article_node.id.to_s
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[2].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Page'
-          expect(entity_log['class']).to eq 'Article::Page'
-          expect(entity_log['id']).to eq article_page1.id.to_s
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[3].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Page'
-          expect(entity_log['class']).to eq 'Article::Page'
-          expect(entity_log['id']).to eq article_page2.id.to_s
-          expect(entity_log['changes']).to be_present
         end
       end
     end
@@ -396,19 +520,22 @@ describe Chorg::MainRunner, dbscope: :example do
                group_ids: [source_group.id], cms_role_ids: [cms_role.id])
       end
       let!(:article_page1) do
-        page = build(:revision_page, cur_site: site, cur_node: article_node, group: source_group,
-               workflow_user_id: user1.id, workflow_state: "request", workflow_comment: "",
-               workflow_approvers: [{level: 1, user_id: user2.id, state: "request", comment: ""}],
-               workflow_required_counts: [false])
-        page.cur_site = site
-        page.save!
-        page
+        Timecop.freeze(now - 2.weeks) do
+          page = build(:revision_page, cur_site: site, cur_node: article_node, group: source_group,
+                 workflow_user_id: user1.id, workflow_state: "request", workflow_comment: "",
+                 workflow_approvers: [{level: 1, user_id: user2.id, state: "request", comment: ""}],
+                 workflow_required_counts: [false])
+          page.cur_site = site
+          page.save!
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
 
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id, user_id: user1.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -421,6 +548,22 @@ describe Chorg::MainRunner, dbscope: :example do
         Cms::Group.where(id: source_group.id).first.tap do |group_after_move|
           expect(group_after_move.name).not_to eq source_group.name
           expect(group_after_move.name).to eq changeset.destinations.first["name"]
+        end
+
+        # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
+        Cms::Node.find(irrelevant_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+        end
+        Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+        end
+        Cms::Node.find(other_site_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+        end
+        Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
         # check page
@@ -439,11 +582,13 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_address).to eq main_destination_contact["contact_address"]
           expect(page_after_move.contact_link_url).to eq main_destination_contact["contact_link_url"]
           expect(page_after_move.contact_link_name).to eq main_destination_contact["contact_link_name"]
+          expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
+          expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 3
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
@@ -454,12 +599,6 @@ describe Chorg::MainRunner, dbscope: :example do
           )
         end
         task.entity_logs[1].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq '1'
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page1.id.to_s
@@ -468,7 +607,7 @@ describe Chorg::MainRunner, dbscope: :example do
             'contact_link_url', 'contact_link_name'
           )
         end
-        task.entity_logs[3].tap do |entity_log|
+        task.entity_logs[2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page2.id.to_s
@@ -481,7 +620,12 @@ describe Chorg::MainRunner, dbscope: :example do
     end
 
     context 'グループの連絡先: 0件 → 1件, ページの連動: 有効' do
-      let!(:source_group) { create(:cms_group, name: "#{root_group.name}/グループ#{unique_id}") }
+      let!(:source_group) do
+        Timecop.freeze(now - 4.weeks) do
+          group = create(:cms_group, name: "#{root_group.name}/グループ#{unique_id}")
+          Cms::Group.find(group.id)
+        end
+      end
       let(:destination_contact1) do
         {
           main_state: "main", name: unique_id,
@@ -492,20 +636,26 @@ describe Chorg::MainRunner, dbscope: :example do
         }.with_indifferent_access
       end
       let!(:article_page1) do
-        create(
-          :article_page, cur_site: site, cur_node: article_node,
-          contact_group: source_group, contact_group_name: source_group.trailing_name, contact_charge: "charge-#{unique_id}",
-          contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
-          contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
-          contact_link_url: "/#{unique_id}/", contact_link_name: "link_name-#{unique_id}")
+        Timecop.freeze(now - 2.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node,
+            contact_group: source_group, contact_group_name: source_group.trailing_name, contact_charge: "charge-#{unique_id}",
+            contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+            contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+            contact_link_url: "/#{unique_id}/", contact_link_name: "link_name-#{unique_id}")
+        end
       end
       let!(:article_page2) do
-        create(
-          :article_page, cur_site: site, cur_node: article_node,
-          contact_group: source_group, contact_group_name: source_group.trailing_name, contact_charge: "charge-#{unique_id}",
-          contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
-          contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
-          contact_link_url: "/#{unique_id}/", contact_link_name: "link_name-#{unique_id}")
+        Timecop.freeze(now - 2.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node,
+            contact_group: source_group, contact_group_name: source_group.trailing_name, contact_charge: "charge-#{unique_id}",
+            contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+            contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+            contact_link_url: "/#{unique_id}/", contact_link_name: "link_name-#{unique_id}")
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
 
       it do
@@ -515,7 +665,7 @@ describe Chorg::MainRunner, dbscope: :example do
 
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -524,11 +674,28 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
+        # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
+        Cms::Node.find(irrelevant_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+        end
+        Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+        end
+        Cms::Node.find(other_site_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+        end
+        Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
+        end
+
         # check group
         Cms::Group.where(id: source_group.id).first.tap do |group_after_move|
           expect(group_after_move.name).not_to eq source_group.name
           expect(group_after_move.order.to_s).to eq destination["order"]
           expect(group_after_move.ldap_dn).to eq destination["ldap_dn"]
+          expect(group_after_move.updated.in_time_zone).to eq source_group.updated.in_time_zone
 
           expect(group_after_move.contact_groups).not_to have(source_group.contact_groups.count).items
           expect(group_after_move.contact_groups).to have(1).items
@@ -560,11 +727,13 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_address).to eq article_page1.contact_address
           expect(page_after_move.contact_link_url).to eq article_page1.contact_link_url
           expect(page_after_move.contact_link_name).to eq article_page1.contact_link_name
+          expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
+          expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 1
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
@@ -573,24 +742,6 @@ describe Chorg::MainRunner, dbscope: :example do
             'name', 'contact_tel', 'contact_fax', 'contact_email', 'contact_postal_code', 'contact_address',
             'contact_link_url', 'contact_link_name'
           )
-        end
-        task.entity_logs[1].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq '1'
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[2].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Page'
-          expect(entity_log['class']).to eq 'Article::Page'
-          expect(entity_log['id']).to eq article_page1.id.to_s
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[3].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Page'
-          expect(entity_log['class']).to eq 'Article::Page'
-          expect(entity_log['id']).to eq article_page2.id.to_s
-          expect(entity_log['changes']).to be_present
         end
       end
     end
@@ -606,7 +757,7 @@ describe Chorg::MainRunner, dbscope: :example do
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -618,6 +769,22 @@ describe Chorg::MainRunner, dbscope: :example do
         # check group
         Cms::Group.where(id: source_group.id).first.tap do |group_after_move|
           expect(group_after_move.contact_groups).to be_blank
+        end
+
+        # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
+        Cms::Node.find(irrelevant_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+        end
+        Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+        end
+        Cms::Node.find(other_site_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+        end
+        Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
         # check page
@@ -635,11 +802,13 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(page_after_move.contact_address).to eq article_page1.contact_address
           expect(page_after_move.contact_link_url).to eq article_page1.contact_link_url
           expect(page_after_move.contact_link_name).to eq article_page1.contact_link_name
+          expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
+          expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
         end
 
         task.reload
         expect(task.state).to eq 'completed'
-        expect(task.entity_logs.count).to eq 4
+        expect(task.entity_logs.count).to eq 3
         task.entity_logs[0].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Group'
           expect(entity_log['class']).to eq 'Cms::Group'
@@ -647,18 +816,12 @@ describe Chorg::MainRunner, dbscope: :example do
           expect(entity_log['changes']).to include('name')
         end
         task.entity_logs[1].tap do |entity_log|
-          expect(entity_log['model']).to eq 'Cms::Node'
-          expect(entity_log['class']).to eq 'Article::Node::Page'
-          expect(entity_log['id']).to eq '1'
-          expect(entity_log['changes']).to be_present
-        end
-        task.entity_logs[2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page1.id.to_s
           expect(entity_log['changes']).to be_present
         end
-        task.entity_logs[3].tap do |entity_log|
+        task.entity_logs[2].tap do |entity_log|
           expect(entity_log['model']).to eq 'Cms::Page'
           expect(entity_log['class']).to eq 'Article::Page'
           expect(entity_log['id']).to eq article_page2.id.to_s
@@ -668,7 +831,7 @@ describe Chorg::MainRunner, dbscope: :example do
     end
 
     context 'unable to move to existing group' do
-      let!(:group2) { create(:revision_new_group, order: 20) }
+      let!(:group2) { Timecop.freeze(now - 4.weeks) { create(:revision_new_group, order: 20) } }
       let(:destination) do
         {
           name: group2.name, order: group2.order.to_s, ldap_dn: group2.ldap_dn,
@@ -679,25 +842,45 @@ describe Chorg::MainRunner, dbscope: :example do
       let!(:article_page3) do
         main_contact = group2.contact_groups.where(main_state: "main").first
 
-        create(
-          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
-          contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-          contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-          contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
-          contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
-          contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+        Timecop.freeze(now - 2.weeks) do
+          page = create(
+            :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
+            contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
+            contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+            contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+            contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
+            contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+          ::FileUtils.rm_f(page.path)
+          Cms::Page.find(page.id)
+        end
       end
 
       it do
         # execute
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 0, 失敗: 1\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 0, 失敗: 1\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
+        Cms::Node.find(irrelevant_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq irrelevant_node.updated.in_time_zone
+        end
+        Cms::Page.find(irrelevant_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq irrelevant_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq irrelevant_page1.updated.in_time_zone
+        end
+        Cms::Node.find(other_site_node.id).tap do |node|
+          expect(node.updated.in_time_zone).to eq other_site_node.updated.in_time_zone
+        end
+        Cms::Page.find(other_site_page1.id).tap do |page|
+          expect(page.released.in_time_zone).to eq other_site_page1.released.in_time_zone
+          expect(page.updated.in_time_zone).to eq other_site_page1.updated.in_time_zone
         end
 
         # check group
@@ -766,25 +949,28 @@ describe Chorg::MainRunner, dbscope: :example do
 
   context "SS::Contact#name が組織変更の前後で一致していれば「ページ-連絡先」連携が切れない" do
     let!(:source_group) do
-      create(
-        :cms_group, name: "#{root_group.name}/#{unique_id}",
-        contact_groups: [
-          {
-            main_state: "main", name: "name-#{unique_id}",
-            contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
-            contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
-            contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
-            contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
-          },
-          {
-            main_state: nil, name: "name-#{unique_id}",
-            contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
-            contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
-            contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
-            contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
-          }
-        ]
-      )
+      Timecop.freeze(now - 4.weeks) do
+        group = create(
+          :cms_group, name: "#{root_group.name}/#{unique_id}",
+          contact_groups: [
+            {
+              main_state: "main", name: "name-#{unique_id}",
+              contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
+              contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+              contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+              contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+            },
+            {
+              main_state: nil, name: "name-#{unique_id}",
+              contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
+              contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+              contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+              contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+            }
+          ]
+        )
+        Cms::Group.find(group.id)
+      end
     end
 
     let!(:revision) { create(:revision, site_id: site.id) }
@@ -827,30 +1013,38 @@ describe Chorg::MainRunner, dbscope: :example do
     let!(:article_page1) do
       main_contact = source_group.contact_groups.where(main_state: "main").first
 
-      create(
-        :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
-        contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
-        contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
-        contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
-        contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
-        contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+      Timecop.freeze(now - 2.weeks) do
+        page = create(
+          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
+          contact_group_id: source_group.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related",
+          contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
+          contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax, contact_email: main_contact.contact_email,
+          contact_postal_code: main_contact.contact_postal_code, contact_address: main_contact.contact_address,
+          contact_link_url: main_contact.contact_link_url, contact_link_name: main_contact.contact_link_name)
+        ::FileUtils.rm_f(page.path)
+        Cms::Page.find(page.id)
+      end
     end
     let!(:article_page2) do
       sub_contact = source_group.contact_groups.ne(main_state: "main").first
 
-      create(
-        :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
-        contact_group_id: source_group.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
-        contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
-        contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
-        contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
-        contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+      Timecop.freeze(now - 3.weeks) do
+        page = create(
+          :article_page, cur_site: site, cur_node: article_node, group_ids: [ source_group.id ],
+          contact_group_id: source_group.id, contact_group_contact_id: sub_contact.id, contact_group_relation: "related",
+          contact_group_name: sub_contact.contact_group_name, contact_charge: sub_contact.contact_charge,
+          contact_tel: sub_contact.contact_tel, contact_fax: sub_contact.contact_fax, contact_email: sub_contact.contact_email,
+          contact_postal_code: sub_contact.contact_postal_code, contact_address: sub_contact.contact_address,
+          contact_link_url: sub_contact.contact_link_url, contact_link_name: sub_contact.contact_link_name)
+        ::FileUtils.rm_f(page.path)
+        Cms::Page.find(page.id)
+      end
     end
 
     it do
       # execute
       job = described_class.bind(site_id: site.id, task_id: task.id)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -890,6 +1084,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page_after_move.contact_address).to eq destination_contact1["contact_address"]
         expect(page_after_move.contact_link_url).to eq destination_contact1["contact_link_url"]
         expect(page_after_move.contact_link_name).to eq destination_contact1["contact_link_name"]
+        expect(page_after_move.released.in_time_zone).to eq article_page1.released.in_time_zone
+        expect(page_after_move.updated.in_time_zone).to eq article_page1.updated.in_time_zone
       end
       Cms::Page.find(article_page2.id).tap do |page_after_move|
         # expect(page_after_move.group_ids).to eq [ source_group.id ]
@@ -906,6 +1102,8 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(page_after_move.contact_address).to eq destination_contact2["contact_address"]
         expect(page_after_move.contact_link_url).to eq destination_contact2["contact_link_url"]
         expect(page_after_move.contact_link_name).to eq destination_contact2["contact_link_name"]
+        expect(page_after_move.released.in_time_zone).to eq article_page2.released.in_time_zone
+        expect(page_after_move.updated.in_time_zone).to eq article_page2.updated.in_time_zone
       end
     end
   end

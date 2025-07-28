@@ -30,12 +30,12 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
         msg = I18n.t('gws/circular.seen_user_info.format', count: count, total: total)
         expect(page).to have_css("dd", text: msg)
 
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t('gws/circular.seen_user_info.more')
         end
       end
 
-      wait_for_cbox do
+      within_cbox do
         within "table.index [data-user-id='#{user1.id}']" do
           seen_at = post1.seen_at(user1)
           expect(page).to have_css("td.browsed", text: I18n.t('gws/board.options.browsed_state.read'))

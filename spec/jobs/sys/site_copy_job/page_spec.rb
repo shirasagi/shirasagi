@@ -26,7 +26,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         page.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -64,7 +64,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         page.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -102,7 +102,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         page.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -147,7 +147,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         page.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -159,6 +159,46 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_page.files).to have(1).items
         expect(dest_page.files.first.owner_item_id).to eq dest_page.id
         expect(dest_page.files.first.owner_item_type).to eq dest_page.class.name
+      end
+    end
+
+    describe "copy article/page with categories" do
+      let(:user) { cms_user }
+      let(:node) { create :article_node_page, cur_site: site, cur_user: user, layout_id: layout.id }
+      let!(:page) do
+        create(:article_page, cur_site: site, cur_node: node, cur_user: user, layout_id: layout.id,
+          category_ids: [cate1.id, cate2.id])
+      end
+      let!(:cate1) { create :category_node_page, cur_site: site, cur_user: user, layout_id: layout.id }
+      let!(:cate2) { create :category_node_page, cur_site: site, cur_user: user, layout_id: layout.id }
+
+      before do
+        task.copy_contents = 'pages'
+        task.save!
+
+        page.html = '<div>page</div>'
+        page.save!
+
+        perform_enqueued_jobs do
+          ss_perform_now Sys::SiteCopyJob
+        end
+      end
+
+      it do
+        dest_site = Cms::Site.find_by(host: target_host_host)
+        dest_page = Cms::Page.site(dest_site).find_by(filename: page.filename)
+        expect(dest_page.name).to eq page.name
+        expect(dest_page.html).to eq page.html
+
+        dest_cate1 = Category::Node::Base.site(dest_site).find_by(filename: cate1.filename)
+        dest_cate2 = Category::Node::Base.site(dest_site).find_by(filename: cate2.filename)
+        expect(dest_page.category_ids).to match_array [dest_cate1.id, dest_cate2.id]
+
+        expect(Job::Log.count).to eq 1
+        log = Job::Log.first
+        expect(log.logs).not_to include(include('WARN'))
+        expect(log.logs).not_to include(include('ERROR'))
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
       end
     end
 
@@ -175,7 +215,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         page.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -205,7 +245,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         page2.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -234,7 +274,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         task.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -256,7 +296,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         task.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -284,7 +324,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         task.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 

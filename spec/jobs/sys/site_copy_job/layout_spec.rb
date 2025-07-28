@@ -18,7 +18,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
       task.save!
 
       perform_enqueued_jobs do
-        Sys::SiteCopyJob.perform_now
+        ss_perform_now Sys::SiteCopyJob
       end
     end
 

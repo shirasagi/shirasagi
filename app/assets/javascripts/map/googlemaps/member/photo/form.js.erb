@@ -27,7 +27,7 @@ this.Member_Photo_Form = (function () {
   };
 
   Member_Photo_Form.attachMessage = function (id) {
-    google.maps.event.addListener(Googlemaps_Map.markers[id], 'click', function (event) {
+    google.maps.event.addListener(Googlemaps_Map.markers[id], 'click', function (_event) {
       if (Googlemaps_Map.openedInfo) {
         Googlemaps_Map.openedInfo.close();
       }
@@ -95,7 +95,7 @@ this.Member_Photo_Form = (function () {
   };
 
   Member_Photo_Form.renderMarkers = function () {
-    var i, len, m, markerBounds, ref, zoomChangeBoundsListener;
+    var i, len, m, markerBounds, ref;
     markerBounds = new google.maps.LatLngBounds();
     if (Googlemaps_Map.markers) {
       ref = Googlemaps_Map.markers;
@@ -158,7 +158,7 @@ this.Member_Photo_Form = (function () {
       Member_Photo_Form.setMapLoc($(".mod-map .clicked"), event.latLng.lng(), event.latLng.lat());
       return Member_Photo_Form.createMarker($(".mod-map .marker-loc"));
     });
-    $(".mod-map .clear-marker").on('click', function (e) {
+    $(".mod-map .clear-marker").on('click', function (_e) {
       Member_Photo_Form.clearMarker($(".mod-map .marker-loc"));
       return false;
     });
@@ -173,7 +173,7 @@ this.Member_Photo_Form = (function () {
       $(".zoom-input").val(Googlemaps_Map.map.getZoom());
       return false;
     });
-    google.maps.event.addListener(Googlemaps_Map.map, 'bounds_changed', function (event) {
+    google.maps.event.addListener(Googlemaps_Map.map, 'bounds_changed', function (_event) {
       var zoom = Googlemaps_Map.map.getZoom();
       $('input[name="item[map_zoom_level]"]').val(zoom);
     });

@@ -11,7 +11,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       inquiry_captcha: 'disabled',
       notice_state: 'enabled',
       notice_content: 'link_only',
-      notice_email: 'notice@example.jp',
+      notice_emails: ['notice@example.jp'],
       from_name: 'admin',
       from_email: 'admin@example.jp'
     )
@@ -55,7 +55,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq sender
+          expect(find("[name='item[1]']")['value']).to eq sender
         end
         within 'footer.send' do
           click_button I18n.t("inquiry.submit")

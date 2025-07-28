@@ -5,6 +5,7 @@ module SS
     module_function
 
     def es_port
+      # @es_port ||= 9200
       @es_port ||= rand(29_200..39_200)
     end
 

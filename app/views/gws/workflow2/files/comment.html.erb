@@ -1,0 +1,75 @@
+<div class="mod-workflow-view gws-workflow-view">
+  <% if @item.workflow_state != Gws::Workflow2::File::WORKFLOW_STATE_APPROVE_WITHOUT_APPROVAL %>
+
+    <% if @item.workflow_approvers.present? %>
+      <% @item.workflow_approvers.group_by { |workflow_approver| workflow_approver[:level] }.each do |level, workflow_approvers| %>
+        <% workflow_approvers.each_with_index do |workflow_approver, index| %>
+          <% next if params[:level] != level.to_s %>
+          <% next if params[:index] != index.to_s %>
+
+          <% approver_id = workflow_approver[:user_id] %>
+          <% approver = Gws::User.site(@cur_site).where(id: approver_id).first %>
+          <% state = workflow_approver[:state] %>
+
+          <table class="index">
+            <tbody>
+              <tr class="level">
+                <td>
+                  <%= t('mongoid.attributes.workflow/model/route.level', level: level) %>
+                </td>
+                <td>
+                  <% required_count = @item.workflow_required_counts[level - 1] %>
+                  <% if required_count %>
+                    <%= t('workflow.required_count_label.minimum', required_count: required_count) %>
+                  <% else %>
+                    <%= t('workflow.required_count_label.all') %>
+                  <% end %>
+                </td>
+                <td>
+                  <% if approver %>
+                    <%= workflow_user_profile(approver) %>
+                  <% else %>
+                    <%= t("workflow.user_deleted") %>
+                  <% end %>
+                </td>
+                <td>
+                  <%= t("workflow.state.#{state}") %>
+                  <%= workflow_approver[:created].in_time_zone(@cur_user.timezone).strftime("(%Y/%m/%d %H:%M)") rescue nil %>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+          <br>
+
+          <% if @ss_mode == :gws && (workflow_approver[:file_ids].present? || workflow_approver[:comment].present?) %>
+            <div style="padding: 10px 30px;">
+              <% if workflow_approver[:comment].present? %>
+                <div class="approver-comment"><%= br workflow_approver[:comment] %></div>
+                <br>
+              <% end %>
+
+              <% if workflow_approver[:file_ids].present? %>
+                <div class="approver-files">
+                  <% SS::File.in(id: workflow_approver[:file_ids]).each do |file| %>
+                    <%= link_to file.url, { class: "approver-file", target: "_blank", rel: "noopener" } do %>
+                      <% if file.image? %>
+                        <%= image_tag(file.thumb_url, class: "thumb") %>
+                      <% else %>
+                      <span class="thumb ext icon-<%= file.extname %>">
+                        <i class="material-icons">insert_drive_file</i><br>
+                        <span class="ext-name"><%= file.extname %></span>
+                      </span>
+                      <% end %>
+                      <span class="name"><%= file.humanized_name %></span>
+                    <% end %>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</div>

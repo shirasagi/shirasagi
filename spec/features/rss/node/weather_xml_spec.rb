@@ -24,7 +24,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[html]', with: html
 
       click_on I18n.t('ss.buttons.save')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      wait_for_notice I18n.t('ss.notice.saved'), wait: 60
 
       expect(Rss::WeatherXmlPage.count).to eq 1
       Rss::WeatherXmlPage.first.tap do |item|
@@ -39,7 +39,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[name]', with: name1
 
       click_on I18n.t('ss.buttons.save')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'), wait: 60)
+      wait_for_notice I18n.t('ss.notice.saved'), wait: 60
 
       Rss::WeatherXmlPage.first.tap do |item|
         expect(item.name).to eq name1
@@ -49,7 +49,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       click_on name1
       click_on I18n.t('ss.links.delete')
       click_on I18n.t('ss.buttons.delete')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'), wait: 60)
+      wait_for_notice I18n.t('ss.notice.deleted'), wait: 60
     end
   end
 
@@ -75,24 +75,24 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       fill_in 'item[lower_mail_text]', with: unique_id
       select I18n.t("rss.options.earthquake_intensity.6-"), from: 'item[earthquake_intensity]'
 
-      wait_cbox_open do
+      wait_for_cbox_opened do
         click_on I18n.t("jmaxml.apis.quake_regions.index")
       end
-      wait_for_cbox do
-        click_on region.name
+      within_cbox do
+        wait_for_cbox_closed { click_on region.name }
       end
       within ".mod-rss-anpi-mail-setting-regions" do
         expect(page).to have_css(".index", text: region.name)
       end
 
       within '.mod-rss-anpi-mail-setting-my-anpi-post' do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.apis.nodes.index")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css("span.select-single-item", text: member_node_my_anpi_post.name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           find("#cboxClose").click
         end
       end
@@ -101,13 +101,13 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       end
 
       within '.mod-rss-anpi-mail-setting-anpi-mail' do
-        wait_cbox_open do
+        wait_for_cbox_opened do
           click_on I18n.t("cms.apis.nodes.index")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css("span.select-single-item", text: ezine_node_member_page.name)
-        wait_cbox_close do
+        wait_for_cbox_closed do
           find("#cboxClose").click
         end
       end
@@ -116,7 +116,7 @@ describe "Rss::Node::WeatherXml", type: :feature, dbscope: :example, js: true do
       end
 
       click_on I18n.t('ss.buttons.save')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
   end
 end

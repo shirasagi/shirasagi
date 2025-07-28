@@ -21,7 +21,7 @@ describe SS::UploadPolicy, dbscope: :example do
   describe "methods" do
     it "sanitizer_input_path" do
       file = SS::File.new(name: 'example.txt')
-      result = file.sanitizer_input_path.start_with?("#{Rails.root}/#{SS.config.ss.sanitizer_input}/")
+      result = file.sanitizer_input_path.start_with?("#{SS::UploadPolicy.sanitizer_input_path}/")
       expect(result).to be_truthy
 
       sanitizer_input_basename = ::File.basename(file.sanitizer_input_path)
@@ -35,7 +35,7 @@ describe SS::UploadPolicy, dbscope: :example do
     let(:zip_path) { "#{root_dir}/ss_file_1_1635072302_1000_sanitized.zip" }
 
     before do
-      ::Fs.mkdir_p(root_dir)
+      Fs.mkdir_p(root_dir)
       FileUtils.cp(zip_source, zip_path)
     end
     after { FileUtils.rm(zip_path) }

@@ -4,36 +4,36 @@
         border: 1px solid #ccc;
     }
     .site-search-keyword {
-        position: relative;
         display: inline-block;
+        position: relative;
         input#s_keyword {
+            width: calc(100% - 12px);
             padding: 5px;
             border: 0;
             color: #666;
-            width: calc(100% - 12px);
         }
     }
     .site-search-history {
         position: absolute;
+        z-index: 200;
         top: 32px;
         min-width: 100%;
-        list-style: none;
         -webkit-border-radius: 6px;
         -moz-border-radius: 6px;
         border-radius: 6px;
+        background: rgb(255, 255, 255);
         -webkit-box-shadow: 0px 0px 10px -6px rgba(0,0,0,0.6);
         box-shadow: 0px 0px 10px -6px rgba(0,0,0,0.6);
-        z-index: 200;
-        background: rgb(255, 255, 255);
         font-size: 14px;
+        list-style: none;
         li {
             a {
                 display: block;
                 padding: 5px 11px;
-                white-space: nowrap;
-                text-decoration: none;
-                font-weight: bold;
                 color: #000;
+                font-weight: bold;
+                text-decoration: none;
+                white-space: nowrap;
                 &:hover {
                     background-color: #EEE;
                 }
@@ -42,15 +42,13 @@
     }
     button[type="submit"],
     input[type="submit"] {
-        margin: 0;
-        border: 0;
         width: 52px;
+        margin: 0;
         padding: 5px 10px;
+        border: 0;
         background: #333;
         color: #fff;
-
     }
-
 }
 @media only screen and (max-width: 600px) {
     .search-wrap,
@@ -66,14 +64,7 @@
         }
         .site-search-history {
             top: 40px;
-            li {
-                a {
-                    &:hover {
-                    }
-                }
-            }
         }
-    
     }
 }
 
@@ -82,30 +73,21 @@
         display: inline-block;
         margin-bottom: 30px;
         .site-search-keyword {
-            input#s_keyword {
-            }
             .site-search-history {
                 min-width: 100%;
-                li {
-                    a {
-                    }
-                }
-            }
-            button[type="submit"],
-            input[type="submit"] {
             }
             input[type="submit"] {
-                padding: 5px 10px;
                 margin: 0;
+                padding: 5px 10px;
                 border: 0;
                 background: #333;
                 color: #fff;
             }
         }
         select#target {
-            padding-left: 10px;
-            height: 31px;
             width: 220px;
+            height: 31px;
+            padding-left: 10px;
         }
     }
 
@@ -149,16 +131,6 @@
                     border-radius: 0;
     
                 }
-                .site-search-history {
-                    li {
-                        a {
-                        }
-                    }
-                }
-            }
-            button[type="submit"],
-            input[type="submit"] {
-
             }
             input[type="submit"] {
                 position: absolute;
@@ -170,11 +142,11 @@
                 line-height: 33px;
             }
             select#target {
-                margin-top: 10px;
-                width: 100%;
                 display: block;
-                border-radius: 3px;
+                width: 100%;
+                margin-top: 10px;
                 padding: 5px;
+                border-radius: 3px;
             }
         }
     }
@@ -195,39 +167,22 @@
         -webkit-justify-content: space-between;
         justify-content: space-between;
         margin-bottom: 5px;
-        .site-search-keyword {
-            input#s_keyword {
-            }
-            .site-search-history {
-            }
-        }
-        button[type="submit"],
-        input[type="submit"] {
-        }
     }
 }
 @media only screen and (max-width: 600px) {
     .search-wrap {
-        float: none;
-        width: 100%;
         display: block;
-        padding: 0 10px;
-        width: 100%;
         -webkit-box-sizing: border-box;
         -moz-box-sizing: border-box;
         box-sizing: border-box;
+        width: 100%;
+        padding: 0 10px;
+        float: none;
         text-align: left;
         form {
             margin-bottom: 15px;
             .site-search-keyword {
                 width: calc(100% - 52px);
-                input#s_keyword {
-                }
-                .site-search-history {
-                }
-            }
-            button[type="submit"],
-            input[type="submit"] {
             }
         }
     }

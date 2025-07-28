@@ -60,7 +60,7 @@
   <dt class="depth-2"><%= @model.t :password_prohibited_char %><%= @model.tt :password_prohibited_char %></dt>
   <dd class="depth-2">
     <%= f.select :password_prohibited_char_use, @item.password_prohibited_char_use_options %>
-    <%= f.text_field :password_prohibited_char %>
+    <%= f.text_field :password_prohibited_char, style: "width: 80%;" %>
   </dd>
 
   <dt class="depth-1"><%= t("sys.password_change_constraint") %></dt>

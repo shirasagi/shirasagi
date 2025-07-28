@@ -13,9 +13,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       visit gws_memo_messages_path(site)
       first(".list-item .icon-star.off a").click
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.set_star'))
-      end
+      wait_for_notice I18n.t('ss.notice.set_star')
 
       expect(page).to have_css(".list-item .icon-star.on")
       memo.reload
@@ -30,9 +28,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
 
       visit gws_memo_messages_path(site)
       first(".list-item .icon-star.on a").click
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.unset_star'))
-      end
+      wait_for_notice I18n.t('ss.notice.unset_star')
 
       expect(page).to have_css(".list-item .icon-star.off")
       memo.reload
@@ -53,9 +49,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.set_star'))
-      end
+      wait_for_notice I18n.t('ss.notice.set_star')
 
       expect(page).to have_css(".list-item .icon-star.on")
       memo.reload
@@ -77,9 +71,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      within find("#notice", visible: false) do
-        expect(page).to have_content(I18n.t('ss.notice.unset_star'))
-      end
+      wait_for_notice I18n.t('ss.notice.unset_star')
 
       expect(page).to have_css(".list-item .icon-star.off")
       memo.reload

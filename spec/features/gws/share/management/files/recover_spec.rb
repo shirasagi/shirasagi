@@ -33,7 +33,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.buttons.restore")
     end
 
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.restored'))
+    wait_for_notice I18n.t('ss.notice.restored')
     within "#content-navi" do
       expect(page).to have_css(".tree-item", text: folder.name)
     end
@@ -48,7 +48,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       expect(history.model).to eq item.class.model_name.i18n_key.to_s
       expect(history.model_name).to eq I18n.t("mongoid.models.#{item.class.model_name.i18n_key}")
       expect(history.item_id).to eq item.id.to_s
-      expect(::Fs.file?(history.path)).to be_truthy
+      expect(Fs.file?(history.path)).to be_truthy
       expect(history.path).to eq item.histories.last.path
     end
 

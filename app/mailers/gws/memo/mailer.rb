@@ -1,6 +1,7 @@
 class Gws::Memo::Mailer < ApplicationMailer
   include SS::AttachmentSupport
 
+  helper SS::DateTimeHelper
   helper_method :format_email
 
   def forward_mail(item, forward_emails)
@@ -17,7 +18,17 @@ class Gws::Memo::Mailer < ApplicationMailer
       add_attachment_file(file)
     end
 
-    mail(from: from, bcc: forward_emails, subject: subject, message_id: Gws.generate_message_id(@cur_site))
+    bcc = @cur_site.exclude_disallowed_emails(forward_emails)
+    return false if bcc.blank?
+
+    mail(from: from, bcc: forward_emails, subject: subject, message_id: Gws.generate_message_id(@cur_site)) do |format|
+      # 本文がHTML形式の場合はHTMLメールを、それ以外の場合はテキスト形式のメールを送る
+      if @item.html?
+        format.html { render }
+      else
+        format.text { render }
+      end
+    end
   end
 
   def notice_mail(notice, users, item, opts = {})
@@ -35,9 +46,8 @@ class Gws::Memo::Mailer < ApplicationMailer
     @body = I18n.t("gws_notification.#{key}.mail_text", subject: subject, text: page_url)
     set_group_settings
     bcc = @users.map(&:send_notice_mail_addresses).flatten
-    bcc = bcc.select{ |email| email.present? && @cur_site.email_domain_allowed?(email) }
-
-    return false unless bcc.present?
+    bcc = @cur_site.exclude_disallowed_emails(bcc)
+    return false if bcc.blank?
 
     mail(from: @from, bcc: bcc, subject: subject, body: @body, message_id: Gws.generate_message_id(@cur_site))
   end

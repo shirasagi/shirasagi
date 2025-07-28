@@ -11,9 +11,9 @@ describe Cms::GenerationReportCreateJob, dbscope: :example do
     Cms::Task.create!(site_id: site.id, node_id: node.id, name: 'cms:generate_nodes', state: 'ready')
   end
 
-  describe "#perform when taks 'cms:generate_node' is running" do
+  describe "#perform when task 'cms:generate_node' is running" do
     before do
-      Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
+      ss_perform_now Cms::Node::GenerateJob.bind(site_id: site.id)
 
       expect(File.exist?("#{node.path}/index.html")).to be_truthy
 
@@ -50,7 +50,7 @@ describe Cms::GenerationReportCreateJob, dbscope: :example do
 
     it do
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
-        Cms::GenerationReportCreateJob.bind(site_id: site.id).perform_now(task.id)
+        ss_perform_now(Cms::GenerationReportCreateJob.bind(site_id: site.id), task.id)
 
         expect(Job::Log.count).to eq 2
         Job::Log.all.each do |log|
@@ -63,6 +63,8 @@ describe Cms::GenerationReportCreateJob, dbscope: :example do
         expect(title.site_id).to eq site.id
         expect(title.name).to include("generate node performance")
         expect(title.task_id).to eq task.id
+        expect(title.task_started).to eq task.started
+        expect(title.task_closed).to eq task.closed
         expect(title.sha256_hash).to be_present
         expect(title.generation_type).to eq "nodes"
 
