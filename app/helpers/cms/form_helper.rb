@@ -33,7 +33,15 @@ module Cms::FormHelper
 
   def ancestral_loop_settings
     items = []
-    Cms::LoopSetting.site(@cur_site).sort(order: 1, name: 1).each do |item|
+    Cms::LoopSetting.site(@cur_site).where(state: 'public', html_format: 'shirasagi').sort(order: 1, name: 1).each do |item|
+      items << [item.name, item.id]
+    end
+    items
+  end
+
+  def ancestral_custom_html_settings
+    items = []
+    Cms::LoopSetting.site(@cur_site).where(state: 'public', html_format: 'liquid').sort(order: 1, name: 1).each do |item|
       items << [item.name, item.id]
     end
     items

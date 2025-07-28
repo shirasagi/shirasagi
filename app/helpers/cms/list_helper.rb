@@ -55,7 +55,11 @@ module Cms::ListHelper
     if cur_item.loop_format_shirasagi?
       render_list_with_shirasagi(cur_item, default_node_loop_html, &block)
     else
-      source = cur_item.loop_liquid.presence || default_node_loop_liquid
+      if cur_item.loop_setting.present?
+        source = cur_item.loop_setting.custom_html.presence || cur_item.loop_setting.html || cur_item.loop_liquid.presence || default_node_loop_liquid
+      else
+        source = cur_item.loop_liquid.presence || default_node_loop_liquid
+      end
       assigns = { "nodes" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
@@ -71,7 +75,11 @@ module Cms::ListHelper
     if cur_item.loop_format_shirasagi?
       render_list_with_shirasagi(cur_item, default_page_loop_html, &block)
     else
-      source = cur_item.loop_liquid.presence || default_page_loop_liquid
+      if cur_item.loop_setting.present?
+        source = cur_item.loop_setting.custom_html.presence || cur_item.loop_setting.html || cur_item.loop_liquid.presence || default_page_loop_liquid
+      else
+        source = cur_item.loop_liquid.presence || default_page_loop_liquid
+      end
       assigns = { "pages" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
@@ -88,7 +96,13 @@ module Cms::ListHelper
     else
       h << cur_item.substitute_html.to_s.html_safe if @items.blank?
       if cur_item.loop_setting.present?
-        loop_html = cur_item.loop_setting.html
+        # シラサギ形式の場合はhtml_format: 'shirasagi'のループ設定のみを使用
+        if cur_item.loop_setting.html_format == 'shirasagi'
+          loop_html = cur_item.loop_setting.html
+        else
+          # Liquid形式のループ設定が選択されている場合は、直接入力のloop_htmlを使用
+          loop_html = cur_item.loop_html.presence || default_loop_html
+        end
       elsif cur_item.loop_html.present?
         loop_html = cur_item.loop_html
       else
