@@ -25,7 +25,7 @@ class Uploader::File
     compile_coffee if @js
     return true
   rescue => e
-    errors.add :path, ":" + e.message
+    errors.add :base, e.message
     return false
   end
 
@@ -179,13 +179,6 @@ class Uploader::File
     end
 
     true
-  rescue Cms::ScssScriptError => e
-    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-    msg = e.backtrace[0].sub(/.*?\/_\//, "")
-    msg = "[#{msg}] #{e}"
-    errors.add :scss, msg
-
-    false
   end
 
   def validate_coffee

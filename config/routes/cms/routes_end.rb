@@ -169,8 +169,12 @@ Rails.application.routes.draw do
 
     scope module: "form" do
       resources :forms, concerns: [:deletion, :download, :import, :change_state] do
-        resources :init_columns, concerns: [:deletion]
-        resources :columns, concerns: [:deletion]
+        resources :columns, concerns: [:deletion] do
+          post :reorder, on: :collection
+        end
+        resources :init_columns, concerns: [:deletion] do
+          post :reorder, on: :collection
+        end
 
         get :column_names, on: :collection
       end
@@ -184,6 +188,15 @@ Rails.application.routes.draw do
           match :download_all, via: [:get, :post], on: :collection
           match :import_url, via: [:get, :post], on: :collection
         end
+      end
+    end
+
+    namespace :frames do
+      resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
+      resources :init_columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
       end
     end
 
@@ -359,6 +372,7 @@ Rails.application.routes.draw do
       end
       resources :result, only: [:index]
     end
+    resources :page_expiration_settings, only: [:index, :show, :edit, :update]
 
     namespace "apis" do
       get "groups" => "groups#index"
@@ -391,7 +405,9 @@ Rails.application.routes.draw do
       put "finalize" => "large_file_upload#finalize"
       post "run" => "large_file_upload#run"
       delete "delete_init_files" => "large_file_upload#delete_init_files"
+      get "content_quota_navi" => "content_quota_navi#index"
 
+      resources :columns, only: %i[edit update]
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end

@@ -12,6 +12,7 @@ Rails.application.routes.draw do
       scope ":nid/:id" do
         get "questions" => "questions#index"
         get "procedures" => "procedures#index"
+        get "edges" => "edges#index"
       end
     end
   end

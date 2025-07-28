@@ -7,8 +7,14 @@
 %>
 <%= tag.dd(class: [ @section_id, "radio-button-#{column.id}" ], data: data) do %>
   <%= hidden_field_tag("#{object_name}[#{column.id}]", nil, id: nil) %>
-  <span class="prefix-block"><%= sanitize_easy column.prefix_explanation %></span>
-  <span class="prefix"><%= column.prefix_label %></span>
+
+  <% if column.prefix_explanation.present? -%>
+    <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></div>
+  <% end -%>
+
+  <% if column.prefix_label.present? -%>
+    <span class="prefix"><%= column.prefix_label %></span>
+  <% end -%>
   <% column.select_options.each_with_index do |val, idx| %>
     <label>
       <%=
@@ -33,8 +39,13 @@
       </span>
     </label>
   <% end %>
-  <span class="postfix"><%= column.postfix_label %></span>
-  <span class="postfix-block"><%= sanitize_easy column.postfix_explanation %></span>
+  <% if column.postfix_label.present? -%>
+    <span class="postfix"><%= column.postfix_label %></span>
+  <% end %>
+
+  <% if column.postfix_explanation.present? -%>
+    <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></div>
+  <% end %>
 
   <% if !column.required? %>
     <div class="mt-1">

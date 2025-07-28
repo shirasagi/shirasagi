@@ -22,7 +22,7 @@ require_relative "../app/models/ss/config"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.19.1" }
+  mattr_reader(:version) { "1.20.0" }
 
   class Current < ActiveSupport::CurrentAttributes
     attribute :env, :request
@@ -61,7 +61,7 @@ module SS
 
   class Application < Rails::Application
     # Initialize configuration defaults for originally generated Rails version.
-    config.load_defaults 7.2
+    config.load_defaults 8.0
 
     # Please, add to the `ignore` list any other `lib` subdirectories that do
     # not contain `.rb` files, or that should not be reloaded or eager loaded.

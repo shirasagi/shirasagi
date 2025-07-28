@@ -1,0 +1,73 @@
+<% max_name_len = 25 %>
+
+<%= jquery do %>
+  SS_SearchUI.modal();
+<% end %>
+
+<div class="search-ui-form">
+<%= form_for :s, url: url_for(action: :index), html: { method: "GET", class: :search } do |f| %>
+  <%= hidden_field_tag("single", params[:single], id: nil) %>
+  <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), id: nil %>
+  <%= f.submit  t("ss.buttons.search"), class: :btn %>
+<% end %>
+</div>
+
+<div class="table-wrap">
+  <table class="index">
+    <thead class="list-head">
+      <tr>
+        <% if @multi %>
+          <th class="checkbox">
+            <input type="checkbox" />
+          </th>
+        <% end %>
+        <th class="question-name"><%= @model.t :name %></th>
+        <th class="name"><%= Guide::Diagram::Edge.t :value %></th>
+      </tr>
+    </thead>
+    <tbody class="items">
+      <% index = 0 %>
+      <% prev_question_id = nil %>
+      <% @items.each do |item| %>
+        <%
+          question, edge = item
+          data = { id: edge ? "#{question.id}:#{edge.id}" : question.id.to_s, name: edge ? "#{question.name}:#{edge.value}" : question.name }
+          if edge
+            data.merge!(
+              question_id: question.id.to_s, edge_id: edge.id.to_s, edge_value: edge.value
+            )
+          end
+          index = 0 if prev_question_id != question.id
+        %>
+        <%= tag.tr data: data do %>
+          <% if @multi %>
+            <td class="checkbox">
+              <input type="checkbox" name="ids[]" value="<%= question.id %>:<%= edge.try(:id) %>" />
+            </td>
+          <% end %>
+          <td class="question-name" style="white-space: normal">
+            <%=
+              if index == 0
+                link_to("#", class: @multi ? "select-item" : "select-single-item") do
+                  ss_truncate(question.name, length: max_name_len)
+                end
+              end
+            %>
+          </td>
+          <td class="value" style="white-space: normal">
+            <%= edge.try(:value) ? link_to(ss_truncate(edge.value, length: max_name_len), "#", class: @multi ? "select-item" : "select-single-item") : nil %>
+          </td>
+        <% end %>
+
+        <% index += 1 %>
+        <% prev_question_id = question.id %>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<div class="search-ui-select">
+  <%= button_tag t("ss.links.select"), { type: :button, class: "select-items btn" } %>
+</div>
+
+<%= paginate @items if @items.try(:current_page) %>

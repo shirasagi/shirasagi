@@ -152,14 +152,15 @@ module SS::UploadPolicy
         zip_file.entries.sort_by(&:name).each do |entry|
           next if entry.ftype == :directory
 
-          if /_[a-zA-Z]+Report\.txt\z/.match?(entry.name)
+          entry_name = SS::Zip.safe_zip_entry_name(entry)
+          if /_[a-zA-Z]+Report\.txt\z/.match?(entry_name)
             zip_file.remove(entry)
             next
           end
 
-          dir = ::File.dirname(entry.name)
-          ext = ::File.extname(entry.name)
-          basename = ::File.basename(entry.name, '.*')
+          dir = ::File.dirname(entry_name)
+          ext = ::File.extname(entry_name)
+          basename = ::File.basename(entry_name, '.*')
           basename = basename.sub('_marked.MSOfficeWithPassword', '_marked')
           basename = basename.sub(/_\d+_\w+\z/, '')
           basename += ext unless /\.\w+\z/.match?(basename)

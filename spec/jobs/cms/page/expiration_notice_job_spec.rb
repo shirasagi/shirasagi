@@ -161,5 +161,36 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
         end
       end
     end
+
+    context "with article/page have expiration_setting_type 'never'" do
+      let!(:node) { create :article_node_page, cur_site: site, group_ids: [ group1.id, group2.id ] }
+      let!(:page1) do
+        create(:article_page, cur_site: site, cur_node: node, group_ids: [ group1.id ], expiration_setting_type: 'never')
+      end
+      let!(:page2) do
+        Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
+          create(:article_page, cur_site: site, cur_node: node, group_ids: [ group2.id ], expiration_setting_type: 'never')
+        end
+      end
+      let!(:page3) do
+        Timecop.travel(Time.zone.now - SS::Duration.parse(expiration_before) - 1.day) do
+          create(
+            :article_page, cur_site: site, cur_node: node, group_ids: [ group3.id ], state: "closed",
+            expiration_setting_type: 'never')
+        end
+      end
+
+      it do
+        described_class.bind(site_id: site).perform_now
+
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/公開期限警告が無効です。/)
+        end
+
+        expect(ActionMailer::Base.deliveries.length).to eq 0
+      end
+    end
   end
 end

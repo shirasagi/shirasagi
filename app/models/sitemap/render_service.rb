@@ -3,7 +3,6 @@ class Sitemap::RenderService
 
   SITEMAP_XMLNS = "http://www.sitemaps.org/schemas/sitemap/0.9".freeze
   REQUIRED_FIELDS = %i[id _id route name filename site_id depth order redirect_link rss_link link_url].freeze
-  EMPTY_ARRAY = [].freeze
 
   attr_accessor :cur_site, :cur_node, :page
 
@@ -127,17 +126,17 @@ class Sitemap::RenderService
   end
 
   def load_contents_with_urls
-    return EMPTY_ARRAY if page.sitemap_urls.blank?
+    return SS::EMPTY_ARRAY if page.sitemap_urls.blank?
 
     url_items = page.sitemap_urls.map { |url| UrlItem.parse(url) }
     url_items.compact!
-    return EMPTY_ARRAY if url_items.blank?
+    return SS::EMPTY_ARRAY if url_items.blank?
 
     url_items.select! do |url_item|
       next true if url_item.authority.blank?
       cur_site.domains.include?(url_item.authority)
     end
-    return EMPTY_ARRAY if url_items.blank?
+    return SS::EMPTY_ARRAY if url_items.blank?
 
     contents = url_items.map do |url_item|
       create_fake_content(url_item)

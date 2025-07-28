@@ -22,7 +22,7 @@ describe Cms::NodeImporter, dbscope: :example do
   end
 
   def check_node(row, node)
-    expect(row["﻿ファイル名"]).to eq node.basename
+    expect(row["ファイル名"]).to eq node.basename
     expect(row["フォルダー属性"]).to eq node.route
     expect(row["タイトル"]).to eq node.name
     expect(row["一覧用タイトル"]).to eq node.index_name

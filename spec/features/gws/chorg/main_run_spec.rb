@@ -28,7 +28,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
     before do
       @save_config = SS.config.job.default.dup
 
-      config = @save_config.dup
+      config = @save_config ? @save_config.dup : {}
       config["mode"] = "service"
       SS.config.replace_value_at(:job, :default, config)
     end

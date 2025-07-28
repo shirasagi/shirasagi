@@ -154,6 +154,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
     let(:column13_youtube_id) { unique_id }
     let(:column13_url) { "https://www.youtube.com/watch?v=#{column13_youtube_id}" }
     let(:column13_embed_url) { "https://www.youtube.com/embed/#{column13_youtube_id}" }
+    let(:column13_title) { unique_id }
 
     before { login_cms_user }
     before do
@@ -233,6 +234,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
           within ".column-value-cms-column-youtube" do
             fill_in "item[column_values][][in_wrap][url]", with: column13_url
+            fill_in "item[column_values][][in_wrap][title]", with: column13_title
           end
         end
 
@@ -256,6 +258,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("div", text: column11_list)
           expect(page).to have_css("div", text: column12_caption)
           expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+          expect(page).to have_css("iframe[title=\"#{column13_title}\"]")
         end
 
         within "form#item-form" do
@@ -290,6 +293,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("div", text: column11_list)
           expect(page).to have_css("div", text: column12_caption)
           expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+          expect(page).to have_css("iframe[title=\"#{column13_title}\"]")
         end
         new_window.close if Capybara.javascript_driver == :chrome
       end

@@ -7,7 +7,8 @@ module.exports = {
   ],
   "ignoreFiles": [
     "app/assets/builds/**/*.css",
-    "app/assets/stylesheets/ss/_github-markdown.scss"
+    "app/assets/stylesheets/ss/_github-markdown.scss",
+    "app/assets/stylesheets/ss/_shirasagi-icons.scss"
   ],
   "rules": {
     "no-descending-specificity": null,

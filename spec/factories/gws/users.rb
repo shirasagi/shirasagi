@@ -40,4 +40,10 @@ FactoryBot.define do
     notice_workflow_email_user_setting { "notify" }
     send_notice_mail_addresses { unique_email }
   end
+
+  trait :gws_tabular_notice do
+    notice_tabular_user_setting { "notify" }
+    notice_tabular_email_user_setting { "notify" }
+    send_notice_mail_addresses { "#{unique_id}@example.jp" }
+  end
 end

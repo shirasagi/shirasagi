@@ -137,8 +137,6 @@ module Cms::Reference::Files
 
     module_function
 
-    EMPTY_ARRAY = [].freeze
-
     def other_user_owned?(file, cur_user)
       cur_user && cur_user.id != file.user_id
     end
@@ -161,7 +159,7 @@ module Cms::Reference::Files
       cur_user ||= SS.current_user
       is_allowed_other_user_files = owner_item.allowed_other_user_files?
       is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
-      add_ids ||= Utils::EMPTY_ARRAY
+      add_ids ||= SS::EMPTY_ARRAY
 
       ids = []
       SS::File.each_file(item.file_ids) do |file|

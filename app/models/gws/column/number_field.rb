@@ -13,6 +13,10 @@ class Gws::Column::NumberField < Gws::Column::Base
   validates :minus_type, presence: true, inclusion: { in: %w(normal filled_triangle triangle), allow_blank: true }
 
   class << self
+    def as_plugin
+      @plugin ||= Gws::Plugin.new(plugin_type: "column", path: "gws/number_field", model_class: self)
+    end
+
     def default_attributes
       attributes = super
       attributes[:minus_type] = "normal"

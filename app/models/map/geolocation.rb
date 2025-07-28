@@ -2,7 +2,7 @@ class Map::Geolocation
   include SS::Document
   include Mongoid::Geospatial
 
-  sphere_index :location
+  spherical_index :location
 
   field :location, type: Point, sphere: true
 

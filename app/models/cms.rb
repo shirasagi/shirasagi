@@ -345,7 +345,7 @@ module Cms
     # 注意: そうしないと sass コマンドがエラー終了する。
     commands << output_path
 
-    output = nil
+    output = error = nil
     wait_thr = Open3.popen3(*commands, { chdir: basedir }) do |stdin, stdout, stderr, wait_thr|
       # stdin.write source
       stdin.close
@@ -359,7 +359,14 @@ module Cms
       wait_thr
     end
 
-    raise ScssScriptError, "sass command exited in errors" unless wait_thr.value.success?
+    unless wait_thr.value.success?
+      ::File.join(basedir, output_path).tap do |full_output_path|
+        # エラー発生時、出力ファイルの内容はエラーが記録されていたりとCSSとしては異常なファイルとなる。
+        # 404 の方がマシなので、エラー発生時、出力ファイルを削除する。
+        FileUtils.rm_f full_output_path
+      end
+      raise ScssScriptError, error
+    end
 
     output
   end

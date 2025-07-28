@@ -623,6 +623,10 @@ en:
       logo_application_link:
         mypage: Mypage
         portal: Portal
+      show_google_maps_search_in_view:
+        hide: Not display
+        show_first: Display first one
+        show_all: Display all
 
     tasks:
       started: Started.
@@ -661,7 +665,7 @@ en:
       ss/kana_setting: Kana settings
       ss/open_graph_setting: OpenGraph settings
       ss/facebook_setting: Facebook settings
-      ss/twitter_setting: Twitter settings
+      ss/twitter_setting: X(formerly Twitter) settings
       ss/line_setting: LINE settings
       ss/kintone_setting: Kintone settings
       ss/approve_setting: Approval settings
@@ -840,6 +844,7 @@ en:
         domains: Domain
         gws_use: Use of groupware
         upload_policy: Upload restrictions
+        path_id: Path ID
       ss/user_group_history:
         created: Move date and time
         cms_site_id: CMS site
@@ -917,7 +922,10 @@ en:
         map_api: Map API
         map_api_key: API key
         map_api_layer: Map layer
+        map_header_text: Map header text
         show_google_maps_search: Link to Google Maps
+        show_google_maps_search_in_marker: In marker
+        show_google_maps_search_in_view: In view
         map_api_mypage: Map type on the admin screen
         map_center: Map center
         map_max_number_of_markers: Maximum number of markers
@@ -947,7 +955,7 @@ en:
         kintone_user: Basic auth user
         kintone_password: Basic auth password
       ss/addon/site_auto_post_setting:
-        site_twitter_auto_post: Twitter auto-post
+        site_twitter_auto_post: X(formerly Twitter) auto-post
         site_edit_auto_post: Auto-post when editing
       ss/addon/file_setting:
         file_resizing: Resize attached file
@@ -1048,7 +1056,7 @@ en:
         elasticsearch_deny: Exclusion path
         elasticsearch_site_ids: Site
         elasticsearch_indexes: Index
-        elasticsearch_outside: External site search
+        elasticsearch_outside: External site search (Fess)
       ss/addon/translate/site_setting:
         translate_state: Status
         translate_source_id: Source language code
@@ -1216,6 +1224,8 @@ en:
         - Groupware is used by default.
       upload_policy:
         - Set behavior when uploading files.
+      path_id:
+        - Set the ID of the export path. The path ID is the name of the folder under public/gws/. Only small alphanumeric characters and numbers are allowed.
     ss/document:
       title:
         - Used for the page title and displayed in the title bar of the browser.
@@ -1405,8 +1415,10 @@ en:
         - The API key for Google Maps is set in this field.
       map_api_layer:
         - Select the OpenLayers layer to use on the site.
+      map_header_text:
+        - Set the text for the map addon's header on the page view.
       show_google_maps_search:
-        - When enabled, the map marker will display a “View on Google Maps” link.
+        - When enabled, the map marker or page view will display a “View on Google Maps” link.
       map_api_mypage:
         - Set whether to display the map on the administration screen.
       map_center:
@@ -1428,7 +1440,7 @@ en:
         - Select the Open Graph format.
         - "You can see what it looks like:"
         - "Facebook share debugger: https://developers.facebook.com/tools/debug/sharing/"
-        - "Twitter Card Validator: https://cards-dev.twitter.com/validator/"
+        - "X(formerly Twitter) Card Validator: https://cards-dev.twitter.com/validator/"
         - "LINE Page Poker: https://poker.line.naver.jp/"
       opengraph_defaul_image_url:
         - Set the default image URL.
@@ -1436,14 +1448,14 @@ en:
         - If the page contains an image, the URL you set here is not used.
     ss/addon/twitter_setting:
       twitter_poster_state:
-        - If enabled, Twitter integration will appear when editing pages.
+        - If enabled, X(formerly Twitter) integration will appear when editing pages.
         - A consumer key and an access token, each with its own secret key, must be set.
       twitter_card:
-        - Select the Twitter card format.
-        - "You can see what it looks like on Twitter with “Twitter Card Validator”: https://cards-dev.twitter.com/validator ."
+        - Select the X(formerly Twitter) card format.
+        - "You can see what it looks like on X(formerly Twitter)with “X(formerly Twitter) Card Validator”: https://cards-dev.twitter.com/validator ."
       twitter_username:
-        - Set your Twitter username.
-        - Once set, you can analyze access with Twitter Card Analytics.
+        - Set your X(formerly Twitter) username.
+        - Once set, you can analyze access with X(formerly Twitter) Card Analytics.
       twitter_default_image_url:
         - Set the default image URL.
         - If the page does not contain an image, the URL will be set to “twitter:image”.
@@ -1674,3 +1686,4 @@ en:
       ss/delete_sso_tokens_job: System/Cleanup SSO tokens job
       ss/delete_ss_o_tokens_job: System/Cleanup SSO tokens job
       ss/cleanup_file_store_cache_job: System/Cleanup file cache job
+      ss/remove_site_job: System/Delete site

@@ -41,30 +41,74 @@ describe "opendata_agents_nodes_dataset_resource", type: :feature, dbscope: :exa
         within ".tabs .tab.graph" do
           click_on I18n.t("opendata.labels.graph_view")
         end
-        wait_for_ajax
-
-        expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.bar"))
-        expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.line"))
-        expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.pie"))
-        expect(page).to have_css(".graph-warp.loaded")
-        within ".graph-types" do
-          click_on I18n.t("opendata.graph_types.bar")
+      end
+      wait_for_ajax
+      within_cbox do
+        within ".resource-content[data-graph-style='bar']" do
+          expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.bar"))
+          expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.line"))
+          expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.pie"))
+          expect(page).to have_css(".graph-warp.loaded")
+          canvas_to_png(first("canvas.graph")).tap do |data_url|
+            extract_image_info_from_data_url(data_url).tap do |info|
+              expect(info[:width]).to be > 100
+              expect(info[:height]).to be > 100
+              expect(info[:size]).to be > 10_240
+            end
+          end
+          within ".graph-types" do
+            click_on I18n.t("opendata.graph_types.line")
+          end
         end
-        wait_for_ajax
+      end
 
-        expect(page).to have_css(".graph-warp.loaded")
-        within ".graph-types" do
-          click_on I18n.t("opendata.graph_types.line")
+      wait_for_ajax
+
+      within_cbox do
+        within ".resource-content[data-graph-style='line']" do
+          expect(page).to have_css(".graph-warp.loaded")
+          canvas_to_png(first("canvas.graph")).tap do |data_url|
+            extract_image_info_from_data_url(data_url).tap do |info|
+              expect(info[:width]).to be > 100
+              expect(info[:height]).to be > 100
+              expect(info[:size]).to be > 10_240
+            end
+          end
+          within ".graph-types" do
+            click_on I18n.t("opendata.graph_types.pie")
+          end
         end
-        wait_for_ajax
+      end
 
-        expect(page).to have_css(".graph-warp.loaded")
-        within ".graph-types" do
-          click_on I18n.t("opendata.graph_types.pie")
+      wait_for_ajax
+
+      within_cbox do
+        within ".resource-content[data-graph-style='pie']" do
+          expect(page).to have_css(".graph-warp.loaded")
+          canvas_to_png(first("canvas.graph")).tap do |data_url|
+            extract_image_info_from_data_url(data_url).tap do |info|
+              expect(info[:width]).to be > 100
+              expect(info[:height]).to be > 100
+              expect(info[:size]).to be > 10_240
+            end
+          end
+          within ".graph-types" do
+            click_on I18n.t("opendata.graph_types.bar")
+          end
         end
-        wait_for_ajax
-
-        expect(page).to have_css(".graph-warp.loaded")
+      end
+      wait_for_ajax
+      within_cbox do
+        within ".resource-content[data-graph-style='bar']" do
+          expect(page).to have_css(".graph-warp.loaded")
+          canvas_to_png(first("canvas.graph")).tap do |data_url|
+            extract_image_info_from_data_url(data_url).tap do |info|
+              expect(info[:width]).to be > 100
+              expect(info[:height]).to be > 100
+              expect(info[:size]).to be > 10_240
+            end
+          end
+        end
       end
     end
   end

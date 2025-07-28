@@ -23,7 +23,10 @@ class Cms::Page::ExpirationNoticeJob < Cms::ApplicationJob
     @all_expired_pages ||= begin
       pages = []
 
-      criteria = Cms::Page.all.site(site).and_public.lt(updated: site.page_expiration_at)
+      criteria = Cms::Page.all.site(site)
+      criteria = criteria.and_public
+      criteria = criteria.lt(updated: site.page_expiration_at)
+      criteria = criteria.ne(expiration_setting_type: "never")
       all_ids = criteria.pluck(:id)
       all_ids.each_slice(20) do |ids|
         pages += criteria.only(*LOAD_FIELDS).in(id: ids).to_a
