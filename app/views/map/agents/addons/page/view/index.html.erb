@@ -8,8 +8,20 @@
 <section class="map-page">
   <% if local_assigns && !local_assigns[:no_header] %>
   <header>
-    <h2><%= t("map.map") %></h2>
+    <h2><%= @cur_site.map_header_text.presence || t("map.views.header") %></h2>
   </header>
   <% end %>
   <div id="map-canvas" style="width: 100%; height: 400px;"></div>
+  <% if @cur_site.show_google_maps_search_in_view.to_s.start_with?("show") %>
+    <%
+      if @cur_site.show_google_maps_search_in_view == "show_first"
+        map_points = map_points.take(1)
+      end
+    %>
+    <ul class="map-markers">
+      <% map_points.each do |map_point| %>
+        <li><%= google_maps_search_link(map_point) %></li>
+      <% end %>
+    </ul>
+  <% end %>
 </section>

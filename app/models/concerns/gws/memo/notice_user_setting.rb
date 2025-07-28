@@ -5,7 +5,9 @@ module Gws::Memo::NoticeUserSetting
   MAX_MAIL_COUNT = SS.config.gws.dig("memo", "max_notice_mail_address_count") || 10
 
   included do
-    %w(schedule todo workload report workflow circular monitor board faq qna survey discussion announcement affair).each do |name|
+    %w(
+      schedule todo workload report workflow circular monitor board faq qna survey discussion announcement affair tabular
+    ).each do |name|
       field "notice_#{name}_user_setting", type: String, default: 'notify'
       field "notice_#{name}_email_user_setting", type: String, default: 'silence'
       permit_params "notice_#{name}_user_setting".to_sym

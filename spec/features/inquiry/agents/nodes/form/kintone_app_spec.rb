@@ -11,7 +11,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       inquiry_captcha: 'enabled',
       notice_state: 'enabled',
       notice_content: 'include_answers',
-      notice_email: 'notice@example.jp',
+      notice_emails: ['notice@example.jp'],
       from_name: 'admin',
       from_email: 'admin@example.jp',
       reply_state: 'disabled',
@@ -197,7 +197,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
           inquiry_captcha: 'enabled',
           notice_state: 'enabled',
           notice_content: 'include_answers',
-          notice_email: 'notice@example.jp',
+          notice_emails: ['notice@example.jp'],
           from_name: 'admin',
           from_email: 'admin@example.jp',
           reply_state: 'disabled',
@@ -506,7 +506,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         inquiry_captcha: 'enabled',
         notice_state: 'enabled',
         notice_content: 'include_answers',
-        notice_email: 'notice@example.jp',
+        notice_emails: ['notice@example.jp'],
         from_name: 'admin',
         from_email: 'admin@example.jp',
         reply_state: 'disabled',
@@ -981,6 +981,119 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         # inquiry_column_upload_file
         expect(notify_mail.body.raw_source).to include("- " + node.columns[7].name)
         expect(notify_mail.body.raw_source).to include("logo.png")
+      end
+    end
+  end
+
+  context "register remote_addr and user_agent" do
+    let(:remote_addr_field_code) { unique_id }
+    let(:user_agent_field_code) { unique_id }
+
+    before do
+      site.kintone_domain = kintone_domain
+      site.save!
+      site.reload
+
+      node.columns.create! attributes_for(:inquiry_column_name).reverse_merge({cur_site: site, kintone_field_code: 'name'})
+      node.reload
+    end
+
+    context "field_code does not exist" do
+      it do
+        stub_request(:post, kintone_url).to_return do |request|
+          record = JSON.parse(request.body)
+          expect(record["record"].size).to eq 1
+          {
+            status: 200,
+            body: { id: 100, revision: 1 }.to_json,
+            headers: { 'Content-Type' => 'application/json'}
+          }
+        end
+
+        visit index_url
+        expect(status_code).to eq 200
+        within 'div.inquiry-form' do
+          within 'div.columns' do
+            fill_in "item[1]", with: "シラサギ太郎"
+          end
+          click_button I18n.t('inquiry.confirm')
+        end
+
+        expect(status_code).to eq 200
+        within 'div.inquiry-form' do
+          within 'div.columns' do
+            expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
+          end
+          within 'div.simple-captcha' do
+            fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
+          end
+          within 'footer.send' do
+            click_button I18n.t('inquiry.submit')
+          end
+        end
+
+        expect(status_code).to eq 200
+        expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
+
+        expect(Inquiry::Answer.site(site).count).to eq 1
+        answer = Inquiry::Answer.first
+        expect(answer.node_id).to eq node.id
+        expect(answer.data.count).to eq 1
+        expect(answer.data[0].value).to eq 'シラサギ太郎'
+      end
+    end
+
+    context "field_code exists" do
+      before do
+        node.kintone_app_remote_addr_field_code = remote_addr_field_code
+        node.kintone_app_user_agent_field_code = user_agent_field_code
+        node.save!
+        node.reload
+      end
+
+      it do
+        stub_request(:post, kintone_url).to_return do |request|
+          record = JSON.parse(request.body)
+          expect(record["record"].size).to eq 3
+          expect(record["record"][remote_addr_field_code]).to be_present
+          expect(record["record"][user_agent_field_code]).to be_present
+          {
+            status: 200,
+            body: { id: 100, revision: 1 }.to_json,
+            headers: { 'Content-Type' => 'application/json'}
+          }
+        end
+
+        visit index_url
+        expect(status_code).to eq 200
+        within 'div.inquiry-form' do
+          within 'div.columns' do
+            fill_in "item[1]", with: "シラサギ太郎"
+          end
+          click_button I18n.t('inquiry.confirm')
+        end
+
+        expect(status_code).to eq 200
+        within 'div.inquiry-form' do
+          within 'div.columns' do
+            expect(find("[name='item[1]']")['value']).to eq 'シラサギ太郎'
+          end
+          within 'div.simple-captcha' do
+            fill_in "answer[captcha_answer]", with: SS::Captcha.first.captcha_text
+          end
+          within 'footer.send' do
+            click_button I18n.t('inquiry.submit')
+          end
+        end
+
+        expect(status_code).to eq 200
+        expect(find('div.inquiry-sent').text).to eq node.inquiry_sent_html.gsub(/<.*?>/, '')
+
+        expect(Inquiry::Answer.site(site).count).to eq 1
+        answer = Inquiry::Answer.first
+        expect(answer.node_id).to eq node.id
+        expect(answer.data.count).to eq 1
+        expect(answer.data[0].value).to eq 'シラサギ太郎'
       end
     end
   end

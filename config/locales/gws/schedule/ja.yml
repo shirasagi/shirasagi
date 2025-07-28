@@ -36,7 +36,7 @@ ja:
         withAbsence: 欠席表示
       titleFormat:
         month: "%Y年 %1m月"
-        week: "(%Y年 %1m月 %1d日（%a）)"
+        week: "%Y年 %1m月 %1d日（%a）"
         day: "%Y年 %1m月 %1d日（%a）"
       columnFormat:
         month: "%a"
@@ -592,5 +592,5 @@ ja:
 
   job:
     models:
-      gws/schedule/trash_purge_job: 予定ゴミ箱の掃除
-      gws/schedule/todo_trash_purge_job: ToDoゴミ箱の掃除
+      gws/schedule/trash_purge_job: スケジュール/予定ゴミ箱の掃除
+      gws/schedule/todo_trash_purge_job: ToDo/ToDoゴミ箱の掃除

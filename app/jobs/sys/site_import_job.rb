@@ -1,15 +1,25 @@
 require 'nkf'
 
 class Sys::SiteImportJob < SS::ApplicationJob
-  include Job::SS::TaskFilter
+  #include Job::SS::TaskFilter
   include Sys::SiteImport::Contents
   include Sys::SiteImport::Opendata
   include Sys::SiteImport::File
 
-  def perform
-    @dst_site = Cms::Site.find(@task.target_site_id)
+  def mock_task
+    task = OpenStruct.new
+    def task.log(message)
+      Rails.logger.info(message)
+      puts message
+    end
+    task
+  end
 
-    @import_zip = @task.import_file
+  def perform(import_file)
+    @dst_site = site
+    @task = mock_task
+
+    @import_zip = import_file
     @import_dir = "#{Rails.root}/private/import/site-#{@dst_site.host}"
 
     @task.log("=== Site Import ===")
@@ -21,10 +31,10 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     init_src_site
     init_mapping
-    import_cms_groups
-    import_cms_users
-    import_dst_site
-    import_cms_editor_templates
+    invoke :import_cms_groups
+    invoke :import_cms_users
+    invoke :import_dst_site
+    invoke :import_cms_editor_templates
 
     if @dst_site.errors.present?
       @task.log("Error: Could not create the site. #{@dst_site.name}")
@@ -55,6 +65,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_opendata_licenses
     invoke :update_cms_nodes
     invoke :update_cms_pages
+    invoke :update_cms_parts
     invoke :update_ss_files
     invoke :update_opendata_dataset_resources
     invoke :update_opendata_app_appfiles
@@ -65,16 +76,22 @@ class Sys::SiteImportJob < SS::ApplicationJob
     invoke :import_cms_translate_langs
     invoke :import_cms_translate_text_caches
     invoke :import_cms_page_search
+    invoke :import_cms_guides
+    invoke :import_cms_check_links_ignore_urls
 
     FileUtils.rm_rf(@import_dir)
     @task.log("Completed.")
+  rescue => e
+    puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+    raise
   end
 
   private
 
   def invoke(method)
     @task.log("- " + method.to_s.sub('_', ' '))
-    send(method)
+    time = Benchmark.realtime { send(method) }
+    @task.log("- completed #{method} (#{time * 1000} ms)")
   end
 
   def extract
@@ -85,14 +102,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
       entries.each do |entry|
         next if entry.directory?
 
-        name = entry.name
-        if (entry.gp_flags & Zip::Entry::EFS) == Zip::Entry::EFS
-          name.force_encoding("UTF-8")
-        else
-          name = NKF.nkf('-w', name)
-        end
-        name = name.tr('\\', '/')
-
+        name = SS::Zip.safe_zip_entry_name(entry)
         if name.start_with?('public/')
           root_dir = @dst_site.path
           name = name.sub(/^public\//, '')
@@ -183,6 +193,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     data['form_id'] = @cms_forms_map[data['form_id']] if data['form_id'].present?
     data['st_form_ids'] = convert_ids(@cms_forms_map, data['st_form_ids']) if data['st_form_ids'].present?
+    data['st_form_default_id'] = @cms_forms_map[data['st_form_default_id']] if data['st_form_default_id'].present?
 
     data['loop_setting_id'] = @cms_loop_settings_map[data['loop_setting_id']] if data['loop_setting_id'].present?
 
@@ -231,6 +242,8 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
   def save_document(item)
     def item.set_updated; end
+    def item.save_backup; end
+    def item.generate_file; end
     return true if item.save
 
     @task.log "#{item.class} - " + item.errors.full_messages.join(' ')
@@ -239,8 +252,6 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_groups
-    @task.log("- import cms_groups")
-
     name = "cms_groups"
     model = Cms::Group
     fields = %w(name)
@@ -333,7 +344,6 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_roles
-    @task.log("- import cms_roles")
     @cms_roles_map = import_documents "cms_roles", Cms::Role, %w(site_id name permissions)
   end
 
@@ -347,21 +357,19 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_editor_templates
-    @task.log("- import cms_editor_templates")
-    
     read_json("cms_editor_templates").each do |data|
       id   = data.delete('_id')
       data = convert_data(data)
-  
+
       thumb_id = data['thumb_id']
       file_ids = data['file_ids']
 
       # Find or initialize the editor template for the destination site
       cond = { name: data['name'], site_id: @dst_site.id }
       item = Cms::EditorTemplate.find_or_initialize_by(cond)
-  
+
       data.each { |k, v| item[k] = v }
-  
+
       if thumb_id.present?
         new_thumb_id = @ss_files_map[thumb_id]
         if new_thumb_id.present?
@@ -370,19 +378,18 @@ class Sys::SiteImportJob < SS::ApplicationJob
           item.thumb_id = thumb_file.id
         end
       end
-  
+
       # Process additional files
       if file_ids.present?
         new_file_ids = convert_ids(@ss_files_map, file_ids)
         item.file_ids = new_file_ids
       end
-  
+
       save_document(item)
     end
   end
 
   def import_source_cleaner_templates
-    @task.log("- import source cleaner templates")
     read_json("cms_source_cleaner_templates").each do |data|
       id   = data.delete('_id')
       data = convert_data(data)
@@ -393,11 +400,9 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
       save_document(item)
     end
-  end  
+  end
 
   def import_theme_templates
-    @task.log("- import theme templates")
-
     read_json("cms_theme_templates").each do |data|
       id   = data.delete('_id')
       data = convert_data(data)
@@ -407,13 +412,10 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
       save_document(item)
     end
-  end  
+  end
 
   def import_cms_word_dictionaries
-    @task.log("- import cms word dictionaries")
-
     dictionaries = Cms::WordDictionary.site(@src_site)
-
     dictionaries.each do |d|
       data = d.attributes
       id   = data.delete('_id')
@@ -427,10 +429,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_translate_langs
-    @task.log("- import cms translate langs")
-
     translate_langs = ::Translate::Lang.site(@src_site)
-
     translate_langs.each do |d|
       data = d.attributes
       id   = data.delete('_id')
@@ -444,10 +443,7 @@ class Sys::SiteImportJob < SS::ApplicationJob
   end
 
   def import_cms_translate_text_caches
-    @task.log("- import cms translate text caches")
-
     translate_text_caches = ::Translate::TextCache.site(@src_site)
-
     translate_text_caches.each do |d|
       data = d.attributes
       id   = data.delete('_id')
@@ -459,11 +455,9 @@ class Sys::SiteImportJob < SS::ApplicationJob
       save_document(item)
     end
   end
+
   def import_cms_page_search
-    @task.log("- import cms Page Search")
-
     page_searches = Cms::PageSearch.site(@src_site)
-
     page_searches.each do |d|
       data = d.attributes
       id   = data.delete('_id')
@@ -483,5 +477,45 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
       save_document(item)
     end
+  end
+
+  def import_cms_guides
+    @guide_diagram_point_map = {}
+
+    embeded_edges = {}
+    read_json("guide_diagram_point").each do |data|
+      klass = data["_type"].constantize
+      id    = data.delete('_id')
+      edges = data.delete('edges')
+
+      data = convert_data(data)
+      cond = { site_id: @dst_site.id, node_id: data["node_id"], id_name: data["id_name"] }
+      item = klass.find_or_initialize_by(cond)
+      data.each { |k, v| item[k] = v }
+
+      if save_document(item)
+        embeded_edges[item.id] = edges if edges.present?
+        @guide_diagram_point_map[id] = item.id
+      end
+    end
+
+    embeded_edges.each do |id, values|
+      point = Guide::Diagram::Point.find(id)
+      point.edges = values.map do |data|
+        data.delete('_id')
+        data["point_ids"] = convert_ids(@guide_diagram_point_map, data["point_ids"])
+        data["not_applicable_point_ids"] = convert_ids(@guide_diagram_point_map, data["not_applicable_point_ids"])
+        data["optional_necessary_point_ids"] = convert_ids(@guide_diagram_point_map, data["optional_necessary_point_ids"])
+
+        item = Guide::Diagram::Edge.new
+        data.each { |k, v| item[k] = v }
+        item
+      end
+      save_document(point)
+    end
+  end
+
+  def import_cms_check_links_ignore_urls
+    import_documents "cms_check_links_ignore_urls", Cms::CheckLinks::IgnoreUrl, %w(site_id name)
   end
 end

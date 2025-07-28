@@ -209,6 +209,7 @@ ja:
       forced_update: "メールアドレスが未設定でも実行する。"
       no_approvers: 承認者がみつかりません。
       branch_is_already_existed: 差し替えページが作成されています。
+      accessibility_check_required: "アクセシビリティエラーが存在します。エラーを修正するか、アクセシビリティチェックを無視する権限が必要です。"
 
   tooltip:
     workflow/approver:
@@ -257,4 +258,4 @@ ja:
 
   job:
     models:
-      workflow/reminder_job: 承認督促
+      workflow/reminder_job: ワークフロー/承認督促

@@ -25,19 +25,10 @@ describe "gws_workflow_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         fill_in "item[name]", with: item_name
         fill_in "item[text]", with: item_text
-        wait_for_cbox_opened do
-          click_on I18n.t("ss.buttons.upload")
-        end
-      end
-      within_cbox do
-        within "article.file-view" do
-          wait_for_cbox_closed do
-            click_on file.name
-          end
-        end
-      end
-      within "form#item-form" do
+
+        ss_select_file file, addon: '#addon-gws-agents-addons-file'
         expect(page).to have_content(file.name)
+
         click_on I18n.t("ss.buttons.save")
       end
 

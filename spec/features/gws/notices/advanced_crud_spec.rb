@@ -38,8 +38,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       #
       # [manager] create folders
       #
-      login_user manager
-      visit gws_notice_folders_path(site: site)
+      login_user manager, to: gws_notice_folders_path(site: site)
       click_on I18n.t('ss.links.new')
 
       within 'form#item-form' do
@@ -55,6 +54,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         within '.dd-group .dropdown-container' do
           click_on site.name
         end
+      end
+      within_cbox do
         expect(page).to have_content(editor.name)
         wait_for_cbox_closed { click_on editor.name }
       end
@@ -70,6 +71,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         within '.dd-group .dropdown-container' do
           click_on site.name
         end
+      end
+      within_cbox do
         expect(page).to have_content(reader.name)
         wait_for_cbox_closed { click_on reader.name }
       end
@@ -98,8 +101,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       #
       # [editor] create posts
       #
-      login_user editor
-      visit gws_notice_main_path(site: site)
+      login_user editor, to: gws_notice_main_path(site: site)
       click_on I18n.t('ss.navi.editable')
       within '.tree-navi' do
         click_on folder_name
@@ -138,8 +140,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       #
       # [reader] read posts
       #
-      login_user reader
-      visit gws_notice_main_path(site: site)
+      login_user reader, to: gws_notice_main_path(site: site)
       expect(page).to have_css('.tree-navi', text: folder_name)
       expect(page).to have_css('.list-items', text: notice_name)
 

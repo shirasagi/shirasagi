@@ -37,8 +37,7 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
   context "basic index" do
     context "with user1" do
       it do
-        login_user user1
-        visit gws_job_user_logs_path(site: site)
+        login_user user1, to: gws_job_user_logs_path(site: site)
 
         expect(page).to have_css(".list-item .title", text: I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_css(".list-item .title", text: I18n.t(log2.class_name.underscore, scope: "job.models"))
@@ -60,8 +59,7 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
 
     context "with user2" do
       it do
-        login_user user2
-        visit gws_job_user_logs_path(site: site)
+        login_user user2, to: gws_job_user_logs_path(site: site)
 
         expect(page).to have_no_content(I18n.t(log1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_content(I18n.t(log2.class_name.underscore, scope: "job.models"))
@@ -80,8 +78,7 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
     after { clear_downloads }
 
     it do
-      login_user user1
-      visit gws_job_user_logs_path(site: site)
+      login_user user1, to: gws_job_user_logs_path(site: site)
       click_on I18n.t("ss.links.download")
 
       within "form#item-form" do
@@ -126,8 +123,7 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
 
   describe "batch destroy" do
     it do
-      login_user user1
-      visit gws_job_user_logs_path(site: site)
+      login_user user1, to: gws_job_user_logs_path(site: site)
       within ".nav-menu" do
         click_on I18n.t("ss.links.delete")
       end

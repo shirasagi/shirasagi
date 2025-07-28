@@ -18,6 +18,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       it do
         visit gws_schedule_facility_plans_path(site: site, facility: facility)
         click_on I18n.t("gws/schedule.links.add_plan")
+        wait_for_js_ready
         within "form#item-form" do
           wait_for_cbox_opened { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
@@ -38,6 +39,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       it do
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
+        wait_for_js_ready
         within "form#item-form" do
           wait_for_cbox_opened { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
@@ -59,6 +61,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       it do
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
+        wait_for_js_ready
         within "form#item-form" do
           wait_for_cbox_opened { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end
@@ -86,6 +89,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       it do
         visit gws_schedule_facility_plan_path(site: site, facility: facility, id: item)
         click_on I18n.t("ss.links.edit")
+        wait_for_js_ready
         within "form#item-form" do
           wait_for_cbox_opened { click_on I18n.t('gws/schedule.facility_reservation.index') }
         end

@@ -22,7 +22,7 @@ class Gws::Workflow2::Form::Base
 
   permit_params :name, :order, :description, :memo
 
-  validates :name, presence: true, length: { maximum: Gws.max_name_length }
+  validates :name, presence: true, length: { maximum: SS.max_name_length }
   validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
 

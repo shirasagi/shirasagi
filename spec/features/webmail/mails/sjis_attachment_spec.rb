@@ -36,17 +36,8 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[subject]", with: item_subject
             fill_in "item[text]", with: item_texts.join("\n")
 
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.links.upload")
-            end
-          end
-          within_cbox do
-            wait_for_cbox_closed do
-              click_on file.name
-            end
-          end
-          within "form#item-form" do
-            expect(page).to have_css(".file-view", text: file.name)
+            ss_select_file file, addon: "#addon-webmail-agents-addons-mail_file"
+
             click_on I18n.t('ss.buttons.send')
           end
         end

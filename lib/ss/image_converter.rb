@@ -1,7 +1,9 @@
 # this class doesn't support grid_fs for performance reason
+require_relative '../../config/initializers/image_settings'
+
 class SS::ImageConverter
-  DEFAULT_THUMB_WIDTH = 120
-  DEFAULT_THUMB_HEIGHT = 90
+  DEFAULT_THUMB_WIDTH = ImageSettings::DEFAULT_THUMB_WIDTH
+  DEFAULT_THUMB_HEIGHT = ImageSettings::DEFAULT_THUMB_HEIGHT
 
   private_class_method :new
 
@@ -90,7 +92,7 @@ class SS::ImageConverter
     SS::ImageConverter.exif_image_mime_type?(mime_type)
   end
 
-  def apply_defaults!(options)
+  def apply_defaults!(resizing: nil, quality: nil)
     if exif_image?
       case SS.config.env.image_exif_option
       when "auto_orient"
@@ -100,8 +102,8 @@ class SS::ImageConverter
       end
     end
 
-    resize_to_fit!(*options[:resizing]) if options[:resizing].present?
-    quality!(options[:quality]) if options[:quality].present?
+    resize_to_fit!(*resizing) if resizing.is_a?(Array) && resizing.present?
+    quality!(quality) if quality.numeric?
 
     self
   end

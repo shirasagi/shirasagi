@@ -50,16 +50,14 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
     expect(site1.maint_remark).to eq maint_remark
 
     # 除外ユーザーでログイン
-    login_user user1
-    visit sns_mypage_path
+    login_user user1, to: sns_mypage_path
     expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
     expect(page).to have_link(site1.name, href: "/.s#{site1.id}/cms/contents")
     click_on site1.name
     expect(page).to have_no_css(".maint-mode-text")
 
     # 除外ユーザーではないユーザーでログイン
-    login_user user2
-    visit sns_mypage_path
+    login_user user2, to: sns_mypage_path
     expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
     expect(page).to have_no_link(site1.name, href: "/.s#{site1.id}/cms/contents")
     visit cms_contents_path(site: site1)

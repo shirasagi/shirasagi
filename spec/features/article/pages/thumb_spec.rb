@@ -8,11 +8,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:item) { create :article_page, cur_node: node }
   let(:edit_path) { edit_article_page_path site.id, node, item }
 
+  before do
+    @save_file_upload_dialog = SS.file_upload_dialog
+    SS.file_upload_dialog = :v1
+  end
+
+  after do
+    SS.file_upload_dialog = @save_file_upload_dialog
+  end
+
   context "attach thumb from upload" do
     before { login_cms_user }
 
     it "#edit" do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
@@ -44,6 +55,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it "#edit file name" do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
@@ -82,6 +95,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
@@ -113,6 +128,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       item.reload
       expect(item.thumb.owner_item_type).to eq item.class.name
@@ -126,6 +143,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       ensure_addon_opened "#addon-cms-agents-addons-thumb"
       within "#addon-cms-agents-addons-thumb" do
@@ -158,6 +177,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       item.reload
       expect(item.thumb.owner_item_type).to eq item.class.name
@@ -168,6 +189,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context 'with rm_thumb' do
       it do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
@@ -200,6 +223,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
         expect(item.thumb.owner_item_type).to eq item.class.name
@@ -208,6 +233,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(SS::File.where(owner_item_type: 'Article::Page', owner_item_id: item.id).present?).to be_truthy
 
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
@@ -222,6 +249,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
         expect(item.thumb).to be_nil
@@ -233,6 +262,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     context 'with cms addon file' do
       it do
         visit edit_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
@@ -251,18 +282,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        within "#addon-cms-agents-addons-file" do
-          wait_for_cbox_opened do
-            click_on I18n.t("cms.file")
-          end
-        end
-
-        within_cbox do
-          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-          wait_for_cbox_closed do
-            click_button I18n.t("ss.buttons.attach")
-          end
-        end
+        ensure_addon_opened "#addon-cms-agents-addons-file"
+        ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
 
         within "form#item-form" do
           within "#addon-cms-agents-addons-thumb" do
@@ -271,14 +292,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_no_css('span.humanized-name', text: 'GIF')
           end
 
-          within '#selected-files' do
-            expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
-            expect(page).to have_css('.name', text: 'keyvisual.gif')
+          within "#addon-cms-agents-addons-file" do
+            within '#selected-files' do
+              expect(page).to have_no_css('.name', text: 'keyvisual.jpg')
+              expect(page).to have_css('.name', text: 'keyvisual.gif')
+            end
           end
 
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         item.reload
         expect(item.thumb.owner_item_type).to eq item.class.name
@@ -302,6 +327,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit article_page_path(site: site, cid: node, id: item)
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect do
         within "#addon-workflow-agents-addons-branch" do
           wait_for_turbo_frame "#workflow-branch-frame"
@@ -318,8 +345,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         wait_for_turbo_frame "#workflow-branch-frame"
         click_on item.name
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       click_on I18n.t("ss.links.edit")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within "form#item-form" do
         ensure_addon_opened "#addon-cms-agents-addons-thumb"
         within "#addon-cms-agents-addons-thumb" do
@@ -346,6 +377,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
       end.to output.to_stdout
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       item.reload
       expect(item.thumb).to be_present

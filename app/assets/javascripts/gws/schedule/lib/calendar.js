@@ -134,9 +134,13 @@ SS.ready(function() {
         slotLabelFormat: 'HH:mm',
         startParam: 's[start]',
         timeFormat: 'HH:mm',
+        // '(' と ')' とで囲むと「2025年 1月 26日（日） — 2025年 2月 1日（土）」のような表示になり、
+        // '(' と ')' とで囲まない場合、共通部分が collapse され「2025年 1月 26日（日） — 2月 1日（土）」のような表示になる。
+        // しかし、日本語の場合、FullCalendarの formatRange バグ（？）で、うまく collapse されないので、week の場合は collapse 禁止、それ以外は collapse 許可。
+        // 参考: https://fullcalendar.io/docs/v3/formatRange
         titleFormat: {
           month: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.month')),
-          week: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')),
+          week: '(' + SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.week')) + ')',
           day: SS.convertDateTimeFormat(i18next.t('gws/schedule.calendar.titleFormat.day'))
         },
         loading: function (isLoading, _view) {
@@ -201,7 +205,9 @@ SS.ready(function() {
           attendance = $('.fc .fc-withAbsence-button');
           if (attendance.length) {
             if (attendance.hasClass('fc-state-active')) {
-              $('.fc .fc-event-user-attendance-absence').removeClass("hide")
+              $('.fc .fc-event-user-attendance-absence').removeClass('hide');
+            } else {
+              $('.fc .fc-event-user-attendance-absence').addClass('hide');
             }
           }
           Gws_Schedule_Calendar.updateNoPlanVisibility(view.el.closest(".fc"));
