@@ -51,7 +51,6 @@ module SS::Copy::CmsForms
   end
 
   def before_copy_cms_form(src_item)
-    Rails.logger.debug("#{src_item.name}(#{src_item.id}): 定型フォームのコピーを開始します。")
   end
 
   def after_copy_cms_form(src_item)

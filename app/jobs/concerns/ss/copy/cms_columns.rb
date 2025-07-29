@@ -52,7 +52,6 @@ module SS::Copy::CmsColumns
   end
 
   def before_copy_cms_column(src_item)
-    Rails.logger.debug("#{src_item.name}(#{src_item.id}): 入力項目のコピーを開始します。")
   end
 
   def after_copy_cms_column(src_item)
