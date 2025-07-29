@@ -40,8 +40,6 @@ class Cms::LoopSetting
       ]
     end
 
-    def html_format_options
-      Cms::Addon::HtmlCustom.html_format_options
-    end
+    delegate :html_format_options, to: Cms::Addon::HtmlCustom
   end
 end
