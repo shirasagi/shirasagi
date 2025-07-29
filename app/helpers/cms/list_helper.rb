@@ -56,10 +56,7 @@ module Cms::ListHelper
       render_list_with_shirasagi(cur_item, default_node_loop_html, &block)
     else
       if cur_item.loop_setting.present?
-        source = cur_item.loop_setting.custom_html.presence ||
-                 cur_item.loop_setting.html ||
-                 cur_item.loop_liquid.presence ||
-                 default_node_loop_liquid
+        source = cur_item.loop_setting.custom_html.presence || cur_item.loop_setting.html
       else
         source = cur_item.loop_liquid.presence || default_node_loop_liquid
       end
@@ -79,10 +76,7 @@ module Cms::ListHelper
       render_list_with_shirasagi(cur_item, default_page_loop_html, &block)
     else
       if cur_item.loop_setting.present?
-        source = cur_item.loop_setting.custom_html.presence ||
-                 cur_item.loop_setting.html ||
-                 cur_item.loop_liquid.presence ||
-                 default_page_loop_liquid
+        source = cur_item.loop_setting.custom_html.presence || cur_item.loop_setting.html
       else
         source = cur_item.loop_liquid.presence || default_page_loop_liquid
       end
@@ -102,13 +96,7 @@ module Cms::ListHelper
     else
       h << cur_item.substitute_html.to_s.html_safe if @items.blank?
       if cur_item.loop_setting.present?
-        # シラサギ形式の場合はhtml_format: 'shirasagi'のループ設定のみを使用
-        if cur_item.loop_setting.html_format == 'shirasagi'
-          loop_html = cur_item.loop_setting.html
-        else
-          # Liquid形式のループ設定が選択されている場合は、直接入力のloop_htmlを使用
-          loop_html = cur_item.loop_html.presence || default_loop_html
-        end
+        loop_html = source = cur_item.loop_setting.custom_html.presence || cur_item.loop_setting.html
       elsif cur_item.loop_html.present?
         loop_html = cur_item.loop_html
       else
