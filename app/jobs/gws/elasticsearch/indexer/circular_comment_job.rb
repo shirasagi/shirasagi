@@ -14,7 +14,9 @@ class Gws::Elasticsearch::Indexer::CircularCommentJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      y << self.class.convert_to_doc(self.site, item.post, item)
+      each_item do |item|
+        y << self.class.convert_to_doc(self.site, item.post, item)
+      end
     end
   end
 end

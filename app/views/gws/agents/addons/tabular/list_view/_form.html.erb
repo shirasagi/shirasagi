@@ -1,0 +1,43 @@
+<%
+  column_options = Gws::Tabular.build_column_options(@item.form, site: @cur_site)
+%>
+<dl class="see" data-field-name="title_column_ids">
+  <dt><%= @model.t :title_column_ids %><%= @model.tt :title_column_ids %></dt>
+  <dd>
+    <%=
+      title_column_options = Gws::Tabular.filter_column_options(column_options, :title)
+      component = Gws::Tabular::DndFormComponent.new(
+        object_name: f.object_name, method_name: :title_column_ids, options: title_column_options, selected: @item.title_column_ids)
+      render component
+    %>
+  </dd>
+</dl>
+
+<dl class="see" data-field-name="meta_column_ids">
+  <dt><%= @model.t :meta_column_ids %><%= @model.tt :meta_column_ids %></dt>
+  <dd>
+    <%=
+      meta_column_options = Gws::Tabular.filter_column_options(column_options, :meta)
+      component = Gws::Tabular::DndFormComponent.new(
+        object_name: f.object_name, method_name: :meta_column_ids, options: meta_column_options, selected: @item.meta_column_ids)
+      render component
+    %>
+  </dd>
+</dl>
+
+<dl class="see" data-field-name="orders">
+  <dt><%= @model.t :orders %><%= @model.tt :orders %></dt>
+  <dd>
+    <%=
+      order_column_options = Gws::Tabular.filter_column_options(column_options, :order)
+      component = Gws::Tabular::DndOrderFormComponent.new(
+        object_name: f.object_name, method_name: :orders, options: order_column_options, selected: @item.orders)
+      render component
+    %>
+  </dd>
+</dl>
+
+<dl class="see" data-field-name="limit_count">
+  <dt><%= @model.t :limit_count %><%= @model.tt :limit_count %></dt>
+  <dd><%= f.number_field :limit_count %></dd>
+</dl>

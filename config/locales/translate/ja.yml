@@ -48,6 +48,8 @@ ja:
 
   mongoid:
     models:
+      translate/text_cache: 翻訳テキスト
+      translate/lang: 言語
       translate/part/tool: 翻訳ツール
     attributes:
       translate/text_cache:
@@ -126,4 +128,4 @@ ja:
 
   job:
     models:
-      translate/access_log/purge_job: 自動翻訳アクセス履歴削除
+      translate/access_log/purge_job: 自動翻訳/アクセス履歴削除

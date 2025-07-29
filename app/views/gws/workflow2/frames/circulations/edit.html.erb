@@ -1,0 +1,35 @@
+<%
+  workflow_circulation ||= local_assigns.fetch(:workflow_circulation, {})
+  show_file_attachment = @item.workflow_circulation_attachment_enabled_at?(workflow_circulation[:level])
+%>
+
+<%= form_with scope: :item, url: gws_workflow2_frames_circulation_path(id: @item), html: { method: "put", id: "workflow-circulation", autocomplete: :off, data: { turbo: true } } do |f| %>
+  <%= hidden_field_tag :ref, ref, id: nil %>
+
+  <%= error_messages_for :item %>
+
+  <section class="mod-workflow-circulation">
+    <%= f.text_area :comment, value: "", id: nil %>
+    <%=
+      if show_file_attachment
+        if SS.file_upload_dialog == :v1
+          render "gws/workflow2/frames/inspections/file_attachment_v1", **local_assigns
+        else
+          render "gws/workflow2/frames/inspections/file_attachment_v2", **local_assigns
+        end
+      end
+    %>
+
+    <div class="buttons">
+      <%= f.button t("workflow.links.set_seen"), type: :seen, name: :approve, class: "btn-primary" %>
+    </div>
+  </section>
+<% end %>
+
+<% if show_file_attachment %>
+  <%= jquery do %>
+    var $el = $("#workflow-circulation");
+    var tempFile = new SS_Addon_TempFile($el.find(".upload-drop-area"), <%= @cur_user.id %>);
+    SS_FileView.renderFileView($el);
+  <% end %>
+<% end %>

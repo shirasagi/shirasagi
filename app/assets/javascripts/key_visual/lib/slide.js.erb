@@ -6,7 +6,7 @@ this.KeyVisual_Image = (function () {
   }
 
   KeyVisual_Image.slide = function (selector, opts) {
-    var defaultOpts, slider;
+    var defaultOpts;
     if (opts == null) {
       opts = {};
     }
@@ -19,7 +19,7 @@ this.KeyVisual_Image = (function () {
       pagerCustom: selector + " .bx-thumbs",
       touchEnabled : false
     };
-    return slider = $(selector + " .images").bxSlider($.extend(defaultOpts, opts));
+    return $(selector + " .images").bxSlider($.extend(defaultOpts, opts));
   };
 
   KeyVisual_Image.randomize = function (selector) {

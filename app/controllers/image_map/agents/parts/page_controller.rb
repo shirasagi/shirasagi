@@ -16,5 +16,7 @@ class ImageMap::Agents::Parts::PageController < ApplicationController
     @items = pages.order_by(order: 1).limit(@cur_node.limit).to_a
     @image = @cur_node.image
     @usemap = "image-map-#{@cur_node.id}"
+
+    render formats: :html
   end
 end

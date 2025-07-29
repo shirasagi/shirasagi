@@ -31,7 +31,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           wait_for_notice I18n.t("webmail.notice.no_recent_mail")
 
           find(".webmail-navi-quota .reload").click
-          quota_label = "#{0.to_s(:human_size)}/#{(10 * 1_024 * 1_024).to_s(:human_size)}"
+          quota_label = "#{0.to_fs(:human_size)}/#{(10 * 1_024 * 1_024).to_fs(:human_size)}"
           expect(page).to have_css(".webmail-navi-quota .ss-quota-bar .label", text: quota_label)
         end
       end

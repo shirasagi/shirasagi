@@ -23,6 +23,10 @@ class Opendata::Dataset::UrlResourcesController < ApplicationController
     @item = dataset.url_resources.find params[:id]
   end
 
+  def fix_params
+    { cur_user: @cur_user }
+  end
+
   public
 
   def index

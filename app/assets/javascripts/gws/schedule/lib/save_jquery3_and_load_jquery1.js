@@ -2,4 +2,4 @@
 //= require jquery
 
 // save jQuery3
-var $jQuery3 = $;
+var $jQuery3 = $; // eslint-disable-line

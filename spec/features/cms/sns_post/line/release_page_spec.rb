@@ -149,7 +149,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
-            wait_event_to_fire "turbo:frame-load" do
+            wait_for_event_fired "turbo:frame-load" do
               click_on I18n.t("workflow.create_branch")
             end
             expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
@@ -206,8 +206,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
@@ -494,7 +493,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
-            wait_event_to_fire "turbo:frame-load" do
+            wait_for_event_fired "turbo:frame-load" do
               click_on I18n.t("workflow.create_branch")
             end
             expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
@@ -552,8 +551,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # 2. approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name

@@ -4,6 +4,8 @@ class SS::File
   include SS::Liquidization
   include Cms::Lgwan::File
 
+  IMAGE_FILE_EXTENSIONS = %w(.gif .jpeg .jpg .png .webp).freeze
+
   cattr_accessor(:models, instance_accessor: false) { [] }
 
   liquidize do
@@ -37,11 +39,12 @@ class SS::File
       metadata
     end
 
-    def clone_file(file, cur_user: nil, owner_item: nil, &block)
+    def clone_file(file, cur_site: nil, cur_user: nil, owner_item: nil, &block)
       attributes = Hash[file.attributes]
       attributes.stringify_keys!
       attributes.select! { |k| file.fields.key?(k) }
 
+      attributes["site_id"] = cur_site.try(:id)
       attributes["user_id"] = cur_user.try(:id) if attributes.key?("user_id")
       if owner_item
         attributes["owner_item_type"] = owner_item.class.name

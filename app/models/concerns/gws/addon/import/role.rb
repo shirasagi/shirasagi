@@ -13,11 +13,7 @@ module Gws::Addon::Import
 
     module ClassMethods
       def csv_headers
-        headers = %w(id name permissions)
-        unless SS.config.ss.disable_permission_level
-          headers << 'permission_level'
-        end
-        headers
+        %w(id name permissions)
       end
 
       def to_csv
@@ -29,9 +25,6 @@ module Gws::Addon::Import
               line << item.id
               line << item.name
               line << item.localized_permissions.join("\n")
-              unless SS.config.ss.disable_permission_level
-                line << item.permission_level
-              end
               data << line
             end
           end
@@ -95,7 +88,6 @@ module Gws::Addon::Import
       id               = row[t("id")].to_s.strip
       name             = row[t("name")].to_s.strip
       permissions      = row[t("permissions")].to_s.strip.split("\n")
-      permission_level = row[t("permission_level")].to_s.strip.to_i
 
       if id.present?
         item = self.class.unscoped.site(cur_site).where(id: id).first
@@ -115,7 +107,6 @@ module Gws::Addon::Import
 
       item.name             = name
       item.permissions      = item.normalized_permissions(permissions)
-      item.permission_level = (permission_level == 0) ? 1 : permission_level
       item.site_id          = cur_site.id
 
       if item.save

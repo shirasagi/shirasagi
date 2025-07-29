@@ -43,16 +43,17 @@ describe "gws_elasticsearch_search_workflow_form", type: :feature, dbscope: :exa
 
   before do
     # enable elastic search
+    site.menu_workflow_state = 'show'
     site.menu_elasticsearch_state = 'show'
     site.elasticsearch_hosts = SS::EsSupport.es_url
     site.save
 
     # gws:es:ingest:init
-    ::Gws::Elasticsearch.init_ingest(site: site)
+    Gws::Elasticsearch.init_ingest(site: site)
     # gws:es:drop
-    ::Gws::Elasticsearch.drop_index(site: site) rescue nil
+    Gws::Elasticsearch.drop_index(site: site) rescue nil
     # gws:es:create_indexes
-    ::Gws::Elasticsearch.create_index(site: site)
+    Gws::Elasticsearch.create_index(site: site)
   end
 
   context "user1" do
@@ -71,7 +72,7 @@ describe "gws_elasticsearch_search_workflow_form", type: :feature, dbscope: :exa
       end
 
       # wait for indexing
-      ::Gws::Elasticsearch.refresh_index(site: site)
+      Gws::Elasticsearch.refresh_index(site: site)
 
       visit index_path
       within '.index form' do
@@ -113,7 +114,7 @@ describe "gws_elasticsearch_search_workflow_form", type: :feature, dbscope: :exa
       end
 
       # wait for indexing
-      ::Gws::Elasticsearch.refresh_index(site: site)
+      Gws::Elasticsearch.refresh_index(site: site)
 
       visit index_path
       within '.index form' do

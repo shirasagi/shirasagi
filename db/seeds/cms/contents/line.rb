@@ -9,7 +9,7 @@ end
 def create_deliver_condition(data)
   Cms::Line::DeliverCondition.create!(
     deliver_category_ids: data[:deliver_category_ids], name: data[:name],
-    order: data[:order], site_id: @site.id, permission_level: 1
+    order: data[:order], site_id: @site.id
   )
 end
 

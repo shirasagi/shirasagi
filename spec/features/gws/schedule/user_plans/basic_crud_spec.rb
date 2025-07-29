@@ -67,8 +67,8 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example, js: true 
         click_button I18n.t('ss.buttons.delete')
       end
       wait_for_js_ready
-      expect(current_path).to eq index_path
       wait_for_notice I18n.t('ss.notice.deleted')
+      expect(current_path).to eq index_path
     end
 
     context 'with gws_schedule_facility_plan_few_days' do
@@ -132,9 +132,8 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example, js: true 
           click_button I18n.t('ss.buttons.delete')
         end
         wait_for_js_ready
-
-        expect(current_path).to eq index_path
         wait_for_notice I18n.t('ss.notice.deleted')
+        expect(current_path).to eq index_path
       end
     end
   end

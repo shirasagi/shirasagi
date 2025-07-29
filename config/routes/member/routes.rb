@@ -68,6 +68,7 @@ Rails.application.routes.draw do
     match "login/(index.:format)" => "public#login", via: [:get, :post], cell: "nodes/login"
     match "login/login.html" => "public#login", via: [:get, :post], cell: "nodes/login"
     get "login/logout.html" => "public#logout", cell: "nodes/login"
+    post "login/:provider" => "public#init", cell: "nodes/login"
     get "login/:provider/callback" => "public#callback", cell: "nodes/login"
     get "login/failure" => "public#failure", cell: "nodes/login"
 
@@ -110,7 +111,7 @@ Rails.application.routes.draw do
     put "line_first_registration/(index.:format)" => "public#index", cell: "nodes/line_first_registration"
 
     scope "my_blog" do
-      resource :setting, controller: "public", cell: "nodes/my_blog/setting", except: [:index, :show, :destroy]
+      resource :setting, controller: "public", cell: "nodes/my_blog/setting", except: [:show, :destroy]
     end
     get "my_blog(index.:format)" => "public#index", cell: "nodes/my_blog"
     resources :my_blog, concerns: :deletion, controller: "public", cell: "nodes/my_blog", except: :index

@@ -17,15 +17,15 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
   end
 
   def check_release_state
-    raise "404" unless @cur_node.public?
+    raise SS::NotFoundError unless @cur_node.public?
   end
 
   def check_reception_state
-    raise "404" unless @cur_node.reception_enabled?
+    raise SS::NotFoundError unless @cur_node.reception_enabled?
   end
 
   def check_aggregation_state
-    raise "404" unless @cur_node.aggregation_enabled?
+    raise SS::NotFoundError unless @cur_node.aggregation_enabled?
   end
 
   def set_columns
@@ -40,7 +40,7 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
     @items = []
     @data = {}
-    @to = [@cur_node.notice_email]
+    @to = @cur_node.notice_emails.to_a
     @columns.each do |column|
       param = params.to_unsafe_h[:item].try(:[], column.id.to_s)
       if column.input_type == "upload_file" &&
@@ -51,6 +51,12 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
         param = SS::File.with(client: client_name) do |model|
           model.find(param)
         end
+      end
+      if column.input_type == "date_field" && param.present?
+        param = Date.parse(param).iso8601 rescue nil
+      end
+      if column.input_type == "datetime_field" && param.present?
+        param = DateTime.parse(param).strftime('%FT%H:%M') rescue nil
       end
       @items << [column, param]
       @data[column.id] = [param]
@@ -83,36 +89,45 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     return if params[:group].blank?
 
     @group = Cms::Group.site(@cur_site).active.where(id: params[:group]).first
-    raise "404" if @group.blank?
-    raise "404" if @cur_node.notify_mail_enabled? && @group.contact_email.blank?
+    raise SS::NotFoundError if @group.blank?
+    raise SS::NotFoundError if @cur_node.notify_mail_enabled? && @group.contact_email.blank?
   end
 
   def set_page
     return if params[:page].blank?
 
     @page = Cms::Page.site(@cur_site).and_public(@cur_date).where(id: params[:page]).first
-    raise "404" if @page.blank?
+    raise SS::NotFoundError if @page.blank?
+  end
+
+  def set_saved_params
+    return if !@cur_node.show_sent_data?
+    @saved_params = Inquiry::SavedParams.get(session[saved_params_key])
+  end
+
+  def saved_params_key
+    "inquiry_saved_params_#{@cur_node.id}"
   end
 
   public
 
   def new
     if @group || @page
-      raise "404" if @cur_site.inquiry_form != @cur_node
+      raise SS::NotFoundError if @cur_site.inquiry_form != @cur_node
     end
     if @group && @page
-      raise "404" if @page.contact_group_id != @group.id
+      raise SS::NotFoundError if @page.contact_group_id != @group.id
     end
   end
 
   def confirm
-    if !@answer.valid?
+    if @answer.errors.present? || @answer.invalid?
       render action: :new
     end
   end
 
   def create
-    if !@answer.valid? || params[:submit].blank?
+    if @answer.errors.present? || @answer.invalid? || params[:submit].blank?
       render action: :new
       return
     end
@@ -129,10 +144,10 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
 
     if @cur_node.notify_mail_enabled?
       if @group.present? && @group.contact_email.present?
-        notice_email = @group.contact_email
-        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now if notice_email.present?
+        email = @group.contact_email
+        Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, email).deliver_now if email.present?
       else
-        @to.each { |notice_email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, notice_email).deliver_now }
+        @to.each { |email| Inquiry::Mailer.notify_mail(@cur_site, @cur_node, @answer, email).deliver_now }
       end
     end
 
@@ -147,6 +162,24 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       @answer.update_kintone_record
     end
 
+    # create saved_params
+    if @cur_node.show_sent_data?
+      data = {}
+      @data.each do |column_id, values|
+        value = values[0]
+        if value.is_a?(String)
+          data[column_id] = value
+        elsif value.is_a?(Hash)
+          data[column_id] = value.values.join("\n")
+        elsif value.respond_to?(:original_filename)
+          data[column_id] = value.original_filename
+        elsif value.respond_to?(:filename)
+          data[column_id] = value.filename
+        end
+      end
+      session[saved_params_key] = Inquiry::SavedParams.apply(data)
+    end
+
     query = {}
     if @answer.source_url.present?
       if params[:preview]
@@ -156,15 +189,15 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
       end
     end
     query[:group] = @group.id if @group
-    query = query.to_query
 
     url = "#{@cur_node.url}sent.html"
-    url = "#{url}?#{query}" if query.present?
+    url = "#{url}?#{query.to_query}" if query.present?
     redirect_to url
   end
 
   def sent
     set_group
+    set_saved_params
     render action: :sent
   end
 

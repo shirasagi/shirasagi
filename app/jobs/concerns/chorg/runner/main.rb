@@ -6,22 +6,14 @@ module Chorg::Runner::Main
   def save_or_collect_errors(entity)
     new_record = entity.new_record?
     if entity.valid?
-      if entity.respond_to?(:without_record_timestamps)
-        entity.without_record_timestamps { entity.save }
-      else
-        entity.save
-      end
+      entity.save
       if entity.previous_changes.present?
         put_log("saved : #{entity.class}(#{entity.id})")
         task.store_entity_changes(entity, target_site(entity), new_record: new_record)
       end
       true
     elsif exclude_validation_model?(entity)
-      if entity.respond_to?(:without_record_timestamps)
-        entity.without_record_timestamps { entity.save!(validate: false) }
-      else
-        entity.save!(validate: false)
-      end
+      entity.save!(validate: false)
       if entity.previous_changes.present?
         put_log("saved (skip validate) : #{entity.class}(#{entity.id})")
         task.store_entity_changes(entity, target_site(entity), new_record: new_record)

@@ -1,0 +1,10 @@
+<% @index_meta = proc do |item| %>
+  <span class="id">#<%= item.id %></span>
+  <span class="datetime"><%= item.updated.strftime("%Y/%m/%d %H:%M") %></span>
+  <span class="filename"><%= item.filename %></span>
+  <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+  <%= colored_state_label(item) %>
+  <span class="expiration-setting"><%= item.label(:expiration_setting_type) || t("cms.options.expiration_setting_type.site") %></span>
+<% end %>
+
+<%= render template: "cms/crud/index" %>

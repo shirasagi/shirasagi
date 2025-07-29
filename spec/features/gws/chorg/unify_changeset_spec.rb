@@ -17,7 +17,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("chorg.menus.revisions.unify")
 
       within "form#item-form" do
-        fill_in "item[destinations[][name]]", with: name
+        fill_in "item[destinations][][name]", with: name
         click_on I18n.t("chorg.views.unify_changesets.select_group")
       end
       within "#ajax-box" do
@@ -60,7 +60,7 @@ describe "gws_chorg", type: :feature, dbscope: :example, js: true do
       click_on I18n.t("ss.links.edit")
 
       within "form#item-form" do
-        fill_in "item[destinations[][name]]", with: name
+        fill_in "item[destinations][][name]", with: name
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')

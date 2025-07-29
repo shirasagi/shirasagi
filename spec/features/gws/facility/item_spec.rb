@@ -42,7 +42,6 @@ describe "facility_item", type: :feature, dbscope: :example do
         expect(item1.readable_member_names).to eq ["gw-admin (admin)"]
         expect(item1.group_names).to eq %w(シラサギ市/企画政策部/政策課)
         expect(item1.user_names).to eq ["gw-admin (admin)"]
-        expect(item1.permission_level).to be_numeric
 
         expect(item2).to be_valid
         expect(item2.category.name).to eq "会議室"
@@ -64,7 +63,6 @@ describe "facility_item", type: :feature, dbscope: :example do
         expect(item2.readable_member_names).to eq ["gw-admin (admin)"]
         expect(item2.group_names).to eq %w(シラサギ市/企画政策部/政策課)
         expect(item2.user_names).to eq ["gw-admin (admin)"]
-        expect(item2.permission_level).to be_numeric
       end
     end
 

@@ -1,7 +1,7 @@
 class SS::Migration20190305000000
   include SS::Migration::Base
 
-  depends_on "20190301000001"
+  depends_on "20181218000000"
 
   def change
     all_ids = Webmail::History::ArchiveFile.all.pluck(:id).sort

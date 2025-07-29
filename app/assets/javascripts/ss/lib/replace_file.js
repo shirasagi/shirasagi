@@ -39,7 +39,7 @@ this.SS_ReplaceFile = (function () {
     });
   };
 
-  SS_ReplaceFile.showError = function(xhr, status, error) {
+  SS_ReplaceFile.showError = function(xhr, _status, _error) {
     var fullMessages = [ "== Error(ReplaceFile) ==" ];
     if (xhr.responseText) {
       fullMessages.push(xhr.responseText);
@@ -60,9 +60,9 @@ this.SS_ReplaceFile = (function () {
         $ajaxBox.hide();
         $loading.show();
       },
-      success: function(data) {
+      success: function(_data) {
         // $("#cboxLoadedContent").load(confirmUrl);
-        $("<div />").load(confirmUrl, function(data, status) {
+        $("<div />").load(confirmUrl, function(_data, _status) {
           $.colorbox.prep($(this).contents());
         });
       },
@@ -147,9 +147,9 @@ this.SS_ReplaceFile = (function () {
           $ajaxBox.hide();
           $loading.show();
         },
-        success: function(data) {
+        success: function(_data) {
           // $("#cboxLoadedContent").load(historiesUrl);
-          $("<div />").load(historiesUrl, function(data, status) {
+          $("<div />").load(historiesUrl, function(_data, _status) {
             $.colorbox.prep($(this).contents());
             SS_SearchUI.anchorAjaxBox.trigger("ss:ajaxRemoved");
           });

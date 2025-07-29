@@ -87,8 +87,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.save")
       end
       wait_for_notice I18n.t('ss.notice.saved')
-      expect(page).to have_css("a", text: "[複製] #{item.name}")
-      expect(page).to have_css(".state", text: "非公開")
+      expect(page).to have_css("a", text: "[#{I18n.t("workflow.cloned_name_prefix")}] #{item.name}")
+      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
     end
 
     context "with release_date and close_date" do
@@ -102,8 +102,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t('ss.notice.saved')
-        expect(page).to have_css("a", text: "[複製] #{item.name}")
-        expect(page).to have_css(".state", text: "非公開")
+        expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] #{item.name}")
+        expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
       end
     end
 
@@ -173,7 +173,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_content I18n.t('ss.confirm.not_contains_links_in_file')
         end
         click_button I18n.t('ss.buttons.delete')
-        wait_for_ajax
+        wait_for_js_ready
 
         expect(page).to have_content File.basename(item2.filename)
       end
@@ -184,7 +184,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
-        wait_for_ajax
+        wait_for_js_ready
 
         expect(page).to have_css('.contains-urls', text: I18n.t('ss.confirm.contains_links_in_file_ignoring_alert'))
       end
@@ -196,7 +196,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within ".list-head-action" do
           click_button I18n.t('ss.buttons.delete')
         end
-        wait_for_ajax
+        wait_for_js_ready
 
         find('.list-item input[type="checkbox"][checked="checked"]').set(false)
         click_button I18n.t('ss.buttons.delete')

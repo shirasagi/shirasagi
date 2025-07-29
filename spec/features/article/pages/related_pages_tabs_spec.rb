@@ -50,7 +50,7 @@ describe "cms_apis_pages", type: :feature, dbscope: :example, js: true do
           within ("tr[data-id='#{page_s2.id}']") do 
             find("input[type='checkbox'][value='#{page_s2.id}']").check
           end
-          wait_for_ajax
+          wait_for_js_ready
           expect(page).to have_css(".search-ui-select")
           within (".search-ui-select") do 
             click_button I18n.t("cms.apis.pages.select")

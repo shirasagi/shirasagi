@@ -32,16 +32,13 @@ describe "sys_notice", type: :feature, dbscope: :example do
         visit sns_login_path
         expect(page).to have_no_css(".login-notice")
 
-        login_sys_user
-        visit sns_mypage_path
+        login_sys_user to: sns_mypage_path
         expect(page).to have_no_css(".notices")
 
-        login_cms_user
-        visit cms_contents_path(site: cms_site)
+        login_cms_user to: cms_contents_path(site: cms_site)
         expect(page).to have_no_css(".notices")
 
-        login_gws_user
-        visit gws_portal_path(site: gws_site)
+        login_gws_user to: gws_portal_path(site: gws_site)
         expect(page).to have_no_css(".sys-notices")
       end
     end
@@ -56,22 +53,19 @@ describe "sys_notice", type: :feature, dbscope: :example do
           expect(page).to have_css(".list-item .notice-severity-normal", text: notice1.name)
         end
 
-        login_sys_user
-        visit sns_mypage_path
+        login_sys_user to: sns_mypage_path
         within ".notices" do
           expect(page).to have_css(".list-item .notice-severity-high", text: notice0.name)
           expect(page).to have_css(".list-item .notice-severity-normal", text: notice1.name)
         end
 
-        login_cms_user
-        visit cms_contents_path(site: cms_site)
+        login_cms_user to: cms_contents_path(site: cms_site)
         within ".notices" do
           expect(page).to have_css(".list-item .notice-severity-high", text: notice0.name)
           expect(page).to have_css(".list-item .notice-severity-normal", text: notice1.name)
         end
 
-        login_gws_user
-        visit gws_portal_path(site: gws_site)
+        login_gws_user to: gws_portal_path(site: gws_site)
         within ".sys-notices" do
           expect(page).to have_css(".list-item .notice-severity-high", text: notice0.name)
           expect(page).to have_css(".list-item .notice-severity-normal", text: notice1.name)
@@ -89,22 +83,19 @@ describe "sys_notice", type: :feature, dbscope: :example do
           expect(page).to have_css(".list-item .notice-severity-normal", text: notice1.name)
         end
 
-        login_sys_user
-        visit sns_mypage_path
+        login_sys_user to: sns_mypage_path
         within ".notices" do
           expect(page).to have_css(".list-item .notice-severity-high", text: notice0.name)
           expect(page).to have_css(".list-item .notice-severity-normal", text: notice1.name)
         end
 
-        login_cms_user
-        visit cms_contents_path(site: cms_site)
+        login_cms_user to: cms_contents_path(site: cms_site)
         within ".notices" do
           expect(page).to have_css(".list-item .notice-severity-high", text: notice0.name)
           expect(page).to have_css(".list-item .notice-severity-normal", text: notice1.name)
         end
 
-        login_gws_user
-        visit gws_portal_path(site: gws_site)
+        login_gws_user to: gws_portal_path(site: gws_site)
         within ".sys-notices" do
           expect(page).to have_css(".list-item .notice-severity-high", text: notice0.name)
           expect(page).to have_css(".list-item .notice-severity-normal", text: notice1.name)
@@ -119,16 +110,13 @@ describe "sys_notice", type: :feature, dbscope: :example do
         visit sns_login_path
         expect(page).to have_no_css(".login-notice")
 
-        login_sys_user
-        visit sns_mypage_path
+        login_sys_user to: sns_mypage_path
         expect(page).to have_no_css(".notices")
 
-        login_cms_user
-        visit cms_contents_path(site: cms_site)
+        login_cms_user to: cms_contents_path(site: cms_site)
         expect(page).to have_no_css(".notices")
 
-        login_gws_user
-        visit gws_portal_path(site: gws_site)
+        login_gws_user to: gws_portal_path(site: gws_site)
         expect(page).to have_no_css(".sys-notices")
       end
     end

@@ -25,10 +25,10 @@
 }
 .event-recurrence-excludes-summary {
   max-width: 20em;
+  margin-left: 5px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  margin-left: 5px;
 }
 .event-recurrence-delete-btn {
   width: 50px;
@@ -95,34 +95,34 @@ dl.see > dd .event-recurrence input {
 }
 
 .information__text {
-  font-weight: bold;
   font-size: 16px;
+  font-weight: bold;
 }
 
 .information__usage {
+  width: 100%;
   margin-top: 20px;
   padding: 20px;
   border: 2px solid #ccc;
-  width: 100%;
   border-radius: 10px;
 }
 
 .event__date {
-  margin: 0 5px;
+  display: inline-block;
   width: 15px;
   height: 15px;
+  margin: 0 5px;
   border-radius: 100%;
-  display: inline-block;
-  vertical-align: text-bottom;
   background-color: #b3e5fc;
+  vertical-align: text-bottom;
 }
 
 .exclusion-date {
-  margin: 0 5px;
+  display: inline-block;
   width: 15px;
   height: 15px;
+  margin: 0 5px;
   border-radius: 100%;
-  display: inline-block;
-  vertical-align: text-bottom;
   background-color: #cfd8dc;
+  vertical-align: text-bottom;
 }

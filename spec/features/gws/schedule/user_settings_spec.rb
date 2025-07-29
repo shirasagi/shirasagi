@@ -11,7 +11,7 @@ describe "gws_schedule_user_settings", type: :feature, dbscope: :example do
 
     it "#show" do
       visit path
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_content(item.name)
     end
 
@@ -21,7 +21,7 @@ describe "gws_schedule_user_settings", type: :feature, dbscope: :example do
         uncheck("tab-g-#{item.id}")
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_ajax
+      wait_for_js_ready
       wait_for_notice I18n.t('ss.notice.saved')
     end
   end

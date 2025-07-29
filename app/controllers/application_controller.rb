@@ -9,31 +9,8 @@ class ApplicationController < ActionController::Base
 
   before_action :clear_secure_option_of_session
 
-  class CloseableChunkedBody < Rack::Chunked::Body
-    def initialize(*args)
-      super
-      @closed = false
-    end
-
-    def each(&block)
-      super
-    ensure
-      unless @closed
-        close
-        @closed = true
-      end
-    end
-
-    def close
-      return unless @body.respond_to?(:close)
-
-      if @body.method(:close).arity == 0
-        @body.close
-      else
-        # Tempfile support
-        @body.close(true)
-      end
-    end
+  if SS.config.env.set_received_by
+    before_action :set_received_by
   end
 
   def new_agent(controller_name)
@@ -42,14 +19,6 @@ class ApplicationController < ActionController::Base
     agent.controller.request = request
     agent.controller.instance_variable_set :@controller, self
     agent
-  end
-
-  def render_agent(controller_name, action)
-    new_agent(controller_name).render(action)
-  end
-
-  def invoke_agent(controller_name, action)
-    new_agent(controller_name).invoke(action)
   end
 
   def send_enum(enum, options = {})
@@ -63,21 +32,19 @@ class ApplicationController < ActionController::Base
       headers['Content-Disposition'] = disposition
     end
 
-    # nginx doc: Setting this to "no" will allow unbuffered responses suitable for Comet and HTTP streaming applications
-    headers['X-Accel-Buffering'] = 'no'
-    headers['Cache-Control'] = 'no-store'
-    headers['Transfer-Encoding'] = 'chunked'
-    headers.delete('Content-Length')
-
-    # Unfortunately Rack::ETag (https://github.com/rack/rack/blob/master/lib/rack/etag.rb#L54) above 2.2
-    # forcibly calculate etag even though the response is streaming. So, streaming response doesn't work properly.
-    # To fix this issue, you must set "Last-Modified" header explicitly
-    #
-    # see: https://qiita.com/snaka/items/133edf3e1a4cabd9ce45
-    headers['Last-Modified'] = Time.zone.now.rfc2822
-
-    # output csv by streaming
-    self.response_body = CloseableChunkedBody.new(enum)
+    enum.each do |chunk|
+      response.stream.write(chunk)
+    end
+    response.stream.close
+  ensure
+    if enum.respond_to?(:close)
+      if enum.method(:close).arity == 0
+        enum.close rescue nil
+      else
+        # Tempfile support
+        enum.close(true) rescue nil
+      end
+    end
   end
 
   def send_file_headers!(options)
@@ -138,7 +105,7 @@ class ApplicationController < ActionController::Base
   end
 
   def request_path
-    request.env["REQUEST_PATH"] || request.path
+    @request_path ||= SS.request_path(request)
   end
 
   def protect_csrf?
@@ -179,6 +146,18 @@ class ApplicationController < ActionController::Base
       response.headers["Cache-Control"] = "no-cache, no-store, max-age=0, must-revalidate"
       response.headers["Pragma"] = "no-cache"
       response.headers["Expires"] = "-1"
+    end
+  end
+
+  def set_received_by
+    # set first received time to received-at
+    response.headers["X-SS-Received-At"] ||= Time.zone.now.to_i
+
+    controller_name = params[:controller].presence
+    action_name = params[:action].presence
+    if controller_name && action_name
+      # set last controller and action to received-by
+      response.headers["X-SS-Received-By"] = "#{request.method} #{controller_name}##{action_name}"
     end
   end
 

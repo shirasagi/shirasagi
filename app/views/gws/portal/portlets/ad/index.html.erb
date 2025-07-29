@@ -2,8 +2,9 @@
   <div class="portlet-title"><%= @portlet.name %></div>
   <div class="slide-wrap">
     <%=
-      files = @portlet.ad_files.shuffle.map { |file| file.becomes_with(SS::LinkFile) }
-      render "ss/slides/swiper_slides", files: files, width: @portlet.effective_ad_width, slide_selector: ".portlet-id-#{@portlet.id} .ss-swiper-slide", slide_options: @portlet.ad_options
+      links = @portlet.ad_links.where(state: "show").to_a.shuffle
+      links.select! { _1.file.present? && _1.file.image? }
+      render "ss/slides/swiper_slides", links: links, width: @portlet.effective_ad_width, slide_selector: ".portlet-id-#{@portlet.id} .ss-swiper-slide", slide_options: @portlet.ad_options
     %>
   </div>
 </div>

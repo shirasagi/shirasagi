@@ -9,7 +9,7 @@ class Member::Agents::Parts::PhotoSlideController < ApplicationController
       filename = uri.path.sub(site.url, "").sub(/\/$/, "")
       node = Member::Node::Photo.site(site).where(filename: filename).first
 
-      raise "404" unless site && node
+      raise SS::NotFoundError unless site && node
     rescue => e
       Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       return head :ok

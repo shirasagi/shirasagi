@@ -3,28 +3,32 @@ module Inquiry::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
+    INPUT_TYPES = %w(
+      text_field text_area email_field number_field date_field datetime_field
+      radio_button select check_box upload_file form_select
+    ).freeze
+
     included do
       field :input_type, type: String, default: "text_field"
       field :select_options, type: SS::Extensions::Lines, default: ""
       field :required, type: String, default: "required"
-      field :required_in_select_form, type: Array
+      field :required_in_select_form, type: Array, default: []
       field :additional_attr, type: String, default: ""
       field :input_confirm, type: String, default: ""
       field :question, type: String, default: 'disabled'
       field :max_upload_file_size, type: Integer, default: 0
       field :transfers, type: Array
+      field :date_inputter, type: String, default: 'local'
       permit_params :input_type, :required, :additional_attr
       permit_params :select_options, :input_confirm, :question, :max_upload_file_size
       permit_params required_in_select_form: []
       permit_params transfers: [:keyword, :email]
+      permit_params :date_inputter
 
-      validates :input_type, presence: true, inclusion: {
-        in: %w(text_field text_area email_field radio_button select check_box upload_file form_select)
-      }
-      validates :question, presence: true, inclusion: {
-        in: %w(enabled disabled)
-      }
+      validates :input_type, presence: true, inclusion: { in: INPUT_TYPES }
+      validates :question, presence: true, inclusion: { in: %w(enabled disabled) }
       validate :validate_select_options
+      validate :validate_required_in_select_form
       validate :validate_input_confirm_options
       # validate :validate_max_upload_file_size_options
       validate :validate_transfers
@@ -33,7 +37,7 @@ module Inquiry::Addon
     end
 
     def input_type_options
-      %w(text_field text_area email_field radio_button select check_box upload_file form_select).map do |v|
+      INPUT_TYPES.map do |v|
         [ I18n.t("inquiry.options.input_type.#{v}"), v ]
       end
     end
@@ -59,11 +63,18 @@ module Inquiry::Addon
       end
     end
 
+    def date_inputter_options
+      [
+        [I18n.t('inquiry.options.date_inputter.local'), 'local'],
+        [I18n.t('inquiry.options.date_inputter.picker'), 'picker'],
+      ]
+    end
+
     # def max_upload_file_size_options
     #   [ 10, 20, 30, 40, 50, 60, 70, 80, 90, 100 ]
     # end
 
-    def required?(in_reply)
+    def required?(in_reply = nil)
       return true if in_reply && required_in_select_form && required_in_select_form.include?(in_reply)
       required == "required"
     end
@@ -80,6 +91,10 @@ module Inquiry::Addon
       if /(select|radio_button|check_box|form_select)/.match?(input_type)
         errors.add :select_options, :blank if select_options.blank?
       end
+    end
+
+    def validate_required_in_select_form
+      self.required_in_select_form = required_in_select_form.to_a.select(&:present?)
     end
 
     def validate_input_confirm_options
@@ -104,6 +119,8 @@ module Inquiry::Addon
 
     def validate_form_select
       return if input_type != 'form_select'
+      return unless node
+
       column = node.columns.where(input_type: 'form_select').first
       if column.present? && column != self
         errors.add :input_type, :exist_form_select, input_type: label(:input_type)

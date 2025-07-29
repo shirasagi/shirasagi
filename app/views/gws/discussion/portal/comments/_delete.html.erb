@@ -1,0 +1,48 @@
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.delete"), class: 'btn-danger delete', data: { disable_with: t("ss.buttons.deleting") } %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{index_path}'; return false;" %>
+<% end %>
+
+<div class="gws-discussion">
+  <%
+    if @item.topic
+      topic = @item.topic
+      ids = @item.topic.children.pluck(:id).reverse
+      idx = ids.index(@item.id).to_i + 2
+    else
+      topic = @item
+      idx = 1
+    end
+    url = gws_discussion_forum_thread_comments_path(forum_id: @forum, topic_id: topic)
+    url += "\#comment-#{@item.id}"
+  %>
+  <div class="addon-view">
+    <div class="addon-head">
+      <h2><%= topic.name %></h2>
+    </div>
+    <div class="addon-body">
+      <header>
+        <div class="contributor">
+          <span class="no"><%= "#{idx}." %></span>
+          <%= gws_public_user_long_name(@item.contributor_name) %>
+        </div>
+        <div class="datetime updated">
+          <%= ss_time_tag @item.updated %>
+        </div>
+      </header>
+      <div class="markdown-body">
+        <%= @item.html %>
+      </div>
+      <% if @item.files.present? %>
+        <div class="files">
+          <% @item.files.each do |file| %>
+            <span id="file-<%= file.id %>">
+              <span><%= link_to file.humanized_name, file.url, class: "icon-#{file.extname}", target: '_blank', rel: "noopener" %></span>
+              <%= sanitizer_status(file) %>
+            </span>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

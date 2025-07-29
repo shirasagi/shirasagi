@@ -1,12 +1,15 @@
-<% addons = @addons || @item.try(:addons) || [] %>
+<%
+  addons = @addons || @item.try(:addons) || []
+  request_path = SS.request_path(request)
+%>
 
 <div class="cms-tabs">
   <% path = url_for(controller: :run, action: :confirmation) %>
-  <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
+  <%= link_to(path, class: [ params[:type], request_path.start_with?(path) ? 'current' : nil ]) do %>
     <span class="tab-name">実行</span>
   <% end %>
   <% path = url_for(controller: :results, action: :show) %>
-  <%= link_to(path, class: [ params[:type], request.path.start_with?(path) ? 'current' : nil ]) do %>
+  <%= link_to(path, class: [ params[:type], request_path.start_with?(path) ? 'current' : nil ]) do %>
     <span class="tab-name">結果</span>
   <% end %>
 </div>
