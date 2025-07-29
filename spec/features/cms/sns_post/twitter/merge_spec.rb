@@ -30,7 +30,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
         capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -50,7 +54,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -69,7 +73,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
         capture_twitter_rest_client(tweet_id: tweet_id, username: username) do |capture|
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -83,18 +91,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -114,7 +121,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # first post
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -128,18 +139,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -154,7 +164,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # second post
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -174,7 +188,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -199,7 +213,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # first post
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -213,18 +231,17 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -237,7 +254,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # second post (enable twitter_edit_auto_post)
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -248,7 +269,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.expired"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
@@ -257,13 +277,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
-            wait_for_cbox do
+            within_cbox do
               have_css("#alertExplanation", text: I18n.t("cms.confirm.twitter_post_enabled"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path
@@ -276,7 +296,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           # third post (disable twitter_edit_auto_post)
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -297,7 +321,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.publish_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           visit show_path

@@ -6,6 +6,6 @@
   <div class="link-fields" data-syntax-check="link" data-syntax-check-name="<%= column.name %>">
     <%= text_field_tag(name, value.try(:link_label), column.form_options(:link_label).merge(id: nil, class: "link-field link-label")) %>
     <%= text_field_tag("#{f.object_name}[][in_wrap][link_url]", value.try(:effective_link_url), column.form_options(:link_url).merge(id: nil, class: "link-field link-url")) %>
-    <%= select_tag("#{f.object_name}[][in_wrap][link_target]", options_for_select(column.link_target_options, value.try(:link_target)), include_blank: true, id: nil, class: "link-field link-target") %>
+    <%= select_tag("#{f.object_name}[][in_wrap][link_target]", options_for_select(column.link_target_options, value.try(:link_target)), include_blank: I18n.t("ss.options.link_target._self"), id: nil, class: "link-field link-target") %>
   </div>
 <% end %>

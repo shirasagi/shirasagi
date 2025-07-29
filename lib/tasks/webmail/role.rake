@@ -6,7 +6,7 @@ namespace :webmail do
     puts "User not found: #{ENV['user']}" or exit unless user
 
     role = Webmail::Role.find_or_create_by name: I18n.t('webmail.roles.admin')
-    role.update permissions: Webmail::Role.permission_names, permission_level: 3
+    role.update permissions: Webmail::Role.permission_names
     user.add_to_set webmail_role_ids: role.id
 
     puts "#{user.name}: #{role.name}"

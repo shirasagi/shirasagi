@@ -37,8 +37,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.login")
             end
 
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -49,7 +49,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -91,8 +91,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.login")
             end
 
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -103,7 +103,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -118,31 +118,15 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
       context "with 'untrusted' as mfa_otp_use_state" do
         let(:mfa_otp_use_state) { "untrusted" }
         let(:mfa_trusted_ip_addresses) { "192.168.32.0/24" }
-        let(:rack_proxy_app) do
-          source_ip_bind = source_ip
-          Class.new do
-            cattr_accessor :source_ip
-            self.source_ip = source_ip_bind
-
-            def initialize(app)
-              @app = app
-            end
-
-            def call(env)
-              env["HTTP_X_REAL_IP"] = self.class.source_ip
-              @app.call(env)
-            end
+        let(:decorator) do
+          proc do |env|
+            env["HTTP_X_REAL_IP"] = source_ip
           end
         end
 
         before do
-          Sns::LoginController.middleware_stack.use rack_proxy_app
-          Sns::MFALoginController.middleware_stack.use rack_proxy_app
-        end
-
-        after do
-          Sns::LoginController.middleware_stack.delete rack_proxy_app
-          Sns::MFALoginController.middleware_stack.delete rack_proxy_app
+          add_request_decorator Sns::LoginController, decorator
+          add_request_decorator Sns::MFALoginController, decorator
         end
 
         context "with trusted source-ip" do
@@ -158,8 +142,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             end
 
             # このケースではOTP認証は不要
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to be_blank
@@ -169,7 +153,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -202,8 +186,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.login")
               end
 
-              expect(current_path).to eq sns_cur_user_account_path
               expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+              expect(current_path).to eq sns_cur_user_account_path
 
               SS::User.find(sys_user.id).tap do |user|
                 expect(user.mfa_otp_secret).to eq otp_secret
@@ -214,7 +198,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
                 # do logout
                 within ".user-navigation" do
-                  wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                  wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                   click_on I18n.t("ss.logout")
                 end
               end
@@ -256,8 +240,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.login")
               end
 
-              expect(current_path).to eq sns_cur_user_account_path
               expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+              expect(current_path).to eq sns_cur_user_account_path
 
               SS::User.find(sys_user.id).tap do |user|
                 expect(user.mfa_otp_secret).to eq otp_secret
@@ -268,7 +252,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
                 # do logout
                 within ".user-navigation" do
-                  wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                  wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                   click_on I18n.t("ss.logout")
                 end
               end
@@ -313,8 +297,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.login")
             end
 
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -325,7 +309,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -361,8 +345,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("ss.login")
             end
 
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -373,7 +357,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -388,31 +372,15 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
       context "with 'untrusted' as mfa_otp_use_state" do
         let(:mfa_otp_use_state) { "untrusted" }
         let(:mfa_trusted_ip_addresses) { "192.168.32.0/24" }
-        let(:rack_proxy_app) do
-          source_ip_bind = source_ip
-          Class.new do
-            cattr_accessor :source_ip
-            self.source_ip = source_ip_bind
-
-            def initialize(app)
-              @app = app
-            end
-
-            def call(env)
-              env["HTTP_X_REAL_IP"] = self.class.source_ip
-              @app.call(env)
-            end
+        let(:decorator) do
+          proc do |env|
+            env["HTTP_X_REAL_IP"] = source_ip
           end
         end
 
         before do
-          Sns::LoginController.middleware_stack.use rack_proxy_app
-          Sns::MFALoginController.middleware_stack.use rack_proxy_app
-        end
-
-        after do
-          Sns::LoginController.middleware_stack.delete rack_proxy_app
-          Sns::MFALoginController.middleware_stack.delete rack_proxy_app
+          add_request_decorator Sns::LoginController, decorator
+          add_request_decorator Sns::MFALoginController, decorator
         end
 
         context "with trusted source-ip" do
@@ -428,8 +396,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             end
 
             # このケースではOTP認証は不要
-            expect(current_path).to eq sns_cur_user_account_path
             expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+            expect(current_path).to eq sns_cur_user_account_path
 
             SS::User.find(sys_user.id).tap do |user|
               expect(user.mfa_otp_secret).to eq otp_secret
@@ -440,7 +408,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
             I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
               # do logout
               within ".user-navigation" do
-                wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                 click_on I18n.t("ss.logout")
               end
             end
@@ -472,8 +440,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.login")
               end
 
-              expect(current_path).to eq sns_cur_user_account_path
               expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+              expect(current_path).to eq sns_cur_user_account_path
 
               SS::User.find(sys_user.id).tap do |user|
                 expect(user.mfa_otp_secret).to eq otp_secret
@@ -484,7 +452,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
                 # do logout
                 within ".user-navigation" do
-                  wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                  wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                   click_on I18n.t("ss.logout")
                 end
               end
@@ -520,8 +488,8 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
                 click_on I18n.t("ss.login")
               end
 
-              expect(current_path).to eq sns_cur_user_account_path
               expect(page).to have_css("nav.user .user-name", text: sys_user.name)
+              expect(current_path).to eq sns_cur_user_account_path
 
               SS::User.find(sys_user.id).tap do |user|
                 expect(user.mfa_otp_secret).to eq otp_secret
@@ -532,7 +500,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
               I18n.with_locale(sys_user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
                 # do logout
                 within ".user-navigation" do
-                  wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+                  wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
                   click_on I18n.t("ss.logout")
                 end
               end

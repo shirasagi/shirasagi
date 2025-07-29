@@ -4,16 +4,18 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   field :width, type: Integer
   field :height, type: Integer
   field :auto_width, type: String, default: -> { "disabled" }
+  field :title, type: String
 
-  permit_values :url, :youtube_id, :width, :height, :auto_width
+  permit_values :url, :youtube_id, :width, :height, :auto_width, :title
 
-  before_validation :set_youtube_id, unless: ->{ @new_clone }
+  before_validation :set_youtube_id
 
   liquidize do
     export :youtube_id
     export :width
     export :height
     export :auto_width
+    export :title
   end
 
   class << self
@@ -58,7 +60,8 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       src: youtube_embed_url,
       frameborder: "0",
       allow: "accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture",
-      allowfullscreen: "allowfullscreen"
+      allowfullscreen: "allowfullscreen",
+      title: title.presence || I18n.t("mongoid.attributes.cms/column/value/youtube.generic_title")
     }
 
     if auto_width != "enabled"
@@ -78,6 +81,8 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
         self.url = value
       when self.class.t(:youtube_id)
         self.youtube_id = value
+      when self.class.t(:title)
+        self.title = value
       when self.class.t(:width)
         self.width = value
       when self.class.t(:height)
@@ -91,6 +96,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   def history_summary
     h = []
     h << "#{t("url")}: #{url}" if url.present?
+    h << "#{t("title")}: #{title}" if title.present?
     h << "#{t("width")}: #{width}" if width.present?
     h << "#{t("height")}: #{height}" if height.present?
     h << "#{t("alignment")}: #{I18n.t("cms.options.alignment.#{alignment}")}"
@@ -110,6 +116,25 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
     (values & [url, youtube_id]).present?
   end
 
+  def fetch_youtube_title
+    return if youtube_id.blank? || title.present?
+
+    uri = URI.parse("https://www.youtube.com/oembed")
+    uri.query = URI.encode_www_form({url: "https://www.youtube.com/watch?v=#{youtube_id}", format: "json"})
+
+    response = Net::HTTP.get_response(uri)
+    unless response.is_a?(Net::HTTPSuccess)
+      raise "YouTube oEmbed API request failed for video: #{youtube_id}, status: #{response.code}"
+    end
+
+    data = JSON.parse(response.body)
+    unless data["title"].present?
+      raise "YouTube oEmbed API returned no title for video: #{youtube_id}"
+    end
+
+    self.title = data["title"]
+  end
+
   private
 
   def set_youtube_id
@@ -117,7 +142,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   end
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || skip_required?
 
     if column.required? && youtube_id.blank?
       self.errors.add(:url, :blank)
@@ -145,6 +170,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
       h = []
       h << %({% if value.youtube_id %})
       h << %(  <iframe src="https://www.youtube.com/embed/{{ value.youtube_id }}")
+      h << %(    title="{{ value.title }}" )
       h << %(    width="{{ value.width }}" )
       h << %(    height="{{ value.height }}")
       h << %(    frameborder="0")

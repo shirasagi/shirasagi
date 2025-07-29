@@ -16,15 +16,19 @@ module Cms::Addon
     end
 
     def validate_release_date
+      return if respond_to?(:new_clone?) && new_clone? && respond_to?(:master?) && master?
+
       self.released ||= release_date if respond_to?(:released)
 
       if close_date.present? && release_date.present? && release_date >= close_date
         errors.add :close_date, :greater_than, count: t(:release_date)
       end
-      if release_date.present? && release_date_changed? && release_date <= Time.zone.now
-        errors.add :release_date, :greater_than, count: I18n.l(Time.zone.now)
-      end
-      if close_date.present? && close_date_changed? && close_date <= Time.zone.now
+      # release_dat が now 以前でもシステム的には問題ないので、エラーにするには厳しすぎる。
+      # しいて言うなら警告だけど、警告を実現する方法がないので、チェックしないようにする。
+      # if release_date.present? && release_date <= Time.zone.now
+      #   errors.add :release_date, :greater_than, count: I18n.l(Time.zone.now)
+      # end
+      if close_date.present? && close_date <= Time.zone.now
         errors.add :close_date, :greater_than, count: I18n.l(Time.zone.now)
       end
     end

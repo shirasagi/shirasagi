@@ -49,8 +49,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
   context "publish and notification" do
     it do
       # publish
-      login_user user0
-      visit gws_report_files_main_path(site: site)
+      login_user user0, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.closed')
       end
@@ -59,7 +58,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.published'))
+      wait_for_notice I18n.t('gws/report.notice.published')
 
       subject.reload
       expect(subject.state).to eq "public"
@@ -95,8 +94,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
 
       # user1 is able to read in inbox
-      login_user user1
-      visit gws_report_files_main_path(site: site)
+      login_user user1, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.inbox')
       end
@@ -106,8 +104,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
 
       # user2 is able to read in readable
-      login_user user2
-      visit gws_report_files_main_path(site: site)
+      login_user user2, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.readable')
       end
@@ -117,8 +114,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       end
 
       # depublish
-      login_user user0
-      visit gws_report_files_main_path(site: site)
+      login_user user0, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.sent')
       end
@@ -127,7 +123,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.depublished'))
+      wait_for_notice I18n.t('gws/report.notice.depublished')
 
       subject.reload
       expect(subject.state).to eq "closed"
@@ -170,8 +166,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
     end
 
     it do
-      login_user user0
-      visit gws_report_files_main_path(site: site)
+      login_user user0, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.closed')
       end
@@ -180,7 +175,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('gws/report.notice.published'))
+      wait_for_notice I18n.t('gws/report.notice.published')
 
       subject.reload
       expect(subject.state).to eq "public"
@@ -200,8 +195,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
     end
 
     it do
-      login_user user0
-      visit gws_report_files_main_path(site: site)
+      login_user user0, to: gws_report_files_main_path(site: site)
       within ".current-navi" do
         click_on I18n.t('gws/report.options.file_state.sent')
       end
@@ -212,7 +206,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       subject.reload
       expect(subject.deleted).to be_present

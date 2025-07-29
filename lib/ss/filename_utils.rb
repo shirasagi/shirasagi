@@ -111,7 +111,7 @@ class SS::FilenameUtils
       str.each_char.all? { |ch| url_safe_japanese_char?(ch) }
     end
 
-    def convert_to_url_safe_japanese(str)
+    def convert_to_url_safe_japanese(str, normalize: true)
       chars = normalize(str).each_char.map do |ch|
         next ch if url_safe_japanese_char?(ch)
 
@@ -125,6 +125,7 @@ class SS::FilenameUtils
       end
 
       ret = chars.join
+      return ret if !normalize
 
       #
       # 様々な案件を考慮して、なんとなく納得感のある正規化を ret に対して実施する。

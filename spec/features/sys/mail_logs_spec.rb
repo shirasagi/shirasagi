@@ -45,7 +45,7 @@ describe "sys_mail_logs", type: :feature, dbscope: :example, js: true do
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
     end
 
@@ -69,7 +69,7 @@ describe "sys_mail_logs", type: :feature, dbscope: :example, js: true do
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+        wait_for_notice I18n.t('ss.notice.deleted')
       end
     end
   end

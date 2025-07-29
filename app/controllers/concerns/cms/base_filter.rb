@@ -36,17 +36,19 @@ module Cms::BaseFilter
 
   def set_site
     @cur_site = SS.current_site = Cms::Site.find(params[:site])
+    raise '404' if @cur_site.deleted?
+
     @ss_mode = :cms
     SS.reset_locale_and_timezone # cms and webmail are currently not supported.
 
     if @cur_site.maintenance_mode? && !@cur_site.allowed_maint_user?(@cur_user.id)
       @ss_maintenance_mode = true
-      render "cms/maintenance_mode_notice/index.html", layout: "ss/base"
+      render "cms/maintenance_mode_notice/index", layout: "ss/base"
       return
     end
 
     request.env["ss.site"] = @cur_site
-    @crumbs << [@cur_site.name, cms_contents_path]
+    @crumbs << [t("cms.top"), cms_contents_path]
   end
 
   def set_cms_logged_in
@@ -91,6 +93,6 @@ module Cms::BaseFilter
   end
 
   def set_tree_navi
-    @tree_navi = cms_apis_node_tree_path(id: (@cur_node || 0), type: @model.to_s.underscore)
+    @tree_navi = true
   end
 end

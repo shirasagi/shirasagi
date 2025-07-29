@@ -29,7 +29,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             expect(page).to have_css("#workflow_route",
               text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
             within "#addon-workflow-agents-addons-branch" do
-              click_on I18n.t("workflow.create_branch")
+              wait_for_turbo_frame "#workflow-branch-frame"
+              wait_for_event_fired "turbo:frame-load" do
+                click_on I18n.t("workflow.create_branch")
+              end
+              expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
               expect(page).to have_link item.name
               click_on item.name
             end
@@ -55,7 +59,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               within "form#item-form" do
                 click_on I18n.t("ss.buttons.publish_save")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             visit show_path
@@ -74,7 +78,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           capture_line_bot_client do |capture|
             visit show_path
             within "#addon-workflow-agents-addons-branch" do
-              click_on I18n.t("workflow.create_branch")
+              wait_for_turbo_frame "#workflow-branch-frame"
+              wait_for_event_fired "turbo:frame-load" do
+                click_on I18n.t("workflow.create_branch")
+              end
+              expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
               expect(page).to have_link item.name
               click_on item.name
             end
@@ -96,13 +104,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+                wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
               end
-              wait_for_cbox do
+              within_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
                 click_on I18n.t("ss.buttons.ignore_alert")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             visit show_path
@@ -132,7 +140,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             # first post
             visit show_path
             within "#addon-workflow-agents-addons-branch" do
-              click_on I18n.t("workflow.create_branch")
+              wait_for_turbo_frame "#workflow-branch-frame"
+              wait_for_event_fired "turbo:frame-load" do
+                click_on I18n.t("workflow.create_branch")
+              end
+              expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
               expect(page).to have_link item.name
               click_on item.name
             end
@@ -152,15 +164,15 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               fill_in "item[line_text_message]", with: line_text_message
             end
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
             end
 
             perform_enqueued_jobs do
-              wait_for_cbox do
+              within_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
                 click_on I18n.t("ss.buttons.ignore_alert")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             visit show_path
@@ -185,7 +197,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             # second post
             visit show_path
             within "#addon-workflow-agents-addons-branch" do
-              click_on I18n.t("workflow.create_branch")
+              wait_for_turbo_frame "#workflow-branch-frame"
+              wait_for_event_fired "turbo:frame-load" do
+                click_on I18n.t("workflow.create_branch")
+              end
+              expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
               expect(page).to have_link item.name
               click_on item.name
             end
@@ -211,7 +227,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               within "form#item-form" do
                 click_on I18n.t("ss.buttons.publish_save")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             visit show_path
@@ -240,7 +256,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             # first post
             visit show_path
             within "#addon-workflow-agents-addons-branch" do
-              click_on I18n.t("workflow.create_branch")
+              wait_for_turbo_frame "#workflow-branch-frame"
+              wait_for_event_fired "turbo:frame-load" do
+                click_on I18n.t("workflow.create_branch")
+              end
+              expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
               expect(page).to have_link item.name
               click_on item.name
             end
@@ -263,13 +283,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+                wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
               end
-              wait_for_cbox do
+              within_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
                 click_on I18n.t("ss.buttons.ignore_alert")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             visit show_path
@@ -294,7 +314,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             # second post (enable line_edit_auto_post)
             visit show_path
             within "#addon-workflow-agents-addons-branch" do
-              click_on I18n.t("workflow.create_branch")
+              wait_for_turbo_frame "#workflow-branch-frame"
+              wait_for_event_fired "turbo:frame-load" do
+                click_on I18n.t("workflow.create_branch")
+              end
+              expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
               expect(page).to have_link item.name
               click_on item.name
             end
@@ -318,13 +342,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
 
             perform_enqueued_jobs do
               within "form#item-form" do
-                wait_cbox_open { click_on I18n.t("ss.buttons.publish_save") }
+                wait_for_cbox_opened { click_on I18n.t("ss.buttons.publish_save") }
               end
-              wait_for_cbox do
+              within_cbox do
                 expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.line_post_enabled"))
                 click_on I18n.t("ss.buttons.ignore_alert")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             visit show_path
@@ -337,7 +361,11 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             # third post (disable line_edit_auto_post)
             visit show_path
             within "#addon-workflow-agents-addons-branch" do
-              click_on I18n.t("workflow.create_branch")
+              wait_for_turbo_frame "#workflow-branch-frame"
+              wait_for_event_fired "turbo:frame-load" do
+                click_on I18n.t("workflow.create_branch")
+              end
+              expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
               expect(page).to have_link item.name
               click_on item.name
             end
@@ -363,7 +391,7 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
               within "form#item-form" do
                 click_on I18n.t("ss.buttons.publish_save")
               end
-              expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+              wait_for_notice I18n.t('ss.notice.saved')
             end
 
             visit show_path

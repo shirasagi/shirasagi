@@ -175,12 +175,12 @@ en:
     edit_private_gws_memo_categories: Edit categories (own)
     delete_other_gws_memo_categories: Delete categories (all)
     delete_private_gws_memo_categories: Delete categories (own)
-    read_other_gws_memo_templates: View phone notes (all)
-    read_private_gws_memo_templates: View phone notes (own)
-    edit_other_gws_memo_templates: Edit phone notes (all)
-    edit_private_gws_memo_templates: Edit phone notes (own)
-    delete_other_gws_memo_templates: Delete phone notes (all)
-    delete_private_gws_memo_templates: Delete phone notes (own)
+    read_other_gws_memo_templates: View templates (all)
+    read_private_gws_memo_templates: View templates (own)
+    edit_other_gws_memo_templates: Edit templates (all)
+    edit_private_gws_memo_templates: Edit templates (own)
+    delete_other_gws_memo_templates: Delete templates (all)
+    delete_private_gws_memo_templates: Delete templates (own)
     restore_gws_memo_messages: Message recovery
     backup_gws_memo_messages: Message backup
   mongoid:
@@ -298,7 +298,7 @@ en:
         notice_workload_user_setting: Workload
         notice_presence_user_setting: Presence status
         notice_affair_user_setting: Affairs
-        notice_workflow_user_setting: Workflows
+        notice_workflow_user_setting: Workflow / Workflow2
         notice_circular_user_setting: Circular boards
         notice_monitor_user_setting: Inquiries and responses
         notice_survey_user_setting: Questionnaires
@@ -308,6 +308,7 @@ en:
         notice_discussion_user_setting: Electronic conference rooms
         notice_report_user_setting: Reports
         notice_announcement_user_setting: Announcements
+        notice_tabular_user_setting: Tabular
         notice_schedule_email_user_setting: Schedule notification e-mail forwarding
         notice_todo_email_user_setting: To-do notification e-mail forwarding
         notice_workload_email_user_setting: Workload notification e-mail forwarding
@@ -322,6 +323,7 @@ en:
         notice_discussion_email_user_setting: Electronic meeting room notification e-mail forwarding
         notice_report_email_user_setting: Report notification e-mail forwarding
         notice_announcement_email_user_setting: Information notification e-mail forwarding
+        notice_tabular_email_user_setting: Tabular notification e-mail forwarding
         send_notice_mail_addresses: Forwarding e-mail address
 
   activemodel:
@@ -382,9 +384,9 @@ en:
         - "Disable: Does not enter this signature automatically"
     gws/memo/template:
       name:
-        - Enter the name that appears in the phone memo list.
+        - Enter the name that appears in the template list.
       text:
-        - Enter the text for the phone memo.
+        - Enter the text for the template.
       order:
         - Enter the order.
         - "The lower the number, the higher the position."

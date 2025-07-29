@@ -42,7 +42,7 @@ class Cms::ApiToken < SS::ApiToken
       yield api_token.audience if block_given?
 
       History::Log.create_log!(
-        request, nil, controller: request.path, action: action,
+        request, nil, controller: SS.request_path(request), action: action,
         cur_site: site, cur_user: api_token.audience, item: api_token
       ) rescue nil
 

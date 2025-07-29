@@ -1,0 +1,23 @@
+<%
+  return if route_options.blank?
+%>
+
+<% if defined?(f) && f.is_a?(ActionView::Helpers::FormBuilder) %>
+  <% if false %>
+  <dl class="see route_id">
+    <dt><%= t("workflow.request") %><%= @model.tt :workflow_routes %></dt>
+    <dd>
+      <%= select_tag "#{f.object_name}[route_id]", options_for_select(route_options, selected: route_id), id: nil, data: { controller: "ss--submit-on-change", "ss--submit-on-change-submitter-value" => "[name='route']" } %>
+      <%= f.submit t("workflow.buttons.select"), name: "route", class: "workflow-route-start btn" %>
+    </dd>
+  </dl>
+  <% else %>
+    <%= hidden_field_tag "#{f.object_name}[route_id]", route_id, id: nil %>
+  <% end %>
+<% else %>
+  <%= form_with scope: :item, url: url_for(action: :update), html: { method: "put", id: "workflow-route", autocomplete: :off, data: { turbo: true } } do |f| %>
+    <%= hidden_field_tag :ref, ref, id: nil %>
+    <%= error_messages_for :item %>
+    <%= render "form_route", f: f %>
+  <% end %>
+<% end %>

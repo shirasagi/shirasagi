@@ -49,6 +49,13 @@ en:
         files: Shared files
         editor_templates: Templates
         dictionaries: Kana dictionary
+        loop_settings: Loop HTML
+        page_searches: Page Search
+        source_cleaner_templates: Source Cleaning
+        theme_templates: Theme
+        translate_langs: "Translate/Lang"
+        translate_text_caches: "Translate/Text"
+        word_dictionaries: Word Dictionary
       force_authn_state:
         enabled: Require
         disabled: Do not require
@@ -93,6 +100,7 @@ en:
       when_disabled: When form authentication is disabled
       form_key: Key
       form_password: Password
+      form_enabled_ip_addresses: Excluded IP address
 
   sys_role:
     edit_sys_sites: Manage site
@@ -208,11 +216,13 @@ en:
       sys/ad:
         time: Image switch time
         width: Width
+        ad_links: Advertisement Links
       sys/auth/setting:
         form_auth: Form authentication
         form_key: Key name to activate form authentication
         form_password: Password to activate form authentication
         in_form_password: Password to activate form authentication
+        form_enabled_ip_addresses: Excluded IP address
 
   errors:
     messages:
@@ -329,10 +339,15 @@ en:
         - Select whether to show form authentication on the login screen.
       when_form_auth_disabled:
         - Even when form authentication is disabled, if the key and password set below are set in the Query String, form authentication will be displayed.
+        - Also if you set excluded IP address, form authentication will be displayed even if it matches the access source.
 
   job:
     models:
-      sys/site_copy_job: Duplicate site
-      sys/postal_code/import_job: Import postal code
-      sys/postal_code/official_csv_import_job: Import Japan Post CSV
-      sys/prefecture_code/import_job: Import city code
+      sys/group_import_job: System/Group Import
+      sys/history_archive_job: System/History Archive
+      sys/site_copy_job: System/Duplicate site
+      sys/site_export_job: System/Site Export
+      sys/site_import_job: System/Site Import
+      sys/postal_code/import_job: System/Import postal code
+      sys/postal_code/official_csv_import_job: System/Import Japan Post CSV
+      sys/prefecture_code/import_job: System/Import city code

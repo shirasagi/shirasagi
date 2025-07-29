@@ -1,40 +1,8 @@
 <%
-  return "" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-
-  addon ||= local_assigns.fetch(:addon, {})
-  css_class = @item.branch? ? "master" : "branch"
+  return unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+  return unless @item.persisted?
 %>
 
-<dl class="see <%= css_class %>">
-  <% if @item.branch? %>
-    <dt class="wide"><%= t("workflow.branch_message") %></dt>
-    <dd></dd>
-
-    <dt><%= t("workflow.master_page") %></dt>
-    <dd class="result">
-      <%= render "workflow/pages/branch", items: [ @item.master ] %>
-    </dd>
-  <% elsif @item.branches.present? %>
-    <dt class="wide"><%= t("workflow.master_message") %></dt>
-    <dd></dd>
-
-    <dt><%= t("workflow.branch_page") %></dt>
-    <dd class="result">
-      <%= render "workflow/pages/branch", items: @item.branches %>
-    </dd>
-  <% else %>
-    <dt class="wide"><%= button_tag t("workflow.create_branch"), type: "button", class: "create-branch btn", disabled: true %></dt>
-    <dt><%= t("workflow.branch_page") %></dt>
-    <dd class="result"></dd>
-  <% end %>
-</dl>
-
-<%= jquery do %>
-  <%
-    js_options = {
-      path: branch_create_workflow_page_path(id: @item.id)
-    }
-  %>
-
-  new Cms_Branch("#<%= addon[:id] %>", <%== js_options.to_json %>);
-<% end %>
+<turbo-frame id="workflow-branch-frame" src="<%= workflow_frames_branch_path(id: @item) %>">
+  <%= loading %>
+</turbo-frame>

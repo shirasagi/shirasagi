@@ -1,0 +1,30 @@
+<div class="gws-column-item" data-id="<%= item.id %>">
+  <div class="main-box">
+    <div class="gws-column-item-drag-handle">
+      <h2 class="header"><%= tryb { item.column.class.model_name.human } || t('cms.init_column.not_found_column') %></h2>
+      <%= md_icons.outlined "drag_handle", class: "gws-column-item-drag-handle-icon" %>
+    </div>
+
+    <%= error_messages_for :item %>
+
+    <div class="gws-column-item-preview" data-controller="ss--click-disabler">
+      <dl class="see gws-column-see">
+        <% if item.column %>
+          <%= form_for :item, url: { action: :update, id: item.id } do |f| %>
+            <%= render(item.column_form_partial_path, column: item.column, object_name: 'custom', value: nil, f: f) %>
+          <% end %>
+        <% end %>
+      </dl>
+    </div>
+    <hr class="gws-column-item-divider">
+    <div class="gws-column-item-toolbar-list" data-controller="gws--column--item-toolbar">
+      <div class="gws-column-item-toolbar-item-group">
+        <div class="gws-column-item-toolbar-item gws-column-item-delete">
+          <%= button_tag name: "delete", type: :button, class: "btn btn-red btn-gws-column-item-delete", title: t("ss.links.delete"), data: { ref: cms_frames_init_column_path(id: item, ref: ref) } do %>
+            <%= md_icons.outlined "delete", size: 15, style: "vertical-align: -3px" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

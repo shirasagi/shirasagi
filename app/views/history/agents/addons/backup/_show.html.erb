@@ -1,6 +1,6 @@
 <%
   return render(plain: "") if @item.backups.size == 0
-  source = ERB::Util.url_encode(request.path)
+  source = ERB::Util.url_encode(SS.request_path(request))
   top_backups = @item.backups.limit(History.max_histories).to_a
 %>
 <dl class="see">
@@ -8,6 +8,9 @@
     <thead class="list-head">
       <tr>
         <th class="created"><%= @model.t :updated %></th>
+        <% if @item.is_a?(Cms::Model::Page) %>
+          <th class="branch"></th>
+        <% end %>
         <th class="name"><%= t("history.editor_name") %></th>
         <th class="links"></th>
       </tr>
@@ -31,6 +34,15 @@
             time_tag
           %>
         </td>
+        <% if @item.is_a?(Cms::Model::Page) %>
+          <td class="branch">
+            <%=
+              if backup.ref_id != backup.data["_id"]
+                "#{t("workflow.branch_page")}(#{backup.data["_id"]})"
+              end
+            %>
+          </td>
+        <% end %>
         <td class="name">
           <%=
             if backup.action == 'replace_urls'
@@ -47,6 +59,8 @@
               elsif backup.member_id
                 # メンバーが作成した履歴
                 id = "#{Cms::Member.model_name.human}: #{backup.member_name}"
+              else
+                id = t("ss.system_operation")
               end
             end
 
@@ -76,10 +90,11 @@
     </tbody>
   </table>
   <%=
-    if @item.backups.count > History.max_histories
-      t("history.n_out_of_m", n: History.max_histories, m: @item.backups.count)
+    backup_count = @item.backups.count
+    if backup_count > History.max_histories
+      t("history.n_out_of_m", n: History.max_histories, m: backup_count)
     else
-      t("history.n_out_of_m", n: @item.backups.count, m: @item.backups.count)
+      t("history.n_out_of_m", n: backup_count, m: backup_count)
     end
   %>
 </dl>

@@ -38,9 +38,9 @@ class Gws::Column::Value::NumberField < Gws::Column::Value::Base
     return if decimal.blank?
 
     if scale.blank?
-      str = decimal.to_s(:delimited)
+      str = decimal.to_fs(:delimited)
     elsif scale == 0
-      str = decimal.round(0).to_s(:delimited).sub(/\.\d*$/, '')
+      str = decimal.round(0).to_fs(:delimited).sub(/\.\d*$/, '')
     else
       integral_part = decimal.fix
       fraction_part = decimal.frac
@@ -49,7 +49,7 @@ class Gws::Column::Value::NumberField < Gws::Column::Value::Base
       fraction_part = fraction_part.to_s.sub(/^-?\d*\./, '')
       fraction_part = fraction_part.ljust(scale, '0')
 
-      str = integral_part.to_s(:delimited).sub(/\.\d*$/, '')
+      str = integral_part.to_fs(:delimited).sub(/\.\d*$/, '')
       str << '.'
       str << fraction_part
     end

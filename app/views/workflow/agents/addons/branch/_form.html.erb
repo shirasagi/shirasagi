@@ -8,7 +8,7 @@
 %>
 
 <%#
-  # 差し替えページにバリデーションえらがある場合、@item.branches.present? => true, @item.branches.first.persited? => false となるケースがある。
+  # 差し替えページにバリデーションエラーがある場合、@item.branches.present? => true, @item.branches.first.persited? => false となるケースがある。
   #%>
 <% if branch.present? && branch.persisted? %>
   <% html = capture do %>

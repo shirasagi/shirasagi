@@ -24,9 +24,11 @@ class Gws::Job::UserLogsController < ApplicationController
   end
 
   def log_criteria
-    criteria = @model.site(@cur_site)
-    criteria = criteria.where(user_id: @cur_user.id)
-    criteria = criteria.search_ymd(ymd: @ymd, term: '1.day') if @ymd.present?
-    criteria
+    @log_criteria ||= begin
+      criteria = @model.all.site(@cur_site)
+      criteria = criteria.where(user_id: @cur_user.id)
+      criteria = criteria.search_ymd(ymd: @ymd, term: '1.day') if @ymd.present?
+      criteria
+    end
   end
 end

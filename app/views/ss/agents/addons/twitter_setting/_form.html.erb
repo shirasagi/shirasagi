@@ -10,7 +10,7 @@
   <dd><%= f.select :twitter_card, @item.twitter_card_options %></dd>
 
   <dt><%= @model.t :twitter_username %><%= @model.tt :twitter_username %></dt>
-  <dd>@ <%= f.text_field :twitter_username %></dd>
+  <dd><div class="input-group"><span>@</span><%= f.text_field :twitter_username %></div></dd>
 
   <dt><%= @model.t :twitter_default_image_url %><%= @model.tt :twitter_default_image_url %></dt>
   <dd><%= f.text_field :twitter_default_image_url %></dd>

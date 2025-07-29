@@ -10,6 +10,9 @@ describe "cms_agents_parts_node", type: :feature, dbscope: :example do
     let!(:item) { create :cms_node, filename: "item" }
 
     before do
+      site.mobile_state = "enabled"
+      site.save!
+
       Capybara.app_host = "http://#{site.domain}"
     end
 

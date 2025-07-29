@@ -1,0 +1,19 @@
+<dl class="see">
+  <dt><%= @model.t :name %><%= @model.tt :name %></dt>
+  <dd><%= f.text_field :name, autofocus: pc_browser? %></dd>
+
+  <dt><%= @model.t :order %><%= @model.tt :order %></dt>
+  <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :url %><%= @model.tt :url %></dt>
+  <dd><%= f.text_field :url %></dd>
+
+  <dt><%= @model.t :description %><%= @model.tt :description %></dt>
+  <dd><%= f.text_area :description %></dd>
+
+  <dt><%= @model.t :memo %><%= @model.tt :memo %></dt>
+  <dd><%= f.text_area :memo %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, @item.state_options %></dd>
+</dl>

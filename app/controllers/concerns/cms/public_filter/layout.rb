@@ -10,6 +10,7 @@ module Cms::PublicFilter::Layout
 
   included do
     helper_method :render_layout_parts
+    helper_method :render_template_variables
   end
 
   private
@@ -43,7 +44,7 @@ module Cms::PublicFilter::Layout
 
   def render_part(part, opts = {})
     part_perf_log(part) do
-      return part.html if part.route == "cms/free"
+      return [ {}, part.html ] if part.route == "cms/free"
 
       path = "/.s#{@cur_site.id}/parts/#{part.route}"
       spec = recognize_agent path, method: "GET"
@@ -77,7 +78,7 @@ module Cms::PublicFilter::Layout
         end
 
         @cur_part = nil
-        body
+        [ resp.headers, body ]
       end
     end
   end
@@ -151,12 +152,21 @@ module Cms::PublicFilter::Layout
   end
 
   def render_template_variables(html)
+    return html if html.blank?
     html.gsub!('#{page_name}') do
       ERB::Util.html_escape(@cur_item.name)
     end
 
     html.gsub!('#{parent_name}') do
       ERB::Util.html_escape(@cur_item.parent ? @cur_item.parent.name : "")
+    end
+
+    html.gsub!('#{description}') do
+      if @cur_item.respond_to?(:template_variable_handler_description)
+        @cur_item.template_variable_handler_description("description", self)
+      else
+        @cur_item.description if @cur_item.respond_to?(:description)
+      end
     end
 
     template = %w(
@@ -185,6 +195,12 @@ module Cms::PublicFilter::Layout
       convert_date
     end
 
+    html.gsub!('#{page_thumb.src}') do
+      thumb_src = ERB::Util.html_escape(Cms::Addon::Body::DEFAULT_IMG_SRC)
+      thumb_src = @cur_item.thumb.url if @cur_item.is_a?(Cms::Addon::Thumb) && @cur_item.thumb
+      thumb_src
+    end
+
     render_conditional_tag(html)
   end
 
@@ -203,7 +219,7 @@ module Cms::PublicFilter::Layout
     criteria = criteria.where(mobile_view: "show") if filters.include?(:mobile)
     criteria.each { |part| @parts[part.filename] = part }
 
-    return html.gsub(/\{\{ part "(.*?)" \}\}/) do
+    html.gsub(/\{\{ part "(.*?)" \}\}/) do
       path = $1
       part = @parts[path]
       part ? render_layout_part(part, opts) : ''
@@ -234,7 +250,8 @@ module Cms::PublicFilter::Layout
     if part.ajax_view == "enabled" && !filters.include?(:mobile) && !@preview
       html << part.ajax_html
     else
-      html << render_part(part)
+      _header, body = render_part(part)
+      html << body
     end
     if previewable
       html << "</div>"
@@ -267,15 +284,24 @@ module Cms::PublicFilter::Layout
   end
 
   def render_kana_tool(html)
+    replaced = html.gsub(/<div[^>]*data-tool="ss-kana"[^>]*data-tool-type="button"[^>]*>.*?<\/div>/m) do |match|
+      match
+    end
     label = try(:kana_path?) ? I18n.t("cms.links.ruby_off") : I18n.t("cms.links.ruby_on")
-    html.gsub(/(<.+? id="ss-kana".*?>)(.*?)(<\/.+?>)/) do
+    replaced = replaced.gsub(/(<div[^>]+id="ss-kana"(?![^>]*data-tool-type="button")[^>]*>)(.*?)(<\/div>)/m) do
+      "#{$1}#{label}#{$3}"
+    end
+    replaced.gsub(/(<div[^>]+data-tool="ss-kana"(?![^>]*data-tool-type="button")[^>]*>)(.*?)(<\/div>)/m) do
       "#{$1}#{label}#{$3}"
     end
   end
 
   def render_theme_tool(html)
     template = Cms::ThemeTemplate.template(@cur_site)
-    html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+    html = html.gsub(/(<.+? id="ss-theme".*?>)(.*?)(<\/.+?>)/) do
+      "#{$1}#{template}#{$3}"
+    end
+    html.gsub(/(<.+? data-tool="ss-theme".*?>)(.*?)(<\/.+?>)/) do
       "#{$1}#{template}#{$3}"
     end
   end

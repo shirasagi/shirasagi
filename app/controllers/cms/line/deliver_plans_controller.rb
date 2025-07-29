@@ -22,6 +22,7 @@ class Cms::Line::DeliverPlansController < ApplicationController
 
   def set_message
     @message ||= Cms::Line::Message.site(@cur_site).find(params[:message_id])
+    raise "403" unless @message.allowed?(:use, @cur_user, site: @cur_site)
   end
 
   def set_items

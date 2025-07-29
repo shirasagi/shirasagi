@@ -21,11 +21,7 @@ module Webmail::Reference::Role
       permissions &= SS.current_token.scopes if SS.current_token
       permissions.each do |name|
         key = name
-        if level = @webmail_role_permissions[key]
-          @webmail_role_permissions[key] = [level, role.permission_level].max
-        else
-          @webmail_role_permissions[key] = role.permission_level
-        end
+        @webmail_role_permissions[key] = 3
       end
     end
     @webmail_role_permissions

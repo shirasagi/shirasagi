@@ -20,9 +20,9 @@ module Cms::Addon
       quota = content_quota_model
       if content_quota.present?
         percentage = ((quota.usage_bytes.to_f / quota.quota_bytes.to_f) * 100).floor
-        "#{quota.usage_bytes.to_s(:human_size)}/#{quota.quota_bytes.to_s(:human_size)}(#{percentage}%)"
+        "#{quota.usage_bytes.to_fs(:human_size)}/#{quota.quota_bytes.to_fs(:human_size)}(#{percentage}%)"
       else
-        quota.usage_bytes.to_s(:human_size)
+        quota.usage_bytes.to_fs(:human_size)
       end
     end
   end

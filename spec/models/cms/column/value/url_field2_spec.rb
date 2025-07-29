@@ -65,16 +65,15 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     let(:valid_url18) { "/docs" }
     let(:valid_url19) { "/docs/" }
     let(:valid_url20) { "/シラサギプロジェクト" }
+    let(:valid_url21) { "//www.example.jp/docs/3481.html" }
 
     let(:invalid_url1) { "http://#{domain} /" }
     let(:invalid_url2) { "https://#{domain} /" }
+    let(:invalid_url3) { "javascript:alert('test')" }
+    let(:invalid_url4) { "javascript:void(0)" }
 
     before do
       request = OpenStruct.new(url: "http://#{domain}/#{unique_id}/")
-
-      # Rails.application.current_request = request
-      Thread.current["ss.env"] = request
-      Thread.current["ss.request"] = request
 
       trusted_urls = [ "http://#{domain}/", "https://#{domain}/", "http://シラサギプロジェクト.jp", "https://シラサギプロジェクト.jp" ]
       @save_trusted_urls = SS.config.sns.trusted_urls
@@ -83,10 +82,6 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     end
 
     after do
-      # Rails.application.current_request = nil
-      Thread.current["ss.env"] = nil
-      Thread.current["ss.request"] = nil
-
       SS.config.replace_value_at(:sns, :trusted_urls, @save_trusted_urls)
       Sys::TrustedUrlValidator.send(:clear_trusted_urls)
     end
@@ -260,6 +255,14 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
       expect(item.column_values.first.link_item_id).to be_nil
     end
 
+    it "valid_url21" do
+      item = build_page(valid_url21)
+      expect(item.valid?).to be_truthy
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
+    end
+
     it "invalid_url1" do
       item = build_page(invalid_url1)
       expect(item.valid?).to be_falsey
@@ -271,6 +274,24 @@ describe Cms::Column::Value::UrlField2, type: :model, dbscope: :example do
     it "invalid_url2" do
       item = build_page(invalid_url2)
       expect(item.valid?).to be_falsey
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
+    end
+
+    it "invalid_url3" do
+      item = build_page(invalid_url3)
+      expect(item.valid?).to be_falsey
+      expect(item.column_values.first.errors[:link_url]).to be_present
+
+      expect(item.column_values.first.link_item_type).to be_nil
+      expect(item.column_values.first.link_item_id).to be_nil
+    end
+
+    it "invalid_url4" do
+      item = build_page(invalid_url4)
+      expect(item.valid?).to be_falsey
+      expect(item.column_values.first.errors[:link_url]).to be_present
 
       expect(item.column_values.first.link_item_type).to be_nil
       expect(item.column_values.first.link_item_id).to be_nil

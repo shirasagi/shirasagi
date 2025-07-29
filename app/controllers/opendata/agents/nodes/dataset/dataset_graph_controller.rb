@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::Dataset::DatasetGraphController < ApplicationCont
     @datasets = []
     @items.each do |item|
       resources = []
-      item.resources.each_with_index do |resource, idx|
+      item.resources.and_public.each_with_index do |resource, idx|
         next unless resource.preview_graph_enabled?
 
         key = "#{item.id}_#{idx}"
@@ -68,14 +68,14 @@ class Opendata::Agents::Nodes::Dataset::DatasetGraphController < ApplicationCont
   def graph
     @model = Opendata::Dataset
     @dataset = @model.site(@cur_site).and_public(@cur_date).where(id: params[:dataset_id]).first
-    raise "404" unless @dataset
+    raise SS::NotFoundError unless @dataset
 
-    @item = @dataset.resources.select { |r| r.id == params[:id].to_i }.first
-    raise "404" unless @item
+    @item = @dataset.resources.and_public.select { |r| r.id == params[:id].to_i }.first
+    raise SS::NotFoundError unless @item
 
     type = params[:type].presence || @item.preview_graph_types.first
     graph = @item.extract_preview_graph(type)
-    raise "404" unless graph
+    raise SS::NotFoundError unless graph
 
     render json: {
       type: type,

@@ -1,0 +1,10 @@
+<div id="errorExplanation" class="errorExplanation">
+  <div class="markdown-body">
+    <%=
+      expres_in = SS::Duration.format(@cur_site.trash_threshold_in_days)
+      SS::Addon::Markdown.text_to_html(t("gws/tabular.trash_notice_md", expires_in: expres_in))
+    %>
+  </div>
+</div>
+
+<%= render template: "gws/tabular/gws/forms/index" %>

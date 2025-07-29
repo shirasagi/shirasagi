@@ -69,7 +69,7 @@
         <td class="pages-used">
           <%= page_count_service.render(group_id: item.group.id, contact_id: item.contact.id) %>
         </td>
-        <td class="contact-main-state"><%= item.contact.main_state == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %></td>
+        <td class="contact-main-state"><%= item.contact.main_state == "main" ? md_icons.filled("radio_button_checked", size: 14, title: t("contact.options.main_state.main"), aria: { hidden: nil, label: t("contact.options.main_state.main") }) : nil %></td>
         <td class="name"><%= item.contact.name %></td>
         <td class="contact-group-name"><%= item.contact.contact_group_name %></td>
         <td class="contact-charge"><%= item.contact.contact_charge %></td>

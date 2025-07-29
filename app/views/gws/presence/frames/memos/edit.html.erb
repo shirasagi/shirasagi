@@ -1,0 +1,30 @@
+<%= jquery do %>
+$form = $("#<%= @frame_id %> form");
+$input = $form.find("input");
+$input.focus();
+
+// focusout
+$form.on("focusout", function (_) {
+  this.requestSubmit();
+  return false;
+});
+
+// enter submit
+$form.on("keypress", function (e) {
+  if (e.which == SS.KEY_ENTER) {
+    this.requestSubmit();
+    return false;
+  }
+});
+
+var submitted = false;
+$form.on("submit",  function (e) {
+  if (submitted) {
+    return false;
+  }
+  submitted = true;
+});
+<% end %>
+<%= form_for :item, url: { action: :update, frame_id: @frame_id }, html: { method: :put } do |f| %>
+  <%= f.text_field :memo, id: nil %>
+<% end %>

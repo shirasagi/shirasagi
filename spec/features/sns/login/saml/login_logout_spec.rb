@@ -55,7 +55,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
           I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
             # do logout
             within ".user-navigation" do
-              wait_event_to_fire("turbo:frame-load") { click_on user.name }
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
 
               expect(page).to have_no_link(I18n.t("ss.logout"))
             end
@@ -64,7 +64,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
           I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
             # do logout
             within ".user-navigation" do
-              wait_event_to_fire("turbo:frame-load") { click_on user.name }
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
 
               click_on I18n.t("ss.logout")
             end
@@ -106,7 +106,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
           I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
             # do logout
             within ".user-navigation" do
-              wait_event_to_fire("turbo:frame-load") { click_on user.name }
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
               expect(page).to have_no_link(I18n.t("ss.logout"))
             end
           end
@@ -114,7 +114,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
           I18n.with_locale(user.lang.try { |lang| lang.to_sym } || I18n.default_locale) do
             # do logout
             within ".user-navigation" do
-              wait_event_to_fire("turbo:frame-load") { click_on user.name }
+              wait_for_event_fired("turbo:frame-load") { click_on user.name }
               click_on I18n.t("ss.logout")
             end
           end

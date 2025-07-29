@@ -14,10 +14,10 @@ describe "gws_schedule_search_times", type: :feature, dbscope: :example, js: tru
 
     it "#index" do
       visit path
-      wait_cbox_open { click_on I18n.t("gws.apis.facilities.index") }
-      wait_for_cbox do
+      wait_for_cbox_opened { click_on I18n.t("gws.apis.facilities.index") }
+      within_cbox do
         expect(page).to have_css(".select-item", text: facility.name)
-        click_on facility.name
+        wait_for_cbox_closed { click_on facility.name }
       end
       within "form.search" do
         fill_in 's[start_on]', with: Time.zone.today.advance(days: 1).strftime("%Y/%m/%d")
@@ -49,10 +49,10 @@ describe "gws_schedule_search_times", type: :feature, dbscope: :example, js: tru
 
     it "over facilities limit" do
       visit path
-      wait_cbox_open { click_on I18n.t("gws.apis.facilities.index") }
-      wait_for_cbox do
+      wait_for_cbox_opened { click_on I18n.t("gws.apis.facilities.index") }
+      within_cbox do
         find('#colorbox .index .list-head .checkbox input').click
-        find('.select-items').click
+        wait_for_cbox_closed { find('.select-items').click }
       end
       within "form.search" do
         first('input[type=submit]').click

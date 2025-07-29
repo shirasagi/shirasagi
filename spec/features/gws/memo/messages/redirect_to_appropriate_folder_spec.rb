@@ -44,15 +44,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example do
       end
 
       it do
-        login_user user1
-        visit gws_memo_message_path(site, folder: 'REDIRECT', id: memo.id)
+        login_user user1, to: gws_memo_message_path(site, folder: 'REDIRECT', id: memo.id)
         expect(current_path).to eq gws_memo_message_path(site: site, folder: 'INBOX', id: memo)
 
         visit gws_memo_message_path(site, folder: 'REDIRECT', id: trash_memo.id)
         expect(current_path).to eq gws_memo_message_path(site: site, folder: 'INBOX.Trash', id: trash_memo)
 
-        login_user user2
-        visit gws_memo_message_path(site, folder: 'REDIRECT', id: memo.id)
+        login_user user2, to: gws_memo_message_path(site, folder: 'REDIRECT', id: memo.id)
         expect(current_path).to eq gws_memo_list_message_path(site: site, list_id: list, id: memo)
       end
     end

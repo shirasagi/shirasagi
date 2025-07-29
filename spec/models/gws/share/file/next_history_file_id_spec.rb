@@ -10,7 +10,7 @@ RSpec.describe Gws::Share::File, type: :model, dbscope: :example do
 
     context 'with 100 history file' do
       before do
-        ::Fs.binwrite("#{subject.path}_history100", '')
+        Fs.binwrite("#{subject.path}_history100", '')
       end
 
       it { expect(subject.send(:next_history_file_id)).to eq 101 }

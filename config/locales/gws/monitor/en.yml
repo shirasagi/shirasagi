@@ -115,6 +115,9 @@ en:
         '15.months': 15 months
         '18.months': 18 months
         '24.months': 24 months
+      download_comment:
+        last: Only Latest one
+        all: All
     links:
       back_to_thread: Go back
       comment: Respond
@@ -337,4 +340,4 @@ en:
           - <b>Closed</b> - Puts the inquiry in a closed state.
   job:
     models:
-      gws/monitor/trash_purge_job: Empty inquiry and response/post trash
+      gws/monitor/trash_purge_job: Inquiries and responses/Empty post trash

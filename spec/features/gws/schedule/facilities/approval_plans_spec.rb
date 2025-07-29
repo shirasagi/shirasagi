@@ -19,7 +19,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
 
     it "#index" do
       visit facilities_path
-      wait_for_ajax
+      wait_for_js_ready
       within ".gws-schedule-box" do
         expect(page).to have_css(".approval-check", text: I18n.t("gws/facility.views.required_approval"))
         expect(page).to have_selector(".approval-check", count: 1)
@@ -28,7 +28,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
 
     it "#index" do
       visit facility1_path
-      wait_for_ajax
+      wait_for_js_ready
       within ".gws-schedule-box" do
         expect(page).to have_css(".approval-check", text: I18n.t("gws/facility.views.required_approval"))
       end
@@ -36,7 +36,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
 
     it "#index" do
       visit facility2_path
-      wait_for_ajax
+      wait_for_js_ready
       within ".gws-schedule-box" do
         expect(page).to have_no_css(".approval-check", text: I18n.t("gws/facility.views.required_approval"))
       end
@@ -55,7 +55,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
       expect(item2.approval_state).to eq nil
 
       visit index_path
-      wait_for_ajax
+      wait_for_js_ready
 
       within ".list-items" do
         expect(page).to have_css(".list-item", text: item1.name)
@@ -65,7 +65,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
       within "#addon-gws-agents-addons-schedule-approval" do
         choose "item_approvals_facility-#{facility1.id}_state_approve"
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "comment[text]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
@@ -75,7 +75,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
       expect(item1.approval_state).to eq "approve"
 
       visit index_path
-      wait_for_ajax
+      wait_for_js_ready
 
       within ".list-items" do
         expect(page).to have_no_css(".list-item", text: item1.name)
@@ -103,7 +103,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
       expect(item2.approval_state).to eq nil
 
       visit index_path
-      wait_for_ajax
+      wait_for_js_ready
 
       within ".list-items" do
         expect(page).to have_css(".list-item", text: item1.name)
@@ -113,7 +113,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
       within "#addon-gws-agents-addons-schedule-approval" do
         choose "item_approvals_facility-#{facility1.id}_state_deny"
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "comment[text]", with: unique_id
         click_on I18n.t("ss.buttons.save")
       end
@@ -123,7 +123,7 @@ describe "gws_schedule_facilities_approval_plans", type: :feature, dbscope: :exa
       expect(item1.approval_state).to eq "deny"
 
       visit index_path
-      wait_for_ajax
+      wait_for_js_ready
 
       within ".list-items" do
         expect(page).to have_no_css(".list-item", text: item1.name)

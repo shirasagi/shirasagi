@@ -19,11 +19,12 @@ class Cms::Site
   include SS::Addon::TrashSetting
   include Opendata::Addon::SiteSetting
   include SS::Addon::EditorSetting
-  include SS::Addon::LogoSetting
+  include Cms::Addon::LogoSetting
   include SS::Addon::Elasticsearch::SiteSetting
   include SS::Addon::Translate::SiteSetting
   include SS::Addon::PartnerSetting
   include SS::Addon::InquirySetting
+  include SS::Addon::CheckLinksSetting
   include SS::Addon::WorkflowSetting
   include SS::Addon::SourceCleaner::SiteSetting
   include SS::Addon::SiteUsage

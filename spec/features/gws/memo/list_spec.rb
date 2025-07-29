@@ -24,14 +24,14 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         fill_in 'item[name]', with: name1
         within '#addon-gws-agents-addons-member' do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t('ss.apis.users.index')
           end
         end
       end
 
-      wait_for_cbox do
-        wait_cbox_close do
+      within_cbox do
+        wait_for_cbox_closed do
           click_on gws_user.name
         end
       end
@@ -41,18 +41,18 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".ajax-selected", text: gws_user.name)
         end
         within "#addon-basic" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t('gws.apis.categories.index')
           end
         end
       end
 
-      wait_for_cbox do
-        wait_event_to_fire("cbox_complete") do
+      within_cbox do
+        wait_for_event_fired("cbox_complete") do
           fill_in 's[keyword]', with: category.name
           click_on I18n.t('ss.buttons.search')
         end
-        wait_cbox_close do
+        wait_for_cbox_closed do
           click_on category.name
         end
       end
@@ -79,7 +79,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
         fill_in 'item[name]', with: name2
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Memo::List.all.count).to eq 1
       Gws::Memo::List.all.first.tap do |list|
@@ -96,7 +96,7 @@ describe 'gws_memo_lists', type: :feature, dbscope: :example, js: true do
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Memo::List.all.count).to eq 0
     end

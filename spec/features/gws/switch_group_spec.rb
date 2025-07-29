@@ -35,11 +35,11 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
         Gws::User.find(gws_user.id).tap do |user|
           user.cur_site = site
           expect(page).to have_css(".user-navigation-user-id", text: "#{user.gws_default_group.trailing_name} #{user.name}")
-          wait_event_to_fire("turbo:frame-load") { click_on user.name }
+          wait_for_event_fired("turbo:frame-load") { click_on user.name }
         end
 
         within "#user-main-dropdown" do
-          wait_event_to_fire("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
+          wait_for_event_fired("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
         end
 
         within "#gws-group-switch-form" do
@@ -82,22 +82,22 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.apis.users.index")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         # モーダルでも「グループ（既定）」が設定されていることを確認する
         expect(page).to have_css(".list-item", text: user_in_default_group.long_name)
       end
 
       visit new_gws_schedule_plan_path(site: site)
       within "nav.user" do
-        wait_event_to_fire("turbo:frame-load") { click_on gws_user.name }
+        wait_for_event_fired("turbo:frame-load") { click_on gws_user.name }
 
         within "#user-main-dropdown" do
-          wait_event_to_fire("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
+          wait_for_event_fired("turbo:frame-load") { click_on I18n.t("gws.links.switch_group") }
         end
 
         within "#gws-group-switch-form" do
@@ -119,12 +119,12 @@ describe "gws_switch_group", type: :feature, dbscope: :example, js: true do
         end
 
         within "#addon-gws-agents-addons-member" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.apis.users.index")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         # モーダルでも「グループ（既定）」が設定されていることを確認する
         expect(page).to have_css(".list-item", text: user_in_group2.long_name)
       end

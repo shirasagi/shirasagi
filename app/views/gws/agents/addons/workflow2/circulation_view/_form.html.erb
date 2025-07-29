@@ -1,0 +1,147 @@
+<%
+  addon ||= local_assigns.fetch(:addon, {})
+
+  circulator_options = "".html_safe
+  if @cur_site.workflow_route_circulation_title == 'show'
+    circulator_options += render(Gws::Workflow2::RouteOption::TitleComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group))
+  end
+  if @cur_site.workflow_route_circulation_occupation == 'show'
+    circulator_options += render(Gws::Workflow2::RouteOption::OccupationComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group))
+  end
+  circulator_options += render(Gws::Workflow2::RouteOption::UserUnderCurGroupComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group))
+  circulator_options += tag.option(t('gws/workflow2.select_other_circulations'), value: 'select_other')
+  circulator_options += tag.option(t('gws/workflow2.specify_at_time_of_application'), value: 'specify_at_time_of_application', data: { type: 'special' })
+
+  if @cur_site.workflow_route_circulation_superior == 'show'
+    circulator_options0 = tag.optgroup(label: t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), class: "superior") { tag.option(t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"), value: 'superior', data: { type: 'superior' }) }
+    circulator_options0 += circulator_options
+  else
+    circulator_options0 = circulator_options.dup
+  end
+
+  circulator_options0 = tag.option('', value: '', label: " ") + circulator_options0
+  circulator_options = tag.option('', value: '', label: " ") + circulator_options
+
+  user_ids = []
+  user_title_ids = []
+  user_occupation_ids = []
+
+  @item.circulations.each do |circulator|
+    case circulator[:user_type]
+    when Gws::User.name
+      user_ids << circulator[:user_id]
+    when Gws::UserTitle.name
+      user_title_ids << circulator[:user_id]
+    when Gws::UserOccupation.name
+      user_occupation_ids << circulator[:user_id]
+    end
+  end
+
+  id_user_map = Gws::User.all.site(@cur_site).in(id: user_ids).active.to_a.index_by(&:id)
+  id_title_map = Gws::UserTitle.all.site(@cur_site).in(id: user_title_ids).active.to_a.index_by(&:id)
+  id_occupation_map = Gws::UserOccupation.all.site(@cur_site).in(id: user_occupation_ids).active.to_a.index_by(&:id)
+%>
+
+<template id="<%= addon[:id] %>-options-template0">
+  <%= circulator_options0 %>
+</template>
+<template id="<%= addon[:id] %>-options-template">
+  <%= circulator_options %>
+</template>
+
+<% render_row = proc do |level, id, user_type, user_id, user_name| %>
+  <%
+    options_template = level == 1 ? "##{addon[:id]}-options-template0" : "##{addon[:id]}-options-template"
+    select_data = { approver_path: gws_apis_users_path(single: true), options_template_ref: options_template }
+    if user_type != 'new'
+      select_data[:default_user_type] = user_type
+      select_data[:default_user_id] = user_id
+      select_data[:default_user_name] = user_name
+    end
+  %>
+  <tr data-id="<%= id %>" data-user-type="<%= user_type %>" data-user-id="<%= user_id %>">
+    <td><%= button_tag t("ss.buttons.delete"), type: 'button', name: 'delete-row', class: "btn btn-delete" %></td>
+    <td>
+      <%= hidden_field_tag("#{f.object_name}[circulations][][level]", level, id: nil) %>
+      <%= hidden_field_tag("#{f.object_name}[circulations][][_id]", id, id: nil) %>
+      <%= ss_stimulus_tag "gws/workflow2/route_approver_select", data: select_data do %>
+        <%= select_tag "dummy-circulator", (level == 1 ? circulator_options0 : circulator_options), id: nil, class: "circulator-select" %>
+        <%= hidden_field_tag("#{f.object_name}[circulations][][user_type]", user_type != 'new' ? user_type : '', id: nil) %>
+        <%= hidden_field_tag("#{f.object_name}[circulations][][user_id]", user_id != 'new' ? user_id : '', id: nil) %>
+      <% end %>
+    </td>
+  </tr>
+<% end %>
+
+<template id="<%= addon[:id] %>-row-template0">
+  <% render_row.call(1, nil, 'new', 'new', '') %>
+</template>
+<template id="<%= addon[:id] %>-row-template">
+  <% render_row.call('', nil, 'new', 'new', '') %>
+</template>
+
+<% 1.upto(@model::MAX_CIRCULATIONS) do |level| %>
+  <%= tag.div class: "gws-workflow-route-circulation-item", data: { level: level } do %>
+    <h1 class="workflow-level-header"><%= t("workflow.circulation_step") %> <%= @model.t :level, level: level %></h1>
+
+    <dl class="see circulation_attachment_uses">
+      <dt><%= @model.t :circulation_attachment_uses %><%= @model.tt :circulation_attachment_uses %></dt>
+      <dd><%= select_tag "item[circulation_attachment_uses][]", options_for_select(@item.circulation_attachment_use_options, @item.circulation_attachment_use_at(level)), id: nil, include_blank: true %></dd>
+    </dl>
+
+    <dl class="see circulations">
+      <dt><%= @model.t :circulations %><%= @model.tt :circulations %></dt>
+      <dd>
+        <%= f.hidden_field "circulations[]", value: "", class: "hidden-ids", id: nil %>
+        <% row_template = level == 0 ? "##{addon[:id]}-row-template0" : "##{addon[:id]}-row-template" %>
+        <%= ss_stimulus_tag "gws/workflow2/route_approver_table", data: { level: level, row_template_ref: row_template } do %>
+          <table class="index gws-workflow-grid-table" data-col="2">
+            <thead>
+            <tr>
+              <th></th>
+              <th class="name"><%= @model.t :name %></th>
+            </tr>
+            </thead>
+            <tbody>
+            <%
+              @item.circulations_at(level).each do |circulator|
+                case circulator[:user_type]
+                when "superior"
+                  render_row.call(level, circulator[:_id], "superior", "superior", t("mongoid.attributes.gws/addon/user/affair_setting.gws_superior_user_ids"))
+                when Gws::User.name
+                  user = id_user_map[circulator[:user_id]]
+                  if user
+                    render_row.call(level, circulator[:_id], user.class.name, user.id, gws_public_user_long_name(user.long_name))
+                  end
+                when Gws::UserTitle.name
+                  user = id_title_map[circulator[:user_id]]
+                  if user
+                    render_row.call(level, circulator[:_id], user.class.name, user.id, user.name)
+                  end
+                when Gws::UserOccupation.name
+                  user = id_occupation_map[circulator[:user_id]]
+                  if user
+                    render_row.call(level, circulator[:_id], user.class.name, user.id, user.name)
+                  end
+                when "special"
+                  render_row.call(level, circulator[:_id], "special", circulator[:user_id], t("gws/workflow2.specify_at_time_of_application"))
+                end
+              end
+            %>
+            <%
+              # new record at last
+              render_row.call(level, nil, 'new', 'new', '')
+            %>
+            </tbody>
+            <tfoot>
+            <tr>
+              <td><%= button_tag t("ss.buttons.add"), type: 'button', name: 'add-row', class: "btn btn-add" %></td>
+              <td></td>
+            </tr>
+            </tfoot>
+          </table>
+        <% end %>
+      </dd>
+    </dl>
+  <% end %>
+<% end %>

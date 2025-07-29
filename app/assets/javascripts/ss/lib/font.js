@@ -8,23 +8,60 @@ this.SS_Font = (function () {
     this.size = parseInt(Cookies.get("ss-font")) || 100;
     if (this.size !== 100) {
       this.set(this.size);
+    } else {
+      $('[data-tool="ss-medium"]').attr("aria-pressed", "true");
     }
 
-    SS_Font.embed($("#ss-medium"), function() { return SS_Font.set(100); });
-    SS_Font.embed($("#ss-small"), function() { return SS_Font.set(false); });
-    SS_Font.embed($("#ss-large"), function() { return SS_Font.set(true); });
+    $('#ss-medium,[data-tool="ss-medium"]').each(function() {
+      const $this = $(this);
+      SS.justOnce(this, "ss-font", function() {
+        SS_Font.embed($this, function () { return SS_Font.set(100); });
+      });
+    });
+
+    $('#ss-small,[data-tool="ss-small"]').each(function() {
+      const $this = $(this);
+      SS.justOnce(this, "ss-font", function() {
+        SS_Font.embed($this, function () { return SS_Font.set(false); });
+      });
+    });
+
+    $('#ss-large,[data-tool="ss-large"]').each(function() {
+      const $this = $(this);
+      SS.justOnce(this, "ss-font", function() {
+        SS_Font.embed($this, function () { return SS_Font.set(true); });
+      });
+    });
   };
 
   SS_Font.embed = function($elements, callback) {
     $elements.each(function() {
-      var $el = $(this);
-      SS.justOnce(this, "font", function() {
-        var $anchor = $("<a/>", { href: "#" });
-        $anchor.on("click", callback);
-        $anchor.html($el.html());
+      const $el = $(this);
+      if ($el.is('[data-tool-type="button"]')) {
+        SS.justOnce(this, "font", function() {
+          const $btn = $("<button/>", {
+            type: "button",
+            name: $el.attr("data-tool"),
+            "data-tool": $el.attr("data-tool")
+          });
+          // 「標準」のみ aria-pressed 属性を付与 https://github.com/shirasagi/shirasagi/pull/5572
+          if ($el.attr("data-tool") === "ss-medium") {
+            $btn.attr("aria-pressed", (SS_Font.size === 100 ? "true" : "false"));
+          }
+          $btn.on("click", callback);
+          $btn.html($el.html());
 
-        $el.replaceWith($anchor);
-      });
+          $el.replaceWith($btn);
+        });
+      } else {
+        SS.justOnce(this, "font", function() {
+          const $anchor = $("<a/>", {href: "#"});
+          $anchor.on("click", callback);
+          $anchor.html($el.html());
+
+          $el.replaceWith($anchor);
+        });
+      }
     });
   }
 
@@ -45,6 +82,15 @@ this.SS_Font = (function () {
     Cookies.set("ss-font", size, {
       expires: 7,
       path: '/'
+    });
+
+    $('[data-tool="ss-medium"]').each(function() {
+      const $btn = $(this);
+      if (size === 100) {
+        $btn.attr('aria-pressed', 'true');
+      } else {
+        $btn.attr('aria-pressed', 'false');
+      }
     });
     return false;
   };

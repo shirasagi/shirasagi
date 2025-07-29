@@ -45,7 +45,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           end
 
@@ -62,14 +62,14 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("workflow.search_approvers.index")
             end
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on user1.long_name
             end
           end
@@ -79,8 +79,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -122,14 +121,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           end
 
@@ -144,14 +142,14 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("workflow.search_approvers.index")
             end
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on user1.long_name
             end
           end
@@ -161,8 +159,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -198,7 +195,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -213,14 +214,13 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
             expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
           end
 
@@ -235,14 +235,14 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t("workflow.search_approvers.index")
             end
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            wait_cbox_close do
+            wait_for_cbox_closed do
               click_on user1.long_name
             end
           end
@@ -252,9 +252,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
           within "#addon-workflow-agents-addons-branch" do
+            wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -302,7 +302,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
 
@@ -310,7 +309,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -323,12 +322,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -336,8 +335,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # 1. approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -369,23 +367,21 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.enabled"), from: "item[twitter_edit_auto_post]"
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.withdraw") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -398,12 +394,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -411,8 +407,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # 2. approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -444,23 +439,21 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.active"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.disabled"), from: "item[twitter_edit_auto_post]"
           end
 
           perform_enqueued_jobs do
             within "form#item-form" do
-              wait_cbox_open { click_on I18n.t("ss.buttons.withdraw") }
+              wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
             end
-            wait_for_cbox do
+            within_cbox do
               expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
               click_on I18n.t("ss.buttons.ignore_alert")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -473,12 +466,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -486,8 +479,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # 3. approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -521,7 +513,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -535,7 +531,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
-            select I18n.t("cms.options.twitter_post_format.page_only"), from: "item[twitter_post_format]"
             select I18n.t("ss.options.state.active"), from: "item[twitter_edit_auto_post]"
           end
 
@@ -543,7 +538,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -556,12 +551,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -569,9 +564,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # 1. approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
           within "#addon-workflow-agents-addons-branch" do
+            wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -603,7 +598,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -614,7 +613,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
@@ -625,7 +623,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -638,12 +636,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -651,9 +649,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # 2. approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
           within "#addon-workflow-agents-addons-branch" do
+            wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -685,7 +683,11 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           login_cms_user
           visit show_path
           within "#addon-workflow-agents-addons-branch" do
-            click_on I18n.t("workflow.create_branch")
+            wait_for_turbo_frame "#workflow-branch-frame"
+            wait_for_event_fired "turbo:frame-load" do
+              click_on I18n.t("workflow.create_branch")
+            end
+            expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
             expect(page).to have_link item.name
             click_on item.name
           end
@@ -696,7 +698,6 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           ensure_addon_opened("#addon-cms-agents-addons-twitter_poster")
           within "#addon-cms-agents-addons-twitter_poster" do
             expect(page).to have_css('select[name="item[twitter_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
-            expect(page).to have_css('select[name="item[twitter_post_format]"] option[selected]', text: I18n.t("cms.options.twitter_post_format.page_only"))
             expect(page).to have_css('select[name="item[twitter_edit_auto_post]"] option[selected]', text: I18n.t("ss.options.state.disabled"))
 
             select I18n.t("ss.options.state.active"), from: "item[twitter_auto_post]"
@@ -707,7 +708,7 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
             within "form#item-form" do
               click_on I18n.t("ss.buttons.draft_save")
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+            wait_for_notice I18n.t('ss.notice.saved')
           end
 
           within "#addon-cms-agents-addons-twitter_poster" do
@@ -720,12 +721,12 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
 
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             click_on I18n.t("workflow.buttons.request")
@@ -733,9 +734,9 @@ describe "article_pages twitter post", type: :feature, dbscope: :example, js: tr
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
 
           # 3. approve
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
           within "#addon-workflow-agents-addons-branch" do
+            wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end
