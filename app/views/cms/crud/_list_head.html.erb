@@ -18,10 +18,12 @@ end
 
   <div class="list-head-action">
     <%= render template: "_list_head_tags" %>
-    <div class="list-head-action-destroy">
-      <%# CMS の一括削除では特別な削除確認画面が表示されるので confirmation は不要 %>
-      <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
-    </div>
+    <% if @deletable %>
+      <div class="list-head-action-destroy">
+        <%# CMS の一括削除では特別な削除確認画面が表示されるので confirmation は不要 %>
+        <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
+      </div>
+    <% end %>
     <% if change_state_all && (releasable || closeable) %>
       <div class="list-head-action-update">
         <%= ss_button_to t("ss.links.make_them_public"), change_state_all,

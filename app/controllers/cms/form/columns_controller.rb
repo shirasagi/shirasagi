@@ -13,6 +13,10 @@ class Cms::Form::ColumnsController < ApplicationController
 
   private
 
+  def set_deletable
+    @deletable ||= @cur_form.allowed?(:delete, @cur_user, site: @cur_site, owned: true)
+  end
+
   def set_crumbs
     @crumbs << [Cms::Form.model_name.human, cms_forms_path]
     @crumbs << [cur_form.name, cms_form_path(id: cur_form)]
