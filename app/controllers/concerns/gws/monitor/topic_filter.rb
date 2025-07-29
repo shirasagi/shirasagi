@@ -170,8 +170,22 @@ module Gws::Monitor::TopicFilter
   def download
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
-    csv = @item.to_csv.encode('SJIS', invalid: :replace, undef: :replace)
-    send_data csv, filename: "monitor_#{Time.zone.now.to_i}.csv"
+    if request.get? || request.head?
+      render
+      return
+    end
+
+    exporter = Gws::Monitor::TopicExporter.new(cur_site: @cur_site, cur_user: @cur_user, item: @item)
+
+    csv_params = params.require(:item).permit(:encoding, :download_comment)
+    csv_params = csv_params.to_h.symbolize_keys
+    enumerable = exporter.enum_csv(**csv_params)
+
+    filename = @model.to_s.tableize.tr("/", "_")
+    filename = "#{filename}_#{Time.zone.now.to_i}.csv"
+
+    response.status = 200
+    send_enum enumerable, type: enumerable.content_type, filename: filename
   end
 
   # 添付ファイル一括ダウンロード

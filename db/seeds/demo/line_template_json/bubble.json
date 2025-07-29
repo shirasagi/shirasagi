@@ -1,0 +1,23 @@
+{
+  "type": "template",
+  "altText": "LINE登録のご案内",
+  "template": {
+    "type": "buttons",
+    "thumbnailImageUrl": "https://demo.ss-proj.org/img/json_dummy1.png",
+    "imageAspectRatio": "rectangle",
+    "imageSize": "cover",
+    "imageBackgroundColor": "#FFFFFF",
+    "title": "LINEお友達登録",
+    "text": "お友達登録をお願いします！",
+    "defaultAction": {
+      "type": "uri",
+      "label": "View detail",
+      "uri": "https://demo.ss-proj.org/img/json_dummy1.png"
+    },
+    "actions": [{
+      "type": "uri",
+      "label": "LINEお友達登録はこちら",
+      "uri": "https://page.line.me/~~"
+    }]
+  }
+}

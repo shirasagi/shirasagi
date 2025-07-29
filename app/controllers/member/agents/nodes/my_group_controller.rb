@@ -27,12 +27,12 @@ class Member::Agents::Nodes::MyGroupController < ApplicationController
 
   def check_admin_member
     set_item
-    raise "403" unless @item.admin_member?(@cur_member)
+    raise SS::ForbiddenError unless @item.admin_member?(@cur_member)
   end
 
   def check_inviting_member
     set_item
-    raise "404" unless @item.inviting_member?(@cur_member)
+    raise SS::NotFoundError unless @item.inviting_member?(@cur_member)
   end
 
   public

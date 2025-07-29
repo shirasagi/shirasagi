@@ -38,14 +38,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
+              wait_for_cbox_opened { click_on I18n.t('mongoid.models.webmail/address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_ids#{address1.id}"
             check "cc_ids#{address2.id}"
             check "bcc_ids#{address3.id}"
-            wait_cbox_close { click_on I18n.t('ss.links.select') }
+            wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do
@@ -95,14 +95,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
+              wait_for_cbox_opened { click_on I18n.t('mongoid.models.webmail/address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_all"
             check "cc_all"
             check "bcc_all"
-            wait_cbox_close { click_on I18n.t('ss.links.select') }
+            wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do
@@ -158,11 +158,11 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('mongoid.models.webmail/address') }
+              wait_for_cbox_opened { click_on I18n.t('mongoid.models.webmail/address') }
             end
           end
-          wait_for_cbox do
-            wait_cbox_close { click_on address1.name }
+          within_cbox do
+            wait_for_cbox_closed { click_on address1.name }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do
@@ -204,14 +204,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
+              wait_for_cbox_opened { click_on I18n.t('gws.organization_addresses') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_ids#{user1.id}"
             check "cc_ids#{user2.id}"
             check "bcc_ids#{user3.id}"
-            wait_cbox_close { click_on I18n.t('ss.links.select') }
+            wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do
@@ -261,14 +261,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
+              wait_for_cbox_opened { click_on I18n.t('gws.organization_addresses') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_all"
             check "cc_all"
             check "bcc_all"
-            wait_cbox_close { click_on I18n.t('ss.links.select') }
+            wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do
@@ -324,11 +324,11 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('gws.organization_addresses') }
+              wait_for_cbox_opened { click_on I18n.t('gws.organization_addresses') }
             end
           end
-          wait_for_cbox do
-            wait_cbox_close { click_on user1.name }
+          within_cbox do
+            wait_for_cbox_closed { click_on user1.name }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do
@@ -379,14 +379,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
+              wait_for_cbox_opened { click_on I18n.t('modules.gws/shared_address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_ids#{address1.id}"
             check "cc_ids#{address2.id}"
             check "bcc_ids#{address3.id}"
-            wait_cbox_close { click_on I18n.t('ss.links.select') }
+            wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do
@@ -436,14 +436,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
+              wait_for_cbox_opened { click_on I18n.t('modules.gws/shared_address') }
             end
           end
-          wait_for_cbox do
+          within_cbox do
             check "to_all"
             check "cc_all"
             check "bcc_all"
-            wait_cbox_close { click_on I18n.t('ss.links.select') }
+            wait_for_cbox_closed { click_on I18n.t('ss.links.select') }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do
@@ -499,11 +499,11 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
           within "form#item-form" do
             click_on I18n.t("webmail.links.show_cc_bcc")
             within 'dl.see.all' do
-              wait_cbox_open { click_on I18n.t('modules.gws/shared_address') }
+              wait_for_cbox_opened { click_on I18n.t('modules.gws/shared_address') }
             end
           end
-          wait_for_cbox do
-            wait_cbox_close { click_on address1.name }
+          within_cbox do
+            wait_for_cbox_closed { click_on address1.name }
           end
           within 'form#item-form' do
             within '.webmail-mail-form-address.to' do

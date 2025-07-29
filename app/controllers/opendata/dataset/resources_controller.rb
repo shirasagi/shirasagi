@@ -23,6 +23,10 @@ class Opendata::Dataset::ResourcesController < ApplicationController
     @item = dataset.resources.find params[:id]
   end
 
+  def fix_params
+    { cur_user: @cur_user }
+  end
+
   def pre_params
     default_license = Opendata::License.site(@cur_site).and_public.and_default.order_by(order: 1, id: 1).first
     if default_license.present?

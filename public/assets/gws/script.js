@@ -1,4 +1,4 @@
-/*! sprintf-js v1.1.2 | Copyright (c) 2007-present, Alexandru Mărășteanu <hello@alexei.ro> | BSD-3-Clause */
+/*! sprintf-js v1.1.3 | Copyright (c) 2007-present, Alexandru Mărășteanu <hello@alexei.ro> | BSD-3-Clause */
 !function(){"use strict";var g={not_string:/[^s]/,not_bool:/[^t]/,not_type:/[^T]/,not_primitive:/[^v]/,number:/[diefg]/,numeric_arg:/[bcdiefguxX]/,json:/[j]/,not_json:/[^j]/,text:/^[^\x25]+/,modulo:/^\x25{2}/,placeholder:/^\x25(?:([1-9]\d*)\$|\(([^)]+)\))?(\+)?(0|'[^$])?(-)?(\d+)?(?:\.(\d+))?([b-gijostTuvxX])/,key:/^([a-z_][a-z_\d]*)/i,key_access:/^\.([a-z_][a-z_\d]*)/i,index_access:/^\[(\d+)\]/,sign:/^[+-]/};function y(e){return function(e,t){var r,n,i,s,a,o,p,c,l,u=1,f=e.length,d="";for(n=0;n<f;n++)if("string"==typeof e[n])d+=e[n];else if("object"==typeof e[n]){if((s=e[n]).keys)for(r=t[u],i=0;i<s.keys.length;i++){if(null==r)throw new Error(y('[sprintf] Cannot access property "%s" of undefined value "%s"',s.keys[i],s.keys[i-1]));r=r[s.keys[i]]}else r=s.param_no?t[s.param_no]:t[u++];if(g.not_type.test(s.type)&&g.not_primitive.test(s.type)&&r instanceof Function&&(r=r()),g.numeric_arg.test(s.type)&&"number"!=typeof r&&isNaN(r))throw new TypeError(y("[sprintf] expecting number but found %T",r));switch(g.number.test(s.type)&&(c=0<=r),s.type){case"b":r=parseInt(r,10).toString(2);break;case"c":r=String.fromCharCode(parseInt(r,10));break;case"d":case"i":r=parseInt(r,10);break;case"j":r=JSON.stringify(r,null,s.width?parseInt(s.width):0);break;case"e":r=s.precision?parseFloat(r).toExponential(s.precision):parseFloat(r).toExponential();break;case"f":r=s.precision?parseFloat(r).toFixed(s.precision):parseFloat(r);break;case"g":r=s.precision?String(Number(r.toPrecision(s.precision))):parseFloat(r);break;case"o":r=(parseInt(r,10)>>>0).toString(8);break;case"s":r=String(r),r=s.precision?r.substring(0,s.precision):r;break;case"t":r=String(!!r),r=s.precision?r.substring(0,s.precision):r;break;case"T":r=Object.prototype.toString.call(r).slice(8,-1).toLowerCase(),r=s.precision?r.substring(0,s.precision):r;break;case"u":r=parseInt(r,10)>>>0;break;case"v":r=r.valueOf(),r=s.precision?r.substring(0,s.precision):r;break;case"x":r=(parseInt(r,10)>>>0).toString(16);break;case"X":r=(parseInt(r,10)>>>0).toString(16).toUpperCase()}g.json.test(s.type)?d+=r:(!g.number.test(s.type)||c&&!s.sign?l="":(l=c?"+":"-",r=r.toString().replace(g.sign,"")),o=s.pad_char?"0"===s.pad_char?"0":s.pad_char.charAt(1):" ",p=s.width-(l+r).length,a=s.width&&0<p?o.repeat(p):"",d+=s.align?l+r+a:"0"===o?l+a+r:a+l+r)}return d}(function(e){if(p[e])return p[e];var t,r=e,n=[],i=0;for(;r;){if(null!==(t=g.text.exec(r)))n.push(t[0]);else if(null!==(t=g.modulo.exec(r)))n.push("%");else{if(null===(t=g.placeholder.exec(r)))throw new SyntaxError("[sprintf] unexpected placeholder");if(t[2]){i|=1;var s=[],a=t[2],o=[];if(null===(o=g.key.exec(a)))throw new SyntaxError("[sprintf] failed to parse named argument key");for(s.push(o[1]);""!==(a=a.substring(o[0].length));)if(null!==(o=g.key_access.exec(a)))s.push(o[1]);else{if(null===(o=g.index_access.exec(a)))throw new SyntaxError("[sprintf] failed to parse named argument key");s.push(o[1])}t[2]=s}else i|=2;if(3===i)throw new Error("[sprintf] mixing positional and named placeholders is not (yet) supported");n.push({placeholder:t[0],param_no:t[1],keys:t[2],sign:t[3],pad_char:t[4],align:t[5],width:t[6],precision:t[7],type:t[8]})}r=r.substring(t[0].length)}return p[e]=n}(e),arguments)}function e(e,t){return y.apply(null,[e].concat(t||[]))}var p=Object.create(null);"undefined"!=typeof exports&&(exports.sprintf=y,exports.vsprintf=e),"undefined"!=typeof window&&(window.sprintf=y,window.vsprintf=e,"function"==typeof define&&define.amd&&define(function(){return{sprintf:y,vsprintf:e}}))}();
 //# sourceMappingURL=/assets/sprintf-js/dist/sprintf.min.js.map
 //!
@@ -57,8 +57,9 @@ Gws_Category_Navi.prototype.render = function(items, opts) {
 
   var toggle = this.el.find('.dropdown-toggle');
   if (!hideClose && isCate) {
-    var icon = '<i class="material-icons md-18 md-dark">&#xE14C;</i>';
-    toggle.after('<a class="ml-1" href="' + toggle.attr('href') + '">' + icon + '</a>');
+    var icon = $("<i/>", { class: "material-icons md-18 md-dark", "aria-hidden": true, role: 'img' }).text("clear");
+    var anchor = $('<a/>', { class: "ml-1", href: toggle.attr('href') }).append(icon);
+    toggle.after(anchor);
   }
   toggle.on("click", function() {
     return false;
@@ -72,7 +73,7 @@ Gws_Tab.renderTabs = function(selector) {
   var path = location.pathname + "/";
   $(selector).find('a').each(function() {
     var $menu = $(this);
-    if (path.match(new RegExp('^' + $menu.attr('href') + '(\/|$)'))) {
+    if (path.match(new RegExp('^' + $menu.attr('href') + '(/|$)'))) {
       $menu.addClass("current")
     }
   });
@@ -110,8 +111,6 @@ this.Gws_Popup = (function () {
     popup = $('.gws-popup');
     if ($(window).width() < popup.outerWidth() * 1.5) {
       popup.css('max-width', $(window).width() / 2);
-    } else {
-
     }
     //pop up.css(max'width',340 );
     pos_left = target.offset().left + (target.outerWidth() / 2) - (popup.outerWidth() / 2);
@@ -154,27 +153,59 @@ this.Gws_Member = (function () {
 
   Gws_Member.users = null;
 
-  Gws_Member.render = function () {
+  Gws_Member.render = function (box) {
     if ($('.js-copy-groups').length < 2) {
-      $('.js-copy-groups').remove();
-      $('.js-paste-groups').remove();
+      $('.js-copy-groups').addClass("hide");
+      $('.js-paste-groups').addClass("hide");
+    } else {
+      $('.js-copy-groups').removeClass("hide");
+      $('.js-paste-groups').removeClass("hide");
     }
-    $('.js-copy-groups').on("click", function () {
-      return Gws_Member.copyGroups($(this));
-    });
-    $('.js-paste-groups').on("click", function () {
-      return Gws_Member.pasteGroups($(this));
-    });
     if ($('.js-copy-users').length < 2) {
-      $('.js-copy-users').remove();
-      $('.js-paste-users').remove();
+      $('.js-copy-users').addClass("hide");
+      $('.js-paste-users').addClass("hide");
+    } else {
+      $('.js-copy-users').removeClass("hide");
+      $('.js-paste-users').removeClass("hide");
     }
-    $('.js-copy-users').on("click", function () {
-      return Gws_Member.copyUsers($(this));
+
+    if (!box) {
+      box = document;
+    }
+    box = $(box);
+
+    box.find('.js-copy-groups').each(function() {
+      var $copyEl = $(this);
+      SS.justOnce(this, "copyGroups", function() {
+        $copyEl.on("click", function () {
+          return Gws_Member.copyGroups($copyEl);
+        });
+      });
     });
-    return $('.js-paste-users').on("click", function () {
-      return Gws_Member.pasteUsers($(this));
+    box.find('.js-paste-groups').each(function() {
+      var $pasteEl = $(this);
+      SS.justOnce(this, "pasteGroups", function() {
+        $pasteEl.on("click", function () {
+          return Gws_Member.pasteGroups($pasteEl);
+        });
+      });
     });
+    box.find('.js-copy-users').each(function() {
+      var $copyEl = $(this);
+      SS.justOnce(this, "copyUsers", function() {
+        $copyEl.on("click", function () {
+          return Gws_Member.copyUsers($copyEl);
+        });
+      });
+    });
+    box.find('.js-paste-users').each(function() {
+      var $pasteEl = $(this);
+      SS.justOnce(this, "pasteUsers", function() {
+        $pasteEl.on("click", function () {
+          return Gws_Member.pasteUsers($(this));
+        });
+      });
+    })
   };
 
   Gws_Member.confirmReadableSetting = function () {
@@ -277,14 +308,14 @@ this.Gws_Reminder = (function () {
           item_name: item.data('name'),
           date: item.data('date')
         },
-        success: function (data) {
+        success: function (_data) {
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .updated, .more-btn').hide();
           item.find('.dropdown-menu').removeClass('active');
           item.find('.restore').show();
           item.find('.notification').hide();
           return false;
         },
-        error: function (data) {
+        error: function (_data) {
           return alert('Error');
         }
       });
@@ -303,7 +334,7 @@ this.Gws_Reminder = (function () {
           item_name: item.data('name'),
           date: item.data('date')
         },
-        success: function (data) {
+        success: function (_data) {
           item.toggleClass('gws-list-item--deleted').find('.check, .meta, .delete, .more-btn').show();
           item.find('.restore').hide();
           if (item.find('.notification')[0]) {
@@ -312,7 +343,7 @@ this.Gws_Reminder = (function () {
           item.find('.notification').show();
           return false;
         },
-        error: function (data) {
+        error: function (_data) {
           return alert('Error');
         }
       });
@@ -354,7 +385,7 @@ Gws_Bookmark.prototype.renderCreate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 };
@@ -398,7 +429,7 @@ Gws_Bookmark.prototype.renderUpdate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 
@@ -425,7 +456,7 @@ Gws_Bookmark.prototype.renderUpdate = function() {
         alert('Error');
       }
     });
-    self.$form.submit();
+    self.$form[0].requestSubmit();
     return false;
   });
 };
@@ -459,135 +490,6 @@ Gws_ReadableSetting.prototype.showSelectForm = function() {
 
 Gws_ReadableSetting.prototype.hideSelectForm = function() {
   this.el.find('.gws-addon-readable-setting-select').slideUp("fast");
-};
-function Gws_Contrast(opts) {
-  this.opts = opts;
-  this.$el = $('#user-contrast-menu');
-  this.template = 'body * { color: :color !important; border-color: :color !important; background: :background !important; } ' +
-                  'body *:after { background: :background !important; }';
-
-  this.render();
-}
-
-Gws_Contrast.getContrastId = function(siteId) {
-  return Cookies.get("gws-contrast-" + siteId);
-};
-
-Gws_Contrast.setContrastId = function(siteId, contrastId) {
-  Cookies.set("gws-contrast-" + siteId, contrastId, { expires: 7, path: '/' });
-};
-
-Gws_Contrast.removeContrastId = function(siteId) {
-  Cookies.remove("gws-contrast-" + siteId);
-};
-
-Gws_Contrast.prototype.render = function() {
-  var _this = this;
-
-  this.$el.data('load', function() {
-    _this.loadContrasts();
-  });
-
-  this.$el.on('click', '.gws-contrast-item', function(ev) {
-    var $this = $(this);
-    var id = $this.data('id');
-    if (id === 'default') {
-      _this.removeContrast($this.data('text-color'), $this.data('color'));
-      Gws_Contrast.removeContrastId(_this.opts.siteId);
-    } else {
-      _this.changeContrast($this.data('text-color'), $this.data('color'));
-      Gws_Contrast.setContrastId(_this.opts.siteId, id);
-    }
-    SS.notice(_this.opts.notice.replace(':name', $this.text()));
-
-    ev.stopPropagation();
-  });
-};
-
-Gws_Contrast.prototype.loadContrasts = function() {
-  if (this.$el.data('loadedAt')) {
-    this.checkActiveContrast();
-    return;
-  }
-
-  var _this = this;
-  $.ajax({
-    url: this.opts.url,
-    type: 'GET',
-    dataType: 'json',
-    success: function(data) { _this.renderContrasts(data); },
-    error: function(xhr, status, error) { _this.showMessage(this.opts.loadError); },
-    complete: function(xhr, status) { _this.completeLoading(xhr); }
-  });
-};
-
-Gws_Contrast.prototype.completeLoading = function(xhr) {
-  this.$el.data('loadedAt', Date.now());
-  this.$el.find('.gws-contrast-loading').closest('li').hide();
-};
-
-Gws_Contrast.prototype.showMessage = function(message) {
-  this.$el.append($('<li/>').html($('<div class="gws-contrast-error"/>').text(message)));
-};
-
-Gws_Contrast.prototype.renderContrasts = function(data) {
-  if (data.length === 0) {
-    this.showMessage(this.opts.noContrasts);
-    return;
-  }
-
-  this.renderContrast('default', this.opts.defaultContrast);
-
-  var _this = this;
-  $.each(data, function() {
-    _this.renderContrast(this._id['$oid'], this.name, this.color, this.text_color);
-  });
-
-  this.checkActiveContrast();
-};
-
-Gws_Contrast.prototype.renderContrast = function(id, name, color, textColor) {
-  var dataAttrs = { id: id };
-  if (color) {
-    dataAttrs.color = color;
-  }
-  if (textColor) {
-    dataAttrs.textColor = textColor;
-  }
-
-  var $input = $('<input/>', { type: 'radio', name: 'gws-contrast-item', value: id });
-  var $label = $('<label/>', { class: 'gws-contrast-item', data: dataAttrs });
-  $label.append($input);
-  $label.append($('<span class="gws-contrast-name"/>').text(name));
-
-  this.$el.append($('<li/>').append($label));
-};
-
-Gws_Contrast.prototype.checkActiveContrast = function() {
-  var contrastId = Gws_Contrast.getContrastId(this.opts.siteId);
-  if (! contrastId) {
-    $('input[name="gws-contrast-item"]').val(['default']);
-    return;
-  }
-
-  $('input[name="gws-contrast-item"]').val([contrastId]);
-};
-
-Gws_Contrast.prototype.changeContrast = function(textColor, color) {
-  if (! this.$style) {
-    this.$style = $('<style/>', { type: 'text/css' });
-    $('head').append(this.$style);
-  }
-
-  this.$style.html(this.template.replace(/:color/g, textColor).replace(/:background/g, color));
-};
-
-Gws_Contrast.prototype.removeContrast = function() {
-  if (! this.$style) {
-    return;
-  }
-
-  this.$style.html('');
 };
 function Gws_Workload_Navi(selector) {
   this.el = $(selector);
@@ -842,13 +744,13 @@ this.Gws_Schedule_Repeat_Plan = (function () {
     b2 = $('<input />', { type: "button", class: "btn", value: i18next.t("gws/schedule.buttons.delete_later") });
     b3 = $('<input />', { type: "button", class: "btn", value: i18next.t("gws/schedule.buttons.delete_all") });
     b1.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="one" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="one" />')[0].requestSubmit();
     });
     b2.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="later" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="later" />')[0].requestSubmit();
     });
     b3.on('click', function () {
-      return form.append('<input type="hidden" name="item[edit_range]" value="all" />').submit();
+      return form.append('<input type="hidden" name="item[edit_range]" value="all" />')[0].requestSubmit();
     });
     buttons = $('<div class="gws-schedule-repeat-submit"></div>');
     buttons.append(b1).append(sp).append(b2).append(sp).append(b3);
@@ -878,14 +780,14 @@ Gws_Schedule_Integration.render = function() {
   }
 
   $el.find(".send-message").each(function() {
-    $(this).on("click", function(ev) {
+    $(this).on("click", function(_ev) {
       var userId = $(this).closest("[data-user-id]").data("user-id");
       location.href = Gws_Schedule_Integration.paths.newMemoMessage + "?to%5B%5D=" + userId;
     });
   });
 
   $el.find(".send-email").each(function() {
-    $(this).on("click", function(ev) {
+    $(this).on("click", function(_ev) {
       var email = $(this).closest("[data-email]").data("email");
       location.href = Gws_Schedule_Integration.paths.newWebmail + "?item%5Bto%5D=" + encodeURIComponent(email);
     });
@@ -957,7 +859,7 @@ this.Gws_Schedule_Todo_Search = (function () {
     }
 
     var self = this;
-    this.timerId = setTimeout(function() { self.$el.submit(); }, 0);
+    this.timerId = setTimeout(function() { self.$el[0].requestSubmit(); }, 0);
   };
 
   return Gws_Schedule_Todo_Search;
@@ -1019,9 +921,9 @@ this.Gws_Schedule_Todo_Index = (function () {
 
   Gws_Schedule_Todo_Index.prototype.examineToShow = function($listItem) {
     if ($listItem.hasClass("gws-schedule-todo-list-item-header")) {
-      var parentGroup = $listItem.data("parent");
-      if (parentGroup) {
-        return this.examineToShow(this.$el.find("#" + parentGroup));
+      var listItemParentGroup = $listItem.data("parent");
+      if (listItemParentGroup) {
+        return this.examineToShow(this.$el.find("#" + listItemParentGroup));
       }
 
       return true;
@@ -1033,9 +935,9 @@ this.Gws_Schedule_Todo_Index = (function () {
       return false;
     }
 
-    var parentGroup = $listItemHeader.data("parent");
-    if (parentGroup) {
-      return this.examineToShow(this.$el.find("#" + parentGroup));
+    var listItemHeaderParentGroup = $listItemHeader.data("parent");
+    if (listItemHeaderParentGroup) {
+      return this.examineToShow(this.$el.find("#" + listItemHeaderParentGroup));
     }
 
     return true;
@@ -1085,7 +987,7 @@ Gws_Schedule_Csv.prototype.render = function () {
       self.$importLog.html($('<span />', { class: "import-loading" }).text(i18next.t("ss.notice.uploading")));
       SS_AddonTabs.show('#import-result');
     },
-    success: function(data, status) {
+    success: function(data, _status) {
       self.renderResult(data);
     },
     error: function(xhr, status, error) {
@@ -1384,7 +1286,7 @@ this.Gws_Schedule_FacilityReservation = (function () {
           self.$html_facility_reservation = $('<div></div>').html(data);
           if(self.$html_facility_reservation.find(".reservation-valid.free").length) {
             self.proceed();
-            $('form#item-form').submit();
+            $('form#item-form')[0].requestSubmit();
           } else {
             self.confirmFacilityReservation();
           }
@@ -1475,7 +1377,7 @@ this.Gws_Schedule_FacilityReservation = (function () {
     $('#cboxLoadedContent .send .confirm').on('click', function(ev) {
       self.proceed();
       if (self.item_submit) {
-        $('form#item-form').submit();
+        $('form#item-form')[0].requestSubmit();
       }
       ev.preventDefault();
       return false;
@@ -1640,7 +1542,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     $(".preparation").on("click", function () {
       var $this, action, confirm, form, token;
@@ -1660,7 +1562,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     $(".question_not_applicable").on("click", function () {
       var form, id, token;
@@ -1678,7 +1580,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
     return $(".answered").on("click", function () {
       var form, id, token;
@@ -1696,7 +1598,7 @@ this.Gws_Monitor_Topic = (function () {
         value: token,
         type: "hidden"
       }));
-      return form.appendTo(document.body).submit();
+      return form.appendTo(document.body)[0].requestSubmit();
     });
   };
 
@@ -1788,7 +1690,10 @@ Gws_Portal.prototype.addItems = function(items) {
 };
 
 Gws_Portal.prototype.addItem = function(item) {
-  var id = item._id.$oid;
+  var id = item._id;
+  if (id !== null && typeof id === 'object' && "$oid" in id) {
+    id = id.$oid
+  }
 
   var li = this.gs.add_widget(
     '<li class="portlet-item" data-id="' + id + '"></li>',
@@ -1900,7 +1805,7 @@ this.Gws_Discussion_Thread = (function () {
       a.text(humanizedName);
       a.attr("href", "/.u" + user + "/apis/temp_files/" + fileId + "/view");
       input.attr("value", fileId);
-      icon.on("click", function (e) {
+      icon.on("click", function (_e) {
         $(this).parent("span").remove();
         if ($(selected).find("[data-file-id]").length <= 0) {
           $(selected).hide();
@@ -1961,6 +1866,26 @@ this.Gws_Discussion_Thread = (function () {
       $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]').on('change', setContributor);
       return $(this).find('.discussion-contributor' + topic + ' input[name="tmp[contributor]"]:checked').each(setContributor);
     });
+
+    // bookmark
+    $(".bookmark-comment").on("click", function () {
+      var $warp = $(this);
+      var url = $warp.data("url");
+      $.ajax({
+        url: url,
+        type: "POST",
+        data: {
+          authenticity_token: $('meta[name="csrf-token"]').attr('content')
+        },
+        success: function(data) {
+          $warp.html(data);
+        },
+        error: function (xhr, _status, _error) {
+          alert(xhr.responseJSON.join("\n"));
+        },
+      });
+      return false;
+    });
   };
 
   return Gws_Discussion_Thread;
@@ -1990,7 +1915,7 @@ this.Gws_Discussion_Unseen = (function () {
   Gws_Discussion_Unseen.checkMessage = function () {
     return $.ajax({
       url: Gws_Discussion_Unseen.url,
-      success: function (data, status) {
+      success: function (data, _status) {
         var timestamp;
         timestamp = parseInt(data);
         if (timestamp > Gws_Discussion_Unseen.timestamp) {
@@ -2107,7 +2032,7 @@ Gws_Attendance.prototype.onPunchClicked = function(action, message) {
   $form = $('<form/>', { action: action, method: 'post' });
   $form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden" }));
   $('body').append($form);
-  $form.submit();
+  $form[0].requestSubmit();
 };
 
 Gws_Attendance.prototype.onEditClicked = function(action, message) {
@@ -2190,21 +2115,21 @@ Gws_Attendance.prototype.onClickCell = function($cell, urlTemplate) {
 
   var showsToolbar = false;
   if (mode === "punch" && punchable && this.options.punchUrl) {
-    var url = this.options.punchUrl;
-    url = url.replace(':type', type);
+    var punchUrl = this.options.punchUrl;
+    punchUrl = punchUrl.replace(':type', type);
 
     this.$toolbar.find('.edit').hide();
-    this.$toolbar.find('.punch').attr('href', url).show();
+    this.$toolbar.find('.punch').attr('href', punchUrl).show();
     showsToolbar = true;
   }
 
   if (mode === "edit" && editable) {
-    var url = urlTemplate;
-    url = url.replace(':day', day);
-    url = url.replace(':type', type);
+    var editUrl = urlTemplate;
+    editUrl = editUrl.replace(':day', day);
+    editUrl = editUrl.replace(':type', type);
 
     this.$toolbar.find('.punch').hide();
-    this.$toolbar.find('.edit').attr('href', url).show();
+    this.$toolbar.find('.edit').attr('href', editUrl).show();
     showsToolbar = true;
   }
 
@@ -2259,11 +2184,11 @@ Gws_Attendance_Portlet.prototype.punch = function($button, fieldName) {
     method: 'POST',
     data: { ref: this.options.ref },
     dataType: 'json',
-    success: function(data) {
+    success: function(_data) {
       alert(_this.options.successMessage);
       location.reload();
     },
-    error: function(xhr, status, error) {
+    error: function(xhr, _status, _error) {
       alert(xhr.responseJSON.join("\n"));
     },
     complete: function() {
@@ -2276,7 +2201,7 @@ Gws_Attendance_Portlet.prototype.edit = function($button, fieldName) {
   $button.attr('disabled', 'disabled');
 
   var url = this.options.editUrl.replace(':TYPE', fieldName);
-  $a = $('<a/>', { href: url });
+  var $a = $('<a/>', { href: url });
   $a.colorbox({
     open: true,
     width: '90%',
@@ -2313,7 +2238,7 @@ this.Gws_Presence_User = (function () {
           Gws_Presence_User.changedState(id, data);
           $(".presence-state-selector").hide();
         },
-        error: function (xhr, status, error) {
+        error: function (xhr, _status, _error) {
           alert(xhr.responseJSON.join("\n"));
         },
       });
@@ -2327,6 +2252,7 @@ this.Gws_Presence_User = (function () {
       return false;
     });
     // ajax-text-field
+    /*
     $(".ajax-text-field").on("click", function(){
       Gws_Presence_User.toggleForm(this);
       return false;
@@ -2335,6 +2261,7 @@ this.Gws_Presence_User = (function () {
       $(this).prev(".ajax-text-field").trigger('click');
       return false;
     })
+    */
   };
 
   Gws_Presence_User.changedState = function (id, data) {
@@ -2353,13 +2280,15 @@ this.Gws_Presence_User = (function () {
     selector.find('[data-value!="' + presence_state + '"] .selected-icon').css('visibility', 'hidden');
   }
 
+  // ajax-text-field
+  /*
   Gws_Presence_User.toggleForm = function (ele) {
     var state = $(ele).attr("data-tag-state");
     var original = $(ele).attr("data-original-tag");
     var form = $(ele).attr("data-form-tag");
     var value = $(ele).text() || $(ele).val();
     var name = $(form).attr("name");
-    var id = $(form).attr("data-id");
+    // var id = $(form).attr("data-id");
     var url = $(form).attr("data-url");
     var errorOccurred = false;
 
@@ -2368,7 +2297,7 @@ this.Gws_Presence_User = (function () {
       form.attr("data-original-tag", $(ele).attr("data-original-tag"));
       form.attr("data-form-tag", $(ele).attr("data-form-tag"));
       form.val(value);
-      form.focusout(function (e) {
+      form.on("focusout", function (_e) {
         if (errorOccurred) {
           return true;
         }
@@ -2385,14 +2314,14 @@ this.Gws_Presence_User = (function () {
             $(form).val(data[name]);
             Gws_Presence_User.toggleForm(form);
           },
-          error: function (xhr, status, error) {
+          error: function (xhr, _status, _error) {
             alert(xhr.responseJSON.join("\n"));
             errorOccurred = true;
           },
         });
         return false;
       });
-      form.keypress(function (e) {
+      form.on("keypress", function (e) {
         if (e.which == SS.KEY_ENTER) {
           var data = {
             _method: 'put',
@@ -2407,7 +2336,7 @@ this.Gws_Presence_User = (function () {
               $(form).val(data[name]);
               Gws_Presence_User.toggleForm(form);
             },
-            error: function (xhr, status, error) {
+            error: function (xhr, _status, _error) {
               alert(xhr.responseJSON.join("\n"));
               errorOccurred = true;
             },
@@ -2434,6 +2363,7 @@ this.Gws_Presence_User = (function () {
       $(".ajax-text-field[data-id='" + original.attr("data-id") + "'][data-name='" + original.attr("data-name") + "']").text(value);
     }
   };
+  */
 
   return Gws_Presence_User;
 })();
@@ -2485,7 +2415,7 @@ this.Gws_Presence_User_Reload = (function () {
           $(".group-users .list-head time").replaceWith(time);
           time.show();
         },
-        error: function (xhr, status, error) {
+        error: function (_xhr, _status, _error) {
           $(".group-users .data-table-wrap").html("");
         }
       });
@@ -2965,6 +2895,64 @@ Gws_Affair_ShiftRecords.prototype.onClickCell = function($cell) {
   this.$toolbar.show();
   this.$toolbar.offset(offset);
 };
+Gws_Workflow2_Approver = function () {
+};
+
+Gws_Workflow2_Approver.prototype.renderAgentForm = function(params) {
+  this.superiorsUrl = params.url;
+  this.errorHtml = $("<span/>", { class: "error" }).text(i18next.t("gws/workflow2.errors.messages.superior_is_not_found"));
+
+  var _this = this;
+  $('.agent-type-agent .ajax-selected').on('change', function() {
+    _this.changeApprovers();
+  });
+
+  $('input[name="item[workflow_agent_type]"]').on('change', function() {
+    var type = $(this).val();
+    if (type === 'myself') {
+      $('.myself-approvers').removeClass('hide');
+      $('.agent-approvers').addClass('hide');
+    } else {
+      $('.myself-approvers').addClass('hide');
+      $('.agent-approvers').removeClass('hide');
+    }
+    _this.renderSubmitButton();
+  });
+};
+
+Gws_Workflow2_Approver.prototype.changeApprovers = function() {
+  var _this = this;
+  var userId = $('.change_agent_type table.index input').val();
+
+  if (!userId) {
+    var $message = $("<span />", { class: "info" }).text(i18next.t("gws/workflow2.errors.messages.plz_select_delegatee"));
+    $('.gws-workflow-file-approver-item .agent-approvers').html($message);
+    _this.renderSubmitButton();
+    return;
+  }
+
+  $.ajax({
+    url: this.superiorsUrl.replace('$id', userId),
+    dataType: "json",
+    beforeSend: function() {
+      $('.gws-workflow-file-approver-item .agent-approvers').text('Loading..');
+    },
+    success: function(user) {
+      $('.gws-workflow-file-approver-item .agent-approvers').text(user.long_name);
+    },
+    error: function() {
+      $('.gws-workflow-file-approver-item .agent-approvers').html(_this.errorHtml);
+    },
+    complete: function() {
+      _this.renderSubmitButton();
+    }
+  });
+};
+
+Gws_Workflow2_Approver.prototype.renderSubmitButton = function() {
+  var disabled = $('.gws-workflow-file-approver-item').find('.user:not(.hide)').find('.error,.info').length > 0;
+  $('form#workflow-request').find('.btn-primary').attr({ 'disabled': (disabled ? 'disabled': null) });
+};
 
 
 
@@ -3014,4 +3002,11 @@ SS.ready(function () {
   });
 
   Gws_Member.render();
+
+  // user detail
+  $(".user-detail").colorbox({
+    maxWidth: "80%",
+    maxHeight: "80%",
+    fixed: true
+  });
 });

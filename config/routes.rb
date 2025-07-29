@@ -58,6 +58,7 @@ Rails.application.routes.draw do
     post  "otp_login" => "mfa_login#otp_login"
     post  "otp_setup" => "mfa_login#otp_setup"
     get   "redirect" => "login#redirect", as: :redirect
+    get   "login_image" => "login_image#index", as: :login_image
     resources :public_notices, only: [:index, :show] do
       get :frame_content, on: :member
     end
@@ -92,6 +93,12 @@ Rails.application.routes.draw do
       # OAuth2
       get "oauth2/authorize" => "oauth2#authorize"
       post "oauth2/token" => "oauth2#token"
+    end
+  end
+
+  namespace :cms do
+    namespace :apis do
+      get 'youtube_title', to: 'youtube#fetch_title'
     end
   end
 end

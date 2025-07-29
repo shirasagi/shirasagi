@@ -62,7 +62,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           within "#ss-preview" do
             within ".ss-preview-wrap-column-edit-mode" do
-              wait_event_to_fire "ss:inplaceModeChanged" do
+              wait_for_event_fired "ss:inplaceModeChanged" do
                 click_on I18n.t("cms.inplace_edit")
               end
             end
@@ -71,7 +71,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           #
           # Form Check
           #
-          wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+          wait_for_event_fired("ss:inplaceEditFrameInitialized") do
             page.within_frame page.first("#ss-preview-form-palette") do
               within ".column-value-palette" do
                 click_on column1.name
@@ -133,7 +133,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           within "#ss-preview" do
             within ".ss-preview-wrap-column-edit-mode" do
-              wait_event_to_fire "ss:inplaceModeChanged" do
+              wait_for_event_fired "ss:inplaceModeChanged" do
                 click_on I18n.t("cms.inplace_edit")
               end
             end

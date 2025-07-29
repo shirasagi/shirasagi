@@ -49,6 +49,19 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       @rs2.format = "CSV"
       @rs2.save!
 
+      # a closed resource
+      @rs3 = page_dataset.resources.new
+      @rs3.license = license
+      @rs3.name = "shift_jis.csv"
+      @rs3.text = "resource3"
+      @rs3.state = "closed"
+      Fs::UploadedFile.create_from_file(csv_path, basename: "spec") do |file|
+        file.original_filename = "shift_jis.csv"
+
+        @rs3.in_file = file
+        @rs3.save!
+      end
+
       # a url resource
       @urs1 = page_dataset.url_resources.new
       @urs1.license = license
@@ -65,7 +78,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       end
 
       page_dataset.reload
-      expect(page_dataset.resources.count).to eq 2
+      expect(page_dataset.resources.count).to eq 3
       expect(page_dataset.url_resources.count).to eq 1
 
       Fs.rm_rf page_dataset.path
@@ -79,8 +92,8 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
       within "div#dataset-tabs-#{node_dataset.id}" do
         within "article#cms-tab-#{node_dataset.id}-0-view" do
           within ".resource[data-uuid='#{@rs1.uuid}']" do
-            expect(page).to have_css(".info .name", text: "#{@rs1.name} (#{@rs1.format} #{@rs1.size.to_s(:human_size)})")
-            expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
+            expect(page).to have_css(".info .name", text: "#{@rs1.name} (#{@rs1.format} #{@rs1.size.to_fs(:human_size)})")
+            expect(page).to have_css(".info-detail .info-list__content", text: "0#{I18n.t("opendata.labels.time")}")
             expect(page).to have_css(".icons .license img[src=\"#{@rs1.license.file.url}\"]")
             expect(page).to have_css(".icons .content-wrap a.content", text: I18n.t("opendata.labels.preview"))
             # シラサギ・ハーベストは data-url が指す URL からリソースをダウンロードする。
@@ -95,13 +108,13 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
             expect(page).to have_css(".icons .download-wrap a.download[href='#{href}']", text: label)
             expect(page).to have_css(".icons .download-wrap a.download[data-url='#{data_url}']", text: label)
             expect(page).to have_css(".icons .clipboard-wrap a.ss-clipboard-copy", text: I18n.t("opendata.links.copy_url"))
-            expect(page).to have_css(".text", text: @rs1.text)
+            expect(page).to have_css(".info .info__text", text: @rs1.text)
           end
 
           within ".resource[data-uuid='#{@rs2.uuid}']" do
             name = "#{@rs2.name} (#{@rs2.format} #{I18n.t("opendata.labels.external_link")})"
             expect(page).to have_css(".info .name", text: name)
-            expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
+            expect(page).to have_css(".info-detail .info-list__content", text: "0#{I18n.t("opendata.labels.time")}")
             expect(page).to have_css(".icons .license img[src=\"#{@rs2.license.file.url}\"]")
             expect(page).to have_no_css(".icons .content-wrap")
             # シラサギ・ハーベストは data-url が指す URL からリソースをダウンロードする。
@@ -113,13 +126,15 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
             expect(page).to have_css(".icons .download-wrap a.download[href='#{href}']", text: label)
             expect(page).to have_css(".icons .download-wrap a.download[data-url='#{data_url}']", text: label)
             expect(page).to have_css(".icons .clipboard-wrap a.ss-clipboard-copy", text: I18n.t("opendata.links.copy_url"))
-            expect(page).to have_css(".text", text: @rs2.text)
+            expect(page).to have_css(".info .info__text", text: @rs2.text)
           end
 
+          expect(page).to have_no_css(".resource[data-uuid='#{@rs3.uuid}']")
+
           within ".url-resource[data-uuid='#{@urs1.uuid}']" do
-            name = "#{@urs1.name} (#{@urs1.format} #{@urs1.size.to_s(:human_size)})"
+            name = "#{@urs1.name} (#{@urs1.format} #{@urs1.size.to_fs(:human_size)})"
             expect(page).to have_css(".info .name", text: name)
-            expect(page).to have_no_css(".info .download-count")
+            expect(page).to have_no_css(".info-detail .info-list__content", text: "0#{I18n.t("opendata.labels.time")}")
             expect(page).to have_css(".icons .license img[src=\"#{@urs1.license.file.url}\"]")
             expect(page).to have_css(".icons .content-wrap a.content", text: I18n.t("opendata.labels.preview"))
             # シラサギ・ハーベストは data-url が指す URL からリソースをダウンロードする。
@@ -131,7 +146,7 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
             expect(page).to have_css(".icons .download-wrap a.download[href='#{href}']", text: label)
             expect(page).to have_css(".icons .download-wrap a.download[data-url='#{data_url}']", text: label)
             expect(page).to have_css(".icons .clipboard-wrap a.ss-clipboard-copy", text: I18n.t("opendata.links.copy_url"))
-            expect(page).to have_css(".text", text: @urs1.text)
+            expect(page).to have_css(".info .info__text", text: @urs1.text)
           end
         end
       end
@@ -218,10 +233,10 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
         visit page_dataset.full_url
       end
       within ".resource[data-uuid='#{@rs1.uuid}']" do
-        expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
+        expect(page).to have_css(".info-detail .info-list__content", text: "0#{I18n.t("opendata.labels.time")}")
       end
       within ".resource[data-uuid='#{@rs2.uuid}']" do
-        expect(page).to have_css(".info .download-count", text: "0#{I18n.t("opendata.labels.time")}")
+        expect(page).to have_css(".info-detail .info-list__content", text: "0#{I18n.t("opendata.labels.time")}")
       end
 
       Timecop.freeze(now + Opendata::Resource::DOWNLOAD_CACHE_LIFETIME + 1.minute) do
@@ -230,10 +245,10 @@ describe "opendata_agents_pages_dataset", type: :feature, dbscope: :example, js:
           visit page_dataset.full_url
         end
         within ".resource[data-uuid='#{@rs1.uuid}']" do
-          expect(page).to have_css(".info .download-count", text: "1#{I18n.t("opendata.labels.time")}")
+          expect(page).to have_css(".info-detail .info-list__content", text: "1#{I18n.t("opendata.labels.time")}")
         end
         within ".resource[data-uuid='#{@rs2.uuid}']" do
-          expect(page).to have_css(".info .download-count", text: "1#{I18n.t("opendata.labels.time")}")
+          expect(page).to have_css(".info-detail .info-list__content", text: "1#{I18n.t("opendata.labels.time")}")
         end
       end
     end

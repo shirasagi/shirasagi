@@ -2,10 +2,13 @@ module Cms::CrudFilter
   extend ActiveSupport::Concern
   include SS::CrudFilter
   include Cms::LockFilter
+  include Cms::SyntaxCheckable
 
   included do
     menu_view "cms/crud/menu"
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy]
+    before_action :set_selected_items, only: [:close_all, :publish_all, :destroy_all, :disable_all, :change_state_all]
+    helper_method :ignore_alert_to_contains_urls?, :ignore_alert_to_syntax_check?
   end
 
   private
@@ -79,6 +82,48 @@ module Cms::CrudFilter
     entries.size != @items.size
   end
 
+  def check_contains_urls_for_items(items)
+    # 被リンクチェック
+    item_errors = {}
+    items.each do |item|
+      contains_urls = Cms.contains_urls(item, site: @cur_site)
+      next unless contains_urls.present?
+      item_errors[item.id] ||= {}
+      if ignore_alert_to_contains_urls?
+        item_errors[item.id][:contains_urls_error] = t("ss.confirm.contains_links_in_file_ignoring_alert_close")
+      else
+        item_errors[item.id][:contains_urls_error] = t("ss.confirm.contains_links_in_file_close")
+      end
+    end
+    item_errors
+  end
+
+  def check_branch_page_for_items(items)
+    # 差し替えページのチェック
+    item_errors = {}
+    items.each do |item|
+      next unless item.branches.present?
+      item_errors[item.id] ||= {}
+      item_errors[item.id][:branch_page_error] = t("errors.messages.branch_is_already_existed")
+    end
+    item_errors
+  end
+
+  def check_syntax_for_items(items)
+    # アクセシビリティチェック
+    item_errors = {}
+    items.each do |item|
+      @item = item
+      item_errors[item.id] ||= {}
+      if syntax_check
+        next
+      else
+        item_errors[item.id][:syntax_error] = t("errors.messages.check_html")
+      end
+    end
+    item_errors
+  end
+
   public
 
   def index
@@ -137,7 +182,7 @@ module Cms::CrudFilter
     raise "400" if @selected_items.blank?
 
     if params[:destroy_all]
-      render_confirmed_all(destroy_items, location: request.path)
+      render_confirmed_all(destroy_items, location: SS.request_path(request))
       return
     end
 
@@ -173,7 +218,7 @@ module Cms::CrudFilter
 
     @change_state = params[:state]
     if params[:change_state_all]
-      render_confirmed_all(change_items_state, location: request.path)
+      render_confirmed_all(change_items_state, location: SS.request_path(request))
       return
     end
 
@@ -181,5 +226,59 @@ module Cms::CrudFilter
       format.html { render "cms/crud/change_state_all" }
       format.json { head json: errors }
     end
+  end
+
+  def publish_all
+    raise "400" if @selected_items.blank?
+
+    @change_state = params[:state]
+    @items = @selected_items.to_a
+
+    # 差し替えページのチェック
+    @item_errors = check_branch_page_for_items(@items)
+    # アクセシビリティチェック
+    @item_errors.deep_merge!(check_syntax_for_items(@items))
+
+    if params[:change_state_all]
+      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.published"))
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/pages/publish_all" }
+      format.json { render json: @items.map { |item| { id: item.id, errors: @item_errors[item.id] || [] } } }
+    end
+  end
+
+  def close_all
+    raise "400" if @selected_items.blank?
+
+    @change_state = params[:state]
+    @items = @selected_items.to_a
+
+    # 被リンクチェック
+    @item_errors = (check_contains_urls_for_items(@items))
+    # 差し替えページのチェック
+    @item_errors.deep_merge!(check_branch_page_for_items(@items))
+    # アクセシビリティチェック
+    @item_errors.deep_merge!(check_syntax_for_items(@items))
+
+    if params[:change_state_all]
+      render_confirmed_all(change_items_state, location: url_for(action: :index), notice: t("ss.notice.depublished"))
+      return
+    end
+
+    respond_to do |format|
+      format.html { render "cms/pages/close_all" }
+      format.json { render json: @items.map { |item| { id: item.id, errors: @item_errors[item.id] || [] } } }
+    end
+  end
+
+  def ignore_alert_to_contains_urls?
+    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_alert))
+  end
+
+  def ignore_alert_to_syntax_check?
+    @cur_user.cms_role_permit_any?(@cur_site, %w(edit_cms_ignore_syntax_check))
   end
 end

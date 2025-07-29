@@ -40,7 +40,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       inquiry_sent_html: inquiry_sent_html,
       notice_state: 'enabled',
       notice_content: 'include_answers',
-      notice_email: 'notice@example.jp',
+      notice_emails: 'notice@example.jp',
       from_name: 'admin',
       from_email: 'admin@example.jp',
       reply_state: 'enabled',

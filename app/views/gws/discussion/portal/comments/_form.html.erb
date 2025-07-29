@@ -1,0 +1,15 @@
+<% @crud_buttons = proc do |f| %>
+  <%= f.submit t("ss.buttons.save"), class: 'btn-primary save', data: { disable_with: t("ss.buttons.saving") } %>
+  <%= f.button t("ss.buttons.cancel"), class: 'btn-default', type: :reset, onclick: "location.href='#{index_path}'; return false;" %>
+<% end %>
+
+<dl class="see">
+  <dt class="required"><%= @model.t :name %></dt>
+  <dd>
+    <% if @item.depth.to_i >= 3 %>
+      <%= @item.name %>
+    <% else %>
+      <%= f.text_field :name %>
+    <% end %>
+  </dd>
+</dl>

@@ -22,9 +22,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
       visit cms_all_contents_path(site: site)
       click_on I18n.t("ss.buttons.download")
 
-      expect(page.response_headers["Cache-Control"]).to include "no-store"
-      expect(page.response_headers["Transfer-Encoding"]).to eq "chunked"
-      csv = ::SS::ChunkReader.new(page.html).to_a.join
+      csv = page.html
       csv = csv.encode("UTF-8", "SJIS")
       csv = ::CSV.parse(csv, headers: true)
 
@@ -65,7 +63,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
           end
           click_on I18n.t("ss.import")
         end
-        expect(page).to have_css("#notice", text: I18n.t('ss.notice.started_import'))
+        wait_for_notice I18n.t('ss.notice.started_import')
 
         expect(enqueued_jobs.length).to eq 1
         enqueued_jobs.first.tap do |enqueued_job|
@@ -132,9 +130,7 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
       click_on I18n.t("cms.all_content.sampling_tab")
       click_on I18n.t("ss.buttons.download")
 
-      expect(page.response_headers["Cache-Control"]).to include "no-store"
-      expect(page.response_headers["Transfer-Encoding"]).to eq "chunked"
-      csv = ::SS::ChunkReader.new(page.html).to_a.join
+      csv = page.html
       csv.force_encoding("UTF-8")
       csv = csv[1..-1]
       SS::Csv.open(StringIO.new(csv)) do |csv|

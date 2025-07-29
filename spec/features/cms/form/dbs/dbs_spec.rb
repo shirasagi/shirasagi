@@ -23,7 +23,7 @@ describe Cms::Form::DbsController, type: :feature, dbscope: :example, js: true d
         select article_node.name, from: "item[node_id]"
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # edit
       visit cms_form_dbs_path(site)
@@ -32,14 +32,14 @@ describe Cms::Form::DbsController, type: :feature, dbscope: :example, js: true d
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # delete
       click_on I18n.t('ss.links.delete')
       within 'form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Cms::FormDb.count).to eq 0
     end
   end

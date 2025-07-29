@@ -47,9 +47,9 @@ Cms_UploadFileOrder.prototype.changeFileOrder = function (selectedVal) {
 
 Cms_UploadFileOrder.prototype.appendOrderedFiles = function ($filesEl) {
   if (this.addonName === 'file') {
-    this.$el.find('#selected-files').append($filesEl);
+    this.$el.find('#selected-files').append($filesEl).trigger("change");
   } else {
     // columsForm
-    this.$el.find('.column-value-files').append($filesEl);
+    this.$el.find('.column-value-files').append($filesEl).trigger("change");
   }
 };

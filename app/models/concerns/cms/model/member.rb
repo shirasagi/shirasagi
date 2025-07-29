@@ -6,6 +6,7 @@ module Cms::Model::Member
   include Cms::SitePermission
 
   OAUTH_PROVIDER_TWITTER = 'twitter'.freeze
+  OAUTH_PROVIDER_TWITTER2 = 'twitter2'.freeze
   OAUTH_PROVIDER_FACEBOOK = 'facebook'.freeze
   OAUTH_PROVIDER_YAHOOJP = 'yahoojp'.freeze
   OAUTH_PROVIDER_YAHOOJP_V2 = 'yahoojp_v2'.freeze
@@ -13,7 +14,7 @@ module Cms::Model::Member
   OAUTH_PROVIDER_GITHUB = 'github'.freeze
   OAUTH_PROVIDER_LINE = 'line'.freeze
   OAUTH_PROVIDERS = [
-    OAUTH_PROVIDER_TWITTER, OAUTH_PROVIDER_FACEBOOK, OAUTH_PROVIDER_YAHOOJP,
+    OAUTH_PROVIDER_TWITTER, OAUTH_PROVIDER_TWITTER2, OAUTH_PROVIDER_FACEBOOK, OAUTH_PROVIDER_YAHOOJP,
     OAUTH_PROVIDER_YAHOOJP_V2, OAUTH_PROVIDER_GOOGLE_OAUTH2, OAUTH_PROVIDER_GITHUB,
     OAUTH_PROVIDER_LINE
   ].freeze
@@ -93,7 +94,7 @@ module Cms::Model::Member
   def authorized?
     enabled?
   end
-  deprecate :authorized?
+  deprecate :authorized?, deprecator: SS.deprecator
 
   def email_type_options
     %w(text html).map { |m| [ I18n.t("cms.options.email_type.#{m}"), m ] }.to_a

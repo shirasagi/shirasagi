@@ -6,7 +6,7 @@ class Gws::Schedule::MainController < ApplicationController
     path = params.dig(:calendar, :path)
     if path.present? && trusted_url?(path)
       uri = ::Addressable::URI.parse(path)
-      uri.query = { calendar: redirection_calendar_params }.to_param
+      uri.query = redirection_calendar_query.to_param
       redirect_to uri.request_uri
       return
     end

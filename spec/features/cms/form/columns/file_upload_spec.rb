@@ -8,226 +8,38 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
 
   before { login_cms_user }
 
-  context 'with image' do
+  context 'basic crud' do
     it do
-      #
-      # Create
-      #
       visit cms_form_path(site, form)
       click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
-      within ".cms-dropdown-menu" do
-        click_on I18n.t('cms.columns.cms/file_upload')
-      end
 
-      within 'form#item-form' do
+      within '.gws-column-list-toolbar[data-placement="top"]' do
+        wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/file_upload') }
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      within '.gws-column-form' do
         fill_in 'item[name]', with: name
-        select I18n.t('cms.options.column_file_type.image'), from: 'item[file_type]'
+        choose I18n.t('cms.options.column_file_type.image')
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
+      wait_for_notice I18n.t('ss.notice.saved')
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
+        expect(item.required).to eq 'required'
         expect(item.file_type).to eq 'image'
       end
 
-      #
-      # Read & Update
-      #
-      visit cms_form_columns_path(site, form)
-      click_on name
-      click_on I18n.t('ss.links.edit')
-      within 'form#item-form' do
-        fill_in 'item[tooltips]', with: tooltips
-        click_on I18n.t('ss.buttons.save')
+      wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
+      within_dialog do
+        find('.save').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
-      Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item.name).to eq name
-        expect(item.tooltips).to eq [tooltips]
-        expect(item.file_type).to eq 'image'
-      end
+      wait_for_notice I18n.t('ss.notice.saved')
 
-      #
-      # Delete
-      #
-      visit cms_form_columns_path(site, form)
-      click_on name
-      click_on I18n.t('ss.links.delete')
-      within 'form' do
-        click_on I18n.t('ss.buttons.delete')
+      page.accept_confirm do
+        find('.btn-gws-column-item-delete').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
-    end
-  end
-
-  context 'with video' do
-    it do
-      #
-      # Create
-      #
-      visit cms_form_path(site, form)
-      click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
-      within ".cms-dropdown-menu" do
-        click_on I18n.t('cms.columns.cms/file_upload')
-      end
-
-      within 'form#item-form' do
-        fill_in 'item[name]', with: name
-        select I18n.t('cms.options.column_file_type.video'), from: 'item[file_type]'
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
-      Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item.name).to eq name
-        expect(item.file_type).to eq 'video'
-      end
-
-      #
-      # Read & Update
-      #
-      visit cms_form_columns_path(site, form)
-      click_on name
-      click_on I18n.t('ss.links.edit')
-      within 'form#item-form' do
-        fill_in 'item[tooltips]', with: tooltips
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
-      Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item.name).to eq name
-        expect(item.tooltips).to eq [tooltips]
-        expect(item.file_type).to eq 'video'
-      end
-
-      #
-      # Delete
-      #
-      visit cms_form_columns_path(site, form)
-      click_on name
-      click_on I18n.t('ss.links.delete')
-      within 'form' do
-        click_on I18n.t('ss.buttons.delete')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
-    end
-  end
-
-  context 'with attachment' do
-    it do
-      #
-      # Create
-      #
-      visit cms_form_path(site, form)
-      click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
-      within ".cms-dropdown-menu" do
-        click_on I18n.t('cms.columns.cms/file_upload')
-      end
-
-      within 'form#item-form' do
-        fill_in 'item[name]', with: name
-        select I18n.t('cms.options.column_file_type.attachment'), from: 'item[file_type]'
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
-      Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item.name).to eq name
-        expect(item.file_type).to eq 'attachment'
-      end
-
-      #
-      # Read & Update
-      #
-      visit cms_form_columns_path(site, form)
-      click_on name
-      click_on I18n.t('ss.links.edit')
-      within 'form#item-form' do
-        fill_in 'item[tooltips]', with: tooltips
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
-      Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item.name).to eq name
-        expect(item.tooltips).to eq [tooltips]
-        expect(item.file_type).to eq 'attachment'
-      end
-
-      #
-      # Delete
-      #
-      visit cms_form_columns_path(site, form)
-      click_on name
-      click_on I18n.t('ss.links.delete')
-      within 'form' do
-        click_on I18n.t('ss.buttons.delete')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
-    end
-  end
-
-  context 'with banner' do
-    it do
-      #
-      # Create
-      #
-      visit cms_form_path(site, form)
-      click_on I18n.t('cms.buttons.manage_columns')
-      wait_event_to_fire("ss:dropdownOpened") { click_on I18n.t('ss.links.new') }
-      within ".cms-dropdown-menu" do
-        click_on I18n.t('cms.columns.cms/file_upload')
-      end
-
-      within 'form#item-form' do
-        fill_in 'item[name]', with: name
-        select I18n.t('cms.options.column_file_type.banner'), from: 'item[file_type]'
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
-      Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item.name).to eq name
-        expect(item.file_type).to eq 'banner'
-      end
-
-      #
-      # Read & Update
-      #
-      visit cms_form_columns_path(site, form)
-      click_on name
-      click_on I18n.t('ss.links.edit')
-      within 'form#item-form' do
-        fill_in 'item[tooltips]', with: tooltips
-        click_on I18n.t('ss.buttons.save')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
-      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
-      Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
-        expect(item.name).to eq name
-        expect(item.tooltips).to eq [tooltips]
-        expect(item.file_type).to eq 'banner'
-      end
-
-      #
-      # Delete
-      #
-      visit cms_form_columns_path(site, form)
-      click_on name
-      click_on I18n.t('ss.links.delete')
-      within 'form' do
-        click_on I18n.t('ss.buttons.delete')
-      end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 0
     end
   end

@@ -35,7 +35,7 @@ this.Cms_Line_Area_Cropper = (function () {
     this.$image = this.$el.find(".image-warp img");
     this.readonly = opts["readonly"];
     this.render();
-  };
+  }
 
   Cms_Line_Area_Cropper.prototype.render = function () {
     var self = this;
@@ -46,14 +46,14 @@ this.Cms_Line_Area_Cropper = (function () {
         zoomOnWheel: false,
         background: true,
         autoCrop: false,
-        ready: function(e) {
+        ready: function(_e) {
           $(".area-names .area-name:first").trigger("click");
           if (self.readonly) {
             self.cropper.disable();
           }
           window.cropper = self.cropper;
         },
-        cropmove: function(e) {
+        cropmove: function(_e) {
           self.setCroppedArea();
         }
       }
@@ -139,7 +139,7 @@ this.Cms_Line_Area_Cropper = (function () {
 this.Cms_Line_Deliver_Condition =  (function () {
   function Cms_Line_Deliver_Condition() {
     this.render();
-  };
+  }
 
   Cms_Line_Deliver_Condition.prototype.render = function () {
     $(".select-deliver-category").on("change", this.toggleDeliverCategory);

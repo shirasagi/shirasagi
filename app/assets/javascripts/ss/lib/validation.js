@@ -9,7 +9,7 @@ this.SS_Validation = (function () {
 
   SS_Validation.render = function () {
 
-    $.each(SS_Validation.labels, function(key, label) {
+    $.each(SS_Validation.labels, function(key, _label) {
       var div = $('<div id="item_' + key + '_errors"></div>');
       var input = $("#item_" + key);
       input.after(div);

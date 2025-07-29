@@ -88,7 +88,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       let!(:item) { create(:article_page, cur_site: site, cur_node: node, layout: layout, form: form, state: state) }
       let(:column1_value1) { unique_id }
       let(:column2_date1) { Date.new(rand(2000..2050), 1, 1) }
-      let(:column2_value1) { I18n.l(column2_date1, format: :picker) }
+      # let(:column2_value1) { I18n.l(column2_date1, format: :picker) }
       let(:column3_label1) { unique_id }
       let(:column3_url1) { "/#{unique_id}/" }
       let(:column4_value1) { Array.new(2) { unique_id } }
@@ -106,13 +106,16 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       let(:column12_caption1) { unique_id }
       let(:column13_youtube_id1) { unique_id }
       let(:column13_url1) { "https://www.youtube.com/watch?v=#{column13_youtube_id1}" }
+      let(:column13_title1) { unique_id }
       let(:column14_page1) { [ selectable_page1, selectable_page2, selectable_page3 ].sample }
 
       it do
         visit cms_preview_path(site: site, path: item.preview_path)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         # start preview editing
-        wait_event_to_fire "ss:inplaceModeChanged" do
+        wait_for_event_fired "ss:inplaceModeChanged" do
           within "#ss-preview" do
             within ".ss-preview-wrap-column-edit-mode" do
               click_on I18n.t("cms.inplace_edit")
@@ -121,12 +124,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         # #1: cms_column_text_field
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column1.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -166,17 +174,22 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #2: cms_column_date_field
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column2.name
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-datefield" do
-              fill_in "item[column_values][][in_wrap][date]", with: column2_value1
+              fill_in_date "item[column_values][][in_wrap][date]", with: column2_date1
             end
 
             click_on I18n.t("ss.buttons.save")
@@ -197,12 +210,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #3: cms_column_url_field2
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column3.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -232,12 +250,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #4: cms_column_text_area
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column4.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -265,12 +288,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #5: cms_column_select
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column5.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -296,12 +324,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #6: cms_column_radio_button
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column6.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -327,12 +360,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #7: cms_column_check_box
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column7.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -358,25 +396,27 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #8: cms_column_file_upload
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column8.name
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#item-form" do
             within ".column-value-cms-column-fileupload" do
               fill_in "item[column_values][][in_wrap][file_label]", with: column8_image_text1
-              wait_cbox_open { click_on I18n.t("ss.links.upload") }
+              # wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
             end
-          end
-          wait_for_cbox do
-            attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_on I18n.t('ss.buttons.attach')
-          end
-          within 'form#item-form' do
+            ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-fileupload"
             within ".column-value-cms-column-fileupload" do
               expect(page).to have_content("keyvisual.gif")
             end
@@ -403,25 +443,26 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #9: cms_column_free
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column9.name
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#item-form" do
             within ".column-value-cms-column-free" do
               fill_in_ckeditor "item[column_values][][in_wrap][value]", with: column9_value1
-              wait_cbox_open { click_on I18n.t("ss.links.upload") }
             end
-          end
-          wait_for_cbox do
-            attach_file 'item[in_files][]', "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            click_on I18n.t('ss.buttons.attach')
-          end
-          within "#item-form" do
+            ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif", addon: ".column-value-cms-column-free"
             within ".column-value-cms-column-free" do
               expect(page).to have_content("keyvisual.gif")
               wait_for_ckeditor_event "item[column_values][][in_wrap][value]", "afterInsertHtml" do
@@ -451,12 +492,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #10: cms_column_headline
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column10.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -486,12 +532,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #11: cms_column_list
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column11.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -519,12 +570,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #12: cms_column_table
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column12.name
             end
           end
+        end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
         end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
@@ -554,17 +610,23 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #13: cms_column_youtube
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column13.name
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
           within "#item-form" do
             within ".column-value-cms-column-youtube" do
               fill_in "item[column_values][][in_wrap][url]", with: column13_url1
+              fill_in "item[column_values][][in_wrap][title]", with: column13_title1
             end
 
             click_on I18n.t("ss.buttons.save")
@@ -575,6 +637,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css("#ss-notice", text: I18n.t("ss.notice.saved"))
         page.execute_script('$("#ss-notice").remove();')
         expect(page).to have_css("[data-column-name='#{column13.name}'] iframe[src='https://www.youtube.com/embed/#{column13_youtube_id1}']")
+        expect(page).to have_css("[data-column-name='#{column13.name}'] iframe[title='#{column13_title1}']")
 
         now_editing_item.reload
         expect(now_editing_item.column_values.count).to eq 13
@@ -582,26 +645,32 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         column_value13 = column_values.last
         expect(column_value13.column_id).to eq column13.id
         expect(column_value13.youtube_id).to eq column13_youtube_id1
+        expect(column_value13.title).to eq column13_title1
         expect(column_value13.order).to eq 12
 
         puts_console_logs if capture_console_logs.any? { |log| log =~ /Uncaught/i }
 
         # #14: cms_column_select_page
-        wait_event_to_fire("ss:inplaceEditFrameInitialized") do
+        wait_for_event_fired("ss:inplaceEditFrameInitialized") do
           within_frame page.first("#ss-preview-form-palette") do
             within ".column-value-palette" do
               click_on column14.name
             end
           end
         end
+        bounding_client_rect("#ss-preview-dialog-frame").tap do |rect|
+          expect(rect).to be_present
+          # ダイアログ内一杯に表示されているか確認
+          expect(rect["width"]).to be > 600
+        end
         within_frame page.first("#ss-preview-dialog-frame") do
-          wait_cbox_open { click_on I18n.t("cms.apis.pages.index") }
-          wait_for_cbox do
+          wait_for_cbox_opened { click_on I18n.t("cms.apis.pages.index") }
+          within_cbox do
             expect(page).to have_css(".list-item", text: selectable_page1.name)
             expect(page).to have_css(".list-item", text: selectable_page2.name)
             expect(page).to have_css(".list-item", text: selectable_page3.name)
             expect(page).to have_no_css(".list-item", text: selectable_page4.name)
-            click_on column14_page1.name
+            wait_for_cbox_closed { click_on column14_page1.name }
           end
           within 'form#item-form' do
             within ".column-value-cms-column-selectpage " do

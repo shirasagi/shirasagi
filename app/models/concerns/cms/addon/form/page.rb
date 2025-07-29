@@ -104,7 +104,6 @@ module Cms::Addon::Form::Page
             "errors.format2", name: column_value.name,
             error: column_value.errors.full_message(attribute, message))
         end
-
         self.errors.add :base, new_message
       end
     end

@@ -112,6 +112,7 @@ module Gws::Addon::Schedule::Facility
       without_deleted.
       exists(duplicate_registered: false).
       where(site_id: site_id).
+      ne(approval_state: "deny").
       any_in(facility_ids: facility_ids)
     if allday?
       plans = plans.where(:end_at.gt => start_on.in_time_zone.beginning_of_day, :start_at.lt => end_on.in_time_zone.end_of_day)

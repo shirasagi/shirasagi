@@ -40,7 +40,7 @@ describe "urgency_layouts", type: :feature, dbscope: :example, js: true do
       page.accept_alert do
         click_on I18n.t('urgency.switch_layout')
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       item1.reload
       item2.reload
@@ -54,7 +54,7 @@ describe "urgency_layouts", type: :feature, dbscope: :example, js: true do
       page.accept_alert do
         click_on I18n.t('urgency.switch_layout')
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       item1.reload
       item2.reload

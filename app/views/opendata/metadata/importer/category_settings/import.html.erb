@@ -1,0 +1,20 @@
+<%= form_for :item, url: { action: :import }, html: { method: :put } do |f| %>
+  <%= error_messages_for :item %>
+
+  <section class="main-box">
+    <header><h2><%= t("ss.import") %></h2></header>
+
+    <dl class="see">
+      <dt><%= t("ss.file") %></dt>
+      <dd>
+        <%= f.hidden_field "item[in_file]", value: "" %>
+        <%= f.file_field :in_file %>
+      </dd>
+    </dl>
+  </section>
+
+  <footer class="send">
+    <%= f.submit t("ss.buttons.import"), class: :save, data: { confirm: "#{t("opendata.messages.harvest_import_category_settings")}#{t("ss.confirm.import")}", disable_with: t("ss.buttons.importing") } %>
+    <%= f.button t("ss.buttons.cancel"), class: 'btn-default', onclick: "location.href='#{opendata_metadata_importer_path(id: @importer.id)}'; return false;" %>
+  </footer>
+<% end %>

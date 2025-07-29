@@ -20,16 +20,18 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
         end
 
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -42,16 +44,17 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_cur_user_profile_path
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
         end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -67,16 +70,17 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_cur_user_profile_path
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
         end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -100,16 +104,17 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
-
+        expect(page).to have_css("nav.user .user-name", text: sys_user.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
         I18n.with_locale(sys_user.lang.to_sym) do
           within ".user-navigation" do
-            wait_event_to_fire("turbo:frame-load") { click_on sys_user.name }
+            wait_for_event_fired("turbo:frame-load") { click_on sys_user.name }
             expect(page).to have_link(I18n.t("ss.logout"), href: sns_logout_path)
             click_on I18n.t("ss.logout")
           end
         end
+        expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
         expect(current_path).to eq sns_login_path
       end
     end
@@ -125,6 +130,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: subject.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
       end
@@ -139,6 +145,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        expect(page).to have_css("nav.user .user-name", text: subject.name)
         expect(current_path).to eq sns_mypage_path
         expect(page).to have_no_css(".login-box")
       end
@@ -153,35 +160,23 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           fill_in "item[password]", with: "pass"
           click_button I18n.t("ss.login")
         end
+        within ".login-box" do
+          expect(page).to have_css(".error-message", text: I18n.t("service.errors.invalid_login"))
+        end
         expect(current_path).not_to eq sns_mypage_path
       end
 
       context "with cms_group domains" do
         let(:domain) { 'www.example.com' }
-        let(:rack_proxy_app) do
-          domain_bind = domain
-          Class.new do
-            cattr_accessor :domain
-            self.domain = domain_bind
-
-            def initialize(app)
-              @app = app
-            end
-
-            def call(env)
-              env["HTTP_X_FORWARDED_HOST"] = self.class.domain
-              @app.call(env)
-            end
+        let(:decorator) do
+          proc do |env|
+            env["HTTP_X_FORWARDED_HOST"] = domain
           end
         end
 
         before do
           cms_group.set(domains: [domain])
-          Sns::LoginController.middleware_stack.use rack_proxy_app
-        end
-
-        after do
-          Sns::LoginController.middleware_stack.delete rack_proxy_app
+          add_request_decorator Sns::LoginController, decorator
         end
 
         it "valid login" do
@@ -220,6 +215,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: password
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css("nav.user .user-name", text: subject.name)
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
     end
@@ -236,6 +232,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: user.in_password
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css("nav.user .user-name", text: user.name)
       expect(current_path).to eq sns_mypage_path
       expect(page).to have_no_css(".login-box")
     end

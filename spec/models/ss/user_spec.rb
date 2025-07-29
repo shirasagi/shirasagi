@@ -108,7 +108,7 @@ describe SS::User, dbscope: :example do
         subject { model.new(entity) }
 
         it do
-          expect { subject.save! }.not_to raise_error Mongoid::Errors::Validations
+          expect { subject.save! }.not_to raise_error
         end
       end
     end

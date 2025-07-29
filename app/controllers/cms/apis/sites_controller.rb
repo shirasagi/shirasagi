@@ -15,7 +15,7 @@ class Cms::Apis::SitesController < ApplicationController
   public
 
   def index
-    @items = @model.all.allow(:read, @cur_user, site: @cur_site)
+    @items = @model.without_deleted.allow(:read, @cur_user, site: @cur_site)
     @items = @items.search(params[:s])
     @items = @items.order_by(_id: -1)
     @items = @items.page(params[:page]).per(50)

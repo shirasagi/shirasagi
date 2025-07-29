@@ -44,11 +44,17 @@ SS.ready(function () {
   SS_Font.render();
   SS_AdobeReader.render();
   SS_Mobile.render();
-  SS_Voice.render();
+  var $voiceTags = $('#ss-voice,[data-tool="ss-voice"]');
+  $voiceTags.each(function (index, voiceTag) {
+    SS.justOnce(voiceTag, "ss-voice", function() {
+      var voiceInstance = new SS_Voice(); // Instantiate SS_Voice for each voiceTag
+      voiceInstance.render($(voiceTag), index); // Pass the voiceTag to the render method
+    });
+  });
   SS_Theme.render();
   SS.renderAjaxBox();
-  SS.part = $(".ss-part").length;
-  if (SS.part === 0) {
+  SS.partCountToLoad = $(".ss-part").length;
+  if (SS.partCountToLoad === 0) {
     SS_Recommend.render();
   }
   $(".ss-part").each(function () {
@@ -72,41 +78,73 @@ this.SS_Kana = (function () {
   SS_Kana.kanaUrl = <%= SS.config.kana.location.to_json %> + "/";
 
   SS_Kana.render = function () {
-    var $kana = $("#ss-kana");
-    if (!$kana[0]) {
-      return;
-    }
-
     if (SS.config["site_url"] && SS.config["kana_url"]) {
       SS_Kana.siteUrl = SS.config["site_url"];
       SS_Kana.kanaUrl = SS.config["kana_url"];
     }
 
-    var pathname = location.pathname;
-    var url, cssClass;
-    if ($("body").data("kana")) {
-      url = SS_Kana.url(pathname, false);
-      url = SS_Translate.url(url);
-      cssClass = "off";
-    } else {
-      url = SS_Translate.url(pathname, false)
-      url = SS_Kana.url(url, true);
-      cssClass = "on";
-    }
-    if (url[0] !== '/') {
-      // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
-      // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
-      return;
-    }
+    const kanaElements = document.querySelectorAll('#ss-kana, [data-tool="ss-kana"]');
+    kanaElements.forEach((kanaElement, index) => {
+      if (!kanaElement) return;
 
-    var html = $kana.html();
-    var $anchor = $("<a />", { class: cssClass, href: "#" + url, rel: "nofollow" }).html(html)
-    $kana.html($anchor);
+      SS.justOnce(kanaElement, "ss-kana", function() {
+        const pathname = location.pathname;
+        let url, cssClass;
+        if (document.body.dataset.kana) {
+          url = SS_Kana.url(pathname, false);
+          url = SS_Translate.url(url);
+          cssClass = "off";
+        } else {
+          url = SS_Translate.url(pathname, false)
+          url = SS_Kana.url(url, true);
+          cssClass = "on";
+        }
+        if (url[0] !== '/') {
+          // "javascript:alert('xss')" のような URL を location.href にセットしてしまうと xss とダイアログが表示されてしまう。
+          // 先頭が "/" かどうかをチェックすることで、この種の脆弱性を防ぐ。
+          return;
+        }
 
-    $anchor.on("click", function(ev) {
-      ev.preventDefault();
-      location.href = url;
-      return false;
+        // legacy：htmlにbuttonが含まれていない　→ a タグを生成
+        if (kanaElement.dataset.toolType === "button") {
+          const buttonId = 'kana_button_' + index;
+          const content = kanaElement.innerHTML;
+          const button = document.createElement('button');
+          button.id = buttonId;
+          button.className = cssClass;
+          button.setAttribute('name', 'kana');
+          button.setAttribute('type', 'button');
+          button.setAttribute('aria-pressed', (cssClass === 'on') ? 'false' : 'true');
+          button.innerHTML = content;
+          kanaElement.innerHTML = '';
+          kanaElement.appendChild(button);
+
+          button.addEventListener('click', function(ev){
+            ev.preventDefault();
+            const expressed = (this.getAttribute('aria-pressed') === 'true') ? 'false' : 'true';
+            this.setAttribute('aria-pressed', expressed);
+            location.href = url;
+          });
+        } else {
+          const anchorId = 'kana_a_' + index;
+          const content = kanaElement.innerHTML;
+          const anchor = document.createElement('a');
+          anchor.id = anchorId;
+          anchor.className = cssClass;
+          anchor.href = '#' + url;
+          anchor.rel = 'nofollow';
+          anchor.innerHTML = content;
+          kanaElement.innerHTML = '';
+          kanaElement.appendChild(anchor);
+
+          anchor.addEventListener("click", function (ev) {
+            ev.preventDefault();
+            const clickedUrl = this.getAttribute('href').substring(1); // Remove '#'
+            location.href = clickedUrl;
+            return false;
+          });
+        }
+      });
     });
   };
 
@@ -131,7 +169,7 @@ this.SS_Kana = (function () {
       url: elem.attr("href"),
       dataType: "html",
       success: function (data) {
-        var body;
+        let body;
         body = $("body");
         body.data("kana", elem.hasClass("on"));
         return body.html(data.replace(/[\s\S]*<body.*?>([\s\S]*)<\/body>[\s\S]*/, "$1"));
@@ -176,78 +214,132 @@ this.SS_Translate = (function () {
 
 })();
 
+//背景色
 this.SS_Theme = (function () {
   function SS_Theme() {
   }
 
   SS_Theme.render = function () {
-    var $theme = $("#ss-theme");
-    if ($theme.length === 0) {
+    const $themes = $('#ss-theme,[data-tool="ss-theme"]');
+    if ($themes.length === 0) {
       return;
     }
 
-    var theme = SS.config["theme"];
-    var inlineStyle = '';
-    for (var cls in theme) {
-      var $a = $theme.find("a." + $.escapeSelector(cls));
-      if (!$a[0]) {
-        continue;
-      }
+    $themes.each(function(index) {
+      const $theme = $(this);
+      SS.justOnce(this, "ss-theme", function() {
+        $theme.attr("aria-busy", "true");
 
-      $a.attr("data-ss-theme", cls);
+        let cls;
+        const theme = SS.config["theme"];
+        let inlineStyle = '';
+        const isButton = $theme.is('[data-tool-type="button"]');
+        for (const cls in theme) {
+          let $el = $theme.find("." + $.escapeSelector(cls));
+          if (!$el.length) continue;
 
-      var v = theme[cls];
-      if (v["css_path"]) {
-        var $styleSheetLink = $('<link />', { rel: "alternate stylesheet", type: "text/css", title: v["name"], href: v["css_path"], class: "ss-theme " + $.escapeSelector(cls), disabled: true });
-        $('head').append($styleSheetLink);
-      }
-      if (v["font_color"] && v["background_color"]) {
-        inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
-      }
-      if (v["default_theme"]) {
-        $theme.find('a').removeClass('active');
-        $a.addClass('active');
-        SS_Theme.switchTheme(cls);
-      }
-      $a.on("click", function () {
-        var $this = $(this);
-        var cls = $this.data("ss-theme");
-        $theme.find('a').removeClass('active');
-        $this.addClass('active');
-        Cookies.set("ss-theme", cls, {
-          expires: 7,
-          path: '/'
-        });
-        SS_Theme.switchTheme(cls);
-        return false;
+          if (isButton) {
+            $el.each(function () {
+              const $el = $(this);
+              // 元の要素(または子要素)に aria-label があれば取得
+              let ariaLabel = $el.attr("aria-label");
+              if (!ariaLabel) {
+                const $labelEl = $el.find("[aria-label]").first();
+                if ($labelEl.length > 0) {
+                  ariaLabel = $labelEl.attr("aria-label");
+                }
+              }
+              const $btn = $("<button>", {
+                type: "button",
+                name: $el.attr("class"),
+                class: $el.attr("class"),
+                "data-ss-theme": cls,
+                "aria-pressed": "false"
+              }).html($el.html());
+              if (ariaLabel) {
+                $btn.attr("aria-label", ariaLabel);
+              }
+              $el.replaceWith($btn);
+            });
+            $el = $theme.find("button." + $.escapeSelector(cls));
+          } else {
+            $el.each(function () {
+              const $el = $(this);
+              const $a = $("<a>", {
+                href: "#",
+                name: $el.attr("class"),
+                class: $el.attr("class"),
+                "data-ss-theme": cls,
+                "aria-pressed": "false"
+              }).html($el.html());
+              $el.replaceWith($a);
+            });
+            $el = $theme.find("a." + $.escapeSelector(cls));
+          }
+          const elId = "ss-theme-" + index + "-" + cls; // Unique ID for the anchor
+          $el.attr("id", elId); // Assign the unique ID to the anchor
+          const v = theme[cls];
+          if (v["css_path"]) {
+            const $styleSheetLink = $('<link />', {
+              rel: "alternate stylesheet",
+              type: "text/css",
+              title: v["name"],
+              href: v["css_path"],
+              class: "ss-theme " + $.escapeSelector(cls),
+              disabled: true
+            });
+            $('head').append($styleSheetLink);
+          }
+          if (v["font_color"] && v["background_color"]) {
+            inlineStyle += SS_Theme.cssTemplate(cls, v["font_color"], v["background_color"]) + "\n";
+          }
+          if (v["default_theme"]) {
+            $theme.find("[data-ss-theme]").removeClass('active');
+            $el.addClass('active').attr('aria-pressed', true);
+            SS_Theme.switchTheme(cls);
+          }
+          $el.on("click", function () {
+            const $this = $(this);
+            const cls = $this.data("ss-theme");
+            $themes.find("[data-ss-theme]").removeClass('active').attr('aria-pressed', false);
+            $themes.find("[data-ss-theme='" + $.escapeSelector(cls) + "']").addClass('active').attr('aria-pressed', true);
+            Cookies.set("ss-theme", cls, {
+              expires: 7,
+              path: '/'
+            });
+            SS_Theme.switchTheme(cls);
+            return false;
+          });
+        }
+
+        if (inlineStyle) {
+          const $inlineStyle = $("<style />", {type: "text/css", class: "ss-theme"}).text(inlineStyle);
+          $("head").append($inlineStyle);
+        }
+
+        cls = Cookies.get("ss-theme");
+        if (!theme[cls]) {
+          Cookies.remove("ss-theme");
+          cls = null;
+        }
+        if (cls) {
+          $theme.find('[data-ss-theme]').removeClass('active').attr('aria-pressed', false);
+          $theme.find('[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active').attr('aria-pressed', true);
+          SS_Theme.switchTheme(cls);
+        }
+
+        $theme.attr("aria-busy", "false").trigger("ss:ready");
       });
-    }
-
-    if (inlineStyle) {
-      var $inlineStyle = $("<style />", { type: "text/css", class: "ss-theme" }).text(inlineStyle);
-      $("head").append($inlineStyle);
-    }
-
-    var cls = Cookies.get("ss-theme");
-    if (!theme[cls]) {
-      Cookies.remove("ss-theme");
-      cls = null;
-    }
-    if (cls) {
-      $theme.find('a').removeClass('active');
-      $theme.find('a[data-ss-theme="' + $.escapeSelector(cls) + '"]').addClass('active');
-      SS_Theme.switchTheme(cls);
-    }
+    });
   };
 
   SS_Theme.cssTemplate = function (cls, color, backgroundColor) {
-    return "body[data-ss-theme=\"" + $.escapeSelector(cls) + "\"] * {\n  border-color: " + color + " !important;\n  background: " + backgroundColor + " !important;\n  color: " + color + " !important;\n}";
+    return "body[data-ss-theme=\"" + $.escapeSelector(cls) + "\"] * {\n  border-color: " + color + " !important;\n  background-color: " + backgroundColor + " !important;\n  color: " + color + " !important;\n}";
   };
 
   SS_Theme.switchTheme = function (cls) {
     $('head link.ss-theme').prop("disabled", true);
     $('head link.ss-theme.' + $.escapeSelector(cls)).prop("disabled", false);
-    $("body").attr("data-ss-theme", "");
     $("body").attr("data-ss-theme", cls);
   };
 
@@ -337,194 +429,197 @@ this.SS_Tabs = (function () {
   return SS_Tabs;
 
 })();
-
-this.SS_Voice = (function () {
-  function SS_Voice() {
-  }
-
-  SS_Voice.voiceConfig = {
+function SS_Voice() {
+  this.voiceConfig = {
     'location': <%= SS.config.voice.controller['location'].to_json %>,
     'loading-resource': <%= SS.config.voice.resource['loading'].to_json %>,
     'disabled-resource': <%= SS.config.voice.resource['disabled'].to_json %>,
     'overload-resource': <%= SS.config.voice.resource['overload'].to_json %>
   };
 
-  SS_Voice.url = null;
+  this.url = null;
 
-  SS_Voice.$voiceTag = null;
+  this.$voiceTag = null;
 
-  SS_Voice.voiceController = null;
+  this.voiceController = null;
 
-  SS_Voice.state = null;
+  this.state = null;
 
-  SS_Voice.cancelLoading = null;
+  this.cancelLoading = null;
 
-  SS_Voice.timerId = null;
+  this.timerId = null;
+}
 
-  SS_Voice.render = function () {
-    SS_Voice.url = SS_Voice.requestUrl();
-    var $voiceTag = $('#ss-voice');
-    if ($voiceTag.size() === 0) {
-      return;
-    }
-    if ($voiceTag.size() > 1) {
-      $voiceTag = $voiceTag.first();
-    }
-    var anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
+SS_Voice.prototype.render = function ($voiceTag, index_1)  {
+  const self = this;
+  const index = index_1;
+  self.url = self.requestUrl();
+
+  if ($voiceTag.is('[data-tool-type="button"]')) {
+    const button = $('<button/>', {
+      type: "button",
+      name: "voice",
+      "aria-expanded": "false",
+      "aria-haspopup": "dialog"
+    }).html($voiceTag.html());
+    $voiceTag.html('');
+    button.appendTo($voiceTag);
+    self.$voiceTag = button;
+  } else {
+    const anchor = $('<a rel="nofollow"/>').attr('href', "#/voice/").html($voiceTag.html());
     $voiceTag.html('');
     anchor.appendTo($voiceTag);
-    SS_Voice.$voiceTag = anchor;
-    var voice_controller = $('#ss-voice-controller');
-    if (voice_controller.size() === 0) {
-      $voiceTag.after('<div id="ss-voice-controller" style="display: none;"/>');
-      voice_controller = $('#ss-voice-controller');
-    }
-    SS_Voice.voiceController = new SS_VoiceController(voice_controller[0]);
-    SS_Voice.state = null;
-    SS_Voice.cancelLoading = false;
-    SS_Voice.timerId = null;
-    SS_Voice.init();
-    voice_controller.find('.ss-jp-close').on('click', SS_Voice.cancel);
-  };
+    self.$voiceTag = anchor;
+  }
 
-  SS_Voice.init = function () {
-    SS_Voice.state = 'init';
-    SS_Voice.voiceController.stop();
-    SS_Voice.setAction(SS_Voice.load);
-    SS_Voice.cancelLoading = false;
-    return false;
-  };
+  const controllerId = 'ss-voice-controller-' + index;
+  const voice_controller = $('<div id="' + controllerId + '" class="ss-voice-controller" style="display: none;"/>');
+  self.$voiceTag.attr("aria-controls", controllerId);
+  self.$voiceTag.after(voice_controller);
+  self.voiceController = new SS_VoiceController(voice_controller[0], index);
+  self.state = null;
+  self.cancelLoading = false;
+  self.timerId = null;
+  self.init();
+  voice_controller.find('.ss-jp-close').on('click', self.cancel.bind(self));
+};
 
-  SS_Voice.setAction = function (action) {
-    SS_Voice.$voiceTag.off('click');
-    SS_Voice.$voiceTag.on('click', action);
-  };
+SS_Voice.prototype.init = function () {
+  this.state = 'init';
+  this.voiceController.stop();
+  this.setAction(this.load.bind(this));
+  this.cancelLoading = false;
+  return false;
+};
 
-  SS_Voice.load = function (ev) {
-    if (SS_Voice.cancelLoading) {
-      if (ev) {
-        ev.preventDefault();
-      }
-      return false;
-    }
+SS_Voice.prototype.setAction = function (action) {
+  this.$voiceTag.off('click');
+  this.$voiceTag.on('click', action);
+};
 
-    $.ajax({
-      type: 'HEAD',
-      url: SS_Voice.url,
-      cache: false,
-      statusCode: {
-        200: (function (_this) {
-          return function () {
-            return SS_Voice.playAudio();
-          };
-        })(this),
-        202: (function (_this) {
-          return function (data, status, xhr) {
-            var retry_after;
-            SS_Voice.renderLoading();
-            retry_after = xhr.getResponseHeader('Retry-After');
-            if (!retry_after) {
-              retry_after = 5;
-            }
-            return SS_Voice.timerId = setTimeout(SS_Voice.load, retry_after * 1000);
-          };
-        })(this)
-      },
-      error: function (xhr, status, error) {
-        return SS_Voice.renderError(xhr.status);
-      }
-    });
-
+SS_Voice.prototype.load = function (ev) {
+  const self = this;
+  this.$voiceTag.attr("aria-expanded", "true");
+  if (this.cancelLoading) {
     if (ev) {
       ev.preventDefault();
     }
     return false;
-  };
+  }
 
-  SS_Voice.renderLoading = function () {
-    var url;
-    if (SS_Voice.state === 'loading') {
-      return false;
+  $.ajax({
+    type: 'HEAD',
+    url: this.url,
+    cache: false,
+    statusCode: {
+      200: function () {
+        return self.playAudio();
+      },
+      202: function (data, status, xhr) {
+        let retry_after;
+        self.renderLoading();
+        retry_after = xhr.getResponseHeader('Retry-After');
+        if (!retry_after) {
+          retry_after = 5;
+        }
+        return self.timerId = setTimeout(self.load.bind(self), retry_after * 1000);
+      }
+    },
+    error: function (xhr, status, error) {
+      return self.renderError(xhr.status);
     }
-    url = SS_Voice.voiceConfig['loading-resource'];
-    SS_Voice.state = 'loading';
-    SS_Voice.setAction(SS_Voice.cancel);
-    SS_Voice.voiceController.play(url);
-    return false;
-  };
+  });
 
-  SS_Voice.renderError = function (status) {
-    var url;
-    if (SS_Voice.state === 'error') {
-      return false;
-    }
-    if (SS_Voice.timerId >= 0) {
-      clearTimeout(SS_Voice.timerId);
-    }
-    SS_Voice.timerId = -1;
-    if (status === 429) {
-      url = SS_Voice.voiceConfig['overload-resource'];
-    } else {
-      url = SS_Voice.voiceConfig['disabled-resource'];
-    }
-    SS_Voice.state = 'error';
-    SS_Voice.setAction(SS_Voice.cancel);
-    SS_Voice.voiceController.play(url);
-    return false;
-  };
-
-  SS_Voice.cancel = function (ev) {
-    SS_Voice.cancelLoading = true;
-    if (SS_Voice.timerId !== null) {
-      clearTimeout(SS_Voice.timerId);
-    }
-    SS_Voice.timerId = null;
-    SS_Voice.init();
-
+  if (ev) {
     ev.preventDefault();
+  }
+  return false;
+};
+
+SS_Voice.prototype.renderLoading = function () {
+  let url;
+  if (this.state === 'loading') {
     return false;
-  };
+  }
+  url = this.voiceConfig['loading-resource'];
+  this.state = 'loading';
+  this.setAction(this.cancel.bind(this));
+  this.voiceController.play(url);
+  return false;
+};
 
-  SS_Voice.playAudio = function () {
-    SS_Voice.state = 'playing';
-    SS_Voice.voiceController.play(SS_Voice.url);
-    SS_Voice.setAction(SS_Voice.cancel);
+SS_Voice.prototype.renderError = function (status) {
+  let url;
+  if (this.state === 'error') {
     return false;
-  };
+  }
+  if (this.timerId >= 0) {
+    clearTimeout(this.timerId);
+  }
+  this.timerId = -1;
+  if (status === 429) {
+    url = this.voiceConfig['overload-resource'];
+  } else {
+    url = this.voiceConfig['disabled-resource'];
+  }
+  this.state = 'error';
+  this.setAction(this.cancel.bind(this));
+  this.voiceController.play(url);
+  return false;
+};
 
-  SS_Voice.requestUrl = function () {
-    var path, url;
-    path = SS_Voice.trimKanaDir(location.pathname);
-    if (path === "/") {
-      path = "/index.html";
-    }
-    url = encodeURIComponent(SS_Voice.normalizeProtocol(location.protocol) + '://' + location.host + path);
-    url = SS_Voice.normalizeLocation(SS_Voice.voiceConfig['location']) + '/' + url;
-    return url;
-  };
+SS_Voice.prototype.cancel = function (ev) {
+  this.cancelLoading = true;
+  if (this.timerId !== null) {
+    clearTimeout(this.timerId);
+  }
+  this.timerId = null;
+  this.init();
+  this.$voiceTag.attr("aria-expanded", "false");
+  if (ev) {
+    ev.preventDefault();
+  }
+  return false;
+};
 
-  SS_Voice.trimKanaDir = function (path, kana_dir) {
-    if (kana_dir == null) {
-      kana_dir = SS_Kana.dir;
-    }
-    return path.replace(new RegExp('^' + kana_dir.replace('/', '\/') + '\/'), '/');
-  };
+SS_Voice.prototype.playAudio = function () {
+  this.state = 'playing';
+  this.voiceController.play(this.url);
+  this.setAction(this.cancel.bind(this));
+  return false;
+};
 
-  SS_Voice.normalizeProtocol = function (protocol) {
-    return protocol.replace(new RegExp(':$'), '');
-  };
+SS_Voice.prototype.requestUrl = function () {
+  let path, url;
+  path = this.trimKanaDir(location.pathname);
+  if (path === "/") {
+    path = "/index.html";
+  }
+  url = encodeURIComponent(this.normalizeProtocol(location.protocol) + '://' + location.host + path);
+  url = this.normalizeLocation(this.voiceConfig['location']) + '/' + url;
+  return url;
+};
 
-  SS_Voice.normalizeLocation = function (location) {
-    return location.replace(new RegExp('/$'), '');
-  };
+SS_Voice.prototype.trimKanaDir = function (path, kana_dir) {
+  if (kana_dir == null) {
+    kana_dir = SS_Kana.dir;
+  }
+  return path.replace(new RegExp('^' + kana_dir.replace('/', '\/') + '\/'), '/');
+};
 
-  return SS_Voice;
+SS_Voice.prototype.normalizeProtocol = function (protocol) {
+  return protocol.replace(new RegExp(':$'), '');
+};
 
-})();
+SS_Voice.prototype.normalizeLocation = function (location) {
+  return location.replace(new RegExp('/$'), '');
+};
+
 
 this.SS_VoiceController = (function () {
-  function SS_VoiceController(container) {
+  function SS_VoiceController(container, index) {
     this.status = 'stopped';
+    this.index = index || 0;
     this.container = $(container);
     this.initialized = false;
     this.container.html(this.template());
@@ -583,7 +678,7 @@ this.SS_VoiceController = (function () {
   };
 
   SS_VoiceController.prototype.template = function () {
-    var template = "<div id=\"jquery_jplayer_:TIMESTAMP:\" class=\"jp-jplayer\"></div>\n" +
+    let template = "<div id=\"jquery_jplayer_:TIMESTAMP:\" class=\"jp-jplayer\"></div>\n" +
       "<div id=\"jp_container_:TIMESTAMP:\" class=\"jp-audio\" role=\"application\" aria-label=\"media player\">\n" +
       "  <div class=\"jp-type-single\">\n" +
       "    <div class=\"jp-gui jp-interface\">\n" +
@@ -615,7 +710,7 @@ this.SS_VoiceController = (function () {
       "    </div>\n" +
       "  </div>\n" +
       "</div>";
-    var timestamp = (new Date).getTime();
+    const timestamp = (new Date).getTime() + "_" + this.index;
 
     template = template.replace(new RegExp(":TIMESTAMP:", 'g'), timestamp);
     return template;

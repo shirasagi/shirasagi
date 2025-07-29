@@ -184,5 +184,5 @@ en:
 
   job:
     models:
-      gws/board/trash_purge_job: Empty bulletin board/post trash
-      gws/board/notification_job: Bulletin board/notifications
+      gws/board/trash_purge_job: Bulletin board/Empty post trash
+      gws/board/notification_job: Bulletin board/Notifications

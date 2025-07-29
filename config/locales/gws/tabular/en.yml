@@ -1,0 +1,314 @@
+en:
+  gws/tabular:
+    auto_generated_icon_notice: "auto generated icon is shown"
+    csv_prefix: "System/"
+    format: File Format
+    import_notice_md: |-
+      ##### About the CSV / ZIP
+      - Please obtain the CSV or ZIP file for import from Downloads.
+
+      ##### About Attachments
+      - When uploading data that includes attachments, please compress the CSV file and attachments together into one ZIP file and import the ZIP file.
+      - Only CSV files can be imported if attachments are not included.
+
+      ##### About the columns in the CSV
+      - The ID column is required. The ID column represents an internal ID. An empty row in the ID column is always imported as a new record, and a row with the ID column set updates an existing record. If the record in the ID column is not found, it is imported as a new record.
+      - All columns except the ID column can be deleted from the CSV. Removing columns that are not to be imported prevents unnecessary or unintended changes.
+      
+      ##### About columns that cannot be imported
+      - Lookup type items cannot be imported. During import, if the reference type data is changed, the corresponding lookup type data is automatically changed.
+      - The following columns cannot be imported:
+        - 申請日時列
+        - 申請コメント列
+        - 承認状態列
+        - ステータス列
+        - マイグレーションエラー列
+        - 更新日時列
+        - 作成日時列
+        There may be other columns that cannot be imported due to system reasons.
+      
+      ##### Restrictions
+      - Even if you download the CSV with the language setting “English,” the content of the downloaded CSV will be in Japanese, and only Japanese CSV can be imported.
+    new_form_notice_md: |-
+      Click on the appropriate entry button in the toolbar to complete the creation of %{name}.
+      
+      ##### How to create
+      - You can add an entry at the top by clicking on the button in the top toolbar.
+      - You can also add an entry at the bottom by clicking on the button in the bottom toolbar.
+
+      ##### Notes on the first entry
+      - The first entry should be set to a text type that is unique.
+      - Non-unique or non-text type input items may cause problems with CSV import. In particular, when importing a reference type, if the first input item in the reference is not unique, it cannot be imported correctly.
+    no_reference_fields: “The reference column has not been added. To use the lookup, you must first add the reference column and set it appropriately.”
+    option_setting: Optional Setting
+    sort_asc: "%{name} (ascending order)"
+    sort_desc: "%{name} (descending order)"
+    trash_notice_md: |-
+      Items in the trash are deleted after %{expires_in}.
+      The retention period of the Trash can be changed in “System Settings - Trash retention period” under “Organization Information”.
+    view_files: View Data
+    apis:
+      files:
+        index: "Select %{name}"
+      forms:
+        index: Select form
+    buttons:
+      manage_space: Space Management
+    notice:
+      delay_download_with_message: |-
+        Prepare files in the background.
+        You will be informed when the download is ready.
+    options:
+      enum_input_type:
+        radio: Radio Button
+        checkbox: Checkbox
+        select: Dropdown
+      export_state:
+        none: None
+        public: Export to public
+      act:
+        approver: Asking For
+        applicant: Requested To
+      format:
+        zip: ZIP (includes attachments)
+        csv: CSV (text only)
+      number_field_type:
+        integer: Integer
+        float: Floating Point
+        decimal: Decimal
+      order_direction:
+        none: None
+        asc: Ascending
+        desc: Descending
+      reference_type:
+        one_to_one: One to one
+        one_to_many: One to many
+        many_to_many: Many to many
+      state:
+        public: Public
+        publishing: Publishing
+        closed: Private
+      text_input_type:
+        single: Text
+        multi: Text Area
+        multi_html: Text Area (HTML)
+      validation_type:
+        none: None
+        email: E-mail address
+        tel: Phone number
+        url: URL
+        color: Color Picker
+      column:
+        updated_or_deleted: Updated Datetime (Deleted Datetime in the Trash)
+      authoring_permission:
+        read: Read
+        edit: Create / Edit / Copy
+        delete: Delete
+        download_all: Download
+        import: Import
+
+  gws_role:
+    use_gws_tabular: Use of Tabular
+
+    read_other_gws_tabular_spaces: View spaces (all)
+    read_private_gws_tabular_spaces: View spaces (own)
+    edit_other_gws_tabular_spaces: Edit spaces (all)
+    edit_private_gws_tabular_spaces: Edit spaces (own)
+    delete_other_gws_tabular_spaces: Delete spaces (all)
+    delete_private_gws_tabular_spaces: Delete spaces (own)
+
+    read_other_gws_tabular_forms: View forms (all)
+    read_private_gws_tabular_forms: View forms (own)
+    edit_other_gws_tabular_forms: Edit forms (all)
+    edit_private_gws_tabular_forms: Edit forms (own)
+    delete_other_gws_tabular_forms: Delete forms (all)
+    delete_private_gws_tabular_forms: Delete forms (own)
+
+    read_other_gws_tabular_views: View views (all)
+    read_private_gws_tabular_views: View views (own)
+    edit_other_gws_tabular_views: Edit views (all)
+    edit_private_gws_tabular_views: Edit views (own)
+    delete_other_gws_tabular_views: Delete views (all)
+    delete_private_gws_tabular_views: Delete views (own)
+
+    read_gws_tabular_files: View data
+    edit_gws_tabular_files: Edit data
+    delete_gws_tabular_files: Delete data
+    download_gws_tabular_files: Download data
+    import_gws_tabular_files: Import data
+
+  gws_notification:
+    gws/tabular/file:
+      mail_text: |
+        %{subject}
+
+        %{text}
+
+      request: "[%{form}] An approval request for “%{name}” has arrived."
+      approve: "[%{form}] Final approval of “%{name}” has been completed."
+      remand: "[%{form}] The approval request for “%{name}” has been referred back."
+      circular: "[%{form}] “%{name}” has arrived."
+      comment: "[%{form}] There is a comment in “%{name}”."
+
+  modules:
+    gws/tabular: Tabular
+    addons:
+      gws/tabular/approver: Approve
+      gws/tabular/approver_print: Approve
+      gws/tabular/circulation: Circulation
+      gws/tabular/column_setting: Input settings
+      gws/tabular/destination_state: Treated state
+      gws/tabular/destination_view: Destination
+      gws/tabular/inspection: Approve/Remand
+      gws/tabular/liquid_view: Liquid
+      gws/tabular/list_view: List
+      gws/tabular/workflow_setting: Workflow
+      gws/tabular/column/base: Tabular Common
+      gws/tabular/column/date_time_field: Date Time
+      gws/tabular/column/enum_field: Enum
+      gws/tabular/column/file_upload_field: File Upload
+      gws/tabular/column/lookup_field: Lookup
+      gws/tabular/column/number_field: Number
+      gws/tabular/column/reference_field: Reference
+      gws/tabular/column/text_field: Text
+
+  activemodel:
+    errors:
+      models:
+        gws/tabular/file/import_param:
+          malformed_zip: "Either the ZIP format is incorrect or there are no required file “files.csv” in the ZIP. Please select a ZIP file with the correct format."
+    attributes:
+      gws/tabular/gws/views_controller/new_prerequisite_params:
+        type: Type
+        form_id: Form
+
+  mongoid:
+    models:
+      #gws/tabular/column/check_box: Checkbox
+      gws/tabular/column/date_time_field: Date Time
+      gws/tabular/column/enum_field: Enum
+      gws/tabular/column/file_upload_field: File Upload
+      gws/tabular/column/lookup_field: Lookup
+      gws/tabular/column/number_field: Number
+      #gws/tabular/column/radio_button: Radio Button
+      gws/tabular/column/reference_field: Reference
+      #gws/tabular/column/select: Dropdown
+      gws/tabular/column/text_field: Text
+      gws/tabular/form: Form
+      gws/tabular/space: Space
+      gws/tabular/view/base: View
+      gws/tabular/view/liquid: Liquid View
+      gws/tabular/view/list: List View
+    errors:
+      messages:
+        unable_to_delete_item_in_public: It is public and cannot be deleted.
+    attributes:
+      gws/tabular/column/base:
+        index_state: Index
+        unique_state: Unique
+      gws/tabular/column/date_time_field:
+        input_type: Date/Time Type
+      gws/tabular/column/enum_field:
+        select_options: Choices
+        input_type: Choice Type
+      gws/tabular/column/file_upload_field:
+        export_state: Export setting
+        allowed_extensions: File Format
+      gws/tabular/column/lookup_field:
+        reference_column: Reference Column
+        reference_column_id: Reference Column
+        lookup_column: Lookup Column
+        lookup_column_id: Lookup Column
+      gws/tabular/column/number_field:
+        field_type: Number Type
+        min_value: Minimum Value
+        max_value: Maximum Value
+        default_value: Default Value
+      gws/tabular/column/reference_field:
+        reference_form: Reference Form
+        reference_form_id: Reference Form
+        reference_type: Reference Type
+      gws/tabular/column/text_field:
+        input_type: Input Type
+        max_length: Max Length
+        i18n_default_value: Default Text
+        validation_type: Restriction
+        i18n_state: I18N
+        html_state: HTML Support
+      gws/tabular/file:
+        _id: ID
+        id: ID
+        migration_errors: Migration Errors
+      gws/tabular/form:
+        name: Title
+        i18n_name: Title
+        description: Explanation
+        i18n_description: Explanation
+        order: Order
+        state: Publishing status
+        memo: Remarks
+      gws/tabular/space:
+        name: Title
+        i18n_name: Title
+        description: Explanation
+        i18n_description: Explanation
+        order: Order
+        icon: Icon Image
+        icon_id: Icon Image
+        state: Publishing status
+        memo: Remarks
+      gws/tabular/view/base:
+        name: Title
+        i18n_name: Title
+        order: Order
+        authoring_permissions: Authoring permissions
+        state: Publishing status
+        default_state: Default view
+        memo: Remarks
+      gws/reference/tabular/space:
+        space: Space
+        space_id: Space
+      gws/reference/tabular/form:
+        form: Form
+        form_id: Form
+      gws/addon/tabular/liquid_view:
+        template_html: Template
+        template_style: CSS/Style
+        orders: Order
+        limit_count: Count
+      gws/addon/tabular/list_view:
+        title_column_ids: Title
+        meta_column_ids: Detail
+        orders: Order
+        limit_count: Count
+        filters: Filter
+        aggregations: Grouping / Aggregation
+      gws/addon/tabular/workflow_setting:
+        workflow_state: Use of workflows
+
+  tooltip:
+    gws/tabular/column/file_upload_field:
+      export_state:
+        - Selecting “None” will check permissions each time an uploaded file is viewed, which may worsen server performance.
+        - Selecting “Export to public” will export files uploaded under the server's public/ folder. This results in better server performance, but also allows unauthorized persons to view the file if they know the URL.
+      allowed_extensions:
+        - Enter the file extensions for uploadable files.
+        - Multiple file formats can be specified by separating the file extensions with a space.
+        - "Example for image only: .gif .png .jpg .jpeg"
+        -
+        - If left blank, all files can be uploaded.
+
+  input_guide:
+    gws/addon/tabular/approver:
+      restart_notice_html: |-
+        <p style="color: #e00;">If you reapply this application, the remand comments and attached files at the time of remand will disappear.</p>
+
+  job:
+    models:
+      gws/tabular/file/csv_import_job: Tabular/CSV Import Job
+      gws/tabular/file/publish_upload_file_job: Tabular/Upload File Publication Job
+      gws/tabular/file/zip_export_job: Tabular/Data Zip Archiving Job
+      gws/tabular/file/zip_import_job: Tabular/Zip Import Job
+      gws/tabular/form_publish_job: Tabular/Form Publishing Job
+      gws/tabular/form_trash_purge_job: Tabular/Empty forms trash
+      gws/tabular/space_trash_purge_job: Tabular/Empty spaces trash

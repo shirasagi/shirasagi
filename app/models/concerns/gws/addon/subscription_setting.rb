@@ -28,7 +28,7 @@ module Gws::Addon::SubscriptionSetting
   end
 
   def subscribed_groups_hash
-    self[:subscribed_groups_hash].presence || subscribed_groups.map { |m| [m.id, m.name] }.to_h
+    self[:subscribed_groups_hash].presence || Gws.id_name_hash(subscribed_groups)
   end
 
   def subscribed_group_names
@@ -36,7 +36,7 @@ module Gws::Addon::SubscriptionSetting
   end
 
   def subscribed_members_hash
-    self[:subscribed_members_hash].presence || subscribed_members.map { |m| [m.id, m.long_name] }.to_h
+    self[:subscribed_members_hash].presence || Gws.id_name_hash(subscribed_members, name_method: :long_name)
   end
 
   def subscribed_member_names
@@ -44,7 +44,7 @@ module Gws::Addon::SubscriptionSetting
   end
 
   def subscribed_custom__groups_hash
-    self[:subscribed_custom_groups_hash].presence || subscribed_custom_groups.map { |m| [m.id, m.name] }.to_h
+    self[:subscribed_custom_groups_hash].presence || Gws.id_name_hash(subscribed_custom_groups)
   end
 
   def subscribed_custom_group_names
@@ -54,15 +54,18 @@ module Gws::Addon::SubscriptionSetting
   private
 
   def set_subscribed_groups_hash
-    self.subscribed_groups_hash = subscribed_groups.map { |m| [m.id, m.name] }.to_h
+    return unless subscribed_group_ids_changed?
+    self.subscribed_groups_hash = Gws.id_name_hash(subscribed_groups)
   end
 
   def set_subscribed_members_hash
-    self.subscribed_members_hash = subscribed_members.map { |m| [m.id, m.long_name] }.to_h
+    return unless subscribed_member_ids_changed?
+    self.subscribed_members_hash = Gws.id_name_hash(subscribed_members, name_method: :long_name)
   end
 
   def set_subscribed_custom_groups_hash
-    self.subscribed_custom_groups_hash = subscribed_custom_groups.map { |m| [m.id, m.name] }.to_h
+    return unless subscribed_custom_group_ids_changed?
+    self.subscribed_custom_groups_hash = Gws.id_name_hash(subscribed_custom_groups)
   end
 
   module ClassMethods

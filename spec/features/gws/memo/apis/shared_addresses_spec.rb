@@ -62,7 +62,7 @@ describe Gws::Memo::Apis::SharedAddressesController, type: :feature, dbscope: :e
       click_on I18n.t("ss.links.new")
 
       within 'dl.see.all' do
-        wait_cbox_open { click_on I18n.t("modules.gws/shared_address") }
+        wait_for_cbox_opened { click_on I18n.t("modules.gws/shared_address") }
       end
 
       within "#ajax-box" do

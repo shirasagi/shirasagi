@@ -42,6 +42,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-add" do
         click_on I18n.t("chorg.menus.revisions.add")
       end
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-after-basic" do
           fill_in "item[destinations][][name]", with: new_name
@@ -131,8 +132,10 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-add" do
         click_on new_name
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css("#chorg-after-basic", text: new_name)
       click_on I18n.t("ss.links.edit")
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-after-basic" do
           fill_in "item[destinations][][name]", with: new_name2
@@ -181,6 +184,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-add" do
         click_on new_name2
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css("#chorg-after-basic", text: new_name2)
       click_on I18n.t("ss.links.delete")
       within "form" do

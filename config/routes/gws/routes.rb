@@ -84,7 +84,9 @@ Rails.application.routes.draw do
     end
     resource :user_locale_setting, only: [:show, :edit, :update]
     resource :user_form, concerns: [:deletion] do
-      resources :user_form_columns, concerns: :deletion, path: '/columns'
+      resources :user_form_columns, only: %i[index create], path: '/columns' do
+        post :reorder, on: :collection
+      end
     end
     resources :contrasts, concerns: [:deletion]
     namespace "ldap" do
@@ -113,8 +115,15 @@ Rails.application.routes.draw do
       put "reload_site_usages" => "site_usages#reload"
       post "validation" => "validation#validate"
       get "cke_config" => "cke_config#index"
+      get "user_detail/:id" => "user_detail#index", as: :user_detail
 
       resources :files, concerns: [:deletion, :file_api]
+      resources :columns, only: %i[edit update]
+    end
+    namespace :frames do
+      resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
     end
     namespace :frames do
       resources :columns, only: %i[show edit update destroy] do

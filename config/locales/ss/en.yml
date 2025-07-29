@@ -17,10 +17,14 @@ en:
     export_log: Export log
     login: Login
     logout: Logout
+    menu: Menu
     module: Module
     operation: Operation
+    organization: Organization
+    qr_code: QR Code
     regexp: Regular expression
     resize_image: Resize image
+    no_resize_image: No resize image
     role: Role
     role_setting: Role batch settings
     required: Required field
@@ -36,6 +40,10 @@ en:
     quota: Size
     encoding: Character encoding
     text_zoom: Character size
+    font_size:
+      small: small
+      medium: standard
+      large: large
     default_here_label: "Click here for details⇒"
     dash: ー
     wave_dash: ～
@@ -46,6 +54,7 @@ en:
     replace: Replace
     before_replace: Before replacement
     after_replace: After replacement
+    unused_file: Unused file
     broken_link: Broken link
     auto_reload: Automatic updates
     quality: Quality
@@ -71,22 +80,25 @@ en:
     mfa_otp_enabled_at: "Enabled at %{time}"
     mfa_otp_not_enabled_yet: "Not enabled yet"
     system_operation: "-- System operation --"
-    
+    upload_or_select_from_list: File upload or select file from list
+    auto_resizing_label: "%{size} (System setting)"
+
     views:
       login/login:
         id: User ID or e-mail address
         password: Password
         organization_uid: Staff number or e-mail address
       index:
-        created: "Created：%{created}"
+        created: "Created: %{created}"
         updated: "Updated: %{updated}"
         released: "Published: %{released}"
         approved: "Approved: %{approved}"
-        reserved: "Reserved：%{time}"
-        delivered: "Delivered：%{time}"
-        term: "Term：%{term}"
-        openrate: "Openrate：%{openrate}"
-        expiration_date: "Expiration date：%{expiration_date}"
+        reserved: "Reserved: %{time}"
+        delivered: "Delivered: %{time}"
+        term: "Term: %{term}"
+        openrate: "Openrate: %{openrate}"
+        expiration_date: "Expiration date: %{expiration_date}"
+        close_date: "Publication end date: "
       oauth2/application:
         header:
           name: Application Type
@@ -176,11 +188,15 @@ en:
       edit_password: Change password
       registration: Registration
       approve: Approve
+      remand: Remand
       prev: Previous
       next: Next
       update: Update
       open_in_new_tab: Open in new tab
+      navi_open: Open side menu
+      navi_close: Close side menu
     buttons:
+      answer: Answer
       save: Save
       saving: Saving
       new: Create new
@@ -252,7 +268,19 @@ en:
       update: Update
       prev: Previous
       next: Next
+      simple: Simple
+      advanced: Advanced
+      match_all: Match all
+      match_any_of: Match one of
+      include_all_of: Include all of
+      include_any_of: Include any of
+      include_none_of: Include none of
+      decide: Decide
       reset_mfa_otp: Reset OTP
+      select_from_list: Select from list
+      select_files: Select files
+      cancel_upload: Cancel upload
+      do_access_to_unreliable_site: Go to external site
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?
@@ -279,7 +307,9 @@ en:
       delete_file_histories: Are you sure you want to delete your file history?
       contains_url_expect: "There is a page linking to this page, so the process will be suspended. Remove all the links you have added before continuing."
       contains_links_in_file: This page cannot be deleted because there are other pages linking to it.
+      contains_links_in_file_close: "This page cannot be closed because there are other pages linking to it. Please remove the links before deleting this page."
       contains_links_in_file_ignoring_alert: "After confirming the backlinks, click the checkbox to delete it."
+      contains_links_in_file_ignoring_alert_close: "This page cannot be closed because there are other pages linking to it. Please remove the links before closing this page."
       not_contains_links_in_file: "There are no backlinks, so you can delete it."
       target_to_delete: Check what to delete
       target_to_public: Check what to make public
@@ -288,6 +318,11 @@ en:
       test_deliver: Are you sure you want to start test delivery
       resume_editing: Found automatically saved content. Do you want to resume editing from immediately before?
       reset_mfa_otp: Are you sure you want ot reset OTP?
+      unable_to_delete_due_to_branch_page: It cannot be deleted because a replacement page has been created.
+      not_allowed_to_publish: You are not allowed to Publish this Page
+      not_allowed_to_close: You are not allowed to Close this Page
+      submit_image_canvas: To confirm the image resize, click the ✓ on the toolbar.
+
     notice:
       saved: Saved.
       not_saved_successfully: Not saved successfully.
@@ -298,6 +333,7 @@ en:
       copied: Duplicated.
       imported: Imported.
       approved: Approved.
+      answered: Answered.
       started_import: Importing started.
       started_export: Exporting started.
       started_upload: Upload started.
@@ -342,6 +378,8 @@ en:
       ordered_by_file_name_order: Ordered by name.
       ordered_by_file_upload_order: Ordered by upload order.
       reset_mfa_otp: Reset OTP
+      wait_to_upload: Waiting to upload.
+      finished_uploading: Finished uploading.
 
     info:
       soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.
@@ -352,7 +390,9 @@ en:
       ie_browser: The browser you are using (IE) cannot perform large file uploads. Please use another browser (e.g. Google Chrome).
     warning:
       initial_password: Please change your initial password.
-      session_timeout: Your session has expired.
+      session_timeout: |-
+        You were automatically logged out of the system for security reasons because it had not been operated for a long time.
+        After closing this message, you will be returned to the login screen. Please log in to the system again to resume your work.
       password_expired: Your password has expired. Please change your password.
       password_neary_expired: Your password will expire soon. Please change your password.
     errors:
@@ -447,6 +487,9 @@ en:
         768x1024: 768x1024 (XGA portrait)
         1280x720: 1280x720 (HD landscape)
         720x1280: 720x1280 (HD portrait)
+        380x380: 380x380 (Suitable for 3 columns layout)
+        580x580: 580x580 (Suitable for 2 columns layout)
+        1200x1200: 1200x1200 (Suitable for general layout)
       text_type:
         plain: Text
         markdown: Markdown
@@ -577,6 +620,13 @@ en:
         always: Use
         untrusted: Use when the access source is untrusted
         none: Not use
+      logo_application_link:
+        mypage: Mypage
+        portal: Portal
+      show_google_maps_search_in_view:
+        hide: Not display
+        show_first: Display first one
+        show_all: Display all
 
     tasks:
       started: Started.
@@ -615,20 +665,18 @@ en:
       ss/kana_setting: Kana settings
       ss/open_graph_setting: OpenGraph settings
       ss/facebook_setting: Facebook settings
-      ss/twitter_setting: Twitter settings
+      ss/twitter_setting: X(formerly Twitter) settings
       ss/line_setting: LINE settings
       ss/kintone_setting: Kintone settings
       ss/approve_setting: Approval settings
       ss/editor_setting: Editor settings
       ss/mail_setting: E-mail settings
       ss/trash_setting: Trash settings
-      ss/link_file: File
       ss/notification/reply:
         discussion: Electronic meeting room
       ss/elasticsearch/site_setting: Site search settings
       ss/translate/site_setting: Automatic translation
       ss/site_usage: Usage amount
-      ss/logo_setting: Logo settings
       ss/release: Publishing settings
       ss/generate_lock: Stop exporting
       ss/partner_site: Partner site settings
@@ -641,6 +689,7 @@ en:
       ss/oauth2/webmail_permission: Mail permissions
       ss/locale_setting: Locale settings
       ss/mfa/user_setting: MFA settings
+      ss/check_links_setting: Email Notification Settings
 
   activemodel:
     errors:
@@ -656,6 +705,11 @@ en:
         new_password: New Password
         new_password_again: New Password (Confirm)
         old_password: Current Password
+      ss/temp_file_creator:
+        in_file: File
+        name: File name
+        filename: File name (alphanumeric)
+        resizing: Resize
 
   mongoid:
     models:
@@ -681,6 +735,7 @@ en:
       ss/oauth2/application/base: OAuth Application
       ss/oauth2/application/confidential: Client
       ss/oauth2/application/service: Service
+      ss/link_item: Link Item
     errors:
       models:
         ss/model/group:
@@ -789,6 +844,7 @@ en:
         domains: Domain
         gws_use: Use of groupware
         upload_policy: Upload restrictions
+        path_id: Path ID
       ss/user_group_history:
         created: Move date and time
         cms_site_id: CMS site
@@ -809,6 +865,7 @@ en:
         current_count: No. of actions
         logs: Log
         segment: Segment
+        log_sequence: Sequence
       ss/model/file:
         in_file: File
         in_files: File
@@ -827,7 +884,6 @@ en:
         site_id: Site
       ss/model/role:
         name: Role name
-        permission_level: Permission level
         permissions: Permission settings
       ss/model/address:
         member_id: User
@@ -866,7 +922,10 @@ en:
         map_api: Map API
         map_api_key: API key
         map_api_layer: Map layer
+        map_header_text: Map header text
         show_google_maps_search: Link to Google Maps
+        show_google_maps_search_in_marker: In marker
+        show_google_maps_search_in_view: In view
         map_api_mypage: Map type on the admin screen
         map_center: Map center
         map_max_number_of_markers: Maximum number of markers
@@ -896,13 +955,13 @@ en:
         kintone_user: Basic auth user
         kintone_password: Basic auth password
       ss/addon/site_auto_post_setting:
-        site_twitter_auto_post: Twitter auto-post
+        site_twitter_auto_post: X(formerly Twitter) auto-post
         site_edit_auto_post: Auto-post when editing
       ss/addon/file_setting:
         file_resizing: Resize attached file
         file_resizing_width: Width
         file_resizing_height: Height
-        file_resizing_label: ! '%{size} (Site settings)'
+        file_resizing_label: ! '%{size} (Site setting)'
         multibyte_filename_state: Japanese-language file name
         file_fs_access_restriction_state: /fs access restrictions
         file_fs_access_restriction_allowed_ip_addresses: Allowed IP addresses
@@ -933,8 +992,9 @@ en:
         order: Sort by
         state: Status
       ss/model/image_resize:
-        max_width: Width
-        max_height: Height
+        max_width: Max Width
+        max_height: Max Height
+        size: Number of bytes
         quality: Quality
       ss/model/postal_code:
         code: Postal code
@@ -996,7 +1056,7 @@ en:
         elasticsearch_deny: Exclusion path
         elasticsearch_site_ids: Site
         elasticsearch_indexes: Index
-        elasticsearch_outside: External site search
+        elasticsearch_outside: External site search (Fess)
       ss/addon/translate/site_setting:
         translate_state: Status
         translate_source_id: Source language code
@@ -1031,6 +1091,7 @@ en:
         usage_calculated_at: Usage calculation date and time
       ss/model/logo_setting:
         logo_application_name: Application name
+        logo_application_link: Logo link
         logo_application_image_id: Logo image
         logo_application_template: Logo HTML
       ss/addon/release:
@@ -1045,14 +1106,17 @@ en:
         partner_site_ids: Partner sites
       ss/addon/inquiry_setting:
         inquiry_form_id: Inquiry form
+      ss/addon/check_links_setting:
+        check_links_email: Notification e-mail address
+        check_links_message_format: Format
       ss/oauth2/application/base:
         name: Name
         state: Status
         permissions: Permissions
         client_id: Client ID
       ss/oauth2/application/confidential:
-        client_secret: クライアントシークレット
-        redirect_uris: リダイレクトURL
+        client_secret: Client Secret
+        redirect_uris: Redirect URL
       ss/oauth2/application/service:
         public_key_type: Public-key type
         public_key: Public-key
@@ -1078,6 +1142,13 @@ en:
         maintenance_mode: Maintenance mode
         maint_remark: Notice in maintenance mode
         maint_excluded_user_ids: Excluded users
+      ss/link_item:
+        name: Display name
+        url: URL
+        target: Target
+        file: Image
+        file_id: Image
+        state: State
   tooltip:
     ss/model/site:
       upload_policy:
@@ -1153,6 +1224,8 @@ en:
         - Groupware is used by default.
       upload_policy:
         - Set behavior when uploading files.
+      path_id:
+        - Set the ID of the export path. The path ID is the name of the folder under public/gws/. Only small alphanumeric characters and numbers are allowed.
     ss/document:
       title:
         - Used for the page title and displayed in the title bar of the browser.
@@ -1210,8 +1283,6 @@ en:
       close_date:
         - Specify the date and time to end publishing.
         - Publishing will cease at the specified date and time.
-      permission_level:
-        - Specify the permission level at which edits are allowed.
       group_ids:
         - Select the groups that are allowed to edit.
       user_ids:
@@ -1241,6 +1312,10 @@ en:
         - If the size is exceeded, the image quality of the file will be changed to the value set in advance.
         - If the width or height is exceeded, the size will be reduced to fit.
         - If you do not want to auto-resize, after you have the administrator grant you permission, click “Auto-resize enabled” on the left and set it to “Auto-resize disabled”.
+      user_file:
+        - If checked, the per-user file is displayed. The per-user file is the file you registered under Files on My Page.
+      cms_file:
+        - If checked, files shared on the site will be displayed.
     ss/model/user_title:
       code: Enter the job title code.
       name: Enter the job title.
@@ -1340,8 +1415,10 @@ en:
         - The API key for Google Maps is set in this field.
       map_api_layer:
         - Select the OpenLayers layer to use on the site.
+      map_header_text:
+        - Set the text for the map addon's header on the page view.
       show_google_maps_search:
-        - When enabled, the map marker will display a “View on Google Maps” link.
+        - When enabled, the map marker or page view will display a “View on Google Maps” link.
       map_api_mypage:
         - Set whether to display the map on the administration screen.
       map_center:
@@ -1362,23 +1439,23 @@ en:
       opengraph_type:
         - Select the Open Graph format.
         - "You can see what it looks like:"
-        - Facebook share debugger：https://developers.facebook.com/tools/debug/sharing/
-        - Twitter Card Validator：https://cards-dev.twitter.com/validator/
-        - LINE Page Poker：https://poker.line.naver.jp/
+        - "Facebook share debugger: https://developers.facebook.com/tools/debug/sharing/"
+        - "X(formerly Twitter) Card Validator: https://cards-dev.twitter.com/validator/"
+        - "LINE Page Poker: https://poker.line.naver.jp/"
       opengraph_defaul_image_url:
         - Set the default image URL.
         - If the page does not contain an image, the URL will be set to “og:image”.
         - If the page contains an image, the URL you set here is not used.
     ss/addon/twitter_setting:
       twitter_poster_state:
-        - If enabled, Twitter integration will appear when editing pages.
+        - If enabled, X(formerly Twitter) integration will appear when editing pages.
         - A consumer key and an access token, each with its own secret key, must be set.
       twitter_card:
-        - Select the Twitter card format.
-        - "You can see what it looks like on Twitter with “Twitter Card Validator”: https://cards-dev.twitter.com/validator ."
+        - Select the X(formerly Twitter) card format.
+        - "You can see what it looks like on X(formerly Twitter)with “X(formerly Twitter) Card Validator”: https://cards-dev.twitter.com/validator ."
       twitter_username:
-        - Set your Twitter username.
-        - Once set, you can analyze access with Twitter Card Analytics.
+        - Set your X(formerly Twitter) username.
+        - Once set, you can analyze access with X(formerly Twitter) Card Analytics.
       twitter_default_image_url:
         - Set the default image URL.
         - If the page does not contain an image, the URL will be set to “twitter:image”.
@@ -1462,13 +1539,18 @@ en:
         - Enable or disable restrictions.
     ss/model/image_resize:
       max_width:
-        - The width of the image file can be set.
+        - The max width of the image to be uploaded can be set.
       max_height:
-        - The height of the image file can be set.
+        - The max height of the image to be uploaded can be set.
+      size:
+        - If the number of bytes in the image file is greater than this setting, the image quality is reduced.
+        - Even with reduced image quality, the number of bytes in the image may exceed this setting.
       quality:
         - Image file quality can be set between 0 and 100.
-        - Compresses images based on image quality if the maximum file size is exceeded.
+        - "If the number of bytes of the image file exceeds the value set for “Number of bytes”, the image quality is changed to this setting."
         - The higher the image quality, the less degraded it is.
+      state:
+        - Enable or disable the resize image.
     ss/model/editor_setting:
       color_button:
         - Set the display of the text color change button.
@@ -1485,9 +1567,16 @@ en:
         - Enter the default signature for e-mails sent from the system.
 
     ss/addon/elasticsearch/site_setting:
-      elasticsearch_deny:
-        - Enter the path of the pages that you want to exclude from searches.
-        - Separate them with line breaks.
+      elasticsearch_deny: |-
+        Enter the path of the pages that you want to exclude from searches.
+        Separate them with line breaks.
+
+        Example: Exclude by specifying the URL of the page
+        docs/123.html
+        404.html
+
+        After the change, the full-text search index needs to be updated.
+        https://shirasagi.github.io/updation/elasticsearch_index.html
       elasticsearch_site_ids:
         - Set the site to be searched.
         - This will allow you to see the pages for the site you set.
@@ -1521,6 +1610,12 @@ en:
     ss/addon/inquiry_setting:
       inquiry_form_id:
         - Set a group-wide inquiry form.
+
+    ss/addon/check_links_setting:
+      check_links_email:
+        - If an e-mail address is set, error results will be notified after the link check is executed.
+      check_links_message_format:
+        - Select the format for e-mail notification of error results.
 
     ss/addon/workflow_setting:
       workflow_my_group:
@@ -1558,11 +1653,11 @@ en:
     ss/mfa/site_setting:
       mfa_otp_use_state:
         - Select whether to use OTP(one-time password) authentication.
-        -
+        - ""
         - "・Not use: Do not use OTP authentication."
         - "・Use: Use OTP authentication."
         - "・Use when the access source is untrusted: Use OTP authentication when the access source is not trusted. Set the trusted access source to \"Trusted source\" below."
-        -
+        - ""
         - OTP authentication is applied during form authentication. It does not apply to single sign-on from an external authentication server. If you wish to use OTP authentication when using an external authentication server, please configure the external authentication server to use OTP authentication.
       mfa_trusted_ip_addresses:
         - Sets the IP address as a trusted source. Used to determine if the source is trustworthy when "Use if source is untrusted" is selected for use of OTP.
@@ -1583,11 +1678,12 @@ en:
 
   job:
     models:
-      ss/public_file_remover_job: Published file deletion job
-      ss/task_sweep_job: Task deletion job
-      ss/delete_empty_directories_job: Delete empty directories job
-      ss/delete_download_files_job: Delete temporary files job (for export)
-      ss/delete_access_tokens_job: Cleanup access tokens job
-      ss/delete_sso_tokens_job: Cleanup SSO tokens job
-      ss/delete_ss_o_tokens_job: Cleanup SSO tokens job
-      ss/cleanup_file_store_cache_job: Cleanup file cache job
+      ss/public_file_remover_job: System/Published file deletion job
+      ss/task_sweep_job: System/Task deletion job
+      ss/delete_empty_directories_job: System/Delete empty directories job
+      ss/delete_download_files_job: System/Delete temporary files job (for export)
+      ss/delete_access_tokens_job: System/Cleanup access tokens job
+      ss/delete_sso_tokens_job: System/Cleanup SSO tokens job
+      ss/delete_ss_o_tokens_job: System/Cleanup SSO tokens job
+      ss/cleanup_file_store_cache_job: System/Cleanup file cache job
+      ss/remove_site_job: System/Delete site

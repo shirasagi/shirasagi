@@ -95,11 +95,63 @@ FactoryBot.define do
     order { 80 }
   end
 
+  factory :inquiry_column_form_select, class: Inquiry::Column do
+    name { "回答の有無" }
+    input_type { "form_select" }
+    required { "required" }
+    select_options { %w(不要 必要) }
+    order { 10 }
+  end
+
   factory :inquiry_column_same_as_name, class: Inquiry::Column do
     name { "お名前" }
     input_type { "text_field" }
     required { "optional" }
     html { "<p>お名前を入力してください。（重複）</p>" }
     order { 90 }
+  end
+
+  factory :inquiry_column_number, class: Inquiry::Column do
+    name { "数値入力" }
+    input_type { "number_field" }
+    required { "optional" }
+    html { "<p>数値で入力してください。</p>" }
+    order { 100 }
+  end
+
+  factory :inquiry_column_date_local, class: Inquiry::Column do
+    name { "日付入力" }
+    input_type { "date_field" }
+    required { "optional" }
+    html { "<p> 日付を入力してください。</p>" }
+    date_inputter { "local" }
+    order { 110 }
+  end
+
+  factory :inquiry_column_date_picker, class: Inquiry::Column do
+    name { "日付入力" }
+    input_type { "date_field" }
+    required { "optional" }
+    html { "<p> 日付を入力してください。</p>" }
+    date_inputter { "picker" }
+    order { 110 }
+  end
+
+  factory :inquiry_column_datetime_local, class: Inquiry::Column do
+    name { "日時入力" }
+    input_type { "datetime_field" }
+    required { "optional" }
+    html { "<p> 日付を入力してください。</p>" }
+    date_inputter { "local" }
+    order { 110 }
+  end
+
+  factory :inquiry_column_datetime_picker, class: Inquiry::Column do
+    name { "日時入力" }
+    input_type { "datetime_field" }
+    required { "optional" }
+    html { "<p> 日付を入力してください。</p>" }
+    date_inputter { "picker" }
+    order { 110 }
   end
 end

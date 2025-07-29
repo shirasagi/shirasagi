@@ -42,7 +42,13 @@ module Job::LogsFilter
 
   def min_updated
     keep_logs = SS.config.job.keep_logs
-    Time.zone.now - keep_logs
+    min1 = Time.zone.now - keep_logs
+    min2 = log_criteria.min(:created)
+    if min2
+      min1 < min2 ? min1 : min2
+    else
+      min1
+    end
   end
 
   def class_name_options
@@ -59,7 +65,7 @@ module Job::LogsFilter
         id = d["_id"]
         count = d["count"]
         humanized_id = I18n.t("job.models.#{id.underscore}", default: id)
-        [ "#{humanized_id} (#{count.to_s(:delimited)})", id ]
+        [ "#{humanized_id} (#{count.to_fs(:delimited)})", id ]
       end
       options.sort!
       options
@@ -70,6 +76,14 @@ module Job::LogsFilter
 
   def index
     @items = log_criteria.search(@s).order_by(updated: -1).page(params[:page]).per(50)
+
+    render_opts = {}
+    if request.headers.key?("HTTP_TURBO_FRAME")
+      @frame_id = request.headers["HTTP_TURBO_FRAME"]
+      render_opts[:layout] = "ss/item_frame"
+    end
+
+    render template: 'index', **render_opts
   end
 
   def show

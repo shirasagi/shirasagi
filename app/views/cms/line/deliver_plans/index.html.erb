@@ -2,10 +2,10 @@
   <table class="index">
     <thead>
       <tr>
-        <th class="list-head" style="width: 120px;">
+        <th class="list-head" style="width: 140px;">
           <label class="check"><input type="checkbox" /></label>
           <div class="list-head-action-destroy">
-            <%= ss_button_to t("ss.buttons.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.delete') %>
+            <%= ss_button_to t("ss.buttons.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete" %>
           </div>
         </th>
         <th><%= @model.t :deliver_date %></th>

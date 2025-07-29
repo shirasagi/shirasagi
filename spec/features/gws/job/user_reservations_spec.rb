@@ -37,9 +37,7 @@ describe "gws_job_user_reservations", type: :feature, dbscope: :example, js: tru
   context "basic index" do
     context "with user1" do
       it do
-        login_user user1
-
-        visit gws_job_user_reservations_path(site: site)
+        login_user user1, to: gws_job_user_reservations_path(site: site)
         expect(page).to have_css(".list-item .title", text: I18n.t(task1.class_name.underscore, scope: "job.models"))
         expect(page).to have_css(".list-item .title", text: I18n.t(task2.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_content(I18n.t(task3.class_name.underscore, scope: "job.models"))
@@ -69,9 +67,7 @@ describe "gws_job_user_reservations", type: :feature, dbscope: :example, js: tru
 
     context "with user2" do
       it do
-        login_user user2
-
-        visit gws_job_user_reservations_path(site: site)
+        login_user user2, to: gws_job_user_reservations_path(site: site)
         expect(page).to have_no_content(I18n.t(task1.class_name.underscore, scope: "job.models"))
         expect(page).to have_no_content(I18n.t(task2.class_name.underscore, scope: "job.models"))
         expect(page).to have_css(".list-item .title", text: I18n.t(task3.class_name.underscore, scope: "job.models"))
@@ -85,9 +81,7 @@ describe "gws_job_user_reservations", type: :feature, dbscope: :example, js: tru
 
   describe "destroy all" do
     it do
-      login_user user1
-
-      visit gws_job_user_reservations_path(site: site)
+      login_user user1, to: gws_job_user_reservations_path(site: site)
       within first(".list-item") do
         first("[name='ids[]']").click
       end

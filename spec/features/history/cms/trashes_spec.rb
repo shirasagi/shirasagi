@@ -1,10 +1,11 @@
 require 'spec_helper'
 
 describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
-  let(:file) { create :cms_file, site: site }
-  let(:page_item) { create(:article_page, cur_node: node, file_ids: [file.id]) }
+  let!(:site) { cms_site }
+  let!(:user) { cms_user }
+  let!(:node) { create :article_node_page }
+  let!(:file) { tmp_ss_file(site: site, user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
+  let!(:page_item) { create(:article_page, cur_site: site, cur_user: user, cur_node: node, file_ids: [file.id]) }
   let(:index_path) { history_cms_trashes_path(site: site.id) }
   let(:node_path) { article_pages_path(site: site.id, cid: node.id) }
   let(:page_path) { article_page_path(site: site.id, cid: node.id, id: page_item.id) }
@@ -15,8 +16,12 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
     it "#destroy" do
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       click_link I18n.t('ss.links.delete')
-      click_button I18n.t('ss.buttons.delete')
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
       wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
@@ -49,7 +54,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(trashes[0].ref_coll).to eq "ss_files"
       expect(trashes[0].ref_class).to eq "SS::File"
 
-      Timecop.freeze(Time.zone.now + History::Trash::TrashPurgeJob::DEFAULT_THRESHOLD_YEARS.years + 1.second) do
+      Timecop.freeze(Time.zone.now + SS.default_trash_threshold_in_days + 1.second) do
         History::Trash::TrashPurgeJob.bind(site_id: site.id).perform_now
         expect(History::Trash.all.count).to eq 0
       end
@@ -57,8 +62,12 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
     it "#destroy_all" do
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       click_link I18n.t('ss.links.delete')
-      click_button I18n.t('ss.buttons.delete')
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
       wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
@@ -95,10 +104,14 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
     it "#undo_delete" do
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_css('div.file-view', text: file.name)
 
       click_link I18n.t('ss.links.delete')
-      click_button I18n.t('ss.buttons.delete')
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
       wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
@@ -146,6 +159,8 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('a.title', text: page_item.name)
 
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_css('div.file-view', text: file.name)
 
@@ -154,10 +169,14 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
     it "#restore_ss_files" do
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_css('div.file-view', text: file.name)
 
       click_link I18n.t('ss.links.delete')
-      click_button I18n.t('ss.buttons.delete')
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
       wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
@@ -248,10 +267,14 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
     it "#undo_delete as another filename" do
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_css('div.file-view', text: file.name)
 
       click_link I18n.t('ss.links.delete')
-      click_button I18n.t('ss.buttons.delete')
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
       wait_for_notice I18n.t('ss.notice.deleted')
       expect(page).to have_no_css('a.title', text: page_item.name)
 
@@ -271,7 +294,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
       click_link I18n.t('ss.buttons.restore')
 
-      click_on I18n.t("ss.links.change")
+      wait_for_event_fired("change") { click_on I18n.t("ss.links.change") }
       fill_in "item[basename]", with: new_filename
 
       click_button I18n.t('ss.buttons.restore')
@@ -289,6 +312,8 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('a.title', text: page_item.name)
 
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       expect(page).to have_css('div.file-view', text: file.name)
 
@@ -301,15 +326,18 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
 
     it do
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       expect(page).to have_css('div.file-view', text: file.name)
 
       # create branch page
       within "#addon-workflow-agents-addons-branch" do
-        within ".branch" do
+        wait_for_event_fired "turbo:frame-load" do
           click_on I18n.t("workflow.create_branch")
-          within ".result .branches" do
-            expect(page).to have_css(".name", text: page_item.name)
-          end
+        end
+        expect(page).to have_css('.see.branch', text: I18n.t("workflow.notice.created_branch_page"))
+        within ".result .branches" do
+          expect(page).to have_css(".name", text: page_item.name)
         end
       end
 
@@ -325,6 +353,9 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
           click_on page_item.name
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       click_on I18n.t('ss.links.delete')
       within "form" do
         click_on I18n.t('ss.buttons.delete')
@@ -370,9 +401,11 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(History::Trash.all.count).to eq 0
 
       visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within "#addon-workflow-agents-addons-branch" do
         within ".branch" do
-          expect(page).to have_css(".create-branch", text: I18n.t("workflow.create_branch"))
+          expect(page).to have_button(I18n.t("workflow.create_branch"))
           expect(page).to have_no_content(page_item.name)
         end
       end
@@ -392,8 +425,12 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       it do
         # move page to trash
         visit page_path
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         click_link I18n.t('ss.links.delete')
-        click_button I18n.t('ss.buttons.delete')
+        within "form" do
+          click_button I18n.t('ss.buttons.delete')
+        end
         wait_for_notice I18n.t('ss.notice.deleted')
 
         expect(History::Trash.all.count).to eq 2

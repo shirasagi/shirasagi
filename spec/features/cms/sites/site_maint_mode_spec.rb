@@ -35,18 +35,18 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
         find("#item_maintenance_mode").find("option[value='enabled']").select_option
         fill_in "item[maint_remark]", with: maint_remark
 
-        wait_cbox_open do
+        wait_for_cbox_opened do
           within ".maint-mode" do
             click_on I18n.t("ss.apis.users.index")
           end
         end
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_css(".list-item", text: site1_user1.name)
         expect(page).to have_css(".list-item", text: site1_user2.name)
         expect(page).to have_no_css(".list-item", text: site2_user1.name)
         within ".items" do
-          wait_cbox_close do
+          wait_for_cbox_closed do
             click_on site1_user1.name
           end
         end
@@ -54,6 +54,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
       within "#item-form" do
         click_on I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       site1.reload
       expect(site1.maintenance_mode).to eq "enabled"
 
@@ -71,6 +72,9 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      within "#head" do
+        expect(page).to have_css(".user-name", text: site1_user2.name)
+      end
       I18n.with_locale(site1_user2.lang.try(:to_sym) || I18n.default_locale) do
         visit sns_mypage_path
         expect(page).to have_text(I18n.t("ss.under_maintenance_mode"))
@@ -85,6 +89,9 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
         fill_in "item[email]", with: site2_user1.email
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
+      end
+      within "#head" do
+        expect(page).to have_css(".user-name", text: site2_user1.name)
       end
       I18n.with_locale(site2_user1.lang.try(:to_sym) || I18n.default_locale) do
         visit cms_contents_path(site: site2)

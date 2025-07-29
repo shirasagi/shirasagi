@@ -23,15 +23,15 @@ describe Opendata::CmsIntegration::AssocJob, dbscope: :example do
     article_node.save!
 
     file = tmp_ss_file(contents: '0123456789', user: cms_user)
+    license = create :opendata_license, cur_site: od_site
 
     article_page.cur_user = cms_user
     article_page.file_ids = [ file.id ]
     article_page.opendata_dataset_state = 'public'
     article_page.init_opendata_resources(file)
-    article_page.opendata_resources[file.id.to_s][:state] = 'same'
+    article_page.opendata_resources[file.id.to_s]['state'] = 'same'
+    article_page.opendata_resources[file.id.to_s]['license_ids'] = [ license.id ]
     article_page.save!
-
-    create :opendata_license, cur_site: od_site
   end
 
   describe "#perform" do
