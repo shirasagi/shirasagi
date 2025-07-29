@@ -89,18 +89,9 @@ module Sys::SiteImport::File
       items.where(cond).each do |item|
         attr = {}
         fields.each do |field|
-          html = old_html = item[field]
-
-          next if html.blank?
-
-          @ss_files_url.each do |src, dst|
-            src_path = ::Regexp.new(/="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/)
-
-            next unless old_html.match?(src_path)
-
-            html = html.gsub(src_path, "=\"#{dst}")
-          end
-          attr[field] = html if html != old_html
+          next if item[field].blank?
+          html = item[field].gsub(src_path, dst_path)
+          attr[field] = html if item[field] != html
         end
         item.set(attr) if attr.present?
       end
