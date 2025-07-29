@@ -44,10 +44,6 @@ module SS::Copy::CmsPages
       copy_opendata_app_appfiles(src_page, dest_page)
     end
 
-    Rails.logger.debug do
-      "DEBUG: dest_page.related_page_ids=#{dest_page.related_page_ids.inspect} " \
-        "(class=#{dest_page.related_page_ids.class})"
-    end
     if dest_page.respond_to?(:column_values)
       dest_page.column_values = src_page.column_values.map do |src_column_value|
         dest_column_value = src_column_value.dup
