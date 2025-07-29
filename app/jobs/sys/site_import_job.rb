@@ -198,16 +198,6 @@ class Sys::SiteImportJob < SS::ApplicationJob
 
     data['loop_setting_id'] = @cms_loop_settings_map[data['loop_setting_id']] if data['loop_setting_id'].present?
 
-    if data.dig('condition_forms', 'values').present?
-      data['condition_forms'] = data.dig('condition_forms', 'values')
-      data['condition_forms'].each do |condition_form|
-        condition_form['form_id'] = @cms_forms_map[condition_form['form_id']] if condition_form['form_id'].present?
-        condition_form['filters'].each do |filter|
-          filter['column_id'] = @cms_columns_map[filter['column_id']] if filter['column_id'].present?
-        end
-      end
-    end
-
     data
   end
 
