@@ -42,6 +42,7 @@ module Sys::SiteCopy::CmsContents
           "dest_content.related_page_ids=#{dest_content.try(:related_page_ids).inspect}"
       end
       update_html_links(src_content, dest_content)
+      update_condition_forms(src_content, dest_content)
       dest_content.save!
       Rails.logger.debug do
         "Sys::SiteCopy::CmsContents[copy_cms_content] " \
@@ -174,5 +175,21 @@ module Sys::SiteCopy::CmsContents
       dest_file = SS::File.where(site_id: @dest_site.id).find(dest_file_id)
       [ src_file.url, dest_file.url ]
     end
+  end
+
+  def update_condition_forms(src_content, dest_content, options = {})
+    return unless dest_content.respond_to?(:condition_forms)
+    return if dest_content.condition_forms.values.blank?
+
+    condition_forms = []
+    dest_content.condition_forms.each do |dest_condition_form|
+      form_id = resolve_reference(:form, dest_condition_form.form_id)
+      filters = []
+      dest_condition_form.filters.each do |filter|
+        filters << filter.to_h.merge(column_id: resolve_reference(:column, filter.column_id))
+      end
+      condition_forms << dest_condition_form.to_h.merge(form_id: form_id, filters: filters)
+    end
+    dest_content.condition_forms = condition_forms
   end
 end
