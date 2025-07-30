@@ -19,14 +19,7 @@ this.Form_Preview = (function () {
       // if (!name) {
       //   errors.push(<%= I18n.t('errors.messages.set_name').to_json %>);
       // }
-      
-      // ファイル名が空の場合は、一時的なファイル名を設定（サーバー側で正しい番号に置き換えられる）
-      if (!basename) {
-        var timestamp = new Date().getTime();
-        basename = "temp_" + timestamp + ".html";
-        $("#" + Form_Preview.form_id + " input[name='item[basename]']").val(basename);
-      }
-      
+
       // ファイル名の形式チェックもコメントアウト（プレビュー専用なので）
       // if (basename) {
       //   if (!/^[\w-]+(\.html)?$/.test(basename)) {

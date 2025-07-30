@@ -407,16 +407,16 @@ this.Form_Preview = (function () {
       name = $("#" + Form_Preview.form_id + " input[name='item[name]']").val();
       basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
       errors = [];
-      // if (!name) {
-      //   errors.push("タイトルを入力してください。");
-      // }
-      // if (basename) {
-      //   if (!/^[\w-]+(\.html)?$/.test(basename)) {
-      //     errors.push("は半角英数、アンダースコア、ハイフンのみ使用可能です。");
-      //   }
-      // } else {
-      //   errors.push("ファイル名を入力してください。");
-      // }
+      if (!name) {
+        errors.push("タイトルを入力してください。");
+      }
+      if (basename) {
+        if (!/^[\w-]+(\.html)?$/.test(basename)) {
+          errors.push("は半角英数、アンダースコア、ハイフンのみ使用可能です。");
+        }
+      } else {
+        errors.push("ファイル名を入力してください。");
+      }
       if (!SS.isEmptyObject(errors)) {
         alert(errors.join("\n"));
         return false;
