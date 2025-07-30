@@ -14,16 +14,26 @@ this.Form_Preview = (function () {
       name = $("#" + Form_Preview.form_id + " input[name='item[name]']").val();
       basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
       errors = [];
-      if (!name) {
-        errors.push(<%= I18n.t('errors.messages.set_name').to_json %>);
+      
+      // プレビューは確認用なので、必須入力チェックをコメントアウト
+      // if (!name) {
+      //   errors.push(<%= I18n.t('errors.messages.set_name').to_json %>);
+      // }
+      
+      // ファイル名が空の場合は、一時的なファイル名を設定（サーバー側で正しい番号に置き換えられる）
+      if (!basename) {
+        var timestamp = new Date().getTime();
+        basename = "temp_" + timestamp + ".html";
+        $("#" + Form_Preview.form_id + " input[name='item[basename]']").val(basename);
       }
-      if (basename) {
-        if (!/^[\w-]+(\.html)?$/.test(basename)) {
-          errors.push(<%= I18n.t('errors.messages.invalid_filename').to_json %>);
-        }
-      } else {
-        errors.push(<%= I18n.t('errors.messages.set_filename').to_json %>);
-      }
+      
+      // ファイル名の形式チェックもコメントアウト（プレビュー専用なので）
+      // if (basename) {
+      //   if (!/^[\w-]+(\.html)?$/.test(basename)) {
+      //     errors.push(<%= I18n.t('errors.messages.invalid_filename').to_json %>);
+      //   }
+      // }
+      
       if (!SS.isEmptyObject(errors)) {
         alert(errors.join("\n"));
         return false;

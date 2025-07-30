@@ -90,8 +90,16 @@ class Cms::PreviewController < ApplicationController
     page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
     page.lock_until = nil if page.respond_to?(:lock_until)
 
-    # raise page_not_found unless page.name.present?
-    # raise page_not_found unless page.basename.present?
+    # プレビュー時は必須チェックを緩和
+    if page.name.blank?
+      page.name = "プレビュー用タイトル"
+    end
+
+    # ファイル名が空の場合は、一時的なファイル名を設定（実際の保存時にseq_filenameメソッドで正しいIDが割り当てられる）
+    if page.basename.blank?
+      page.basename = "preview_temp.html"
+    end
+
     page.basename = page.basename.sub(/\..+?$/, "") + ".html"
 
     # column_values
@@ -104,7 +112,7 @@ class Cms::PreviewController < ApplicationController
     @cur_layout = Cms::Layout.site(@cur_site).where(id: page.layout_id).first
     @cur_body_layout = Cms::BodyLayout.site(@cur_site).where(id: page.body_layout_id).first
     page.layout_id = nil if @cur_layout.nil?
-    page.body_layout_id = nil if @cur_body_layout.nil?
+    page.body_layout_id = nil if @cur_layout.nil?
 
     @cur_node = page.cur_node = node
     page.valid?
