@@ -123,5 +123,14 @@ describe Article::Node::Page, type: :model, dbscope: :example do
         expect(subject.groups[1].name).to eq group2.name
       end
     end
+
+    context "with pagination" do
+      let(:registers) { { cur_site: cms_site, cur_node: node, cur_path: "/#{node.filename}" } }
+      let!(:node) { create :article_node_page, cur_node: item, sort: "order" }
+
+      it do
+        expect(subject.current?).to be_truthy
+      end
+    end
   end
 end
