@@ -1,0 +1,7 @@
+<dl class="see">
+  <dt><%= @model.t :select_options %><%= @model.tt :select_options %></dt>
+  <dd><%= f.ss_lines_field :select_options, value: @item.select_options.join("\n") %></dd>
+
+  <dt><%= @model.t :input_type %><%= @model.tt :input_type %></dt>
+  <dd><%= f.select :input_type, @item.input_type_options %></dd>
+</dl>

@@ -12,7 +12,7 @@ this.Event_Calendar = (function () {
         type: "GET",
         url: url + "?year=" + year + "&month=" + month,
         cache: false,
-        success: function (res, status) {
+        success: function (res, _status) {
           var html;
           html = "<div>" + res + "</div>";
           $(".event-calendar").replaceWith($(html).find(".event-calendar"));
@@ -21,9 +21,9 @@ this.Event_Calendar = (function () {
             return false;
           });
         },
-        error: function (xhr, status, error) {
+        error: function (_xhr, _status, _error) {
         },
-        complete: function (xhr, status) {
+        complete: function (_xhr, _status) {
           $(".event-calendar .calendar").hide().fadeIn('fast');
         }
       });

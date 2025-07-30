@@ -74,14 +74,6 @@ describe Opendata::Resource, dbscope: :example do
     end
   end
 
-  describe ".allowed?" do
-    it { expect(described_class.allowed?(:edit, nil)).to be_truthy }
-  end
-
-  describe ".allow" do
-    it { expect(described_class.allow(:edit, nil)).to be_truthy }
-  end
-
   describe ".format_options" do
     it { expect(described_class.format_options).to include "AVI" }
   end

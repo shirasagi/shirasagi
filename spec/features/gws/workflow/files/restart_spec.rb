@@ -39,8 +39,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # admin: send request
       #
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
 
       within ".mod-workflow-request" do
         select route_name, from: "workflow_route"
@@ -69,8 +68,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user1: approve request
       #
-      login_user user1
-      visit show_path
+      login_user user1, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment1
@@ -85,7 +83,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
         include({level: 2, user_id: user2.id, editable: '', state: 'request', comment: ''})
       expect(item.workflow_approvers).to \
@@ -96,8 +97,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: remand request
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: remand_comment1
@@ -112,9 +112,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment1
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
-        include({level: 2, user_id: user2.id, editable: '', state: 'remand', comment: remand_comment1})
+        include({
+          level: 2, user_id: user2.id, editable: '', state: 'remand', comment: remand_comment1,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'pending', comment: ''})
 
@@ -123,8 +129,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # admin: restart request
       #
-      login_user admin
-      visit show_path
+      login_user admin, to: show_path
 
       within ".mod-workflow-request" do
         select I18n.t("workflow.restart_workflow"), from: "workflow_route"
@@ -153,8 +158,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user1: approve request
       #
-      login_user user1
-      visit show_path
+      login_user user1, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment2
@@ -170,7 +174,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment2
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil,
+          created: within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
         include({level: 2, user_id: user2.id, editable: '', state: 'request', comment: '', file_ids: nil})
       expect(item.workflow_approvers).to \
@@ -181,8 +188,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: approve request
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment3
@@ -198,9 +204,15 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment2
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil,
+          created: within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
-        include({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment3, file_ids: nil})
+        include({
+          level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment3, file_ids: nil,
+          created: within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
         include({level: 3, user_id: user3.id, editable: '', state: 'request', comment: '', file_ids: nil})
 
@@ -209,8 +221,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user3: approve request, he is the last one
       #
-      login_user user3
-      visit show_path
+      login_user user3, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment4
@@ -226,11 +237,20 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment2
       expect(item.workflow_approvers.count).to eq 3
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil,
+          created: within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
-        include({level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment3, file_ids: nil})
+        include({
+          level: 2, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment3, file_ids: nil,
+          created: within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_approvers).to \
-        include({level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment4, file_ids: nil})
+        include({
+          level: 3, user_id: user3.id, editable: '', state: 'approve', comment: approve_comment4, file_ids: nil,
+          created: within(30.seconds).of(Time.zone.now)
+        })
 
       expect(SS::Notification.count).to eq 7
     end

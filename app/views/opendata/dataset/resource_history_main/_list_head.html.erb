@@ -60,7 +60,9 @@
     var url = '<%= url_for(action: :index, ymd: ':ymd') %>';
     url = url.replace(':ymd', ymd);
 
-    location.href = url;
+    setTimeout(function() {
+      location.href = url;
+    }, 11);
   });
   $('.list-head button[data-href]').on("click", function() {
     location.href = $(this).data("href");

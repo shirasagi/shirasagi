@@ -20,7 +20,7 @@ describe Cms::User do
     end
 
     context "when ldap user is given" do
-      subject { attributes_for(:cms_user_base, :cms_user_rand_name, :cms_user_uid, :cms_user_ldap, group: group1) }
+      subject { attributes_for(:cms_ldap_user, email: nil, group: group1) }
       it "save and find successfully" do
         expect { model.new(subject).save! }.not_to raise_error
         expect(model.where(uid: subject[:uid]).first).not_to be_nil
@@ -56,7 +56,7 @@ describe Cms::User do
     subject { create(:cms_user_base, :cms_user_rand_name, :cms_user_email, group: group1, cms_role_ids: [ role1.id, role2.id ]) }
 
     its(:cms_role_permissions) { is_expected.to be_a(Hash) }
-    its(:cms_role_permissions) { is_expected.to include("edit_private_article_pages_#{cms_site.id}" => 1) }
+    its(:cms_role_permissions) { is_expected.to include("edit_private_article_pages_#{cms_site.id}") }
   end
 
   describe "#cms_role_permissions" do

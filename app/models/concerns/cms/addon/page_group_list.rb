@@ -7,7 +7,7 @@ module Cms::Addon
     included do
       self.use_no_items_display = false
       self.use_substitute_html = false
-      self.use_liquid = false
+      self.use_loop_formats = %i(shirasagi)
 
       embeds_ids :condition_groups, class_name: "SS::Group"
       permit_params condition_group_ids: []

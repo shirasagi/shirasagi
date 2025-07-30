@@ -64,6 +64,10 @@ namespace :gws do
       ::Tasks::Gws::Es.feed_all_workflows
     end
 
+    task feed_all_workflows2: :environment do
+      ::Tasks::Gws::Es.feed_all_workflows2
+    end
+
     task feed_all_files: :environment do
       ::Tasks::Gws::Es.feed_all_files
     end

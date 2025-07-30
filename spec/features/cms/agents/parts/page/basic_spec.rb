@@ -9,6 +9,11 @@ describe "cms_agents_parts_page", type: :feature, dbscope: :example do
            substitute_html: '<div class="substitute">substitute</div>'
   end
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   context "public" do
     let!(:item) { create :cms_page, filename: "item" }
 

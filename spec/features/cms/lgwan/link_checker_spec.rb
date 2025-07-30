@@ -55,7 +55,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
       it do
         visit edit_path2
         within ".column-value-palette" do
-          wait_event_to_fire("ss:columnAdded") do
+          wait_for_event_fired("ss:columnAdded") do
             click_on column.name
           end
         end
@@ -88,7 +88,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         with_lgwan_web do
           visit edit_path2
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column.name
             end
           end
@@ -122,7 +122,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         with_lgwan_cms do
           visit edit_path2
           within ".column-value-palette" do
-            wait_event_to_fire("ss:columnAdded") do
+            wait_for_event_fired("ss:columnAdded") do
               click_on column.name
             end
           end

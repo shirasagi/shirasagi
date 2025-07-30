@@ -26,7 +26,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         fill_in "item[id_name]", with: "0.sample"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show" do
@@ -45,7 +45,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
         fill_in "item[in_edges][][value]", with: "answer1"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(page).to have_css("#addon-basic", text: "modify")
       expect(page).to have_css("#addon-guide-agents-addons-question", text: I18n.t("guide.options.question_type.choices"))
@@ -56,7 +56,7 @@ describe "guide_questions", type: :feature, dbscope: :example, js: true do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 end

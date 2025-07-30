@@ -22,8 +22,20 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
 
   def enum_es_docs
     Enumerator.new do |y|
-      y << convert_to_doc
-      item.files.each { |file| y << convert_file_to_doc(file) }
+      each_item(criteria: ::Gws::Memo::Message.site(site)) do |item|
+        if item.list_message?
+          item = item.to_list_message
+        end
+        @id = item.id.to_s
+        @item = item
+
+        puts item.subject
+        y << convert_to_doc
+        item.files.each { |file| y << convert_file_to_doc(file) }
+      ensure
+        @id = nil
+        @item = nil
+      end
     end
   end
 
@@ -46,13 +58,11 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
       doc[:group_ids] = item.list.groups.pluck(:id)
       doc[:custom_group_ids] = item.list.custom_groups.pluck(:id)
       doc[:user_ids] = item.list.users.pluck(:id)
-      doc[:permission_level] = item.list.permission_level
     else
       doc[:user_name] = item.user_long_name
       # doc[:group_ids] = item.groups.pluck(:id)
       # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
       doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
-      # doc[:permission_level] = item.permission_level
     end
 
     # doc[:readable_group_ids] =
@@ -86,12 +96,10 @@ class Gws::Elasticsearch::Indexer::MemoMessageJob < Gws::ApplicationJob
       doc[:group_ids] = item.list.groups.pluck(:id)
       doc[:custom_group_ids] = item.list.custom_groups.pluck(:id)
       doc[:user_ids] = item.list.users.pluck(:id)
-      doc[:permission_level] = item.list.permission_level
     else
       # doc[:group_ids] = item.groups.pluck(:id)
       # doc[:custom_group_ids] = item.custom_groups.pluck(:id)
       doc[:user_ids] = [ item.user_id ] if item.readable?(item.user, site: site)
-      # doc[:permission_level] = item.permission_level
     end
 
     # doc[:readable_group_ids] =

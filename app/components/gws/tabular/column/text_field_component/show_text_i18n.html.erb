@@ -1,0 +1,31 @@
+<%= render Gws::Tabular::Column::BaseComponent.new(cur_site: cur_site, cur_user: cur_user, type: type, column: column) do -%>
+  <% if type == :show -%>
+    <%= render Gws::Tabular::Column::TextFieldComponent::I18n.new do |component| -%>
+      <% SS.locales_in_order.each do |lang| -%>
+        <% component.with_part do -%>
+          <%= value.try(:[], lang).presence || value.try(:[], I18n.default_locale) -%>
+        <% end -%>
+      <% end -%>
+    <% end -%>
+  <% elsif type == :localized -%>
+    <%=
+      if value.is_a?(Hash)
+        value.try(:[], I18n.locale).presence || value.try(:[], I18n.default_locale)
+      else
+        value.to_s
+      end
+    -%>
+  <% else -%>
+    <% I18n.available_locales.each do |lang| -%>
+      <%=
+        if value.is_a?(Hash)
+          content = value.try(:[], lang).presence || value.try(:[], I18n.default_locale)
+        elsif lang == I18n.default_locale
+          content = value.to_s
+        end
+        next if content.blank?
+        tag.span content, data: { "show-in" => lang }
+      -%>
+    <% end -%>
+  <% end -%>
+<% end -%>

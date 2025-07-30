@@ -48,20 +48,13 @@ this.Event_Form = (function () {
     var self = this;
 
     self.$el.find(".event-recurrence-date").each(function() {
-      if (this.ss && this.ss.synchronizer) {
-        return;
-      }
-
       var $this = $(this);
-
-      var synchronizer = new SS_StartEndSynchronizer(
-        $this.find(".event-recurrence-date-start-on"),
-        $this.find(".event-recurrence-date-until-on"));
-
-      if (!this.ss) {
-        this.ss = {}
-      }
-      this.ss.synchronizer = synchronizer
+      SS.justOnce(this, "synchronizer", function() {
+        var synchronizer = new SS_StartEndSynchronizer(
+          $this.find(".event-recurrence-date-start-on"),
+          $this.find(".event-recurrence-date-until-on"));
+        return synchronizer;
+      });
     });
   };
 

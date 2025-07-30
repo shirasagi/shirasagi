@@ -1,0 +1,31 @@
+<% value ||= nil %>
+<% files = value.try(:files) %>
+<%= render 'gws/agents/columns/main/common_label', column: column %>
+<dd class="<%= @section_id %>">
+  <% if column.prefix_explanation.present? -%>
+    <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></div>
+  <% end -%>
+
+  <% column.upload_file_count.times.each do |index| %>
+    <div class="mb-2">
+      <% if column.prefix_label.present? -%>
+        <span class="prefix"><%= column.prefix_label %></span>
+      <% end -%>
+      <%=
+        # f.ss_file_field
+        file = files[index] rescue nil
+        component = SS::FileFieldV2Component.new(
+          ss_mode: @ss_mode, cur_site: @cur_site, cur_user: @cur_user, item: @item, file: file,
+          field_name: "#{object_name}[#{column.id}][]", element_id: "#{object_name}_#{column.id}_#{index}")
+        render component
+      %>
+      <% if column.postfix_label.present? -%>
+        <span class="postfix"><%= column.postfix_label %></span>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if column.postfix_explanation.present? -%>
+    <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></div>
+  <% end -%>
+</dd>

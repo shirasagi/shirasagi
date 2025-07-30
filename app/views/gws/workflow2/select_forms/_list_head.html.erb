@@ -1,0 +1,19 @@
+<div class="gws-workflow-select-forms-head">
+  <%= render template: "_search" %>
+
+  <% if @s.search_id.present? %>
+    <div class="gws-workflow-select-forms-selected-search">
+      <%= Gws::Workflow2::Form::Purpose.site(@cur_site).readable(@cur_user, site: @cur_site).find(@s.search_id).name %>
+    </div>
+  <% end %>
+  <% if @s.category_ids.present? %>
+    <div class="gws-workflow-select-forms-selected-categories">
+      <% Gws::Workflow2::Form::Category.site(@cur_site).in(id: @s.category_ids).each do |cate| %>
+        <%= link_to url_for_index(category: cate, exclude: true), class: "gws-category-label", style: category_label_css(cate) do %>
+          <span><%= cate.trailing_name %></span>
+          <i class="material-icons md-13">close</i>
+        <% end %>
+      <% end %>
+    </div>
+  <% end %>
+</div>

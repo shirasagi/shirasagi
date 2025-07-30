@@ -1,5 +1,6 @@
 class SS::Contact
   include SS::Document
+  include SS::Liquidization
 
   embedded_in :group, class_name: "SS::Group"
 
@@ -21,6 +22,20 @@ class SS::Contact
 
   permit_params :name, :contact_group_name, :contact_charge, :contact_tel, :contact_fax, :contact_email
   permit_params :contact_postal_code, :contact_address, :contact_link_url, :contact_link_name, :main_state
+
+  liquidize do
+    export :name
+    export :contact_group_name
+    export :contact_charge
+    export :contact_tel
+    export :contact_fax
+    export :contact_email
+    export :contact_postal_code
+    export :contact_address
+    export :contact_link_url
+    export :contact_link_name
+    export :main_state
+  end
 
   def same_contact?(dist)
     dist.deep_stringify_keys!

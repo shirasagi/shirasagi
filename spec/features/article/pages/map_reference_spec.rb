@@ -55,7 +55,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(options).to include(I18n.t("map.options.map_reference_method.direct"))
         end
 
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form1.name, from: 'in_form_id'
           end
@@ -68,7 +68,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(options).to include(I18n.t("map.options.map_reference_method.direct"), form1_column_select_page.name)
         end
 
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form2.name, from: 'in_form_id'
           end
@@ -81,7 +81,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(options).to include(I18n.t("map.options.map_reference_method.direct"), form2_column_select_page.name)
         end
 
-        wait_event_to_fire("ss:formDeactivated") do
+        wait_for_event_fired("ss:formDeactivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select I18n.t("cms.default_form"), from: 'in_form_id'
           end
@@ -97,7 +97,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         #
         # 地図の指定方法が正しく保存されるかのチェック
         #
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form1.name, from: 'in_form_id'
           end

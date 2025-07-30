@@ -3,7 +3,7 @@ FLAGS:
   - !ruby/symbol Seen
   - !ruby/symbol Flagged
   - !ruby/symbol Draft
-INTERNALDATE: 2017-04-01 15:55:36 +0900
+INTERNALDATE: "2017-04-01 15:55:36 +0900"
 RFC822: RFC822
 RFC822.SIZE: 1024
 RFC822.HEADER: |

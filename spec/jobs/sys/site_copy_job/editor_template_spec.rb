@@ -21,7 +21,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
     describe "without options" do
       before do
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -37,7 +37,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         task.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -52,16 +52,17 @@ describe Sys::SiteCopyJob, dbscope: :example do
     end
 
     describe "with thumb" do
+      let(:file) { tmp_ss_file site: site, contents: "#{Rails.root}/spec/fixtures/ss/logo.png" }
+
       before do
         task.copy_contents = "editor_templates"
         task.save!
 
-        file = create :ss_file, site_id: site.id
         template.thumb_id = file.id
         template.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -76,6 +77,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         expect(dest_template.thumb_id).not_to eq template.thumb_id
         expect(dest_template.thumb.site_id).to eq dest_site.id
         expect(dest_template.thumb.owner_item_id).to eq dest_template.id
+        expect(::File.size(dest_template.thumb.path)).to be > 0
       end
     end
   end

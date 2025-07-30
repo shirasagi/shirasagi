@@ -46,7 +46,7 @@ describe Cms::Node::GenerateJob, dbscope: :example do
       end
 
       Cms::Task.where(site_id: site.id, node_id: nil, name: 'cms:generate_nodes').first.tap do |task|
-        Cms::GenerationReportCreateJob.bind(site_id: site.id, task_id: task.id).perform_now
+        Cms::GenerationReportCreateJob.bind(site_id: site.id).perform_now(task.id)
 
         expect(Job::Log.count).to eq 2
         Job::Log.all.each do |log|
@@ -57,9 +57,10 @@ describe Cms::Node::GenerateJob, dbscope: :example do
         expect(Cms::GenerationReport::Title.all.count).to eq 1
         title = Cms::GenerationReport::Title.all.first
         expect(title.site_id).to eq site.id
-        expect(title.name).to be_present
+        expect(title.name).to include("generate node performance")
         expect(title.task_id).to eq task.id
         expect(title.sha256_hash).to be_present
+        expect(title.generation_type).to eq "nodes"
 
         expect(Cms::GenerationReport::History[title].all.count).to eq 3
         Cms::GenerationReport::History[title].all.to_a.tap do |histories|

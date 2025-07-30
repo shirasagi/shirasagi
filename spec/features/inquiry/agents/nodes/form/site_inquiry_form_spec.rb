@@ -18,7 +18,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
   let!(:inquiry_form) do
     create(
       :inquiry_node_form, cur_site: site, layout: layout, state: "public", inquiry_captcha: "disabled",
-      notice_state: "enabled", notice_content: "link_only", notice_email: unique_email,
+      notice_state: "enabled", notice_content: "link_only", notice_emails: [unique_email],
       from_name: unique_id, from_email: unique_email, reply_state: "disabled", aggregation_state: "disabled",
       group_ids: [ group.id ]
     )
@@ -60,7 +60,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq name
+          expect(find("[name='item[1]']")['value']).to eq name
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
@@ -79,7 +79,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       ActionMailer::Base.deliveries.first.tap do |mail|
         expect(mail.from.first).to eq inquiry_form.from_email
-        expect(mail.to.first).to eq inquiry_form.notice_email
+        expect(mail.to.first).to eq inquiry_form.notice_emails.first
         expect(mail.subject).to eq "[自動通知]#{inquiry_form.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
         expect(mail.body.raw_source).to include("「#{inquiry_form.name}」に入力がありました。")
@@ -111,7 +111,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
       within 'div.inquiry-form' do
         within 'div.columns' do
-          expect(find('#item_1')['value']).to eq name
+          expect(find("[name='item[1]']")['value']).to eq name
         end
         within 'footer.send' do
           click_button I18n.t('inquiry.submit')
@@ -152,7 +152,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
@@ -167,7 +167,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
@@ -182,7 +182,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 
@@ -197,7 +197,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
 
     it do
       visit inquiry_form.full_url + "?" + { group: group1.id, page: article_page.id }.to_query
-      expect { page.reset! }.to raise_error(RuntimeError, "404")
+      expect(page).to have_css("#container .message", text: "404")
     end
   end
 end

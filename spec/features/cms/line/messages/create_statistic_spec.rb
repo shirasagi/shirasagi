@@ -32,7 +32,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
     within "footer.send" do
       click_on I18n.t("ss.buttons.save")
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
   end
 
   before do
@@ -53,7 +53,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
           select I18n.t("ss.options.state.enabled"), from: 'item[statistic_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_template
 
@@ -73,7 +73,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
                 click_on I18n.t("ss.links.deliver")
               end
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+            wait_for_notice I18n.t('ss.notice.started_deliver')
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -102,7 +102,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
           select I18n.t("ss.options.state.enabled"), from: 'item[statistic_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_template
 
@@ -122,7 +122,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
                 click_on I18n.t("ss.links.deliver")
               end
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+            wait_for_notice I18n.t('ss.notice.started_deliver')
           end
 
           expect(capture.multicast.count).to eq 1
@@ -153,7 +153,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
           select I18n.t("ss.options.state.disabled"), from: 'item[statistic_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_template
 
@@ -173,7 +173,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
                 click_on I18n.t("ss.links.deliver")
               end
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+            wait_for_notice I18n.t('ss.notice.started_deliver')
           end
 
           expect(capture.broadcast.count).to eq 1
@@ -192,7 +192,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
           select I18n.t("ss.options.state.disabled"), from: 'item[statistic_state]'
           click_on I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         add_template
 
@@ -212,7 +212,7 @@ describe "cms/line/messages create statistic", type: :feature, dbscope: :example
                 click_on I18n.t("ss.links.deliver")
               end
             end
-            expect(page).to have_css('#notice', text: I18n.t('ss.notice.started_deliver'))
+            wait_for_notice I18n.t('ss.notice.started_deliver')
           end
 
           expect(capture.multicast.count).to eq 1

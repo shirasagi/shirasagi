@@ -1,6 +1,7 @@
 class Gws::Group
   include SS::Model::Group
   include SS::Relation::File
+  include Fs::FilePreviewable
   include Gws::Referenceable
   include Gws::SitePermission
   include Gws::Addon::Group::AffairSetting
@@ -35,6 +36,7 @@ class Gws::Group
   include Gws::Addon::History
   include Gws::Addon::Import::Group
   include Gws::Addon::SiteUsage
+  include SS::Ldap::SiteSetting
 
   set_permission_name "gws_groups", :edit
 
@@ -45,6 +47,16 @@ class Gws::Group
   validate :validate_parent_name, if: ->{ cur_site.present? }
 
   scope :site, ->(site) { self.and name: /^#{::Regexp.escape(site.name)}(\/|$)/ }
+
+  def file_previewable?(file, site: @cur_site, user: @cur_user, member: nil)
+    # メニューのファイル（Gws::Groupが所有者のファイル）の場合は、ユーザーが存在すればtrueを返す
+    if file&.owner_item_type == "Gws::Group" && file&.owner_item_id.present?
+      return user.present?
+    end
+
+    # その他のファイルの場合は、既存のロジックで権限チェック
+    super
+  end
 
   private
 

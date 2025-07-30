@@ -15,12 +15,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
     context "default all" do
       it "#index" do
         visit index_path
+        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
-
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
       end
     end
 
@@ -32,12 +29,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
 
       it "#index" do
         visit index_path
+        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
         expect(page).to have_no_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
-
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".index-search" do
           select I18n.t("gws/notice.options.severity.all"), from: "s[severity]"
@@ -47,9 +41,6 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         # wait for ajax completion
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
-
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
       end
     end
 
@@ -61,12 +52,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
 
       it "#index" do
         visit index_path
+        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_no_css(".list-item", text: item2.name)
-
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".index-search" do
           select I18n.t("gws/notice.options.severity.all"), from: "s[severity]"
@@ -75,10 +63,6 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
 
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
-
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
       end
     end
   end

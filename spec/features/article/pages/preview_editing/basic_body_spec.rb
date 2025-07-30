@@ -22,6 +22,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:layout) { create :cms_layout, html: layout_html }
   let!(:node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   before { login_cms_user }
 
   describe "preview editing" do
@@ -34,6 +39,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit cms_preview_path(site: site, path: item.preview_path)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
 
         within "#ss-preview" do
           within ".ss-preview-wrap-column-edit-mode" do
@@ -59,7 +66,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         within "#ss-preview" do
           within ".ss-preview-wrap-column-edit-mode" do
-            wait_event_to_fire "ss:inplaceModeChanged" do
+            wait_for_event_fired "ss:inplaceModeChanged" do
               click_on I18n.t("cms.inplace_edit")
             end
           end
@@ -67,7 +74,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         first("#main .page-body").click
         within "#ss-preview-overlay" do
-          wait_event_to_fire "ss:inplaceEditFrameInitialized" do
+          wait_for_event_fired "ss:inplaceEditFrameInitialized" do
             click_on I18n.t("ss.links.edit")
           end
         end
@@ -76,19 +83,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           within "#item-form" do
             fill_in_ckeditor "item[html]", with: html2
 
-            wait_cbox_open do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
+            ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
 
-          wait_for_cbox do
-            attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
-            wait_cbox_close do
-              click_on I18n.t("ss.buttons.attach")
-            end
-          end
-
-          within "#item-form" do
             expect(page).to have_css(".file-view", text: "keyvisual.gif")
             wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
               click_on I18n.t("sns.image_paste")

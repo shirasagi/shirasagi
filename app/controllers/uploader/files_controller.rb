@@ -10,6 +10,7 @@ class Uploader::FilesController < ApplicationController
   before_action :redirect_from_index
   before_action :set_item
   before_action :set_item_was, if: ->{ @item }
+  before_action :set_deletable
   before_action :set_crumbs
   before_action :deny_sanitizing_file, only: [:update, :destroy]
   after_action :save_job, only: [:create, :update, :destroy, :destroy_all]
@@ -70,6 +71,10 @@ class Uploader::FilesController < ApplicationController
   def set_item_was
     @path_was = @item.path
     @text_was = @item.text if @item.text?
+  end
+
+  def set_deletable
+    @deletable ||= @cur_node.allowed?(:delete, @cur_user, site: @cur_site, owned: true)
   end
 
   def save_job
@@ -157,7 +162,7 @@ class Uploader::FilesController < ApplicationController
 
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-    return redirect_to("#{request.path}?do=show") unless @item.directory?
+    return redirect_to("#{SS.request_path(request)}?do=show") unless @item.directory?
     set_items(@item.path)
     Uploader::File.set_sanitizer_state(@items, { site_id: @cur_site.id })
     render :index

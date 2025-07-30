@@ -13,7 +13,7 @@
     title
   %>
 </title>
-<%= safe_join controller.stylesheets.map { |path| stylesheet_link_tag(path, media: "all") }, "\n" %>
+<%= safe_join controller.stylesheets.map { |path, options| stylesheet_link_tag(path, stylesheet_link_options(options)) }, "\n" %>
 <%= safe_join controller.javascripts.map { |path, options| javascript_include_tag(path, options || {}) }, "\n" %>
 <%= csrf_meta_tags %>
 </head>
@@ -21,11 +21,13 @@
 
 <div id="page-login">
 
+<% unless @hide_ss_layout_header %>
 <header id="head">
   <div class="wrap">
-    <h1 class="application-name"><%= render_application_logo %></h1>
+    <%= render_application_logo %>
   </div>
 <!-- /#head --></header>
+<% end %>
 
 <aside id="notice">
   <div class="wrap"><%= notice %></div>
@@ -54,5 +56,8 @@
 
 </div>
 
+<%= javascript_tag do %>
+  SS_Login.disabled = true;
+<% end %>
 </body>
 </html>

@@ -3,7 +3,7 @@ module Cms::Addon
     extend ActiveSupport::Concern
     extend SS::Addon
 
-    SERVICES = %w(fb_like fb_share twitter hatena line).freeze
+    SERVICES = %w(fb_share twitter hatena line).freeze
 
     included do
       field :sns_share_states, type: Hash

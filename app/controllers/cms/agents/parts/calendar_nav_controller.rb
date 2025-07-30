@@ -46,6 +46,8 @@ class Cms::Agents::Parts::CalendarNavController < ApplicationController
     (start_date...close_date).each do |d|
       @dates.push [ d, blog_update(d) ]
     end
+
+    render formats: :html
   end
 
   private

@@ -22,16 +22,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       fill_in 'item[name]', with: notice_name
       fill_in 'item[text]', with: notice_text
 
-      within '#addon-gws-agents-addons-file' do
-        wait_cbox_open do
-          click_on I18n.t('ss.links.upload')
-        end
-      end
-    end
-    wait_cbox_close do
-      click_on notice_file.name
-    end
-    within 'form#item-form' do
+      ss_select_file notice_file, addon: '#addon-gws-agents-addons-file'
+
       click_on I18n.t('ss.buttons.save')
     end
   end
@@ -39,7 +31,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   context 'when notice is created' do
     it do
       create_notice
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       folder.reload
       expect(folder.notice_total_body_size).to eq notice_text.length
@@ -57,7 +49,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       create_notice
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       folder.reload
       expect(folder.notice_total_body_size).to eq folder.notice_total_body_size_limit
@@ -69,15 +61,15 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     let(:exceeded_total_body_size_limit) do
       I18n.t(
         'mongoid.errors.models.gws/notice/post.exceeded_total_body_size_limit',
-        size: folder.notice_total_body_size_limit.to_s(:human_size),
-        limit: folder.notice_total_body_size_limit.to_s(:human_size)
+        size: folder.notice_total_body_size_limit.to_fs(:human_size),
+        limit: folder.notice_total_body_size_limit.to_fs(:human_size)
       )
     end
     let(:exceeded_total_file_size_limit) do
       I18n.t(
         'mongoid.errors.models.gws/notice/post.exceeded_total_file_size_limit',
-        size: folder.notice_total_body_size_limit.to_s(:human_size),
-        limit: folder.notice_total_body_size_limit.to_s(:human_size)
+        size: folder.notice_total_body_size_limit.to_fs(:human_size),
+        limit: folder.notice_total_body_size_limit.to_fs(:human_size)
       )
     end
 

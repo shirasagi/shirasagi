@@ -1,11 +1,20 @@
 require 'spec_helper'
 
 describe "cms/line/statistic", type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
-  let(:message1) { create :cms_line_message }
-  let(:message2) { create :cms_line_message }
-  let(:item1) { create :cms_line_multicast_statistic, name: message1.name, message: message1 }
-  let(:item2) { create :cms_line_multicast_statistic, name: message2.name, message: message2 }
+  let(:now) { Time.zone.now.change(usec: 0) }
+  let!(:site) { cms_site }
+  let!(:message1) { create :cms_line_message, cur_site: site }
+  let!(:message2) { create :cms_line_message, cur_site: site }
+  let!(:item1) do
+    Timecop.freeze(now - 5.minutes) do
+      create :cms_line_multicast_statistic, cur_site: site, name: message1.name, message: message1
+    end
+  end
+  let!(:item2) do
+    Timecop.freeze(now - 4.minutes) do
+      create :cms_line_multicast_statistic, cur_site: site, name: message2.name, message: message2
+    end
+  end
   let(:index_path) { cms_line_statistics_path site }
 
   describe "basic crud" do
@@ -13,8 +22,6 @@ describe "cms/line/statistic", type: :feature, dbscope: :example, js: true do
 
     context "multicast case" do
       it "#download" do
-        item1
-        item2
         visit index_path
         click_on I18n.t("ss.buttons.download")
 

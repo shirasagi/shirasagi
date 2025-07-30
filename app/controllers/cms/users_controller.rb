@@ -70,7 +70,7 @@ class Cms::UsersController < ApplicationController
     raise "400" if @selected_items.blank?
 
     if params[:destroy_all]
-      render_destroy_all(disable_all, location: request.path)
+      render_destroy_all(disable_all, location: SS.request_path(request))
       return
     end
 
@@ -163,5 +163,13 @@ class Cms::UsersController < ApplicationController
       @items << item
     end
     render_confirmed_all(entries.size != @items.size, notice: t('ss.notice.unlock_user_all'))
+  end
+
+  def reset_mfa_otp
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    @item.unset(:mfa_otp_secret, :mfa_otp_enabled_at)
+    redirect_to url_for(action: :show), notice: t("ss.notice.reset_mfa_otp")
   end
 end

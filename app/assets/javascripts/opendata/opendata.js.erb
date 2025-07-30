@@ -150,17 +150,6 @@ this.Opendata = (function () {
     });
   };
 
-  Opendata.confirmUnloading = function () {
-    $("input[type=text],textarea,select").on("change", function () {
-      return $(window).on("beforeunload", function () {
-        return <%= I18n.t('ss.confirm.unload').to_json %>;
-      });
-    });
-    return $("input[type=submit]").on("click", function () {
-      return $(window).off("beforeunload");
-    });
-  };
-
   return Opendata;
 
 })();

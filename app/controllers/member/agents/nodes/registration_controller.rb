@@ -89,13 +89,13 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
   # 確認メールのURLをクリック
   def verify
     @item = Cms::Member.site(@cur_site).and_verification_token(params[:token]).and_temporary.first
-    raise "404" if @item.blank?
+    raise SS::NotFoundError if @item.blank?
   end
 
   # 本登録
   def registration
     @item = Cms::Member.site(@cur_site).and_verification_token(params[:token]).and_temporary.first
-    raise "404" if @item.blank?
+    raise SS::NotFoundError if @item.blank?
 
     @item.attributes = get_params
     @item.in_check_password = true
@@ -179,7 +179,7 @@ class Member::Agents::Nodes::RegistrationController < ApplicationController
 
   def change_password
     @item = Cms::Member.site(@cur_site).and_enabled.find_by_secure_id(params[:token]) rescue nil
-    raise "404" unless @item.present?
+    raise SS::NotFoundError unless @item.present?
 
     return if request.get? || request.head?
 

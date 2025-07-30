@@ -1,0 +1,14 @@
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), item.main_path(space: item) %>
+<% end %>
+
+<% @index_check = proc do |_item| %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%= link_to item.main_path(space: item), style: "display: flex; gap: 5px; align-items: center;" do %>
+    <span><%= item.i18n_name %></span>
+  <% end %>
+<% end %>
+
+<%= render template: "gws/crud/index" %>

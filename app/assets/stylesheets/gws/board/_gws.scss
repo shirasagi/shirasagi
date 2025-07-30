@@ -66,17 +66,25 @@
     }
   }
   .menu {
-    padding: 0 5px 10px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 4px;
+    padding: 0 10px 10px;
     text-align: right;
-    a {
-      margin: 0 4px;
+    .btn:has(.material-icons-outlined) {
+      display: flex;
+      align-items: center;
+      gap: 2px;
     }
     a.primary {
       @include grd-orange;
     }
   }
   .comments {
-    padding-left: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 10px;
   }
 
   .subscribed-users {

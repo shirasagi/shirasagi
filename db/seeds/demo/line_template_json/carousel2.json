@@ -1,0 +1,31 @@
+{
+  "type": "template",
+  "altText": "画像カルーセル_画像リンク1枚のみ",
+  "template": {
+    "type": "image_carousel",
+    "columns": [
+      {
+        "imageUrl": "https://demo.ss-proj.org/img/json_dummy1.png",
+        "action": {
+          "type": "uri",
+          "uri": "https://demo.ss-proj.org/img/json_dummy1.png"
+        }
+      },
+      {
+        "imageUrl": "https://demo.ss-proj.org/img/json_dummy2.png",
+        "action": {
+          "type": "uri",
+          "uri": "https://demo.ss-proj.org/img/json_dummy2.png"
+        }
+      },
+      {
+        "imageUrl": "https://demo.ss-proj.org/img/json_dummy3.png",
+        "action": {
+          "type": "uri",
+          "label": "詳細を確認する",
+          "uri": "https://demo.ss-proj.org/"
+        }
+      }
+    ]
+  }
+}

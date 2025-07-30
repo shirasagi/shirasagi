@@ -112,14 +112,24 @@ describe ApplicationHelper, type: :helper, dbscope: :example do
   describe ".render_application_logo" do
     context "when @cur_site isn't given" do
       subject { helper.render_application_logo }
-      it { is_expected.to eq SS.config.ss.application_logo_html }
+      let(:logo_html) { SS.config.ss.application_logo_html }
+      let(:html) do
+        "<h1 class=\"application-name\"><a href=\"#{sns_mypage_path}\">#{logo_html}</a></h1>"
+      end
+
+      it { is_expected.to eq html }
     end
 
     context "when @cur_site is given" do
       context "when both logo_application_name and logo_application_image aren't given" do
         subject { helper.render_application_logo }
+        let(:logo_html) { SS.config.ss.application_logo_html }
+        let(:html) do
+          "<h1 class=\"application-name\"><a href=\"#{sns_mypage_path}\">#{logo_html}</a></h1>"
+        end
+
         before { @cur_site = gws_site }
-        it { is_expected.to eq SS.config.ss.application_logo_html }
+        it { is_expected.to eq html }
       end
 
       context "when only logo_application_name is given and it is blank" do
@@ -128,8 +138,13 @@ describe ApplicationHelper, type: :helper, dbscope: :example do
           site.logo_application_name = ""
           site
         end
-        subject { helper.render_application_logo(site) }
-        it { is_expected.to eq SS.config.ss.application_logo_html }
+        subject { helper.render_application_logo(site: site) }
+        let(:logo_html) { SS.config.ss.application_logo_html }
+        let(:html) do
+          %(<h1 class="application-name"><a href="#{sns_mypage_path}">#{logo_html}</a></h1>)
+        end
+
+        it { is_expected.to eq html }
       end
 
       context "when only logo_application_name is given and it is present" do
@@ -139,10 +154,15 @@ describe ApplicationHelper, type: :helper, dbscope: :example do
           site.logo_application_name = logo_application_name
           site
         end
-        subject { helper.render_application_logo(site) }
         let(:img_part) { "" }
         let(:span_part) { %(<span class="ss-logo-application-name">#{logo_application_name}</span>) }
-        it { is_expected.to eq %(<div class="ss-logo-wrap">#{img_part}#{span_part}</div>) }
+        let(:logo_html) { %(<div class="ss-logo-wrap">#{img_part}#{span_part}</div>) }
+        let(:html) do
+          %(<h1 class="application-name"><a href="#{sns_mypage_path}">#{logo_html}</a></h1>)
+        end
+        subject { helper.render_application_logo(site: site) }
+
+        it { is_expected.to eq html }
       end
 
       context "when only logo_application_image is given" do
@@ -154,10 +174,15 @@ describe ApplicationHelper, type: :helper, dbscope: :example do
           site.logo_application_image = logo_application_image
           site
         end
-        subject { helper.render_application_logo(site) }
         let(:img_part) { %(<img alt="#{SS.config.ss.application_name}" src="#{logo_application_image.url}" />) }
         let(:span_part) { "" }
-        it { is_expected.to eq %(<div class="ss-logo-wrap">#{img_part}#{span_part}</div>) }
+        let(:logo_html) { %(<div class="ss-logo-wrap">#{img_part}#{span_part}</div>) }
+        let(:html) do
+          %(<h1 class="application-name"><a href="#{sns_mypage_path}">#{logo_html}</a></h1>)
+        end
+        subject { helper.render_application_logo(site: site) }
+
+        it { is_expected.to eq html }
       end
 
       context "when both logo_application_name and logo_application_image are given" do
@@ -171,10 +196,67 @@ describe ApplicationHelper, type: :helper, dbscope: :example do
           site.logo_application_image = logo_application_image
           site
         end
-        subject { helper.render_application_logo(site) }
         let(:img_part) { %(<img alt="#{logo_application_name}" src="#{logo_application_image.url}" />) }
         let(:span_part) { %(<span class="ss-logo-application-name">#{logo_application_name}</span>) }
-        it { is_expected.to eq %(<div class="ss-logo-wrap">#{img_part}#{span_part}</div>) }
+        let(:logo_html) { %(<div class="ss-logo-wrap">#{img_part}#{span_part}</div>) }
+        let(:html) do
+          %(<h1 class="application-name"><a href="#{sns_mypage_path}">#{logo_html}</a></h1>)
+        end
+        subject { helper.render_application_logo(site: site) }
+
+        it { is_expected.to eq html }
+      end
+
+      context "when logo_application_link is portal and cms site given" do
+        before do
+          @cur_site = cms_site
+          @cur_site.logo_application_link = "portal"
+          @cur_site.update!
+        end
+        let(:logo_html) { SS.config.ss.application_logo_html }
+        let(:html) do
+          %(<h1 class="application-name"><a href="#{cms_contents_path(site: @cur_site)}">#{logo_html}</a></h1>)
+        end
+        subject { helper.render_application_logo }
+
+        it { is_expected.to eq html }
+      end
+
+      context "when logo_application_link is portal and gws site given" do
+        before do
+          @cur_site = gws_site
+          @cur_site.logo_application_link = "portal"
+          @cur_site.update!
+        end
+        let(:logo_html) { SS.config.ss.application_logo_html }
+        let(:html) do
+          %(<h1 class="application-name"><a href="#{gws_portal_path(site: @cur_site)}">#{logo_html}</a></h1>)
+        end
+        subject { helper.render_application_logo }
+
+        it { is_expected.to eq html }
+      end
+
+      context "when site and url given" do
+        let(:logo_application_image) do
+          tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", basename: "#{unique_id}.png")
+        end
+        let(:site) do
+          site = gws_site
+          site.logo_application_image = logo_application_image
+          site.logo_application_link = "portal"
+          site
+        end
+        let(:img_part) { %(<img alt="#{SS.config.ss.application_name}" src="#{logo_application_image.url}" />) }
+        let(:span_part) { "" }
+        let(:logo_html) { %(<div class="ss-logo-wrap">#{img_part}#{span_part}</div>) }
+        let(:url) { "/" }
+        let(:html) do
+          %(<h1 class="application-name"><a href="#{url}">#{logo_html}</a></h1>)
+        end
+        subject { helper.render_application_logo(site: site, url: url) }
+
+        it { is_expected.to eq html }
       end
     end
   end

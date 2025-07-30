@@ -1,13 +1,214 @@
 .gws-workflow {
   .btn-download {
     &:before {
-      font-family: "Material Icons";
-      font-size: 108%;
       content: "\E2C4";
-
       display: inline;
       margin-right: 4px;
+      font-family: "Material Icons";
+      font-size: 108%;
+      line-height: .9;
       vertical-align: -3px;
     }
+  }
+}
+
+.gws-workflow-select-forms-notice {
+  padding: 0 15px;
+}
+
+.gws-workflow-select-forms-head {
+  margin: 15px 0;
+  padding: 0 15px;
+
+  .gws-category-navi {
+    margin-right: auto;
+    margin-bottom: 0;
+  }
+}
+
+.gws-workflow-select-forms-index {
+  margin: 15px 0;
+  padding: 0 15px;
+}
+
+.gws-workflow-select-forms-dialog {
+  width: 90vw;
+  height: 90vh;
+
+  .send {
+    position: sticky;
+    bottom: 0;
+    background-color: rgba(255, 255, 255, .85);
+  }
+}
+
+.application-by-purpose-list {
+  display: flex;
+}
+
+.application-by-purpose-list-title {
+  min-width: 150px;
+  padding: 5px;
+  font-weight: bold;
+}
+
+.application-by-purpose-list-items {
+  display: flex;
+}
+
+.application-by-purpose-list-item {
+  padding: 5px;
+}
+
+.gws-workflow-select-forms-table-col {
+  vertical-align: top;
+
+  &.name {
+    width: 20em;
+  }
+  &.updated {
+    width: 12em;
+  }
+  &.description {
+    width: calc(100% - 20em - 12em - 1em);
+  }
+}
+
+.gws-workflow-select-forms-search {
+  display: flex;
+  width: 100%;
+}
+
+.gws-workflow-select-forms-search-keyword {
+  width: 100%;
+
+  [name="s[keyword]"] {
+    width: 100%;
+  }
+}
+
+.gws-workflow-select-forms-search-buttons {
+  margin-left: 5px;
+}
+
+.gws-workflow-select-forms-selected-search {
+  display: inline;
+}
+
+.gws-workflow-select-forms-selected-categories {
+  .gws-category-label {
+    display: inline-flex;
+    align-items: center;
+  }
+}
+
+.gws-workflow-select-forms-search ~ .gws-workflow-select-forms-selected-categories {
+  display: flex;
+  margin-top: 10px;
+}
+.gws-workflow-select-forms-selected-search ~ .gws-workflow-select-forms-selected-categories {
+  display: inline;
+  margin-top: 10px;
+}
+
+.gws-workflow-grid-table {
+  display: grid;
+
+  &[data-col='1'] {
+    grid-template-columns: 1fr;
+  }
+  &[data-col='2'] {
+    grid-template-columns: auto 1fr;
+  }
+  &[data-col='3'] {
+    grid-template-columns: auto auto 1fr;
+  }
+  &[data-col='4'] {
+    grid-template-columns: auto auto auto 1fr;
+  }
+
+  thead, tbody, tfoot, tr {
+    display: contents;
+  }
+
+  tbody {
+    th[scope="col"] {
+      color: #a0522d;
+      font-weight: bold;
+    }
+  }
+
+  tr {
+    &:hover {
+      th, td {
+        background: #f2f2f2;
+      }
+    }
+  }
+
+  tr:nth-child(2n) {
+    th, td {
+      background: #f8f8f8;
+    }
+    &:hover {
+      th, td {
+        background: #f2f2f2;
+      }
+    }
+  }
+
+  th, td {
+    display: flex;
+    align-items: center;
+  }
+
+  tfoot {
+    td {
+      border-top: 1px solid #dcdcdc;
+      background: #f2f2f2;
+      color: #999;
+    }
+  }
+
+  .check {
+    justify-content: center;
+  }
+
+  .error {
+    color: #e00;
+  }
+}
+
+.gws-workflow-destination-states-wrap {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.gws-workflow-destination-states-notice {
+  display: inline-flex;
+  gap: 5px;
+  align-items: center;
+
+  .material-icons-outlined {
+    color: #00C853
+  }
+}
+
+.gws-workflow-application-form-head-container {
+  display: flex;
+  align-items: center;
+  gap: 0 10px;
+
+  .navi {
+    font-weight: normal;
+  }
+}
+
+.gws-workflow-file-approver-item-special-result, .gws-workflow-file-circulation-item-special-result {
+  width: 100%;
+
+  &-item {
+    padding: 6px 18px;
   }
 }

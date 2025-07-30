@@ -15,7 +15,7 @@ class Opendata::Dataset::UrlResourcesController < ApplicationController
   end
 
   def set_dataset
-    raise "403" unless dataset.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless dataset.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @crumbs << [@dataset.name, opendata_dataset_path(id: @dataset)]
   end
 
@@ -23,13 +23,23 @@ class Opendata::Dataset::UrlResourcesController < ApplicationController
     @item = dataset.url_resources.find params[:id]
   end
 
+  def fix_params
+    { cur_user: @cur_user }
+  end
+
   public
 
   def index
     @items = @dataset.url_resources.
+      allow(:read, @cur_user, site: @cur_site, node: @cur_node, owned: true).
       search(params[:s]).
       order_by(name: 1).
       page(params[:page]).per(50)
+  end
+
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node, owned: true)
   end
 
   def create

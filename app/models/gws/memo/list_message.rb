@@ -13,7 +13,7 @@ class Gws::Memo::ListMessage
   include Gws::Addon::Memo::Quota
   include Gws::Addon::GroupPermission
 
-  attr_accessor :cur_user, :cur_list, :in_append_signature
+  attr_accessor :cur_user, :cur_list, :in_append_signature, :publish_user
 
   belongs_to :list, class_name: 'Gws::Memo::List'
 
@@ -22,6 +22,7 @@ class Gws::Memo::ListMessage
   validates :list_id, presence: true
 
   before_save :append_signature, if: ->{ @in_append_signature }
+  after_save :set_publish_user, if: ->{ @publish_user }
 
   scope :and_list_message, ->{ where(type: 'Gws::Memo::ListMessage') }
   scope :and_list, ->(list) { where(list_id: list.id) }
@@ -63,5 +64,10 @@ class Gws::Memo::ListMessage
       self.text += "\n\n#{sign}" if self.text.present?
       self.html += "<p></p>" + h(sign.to_s).gsub(/\r\n|\n/, '<br />') if self.html.present?
     end
+  end
+
+  def set_publish_user
+    item = Gws::Memo::Message.find(id)
+    item.set(user_id: publish_user.id)
   end
 end

@@ -6,6 +6,7 @@ describe Article::Page, dbscope: :example do
   let(:node) { create :article_node_page, cur_site: site }
   let(:prefix) { I18n.t("workflow.cloned_name_prefix") }
   let(:file_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let(:now) { Time.zone.now.change(usec: 0) }
 
   describe "#new_clone" do
     context "with basic page" do
@@ -19,7 +20,9 @@ describe Article::Page, dbscope: :example do
         ].join("\r\n\r\n")
       end
       let!(:item) do
-        create :article_page, cur_site: site, cur_user: user, cur_node: node, html: html, file_ids: [ file1.id, file2.id ]
+        Timecop.freeze(now - 1.week) do
+          create :article_page, cur_site: site, cur_user: user, cur_node: node, html: html, file_ids: [ file1.id, file2.id ]
+        end
       end
 
       context "before save" do
@@ -37,7 +40,6 @@ describe Article::Page, dbscope: :example do
           expect(subject.state).not_to eq item.state
           expect(subject.state).to eq 'closed'
           expect(subject.group_ids).to eq item.group_ids
-          expect(subject.permission_level).to eq item.permission_level
           expect(subject.workflow_user_id).to be_nil
           expect(subject.workflow_state).to be_nil
           expect(subject.workflow_comment).to be_nil
@@ -52,10 +54,10 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created).to eq item.created
-          expect(subject.updated).to eq item.updated
-          expect(subject.released).to eq item.released
-          expect(subject.first_released).to eq item.first_released
+          expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.updated.in_time_zone).to eq item.updated.in_time_zone
+          expect(subject.released).to be_blank # 複製対象から除外
+          expect(subject.first_released).to be_blank # 複製対象から除外
 
           # 保存前は添付ファイルは元と同じ、HTML も元と同じ
           expect(subject.files.count).to eq 2
@@ -69,10 +71,12 @@ describe Article::Page, dbscope: :example do
 
       context "copy page" do
         subject do
-          copy = item.new_clone
-          copy.name = "[#{prefix}] #{copy.name}"
-          copy.save!
-          copy
+          Timecop.freeze(now) do
+            copy = item.new_clone
+            copy.name = "[#{prefix}] #{copy.name}"
+            copy.save!
+            copy
+          end
         end
 
         it do
@@ -89,7 +93,6 @@ describe Article::Page, dbscope: :example do
           expect(subject.state).not_to eq item.state
           expect(subject.state).to eq 'closed'
           expect(subject.group_ids).to eq item.group_ids
-          expect(subject.permission_level).to eq item.permission_level
           expect(subject.workflow_user_id).to be_nil
           expect(subject.workflow_state).to be_nil
           expect(subject.workflow_comment).to be_nil
@@ -104,10 +107,12 @@ describe Article::Page, dbscope: :example do
           expect(subject.branches.count).to eq 0
 
           expect(subject.released_type).to eq item.released_type
-          expect(subject.created).to eq item.created
-          expect(subject.updated).to be > item.updated
-          expect(subject.released).to eq item.released
-          expect(subject.first_released).to eq item.first_released
+          expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.updated.in_time_zone).to be_within(2.minutes).of(now)
+          expect(subject.released).to be_blank
+          # https://github.com/shirasagi/shirasagi/issues/5452:
+          # 複製直後は一度も公開されていないので first_release は blank であるべき
+          expect(subject.first_released).to be_blank
 
           # 複製の場合、添付ファイルは元のコピーなのでIDが異なるファイル（中身は同じ）し HTML も異なる
           expect(subject.files.count).to eq 2
@@ -142,14 +147,19 @@ describe Article::Page, dbscope: :example do
 
       context "branch page" do
         subject do
-          copy = item.new_clone
-          copy.master = item
-          copy.save!
-          copy
+          Timecop.freeze(now) do
+            copy = item.new_clone
+            copy.master = item
+            copy.save!
+            copy
+          end
         end
 
         context "when branch was finally destroyed" do
           it do
+            expect(item.backups.count).to eq 1
+            expect(subject.backups.count).to eq 1
+
             expect(subject.persisted?).to be_truthy
             expect(subject.id).not_to eq item.id
             expect(subject.site_id).to eq item.site_id
@@ -163,7 +173,6 @@ describe Article::Page, dbscope: :example do
             expect(subject.state).not_to eq item.state
             expect(subject.state).to eq 'closed'
             expect(subject.group_ids).to eq item.group_ids
-            expect(subject.permission_level).to eq item.permission_level
             expect(subject.workflow_user_id).to be_nil
             expect(subject.workflow_state).to be_nil
             expect(subject.workflow_comment).to be_nil
@@ -178,10 +187,10 @@ describe Article::Page, dbscope: :example do
             expect(subject.branches.count).to eq 0
 
             expect(subject.released_type).to eq item.released_type
-            expect(subject.created).to eq item.created
-            expect(subject.updated).to be > item.updated
-            expect(subject.released).to eq item.released
-            expect(subject.first_released).to eq item.first_released
+            expect(subject.created.in_time_zone).to be_within(2.minutes).of(now)
+            expect(subject.updated.in_time_zone).to be_within(2.minutes).of(now)
+            expect(subject.released).to be_blank
+            expect(subject.first_released).to be_blank
 
             # 差し替えページの場合、添付ファイルは元と同じ
             expect(subject.files.count).to eq 2
@@ -229,6 +238,11 @@ describe Article::Page, dbscope: :example do
               expect(trash.state).to be_blank
               expect(trash.action).to eq "save"
             end
+
+            expect(subject.backups.count).to eq 0
+
+            # 差し替えページを単に削除した際、マスターページの更新歴は変わらない
+            expect(item.backups.count).to eq 1
           end
         end
 
@@ -244,6 +258,9 @@ describe Article::Page, dbscope: :example do
           end
 
           it do
+            expect(item.backups.count).to eq 1
+            expect(subject.backups.count).to eq 1
+
             subject.class.find(subject.id).tap do |branch|
               expect(branch.new_clone?).to be_falsey
               expect(branch.master_id).to eq item.id
@@ -256,10 +273,15 @@ describe Article::Page, dbscope: :example do
               branch.state = "public"
               branch.save
 
+              # 差し替えページを公開した際の履歴は作成されない
+              expect(subject.backups.count).to eq 1
+
               branch.file_ids = nil
               branch.skip_history_trash = true
               branch.destroy
             end
+
+            expect(subject.backups.count).to eq 0
 
             item.reload
             expect(item.master?).to be_truthy
@@ -291,6 +313,23 @@ describe Article::Page, dbscope: :example do
               expect(trash.data["_id"]).to eq file2.id
               expect(trash.state).to be_blank
               expect(trash.action).to eq "save"
+            end
+
+            # 差し替えページを公開した際、差し替えページの更新履歴をマスターページで確認することができる
+            expect(item.backups.count).to eq 3
+            item.backups.to_a.tap do |backups|
+              backups[0].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq item.id
+              end
+              backups[1].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq subject.id
+              end
+              backups[2].tap do |backup|
+                expect(backup.ref_id).to eq item.id
+                expect(backup.data["_id"]).to eq item.id
+              end
             end
           end
         end

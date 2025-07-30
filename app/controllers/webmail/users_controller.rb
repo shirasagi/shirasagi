@@ -65,4 +65,12 @@ class Webmail::UsersController < ApplicationController
     @item = Webmail::UserExport.new
     send_data @item.export_template_csv(items), filename: "webmail_accounts_template.csv"
   end
+
+  def reset_mfa_otp
+    set_item
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+
+    @item.unset(:mfa_otp_secret, :mfa_otp_enabled_at)
+    redirect_to url_for(action: :show), notice: t("ss.notice.reset_mfa_otp")
+  end
 end

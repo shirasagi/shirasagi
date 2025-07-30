@@ -12,12 +12,12 @@ module SS::BaseFilter
 
     helper SS::EditorHelper
     helper SS::JbuilderHelper
+    helper_method :logout_path
     before_action :set_model
     before_action :set_setting
     before_action :set_ss_assets
     before_action :logged_in?
     before_action :check_api_user
-    before_action :set_logout_path_by_session
     rescue_from StandardError, with: :rescue_action
     layout "ss/base"
   end
@@ -159,7 +159,7 @@ module SS::BaseFilter
     return true
   end
 
-  def set_user(user, opts = {})
+  def set_user(user, **opts)
     if opts[:session]
       old_session_id = session.id
       reset_session if SS.config.sns.logged_in_reset_session
@@ -198,8 +198,8 @@ module SS::BaseFilter
     raise "403"
   end
 
-  def set_logout_path_by_session
-    @logout_path = session[:logout_path].presence
+  def logout_path
+    @logout_path ||= session[:logout_path].presence || sns_logout_path
   end
 
   def set_login_path_to_cookie(path)

@@ -35,7 +35,7 @@ class Chorg::ChangesetImportJob < Cms::ApplicationJob
     exception = nil
     self.class.each_csv(@cur_file) do |row|
       i += 1
-      Rails.logger.tagged("#{i.to_s(:delimited)}行目") do
+      Rails.logger.tagged("#{i.to_fs(:delimited)}行目") do
         item = @revision.changesets.build
         importer.import_row(row, item)
         item.sources = nil if item.type == Chorg::Changeset::TYPE_ADD

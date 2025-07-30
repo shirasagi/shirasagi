@@ -7,11 +7,11 @@ describe SS::Addon::FileSetting::EnvMatcher, dbscope: :example do
   let(:value) { "C=JP,O=JPNIC,OU=security,CN=#{unique_id}" }
 
   before do
-    SS::LogSupport.stdout_logger.enable
+    SS::LogSupport.enable
   end
 
   after do
-    SS::LogSupport.stdout_logger.disable(false)
+    SS::LogSupport.disable(false)
   end
 
   context "when value is given" do
@@ -24,7 +24,7 @@ describe SS::Addon::FileSetting::EnvMatcher, dbscope: :example do
       expect(matcher.match?(ActionDispatch::Request.new(key => value2))).to be_falsey
       expect(matcher.match?(ActionDispatch::Request.new(unique_id.upcase => value))).to be_falsey
 
-      expect { SS::LogSupport.stdout_logger.disable(true) }.to \
+      expect { SS::LogSupport.disable(true) }.to \
         output(include("environment value '#{value2}' is not matched", "environment key '#{key}' is not presented")).to_stdout
     end
   end
@@ -39,7 +39,7 @@ describe SS::Addon::FileSetting::EnvMatcher, dbscope: :example do
 
       expect(matcher.match?(ActionDispatch::Request.new(unique_id.upcase => value))).to be_falsey
 
-      expect { SS::LogSupport.stdout_logger.disable(true) }.to \
+      expect { SS::LogSupport.disable(true) }.to \
         output(include("environment key '#{key}' is not presented")).to_stdout
     end
   end

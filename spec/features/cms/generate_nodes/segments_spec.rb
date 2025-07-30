@@ -47,7 +47,7 @@ describe "cms_generate_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.run")
       end
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.tasks.started'))
+      wait_for_notice I18n.t('ss.tasks.started')
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task.state).to eq "ready"
@@ -109,7 +109,7 @@ describe "cms_generate_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.run")
       end
       expect(current_path).to eq web01_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.tasks.started'))
+      wait_for_notice I18n.t('ss.tasks.started')
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task).to eq nil
@@ -124,7 +124,7 @@ describe "cms_generate_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.run")
       end
       expect(current_path).to eq web02_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.tasks.started'))
+      wait_for_notice I18n.t('ss.tasks.started')
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task).to eq nil
@@ -139,7 +139,7 @@ describe "cms_generate_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.run")
       end
       expect(current_path).to eq web03_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.tasks.started'))
+      wait_for_notice I18n.t('ss.tasks.started')
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task).to eq nil
