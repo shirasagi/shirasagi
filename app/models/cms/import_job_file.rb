@@ -17,6 +17,7 @@ class Cms::ImportJobFile
 
   validate :validate_root_node
   validate :validate_in_file
+  validate :user_id
 
   before_save :set_import_date
   before_save :save_root_node, if: -> { @root_node }
@@ -61,6 +62,7 @@ class Cms::ImportJobFile
     item.filename = filename
     item.name = ::File.basename(filename)
     item.cur_site = site
+    item.cur_user = user
     item.group_ids = user.group_ids
 
     if item.save
@@ -82,6 +84,7 @@ class Cms::ImportJobFile
     item.name = ::File.basename(filename)
     item.html = import_html
     item.cur_site = site
+    item.cur_user = user
     item.group_ids = user.group_ids
 
     if item.save
@@ -216,8 +219,9 @@ class Cms::ImportJobFile
     @root_node.filename = basename
     @root_node.name = name
     @root_node.cur_site = cur_site
+    @root_node.cur_user = cur_user
     @root_node.cur_node = cur_node if cur_node
-    @root_node.group_ids = cur_site.group_ids
+    @root_node.group_ids = cur_user.group_ids if cur_user
     return if @root_node.valid?
 
     self.errors.add :base, I18n.t("errors.messages.root_node_save_error")
