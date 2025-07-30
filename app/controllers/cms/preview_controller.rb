@@ -90,8 +90,8 @@ class Cms::PreviewController < ApplicationController
     page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
     page.lock_until = nil if page.respond_to?(:lock_until)
 
-    raise page_not_found unless page.name.present?
-    raise page_not_found unless page.basename.present?
+    # raise page_not_found unless page.name.present?
+    # raise page_not_found unless page.basename.present?
     page.basename = page.basename.sub(/\..+?$/, "") + ".html"
 
     # column_values
