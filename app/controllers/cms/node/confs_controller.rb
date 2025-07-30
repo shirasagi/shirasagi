@@ -1,6 +1,7 @@
 class Cms::Node::ConfsController < ApplicationController
   include Cms::BaseFilter
   include Cms::NodeFilter
+  include Cms::LoopSettingFilter
 
   model Cms::Node
 
@@ -26,6 +27,15 @@ class Cms::Node::ConfsController < ApplicationController
   end
 
   public
+
+  def update
+    process_loop_setting_params
+
+    @item.attributes = get_params
+    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+    render_update @item.update
+  end
 
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user)
