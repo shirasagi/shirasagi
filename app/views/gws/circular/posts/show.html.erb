@@ -1,13 +1,13 @@
 <% parent = params[:controller].split('/').last %>
 <% @item_menu_proc = proc do |item| %>
-  <% if item.member?(@cur_user) %>
+  <% if item.member_include?(@cur_user) %>
     <%=
       link_to new_gws_circular_comment_path(category: @category || '-', parent: parent, post_id: item), class: 'btn primary' do
         md_icons.outlined("reply", size: 15) + tag.span(t('gws/board.links.comment'), class: "button-label")
       end
     %>
   <% end %>
-  <% if item.see_type_normal? && item.member?(@cur_user) %>
+  <% if item.see_type_normal? && item.member_include?(@cur_user) %>
     <% if item.seen?(@cur_user) %>
       <%= link_to tag.span(item.see_action_label(@cur_user), class: "button-label"), unset_seen_gws_circular_post_path(category: @category || '-'), method: :post, class: "btn gws-btn-pushed" %>
     <% else %>
