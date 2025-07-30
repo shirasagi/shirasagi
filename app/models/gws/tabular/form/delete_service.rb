@@ -9,6 +9,7 @@ class Gws::Tabular::Form::DeleteService
 
     return false unless form.destroy
 
+    delete_class_file(form_release)
     delete_all_files(form_release, file_model)
     delete_all_releases(form_release, file_model)
     true
@@ -19,6 +20,11 @@ class Gws::Tabular::Form::DeleteService
   def find_release
     releases = Gws::Tabular::FormRelease.where(form_id: form.id, revision: form.revision)
     releases.reorder(patch: -1).first
+  end
+
+  def delete_class_file(form_release)
+    generator = Gws::Tabular::File::Generator.new(form_release: form_release)
+    ::FileUtils.rm(generator.target_file_path)
   end
 
   def delete_all_releases(form_release, file_model)

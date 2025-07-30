@@ -4,9 +4,10 @@ module Gws::Tabular::File
   include SS::Liquidization
 
   included do
-    cattr_accessor(:form_id, instance_accessor: false)
-    cattr_accessor(:revision, instance_accessor: false)
-    cattr_accessor(:patch, instance_accessor: false)
+    cattr_accessor(:form_release, instance_accessor: false)
+    cattr_accessor(:released_form, instance_accessor: false)
+    cattr_accessor(:released_columns, instance_accessor: false)
+
     cattr_accessor(:field_name_to_method_name_map, instance_accessor: false)
     self.field_name_to_method_name_map = {}
     cattr_accessor(:renderer_factory_map, instance_accessor: false)
@@ -37,7 +38,15 @@ module Gws::Tabular::File
   end
 
   module ClassMethods
-    def add_column(column)
+    def load_form_release(form_id, revision, patch)
+      self.form_release = Gws::Tabular::FormRelease.where(form_id: form_id, revision: revision, patch: patch).first
+      self.released_form = Gws::Tabular.released_form(form_release, site: form_release.site)
+      self.released_columns = Gws::Tabular.released_columns(form_release, site: form_release.site)
+    end
+
+    def add_column(column_id)
+      column_id = column_id.to_s
+      column = released_columns.find { _1.id.to_s == column_id }
       column.configure_file(self)
       # 現状、項目名の国際化はされていないけど、国際化の余地を残しておく
       self.field_name_map["col_#{column.id}"] = { I18n.default_locale => column.name }
@@ -69,74 +78,30 @@ module Gws::Tabular::File
       end
       criteria
     end
-
-    def workflow_addons(form)
-      addons = []
-
-      addons << Gws::Addon::Tabular::Inspection
-      addons << Gws::Addon::Tabular::Circulation
-      addons << Gws::Addon::Tabular::DestinationState
-      addons << Gws::Addon::Tabular::Approver
-      addons << Gws::Addon::Tabular::ApproverPrint
-      addons << Gws::Workflow2::DestinationSetting
-      addons << Gws::Tabular::Release
-
-      addons
-    end
   end
 
-  mattr_accessor :class_map, instance_accessor: false, default: {}
+  mattr_accessor :mutex, instance_accessor: false, default: Thread::Mutex.new
 
   def self.[](form_release)
-    memorize_class form_release.id.to_s do
-      form = Gws::Tabular.released_form(form_release, site: form_release.site)
-      form ||= form_release.form
-      columns = Gws::Tabular.released_columns(form_release, site: form_release.site)
-      columns ||= form.columns.reorder(order: 1, id: 1).to_a
+    generator = Gws::Tabular::File::Generator.new(form_release: form_release)
+    if Gws::Tabular.const_defined?(generator.model_name)
+      file_model = Gws::Tabular.const_get(generator.model_name)
+      return file_model if file_model.form_release == form_release
+    end
 
-      model_name = "File#{form.id}"
-      model = Class.new do
-        extend SS::Translation
-        include SS::Document
-        include Gws::Referenceable
-        include Gws::Reference::User
-        include Gws::Reference::Site
-        include SS::Relation::File
-        include Gws::Tabular::File
-        include Gws::Reference::Tabular::Space
-        include Gws::Reference::Tabular::Form
-        include Gws::SitePermission
+    Gws::Tabular::File.mutex.synchronize do
+      # ロックを獲得している間に他のスレッドでロードされたかもしれないので、もう一度確認
+      if Gws::Tabular.const_defined?(generator.model_name)
+        file_model = Gws::Tabular.const_get(generator.model_name)
+        next file_model if file_model.form_release == form_release
 
-        # Mongoid 9.0.2 以降、グローバルレジストリを通じてカスタム多形型をサポートするようになった。
-        # この影響だと思うが owner_item_type が unset になる現象を確認した。
-        # これを防ぐために identify_as を用いて明示的に型を登録する
-        identify_as "Gws::Tabular::#{model_name}"
-        store_in collection: "gws_tabular_file_#{form.id}"
-        set_permission_name "gws_tabular_files"
-
-        if form.workflow_enabled?
-          workflow_addons(form).each do |addon|
-            include addon
-          end
-
-          cattr_reader(:approver_user_class) { Gws::User }
-        end
-
-        # 注意: include の順番によっては Workflow::Approver.search が有効化してしまうのでこの位置でオーバーライドする。
-        include Gws::Tabular::File::Search
-
-        columns.each do |column|
-          add_column column
-        end
+        Gws::Tabular.send(:remove_const, generator.model_name)
       end
 
-      model.form_id = form.id.to_s
-      model.revision = form_release.try(:revision)
-      model.patch = form_release.try(:patch)
+      generator.call
+      load generator.target_file_path
 
-      SS.update_const Gws::Tabular, model_name, model
-
-      model
+      Gws::Tabular.const_get(generator.model_name)
     end
   end
 
@@ -180,16 +145,6 @@ module Gws::Tabular::File
   end
 
   private
-
-  def self.memorize_class(class_key)
-    model = Gws::Tabular::File.class_map[class_key]
-    return model if model
-
-    model = yield
-
-    Gws::Tabular::File.class_map[class_key] = model
-  end
-  private_class_method :memorize_class
 
   def validate_column_values
     return if form.blank?

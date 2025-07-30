@@ -23,7 +23,7 @@ class Gws::Tabular::File::NotificationSubjectService
   def call
     template = SUBJECT_TEMPLATE_MAP[type]
 
-    release = Gws::Tabular.form_release_from_file_model(item.class, site: site)
+    release = item.class.form_release
     form = Gws::Tabular.load_form(release, site: site)
 
     title = Gws::Tabular.item_title(item, site: site)
