@@ -2,7 +2,7 @@ ja:
   tooltip:
     cms/addon/sns_poster:
       twitter_auto_post:
-        - Twitterへの自動投稿の設定を行います。
+        - X(旧Twitter)への自動投稿の設定を行います。
     cms/addon/node_auto_post_setting:
       node_twitter_auto_post:
-        - Twitterへの自動投稿の設定を行います。
+        - X(旧Twitter)への自動投稿の設定を行います。

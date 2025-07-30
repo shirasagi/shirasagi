@@ -29,7 +29,7 @@ class Gws::Discussion::TodosController < ApplicationController
 
   def set_crumbs
     @crumbs << [ @cur_site.menu_discussion_label || t('modules.gws/discussion'), gws_discussion_forums_path ]
-    @crumbs << [ @forum.name, gws_discussion_forum_topics_path ]
+    @crumbs << [ @forum.name, gws_discussion_forum_portal_path ]
     @crumbs << [ t('modules.gws/schedule/todo'), gws_discussion_forum_todos_path ]
   end
 

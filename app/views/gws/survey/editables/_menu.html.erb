@@ -12,7 +12,7 @@
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <% if @item.public? %>
+      <% if @item.state == "public" %>
         <%= link_to t('gws/workflow.links.depublish'), action: :depublish, id: @item %>
       <% else %>
         <%= link_to t('gws/workflow.links.publish'), action: :publish, id: @item %>

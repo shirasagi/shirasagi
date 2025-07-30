@@ -12,11 +12,6 @@ describe "gws_bookmark_items", type: :feature, dbscope: :example, js: true do
   context "basic crud" do
     it "#index" do
       visit index_path
-
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
-
       within ".index .list-items" do
         expect(page).to have_selector(".list-item a", text: item1.url)
         expect(page).to have_selector(".list-item a[target=\"_blank\"]", text: item2.url)

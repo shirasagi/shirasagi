@@ -9,11 +9,11 @@ class Chorg::Runner < Cms::ApplicationJob
   TEST = 'test'.freeze
 
   def models_scope
-    site_ids = @item.target_sites.map(&:id)
+    site_ids = @cur_site.chorg_sites.pluck(:id)
     if site_ids.present?
-      { "site_id" => { "$in" => site_ids } }
+      { site_id: { "$in" => site_ids } }
     else
-      {}
+      { site_id: @cur_site.id }
     end
   end
 

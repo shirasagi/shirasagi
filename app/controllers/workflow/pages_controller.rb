@@ -4,6 +4,10 @@ class Workflow::PagesController < ApplicationController
 
   before_action :set_item, only: %i[request_update restart_update approve_update pull_up_update remand_update branch_create]
 
+  %i[request_update restart_update approve_update pull_up_update remand_update request_cancel branch_update].tap do |names|
+    after_action :create_history_log, only: names
+  end
+
   private
 
   def set_model
@@ -20,17 +24,29 @@ class Workflow::PagesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site, cur_node: false }
   end
 
+  def create_history_log
+    # レスポンスの status コードが 200 か 422 の場合、操作履歴が作られないので、手動で作成
+    self.class.log_class.create_log!(
+      request, response,
+      controller: params[:controller], action: params[:action],
+      cur_site: @cur_site, cur_user: @cur_user, item: @item
+    ) rescue nil
+  end
+
   def request_approval
     current_level = @item.workflow_current_level
     current_workflow_approvers = @item.workflow_pull_up_approvers_at(current_level)
     Workflow::Mailer.send_request_mails(
-      f_uid: @item.workflow_user_id, t_uids: current_workflow_approvers.map { |approver| approver[:user_id] },
+      f_uid: @item.workflow_user_id, m_id: @item.workflow_member_id,
+      t_uids: current_workflow_approvers.map { |approver| approver[:user_id] },
       site: @cur_site, page: @item,
       url: params[:url], comment: @item.workflow_comment
     )
 
     @item.set_workflow_approver_state_to_request
-    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
+    @item.record_timestamps = false
+    # 更新履歴が作成されるように変更する
+    # @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.save
   end
 
@@ -95,6 +111,8 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
+    @item.record_timestamps = false
+    # 一時保存のため、履歴を作成しないようにする（履歴に記録したい保存は request_approval で行われる）
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.approved = nil
     @item.workflow_user_id = @cur_user.id
@@ -107,8 +125,10 @@ class Workflow::PagesController < ApplicationController
     @item.workflow_required_counts = params[:workflow_required_counts]
     @item.workflow_current_circulation_level = 0
     @item.workflow_circulations = params[:workflow_circulations]
+    result = @item.save
+    @item.skip_history_backup = false if @item.respond_to?(:skip_history_backup)
 
-    if @item.save
+    if result
       request_approval
       render json: create_success_response
     else
@@ -119,6 +139,8 @@ class Workflow::PagesController < ApplicationController
   def restart_update
     raise "403" unless @item.allowed?(:edit, @cur_user)
 
+    @item.record_timestamps = false
+    # 一時保存のため、履歴を作成しないようにする（履歴に記録したい保存は request_approval で行われる）
     @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     @item.approved = nil
     @item.workflow_user_id = @cur_user.id
@@ -129,6 +151,7 @@ class Workflow::PagesController < ApplicationController
     copy.each do |approver|
       approver[:state] = @model::WORKFLOW_STATE_PENDING
       approver[:comment] = ''
+      approver.delete(:created)
     end
     @item.workflow_approvers = Workflow::Extensions::WorkflowApprovers.new(copy)
     @item.workflow_current_circulation_level = 0
@@ -138,8 +161,10 @@ class Workflow::PagesController < ApplicationController
       circulation[:comment] = ''
     end
     @item.workflow_circulations = Workflow::Extensions::WorkflowCirculations.new(copy)
+    result = @item.save
+    @item.skip_history_backup = false if @item.respond_to?(:skip_history_backup)
 
-    if @item.save
+    if result
       request_approval
       render json: create_success_response
     else
@@ -164,7 +189,9 @@ class Workflow::PagesController < ApplicationController
       @item.approve_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     end
 
-    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
+    @item.record_timestamps = false
+    # 更新履歴が作成されるように変更する
+    # @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if @item.finish_workflow?
       @item.approved = Time.zone.now
       @item.workflow_state = @model::WORKFLOW_STATE_APPROVE
@@ -174,7 +201,8 @@ class Workflow::PagesController < ApplicationController
       else
         @item.state = 'public'
       end
-      @item.skip_history_backup = false if @item.respond_to?(:skip_history_backup)
+      @item.record_timestamps = true
+      # @item.skip_history_backup = false if @item.respond_to?(:skip_history_backup)
 
       if @item.respond_to?(:release_date)
         if @item.release_date
@@ -190,6 +218,8 @@ class Workflow::PagesController < ApplicationController
       guard = ->(&block) do
         task.run_with(rejected: rejected) do
           task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.publish_save")}"
+          task.log "master: #{@item.master.filename}(#{@item.master_id})"
+          task.log "branch: #{@item.filename}(#{@item.id})"
           block.call
         end
       end
@@ -203,8 +233,11 @@ class Workflow::PagesController < ApplicationController
       result = @item.save
     end
 
-    if !result
+    if result
+      task.log "succeeded" if task
+    else
       render json: @item.errors.full_messages, status: :unprocessable_entity
+      task.log "failed\n#{@item.errors.full_messages.join("\n")}" if task
       return
     end
 
@@ -249,8 +282,10 @@ class Workflow::PagesController < ApplicationController
       end
     end
 
-    @item.remand_workflow_approver_state(@cur_user, params[:remand_comment])
-    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
+    @item.remand_workflow_approver_state(@cur_user, comment: params[:remand_comment])
+    @item.record_timestamps = false
+    # 更新履歴が作成されるように変更する
+    # @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if !@item.save
       render json: @item.errors.full_messages, status: :unprocessable_entity
       return
@@ -284,7 +319,9 @@ class Workflow::PagesController < ApplicationController
     # @item.workflow_user_id = nil
     @item.workflow_state = @model::WORKFLOW_STATE_CANCELLED
 
-    @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
+    @item.record_timestamps = false
+    # 更新履歴が作成されるように変更する
+    # @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if @item.save
       render json: { notice: t('workflow.notice.request_cancelled') }
     else
@@ -296,27 +333,9 @@ class Workflow::PagesController < ApplicationController
     raise "400" if @item.branch?
 
     @item.cur_node = @item.parent
-    if @item.branches.blank?
-      task = SS::Task.find_or_create_for_model(@item, site: @cur_site)
-
-      result = nil
-      rejected = -> do
-        @item.errors.add :base, :other_task_is_running
-        render :branch, layout: false, status: :unprocessable_entity
-        result = false
-      end
-
-      task.run_with(rejected: rejected) do
-        task.log "# #{I18n.t("workflow.branch_page")} #{I18n.t("ss.buttons.new")}"
-
-        copy = @item.new_clone
-        copy.master = @item
-        result = copy.save
-      end
-      return unless result
-
-      @item.reload
-    end
+    service = Workflow::BranchCreationService.new(cur_site: @cur_site, item: @item)
+    result = service.call
+    return unless result
 
     @items = @item.branches
     render :branch, layout: false

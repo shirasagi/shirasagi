@@ -35,19 +35,19 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       within ".mod-workflow-request" do
         select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
         click_on I18n.t("workflow.buttons.select")
-        wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+        wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user1.long_name)
-        click_on user1.long_name
+        wait_for_cbox_closed { click_on user1.long_name }
       end
 
       within ".mod-workflow-request" do
-        wait_cbox_open { click_on I18n.t("workflow.search_circulations.index") }
+        wait_for_cbox_opened { click_on I18n.t("workflow.search_circulations.index") }
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_content(user2.long_name)
-        click_on user2.long_name
+        wait_for_cbox_closed { click_on user2.long_name }
       end
 
       within ".mod-workflow-request" do
@@ -79,8 +79,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user1: 申請を承認する
       #
-      login_user user1
-      visit show_path
+      login_user user1, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: approve_comment1
@@ -95,7 +94,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 1
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'unseen', comment: ''})
@@ -117,8 +119,7 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       #
       # user2: 申請を確認する
       #
-      login_user user2
-      visit show_path
+      login_user user2, to: show_path
 
       within ".mod-workflow-approve" do
         fill_in "remand[comment]", with: circulation_comment2
@@ -133,7 +134,10 @@ describe Gws::Workflow::FilesController, type: :feature, dbscope: :example, js: 
       expect(item.workflow_comment).to eq workflow_comment
       expect(item.workflow_approvers.count).to eq 1
       expect(item.workflow_approvers).to \
-        include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
+        include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+          created: be_within(30.seconds).of(Time.zone.now)
+        })
       expect(item.workflow_circulations.count).to eq 1
       expect(item.workflow_circulations).to \
         include({level: 1, user_id: user2.id, state: 'seen', comment: circulation_comment2})

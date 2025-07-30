@@ -12,7 +12,7 @@ describe Opendata::Harvest::ImportJob, dbscope: :example, tmpdir: true, ckan: tr
   let!(:exporter) { create(:opendata_harvest_exporter, cur_node: node, url: ckan_url, api_key: api_key) }
   let!(:importer) { create(:opendata_harvest_importer, cur_node: node, source_url: ckan_url, api_type: "ckan") }
 
-  let!(:ckan_url) { "http://localhost:8080" }
+  let!(:ckan_url) { "http://localhost:#{SS::CkanSupport.docker_ckan_port}" }
   let!(:api_key) { SS::CkanSupport.docker_ckan_api_key }
 
   let!(:dataset1) { create :opendata_dataset, cur_site: site, cur_node: node, group_ids: [group.id] }

@@ -33,12 +33,12 @@
               <% end %>
             </tbody>
           </table>
-          <% if data.size > 0 %>
-            <dd class="graph">
-              <canvas class="graph-canvas" height="<%= data.keys.count * 25 %>" data-name='<%= column.name %>' data-columns='<%= data.to_json %>'></canvas>
-            </dd>
-          <% end %>
         </dd>
+        <% if data.size > 0 %>
+          <dd class="graph">
+            <canvas class="graph-canvas" height="<%= data.keys.count * 25 %>" data-name='<%= column.name %>' data-columns='<%= data.to_json %>'></canvas>
+          </dd>
+        <% end %>
       </dl>
     <% end %>
   <% end %>

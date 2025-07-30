@@ -56,7 +56,7 @@ describe Jmaxml::Filter, dbscope: :example do
     expect(Article::Page.count).to eq 1
     Article::Page.first.tap do |page|
       expect(page.name).to eq '震度速報'
-      expect(page.state).to eq action1.publish_state
+      expect(page.state).to eq "closed"
       expect(page.category_ids).to eq [ category_node.id ]
       expect(page.html).to include('<div class="jmaxml quake">')
       expect(page.html).to include('<time datetime="2011-03-11T14:48:10+09:00">2011年3月11日 14時48分</time>')

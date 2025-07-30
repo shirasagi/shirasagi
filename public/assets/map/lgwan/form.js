@@ -7,15 +7,15 @@ this.Map_Lgwan_Form = (function () {
   Map_Lgwan_Form.deleteMessage = "マーカーを削除してよろしいですか？";
 
   Map_Lgwan_Form.renderEvents = function () {
-    $(".mod-map .add-marker").on('click', function (e) {
+    $(".mod-map .add-marker").on('click', function (_e) {
       Map_Lgwan_Form.clonePointForm();
       return false;
     });
-    $(".mod-map .clear-marker").on('click', function (e) {
+    $(".mod-map .clear-marker").on('click', function (_e) {
       Map_Lgwan_Form.clearPointForm($(this).closest("dd.marker"));
       return false;
     });
-    $(".mod-map .set-marker").on('click', function (e) {
+    $(".mod-map .set-marker").on('click', function (_e) {
       Map_Lgwan_Form.createMarker($(this).closest("dd.marker"));
       return false;
     });

@@ -25,4 +25,7 @@
 
   <dt><%= @model.t :kv_thumbnail_count %><%= @model.tt :kv_thumbnail_count %></dt>
   <dd><%= f.number_field :kv_thumbnail_count, placeholder: KeyVisual::Part::SwiperSlide::DEFAULT_KV_THUMBNAIL_COUNT %></dd>
+
+  <dt><%= @model.t :kv_scrollbar %><%= @model.tt :kv_scrollbar %></dt>
+  <dd><%= f.select :kv_scrollbar, @item.kv_scrollbar_options %></dd>
 </dl>

@@ -28,7 +28,7 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
         fill_in_code_mirror "item[category_html]", with: category_html
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic", text: name)
       expect(page).to have_css("#addon-basic", text: category_html)
       expect(root_categories.size).to eq 1
@@ -51,7 +51,7 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
         fill_in_code_mirror "item[category_html]", with: category_html
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic", text: "modify")
       expect(page).to have_css("#addon-basic", text: category_html)
       expect(root_categories.size).to eq 1
@@ -64,7 +64,7 @@ describe "cms/line/deliver_category", type: :feature, dbscope: :example, js: tru
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(root_categories.size).to eq 0
     end
   end

@@ -3,12 +3,12 @@ module Service::LoginFilter
 
   private
 
-  def render_login(user, account, opts = {})
+  def render_login(user, account, **opts)
     alert = opts.delete(:alert).presence || t("service.errors.invalid_login")
 
     if user
       opts[:session] ||= true
-      set_user(user, opts)
+      set_user(user, **opts)
 
       respond_to do |format|
         format.html { redirect_to(service_main_path) }

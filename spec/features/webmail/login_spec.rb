@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "webmail_login", type: :feature, dbscope: :example, imap: true do
+describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: true do
   let(:user) { create :webmail_user, imap_settings: [] }
   let(:login_path) { webmail_login_path }
   let(:logout_path) { webmail_logout_path }
@@ -14,6 +14,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
       expect(current_path).to eq login_path
     end
   end
@@ -26,6 +27,9 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
+      end
       expect(current_path).to eq main_path
     end
 
@@ -36,13 +40,21 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
+      end
       expect(current_path).to eq main_path
-      expect(find('#head .logout')[:href]).to eq logout_path
+      within ".user-navigation" do
+        wait_for_event_fired("turbo:frame-load") { click_on user.name }
+        expect(page).to have_link(I18n.t("ss.logout"), href: logout_path)
+        click_on I18n.t("ss.logout")
+      end
 
-      find('#head .logout').click
+      expect(page).to have_css(".login-box", text: SS.version)
       expect(current_path).to eq login_path
 
       visit main_path
+      expect(page).to have_css(".login-box", text: SS.version)
       expect(current_path).to eq login_path
     end
   end
@@ -55,18 +67,27 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true do
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
       end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
+      end
 
       expect(current_path).to eq webmail_addresses_path(group: "-")
     end
   end
 
   context "when internal url is given at `ref` parameter" do
+    let(:capybara_server) { Capybara.current_session.server }
+    let(:ref) { webmail_addresses_url(host: "#{capybara_server.host}:#{capybara_server.port}", group: "-") }
+
     it do
-      visit webmail_login_path(ref: webmail_addresses_url(group: "-"))
+      visit webmail_login_path(ref: ref)
       within "form" do
         fill_in "item[email]", with: user.email
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
+      end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
       end
 
       expect(current_path).to eq webmail_addresses_path(group: "-")
@@ -91,6 +112,9 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true do
         fill_in "item[email]", with: user.email
         fill_in "item[password]", with: "pass"
         click_button I18n.t("ss.login")
+      end
+      within ".user-navigation" do
+        expect(page).to have_css(".user-name", text: user.name)
       end
 
       expect(current_path).to eq main_path

@@ -17,4 +17,4 @@
   <%= @page.workflow_comment %>
 
 - 記事URL
-  <%= URI.join(@site.mypage_full_url, @page.private_show_path).to_s %>
+  <%= ::Addressable::URI.join(@site.mypage_full_url, @page.private_show_path).to_s %>

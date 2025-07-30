@@ -10,7 +10,7 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
   let!(:edit_path) { edit_article_page_path(site: site, cid: node, id: item) }
 
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
-  let!(:column1) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1) }
+  # let!(:column1) { create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "optional", order: 1) }
   let!(:column2) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 2) }
 
   let(:logs_path) { history_cms_logs_path site.id }
@@ -20,36 +20,34 @@ describe "history_cms_logs", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within 'form#item-form' do
-        wait_event_to_fire("ss:formActivated") do
+        wait_for_event_fired("ss:formActivated") do
           page.accept_confirm(I18n.t("cms.confirm.change_form")) do
             select form.name, from: 'in_form_id'
           end
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       within ".column-value-palette" do
-        wait_event_to_fire("ss:columnAdded") do
+        wait_for_event_fired("ss:columnAdded") do
           click_on column2.name
         end
       end
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
-      within ".column-value-cms-column-free" do
-        wait_cbox_open do
-          click_on I18n.t("cms.file")
-        end
-      end
-      wait_for_cbox do
-        attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        wait_cbox_close do
-          click_on I18n.t('ss.buttons.attach')
-        end
-      end
+      ss_upload_file "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg", addon: ".column-value-cms-column-free"
       within ".column-value-cms-column-free" do
         expect(page).to have_css(".file-view", text: "keyvisual.jpg")
       end
       click_on I18n.t("ss.buttons.publish_save")
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       item.reload
       expect(item.column_values.count).to eq 1

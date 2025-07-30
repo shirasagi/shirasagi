@@ -1,4 +1,4 @@
-.markdown-body { padding: 0 7px; }
+.markdown-body { padding: 0; }
 .markdown-body ul li { list-style: disc outside none; }
 
 /**
@@ -209,14 +209,6 @@
 
 .markdown-body .octicon-link:before {
   content: "\f05c";
-}
-
-.markdown-body>*:first-child {
-  margin-top: 0 !important;
-}
-
-.markdown-body>*:last-child {
-  margin-bottom: 0 !important;
 }
 
 .markdown-body a:not([href]) {
@@ -647,4 +639,17 @@
   z-index: 1;
   position: relative;
   border-color: #4078c0;
+}
+
+.markdown-body p {
+  margin-block-start: 2.25em;
+  margin-block-end: 2.25em;
+  line-height: 2rem;
+
+  &:first-child {
+    margin-block-start: 0;
+  }
+  &:last-child {
+    margin-block-end: 0;
+  }
 }

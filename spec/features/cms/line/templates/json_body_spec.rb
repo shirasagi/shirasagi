@@ -41,7 +41,7 @@ describe "cms/line/templates json_body", type: :feature, dbscope: :example, js: 
       within "footer.send" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # check talk-balloon
       within "#addon-cms-agents-addons-line-message-body" do
@@ -63,7 +63,7 @@ describe "cms/line/templates json_body", type: :feature, dbscope: :example, js: 
       within "footer.send" do
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       # delete talk-balloon
       within "#addon-cms-agents-addons-line-message-body" do
@@ -75,7 +75,7 @@ describe "cms/line/templates json_body", type: :feature, dbscope: :example, js: 
           end
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       within "#addon-cms-agents-addons-line-message-body" do
         expect(page).to have_css("h2", text: I18n.t("modules.addons.cms/line/message/body"))

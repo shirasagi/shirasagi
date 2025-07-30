@@ -8,6 +8,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     shared_examples "webmail/mails with space separated address with DN flow" do
       before do
         webmail_import_mail(user, msg)
+        Webmail.imap_pool.disconnect_all
 
         ActionMailer::Base.deliveries.clear
         login_user(user)

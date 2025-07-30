@@ -1,0 +1,10 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% download_url = url_for(action: :download_all) rescue (url_for(action: :download) rescue nil) %>
+      <% if download_url %>
+        <%= link_to(t('ss.links.download'), download_url, class: :download) %>
+      <% end %>
+    <% end %>
+  <% end %>
+</nav>

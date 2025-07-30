@@ -69,7 +69,7 @@ module Gws::Schedule::TodoFilter
     path = params.dig(:calendar, :path)
     if path.present? && trusted_url?(path)
       uri = ::Addressable::URI.parse(path)
-      uri.query = redirection_calendar_params.to_param
+      uri.query = redirection_calendar_query.to_param
       uri.request_uri
     else
       nil

@@ -352,6 +352,7 @@ class Cms::PageExporter
       end
     end
     drawer.column :contact_group_relation, type: :label
+    drawer.column :contact_group_name
     drawer.column :contact_charge
     drawer.column :contact_tel
     drawer.column :contact_fax
@@ -372,10 +373,6 @@ class Cms::PageExporter
   def draw_groups(drawer)
     drawer.column :groups do
       drawer.body { |item| item.try(:groups).try(:pluck, :name).join("\n") }
-    end
-
-    unless SS.config.ss.disable_permission_level
-      drawer.column :permission_level
     end
   end
 

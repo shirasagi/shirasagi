@@ -56,7 +56,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   def zip_each_datasets_csv
     @zip_datasets_count ||= 0
     zip_file.each do |datasets_csv_entry|
-      datasets_csv_path = zip_normalize_entry_name(datasets_csv_entry)
+      datasets_csv_path = SS::Zip.safe_zip_entry_name(datasets_csv_entry)
       next unless datasets_csv_path.end_with?("/datasets.csv")
 
       temp_name = "#{temp_dir}/datasets-#{@zip_datasets_count}.csv"
@@ -77,22 +77,12 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     zip_file.find_entry(entry_path)
   end
 
-  def zip_normalize_entry_name(entry)
-    name = entry.name
-    if entry.gp_flags & Zip::Entry::EFS
-      name.force_encoding("UTF-8")
-    else
-      name = NKF.nkf('-w', name)
-    end
-    name
-  end
-
   def zip_first_file(pattern)
     found = nil
     zip_file.each do |entry|
       next unless entry.file?
 
-      path = zip_normalize_entry_name(entry)
+      path = SS::Zip.safe_zip_entry_name(entry)
       next unless ::File.fnmatch(pattern, path.chomp('/'))
 
       found = entry
@@ -146,7 +136,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     @zip_resources_count += 1
 
     ::SS::Csv.open(temp_name) do |resources_csv_table|
-      resources_csv_path = zip_normalize_entry_name(resources_csv_entry)
+      resources_csv_path = SS::Zip.safe_zip_entry_name(resources_csv_entry)
       resources_csv_dir = ::File.dirname(resources_csv_path)
       task.tagged(resources_csv_path) do
         task.log("start importing resources")
@@ -187,6 +177,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
     # contact
     item.contact_state = value(row, item, :contact_state)
     item.contact_group_id = Cms::Group.site(site).where(name: value(row, item, :contact_group_id)).first.try(:id)
+    item.contact_group_name = value(row, item, :contact_group_name)
     item.contact_charge = value(row, item, :contact_charge)
     item.contact_tel = value(row, item, :contact_tel)
     item.contact_fax = value(row, item, :contact_fax)
@@ -304,7 +295,7 @@ class Opendata::Dataset::ImportJob < Cms::ApplicationJob
   end
 
   def create_file(entry)
-    path = zip_normalize_entry_name(entry)
+    path = SS::Zip.safe_zip_entry_name(entry)
     basename = ::File.basename(path)
     basename = SS::FilenameUtils.convert_to_url_safe_japanese(basename)
     SS::TempFile.create_empty!(model: 'ss/temp_file', filename: basename) do |new_file|

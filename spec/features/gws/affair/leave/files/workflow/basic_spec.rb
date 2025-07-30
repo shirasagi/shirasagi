@@ -19,8 +19,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       reason = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit new_path
+        login_user(user638, to: new_path)
 
         within "form#item-form" do
           fill_in_date "item[start_at_date]", with: start_at.to_date
@@ -36,12 +35,14 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           # end
 
           fill_in "item[reason]", with: reason
-          select I18n.t("gws/affair.options.leave_type.paidleave"), from: 'item[leave_type]'
+          wait_for_event_fired "ss:ready" do
+            select I18n.t("gws/affair.options.leave_type.paidleave"), from: 'item[leave_type]'
+          end
 
-          wait_cbox_open { click_on I18n.t("gws/affair.apis.special_leaves.index") }
+          wait_for_cbox_opened { click_on I18n.t("gws/affair.apis.special_leaves.index") }
         end
-        wait_for_cbox do
-          wait_cbox_close { click_on "病気休暇（公務）" }
+        within_cbox do
+          wait_for_cbox_closed { click_on "病気休暇（公務）" }
         end
         within "form#item-form" do
           expect(page).to have_css(".select-special-leave", text: "病気休暇（公務）")
@@ -57,20 +58,19 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       workflow_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
 
         click_on item.name
 
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+          wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
-          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           expect(page).to have_css(".approvers [data-id='1,#{user545.id}']", text: user545.long_name)
@@ -98,14 +98,13 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       item = request_file(item)
 
       Timecop.freeze(start_at) do
-        login_user(user545)
-        visit approve_path
+        login_user(user545, to: approve_path)
 
         within ".list-items" do
           expect(page).to have_link item.name
         end
 
-        wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+        wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
         within ".list-head" do
           page.accept_alert do
             click_button I18n.t('ss.links.approve')

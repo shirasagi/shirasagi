@@ -160,6 +160,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           layout: layout.id,
           order: 0,
           keywords: 'test1_keywords',
+          description_setting: 'auto',
           description: 'test1_description',
           summary_html: 'test1_summary_html',
           html: 'test1_html',
@@ -169,6 +170,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           event_recurrences: [{ kind: "date", start_at: "2016/07/06", frequency: "daily", until_on: "2016/07/06" }],
           contact_state: 'show',
           contact_group: group.id,
+          contact_group_name: 'test1_contact_name',
           contact_charge: 'test1_contact_charge',
           contact_tel: 'test1_contact_tel',
           contact_fax: 'test1_contact_fax',
@@ -180,8 +182,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           released: released,
           release_date: release_date,
           close_date: close_date,
-          group_ids: [group.id],
-          permission_level: 1)
+          group_ids: [group.id])
       end
 
       describe "POST /.s{site}/article{cid}/pages/download_all" do
@@ -195,9 +196,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
           }
           post download_pages_path, params: params
           expect(response.status).to eq 200
-          expect(response.headers["Cache-Control"]).to include "no-store"
-          expect(response.headers["Transfer-Encoding"]).to eq "chunked"
-          body = ::SS::ChunkReader.new(response.body).to_a.join
+          body = response.body
           body = body.encode("UTF-8", "SJIS")
 
           csv = ::CSV.parse(body, headers: true)
@@ -218,6 +217,7 @@ describe "Article::PagesController", type: :request, dbscope: :example do
             expect(row["#{Cms::Page.t(:event_recurrences)}_1_終了日"]).to eq "2016/07/06"
             expect(row[Cms::Page.t(:contact_state)]).to eq I18n.t("ss.options.state.show")
             expect(row[Cms::Page.t(:contact_group)]).to eq group.name
+            expect(row[Cms::Page.t(:contact_group_name)]).to eq "test1_contact_name"
             expect(row[Cms::Page.t(:contact_charge)]).to eq "test1_contact_charge"
             expect(row[Cms::Page.t(:contact_tel)]).to eq "test1_contact_tel"
             expect(row[Cms::Page.t(:contact_fax)]).to eq "test1_contact_fax"
@@ -230,9 +230,6 @@ describe "Article::PagesController", type: :request, dbscope: :example do
             expect(row[Cms::Page.t(:release_date)]).to eq release_date.strftime("%Y/%m/%d %H:%M")
             expect(row[Cms::Page.t(:close_date)]).to eq close_date.strftime("%Y/%m/%d %H:%M")
             expect(row[Cms::Page.t(:group_ids)]).to eq group.name
-            unless SS.config.ss.disable_permission_level
-              expect(row[Cms::Page.t(:permission_level)]).to eq 1
-            end
           end
         end
       end

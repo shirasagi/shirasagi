@@ -10,11 +10,11 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
   describe "#disable_all" do
     it do
       visit gws_schedule_todo_readables_path gws_site, "-"
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       page.accept_confirm do
         find('.disable-all').click
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
       expect(item.deleted).to be_present

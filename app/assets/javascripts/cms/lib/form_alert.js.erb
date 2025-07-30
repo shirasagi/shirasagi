@@ -96,8 +96,12 @@ this.Form_Alert = (function () {
       allowEdit = false;
     } else if (!SS.isEmptyObject(Form_Alert.alerts[<%= I18n.t("cms.syntax_check").to_json %>])) {
       $.each(Form_Alert.alerts[<%= I18n.t("cms.syntax_check").to_json %>], function(id, alert) {
-        if (alert["msg"] == "<%= I18n.t('cms.confirm.disallow_edit_ignore_syntax_check') %>") {
-          allowEdit = false;
+        if (alert["msg"] == <%= I18n.t('cms.confirm.disallow_edit_ignore_syntax_check').to_json %>) {
+          if ($(submit).attr("name") == "draft_save") {
+            allowEdit = true;
+          } else {
+            allowEdit = false;
+          }
         }
       });
     }

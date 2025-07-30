@@ -1,0 +1,9 @@
+<% @index_title = proc do |item| %>
+  <%= link_to item.name, url_for(action: :new, source: item), class: "title"%>
+<% end %>
+
+<div class="main-box">
+  <%= t("input_guide.gws/workflow/route.template_html") %>
+</div>
+
+<%= render template: 'gws/crud/index' %>

@@ -39,7 +39,6 @@ module Cms::HistoryListHelper
     return unless @item
 
     # @item is page or node only
-    @item = @item.becomes_with_route
     @items = [@item]
     @items = [] if controller.preview_path?
 

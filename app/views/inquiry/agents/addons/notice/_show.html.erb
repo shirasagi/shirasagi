@@ -3,10 +3,10 @@
   <dd><%= @item.label :notice_state %></dd>
   <dt><%= @model.t :notice_content %></dt>
   <dd><%= @item.label :notice_content %></dd>
-  <dt><%= @model.t :notice_email %></dt>
-  <dd><%= @item.send :notice_email %></dd>
+  <dt><%= @model.t :notice_emails %></dt>
+  <dd><%=br @item.notice_emails %></dd>
   <dt><%= @model.t :from_name %></dt>
-  <dd><%= @item.send :from_name %></dd>  
+  <dd><%= @item.from_name %></dd>
   <dt><%= @model.t :from_email %></dt>
-  <dd><%= @item.send :from_email %></dd>
+  <dd><%= @item.from_email %></dd>
 </dl>

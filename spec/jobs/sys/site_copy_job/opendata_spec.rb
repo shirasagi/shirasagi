@@ -49,7 +49,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         page.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -174,7 +174,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         app2.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 
@@ -309,7 +309,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
         idea2.save!
 
         perform_enqueued_jobs do
-          Sys::SiteCopyJob.perform_now
+          ss_perform_now Sys::SiteCopyJob
         end
       end
 

@@ -7,8 +7,8 @@ class Chorg::ChangesetExporter
   MIN_CONTACT_COUNT = 1
 
   DESTINATION_CONTACT_ATTRS = %i[
-    name contact_group_name contact_tel contact_fax contact_email contact_postal_code contact_address contact_link_url
-    contact_link_name
+    name contact_group_name contact_charge contact_tel contact_fax contact_email contact_postal_code contact_address
+    contact_link_url contact_link_name
   ].freeze
 
   class << self

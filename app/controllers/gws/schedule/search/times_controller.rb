@@ -29,10 +29,20 @@ class Gws::Schedule::Search::TimesController < ApplicationController
   public
 
   def index
+    max = SS.config.gws.schedule['search_times']['max_facilities']
+
     @s = get_params
+    @s[:facility_ids] = @s[:facility_ids].reject(&:empty?) rescue []
+
+    if @s[:facility_ids].count > max
+      @s[:facility_ids] = @s[:facility_ids].slice(0, max)
+      facility_error = true
+    end
 
     @time_search = Gws::Schedule::PlanSearch.new(pre_params.merge(@s))
     return if @time_search.invalid?
+
+    @time_search.errors.add :base, t('gws.errors.plan_search.max_facilities', count: max) if facility_error.present?
 
     @items = @time_search.search
   end

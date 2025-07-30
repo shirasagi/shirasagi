@@ -202,11 +202,10 @@ this.Webmail_Mail_List = (function () {
   };
 
   Webmail_Mail_List.findListItems = function (uids) {
-    var items;
     if (uids == null) {
       uids = [];
     }
-    return items = $('.webmail-mails .list-item').map(function () {
+    return $('.webmail-mails .list-item').map(function () {
       var uid;
       uid = $(this).data('uid');
       if ($.inArray(uid + "", uids) === -1) {
@@ -310,7 +309,7 @@ this.Webmail_Mail_List = (function () {
       zIndex: 110,
       opacity: 0.5,
       cursor: "pointer",
-      start: function (e, ui) {
+      start: function (_e, _ui) {
         return $(".tap-menu").hide();
       }
     });
@@ -399,7 +398,7 @@ this.Webmail_Mail_List = (function () {
         }));
       }
     }
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
     return false;
   };
 
@@ -444,7 +443,7 @@ this.Webmail_Mail_List = (function () {
         value: opts['dst']
       }));
     }
-    form.appendTo(document.body).submit();
+    form.appendTo(document.body)[0].requestSubmit();
     return false;
   };
 
@@ -646,8 +645,9 @@ this.Webmail_Mail_Form_Address = (function () {
 
   Webmail_Mail_Form_Address.select = function (item) {
     self = this;
-    var item_html = jQuery('<div>').append(item.clone(true)).html()
+    var item_html = jQuery('<div>').append(item.clone(true)).html();
     var data, dl, field, label, selected, self, span, value, check_all;
+    selectTable = null;
     if(item_html.indexOf("to_ids") > 0){
       selectTable="to";
     }
@@ -656,6 +656,9 @@ this.Webmail_Mail_Form_Address = (function () {
     }
     if(item_html.indexOf("bcc_ids") > 0){
       selectTable="bcc";
+    }
+    if (!selectTable) {
+      selectTable = "to";
     }
     data = item.closest("[data-id]");
     dl = self.anchorAjaxBox.closest(".webmail-mail-form-address");

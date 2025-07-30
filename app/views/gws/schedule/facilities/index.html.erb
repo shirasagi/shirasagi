@@ -14,7 +14,7 @@
 %>
 <%= jquery do %>
   $(document).on("gws:calendarInitialized", function() {
-    Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', <%== calendar_options.to_json %>, <%== init_options.to_json.to_json %>);
+    Gws_Schedule_Multiple_Calendar.renderController('#calendar-controller', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
   });
 <% end %>
 
@@ -26,11 +26,15 @@
     <nav><%= render 'gws/schedule/facilities/search' %></nav>
   </header>
 
-  <div class="calendar" id="calendar-controller"></div>
+  <div class="calendar calendar-controller" id="calendar-controller"></div>
 
   <% @items.each_with_index do |item, idx| %>
     <div class="calendar-multiple-header" id="cal-<%= item.id %>-header">
       <%= link_to item.name, gws_schedule_facility_plans_path(facility: item.id), class: "calendar-name" %>
+
+      <% if item.approval_check? %>
+        <span class="approval-check"><%= t("gws/facility.views.required_approval") %></span>
+      <% end %>
 
       <% if item.reservable?(@cur_user) %>
         <%= link_to t('gws/schedule.links.add_plan'), new_gws_schedule_facility_plan_path(facility: item.id), class: 'add-plan' %>
@@ -39,7 +43,7 @@
       <% if item.text.present? %>
       <span class="calendar-attr calendar-text">
         <a class="calendar-text-link" href="#"><%= item.t :html %></a>
-        <div class="calendar-text-popup markdown-body" style="display: none;"><%= item.html %></div>
+        <span class="calendar-text-popup markdown-body" style="display: none;"><%= item.html %></span>
       </span>
       <% end %>
     </div>

@@ -39,7 +39,8 @@ en:
       add_changesets: &group_props
         name: Group name
         order: Display order
-        contact_group_name: Group name in charge
+        contact_group_name: Display group name in public view
+        contact_charge: Group name in charge
         contact_tel: Phone number
         contact_fax: Fax number
         contact_email: E-mail address
@@ -82,7 +83,7 @@ en:
         more: See more
         close: Close
     labels:
-      all_sites: All sites
+      this_site: This site
     menus:
       revisions:
         add: Add a new group
@@ -99,6 +100,7 @@ en:
       test_run: Test run
       import_revision_file_confirmation: Import organizational change operations from a CSV. \n If an operation has already been registered, it will be deleted. \n Are you sure you want to run the operation?
       import_changesets_notice: Changed contents contained in the CSV are always appended; importing the CSV does not change existing changed contents in any way.
+      chorg_sites_can_be_changed_in_sys_sites: The target site for organizational changes can be set in the Site Settings on the System Administration page. Please contact the system administrator to set this up.
     options:
       changeset_type:
         add: New
@@ -109,6 +111,8 @@ en:
       delete_method:
         disable_if_possible: Disable and allow recovery later
         always_delete: Always physically delete
+    links:
+      chorg_sites_can_be_changed_in_sys_sites: The target site for organizational changes can be set in the Site Settings on the System Administration page.
     buttons:
       reset_after_move: Reset transfer-destination
       reset_after_unify: Reset merge-destination
@@ -138,7 +142,8 @@ en:
         nth_destination_ldap_dn: "Destination%{dest_seq}_DN"
         nth_destination_contact_main_state: "Destination%{dest_seq}_Contact%{contact_seq}_Main"
         nth_destination_contact_name: "Destination%{dest_seq}_Contact%{contact_seq}_ID Name"
-        nth_destination_contact_contact_group_name: "Destination%{dest_seq}_Contact%{contact_seq}_Department in Charge"
+        nth_destination_contact_contact_group_name: "Destination%{dest_seq}_Contact%{contact_seq}_Display Group Name"
+        nth_destination_contact_contact_charge: "Destination%{dest_seq}_Contact%{contact_seq}_Department in Charge"
         nth_destination_contact_contact_tel: "Destination%{dest_seq}_Contact%{contact_seq}_Phone Number"
         nth_destination_contact_contact_fax: "Destination%{dest_seq}_Contact%{contact_seq}_Fax Number"
         nth_destination_contact_contact_email: "Destination%{dest_seq}_Contact%{contact_seq}_E-mail Address"
@@ -158,6 +163,7 @@ en:
     chorg: Organizational change
     addons:
       chorg/entity_log: History of changes
+      chorg/option: Option
 
   cms_role:
     edit_chorg_revisions: Manage organizational changes
@@ -177,6 +183,7 @@ en:
       models:
         chorg/run_params:
           job_mode_is_not_service: Job service execution mode is not a service and cannot be reserved. Please contact a system administrator.
+          chorg_empty_all: "None of the “Organization Change Data (New Establishment, Move, etc.),” “User CSV,” or “Contents CSV” is set."
         chorg/changeset:
           blank_contact_group_name: "'s contact has blank name."
           duplicate_contact_group_name: "'s contact has duplicated name \"%{name}\"."
@@ -200,7 +207,8 @@ en:
         reservation: Reservation for execution
       chorg/revision:
         content_csv_file_id: Content CSV files
-        target_site_ids: Target site
+      chorg/site_setting:
+        chorg_site_ids: Sites subject to reorganization
 
   tooltip:
     chorg/model/revision:
@@ -208,7 +216,9 @@ en:
         - Enter the name for the organizational change.
       user_csv_file_id:
         - Select the user CSV file to perform user transfers after the organizational change is run.
-        - Set the group name and titles after the change in the user CSV.
+        -
+        - Open the CSV downloaded from "Site Settings - Users" in Excel, etc., and set the group name, user title, etc. after the organizational change is run.
+        - Select the user CSV thus modified for the user CSV file.
         -
         - "If you do not select a file, the users will not be transferred after the organizational change is run and you will need to transfer the users manually."
       revision_csv_file_id:
@@ -224,10 +234,9 @@ en:
     chorg/revision:
       content_csv_file_id:
         - "Select the content CSV files for parts, layouts, pages, and folders to be transferred after the organizational change is run."
-        - "Please set the post-change group name, etc. in the content CSV."
-      target_site_ids:
-        - Select the site to apply organizational changes to.
-        - Unless specified otherwise, all sites are eligible.
+        -
+        - Open the CSV file downloaded from "All Contents" in Excel, etc., and set the group name, etc. after the organizational change is run.
+        - Select the All Contents CSV that you have modified in this way for the contents CSV file.
     chorg/run_params:
       reservation:
         - You can reserve a time to run.
@@ -240,6 +249,8 @@ en:
             - Enter the order in which groups are shown on the group screen.
             - The lower the number, the higher the position.
           contact_group_name:
+            - Enter the display group name in public view of the new group.
+          contact_charge:
             - Enter the group name in charge of the new group.
           contact_tel:
             - Enter the phone number of the new group.
@@ -267,6 +278,8 @@ en:
             - Enter the order in which groups are shown on the group screen.
             - The lower the number, the higher the position.
           contact_group_name:
+            - Enter the display group name in public view of the split group.
+          contact_charge:
             - Enter the name in charge of the split group.
           contact_tel:
             - Enter the phone number of the split group.
@@ -293,6 +306,8 @@ en:
             - Enter the order in which groups are shown on the group screen.
             - The lower the number, the higher the position.
           contact_group_name:
+            - Enter the display group name in public view of the split destination.
+          contact_charge:
             - Enter the group name in charge of the split destination.
           contact_tel:
             - Enter the phone number of the transfer destination group.
@@ -319,6 +334,8 @@ en:
             - Enter the order in which groups are shown on the group screen.
             - The lower the number, the higher the position.
           contact_group_name:
+            - Enter the display group name in public view of the merge destination.
+          contact_charge:
             - Enter the group name in charge of the merge destination.
           contact_tel:
             - Enter the phone number of the merge destination group.
@@ -338,3 +355,8 @@ en:
             - If you are using LDAP, enter the identifier (DN) of the merge destination group.
           before_name:
             - Select the group name of the merge source.
+    chorg/site_setting:
+      chorg_site_ids:
+        - Set the site for the organizational change.
+        - If not set, the organizational change will be implemented for this site only.
+        - If there are other target sites besides this own site, set them.

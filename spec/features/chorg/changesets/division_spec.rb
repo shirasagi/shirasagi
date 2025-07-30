@@ -8,13 +8,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       :cms_group, name: "#{cms_group.name}/#{unique_id}",
       contact_groups: [
         {
-          main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          main_state: "main", name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
         },
         {
-          main_state: nil, name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          main_state: nil, name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
@@ -47,14 +49,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-division" do
         click_on I18n.t("chorg.menus.revisions.division")
       end
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.division_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.division_changesets.select_group") }
         end
       end
-      wait_event_to_fire "turbo:frame-load" do
+      wait_for_event_fired "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_division") do
-          wait_for_cbox do
+          within_cbox do
             click_on group.trailing_name
           end
         end
@@ -122,6 +125,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
               expect(contact_group[:main_state]).to eq "main"
               expect(contact_group[:name]).to eq source_contact_group.name
               expect(contact_group[:contact_group_name]).to eq source_contact_group.contact_group_name
+              expect(contact_group[:contact_charge]).to eq source_contact_group.contact_charge
               expect(contact_group[:contact_tel]).to eq source_contact_group.contact_tel
               expect(contact_group[:contact_fax]).to eq source_contact_group.contact_fax
               expect(contact_group[:contact_email]).to eq source_contact_group.contact_email
@@ -143,6 +147,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
               expect(contact_group[:main_state]).to eq "main"
               expect(contact_group[:name]).to eq source_contact_group.name
               expect(contact_group[:contact_group_name]).to eq source_contact_group.contact_group_name
+              expect(contact_group[:contact_charge]).to eq source_contact_group.contact_charge
               expect(contact_group[:contact_tel]).to eq source_contact_group.contact_tel
               expect(contact_group[:contact_fax]).to eq source_contact_group.contact_fax
               expect(contact_group[:contact_email]).to eq source_contact_group.contact_email
@@ -160,10 +165,12 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       #
       visit chorg_revision_path(site: site, id: revision)
       within "dd.chorg-revisions-division" do
-        click_on [ new_name1, new_name2 ].join(",")
+        click_on [ "\"#{new_name1}\"", "\"#{new_name2}\"" ].join(",")
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css("#chorg-after-basic1", text: new_name1)
       click_on I18n.t("ss.links.edit")
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-after-basic1" do
           fill_in "item[destinations][][name]", with: new_name11
@@ -193,6 +200,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
               expect(contact_group[:main_state]).to eq "main"
               expect(contact_group[:name]).to eq source_contact_group.name
               expect(contact_group[:contact_group_name]).to eq source_contact_group.contact_group_name
+              expect(contact_group[:contact_charge]).to eq source_contact_group.contact_charge
               expect(contact_group[:contact_tel]).to eq source_contact_group.contact_tel
               expect(contact_group[:contact_fax]).to eq source_contact_group.contact_fax
               expect(contact_group[:contact_email]).to eq source_contact_group.contact_email
@@ -214,6 +222,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
               expect(contact_group[:main_state]).to eq "main"
               expect(contact_group[:name]).to eq source_contact_group.name
               expect(contact_group[:contact_group_name]).to eq source_contact_group.contact_group_name
+              expect(contact_group[:contact_charge]).to eq source_contact_group.contact_charge
               expect(contact_group[:contact_tel]).to eq source_contact_group.contact_tel
               expect(contact_group[:contact_fax]).to eq source_contact_group.contact_fax
               expect(contact_group[:contact_email]).to eq source_contact_group.contact_email
@@ -231,8 +240,9 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       #
       visit chorg_revision_path(site: site, id: revision)
       within "dd.chorg-revisions-division" do
-        click_on [ new_name11, new_name2 ].join(",")
+        click_on [ "\"#{new_name11}\"", "\"#{new_name2}\"" ].join(",")
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css("#chorg-after-basic1", text: new_name11)
       click_on I18n.t("ss.links.delete")
       within "form" do

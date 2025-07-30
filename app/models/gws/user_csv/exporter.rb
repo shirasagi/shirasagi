@@ -13,8 +13,11 @@ class Gws::UserCsv::Exporter
         restriction lock_state deletion_lock_state
         organization_id groups gws_main_group_ids gws_default_group_ids switch_user_id remark
         lang timezone
-        ldap_dn
-        charge_name charge_address charge_tel divide_duties
+        ldap_dn)
+      unless Sys::Auth::Setting.instance.mfa_otp_use_none?
+        headers << "mfa_otp_enabled_at"
+      end
+      headers += %w(charge_name charge_address charge_tel divide_duties
         staff_category staff_address_uid gws_superior_group_ids gws_superior_user_ids gws_roles sys_roles
         readable_setting_range readable_group_ids readable_member_ids
       )
@@ -54,28 +57,24 @@ class Gws::UserCsv::Exporter
   end
 
   def enum_csv
-    form ||= begin
-      if site
-        Gws::UserForm.find_for_site(site)
-      end
-    end
-
     Enumerator.new do |y|
-      csv_headers.to_csv.tap do |csv|
-        case encoding
-        when "Shift_JIS"
-          y << encode_sjis(csv)
-        when "UTF-8"
-          y << SS::Csv::UTF8_BOM + csv
-        end
-      end
-      @criteria.each do |item|
-        item_to_csv(item).to_csv.tap do |csv|
+      I18n.with_locale(I18n.default_locale) do
+        csv_headers.to_csv.tap do |csv|
           case encoding
           when "Shift_JIS"
             y << encode_sjis(csv)
           when "UTF-8"
-            y << csv
+            y << SS::Csv::UTF8_BOM + csv
+          end
+        end
+        @criteria.each do |item|
+          item_to_csv(item).to_csv.tap do |csv|
+            case encoding
+            when "Shift_JIS"
+              y << encode_sjis(csv)
+            when "UTF-8"
+              y << csv
+            end
           end
         end
       end
@@ -118,6 +117,9 @@ class Gws::UserCsv::Exporter
     terms << item.label(:lang)
     terms << item.label(:timezone)
     terms << item.ldap_dn
+    unless Sys::Auth::Setting.instance.mfa_otp_use_none?
+      terms << item_mfa_otp_enabled_at(item)
+    end
     terms << item.charge_name
     terms << item.charge_address
     terms << item.charge_tel
@@ -136,6 +138,14 @@ class Gws::UserCsv::Exporter
     terms += item_column_values(item)
 
     terms
+  end
+
+  def item_mfa_otp_enabled_at(item)
+    if item.mfa_otp_secret.present?
+      I18n.t("ss.mfa_otp_enabled_at", time: I18n.l(item.mfa_otp_enabled_at, format: :picker))
+    else
+      I18n.t("ss.mfa_otp_not_enabled_yet")
+    end
   end
 
   def item_roles(item)

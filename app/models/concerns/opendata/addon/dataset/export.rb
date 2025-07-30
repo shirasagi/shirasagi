@@ -48,7 +48,7 @@ module Opendata::Addon
           category_ids estat_category_ids area_ids
           dataset_group_ids
           released
-          contact_state contact_group contact_charge contact_tel contact_fax contact_email
+          contact_state contact_group contact_group_name contact_charge contact_tel contact_fax contact_email
           contact_postal_code contact_address contact_link_url contact_link_name
           related_pages
           groups
@@ -92,6 +92,7 @@ module Opendata::Addon
           # contact
           item.contact_state,
           item.contact_group.try(:name),
+          item.contact_group_name,
           item.contact_charge,
           item.contact_tel,
           item.contact_fax,

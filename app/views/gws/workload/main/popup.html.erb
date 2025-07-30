@@ -11,8 +11,8 @@ $('.popup-attributes .custom-group-name').on("click", function() {
 <div class="popup-date"><%= term(@item) %></div>
 
 <span class="ss-quota-bar gws-achievement-bar">
-  <div class="label"><%= t("gws/schedule/todo.achievement_rate", count: @item.achievement_rate || 0) %></div>
-  <div class="usage " style="width: <%= @item.achievement_rate || 0 %>%"></div>
+  <span class="label"><%= t("gws/schedule/todo.achievement_rate", count: @item.achievement_rate || 0) %></span>
+  <span class="usage " style="width: <%= @item.achievement_rate || 0 %>%"></span>
 </span>
 
 <% if @item.text.present? %>

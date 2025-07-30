@@ -13,14 +13,14 @@
           <% percent = quota.usage * 100 / quota.quota.to_f %>
           <div class="ss-quota-bar" data-reloaded="<%= quota.reloaded.iso8601 %>" data-percent="<%= percent %>">
             <div class="label">
-              <%= (quota.usage * 1_024).to_s(:human_size) %>/<%= (quota.quota * 1_024).to_s(:human_size) %>
+              <%= (quota.usage * 1_024).to_fs(:human_size) %>/<%= (quota.quota * 1_024).to_fs(:human_size) %>
             </div>
             <div class="usage" style="width: <%= percent %>%"></div>
           </div>
         <% else %>
           <div class="ss-quota-bar">
             <div class="label">--/--</div>
-            <div class="usage" style="width: 0px"></div>
+            <div class="usage" style="width: 0"></div>
           </div>
         <% end %>
       </td>

@@ -44,7 +44,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in_datetime "item[end_at]", with: end_at
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
   end
 end

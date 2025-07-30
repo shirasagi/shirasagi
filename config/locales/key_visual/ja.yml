@@ -18,6 +18,12 @@ ja:
         none: なし
         disc: ディスク
         number: スライド番号
+        bullets: 黒丸
+        fraction: スライド番号（分数）
+        progressbar: プログレスバー
+      display_remarks:
+        title: タイトル
+        remark_html: 説明HTML
 
   modules:
     key_visual: キービジュアル
@@ -55,6 +61,8 @@ ja:
         link_url: リンクURL
         file_id: 画像
         in_file: 画像
+        remark_html: 説明HTML
+        display_remarks: 表示
       key_visual/addon/swiper_setting:
         link_target: リンク表示
         kv_speed: スライド切替時間
@@ -65,6 +73,7 @@ ja:
         kv_pagination_style: ページネーション
         kv_thumbnail: サムネイル画像
         kv_thumbnail_count: サムネイル数
+        kv_scrollbar: スクロールバー
 
   tooltip:
     key_visual/image:
@@ -75,6 +84,10 @@ ja:
         - キービジュアル画像のリンク先のURLを入力します。
       file_id:
         - キービジュアル画像に利用する画像を登録します。
+      remark_html:
+        - 説明HTMLを入力します。
+      display_remarks:
+        - キービジュアルに追加表示する文言を選択します。
     key_visual/addon/page_list:
       link_target:
         - リンクの表示形式を設定します。
@@ -108,3 +121,5 @@ ja:
         - サムネイル画像を表示するかどうを選択します。
       kv_thumbnail_count:
         - サムネイル画像を表示する場合、一画面に表示するサムネイル数を設定します。既定値は 4 です。
+      kv_scrollbar:
+        - スクロールバーを表示するかどうを選択します。

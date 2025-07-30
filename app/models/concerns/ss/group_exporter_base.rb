@@ -21,6 +21,7 @@ module SS::GroupExporterBase
     draw_basic(drawer)
     draw_ldap(drawer)
     draw_contact(drawer)
+    draw_lsorg(drawer)
   end
 
   def draw_basic(drawer)
@@ -38,9 +39,14 @@ module SS::GroupExporterBase
     drawer.column :ldap_dn
   end
 
+  def draw_lsorg(drawer)
+    drawer.column :basename
+    drawer.column :overview
+  end
+
   CONTACT_GROUP_ATTRIBUTES = %i[
-    main_state name contact_group_name contact_tel contact_fax contact_email contact_postal_code contact_address
-    contact_link_url contact_link_name
+    main_state name contact_group_name contact_charge contact_tel contact_fax contact_email
+    contact_postal_code contact_address contact_link_url contact_link_name
   ].freeze
 
   def draw_contact(drawer)

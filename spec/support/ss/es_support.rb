@@ -5,6 +5,7 @@ module SS
     module_function
 
     def es_port
+      # @es_port ||= 9200
       @es_port ||= rand(29_200..39_200)
     end
 
@@ -57,7 +58,7 @@ module SS
           es_port = container.info["HostConfig"]["PortBindings"]["9200/tcp"][0]["HostPort"].to_i
           SS::EsSupport.es_port = es_port
 
-          puts "use container '#{container.id[0, 12]}' listening on #{es_port}"
+          puts "use container '#{container.id[0, 12]}' as '#{SS::EsSupport.docker_image_id}' listening on #{es_port}"
         end
       end
 

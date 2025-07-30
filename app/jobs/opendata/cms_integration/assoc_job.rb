@@ -1,30 +1,47 @@
 class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
-  def perform(site_id, node_id, page_id, action)
+  def perform(site_id, node_id, page_ids, action)
     return unless self.site.dataset_enabled?
     @dataset_node = Opendata::Node::Dataset.site(self.site).first
     return if @dataset_node.blank?
 
     @cms_site = Cms::Site.find(site_id)
     @cms_node = Cms::Node.site(@cms_site).find(node_id)
-    @cur_page = Cms::Page.site(@cms_site).node(@cms_node).find(page_id)
+    if page_ids.nil?
+      @page_ids = Cms::Page.site(@cms_site).node(@cms_node).distinct(:id)
+    else
+      @page_ids = [page_ids].flatten.uniq.compact
+    end
 
     @file_goes_to = []
 
     case action.to_sym
     when :create_or_update
-      if @cur_page.opendata_dataset_state.present? && @cur_page.opendata_dataset_state != 'none'
-        create_or_update_associated_dataset
-      else
-        close_associated_dataset
+      each_page do |page|
+        @cur_page = page
+        if @cur_page.try(:opendata_dataset_state).present? && @cur_page.opendata_dataset_state != 'none'
+          create_or_update_associated_dataset
+        else
+          close_associated_dataset
+        end
       end
     when :destroy
-      close_associated_dataset
+      each_page do |page|
+        @cur_page = page
+        close_associated_dataset
+      end
     end
 
     true
   end
 
   private
+
+  def each_page(&block)
+    @page_ids.each_slice(20) do |ids|
+      pages = Cms::Page.site(@cms_site).node(@cms_node).in(id: ids).to_a
+      pages.each(&block)
+    end
+  end
 
   def close_associated_dataset
     Opendata::Dataset.site(self.site).node(@dataset_node).and_resource_associated_page(@cur_page).each do |dataset|
@@ -145,6 +162,7 @@ class Opendata::CmsIntegration::AssocJob < Cms::ApplicationJob
     attributes["contact_group_id"] = contact_group.try(:id)
     attributes["contact_group_contact_id"] = contact.try(:id)
     attributes["contact_group_relation"] = @cur_page.contact_group_relation if @cur_page.respond_to?(:contact_group_relation)
+    attributes["contact_group_name"] = @cur_page.contact_group_name if @cur_page.respond_to?(:contact_group_name)
     attributes["contact_charge"] = @cur_page.contact_charge if @cur_page.respond_to?(:contact_charge)
     attributes["contact_tel"] = @cur_page.contact_tel if @cur_page.respond_to?(:contact_tel)
     attributes["contact_fax"] = @cur_page.contact_fax if @cur_page.respond_to?(:contact_fax)

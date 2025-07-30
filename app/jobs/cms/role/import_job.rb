@@ -65,6 +65,5 @@ class Cms::Role::ImportJob < Cms::ApplicationJob
     item.name = value(row, :name)
     item.permissions = permissions_value(row, :permissions)
     item.site_id = site.id
-    item.permission_level = value(row, :permission_level)
   end
 end

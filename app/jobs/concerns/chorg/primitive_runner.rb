@@ -12,9 +12,11 @@ module Chorg::PrimitiveRunner
   def run_primitive_chorg
     run_callbacks :primitive_chorg do
       Chorg::Model::Changeset::TYPES.each do |type|
-        # put_log("==#{type}==")
-        task.log("==#{I18n.t("chorg.views.revisions/edit.#{type}")}==")
-        with_inc_depth { @item.send("#{type}_changesets").each(&method("execute_#{type}")) }
+        task.performance.collect_changeset(type) do
+          # put_log("==#{type}==")
+          task.log("==#{I18n.t("chorg.views.revisions/edit.#{type}")}==")
+          with_inc_depth { @item.send("#{type}_changesets").each(&method("execute_#{type}")) }
+        end
       end
     end
   end
@@ -27,7 +29,7 @@ module Chorg::PrimitiveRunner
     destination = changeset.destinations.first
     group = find_or_create_group(destination)
     if save_or_collect_errors(group)
-      put_log("created/updated group: #{group.name}(#{group.id})")
+      put_log("created/updated group: \"#{group.name}\"(#{group.id})")
       inc_counter(:add, :success)
     else
       inc_counter(:add, :failed)
@@ -43,14 +45,14 @@ module Chorg::PrimitiveRunner
 
     group = self.class.group_class.where(id: source["id"]).first
     if group.blank?
-      put_warn("group not found: #{source["name"]}(#{source["id"]})")
+      put_warn("group not found: \"#{source["name"]}\"(#{source["id"]})")
       return
     end
 
     source_attributes = copy_attributes_deeply(group)
     update(group, destination)
     if save_or_collect_errors(group)
-      put_log("updated group: #{group.name}(#{group.id})")
+      put_log("updated group: \"#{group.name}\"(#{group.id})")
       inc_counter(:move, :success)
       substitutor.collect(source_attributes, group.attributes, [group.id])
       if destination[:contact_groups].present?
@@ -69,7 +71,7 @@ module Chorg::PrimitiveRunner
     task.log("  #{changeset.before_unify} から #{changeset.after_unify} へ")
     # なるべく新しいグループは作成しないようにする。
     # 操作先のグループが見つからない場合は、操作元グループを並び順で検索し、最初に見つけたものへ統合する。
-    source_groups = self.class.group_class.in(name: changeset.sources.map { |source| source["name"] })
+    source_groups = self.class.group_class.in(name: changeset.sources.map { |source| source["name"].strip })
     source_groups = source_groups.reorder(order: :asc, name: :asc)
     source_groups = source_groups.to_a
     source_attributes_array = source_groups.map { |group| copy_attributes_deeply(group) }
@@ -81,7 +83,7 @@ module Chorg::PrimitiveRunner
       return
     end
 
-    put_log("created/updated group: #{destination_group.name}(#{destination_group.id})")
+    put_log("created/updated group: \"#{destination_group.name}\"(#{destination_group.id})")
     inc_counter(:unify, :success)
 
     add_group_to_site(destination_group)
@@ -109,7 +111,7 @@ module Chorg::PrimitiveRunner
     source = changeset.sources.first
     source_group = self.class.group_class.where(id: source["id"]).first
     if source_group.blank?
-      put_warn("group not found: #{source["name"]}")
+      put_warn("group not found: \"#{source["name"]}\"")
       return
     end
     source_attributes = copy_attributes_deeply(source_group)
@@ -133,7 +135,7 @@ module Chorg::PrimitiveRunner
 
     success = destination_groups.reduce(true) do |a, e|
       if save_or_collect_errors(e)
-        put_log("created group: #{e.name}")
+        put_log("created group: \"#{e.name}\"")
         a
       else
         false
@@ -189,7 +191,7 @@ module Chorg::PrimitiveRunner
 
     source_contact_groups_attributes.each do |contact_attributes|
       triple = destination_group_contact_pairs.find do |_group, contact|
-        contact.id.to_s == contact_attributes["_id"].to_s || contact.name == contact_attributes["name"]
+        contact.id.to_s == contact_attributes["_id"].to_s || contact.name == contact_attributes["name"].strip
       end
 
       criteria = Cms::Page.all.where(contact_group_id: source_attributes['_id'], contact_group_relation: "related")
@@ -202,7 +204,7 @@ module Chorg::PrimitiveRunner
             page.contact_group_contact = nil
 
             if save_or_collect_errors(page)
-              put_log("unifies contacts to main: #{page.name}(#{page.id})")
+              put_log("unifies contacts to main: \"#{page.name}\"(#{page.id})")
             else
               Rails.logger.warn("failed to unify contacts to main: #{page.errors.full_messages.join("\n")}")
             end
@@ -213,7 +215,8 @@ module Chorg::PrimitiveRunner
           criteria.in(id: ids).to_a.each do |page|
             page.contact_group = triple[0]
             page.contact_group_contact = triple[1]
-            page.contact_charge = triple[1].contact_group_name
+            page.contact_group_name = triple[1].contact_group_name
+            page.contact_charge = triple[1].contact_charge
             page.contact_tel = triple[1].contact_tel
             page.contact_fax = triple[1].contact_fax
             page.contact_email = triple[1].contact_email
@@ -223,7 +226,7 @@ module Chorg::PrimitiveRunner
             page.contact_link_name = triple[1].contact_link_name
 
             if save_or_collect_errors(page)
-              put_log("divided contact: #{page.name}(#{page.id})")
+              put_log("divided contact: \"#{page.name}\"(#{page.id})")
             else
               Rails.logger.warn("failed to unify contacts to main: #{page.errors.full_messages.join("\n")}")
             end
@@ -244,7 +247,8 @@ module Chorg::PrimitiveRunner
       criteria.in(id: ids).to_a.each do |page|
         page.contact_group = destination_group
         page.contact_group_contact = destination_main_contact
-        page.contact_charge = destination_main_contact.contact_group_name
+        page.contact_group_name = destination_main_contact.contact_group_name
+        page.contact_charge = destination_main_contact.contact_charge
         page.contact_tel = destination_main_contact.contact_tel
         page.contact_fax = destination_main_contact.contact_fax
         page.contact_email = destination_main_contact.contact_email
@@ -254,7 +258,7 @@ module Chorg::PrimitiveRunner
         page.contact_link_name = destination_main_contact.contact_link_name
 
         if save_or_collect_errors(page)
-          put_log("unifies contacts to main: #{page.name}(#{page.id})")
+          put_log("unifies contacts to main: \"#{page.name}\"(#{page.id})")
         else
           Rails.logger.warn("failed to unify contacts to main: #{page.errors.full_messages.join("\n")}")
         end

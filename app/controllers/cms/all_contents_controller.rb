@@ -50,7 +50,7 @@ class Cms::AllContentsController < ApplicationController
       return
     end
 
-    safe_params = params.require(:item).permit(:in_file)
+    safe_params = params.require(:item).permit(:in_file, :keep_timestamp)
     file = safe_params[:in_file]
     if file.blank? || ::File.extname(file.original_filename).casecmp(".csv") != 0
       @errors = [ t("errors.messages.invalid_csv") ]
@@ -75,7 +75,22 @@ class Cms::AllContentsController < ApplicationController
     temp_file.save!
 
     job = Cms::AllContentsImportJob.bind(site_id: @cur_site, user_id: @cur_user)
-    job.perform_later(temp_file.id)
+    job.perform_later(temp_file.id, keep_timestamp: safe_params[:keep_timestamp] == "keep")
     redirect_to({ action: :import }, { notice: t('ss.notice.started_import') })
+  end
+
+  def sampling_all
+    respond_to do |format|
+      format.html
+      format.csv do
+        exporter = Cms::AllContentSampling.new(site: @cur_site)
+        enumerable = exporter.enum_csv(encoding: "UTF-8")
+
+        filename = "all_contents_sampling_#{Time.zone.now.to_i}.csv"
+
+        response.status = 200
+        send_enum enumerable, type: enumerable.content_type, filename: filename
+      end
+    end
   end
 end

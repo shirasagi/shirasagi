@@ -1,0 +1,6 @@
+<dl class="see" style="margin-bottom: 10px;">
+  <dt><%= @model.t :page_group_id %></dt>
+  <dd><%= @item.page_group.try(:name) %></dd>
+</dl>
+
+<%= render "cms/agents/addons/page_list/show", local_assigns %>

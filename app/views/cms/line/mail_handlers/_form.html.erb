@@ -6,10 +6,10 @@
   <dd><%= f.text_field :filename %></dd>
 
   <dt><%= @model.t :from_conditions %><%= @model.tt :from_conditions %></dt>
-  <dd><%= f.text_area :from_conditions %></dd>
+  <dd><%= f.ss_lines_field :from_conditions %></dd>
 
   <dt><%= @model.t :to_conditions %><%= @model.tt :to_conditions %></dt>
-  <dd><%= f.text_area :to_conditions %></dd>
+  <dd><%= f.ss_lines_field :to_conditions %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>

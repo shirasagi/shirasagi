@@ -9,7 +9,7 @@ class Cms::SyntaxChecker::InternalLinkChecker
         attr_value = node[attr]
         next if attr_value.blank?
 
-        url = Addressable::URI.parse(attr_value) rescue nil
+        url = ::Addressable::URI.parse(attr_value) rescue nil
         next if !url || !internal_link?(context, url)
 
         if url.scheme.present? || url.host.present?

@@ -8,13 +8,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       :cms_group, name: "#{cms_group.name}/#{unique_id}",
       contact_groups: [
         {
-          main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          main_state: "main", name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
         },
         {
-          main_state: nil, name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          main_state: nil, name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
@@ -27,13 +29,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       :cms_group, name: "#{cms_group.name}/#{unique_id}",
       contact_groups: [
         {
-          main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          main_state: "main", name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
         },
         {
-          main_state: nil, name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          main_state: nil, name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
@@ -55,13 +59,14 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-delete" do
         click_on I18n.t("chorg.menus.revisions.delete")
       end
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.delete_changesets.select_group") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on group1.trailing_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on group1.trailing_name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
@@ -88,16 +93,18 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-delete" do
         click_on group1.name
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css(".chorg-before", text: group1.name)
       # expect(page).to have_content(group1.name)
       click_on I18n.t("ss.links.edit")
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.delete_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.delete_changesets.select_group") }
         end
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on group2.trailing_name }
+      within_cbox do
+        wait_for_cbox_closed { click_on group2.trailing_name }
       end
       within "form#item-form" do
         click_on I18n.t("ss.buttons.save")
@@ -124,6 +131,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-delete" do
         click_on group2.name
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css(".chorg-before", text: group2.name)
       click_on I18n.t("ss.links.delete")
       within "form" do

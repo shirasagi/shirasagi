@@ -21,6 +21,7 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::Thumb
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeTwitterPostSetting
     include Cms::Addon::NodeLinePostSetting
@@ -41,6 +42,7 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::Thumb
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeTwitterPostSetting
     include Cms::Addon::NodeLinePostSetting
@@ -129,7 +131,7 @@ class Cms::Node
     self.use_lower_html = false
     self.use_loop_html = false
     self.use_new_days = false
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
     self.use_sort = false
 
     default_scope ->{ where(route: "cms/photo_album") }
@@ -143,7 +145,9 @@ class Cms::Node
     include Cms::Model::Node
     include Cms::Addon::NodeSetting
     include Cms::Addon::Meta
+    include Cms::Addon::SiteSearch::Setting
     include Category::Addon::Setting
+    include Cms::Addon::SiteSearch::Group
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup

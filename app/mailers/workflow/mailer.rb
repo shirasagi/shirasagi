@@ -1,6 +1,7 @@
 class Workflow::Mailer < ApplicationMailer
   def request_mail(args)
     @from_user = SS::User.find(args[:f_uid]) rescue nil
+    @member    = Cms::Member.find(args[:m_id]) rescue nil
     @to_user   = SS::User.find(args[:t_uid]) rescue nil
     @agent_user = SS::User.find(args[:agent_uid]) rescue nil
     @site      = args[:site]
@@ -107,6 +108,6 @@ class Workflow::Mailer < ApplicationMailer
   end
 
   def make_full_url(url)
-    URI.join(@site.mypage_full_url, url).to_s
+    ::Addressable::URI.join(@site.mypage_full_url, url).to_s
   end
 end

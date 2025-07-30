@@ -12,6 +12,7 @@ module Member::Node
     include Member::Addon::Redirection
     include Member::Addon::FormAuth
     include Member::Addon::TwitterOAuth
+    include Member::Addon::Twitter2OAuth
     include Member::Addon::FacebookOAuth
     include Member::Addon::YahooJpOAuth
     include Member::Addon::YahooJpOAuthV2
@@ -54,8 +55,8 @@ module Member::Node
     private
 
     def make_full_url(path)
-      site_root_url = URI.parse(site.full_root_url)
-      URI.join(site_root_url, path) rescue nil
+      site_root_url = ::Addressable::URI.parse(site.full_root_url)
+      ::Addressable::URI.join(site_root_url, path) rescue nil
     end
 
     def trusted?(full_url)
@@ -155,7 +156,7 @@ module Member::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "member/blog") }
 
@@ -178,7 +179,7 @@ module Member::Node
     include Cms::Addon::GroupPermission
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     set_permission_name "member_blogs"
 
@@ -209,7 +210,7 @@ module Member::Node
     include History::Addon::Backup
     include Cms::Lgwan::Node
 
-    self.use_liquid = false
+    self.use_loop_formats = %i(shirasagi)
 
     default_scope ->{ where(route: "member/blog_page_location") }
 

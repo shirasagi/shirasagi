@@ -1,129 +1,69 @@
 class Cms::Form::InitColumnsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  include Cms::ColumnFilter2
 
   model Cms::InitColumn
+  self.form_model = Cms::Form
 
-  navi_view "cms/main/conf_navi"
-
-  before_action :set_form
-  before_action :check_form_type
-  before_action :set_items, only: %i[index]
-  before_action :set_item, only: %i[show edit update delete destroy]
+  navi_view "cms/form/main/navi"
+  append_view_path 'app/views/cms/init_columns'
 
   private
 
-  def set_form
-    @cur_form ||= Cms::Form.site(@cur_site).find(params[:form_id])
+  def items
+    @items ||= cur_form.init_columns.reorder(order: 1)
   end
 
-  def check_form_type
-    raise "404" if @cur_form.blank? || !@cur_form.sub_type_entry?
-  end
-
-  def set_items
-    @items = @cur_form.init_columns
-  end
-
-  def set_item
-    set_form
-    @item = @cur_form.init_columns.find(params[:id])
-    @item.attributes = fix_params
-
-    @model = @item.class
-  rescue Mongoid::Errors::DocumentNotFound => e
-    return render_destroy(true) if params[:action] == 'destroy'
-    raise e
-  end
-
-  def set_crumbs
-    set_form
-    @crumbs << [Cms::Form.model_name.human, cms_forms_path]
-    @crumbs << [@cur_form.name, cms_form_path(id: @cur_form)]
-    @crumbs << [Cms::InitColumn.model_name.human, action: :index]
-  end
-
-  def fix_params
-    set_form
-    { cur_site: @cur_site, cur_form: @cur_form }
-  end
-
-  def pre_params
-    ret = super || {}
-
-    max_order = @cur_form.init_columns.max(:order) || 0
-    ret[:order] = max_order + 10
-    ret
-  end
-
-  def set_column
-    column_id = params[:column_id].presence || params.dig(:item, :column_id) || @item.column.id
-    @column = @cur_form.columns.find(column_id)
+  def set_model
+    @model = self.class.model_class
   end
 
   public
 
-  def index
-    raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site)
-
-    @items = @items.order_by(order: 1).
-      page(params[:page]).per(50)
-  end
-
-  def show
-    raise '403' unless @cur_form.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
-    set_column
-    render
-  end
-
-  def new
-    set_column
-    raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
-
-    @item = @model.new
-  end
-
   def create
-    set_column
-    raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless cur_form.allowed?(:edit, @cur_user, site: @cur_site)
 
-    @item = @model.new get_params
-    render_create @item.save
-  end
+    column_id = params[:type]
+    column = cur_form.columns.where(id: column_id).first_or_initialize
 
-  def edit
-    raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    set_column
-    render
-  end
-
-  def update
-    @item.attributes = get_params
-    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise '403' unless @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_update @item.update
-  end
-
-  def delete
-    raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-    render
-  end
-
-  def destroy
-    raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-    render_destroy @item.destroy
-  end
-
-  def destroy_all
-    raise '403' unless @cur_form.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-
-    entries = @items.entries
-    @items = []
-
-    entries.each do |item|
-      next if item.destroy
-      @items << item
+    @item = @model.new(cur_site: @cur_site, site: @cur_site, form: cur_form)
+    @item.column_id = column.id
+    @item.column_type = column._type
+    @item.order = placement == "bottom" ? cur_form.init_columns.max(:order).to_i + 10 : 10
+    unless @item.save
+      json = { status: 422, errors: @item.errors.full_messages }
+      render json: json, status: :unprocessable_entity, content_type: json_content_type
+      return
     end
-    render_destroy_all(entries.size != @items.size)
+
+    if placement == "top"
+      next_order = 20
+      cur_form.init_columns.ne(id: @item.id).only(:id, :order).reorder(order: 1).to_a.each do |column|
+        column.set(order: next_order)
+        next_order += 10
+      end
+    end
+
+    @frame_id = "item-#{@item.id}"
+    locals = { ref: SS.request_path(request), model: @model, item: @item, new_item: true }
+    render template: "cms/frames/init_columns/show", locals: locals, layout: "ss/item_frame"
+  end
+
+  def reorder
+    ids = params.require(:ids)
+    id_order_map = ids.index_with.with_index do |id, index|
+      (index + 1) * 10
+    end
+
+    cur_form.init_columns.only(:id, :order).each do |column|
+      next unless id_order_map.key?(column.id.to_s)
+
+      order = id_order_map[column.id.to_s]
+      column.set(order: order)
+    end
+
+    json = { status: 200 }
+    render json: json, status: :ok, content_type: json_content_type
   end
 end

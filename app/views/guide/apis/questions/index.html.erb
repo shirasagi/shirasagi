@@ -22,8 +22,10 @@ SS_SearchUI.modal({
   <div class="search-ui-form">
     <% url = @multi ? { action: :index } : { action: :index, single: 1 } %>
     <%= form_for :s, url: url, html: { method: "GET", class: :search } do |f| %>
-      <%= f.text_field :name, value: params[:s].try(:[], :name) %>
-      <%= f.submit  t("ss.buttons.search"), class: :btn %>
+      <div class="input-group">
+        <%= f.text_field :name, value: params[:s].try(:[], :name), placeholder: t("ss.keyword") %>
+        <%= f.submit t("ss.buttons.search"), class: :btn %>
+      </div>
     <% end %>
   </div>
 
@@ -33,7 +35,7 @@ SS_SearchUI.modal({
       <% if @multi %>
         <th class="checkbox"><input type="checkbox" /></th>
       <% end %>
-      <th class="name"><%= t("guide.labels.root_question") %></th>
+      <th class="name"><%= t("guide.question") %></th>
     </tr>
     </thead>
     <tbody class="items">

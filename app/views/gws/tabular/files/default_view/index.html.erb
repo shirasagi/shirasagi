@@ -1,0 +1,32 @@
+<%
+  columns = cur_form.columns.reorder(order: 1, id: 1).to_a
+%>
+<% @tap_menu = proc do |item| %>
+  <%= link_to t('ss.links.show'), url_for(action: :show, id: item) if item.allowed?(:read, @cur_user, site: @cur_site) %>
+  <%=
+    if item.allowed?(:edit, @cur_user, site: @cur_site) && (edit_path = url_for(action: :edit, id: item) rescue nil)
+      link_to t('ss.links.edit'), edit_path
+    end
+  %>
+<% end %>
+
+<% @index_title = proc do |item| %>
+  <%=
+    title_column = columns.first
+    title_value = item.read_tabular_value(title_column)
+    title_html = capture { render title_column.value_renderer(title_value, :title, cur_site: @cur_site, cur_user: @cur_user, item: item) }
+    link_to title_html, url_for(action: :show, id: item), class: "title"
+  %>
+<% end %>
+
+<% @index_meta = proc do |item| %>
+  <% if @trash %>
+    <%= ss_time_tag item.deleted, class: "datetime", data: { column_id: "deleted" } %>
+  <% else %>
+    <%= ss_time_tag item.updated, class: "datetime", data: { column_id: "updated" } %>
+  <% end %>
+<% end %>
+
+<%= tag.div class: "gws-tabular-views-main-box", data: { controller: "ss--list-action-enabler" } do %>
+  <%= render template: "gws/crud/index" %>
+<% end %>

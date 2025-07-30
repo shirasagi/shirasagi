@@ -4,8 +4,10 @@
 <%= render 'cms/agents/columns/main/base', f: f, column: column, value: value, controller: controller do |id| %>
   <% render_item = proc do |text| %>
     <li>
-      <%= text_field_tag("#{f.object_name}[][in_wrap][lists][]", text, column.form_options.merge(id: nil)) %>
-      <%= button_tag t("ss.links.delete"), class: "btn delete btn-delete-list", type: 'button' %>
+      <div class="input-group">
+        <%= text_field_tag("#{f.object_name}[][in_wrap][lists][]", text, column.form_options.merge(id: nil)) %>
+        <%= button_tag t("ss.links.delete"), class: "btn delete btn-delete-list", type: 'button' %>
+      </div>
     </li>
   <% end %>
 

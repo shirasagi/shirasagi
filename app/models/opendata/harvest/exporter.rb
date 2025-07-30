@@ -41,7 +41,7 @@ class Opendata::Harvest::Exporter
   private
 
   def validate_host
-    self.host = ::URI.parse(url).host
+    self.host = ::Addressable::URI.parse(url).host
   rescue => e
     errors.add :host, :invalid
   end

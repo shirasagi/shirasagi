@@ -31,6 +31,8 @@ class Webmail::UserExport
     { key: 'remark', label: Webmail::User.t('remark') }.freeze,
     # Ldap::Addon::Group
     { key: 'ldap_dn', label: Webmail::User.t('ldap_dn') }.freeze,
+    # SS::Addon::MFA::UserSetting
+    { key: 'mfa_otp_enabled_at', label: Webmail::User.t('mfa_otp_enabled_at') }.freeze,
     # Webmail::Addon::Role
     { key: 'webmail_role_ids', label: I18n.t("mongoid.attributes.ss/model/user.webmail_role_ids") }.freeze,
     # Sys::Reference::Role
@@ -264,6 +266,14 @@ class Webmail::UserExport
 
   def get_item_group_ids(item, index, setting)
     item.groups.pluck(:name).join("\n")
+  end
+
+  def get_item_mfa_otp_enabled_at(item, index, setting)
+    if item.mfa_otp_secret.present?
+      I18n.t("ss.mfa_otp_enabled_at", time: I18n.l(item.mfa_otp_enabled_at, format: :picker))
+    else
+      I18n.t("ss.mfa_otp_not_enabled_yet")
+    end
   end
 
   def get_item_webmail_role_ids(item, index, setting)

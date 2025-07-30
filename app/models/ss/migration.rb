@@ -157,6 +157,11 @@ class SS::Migration
 
     def apply_all(filepath_list, context)
       filepath_list.each { |filepath| apply(filepath, context) }
+
+      # 管理画面のフォルダーツリーはキャッシュされている。マイグレーションを実行するとフォルダーツリーが不正になるかも。
+      # そこで、キャッシュをクリアーする。
+      # キャッシュ寿命が有効であっても消去したいので Rails.cache.clear を実行
+      Rails.cache.clear rescue nil
     end
 
     def apply(filepath, context)

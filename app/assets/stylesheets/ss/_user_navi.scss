@@ -1,0 +1,112 @@
+// -------------------------------------------------------------------------------------------------
+// user navigation dropdown
+.user-navigation {
+  display: inline-block;
+  max-width: 220px;
+  height: 48px;
+
+  .user-navigation-dropdown-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0 5px;
+    height: 100%;
+    margin: 0;
+    padding: 5px;
+    border: 0;
+    background-color: transparent;
+    color: $white;
+    &:hover {
+      background-color: #424242;
+    }
+  }
+
+  .user-navigation-user-id {
+    display: inline-grid;
+    grid-template-columns: auto auto;
+    align-items: center;
+    gap: 0 10px;
+  }
+
+  // グループ名、ユーザー名は最大2行
+  .group-name, .user-name {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .user-navigation-dropdown-menu {
+    right: 0;
+    width: 260px;
+    max-height: unset;
+    padding: 5px 0;
+    border: $border-gray4;
+    background-color: $white;
+    color: $black;
+  }
+  .user-navigation-dropdown-menu-item-list {
+    margin: 0;
+    padding: 0;
+  }
+
+  .user-navigation-dropdown-menu-item {
+    display: block;
+    width: 100%;
+    //min-width: 120px;
+    //padding: 8px 10px;
+    list-style: none;
+
+    &.user-navigation-dropdown-menu-item-divider {
+      padding: 0;
+    }
+  }
+  .user-navigation-dropdown-menu-link {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+    color: $black;
+    text-decoration: none;
+
+    &:hover {
+      background: #eee;
+      color: $orange;
+    }
+
+    .caret {
+      margin-left: auto;
+    }
+  }
+
+  .user-navigation-dropdown-menu-item-divider-item {
+    margin: 0;
+    padding: 0;
+    border: 1px solid #f2f2f2;
+  }
+
+  .text-zoom {
+    display: flex;
+    align-items: center;
+    padding: 8px 10px;
+  }
+
+  .text-zoom-button-set {
+    display: flex;
+    margin-left: auto;
+  }
+
+  .zoom-out {
+    border-right: 0;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+
+  .zoom-reset {
+    border-radius: unset;
+  }
+
+  .zoom-in {
+    border-left: 0;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+}

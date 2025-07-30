@@ -8,7 +8,6 @@ FactoryBot.define do
     uid { email.split("@")[0] }
     in_password { 'pass' }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [SS::Model::User::LOGIN_ROLE_DBPASSWD] }
     group_ids { [ ss_group.id ] }
     imap_settings do
       conf = SS::WebmailSupport.test_conf
@@ -31,7 +30,6 @@ FactoryBot.define do
     email { "#{name}@example.jp" }
     in_password { 'pass' }
     type { SS::Model::User::TYPE_SNS }
-    login_roles { [SS::Model::User::LOGIN_ROLE_DBPASSWD] }
     group_ids { [ ss_group.id ] }
   end
 end

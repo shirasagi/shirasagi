@@ -14,7 +14,9 @@
   init_options = params[:calendar] || {}
 %>
 <%= jquery do %>
-Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+  $(document).on("gws:calendarInitialized", function() {
+    Gws_Schedule_Calendar.render('#calendar', <%== calendar_options.to_json %>, <%== init_options.to_json %>);
+  });
 <% end %>
 
 <%= render 'ss/crud/print_preview_head', links: [[ I18n.t('ss.links.back'), { action: :index }.merge(request.query_parameters) ]] %>

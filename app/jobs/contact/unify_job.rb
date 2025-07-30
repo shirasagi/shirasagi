@@ -11,7 +11,7 @@ class Contact::UnifyJob < Cms::ApplicationJob
     criteria = Cms::Page.all.where(
       contact_group_id: group_item.id, contact_group_contact_id: main_contact.id, contact_group_relation: "related")
     criteria.set(
-      contact_charge: main_contact.contact_group_name,
+      contact_group_name: main_contact.contact_group_name, contact_charge: main_contact.contact_charge,
       contact_tel: main_contact.contact_tel, contact_fax: main_contact.contact_fax,
       contact_email: main_contact.contact_email, contact_postal_code: main_contact.contact_postal_code,
       contact_address: main_contact.contact_address, contact_link_url: main_contact.contact_link_url,

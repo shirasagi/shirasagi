@@ -12,7 +12,8 @@ class Cms::Apis::SiteUsagesController < ApplicationController
   public
 
   def reload
-    @cur_site.reload_usage!
+    Cms::ReloadSiteUsageJob.bind(site_id: @cur_site).perform_now
+    @cur_site.reload
     render
   end
 end

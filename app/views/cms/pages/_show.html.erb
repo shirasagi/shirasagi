@@ -7,7 +7,10 @@
 
   <dt><%= @model.t :basename %></dt>
   <dd><%= @item.send :basename %></dd>
-  <dd><%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %></dd>
+  <dd>
+    <%= @item.public? ? link_to(@item.full_url, @item.full_url, target: "_blank", rel: "noopener") : @item.full_url %>
+    <%= link_to t('ss.qr_code'), cms_apis_qr_codes_path(filename: @item.filename), class: "ajax-box ml-1" %>
+  </dd>
 
   <% if @item.redirect_link.blank? %>
     <dd><div class="cms-preview-links"><%= safe_join cms_preview_links(@item), '|' %></div></dd>

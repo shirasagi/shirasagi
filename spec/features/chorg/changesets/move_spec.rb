@@ -8,13 +8,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       :cms_group, name: "#{cms_group.name}/#{unique_id}",
       contact_groups: [
         {
-          main_state: "main", name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          main_state: "main", name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
         },
         {
-          main_state: nil, name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          main_state: nil, name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
           contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
@@ -35,6 +37,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
     let(:new_ldap_dn) { "dc=#{new_name},dc=city,dc=example,dc=jp" }
     let(:new_contact_name1) { unique_id }
     let(:new_contact_group_name1) { unique_id }
+    let(:new_contact_charge1) { unique_id }
     let(:new_contact_tel1) { unique_tel }
     let(:new_contact_fax1) { unique_tel }
     let(:new_contact_email1) { unique_email }
@@ -44,6 +47,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
     let(:new_contact_link_name1) { unique_id }
     let(:new_contact_name2) { unique_id }
     let(:new_contact_group_name2) { unique_id }
+    let(:new_contact_charge2) { unique_id }
     let(:new_contact_tel2) { unique_tel }
     let(:new_contact_fax2) { unique_tel }
     let(:new_contact_email2) { unique_email }
@@ -60,14 +64,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-move" do
         click_on I18n.t("chorg.menus.revisions.move")
       end
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.move_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.move_changesets.select_group") }
         end
       end
-      wait_event_to_fire "turbo:frame-load" do
+      wait_for_event_fired "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_move") do
-          wait_for_cbox do
+          within_cbox do
             click_on group.trailing_name
           end
         end
@@ -86,6 +91,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             first('[name="dummy[chorg-after-contact][][main_state]"]').click
             fill_in "item[destinations][][contact_groups][][name]", with: new_contact_name1
             fill_in "item[destinations][][contact_groups][][contact_group_name]", with: new_contact_group_name1
+            fill_in "item[destinations][][contact_groups][][contact_charge]", with: new_contact_charge1
             fill_in "item[destinations][][contact_groups][][contact_tel]", with: new_contact_tel1
             fill_in "item[destinations][][contact_groups][][contact_fax]", with: new_contact_fax1
             fill_in "item[destinations][][contact_groups][][contact_email]", with: new_contact_email1
@@ -97,6 +103,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
           within first("tr[data-id='#{group.contact_groups[1].id}']") do
             fill_in "item[destinations][][contact_groups][][name]", with: new_contact_name2
             fill_in "item[destinations][][contact_groups][][contact_group_name]", with: new_contact_group_name2
+            fill_in "item[destinations][][contact_groups][][contact_charge]", with: new_contact_charge2
             fill_in "item[destinations][][contact_groups][][contact_tel]", with: new_contact_tel2
             fill_in "item[destinations][][contact_groups][][contact_fax]", with: new_contact_fax2
             fill_in "item[destinations][][contact_groups][][contact_email]", with: new_contact_email2
@@ -132,6 +139,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:unifies_to_main]).to be_blank
             expect(contact_group[:name]).to eq new_contact_name1
             expect(contact_group[:contact_group_name]).to eq new_contact_group_name1
+            expect(contact_group[:contact_charge]).to eq new_contact_charge1
             expect(contact_group[:contact_tel]).to eq new_contact_tel1
             expect(contact_group[:contact_fax]).to eq new_contact_fax1
             expect(contact_group[:contact_email]).to eq new_contact_email1
@@ -146,6 +154,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:unifies_to_main]).to be_blank
             expect(contact_group[:name]).to eq new_contact_name2
             expect(contact_group[:contact_group_name]).to eq new_contact_group_name2
+            expect(contact_group[:contact_charge]).to eq new_contact_charge2
             expect(contact_group[:contact_tel]).to eq new_contact_tel2
             expect(contact_group[:contact_fax]).to eq new_contact_fax2
             expect(contact_group[:contact_email]).to eq new_contact_email2
@@ -164,8 +173,10 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-move" do
         click_on new_name
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css(".chorg-after", text: new_name)
       click_on I18n.t("ss.links.edit")
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-after-basic" do
           fill_in "item[destinations][][name]", with: new_name2
@@ -201,6 +212,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:unifies_to_main]).to be_blank
             expect(contact_group[:name]).to eq new_contact_name2
             expect(contact_group[:contact_group_name]).to eq new_contact_group_name2
+            expect(contact_group[:contact_charge]).to eq new_contact_charge2
             expect(contact_group[:contact_tel]).to eq new_contact_tel2
             expect(contact_group[:contact_fax]).to eq new_contact_fax2
             expect(contact_group[:contact_email]).to eq new_contact_email2
@@ -219,6 +231,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-move" do
         click_on new_name2
       end
+      wait_for_turbo_frame "#item-frame"
       expect(page).to have_css(".chorg-after", text: new_name2)
       click_on I18n.t("ss.links.delete")
       within "form" do
@@ -238,6 +251,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
     let(:new_ldap_dn) { "dc=#{new_name},dc=city,dc=example,dc=jp" }
     let(:new_contact_name1) { unique_id }
     let(:new_contact_group_name1) { unique_id }
+    let(:new_contact_charge1) { unique_id }
     let(:new_contact_tel1) { unique_tel }
     let(:new_contact_fax1) { unique_tel }
     let(:new_contact_email1) { unique_email }
@@ -247,6 +261,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
     let(:new_contact_link_name1) { unique_id }
     let(:new_contact_name2) { unique_id }
     let(:new_contact_group_name2) { unique_id }
+    let(:new_contact_charge2) { unique_id }
     let(:new_contact_tel2) { unique_tel }
     let(:new_contact_fax2) { unique_tel }
     let(:new_contact_email2) { unique_email }
@@ -263,14 +278,15 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
       within "dd.chorg-revisions-move" do
         click_on I18n.t("chorg.menus.revisions.move")
       end
+      wait_for_turbo_frame "#item-frame"
       within "form#item-form" do
         within "#chorg-before-basic" do
-          wait_cbox_open { click_on I18n.t("chorg.views.move_changesets.select_group") }
+          wait_for_cbox_opened { click_on I18n.t("chorg.views.move_changesets.select_group") }
         end
       end
-      wait_event_to_fire "turbo:frame-load" do
+      wait_for_event_fired "turbo:frame-load" do
         page.accept_confirm I18n.t("chorg.confirm.reset_after_move") do
-          wait_for_cbox do
+          within_cbox do
             click_on group.trailing_name
           end
         end
@@ -289,6 +305,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             first('[name="dummy[chorg-after-contact][][main_state]"]').click
             fill_in "item[destinations][][contact_groups][][name]", with: new_contact_name1
             fill_in "item[destinations][][contact_groups][][contact_group_name]", with: new_contact_group_name1
+            fill_in "item[destinations][][contact_groups][][contact_charge]", with: new_contact_charge1
             fill_in "item[destinations][][contact_groups][][contact_tel]", with: new_contact_tel1
             fill_in "item[destinations][][contact_groups][][contact_fax]", with: new_contact_fax1
             fill_in "item[destinations][][contact_groups][][contact_email]", with: new_contact_email1
@@ -331,6 +348,7 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
             expect(contact_group[:unifies_to_main]).to eq "enabled"
             expect(contact_group[:name]).to eq new_contact_name1
             expect(contact_group[:contact_group_name]).to eq new_contact_group_name1
+            expect(contact_group[:contact_charge]).to eq new_contact_charge1
             expect(contact_group[:contact_tel]).to eq new_contact_tel1
             expect(contact_group[:contact_fax]).to eq new_contact_fax1
             expect(contact_group[:contact_email]).to eq new_contact_email1

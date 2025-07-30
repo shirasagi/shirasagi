@@ -28,8 +28,6 @@ class Guide::MermaidComponent < ApplicationComponent
       all_procedures = all_points.reject { |point| point.is_a?(Guide::Question) }
       unreachable_procedures = all_procedures.reject { |procedure| @rendered_point_map.key?(procedure.id) }
       if unreachable_procedures.present?
-        output_buffer << "ID_UNREACHABLE{{\"#{escape("")}\"}}\n".html_safe
-
         unreachable_procedures.each do |procedure|
           output_buffer << "\n"
           output_buffer << build_point(procedure)
@@ -90,7 +88,8 @@ class Guide::MermaidComponent < ApplicationComponent
   def render_question(question)
     output_buffer << build_point(question)
     question.edges.each do |edge|
-      points = select_points(edge.point_ids)
+      edge.parent = question
+      points = select_points(edge.points.pluck(:id))
       next if points.blank?
 
       points.each do |point|
@@ -103,7 +102,7 @@ class Guide::MermaidComponent < ApplicationComponent
     question.edges.each do |edge|
       next if @rendered_edge_map.key?(edge.id)
 
-      points = select_points(edge.point_ids)
+      points = select_points(edge.points.pluck(:id))
       next if points.blank?
 
       points.each do |point|

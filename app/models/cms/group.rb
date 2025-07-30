@@ -2,6 +2,7 @@ class Cms::Group
   include SS::Model::Group
   include Cms::SitePermission
   include Contact::Addon::Group
+  include Lsorg::Addon::Group
 
   set_permission_name "cms_groups", :edit
 
@@ -29,7 +30,7 @@ class Cms::Group
     def search_keyword(params)
       return all if params.blank? || params[:keyword].blank?
       all.keyword_in(
-        params[:keyword], :name, "contact_groups.name", "contact_groups.contact_group_name",
+        params[:keyword], :name, "contact_groups.name", "contact_groups.contact_group_name", "contact_groups.contact_charge",
         "contact_groups.contact_tel", "contact_groups.contact_fax", "contact_groups.contact_email",
         "contact_groups.contact_postal_code", "contact_groups.contact_address",
         "contact_groups.contact_link_url", "contact_groups.contact_link_name")

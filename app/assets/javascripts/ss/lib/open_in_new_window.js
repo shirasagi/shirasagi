@@ -62,7 +62,6 @@ SS_OpenInNewWindow.openInNewWindow = function(el) {
     } catch (_error) {
       width = undefined;
     }
-    console.log(width);
   }
   if (!width) {
     width = SS_OpenInNewWindow.defaultWidth();

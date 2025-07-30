@@ -18,9 +18,9 @@ class Gws::UserTitleImportJob < Gws::ApplicationJob
 
       importer.import_row(row, item)
       if item.save
-        Rails.logger.info("#{i.to_s(:delimited)}行目: #{item.name}(#{item.code})をインポートしました。")
+        Rails.logger.info("#{i.to_fs(:delimited)}行目: #{item.name}(#{item.code})をインポートしました。")
       else
-        Rails.logger.warn("#{i.to_s(:delimited)}行目: #{item.errors.full_messages.join("\n")}")
+        Rails.logger.warn("#{i.to_fs(:delimited)}行目: #{item.errors.full_messages.join("\n")}")
       end
     end
   end

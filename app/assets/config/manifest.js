@@ -2,8 +2,12 @@
 //
 //= link application.js
 //= link application.css
+//= link choices.js
+//= link choices.css
 //= link colorbox.js
 //= link colorbox.css
+//= link swiper.js
+//= link swiper.css
 //= link jplayer.js
 //= link jplayer.css
 

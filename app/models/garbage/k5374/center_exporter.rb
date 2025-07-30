@@ -28,13 +28,13 @@ class Garbage::K5374::CenterExporter < Garbage::K5374::BaseExporter
         nodes.each do |node|
           row = []
           row << node.name
-          row << (I18n.l(node.rest_start, format: :picker) rescue nil)
-          row << (I18n.l(node.rest_end, format: :picker) rescue nil)
+          row << (I18n.l(node.rest_start.to_date, format: :picker) rescue nil)
+          row << (I18n.l(node.rest_end.to_date, format: :picker) rescue nil)
           data << row
         end
       end
     end
-    ("\uFEFF" + csv).encode("UTF-8", invalid: :replace, undef: :replace)
+    (SS::Csv::UTF8_BOM + csv).encode("UTF-8", invalid: :replace, undef: :replace)
   end
 
   def write_csv

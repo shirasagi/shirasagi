@@ -1,21 +1,23 @@
 class Cms::FolderSize
   # check reverse mapping in `app/jobs/cms/folder_csvs_import_job.rb`
-  FIELDS_DEF = [
-    %w(name),
-    %w(index_name),
-    %w(filename),
-    %w(layout to_layout),
-    %w(depth),
-    %w(order),
-    %w(keywords),
-    %w(description),
-    %w(summary_html),
-    %w(status to_label),
-    %w(released),
-    %w(group_names to_group_names),
-    %w(permission_level),
-    %w(size to_size),
-  ].freeze
+  FIELDS_DEF = begin
+    fields = [
+      %w(name),
+      %w(index_name),
+      %w(filename),
+      %w(layout to_layout),
+      %w(depth),
+      %w(order),
+      %w(keywords),
+      %w(description),
+      %w(summary_html),
+      %w(status to_label),
+      %w(released),
+      %w(group_names to_group_names)
+    ]
+    fields << %w(size to_size)
+    fields
+  end.freeze
 
   class << self
     def enum_csv(site)

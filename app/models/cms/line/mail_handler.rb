@@ -98,6 +98,10 @@ class Cms::Line::MailHandler
     item
   end
 
+  def root_owned?(user)
+    true
+  end
+
   private
 
   def validate_filename

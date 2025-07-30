@@ -3,10 +3,27 @@ class Gws::Column::Base
   include SS::Model::Column
   include Gws::Reference::Site
 
+  attr_accessor :skip_elastic
+
   store_in collection: 'gws_columns'
 
   after_destroy :update_form
   after_save :update_form
+
+  class << self
+    def default_attributes
+      {
+        name: self.model_name.human
+      }
+    end
+
+    def inherited(subclass)
+      super
+
+      subclass.cattr_accessor(:use_required, instance_accessor: false)
+      subclass.use_required = true
+    end
+  end
 
   def to_es
     texts = []
