@@ -1,15 +1,4 @@
-<%= jquery do %>
-
-  $(".search_clear").on("click", function () {
-    $(".keyword").val("");
-    $(".prop").prop("checked", false);
-    $(".start").val("");
-    $(".close").val("");
-    $(".facility").val("");
-    return false;
-  });
-
-<% end %>
+<%= jquery do %>Event_Search.render();<% end %>
 
 <%= form_for(:item, url: @cur_part.search_url, method: "get", html: { class: 'event-search' }) do %>
   <fieldset class="keyword">
@@ -46,7 +35,7 @@
   <% if @parent_node.present? %>
     <fieldset class="event-sort">
       <legend><%= label_tag :sort, @parent_node.t(:sort) %></legend>
-      <%= select_tag :sort, options_for_select(@parent_node.public_sort_options, selected: @sort), include_blank: true %>
+      <%= select_tag :sort, options_for_select(@parent_node.public_sort_options, selected: @sort), include_blank: true, class: 'sort' %>
     </fieldset>
   <% end %>
 
