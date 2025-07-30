@@ -17,6 +17,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit event_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: name
 
@@ -33,6 +34,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
 
         expect(Event::Page.all.count).to eq 1
         item = Event::Page.all.first
@@ -60,6 +62,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit event_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: name
 
@@ -77,6 +80,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
 
         expect(Event::Page.all.count).to eq 1
         item = Event::Page.all.first
@@ -104,6 +108,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit event_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: name
 
@@ -125,6 +130,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
 
         expect(Event::Page.all.count).to eq 1
         item = Event::Page.all.first
@@ -161,7 +167,9 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         visit event_pages_path(site: site, cid: node)
         click_on item.name
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
         click_on I18n.t("ss.links.edit")
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           ensure_addon_opened "#addon-event-agents-addons-date"
           within "#addon-event-agents-addons-date" do
@@ -174,6 +182,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
 
         item.reload
         expect(item.event_recurrences).to have(2).items
@@ -205,7 +214,9 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         visit event_pages_path(site: site, cid: node)
         click_on item.name
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
         click_on I18n.t("ss.links.edit")
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           ensure_addon_opened "#addon-event-agents-addons-date"
           within "#addon-event-agents-addons-date" do
@@ -218,6 +229,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
 
         item.reload
         expect(item.event_recurrences).to have(1).items
@@ -238,7 +250,9 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         visit event_pages_path(site: site, cid: node)
         click_on item.name
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
         click_on I18n.t("ss.links.edit")
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           ensure_addon_opened "#addon-event-agents-addons-date"
           within "#addon-event-agents-addons-date" do
@@ -258,6 +272,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
 
         item.reload
         expect(item.event_recurrences).to be_blank
@@ -269,6 +284,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
       it do
         visit event_pages_path(site: site, cid: node)
         click_on I18n.t("ss.links.new")
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: name
 
@@ -316,6 +332,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
 
         expect(Event::Page.all.count).to eq 1
         item = Event::Page.all.first
@@ -361,7 +378,10 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         # clear all
         visit event_pages_path(site: site, cid: node)
         click_on item.name
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
         click_on I18n.t("ss.links.edit")
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           ensure_addon_opened "#addon-event-agents-addons-date"
           within "#addon-event-agents-addons-date" do
@@ -398,6 +418,7 @@ describe "event_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+        wait_for_turbo_frame "#workflow-branch-frame"
 
         item.reload
         expect(item.event_recurrences).to have(3).items

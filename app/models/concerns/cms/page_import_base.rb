@@ -41,9 +41,10 @@ module Cms::PageImportBase
 
   def import(file, opts = {})
     @task = opts[:task]
+    @keep_timestamp = opts[:keep_timestamp]
     basename = ::File.basename(file.name)
     put_log("import start #{basename}")
-    Rails.logger.tagged(basename) do
+    Rails.logger.tagged(basename, @keep_timestamp) do
       import_csv(file)
     end
   end
@@ -76,7 +77,12 @@ module Cms::PageImportBase
     set_page_attributes(row, item)
     raise I18n.t('errors.messages.auth_error') unless allowed_to_import?(item)
 
-    if item.save
+    if @keep_timestamp
+      result = item.without_record_timestamps { item.save }
+    else
+      result = item.save
+    end
+    if result
       item
     else
       raise item.errors.full_messages.join(", ")
@@ -261,9 +267,13 @@ module Cms::PageImportBase
       contact_group_relation = from_label(value, item.contact_group_relation_options)
       item.contact_group_relation = contact_group_relation.presence
     end
+    importer.simple_column :contact_group_name do |row, item, head, value|
+      next unless item.respond_to?(:contact_group_name=)
+      import_contact_attribute(row, item, value, :contact_group_name, :contact_group_name)
+    end
     importer.simple_column :contact_charge do |row, item, head, value|
       next unless item.respond_to?(:contact_charge=)
-      import_contact_attribute(row, item, value, :contact_charge, :contact_group_name)
+      import_contact_attribute(row, item, value, :contact_charge, :contact_charge)
     end
     importer.simple_column :contact_tel do |row, item, head, value|
       next unless item.respond_to?(:contact_tel=)
@@ -276,6 +286,14 @@ module Cms::PageImportBase
     importer.simple_column :contact_email do |row, item, head, value|
       next unless item.respond_to?(:contact_email=)
       import_contact_attribute(row, item, value, :contact_email)
+    end
+    importer.simple_column :contact_postal_code do |row, item, head, value|
+      next unless item.respond_to?(:contact_postal_code=)
+      import_contact_attribute(row, item, value, :contact_postal_code)
+    end
+    importer.simple_column :contact_address do |row, item, head, value|
+      next unless item.respond_to?(:contact_address=)
+      import_contact_attribute(row, item, value, :contact_address)
     end
     importer.simple_column :contact_link_url do |row, item, head, value|
       next unless item.respond_to?(:contact_link_url=)
@@ -294,7 +312,20 @@ module Cms::PageImportBase
         item.released_type = released_type.presence
       end
     end
-    importer.simple_column :released
+    importer.simple_column :released do |row, item, head, value|
+      released_type = item.try(:released_type)
+      if item.respond_to?(:released_type)
+        # 列が前後する可能性を考慮し、CSVの released_type を取得する
+        released_type_key = self.class.model.t(:released_type)
+        if row.header?(released_type_key)
+          released_type_value = row[released_type_key]
+          released_type = from_label(released_type_value, item.released_type_options)
+        end
+      end
+      if released_type.blank? || released_type == "fixed"
+        item.released = value
+      end
+    end
     importer.simple_column :release_date
     importer.simple_column :close_date
   end
@@ -306,7 +337,6 @@ module Cms::PageImportBase
         item.group_ids = group_names.map { |name| group_name_group_map[name] }.compact.map(&:id)
       end
     end
-    importer.simple_column :permission_level
   end
 
   def define_importer_state(importer)

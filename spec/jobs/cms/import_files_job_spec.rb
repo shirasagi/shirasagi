@@ -13,7 +13,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
     end
 
     it do
-      expectation = expect { described_class.bind(job_binding).perform_now }
+      expectation = expect { ss_perform_now described_class.bind(job_binding) }
       expectation.to output(include(*expected_files)).to_stdout
 
       log = Job::Log.first
@@ -51,11 +51,21 @@ describe Cms::ImportFilesJob, dbscope: :example do
     let(:job_binding) { { site_id: site.id } }
 
     context "zip file contain root directory" do
-      let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
-      let(:dir) { "site" }
-      let(:root) { "site" }
+      context "same root dir" do
+        let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+        let(:dir) { "site" }
+        let(:root) { "site" }
 
-      it_behaves_like "perform import from zip"
+        it_behaves_like "perform import from zip"
+      end
+
+      context "another dir" do
+        let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+        let(:dir) { "another" }
+        let(:root) { "another/site" }
+
+        it_behaves_like "perform import from zip"
+      end
     end
 
     context "zip file not contain root directory" do
@@ -72,11 +82,21 @@ describe Cms::ImportFilesJob, dbscope: :example do
     let(:job_binding) { { site_id: site.id, node_id: node.id } }
 
     context "zip file contain root directory" do
-      let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
-      let(:dir) { "site" }
-      let(:root) { "#{node.filename}/#{dir}" }
+      context "same root dir" do
+        let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+        let(:dir) { "site" }
+        let(:root) { "#{node.filename}/#{dir}" }
 
-      it_behaves_like "perform import from zip"
+        it_behaves_like "perform import from zip"
+      end
+
+      context "another dir" do
+        let(:in_file) { Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/cms/import/site.zip", nil, true) }
+        let(:dir) { "another" }
+        let(:root) { "#{node.filename}/another/site" }
+
+        it_behaves_like "perform import from zip"
+      end
     end
 
     context "zip file not contain root directory" do
@@ -118,7 +138,7 @@ describe Cms::ImportFilesJob, dbscope: :example do
       let(:root) { "#{node.filename}/#{dir}" }
 
       it do
-        expectation = expect { described_class.bind(job_binding).perform_now }
+        expectation = expect { ss_perform_now described_class.bind(job_binding) }
         expectation.to output.to_stdout
 
         log = Job::Log.first

@@ -31,11 +31,22 @@
     %>
   </dd>
 
+  <dt><%= @model.t :contact_group_name %></dt>
+  <dd class="contact-group-name">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_group_name)
+      else
+        @item.contact_group_name
+      end
+    %>
+  </dd>
+
   <dt><%= @model.t :contact_charge %></dt>
   <dd class="contact-charge">
     <%=
       if @item.contact_group_related?
-        contact.try(:contact_group_name)
+        contact.try(:contact_charge)
       else
         @item.contact_charge
       end
@@ -75,6 +86,28 @@
     %>
   </dd>
 
+  <dt><%= @model.t :contact_postal_code %></dt>
+  <dd class="contact-postal-code">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_postal_code)
+      else
+        @item.contact_postal_code
+      end
+    %>
+  </dd>
+
+  <dt><%= @model.t :contact_address %></dt>
+  <dd class="contact-address">
+    <%=
+      if @item.contact_group_related?
+        contact.try(:contact_address)
+      else
+        @item.contact_address
+      end
+    %>
+  </dd>
+
   <dt><%= @model.t :contact_link_url %></dt>
   <dd class="contact-link-url">
     <%=
@@ -96,4 +129,7 @@
       end
     %>
   </dd>
+
+  <dt><%= @model.t :contact_sub_group_ids %></dt>
+  <dd class="contact-sub-group-ids"><%=br @item.contact_sub_groups.map(&:name) %></dd>
 </dl>

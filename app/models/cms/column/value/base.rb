@@ -22,10 +22,8 @@ class Cms::Column::Value::Base
   field :order, type: Integer
   field :alignment, type: String
 
-  after_initialize :copy_column_settings, if: ->{ new_record? }
-
+  before_validation :copy_column_settings
   validate :validate_value
-
   validate :validate_link_check, on: :link
 
   liquidize do
@@ -168,8 +166,13 @@ class Cms::Column::Value::Base
     template.render(render_opts).html_safe
   end
 
+  def skip_required?
+    return false if validation_context.is_a?(Array) && validation_context.include?(:form_check)
+    _parent.skip_required?
+  end
+
   def validate_value
-    return if column.blank?
+    return if column.blank? || skip_required?
 
     if column.required? && value.blank?
       self.errors.add(:value, :blank)
@@ -177,10 +180,11 @@ class Cms::Column::Value::Base
   end
 
   def copy_column_settings
-    if column.present?
-      self.name ||= column.name
-      self.order ||= column.order
-    end
+    return if self.name.present? && self.order.present?
+    return if column.blank?
+
+    self.name ||= column.name
+    self.order ||= column.order
   end
 
   def to_default_html

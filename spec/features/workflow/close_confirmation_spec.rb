@@ -22,7 +22,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
   def expected_alert(save_with, notice = nil)
     within "form#item-form" do
-      wait_ckeditor_ready(find(:fillable_field, "item[html]"))
+      wait_for_ckeditor_ready(find(:fillable_field, "item[html]"))
       click_button save_with
     end
     expect(page).to have_css("#alertExplanation", text: I18n.t("cms.confirm.close"))
@@ -35,7 +35,7 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
 
   def unexpected_alert(save_with, notice = nil)
     within "form#item-form" do
-      wait_ckeditor_ready(find(:fillable_field, "item[html]"))
+      wait_for_ckeditor_ready(find(:fillable_field, "item[html]"))
       click_button save_with
     end
     expect(page).to have_no_css("#alertExplanation", text: I18n.t("cms.confirm.close"))

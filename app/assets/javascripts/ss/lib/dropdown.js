@@ -1,90 +1,92 @@
 this.SS_Dropdown = (function () {
-  SS_Dropdown.render = function () {
-    return $("button.dropdown").each(function () {
-      var dropdown, target;
-      target = $(this).parent().find(".dropdown-container")[0];
-      dropdown = new SS_Dropdown(this, {
-        target: target
+  // private methods
+  var cancelEvent = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  SS_Dropdown.onceRendered = false;
+
+  SS_Dropdown.renderOnce = function() {
+    if (SS_Dropdown.onceRendered) {
+      return;
+    }
+
+    //focusout
+    $(document).on("click", function (ev) {
+      $("button.dropdown").each(function () {
+        if (this.ss && this.ss.dropdown) {
+          if (!this.ss.dropdown.isTarget(ev)) {
+            return this.ss.dropdown.closeDropdown();
+          }
+        }
       });
-      if (!SS_Dropdown.dropdown) {
-        return SS_Dropdown.dropdown = dropdown;
+    });
+
+    SS_Dropdown.onceRendered = true;
+  };
+
+  SS_Dropdown.render = function () {
+    SS_Dropdown.renderOnce();
+
+    $("button.dropdown").each(function () {
+      var element = this;
+      SS.justOnce(element, "dropdown", function() {
+        var target = $(element).parent().find(".dropdown-container")[0];
+        return new SS_Dropdown(element, {
+          target: target
+        });
+      });
+    });
+  };
+
+  function SS_Dropdown(elem, options) {
+    this.$element = $(elem);
+    this.$target = $(options.target);
+    this.bindEvents();
+    if (this.$target.data("opened")) {
+      this.openDropdown();
+    }
+  }
+
+  SS_Dropdown.prototype.bindEvents = function () {
+    var _this = this;
+
+    this.$element.on("click", function (ev) {
+      _this.toggleDropdown();
+      cancelEvent(ev);
+      return false;
+    });
+    this.$element.on("keydown", function (ev) {
+      if (ev.keyCode === 27) {  //ESC
+        _this.closeDropdown();
+        cancelEvent(ev);
+        return false;
       }
     });
   };
 
-  SS_Dropdown.openDropdown = function () {
-    if (SS_Dropdown.dropdown) {
-      return SS_Dropdown.dropdown.openDropdown();
-    }
-  };
-
-  SS_Dropdown.closeDropdown = function () {
-    if (SS_Dropdown.dropdown) {
-      return SS_Dropdown.dropdown.closeDropdown();
-    }
-  };
-
-  SS_Dropdown.toggleDropdown = function () {
-    if (SS_Dropdown.dropdown) {
-      return SS_Dropdown.dropdown.toggleDropdown();
-    }
-  };
-
-  function SS_Dropdown(elem, options) {
-    this.elem = $(elem);
-    this.options = options;
-    this.target = $(this.options.target);
-    this.bindEvents();
+  SS_Dropdown.prototype.isTarget = function (event) {
+    return (event.target === this.$element || event.target === this.$target);
   }
 
-  SS_Dropdown.prototype.bindEvents = function () {
-    this.elem.on("click", (function (_this) {
-      return function (e) {
-        _this.toggleDropdown();
-        return _this.cancelEvent(e);
-      };
-    })(this));
-    //focusout
-    $(document).on("click", (function (_this) {
-      return function (e) {
-        if (e.target !== _this.elem && e.target !== _this.target) {
-          return _this.closeDropdown();
-        }
-      };
-    })(this));
-    return this.elem.on("keydown", (function (_this) {
-      return function (e) {
-        if (e.keyCode === 27) {  //ESC
-          _this.closeDropdown();
-          return _this.cancelEvent(e);
-        }
-      };
-    })(this));
-  };
-
   SS_Dropdown.prototype.openDropdown = function () {
-    return this.target.show();
+    this.$target.show();
   };
 
   SS_Dropdown.prototype.closeDropdown = function () {
-    return this.target.hide();
+    this.$target.hide();
   };
 
   SS_Dropdown.prototype.toggleDropdown = function () {
-    this.closeOtherDropdown();
-    return this.target.toggle();
+    this.closeOtherDropdowns();
+    this.$target.toggle();
   };
 
-  SS_Dropdown.prototype.closeOtherDropdown = function () {
-    $(".dropdown-container").not(this.target.get(0)).each(function () {
+  SS_Dropdown.prototype.closeOtherDropdowns = function () {
+    $(".dropdown-container").not(this.$target.get(0)).each(function () {
       $(this).hide();
     });
-  };
-
-  SS_Dropdown.prototype.cancelEvent = function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
   };
 
   return SS_Dropdown;

@@ -9,7 +9,8 @@ this.SS_Clipboard = (function () {
   SS_Clipboard.copyButtonLabel = 'コピー';
 
   SS_Clipboard.copy = function (text, opts) {
-    var copy, e, message, rett, style;
+    var copy, e, message, style, $body;
+
     if (opts == null) {
       opts = {};
     }
@@ -18,9 +19,10 @@ this.SS_Clipboard = (function () {
         style = 'position: absolute; overflow: hidden; width: 0; height: 0;';
         style += 'border: none; box-shadow: none; background: transparent; resize: none;';
         copy = $("<textarea style='" + style + "'>" + text + "</textarea>");
-        $('body').after(copy);
+        $body = ($("#ajax-box").length > 0) ? $("#ajax-box") : $('body');
+        $body.after(copy);
         copy.select();
-        rett = document.execCommand('copy');
+        document.execCommand('copy');
         copy.remove();
         if (opts["success_alert"]) {
           message = SS_Clipboard.successAlertMessage;

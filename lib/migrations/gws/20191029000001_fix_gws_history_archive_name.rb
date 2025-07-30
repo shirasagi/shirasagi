@@ -1,7 +1,7 @@
 class SS::Migration20191029000001
   include SS::Migration::Base
 
-  depends_on "20190301000001"
+  depends_on "20190918000000"
 
   def change
     all_ids = Gws::HistoryArchiveFile.all.pluck(:id).sort

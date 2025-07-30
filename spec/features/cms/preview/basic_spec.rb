@@ -3,6 +3,11 @@ require 'spec_helper'
 describe "cms_preview", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   context "with article page" do
     let(:node) { create :article_node_page, cur_site: site }
     let(:node_category_root) { create :category_node_node, cur_site: site }
@@ -147,6 +152,9 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     let!(:preview_time) { Time.zone.now.beginning_of_minute + 3.hours }
 
     before do
+      sub_site.mobile_state = "enabled"
+      sub_site.save!
+
       user.add_to_set(cms_role_ids: admin_role.id)
       user.reload
 

@@ -55,7 +55,7 @@ module Ckan::Addon
     end
 
     def values
-      uri = URI.parse "#{ckan_url}/api/3/action/package_search?rows=#{ckan_max_docs}&sort=metadata_modified+desc"
+      uri = ::Addressable::URI.parse "#{ckan_url}/api/3/action/package_search?rows=#{ckan_max_docs}&sort=metadata_modified+desc"
       http = Net::HTTP.new(uri.host, uri.port)
       http.use_ssl = true if uri.scheme == 'https'
       req = Net::HTTP::Get.new(uri.path + '?' + uri.query)

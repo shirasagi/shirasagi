@@ -39,7 +39,7 @@ class Cms::Column::Value::UrlField < Cms::Column::Value::Base
   private
 
   def validate_value
-    return if column.blank?
+    return if column.blank? || _parent.skip_required?
 
     if column.required? && value.blank?
       self.errors.add(:value, :blank)
@@ -57,10 +57,11 @@ class Cms::Column::Value::UrlField < Cms::Column::Value::Base
   def copy_column_settings
     super
 
+    return if self.html_tag.present? && self.html_additional_attr.present?
     return if column.blank?
 
-    self.html_tag = column.html_tag
-    self.html_additional_attr = column.html_additional_attr
+    self.html_tag ||= column.html_tag
+    self.html_additional_attr ||= column.html_additional_attr
   end
 
   def to_default_html

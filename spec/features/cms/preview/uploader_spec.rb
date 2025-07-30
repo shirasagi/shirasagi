@@ -31,7 +31,7 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
           attach_file "item[files][]", file
           click_button I18n.t("ss.buttons.save")
         end
-        expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+        wait_for_notice I18n.t('ss.notice.saved')
 
         visit pc_preview_path
         expect(page).to have_text("appended by sample.js")

@@ -91,8 +91,7 @@ class Webmail::MailsController < ApplicationController
       uid_list << item.uid
     end
 
-    webmail_uid_list_session = session[:webmail_uid_list]
-    webmail_uid_list_session ||= {}
+    webmail_uid_list_session = {}
     webmail_uid_list_session['uid_list'] = uid_list
     if params[:s]
       webmail_uid_list_session['search'] = params[:s].to_unsafe_h
@@ -258,6 +257,7 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply(@ref, params[:without_body].present?)
@@ -271,6 +271,7 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
     @item.new_reply_all(@ref, params[:without_body].present?)
@@ -284,9 +285,10 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_forward(@ref)
+    @item.new_forward(@ref, webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index)
     @dedicated = true
     render :new, layout: "ss/dedicated"
   end
@@ -297,9 +299,10 @@ class Webmail::MailsController < ApplicationController
     else
       @ref = @imap.mails.find params[:id], :body
     end
+    @ref.attributes = fix_params
 
     @item = @model.new pre_params.merge(fix_params)
-    @item.new_edit(@ref)
+    @item.new_edit(@ref, webmail_mode: @webmail_mode, account: params[:account] || @cur_user.imap_default_index)
     @dedicated = true
     render :new, layout: "ss/dedicated"
   end
@@ -413,9 +416,9 @@ class Webmail::MailsController < ApplicationController
     location = params[:redirect].presence || opts[:redirect] || { action: :index }
 
     respond_to do |format|
-      notice = t("webmail.notice.#{action}", default: nil)
-      notice ||= t("ss.notice.#{action}", default: nil)
-      notice ||= t("ss.notice.saved")
+      notice = I18n.t("webmail.notice.#{action}", default: nil)
+      notice ||= I18n.t("ss.notice.#{action}", default: nil)
+      notice ||= I18n.t("ss.notice.saved")
       format.html { redirect_to location, notice: notice }
       format.json { render json: { action: params[:action], notice: notice } }
     end

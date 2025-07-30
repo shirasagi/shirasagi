@@ -1,0 +1,48 @@
+<nav class="nav-menu">
+  <% if params[:action] =~ /index/ %>
+    <% if @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.new'), { action: :new }, class: :new %>
+    <% end %>
+    <% if @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% download_url = url_for(action: :download_all) rescue (url_for(action: :download) rescue nil) %>
+      <% if download_url %>
+        <%= link_to(t('ss.links.download'), download_url, class: :download) %>
+      <% end %>
+    <% end %>
+    <% if @model.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
+      <%= link_to(t('ss.links.import'), { action: :import }, { class: :import }) rescue nil %>
+    <% end %>
+  <% elsif params[:action] =~ /new|create|lock|download|import|destroy_all|change_state_all/ %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% elsif params[:action] =~ /edit|update|delete|copy|move|command|contains_urls/ %>
+    <% if @item.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%# link_to t('ss.links.back_to_show'), { action: :show, id: @item }, class: "back-to-show" %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% else %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.edit'), { action: :edit, id: @item }, class: :edit %>
+    <% end %>
+    <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(t('ss.links.copy'), { action: :copy, id: @item }, class: :copy) rescue nil %>
+    <% end %>
+    <% if @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to(t('ss.links.move'), { action: :move, id: @item }, class: :move) rescue nil %>
+    <% end %>
+    <% if @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node) %>
+      <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site, node: @cur_node) %>
+        <%= link_to(t('ss.links.command'), { action: :command, id: @item }, class: :command) rescue nil %>
+      <% end %>
+    <% end %>
+    <% if @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.delete'), { action: :delete, id: @item }, class: :delete %>
+    <% end %>
+    <% if SS.config.michecker && SS.config.michecker['disable'].blank? && @cur_user.cms_role_permit_any?(@cur_site, :use_cms_michecker) %>
+      <%= link_to t('cms.links.michecker'), { action: :michecker }, target: "_blank" rescue nil %>
+    <% end %>
+    <% if @item.try(:master?) %>
+      <%= link_to(t('cms.confirm.check_linked_url_list'), { action: :contains_urls, id: @item }, class: :contains_urls) rescue nil %>
+    <% end %>
+    <%= link_to t('ss.links.back_to_index'), { action: :index }, class: "back-to-index" %>
+  <% end %>
+</nav>

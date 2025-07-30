@@ -2,19 +2,23 @@ module Contact::Addon::Group
   extend ActiveSupport::Concern
   extend SS::Addon
 
-  MAX_CONTACT_COUNT = 20
+  # CSVインポート時の都合上、連絡先数の上限がある方が良い
+  MAX_CONTACT_COUNT = 200
 
   included do
     embeds_many :contact_groups, class_name: "SS::Contact", cascade_callbacks: true, validate: false
     field :contact_group_name, type: String
+    field :contact_charge, type: String
     field :contact_tel, type: String
     field :contact_fax, type: String
     field :contact_email, type: String
+    field :contact_postal_code, type: String
+    field :contact_address, type: String
     field :contact_link_url, type: String
     field :contact_link_name, type: String
 
-    permit_params contact_groups: %i[_id name contact_group_name contact_tel contact_fax contact_email
-                                     contact_link_url contact_link_name main_state]
+    permit_params contact_groups: %i[_id name contact_group_name contact_charge contact_tel contact_fax contact_email
+                                     contact_postal_code contact_address contact_link_url contact_link_name main_state]
 
     before_validation :sync_with_main_contact
     before_validation :remove_empty_contact_groups
@@ -32,16 +36,22 @@ module Contact::Addon::Group
     main_contact = contact_groups.where(main_state: 'main').first
     if main_contact
       self.contact_group_name = main_contact.contact_group_name
+      self.contact_charge = main_contact.contact_charge
       self.contact_tel = main_contact.contact_tel
       self.contact_fax = main_contact.contact_fax
       self.contact_email = main_contact.contact_email
+      self.contact_postal_code = main_contact.contact_postal_code
+      self.contact_address = main_contact.contact_address
       self.contact_link_url = main_contact.contact_link_url
       self.contact_link_name = main_contact.contact_link_name
     else
       self.contact_group_name = nil
+      self.contact_charge = nil
       self.contact_tel = nil
       self.contact_fax = nil
       self.contact_email = nil
+      self.contact_postal_code = nil
+      self.contact_address = nil
       self.contact_link_url = nil
       self.contact_link_name = nil
     end

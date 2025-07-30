@@ -19,6 +19,7 @@ ja:
     convert_to_cms_page: 固定ページに変換する
     count_log_of_errors: 発生したエラー数は『%{number_of_errors}件』です。
     editor_template: テンプレート
+    etc: その他
     event_calendar: イベントカレンダー
     file: 共有ファイル
     generate_node: フォルダー書き出し
@@ -78,20 +79,29 @@ ja:
     preview: プレビュー
     preview_mobile_page: 携帯プレビュー
     preview_page: プレビュー
+    preview_page2: 画面プレビュー
     preview_pc_page: PCプレビュー
     preview_site: サイトプレビュー
+    reference_article: 参照記事
+    release_date: 公開日
     role: 権限/ロール
     root_menu: メインメニュー
-    search_button: 検索
     search_contents: サイト内検索
     search_contents_condition: "検索条件: %{condition}"
     search_contents_count: "%{count} 件の検索結果"
+    search_contents_fields:
+      keyword_place_holder: キーワードを入力
+    search_contents_files: ファイル一覧
     search_contents_html: HTML検索と置換
     search_contents_pages: ページ検索
-    search_contents_files: ファイル一覧
-    search_form: サイト検索フォーム
-    search_target: サイト検索範囲を選択してください
     search_contents_sitemap: サイトマップ
+    search_form: サイト検索フォーム
+    search_target: サイト検索範囲
+    search_sort: 表示順
+    search_sort_options:
+      score: 関連性
+      released: 公開日
+    shortcut: ショートカット
     show_link_to_part: パーツのリンクを表示
     site: サイト
     site_config: サイト設定
@@ -99,7 +109,9 @@ ja:
     site_menu: サイトメニュー
     source_cleaner: ソースクリーニング
     source_cleaner_template: ソースクリーニング
+    switch_module: 表示切り替え
     syntax_check: アクセシビリティチェック
+    top: トップ
     url_scheme: URLスキーム設定
     backlink_check: 被リンクチェック
     sns_post: SNS投稿連携
@@ -117,6 +129,43 @@ ja:
     translate: 自動翻訳
     list_menu_of_monthly_page: 月別ページ一覧メニュー
     state_expired_suffix: （期限切れ）
+    csv_export: CSVエクスポート
+    csv_import: CSVインポート
+    batch_operation: 一括操作
+    csv_export_node: 一括エクスポート
+    csv_import_node: 一括インポート
+    root: ルート
+    yearly_archive: 年別アーカイブ
+    monthly_archive: 月別アーカイブ
+    node_columns:
+      filename: 'ファイル名'
+      route: 'フォルダー属性'
+      name: 'タイトル'
+      index_name: '一覧用タイトル'
+      order: '並び順'
+      layout_filename: 'レイアウト'
+      page_layout_filename: 'ページレイアウト'
+      shortcut: 'ショートカット'
+      view_route: '既定のモジュール'
+      keywords: 'キーワード'
+      description: '概要'
+      summary_html: 'サマリー'
+      conditions: '検索条件(URL)'
+      sort: 'リスト並び順'
+      limit: '表示件数'
+      new_days: 'NEWマーク期間'
+      loop_format: 'ループHTML形式'
+      upper_html: '上部HTML'
+      loop_html: 'ループHTML(SHIRASAGI形式)'
+      lower_html: '下部HTML'
+      loop_liquid: 'ループHTML(Liquid形式)'
+      no_items_display_state: 'ページ未検出時表示'
+      substitute_html: '代替HTML'
+      st_category_ids: 'カテゴリー設定'
+      released_type: '公開日時種別'
+      released: '公開日時'
+      state: 'ステータス'
+      group_ids: '管理グループ'
     column_file_upload:
       image:
         file_label: 代替テキスト
@@ -146,7 +195,16 @@ ja:
     column_url_field:
       link_label_placeholder: リンクテキスト
       link_url_placeholder: URL
+    column_youtube_title_field:
+      field_label: YouTube動画タイトル
+      field_placeholder: 画面読み上げなどで使う動画のタイトルを入力してください。
     visit_article: 記事を見る
+    init_column:
+      new_form_notice:
+        - "上部のツールバー内のボタンをクリックすると入力項目を先頭に追加することができます。"
+        - "下部のツールバー内のボタンをクリックすると入力項目を末尾に追加することができます。"
+      not_found_column: 入力項目が見つかりません。
+    content_quota_navi: フォルダー使用量
 
     adobe_reader:
       remark:
@@ -183,6 +241,15 @@ ja:
           <li>更新日時</li>
           <li>静的ファイル容量</li>
         </ul></p>
+      sampling_tab: 無作為抽出
+      sampling_head: 全コンテンツ無作為抽出
+      sampling_description_html: |-
+        <ul style="margin: 0; padding: 0 2em;">
+          <li style="list-style-type: disc;">サイト内の全フォルダー・全ページから無作為に抽出し、CSVを出力します。</li>
+          <li style="list-style-type: disc;">(フォルダー種別・レイアウト)でグルーピングの後、それぞれのグループの中から最大10件を無作為に抽出します。ページは、(ページ種別・レイアウト・定型フォーム)でグルーピングの後、それぞれのグループの中から最大10件を無作為に抽出します。</li>
+          <li style="list-style-type: disc;">つまり本CSVを利用することで効率よく網羅的にサイト構築結果を確認することができます。</li>
+        </ul>
+      keep_updated: 更新日時を変更しない
     roles:
       admin: 管理者
       user: 編集者
@@ -199,6 +266,7 @@ ja:
       setting: 設定する
       apply_richmenu: リッチメニューを反映する
       add_template: "テンプレートを追加する（最大5個）"
+      youtube_title: YouTubeからタイトルを取得する
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
@@ -211,10 +279,15 @@ ja:
       check_accessibility_manually: "セマンティックなマークアップであり、コントラスト比に問題がない事を確認してください。"
       when_publish: 公開時の注意
       line_post_enabled: LINE連携が有効になっています。連携しない場合は、設定を解除してください。
-      twitter_post_enabled: Twitter投稿が有効になっています。連携しない場合は、設定を解除してください。
+      twitter_post_enabled: X(旧Twitter)投稿が有効になっています。連携しない場合は、設定を解除してください。
       source_clean: "ソースクリーニングを実行してよろしいですか。\nソースクリーニングにより表示が崩れる可能性があります。"
       change_form: 定型フォームを変更してよろしいですか？
       line_apply_richmenu: リッチメニューの反映処理を開始してよろしいですか？
+      disallow_edit_ignore_syntax_check: アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。
+      confirm_move_changes: 移動により影響を受けるコンテンツを確認しました。
+      expiration_setting_type:
+        site: "公開期限をサイト設定にしたがうへ変更してもよろしいですか？"
+        never: "公開期限を無期限へ変更してもよろしいですか？"
     notices:
       import_with_entry_form_is_not_supported: 次のフォームでは本文ブロックは出力されません。
       restoring_public_content_from_trash: 非公開で復元されます。復元後、内容を確認うえ、公開してください。
@@ -262,6 +335,11 @@ ja:
       page_expiration_body:
         - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
+      generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
+      batch_accessibility_check_notice: ※ 一括処理の場合、簡易なアクセシビリティチェックなどは実行されません。各ページについて確実にアクセシビリティチェックを実施されたい場合は、ページ単位で処理をされることをお勧めします。
+      content_quota_navi:
+        - "ショートカットに表示されているフォルダーのおおよその使用量を表示しています。"
+        - "対象のフォルダー属性: %{routes} "
     apis:
       categories:
         index: カテゴリーを選択する
@@ -330,6 +408,7 @@ ja:
       download: フォルダ容量をCSVダウンロードする
       check_preview: プレビューで確認する
       open_remark: 詳細を開く
+      page_expiration_setting: 公開期限ページ設定
     move_page:
       confirm: 確認
       message: '"%{source}"へのリンクが含まれるページ'
@@ -341,7 +420,9 @@ ja:
     move_node:
       title: フォルダーの移動
       current_filename: 現在のフォルダー名
-      destination_filename: 移動先のフォルダー名
+      destination: 移動先
+      destination_folder: 親フォルダー
+      destination_filename: ファイル名
     copy_nodes:
       from: 複製元フォルダー
       to: 複製先
@@ -349,6 +430,16 @@ ja:
       link_to_job_history: ジョブ実行履歴
       target_node_name: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
+    download_nodes:
+      messages:
+        - 現在のフォルダー直下の全てのフォルダー情報をCSVに出力いたします。
+        - 「一括インポート」メニューにてインポートすることで、修正したCSV内容を一括反映させたり、違うフォルダー配下や違うサイトに一括で同じフォルダーを設置することもできます。
+    import_nodes:
+      messages:
+        - 現在のフォルダー直下において、作成したいフォルダーを一括して作成したり、既存フォルダーの設定を一括して更新することができます。
+        -
+        - ※「ファイル名」（フォルダー名）をキーにしてインポートを行いますので、同じファイル名があれば上書きし、配下にないフォルダー名を「ファイル名」に指定した場合は新規作成します。
+        - ※フォルダーを一括して非公開にするとリンク切れが発生する可能性があります。 一括して非公開にした後はリンクチェックを実行し、想定外のリンク切れが発生していないか確認するようにしてください。
     sort_options:
       name:
         title: タイトル
@@ -462,10 +553,6 @@ ja:
         same_as_updated: 更新日
         same_as_created: 作成日
         same_as_first_released: 初公開日
-      twitter_post_format:
-        thumb_and_page: サムネイル画像とページ
-        files_and_page: 本文内の画像とページ
-        page_only: ページ
       line_post_format:
         thumb_carousel: サムネイル画像とLINEメッセージ
         body_carousel: 本文内の最初の画像とLINEメッセージ
@@ -510,7 +597,7 @@ ja:
         main: 本配信
         test: テスト配信
       sns_post_log_type:
-        twitter: Twitter投稿
+        twitter: X(旧Twitter)投稿
         line: LINE投稿
       sns_post_log_state:
         success: 成功
@@ -524,6 +611,13 @@ ja:
       list_origin:
         deployment: 配備された階層に応じてリストを作成
         content: アクセスされたページ/フォルダーに応じてリストを作成
+      origin_of_page:
+        parent1: 対象が配置されているフォルダー内のリスト
+        parent2: 対象が配置されているフォルダーの親フォルダー内のリスト
+      origin_of_node:
+        parent1: 対象が配置されているフォルダー内のリスト
+        parent2: 対象が配置されているフォルダーの親フォルダー内のリスト
+        self_node: 対象（自フォルダー）内のリスト
       clipboard_copy_target:
         url: URL
         css_selector: CSSセレクター
@@ -534,11 +628,37 @@ ja:
       subject_state:
         disabled: 本文に含めない
         include: 本文に含める
+      description_setting:
+        description_setting_manual: 手動
+        description_setting_auto: 自動的に本文と連動
+      site_search_type:
+        page: ウェブページ
+        file: 添付ファイル
+        all: 全て
+      link_target:
+        self: 同じタブで表示
+        blank: 別のタブで表示
+      archive_view:
+        list: リスト（月別）
+        yearly_list: リスト（年別）
+        calendar: カレンダー
+      expiration_setting_type:
+        site: サイト設定にしたがう
+        never: 無期限
+      updated_before:
+        90_days: 90日以上更新なし
+        180_days: 180日以上更新なし
+        1_year: 1年以上更新なし
+        2_years: 2年以上更新なし
+        3_years: 3年以上更新なし
+    site_search:
+      no_results: 選択候補がありません。
+      no_choices: 選択候補がありません。
+      max_item: 個まで選択できます。
     sns_share:
-      fb_like: Facebook いいね！
       fb_share: Facebook シェア
       fb_lang: ja_JP
-      twitter: Twitter
+      twitter: X(旧Twitter)
       tweet: ツイート
       hatena: はてなブックマーク
       hatena_add: このエントリーをはてなブックマークに追加
@@ -652,6 +772,18 @@ ja:
       success: miChecker による検証が完了しました。
       failed: miChecker による検証が失敗しました。
 
+  cms/check_links:
+    run: 実行
+    site_setting: 設定
+    reports: レポート
+    ignore_urls: 除外URL
+    nodes: フォルダー
+    pages: ページ
+    options:
+      message_format:
+        text: メール本文
+        csv: CSVを添付
+
   cms_role:
     edit_cms_sites: サイトの管理
     edit_cms_groups: グループの管理
@@ -739,14 +871,14 @@ ja:
     delete_private_cms_forms: 定型フォームの削除（所有）
     delete_other_cms_forms: 定型フォームの削除（全て）
     use_cms_michecker: micheckerの利用
-    delete_cms_ignore_alert: 警告を無視して削除する
-    edit_cms_ignore_alert: 警告を無視して非公開保存する
+    delete_cms_ignore_alert: リンクチェック警告を無視して削除する
+    edit_cms_ignore_alert: リンクチェック警告を無視して非公開保存する
     use_cms_sitemap: フォルダ容量のCSVダウンロード
-    read_cms_check_links_reports: リンクチェックレポートの閲覧
-    delete_cms_check_links_reports: リンクチェックレポートの削除
-    read_other_cms_check_links_errors: リンクチェックエラーの閲覧（全て）
-    read_private_cms_check_links_errors: リンクチェックエラーの閲覧（所有）
-    edit_cms_check_links_ignore_urls: リンクチェックエラー例外の管理
+    use_cms_check_links: リンクチェックの利用
+    run_cms_check_links: リンクチェックの実行
+    read_other_cms_check_links_errors: エラーの閲覧（全て）
+    read_private_cms_check_links_errors: エラーの閲覧（所有）
+    edit_cms_check_links_ignore_urls: 除外URLの管理
     read_cms_image_resizes: 画像リサイズの閲覧
     edit_cms_image_resizes: 画像リサイズの編集
     delete_cms_image_resizes: 画像リサイズの削除
@@ -756,14 +888,22 @@ ja:
     use_cms_line_deliver_categories: LINE配信カテゴリーの管理
     use_cms_line_services: LINEサービスの管理
     use_cms_all_contents: 全コンテンツの利用
+    use_cms_page_twitter_posts: ページX(旧Twitter)投稿の利用
+    use_cms_page_line_posts: ページLINE投稿の利用
     use_other_cms_line_mail_handlers: LINEメール連携の管理（全て）
     use_private_cms_line_mail_handlers: LINEメール連携の管理（所有）
     use_other_cms_line_statistics: LINE統計情報の利用（全て）
     use_private_cms_line_statistics: LINE統計情報の利用（所有）
+    edit_cms_ignore_syntax_check: アクセシビリティチェックを無視して保存する
+    edit_cms_user_profile: プロフィールの編集
+    edit_password_cms_user_profile: プロフィールのパスワード変更
+    edit_cms_page_expiration_settings: 公開期限ページ設定の管理
 
   modules:
     cms: 標準機能
     cms/line: LINE機能
+    cms/check_links: リンクチェック
+    cms/user_profile: プロフィール
     import_node: フォルダー取り込み
     addons:
       cms/role: ロール
@@ -792,8 +932,8 @@ ja:
       cms/import/body: 本文
       cms/edit_lock: 排他制御
       cms/sns_share: SNS共有
-      cms/twitter_poster: Twitter連携
-      cms/node_twitter_post_setting: Twitter連携設定
+      cms/twitter_poster: X(旧Twitter)連携
+      cms/node_twitter_post_setting: X(旧Twitter)連携設定
       cms/node_line_post_setting: LINE連携設定
       cms/captcha: 認証
       cms/body_layout_html: HTML
@@ -829,6 +969,8 @@ ja:
       cms/redirect_link: リンクページ
       cms/site_search/history: 履歴
       cms/site_search/keyword: 注目ワード
+      cms/site_search/setting: サイト内検索設定
+      cms/site_search/group: 組織
       cms/line_poster: LINE連携
       cms/content_quota: 容量制限
       cms/history_list: 閲覧履歴
@@ -859,6 +1001,8 @@ ja:
       cms/line/statistic/info: 詳細情報
       cms/line/mail_handler: 本文設定
       cms/clipboard_copy: クリップボードへコピー
+      cms/logo_setting: ロゴ設定
+      cms/print: 印刷ボタンの設定
 
   mongoid:
     models:
@@ -889,7 +1033,7 @@ ja:
       cms/page_search: ページ検索
       cms/task: タスク
       cms/import_page: 取り込みページ
-      cms/word_dictionary: かな辞書
+      cms/word_dictionary: 単語置換辞書
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
@@ -916,6 +1060,10 @@ ja:
       cms/michecker_task: miCheckerタスク
       cms/check_links/error/base: エラー情報
       cms/api_token: 連携用APIトークン
+      cms/generation_report/title: 書き出し性能レポート
+      cms/generation_report/history: 書き出し性能履歴
+      cms/generation_report/aggregation: 書き出し性能履歴の集計結果
+      cms/source_cleaner_template: ソースクリーニング
     errors:
       models:
         cms/content:
@@ -926,6 +1074,10 @@ ja:
           attributes:
             url:
               youtube_id_can_not_get: からYouTubeIDが取得できませんでした。
+        cms/generation_report/title:
+          generate_nodes_is_not_done: フォルダー書き出しが一度も実行されていません。まずはフォルダー書き出しを実行してください。
+          generate_pages_is_not_done: ページ書き出しが一度も実行されていません。まずはページ書き出しを実行してください。
+          latest_report_is_already_existed: 最新の書き出し性能レポートがすでに存在します。
     attributes:
       cms/content:
         released_type: 公開日時種別
@@ -1041,6 +1193,8 @@ ja:
       cms/addon/meta:
         keywords: キーワード
         description: 概要
+        description_setting: 概要の連動設定
+        description_body: 概要の本文(手動)
         summary_html: サマリー
       cms/addon/editor_setting:
         color_button: 文字色変更ボタン
@@ -1057,11 +1211,9 @@ ja:
       cms/addon/permission:
         group_ids: 管理グループ
         groups: 管理グループ
-        permission_level: 権限レベル
       cms/addon/group_permission:
         group_ids: 管理グループ
         groups: 管理グループ
-        permission_level: 権限レベル
       cms/addon/readable_setting:
         readable_setting_range: 公開範囲
         readable_group_ids: 閲覧グループ
@@ -1088,6 +1240,8 @@ ja:
       cms/addon/node_list:
         node_routes: フォルダー属性
         list_origin: 起点
+        origin_of_page: ページの場合
+        origin_of_node: フォルダーの場合
       cms/addon/page_group_list:
         condition_groups: 検索条件(グループ)
       cms/addon/tabs:
@@ -1115,10 +1269,9 @@ ja:
         sns_share_states: 表示
         sns_share_orders: 並び順
       cms/addon/twitter_poster:
-        twitter_auto_post: Twitter投稿
+        twitter_auto_post: X(旧Twitter)投稿
         twitter_edit_auto_post: 編集時に自動投稿
-        twitter_post_format: 投稿形式
-        twitter_posted: Twitter投稿履歴
+        twitter_posted: X(旧Twitter)投稿履歴
         twitter_posted_url: TweetURL
         twitter_posted_at: 投稿日時
         twitter_post_error: 投稿エラー
@@ -1126,15 +1279,16 @@ ja:
         line_auto_post: LINE投稿
         line_post_format: 投稿形式
         line_text_message: LINEメッセージ
-        line_text_message_placeholder: "○月○日、○○○イベントが行われます。詳しくは、市ホームページをご覧ください。\n※全角45文字以内\n※改行はしないでください"
+        line_text_message_placeholder: "○月○日、○○○イベントが行われます。\n詳しくは、市ホームページをご覧ください。"
         line_posted: LINE投稿履歴
         line_edit_auto_post: 編集時に自動投稿
         line_post_error: 投稿エラー
       cms/addon/node_twitter_post_setting:
-        node_twitter_auto_post: Twitter投稿
-        node_twitter_post_format: 投稿形式
+        node_twitter_poster_state: ページ連携
+        node_twitter_auto_post: X(旧Twitter)投稿
         node_twitter_edit_auto_post: 編集時に自動投稿
       cms/addon/node_line_post_setting:
+        node_line_poster_state: ページ連携
         node_line_auto_post: LINE投稿
         node_line_post_format: 投稿形式
         node_line_edit_auto_post: 編集時に自動投稿
@@ -1243,6 +1397,15 @@ ja:
         site_search_keywords: 注目ワード
         upper_html: 上部HTML
         lower_html: 下部HTML
+      cms/addon/site_search/setting:
+        link_target: リンク表示
+        search_type_state: 検索種類の選択
+        article_node_state: フォルダーの選択
+        category_state: カテゴリーの選択
+        organization_state: 組織の選択
+        st_article_node_ids: 記事フォルダー
+        site_search_type: 検索種類の初期値
+        st_group_ids: 組織の設定
       cms/form:
         name: 名前
         order: 並び順
@@ -1277,6 +1440,7 @@ ja:
       cms/init_column:
         name: 名前
         order: 並び順
+        column_id: 入力項目
       cms/column/base:
         route: 属性
         name: 名前
@@ -1375,6 +1539,8 @@ ja:
         text: テキスト
       cms/column/value/youtube:
         url: URL
+        title: YouTube動画タイトル
+        generic_title: YouTube動画
         width: 幅
         height: 高さ
         auto_width: 画面幅に合わせる
@@ -1613,6 +1779,70 @@ ja:
       cms/addon/clipboard_copy:
         clipboard_copy_target: コピー対象
         clipboard_copy_selector: CSSセレクター
+        clipboard_display_name: ボタンに表示するテキスト
+      cms/addon/print:
+        print_display_name: ボタンに表示するテキスト
+      cms/generation_report/title:
+        name: タイトル
+        memo: メモ
+        task: タスク
+        task_started: 処理開始日時
+        task_closed: 処理終了日時
+        started: 開始日時
+        closed: 終了日時
+      cms/generation_report/history:
+        task: タスク
+        title: 書き出し性能レポート
+        history_type: 履歴種別
+        content: コンテンツ
+        content_id: コンテンツID
+        content_type: コンテンツタイトル
+        content_name: コンテンツ種別
+        content_filename: コンテンツファイル名
+        page_no: ページ番号
+        db: DB処理時間
+        view: ビュー処理時間
+        elapsed: 全処理時間
+        total_db: 合計DB処理時間
+        total_view: 合計ビュー処理時間
+        total_elapsed: 合計全処理時間
+        sub_total_db: 子合計DB処理時間
+        sub_total_view: 子合計ビュー処理時間
+        sub_total_elapsed: 子合計全処理時間
+        parent: 親書き出し性能履歴
+        parent_id: 親書き出し性能履歴
+        children: 子書き出し性能履歴
+        child_ids: 子書き出し性能履歴
+      cms/generation_report/aggregation:
+        task: タスク
+        title: 書き出し性能レポート
+        history_type: 履歴種別
+        content: コンテンツ
+        content_id: コンテンツID
+        content_type: コンテンツ種別
+        content_name: コンテンツ種別
+        content_filename: コンテンツファイル名
+        count: 回数
+        db: 総DB処理時間
+        view: 総ビュー処理時間
+        elapsed: 総全処理時間
+        total_db: 総合計DB処理時間
+        total_view: 総合計ビュー処理時間
+        total_elapsed: 総合計全処理時間
+        sub_total_db: 総子合計DB処理時間
+        sub_total_view: 総子合計ビュー処理時間
+        sub_total_elapsed: 総子合計全処理時間
+        average_db: 平均DB処理時間
+        average_view: 平均ビュー処理時間
+        average_elapsed: 平均全処理時間
+        average_total_db: 平均合計DB処理時間
+        average_total_view: 平均合計ビュー処理時間
+        average_total_elapsed: 平均合計全処理時間
+        average_sub_total__db: 平均子合計DB処理時間
+        average_sub_total_view: 平均子合計ビュー処理時間
+        average_sub_total_elapsed: 平均子合計全処理時間
+      cms/page_expiration_setting:
+        expiration_setting_type: 公開期限
 
   activemodel:
     attributes:
@@ -1638,11 +1868,15 @@ ja:
         x: X座標
         y: Y座標
         area: 面積
+      cms/node/move_service:
+        source: 移動元フォルダー
+        destination_parent_node: 移動先の親フォルダー
+        destination_basename: 移動先のファイル名
+        confirm_changes: 移動により影響を受けるコンテンツの確認
 
   errors:
     messages:
       set_filename: ファイル名を入力してください。
-      invalid_filename: ファイル名は不正な値です。
       too_bigsize: 携帯電話で表示する場合、ファイルサイズ合計(%{total})が制限値の%{mobile_size}以下になるようにしてください。
       too_bigfile: 携帯電話で表示する場合、%{filename}(%{filesize})のファイルサイズを%{mobile_size}以下になるようにしてください。
       set_name: タイトルを入力してください。
@@ -1689,6 +1923,10 @@ ja:
       check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: リンクのテキストを確認してください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
+      input_youtube_url: YouTubeのURLを入力してください。
+      youtube_title_fetch_failed: タイトルの取得に失敗しました。
+      network_error: 通信エラーが発生しました。
       replace_word: 使用が好ましくない単語が含まれています。「%{from}」→「%{to}」
       replace_word_validation: に使用が好ましくない単語が含まれています。
       alt_is_included_in_filename: 代替テキストがファイル名に含まれています。
@@ -1733,6 +1971,8 @@ ja:
           - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
+        set_iframe_title:
+          - iframe要素またはframe要素には、アクセシビリティのためにtitle属性を設定する必要があります。
         alt_is_included_in_filename:
           - 代替テキストの一部もしくは全部がファイル名に含まれています。
           - 一般的にファイル名をそのまま代替テキストに設定するのは好ましくないと考えられます。
@@ -1761,6 +2001,8 @@ ja:
       unable_to_close_form_if_form_is_in_use: 定型フォームが使用中のため非公開にすることはできません。
       both_of_page_id_and_node_id_is_blank: ページIDかノードIDのどちらかを設定してください。
       not_found_test_members: テストメンバーが選択されていません。
+      plz_check_targets_to_delete: 削除対象が選択されていません。削除したい項目のチェックボックスにチェックを入れてください。
+      plz_confirm_move_changes: 移動により影響を受けるコンテンツを確認してください。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -1807,11 +2049,6 @@ ja:
       captcha_test:
         - 認証画像の表示を確認します。
 
-    cms/role:
-      permission_level:
-        - 権限レベルを設定します。
-        - 数字が大きいほど強い権限になります。
-
     search_contents:
       html:
         keyword:
@@ -1843,7 +2080,7 @@ ja:
           フォルダー内の記事ページ一覧を表示します。
         - |-
           カテゴリー/カテゴリーリスト
-          ファルダー属性「カテゴリー」を設定したフォルダー一覧を表示します。
+          フォルダー属性「カテゴリー」を設定したフォルダー一覧を表示します。
         - |-
           カテゴリー/ページリスト
           カテゴリーが設定されているページ一覧を表示します。
@@ -1923,7 +2160,7 @@ ja:
       conditions:
         - 自フォルダー内のリスト以外で表示するリストのフォルダー名を記述します。
         - |-
-          改行することで複数のファルダー指定することが可能です。
+          改行することで複数のフォルダー指定することが可能です。
           例：
           oshirase
           oshirase/event
@@ -1982,9 +2219,12 @@ ja:
       st_categories:
         - フォルダー下で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+
+    cms/move_node:
+      destination_folder:
+        - 移動先のフォルダーを選択してください。
       destination_filename:
-        - ページやフォルダーを移動します。
-        - 移動先をフルパスで設定します。
+        - 移動先のファイル名を入力します。
 
     cms/line/service/base:
       service:
@@ -2125,9 +2365,9 @@ ja:
       page_expiration_before:
         - 公開期限の期限を選択します。
       page_expiration_mail_subject:
-        - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの件名を入力します。
+        - 公開期限が切れたページについて、そのページの管理グループ宛にお知らせメールを送ります。そのメールの件名を入力します。
       page_expiration_mail_upper_text:
-        - 公開期限が切れたページについて、そのページの担当部署宛にお知らせメールを送ります。そのメールの上部テキストを入力します。
+        - 公開期限が切れたページについて、そのページの管理グループ宛にお知らせメールを送ります。そのメールの上部テキストを入力します。
 
     cms/addon/site/node_setting:
       rss_recent_state:
@@ -2161,7 +2401,7 @@ ja:
           パンくずリストを自動生成します。
         - |-
           標準機能/SNSシェアボタン
-          facebook、Twitter等のSNSシェアボタンを表示します。
+          facebook、X(旧Twitter)等のSNSシェアボタンを表示します。
         - |-
           イベント/カレンダー
           イベントカレンダーを表示します。
@@ -2186,7 +2426,7 @@ ja:
       conditions:
         - 自フォルダー内のリスト以外で表示するリストのフォルダー名を記述します。
         - |-
-          改行することで複数のファルダーを指定することが可能です。
+          改行することで複数のフォルダーを指定することが可能です。
           例：
           oshirase
           oshirase/event
@@ -2293,7 +2533,7 @@ ja:
       conditions:
         - タブ分けで表示するリストのフォルダー名を記述します。
         - |-
-          改行することで複数のファルダーを指定することが可能です。
+          改行することで複数のフォルダーを指定することが可能です。
           例：
           oshirase
           oshirase/event
@@ -2544,7 +2784,7 @@ ja:
         - 表示するリストのフォルダー名を記述します。
         - 設定されていない場合、すべてのフォルダーからページを検索します。
         - |-
-          改行することで複数のファルダーを指定することが可能です。
+          改行することで複数のフォルダーを指定することが可能です。
           例：
           oshirase
           oshirase/event
@@ -2607,6 +2847,8 @@ ja:
         ページの更新日時が「2015年4月1日」の形式で表示されます。
         #{page_updated.short}
         ページの更新日時が「4/1」の形式で表示されます。
+        #{page_thumb.src}
+        ページやフォルダーに設定しているサムネイル画像が表示されます。
 
         &lt;!-- skip-voice --&gt;&lt;div&gt;読み上げない&lt;/div&gt;&lt;!-- end-skip-voice --&gt;
         コメントアウトで囲われた個所の読み上げをスキップします。
@@ -2677,7 +2919,11 @@ ja:
     cms/addon/for_member_node:
       for_member_state:
         - 会員がログインしている時のみ閲覧できるように設定します。
-
+    cms/addon/file:
+      description:
+        - 本ページにアップロードされたファイルの一覧です。
+        - 本ページで使用していないファイルには「未使用」タグが表示されます。
+        - ※アップロードされたファイルは、URLを直接入力するとアクセスできるため、不要なファイルの管理にご注意ください。
     cms/command:
       name:
         - タイトルを入力します。
@@ -2853,9 +3099,9 @@ ja:
         - 種類を選択します。
 
     cms/column/select_page:
-      node_ids:
-        - 記事フォルダーを設定します。
-        - 設定した記事フォルダー配下のページを選択可能です。
+       node_ids:
+         - 記事フォルダーを設定します。
+         - 設定した記事フォルダー配下のページを選択可能です。
 
     cms/addon/form_db/import:
       import_url: |-
@@ -2881,28 +3127,18 @@ ja:
         ※定期実行時のみ有効な設定です。
       generate_on_import: |-
         インポートした際に記事ページを書き出します。
-
     cms/addon/node_twitter_post_setting:
+      node_twitter_poster_state:
+        - 有効に設定するとフォルダー内の記事編集時にX(旧Twitter)連携が表示されます。
       node_twitter_auto_post:
-        - 有効に設定すると公開時にTwitter投稿をおこないます。
+        - 有効に設定すると公開時にX(旧Twitter)投稿をおこないます。
       node_twitter_edit_auto_post:
-        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - 有効に設定すると再度公開した際にX(旧Twitter)投稿をおこないます。
         - この設定は再投稿が完了した際に、自動的に無効に戻ります。
-      node_twitter_post_format:
-        - 投稿形式を選択します。
-        -
-        - ・サムネイル画像とページ
-        - サムネイル画像とページタイトルおよびリンクを投稿します。
-        -
-        - ・本文内の画像とページ
-        - 本文内の画像とページタイトルおよびリンクを投稿します。
-        - 画像は最大４件表示されます。
-        -
-        - ・ページ
-        - ページタイトルおよびリンクを投稿します。
-        - ページをOGPで表示する場合は、こちらを選択してください。
 
     cms/addon/node_line_post_setting:
+      node_line_poster_state:
+        - 有効に設定するとフォルダー内の記事編集時LINE連携が表示されます。
       node_line_auto_post:
         - 有効に設定すると公開時にLINE投稿をおこないます。
       node_line_edit_auto_post:
@@ -2922,23 +3158,10 @@ ja:
 
     cms/addon/twitter_poster:
       twitter_auto_post:
-        - 有効に設定すると公開時にTwitter投稿をおこないます。
+        - 有効に設定すると公開時にX(旧Twitter)投稿をおこないます。
       twitter_edit_auto_post:
-        - 有効に設定すると再度公開した際にTwitter投稿をおこないます。
+        - 有効に設定すると再度公開した際にX(旧Twitter)投稿をおこないます。
         - この設定は再投稿が完了した際に、自動的に無効に戻ります。
-      twitter_post_format:
-        - 投稿形式を選択します。
-        -
-        - ・サムネイル画像とページ
-        - サムネイル画像とページタイトルおよびリンクを投稿します。
-        -
-        - ・本文内の画像とページ
-        - 本文内の画像とページタイトルおよびリンクを投稿します。
-        - 画像は最大４件表示されます。
-        -
-        - ・ページ
-        - ページタイトルおよびリンクを投稿します。
-        - ページをOGPで表示する場合は、こちらを選択してください。
 
     cms/addon/line_poster:
       line_auto_post:
@@ -2973,7 +3196,7 @@ ja:
         - フォルダーの合計容量の上限を入力します。合計容量が設定した上限を超えた場合、警告が表示されます。
         - 初期値は「未設定」で、未設定である場合、警告は表示されません。
         -
-        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。　
+        - なお、上限を設定するだけでは有効になりません。以下の条件が必要です。
         - 1. 容量制限が設定されている。
         - 2. フォルダー設定のショートカットが「表示」に設定されている。
         - 3. 自グループが管理権限の管理グループに設定されている。
@@ -2984,7 +3207,17 @@ ja:
 
     cms/check_links/ignore_url:
       name:
-        - 除外URLを入力します。
+        - リンクチェック時に、チェックの対象外にしたいURLを登録します。
+        - URLの記述は、管理画面側より実際にページなどに記述されている書き方で登録してください。
+        - ""
+        - 【記述例】
+        - ・外部リンクなどでドメインから全てURLを記述している場合
+        - https://demo.ss-proj.org/kurashi/
+        - https://demo.ss-proj.org/kurashi/xxxx.html
+        - ""
+        - ・内部リンクでドメインを除いてURLを記述している場合
+        - /kurashi/
+        - /kurashi/xxxx.html
 
     cms/addon/site_search/history:
       upper_html:
@@ -3001,6 +3234,22 @@ ja:
         - 上部HTMLを入力します。
       lower_html:
         - 下部HTMLを入力します。
+
+    cms/addon/site_search/setting:
+      link_target:
+        - 検索結果のリンクの表示形式を設定します。
+      search_type_state:
+        - 検索フォームに検索種類の選択を表示します。
+      article_node_state:
+        - 検索フォームにフォルダーの選択を表示します。
+      category_state:
+        - 検索フォームにカテゴリーの選択を表示します。
+      organization_state:
+        - 検索フォームに組織の選択を表示します。
+      st_article_node_ids:
+        - サイト内検索の対象となる記事フォルダーを設定します。
+      site_search_type:
+        - 検索種類の初期値を設定します。
 
     cms/line/facility_search/category:
       name:
@@ -3124,6 +3373,10 @@ ja:
       st_categories:
         - サイト内検索で使用するカテゴリーを設定します。
         - 設定されていない場合は全カテゴリーが対象となります。
+      st_group_ids:
+        - サイト内検索で使用する組織の一覧を設定します。
+        - 選択した部署とその配下の部署が検索対象となります。
+        - 設定されていない場合は全部署が対象となります。
 
     cms/syntax_checker/main_setting:
       syntax_check:
@@ -3157,6 +3410,42 @@ ja:
         - "例: .contact"
         - class="contact" が設定されているHTML要素のテキストをクリップボードへコピーします。
         - 通常、この設定は、お問い合わせ先をクリップボードへコピーすることができます。
+      clipboard_display_name:
+        - ボタンに表示するテキストを入力してください。
+        - 「コピーする」「リンクをコピー」など、自由に設定できます。
+        - 省略した場合は「パーツ名」が表示されます。
+    cms/addon/print:
+      print_display_name:
+        - ボタンに表示するテキストを入力してください。
+        - 「印刷する」「帳票出力」など、自由に設定できます。
+        - 省略した場合は「パーツ名」が表示されます。
+    cms/column/value/youtube:
+      title:
+      - "YouTube動画のタイトルを入力してください（アクセシビリティ向上のため）。"
+      - "「YouTubeからタイトルを取得」ボタンで自動取得もできます。"
+      - "自動取得後に内容を修正することも可能です。"
+      - "未入力の場合は「YouTube動画」がタイトルに設定されます。"
+    cms/addon/meta:
+      description_setting:
+        - 概要について、記事本文から自動入力するか手動入力するかを選択します。初期値は「自動的に本文と連動」です。
+        -
+        - ・自動的に本文と連動
+        - 保存時に本文の内容の最初の60文字を概要として表示します。
+        - 本文の冒頭60文字の内容を変更した場合は、自動的に概要も更新されます。
+        -
+        - ・手動
+        - 概要の本文欄に概要を入力します。
+        - 本文の内容を変更した場合は、手動で概要を更新する必要があります。
+      description_body:
+        - メタ情報の概要を入力します。
+        - メタ情報の概要を設定しておくことで、閲覧者の方が必要な情報を見つけやすくなり、サイトの利便性が高まります。
+
+    cms/page_expiration_setting:
+      expiration_setting_type:
+        - 公開期限の期限切れ警告の公開期限をページごとに個別に設定することができます。
+        -
+        - "・サイト設定にしたがう: この選択はサイト設定の公開期限にしたがうことを意味します。この選択が既定です。"
+        - "・無期限: この選択は公開期限を無期限に設定します。この設定をしたページは公開期限切れ警告が通知または表示されることはありません。"
 
   all_content:
     page_id: ページID
@@ -3206,31 +3495,37 @@ ja:
     status: ステータス
     released: 公開日時
     group_names: 管理グループ
-    permission_level: 権限レベル
     size: 容量
 
   job:
     models:
-      cms/node/generate_job: フォルダー書き出し
-      cms/page/generate_job: ページ書き出し
-      cms/page/release_job: ページ公開
-      cms/page/remove_job: ページ削除
-      cms/page/update_job: ページ更新
-      cms/page/move_job: ページ移動
-      cms/page/expiration_notice_job: 公開期限お知らせ
-      cms/check_links_job: リンクチェック
-      cms/node/copy_nodes_job: フォルダー複製
-      cms/import_files_job: ページ/フォルダー取り込み
-      cms/role/import_job: 権限インポート
-      cms/form_db/import_url_job: 定型DBインポート
-      cms/all_contents_import_job: 全コンテンツ一括設定
-      cms/michecker_job: miChecker
-      cms/sns_post/twitter_job: Twitterページ投稿
-      cms/sns_post/line_job: LINEページ投稿
-      cms/line/deliver_job: LINE配信
-      cms/line/test_deliver_job: LINEテスト配信
-      cms/line/deliver_reserved_job: LINE予約配信
-      cms/line/apply_richmenu_job: LINEリッチメニュー登録
-      cms/group_import_job: グループインポート
-      cms/remove_improper_htmls_job: 不要HTML削除
-      cms/line/update_statistics_job: LINE統計情報更新
+      cms/node/generate_job: CMS/フォルダー書き出し
+      cms/page/generate_job: CMS/ページ書き出し
+      cms/page/release_job: CMS/ページ公開
+      cms/page/remove_job: CMS/ページ削除
+      cms/page/update_job: CMS/ページ更新
+      cms/page/move_job: CMS/ページ移動
+      cms/page/expiration_notice_job: CMS/公開期限お知らせ
+      cms/check_links_job: CMS/リンクチェック
+      cms/node/copy_nodes_job: CMS/フォルダー複製
+      cms/import_files_job: CMS/ページ・フォルダー取り込み
+      cms/role/import_job: CMS/権限インポート
+      cms/form_db/import_url_job: CMS/定型DBインポート
+      cms/all_contents_import_job: CMS/全コンテンツ一括設定
+      cms/michecker_job: CMS/miChecker
+      cms/sns_post/twitter_job: CMS/X(旧Twitter)ページ投稿
+      cms/sns_post/line_job: LINE/ページ投稿
+      cms/line/deliver_job: LINE/配信
+      cms/line/test_deliver_job: LINE/テスト配信
+      cms/line/deliver_reserved_job: LINE/予約配信
+      cms/line/apply_richmenu_job: LINE/リッチメニュー登録
+      cms/group_import_job: CMS/グループインポート
+      cms/remove_improper_htmls_job: CMS/不要HTML削除
+      cms/line/update_statistics_job: LINE/統計情報更新
+      cms/generation_report_create_job: CMS/書き出し性能レポートの作成
+      cms/reload_site_usage_job: CMS/各種使用率の更新
+      cms/elasticsearch/indexer/feed_releases_job: CMS全文検索/リリースフィード
+      cms/elasticsearch/indexer/node_close_job: CMS全文検索/フォルダーの非公開（配下のページの削除）
+      cms/elasticsearch/indexer/node_release_job: CMS全文検索/フォルダーの公開（配下のページの追加）
+      cms/elasticsearch/indexer/page_release_job: CMS全文検索/ページの追加
+      cms/form_db/import_urls_job: CMS/定型DBインポート（サイト全体）

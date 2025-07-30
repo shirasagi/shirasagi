@@ -25,7 +25,7 @@ describe "sys/auth/open_id_connects", type: :feature, dbscope: :example do
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Sys::Auth::OpenIdConnect.count).to eq 1
       Sys::Auth::OpenIdConnect.first.tap do |item|
@@ -66,7 +66,7 @@ describe "sys/auth/open_id_connects", type: :feature, dbscope: :example do
 
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css("#notice", text: I18n.t("ss.notice.saved"))
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(Sys::Auth::OpenIdConnect.count).to eq 1
       Sys::Auth::OpenIdConnect.first.tap do |item|

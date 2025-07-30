@@ -24,9 +24,6 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
-      # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
       within "#content-navi" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)
@@ -42,8 +39,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on folder1.name
       end
       # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
+      wait_for_js_ready
       within "#content-navi" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)
@@ -59,8 +55,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on folder2.name
       end
       # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
+      wait_for_js_ready
       within "#content-navi" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)
@@ -76,8 +71,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("gws/notice.all")
       end
       # wait for ajax completion
-      expect(page).to have_no_css('.fc-loading')
-      expect(page).to have_no_css('.ss-base-loading')
+      wait_for_js_ready
       within "#content-navi" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)

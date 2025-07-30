@@ -21,12 +21,19 @@ module Sys::SiteImport::File
       end
 
       if item.save
-        src = SS::File.new(id: id, name: item.name, filename: item.filename)
+        src = SS::File.new(id: id, name: data["name"], filename: data["filename"])
         src = src.becomes_with_model
+
         @ss_files_map[id] = item.id
         @ss_files_url[src.url] = item.url
         FileUtils.mkdir_p(File.dirname(item.path))
         FileUtils.cp(path, item.path) # FileUtils.mv
+
+        if Fs.to_io(path) { |io| SS::ImageConverter.image?(io) }
+          @ss_files_url[src.thumb_url] = item.thumb_url
+          item.in_disable_variant_processing = false
+          item.update_variants
+        end
       else
         @task.log "[#{item.class}##{item.id}] " + item.errors.full_messages.join(' ')
       end
@@ -59,9 +66,20 @@ module Sys::SiteImport::File
   end
 
   def update_ss_files_url
-    src_path = ::Regexp.union(@ss_files_url.keys.collect { |src| /="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/ })
+    @ss_files_url.each do |src, dst|
+      replace_html_with_url(src, dst)
+    end
+  end
+
+  def replace_html_with_url(src, dst)
+    src_path = "=\"#{src}"
+    dst_path = "=\"#{dst}"
+
+    # html fields
     fields = Cms::ApiFilter::Contents::HTML_FIELDS + Cms::ApiFilter::Contents::CONTACT_FIELDS
-    cond = { "$or" => fields.map { |field| { field => src_path } } }
+    path = "=\"#{::Regexp.escape(src)}"
+    cond = { "$or" => fields.map { |field| { field => /#{path}/ } } }
+
     criterias = [
       Cms::Page.in(id: @cms_pages_map.values),
       Cms::Part.in(id: @cms_parts_map.values),
@@ -77,21 +95,22 @@ module Sys::SiteImport::File
         item.set(attr) if attr.present?
       end
     end
-  end
 
-  def replace_html_with_url(html)
-    return html if html.blank?
+    # column_values
+    criteria = Cms::Page.in(id: @cms_pages_map.values)
+    criteria = criteria.where(column_values: { "$exists" => true, "$ne" => [] })
+    criteria.each do |item|
+      next if !item.respond_to?(:column_values)
+      next if item.column_values.blank?
 
-    src_html = dst_html = html
+      item.column_values.each do |column_value|
+        next if !column_value.respond_to?(:value)
+        next if column_value.value.blank?
 
-    @ss_files_url.each do |src, dst|
-      src_path = ::Regexp.new(/="#{::Regexp.escape(::File.dirname(src))}\/[^"]*/)
-
-      next unless dst_html.match?(src_path)
-
-      src_html = src_html.gsub(src_path, "=\"#{dst}")
+        value = column_value.value
+        new_value = value.gsub(src_path, dst_path)
+        column_value.set(value: new_value) if new_value != value
+      end
     end
-    html = src_html if src_html != dst_html
-    html
   end
 end

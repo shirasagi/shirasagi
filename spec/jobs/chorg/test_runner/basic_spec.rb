@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Chorg::TestRunner, dbscope: :example do
+describe Chorg::TestRunner, dbscope: :example, fragile: true do
   let(:root_group) { create(:revision_root_group) }
   let(:site) { create(:cms_site, group_ids: [root_group.id]) }
   let(:task) { Chorg::Task.create!(name: unique_id, site_id: site.id) }
@@ -14,7 +14,7 @@ describe Chorg::TestRunner, dbscope: :example do
       expect(revision).not_to be_nil
       expect(changeset).not_to be_nil
       job = described_class.bind(site_id: site.id, task_id: task.id)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -52,7 +52,7 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page).not_to be_nil
         # check for not changed
         job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -68,6 +68,8 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page.group_ids).to eq [ group.id ]
         expect(page.contact_group_id).to eq group.id
         expect(page.contact_email).to eq group.contact_email
+        expect(page.contact_postal_code).to eq group.contact_postal_code
+        expect(page.contact_address).to eq group.contact_address
         expect(page.contact_tel).to eq group.contact_tel
         expect(page.contact_fax).to eq group.contact_fax
         expect(page.contact_link_url).to eq group.contact_link_url
@@ -109,7 +111,7 @@ describe Chorg::TestRunner, dbscope: :example do
 
         # check for not changed
         job = described_class.bind(site_id: site.id, task_id: task.id, user_id: user1.id)
-        expect { job.perform_now(revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
+        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -127,6 +129,8 @@ describe Chorg::TestRunner, dbscope: :example do
         expect(page.group_ids).to eq [ group1.id ]
         expect(page.contact_group_id).to eq group1.id
         expect(page.contact_email).to eq group1.contact_email
+        expect(page.contact_postal_code).to eq group1.contact_postal_code
+        expect(page.contact_address).to eq group1.contact_address
         expect(page.contact_tel).to eq group1.contact_tel
         expect(page.contact_fax).to eq group1.contact_fax
         expect(page.contact_link_url).to eq group1.contact_link_url
@@ -168,7 +172,7 @@ describe Chorg::TestRunner, dbscope: :example do
       expect(changeset).not_to be_nil
       # change group.
       job = described_class.bind(site_id: site.id, task_id: task.id)
-      expect { job.perform_now(revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1

@@ -1,0 +1,42 @@
+<div class="list-head">
+  <% if list_check_box? %>
+    <label class="check"><input type="checkbox" /></label>
+
+    <div class="list-head-action">
+      <%
+        operational_actions = []
+        if cur_form.workflow_enabled?
+          approve_all = render "gws/tabular/files/list_head_approve_all"
+          if approve_all.present?
+            operational_actions << approve_all
+          end
+        end
+
+        if @model.allowed?(:download, @cur_user, site: @cur_site)
+          download_specified_path = url_for(action: :download_specified) rescue nil
+        end
+        if download_specified_path
+          download_specified = render "gws/tabular/files/list_head_download_specified", download_specified_path: download_specified_path
+        end
+        if download_specified.present?
+          operational_actions << download_specified
+        end
+      %>
+      <% if operational_actions.present? %>
+        <div class="list-head-action-set">
+          <% operational_actions.each do |operation_button| %>
+            <%= operation_button %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <% if @model.allowed?(:delete, @cur_user, site: @cur_site) %>
+        <div class="list-head-action-set">
+          <%= render "gws/tabular/files/list_head_destroy_all" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%= render template: "_search" %>
+</div>

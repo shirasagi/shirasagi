@@ -11,7 +11,7 @@
   <dt><%= @model.t :loop_liquid %></dt>
   <dd>
     <% if @item.loop_liquid.present? %>
-      <dd><%= text_area_tag :loop_liquid, @item.loop_liquid, class: "html", style: "height: 100px;" %></dd>
+      <%= text_area_tag :loop_liquid, @item.loop_liquid, class: "html", style: "height: 100px;" %>
     <% end %>
   </dd>
 

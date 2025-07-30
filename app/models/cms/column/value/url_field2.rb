@@ -9,6 +9,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   permit_values :link_url, :link_label, :link_target
 
+  validates :link_url, url: { absolute_path: true, allow_blank: true }
   validate :validate_link_url
   validates :link_url, "sys/trusted_url" => true, if: ->{ Sys::TrustedUrlValidator.url_restricted? }
 
@@ -87,13 +88,13 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
 
   def validate_link_url
     return if link_url.blank?
-    Addressable::URI.parse(link_url)
+    ::Addressable::URI.parse(link_url)
   rescue
     errors.add :link_url, :invalid
   end
 
   def set_link_item
-    u = Addressable::URI.parse(link_url) rescue nil
+    u = ::Addressable::URI.parse(link_url) rescue nil
     site = _parent.site || _parent.instance_variable_get(:@cur_site)
 
     if link_url.blank? || u.nil? || site.nil?
@@ -153,7 +154,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && effective_link_url.blank?
-      self.errors.add(:link_url, :blank)
+      self.errors.add(:link_url, :blank) unless skip_required?
     end
 
     if link_label.present? && column.label_max_length.present? && column.label_max_length > 0
@@ -172,10 +173,11 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   def copy_column_settings
     super
 
+    return if self.html_tag.present? && self.html_additional_attr.present?
     return if column.blank?
 
-    self.html_tag = column.html_tag
-    self.html_additional_attr = column.html_additional_attr
+    self.html_tag ||= column.html_tag
+    self.html_additional_attr ||= column.html_additional_attr
   end
 
   def to_default_html

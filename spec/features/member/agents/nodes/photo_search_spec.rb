@@ -36,8 +36,8 @@ describe "member_agents_nodes_photo_search", type: :feature, dbscope: :example, 
       expect(page).to have_css(".member-photos")
       expect(page).to have_css(".member-photos a img")
 
-      wait_cbox_open { click_on I18n.t("member.links.search_condition") }
-      wait_for_cbox do
+      wait_for_cbox_opened { click_on I18n.t("member.links.search_condition") }
+      within_cbox do
         expect(page).to have_css("label", text: category1.name)
         expect(page).to have_css("label", text: category2.name)
         expect(page).to have_css("label", text: category3.name)

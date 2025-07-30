@@ -1,0 +1,77 @@
+<%
+  SS.config.cms.ckeditor.fetch('javascripts', []).each do |js|
+    controller.javascript js
+  end
+%>
+<%= jquery do %>
+  Gws_Discussion_Thread.render(<%= @cur_user.id %>);
+  <% if @cur_site.discussion_unseen_interval.present? %>
+  Gws_Discussion_Unseen.renderUnseen(
+    "<%= gws_discussion_apis_unseen_path(id: @forum.id) %>",
+    <%= @cur_site.discussion_unseen_interval %>,
+    <%= @forum.descendants_updated.to_i %>
+  );
+  <% end %>
+
+  var highlighter = new Gws_Elasticsearch_Highlighter();
+  highlighter.render();
+<% end %>
+
+<%= render partial: "header" %>
+
+<p class="gws-discussion-unseen" style="display: none;">
+  <%= link_to t("gws/discussion.notice.reload"), { action: :index } %>
+</p>
+
+<%= paginate @items if @items.try(:current_page) %>
+
+<!-- body -->
+<div class="gws-discussion gws-discussion-thread">
+  <% if @items.present?%>
+    <% @items.each do |item| %>
+      <%= form_for :item, url: { action: :reply, id: item.id }, html: { method: :put, class: "reply", multipart: true, autocomplete: :off } do |f| %>
+        <%
+          locals = {
+            f: f, topic: item, limit: 5, reply_menu: @comment.blank?,
+            show_path_proc: ->(forum, topic) { gws_discussion_forum_thread_comments_path(topic_id: topic) },
+            edit_path_proc: ->(forum, topic, comment) { edit_gws_discussion_forum_portal_comment_path(topic_id: topic, id: comment) },
+            delete_path_proc: ->(forum, topic, comment) { delete_gws_discussion_forum_portal_comment_path(topic_id: topic, id: comment) }
+          }
+        %>
+        <%= render partial: 'gws/discussion/main/thread', locals: locals %>
+      <% end %>
+    <% end %>
+  <% else %>
+    <div class="addon-view">
+      <div class="addon-body">
+        <dl class="see">
+          <dd class="wide">
+            <%= t("gws/discussion.notice.no_topics") %>
+          </dd>
+        </dl>
+      </div>
+    </div>
+  <% end %>
+
+  <%= paginate @items if @items.try(:current_page) %>
+</div>
+
+<div class="gws-discussion-navi">
+  <!-- bookmarks -->
+  <%= render "bookmarks", head: t("gws/discussion.bookmarks"), css_class: %w(gws-discussion-navi-list bookmarks) %>
+
+  <!-- todo -->
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_schedule_todos) %>
+    <%= render "todo", head: t("gws/schedule.tabs.my_todo"), css_class: %w(gws-discussion-navi-list my-todo), todos: @todos %>
+    <%= render "todo", head: t("gws/schedule.tabs.manageable_todo"), css_class: %w(gws-discussion-navi-list manageable-todo), todos: @manageable_todos %>
+  <% end %>
+
+  <!-- recent_items -->
+  <%= render "recent_items", head: t("gws/discussion.topics"), css_class: %w(gws-discussion-navi-list recent-items) %>
+
+  <!-- members -->
+  <%= render "members", head: t("gws/discussion.members"), css_class: %w(gws-discussion-navi-list members) %>
+
+  <!-- quota -->
+  <%= render "quota", head: t('ss.quota'), css_class: %w(gws-discussion-navi-list quota) %>
+</div>

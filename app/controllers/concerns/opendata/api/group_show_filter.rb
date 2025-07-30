@@ -1,6 +1,5 @@
 module Opendata::Api::GroupShowFilter
   extend ActiveSupport::Concern
-  include Opendata::Api
 
   private
 

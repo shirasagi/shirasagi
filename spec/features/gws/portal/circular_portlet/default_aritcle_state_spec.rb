@@ -59,7 +59,7 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -94,13 +94,12 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
           expect(page).to have_no_css(".list-item", text: post11.name)
           expect(page).to have_no_css(".list-item", text: post12.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".portlets .gws-boards" do
           click_on I18n.t("ss.links.more")
         end
+        # wait for ajax completion
+        wait_for_js_ready
       end
 
       within ".index.gws-boards" do
@@ -126,7 +125,7 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
       click_on I18n.t('gws/portal.links.manage_portlets')
 
       # destroy default portlet
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
       within ".list-head-action" do
         page.accept_alert do
           click_button I18n.t('ss.buttons.delete')
@@ -162,13 +161,12 @@ describe "gws_portal_circluar", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css(".list-item", text: post11.name)
           expect(page).to have_no_css(".list-item", text: post12.name)
         end
-        # wait for ajax completion
-        expect(page).to have_no_css('.fc-loading')
-        expect(page).to have_no_css('.ss-base-loading')
 
         within ".portlets .gws-boards" do
           click_on I18n.t("ss.links.more")
         end
+        # wait for ajax completion
+        wait_for_js_ready
       end
 
       within ".index.gws-boards" do

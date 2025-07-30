@@ -8,6 +8,8 @@ class Faq::PagesController < ApplicationController
   append_view_path "app/views/cms/pages"
   navi_view "faq/main/navi"
 
+  before_action(only: %i[new create edit update]) { @auto_save_enabled = true }
+
   private
 
   def fix_params

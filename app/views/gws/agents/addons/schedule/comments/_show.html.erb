@@ -24,7 +24,7 @@
 
   <%= form_tag(gws_schedule_comments_path(plan_id: @item), id: 'comment-form', method: :post) do %>
     <%= text_field_tag 'item[text]' %>
-    <%= hidden_field_tag('redirect_to', request.fullpath) %>
+    <%= hidden_field_tag('redirect_to', request.fullpath, id: nil) %>
     <%= submit_tag(I18n.t('gws/schedule.buttons.comment'), class: :btn) %>
   <% end %>
 </div>

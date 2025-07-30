@@ -34,6 +34,7 @@ module Cms::SyntaxChecker
     Cms::SyntaxChecker::AdjacentAChecker,
     Cms::SyntaxChecker::AreaAltChecker,
     Cms::SyntaxChecker::EmbeddedMediaChecker,
+    Cms::SyntaxChecker::IframeTitleChecker,
     Cms::SyntaxChecker::ImgAltChecker,
     Cms::SyntaxChecker::ImgDataUriSchemeChecker,
     Cms::SyntaxChecker::LinkTextChecker,
@@ -72,6 +73,15 @@ module Cms::SyntaxChecker
       end
     end
 
+    if context.errors.present?
+      if !cur_user.cms_role_permit_any?(cur_site, "edit_cms_ignore_syntax_check")
+        context.errors.unshift(
+          {
+            msg: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check')
+          }
+        )
+      end
+    end
     context
   end
 

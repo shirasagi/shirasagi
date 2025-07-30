@@ -69,7 +69,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       Gws::Schedule::Todo.without_deleted.first.tap do |todo|
@@ -96,7 +96,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 0
       expect(Gws::Schedule::Todo.only_deleted.count).to eq 1
@@ -172,7 +172,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
         click_on I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 1
       Gws::Schedule::Todo.without_deleted.first.tap do |todo|
@@ -201,7 +201,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       within 'form#item-form' do
         click_on I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 0
       expect(Gws::Schedule::Todo.only_deleted.count).to eq 1
@@ -217,6 +217,36 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       # 自分宛ての ToDo では、一切の通知は送られない
       expect(SS::Notification.count).to eq 0
+    end
+  end
+
+  context "copy" do
+    it do
+      #
+      # Create
+      #
+      visit gws_schedule_todo_readables_path gws_site, "-"
+
+      click_on I18n.t("ss.links.new")
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+        fill_in_datetime 'item[end_at]', with: end_at
+        fill_in 'item[text]', with: text
+
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      #
+      # Copy
+      #
+      within "#menu" do
+        click_on I18n.t("ss.links.copy")
+      end
+      within 'form#item-form' do
+        click_on I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
     end
   end
 end

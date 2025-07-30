@@ -8,15 +8,33 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       :contact_group, name: "#{group0.name}/#{unique_id}",
       contact_groups: [
         {
-          name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
+          name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+          contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
           main_state: "main"
         },
         {
+          name: "name-#{unique_id}",
+          contact_group_name: "contact_group_name-#{unique_id}", contact_charge: "contact_charge-#{unique_id}",
+          contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+          contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
+          contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+        }
+      ]
+    )
+  end
+  let!(:other_group) do
+    create(
+      :contact_group, name: unique_id,
+      contact_groups: [
+        {
           name: "name-#{unique_id}", contact_group_name: "contact_group_name-#{unique_id}",
           contact_tel: unique_tel, contact_fax: unique_tel, contact_email: unique_email,
+          contact_postal_code: unique_id, contact_address: "address-#{unique_id}",
           contact_link_url: "/#{unique_id}", contact_link_name: "link_name-#{unique_id}",
+          main_state: "main"
         }
       ]
     )
@@ -53,6 +71,7 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
         expect(page).to have_css(".name", text: sub_contact.name)
         expect(page).to have_css(".pages-used", text: I18n.t("contact.pages_used.zero"))
       end
+      expect(page).to have_no_content(other_group.name)
 
       within "[data-id='#{main_contact.id}']" do
         click_on "2"
@@ -82,8 +101,8 @@ describe Contact::ContactsController, type: :feature, dbscope: :example, js: tru
       #
       # delete all
       #
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
-      wait_event_to_fire("ss:all-list-action-finished") do
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head input[type="checkbox"]').set(true) }
+      wait_for_event_fired("ss:all-list-action-finished") do
         page.accept_confirm(I18n.t("ss.confirm.delete")) do
           within ".list-head-action" do
             click_on I18n.t("ss.links.delete")

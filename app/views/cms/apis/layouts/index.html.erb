@@ -1,11 +1,13 @@
 <%= jquery do %> SS_SearchUI.modal(); <% end %>
 
 <div class="search-ui-form">
-<% url = @multi ? { action: :index } : { action: :index, single: 1 } %>
-<%= form_for :s, url: url, html: { method: "GET", class: :search } do |f| %>
-  <%= f.text_field :name, value: params[:s].try(:[], :name) %>
-  <%= f.submit  t("cms.apis.layouts.search"), class: :btn %>
-<% end %>
+  <% url = @multi ? { action: :index } : { action: :index, single: 1 } %>
+  <%= form_for :s, url: url, html: { method: "GET", class: :search } do |f| %>
+    <div class="input-group">
+      <%= f.text_field :name, value: params[:s].try(:[], :name), placeholder: t("ss.keyword") %>
+      <%= f.submit t("cms.apis.layouts.search"), class: :btn %>
+    </div>
+  <% end %>
 </div>
 
 <table class="index">

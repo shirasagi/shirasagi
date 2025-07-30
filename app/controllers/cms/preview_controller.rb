@@ -12,6 +12,18 @@ class Cms::PreviewController < ApplicationController
 
   helper_method :head_for, :foot_for, :inplace_editable?
 
+  IGNORE_HEADER_KEY_SET = begin
+    # 304 not modified が返ってきても困るので、304 を応答する恐れのあるヘッダーを子コントローラーへ渡さないようにする
+    keys = %w(
+      HTTP_IF_MATCH
+      HTTP_IF_MODIFIED_SINCE
+      HTTP_IF_NONE_MATCH
+      HTTP_IF_RANGE
+      HTTP_IF_UNMODIFIED_SINCE
+    )
+    Set[*keys]
+  end.freeze
+
   private
 
   def head_for(view, &block)
@@ -110,6 +122,9 @@ class Cms::PreviewController < ApplicationController
 
     @contents_env = {}
     request.env.keys.each do |key|
+      # 304 not modified が返ってきても困るので、304 を応答する恐れのあるヘッダーを子コントローラーへ渡さないようにする
+      next if IGNORE_HEADER_KEY_SET.include?(key)
+
       if !key.include?(".") || key.start_with?("rack.") || key.start_with?("ss.")
         @contents_env[key] = request.env[key]
       end
@@ -224,9 +239,15 @@ class Cms::PreviewController < ApplicationController
     end
 
     chunks = []
+    # ヘッダーに ETag が含まれる場合、ETag を再計算する。計算方法は以下のRack::ETagを参考にした。
+    # https://github.com/rack/rack/blob/v2.2.8/lib/rack/etag.rb#L37
+    digest = Digest::SHA256.new if self.headers[Rack::ETAG].present?
     @contents_body.each do |body|
-      chunks << convert_html_to_preview(body, mode: mode, rendered: @contents_env["ss.rendered"], desktop_pc: desktop_pc)
+      html = convert_html_to_preview(body, mode: mode, rendered: @contents_env["ss.rendered"], desktop_pc: desktop_pc)
+      chunks << html
+      digest << html if digest
     end
+    self.headers[Rack::ETAG] = %(W/"#{digest.hexdigest.byteslice(0, 32)}") if digest
     render html: chunks.join.html_safe, layout: false
   end
 

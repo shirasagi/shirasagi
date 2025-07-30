@@ -44,7 +44,7 @@ class Cms::Column::Value::SelectPage < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && page.nil?
-      self.errors.add(:page_id, :blank)
+      self.errors.add(:page_id, :blank) unless skip_required?
     end
     self.value = page.try(:name)
   end

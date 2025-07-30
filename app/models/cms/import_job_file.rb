@@ -31,110 +31,158 @@ class Cms::ImportJobFile
 
   def import
     @import_logs = []
+    @import_pages = {}
+    @import_nodes = {}
+    @import_files = {}
+
     files.each do |file|
-      import_from_zip(file)
+      Rails.logger.tagged("#{file.filename}(#{file.id})") do
+        # フォルダーインポートで原因不明のエラーが発生することがある。現在、解決の糸口が見えない。
+        # file は private/ 配下に実体が格納されている。private/ 配下は NFS でマウントされたリモートサーバーの場合がある。
+        # 直接 private/ 配下のファイルにアクセスするとネットワーク IO が発生する可能性があるが、
+        # 少しでも不確定要素を減らすために、ローカルファイルシステムへコピーし、ローカルファイルを開くようにする。
+        # フォルダーインポートが将来安定すれば、以下のコピー処理は削除可
+        tmp_file = ::Tempfile.create("zip", "#{Rails.root}/tmp")
+        Retriable.retriable { ::FileUtils.cp(file.path, tmp_file.path) }
+
+        Zip::File.open(tmp_file.path) do |archive|
+          import_from_zip(archive)
+        end
+      ensure
+        if tmp_file
+          ::FileUtils.rm_f(tmp_file.path) rescue nil
+        end
+      end
     end
   end
 
-  def save_import_page(file, import_filename)
+  def save_import_node(filename)
+    item = Cms::Node::ImportNode.new
+    item.filename = filename
+    item.name = ::File.basename(filename)
+    item.cur_site = site
+    item.group_ids = user.group_ids
+
+    if item.save
+      @import_nodes[filename] = item
+      @import_logs << "import: #{filename}"
+      return item
+    else
+      set_errors(filename, item)
+      return nil
+    end
+  end
+
+  def save_import_page(filename, file)
     import_html = file.read.force_encoding("utf-8").scrub
     import_html = modify_relative_paths(import_html)
 
     item = Cms::ImportPage.new
-    item.filename = import_filename
-    item.name = ::File.basename(import_filename)
+    item.filename = filename
+    item.name = ::File.basename(filename)
     item.html = import_html
     item.cur_site = site
     item.group_ids = user.group_ids
-    item.save
 
-    set_errors(item, import_filename)
-    return item.errors.empty?
+    if item.save
+      @import_pages[filename] = item
+      @import_logs << "import: #{filename}"
+      return item
+    else
+      set_errors(filename, item)
+      return nil
+    end
   end
 
-  def save_import_node(file, import_filename)
-    item = Cms::Node::ImportNode.new
-    item.filename = import_filename
-    item.name = ::File.basename(import_filename)
-    item.cur_site = site
-    item.group_ids = user.group_ids
-    item.save
-
-    set_errors(item, import_filename)
-    return item.errors.empty?
-  end
-
-  def upload_import_file(file, import_filename)
-    import_path = "#{site.path}/#{import_filename}"
-
+  def upload_import_file(filename, file)
+    import_path = "#{site.path}/#{filename}"
     item = Uploader::File.new(path: import_path, binary: file.read, site: site)
-    item.save
 
-    set_errors(item, import_filename)
-    return item.errors.empty?
+    if item.save
+      @import_files[filename] = item
+      @import_logs << "import: #{filename}"
+      return item
+    else
+      set_errors(filename, item)
+      return nil
+    end
   end
 
-  def set_errors(item, import_filename)
+  def set_errors(filename, item)
     item.errors.each do |error|
       attribute = error.attribute
       message = error.message
 
       case attribute
       when :filename
-        @import_logs << "error: #{import_filename} #{message}"
+        @import_logs << "error: #{filename} #{message}"
         self.errors.add :base, "#{item.filename} #{message}"
       when :name
-        @import_logs << "error: #{import_filename} #{message}"
-        self.errors.add :base, "#{import_filename} #{message}"
+        @import_logs << "error: #{filename} #{message}"
+        self.errors.add :base, "#{filename} #{message}"
       else
         name = attribute == :base ? '' : item.class.t(attribute)
-        @import_logs << "error: #{import_filename} #{name}#{message}"
-        self.errors.add :base, "#{import_filename} #{name}#{message}"
+        @import_logs << "error: #{filename} #{name}#{message}"
+        self.errors.add :base, "#{filename} #{name}#{message}"
       end
     end
   end
 
-  def import_from_zip(file)
-    Zip::File.open(file.path) do |archive|
-      archive.each do |entry|
-        filename = entry.name.force_encoding("utf-8").scrub
-        next if filename.blank?
+  def entry_to_filename(entry)
+    filename = SS::Zip.safe_zip_entry_name(entry).scrub
+    return if filename.blank?
 
-        virtual_path = "/$"
-        filename = ::File.expand_path(filename, virtual_path)
-        next unless filename.start_with?("/$/")
+    virtual_path = "/$"
+    filename = ::File.expand_path(filename, virtual_path)
+    return if !filename.start_with?("/$/")
+    filename = filename[3..-1]
 
-        filename = filename[3..-1]
-        filename = filename.delete_prefix("#{root_node.basename}/") # remove root folder
-        next if filename.blank?
-        next if filename.start_with?('__MACOSX')
-        next if filename.start_with?('.DS_Store')
+    return if filename.blank?
+    return if filename.include?('__MACOSX')
+    return if filename.include?('.DS_Store')
 
-        import_filename = "#{root_node.filename}/#{filename}"
-        import_filename = import_filename.sub(/\/$/, "")
+    filename
+  end
 
-        if entry.directory?
-          if save_import_node(entry.get_input_stream, import_filename)
-            @import_logs << "import: #{import_filename}"
-          end
-        elsif /^\.(html|htm)$/i.match?(::File.extname(import_filename))
-          if save_import_page(entry.get_input_stream, import_filename)
-            @import_logs << "import: #{import_filename}"
-          end
-        elsif upload_import_file(entry.get_input_stream, import_filename)
-          @import_logs << "import: #{import_filename}"
+  def import_from_zip(zip_archive)
+    zip_archive.each do |entry|
+      next if entry.directory?
+
+      filename = entry_to_filename(entry)
+      next if filename.blank?
+
+      # relative basedir
+      @basedir = filename.index("/") ? filename.split("/").first : root_node.filename
+      @basedir = ::File.join(root_node.filename, @basedir) if @basedir != root_node.filename
+
+      # prepend root node filename
+      filename = filename.delete_prefix("#{root_node.basename}/")
+      filename = ::File.join(root_node.filename, filename)
+
+      # import parent dirs
+      filename.split("/").inject do |filename, item|
+        if filename.start_with?("#{root_node.filename}/") && !@import_nodes[filename]
+          save_import_node(filename)
         end
+        "#{filename}/#{item}"
+      end
+
+      # import page or files
+      if /^\.(html|htm)$/i.match?(::File.extname(filename))
+        save_import_page(filename, entry.get_input_stream)
+      else
+        upload_import_file(filename, entry.get_input_stream)
       end
     end
 
-    return errors.empty?
+    errors.empty?
   end
 
   def modify_relative_paths(html)
     html.gsub(/(href|src)="\/(.*?)"/) do
       attr = $1
       path = $2
-      "#{attr}=\"\/#{root_node.filename}/#{path}\""
+      "#{attr}=\"\/#{@basedir}/#{path}\""
     end
   end
 

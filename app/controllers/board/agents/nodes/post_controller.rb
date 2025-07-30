@@ -16,7 +16,7 @@ class Board::Agents::Nodes::PostController < ApplicationController
     if @cur_node.deny_ips.present?
       remote_ip = remote_addr
       @cur_node.deny_ips.each do |deny_ip|
-        raise "403" if remote_ip.match?(/^#{deny_ip}/)
+        raise SS::ForbiddenError if remote_ip.match?(/^#{deny_ip}/)
       end
     end
   end
@@ -28,13 +28,13 @@ class Board::Agents::Nodes::PostController < ApplicationController
   def set_topic
     @topic = @model.topic.site(@cur_site).
       where(id: params[:parent_id], node_id: @cur_node.id).first
-    raise "404" unless @topic
+    raise SS::NotFoundError unless @topic
   end
 
   def set_item
     @item = @model.site(@cur_site).
       where(id: params[:parent_id], node_id: @cur_node.id).first
-    raise "404" unless @item
+    raise SS::NotFoundError unless @item
   end
 
   def generate
@@ -89,14 +89,14 @@ class Board::Agents::Nodes::PostController < ApplicationController
   end
 
   def delete
-    raise "404" unless @cur_node.deletable_post?
-    raise "404" unless @item.delete_key.present?
+    raise SS::NotFoundError unless @cur_node.deletable_post?
+    raise SS::NotFoundError unless @item.delete_key.present?
     @item.delete_key = ""
   end
 
   def destroy
-    raise "404" unless @cur_node.deletable_post?
-    raise "404" unless @item.delete_key.present?
+    raise SS::NotFoundError unless @cur_node.deletable_post?
+    raise SS::NotFoundError unless @item.delete_key.present?
     @item.delete_key = ""
     @item.attributes = get_params
 

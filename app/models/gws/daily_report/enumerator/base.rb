@@ -79,6 +79,6 @@ class Gws::DailyReport::Enumerator::Base < Enumerator
 
   def bom
     return '' if @encoding == 'Shift_JIS'
-    "\uFEFF"
+    SS::Csv::UTF8_BOM
   end
 end

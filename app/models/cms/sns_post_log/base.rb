@@ -37,7 +37,7 @@ class Cms::SnsPostLog::Base
   def page
     return if @_page == false
     return @_page if @_page
-    @_page = soruce.include?(Cms::Model::Page) ? source.page.becomes_with_route : false
+    @_page = soruce.include?(Cms::Model::Page) ? source.page : false
   end
 
   private

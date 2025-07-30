@@ -123,15 +123,8 @@ module Cms
     Cms::Role.permission :import_other_cms_nodes
     Cms::Role.permission :unlock_other_cms_pages
     Cms::Role.permission :use_cms_all_contents
-    Cms::Role.permission :use_other_cms_line_messages, module_name: 'cms/line'
-    Cms::Role.permission :use_private_cms_line_messages, module_name: 'cms/line'
-    Cms::Role.permission :use_cms_line_deliver_categories, module_name: 'cms/line'
-    Cms::Role.permission :use_cms_line_services, module_name: 'cms/line'
-    Cms::Role.permission :use_other_cms_line_mail_handlers, module_name: 'cms/line'
-    Cms::Role.permission :use_private_cms_line_mail_handlers, module_name: 'cms/line'
-    Cms::Role.permission :use_other_cms_line_statistics, module_name: 'cms/line'
-    Cms::Role.permission :use_private_cms_line_statistics, module_name: 'cms/line'
-
+    Cms::Role.permission :use_cms_page_twitter_posts
+    Cms::Role.permission :use_cms_page_line_posts
     if SS.config.michecker && SS.config.michecker['disable'].blank?
       Cms::Role.permission :use_cms_michecker
     end
@@ -144,12 +137,26 @@ module Cms
     Cms::Role.permission :edit_cms_image_resizes
     Cms::Role.permission :delete_cms_image_resizes
     Cms::Role.permission :disable_cms_image_resizes
+    Cms::Role.permission :edit_cms_ignore_syntax_check
+    Cms::Role.permission :edit_cms_page_expiration_settings
 
-    Cms::Role.permission :read_cms_check_links_reports
-    Cms::Role.permission :delete_cms_check_links_reports
-    Cms::Role.permission :read_other_cms_check_links_errors
-    Cms::Role.permission :read_private_cms_check_links_errors
-    Cms::Role.permission :edit_cms_check_links_ignore_urls
+    Cms::Role.permission :use_other_cms_line_messages, module_name: 'cms/line'
+    Cms::Role.permission :use_private_cms_line_messages, module_name: 'cms/line'
+    Cms::Role.permission :use_cms_line_deliver_categories, module_name: 'cms/line'
+    Cms::Role.permission :use_cms_line_services, module_name: 'cms/line'
+    Cms::Role.permission :use_other_cms_line_mail_handlers, module_name: 'cms/line'
+    Cms::Role.permission :use_private_cms_line_mail_handlers, module_name: 'cms/line'
+    Cms::Role.permission :use_other_cms_line_statistics, module_name: 'cms/line'
+    Cms::Role.permission :use_private_cms_line_statistics, module_name: 'cms/line'
+
+    Cms::Role.permission :use_cms_check_links, module_name: 'cms/check_links'
+    Cms::Role.permission :run_cms_check_links, module_name: 'cms/check_links'
+    Cms::Role.permission :read_other_cms_check_links_errors, module_name: 'cms/check_links'
+    Cms::Role.permission :read_private_cms_check_links_errors, module_name: 'cms/check_links'
+    Cms::Role.permission :edit_cms_check_links_ignore_urls, module_name: 'cms/check_links'
+
+    Cms::Role.permission :edit_cms_user_profile, module_name: 'cms/user_profile'
+    Cms::Role.permission :edit_password_cms_user_profile, module_name: 'cms/user_profile'
 
     SS::File.model "cms/editor_template", SS::File
     SS::File.model "cms/file", Cms::File

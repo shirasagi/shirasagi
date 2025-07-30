@@ -23,19 +23,17 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
       #
       visit index_path
       click_on I18n.t("ss.links.new")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
       within "form#item-form" do
         fill_in "item[name]", with: name
         fill_in "item[description]", with: description
         fill_in_code_mirror "item[html]", with: html
-        wait_cbox_open { first(".btn-file-upload").click }
-      end
-      wait_for_cbox do
-        click_on file.name
-      end
-      within "form#item-form" do
+        attach_to_ss_file_field "item[thumb_id]", file
+
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       expect(Cms::EditorTemplate.all.count).to eq 1
       item = Cms::EditorTemplate.all.first
@@ -50,6 +48,8 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
       visit index_path
       click_on item.name
       click_on I18n.t("ss.links.edit")
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
 
       within "form#item-form" do
         fill_in "item[name]", with: name2
@@ -57,7 +57,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
         fill_in_code_mirror "item[html]", with: html2
         click_button I18n.t('ss.buttons.save')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       item.reload
       expect(item.name).to eq name2
@@ -72,7 +72,7 @@ describe "cms_editor_templates", type: :feature, dbscope: :example do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 

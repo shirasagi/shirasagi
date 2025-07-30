@@ -1,5 +1,5 @@
 <dl class="see mod-category-summary_page">
-  <dt><%= @model.t :summary_page_id %><%= @model.tt :summary_page_ids %></dt>
+  <dt><%= @model.t :summary_page_id %><%= @model.tt :summary_page_id %></dt>
   <dd>
     <%= f.hidden_field "summary_page_id", value: "", id: nil, class: "hidden-ids" %>
     <%= link_to t("cms.apis.pages.index"), cms_apis_pages_path(single: 1), class: "ajax-box" %>

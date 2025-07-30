@@ -54,7 +54,7 @@ describe Event::Page::ImportJob, dbscope: :example do
         end
 
         job_class = described_class.bind(site_id: site.id, node_id: node.id, user_id: user.id)
-        expect { job_class.perform_now(ss_file.id) }.to output(include("import start event_pages.csv\n")).to_stdout
+        expect { ss_perform_now(job_class, ss_file.id) }.to output(include("import start event_pages.csv\n")).to_stdout
       end
 
       it do
@@ -81,9 +81,6 @@ describe Event::Page::ImportJob, dbscope: :example do
         expect(item.released_type).to eq released_type
         expect(item.released).to eq released.in_time_zone
         expect(item.groups.pluck(:name)).to match_array [ group.name ]
-        unless SS.config.ss.disable_permission_level
-          expect(item.permission_level).to be 2
-        end
         expect(item.state).to eq state
       end
     end

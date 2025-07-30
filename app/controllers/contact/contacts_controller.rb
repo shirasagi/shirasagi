@@ -28,6 +28,10 @@ class Contact::ContactsController < ApplicationController
     offset = params[:page].numeric? ? (params[:page].to_i - 1) * limit : 0
 
     stages = [{ "$match" => { contact_groups: { "$exists" => true } } }]
+    Cms::Group.unscoped do
+      criteria = Cms::Group.site(@cur_site)
+      stages << { "$match" => criteria.selector }
+    end
     if params[:s].present?
       Cms::Group.unscoped do
         criteria = Cms::Group.search(params[:s])

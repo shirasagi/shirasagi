@@ -21,14 +21,16 @@
 
   <table class="index data-table">
     <thead>
-    <th style="width: 10%"></th>
-    <th style="width: 10%">No</th>
-    <th style="width: 18%"><%= @model.t :divide_duties %></th>
-    <th style="width: 10%"><%= @model.t :title_ids %></th>
-    <th style="width: 10%"><%= @model.t :occupation_ids %></th>
-    <th style="width: 10%"><%= @model.t :name %></th>
-    <th style="width: 10%"><%= @model.t :tel_ext %></th>
-    <th><%= @model.t :remark %></th>
+    <tr>
+      <th style="width: 10%"></th>
+      <th style="width: 10%">No</th>
+      <th style="width: 18%"><%= @model.t :divide_duties %></th>
+      <th style="width: 10%"><%= @model.t :title_ids %></th>
+      <th style="width: 10%"><%= @model.t :occupation_ids %></th>
+      <th style="width: 10%"><%= @model.t :name %></th>
+      <th style="width: 10%"><%= @model.t :tel_ext %></th>
+      <th><%= @model.t :remark %></th>
+    </tr>
     </thead>
     <tbody>
     <% @items.each do |item| %>

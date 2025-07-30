@@ -138,9 +138,12 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to eq "enabled"
         expect(g.ldap_dn).to eq "cn=Manager,dc=city,dc=shirasagi,dc=jp"
         expect(g.contact_group_name).to eq "部署A"
+        expect(g.contact_charge).to eq "係A"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "1000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/A/"
         expect(g.contact_link_name).to eq "A"
       end
@@ -151,9 +154,12 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署B"
+        expect(g.contact_charge).to eq "係B"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "1000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/"
         expect(g.contact_link_name).to eq "B"
       end
@@ -164,9 +170,12 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署C"
+        expect(g.contact_charge).to eq "係C"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "1000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/C/"
         expect(g.contact_link_name).to eq "C"
       end
@@ -177,9 +186,12 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署D"
+        expect(g.contact_charge).to eq "係D"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "1000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/B/C/D/"
         expect(g.contact_link_name).to eq "D"
       end
@@ -190,9 +202,12 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署E"
+        expect(g.contact_charge).to eq "係E"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "1000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/"
         expect(g.contact_link_name).to eq "E"
       end
@@ -203,9 +218,12 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署F"
+        expect(g.contact_charge).to eq "係F"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "1000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/F/"
         expect(g.contact_link_name).to eq "F"
       end
@@ -216,9 +234,12 @@ describe "sys_groups", type: :feature, dbscope: :example, js: true do
         expect(g.gws_use).to be_blank
         expect(g.ldap_dn).to be_blank
         expect(g.contact_group_name).to eq "部署G"
+        expect(g.contact_charge).to eq "係G"
         expect(g.contact_tel).to eq "000-000-0000"
         expect(g.contact_fax).to eq "000-000-0000"
         expect(g.contact_email).to eq "sys@example.jp"
+        expect(g.contact_postal_code).to eq "1000000"
+        expect(g.contact_address).to eq "大鷺県シラサギ市小鷺町1丁目1番地1号"
         expect(g.contact_link_url).to eq "/E/G/"
         expect(g.contact_link_name).to eq "G"
       end

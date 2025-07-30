@@ -59,7 +59,9 @@
     <dd class="wide">
     <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } if syntax_check %>
     <%= button_tag t("cms.mobile_size_check"), { type: :button, class: "btn mobile-size-check" } if @cur_site.mobile_enabled? %>
-    <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+    <% if !SS::Lgwan.enabled? || SS::Lgwan.web? %>
+      <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+    <% end %>
     <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
     <% if !@inplace_mode && @item.respond_to?(:route) %>
       <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } %>

@@ -52,8 +52,7 @@
                 term << "終了:" + I18n.l(item.close_date, format: :picker)
               end
             %>
-            <%= "( #{term.join(", ")} )" if term.present? %>
-            </span>
+            <%= tag.span("( #{term.join(", ")} )") if term.present? %>
           </div>
         </div>
       </li>

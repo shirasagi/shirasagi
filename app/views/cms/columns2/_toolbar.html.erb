@@ -1,0 +1,18 @@
+<%= ss_stimulus_tag({ "gws/column/list-toolbar" => { url: url_for(action: :create), target: target, placement: placement } }, class: "gws-column-list-toolbar", data: { placement: placement }) do %>
+  <div class="main-box">
+    <% column_type_options.each do |key, value| %>
+      <div class="gws-column-list-toolbar-list" data-module="<%= key %>">
+        <div class="gws-column-list-toolbar-item gws-column-list-toolbar-item-label">
+          <span><%= value[:name] %>:</span>
+        </div>
+        <% value[:items].each do |label, route| %>
+          <div class="gws-column-list-toolbar-item">
+            <button name="<%= route %>" class="btn btn-create-column" title="<%= t("gws/column.add_column", name: label) %>" aria-label="<%= t("gws/column.add_column", name: label) %>" data-route="<%= route %>">
+              <%= label %>
+            </button>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+<% end %>

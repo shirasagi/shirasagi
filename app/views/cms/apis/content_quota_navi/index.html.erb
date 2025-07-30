@@ -1,0 +1,44 @@
+<%= jquery do %>
+SS_SearchUI.modal();
+
+if (sessionStorage.getItem("ss_quota_checked_site_<%= @cur_site.id %>")) {
+  var date = new Date();
+  date.setHours(date.getHours() - 1)
+  if (date < sessionStorage.getItem("ss_quota_checked_site_<%= @cur_site.id %>")) {
+    return false;
+  }
+}
+var text = [];
+$('div.over-threshold').each(function() {
+  var name = $(this).parent('div').prev('h2').text();
+  var label = $(this).parent('div').find('div.label').text();
+  text.push(name + ' ' + label);
+});
+if (text.length) {
+  text.unshift('');
+  text.unshift('<%= t('cms.notices.over_content_quota') %>');
+  alert(text.join("\n"));
+  sessionStorage.setItem("ss_quota_checked_site_<%= @cur_site.id %>", Date.now());
+} else {
+  sessionStorage.removeItem("ss_quota_checked_site_<%= @cur_site.id %>")
+}
+<% end %>
+
+<div><%=br t("cms.notices.content_quota_navi", routes: @routes.map { |route| t("cms.nodes.#{route}") }.join(", ")) %></div>
+
+<nav class="mod-navi">
+  <% @items.each do |item| %>
+    <h2>
+      <%= item.name %>
+      <%= item.filename %>
+    </h2>
+    <div class="ss-quota-bar">
+      <% if item.respond_to?(:content_quota) && item.content_quota_model.present? %>
+        <div class="label"><%= item.content_quota_label %></div>
+        <div class="usage <%= item.content_quota_model.over? ? 'over-threshold' : '' %>" style="width: <%= item.content_quota_model.percentage %>%"></div>
+      <% end %>
+    </div>
+  <% end %>
+</nav>
+
+<%= paginate @items if @items.try(:current_page) %>

@@ -2,27 +2,27 @@
 
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
-    <%= link_to(t('ss.links.new'), url_for(action: :new), class: "new ss-open-in-new-window", data: { width: SS.config.webmail.mail_edit_screen_width }) if @model.allowed?(:edit, @cur_user) %>
+    <%= link_to_new_window(t('ss.links.new'), url_for(action: :new), class: "new") if @model.allowed?(:edit, @cur_user) %>
   <% elsif params[:action] =~ /new|create|reply|forward/ %>
     <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% elsif params[:action] =~ /edit|update|delete/ %>
     <%= link_to(t('ss.links.back_to_show'), { action: :show }, class: "back-to-show") %>
     <%= link_to(t('ss.links.back_to_index'), { action: :index }, class: "back-to-index") %>
   <% else %>
-    <%= link_to(t('ss.links.edit'), { action: :edit }, class: "edit ss-open-in-new-window") if @item.draft? && (@imap.draft_box == @mailbox) %>
+    <%= link_to_new_window(t('ss.links.edit'), url_for(action: :edit), class: "edit") if @item.draft? && (@imap.draft_box == @mailbox) %>
     <% unless @item.draft? %>
     <div class="dropdown webmail-dropdown dropdown-toggle webmail-menu-reply">
       <a href="#"><%= t 'webmail.links.reply' %> <i class="material-icons md-13">keyboard_arrow_down</i></a>
       <ul class="dropdown-menu webmail-dropdown-menu">
-        <li><%= link_to t('webmail.links.reply'), { action: :reply }, { class: 'reply ss-open-in-new-window' } %></li>
-        <li><%= link_to t('webmail.links.reply_without_body'), { action: :reply, without_body: true }, { class: 'reply ss-open-in-new-window' } %></li>
-        <li><%= link_to t('webmail.links.reply_all'), { action: :reply_all }, { class: 'reply-all ss-open-in-new-window' } %></li>
-        <li><%= link_to t('webmail.links.reply_all_without_body'), { action: :reply_all, without_body: true }, { class: 'reply-all ss-open-in-new-window' } %></li>
+        <li><%= link_to_new_window t('webmail.links.reply'), url_for(action: :reply), class: 'reply' %></li>
+        <li><%= link_to_new_window t('webmail.links.reply_without_body'), url_for(action: :reply, without_body: true), class: 'reply' %></li>
+        <li><%= link_to_new_window t('webmail.links.reply_all'), url_for(action: :reply_all), class: 'reply-all' %></li>
+        <li><%= link_to_new_window t('webmail.links.reply_all_without_body'), url_for(action: :reply_all, without_body: true), class: 'reply-all' %></li>
       </ul>
     </div>
     <% end %>
-    <%= link_to t('webmail.links.forward'), { action: :forward }, { class: 'forward ss-open-in-new-window' } unless @item.draft? %>
-    <%= link_to t('webmail.links.edit_as_new'), { action: :edit_as_new }, { class: 'edit-as-new ss-open-in-new-window' } unless @item.draft? %>
+    <%= link_to_new_window(t('webmail.links.forward'), url_for(action: :forward), class: 'forward') unless @item.draft? %>
+    <%= link_to_new_window(t('webmail.links.edit_as_new'), url_for(action: :edit_as_new), class: 'edit-as-new') unless @item.draft? %>
 
     <%
       groups = nil
@@ -35,13 +35,13 @@
         <a href="#"><%= t('webmail.links.forward_gws_message') %> <i class="material-icons md-13">keyboard_arrow_down</i></a>
         <ul class="dropdown-menu webmail-dropdown-menu">
           <% groups.each do |group| %>
-          <li><%= link_to group.name, new_webmail_gws_message_path(site: group.id, mailbox: @mailbox, webmail_mode: @webmail_mode), class: "ss-open-in-new-window" %></li>
+          <li><%= link_to_new_window group.name, new_webmail_gws_message_path(site: group.id, mailbox: @mailbox, webmail_mode: @webmail_mode) %></li>
           <% end %>
         </ul>
       </div>
     <% elsif groups.present? %>
       <% group = groups.first %>
-      <%= link_to t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: group.id, mailbox: @mailbox, webmail_mode: @webmail_mode), class: "ss-open-in-new-window" %>
+      <%= link_to_new_window t('webmail.links.forward_gws_message'), new_webmail_gws_message_path(site: group.id, mailbox: @mailbox, webmail_mode: @webmail_mode) %>
     <% end %>
 
     <%= link_to(t('ss.links.delete'), { action: :delete }, class: :delete) %>

@@ -1,4 +1,7 @@
 <dl class="see mod-garbage-body">
+  <dt><%= @model.t :category_ids %></dt>
+  <dd><%= @item.send(:categories).pluck(:name).join(", ") %></dd>
+
   <dt><%= @model.t :kana %></dt>
   <dd><%=br @item.send :kana %></dd>
 

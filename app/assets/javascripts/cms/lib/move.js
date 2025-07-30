@@ -32,9 +32,18 @@ Cms_Move.prototype.render = function() {
         $result.find("input[name='part_ids[]']").remove();
         $result.find("input[name='layout_ids[]']").remove();
       },
-      error: function (data, status) {
+      error: function (data, _status) {
         alert(["== Error(Move) =="].concat(data.responseJSON).join("\n"));
       }
     });
   }
+};
+
+function FolderMove(el) {
+  this.$el = $(el);
+  this.render();
+}
+
+FolderMove.prototype.render = function() {
+  $.colorbox({ fixed: true, open: true, inline: true, href: this.$el.find("form"), width: "90%", height: "90%", });
 };

@@ -21,9 +21,11 @@ describe "cms_users", type: :feature, dbscope: :example do
 
       #new
       visit new_path
-      wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
-      wait_for_cbox do
-        click_on group.name
+      within "#item-form" do
+        wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
+      end
+      within_cbox do
+        wait_for_cbox_closed { click_on group.name }
       end
 
       within "#item-form" do
@@ -35,7 +37,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         check "item[cms_role_ids][]"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       #show
       visit show_path
@@ -47,14 +49,14 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
 
       #delete
       visit delete_path
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       within ".index-search" do
         fill_in "s[keyword]", with: item.name
@@ -70,9 +72,9 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t('ss.links.lock_user')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.lock_user_all'))
+      wait_for_notice I18n.t('ss.notice.lock_user_all')
       expect(page).to have_no_content(item.name)
 
       #unlock_all
@@ -83,9 +85,9 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t('ss.links.unlock_user')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.unlock_user_all'))
+      wait_for_notice I18n.t('ss.notice.unlock_user_all')
       expect(page).to have_no_content(item.name)
 
       # delete_all
@@ -96,11 +98,11 @@ describe "cms_users", type: :feature, dbscope: :example do
       end
       expect(page).to have_css(".list-items", count: 1)
 
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       click_button I18n.t("ss.links.delete")
       expect(page).to have_content I18n.t('ss.confirm.target_to_delete')
       click_button I18n.t('ss.buttons.delete')
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       within ".index-search" do
         select I18n.t('ss.options.state.disabled'), from: 's[state]'
@@ -115,9 +117,9 @@ describe "cms_users", type: :feature, dbscope: :example do
       login_cms_user
 
       visit new_path
-      wait_cbox_open { click_on I18n.t("ss.apis.groups.index") }
-      wait_for_cbox do
-        click_on group.name
+      wait_for_cbox_opened { click_on I18n.t("ss.apis.groups.index") }
+      within_cbox do
+        wait_for_cbox_closed { click_on group.name }
       end
 
       within "form#item-form" do
@@ -125,11 +127,12 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name
         fill_in "item[uid]", with: name
         expect(page).to have_css('#item_uid_errors', text: '')
+        select I18n.t("ss.options.user_type.#{Cms::User::TYPE_LDAP}"), from: "item[type]"
         fill_in "item[ldap_dn]", with: "dc=#{name},dc=city,dc=example,dc=jp"
         check "item[cms_role_ids][]"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#show" do
@@ -145,7 +148,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_on I18n.t("ss.buttons.save")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+      wait_for_notice I18n.t('ss.notice.saved')
     end
 
     it "#delete" do
@@ -154,7 +157,7 @@ describe "cms_users", type: :feature, dbscope: :example do
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
     end
   end
 

@@ -19,7 +19,7 @@ class Cms::Column::UrlField2 < Cms::Column::Base
 
   def link_target_options
     %w(_blank).map do |v|
-      [ v, v ]
+      [ I18n.t("ss.options.link_target.#{v}"), v ]
     end
   end
 

@@ -13,22 +13,30 @@ class Ads::Banner
 
   field :link_url, type: String
   field :additional_attr, type: Cms::Extensions::HtmlAttributes, default: ""
+  field :link_target, type: String
 
   belongs_to_file :file
 
-  validates :link_url, presence: true
+  validates :link_url, presence: true, url: { absolute_path: true }
   validate :validate_link_url
   #validates :file_id, presence: true
 
-  permit_params :link_url, :additional_attr
+  permit_params :link_url, :additional_attr, :link_target
 
   after_generate_file :generate_relation_public_file, if: ->{ public? }
   after_remove_file :remove_relation_public_file
 
   default_scope ->{ where(route: "ads/banner") }
 
+  def self.link_target_options
+    [
+      [I18n.t('ads.options.link_target.self'), '_self'],
+      [I18n.t('ads.options.link_target.blank'), '_blank'],
+    ]
+  end
+
   def url
-    uri = URI.parse(super)
+    uri = ::Addressable::URI.parse(super)
     uri.query = { redirect: link_url }.to_param
     uri.to_s
   end

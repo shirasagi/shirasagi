@@ -1,3 +1,5 @@
+<% return %>
+
 <nav class="nav-menu">
   <% if params[:action] =~ /index/ %>
     <% if @cur_form.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>

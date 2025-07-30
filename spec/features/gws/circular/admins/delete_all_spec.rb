@@ -39,7 +39,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.delete")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       post1.reload
       post2.reload
@@ -59,7 +59,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.links.delete")
         end
       end
-      expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+      wait_for_notice I18n.t('ss.notice.deleted')
 
       expect(Gws::Circular::Post.all.topic.count).to eq 2
       expect { Gws::Circular::Post.all.find(post3.id) }.to raise_error Mongoid::Errors::DocumentNotFound

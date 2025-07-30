@@ -1,0 +1,10 @@
+<dl class="mod-request-word-limit see">
+  <dt><%= @model.t :translate_referer_restriction %><%= @model.tt :translate_referer_restriction %></dt>
+  <dd><%= f.select :translate_referer_restriction, @item.translate_referer_restriction_options %></dd>
+
+  <dt><%= @model.t :translate_access_log_threshold %><%= @model.tt :translate_access_log_threshold %></dt>
+  <dd>
+    <%= f.number_field :translate_access_log_threshold, min: 0 %>
+    <%= t("datetime.prompts.day") %>
+  </dd>
+</dl>

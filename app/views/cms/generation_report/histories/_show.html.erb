@@ -1,0 +1,90 @@
+<dl class="see">
+  <dt><%= @model.t :content %></dt>
+  <dd>
+    <%=
+      content = @item.content
+      if content && content.allowed?(:read, @cur_user, site: @cur_site) && content.respond_to?(:private_show_path)
+        link_to item_title(@item), content.private_show_path
+      else
+        item_title(@item)
+      end
+    %>
+  </dd>
+
+  <dt><%= @model.t :page_no %></dt>
+  <dd><%= @item.page_no %></dd>
+
+  <dt><%= @model.t :db %></dt>
+  <dd>
+    <%= format_elapsed(@item.total_db) %>
+    <% if @item.child_ids.present? %>
+      (<%= format_elapsed(@item.db) %> + <%= format_elapsed(@item.sub_total_db) %>)
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :view %></dt>
+  <dd>
+    <%= format_elapsed(@item.total_view) %>
+    <% if @item.child_ids.present? %>
+      (<%= format_elapsed(@item.view) %> + <%= format_elapsed(@item.sub_total_view) %>)
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :elapsed %></dt>
+  <dd>
+    <%= format_elapsed(@item.total_elapsed) %>
+    <% if @item.child_ids.present? %>
+      (<%= format_elapsed(@item.elapsed) %> + <%= format_elapsed(@item.sub_total_elapsed) %>)
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :parent %></dt>
+  <dd>
+    <%=
+      parent_history = @item.parent
+      if parent_history
+        link_to item_title(parent_history), url_for(action: :show, id: parent_history)
+      end
+    %>
+  </dd>
+
+  <dt class="wide"><%= @model.t :children %></dt>
+  <dd class="wide">
+    <% if @item.children.present? %>
+      <table class="index">
+        <thead>
+        <tr>
+          <th>#</th>
+          <th><%= @model.t :content %></th>
+          <th><%= @model.t :page_no %></th>
+          <th><%= @model.t :db %></th>
+          <th><%= @model.t :view %></th>
+          <th><%= @model.t :elapsed %></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% @item.children.each_with_index do |child_history, index| %>
+          <tr data-id=<%= child_history.id %>>
+            <td><%= index + 1 %></td>
+            <td><%= link_to item_title(child_history), url_for(action: :show, id: child_history) %></td>
+            <td><%= child_history.page_no %></td>
+            <td><%= format_elapsed(child_history.total_db) %></td>
+            <td><%= format_elapsed(child_history.total_view) %></td>
+            <td><%= format_elapsed(child_history.total_elapsed) %></td>
+          </tr>
+        <% end %>
+        </tbody>
+        <tfoot>
+        <tr>
+          <td style="background: #f2f2f2; color: #999;"></td>
+          <td style="background: #f2f2f2; color: #999;">Total</td>
+          <td style="background: #f2f2f2; color: #999;"></td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_db) %></td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_view) %></td>
+          <td style="background: #f2f2f2; color: #999;"><%= format_elapsed(@item.sub_total_elapsed) %></td>
+        </tr>
+        </tfoot>
+      </table>
+    <% end %>
+  </dd>
+</dl>

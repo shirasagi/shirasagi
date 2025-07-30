@@ -1,0 +1,13 @@
+<%
+  if !@item.reservable_setting_present?
+    addon ||= local_assigns.fetch(:addon, {})
+    addon[:display_body] = "hide"
+  end
+%>
+
+<dl class="see gws-addon-facility-default-members">
+  <dl class="see">
+    <dt><%= @model.t :default_member_ids %></dt>
+    <dd><%=br @item.default_members.map(&:long_name) %></dd>
+  </dl>
+</div>

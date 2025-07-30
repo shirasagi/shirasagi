@@ -65,6 +65,7 @@ describe Article::Node::Page, type: :model, dbscope: :example do
         expect(subject.full_url).to eq node.full_url
         expect(subject.basename).to eq node.basename
         expect(subject.filename).to eq node.filename
+        expect(subject.depth).to eq node.depth
         expect(subject.order).to eq node.order
         expect(subject.date).to eq node.date
         expect(subject.released).to eq node.released
@@ -101,7 +102,7 @@ describe Article::Node::Page, type: :model, dbscope: :example do
     context "with Cms::Addon::Meta" do
       let(:summary) { Array.new(2) { "<p>#{unique_id}</p>" }.join("\n") }
       let(:description) { Array.new(2) { unique_id }.join("\n") }
-      let!(:node) { create :article_node_page, summary_html: summary, description: description }
+      let!(:node) { create :article_node_page, summary_html: summary, description: description, description_setting: 'manual' }
 
       it do
         # Cms::Addon::Meta
@@ -120,6 +121,15 @@ describe Article::Node::Page, type: :model, dbscope: :example do
         expect(subject.groups.length).to eq 2
         expect(subject.groups[0].name).to eq group1.name
         expect(subject.groups[1].name).to eq group2.name
+      end
+    end
+
+    context "with pagination" do
+      let(:registers) { { cur_site: cms_site, cur_node: node, cur_path: "/#{node.filename}" } }
+      let!(:node) { create :article_node_page, cur_node: item, sort: "order" }
+
+      it do
+        expect(subject.current?).to be_truthy
       end
     end
   end

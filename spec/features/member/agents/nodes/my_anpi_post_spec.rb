@@ -53,6 +53,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
           fill_in 'item[text]', with: text0
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
         expect(current_path).to eq index_url
 
@@ -75,6 +76,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
           fill_in 'item[text]', with: text1
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
         within 'table.member-anpi-post' do
           expect(page).to have_css('td.name a', text: cms_member.name)
@@ -86,6 +88,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         click_on cms_member.name
         click_on I18n.t('ss.links.delete')
         click_on I18n.t('ss.buttons.delete')
+        wait_for_notice I18n.t("ss.notice.deleted"), selector: "#ss-notice"
         expect(page).to have_no_css('table.member-anpi-post')
 
         expect(Board::AnpiPost.count).to eq 0
@@ -106,6 +109,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
           fill_in 'item[text]', with: text0
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
         expect(current_path).to eq index_url
 
@@ -128,6 +132,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
           fill_in 'item[text]', with: text1
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
 
         within 'table.member-anpi-post' do
           expect(page).to have_css('td.name a', text: name)
@@ -139,6 +144,7 @@ describe 'members/agents/nodes/my_anpi_post', type: :feature, dbscope: :example,
         click_on name
         click_on I18n.t('ss.links.delete')
         click_on I18n.t('ss.buttons.delete')
+        wait_for_notice I18n.t("ss.notice.deleted"), selector: "#ss-notice"
         expect(page).to have_no_css('table.member-anpi-post')
 
         expect(Board::AnpiPost.count).to eq 0

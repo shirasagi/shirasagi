@@ -33,83 +33,81 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         }
       end
 
-      context "deliver handler" do
-        context "post utf-8 mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
-          let(:decoded) { "【UTF-8】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
-          let(:start_line) { "【緊急メールサービス】" }
-          let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
-          let(:subject_state) { "include" }
+      context "post utf-8 mail" do
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:decoded) { "【UTF-8】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
+        let(:start_line) { "【緊急メールサービス】" }
+        let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
+        let(:subject_state) { "include" }
 
-          it "#mail" do
-            mail_handler
-            capture_line_bot_client do |capture|
-              perform_enqueued_jobs do
-                post url, params: { data: file }, headers: headers
-                expect(Cms::Line::Message.count).to eq 1
-                expect(message.name).to include("[#{mail_handler.name}]")
-                expect(message.templates.first.text).to eq decoded
-              end
-              expect(message.deliver_state).to eq "completed"
-              expect(capture.broadcast.count).to eq 1
-              expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
+        it "#mail" do
+          mail_handler
+          capture_line_bot_client do |capture|
+            perform_enqueued_jobs do
+              post url, params: { data: file }, headers: headers
+              expect(Cms::Line::Message.count).to eq 1
+              expect(message.name).to include("[#{mail_handler.name}]")
+              expect(message.templates.first.text).to eq decoded
             end
+            expect(message.deliver_state).to eq "completed"
+            expect(capture.broadcast.count).to eq 1
+            expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
           end
         end
+      end
 
-        context "post utf-8_2 mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8_2.eml") }
-          let(:decoded) do
-            [
-              "【台風第７号の接近について】",
-              "",
-              "台風第７号の接近に伴い、本日午後２時に警戒本部を設置しました。",
-              "引き続き、気象情報にご注意ください。",
-              "",
-              "警戒本部",
-              "TEL：000-000-0000",
-            ].join("\n")
-          end
-          let(:start_line) { "≪シラサギ市メール配信≫" }
-          let(:terminate_line) { "【配信カテゴリ】" }
-          let(:subject_state) { "include" }
+      context "post utf-8_2 mail" do
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8_2.eml") }
+        let(:decoded) do
+          [
+            "【台風第７号の接近について】",
+            "",
+            "台風第７号の接近に伴い、本日午後２時に警戒本部を設置しました。",
+            "引き続き、気象情報にご注意ください。",
+            "",
+            "警戒本部",
+            "TEL：000-000-0000",
+          ].join("\n")
+        end
+        let(:start_line) { "≪シラサギ市メール配信≫" }
+        let(:terminate_line) { "【配信カテゴリ】" }
+        let(:subject_state) { "include" }
 
-          it "#mail" do
-            mail_handler
-            capture_line_bot_client do |capture|
-              perform_enqueued_jobs do
-                post url, params: { data: file }, headers: headers
-                expect(Cms::Line::Message.count).to eq 1
-                expect(message.name).to include("[#{mail_handler.name}]")
-                expect(message.templates.first.text).to eq decoded
-              end
-              expect(message.deliver_state).to eq "completed"
-              expect(capture.broadcast.count).to eq 1
-              expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
+        it "#mail" do
+          mail_handler
+          capture_line_bot_client do |capture|
+            perform_enqueued_jobs do
+              post url, params: { data: file }, headers: headers
+              expect(Cms::Line::Message.count).to eq 1
+              expect(message.name).to include("[#{mail_handler.name}]")
+              expect(message.templates.first.text).to eq decoded
             end
+            expect(message.deliver_state).to eq "completed"
+            expect(capture.broadcast.count).to eq 1
+            expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
           end
         end
+      end
 
-        context "post iso-2022-jp mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
-          let(:decoded) { "【ISO-2022-JP】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
-          let(:start_line) { "【緊急メールサービス】" }
-          let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
-          let(:subject_state) { "include" }
+      context "post iso-2022-jp mail" do
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+        let(:decoded) { "【ISO-2022-JP】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
+        let(:start_line) { "【緊急メールサービス】" }
+        let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
+        let(:subject_state) { "include" }
 
-          it "#mail" do
-            mail_handler
-            capture_line_bot_client do |capture|
-              perform_enqueued_jobs do
-                post url, params: { data: file }, headers: headers
-                expect(Cms::Line::Message.count).to eq 1
-                expect(message.name).to include("[#{mail_handler.name}]")
-                expect(message.templates.first.text).to eq decoded
-              end
-              expect(message.deliver_state).to eq "completed"
-              expect(capture.broadcast.count).to eq 1
-              expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
+        it "#mail" do
+          mail_handler
+          capture_line_bot_client do |capture|
+            perform_enqueued_jobs do
+              post url, params: { data: file }, headers: headers
+              expect(Cms::Line::Message.count).to eq 1
+              expect(message.name).to include("[#{mail_handler.name}]")
+              expect(message.templates.first.text).to eq decoded
             end
+            expect(message.deliver_state).to eq "completed"
+            expect(capture.broadcast.count).to eq 1
+            expect(Cms::SnsPostLog::LineDeliver.count).to eq 1
           end
         end
       end

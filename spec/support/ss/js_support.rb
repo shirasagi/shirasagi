@@ -39,9 +39,10 @@ module SS
     module_function
 
     HOOK_EVENT_COMPLETION = <<~SCRIPT.freeze
-      (function(promiseId, eventName, selector) {
+      (function(promiseId, eventNames, selector) {
         var defer = $.Deferred();
-        $(selector || document).one(eventName, function() { defer.resolve(true); });
+        var $eventTarget = $(selector || document);
+        eventNames.forEach((eventName) => $eventTarget.one(eventName, function() { defer.resolve(true); }));
         window.SS[promiseId] = defer.promise();
       })(...arguments)
     SCRIPT
@@ -105,6 +106,11 @@ module SS
 
     WAIT_ALL_CKEDITORS_READY_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
+        if (! ("CKEDITOR" in window)) {
+          resolve(true);
+          return;
+        }
+
         var promises = [];
         Object.values(CKEDITOR.instances).forEach(function(ckeditor) {
           if (ckeditor.status === "ready") {
@@ -203,15 +209,8 @@ module SS
           var pickerInstance = SS_DateTimePicker.instance(element);
           pickerInstance.momentValue(value ? moment(value) : null);
 
-          // validate を実行するとイベント "ss:changeDateTime" が発生する。
-          // イベント "ss:changeDateTime" のハンドラーのいくつかで別　URL へ遷移するものがある。
-          // そのようなもので stale element reference エラーが発生することを防ぐため、
-          // setTimeout 内で validate を実行するようにする。
-          // ※ setTimeout 内で validate を実行すると、stale element reference エラーがなぜ発生しなくなるかは不明。
-          setTimeout(function() {
-            $(element).datetimepicker("validate");
-            resolve(true);
-          }, 0);
+          $(element).datetimepicker("validate");
+          resolve(true);
         }
 
         var pickerInstance = SS_DateTimePicker.instance(element);
@@ -227,6 +226,202 @@ module SS
       (function(element, valueText) {
         const optionIndex = Array.from(element.options).findIndex(option => option.text === valueText);
         element.selectedIndex = optionIndex;
+      })(...arguments)
+    SCRIPT
+
+    WAIT_FOR_FORM_RESTORED = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        if (element.dataset.ssAutoSaveState) {
+          resolve(element.dataset.ssAutoSaveState === "restored");
+          return;
+        }
+
+        element.addEventListener("ss:restored", () => {
+          resolve(element.dataset.ssAutoSaveState === "restored");
+        }, { once: true });
+      })(...arguments)
+    SCRIPT
+
+    WAIT_FOR_TURBO_FRAME_SCRIPT = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        const isCompleted = function(el) {
+          return el.hasAttribute("complete");
+        }
+
+        const el = $(element)[0];
+        if (isCompleted(el)) {
+          resolve(true);
+          return;
+        }
+        el.addEventListener("turbo:frame-load", () => resolve(true), { once: true });
+      })(...arguments)
+    SCRIPT
+
+    WAIT_FOR_ALL_TURBO_FRAMES_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        const isLazy = function(el) {
+          const loadingAttr = el.getAttribute("loading");
+          return loadingAttr && loadingAttr === "lazy";
+        }
+        const hasSrc = function(el) {
+          return el.hasAttribute("src");
+        }
+        const isCompleted = function(el) {
+          return el.hasAttribute("complete");
+        }
+
+        const promises = [];
+        document.querySelectorAll("turbo-frame").forEach((el) => {
+          if (isLazy(el) || !hasSrc(el) || isCompleted(el)) {
+            return;
+          }
+
+          const promise = new Promise((resolutionFunc, rejectionFunc) => {
+            el.addEventListener("turbo:frame-load", () => resolutionFunc(true), { once: true });
+          });
+          promises.push(promise);
+        });
+
+        if (promises.length === 0) {
+          console.log(`found no frames to wait for load`)
+          resolve(true);
+          return;
+        }
+
+        console.log(`found ${promises.length} frames to wait for load`)
+        Promise.all(promises).then(() => resolve(true));
+      })(...arguments)
+    SCRIPT
+
+    WAIT_FOR_TREE_RENDER_SCRIPT = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        var el = $(element)[0];
+        if (el.hasAttribute("data-ss-tree") && el.dataset.ssTree === "completed") {
+          resolve(true);
+          return;
+        }
+        el.addEventListener("ss:tree-render", () => resolve(true), { once: true });
+      })(...arguments)
+    SCRIPT
+
+    WAIT_FOR_ALL_AJAX_PARTS_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        SS.ready(function() {
+          if (SS.partCountToLoad === 0) {
+            console.log("there are no ajax parts to load");
+            resolve(true);
+            return;
+          }
+
+          $(document).on("ss:ajaxPartComplete", function() {
+            console.log("a ajax part is loaded");
+            if (SS.partCountToLoad === 0) {
+              resolve(true);
+            }
+          });
+        });
+      })(...arguments)
+    SCRIPT
+
+    WAIT_COLOR_PICKER_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(element, resolve) {
+        var ariaBusy = $(element).attr("aria-busy");
+        if (ariaBusy === "false") {
+          console.log("color picker is ready");
+          resolve(true);
+          return;
+        }
+
+        ckeditor.once("ss:colorPickerReady", function() {
+          console.log("color picker gets ready");
+          setTimeout(function() { resolve(true); }, 0);
+        });
+      })(...arguments)
+    SCRIPT
+
+    WAIT_ALL_COLOR_PICKERS_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        const waitForColorPickerReady = function(element, resolve) {
+          var ariaBusy = $(element).attr("aria-busy");
+          if (ariaBusy === "false") {
+            console.log("color picker is ready");
+            resolve(true);
+            return;
+          }
+
+          ckeditor.once("ss:colorPickerReady", function() {
+            console.log("color picker gets ready");
+            setTimeout(function() { resolve(true); }, 0);
+          });
+        };
+
+        const promises = [];
+        document.querySelectorAll(".js-color").forEach((element) => {
+          const promise = new Promise((resolveInner) => waitForColorPickerReady(element, resolveInner));
+          promises.push(promise);
+        });
+        if (promises.length === 0) {
+          resolve(true);
+          return;
+        }
+
+        Promise.all(promises).then(() => resolve(true));
+      })(...arguments)
+    SCRIPT
+
+    WAIT_FOR_ALL_THEMES_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        const waitForThemeReady = (element, resolve) => {
+          if (element.hasAttribute("aria-busy") && element.getAttribute("aria-busy") === "false") {
+            console.log("theme is ready");
+            resolve(true);
+            return;
+          }
+
+          element.addEventListener("ss:ready", () => {
+            console.log("theme gets ready");
+            resolve(true);
+          })
+        };
+
+        const promises = [];
+        document.querySelectorAll('#ss-theme,[data-tool="ss-theme"]').forEach((element) => {
+          const promise = new Promise((resolveInner) => waitForThemeReady(element, resolveInner));
+          promises.push(promise);
+        });
+
+        if (promises.length === 0) {
+          console.log("there are no themes");
+          resolve(true);
+          return;
+        }
+
+        Promise.all(promises).then(() => resolve(true));
+      })(...arguments)
+    SCRIPT
+
+    BOUNDING_CLIENT_RECT_SCRIPT = <<~SCRIPT.freeze
+      (function(selector) {
+        const element = document.querySelector(selector);
+        if (!element) {
+          return {};
+        }
+
+        const rect = element.getBoundingClientRect();
+        if (!rect) {
+          return {};
+        }
+
+        return {
+          x: rect.x, y: rect.y, width: rect.width, height: rect.height,
+          top: rect.top, right: rect.right, bottom: rect.bottom, left: rect.left
+        };
+      })(...arguments)
+    SCRIPT
+
+    CANVAS_TO_PNG_SCRIPT = <<~SCRIPT.freeze
+      (function(element) {
+        return element.toDataURL("image/png");
       })(...arguments)
     SCRIPT
 
@@ -262,7 +457,9 @@ module SS
       el = find(:fillable_field, locator).set('').click
       with.to_s.chars.each { |c| el.native.send_keys(c) }
       el
-    rescue Selenium::WebDriver::Error::WebDriverError
+    rescue Selenium::WebDriver::Error::WebDriverError => e
+      puts_console_logs
+      Rails.logger.info { "#{e.class} (#{e.message})" }
       el
     end
 
@@ -278,18 +475,30 @@ module SS
       yield if block_given?
     end
 
-    def wait_for_cbox(&block)
+    def within_cbox(&block)
       wait_for_js_ready
-      have_css("#cboxClose", text: "close")
+      have_css(page.document.find("#cboxClose"), text: "close")
       if block
         save = JsSupport.is_within_cbox
         JsSupport.is_within_cbox = true
         begin
-          within("#cboxContent", &block)
+          element = page.document.find("#cboxContent")
+          within(element, &block)
         ensure
           JsSupport.is_within_cbox = save
         end
       end
+    end
+    # old(obsolete) method
+    alias wait_for_cbox within_cbox
+
+    def open_dialog(locator)
+      wait_for_cbox_opened { click_on locator }
+    end
+
+    def within_dialog(&block)
+      element = page.document.first(".ss-dialog")
+      page.within_element(element, &block)
     end
 
     def colorbox_opened?
@@ -320,23 +529,17 @@ module SS
       wait_for_js_ready
     end
 
-    def wait_for_notice(text)
-      wait_for_js_ready
-      expect(page).to have_css('#notice', text: text)
-      page.execute_script("SS.clearNotice();")
-      wait_for_js_ready
-    end
-
-    def wait_for_error(text)
-      wait_for_js_ready
-      expect(page).to have_css('#errorExplanation', text: text)
-      page.execute_script("SS.clearNotice();")
-      wait_for_js_ready
-    end
-
     def save_full_screenshot(**opts)
+      width = page.execute_script(
+        "return Math.max(document.body.scrollWidth, document.body.offsetWidth, document.documentElement.clientWidth, " \
+        "document.documentElement.scrollWidth, document.documentElement.offsetWidth);")
+      height = page.execute_script(
+        "return Math.max(document.body.scrollHeight, document.body.offsetHeight, document.documentElement.clientHeight, " \
+        "document.documentElement.scrollHeight, document.documentElement.offsetHeight);")
+      window = Capybara.current_session.driver.browser.manage.window
+      window.resize_to(width + 100, height + 100)
       filename = opts[:filename].presence || "#{Rails.root}/tmp/screenshots-#{Time.zone.now.to_f}.png"
-      page.save_screenshot(filename, full: true)
+      page.save_screenshot(filename)
       puts "screenshot: #{filename}"
     rescue
     end
@@ -390,11 +593,11 @@ module SS
       end
     end
 
-    def wait_event_to_fire(event_name, selector = nil)
+    def wait_for_event_fired(*event_names, selector: nil)
       wait_for_js_ready
 
       promise_id = "promise_#{unique_id}"
-      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_name, selector)
+      page.execute_script(HOOK_EVENT_COMPLETION, promise_id, event_names, selector)
 
       # do operations which fire events
       ret = yield
@@ -404,35 +607,38 @@ module SS
 
       ret
     end
+    alias wait_event_to_fire wait_for_event_fired
 
     #
     # Usage:
-    #   wait_cbox_open do
+    #   wait_for_cbox_opened do
     #     # do operations to open a colorbox
     #     click_on I18n.t("ss.buttons.upload")
     #   end
     #
-    def wait_cbox_open(&block)
+    def wait_for_cbox_opened(&block)
       wait_for_js_ready
-      wait_event_to_fire("cbox_complete", &block)
+      wait_for_event_fired("cbox_complete", "ss:dialog:opened", &block)
       wait_for_js_ready
     end
+    alias wait_cbox_open wait_for_cbox_opened
 
     #
     # Usage:
-    #   wait_cbox_close do
+    #   wait_for_cbox_closed do
     #     # do operations to close a colorbox
     #     click_on user.name
     #   end
     #
-    def wait_cbox_close(&block)
+    def wait_for_cbox_closed(&block)
       wait_for_js_ready
       save = JsSupport.is_within_cbox
       JsSupport.is_within_cbox = true
-      wait_event_to_fire("cbox_closed", &block)
+      wait_for_event_fired("cbox_closed", "ss:dialog:closed", &block)
     ensure
       JsSupport.is_within_cbox = save
     end
+    alias wait_cbox_close wait_for_cbox_closed
 
     #
     # Usage:
@@ -447,21 +653,23 @@ module SS
 
     #
     # Usage
-    #   wait_ckeditor_ready find(:fillable_field, "item[html]")
+    #   wait_for_ckeditor_ready find(:fillable_field, "item[html]")
     #
-    def wait_ckeditor_ready(element)
+    def wait_for_ckeditor_ready(element)
       wait_for_js_ready
       page.evaluate_async_script(WAIT_CKEDITOR_READY_SCRIPT, element)
     end
+    alias wait_ckeditor_ready wait_for_ckeditor_ready
 
     #
     # Usage
     #   wait_all_ckeditors_ready
     #
-    def wait_all_ckeditors_ready
+    def wait_for_all_ckeditors_ready
       wait_for_js_ready
       page.evaluate_async_script(WAIT_ALL_CKEDITORS_READY_SCRIPT)
     end
+    alias wait_all_ckeditors_ready wait_for_all_ckeditors_ready
 
     # CKEditor に html を設定する
     #
@@ -477,7 +685,7 @@ module SS
       options[:visible] = :all
       element = find(:fillable_field, locator, **options)
 
-      ret = wait_ckeditor_ready(element)
+      ret = wait_for_ckeditor_ready(element)
       expect(ret).to be_truthy
       ret = page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, element, with)
       expect(ret).to be_truthy
@@ -490,9 +698,17 @@ module SS
       with = options.delete(:with)
       with = with.in_time_zone.iso8601 if with.present?
 
-      page.evaluate_script(FILL_DATETIME_SCRIPT, element, with)
-      #result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
-      #expect(result).to be_truthy
+      # must use evaluate_async_script because 'resolved' is required in FILL_DATETIME_SCRIPT
+      # page.evaluate_script(FILL_DATETIME_SCRIPT, element, with)
+      result = page.evaluate_async_script(FILL_DATETIME_SCRIPT, element, with)
+      expect(result).to be_truthy
+    rescue Selenium::WebDriver::Error::WebDriverError => e
+      # 履歴などの画面で日付型に入力すると、即、画面遷移するものがある。
+      # そのようなもので stale element reference エラーが発生する場合がある。
+      # もう少しスマートに stale element reference エラーの発生を防ぐことができたらよかったが、
+      # そのような方法は簡単には見つからないので rescue で防ぐ
+      puts_console_logs
+      Rails.logger.info { "#{e.class} (#{e.message})" }
     end
 
     alias fill_in_date fill_in_datetime
@@ -507,7 +723,7 @@ module SS
     def wait_for_ckeditor_event(locator, event_name)
       element = find(:fillable_field, locator)
 
-      ret = wait_ckeditor_ready(element)
+      ret = wait_for_ckeditor_ready(element)
       expect(ret).to be_truthy
 
       promise_id = "promise_#{unique_id}"
@@ -552,6 +768,8 @@ module SS
     end
 
     def wait_for_js_ready(session = nil, &block)
+      return unless page.driver.is_a?(Capybara::Selenium::Driver)
+
       session ||= page
       unless session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
         puts_console_logs
@@ -559,9 +777,9 @@ module SS
       end
 
       yield if block
-    rescue Selenium::WebDriver::Error::JavascriptError
+    rescue Selenium::WebDriver::Error::WebDriverError => e
       puts_console_logs
-      raise
+      Rails.logger.info { "#{e.class} (#{e.message})" }
     end
     alias wait_for_ajax wait_for_js_ready
 
@@ -604,7 +822,7 @@ module SS
 
     def fill_in_address(locator, with:)
       wait_for_js_ready
-      wait_event_to_fire("ss:addressCommitted") do
+      wait_for_event_fired("ss:addressCommitted") do
         fill_in locator, with: with
         js_dispatch_focus_event find(:fillable_field, locator), 'blur'
       end
@@ -615,6 +833,294 @@ module SS
       element = find(:select, from, **options)
       page.execute_script(JS_SELECT_SCRIPT, element, value)
       js_dispatch_generic_event(element, "change")
+    end
+
+    def wait_for_form_restored(element = nil)
+      element ||= first("form#item-form")
+      result = page.evaluate_async_script(WAIT_FOR_FORM_RESTORED, element)
+      expect(result).to be_truthy
+
+      wait_for_js_ready
+      result
+    end
+
+    def wait_for_turbo_frame(element)
+      result = page.evaluate_async_script(WAIT_FOR_TURBO_FRAME_SCRIPT, element)
+      expect(result).to be_truthy
+    end
+
+    def wait_for_all_turbo_frames
+      wait_for_js_ready
+      result = page.evaluate_async_script(WAIT_FOR_ALL_TURBO_FRAMES_SCRIPT)
+      expect(result).to be_truthy
+    end
+
+    def wait_for_tree_render(element)
+      result = page.evaluate_async_script(WAIT_FOR_TREE_RENDER_SCRIPT, element)
+      expect(result).to be_truthy
+    end
+
+    def clear_notice
+      page.execute_script("SS.clearNotice();")
+    end
+
+    def enable_confirm_unloading
+      page.execute_script('SS.disableConfirmUnloading = false;')
+    end
+
+    def wait_for_all_ajax_parts
+      result = page.evaluate_async_script(WAIT_FOR_ALL_AJAX_PARTS_SCRIPT)
+      expect(result).to be_truthy
+    end
+
+    def wait_for_color_picker_ready(element)
+      wait_for_js_ready
+      page.evaluate_async_script(WAIT_COLOR_PICKER_READY_SCRIPT, element)
+    end
+
+    def wait_for_all_color_pickers_ready
+      wait_for_js_ready
+      page.evaluate_async_script(WAIT_ALL_COLOR_PICKERS_READY_SCRIPT)
+    end
+
+    def fill_in_color(locator, with:, visible: :all)
+      element = find(:fillable_field, locator, visible: visible)
+
+      ret = wait_for_color_picker_ready(element)
+      expect(ret).to be_truthy
+
+      fill_in locator, with: with.to_s + "\n"
+    end
+
+    def ss_upload_file(*file_paths, addon: "#addon-cms-agents-addons-file")
+      if SS.file_upload_dialog == :v1
+        ss_upload_file_v1(*file_paths, addon: addon)
+      else
+        ss_upload_file_v2(*file_paths, addon: addon)
+      end
+    end
+
+    def ss_upload_file_v1(*file_paths, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_cbox do
+        attach_file "item[in_files][]", file_paths
+        wait_for_cbox_closed do
+          click_on I18n.t("ss.buttons.attach")
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view", text: ::File.basename(file_paths.first))
+      end
+    end
+
+    def ss_upload_file_v2(*file_paths, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", file_paths
+        end
+      end
+      wait_for_cbox_closed do
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view", text: ::File.basename(file_paths.first, ".*"))
+      end
+    end
+
+    def ss_select_file(file, addon: "#addon-cms-agents-addons-file")
+      if SS.file_upload_dialog == :v1
+        ss_select_file_v1(file, addon: addon)
+      else
+        ss_select_file_v2(file, addon: addon)
+      end
+    end
+
+    def ss_select_file_v1(file, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_cbox do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+        wait_for_cbox_closed do
+          click_on file.name
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+      end
+    end
+
+    def ss_select_file_v2(file, addon: "#addon-cms-agents-addons-file")
+      within addon do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.select_from_list")
+        end
+      end
+      within_dialog do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+        wait_for_cbox_closed do
+          click_on file.name
+        end
+      end
+      within addon do
+        expect(page).to have_css(".file-view[data-file-id='#{file.id}']", text: file.name)
+      end
+    end
+
+    def upload_to_ss_file_field(locator, path)
+      if SS.file_upload_dialog == :v1
+        upload_to_ss_file_field_v1(locator, path)
+      else
+        upload_to_ss_file_field_v2(locator, path)
+      end
+    end
+
+    def upload_to_ss_file_field_v1(locator, path)
+      field_element = find(:field, locator, visible: false, type: :hidden)
+      container_element = field_element.ancestor(".ss-file-field")
+      within container_element do
+        wait_for_cbox_opened do
+          # click_on I18n.t("ss.buttons.upload")
+          first(".btn-file-upload").click
+        end
+      end
+      within_cbox do
+        attach_file "item[in_files][]", path
+        wait_for_cbox_closed { click_on I18n.t("ss.buttons.attach") }
+      end
+      within container_element do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(path, ".*"))
+      end
+    end
+
+    def upload_to_ss_file_field_v2(locator, path)
+      field_element = find(:field, locator, visible: false, type: :hidden)
+      container_element = field_element.ancestor(".ss-file-field-v2")
+      within container_element do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      within_dialog do
+        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          attach_file "in_files", path
+        end
+      end
+      wait_for_cbox_closed do
+        within_dialog do
+          within "form" do
+            click_on I18n.t("ss.buttons.upload")
+          end
+        end
+      end
+      within container_element do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(path, ".*"))
+      end
+    end
+
+    def attach_to_ss_file_field(locator, ss_file)
+      if SS.file_upload_dialog == :v1
+        attach_to_ss_file_field_v1(locator, ss_file)
+      else
+        attach_to_ss_file_field_v2(locator, ss_file)
+      end
+    end
+
+    def attach_to_ss_file_field_v1(locator, ss_file)
+      field_element = find(:field, locator, visible: false, type: :hidden)
+      container_element = field_element.ancestor(".ss-file-field")
+      within container_element do
+        wait_for_cbox_opened { first(".btn-file-upload").click }
+      end
+      within_cbox do
+        expect(page).to have_css(".file-view", text: ss_file.name)
+        wait_for_cbox_closed { click_on ss_file.name }
+      end
+      within container_element do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(ss_file.name, ".*"))
+      end
+    end
+
+    def attach_to_ss_file_field_v2(locator, ss_file)
+      field_element = find(:field, locator, visible: false, type: :hidden)
+      container_element = field_element.ancestor(".ss-file-field-v2")
+      within container_element do
+        wait_for_cbox_opened do
+          click_on I18n.t("ss.buttons.upload")
+        end
+      end
+      wait_for_event_fired "turbo:frame-load" do
+        within_dialog do
+          within ".cms-tabs" do
+            click_on I18n.t("ss.buttons.select_from_list")
+          end
+        end
+      end
+      within_dialog do
+        expect(page).to have_css(".file-view", text: ss_file.name)
+        wait_for_cbox_closed { click_on ss_file.name }
+      end
+      within container_element do
+        expect(page).to have_css(".humanized-name", text: ::File.basename(ss_file.name, ".*"))
+      end
+    end
+
+    def ss_drop_file(locator, file_path)
+      file_input = unique_id
+      page.execute_script <<~SCRIPT
+        (function() {
+          const fileInputElement = document.createElement("input");
+          fileInputElement.name = `#{file_input}`;
+          fileInputElement.type = "file";
+          document.body.appendChild(fileInputElement);
+        })(...arguments)
+      SCRIPT
+
+      element = page.document.first("body")
+      page.within_element(element) do
+        attach_file file_input, file_path
+      end
+
+      script = <<~SCRIPT
+        (function(dropTargetElement) {
+          const fileInputElement = document.querySelector(`[name="#{file_input}"]`);
+
+          const dataTransfer = new DataTransfer();
+          dataTransfer.items.add(fileInputElement.files[0]);
+
+          const dropEvent = new DragEvent("drop", { dataTransfer });
+          dropTargetElement.dispatchEvent(dropEvent);
+        })(...arguments)
+      SCRIPT
+      page.execute_script script, first(locator)
+    end
+
+    def wait_for_all_themes_ready
+      result = page.evaluate_async_script(WAIT_FOR_ALL_THEMES_READY_SCRIPT)
+      expect(result).to be_truthy
+    end
+
+    def bounding_client_rect(selector)
+      page.evaluate_script(BOUNDING_CLIENT_RECT_SCRIPT, selector)
+    end
+
+    def canvas_to_png(element)
+      page.evaluate_script(CANVAS_TO_PNG_SCRIPT, element)
     end
   end
 end

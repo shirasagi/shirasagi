@@ -104,7 +104,9 @@ if ($("#item_form_id").val()) {
 <dl class="see mod-body-part-html">
   <dd class="wide buttons">
     <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } if syntax_check %>
-    <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+    <% if !SS::Lgwan.enabled? || SS::Lgwan.web? %>
+      <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
+    <% end %>
     <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } if @item.respond_to?(:route) %>
   </dd>
 </dl>
