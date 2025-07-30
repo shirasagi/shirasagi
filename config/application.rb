@@ -88,6 +88,7 @@ module SS
     config.autoload_paths << "#{config.root}/app/validators"
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
+    config.autoload_paths << "#{Rails.root}/private/models"
 
     # Don't generate system test files.
     config.generators.system_tests = nil
