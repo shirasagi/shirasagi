@@ -42,24 +42,4 @@ class Gws::Tabular::Initializer
   Gws.module_usable :tabular do |site, user|
     Gws::Tabular.allowed?(:use, user, site: site)
   end
-
-  # アプリケーションサーバーが、メモリ使用量の超過や処理したリクエスト数の超過などにより
-  # リサイクルされた - つまり Gws::Tabular::FileXXXXXXXX クラスのキャッシュが破棄された - 状況を考える。
-  # このような状況下で、参照 SS::File#owner_item を辿っても Gws::Tabular::FileXXXXXXXX クラスが
-  # 見つからないので、参照を辿れない。
-  # 参照が辿れないのでファイルへアクセスすることができないと判定される。
-  # これでは困るので、起動時に全 Gws::Tabular::FileXXXXXXXX クラスをロードするようにする。
-  Gws::Tabular::Form.all.tap do |criteria|
-    all_ids = criteria.pluck(:id)
-    all_ids.each_slice(20) do |ids|
-      criteria.in(id: ids).to_a.each do |form|
-        release = form.current_release
-        next unless release
-
-        Gws::Tabular::File[release]
-      rescue => e
-        Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-      end
-    end
-  end
 end
