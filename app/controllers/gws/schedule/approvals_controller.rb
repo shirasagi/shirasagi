@@ -21,7 +21,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
     raise '404' unless target_user
 
     visible = false
-    visible = true if @cur_schedule.member?(target_user)
+    visible = true if @cur_schedule.member_user?(target_user)
     visible = true if !visible && @cur_schedule.readable?(target_user, site: @cur_site)
     visible = true if !visible && @cur_schedule.allowed?(:read, target_user, site: @cur_site)
     raise '404' unless visible
