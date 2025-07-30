@@ -1,6 +1,6 @@
 <% parent = params[:controller].split('/').last %>
 <% @item_menu_proc = proc do |item| %>
-  <% if item.member_user?(@cur_user) %>
+  <% if item.member_include?(@cur_user) %>
     <%=
       link_to new_gws_circular_comment_path(parent: parent, post_id: item), class: 'btn primary' do
         md_icons.outlined("reply", size: 15) + tag.span(t('gws/board.links.comment'), class: "button-label")

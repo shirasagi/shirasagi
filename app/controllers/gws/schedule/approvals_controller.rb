@@ -21,7 +21,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
     raise '404' unless target_user
 
     visible = false
-    visible = true if @cur_schedule.member_user?(target_user)
+    visible = true if @cur_schedule.member_include?(target_user)
     visible = true if !visible && @cur_schedule.readable?(target_user, site: @cur_site)
     visible = true if !visible && @cur_schedule.allowed?(:read, target_user, site: @cur_site)
     raise '404' unless visible
@@ -93,7 +93,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   public
 
   def edit
-    raise "403" unless @cur_schedule.member_user?(@cur_user) ||
+    raise "403" unless @cur_schedule.member_include?(@cur_user) ||
                        @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site) ||
                        @cur_schedule.approval_member?(@cur_user)
     @item.valid?
@@ -101,7 +101,7 @@ class Gws::Schedule::ApprovalsController < ApplicationController
   end
 
   def update
-    raise "403" unless @cur_schedule.member_user?(@cur_user) ||
+    raise "403" unless @cur_schedule.member_include?(@cur_user) ||
                        @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site) ||
                        @cur_schedule.approval_member?(@cur_user)
     @item.attributes = get_params

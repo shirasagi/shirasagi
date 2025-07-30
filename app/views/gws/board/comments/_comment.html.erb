@@ -7,11 +7,11 @@ if @item.permit_comment? && recursion && @model.allowed?(:edit, @cur_user, site:
     md_icons.outlined("reply", size: 15) + tag.span(t('gws/board.links.comment'), class: "button-label")
   end
 end
-if @item.allowed?(:edit, @cur_user, site: @cur_site) || (@item.member_user?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
+if @item.allowed?(:edit, @cur_user, site: @cur_site) || (@item.member_include?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
   link = edit_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   menu << link_to(md_icons.outlined("edit", size: 15), link, class: "btn", title: t('ss.links.edit'))
 end
-if @item.allowed?(:delete, @cur_user, site: @cur_site) || (@item.member_user?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
+if @item.allowed?(:delete, @cur_user, site: @cur_site) || (@item.member_include?(@cur_user) && (comment.group_ids & @cur_user.group_ids).present? || comment.user_ids.include?(@cur_user.id))
   link = delete_gws_board_topic_parent_comment_path(topic_id: @item.id, parent_id: comment.parent_id, id: comment.id)
   menu << link_to(md_icons.outlined("delete", size: 15), link, class: "btn", title: t('ss.links.delete'))
 end

@@ -22,7 +22,7 @@ module Gws::Addon::Workload::Member
     }
   end
 
-  def member_user?(user)
+  def member_include?(user)
     return true if member_ids.include?(user.id)
     false
   end
