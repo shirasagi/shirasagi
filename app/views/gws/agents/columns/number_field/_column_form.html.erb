@@ -1,7 +1,23 @@
-<% value ||= OpenStruct.new(decimal: column.initial_decimal) %>
+<%
+  value ||= OpenStruct.new(decimal: column.initial_decimal)
+%>
 <%= render 'gws/agents/columns/main/common_label', column: column %>
-<dd>
-  <span class="prefix"><%= column.prefix_label %></span>
-  <%= number_field_tag("#{object_name}[#{column.id}]", value.try(:decimal), column.form_options) %>
-  <span class="postfix"><%= column.postfix_label %></span>
+<dd class="<%= @section_id %>">
+  <% if column.prefix_explanation.present? -%>
+    <div class="prefix-block"><%= sanitize_easy(br(column.prefix_explanation)) %></div>
+  <% end -%>
+
+  <div class="input-group gap-5 align-items-center">
+    <% if column.prefix_label.present? -%>
+      <span class="prefix"><%= column.prefix_label %></span>
+    <% end -%>
+    <%= number_field_tag("#{object_name}[#{column.id}]", SS.decimal_to_s(value.try(:decimal)), column.form_options) %>
+    <% if column.postfix_label.present? -%>
+      <span class="postfix"><%= column.postfix_label %></span>
+    <% end %>
+  </div>
+
+  <% if column.postfix_explanation.present? -%>
+    <div class="postfix-block"><%= sanitize_easy(br(column.postfix_explanation)) %></div>
+  <% end -%>
 </dd>

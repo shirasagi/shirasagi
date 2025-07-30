@@ -71,6 +71,7 @@ module Cms::Addon::Line::DeliverPlan::Repeat
       item.in_ready = in_ready
       item.message = message
       item.deliver_date = date
+      item.group_ids = group_ids
       item.save
     end
   end

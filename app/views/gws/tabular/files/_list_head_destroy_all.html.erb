@@ -1,0 +1,7 @@
+<div class="list-head-action-destroy" data-controller="ss--destroy-all">
+  <%= button_tag type: :button, name: "destroy_all", class: "btn btn-red btn-inline-flex", disabled: true, data: { action: "ss--destroy-all#destroyAll", "ss--list-action-enabler-target" => "button" } do %>
+    <%= md_icons.outlined "delete", size: 15 %>
+    <%= t("ss.links.delete") %>
+    <span class="badge" data-count="0"></span>
+  <% end %>
+</div>

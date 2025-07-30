@@ -22,6 +22,9 @@
   <dt><%= @model.t :discussion_todo_limit %><%= @model.tt :discussion_todo_limit %></dt>
   <dd><%= f.number_field :discussion_todo_limit, min: 0 %></dd>
 
+  <dt><%= @model.t :discussion_bookmark_limit %><%= @model.tt :discussion_bookmark_limit %></dt>
+  <dd><%= f.number_field :discussion_bookmark_limit, min: 0 %></dd>
+
   <dt><%= @model.t :discussion_comment_limit %><%= @model.tt :discussion_comment_limit %></dt>
   <dd><%= f.number_field :discussion_comment_limit, min: 100 %></dd>
 </dl>

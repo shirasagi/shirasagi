@@ -25,21 +25,19 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
   context "preview" do
     context "with user who is a manger and reader" do
       it do
-        login_user user1
-
-        visit gws_survey_main_path(site: site)
+        login_user user1, to: gws_survey_main_path(site: site)
         within ".current-navi" do
           click_on I18n.t("ss.navi.editable")
         end
         click_on form.name
 
         within "#addon-gws-agents-addons-survey-column_setting" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.preview")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".mod-gws-survey-custom_form", text: column1.name)
         end
       end
@@ -47,21 +45,19 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
     context "with user who is a manger, but not a reader" do
       it do
-        login_user user2
-
-        visit gws_survey_main_path(site: site)
+        login_user user2, to: gws_survey_main_path(site: site)
         within ".current-navi" do
           click_on I18n.t("ss.navi.editable")
         end
         click_on form.name
 
         within "#addon-gws-agents-addons-survey-column_setting" do
-          wait_cbox_open do
+          wait_for_cbox_opened do
             click_on I18n.t("ss.links.preview")
           end
         end
 
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_css(".mod-gws-survey-custom_form", text: column1.name)
         end
       end

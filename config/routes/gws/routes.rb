@@ -34,6 +34,9 @@ Rails.application.routes.draw do
     match "logout" => "login#logout", as: :logout, via: [:get, :delete]
     match "login" => "login#login", as: :login, via: [:get, :post]
     post "access_token" => "login#access_token", as: :access_token
+    get  "mfa_login" => "mfa_login#login", as: :mfa_login
+    post "otp_login" => "mfa_login#otp_login"
+    post "otp_setup" => "mfa_login#otp_setup"
   end
 
   namespace "gws", path: ".g:site/gws" do
@@ -48,6 +51,7 @@ Rails.application.routes.draw do
     resources :users, concerns: [:deletion, :import, :webmail_import, :lock_and_unlock] do
       match :download_all, on: :collection, via: %i[get post]
       get :download_template, on: :collection
+      post :reset_mfa_otp, on: :member
     end
     resources :multi_checkboxes, concerns: [:deletion, :import, :webmail_import, :lock_and_unlock] do
       match :download_all, on: :collection, via: %i[get post]
@@ -76,13 +80,24 @@ Rails.application.routes.draw do
     resources :history_archives, concerns: [:deletion], only: [:index, :show, :destroy]
     resource :user_profile, only: [:show, :edit, :update] do
       get :edit_password, on: :member
-      post :update_password, on: :member
+      post :edit_password, on: :member, action: :update_password
     end
     resource :user_locale_setting, only: [:show, :edit, :update]
     resource :user_form, concerns: [:deletion] do
-      resources :user_form_columns, concerns: :deletion, path: '/columns'
+      resources :user_form_columns, only: %i[index create], path: '/columns' do
+        post :reorder, on: :collection
+      end
     end
     resources :contrasts, concerns: [:deletion]
+    namespace "ldap" do
+      get '/' => redirect { |p, req| "#{req.path}/setting" }, as: :main
+      resource :setting, only: %i[show edit update]
+      namespace "diagnostic" do
+        get '/' => redirect { |p, req| "#{req.path}/auth" }, as: :main
+        resource :auth, only: %i[show update]
+        resource :search, only: %i[show update]
+      end
+    end
 
     namespace "apis" do
       get "groups" => "groups#index"
@@ -96,14 +111,29 @@ Rails.application.routes.draw do
       post "reminders/restore" => "reminders#restore", as: :restore_reminder
       post "reminders/notifications" => "reminders#notification"
       get "custom_groups" => "custom_groups#index"
-      get "contrasts" => "contrasts#index"
       get "desktop_settings" => "desktop_settings#index"
       put "reload_site_usages" => "site_usages#reload"
       post "validation" => "validation#validate"
-      post "default_group" => "default_groups#update"
       get "cke_config" => "cke_config#index"
+      get "user_detail/:id" => "user_detail#index", as: :user_detail
 
       resources :files, concerns: [:deletion, :file_api]
+      resources :columns, only: %i[edit update]
+    end
+    namespace :frames do
+      resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
+    end
+    namespace :frames do
+      resources :columns, only: %i[show edit update destroy] do
+        get :detail, on: :member
+      end
+      namespace :user_navigation do
+        resource :menu, only: %i[show]
+        resource :group, only: %i[show update]
+        resource :contrast, only: %i[show update]
+      end
     end
   end
 

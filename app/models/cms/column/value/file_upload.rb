@@ -123,11 +123,11 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
     return if column.blank?
 
     if column.required? && file.blank?
-      self.errors.add(:file_id, :blank)
+      self.errors.add(:file_id, :blank) unless skip_required?
     end
 
     if column.required? && column.file_type == 'banner' && link_url.blank?
-      self.errors.add(:link_url, :blank)
+      self.errors.add(:link_url, :blank) unless skip_required?
     end
 
     self.file_name = file.name if file
@@ -179,8 +179,13 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
     return unless Cms::Reference::Files::Utils.need_to_clone?(file, owner_item, owner_item.try(:in_branch))
 
+    cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
+    cur_site ||= owner_item.site if owner_item.respond_to?(:site)
+    cur_site ||= SS.current_site
+    cur_site = nil unless cur_site.is_a?(SS::Model::Site)
     cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
-    new_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item) do |new_file|
+    cur_user ||= SS.current_user
+    new_file = SS::File.clone_file(file, cur_site: cur_site, cur_user: cur_user, owner_item: owner_item) do |new_file|
       # history_files
       if @merge_values
         new_file.history_file_ids = file.history_file_ids
@@ -263,7 +268,7 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   def to_default_html_attachment
     label = file_label.presence.try { |l| ApplicationController.helpers.sanitize(l) }
     label ||= file.name.sub(/\.[^.]+$/, '')
-    label = "#{label} (#{file.extname.upcase} #{file.size.to_s(:human_size)})"
+    label = "#{label} (#{file.extname.upcase} #{file.size.to_fs(:human_size)})"
     ApplicationController.helpers.link_to(label, file.url)
   end
 

@@ -1,0 +1,14 @@
+<nav class="mod-navi">
+  <h2><%= t "ldap.links.ldap" %></h2>
+
+  <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("ldap.setting"), cms_ldap_setting_path %></h3>
+    <h3><%= link_to t("views.ldap/server.index"), cms_ldap_server_main_path %></h3>
+  <% end %>
+  <% if Cms::User.allowed?(:edit, @cur_user, site: @cur_site) %>
+    <h3><%= link_to t("views.ldap/import.index"), cms_ldap_imports_path %></h3>
+    <h3><%= link_to t("views.ldap/result.index"), cms_ldap_result_index_path %></h3>
+  <% end %>
+</nav>
+
+<%= render partial: "cms/main/conf_navi" %>

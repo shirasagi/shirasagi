@@ -39,11 +39,11 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+          wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user1.long_name)
-          click_on user1.long_name
+          wait_for_cbox_closed { click_on user1.long_name }
         end
         within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
@@ -60,8 +60,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.workflow_comment).to eq workflow_comment
         expect(item.workflow_approvers.count).to eq 1
         expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-        # no backups are created while requesting approve
-        expect(item.backups.count).to eq 1
+        expect(item.backups.count).to eq 2
 
         expect(Sys::MailLog.count).to eq 1
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -78,8 +77,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         #
         # user1: approve request
         #
-        login_user user1
-        visit show_path
+        login_user user1, to: show_path
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -93,9 +91,11 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(item.state).to eq "ready"
         expect(item.release_date).to eq release_date
         expect(item.workflow_approvers).to \
-          include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
-        # backup is created
-        expect(item.backups.count).to eq 2
+          include({
+            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now)
+          })
+        expect(item.backups.count).to eq 3
 
         expect(Sys::MailLog.count).to eq 2
         expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -106,6 +106,21 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(item.name)
         end
+
+        expect do
+          Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
+        end.to output.to_stdout
+
+        item.reload
+        expect(item.workflow_state).to eq "approve"
+        expect(item.state).to eq "ready"
+        expect(item.release_date).to eq release_date
+        expect(item.workflow_approvers.count).to eq 1
+        expect(item.workflow_approvers).to include(
+          { level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+            created: be_within(30.seconds).of(Time.zone.now) }
+        )
+        expect(item.backups.count).to eq 3
       end
     end
 
@@ -123,11 +138,11 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           within ".mod-workflow-request" do
             select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
             click_on I18n.t("workflow.buttons.select")
-            wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+            wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
           end
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_content(user1.long_name)
-            click_on user1.long_name
+            wait_for_cbox_closed { click_on user1.long_name }
           end
           within ".mod-workflow-request" do
             fill_in "workflow[comment]", with: workflow_comment
@@ -144,8 +159,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(item.release_date).to eq release_date
           expect(item.workflow_approvers.count).to eq 1
           expect(item.workflow_approvers).to include({level: 1, user_id: user1.id, editable: '', state: 'request', comment: ''})
-          # no backups are created while requesting approve
-          expect(item.backups.count).to eq 1
+          expect(item.backups.count).to eq 2
 
           expect(Sys::MailLog.count).to eq 1
           expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -162,8 +176,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           #
           # user1: approve request
           #
-          login_user user1
-          visit show_path
+          login_user user1, to: show_path
 
           within ".mod-workflow-approve" do
             fill_in "remand[comment]", with: approve_comment1
@@ -177,9 +190,11 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
           expect(item.state).to eq "ready"
           expect(item.release_date).to eq release_date
           expect(item.workflow_approvers).to \
-            include({level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil})
-          # backup is created
-          expect(item.backups.count).to eq 2
+            include({
+              level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+              created: be_within(30.seconds).of(Time.zone.now)
+            })
+          expect(item.backups.count).to eq 3
 
           expect(Sys::MailLog.count).to eq 2
           expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
@@ -190,6 +205,21 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
             expect(mail.body.multipart?).to be_falsey
             expect(mail.body.raw_source).to include(item.name)
           end
+
+          expect do
+            Cms::Page::ReleaseJob.bind(site_id: node.site_id, node_id: node.id).perform_now
+          end.to output(/#{::Regexp.escape(item.full_url)}/).to_stdout
+
+          item.reload
+          expect(item.workflow_state).to eq "approve"
+          expect(item.state).to eq "public"
+          expect(item.release_date).to be_blank
+          expect(item.workflow_approvers.count).to eq 1
+          expect(item.workflow_approvers).to include(
+            { level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
+              created: be_within(30.seconds).of(Time.zone.now) }
+          )
+          expect(item.backups.count).to eq 4
         end
       end
     end

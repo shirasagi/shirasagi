@@ -29,7 +29,7 @@ class Gws::Memo::MessageImporter
       entries.each do |entry|
         next if entry.directory? || entry.name.blank?
 
-        normalized = NKF.nkf("-Ww", entry.name)
+        normalized = SS::Zip.safe_zip_entry_name(entry)
         next if normalized.blank? || !normalized.end_with?(".eml")
 
         basename = File.basename(normalized)

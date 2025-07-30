@@ -17,12 +17,15 @@ class Opendata::Dataset
   include Contact::Addon::Page
   include Cms::Addon::RelatedPage
   include Opendata::Addon::Harvest::Dataset
+  include Opendata::Addon::Metadata::Dataset
   include Cms::Addon::GroupPermission
+  include History::Addon::Backup
   include Workflow::MemberPermission
   include Opendata::DatasetSearchable
   include Opendata::DatasetTemplateVariables
   include Opendata::DatasetCopy
   include Opendata::Addon::Harvest::EditLock
+  include Opendata::Addon::Metadata::EditLock
   include Opendata::Addon::ZipDataset
   include Opendata::Addon::ExportPublicEntityFormat
   include Cms::Lgwan::Page
@@ -123,6 +126,16 @@ class Opendata::Dataset
 
   def no
     format("%010d", id.to_i)
+  end
+
+  def file_previewable?(file, site:, user:, member:)
+    return false unless super
+
+    resource = resources.where(file_id: file.id).first
+    resource ||= resources.where(tsv_id: file.id).first
+    return false unless resource
+    return false if resource.state != "public"
+    true
   end
 
   private

@@ -14,9 +14,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       # create root folder
       within "#gws-share-file-folder-list" do
-        wait_cbox_open { first(".btn-create-root-folder").click }
+        wait_for_cbox_opened { first(".btn-create-root-folder").click }
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "item[in_basename]", with: folder_name1
         click_on I18n.t("ss.buttons.save")
       end
@@ -34,9 +34,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       # create sub folder
       within "#gws-share-file-folder-property" do
-        wait_cbox_open { first(".btn-create-folder").click }
+        wait_for_cbox_opened { first(".btn-create-folder").click }
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "item[in_basename]", with: folder_name2
         click_on I18n.t("ss.buttons.save")
       end
@@ -54,17 +54,17 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(folder.share_max_file_size).to eq root_folder.share_max_file_size
         expect(folder.share_max_folder_size).to eq root_folder.share_max_folder_size
         expect(folder.readable_setting_range).to eq root_folder.readable_setting_range
-        expect(folder.readable_group_ids).to include(*root_folder.readable_group_ids)
-        expect(folder.readable_member_ids).to include(*root_folder.readable_member_ids)
-        expect(folder.group_ids).to include(*root_folder.group_ids)
-        expect(folder.user_ids).to include(*root_folder.user_ids)
+        expect(folder.readable_group_ids.sort).to eq root_folder.readable_group_ids.sort
+        expect(folder.readable_member_ids.sort).to eq root_folder.readable_member_ids.sort
+        expect(folder.group_ids.sort).to eq root_folder.group_ids.sort
+        expect(folder.user_ids.sort).to eq root_folder.user_ids.sort
       end
 
       # rename sub folder
       within "#gws-share-file-folder-property" do
-        wait_cbox_open { first(".btn-rename-folder").click }
+        wait_for_cbox_opened { first(".btn-rename-folder").click }
       end
-      wait_for_cbox do
+      within_cbox do
         fill_in "item[in_basename]", with: folder_name3
         click_on I18n.t("ss.buttons.save")
       end
@@ -82,9 +82,9 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
 
       # delete sub folder
       within "#gws-share-file-folder-property" do
-        wait_cbox_open { first(".btn-delete-folder").click }
+        wait_for_cbox_opened { first(".btn-delete-folder").click }
       end
-      wait_for_cbox do
+      within_cbox do
         click_on I18n.t("ss.buttons.delete")
       end
 

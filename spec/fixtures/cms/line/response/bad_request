@@ -1,0 +1,1 @@
+{"message":"A message (messages[1]) in the request body is invalid","details":[{"message":"must be non-empty text","property":"template/columns/0/imageUrl"},{"message":"invalid uri scheme","property":"template/columns/0/imageUrl"}]}

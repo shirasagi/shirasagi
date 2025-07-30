@@ -109,4 +109,4 @@ ja:
 
   job:
     models:
-      rdf/vocab_import_job: "RDF語彙インポート"
+      rdf/vocab_import_job: "RDF語彙/語彙インポート"

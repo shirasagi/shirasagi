@@ -1,6 +1,5 @@
 module Opendata::Api::ResourceSearchFilter
   extend ActiveSupport::Concern
-  include Opendata::Api
 
   included do
     before_action :init_resource_search, only: [:resource_search]
@@ -94,7 +93,7 @@ module Opendata::Api::ResourceSearchFilter
 
     datasets = Opendata::Dataset.site(@cur_site).and_public
     datasets.each do |dataset|
-      resources = dataset.resources
+      resources = dataset.resources.and_public
       resources.each do |resource|
         @result_list << resource if agree?(resource, @queries)
       end

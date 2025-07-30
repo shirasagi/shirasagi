@@ -1260,11 +1260,7 @@ this.Openlayers_Member_Photo_Form = (function () {
   Openlayers_Member_Photo_Form.prototype.renderEvents = function () {
     this.map.on('click', (function (_this) {
       return function (e) {
-        var feature, pos;
-        feature = _this.map.forEachFeatureAtPixel(e.pixel, function (feature, layer) {
-          return feature;
-        });
-        pos = ol.proj.transform(e.coordinate, "EPSG:3857", "EPSG:4326");
+        var pos = ol.proj.transform(e.coordinate, "EPSG:3857", "EPSG:4326");
         while (pos[0] < 180) {
           pos[0] += 360;
         }
@@ -1298,7 +1294,7 @@ this.Openlayers_Member_Photo_Form = (function () {
       };
     })(this));
     return $(".mod-map .clear-marker").on('click', (function (_this) {
-      return function (e) {
+      return function (_e) {
         _this.clearMarker($(".mod-map .marker-loc"));
         return false;
       };

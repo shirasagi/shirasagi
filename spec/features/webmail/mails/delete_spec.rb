@@ -12,6 +12,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
 
       before do
         webmail_import_mail(user, item)
+        Webmail.imap_pool.disconnect_all
 
         ActionMailer::Base.deliveries.clear
         login_user(user)
@@ -29,7 +30,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
         click_on item_subject
         click_on I18n.t('ss.links.delete')
         click_on I18n.t('ss.buttons.delete')
-        expect(page).to have_css("#notice", text: I18n.t("ss.notice.deleted"))
+        wait_for_notice I18n.t("ss.notice.deleted")
 
         expect { Webmail::Mail.find_by(subject: item_subject) }.to raise_error Mongoid::Errors::DocumentNotFound
       end

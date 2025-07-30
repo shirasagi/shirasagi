@@ -15,16 +15,15 @@ class Cms::LineUtils
         bookmark = opts[:bookmark]
 
         content = { type: "bubble", size: "kilo" }
+        content[:body] = {
+          type: "box",
+          layout: "vertical",
+          contents: []
+        }
 
-        if image
-          content[:hero] = {
-            type: "image",
-            url: image.full_url,
-            size: "full",
-            aspectRatio: "20:13",
-            aspectMode: "cover"
-          }
-        elsif image_url
+        # image
+        image_url = image.full_url if image
+        if image_url.present?
           content[:hero] = {
             type: "image",
             url: image_url,
@@ -33,12 +32,6 @@ class Cms::LineUtils
             aspectMode: "cover"
           }
         end
-
-        content[:body] = {
-          type: "box",
-          layout: "vertical",
-          contents: []
-        }
 
         # name
         content[:body][:contents] << {

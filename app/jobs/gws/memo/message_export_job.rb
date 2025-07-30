@@ -12,7 +12,7 @@ class Gws::Memo::MessageExportJob < Gws::ApplicationJob
 
     export_gws_memo_messages
     @output_zip.close
-    Rails.logger.info("#{@exported_items.to_s(:delimied)} 件のメッセージをエクスポートしました。")
+    Rails.logger.info("#{@exported_items.to_fs(:delimied)} 件のメッセージをエクスポートしました。")
 
     if @exported_items == 0
       create_notify_message(failed: true)

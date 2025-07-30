@@ -15,6 +15,11 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:layout) { create :cms_layout, html: layout_html }
   let(:node) { create(:article_node_page, cur_site: site, layout_id: layout.id) }
 
+  before do
+    site.mobile_state = "enabled"
+    site.save!
+  end
+
   before { login_cms_user }
 
   describe "page preview" do
@@ -105,14 +110,18 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit sns_mypage_path
-        first('.dropdown-toggle').click
-        click_link I18n.t('ss.logout')
+        within ".user-navigation" do
+          wait_for_event_fired("turbo:frame-load") { click_on cms_user.name }
+          within "#user-main-dropdown" do
+            click_link I18n.t('ss.logout')
+          end
+        end
 
         visit cms_preview_path(site: site, path: item.preview_path)
         within "form" do
           fill_in "item[email]", with: Cms::User.first.email
           fill_in "item[password]", with: "pass"
-          click_button I18n.t('ss.login')
+          click_on I18n.t('ss.login')
         end
 
         within "#ss-preview" do
@@ -143,7 +152,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.publish')
         end
 
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css('div.ss-preview-notice-wrap', text: I18n.t('ss.notice.published'))
 
         within "#ss-preview" do
@@ -159,6 +168,59 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_button(I18n.t("ss.links.mobile"))
             expect(page).to have_button(I18n.t("cms.layout"))
             expect(page).to have_button(I18n.t("ss.links.back_to_administration"))
+          end
+        end
+      end
+    end
+
+    context "check accessibility tools" do
+      let(:accessibility_tool) { create(:accessibility_tool, cur_site: site) }
+      let(:layout_html) do
+        html = []
+        html << "<html><head>"
+        html << "{{ part \"#{accessibility_tool.filename.sub(/\..*/, '')}\" }}"
+        html << "{{ part \"#{accessibility_tool.filename.sub(/\..*/, '')}\" }}"
+        html << "<script src='/assets/cms/public.js'></script>"
+        html << "</head><body><br><br><br><div id=\"main\" class=\"page\">"
+        html << "{{ yield }}"
+        html << "</div></body></html>"
+        html.join("\n")
+      end
+      let(:layout) { create :cms_layout, html: layout_html }
+      let(:text) { unique_id }
+      let(:html) { "<p>#{text}</p>" }
+      let!(:item) { create(:article_page, cur_site: site, cur_node: node, layout_id: layout.id, html: html) }
+      it "check if accessibility tools are clickable if multiple time" do
+        visit cms_preview_path(site: site, path: item.preview_path)
+        ['ss-kana', 'ss-voice'].each do |tool|
+          divs = page.all("div[data-tool='#{tool}']")
+          divs.each do |div|
+            if tool == 'ss-kana'
+              links = div.all('a')
+              links.each do |link|
+                expect(link).to be_visible
+              end
+            elsif tool == 'ss-voice'
+              links = div.all('a')
+              links.each do |link|
+                expect(link[:href]).to include('voice')
+              end
+            end
+          end
+        end
+        spans = page.all("span[data-tool='ss-theme']")
+        spans.each do |span|
+          links = span.all('a')
+          links.each do |link|
+            expect(link).to be_visible
+          end
+        end
+
+        divs = page.all("div[id=size]")
+        divs.each do |div|
+          links = div.all('a', visible: true)
+          links.each do |link|
+            expect(link).to be_visible
           end
         end
       end

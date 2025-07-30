@@ -1,0 +1,71 @@
+<nav class="mod-navi current-navi">
+  <h2>
+    <%= link_to gws_tabular_main_path(space: cur_space) do %>
+      <span><%= cur_space.name %></span>
+    <% end %>
+  </h2>
+
+  <% forms.each do |form| %>
+    <% views = find_views(form) %>
+    <% if views.blank? %>
+      <h3 class="no-icons pl-3 pr-1">
+        <%= link_to gws_tabular_files_path(space: cur_space, form: form, view: "-"), class: "d-inline-flex", title: form.name do %>
+          <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+          <span class="mod-navi-name" style="flex-basis: 150px;"><%= form.name %></span>
+        <% end %>
+        <%= link_to md_icons.outlined("delete", size: 16), gws_tabular_trash_files_path(space: cur_space, form: form, view: "-"), class: "ml-auto", title: t("ss.links.trash") %>
+      </h3>
+      <% if form.workflow_enabled? %>
+        <% %w(approver applicant).each do |act| %>
+          <h4 class="no-icons pl-3 pr-1">
+            <%
+              s = { act: act }
+            %>
+            <%= link_to gws_tabular_files_path(space: cur_space, form: form, view: "-", s: s), class: "d-inline-flex" do %>
+              <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+              <span class="mod-navi-name" style="flex-basis: 150px;">
+                <%= I18n.t("gws/tabular.options.act.#{act}") %>
+              </span>
+            <% end %>
+          </h4>
+        <% end %>
+      <% end %>
+    <% else %>
+      <% shows_trash = false %>
+      <% shows_workflow_specials = false %>
+      <% views.each do |view| %>
+        <h3 class="no-icons pl-3 pr-1">
+          <%= link_to gws_tabular_files_path(space: cur_space, form: form, view: view), class: "d-inline-flex", title: view.name do %>
+            <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+            <span class="mod-navi-name" style="flex-basis: 150px;"><%= view.name %></span>
+          <% end %>
+          <%=
+            if !shows_trash && view.authoring_allowed?("delete")
+              shows_trash = true
+              link_to md_icons.outlined("delete", size: 16), gws_tabular_trash_files_path(space: cur_space, form: form, view: view), class: "ml-auto", title: t("ss.links.trash")
+            end
+          %>
+        </h3>
+
+        <% if !shows_workflow_specials && form.workflow_enabled? && view.authoring_allowed?("edit") %>
+          <% %w(approver applicant).each do |act| %>
+            <h4 class="no-icons pl-3 pr-1">
+              <%
+                s = { act: act }
+              %>
+              <%= link_to gws_tabular_files_path(space: cur_space, form: form, view: view, s: s), class: "d-inline-flex" do %>
+                <%= md_icons.outlined "arrow_circle_right", size: 16 %>
+                <span class="mod-navi-name" style="flex-basis: 150px;">
+                  <%= I18n.t("gws/tabular.options.act.#{act}") %>
+                </span>
+              <% end %>
+            </h4>
+          <% end %>
+          <% shows_workflow_specials = true %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+</nav>
+
+<%= render partial: 'gws/main/navi' %>

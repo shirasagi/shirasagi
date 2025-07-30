@@ -3,12 +3,14 @@ require 'spec_helper'
 describe "cms/pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:item) { create :cms_page, cur_site: site, basename: unique_id }
+  let(:map_api_key) { ENV["GOOGLE_MAPS_API_KEY"] }
   let(:map_center_lng) { rand(12_700..14_500) / 100.0 }
   let(:map_center_lat) { rand(2_700..4_500) / 100.0 }
 
   before do
     site.map_api = map_api
     site.map_api_layer = map_api_layer
+    site.map_api_key = map_api_key
     site.map_center = { "lat" => map_center_lat, "lng" => map_center_lng }
     site.map_max_number_of_markers = 3
     site.save!
@@ -27,6 +29,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
 
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
@@ -46,6 +49,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         item.reload
 
@@ -88,6 +93,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
       it do
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
 
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
@@ -132,6 +138,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        wait_for_turbo_frame "#workflow-branch-frame"
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
         item.reload
 
@@ -155,11 +163,74 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
         # re-open for edit
         visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
         within "#item-form" do
           ensure_addon_opened("#addon-map-agents-addons-page")
           within "#addon-map-agents-addons-page" do
             # add-marker button is not shown because number of markers reaches the limit
             expect(page).to have_no_css(".add-marker", visible: true)
+          end
+        end
+      end
+    end
+
+    describe "validation checks" do
+      it "prevents script tags in marker name" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][name]", with: "<script>alert('test')</script>"
+              expect(find_field("item[map_points][][name]").value).to eq ""
+            end
+          end
+        end
+      end
+
+      it "prevents script tags in marker text" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][text]", with: "<script>alert('test')</script>"
+              expect(find_field("item[map_points][][text]").value).to eq ""
+            end
+          end
+        end
+      end
+
+      it "removes HTML tags from marker name" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][name]", with: "テスト"
+              expect(find_field("item[map_points][][name]").value).to eq "テスト"
+            end
+          end
+        end
+      end
+
+      it "removes HTML tags from marker text" do
+        visit edit_cms_page_path(site: site, id: item)
+        wait_for_all_ckeditors_ready
+
+        within "#item-form" do
+          ensure_addon_opened("#addon-map-agents-addons-page")
+          within "#addon-map-agents-addons-page" do
+            within first(".marker") do
+              fill_in "item[map_points][][text]", with: "テスト"
+              expect(find_field("item[map_points][][text]").value).to eq "テスト"
+            end
           end
         end
       end
@@ -240,6 +311,7 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
 
     it do
       visit edit_cms_page_path(site: site, id: item)
+      wait_for_all_ckeditors_ready
 
       within "#item-form" do
         ensure_addon_opened("#addon-map-agents-addons-page")
@@ -256,6 +328,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.publish_save")
       end
       wait_for_notice I18n.t("ss.notice.saved")
+      wait_for_turbo_frame "#workflow-branch-frame"
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
       item.reload
 

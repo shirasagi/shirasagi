@@ -5,11 +5,13 @@
 <% end %>
 
 <div class="search-ui-form">
-<%= form_for :s, url: url_for(action: :index), html: { method: "GET", class: :search } do |f| %>
-  <%= hidden_field_tag("single", params[:single], id: nil) %>
-  <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), id: nil %>
-  <%= f.submit  t("contact.apis.contacts.search"), class: :btn %>
-<% end %>
+  <%= form_for :s, url: url_for(action: :index), html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag("single", params[:single], id: nil) %>
+    <div class="input-group">
+      <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), id: nil, placeholder: t("ss.keyword") %>
+      <%= f.submit t("contact.apis.contacts.search"), class: :btn %>
+    </div>
+  <% end %>
 </div>
 
 <div class="table-wrap">
@@ -69,7 +71,7 @@
             %>
           </td>
           <td class="main-state">
-            <%= contact.try(:main_state) == "main" ? tag.span("radio_button_checked", class: "material-icons md-14", title: t("contact.options.main_state.main")) : nil %>
+            <%= contact.try(:main_state) == "main" ? md_icons.filled("radio_button_checked", size: 14, title: t("contact.options.main_state.main"), aria: { hidden: nil, label: t("contact.options.main_state.main") }) : nil %>
           </td>
           <td class="name" style="white-space: normal">
             <%= contact.try(:name) ? link_to(ss_truncate(contact.name, length: max_name_len), "#", class: @multi ? "select-item" : "select-single-item") : nil %>

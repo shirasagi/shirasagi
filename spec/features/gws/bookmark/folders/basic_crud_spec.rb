@@ -34,7 +34,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       fill_in 'item[order]', with: order
       click_button I18n.t('ss.buttons.save')
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "#addon-basic" do
       expect(page).to have_css("dd", text: name)
@@ -59,7 +59,7 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
       fill_in 'item[order]', with: order
       click_button I18n.t('ss.buttons.save')
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.saved'))
+    wait_for_notice I18n.t('ss.notice.saved')
 
     within "#addon-basic" do
       expect(page).to have_css("dd", text: name)
@@ -73,6 +73,6 @@ describe "gws_bookmark_folders", type: :feature, dbscope: :example, js: true do
     within "form#item-form" do
       click_button I18n.t('ss.buttons.delete')
     end
-    expect(page).to have_css('#notice', text: I18n.t('ss.notice.deleted'))
+    wait_for_notice I18n.t('ss.notice.deleted')
   end
 end

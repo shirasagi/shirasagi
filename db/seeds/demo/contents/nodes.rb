@@ -40,7 +40,8 @@ save_node route: "article/page", filename: "docs", name: "記事",
   st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 article_map_search = save_node(
   route: "article/map_search", filename: "hinanjo", name: "避難所検索",
-  view_route: "category/node", conditions: %w(hinanjo-docs), sort: 'order', new_days: 0,
+  view_route: "category/node", sort: 'order', new_days: 0,
+  conditions: %w(hinanjo-docs hinanjo-docs/dosya hinanjo-docs/jishin hinanjo-docs/thunami),
   map_search_options: [{ name: '地域', values: "東部\n北部\n南部" }]
 )
 article_map_search_categories = [
@@ -59,12 +60,6 @@ article_map_search_categories = [
 ]
 article_map_search.st_category_ids = article_map_search_categories.map(&:id)
 article_map_search.update
-save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情報", layout_id: @layouts["more"].id,
-  page_layout_id: @layouts["general"].id, conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
-  condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0, st_form_ids: [@form8.id],
-  st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
-save_node route: "article/page", filename: "population", name: "人口・世帯数", new_days: 0, st_form_ids: [@form7.id],
-  st_form_default_id: @form7.id
 
 ## category
 save_node route: "category/node", filename: "guide", name: "くらしのガイド", sort: 'order', loop_format: 'liquid'
@@ -77,7 +72,7 @@ save_node route: "category/page", filename: "kurashi/bosai", name: "防災情報
 save_node route: "category/page", filename: "kurashi/kankyo", name: "環境", order: 40
 save_node route: "category/page", filename: "kurashi/koseki", name: "戸籍・印鑑登録・住民登録", order: 50
 save_node route: "category/page", filename: "kurashi/nenkin", name: "年金・保険", order: 60
-save_node route: "category/node", filename: "kurashi/zeikin", name: "税金", order: 110
+save_node route: "category/page", filename: "kurashi/zeikin", name: "税金", order: 110
 save_node route: "category/node", filename: "sangyo", name: "産業・仕事", order: 50
 save_node route: "category/page", filename: "sangyo/keiei", name: "経営支援・金融支援・企業立", order: 20
 save_node route: "category/page", filename: "sangyo/nyusatsu", name: "入札・契約", order: 30
@@ -196,9 +191,9 @@ save_node route: "category/page", filename: "shisei/koho/shiryo", name: "報道�
 save_node route: "category/page", filename: "shisei/senkyo", name: "選挙", order: 50
 save_node route: "category/page", filename: "shisei/shicho", name: "市長の部屋", order: 60
 save_node route: "category/page", filename: "shisei/shisaku", name: "施策・計画", order: 70
-save_node route: "category/node", filename: "shisei/soshiki", name: "組織案内", order: 80
-save_node route: "category/node", filename: "shisei/soshiki/kikaku", name: "企画政策部", order: 10
-save_node route: "category/node", filename: "shisei/soshiki/kikikanri", name: "危機管理部", order: 50
+save_node route: "category/node", filename: "shisei/soshiki", name: "組織案内", order: 80, state: "closed"
+save_node route: "category/node", filename: "shisei/soshiki/kikaku", name: "企画政策部", order: 10, state: "closed"
+save_node route: "category/node", filename: "shisei/soshiki/kikikanri", name: "危機管理部", order: 50, state: "closed"
 save_node route: "category/page", filename: "shisei/toke", name: "統計・人口", order: 90
 save_node route: "category/page", filename: "shisei/toshi", name: "都市整備", order: 100
 save_node route: "category/page", filename: "shisei/zaisei", name: "財政・行政改革", order: 110
@@ -214,14 +209,17 @@ save_node route: "category/page", filename: "calendar/bunka", name: "文化・�
 save_node route: "category/page", filename: "calendar/kohen", name: "講演・講座", order: 20
 save_node route: "category/page", filename: "calendar/sports", name: "スポーツ", order: 60
 save_node route: "event/search", filename: "calendar/search", name: "イベント検索", conditions: %w(calendar)
-save_node route: "category/node", filename: "download", name: "申請書ダウンロード", layout_id: @layouts["category-top"].id,
-  sort: 'order', child_limit: 0
-save_node route: "category/node", filename: "kohoshi", name: "広報シラサギ", child_limit: 0
-save_node route: "category/page", filename: "kohoshi/kakopdf", name: "過去のPDF版広報", layout_id: @layouts["more"].id,
-  new_days: 0
+save_node route: "category/node", filename: "download", name: "申請書ダウンロード",
+  layout_id: @layouts["category-top"].id, sort: 'order', child_limit: 0
+save_node route: "category/node", filename: "kohoshi", name: "広報シラサギ",
+  layout_id: @layouts["category-top"].id, sort: 'order', child_limit: 0
 save_node route: "category/page", filename: "kohoshi/kongetsukoho", name: "今月の広報シラサギ",
-  layout_id: @layouts["pages"].id, new_days: 0, loop_format: 'liquid'
-save_node route: "category/page", filename: "topics", name: "街の話題"
+  layout_id: @layouts["pages"].id, summary_html: "今月の広報シラサギを掲載しています。",
+  order: 10, new_days: 0, loop_format: 'liquid'
+save_node route: "category/page", filename: "kohoshi/kakopdf", name: "過去のPDF版広報",
+  layout_id: @layouts["more"].id, summary_html: "過去の広報シラサギを掲載しています。",
+  order: 20, new_days: 0
+save_node route: "category/page", filename: "topics", name: "街の話題", layout_id: @layouts["more"].id
 
 array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m] }
 @categories = Hash[*array.flatten]
@@ -252,13 +250,15 @@ save_node route: "cms/site_search", filename: "search", name: "サイト内検�
 save_node route: "sitemap/page", filename: "sitemap", name: "サイトマップ"
 
 ## event
-save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs), event_display: "table",
+save_node route: "event/page", filename: "calendar", name: "イベントカレンダー", conditions: %w(docs),
+  event_display: "table", event_display_tabs: %w(list table map),
   st_category_ids: %w(calendar/bunka calendar/kohen calendar/sports).map { |c| @categories[c].id }
 
 ## uploader
 save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
 save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "show"
 save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
+save_node route: "uploader/file", filename: "dataset", name: "javascript", shortcut: "hide"
 
 ## faq
 save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", st_category_ids: [@categories["faq"].id]
@@ -292,6 +292,8 @@ inquiry_sent_html = File.read("nodes/inquiry.inquiry_sent_html") rescue nil
   reply_content_state: "static",
   reply_lower_text: "",
   aggregation_state: "disabled"
+@site.inquiry_form = @inquiry_node
+@site.update
 
 ## feedback
 feedback_html = File.read("nodes/feedback.inquiry_html") rescue nil
@@ -460,6 +462,9 @@ save_node route: "key_visual/image", filename: "key-visual", name: "キービジ
 @guide_node = save_node route: "guide/guide", filename: "purpose-guide", name: "移住目的別ガイド",
   layout_id: @layouts["general"].id, guide_index_html: '<p class="guide__text">移住に必要な手続きをご案内いたします。</p>'
 
+## line
+save_node route: "cms/line_hub", filename: "receiver", name: "LINE HUB", layout_id: @layouts["general"].id
+
 ## ckan
 save_node route: "ckan/page", filename: "ckan", name: "CKAN", layout_id: @layouts["more"].id,
   ckan_url: 'https://ckan.open-governmentdata.org/', ckan_max_docs: 20,
@@ -468,3 +473,36 @@ save_node route: "ckan/page", filename: "ckan", name: "CKAN", layout_id: @layout
 ## import node
 save_node route: "cms/import_node", filename: "testf", name: "取込ページ", layout_id: @layouts["general"].id,
   new_days: 0
+
+## form db
+save_node route: "article/page", filename: "hinanjo-docs", name: "避難所情報", layout_id: @layouts["more"].id,
+  view_route: "cms/node", page_layout_id: @layouts["general"].id, st_form_ids: [@form8.id],
+  conditions: %w(hinanjo/dosya hinanjo/jishin hinanjo/thunami),
+  condition_forms: [{ form_id: @form8.id }], sort: 'updated -1', new_days: 0,
+  st_form_default_id: @form8.id, st_category_ids: article_map_search_categories.map(&:id)
+@node_form_db1 = save_node route: "article/page", filename: "hinanjo-docs/dosya", name: "土砂災害",
+  layout_id: @layouts["more"].id, st_category_ids: [@categories["hinanjo/dosya"].id],
+  st_form_ids: [@form8.id], st_form_default_id: @form8.id
+@node_form_db2 = save_node route: "article/page", filename: "hinanjo-docs/jishin", name: "地震",
+  layout_id: @layouts["more"].id, st_category_ids: [@categories["hinanjo/jishin"].id],
+  st_form_ids: [@form8.id], st_form_default_id: @form8.id
+@node_form_db3 = save_node route: "article/page", filename: "hinanjo-docs/thunami", name: "津波",
+  layout_id: @layouts["more"].id, st_category_ids: [@categories["hinanjo/thunami"].id],
+  st_form_ids: [@form8.id], st_form_default_id: @form8.id
+save_node route: "article/page", filename: "population", name: "人口・世帯数",
+  layout_id: @layouts["pages"].id, st_form_ids: [@form7.id], st_form_default_id: @form7.id,
+  new_days: 0
+
+@form_db1.node = @node_form_db1
+@form_db1.update
+
+@form_db2.node = @node_form_db2
+@form_db2.update
+
+@form_db3.node = @node_form_db3
+@form_db3.update
+
+## lsorg
+@lsorg_node = save_node route: "lsorg/node", filename: "organization", name: "組織案内",
+  layout_id: @layouts["organization"].id, root_group_ids: [@g_ss.id]
+Lsorg::ImportGroupsJob.bind(site_id: @site.id, node_id: @lsorg_node.id).perform_now

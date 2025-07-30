@@ -1,3 +1,8 @@
 <%= render 'cms/agents/columns/main/base', show: true, column: column, value: value do %>
-  <%= [ value.effective_link_label.presence, value.effective_link_url.presence, value.link_target.presence ].compact.flatten.join(', ') %>
+  <%=
+    [
+      value.effective_link_label.presence,
+      value.effective_link_url.presence,
+      I18n.t("ss.options.link_target.#{value.link_target.presence || "_self"}")
+    ].compact.flatten.join(', ') %>
 <% end %>

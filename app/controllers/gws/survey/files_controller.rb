@@ -95,7 +95,10 @@ class Gws::Survey::FilesController < ApplicationController
     new_column_values = @cur_form.build_column_values(custom)
     @item.update_column_values(new_column_values)
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    render_opts = { location: gws_survey_readables_path(s: { answered_state: "" }) }
+    render_opts = {
+      location: gws_survey_readables_path(s: { answered_state: "" }),
+      notice: t("ss.notice.answered"),
+    }
 
     result = @item.save
     if result

@@ -8,7 +8,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
 
   def set_member
     @member = Opendata::Member.site(@cur_site).where(id: params[:member]).first
-    raise "404" unless @member
+    raise SS::NotFoundError unless @member
 
     @member_url = "#{@cur_node.url}#{@member.id}/"
   end
@@ -16,7 +16,7 @@ class Opendata::Agents::Nodes::MemberController < ApplicationController
   public
 
   def index
-    raise "404"
+    raise SS::NotFoundError
   end
 
   def show

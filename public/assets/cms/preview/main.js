@@ -289,7 +289,11 @@ this.Form_Alert = (function () {
     } else if (!SS.isEmptyObject(Form_Alert.alerts["アクセシビリティチェック"])) {
       $.each(Form_Alert.alerts["アクセシビリティチェック"], function(id, alert) {
         if (alert["msg"] == "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
-          allowEdit = false;
+          if ($(submit).attr("name") == "draft_save") {
+            allowEdit = true;
+          } else {
+            allowEdit = false;
+          }
         }
       });
     }
@@ -398,7 +402,7 @@ this.Form_Preview = (function () {
   Form_Preview.page_route;
 
   Form_Preview.render = function () {
-    $("button.preview").not(".form-preview-rendered").on("click", function (e) {
+    $("button.preview").not(".form-preview-rendered").on("click", function (_e) {
       var basename, errors, form, height, i, name, ref, token, v, width;
       name = $("#" + Form_Preview.form_id + " input[name='item[name]']").val();
       basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
@@ -407,8 +411,8 @@ this.Form_Preview = (function () {
         errors.push("タイトルを入力してください。");
       }
       if (basename) {
-        if (!/^[\w\-]+(\.html)?$/.test(basename)) {
-          errors.push("ファイル名は不正な値です。");
+        if (!/^[\w-]+(\.html)?$/.test(basename)) {
+          errors.push("は半角英数、アンダースコア、ハイフンのみ使用可能です。");
         }
       } else {
         errors.push("ファイル名を入力してください。");
@@ -469,9 +473,11 @@ this.Form_Preview = (function () {
       height = $(window).height();
       window.open("about:blank", "FormPreview", "width=" + width + ",height=" + height + ",resizable=yes,scrollbars=yes");
       form.appendTo("body");
-      form.submit();
+      form[0].requestSubmit();
       return false;
     });
+
+    $("button.preview").hide().eq(0).prependTo("footer.send").addClass("icon-material").show();
     $("button.preview").addClass("form-preview-rendered");
   };
 
@@ -483,11 +489,11 @@ this.Form_Save_Event = (function () {
   }
 
   Form_Save_Event.render = function () {
-    return document.onkeydown = function (e) {
+    return document.onkeydown = function (_e) {
       if (event.ctrlKey || event.metaKey) {
         if (event.keyCode === 83) {
           event.keyCode = 0;
-          $("#" + Form_Preview.form_id).submit();
+          $("#" + Form_Preview.form_id)[0].requestSubmit();
           return false;
         }
       }
@@ -1063,8 +1069,20 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
-    if (Syntax_Checker.errors.length == 1 && Syntax_Checker.errors[0]['msg'] == "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
-      Syntax_Checker.reset();
+    var warnMessages = ["アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。","動画や音声を含む場合、説明があるか確認してください。"];
+    var allowEdit = true;
+    $.each(Syntax_Checker.errors, function(id, error) {
+      if (warnMessages.includes(error['msg'])) {
+        return true;
+      }
+
+      allowEdit = false;
+    });
+    if (allowEdit) {
+      Syntax_Checker.errors = Syntax_Checker.errors.filter(function (error) {
+        return error['msg'] != warnMessages[0];
+      });
+      Syntax_Checker.errorCount--;
     }
 
     Syntax_Checker.resultBox.showResult(checks, Syntax_Checker.errors);
@@ -1702,7 +1720,7 @@ this.Backlink_Checker = (function () {
 
   Backlink_Checker.itemId = null;
 
-  Backlink_Checker.asyncCheck = function(form, submit, opts) {
+  Backlink_Checker.asyncCheck = function(form, submit, _opts) {
     var defer = $.Deferred();
     if (!Backlink_Checker.enabled || !Backlink_Checker.url || !Backlink_Checker.itemId) {
       defer.resolve();
@@ -1780,7 +1798,7 @@ Cms_TemplateForm.createElementFromHTML = function(html) {
   var div = document.createElement('div');
   div.innerHTML = html.trim();
 
-  return div.firstChild;
+  return div.firstElementChild;
 };
 
 Cms_TemplateForm.prototype.render = function() {
@@ -1856,7 +1874,12 @@ Cms_TemplateForm.prototype.deleteEditors = function() {
 
 Cms_TemplateForm.prototype.loadForm = function(html) {
   this.deleteEditors();
-  this.$formPage.html($(html).html());
+
+  var $html = $(html);
+  var $siblings = $html.siblings();
+  $html = $siblings.length > 0 ? $siblings.first() : $html;
+
+  this.$formPage.html($html.html());
   // SS.render();
   SS.renderAjaxBox();
   SS_DateTimePicker.render();
@@ -1910,19 +1933,19 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
   this.$el = $(el);
 
   var self = this;
-  this.$el.on("change", ".column-value-controller-move-position", function(ev) {
+  this.$el.on("change", ".column-value-controller-move-position", function(_ev) {
     self.movePosition($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-move-up", function(ev) {
+  this.$el.on("click", ".column-value-controller-move-up", function(_ev) {
     self.moveUp($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-move-down", function(ev) {
+  this.$el.on("click", ".column-value-controller-move-down", function(_ev) {
     self.moveDown($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-delete", function(ev) {
+  this.$el.on("click", ".column-value-controller-delete", function(_ev) {
     self.remove($(this));
   });
 
@@ -1938,7 +1961,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
     // $this.trigger("ss:columnAdding");
     $.ajax({
       url: Cms_TemplateForm.paths.formColumn.replace(/:formId/, formId).replace(/:columnId/, columnId),
-      success: function(data, status, xhr) {
+      success: function(data, _status, _xhr) {
         var newColumnElement = Cms_TemplateForm.createElementFromHTML(data);
         var $palette = $this.closest(".column-value-palette");
         $palette.before(newColumnElement);
@@ -1958,7 +1981,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       error: function(xhr, status, error) {
         $this.closest(".column-value-palette").find(".column-value-palette-error").html(error).removeClass("hide");
       },
-      complete: function(xhr, status) {
+      complete: function(_xhr, _status) {
         $this.css('cursor', "pointer");
         $this.closest("fieldset").prop("disabled", false);
       }
@@ -1979,7 +2002,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       stop: function (ev, ui) {
         ui.item.trigger("column:afterMove");
       },
-      update: function (ev, ui) {
+      update: function (_ev, _ui) {
         self.resetOrder();
       }
     });
@@ -2138,17 +2161,17 @@ Cms_TemplateForm.insertElement = function($source, $destination, completion) {
       return;
     }
 
-    var sourceBottom = source.offsetTop + source.offsetHeight;
+    // var sourceBottom = source.offsetTop + source.offsetHeight;
     var prev = source.previousElementSibling;
     var prevBottom = prev.offsetTop + prev.offsetHeight;
 
     sourceDisplacement = destination.offsetTop - source.offsetTop;
-    destinationDisplacement = sourceBottom - prevBottom;
+    destinationDisplacement = source.offsetTop + source.offsetHeight - prevBottom;
 
-    var el = destination;
-    while (el !== source) {
-      intermediateElements.push(el);
-      el = el.nextElementSibling;
+    var nextEl = destination;
+    while (nextEl !== source) {
+      intermediateElements.push(nextEl);
+      nextEl = nextEl.nextElementSibling;
     }
   } else if (destination.offsetTop > source.offsetTop) {
     // moveDown
@@ -2158,16 +2181,15 @@ Cms_TemplateForm.insertElement = function($source, $destination, completion) {
     }
 
     var destinationBottom = destination.offsetTop + destination.offsetHeight;
-    var sourceBottom = source.offsetTop + source.offsetHeight;
     var next = source.nextElementSibling;
 
-    sourceDisplacement = destinationBottom - sourceBottom;
+    sourceDisplacement = destinationBottom - (source.offsetTop + source.offsetHeight);
     destinationDisplacement = source.offsetTop - next.offsetTop;
 
-    var el = destination;
-    while (el !== source) {
-      intermediateElements.push(el);
-      el = el.previousElementSibling;
+    var prevEl = destination;
+    while (prevEl !== source) {
+      intermediateElements.push(prevEl);
+      prevEl = prevEl.previousElementSibling;
     }
   }
 
@@ -2452,7 +2474,7 @@ SS_Workflow.prototype = {
 
         location.reload();
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         try {
           var errors = $.parseJSON(xhr.responseText);
           alert(["== Error(Workflow) =="].concat(errors).join("\n"));
@@ -2499,7 +2521,7 @@ SS_Workflow.prototype = {
           location.reload();
         }
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -2522,10 +2544,10 @@ SS_Workflow.prototype = {
     $.ajax({
       type: "GET",
       url: uri,
-      success: function(html, status) {
+      success: function(html, _status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -2550,10 +2572,10 @@ SS_Workflow.prototype = {
       type: "POST",
       url: uri,
       data: data,
-      success: function(html, status) {
+      success: function(html, _status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -2596,10 +2618,10 @@ SS_Workflow.prototype = {
           type: 'POST',
           url: uri,
           data: data,
-          success: function(html, status) {
+          success: function(_html, _status) {
             location.reload();
           },
-          error: function(xhr, status) {
+          error: function(xhr, _status) {
             try {
               var errors = $.parseJSON(xhr.responseText);
               alert(errors.join("\n"));
@@ -2619,10 +2641,10 @@ SS_Workflow.prototype = {
     var pThis = this;
     $.ajax({
       url: this.fileSelectViewUrl($item.closest("[data-id]").data("id")),
-      success: function(data, status, xhr) {
+      success: function(data, _status, _xhr) {
         pThis.renderFileHtml(data);
       },
-      error: function (xhr, status, error) {
+      error: function (_xhr, _status, _error) {
         alert("== Error(Workflow) ==");
       }
     });
@@ -2639,12 +2661,12 @@ SS_Workflow.prototype = {
     $html.find(".action .action-attach").remove();
     $html.find(".action .action-paste").remove();
     $html.find(".action .action-thumb").remove();
-    $("#selected-files").append($html);
+    $("#selected-files").append($html).trigger("change");
   },
   deleteUploadedFile: function($a) {
     $a.closest("div[data-file-id]").remove();
   },
-  onDropFile: function(files, dropArea) {
+  onDropFile: function(files, _dropArea) {
     var pThis = this;
     for (var j = 0, len = files.length; j < len; j++) {
       var file = files[j];
@@ -2652,10 +2674,10 @@ SS_Workflow.prototype = {
       var url = pThis.fileSelectViewUrl(id);
       $.ajax({
         url: url,
-        success: function(data, status, xhr) {
+        success: function(data, _status, _xhr) {
           pThis.renderFileHtml(data);
         },
-        error: function (xhr, status, error) {
+        error: function (_xhr, _status, _error) {
           alert("== Error(Workflow) ==");
         }
       });
@@ -2675,7 +2697,7 @@ SS_WorkflowRerouteBox = function (el, options) {
       success: function (data) {
         pThis.$el.closest("#cboxLoadedContent").html(data);
       },
-      error: function (data, status) {
+      error: function (_data, _status) {
         alert("== Error(Workflow) ==");
       }
     });
@@ -2685,7 +2707,7 @@ SS_WorkflowRerouteBox = function (el, options) {
 
   this.$el.find('.pagination a').on("click", function(e) {
     var url = $(this).attr("href");
-    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, xhr) {
+    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, _xhr) {
       if (status === 'error') {
         alert("== Error(Workflow) ==");
       }
@@ -2785,6 +2807,8 @@ SS_WorkflowApprover.prototype.render = function () {
   if (self.options.draft_save) {
     $(".save")
       .val(self.options.draft_save)
+      .attr("name", "draft_save")
+      .attr("class", "btn-primary save draft_save")
       .attr("data-disable-with", null)
       .attr("data-disable", "")
       .on("click", function (_ev) {
@@ -2887,7 +2911,7 @@ this.SS_Addon_TempFile = (function () {
         return 0;
       });
       for (var i = 0; i < sorted_name_and_datas.length; i++) {
-        $("#selected-files").prepend(sorted_name_and_datas[i].data);
+        $("#selected-files").prepend(sorted_name_and_datas[i].data).trigger("change");
       }
     });
   }
@@ -2931,15 +2955,15 @@ this.SS_Addon_TempFile = (function () {
     });
   };
 
-  SS_Addon_TempFile.prototype.onDragEnter = function(ev) {
+  SS_Addon_TempFile.prototype.onDragEnter = function(_ev) {
     this.$selector.addClass('file-dragenter');
   };
 
-  SS_Addon_TempFile.prototype.onDragLeave = function(ev) {
+  SS_Addon_TempFile.prototype.onDragLeave = function(_ev) {
     this.$selector.removeClass('file-dragenter');
   };
 
-  SS_Addon_TempFile.prototype.onDragOver = function(ev) {
+  SS_Addon_TempFile.prototype.onDragOver = function(_ev) {
     if (!this.$selector.hasClass('file-dragenter')) {
       this.$selector.addClass('file-dragenter');
     }
@@ -3004,6 +3028,8 @@ this.SS_SearchUI = (function () {
   var selectTable = null;
   let toSelected = [], ccSelected = [], bcSelected = [];
 
+  SS_SearchUI.dialogType = 'colorbox';
+
   SS_SearchUI.anchorAjaxBox;
 
   SS_SearchUI.defaultTemplate = " \
@@ -3016,9 +3042,11 @@ this.SS_SearchUI = (function () {
     </tr>";
 
   SS_SearchUI.defaultSelector = function ($item, $prevSelected) {
-    var self = this;
+    if (!SS_SearchUI.anchorAjaxBox) {
+      return
+    }
 
-    var templateId = self.anchorAjaxBox.data("template");
+    var templateId = SS_SearchUI.anchorAjaxBox.data("template");
     var templateEl = templateId ? document.getElementById(templateId) : null;
     var template, attr;
     if (templateEl) {
@@ -3027,7 +3055,7 @@ this.SS_SearchUI = (function () {
     } else {
       template = SS_SearchUI.defaultTemplate;
 
-      var $input = self.anchorAjaxBox.closest("dl").find(".hidden-ids");
+      var $input = SS_SearchUI.anchorAjaxBox.closest("dl").find(".hidden-ids");
       if (selectTable === "to") {
         attr = {
           name: "item[in_to_members][]",
@@ -3065,13 +3093,13 @@ this.SS_SearchUI = (function () {
     var $tr = $(tr);
     var $ajaxSelected;
     if (selectTable === "to") {
-      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
     } else if (selectTable === "cc") {
-      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
     } else if (selectTable === "bcc") {
-      $ajaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
     } else {
-      $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+      $ajaxSelected = SS_SearchUI.anchorAjaxBox.closest("dl").find(".ajax-selected");
     }
 
     if ($prevSelected) {
@@ -3094,22 +3122,33 @@ this.SS_SearchUI = (function () {
     table.trigger("change");
   };
 
+  SS_SearchUI.dispatchEvent = function (eventName, detail) {
+    var ajaxBox = document.getElementById("ajax-box");
+    if (ajaxBox) {
+      var event = new CustomEvent(eventName, { bubbles: true, cancelable: false, composed: true, detail: detail });
+      ajaxBox.dispatchEvent(event);
+    }
+  }
+
   SS_SearchUI.select = function (item, prevSelected) {
-    var self = this;
-    var selector = self.anchorAjaxBox.data('on-select');
-    if (selector) {
-      return selector(item);
-    } else {
-      if (!selectTable) {
-        if (item.closest("[data-id]").find(".to-checkbox")[0]) {
-          selectTable = "to";
+    if (SS_SearchUI.anchorAjaxBox) {
+      var selector = SS_SearchUI.anchorAjaxBox.data('on-select');
+      if (selector) {
+        return selector(item);
+      } else {
+        if (!selectTable) {
+          if (item.closest("[data-id]").find(".to-checkbox")[0]) {
+            selectTable = "to";
+          }
         }
+        var result = this.defaultSelector(item, prevSelected);
+        if (selectTable === "to") {
+          SS_SearchUI.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
+        }
+        return result;
       }
-      var result = this.defaultSelector(item, prevSelected);
-      if (selectTable === "to") {
-        self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
-      }
-      return result;
+    } else {
+      SS_SearchUI.dispatchEvent("ss:modal-select", { item: item })
     }
   };
 
@@ -3124,7 +3163,7 @@ this.SS_SearchUI = (function () {
       // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
       $prevSelected = self.select($(this), $prevSelected);
     });
-    if (selectTable === "to") {
+    if (selectTable === "to" && self.anchorAjaxBox) {
       self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected").show();
     }
 
@@ -3134,7 +3173,7 @@ this.SS_SearchUI = (function () {
       // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
       $prevSelected = self.select($(this), $prevSelected);
     });
-    if (selectTable === "cc") {
+    if (selectTable === "cc" && self.anchorAjaxBox) {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected").show();
     }
 
@@ -3144,7 +3183,7 @@ this.SS_SearchUI = (function () {
       // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
       $prevSelected = self.select($(this), $prevSelected);
     });
-    if (selectTable === "bcc") {
+    if (selectTable === "bcc" && self.anchorAjaxBox) {
       self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected").show();
     }
     if (selectTable === null) {
@@ -3153,7 +3192,9 @@ this.SS_SearchUI = (function () {
         // 複数項目が選択された場合、最初の項目を先頭に挿入し、2個目以降の選択をその次に挿入する。
         $prevSelected = self.select($(this), $prevSelected);
       });
-      self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      if (self.anchorAjaxBox) {
+        self.anchorAjaxBox.closest("dl").find(".ajax-selected").show();
+      }
     }
   };
 
@@ -3180,22 +3221,34 @@ this.SS_SearchUI = (function () {
     }
   };
 
-  SS_SearchUI.render = function () {
-    var self = this;
+  SS_SearchUI.onceRendered = false;
 
-    $(".ajax-selected").each(function () {
-      $(this).on("click", "a.deselect", self.deselect);
-      if ($(this).find("a.deselect").size() === 0) {
-        $(this).hide();
-      }
-    });
+  SS_SearchUI.renderOnce = function() {
+    if (SS_SearchUI.onceRendered) {
+      return;
+    }
 
     $(document)
-      .on("cbox_load", self.onColorBoxLoaded)
-      .on("cbox_cleanup", self.onColorBoxCleanedUp);
+      .on("cbox_load", SS_SearchUI.onColorBoxLoaded)
+      .on("cbox_cleanup", SS_SearchUI.onColorBoxCleanedUp);
+    SS_SearchUI.onceRendered = true;
   };
 
-  SS_SearchUI.onColorBoxLoaded = function (ev) {
+  SS_SearchUI.render = function (box) {
+    SS_SearchUI.renderOnce();
+
+    $(box || document).find(".ajax-selected").each(function () {
+      var $this = $(this);
+      SS.justOnce(this, "searchUI", function() {
+        $this.on("click", "a.deselect", SS_SearchUI.deselect);
+        if ($this.find("a.deselect").size() === 0) {
+          $this.hide();
+        }
+      });
+    });
+  };
+
+  SS_SearchUI.onColorBoxLoaded = function (_ev) {
     if (!SS_SearchUI.anchorAjaxBox) {
       // ファイル選択ダイアログの「編集」ボタンのクリックなどで別のモーダルが表示される場合がある。
       // 別のモーダルからキャンセルなどで戻ってきた際に、元々の anchor を利用したい。
@@ -3204,7 +3257,7 @@ this.SS_SearchUI = (function () {
     }
   };
 
-  SS_SearchUI.onColorBoxCleanedUp = function (ev) {
+  SS_SearchUI.onColorBoxCleanedUp = function (_ev) {
     SS_SearchUI.anchorAjaxBox = null;
     selectTable = null;
   };
@@ -3218,24 +3271,30 @@ this.SS_SearchUI = (function () {
     var colorbox = options.colorbox || $.colorbox;
     var $el = options.$el || $("#ajax-box");
 
+    if (SS_SearchUI.dialogType === 'ss') {
+      $el.find("form.search").attr("data-turbo", true)
+    }
+
     var isSameWindow = (window == $el[0].ownerDocument.defaultView)
     if (isSameWindow) {
       $el.find("form.search").on("submit", function (ev) {
         var $div = $("<span />", {class: "loading"}).html(SS.loading);
         $el.find("[type=submit]").after($div);
 
-        $(this).ajaxSubmit({
-          url: $(this).attr("action"),
-          success: function (data) {
-            var $data = $("<div />").html(data);
-            $.colorbox.prep($data.contents());
-          },
-          error: function (data, status) {
-            $div.html("== Error ==");
-          }
-        });
-        ev.preventDefault();
-        return false;
+        if (SS_SearchUI.dialogType !== 'ss') {
+          $(this).ajaxSubmit({
+            url: $(this).attr("action"),
+            success: function (data) {
+              var $data = $("<div />").html(data);
+              $.colorbox.prep($data.contents());
+            },
+            error: function (_data, _status) {
+              $div.html("== Error ==");
+            }
+          });
+          ev.preventDefault();
+          return false;
+        }
       });
     }
     $el.find(".pagination a").on("click", function (ev) {
@@ -3250,7 +3309,7 @@ this.SS_SearchUI = (function () {
           success: function (data) {
             $el.closest("#cboxLoadedContent").html(data);
           },
-          error: function (data, status) {
+          error: function (_data, _status) {
             $el.find(".pagination").html("== Error ==");
           }
         });
@@ -3261,77 +3320,79 @@ this.SS_SearchUI = (function () {
         return true;
       }
     });
-    $el.find("#s_group").on("change", function (ev) {
+    $el.find("#s_group").on("change", function (_ev) {
       self.selectItems($el);
-      return $el.find("form.search").submit();
+      return $el.find("form.search")[0].requestSubmit();
     });
-    $el.find(".submit-on-change").on("change", function (ev) {
+    $el.find(".submit-on-change").on("change", function (_ev) {
       self.selectItems($el);
-      return $el.find("form.search").submit();
+      return $el.find("form.search")[0].requestSubmit();
     });
 
-    var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
-    var $toAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
-    var $ccAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
-    var $bcAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
-    if (!$ajaxSelected.length) {
-      $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
-    }
-    if (!$toAjaxSelected.length) {
-      $toAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
-    }
-    if (!$ccAjaxSelected.length) {
-      $ccAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
-    }
-    if (!$bcAjaxSelected.length) {
-      $bcAjaxSelected = self.anchorAjaxBox.parent().find("see.cc-bcc.bcc .ajax-selected");
-    }
-    $toAjaxSelected.find("tr[data-id]").each(function () {
-      var id = $(this).data("id");
-      toSelected.push($("#colorbox .items [data-id='" + id + "']"));
-    });
-    $ccAjaxSelected.find("tr[data-id]").each(function () {
-      var id = $(this).data("id");
-      ccSelected.push($("#colorbox .items [data-id='" + id + "']"));
-    });
-    $bcAjaxSelected.find("tr[data-id]").each(function () {
-      var id = $(this).data("id");
-      bcSelected.push($("#colorbox .items [data-id='" + id + "']"));
-    });
-    $ajaxSelected.find("tr[data-id]").each(function () {
-      var id = $(this).data("id");
-      var tr = $("#colorbox .items [data-id='" + id + "']");
-      var i;
-      for (i = 0; i < toSelected.length; i++) {
-        toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+    if (self.anchorAjaxBox) {
+      var $ajaxSelected = self.anchorAjaxBox.closest("dl").find(".ajax-selected");
+      var $toAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.to .ajax-selected");
+      var $ccAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.cc .ajax-selected");
+      var $bcAjaxSelected = self.anchorAjaxBox.closest("body").find(".see.cc-bcc.bcc .ajax-selected");
+      if (!$ajaxSelected.length) {
+        $ajaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
       }
-      for (i = 0; i < ccSelected.length; i++) {
-        ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+      if (!$toAjaxSelected.length) {
+        $toAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
       }
-      for (i = 0; i < bcSelected.length; i++) {
-        bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+      if (!$ccAjaxSelected.length) {
+        $ccAjaxSelected = self.anchorAjaxBox.parent().find(".ajax-selected");
       }
-      tr.find(".checkbox input[type=checkbox]").remove();
-      tr.find(".select-item,.select-single-item").each(function () {
-        var $this = $(this);
-        var html = $this.html();
-
-        var disabledHtml = $("<span />", {class: $this.prop("class"), style: 'color: #888'}).html(html);
-        $this.replaceWith(disabledHtml);
+      if (!$bcAjaxSelected.length) {
+        $bcAjaxSelected = self.anchorAjaxBox.parent().find("see.cc-bcc.bcc .ajax-selected");
+      }
+      $toAjaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        toSelected.push($("#colorbox .items [data-id='" + id + "']"));
       });
-    });
-    self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
-      var i;
-      for (i = 0; i < toSelected.length; i++) {
-        toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
-      }
-      for (i = 0; i < ccSelected.length; i++) {
-        ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
-      }
-      for (i = 0; i < bcSelected.length; i++) {
-        bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
-      }
-    });
+      $ccAjaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        ccSelected.push($("#colorbox .items [data-id='" + id + "']"));
+      });
+      $bcAjaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        bcSelected.push($("#colorbox .items [data-id='" + id + "']"));
+      });
+      $ajaxSelected.find("tr[data-id]").each(function () {
+        var id = $(this).data("id");
+        var tr = $("#colorbox .items [data-id='" + id + "']");
+        var i;
+        for (i = 0; i < toSelected.length; i++) {
+          toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+        }
+        for (i = 0; i < ccSelected.length; i++) {
+          ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+        }
+        for (i = 0; i < bcSelected.length; i++) {
+          bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+        }
+        tr.find(".checkbox input[type=checkbox]").remove();
+        tr.find(".select-item,.select-single-item").each(function () {
+          var $this = $(this);
+          var html = $this.html();
+
+          var disabledHtml = $("<span />", {class: $this.prop("class"), style: 'color: #888'}).html(html);
+          $this.replaceWith(disabledHtml);
+        });
+      });
+      self.anchorAjaxBox.closest("body").find("tr[data-id]").each(function () {
+        var i;
+        for (i = 0; i < toSelected.length; i++) {
+          toSelected[i].find(".to-checkbox input[type=checkbox]").remove();
+        }
+        for (i = 0; i < ccSelected.length; i++) {
+          ccSelected[i].find(".cc-checkbox input[type=checkbox]").remove();
+        }
+        for (i = 0; i < bcSelected.length; i++) {
+          bcSelected[i].find(".bcc-checkbox input[type=checkbox]").remove();
+        }
+      });
+    }
     $el.find("table.index").each(function () {
       SS_ListUI.render(this);
     });
@@ -3340,12 +3401,18 @@ this.SS_SearchUI = (function () {
         return false;
       }
       // self.select() を呼び出した際にダイアログが閉じられ self.anchorAjaxBox が null となる可能性があるので、事前に退避しておく。
-      var ajaxBox = self.anchorAjaxBox;
+      var ajaxBox = SS_SearchUI.anchorAjaxBox;
       //append newly selected item
       self.select($(this));
-      ajaxBox.closest("dl").find(".ajax-selected").show();
+      if (ajaxBox) {
+        ajaxBox.closest("dl").find(".ajax-selected").show();
+      }
       ev.preventDefault();
-      colorbox.close();
+      if (SS_SearchUI.dialogType === "ss") {
+        SS_SearchUI.dispatchEvent("ss:modal-close")
+      } else {
+        colorbox.close();
+      }
       return false;
     });
     //remove old items
@@ -3354,17 +3421,25 @@ this.SS_SearchUI = (function () {
         return false;
       }
       // self.select() を呼び出した際にダイアログが閉じられ self.anchorAjaxBox が null となる可能性があるので、事前に退避しておく。
-      var ajaxBox = self.anchorAjaxBox;
-      ajaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
-        if ($(this).find("input[value]").length) {
-          return $(this).remove();
-        }
-      });
+      var ajaxBox = SS_SearchUI.anchorAjaxBox;
+      if (ajaxBox) {
+        ajaxBox.closest("dl").find(".ajax-selected tr[data-id]").each(function () {
+          if ($(this).find("input[value]").length) {
+            return $(this).remove();
+          }
+        });
+      }
       //append newly selected item
       self.select($(this));
-      ajaxBox.closest("dl").find(".ajax-selected").show();
+      if (ajaxBox) {
+        ajaxBox.closest("dl").find(".ajax-selected").show();
+      }
       ev.preventDefault();
-      colorbox.close();
+      if (SS_SearchUI.dialogType === "ss") {
+        SS_SearchUI.dispatchEvent("ss:modal-close")
+      } else {
+        colorbox.close();
+      }
       return false;
     });
     $el.find(".select-items").on("click", function (ev) {
@@ -3373,10 +3448,14 @@ this.SS_SearchUI = (function () {
       }
       self.selectItems($el);
       ev.preventDefault();
-      colorbox.close();
+      if (SS_SearchUI.dialogType === "ss") {
+        SS_SearchUI.dispatchEvent("ss:modal-close")
+      } else {
+        colorbox.close();
+      }
       return false;
     });
-    $el.find(".index").on("change", function (ev) {
+    $el.find(".index").on("change", function (_ev) {
       return self.toggleSelectButton($el);
     });
     return self.toggleSelectButton($el);
@@ -3445,34 +3524,33 @@ this.SS_ListUI = (function () {
       });
       $(this).trigger("ss:checked-all-list-items");
     });
-    $el.find(".list-item").each(function () {
-      var list;
-      list = $(this);
-      list.find("input:checkbox").on("change", function () {
-        return list.toggleClass("checked", $(this).prop("checked"));
-      });
-      list.on("mouseup", function (e) {
-        var menu, offset, relX, relY;
-        if ($(e.target).is('a') || $(e.target).closest('a,label').length) {
-          return;
-        }
-        menu = list.find(".tap-menu");
-        if (menu.is(':visible')) {
-          return menu.hide();
-        }
-        if (menu.hasClass("tap-menu-relative")) {
-          offset = $(this).offset();
-          relX = e.pageX - offset.left;
-          relY = e.pageY - offset.top;
-        } else {
-          relX = e.pageX;
-          relY = e.pageY;
-        }
-        return menu.css("left", relX - menu.width() + 5).css("top", relY).show();
-      });
-      return list.on("mouseleave", function () {
-        return $el.find(".tap-menu").hide();
-      });
+    $el.on("change", ".list-item input:checkbox", function () {
+      var $list = $(this);
+      return $list.toggleClass("checked", $list.prop("checked"));
+    });
+    $el.on("mouseup", ".list-item", function (ev) {
+      var $list = $(this);
+      var $menu, offset, relX, relY;
+      var $target = $(ev.target);
+      if ($target.is('a') || $target.closest('a,label').length) {
+        return;
+      }
+      $menu = $list.find(".tap-menu");
+      if ($menu.is(':visible')) {
+        return $menu.hide();
+      }
+      if ($menu.hasClass("tap-menu-relative")) {
+        offset = $list.offset();
+        relX = ev.pageX - offset.left;
+        relY = ev.pageY - offset.top;
+      } else {
+        relX = ev.pageX;
+        relY = ev.pageY;
+      }
+      return $menu.css("left", relX - $menu.width() + 5).css("top", relY).show();
+    });
+    $el.on("mouseleave", ".list-item", function (_ev) {
+      return $el.find(".tap-menu").hide();
     });
     $el.find(".list-head .destroy-all").each(function() {
       if (this.classList.contains("btn-list-head-action")) {
@@ -3514,6 +3592,69 @@ this.SS_ListUI = (function () {
           ev.$form.append($("<input/>", { name: "ids[]", value: id, type: "hidden" }));
         }
       });
+    });
+    $el.find('.list-head [name="expiration_setting_all"]').on("click", function (ev) {
+      SS_ListUI.changeAllExpirationSetting($el, $(this), ev.target.value);
+      ev.preventDefault();
+    });
+  };
+
+  SS_ListUI.changeAllExpirationSetting = function($el, $this, state) {
+    if (!state) {
+      return;
+    }
+
+    var checkedElements = $el.find(".list-item input:checkbox:checked");
+    checkedElements = $.grep(checkedElements, function(element, _index) {
+      return !!$(element).val();
+    });
+    if (checkedElements.length === 0) {
+      return false;
+    }
+
+    var confirmation = $this.data('confirm') || '';
+    if (confirmation) {
+      if (!confirm(confirmation)) {
+        return false;
+      }
+    }
+
+    $this.attr("disabled", true);
+    $.each(checkedElements, function() {
+      var $element = $(this);
+      $element.replaceWith(SS.loading);
+    });
+
+    var promises = [];
+    $.each(checkedElements, function() {
+      var $element = $(this);
+      var id = $element.val();
+      var action = window.location.pathname + "/" + id + ".json";
+
+      var formData = new FormData();
+      formData.append("_method", "put");
+      formData.append("authenticity_token", $('meta[name="csrf-token"]').attr('content'));
+      formData.append("item[expiration_setting_type]", state);
+
+      var promise = $.ajax({
+        type: "POST",
+        url: action,
+        data: formData,
+        processData: false,
+        contentType: false,
+        cache: false
+      });
+
+      promises.push(promise);
+    });
+
+    $.when.apply($, promises).done(function() {
+      alert(i18next.t("ss.notice.changed"));
+      window.location.reload();
+    }).fail(function(xhr, status, error) {
+      alert("Error!");
+    }).always(function() {
+      $this.attr("disabled", false);
     });
   };
 
@@ -3692,92 +3833,94 @@ this.SS_TreeUI = (function () {
 // ---
 // generated by coffee-script 1.9.2;
 this.SS_Dropdown = (function () {
-  SS_Dropdown.render = function () {
-    return $("button.dropdown").each(function () {
-      var dropdown, target;
-      target = $(this).parent().find(".dropdown-container")[0];
-      dropdown = new SS_Dropdown(this, {
-        target: target
+  // private methods
+  var cancelEvent = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+  };
+
+  SS_Dropdown.onceRendered = false;
+
+  SS_Dropdown.renderOnce = function() {
+    if (SS_Dropdown.onceRendered) {
+      return;
+    }
+
+    //focusout
+    $(document).on("click", function (ev) {
+      $("button.dropdown").each(function () {
+        if (this.ss && this.ss.dropdown) {
+          if (!this.ss.dropdown.isTarget(ev)) {
+            return this.ss.dropdown.closeDropdown();
+          }
+        }
       });
-      if (!SS_Dropdown.dropdown) {
-        return SS_Dropdown.dropdown = dropdown;
+    });
+
+    SS_Dropdown.onceRendered = true;
+  };
+
+  SS_Dropdown.render = function () {
+    SS_Dropdown.renderOnce();
+
+    $("button.dropdown").each(function () {
+      var element = this;
+      SS.justOnce(element, "dropdown", function() {
+        var target = $(element).parent().find(".dropdown-container")[0];
+        return new SS_Dropdown(element, {
+          target: target
+        });
+      });
+    });
+  };
+
+  function SS_Dropdown(elem, options) {
+    this.$element = $(elem);
+    this.$target = $(options.target);
+    this.bindEvents();
+    if (this.$target.data("opened")) {
+      this.openDropdown();
+    }
+  }
+
+  SS_Dropdown.prototype.bindEvents = function () {
+    var _this = this;
+
+    this.$element.on("click", function (ev) {
+      _this.toggleDropdown();
+      cancelEvent(ev);
+      return false;
+    });
+    this.$element.on("keydown", function (ev) {
+      if (ev.keyCode === 27) {  //ESC
+        _this.closeDropdown();
+        cancelEvent(ev);
+        return false;
       }
     });
   };
 
-  SS_Dropdown.openDropdown = function () {
-    if (SS_Dropdown.dropdown) {
-      return SS_Dropdown.dropdown.openDropdown();
-    }
-  };
-
-  SS_Dropdown.closeDropdown = function () {
-    if (SS_Dropdown.dropdown) {
-      return SS_Dropdown.dropdown.closeDropdown();
-    }
-  };
-
-  SS_Dropdown.toggleDropdown = function () {
-    if (SS_Dropdown.dropdown) {
-      return SS_Dropdown.dropdown.toggleDropdown();
-    }
-  };
-
-  function SS_Dropdown(elem, options) {
-    this.elem = $(elem);
-    this.options = options;
-    this.target = $(this.options.target);
-    this.bindEvents();
+  SS_Dropdown.prototype.isTarget = function (event) {
+    return (event.target === this.$element || event.target === this.$target);
   }
 
-  SS_Dropdown.prototype.bindEvents = function () {
-    this.elem.on("click", (function (_this) {
-      return function (e) {
-        _this.toggleDropdown();
-        return _this.cancelEvent(e);
-      };
-    })(this));
-    //focusout
-    $(document).on("click", (function (_this) {
-      return function (e) {
-        if (e.target !== _this.elem && e.target !== _this.target) {
-          return _this.closeDropdown();
-        }
-      };
-    })(this));
-    return this.elem.on("keydown", (function (_this) {
-      return function (e) {
-        if (e.keyCode === 27) {  //ESC
-          _this.closeDropdown();
-          return _this.cancelEvent(e);
-        }
-      };
-    })(this));
-  };
-
   SS_Dropdown.prototype.openDropdown = function () {
-    return this.target.show();
+    this.$target.show();
   };
 
   SS_Dropdown.prototype.closeDropdown = function () {
-    return this.target.hide();
+    this.$target.hide();
   };
 
   SS_Dropdown.prototype.toggleDropdown = function () {
-    this.closeOtherDropdown();
-    return this.target.toggle();
+    this.closeOtherDropdowns();
+    this.$target.toggle();
   };
 
-  SS_Dropdown.prototype.closeOtherDropdown = function () {
-    $(".dropdown-container").not(this.target.get(0)).each(function () {
+  SS_Dropdown.prototype.closeOtherDropdowns = function () {
+    $(".dropdown-container").not(this.$target.get(0)).each(function () {
       $(this).hide();
     });
-  };
-
-  SS_Dropdown.prototype.cancelEvent = function (e) {
-    e.preventDefault();
-    e.stopPropagation();
-    return false;
   };
 
   return SS_Dropdown;
@@ -4235,7 +4378,7 @@ SS_Preview = (function () {
       $(frame).dialog("option", "width", width)
         .dialog("option", "height", height)
         .css("display", "")
-        .css("width", "");
+        .css("width", "100%");
     }
   };
 
@@ -4287,7 +4430,7 @@ SS_Preview = (function () {
         processData: false,
         contentType: false,
         cache: false,
-        success: function(data, textStatus, xhr) {
+        success: function(data, _textStatus, _xhr) {
           SS_Preview.closeWindow($(frame));
           if (typeof data === "string") {
             // data is html
@@ -4301,7 +4444,7 @@ SS_Preview = (function () {
             }
           }
         },
-        error: function(xhr, status, error) {
+        error: function(xhr, _status, _error) {
           var $html = $(xhr.responseText);
           var $itemForm = $html.find("#item-form");
 
@@ -4372,7 +4515,7 @@ SS_Preview = (function () {
       draggable: true,
       modal: true,
       resizable: true,
-      close: function(ev, ui) {
+      close: function(_ev, _ui) {
         // explicitly destroy dialog and remove elemtns because dialog elements is still remained
         $(this).dialog('destroy').remove();
       }
@@ -4389,7 +4532,7 @@ SS_Preview = (function () {
     $.ajax({
       url: url,
       type: "GET",
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         var $frame = $("div#ss-preview-dialog-frame");
         if (! $frame[0]) {
           $frame = $("<div></div>", { id: "ss-preview-dialog-frame" });
@@ -4406,7 +4549,7 @@ SS_Preview = (function () {
           draggable: true,
           modal: true,
           resizable: true,
-          close: function(ev, ui) {
+          close: function(_ev, _ui) {
             // explicitly destroy dialog and remove elemtns because dialog elements is still remained
             $(this).dialog('destroy').remove();
           }
@@ -4499,7 +4642,7 @@ SS_Preview = (function () {
       partId = parseInt(partId);
     }
 
-    var founds = $.grep(this.parts, function(part, index) { return part.id === partId });
+    var founds = $.grep(this.parts, function(part, _index) { return part.id === partId });
     if (! founds || founds.length === 0) {
       return null;
     }
@@ -4535,7 +4678,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { _method: "DELETE", authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data && data.location) {
@@ -4569,7 +4712,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data.location) {
@@ -4786,7 +4929,7 @@ SS_Preview = (function () {
     SS_Preview.appendParams(form, "preview_item", form_item);
     form.append($("<input/>", { name: "authenticity_token", value: token, type: "hidden"}));
     form.appendTo("body");
-    form.submit();
+    form[0].requestSubmit();
   };
 
   SS_Preview.prototype.changePart = function($el) {
@@ -4919,7 +5062,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data && data.location) {
@@ -4970,7 +5113,7 @@ SS_Preview = (function () {
       dataType: "json",
       cache: false,
       data: {authenticity_token: token}
-    }).done(function(data, status, xhr) {
+    }).done(function(_data, _status, _xhr) {
       self.bindBeforeUnloadOnce();
     }).fail(function(xhr, status, error) {
       if (self.container.notice) {

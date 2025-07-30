@@ -14,8 +14,11 @@ module SS::Model::Column
     field :tooltips, type: SS::Extensions::Lines
     field :prefix_label, type: String
     field :postfix_label, type: String
+    field :prefix_explanation, type: String
+    field :postfix_explanation, type: String
 
     permit_params :name, :order, :required, :tooltips, :prefix_label, :postfix_label
+    permit_params :prefix_explanation, :postfix_explanation
 
     before_validation :set_form_id, if: ->{ @cur_form }
 
@@ -24,19 +27,22 @@ module SS::Model::Column
     validates :name, format: { without: /[{}"'\[\]\/]/ }, if: ->{ SS.config.cms.column_name_type == 'restricted' }
     validates :order, numericality: { greater_than_or_equal_to: 0, less_than_or_equal_to: 999_999, allow_blank: true }
     validates :required, inclusion: { in: %w(required optional), allow_blank: true }
-    validates :prefix_label, length: { maximum: 80 }
-    validates :postfix_label, length: { maximum: 80 }
+    validates :prefix_label, length: { maximum: 10 }
+    validates :postfix_label, length: { maximum: 10 }
 
     scope :form, ->(form) { where(form_id: form.id, form_type: form.class.name) }
   end
 
   module ClassMethods
+    SEARCH_HANDLERS = %i[search_name search_keyword].freeze
+
     def search(params = {})
-      criteria = self.where({})
+      criteria = all
       return criteria if params.blank?
 
-      criteria = criteria.search_name(params)
-      criteria = criteria.search_keyword(params)
+      SEARCH_HANDLERS.each do |handler|
+        criteria = criteria.send(handler, params)
+      end
       criteria
     end
 
@@ -52,11 +58,19 @@ module SS::Model::Column
 
     def build_column_values(hash)
       hash = hash.to_unsafe_h if hash.respond_to?(:to_unsafe_h)
-      hash.map do |key, value|
+      hash.filter_map do |key, value|
         column = all.find(key) rescue nil
-        next nil if column.blank?
-
-        column.serialize_value(value)
+        if column.is_a?(Gws::Column::RadioButton)
+          prefix = "#{key}_"
+          values = {}
+          hash.each do |k, v|
+            k = k.to_s
+            values[k[prefix.length..-1].to_sym] = v if k.start_with?(prefix)
+          end
+          column.serialize_value(value, values)
+        elsif column.present?
+          column.serialize_value(value)
+        end
       end
     end
 

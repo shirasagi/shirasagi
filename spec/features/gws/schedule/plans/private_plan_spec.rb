@@ -17,8 +17,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
     end
 
     it do
-      login_user user2
-      visit gws_schedule_user_plans_path(site: site, user: user1)
+      login_user user2, to: gws_schedule_user_plans_path(site: site, user: user1)
 
       within ".fc-day-grid" do
         expect(page).to have_css(".fc-event.fc-event-private", text: I18n.t("gws/schedule.private_plan"))
@@ -30,6 +29,8 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       within "#addon-basic" do
         expect(page).to have_css("dd", text: I18n.t("gws/schedule.private_plan"))
       end
+      expect(page.title).not_to include(private_plan.name)
+      expect(page.title).to include(I18n.t("gws/schedule.private_plan"))
     end
   end
 end

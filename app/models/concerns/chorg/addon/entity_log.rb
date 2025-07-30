@@ -124,7 +124,7 @@ module Chorg::Addon::EntityLog
     embedded_array_fields.each do |field_name|
       next if !entity.respond_to?(field_name)
 
-      embedded_array = entity.send(field_name).map(&:changes)
+      embedded_array = entity.send(field_name).map { |item| item.previous_changes.presence || item.changes }
       next if !embedded_array.select(&:present?).first
 
       embedded_array.each_with_index do |embedded, idx|
@@ -151,15 +151,16 @@ module Chorg::Addon::EntityLog
     )
   end
 
-  def store_entity_changes(entity, site)
-    if entity.persisted?
-      changes = entity.changes.except('_id', 'created', 'updated')
+  def store_entity_changes(entity, site, new_record:)
+    if new_record
+      creates = entity.attributes.except('_id', 'created', 'updated')
+      hash = { 'model' => entity_model(entity), 'class' => entity.class.name, 'creates' => creates }
+    else
+      changes = entity.previous_changes.presence || entity.changes
+      changes = changes.except('_id', 'created', 'updated')
       changes = changes.merge(embedded_array_changes(entity))
 
       hash = { 'id' => entity.id.to_s, 'model' => entity_model(entity), 'class' => entity.class.name, 'changes' => changes }
-    else
-      creates = entity.attributes.except('_id', 'created', 'updated')
-      hash = { 'model' => entity_model(entity), 'class' => entity.class.name, 'creates' => creates }
     end
 
     hash['site'] = { 'id' => site.id, 'model' => entity_model(site), 'class' => site.class.name, 'name' => site.name } if site

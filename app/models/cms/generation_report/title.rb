@@ -9,7 +9,11 @@ class Cms::GenerationReport::Title
   field :name, type: String
 
   belongs_to :task, polymorphic: true
+  field :task_started, type: DateTime
+  field :task_closed, type: DateTime
   field :sha256_hash, type: String
+
+  field :generation_type, type: String
 
   after_destroy :destroy_all_histories
   after_destroy :destroy_all_aggregations

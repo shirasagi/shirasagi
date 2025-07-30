@@ -34,7 +34,7 @@ module Gws::Workflow::WizardFilter
   end
 
   def set_routes
-    @route_options = Gws::Workflow::Route.route_options(@cur_user, item: @item)
+    @route_options = Gws::Workflow::Route.route_options(@cur_user, item: @item, site: @cur_site)
   end
 
   public

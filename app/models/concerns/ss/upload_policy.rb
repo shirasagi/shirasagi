@@ -8,7 +8,7 @@ module SS::UploadPolicy
 
   def sanitizer_input_path
     filename = "#{SS.config.ss.sanitizer_file_prefix}_file_#{id}_#{created.to_i}#{::File.extname(basename)}"
-    "#{Rails.root}/#{SS.config.ss.sanitizer_input}/#{filename}"
+    "#{SS::UploadPolicy.sanitizer_input_path}/#{filename}"
   end
 
   def sanitizer_skip
@@ -94,6 +94,34 @@ module SS::UploadPolicy
       values
     end
 
+    def sanitizer_input_path
+      @sanitizer_input_path ||= begin
+        path = SS.config.ss.sanitizer_input
+        if path.present?
+          path = path[0..-2] while path.end_with?("/")
+          path = File.expand_path(path, Rails.root)
+          raise "invalid sanitizer input" unless path.start_with?(Rails.root.to_s)
+
+          ::FileUtils.mkdir_p(path)
+        end
+        path.freeze
+      end
+    end
+
+    def sanitizer_output_path
+      @sanitizer_output_path ||= begin
+        path = SS.config.ss.sanitizer_output
+        if path.present?
+          path = path[0..-2] while path.end_with?("/")
+          path = File.expand_path(path, Rails.root)
+          raise "invalid sanitizer input" unless path.start_with?(Rails.root.to_s)
+
+          ::FileUtils.mkdir_p(path)
+        end
+        path.freeze
+      end
+    end
+
     def sanitizer_restore(output_path)
       filename = ::File.basename(output_path)
       return unless /\A#{SS.config.ss.sanitizer_file_prefix}_file_\d+_/.match?(filename)
@@ -124,14 +152,15 @@ module SS::UploadPolicy
         zip_file.entries.sort_by(&:name).each do |entry|
           next if entry.ftype == :directory
 
-          if /_[a-zA-Z]+Report\.txt\z/.match?(entry.name)
+          entry_name = SS::Zip.safe_zip_entry_name(entry)
+          if /_[a-zA-Z]+Report\.txt\z/.match?(entry_name)
             zip_file.remove(entry)
             next
           end
 
-          dir = ::File.dirname(entry.name)
-          ext = ::File.extname(entry.name)
-          basename = ::File.basename(entry.name, '.*')
+          dir = ::File.dirname(entry_name)
+          ext = ::File.extname(entry_name)
+          basename = ::File.basename(entry_name, '.*')
           basename = basename.sub('_marked.MSOfficeWithPassword', '_marked')
           basename = basename.sub(/_\d+_\w+\z/, '')
           basename += ext unless /\.\w+\z/.match?(basename)

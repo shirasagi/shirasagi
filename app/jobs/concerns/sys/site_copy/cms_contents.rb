@@ -3,26 +3,53 @@ module Sys::SiteCopy::CmsContents
   include SS::Copy::CmsContents
 
   def copy_cms_content(cache_id, src_content, options = {})
+    Rails.logger.debug do
+      "Sys::SiteCopy::CmsContents[copy_cms_content] " \
+        "コピー開始 (src_content.filename=#{src_content.try(:filename)}," \
+        "summary_page_id=#{src_content.try(:summary_page_id)}," \
+        "related_page_ids=#{src_content.try(:related_page_ids)}," \
+        "cache_id=#{src_content.try(:cache_id)}"
+    end
     klass = src_content.class
     dest_content = nil
     id = cache(cache_id, src_content.id) do
-      options[:before].call(src_content) if options[:before]
       dest_content = klass.site(@dest_site).where(filename: src_content.filename).first
-      return dest_content.id if dest_content.present?
 
-      # at first, copy non-reference values and references which have no possibility of circular reference
-      dest_content = klass.new(cur_site: @dest_site)
-      dest_content.attributes = copy_basic_attributes(src_content, klass)
-      dest_content.save!
+      if dest_content.present?
+        options[:before].call(src_content, dest_content) if options[:before]
+      else
+        # at first, copy non-reference values and references which have no possibility of circular reference
+        dest_content = klass.new(cur_site: @dest_site)
+        dest_content.attributes = copy_basic_attributes(src_content, klass)
+
+        options[:before].call(src_content, dest_content) if options[:before]
+        dest_content.save!
+      end
       dest_content.id
     end
 
+    Rails.logger.debug{ "[cache] キャッシュキー=#{cache_id}, 値=#{id} (#{id.class})" }
+
     if dest_content
+      Rails.logger.debug do
+        "[BEFORE] resolve_unsafe_references: " \
+          "src_content.related_page_ids=#{src_content.try(:related_page_ids).inspect}"
+      end
       # after create item, copy references which have possibility of circular reference
       dest_content.attributes = resolve_unsafe_references(src_content, klass)
+      Rails.logger.debug do
+        "[AFTER] resolve_unsafe_references: " \
+          "dest_content.related_page_ids=#{dest_content.try(:related_page_ids).inspect}"
+      end
       update_html_links(src_content, dest_content)
+      update_condition_forms(src_content, dest_content)
       dest_content.save!
-
+      Rails.logger.debug do
+        "Sys::SiteCopy::CmsContents[copy_cms_content] " \
+          "コピー後 dest_content.filename=#{dest_content.try(:filename)}," \
+          "related_page_ids=#{dest_content.try(:related_page_ids)}," \
+          "summary_page_id=#{dest_content.try(:summary_page_id)})"
+      end
       options[:after].call(src_content, dest_content) if options[:after]
     end
 
@@ -148,5 +175,21 @@ module Sys::SiteCopy::CmsContents
       dest_file = SS::File.where(site_id: @dest_site.id).find(dest_file_id)
       [ src_file.url, dest_file.url ]
     end
+  end
+
+  def update_condition_forms(src_content, dest_content, options = {})
+    return unless dest_content.respond_to?(:condition_forms)
+    return if dest_content.condition_forms.values.blank?
+
+    condition_forms = []
+    dest_content.condition_forms.each do |dest_condition_form|
+      form_id = resolve_reference(:form, dest_condition_form.form_id)
+      filters = []
+      dest_condition_form.filters.each do |filter|
+        filters << filter.to_h.merge(column_id: resolve_reference(:column, filter.column_id))
+      end
+      condition_forms << dest_condition_form.to_h.merge(form_id: form_id, filters: filters)
+    end
+    dest_content.condition_forms = condition_forms
   end
 end

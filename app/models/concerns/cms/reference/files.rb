@@ -137,14 +137,12 @@ module Cms::Reference::Files
 
     module_function
 
-    EMPTY_ARRAY = [].freeze
-
     def other_user_owned?(file, cur_user)
       cur_user && cur_user.id != file.user_id
     end
 
     def need_to_clone?(file, owner_item, branch)
-      return false if file.owner_item_id.blank? || file.owner_item.blank?
+      return SS::File::COPY_REQUIRED_MODELS.include?(file.model) if file.owner_item_id.blank? || file.owner_item.blank?
       return false if file.owner_item == owner_item
       return false if branch && file.owner_item == branch
 
@@ -155,10 +153,13 @@ module Cms::Reference::Files
       owner_item = SS::Model.container_of(item)
       cur_site = owner_item.cur_site if owner_item.respond_to?(:cur_site)
       cur_site ||= owner_item.site if owner_item.respond_to?(:site)
+      cur_site ||= SS.current_site
+      cur_site = nil unless cur_site.is_a?(SS::Model::Site)
       cur_user = owner_item.cur_user if owner_item.respond_to?(:cur_user)
+      cur_user ||= SS.current_user
       is_allowed_other_user_files = owner_item.allowed_other_user_files?
       is_branch = owner_item.respond_to?(:branch?) && owner_item.branch?
-      add_ids ||= Utils::EMPTY_ARRAY
+      add_ids ||= SS::EMPTY_ARRAY
 
       ids = []
       SS::File.each_file(item.file_ids) do |file|
@@ -185,7 +186,7 @@ module Cms::Reference::Files
         # ファイルの所有者が存在している場合、誤って所有者を変更することを防止する目的で、ファイルを複製する
         # ただし、ブランチが所有している場合を除く
         if Utils.need_to_clone?(file, owner_item, branch)
-          clone_file = SS::File.clone_file(file, cur_user: cur_user, owner_item: owner_item)
+          clone_file = SS::File.clone_file(file, cur_site: cur_site, cur_user: cur_user, owner_item: owner_item)
           ids << clone_file.id
           on_clone_file.call(file, clone_file) if on_clone_file
           next

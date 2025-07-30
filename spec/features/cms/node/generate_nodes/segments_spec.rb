@@ -35,7 +35,7 @@ describe "node_generate_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.run")
       end
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.tasks.started'))
+      wait_for_notice I18n.t('ss.tasks.started')
 
       task = find_task
       expect(task.state).to eq "ready"
@@ -68,7 +68,7 @@ describe "node_generate_nodes", type: :feature, dbscope: :example, js: true do
         click_button I18n.t("ss.buttons.run")
       end
       expect(current_path).to eq index_path
-      expect(page).to have_css('#notice', text: I18n.t('ss.tasks.started'))
+      wait_for_notice I18n.t('ss.tasks.started')
 
       task = find_task
       expect(task.state).to eq "ready"

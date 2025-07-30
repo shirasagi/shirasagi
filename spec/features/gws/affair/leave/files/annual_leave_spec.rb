@@ -19,8 +19,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       reason = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit new_path
+        login_user(user638, to: new_path)
 
         within "form#item-form" do
           fill_in_date "item[start_at_date]", with: start_at.to_date
@@ -32,10 +31,13 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
           select I18n.t("gws/attendance.minute", count: end_at.min), from: 'item[end_at_minute]'
 
           fill_in "item[reason]", with: reason
-          select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
+          wait_for_event_fired "ss:ready" do
+            select I18n.t("gws/affair.options.leave_type.annual_leave"), from: 'item[leave_type]'
+          end
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       end
       Gws::Affair::LeaveFile.site(site).find_by(reason: reason)
     end
@@ -45,8 +47,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       workflow_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user638)
-        visit index_path
+        login_user(user638, to: index_path)
 
         click_on item.name
         wait_for_js_ready
@@ -54,12 +55,12 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
         within ".mod-workflow-request" do
           select I18n.t("mongoid.attributes.workflow/model/route.my_group"), from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
-          wait_cbox_open { click_on I18n.t("workflow.search_approvers.index") }
+          wait_for_cbox_opened { click_on I18n.t("workflow.search_approvers.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           expect(page).to have_content(user545.long_name)
           find("tr[data-id='1,#{user545.id}'] input[type=checkbox]").click
-          wait_cbox_close { click_on I18n.t("workflow.search_approvers.select") }
+          wait_for_cbox_closed { click_on I18n.t("workflow.search_approvers.select") }
         end
         within ".mod-workflow-request" do
           expect(page).to have_css(".approvers [data-id='1,#{user545.id}']", text: user545.long_name)
@@ -82,8 +83,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       approve_comment = unique_id
 
       Timecop.freeze(start_at) do
-        login_user(user545)
-        visit index_path
+        login_user(user545, to: index_path)
         click_on item.name
         wait_for_js_ready
 
@@ -108,8 +108,7 @@ describe "gws_affair_leave_files", type: :feature, dbscope: :example, js: true d
       item1 = request_file(item1)
       item1 = approve_file(item1)
 
-      login_user(user545)
-      visit details_path
+      login_user(user545, to: details_path)
 
       within ".gws-attendance" do
         within "table.index" do

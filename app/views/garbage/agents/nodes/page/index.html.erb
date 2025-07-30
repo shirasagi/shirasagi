@@ -3,6 +3,7 @@
   <thead>
     <tr>
       <th scope="col"><%= t('garbage.item') %></th>
+      <th scope="col"><%= t('garbage.kana') %></th>
       <th scope="col"><%= t('garbage.category.name') %></th>
       <th scope="col"><%= t('garbage.remark') %></th>
     </tr>
@@ -10,6 +11,7 @@
   <tbody>
     <tr>
       <td><%= @cur_node.name %></td>
+      <td><%= @cur_node.kana %></td>
       <td><%=br @cur_node.categories.map(&:name) %></td>
       <td><%=br @cur_node.remark %></td>
     </tr>

@@ -1,4 +1,6 @@
 <%
+  return if @item.new_record?
+
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
 %>
@@ -15,7 +17,7 @@
   <dt><%= @model.t :maint_excluded_user_ids %><%= @model.tt :maint_excluded_user_ids %></dt>
   <dd>
     <%= f.hidden_field "maint_excluded_user_ids[]", value: "", id: nil, class: "hidden-ids" %>
-    <%= link_to t("ss.apis.users.index"), sys_apis_users_path, class: "ajax-box" %>
+    <%= link_to t("ss.apis.users.index"), cms_apis_users_path(site: @item), class: "ajax-box" %>
   </dd>
   <dd>
     <table class="index ajax-selected">

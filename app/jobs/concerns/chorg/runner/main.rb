@@ -4,15 +4,20 @@ module Chorg::Runner::Main
   private
 
   def save_or_collect_errors(entity)
+    new_record = entity.new_record?
     if entity.valid?
-      put_log("save : #{entity.class}(#{entity.id})")
-      task.store_entity_changes(entity, target_site(entity))
       entity.save
+      if entity.previous_changes.present?
+        put_log("saved : #{entity.class}(#{entity.id})")
+        task.store_entity_changes(entity, target_site(entity), new_record: new_record)
+      end
       true
     elsif exclude_validation_model?(entity)
-      put_log("save (skip validate) : #{entity.class}(#{entity.id})")
-      task.store_entity_changes(entity, target_site(entity))
       entity.save!(validate: false)
+      if entity.previous_changes.present?
+        put_log("saved (skip validate) : #{entity.class}(#{entity.id})")
+        task.store_entity_changes(entity, target_site(entity), new_record: new_record)
+      end
       true
     else
       put_error("save failed : #{entity.class}(#{entity.id}) #{entity.errors.full_messages.join(", ")}")
@@ -20,8 +25,8 @@ module Chorg::Runner::Main
       false
     end
   rescue ScriptError, StandardError => e
-    Rails.logger.fatal("got error while saving #{entity.class}(id = #{entity.id})")
-    raise
+    Rails.logger.warn { "got error while saving #{entity.class}(id = #{entity.id})" }
+    Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
   end
 
   def delete_entity(entity)
@@ -108,7 +113,7 @@ module Chorg::Runner::Main
     # result = user.import
 
     task.log("==コンテンツインポート==")
-    Cms::AllContentsImportJob.bind(site_id: site, user_id: user).perform_now(@item.content_csv_file_id)
+    Cms::AllContentsImportJob.bind(site_id: site, user_id: user).perform_now(@item.content_csv_file_id, keep_timestamp: true)
   end
 
   def import_user_csv_gws

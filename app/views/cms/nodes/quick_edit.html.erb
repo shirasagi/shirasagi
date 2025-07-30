@@ -1,0 +1,24 @@
+<div class="main" data-controller="ss--quick-edit" data-ss--quick-edit-url-value="<%= update_inline_category_nodes_path %>">
+  <table class="index quick-edit-grid" data-col="5" id="quick-edit-category-nodes">
+    <thead>
+    <tr>
+      <th><%= @model.t :filename %></th>
+      <th><%= @model.t :name %></th>
+      <th><%= @model.t :index_name %></th>
+      <th><%= @model.t :order %></th>
+      <th></th>
+    </tr>
+    </thead>
+    <tbody>
+    <% @items.each do |item| %>
+    <tr data-id="<%= item.id %>" data-updated="<%= item.updated.to_f %>">
+      <td><%= item.basename %></td>
+      <td><%= text_field_tag "name", item.name %></td>
+      <td><%= text_field_tag "index_name", item.index_name %></td>
+      <td><%= number_field_tag "order", item.order %></td>
+      <td class="error-messages"></td>
+    </tr>
+    <% end %>
+    </tbody>
+  </table>
+</div>
