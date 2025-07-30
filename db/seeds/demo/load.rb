@@ -10,19 +10,27 @@ puts "Site not found: #{ENV['site']}" or exit unless @site
 
 load "#{Rails.root}/db/seeds/cms/users.rb"
 
-@g_ss = SS::Group.where(name: "シラサギ市").first
-@g_seisaku = SS::Group.where(name: "シラサギ市/企画政策部/政策課").first
+@groups_hash = {}
+def g(name)
+  @groups_hash[name.to_s] ||= Cms::Group.site(@site).where(name: name).first
+end
+
+@g_ss = g("シラサギ市")
+@g_seisaku = g("シラサギ市/企画政策部/政策課")
+
+@site.show_google_maps_search_in_marker = "show"
+@site.show_google_maps_search_in_view = "show_all"
 
 if @site.translate_api_limit_exceeded_html.blank?
   @site.translate_api_limit_exceeded_html = ::File.read("translate/limit_exceeded.html") rescue nil
   @site.save
 end
 
-@contact_group = Cms::Group.where(name: "シラサギ市/企画政策部/政策課").first
+@contact_group = g("シラサギ市/企画政策部/政策課")
 @contact_group_id = @contact_group.id if @contact_group
-@contact_sub_group1 = Cms::Group.where(name: "シラサギ市/企画政策部/政策課/経営戦略係").first
+@contact_sub_group1 = g("シラサギ市/企画政策部/政策課/経営戦略係")
 @contact_sub_group_ids1 = [@contact_sub_group1.id] if @contact_sub_group1
-@contact_sub_group2 = Cms::Group.where(name: "シラサギ市/企画政策部/政策課/デジタル戦略係").first
+@contact_sub_group2 = g("シラサギ市/企画政策部/政策課/デジタル戦略係")
 @contact_sub_group_ids2 = [@contact_sub_group2.id] if @contact_sub_group2
 @contact = @contact_group.contact_groups.first
 

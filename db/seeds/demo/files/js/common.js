@@ -8,6 +8,8 @@
 ---------------------------------------------------------- */
 // ready : 画像などが表示されるより前に実行
 $(function () {
+  // サイト内検索ボタン変更
+  searchButtonFunc();
 
   // ヘッダー 注目ワードパーツの移動
   headerInsertKeywords();
@@ -66,6 +68,9 @@ $(function () {
 
   // チャットボットのテキスト改行
   lineBreakChatbot();
+
+  // 添付ファイルアイコン
+  fileSizeFunc();
 });
 
 // load : 画像などが表示された後に実行
@@ -682,4 +687,73 @@ var smoothScrollFunc = function () {
     }
     return false;
   });
+}
+
+/* ----------------------------------------------------------
+fileSizeFunc
+---------------------------------------------------------- */
+var fileSizeFunc = function () {
+  const article = document.querySelector('.yield-wrap article.body');
+  if (!article) return;
+
+  const knownLabels = {
+    pdf: 'PDF',
+    docx: 'DOCX',
+    xlsx: 'XLSX',
+    zip: 'ZIP',
+    txt: 'TXT',
+    csv: 'CSV',
+    jpg: 'JPG',
+    png: 'PNG',
+    pptx: 'PPTX'
+  };
+
+  const ignoredExts = ['cgi', 'php', 'asp', 'aspx', 'html', 'htm'];
+
+  const links = article.querySelectorAll('a[href]');
+
+  links.forEach(link => {
+    const href = link.getAttribute('href');
+    if (!href) return;
+
+    const match = href.toLowerCase().match(/\.([a-z0-9]+)(\?|#|$)/);
+    if (!match) return;
+
+    const ext = match[1];
+
+    // 除外対象ならスキップ
+    if (ignoredExts.includes(ext)) return;
+
+    // すでに icon- クラスがある場合はスキップ
+    if ([...link.classList].some(cls => cls.startsWith('icon-'))) return;
+
+    // icon-拡張子 クラスを追加
+    link.classList.add(`icon-${ext}`);
+
+    // 表示ラベル（既知ならその値、未知なら拡張子大文字）
+    // const label = knownLabels[ext] || ext.toUpperCase();
+
+    // // ファイルサイズ取得
+    // fetch(href, { method: 'HEAD' })
+    //   .then(response => {
+    //     const size = response.headers.get('Content-Length');
+    //     if (size) {
+    //       const kb = (size / 1024).toFixed(2);
+    //       const info = ` (${label} ${kb}KB)`;
+
+    //       // aタグ内テキストに追記
+    //       link.insertAdjacentText('beforeend', info);
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.warn(`サイズ取得失敗: ${href}`, err);
+    //   });
+  });
+}
+
+/* ----------------------------------------------------------
+ searchButtonFunc
+---------------------------------------------------------- */
+var searchButtonFunc = function () {
+  $('#search-button').html('<img src="/img/ic-search.svg" alt="検索">');
 }

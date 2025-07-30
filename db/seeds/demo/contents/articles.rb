@@ -12,6 +12,21 @@ def save_page(data)
   item.html = html if html
   item.summary_html = summary_html if summary_html
 
+  if data[:contact_group_id].present?
+    contact_group = Cms::Group.where(id: data[:contact_group_id]).first
+    contact = contact_group.contact_groups.first
+    data[:contact_group_contact_id] ||= contact.id
+    data[:contact_group_name] ||= contact.contact_group_name
+    data[:contact_charge] ||= contact.contact_charge
+    data[:contact_tel] ||= contact.contact_tel
+    data[:contact_fax] ||= contact.contact_fax
+    data[:contact_email] ||= contact.contact_email
+    data[:contact_postal_code] ||= contact.contact_postal_code
+    data[:contact_address] ||= contact.contact_address
+    data[:contact_link_url] ||= contact.contact_link_url
+    data[:contact_link_name] ||= contact.contact_link_name
+  end
+
   item.attributes = data
   item.cur_user = @user
   item.save
@@ -21,24 +36,22 @@ def save_page(data)
 end
 
 save_page route: "article/page", filename: "docs/page1.html", name: "インフルエンザによる学級閉鎖状況",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids1
+  layout_id: @layouts["pages"].id, keywords: %w(記事 保健・健康・医療 統計・人口),
+  category_ids: [@categories["kenko/hoken"].id, @categories["shisei/toke"].id],
+  contact_group_id: g("シラサギ市/総務部/市民課").id, contact_group_relation: "related",
+  group_ids: [g("シラサギ市").id, g("シラサギ市/企画政策部/政策課").id], contact_sub_group_ids: g("シラサギ市/危機管理部/管理課")
 save_page route: "article/page", filename: "docs/page2.html", name: "コンビニ納付のお知らせ",
-  layout_id: @layouts["pages"].id,
-  category_ids: [@categories["attention"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids1
+  layout_id: @layouts["pages"].id, keywords: %w(記事 年金・保険 税金 企業の税金),
+  category_ids: [
+    @categories["kurashi/nenkin"].id, @categories["kurashi/zeikin"].id,
+    @categories["sangyo/zeikin"].id
+  ],
+  contact_group_id: g("シラサギ市/総務部/財産管理課/管理・営繕係").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: [
+    g("シラサギ市/企画政策部/政策課/デジタル戦略係").id, g("シラサギ市/総務部/財産管理課/電算管理係").id,
+    g("シラサギ市/総務部/市民課/市民税係").id
+  ]
 save_page route: "article/page", filename: "docs/page3.html", name: "平成26年第1回シラサギ市議会定例会を開催します",
   layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -49,14 +62,11 @@ save_page route: "article/page", filename: "docs/page3.html", name: "平成26年
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
   contact_sub_group_ids: @contact_sub_group_ids1
 save_page route: "article/page", filename: "docs/page4.html", name: "放射性物質・震災関連情報",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["attention"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids1
+  layout_id: @layouts["pages"].id, keywords: %w(記事 注目情報 危機管理情報),
+  category_ids: [@categories["attention"].id, @categories["kurashi/bosai/kanri"].id],
+  contact_group_id: g("シラサギ市/危機管理部/管理課").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: [g("シラサギ市/危機管理部/防災課/生活安全係").id, g("シラサギ市/危機管理部/防災課/消防団係").id]
 file_page5_1 = save_ss_files "files/img/dummy.png", filename: "dummy.png", name: "dummy.png", model: "ss/temp_file"
 file_page5_2 = save_ss_files "files/img/dummy.png", filename: "dummy.png", name: "dummy.png", model: "ss/temp_file"
 html_page5_1 = []
@@ -83,7 +93,7 @@ html_page5_1 << "  </tbody>"
 html_page5_1 << "</table>"
 html_page5_1 = html_page5_1.join
 save_page route: "article/page", filename: "docs/page5.html", name: "市内の微小粒子状物質（PM2.5）の測定データ（速報値）を公開しています。",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 注目情報),
   column_values: [
     @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h1', text: '見出し1'),
     @form_columns4[0].value_type.new(
@@ -111,23 +121,15 @@ save_page route: "article/page", filename: "docs/page5.html", name: "市内の�
     )
   ],
   category_ids: [@categories["attention"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids2
+  contact_group_id: g("シラサギ市/危機管理部/防災課/生活安全係").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: [g("シラサギ市/危機管理部/管理課").id, g("シラサギ市/危機管理部/防災課/消防団係").id]
 save_page route: "article/page", filename: "docs/page6.html", name: "還付金詐欺と思われる不審な電話にご注意ください",
-  layout_id: @layouts["pages"].id,
-  category_ids: [@categories["oshirase"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id],
-  contact_sub_group_ids: @contact_sub_group_ids2
+  layout_id: @layouts["pages"].id, keywords: %w(記事 相談窓口),
+  category_ids: [@categories["faq/kurashi"].id, @categories["oshirase/kurashi"].id],
+  contact_group_id: g("シラサギ市/総務部/市民課").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id],
+  contact_sub_group_ids: [g("シラサギ市/企画政策部/政策課/経営戦略係").id]
 save_page route: "article/page", filename: "docs/page7.html", name: "平成26年度　シラサギ市システム構築に係るの公募型企画競争",
   layout_id: @layouts["pages"].id,
   category_ids: [@categories["oshirase"].id, @categories["shisei/soshiki"].id, @categories["shisei/soshiki/kikaku"].id],
@@ -168,21 +170,18 @@ save_page route: "article/page", filename: "docs/page10.html", name: "インフ�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page11.html", name: "転出届", gravatar_screen_name: "サイト管理者",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  layout_id: @layouts["pages"].id, keywords: %w(記事 住民登録),
+  category_ids: [@categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: g("シラサギ市/総務部/市民課/戸籍係").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page12.html", name: "転入届",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  layout_id: @layouts["pages"].id, keywords: %w(記事 住民登録),
+  category_ids: [
+    @categories["faq/kurashi"].id, @categories["guide/hikkoshi"].id,
+    @categories["kurashi/koseki/jyumin"].id
+  ],
+  contact_group_id: g("シラサギ市/総務部/市民課/戸籍係").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page13.html", name: "世帯または世帯主を変更するとき",
   layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -192,66 +191,59 @@ save_page route: "article/page", filename: "docs/page13.html", name: "世帯ま�
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page14.html", name: "証明書発行窓口",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  layout_id: @layouts["pages"].id, keywords: %w(記事 住民登録),
+  category_ids: [
+    @categories["kurashi/koseki/inkan"].id, @categories["kurashi/koseki/jyumin"].id,
+    @categories["kurashi/koseki/koseki"].id, @categories["kurashi/sodan"].id,
+    @categories["kurashi/zeikin"].id
+  ],
+  contact_group_id: g("シラサギ市/総務部/市民課").id, contact_group_relation: "related",
+  contact_sub_group_ids: [g("シラサギ市/総務部/財産管理課/電算管理係").id], group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page15.html", name: "住民票記載事項証明書様式",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  layout_id: @layouts["pages"].id, keywords: %w(記事 住民登録),
+  category_ids: [@categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: g("シラサギ市/総務部/市民課").id, contact_group_relation: "related",
+  contact_sub_group_ids: [g("シラサギ市/総務部/市民課/戸籍係").id],
+  group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page16.html", name: "住所変更の証明書について",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  layout_id: @layouts["pages"].id, keywords: %w(記事 住民登録),
+  category_ids: [@categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: g("シラサギ市/総務部/市民課").id, contact_group_relation: "related",
+  contact_sub_group_ids: [g("シラサギ市/総務部/市民課/戸籍係").id],
+  group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page17.html", name: "住民票コードとは",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  layout_id: @layouts["pages"].id, keywords: %w(記事 住民登録),
+  category_ids: [@categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: g("シラサギ市/総務部/市民課").id, contact_group_relation: "related",
+  contact_sub_group_ids: [g("シラサギ市/総務部/市民課/戸籍係").id],
+  group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page18.html", name: "住民票コードの変更",
-  layout_id: @layouts["pages"].id, category_ids: [@categories["kurashi/koseki/jyumin"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  layout_id: @layouts["pages"].id, keywords: %w(記事 住民登録),
+  category_ids: [@categories["kurashi/koseki/jyumin"].id],
+  contact_group_id: g("シラサギ市/総務部/市民課").id, contact_group_relation: "related",
+  contact_sub_group_ids: [g("シラサギ市/総務部/市民課/戸籍係").id],
+  group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/page19.html", name: "自動交付機・コンビニ交付サービスについて",
-  layout_id: @layouts["pages"].id,
+  layout_id: @layouts["pages"].id, keywords: %w(記事 お知らせ くらし・手続き 組織案内 企画政策部),
   category_ids: [@categories["oshirase"].id,
                  @categories["oshirase/kurashi"].id,
                  @categories["shisei/soshiki"].id,
                  @categories["shisei/soshiki/kikaku"].id,
   ],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_group_id: g("シラサギ市/総務部/市民課").id, contact_group_relation: "related",
+  contact_sub_group_ids: [
+    g("シラサギ市/企画政策部/政策課/デジタル戦略係").id, g("シラサギ市/総務部/財産管理課/管理・営繕係").id,
+    g("シラサギ市/総務部/財産管理課/電算管理係").id
+  ],
+  group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "docs/tenkyo.html", name: "転居届", layout_id: @layouts["pages"].id,
-  category_ids: [@categories["oshirase"].id, @categories["kurashi/koseki/jyumin"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  keywords: %w(記事 住民登録 お知らせ),
+  category_ids: [
+    @categories["faq/kurashi"].id, @categories["oshirase"].id,
+    @categories["kurashi/koseki/jyumin"].id
+  ],
+  contact_group_id: g("シラサギ市/総務部/市民課/戸籍係").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
 save_page route: "article/page", filename: "oshirase/kurashi/page20.html", name: "犬・猫を譲り受けたい方",
   layout_id: @layouts["pages"].id, category_ids: [@categories["oshirase"].id, @categories["oshirase/kurashi"].id],
   contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
@@ -518,7 +510,7 @@ save_page route: "article/page", filename: "docs/page32.html", name: "インタ�
 
 recurrence = { kind: "date", start_at: Time.zone.tomorrow, frequency: "daily", until_on: Time.zone.tomorrow + 1 }
 save_page route: "article/page", filename: "docs/page33.html", name: "第67回　小鷲町ひまわり祭りのお知らせ",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 観光 お知らせ イベント 観光・文化・スポーツ),
   column_values: [
     @form_columns4[11].value_type.new(column: @form_columns4[11], order: 0, value: ''),
   ],
@@ -528,12 +520,7 @@ save_page route: "article/page", filename: "docs/page33.html", name: "第67回�
   event_name: '小鷲町　ひまわり祭り',
   event_recurrences: [ recurrence ],
   event_deadline: Time.zone.now.advance(days: 1).change(hour: 11),
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name,
+  contact_group_id: g("シラサギ市/企画政策部/広報課").id, contact_group_relation: "related",
   map_points: [
     {
       name: 'ウェブチップス', loc: [134.5758945, 34.0612009], text: 'ウェブチップス地図説明',
@@ -612,7 +599,8 @@ file_page40_1 = save_ss_files "ss_files/article/koho_shirasagi.jpg", filename: "
 file_page40_2 = save_ss_files "ss_files/article/koho_shirasagi.pdf", filename: "koho_shirasagi.pdf",
   name: "広報シラサギ.pdf", model: "ss/temp_file"
 save_page route: "article/page", filename: "docs/page40.html", name: "今月の広報SHIRASAGI",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  layout_id: @layouts["pages"].id, keywords: %w(記事 広報SHIRASAGI 広報シラサギ 今月の広報シラサギ),
+  form_id: @form4.id,
   column_values: [
     @form_columns4[4].value_type.new(
       column: @form_columns4[4], order: 0, file_id: file_page40_1.id, file_label: "2022年4月号", image_html_type: "image"
@@ -623,14 +611,11 @@ save_page route: "article/page", filename: "docs/page40.html", name: "今月の�
     ),
   ],
   category_ids: [
-    @categories["kohoshi"].id, @categories["kohoshi/kongetsukoho"].id
+    @categories["kohoshi"].id, @categories["kohoshi/kongetsukoho"].id,
+    @categories["shisei/koho/shirasagi"].id
   ],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_group_id: g("シラサギ市/企画政策部/広報課").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page41.html", name: "春の交通安全週間",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
@@ -656,14 +641,21 @@ save_page route: "article/page", filename: "docs/page42.html", name: "シラサ�
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page43.html", name: "Web版ハザードマップを公開しました",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
-  category_ids: [@categories["kurashi"].id, @categories["kurashi/bosai"].id, @categories["kurashi/bosai/jyoho"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  layout_id: @layouts["pages"].id, keywords: %w(記事 くらし・手続き 防災情報),
+  form_id: @form4.id,
+  category_ids: [
+    @categories["faq/kurashi"].id, @categories["kurashi"].id,
+    @categories["kurashi/bosai"].id, @categories["kurashi/bosai/jyoho"].id
+  ],
+  map_points: [
+    {
+      name: '', loc: [134.515229, 34.059931], text: '',
+      image: '/assets/img/googlemaps/marker1.png'
+    }
+  ],
+  contact_group_id: g("シラサギ市/危機管理部/防災課").id, contact_group_relation: "related",
+  contact_sub_group_ids: [g("シラサギ市/危機管理部/防災課/生活安全係").id, g("シラサギ市/危機管理部/防災課/消防団係").id],
+  group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page44.html", name: "【募集終了】シラサギ市地域防災推進員養成研修受講者募集",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
@@ -689,24 +681,18 @@ save_page route: "article/page", filename: "docs/page45.html", name: "「シラ�
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page46.html", name: "婚姻届（結婚するときの戸籍の届出）について",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  layout_id: @layouts["pages"].id, keywords: %w(記事 くらしのガイド 結婚・離婚),
+  form_id: @form4.id,
   category_ids: [@categories["guide"].id, @categories["guide/kekkon"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_group_id: g("シラサギ市/総務部/市民課/戸籍係").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page47.html", name: "離婚届（離婚するときの戸籍の届出）について",
-  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  layout_id: @layouts["pages"].id, keywords: %w(記事 くらしのガイド 結婚・離婚),
+  form_id: @form4.id,
   category_ids: [@categories["guide"].id, @categories["guide/kekkon"].id],
-  contact_group_id: @contact_group_id, contact_group_contact_id: @contact.id, contact_group_relation: "related",
-  contact_group_name: @contact.contact_group_name, contact_charge: @contact.contact_charge,
-  contact_tel: @contact.contact_tel, contact_fax: @contact.contact_fax,
-  contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
-  contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
-  contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+  contact_group_id: g("シラサギ市/総務部/市民課/戸籍係").id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page48.html", name: "シラサギ市結婚新生活支援事業（補助金）について",
   layout_id: @layouts["pages"].id, form_id: @form4.id,
@@ -717,6 +703,473 @@ save_page route: "article/page", filename: "docs/page48.html", name: "シラサ�
   contact_email: @contact.contact_email, contact_postal_code: @contact.contact_postal_code,
   contact_address: @contact.contact_address, contact_link_url: @contact.contact_link_url,
   contact_link_name: @contact.contact_link_name, group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page49.html", name: "妊婦健診",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  column_values: [
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h2', text: '定期健診をうけましょう。'),
+    @form_columns4[7].value_type.new(
+      column: @form_columns4[7], order: 1,
+      lists: %w(妊娠初期より妊娠23週までは4週に1回 妊娠24週より妊娠35週までは2週に1回 妊娠36週以降分娩までは1週に1回)
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h3', text: '対象者'),
+    @form_columns4[0].value_type.new(column: @form_columns4[0], order: 3, value: '妊婦、産婦'),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 4, head: 'h3', text: '実施場所'),
+    @form_columns4[0].value_type.new(column: @form_columns4[0], order: 5, value: '県内の委託医療機関等')
+  ],
+  category_ids: [
+    @categories["faq/kosodate"].id, @categories["guide/ninshin"].id,
+    @categories["kosodate/hoken"].id, @categories["kosodate/kenko"].id
+  ],
+  contact_state: "show", contact_group_id: g("シラサギ市/福祉健康部/社会福祉課").id,
+  contact_group_relation: "related", group_ids: [@g_seisaku.id, g("シラサギ市/福祉健康部").id]
+
+save_page route: "article/page", filename: "docs/page50.html", name: "予防接種について",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 子育て 母子の健康・予防接種 子育て・教育),
+  column_values: [
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h2', text: '乳幼児個別接種（指定医療機関）'),
+    @form_columns4[1].value_type.new(
+      column: @form_columns4[1], order: 1,
+      value: "個別接種は、保護者が各自でかかりつけ医などの医療機関で接種を受ける方法です。
+        県内の指定医療機関で1年を通して接種できます。
+        接種年齢、他の予防接種との接種間隔などに注意して受けてください。"
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h3', text: '各種予防接種費用'),
+    @form_columns4[0].value_type.new(
+      column: @form_columns4[0], order: 3, value: '乳幼児個別接種、児童生徒個別接種については、無料です。'
+    ),
+    @form_columns4[0].value_type.new(
+      column: @form_columns4[0], order: 4, value: '厚生労働省のホームページもご参照ください'
+    ),
+    @form_columns4[3].value_type.new(
+      column: @form_columns4[3], order: 5, link_label: '予防接種・ワクチン情報​',
+      link_url: "https://www.mhlw.go.jp/stf/seisakunitsuite/bunya/kenkou_iryou/kenkou/kekkaku-kansenshou/yobou-sesshu/index.html",
+      link_target: "_blank"
+    )
+  ],
+  category_ids: [
+    @categories["faq/kosodate"].id, @categories["guide/kosodate"].id,
+    @categories["oshirase/kosodate"].id, @categories["kosodate/kenko"].id
+  ],
+  contact_state: "show", contact_group_id: g("シラサギ市/福祉健康部/社会福祉課").id,
+  contact_group_relation: "related", group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page51.html", name: "小学校一覧",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 教育 小学校・中学校 子育て・教育),
+  column_values: [
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 0, value: File.read("pages/docs/page51.html"))
+  ],
+  category_ids: [
+    @categories["faq/kosodate"].id, @categories["guide/kyoiku"].id,
+    @categories["oshirase/kosodate"].id, @categories["kosodate/shogakko"].id
+  ],
+  contact_state: "show", contact_group_id: g("シラサギ市/福祉健康部/子育て支援課").id,
+  contact_group_relation: "related", group_ids: [@g_seisaku.id, g("シラサギ市/福祉健康部/子育て支援課").id]
+
+html_page52_1 = []
+html_page52_1 << "<table>"
+html_page52_1 << "  <caption>具体的な施策例</caption>"
+html_page52_1 << "  <thead>"
+html_page52_1 << "    <tr>"
+html_page52_1 << "      <th scope=\"col\" class=\"\">分類</th>"
+html_page52_1 << "      <th scope=\"col\" class=\"\">具体的な施策例</th>"
+html_page52_1 << "    </tr>"
+html_page52_1 << "  </thead>"
+html_page52_1 << "  <tbody>"
+html_page52_1 << "    <tr>"
+html_page52_1 << "      <td class=\"\">住宅支援</td>"
+html_page52_1 << "      <td class=\"\">空き家バンク、住宅購入・リフォーム補助、家賃補助、移住者向け公営住宅</td>"
+html_page52_1 << "    </tr>"
+html_page52_1 << "    <tr>"
+html_page52_1 << "      <td class=\"\">就業・起業支援</td>"
+html_page52_1 << "      <td class=\"\">地域おこし協力隊、就農支援、テレワーク施設整備、起業支援金、仕事紹介サービス</td>"
+html_page52_1 << "    </tr>"
+html_page52_1 << "    <tr>"
+html_page52_1 << "      <td class=\"\">子育て・教育支援</td>"
+html_page52_1 << "      <td class=\"\">子育て支援金、保育料補助、学用品補助、地域学校の紹介、通学バスの整備</td>"
+html_page52_1 << "    </tr>"
+html_page52_1 << "    <tr>"
+html_page52_1 << "      <td class=\"\">生活環境支援</td>"
+html_page52_1 << "      <td class=\"\">医療機関・買い物施設の紹介、地域生活ガイド、交通インフラ整備</td>"
+html_page52_1 << "    </tr>"
+html_page52_1 << "  </tbody>"
+html_page52_1 << "</table>"
+html_page52_1 = html_page52_1.join
+save_page route: "article/page", filename: "docs/page52.html", name: "移住・定住促進",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 注目情報 引越し・住まい 住まい くらし・手続き),
+  column_values: [
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h2', text: '移住・定住促進について'),
+    @form_columns4[1].value_type.new(
+      column: @form_columns4[1], order: 1,
+      value: "本市では、出生から子育て、就職・結婚、転出・Uターンに至るまでの各ライフステージに応じた総合的な人口減少対策に取り組んでいます。
+        あわせて、移住・定住を希望される方に対する支援策を展開し、住みよい地域づくりを推進しています。"
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h3', text: '主な施策'),
+    @form_columns4[8].value_type.new(column: @form_columns4[8], order: 3, value: html_page52_1)
+  ],
+  category_ids: [
+    @categories["attention"].id, @categories["faq/kurashi"].id,
+    @categories["guide/hikkoshi"].id, @categories["oshirase/kurashi"].id,
+    @categories["kurashi/sumai"].id
+  ],
+  contact_state: "show", contact_group_id: g("シラサギ市/総務部/市民課").id,
+  contact_group_relation: "related", group_ids: [@g_seisaku.id]
+
+html_page53_1 = []
+html_page53_1 << "<ul>"
+html_page53_1 << "  <li>対象者：求職者全般（新卒・転職・再就職希望者）</li>"
+html_page53_1 << "  <li>主な支援内容"
+html_page53_1 << "  <ul>"
+html_page53_1 << "    <li>求人情報の提供</li>"
+html_page53_1 << "    <li>就職相談・職業紹介</li>"
+html_page53_1 << "    <li>職業訓練（無料あり）</li>"
+html_page53_1 << "    <li>雇用保険（失業手当）の手続き</li>"
+html_page53_1 << "  </ul>"
+html_page53_1 << "  </li>"
+html_page53_1 << "  <li>備考：ハローワークインターネットサービスでも求人検索が可能です。</li>"
+html_page53_1 << "</ul>"
+html_page53_1 = html_page53_1.join
+html_page53_2 = []
+html_page53_2 << "<ul>"
+html_page53_2 << "  <li>対象者：市外からの移住・転入者</li>"
+html_page53_2 << "  <li>主な支援内容"
+html_page53_2 << "  <ul>"
+html_page53_2 << "    <li>地元企業の求人紹介</li>"
+html_page53_2 << "    <li>就職相談・斡旋</li>"
+html_page53_2 << "    <li>地場産業の見学や体験</li>"
+html_page53_2 << "  </ul>"
+html_page53_2 << "  </li>"
+html_page53_2 << "  <li>備考：市役所・移住定住支援センターなどに併設されている場合があります。</li>"
+html_page53_2 << "</ul>"
+html_page53_2 = html_page53_2.join
+html_page53_3 = []
+html_page53_3 << "<ul>"
+html_page53_3 << "  <li>対象者：失業者、転職希望者、スキルを身につけたい人</li>"
+html_page53_3 << "  <li>内容"
+html_page53_3 << "  <ul>"
+html_page53_3 << "    <li>IT、介護、建設、農業など分野別の無料講座</li>"
+html_page53_3 << "    <li>受講中に給付金（条件あり）を受けられる制度も</li>"
+html_page53_3 << "  </ul>"
+html_page53_3 << "  </li>"
+html_page53_3 << "  <li>実施機関：都道府県職業能力開発校、民間委託校 など</li>"
+html_page53_3 << "</ul>"
+html_page53_3 = html_page53_3.join
+save_page route: "article/page", filename: "docs/page53.html", name: "就労を希望する方が利用できる機関と制度",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 就職・退職 相談窓口 産業・仕事 人材募集),
+  column_values: [
+    @form_columns4[0].value_type.new(
+      column: @form_columns4[0], order: 0,
+      value: '就職・転職を考えている方、移住後の仕事探しを始めたい方に向けて、以下の機関や支援制度をご利用いただけます。'
+    ),
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 1, head: 'h2',
+      text: 'ハローワーク（公共職業安定所）'
+    ),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 2, value: html_page53_1),
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 3, head: 'h2', text: '移住者向け就業支援窓口（自治体独自）'
+    ),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 4, value: html_page53_2),
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 5, head: 'h2', text: '職業訓練（公共訓練／求職者支援訓練）'
+    ),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 6, value: html_page53_3)
+  ],
+  category_ids: [
+    @categories["faq/sangyo"].id, @categories["guide/shushoku"].id,
+    @categories["oshirase/sangyo"].id, @categories["kurashi/sodan"].id,
+    @categories["sangyo/jinzai"].id
+  ],
+  contact_state: "show", contact_group_id: g("シラサギ市/企画政策部/広報課").id,
+  contact_group_relation: "related", contact_sub_group_ids: [g("シラサギ市/総務部/人事課/人材育成係").id],
+  group_ids: [@g_seisaku.id]
+
+html_page54_1 = []
+html_page54_1 << "<table>"
+html_page54_1 << "  <caption>高齢者福祉の相談</caption>"
+html_page54_1 << "  <thead>"
+html_page54_1 << "    <tr>"
+html_page54_1 << "      <th scope=\"col\">内容</th>"
+html_page54_1 << "      <th scope=\"col\">担当窓口・課名</th>"
+html_page54_1 << "      <th scope=\"col\">電話番号</th>"
+html_page54_1 << "      <th scope=\"col\">備考</th>"
+html_page54_1 << "    </tr>"
+html_page54_1 << "  </thead>"
+html_page54_1 << "  <tbody>"
+html_page54_1 << "    <tr>"
+html_page54_1 << "      <td>介護保険の申請・相談</td>"
+html_page54_1 << "      <td>高齢福祉課 介護保険係</td>"
+html_page54_1 << "      <td>0999-xx-xxxx</td>"
+html_page54_1 << "      <td>介護認定、サービス利用等</td>"
+html_page54_1 << "    </tr>"
+html_page54_1 << "    <tr>"
+html_page54_1 << "      <td>高齢者支援全般</td>"
+html_page54_1 << "      <td>地域包括支援センター</td>"
+html_page54_1 << "      <td>0999-xx-xxxx</td>"
+html_page54_1 << "      <td>見守り・権利擁護など総合相談</td>"
+html_page54_1 << "    </tr>"
+html_page54_1 << "  </tbody>"
+html_page54_1 << "</table>"
+html_page54_1 = html_page54_1.join
+html_page54_2 = []
+html_page54_2 << "<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">"
+html_page54_2 << "  <caption>障がい福祉の相談</caption>"
+html_page54_2 << "  <thead>"
+html_page54_2 << "    <tr>"
+html_page54_2 << "      <th scope=\"col\">内容</th>"
+html_page54_2 << "      <th scope=\"col\">担当窓口・課名</th>"
+html_page54_2 << "      <th scope=\"col\">電話番号</th>"
+html_page54_2 << "      <th scope=\"col\">備考</th>"
+html_page54_2 << "    </tr>"
+html_page54_2 << "  </thead>"
+html_page54_2 << "  <tbody>"
+html_page54_2 << "    <tr>"
+html_page54_2 << "      <td>身体・知的・精神障がい</td>"
+html_page54_2 << "      <td>障がい福祉課 障がい支援係</td>"
+html_page54_2 << "      <td>0999-xx-xxxx</td>"
+html_page54_2 << "      <td>各種手帳の交付、福祉サービス等</td>"
+html_page54_2 << "    </tr>"
+html_page54_2 << "    <tr>"
+html_page54_2 << "      <td>就労・日中活動支援</td>"
+html_page54_2 << "      <td>就労支援係</td>"
+html_page54_2 << "      <td>0999-xx-xxxx</td>"
+html_page54_2 << "      <td>就労継続支援B型、作業所など</td>"
+html_page54_2 << "    </tr>"
+html_page54_2 << "    <tr>"
+html_page54_2 << "      <td>発達障がいの相談</td>"
+html_page54_2 << "      <td>保健センター 発達支援室</td>"
+html_page54_2 << "      <td>0999-xx-xxxx</td>"
+html_page54_2 << "      <td>児童の発達相談・支援も対応可能</td>"
+html_page54_2 << "    </tr>"
+html_page54_2 << "  </tbody>"
+html_page54_2 << "</table>"
+html_page54_2 = html_page54_2.join
+html_page54_3 = []
+html_page54_3 << "<table border=\"1\" cellpadding=\"8\" cellspacing=\"0\">"
+html_page54_3 << "  <caption>子ども・家庭福祉の相談</caption>"
+html_page54_3 << "  <thead>"
+html_page54_3 << "    <tr>"
+html_page54_3 << "      <th scope=\"col\">内容</th>"
+html_page54_3 << "      <th scope=\"col\">担当窓口・課名</th>"
+html_page54_3 << "      <th scope=\"col\">電話番号</th>"
+html_page54_3 << "      <th scope=\"col\">備考</th>"
+html_page54_3 << "    </tr>"
+html_page54_3 << "  </thead>"
+html_page54_3 << "  <tbody>"
+html_page54_3 << "    <tr>"
+html_page54_3 << "      <td>児童虐待・子育て支援</td>"
+html_page54_3 << "      <td>子ども家庭支援センター</td>"
+html_page54_3 << "      <td>0999-xx-xxxx</td>"
+html_page54_3 << "      <td>虐待・不登校・発達相談にも対応</td>"
+html_page54_3 << "    </tr>"
+html_page54_3 << "    <tr>"
+html_page54_3 << "      <td>ひとり親家庭の支援</td>"
+html_page54_3 << "      <td>子育て支援課</td>"
+html_page54_3 << "      <td>0999-xx-xxxx</td>"
+html_page54_3 << "      <td>児童扶養手当、母子父子家庭支援など</td>"
+html_page54_3 << "    </tr>"
+html_page54_3 << "  </tbody>"
+html_page54_3 << "</table>"
+html_page54_3 = html_page54_3.join
+save_page route: "article/page", filename: "docs/page54.html", name: "各種相談窓口",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  keywords: %w(記事 福祉・介護 子育て 高齢者福祉 障害福祉 子育て支援 健康・福祉 子育て・教育),
+  column_values: [
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 0, head: 'h2',
+      text: '高齢者福祉の相談'
+    ),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 1, value: html_page54_1),
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 2, head: 'h2', text: '障がい福祉の相談'
+    ),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 3, value: html_page54_2),
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 4, head: 'h2', text: '子ども・家庭福祉の相談'
+    ),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 5, value: html_page54_3)
+  ],
+  category_ids: [
+    @categories["faq/kosodate"].id, @categories["faq/kenko"].id,
+    @categories["guide/kosodate"].id, @categories["guide/fukushi"].id,
+    @categories["oshirase/kenko"].id, @categories["oshirase/kosodate"].id,
+    @categories["kosodate/shien"].id, @categories["kenko/korei"].id,
+    @categories["kenko/shogai"].id
+  ],
+  contact_state: "show", contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
+
+html_page55_1 = []
+html_page55_1 << "<table>"
+html_page55_1 << "  <caption>その他の必要な手続き</caption>"
+html_page55_1 << "  <thead>"
+html_page55_1 << "    <tr>"
+html_page55_1 << "      <th scope=\"col\">内容</th>"
+html_page55_1 << "      <th scope=\"col\">担当窓口</th>"
+html_page55_1 << "      <th scope=\"col\">備考</th>"
+html_page55_1 << "    </tr>"
+html_page55_1 << "  </thead>"
+html_page55_1 << "  <tbody>"
+html_page55_1 << "    <tr>"
+html_page55_1 << "      <td>戸籍の死亡届</td>"
+html_page55_1 << "      <td>市民課（戸籍係）</td>"
+html_page55_1 << "      <td>死亡診断書を添えて7日以内に届出</td>"
+html_page55_1 << "    </tr>"
+html_page55_1 << "    <tr>"
+html_page55_1 << "      <td>年金の手続き</td>"
+html_page55_1 << "      <td>年金事務所</td>"
+html_page55_1 << "      <td>未支給年金・遺族年金の申請</td>"
+html_page55_1 << "    </tr>"
+html_page55_1 << "    <tr>"
+html_page55_1 << "      <td>障がい者手帳の返却</td>"
+html_page55_1 << "      <td>福祉課</td>"
+html_page55_1 << "      <td>手帳、医療証、受給者証などの返却</td>"
+html_page55_1 << "    </tr>"
+html_page55_1 << "    <tr>"
+html_page55_1 << "      <td>医療費・福祉制度の停止</td>"
+html_page55_1 << "      <td>各担当課</td>"
+html_page55_1 << "      <td>高額療養費、障がい福祉等</td>"
+html_page55_1 << "    </tr>"
+html_page55_1 << "  </tbody>"
+html_page55_1 << "</table>"
+html_page55_1 = html_page55_1.join
+save_page route: "article/page", filename: "docs/page55.html", name: "被保険者が亡くなられた際の手続きについて",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  keywords: %w(記事 届出・証明・法令・規制 おくやみ 国民健康保険 くらし・手続き),
+  column_values: [
+    @form_columns4[1].value_type.new(
+      column: @form_columns4[1], order: 0,
+      value: "被保険者（国民健康保険・後期高齢者医療制度・介護保険など）がお亡くなりになった場合、ご遺族の方には一定の手続きが必要です。
+        速やかに関係窓口へご相談・届出をお願いいたします。"
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 1, head: 'h2', text: '必要なもの'),
+    @form_columns4[7].value_type.new(
+      column: @form_columns4[7], order: 2,
+      lists: %w(
+        死亡診断書（死亡届に印刷されています。医師の証明）
+        届出人の印鑑（届書への押印は任意ですが、埋火葬許可申請に必要なためご持参ください。）
+      )
+    ),
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 3, head: 'h3', text: '国民健康保険に加入していた方が亡くなった場合'
+    ),
+    @form_columns4[0].value_type.new(
+      column: @form_columns4[0], order: 4,
+      value: '死亡を知った日から14日以内に年金手続、国民健康保険手続などを行ってください。【該当する方のみ】'
+    ),
+    @form_columns4[2].value_type.new(
+      column: @form_columns4[2], order: 5, head: 'h3', text: 'その他必要な手続きの一例'
+    ),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 6, value: html_page55_1)
+  ],
+  category_ids: [
+    @categories["faq/kurashi"].id, @categories["guide/okuyami"].id,
+    @categories["oshirase/kurashi"].id, @categories["kurashi/nenkin/hoken"].id,
+    @categories["sangyo/todokede"].id
+  ],
+  contact_state: "show", contact_group_relation: "related", group_ids: [@g_seisaku.id]
+
+html_page56_1 = []
+html_page56_1 << "<table>"
+html_page56_1 << "  <caption>&nbsp;</caption>"
+html_page56_1 << "  <tbody>"
+html_page56_1 << "    <tr>"
+html_page56_1 << "      <td>白鷺市 市民課</td>"
+html_page56_1 << "      <td>0999-11-2345</td>"
+html_page56_1 << "      <td>使用許可申請・死亡届受付</td>"
+html_page56_1 << "    </tr>"
+html_page56_1 << "    <tr>"
+html_page56_1 << "      <td>白鷺市斎場</td>"
+html_page56_1 << "      <td>0999-55-9876</td>"
+html_page56_1 << "      <td>&nbsp;施設予約・空き状況確認</td>"
+html_page56_1 << "    </tr>"
+html_page56_1 << "  </tbody>"
+html_page56_1 << "</table>"
+html_page56_1 = html_page56_1.join
+save_page route: "article/page", filename: "docs/page56.html", name: "葬斎場の使用",
+  layout_id: @layouts["pages"].id, form_id: @form4.id,
+  keywords: %w(記事 おくやみ くらし・手続き),
+  column_values: [
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h2', text: '利用対象者'),
+    @form_columns4[7].value_type.new(
+      column: @form_columns4[7], order: 1,
+      lists: %w(
+        市内に住民登録のある方が亡くなられた場合
+        市外の方でも、一定の条件で使用可能（使用料が異なります）
+      )
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h2', text: '申請に必要なもの'),
+    @form_columns4[7].value_type.new(
+      column: @form_columns4[7], order: 3,
+      lists: %w(
+        火葬（斎場）使用許可申請書
+        死亡届受理証明書の写し
+      )
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 4, head: 'h2', text: 'お問い合わせ先'),
+    @form_columns4[11].value_type.new(column: @form_columns4[11], order: 5, value: html_page56_1),
+  ],
+  category_ids: [
+    @categories["faq/kurashi"].id, @categories["guide/okuyami"].id
+  ],
+  contact_state: "show", contact_group_id: g("シラサギ市/総務部/市民課").id,
+  contact_group_relation: "related", group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page57.html", name: "社会福祉審議会について",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 健康・福祉 福祉・介護 よくある質問 子育て・教育),
+  column_values: [
+    @form_columns4[1].value_type.new(
+      column: @form_columns4[1], order: 0,
+      value: "社会福祉審議会は、社会福祉法に基づき、地域福祉の推進に関する重要な事項について審議・答申を行う附属機関です。
+        本市の福祉施策が、公正かつ効果的に実施されることを目的とし、専門的かつ中立的な立場から意見を述べる役割を担っています。"
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 1, head: 'h2', text: '主な役割'),
+    @form_columns4[7].value_type.new(
+      column: @form_columns4[7], order: 2,
+      lists: %w(
+        地域福祉計画等に関する事項の審議
+        社会福祉施設の設置・運営方針の検討
+        介護・障害・子ども福祉等に関する意見聴取
+      )
+    )
+  ],
+  category_ids: [
+    @categories["faq"].id, @categories["faq/kosodate"].id,
+    @categories["faq/kenko"].id, @categories["guide/fukushi"].id,
+    @categories["kenko"].id
+  ],
+  contact_state: "show", contact_group_relation: "related", group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "docs/page58.html", name: "児童手当について",
+  layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 子育て 子育て支援 子育て・教育),
+  column_values: [
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 0, head: 'h2', text: '児童手当とは'),
+    @form_columns4[0].value_type.new(
+      column: @form_columns4[0], order: 1,
+      value: '児童手当は、子どもを育てている家庭に支給される手当です。0歳から中学校卒業までの子どもが対象となります。'
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 2, head: 'h3', text: '支給方法'),
+    @form_columns4[0].value_type.new(
+      column: @form_columns4[0], order: 3,
+      value: '児童手当は年数回に分けて支給されます。'
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 4, head: 'h3', text: '所得制限'),
+    @form_columns4[0].value_type.new(
+      column: @form_columns4[0], order: 5,
+      value: '所得が一定以上の家庭には支給されない場合があります。'
+    ),
+    @form_columns4[2].value_type.new(column: @form_columns4[2], order: 6, head: 'h3', text: '申請方法'),
+    @form_columns4[1].value_type.new(
+      column: @form_columns4[1], order: 7,
+      value: "児童手当の申請は、住んでいる市区町村の役場で行います。
+        詳細は、各市区町村の福祉・子育て支援に関するページで確認できます。"
+    )
+  ],
+  category_ids: [
+    @categories["faq/kosodate"].id, @categories["guide/kosodate"].id,
+    @categories["oshirase/kosodate"].id, @categories["kosodate/shien"].id
+  ],
+  contact_state: "show", contact_group_relation: "related", group_ids: [@g_seisaku.id]
 
 #save_page route: "article/page", filename: "hinanjo-docs/page49.html", name: "小しらさぎ南公民館",
 #  layout_id: @layouts["general"].id, form_id: @form8.id,
@@ -960,3 +1413,21 @@ save_page route: "article/page", filename: "hinanjo-docs/thunami/page364.html", 
   ],
   category_ids: [@categories["hinanjo/thunami"].id],
   map_points: [{ name: "", loc: [134.580335, 34.066298], text: "" }]
+
+save_page route: "article/page", filename: "watersupply/page349.html", name: "水道の使用開始手続き（開栓）",
+  layout_id: @layouts["pages"].id, order: 10, keywords: %w(開始受付),
+  category_ids: [
+    @categories["faq/kurashi"].id, @categories["guide/hikkoshi"].id,
+    @categories["kurashi/suido"].id, @categories["kurashi/sumai"].id
+  ],
+  contact_group_id: @contact_group_id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "watersupply/page350.html", name: "水道の使用停止手続き（閉栓）",
+  layout_id: @layouts["pages"].id, order: 20, keywords: %w(開始受付),
+  category_ids: [
+    @categories["faq/kurashi"].id, @categories["guide/hikkoshi"].id,
+    @categories["kurashi/suido"].id, @categories["kurashi/sumai"].id
+  ],
+  contact_group_id: @contact_group_id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]

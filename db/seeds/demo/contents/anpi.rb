@@ -3,8 +3,6 @@ save_page route: "cms/page", filename: "index.html", name: "自治体サンプ�
   released_type: 'same_as_updated'
 save_page route: "cms/page", filename: "index2.html", name: "自治体サンプル（緊急レイアウト用）",
   layout_id: @layouts["top"].id
-save_page route: "cms/page", filename: "mobile.html", name: "スマートフォン・携帯サイト", layout_id: @layouts["pages"].id,
-  released_type: 'same_as_updated'
 save_page route: "cms/page", filename: "use/index.html", name: "ご利用案内", layout_id: @layouts["general"].id,
   released_type: 'same_as_updated'
 save_page route: "cms/page", filename: "404.html", name: "お探しのページは見つかりません。 404 Not Found", layout_id: @layouts["general"].id
@@ -20,3 +18,6 @@ save_page route: "cms/page", filename: "list/two.html", name: "ページ２", la
   released_type: 'same_as_updated'
 save_page route: "cms/page", filename: "list/three.html", name: "ページ３", layout_id: @layouts["pages"].id,
   released_type: 'same_as_updated'
+save_page route: "cms/page", filename: "shisei/shicho/index.html ", name: "市長の部屋",
+  layout_id: @layouts["pages"].id, keywords: %w(市長の部屋),
+  contact_group_id: @contact_group_id, group_ids: [@g_seisaku.id]

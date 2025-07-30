@@ -35,15 +35,7 @@
 
           <div class="head__utility">
             <div class="head__utility-inner">
-              <div class="head-search">
-                <form id="site-search-history-part-371" action="/search/" accept-charset="UTF-8" method="get">
-                  <div class="site-search-keyword">
-                    <input type="text" title=サイト内検索 placeholder=サイト内検索 class="text" id="s_keyword" size="40" name="s[keyword]" autocomplete="off">
-                    <ul class="site-search-history" style="display: none;"></ul>
-                  </div>
-                  <button type="submit" id="search-button"><img src="/img/ic-search.svg" alt="検索"></button>
-                </form>
-              </div>
+              {{ part "search/search" }}
 
               <div class="head-inquiry">
                 <a href="/inquiry/">お問い合わせ</a>

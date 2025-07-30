@@ -19,7 +19,7 @@ end
 save_part route: "cms/free", filename: "about.part.html", name: "シラサギ市について"
 save_part route: "cms/free", filename: "foot.part.html", name: "フッター"
 save_part route: "cms/free", filename: "guide.part.html", name: "くらしのガイド"
-save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー"
+# save_part route: "cms/free", filename: "head.part.html", name: "ヘッダー"
 save_part route: "cms/free", filename: "links-life.part.html", name: "関連リンク：くらし・手続き"
 save_part route: "cms/free", filename: "links-garbage.part.html", name: "関連リンク：ゴミ品目"
 save_part route: "cms/node", filename: "navi.part.html", name: "グローバルナビ", sort: "order -1", loop_format: 'liquid'
@@ -81,8 +81,9 @@ save_part route: "cms/monthly_nav", filename: "docs/archive/month.part.html", na
 save_part route: "recommend/history", filename: "browsing-history.part.html", name: "閲覧履歴",
   mobile_view: "hide", ajax_view: "enabled", limit: 5
 save_part route: "translate/tool", filename: "translate.part.html", name: "翻訳ツール", mobile_view: "hide", ajax_view: "enabled"
-save_part route: "cms/site_search_history", filename: "search.part.html", name: "検索フォーム"
-save_part route: "cms/clipboard_copy", filename: "copy.part.html", name: "URLをコピー"
+# save_part route: "cms/site_search_history", filename: "search.part.html", name: "検索フォーム"
+save_part route: "cms/clipboard_copy", filename: "copy.part.html", name: "クリップボードコピーパーツ",
+  clipboard_copy_target: "url", clipboard_display_name: "URLをコピー"
 save_part route: "category/node", filename: "deepest-catelist.part.html", name: "最下層カテゴリーリスト",
   loop_format: 'liquid'
 save_part route: "cms/node2", filename: "folder.part.html", name: "フォルダーリスト", sort: 'updated',
@@ -92,6 +93,8 @@ save_part route: "recommend/similarity", filename: "highly-relevant.part.html", 
   limit: 5
 save_part route: "cms/site_search_keyword", filename: "keyword.part.html", name: "注目ワード",
   site_search_keywords: %w(マイナンバー 防災情報)
+save_part route: "cms/site_search_history", filename: "search/search.part.html", name: "サイト内検索",
+  placeholder: "サイト内検索"
 save_part route: "cms/page", filename: "kohoshi/kongetsukoho/recent.part.html", name: "トップ　最新　広報SHIRASAGI",
   new_days: 0, loop_format: 'liquid'
 save_part route: "cms/page", filename: "kurashi/bosai/urgency-disaster-top-list.part.html", name: "緊急災害 - 防災情報一覧",
@@ -99,7 +102,8 @@ save_part route: "cms/page", filename: "kurashi/bosai/urgency-disaster-top-list.
 save_part route: "image_map/page", filename: "map-clickable/clickable.part.html", name: "シラサギ市クリッカブルマップ"
 save_part route: "cms/page", filename: "population/show-top.part.html", name: "トップページ表示 - 人口・世帯数", order: 'released',
   limit: 1, new_days: 0, loop_format: 'liquid'
-save_part route: "cms/print", filename: "print.part.html", name: "ページを印刷する"
+save_part route: "cms/print", filename: "print.part.html", name: "印刷パーツ",
+  print_display_name: "ページを印刷する"
 save_part route: "cms/tabs", filename: "recent-tabsside.part.html", name: "新着タブ：サイドメニュー用",
   conditions: %w(oshirase oshirase/event shisei/jinji), limit: 5, new_days: 0
 save_part route: "cms/node2", filename: "sub-catelist.part.html", name: "サブカテゴリー一覧", sort: 'order',
@@ -115,3 +119,6 @@ save_part route: "cms/page", filename: "urgency-disaster-top-list.part.html", na
   ), new_days: 0
 save_part route: "chat/bot", filename: "bot.part.html", name: "チャットボット", chat_path: 'chatbot', mobile_view: "hide"
 save_part route: "cms/free", filename: "favicon.part.html", name: "ファビコン"
+save_part route: "cms/node2", filename: "docs/folder-list.part.html", name: "フォルダーリスト",
+  sort: 'order', limit: 20, loop_format: 'shirasagi', list_origin: 'deployment'
+save_part route: "cms/free", filename: "search/search-info.part.html", name: "サイト内検索説明"
