@@ -89,8 +89,9 @@ module Sys::SiteImport::File
       items.where(cond).each do |item|
         attr = {}
         fields.each do |field|
-          html = replace_html_with_url(item[field])
-          attr[field] = html if html != item[field]
+          next if item[field].blank?
+          html = item[field].gsub(src_path, dst_path)
+          attr[field] = html if item[field] != html
         end
         item.set(attr) if attr.present?
       end
