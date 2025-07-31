@@ -17,20 +17,16 @@ class Gws::Tabular::File::Generator
   end
 
   def call
-    if ::File.exist?(target_file_path)
-      file_time = ::File.mtime(target_file_path)
-      file_time = file_time.in_time_zone
+    if test_target_file
       # no need to create. this is up to date.
-      return true if file_time >= form_release.updated.in_time_zone
+      return true
     end
 
     synchronize do
       # ロックを獲得している間に他のスレッドでロードされたかもしれないので、もう一度確認
-      if ::File.exist?(target_file_path)
-        file_time = ::File.mtime(target_file_path)
-        file_time = file_time.in_time_zone
+      if test_target_file
         # no need to create. this is up to date.
-        next true if file_time >= form_release.updated.in_time_zone
+        next true
       end
 
       prepare
@@ -102,6 +98,17 @@ class Gws::Tabular::File::Generator
     target_lock_file_stream.puts("generate at #{Time.zone.now.iso8601} in #{Rails.application.hostname}@#{Process.pid}")
     yield
   end
+
+  # rubocop:disable Naming/PredicateMethod
+  def test_target_file
+    return false unless ::File.exist?(target_file_path)
+
+    file_time = ::File.mtime(target_file_path)
+    file_time = file_time.in_time_zone
+    # no need to create. this is up to date if true.
+    file_time >= form_release.updated.in_time_zone
+  end
+  # rubocop:enable Naming/PredicateMethod
 
   def prepare
     # ローカルストレージに一時ファイルを作成したいので "#{Rails.root}/tmp" に一時ファイルを作成する
