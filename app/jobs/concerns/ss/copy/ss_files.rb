@@ -7,7 +7,6 @@ module SS::Copy::SSFiles
     klass = src_file.class
     dest_file = nil
     id = cache(:files, src_file.id) do
-      Rails.logger.debug("#{src_file.filename}(#{src_file.id}): ファイルのコピーを開始します。")
       dest_file_attributes = copy_basic_attributes(src_file, klass)
       dest_file_attributes[:site_id] = @dest_site.id
       dest_file = klass.create_empty!(dest_file_attributes) do |file|
