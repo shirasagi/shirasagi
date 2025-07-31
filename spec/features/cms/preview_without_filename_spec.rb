@@ -1,15 +1,15 @@
 require 'spec_helper'
 
 describe "cms_preview_without_filename", type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
-  let(:node) { create :article_node_page, cur_site: site }
+  let!(:site) { cms_site }
+  let!(:user) { cms_user }
+  let!(:layout) { create :cms_layout_with_title, cur_site: site }
+  let!(:node) { create :article_node_page, cur_site: site }
   let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
-  let(:user) { cms_user }
   let(:new_path) { new_article_page_path site.id, node.id }
 
   before do
     login_cms_user
-    setup_preview_with_title_layout
   end
 
   context "with article page preview" do
@@ -20,7 +20,7 @@ describe "cms_preview_without_filename", type: :feature, dbscope: :example, js: 
       within "form#item-form" do
         fill_in "item[name]", with: "test article"
         fill_in_ckeditor "item[html]", with: html
-        select @preview_layout.name, from: 'item[layout_id]'
+        select layout.name, from: 'item[layout_id]'
       end
       page.first("footer.send .preview").click
       switch_to_window(windows.last)
@@ -44,7 +44,7 @@ describe "cms_preview_without_filename", type: :feature, dbscope: :example, js: 
       # タイトルもファイル名も入力しない
       within "form#item-form" do
         fill_in_ckeditor "item[html]", with: html
-        select @preview_layout.name, from: 'item[layout_id]'
+        select layout.name, from: 'item[layout_id]'
       end
       page.first("footer.send .preview").click
       switch_to_window(windows.last)

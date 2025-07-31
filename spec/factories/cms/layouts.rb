@@ -30,6 +30,7 @@ FactoryBot.define do
   end
 
   factory :cms_layout_with_title, class: Cms::Layout, traits: [:cms_layout] do
+    name { "プレビュー用レイアウト" }
     html do
       <<~HTML
         <html>
