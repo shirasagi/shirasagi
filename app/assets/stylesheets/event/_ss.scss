@@ -54,7 +54,8 @@ dl.see > dd .event-recurrence input {
   flex-wrap: wrap;
   padding: 5px;
 
-  .prev-month .day, .next-month .day {
+  .prev-month .day,
+  .next-month .day {
     visibility: hidden;
   }
 

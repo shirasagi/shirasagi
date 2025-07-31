@@ -38,12 +38,23 @@
   }
   .buttons {
     margin: 0 0 15px;
-    button { width: 100px; min-height: 3em; margin: 0 10px 0 0; }
+    button {
+      width: 100px;
+      min-height: 3em;
+      margin: 0 10px 0 0;
+    }
   }
 
   .view {
-    #queue { width: 120px; text-align: right; }
-    div { margin: 10px 0; }
-    textarea { height: 200px; }
+    #queue {
+      width: 120px;
+      text-align: right;
+    }
+    div {
+      margin: 10px 0;
+    }
+    textarea {
+      height: 200px;
+    }
   }
 }

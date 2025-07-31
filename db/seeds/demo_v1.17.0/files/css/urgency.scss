@@ -10,9 +10,9 @@ html {
 }
 body {
   margin: 0 auto;
+  color: $text;
   font-family: $font-base;
   font-size: 100%;
-  color: $text;
 }
 h1, h2, h3, h4, h5 {
   margin: 0;
@@ -66,8 +66,8 @@ img {
   padding: 0 10px;
   @include clear;
   .logo {
-    float: left;
     padding: 17px 0;
+    float: left;
     font-size: $px32;
   }
   .menu {
@@ -83,9 +83,9 @@ img {
       }
     }
     .l-menu {
+      padding-bottom: 10px;
       clear: both;
       text-align: right;
-      padding-bottom: 10px;
       form {
         float: right;
         border: $border-hgry;
@@ -108,16 +108,16 @@ img {
 // -----------------------------------------------------------------------------
 // navi
 #navi {
-  background: $blue;
-  @include clear;
   min-width: 1100px;
   border-bottom: 3px solid $orange;
+  background: $blue;
+  @include clear;
   .wrap {
     @include clear;
     width: 1078px;
     margin: 0 auto;
-    border-left: $border-lblue;
     border-right: $border-hblue;
+    border-left: $border-lblue;
     li {
       position: relative;
       float: left;
@@ -127,12 +127,12 @@ img {
       @include inline-block;
       width: 178px;
       padding: 5px 0 4px;
-      border-left: $border-hblue;
       border-right: $border-lblue;
+      border-left: $border-hblue;
       color: $t-white;
       font-size: $px16;
-      text-decoration: none;
       text-align: center;
+      text-decoration: none;
       &:hover {
         background: $hblue;
         color: #202020;
@@ -164,17 +164,17 @@ img {
 // -----------------------------------------------------------------------------
 // main addition
 #main {
-  float: left;
   width: 712px;
+  float: left;
 }
 .one #main {
   width: 100%;
 }
 #main .left, #addition .left,
 #main .center, #addition .center {
-  float: left;
   width: 344px;
   margin-right: $box-margin;
+  float: left;
 }
 #main .center {
   margin: 0;
@@ -187,14 +187,14 @@ img {
   border-top: $border-hgry;
 }
 #addition .right {
-  float: right;
   width: 344px;
+  float: right;
 }
 // -----------------------------------------------------------------------------
 // side
 #side {
-  float: right;
   width: 344px;
+  float: right;
 }
 
 // -----------------------------------------------------------------------------
@@ -214,23 +214,23 @@ img {
     margin: 0 auto;
     padding: 0 10px;
     dt {
-      float: left;
-      clear: both;
       width: 148px;
       margin-right: 12px;
+      float: left;
+      clear: both;
       font-weight: bold;
     }
     dd {
-      float: left;
       width: 920px;
+      float: left;
       a {
         @include inline-block;
         margin-left: 12px;
         padding: 3px 4px 0;
         border: 1px solid #999;
-        line-height: 1;
         background: $hgry;
         color: $text;
+        line-height: 1;
         text-decoration: none;
       }
     }
@@ -292,8 +292,8 @@ img {
   }
   article {
     padding: $item-margin $item-margin 0;
-    border-left: 2px solid #c42c00;
     border-right: 2px solid #c42c00;
+    border-left: 2px solid #c42c00;
     background: #ffffa4;
     &:last-child {
       padding-bottom: $item-margin;
@@ -309,9 +309,9 @@ img {
     @include clear;
   }
   li {
-    float: left;
     width: 166px;
     padding: 4px 0;
+    float: left;
     border-bottom: $border-hgry;
     &:nth-child(2n+1) {
       margin-right: $item-margin;
@@ -335,9 +335,9 @@ img {
     @include clear;
   }
   li {
-    float: left;
     width: 166px;
     padding: 4px 0;
+    float: left;
     border-bottom: $border-hgry;
     &:nth-child(2n+1) {
       margin-right: $item-margin;
@@ -358,8 +358,8 @@ img {
     @include clear;
   }
   li {
-    float: left;
     width: 166px;
+    float: left;
     &:nth-child(2n+1) {
       margin-right: $item-margin;
     }
@@ -367,20 +367,20 @@ img {
 }
 #population {
   dt {
-    float: left;
     width: 58px;
     margin: 0 12px 3px 0;
     padding: 0 3px;
+    float: left;
     background: #ffeacc;
     &:nth-child(4) {
       clear: both;
     }
   }
   dd {
-    float: left;
     width: 90px;
     margin: 0 0 3px;
     padding: 0 3px;
+    float: left;
     background: #fff;
     &:nth-child(2n) {
       margin-right: 0;
@@ -393,8 +393,8 @@ img {
 #topics {
   @include clear;
   .thumb {
-    float: left;
     margin-right: $item-margin;
+    float: left;
   }
   h2 {
     margin-bottom: $item-margin;
@@ -404,13 +404,13 @@ img {
   }
 }
 #connect a {
-  float: left;
   display: block;
   width: 164px;
   min-height: 48px;
-  line-height: 48px;
   margin-bottom: $item-margin;
+  float: left;
   border: $border-hgry;
+  line-height: 48px;
   text-align: center;
   &:nth-child(2n+1) {
     margin-right: $item-margin;
@@ -461,8 +461,8 @@ img {
   }
   h2 {
     padding: 3px 6px 0;
-    border-left: 5px solid $orange;
     border-bottom: 2px solid $orange;
+    border-left: 5px solid $orange;
     background: $blue;
     color: $t-white;
   }
@@ -476,7 +476,7 @@ img {
   h2 {
     display: inline;
   }
-  .new h2:after {
+  .new h2::after {
     content: "NEW";
     margin-left: 5px;
     color: #e03300;
@@ -516,9 +516,9 @@ img {
   #main .left, #addition .left, #main .center, #addition .center, #addition .right,
   #address dl, #address dl dt, #address dl dd, #footer-navi,
   #main .category-nodes article, #mode p {
-    float: none;
     width: 100%;
     padding: 0;
+    float: none;
   }
   img {
     max-width: 100% !important;
@@ -538,26 +538,26 @@ img {
 // -----------------------------------------------------------------------------
 // head
   #head .logo {
-    float: none;
     display: block;
     padding: 10px;
+    float: none;
     img {
       width: 180px;
       height: auto;
     }
   }
   #head .menu {
-    float: none;
     display: block;
     padding: 0 10px;
+    float: none;
   }
   #head .menu .l-menu {
     width: 100%;
     @include box-sizing(border-box);
     text-align: left;
     form {
-      float: none;
       position: relative;
+      float: none;
       @include border-radius(0);
       #search-box {
         width: 80%;
@@ -587,12 +587,12 @@ img {
     li {
       width: 50%;
       a {
-        width: auto;
         display: block;
-        @include box-sizing(border-box);
+        width: auto;
         border-top: $border-hblue;
         border-bottom: $border-lblue;
         font-size: 100%;
+        @include box-sizing(border-box);
       }
     }
     .sangyo a, .shsiei a {
@@ -621,8 +621,8 @@ img {
         margin-left: 5px;
       }
       a {
-        border: $border-hgry;
         padding: 5px 10px 2px;
+        border: $border-hgry;
       }
     }
   }
@@ -630,8 +630,8 @@ img {
 //  safety online propose attention recent useful relations ranking topics connect add links-life
   #safety, #online, #propose, #attention, #recent, #useful, #connect, #calamity,
   #relations, #ranking, #topics, #recent-oshirase, #links-life, #category-list {
-    margin-bottom: $smart-margin;
     margin-top: 0;
+    margin-bottom: $smart-margin;
     header h1 {
       margin-bottom: 0;
     }
@@ -642,7 +642,7 @@ img {
   #recent-oshirase {
     margin-top: 10px;
     margin-bottom: 0;
-    .new h2:after {
+    .new h2::after {
       display: none;
     }
   }
@@ -661,8 +661,8 @@ img {
     }
   }
   #online nav, #propose nav {
-    background: none;
     padding: 0;
+    background: none;
   }
   #online li a, #propose li a, #useful li a,
   #relations li a, #ranking li a {
@@ -679,10 +679,10 @@ img {
     padding: 0;
     a {
       display: block;
-      @include ic-doc;
       overflow: hidden;
-      white-space: nowrap;
       text-overflow: ellipsis;
+      white-space: nowrap;
+      @include ic-doc;
     }
   }
   #attention time, #recent time, #recent-oshirase time, .cms-tabs time {
@@ -721,15 +721,15 @@ img {
       @include clear;
       .name {
         display: block;
-        float: left;
         width: 33%;
+        float: left;
         @include box-sizing(border-box);
       }
       .name:last-child {
         width: 34%;
-        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
         @include box-sizing(border-box);
       }
     }
@@ -747,15 +747,15 @@ img {
     padding: 0;
     background: $hgry;
     .rss {
-      float: left;
       width: 30%;
-      @include inline-block;
       padding: 3px 0;
+      float: left;
+      @include inline-block;
     }
     .more {
-      float: left;
       width: 70%;
       padding: 3px 0 3px 15px;
+      float: left;
     }
   }
   .cms-tabs {
@@ -787,32 +787,32 @@ img {
     padding: 10px;
     @include box-sizing(border-box);
     dl dt {
-      font-weight: normal;
       color: $blue;
+      font-weight: normal;
     }
     dl dd a {
       display: block;
       margin: 0;
       padding: 8px 8px 5px;
-      text-align: center;
       background-position: 28% center;
+      text-align: center;
     }
   }
   #footer-navi nav {
     @include clear;
     border-top: 1px solid #999;
     a {
-      float: left;
       display: block;
       width: 50%;
-      @include box-sizing(border-box);
       margin: 0;
       padding-left: 22px;
+      float: left;
       border: 1px solid #999;
       border-top: 0;
       background-color: $hgry;
       color: $text;
       text-decoration: none;
+      @include box-sizing(border-box);
       &:nth-child(2n+1) {
         border-right: 0;
       }

@@ -67,7 +67,7 @@ $item-margin: 10px;
   @include btn;
   padding-right: 30px;
   background: $red;
-  &:after {
+  &::after {
     content: ">";
     position: absolute;
     top: 3px;
