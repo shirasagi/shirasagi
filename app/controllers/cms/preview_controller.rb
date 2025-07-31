@@ -90,8 +90,16 @@ class Cms::PreviewController < ApplicationController
     page.lock_owner_id = nil if page.respond_to?(:lock_owner_id)
     page.lock_until = nil if page.respond_to?(:lock_until)
 
-    raise page_not_found unless page.name.present?
-    raise page_not_found unless page.basename.present?
+    # プレビュー時は一時的にタイトルを設定
+    if page.name.blank?
+      page.name = I18n.t("cms.preview_title")
+    end
+
+    # ファイル名が空の場合は、一時的なファイル名を設定
+    if page.basename.blank?
+      page.basename = "preview_#{Time.current.to_i}.html"
+    end
+
     page.basename = page.basename.sub(/\..+?$/, "") + ".html"
 
     # column_values
