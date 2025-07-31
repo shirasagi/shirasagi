@@ -24,43 +24,54 @@ class Gws::Tabular::File::Generator
       return true if file_time >= form_release.updated.in_time_zone
     end
 
-    prepare_temp
+    synchronize do
+      # ロックを獲得している間に他のスレッドでロードされたかもしれないので、もう一度確認
+      if ::File.exist?(target_file_path)
+        file_time = ::File.mtime(target_file_path)
+        file_time = file_time.in_time_zone
+        # no need to create. this is up to date.
+        next true if file_time >= form_release.updated.in_time_zone
+      end
 
-    puts "class Gws::Tabular::#{model_name}"
-    indent 1 do
-      puts "extend SS::Translation"
-      puts "include SS::Document"
-      puts "include Gws::Referenceable"
-      puts "include Gws::Reference::User"
-      puts "include Gws::Reference::Site"
-      puts "include SS::Relation::File"
-      puts "include Gws::Tabular::File"
-      puts "include Gws::Reference::Tabular::Space"
-      puts "include Gws::Reference::Tabular::Form"
-      puts "include Gws::SitePermission"
-      puts
-      puts "identify_as 'Gws::Tabular::#{model_name}'"
-      puts "store_in collection: 'gws_tabular_file_#{form.id}'"
-      puts "set_permission_name 'gws_tabular_files'"
-      puts
-      puts "load_form_release '#{form.id}', #{form_release.revision}, #{form_release.patch}"
-      if form.workflow_enabled?
-        activate_workflow
+      prepare
+
+      puts "class Gws::Tabular::#{model_name}"
+      indent 1 do
+        puts "extend SS::Translation"
+        puts "include SS::Document"
+        puts "include Gws::Referenceable"
+        puts "include Gws::Reference::User"
+        puts "include Gws::Reference::Site"
+        puts "include SS::Relation::File"
+        puts "include Gws::Tabular::File"
+        puts "include Gws::Reference::Tabular::Space"
+        puts "include Gws::Reference::Tabular::Form"
+        puts "include Gws::SitePermission"
+        puts
+        puts "identify_as 'Gws::Tabular::#{model_name}'"
+        puts "store_in collection: 'gws_tabular_file_#{form.id}'"
+        puts "set_permission_name 'gws_tabular_files'"
+        puts
+        puts "load_form_release '#{form.id}', #{form_release.revision}, #{form_release.patch}"
+        if form.workflow_enabled?
+          activate_workflow
+        end
+        puts
+        puts "# 注意: include の順番によっては Workflow::Approver.search が有効化してしまうのでこの位置でオーバーライドする。"
+        puts "include Gws::Tabular::File::Search"
+        puts
+        columns.each do |column|
+          puts "add_column '#{column.id}' # #{column.name} (#{column.class.name})"
+        end
       end
-      puts
-      puts "# 注意: include の順番によっては Workflow::Approver.search が有効化してしまうのでこの位置でオーバーライドする。"
-      puts "include Gws::Tabular::File::Search"
-      puts
-      columns.each do |column|
-        puts "add_column '#{column.id}' # #{column.name} (#{column.class.name})"
-      end
+      puts "end"
+
+      deploy_temp
     end
-    puts "end"
 
-    deploy_temp
     true
   ensure
-    finalize_temp
+    finalize
   end
 
   private
@@ -75,14 +86,32 @@ class Gws::Tabular::File::Generator
     end
   end
 
-  def prepare_temp
+  def target_lock_file_path
+    @target_lock_file_path ||= "#{Gws::Tabular.file_class_dir}/.#{model_name.underscore}.rb.lock"
+  end
+
+  def target_lock_file_stream
+    @target_file_stream ||= begin
+      ::FileUtils.mkdir_p(::File.dirname(target_lock_file_path))
+      ::File.open(target_lock_file_path, "wt")
+    end
+  end
+
+  def synchronize
+    target_lock_file_stream.flock(File::LOCK_EX)
+    target_lock_file_stream.puts("generate at #{Time.zone.now.iso8601} in #{Rails.application.hostname}@#{Process.pid}")
+    yield
+  end
+
+  def prepare
     # ローカルストレージに一時ファイルを作成したいので "#{Rails.root}/tmp" に一時ファイルを作成する
     @temp_file = Tempfile.open("tabular_file_#{form.id}", "#{Rails.root}/tmp")
     @indent_level = 0
   end
 
-  def finalize_temp
-    @temp_file.close if @temp_file
+  def finalize
+    target_lock_file_stream.try(:close)
+    @temp_file.try(:close)
   end
 
   def deploy_temp
@@ -94,9 +123,7 @@ class Gws::Tabular::File::Generator
     Retriable.retriable do
       ::FileUtils.mkdir_p(Gws::Tabular.file_class_dir)
 
-      target_temp_file_path = "#{Gws::Tabular.file_class_dir}/.#{model_name.underscore}.#{Process.pid}"
-      ::FileUtils.cp(@temp_file.path, target_temp_file_path)
-      ::FileUtils.mv(target_temp_file_path, target_file_path)
+      ::FileUtils.cp(@temp_file.path, target_file_path)
       ::FileUtils.touch(target_file_path, mtime: form_release.updated.in_time_zone.to_time)
     end
   end
