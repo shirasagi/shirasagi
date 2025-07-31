@@ -88,8 +88,7 @@ class Guide::MermaidComponent < ApplicationComponent
   def render_question(question)
     output_buffer << build_point(question)
     question.edges.each do |edge|
-      edge.parent = question
-      points = select_points(edge.points.pluck(:id))
+      points = select_points(edge.point_ids)
       next if points.blank?
 
       points.each do |point|
@@ -102,7 +101,7 @@ class Guide::MermaidComponent < ApplicationComponent
     question.edges.each do |edge|
       next if @rendered_edge_map.key?(edge.id)
 
-      points = select_points(edge.points.pluck(:id))
+      points = select_points(edge.point_ids)
       next if points.blank?
 
       points.each do |point|

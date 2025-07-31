@@ -1,2 +1,19 @@
-<%= hidden_field_tag "item[in_edges][][question_type]", "yes_no", id: nil %>
-<%= hidden_field_tag "item[in_edges][][value]", t("guide.links.not_applicable"), id: nil %>
+<% edge = ::Guide::Diagram::Edge.new(in_edge) %>
+<dl class="see edge" style="background: #f5f5f5; border-radius: 3px; padding-top: 5px;">
+  <dt><%= t("guide.links.not_applicable") %></dt>
+  <dd>
+    <%= hidden_field_tag "item[in_edges][][question_type]", "yes_no", id: nil %>
+    <%= hidden_field_tag "item[in_edges][][value]", t("guide.links.not_applicable"), id: nil %>
+    <%= hidden_field_tag "item[in_edges][][point_ids][]", "", id: nil, class: "hidden-ids" %>
+    <%= link_to t("ss.links.select"), guide_apis_procedures_path(nid: @cur_node.id, id: @item.id), class: "ajax-box" %>
+  </dd>
+  <dd>
+    <table class="index ajax-selected">
+      <tbody>
+        <% edge.points.each do |point| %>
+          <% @render_form.call(point.id, point.name_with_type, edge.not_applicable_point_ids.include?(point.id), edge.optional_necessary_point_ids.include?(point.id)) %>
+        <% end %>
+      </tbody>
+    </table>
+  </dd>
+</dl>

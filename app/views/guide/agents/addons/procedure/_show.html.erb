@@ -19,31 +19,4 @@
 
   <dt><%= @model.t :remarks %></dt>
   <dd><%=br @item.remarks %></dd>
-
-  <% %w(yes no or).each do |cond| %>
-    <% if @item.send(:"cond_#{cond}_questions").present? && @item.send(:"cond_#{cond}_edge_values").present? %>
-      <dt><%= @model.t :"cond_#{cond}_edge_values" %></dt>
-      <dd>
-        <table class="index">
-          <thead>
-            <tr>
-              <th class="name"><%= @model.t :name %></th>
-              <th></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @item.send(:"cond_#{cond}_questions").each do |question| %>
-              <% question.edges.in(value: @item.send(:"cond_#{cond}_edge_values").select { |v| v[:question_id].to_s == question.id.to_s }.collect { |v| v[:edge_value] }).each do |edge| %>
-                <tr>
-                  <td>
-                    <%= link_to "#{question.name}:#{edge.value}", guide_question_path(id: question.id) %>
-                  </td>
-                </tr>
-              <% end %>
-            <% end %>
-          </tbody>
-        </table>
-      </dd>
-    <% end %>
-  <% end %>
 </dl>

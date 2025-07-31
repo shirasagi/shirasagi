@@ -51,7 +51,6 @@ module Guide::Importer::Combination
         y << encode_sjis(row.to_csv)
 
         item.edges.to_a.each do |edge|
-          edge.parent = item
           row = ['']
           row = [''].cycle.take(7)
           row << edge.value
@@ -60,10 +59,10 @@ module Guide::Importer::Combination
           edge_list = edge.points.map do |point|
             value = point.name_with_type
             # applicable or not_applicable
-            label = edge.not_applicable_points.pluck(:id).include?(point.id) ? I18n.t('guide.labels.not_applicable') : nil
+            label = edge.not_applicable_point_ids.include?(point.id) ? I18n.t('guide.labels.not_applicable') : nil
             value = value.sub('] ', "][#{label}] ") if label
             # necessary or optional_necessary
-            label = edge.optional_necessary_points.pluck(:id).include?(point.id) ? I18n.t('guide.labels.optional_necessary') : nil
+            label = edge.optional_necessary_point_ids.include?(point.id) ? I18n.t('guide.labels.optional_necessary') : nil
             value = value.sub('] ', "][#{label}] ") if label
             value
           end
@@ -139,11 +138,7 @@ module Guide::Importer::Combination
     item.procedure_location = @row[6]
     item.belongings = @row[7]
     item.procedure_applicant = @row[8]
-    item.remarks = @row[9]
-    %w(yes no or).each do |cond|
-      item.send(:"cond_#{cond}_question_ids=", [])
-      item.send(:"cond_#{cond}_edge_values=", [])
-    end
+    item.remarks= @row[9]
 
     if item.save
       true
@@ -198,13 +193,18 @@ module Guide::Importer::Combination
         value: @row[7],
         question_type: item.question_type,
         explanation: @row[8],
+        point_ids: [],
+        not_applicable_point_ids: [],
+        optional_necessary_point_ids: [],
         point_names: @row[9].to_s.strip.split("\n")
       }
       return true
     end
   end
 
+  # rubocop:disable Metrics/PerceivedComplexity
   def save_combination_question_edges(item)
+    label_question = I18n.t('guide.question')
     label_procedure = I18n.t('guide.procedure')
     label_not_applicable = I18n.t('guide.labels.not_applicable')
     label_optional_necessary = I18n.t('guide.labels.optional_necessary')
@@ -217,27 +217,23 @@ module Guide::Importer::Combination
 
         if cate.match(label_procedure)
           rel = Guide::Procedure.site(cur_site).node(cur_node).where(id_name: name).first
-          rel.add_to_set(
-            cond_yes_question_ids: item.id,
-            cond_yes_edge_values: { question_id: item.id.to_s, edge_value: edge[:value] }
-          )
+          edge[:point_ids] << rel.id if rel
+          item.errors.add :base, I18n.t('guide.errors.not_found_procedure', id: name) unless rel
+        elsif cate.match(label_question)
+          rel = Guide::Question.site(cur_site).node(cur_node).where(id_name: name).first
+          edge[:point_ids] << rel.id if rel
+          item.errors.add :base, I18n.t('guide.errors.not_found_question', id: name) unless rel
         end
         if rel && cate.match(label_not_applicable)
-          rel.add_to_set(
-            cond_no_question_ids: item.id,
-            cond_no_edge_values: { question_id: item.id.to_s, edge_value: edge[:value] }
-          )
+          edge[:not_applicable_point_ids] << rel.id
         end
         if rel && cate.match(label_optional_necessary)
-          rel.add_to_set(
-            cond_or_question_ids: item.id,
-            cond_or_edge_values: { question_id: item.id.to_s, edge_value: edge[:value] }
-          )
+          edge[:optional_necessary_point_ids] << rel.id
         end
-        line
       end
 
-      edge.except(:point_names)
+      edge.delete(:point_names)
+      edge
     end
 
     if item.errors.empty?
@@ -248,4 +244,5 @@ module Guide::Importer::Combination
       false
     end
   end
+  # rubocop:enable Metrics/PerceivedComplexity
 end
