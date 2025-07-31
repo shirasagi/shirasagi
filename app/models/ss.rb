@@ -166,13 +166,4 @@ module SS
     return true if err.to_s == HTTP_STATUS_CODE_NOT_FOUND
     false
   end
-
-  def update_const(mod, constant_name, constant)
-    mod.module_eval do
-      remove_const(constant_name) if const_defined?(constant_name)
-      const_set(constant_name, constant)
-    end
-
-    constant
-  end
 end

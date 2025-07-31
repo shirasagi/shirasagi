@@ -57,6 +57,11 @@ describe Gws::Tabular::FormTrashPurgeJob, dbscope: :example do
     before do
       expect(form1_model.all.count).to be > 0
       expect(form2_model.all.count).to be > 0
+
+      form1_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form1.id}.rb"
+      expect(::File.size(form1_model_class_path)).to be > 0
+      form2_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form2.id}.rb"
+      expect(::File.size(form2_model_class_path)).to be > 0
     end
 
     context '1 form is purged' do
@@ -75,6 +80,11 @@ describe Gws::Tabular::FormTrashPurgeJob, dbscope: :example do
         expect(form2_model.all.count).to eq 0
         expect { attachment1.reload }.not_to raise_error
         expect { attachment2.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+
+        form1_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form1.id}.rb"
+        expect(::File.size(form1_model_class_path)).to be > 0
+        form2_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form2.id}.rb"
+        expect(::File.exist?(form2_model_class_path)).to be_falsey
       end
     end
 
@@ -95,6 +105,11 @@ describe Gws::Tabular::FormTrashPurgeJob, dbscope: :example do
         expect(form2_model.all.count).to eq 0
         expect { attachment1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
         expect { attachment2.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+
+        form1_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form1.id}.rb"
+        expect(::File.exist?(form1_model_class_path)).to be_falsey
+        form2_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form2.id}.rb"
+        expect(::File.exist?(form2_model_class_path)).to be_falsey
       end
     end
 
@@ -115,6 +130,11 @@ describe Gws::Tabular::FormTrashPurgeJob, dbscope: :example do
         expect(form2_model.all.count).to be > 0
         expect { attachment1.reload }.not_to raise_error
         expect { attachment2.reload }.not_to raise_error
+
+        form1_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form1.id}.rb"
+        expect(::File.size(form1_model_class_path)).to be > 0
+        form2_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form2.id}.rb"
+        expect(::File.size(form2_model_class_path)).to be > 0
       end
     end
 
@@ -140,6 +160,11 @@ describe Gws::Tabular::FormTrashPurgeJob, dbscope: :example do
         expect(form2_model.all.count).to eq 0
         expect { attachment1.reload }.to raise_error Mongoid::Errors::DocumentNotFound
         expect { attachment2.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+
+        form1_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form1.id}.rb"
+        expect(::File.exist?(form1_model_class_path)).to be_falsey
+        form2_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form2.id}.rb"
+        expect(::File.exist?(form2_model_class_path)).to be_falsey
       end
     end
 
@@ -164,6 +189,11 @@ describe Gws::Tabular::FormTrashPurgeJob, dbscope: :example do
         expect(form2_model.all.count).to be > 0
         expect { attachment1.reload }.not_to raise_error
         expect { attachment2.reload }.not_to raise_error
+
+        form1_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form1.id}.rb"
+        expect(::File.size(form1_model_class_path)).to be > 0
+        form2_model_class_path = "#{Gws::Tabular.file_class_dir}/file#{form2.id}.rb"
+        expect(::File.size(form2_model_class_path)).to be > 0
       end
     end
   end
