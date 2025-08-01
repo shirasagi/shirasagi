@@ -33,7 +33,11 @@ module Cms::FormHelper
 
   def ancestral_loop_settings
     items = []
-    Cms::LoopSetting.site(@cur_site).where(state: 'public', html_format: 'shirasagi').sort(order: 1, name: 1).each do |item|
+    settings = Cms::LoopSetting.site(@cur_site).where(state: 'public', html_format: 'shirasagi').sort(order: 1, name: 1)
+    Rails.logger.info "=== ancestral_loop_settings デバッグ ==="
+    Rails.logger.info "取得されたループ設定数: #{settings.count}"
+    settings.each do |item|
+      Rails.logger.info "ループ設定: id=#{item.id}, name=#{item.name}, html_format=#{item.html_format}"
       items << [item.name, item.id]
     end
     items

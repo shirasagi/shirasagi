@@ -99,13 +99,7 @@ module Cms::ListHelper
     else
       h << cur_item.substitute_html.to_s.html_safe if @items.blank?
       if cur_item.loop_setting.present?
-        # シラサギ形式の場合はcustom_html,htmlの順で使用
-        if cur_item.loop_setting.custom_html.present?
-          Rails.logger.info("render_list_with_shirasagi custom_html (shirasagi) #{cur_item.loop_setting.custom_html.inspect}")
-          loop_html = cur_item.loop_setting.custom_html
-        else
-          loop_html = cur_item.loop_setting.html
-        end
+        loop_html = cur_item.loop_setting.html
       elsif cur_item.loop_html.present?
         loop_html = cur_item.loop_html
       else
