@@ -55,6 +55,8 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
         expect(item.name).to be_present
         expect(item.question_type).to be_present
         expect(item.check_type).to be_present
+        expect(item.edges[0][:point_ids].count).to eq [2, 2, 1, 2][idx]
+        expect(item.edges[1][:point_ids].count).to eq [0, 2, 0, 0][idx]
       end
 
       ## upload 1 file
@@ -131,6 +133,14 @@ describe "guide_import_transitions", type: :feature, dbscope: :example, js: true
 
       expect(Guide::Procedure.all.size).to eq 2
       expect(Guide::Question.all.size).to eq 2
+      Guide::Question.all.each_with_index do |item, idx|
+        expect(item.edges[0][:point_ids].count).to eq [2, 2][idx]
+        expect(item.edges[0][:not_applicable_point_ids].count).to eq [2, 2][idx]
+        expect(item.edges[0][:optional_necessary_point_ids].count).to eq [2, 2][idx]
+        expect(item.edges[1][:point_ids].count).to eq [2, 2][idx]
+        expect(item.edges[1][:not_applicable_point_ids].count).to eq [0, 0][idx]
+        expect(item.edges[1][:optional_necessary_point_ids].count).to eq [0, 0][idx]
+      end
 
       visit import_combinations_guide_importers_path(site, node)
       within "form#task-form" do

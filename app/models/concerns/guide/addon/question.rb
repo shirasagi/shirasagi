@@ -14,7 +14,10 @@ module Guide::Addon
 
       permit_params :question_type
       permit_params :check_type
-      permit_params in_edges: [:value, :question_type, :explanation]
+      permit_params in_edges: [
+        :value, :question_type, :explanation, point_ids: [], not_applicable_point_ids: [],
+        optional_necessary_point_ids: []
+      ]
 
       before_validation :set_check_type, if: ->{ question_type == "yes_no" }
 
@@ -22,6 +25,8 @@ module Guide::Addon
       validates :check_type, inclusion: { in: %w(single multiple) }
 
       validate :validate_in_edges, if: ->{ in_edges.present? }
+
+      after_save :set_referenced_questions
     end
 
     def question_type_options
@@ -54,6 +59,17 @@ module Guide::Addon
       self.edges = with_type.map do |in_edge|
         self.edges.new(in_edge)
       end
+    end
+
+    def set_referenced_questions
+      question_ids = []
+      self.edges.each do |edge|
+        edge.questions.each do |question|
+          question_ids << question.id
+          question.add_to_set(referenced_question_ids: id)
+        end
+      end
+      self.class.nin(id: question_ids).pull(referenced_question_ids: id)
     end
 
     def set_check_type

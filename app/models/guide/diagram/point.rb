@@ -6,7 +6,7 @@ class Guide::Diagram::Point
   include Cms::Reference::Node
 
   attr_accessor :transitions, :applicable_transitions, :not_applicable_transitions, :necessary_transitions,
-    :not_necessary_transitions, :optional_necessary_transitions
+    :optional_necessary_transitions
 
   field :name, type: String
   field :id_name, type: String
