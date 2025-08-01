@@ -79,6 +79,12 @@
           <% end %>
         </div>
       <% end %>
+
+      <%# テスト側で承認を待機する方法がない。承認したら「承認しました。」というnoticeを表示すれば良いのだろうけど、その方法がない。 %>
+      <%# 代わりに hidden 要素にワークフロー状態を出力するようにする。 %>
+      <% if page.is_a?(Workflow::Approver) && page.workflow_state.present? %>
+        <span class="ss-preview-workflow-state" style="display: none;" data-workflow-state="<%= page.workflow_state %>"><%= t("workflow.state.#{page.workflow_state}") %></span>
+      <% end %>
     <% end %>
 
     <% if rendered && (node = rendered[:node]) %>
