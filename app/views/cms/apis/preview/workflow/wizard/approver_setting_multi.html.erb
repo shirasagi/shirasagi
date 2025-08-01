@@ -11,9 +11,10 @@
       height = maxHeight;
     }
 
-    var currentHeight = $frame.dialog("option", "height");
+    var $dialog = $frame.closest(".ss-preview-dialog");
+    var currentHeight = $dialog.dialog("option", "height");
     if (currentHeight < height) {
-      $frame.dialog("option", "height", height);
+      $dialog.dialog("option", "height", height);
     }
   <% end %>
 </div>
