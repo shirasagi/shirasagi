@@ -15,7 +15,7 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
       redirect_url: node_my_blog.url)
   end
   let!(:blog_layout) { create :member_blog_layout, cur_site: site, cur_node: node_blog }
-  let!(:member) { cms_member(site: site) }
+  let!(:member1) { cms_member(site: site) }
 
   describe 'without member login' do
     it do
@@ -29,20 +29,20 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
   end
 
   describe 'with member login' do
-    before do
-      login_member(site, node_login, member)
-    end
-
-    after do
-      logout_member(site, node_login, member)
-    end
-
     describe "member/node/blog_page's crud" do
       let(:blog_name) { unique_id }
       let(:blog_url) { unique_id }
       let(:blog_description) { Array.new(2) { unique_id } }
       let(:blog_genres) { Array.new(2) { unique_id } }
       let(:blog_name2) { unique_id }
+
+      before do
+        login_member(site, node_login, member1)
+      end
+
+      after do
+        logout_member(site, node_login, member1)
+      end
 
       it do
         visit node_blog.full_url
@@ -130,12 +130,20 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
       let!(:node_blog_page) do
         create(
           :member_node_blog_page, cur_site: site, cur_node: node_blog, layout: blog_layout, page_layout: blog_layout,
-          member: member, genres: [ unique_id ], state: "public")
+          member: member1, genres: [ unique_id ], state: "public")
       end
       let(:name1) { "name-#{unique_id}" }
       let(:body1) { "body-#{unique_id}" }
       let(:html1) { "<p>#{body1}</p>" }
       let(:name2) { "name-#{unique_id}" }
+
+      before do
+        login_member(site, node_login, member1)
+      end
+
+      after do
+        logout_member(site, node_login, member1)
+      end
 
       it do
         #
@@ -167,7 +175,7 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
           expect(file.model).to eq "member/temp_file"
           expect(file.owner_item_type).to be_blank
           expect(file.owner_item_id).to be_blank
-          expect(file.member_id).to eq member.id
+          expect(file.member_id).to eq member1.id
         end
         # back to blog
         within "form.member-blog-page" do
@@ -192,7 +200,7 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
         expect(Member::BlogPage.all.count).to eq 1
         Member::BlogPage.all.first.tap do |blog_page|
           expect(blog_page.site_id).to eq site.id
-          expect(blog_page.member_id).to eq member.id
+          expect(blog_page.member_id).to eq member1.id
           expect(blog_page.filename).to start_with "#{node_blog_page.filename}/"
           expect(blog_page.name).to eq name1
           expect(blog_page.html).to include(body1, "keyvisual.jpg")
@@ -207,7 +215,7 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
           expect(blog_image.model).to eq "member/blog_page"
           expect(blog_image.owner_item_type).to eq blog_page.class.name
           expect(blog_image.owner_item_id).to eq blog_page.id
-          expect(blog_image.member_id).to eq member.id
+          expect(blog_image.member_id).to eq member1.id
         end
 
         #
@@ -228,7 +236,7 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
         expect(Member::BlogPage.all.count).to eq 1
         Member::BlogPage.all.first.tap do |blog_page|
           expect(blog_page.site_id).to eq site.id
-          expect(blog_page.member_id).to eq member.id
+          expect(blog_page.member_id).to eq member1.id
           expect(blog_page.filename).to start_with "#{node_blog_page.filename}/"
           expect(blog_page.name).to eq name2
           expect(blog_page.html).to include(body1, "keyvisual.jpg")
@@ -243,7 +251,7 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
           expect(blog_image.model).to eq "member/blog_page"
           expect(blog_image.owner_item_type).to eq blog_page.class.name
           expect(blog_image.owner_item_id).to eq blog_page.id
-          expect(blog_image.member_id).to eq member.id
+          expect(blog_image.member_id).to eq member1.id
         end
 
         #
@@ -261,6 +269,153 @@ describe 'members/agents/nodes/my_blog', type: :feature, dbscope: :example, js: 
         wait_for_notice I18n.t("ss.notice.deleted"), selector: "#ss-notice"
 
         expect(Member::BlogPage.all.count).to eq 0
+      end
+    end
+
+    describe "member/blog_page's publish" do
+      let!(:member2) { cms_member(site: site, email: unique_email) }
+      let!(:node_blog_page) do
+        create(
+          :member_node_blog_page, cur_site: site, cur_node: node_blog, layout: blog_layout, page_layout: blog_layout,
+          member: member1, genres: [ unique_id ], state: "public")
+      end
+      let(:name1) { "name-#{unique_id}" }
+      let(:body1) { "body-#{unique_id}" }
+      let(:html1) { "<p>#{body1}</p>" }
+      let(:name2) { "name-#{unique_id}" }
+
+      it do
+        login_member(site, node_login, member1)
+
+        # Create a blog in private
+        visit node_my_blog.full_url
+        click_on I18n.t("ss.links.new")
+        wait_for_all_ckeditors_ready
+        within "form.member-blog-page" do
+          fill_in "item[name]", with: name1
+          fill_in_ckeditor "item[html]", with: html1
+          wait_for_cbox_opened { click_on I18n.t("ss.links.upload") }
+        end
+        within_cbox do
+          attach_file "item[in_files][]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
+          click_on I18n.t("ss.buttons.save")
+          expect(page).to have_css('.file-view', text: 'keyvisual.jpg')
+          wait_for_cbox_closed do
+            click_on 'keyvisual.jpg'
+          end
+        end
+        within "form.member-blog-page" do
+          within '#selected-files' do
+            expect(page).to have_css('.name', text: 'keyvisual.jpg')
+            image_element_info(first("img")).tap do |info|
+              expect(info[:width]).to eq 360
+              expect(info[:height]).to be > 100
+            end
+          end
+
+          wait_for_ckeditor_event "item[html]", "afterInsertHtml" do
+            within '#selected-files' do
+              click_on I18n.t("sns.image_paste")
+            end
+          end
+
+          select I18n.t("ss.options.state.closed"), from: "item[state]"
+
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
+
+        expect(Member::BlogPage.all.count).to eq 1
+        Member::BlogPage.all.first.tap do |blog_page|
+          expect(blog_page.site_id).to eq site.id
+          expect(blog_page.member_id).to eq member1.id
+          expect(blog_page.filename).to start_with "#{node_blog_page.filename}/"
+          expect(blog_page.name).to eq name1
+          expect(blog_page.html).to include(body1, "keyvisual.jpg")
+          expect(blog_page.files.count).to eq 1
+          expect(blog_page.state).to eq "closed"
+
+          blog_image = blog_page.files.first
+          blog_image = blog_image.becomes_with_model
+          expect(blog_image).to be_a(Member::File)
+          expect(blog_image.site_id).to eq site.id
+          expect(blog_image.filename).to eq "keyvisual.jpg"
+          expect(blog_image.model).to eq "member/blog_page"
+          expect(blog_image.owner_item_type).to eq blog_page.class.name
+          expect(blog_image.owner_item_id).to eq blog_page.id
+          expect(blog_image.member_id).to eq member1.id
+        end
+
+        # 公開側をアクセス
+        visit node_blog_page.url
+        expect(page).to have_no_content(name1)
+
+        # publish a blog
+        visit node_my_blog.full_url
+        click_on name1
+        click_on I18n.t("ss.links.edit")
+        within "form.member-blog-page" do
+          select I18n.t("ss.options.state.public"), from: "item[state]"
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved"), selector: "#ss-notice"
+
+        expect(Member::BlogPage.all.count).to eq 1
+        Member::BlogPage.all.first.tap do |blog_page|
+          expect(blog_page.state).to eq "public"
+        end
+
+        # 公開側をアクセス
+        visit node_blog_page.url
+        within ".pages" do
+          expect(page).to have_css(".blog", count: 1)
+          within ".blog" do
+            expect(page).to have_css("h2", text: name1)
+
+            image_element_info(first(".body img")).tap do |info|
+              expect(info[:width]).to eq 712
+              expect(info[:height]).to be > 100
+            end
+
+            click_on name1
+          end
+        end
+
+        within ".blog" do
+          expect(page).to have_css("h2", text: name1)
+
+          image_element_info(first(".body img")).tap do |info|
+            expect(info[:width]).to eq 712
+            expect(info[:height]).to be > 100
+          end
+        end
+
+        # 違うメンバーで公開側をチェック
+        login_member(site, node_login, member2)
+
+        visit node_blog_page.url
+        within ".pages" do
+          expect(page).to have_css(".blog", count: 1)
+          within ".blog" do
+            expect(page).to have_css("h2", text: name1)
+
+            image_element_info(first(".body img")).tap do |info|
+              expect(info[:width]).to eq 712
+              expect(info[:height]).to be > 100
+            end
+
+            click_on name1
+          end
+        end
+
+        within ".blog" do
+          expect(page).to have_css("h2", text: name1)
+
+          image_element_info(first(".body img")).tap do |info|
+            expect(info[:width]).to eq 712
+            expect(info[:height]).to be > 100
+          end
+        end
       end
     end
   end
