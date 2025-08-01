@@ -33,7 +33,7 @@ module Member::AjaxFileFilter
   end
 
   def fix_params
-    { cur_member: @cur_member }
+    { site: @cur_site, cur_member: @cur_member }
   end
 
   def set_items
