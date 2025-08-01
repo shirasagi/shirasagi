@@ -4,6 +4,7 @@ class Cms::LoopSetting
   include SS::Reference::Site
   include Cms::SitePermission
   include Cms::Addon::Html
+  include Cms::Addon::HtmlCustom
 
   set_permission_name "cms_loop_settings", :edit
 
@@ -11,6 +12,7 @@ class Cms::LoopSetting
   field :name, type: String
   field :description, type: String
   field :order, type: Integer
+  field :state, type: String, default: "public"
   permit_params :name, :description, :order
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
@@ -30,5 +32,14 @@ class Cms::LoopSetting
       end
       criteria
     end
+
+    def options_for_state
+      [
+        [I18n.t('ss.options.state.public'), 'public'],
+        [I18n.t('ss.options.state.closed'), 'closed']
+      ]
+    end
+
+    delegate :html_format_options, to: Cms::Addon::HtmlCustom
   end
 end

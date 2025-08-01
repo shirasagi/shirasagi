@@ -55,7 +55,12 @@ module Cms::ListHelper
     if cur_item.loop_format_shirasagi?
       render_list_with_shirasagi(cur_item, default_node_loop_html, &block)
     else
-      source = cur_item.loop_liquid.presence || default_node_loop_liquid
+      if cur_item.loop_setting.present?
+        # Liquid形式の場合はcustom_htmlを使用
+        source = cur_item.loop_setting.custom_html.presence
+      else
+        source = cur_item.loop_liquid.presence || default_node_loop_liquid
+      end
       assigns = { "nodes" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
@@ -71,7 +76,12 @@ module Cms::ListHelper
     if cur_item.loop_format_shirasagi?
       render_list_with_shirasagi(cur_item, default_page_loop_html, &block)
     else
-      source = cur_item.loop_liquid.presence || default_page_loop_liquid
+      # Liquid形式の場合はcustom_htmlを使用
+      if cur_item.loop_setting.present?
+        source = cur_item.loop_setting.custom_html.presence
+      else
+        source = cur_item.loop_liquid.presence || default_page_loop_liquid
+      end
       assigns = { "pages" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
@@ -80,6 +90,7 @@ module Cms::ListHelper
   private
 
   def render_list_with_shirasagi(cur_item, default_loop_html, &block)
+    Rails.logger.info("render_list_with_shirasagi #{cur_item.inspect}")
     h = []
 
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?
