@@ -17,6 +17,9 @@
 //= require mdn-polyfills/String.prototype.startsWith.js
 //= require mdn-polyfills/String.prototype.trim.js
 
+// for 承認ユーザー選択
+//= require ejs/ejs.min.js
+
 SS_Preview = (function () {
   function SS_Preview(el) {
     this.el = el;
@@ -195,7 +198,8 @@ SS_Preview = (function () {
       $.colorbox.close();
     }
     if ($frame.closest(".ui-dialog")[0]) {
-      $frame.dialog("close");
+      var $dialog = $frame.closest(".ss-preview-dialog");
+      $dialog.dialog("close");
     }
   }
 
@@ -414,7 +418,8 @@ SS_Preview = (function () {
     var width = frame.contentWindow.document.body.scrollWidth;
     var height = frame.contentWindow.document.body.scrollHeight;
 
-    if ($(frame).closest(".ui-dialog")[0]) {
+    var $frame = $(frame);
+    if ($frame.closest(".ui-dialog")[0]) {
       height += SS_Preview.jqueryDialogMargin.height;
     }
 
@@ -435,15 +440,18 @@ SS_Preview = (function () {
       height = maxHeight;
     }
 
-    if ($(frame).closest("#cboxLoadedContent")[0]) {
+    if ($frame.closest("#cboxLoadedContent")[0]) {
       $.colorbox.resize({ width: width, height: height });
     }
 
-    if ($(frame).closest(".ui-dialog")[0]) {
-      $(frame).dialog("option", "width", width)
+    if ($frame.closest(".ui-dialog")[0]) {
+      var $dialog = $frame.closest(".ss-preview-dialog");
+      $dialog.dialog("option", "width", width)
         .dialog("option", "height", height)
         .css("display", "")
-        .css("width", "100%");
+        .css("width", "");
+
+      $frame.css("width", "100%").css("height", "100%");
     }
   };
 
@@ -566,20 +574,23 @@ SS_Preview = (function () {
       frameborder: "0", allowfullscreen: true,
       src: url
     });
-
     $frame[0].onload = function() { self.initializeFrame($frame[0]); };
 
-    $frame.dialog({
+    var $dialog = $("<div />", { class: "ss-preview-dialog ss-preview-dialog-column" });
+    $dialog.append($frame);
+    $dialog.dialog({
       autoOpen: true,
       width: SS_Preview.initialFrameSize.width,
       height: SS_Preview.initialFrameSize.height,
       minWidth: SS_Preview.minFrameSize.width,
       minHeight: SS_Preview.minFrameSize.height,
       closeOnEscape: false,
-      dialogClass: "ss-preview-dialog ss-preview-dialog-column",
       draggable: true,
       modal: true,
       resizable: true,
+      open: function(_ev, _ui) {
+        window.requestAnimationFrame(function() { $dialog.trigger("ss:previewDialogOpened"); });
+      },
       close: function(_ev, _ui) {
         // explicitly destroy dialog and remove elemtns because dialog elements is still remained
         $(this).dialog('destroy').remove();
@@ -598,22 +609,24 @@ SS_Preview = (function () {
       url: url,
       type: "GET",
       success: function(data, _textStatus, _xhr) {
-        var $frame = $("div#ss-preview-dialog-frame");
-        if (! $frame[0]) {
-          $frame = $("<div></div>", { id: "ss-preview-dialog-frame" });
-        }
+        var $frame = $("<div/>", { id: "ss-preview-dialog-frame" });
         $frame.html(data);
-        $frame.dialog({
+
+        var $dialog = $("<div/>", { class: "ss-preview-dialog ss-preview-dialog-column" });
+        $dialog.append($frame);
+        $dialog.dialog({
           autoOpen: true,
           width: options.width || SS_Preview.initialFrameSize.width,
           height: options.height || SS_Preview.initialFrameSize.height,
           minWidth: options.minWidth || SS_Preview.minFrameSize.width,
           minHeight: options.minHeight || SS_Preview.minFrameSize.height,
           closeOnEscape: false,
-          dialogClass: "ss-preview-dialog ss-preview-dialog-column",
           draggable: true,
           modal: true,
           resizable: true,
+          open: function(_ev, _ui) {
+            window.requestAnimationFrame(function() { $dialog.trigger("ss:previewDialogOpened"); });
+          },
           close: function(_ev, _ui) {
             // explicitly destroy dialog and remove elemtns because dialog elements is still remained
             $(this).dialog('destroy').remove();

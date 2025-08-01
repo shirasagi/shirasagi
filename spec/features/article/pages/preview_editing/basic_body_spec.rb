@@ -80,6 +80,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         page.within_frame page.first("#ss-preview-dialog-frame") do
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
+
           within "#item-form" do
             fill_in_ckeditor "item[html]", with: html2
 
