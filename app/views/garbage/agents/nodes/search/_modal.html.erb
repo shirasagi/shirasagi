@@ -5,7 +5,7 @@
   </fieldset>
 
   <fieldset class="category">
-    <legend><%= label_tag 'category_ids[]', t("garbage.category.setting") %></legend>
+    <legend><%= label_tag 'category_ids[]', t("garbage.category.select") %></legend>
     <%= select_tag 'category_ids[]', options_for_select(@options, @category_ids.first), include_blank: "" %>
   </fieldset>
 
