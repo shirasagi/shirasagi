@@ -66,7 +66,13 @@ this.SS_SearchUI = (function () {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
     }
 
-    var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});
+    var deleteLabel;
+    if ("i18next" in window) {
+      deleteLabel = i18next.t("ss.buttons.delete");
+    } else {
+      deleteLabel = "削除";
+    }
+    var tr = ejs.render(template, {data: data, attr: attr, label: { delete: deleteLabel }});
     var $tr = $(tr);
     var $ajaxSelected;
     if (selectTable === "to") {
