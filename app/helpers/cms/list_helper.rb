@@ -90,7 +90,6 @@ module Cms::ListHelper
   private
 
   def render_list_with_shirasagi(cur_item, default_loop_html, &block)
-    Rails.logger.info("render_list_with_shirasagi #{cur_item.inspect}")
     h = []
 
     h << cur_item.upper_html.html_safe if cur_item.upper_html.present?

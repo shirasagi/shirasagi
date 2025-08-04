@@ -27,13 +27,6 @@ class Cms::Node::ConfsController < ApplicationController
 
   public
 
-  def update
-    @item.attributes = get_params
-    @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
-    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
-    render_update @item.update
-  end
-
   def destroy
     raise "403" unless @item.allowed?(:delete, @cur_user)
     render_destroy @item.destroy, location: redirect_url_on_destroy
