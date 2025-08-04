@@ -58,7 +58,7 @@ class Gws::Tabular::Column::LookupField < Gws::Column::Base
       index_direction = -1
     end
     if %w(enabled asc desc).include?(index_state)
-      if lookup_column.i18n_state == "enabled"
+      if lookup_column.try(:i18n_state) == "enabled"
         I18n.available_locales.each do |lang|
           file_model.index "#{field_name}.#{lang}" => index_direction
         end
@@ -68,7 +68,7 @@ class Gws::Tabular::Column::LookupField < Gws::Column::Base
     end
 
     file_model.keyword_fields << field_name
-    if lookup_column.i18n_state == "enabled"
+    if lookup_column.try(:i18n_state) == "enabled"
       I18n.available_locales.each do |lang|
         file_model.keyword_fields << "#{field_name}.#{lang}"
       end
