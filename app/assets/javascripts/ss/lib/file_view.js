@@ -298,60 +298,76 @@ SS_FileView.findScaleStepIndex = function(scale) {
 };
 
 SS_FileView.prototype.initializationComplete = function() {
-  var canvasWidth = this.$el.width();
+  var self = this;
+  var canvasWidth = self.$el.width();
 
   var $ajaxBox = $("#ajax-box");
   var canvasHeight = $("#cboxLoadedContent").height();
   // minus padding
   canvasHeight -= $ajaxBox.outerHeight(true) - $ajaxBox.height();
   // minus toolbar height
-  canvasHeight -= Math.ceil(this.$canvasContainer.offset().top) - Math.floor(this.$el.offset().top);
+  canvasHeight -= Math.ceil(self.$canvasContainer.offset().top) - Math.floor(self.$el.offset().top);
   canvasHeight -= SS_FileView.CANVAS_SAFE_MARGIN;
 
-  this.canvas.width = canvasWidth;
-  this.canvas.height = canvasHeight;
+  self.canvas.width = canvasWidth;
+  self.canvas.height = canvasHeight;
 
-  var x = SS_FileView.calcPositionAndScale(this.image.width, canvasWidth);
-  var y = SS_FileView.calcPositionAndScale(this.image.height, canvasHeight);
+  var x = SS_FileView.calcPositionAndScale(self.image.width, canvasWidth);
+  var y = SS_FileView.calcPositionAndScale(self.image.height, canvasHeight);
 
   if (y.scale > x.scale) {
-    this.scale = x.scale;
-    this.dragInfo.diff.x = x.position;
-    this.dragInfo.diff.y = ((canvasHeight - this.image.height * this.scale) / 2) / this.scale;
-    if (this.dragInfo.diff.y < 0) {
-      this.dragInfo.diff.y = 0;
+    self.scale = x.scale;
+    self.dragInfo.diff.x = x.position;
+    self.dragInfo.diff.y = ((canvasHeight - self.image.height * self.scale) / 2) / self.scale;
+    if (self.dragInfo.diff.y < 0) {
+      self.dragInfo.diff.y = 0;
     }
   } else {
-    this.scale = y.scale;
-    this.dragInfo.diff.x = ((canvasWidth - this.image.width * this.scale) / 2) / this.scale;
-    if (this.dragInfo.diff.x < 0) {
-      this.dragInfo.diff.x = 0;
+    self.scale = y.scale;
+    self.dragInfo.diff.x = ((canvasWidth - self.image.width * self.scale) / 2) / self.scale;
+    if (self.dragInfo.diff.x < 0) {
+      self.dragInfo.diff.x = 0;
     }
-    this.dragInfo.diff.y = y.position;
+    self.dragInfo.diff.y = y.position;
   }
-  this.dragInfo.canvas.x = this.dragInfo.diff.x;
-  this.dragInfo.canvas.y = this.dragInfo.diff.y;
-  this.redrawImage();
+  self.dragInfo.canvas.x = self.dragInfo.diff.x;
+  self.dragInfo.canvas.y = self.dragInfo.diff.y;
+  self.redrawImage();
 
-  this.$slider.prop({ value: this.scale * 100 });
+  self.$slider.prop({ value: self.scale * 100 });
 
-  this.$el.find(".btn-zoom-out").on("click", this.prevScale.bind(this));
-  this.$el.find(".btn-zoom-in").on("click", this.nextScale.bind(this));
+  self.$el.find(".btn-zoom-out").on("click", self.prevScale.bind(self));
+  self.$el.find(".btn-zoom-in").on("click", self.nextScale.bind(self));
 
-  this.$el.find("#foreground-color").minicolors("value", this.rgbAt(canvasWidth / 2, canvasHeight / 2));
-  this.$el.find("#background-color").minicolors("value", "#ffffff");
-  this.calculateContrastRatio();
+  var $foregroundColorEl = self.$el.find("[name='foreground-color']");
+  if ($foregroundColorEl.attr("aria-busy")) {
+    $foregroundColorEl.one("ss:colorPickerReady", function() {
+      $foregroundColorEl.minicolors("value", self.rgbAt(canvasWidth / 2, canvasHeight / 2));
+    });
+  } else {
+    $foregroundColorEl.minicolors("value", self.rgbAt(canvasWidth / 2, canvasHeight / 2));
+  }
 
-  this.$el.find(".btn-contrast-ratio").on("click", this.calculateContrastRatio.bind(this));
+  var $backgroundColorEl = self.$el.find("[name='background-color']");
+  if ($backgroundColorEl.attr("aria-busy")) {
+    $backgroundColorEl.one("ss:colorPickerReady", function() {
+      $backgroundColorEl.minicolors("value", "#ffffff");
+    });
+  } else {
+    $backgroundColorEl.minicolors("value", "#ffffff");
+  }
+  self.calculateContrastRatio();
 
-  this.canvas.addEventListener("click", this.pickUpColor.bind(this));
-  this.canvas.addEventListener("mousedown", this.dragStart.bind(this));
-  this.canvas.addEventListener("mousemove", this.dragging.bind(this));
-  this.canvas.addEventListener("mouseup", this.dragEnd.bind(this));
+  self.$el.find(".btn-contrast-ratio").on("click", self.calculateContrastRatio.bind(self));
 
-  this.$el.find(".btn-color-picker").on("click", this.pickUpColorStart.bind(this));
+  self.canvas.addEventListener("click", self.pickUpColor.bind(self));
+  self.canvas.addEventListener("mousedown", self.dragStart.bind(self));
+  self.canvas.addEventListener("mousemove", self.dragging.bind(self));
+  self.canvas.addEventListener("mouseup", self.dragEnd.bind(self));
 
-  this.$el.find(".canvas-container").html(this.canvas);
+  self.$el.find(".btn-color-picker").on("click", self.pickUpColorStart.bind(self));
+
+  self.$el.find(".canvas-container").html(self.canvas);
 };
 
 SS_FileView.prototype.calculateContrastRatio = function() {
