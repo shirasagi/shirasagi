@@ -40,16 +40,64 @@
     <% if @model.use_liquid %>
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
+      var savedLoopSettingId = '<%= @item.loop_setting_id %>';
+      
       if (format === "liquid") {
         $addon.find(".loop-format-shirasagi").addClass("hide");
         $addon.find(".loop-format-liquid").removeClass("hide");
+        // シラサギ形式のloop_setting_idを無効化
+        $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', true);
+        // Liquid形式のloop_setting_idを有効化
+        $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").prop('disabled', false);
+        
+        // 保存された値がある場合、Liquid形式のセレクトボックスに移行
+        if (savedLoopSettingId && savedLoopSettingId !== '') {
+          $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").val(savedLoopSettingId);
+          console.log('Liquid形式に変更: loop_setting_idを移行:', savedLoopSettingId);
+        }
       } else {
         $addon.find(".loop-format-shirasagi").removeClass("hide");
         $addon.find(".loop-format-liquid").addClass("hide");
+        // シラサギ形式のloop_setting_idを有効化
+        $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', false);
+        // Liquid形式のloop_setting_idを無効化
+        $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").prop('disabled', true);
+        
+        // 保存された値がある場合、シラサギ形式のセレクトボックスに移行
+        if (savedLoopSettingId && savedLoopSettingId !== '') {
+          $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").val(savedLoopSettingId);
+          console.log('シラサギ形式に変更: loop_setting_idを移行:', savedLoopSettingId);
+        }
       }
     };
 
     changeLoopFormat();
+
+    // 初期状態で適切なloop_setting_idセレクトボックスを有効化
+    var initialFormat = $loopFormatSelect.val();
+    if (initialFormat === "liquid") {
+      $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', true);
+      $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").prop('disabled', false);
+    } else {
+      $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', false);
+      $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").prop('disabled', true);
+    }
+
+    // 保存されたloop_setting_idの値をデバッグ出力
+    var savedLoopSettingId = '<%= @item.loop_setting_id %>';
+    console.log('保存されたloop_setting_id:', savedLoopSettingId);
+    console.log('現在のloop_format:', initialFormat);
+    
+    // 保存された値が存在する場合、適切なセレクトボックスに設定
+    if (savedLoopSettingId && savedLoopSettingId !== '') {
+      if (initialFormat === "liquid") {
+        $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").val(savedLoopSettingId);
+        console.log('Liquid形式のセレクトボックスに値を設定:', savedLoopSettingId);
+      } else {
+        $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").val(savedLoopSettingId);
+        console.log('シラサギ形式のセレクトボックスに値を設定:', savedLoopSettingId);
+      }
+    }
 
     $loopFormatSelect.on("change", changeLoopFormat);
     <% end %>

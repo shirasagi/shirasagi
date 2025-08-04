@@ -99,7 +99,7 @@ module Cms::ListHelper
     else
       h << cur_item.substitute_html.to_s.html_safe if @items.blank?
       if cur_item.loop_setting.present?
-        loop_html = cur_item.loop_setting.html
+        loop_html = cur_item.loop_setting.custom_html.presence || cur_item.loop_setting.html
       elsif cur_item.loop_html.present?
         loop_html = cur_item.loop_html
       else
