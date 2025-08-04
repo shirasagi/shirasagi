@@ -10,7 +10,7 @@
     <% if @model.use_liquid %>
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
-      var savedLoopSettingId = '<%= @item.loop_setting_id %>';
+      var savedLoopSettingId = '';
       
       if (format === "liquid") {
         $addon.find(".loop-format-shirasagi").addClass("hide");
