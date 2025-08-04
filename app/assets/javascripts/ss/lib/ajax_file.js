@@ -117,9 +117,8 @@ this.SS_AjaxFile = (function () {
     });
 
     self.$el.on("click", ".user-files .delete", function(ev) {
-      self.deleteFile(ev.target);
-
       ev.preventDefault();
+      self.deleteFile(ev.target);
       return false;
     });
 
@@ -231,7 +230,13 @@ this.SS_AjaxFile = (function () {
   };
 
   SS_AjaxFile.prototype.deleteFile = function(el) {
-    if (!confirm(i18next.t('ss.confirm.delete'))) {
+    var confirmMessage = "削除してよろしいですか？";
+    if ("i18next" in window) {
+      confirmMessage = i18next.t('ss.confirm.delete')
+    } else {
+      confirmMessage = "削除してよろしいですか？";
+    }
+    if (!confirm(confirmMessage)) {
       return false;
     }
 
