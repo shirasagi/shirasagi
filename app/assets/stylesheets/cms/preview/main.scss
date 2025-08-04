@@ -488,6 +488,11 @@ table.index {
     font-weight: normal;
   }
 }
+.search-ui-select {
+  .btn {
+    @include btn;
+  }
+}
 .mod-workflow-request {
   dt {
     .tooltip {
