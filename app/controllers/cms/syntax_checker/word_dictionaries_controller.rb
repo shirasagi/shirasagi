@@ -8,7 +8,8 @@ class Cms::SyntaxChecker::WordDictionariesController < ApplicationController
   private
 
   def set_crumbs
-    @crumbs << [t("cms.word_dictionary"), action: :index]
+    @crumbs << [t("cms.syntax_check"), cms_syntax_checker_main_path]
+    @crumbs << [t("cms.word_dictionary"), url_for(action: :index)]
   end
 
   def fix_params
