@@ -25,7 +25,17 @@ module Gws::Schedule::CalendarFilter
     end
 
     def redirection_date
-      @item.present? ? @item.start_at.to_date.to_s : params.dig(:calendar, :date)
+      if @item.present?
+        return @item.start_at.to_date.to_s
+      end
+
+      date = params.dig(:calendar, :date)
+      if date.present?
+        return date
+      end
+
+      # Timecop で today / now が変更されている可能性があるので、現在年月日を明示する
+      I18n.l(Time.zone.today, format: :iso)
     end
 
     def redirection_view_format
