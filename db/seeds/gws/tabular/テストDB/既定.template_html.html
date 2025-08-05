@@ -1,0 +1,25 @@
+<div class="card-view">
+  {% ss_pagination %}
+
+  <div class="card-list">
+    {% for item in items %}
+    <a href="{{ item | show_url }}" class="card-item card-link" data-id="{{ item.id }}">
+      <span class="type-mark">{% for type in item.values["分類"] %}{{ type.values["分類"] }}{% endfor %}</span>
+      <figure class="card-cover-fig">
+        {% if item.values["写真1"].url and item.values["写真1"].image? %}
+        <img src="{{ item.values["写真1"].thumb_url }}" alt="{{ item.values["製品名"] }}" class="card-cover-img">
+        {% else %}
+        <div class="card-cover-no-image"><span>No Image</span></div>
+        {% endif %}
+      </figure>
+      <h3 class="card-name">
+        {{ item.values["製品名"] }}
+      </h3>
+      <div class="card-release-close">
+        <time class="card-time" datetime="{{ item.released }}">{{ item.values["使用日"] | ss_time: "iso" }}</time>
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+    {% ss_pagination %}
+</div>

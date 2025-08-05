@@ -200,6 +200,8 @@ save_node route: "member/photo_spot", filename: "kanko-info/photo/spot", name: "
 Cms::Node.where(site_id: @site._id, route: /^article\//).update_all(layout_id: @layouts["more"].id)
 Cms::Node.where(site_id: @site._id, route: /^article\//, filename: "hinanjo").
   update_all(layout_id: @layouts["general"].id)
+Cms::Node.where(site_id: @site._id, route: /^article\//, filename: "watersupply").
+  update_all(layout_id: @layouts["general"].id)
 Cms::Node.where(site_id: @site._id, route: /^event\//, filename: "calendar").
   update_all(layout_id: @layouts["event-top"].id)
 Cms::Node.where(site_id: @site._id, route: /^event\//, filename: "calendar/search").
