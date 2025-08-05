@@ -392,7 +392,7 @@ end
     "col_#{@tabular_columns[12].id}": %w(社用),
     "col_#{@tabular_columns[13].id}": "営業",
     "col_#{@tabular_columns[14].id}": %w(なし)
-  )
+  ),
   create_tabular_file(
     cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[6],
     "col_#{@tabular_columns[23].id}": "ワゴン",
@@ -407,5 +407,5 @@ end
     cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[6],
     "col_#{@tabular_columns[23].id}": "セダン",
     "col_#{@tabular_columns[24].id}": 100,
-  ),
+  )
 ]
