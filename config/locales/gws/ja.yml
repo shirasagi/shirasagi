@@ -102,7 +102,9 @@ ja:
       change_menu_icon: アイコン変更
     confirm:
       readable_setting:
-        empty: 閲覧者が入力されていません。\n全員に表示されますがよろしいですか？
+        empty: |
+          閲覧者が入力されていません。
+          全員に表示されますがよろしいですか？
     notice:
       delay_download_with_message: |-
         ファイル数が多い、またはファイル容量が大きいためバックグランドでファイルを準備します。
