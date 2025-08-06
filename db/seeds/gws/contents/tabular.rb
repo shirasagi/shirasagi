@@ -340,5 +340,147 @@ end
     space: @tabular_spaces[2], form: @tabular_forms[7], name: "レンタル品一覧",
     authoring_permissions: %w(delete download_all edit import read), state: "public",
     default_state: "enabled", limit_count: 20
-  ),
+  )
 ]
+
+@tabular_forms.each do |form|
+  backup_service = Gws::Column::BackupService.new(
+    cur_site: @site, cur_user: u('sys'), model: form.class
+  )
+  backup_service.criteria = form.class.unscoped.where(id: form.id)
+  backup_service.filename = form.current_release.archive_path
+  backup_service.call
+end
+
+puts "# tabular/file"
+
+def create_tabular_file(data)
+  cond = { site_id: @site._id }
+  item = Gws::Tabular::File[data[:form].current_release].new(cond)
+  item.attributes = data
+  item.cur_site ||= @site
+  item.cur_user ||= u('admin') if item.respond_to?(:cur_user)
+  if item.respond_to?("user_ids=")
+    item.user_ids = ([item.user_ids].flatten.compact + [item.cur_user.id]).uniq
+  end
+  if item.respond_to?("group_ids=")
+    item.group_ids = ([item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
+  end
+  puts item.errors.full_messages unless item.save
+  item
+end
+
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[0], form: @tabular_forms[2],
+  "col_#{@tabular_columns[9].id}": "<p>これはテストです1</p>"
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[0], form: @tabular_forms[2],
+  "col_#{@tabular_columns[9].id}": "<p>これはテストです2</p>"
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[3],
+  "col_#{@tabular_columns[10].id}": "2025-07-17",
+  "col_#{@tabular_columns[12].id}": %w(社用),
+  "col_#{@tabular_columns[13].id}": "配達",
+  "col_#{@tabular_columns[14].id}": %w(なし)
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[3],
+  "col_#{@tabular_columns[10].id}": "2025-08-01",
+  "col_#{@tabular_columns[12].id}": %w(社用),
+  "col_#{@tabular_columns[13].id}": "営業",
+  "col_#{@tabular_columns[14].id}": %w(なし)
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[6],
+  "col_#{@tabular_columns[23].id}": "ワゴン",
+  "col_#{@tabular_columns[24].id}": 100
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[6],
+  "col_#{@tabular_columns[23].id}": "軽自動車",
+  "col_#{@tabular_columns[24].id}": 300
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[6],
+  "col_#{@tabular_columns[23].id}": "セダン",
+  "col_#{@tabular_columns[24].id}": 100
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
+  "col_#{@tabular_columns[33].id}": "PC本体",
+  "col_#{@tabular_columns[34].id}": 100
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
+  "col_#{@tabular_columns[33].id}": "ケーブル類",
+  "col_#{@tabular_columns[34].id}": 200
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
+  "col_#{@tabular_columns[33].id}": "付属品類",
+  "col_#{@tabular_columns[34].id}": 300
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
+  "col_#{@tabular_columns[33].id}": "デスク",
+  "col_#{@tabular_columns[34].id}": 400
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
+  "col_#{@tabular_columns[33].id}": "イス",
+  "col_#{@tabular_columns[34].id}": 500
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
+  "col_#{@tabular_columns[33].id}": "コピー機",
+  "col_#{@tabular_columns[34].id}": 600
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
+  "col_#{@tabular_columns[33].id}": "その他",
+  "col_#{@tabular_columns[34].id}": 700
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
+  "col_#{@tabular_columns[35].id}": "PC",
+  "col_#{@tabular_columns[36].id}": 100
+)
+@tabular_file_2_9_2 =create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
+  "col_#{@tabular_columns[35].id}": "PC周辺機器",
+  "col_#{@tabular_columns[36].id}": 200
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
+  "col_#{@tabular_columns[35].id}": "什器",
+  "col_#{@tabular_columns[36].id}": 300
+)
+@tabular_file_2_9_4 = create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
+  "col_#{@tabular_columns[35].id}": "事務用品",
+  "col_#{@tabular_columns[36].id}": 400
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
+  "col_#{@tabular_columns[35].id}": "その他",
+  "col_#{@tabular_columns[36].id}": 500
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[7],
+  "col_#{@tabular_columns[25].id}": "2025-07-16 09:00",
+  "col_#{@tabular_columns[26].id}": "出張のため",
+  "col_#{@tabular_columns[27].id}_ids": [@tabular_file_2_9_2.id],
+  "col_#{@tabular_columns[28].id}": "Wi-Fiルーター",
+  "col_#{@tabular_columns[29].id}": 1,
+  "in_col_#{@tabular_columns[30].id}": sh_upload_file('dummy_slide05.png'),
+  "in_col_#{@tabular_columns[31].id}": sh_upload_file('dummy_slide08.png')
+)
+create_tabular_file(
+  cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[7],
+  "col_#{@tabular_columns[25].id}": "2025-07-23 13:39",
+  "col_#{@tabular_columns[27].id}_ids": [@tabular_file_2_9_4.id],
+  "col_#{@tabular_columns[28].id}": "テプラ",
+  "col_#{@tabular_columns[29].id}": 1
+)
