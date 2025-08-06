@@ -47,7 +47,9 @@ describe "member_agents_parts_logins", type: :feature, dbscope: :example, js: tr
     let!(:site1) { create(:cms_site_subdir, parent_id: site.id) }
 
     let!(:layout1) { create_cms_layout cur_site: site1 }
-    let!(:login_node1) { create :member_node_login, cur_site: site1, layout: layout1, redirect_url: "/#{unique_id}/#{unique_id}/" }
+    let!(:login_node1) do
+      create :member_node_login, cur_site: site1, layout: layout1, redirect_url: "/#{unique_id}/#{unique_id}/"
+    end
     let!(:login_part1) { create :member_part_login, cur_site: site1, cur_node: login_node1, ajax_view: 'enabled' }
 
     let!(:layout2) { create_cms_layout login_part1, cur_site: site1 }
