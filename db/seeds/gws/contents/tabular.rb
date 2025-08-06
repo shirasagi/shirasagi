@@ -393,7 +393,7 @@ create_tabular_file(
   "col_#{@tabular_columns[6].id}_ids": [@tabular_file_0_2_0.id],
   "col_#{@tabular_columns[7].id}": "プリウス",
   "col_#{@tabular_columns[8].id}": "品川 300 あ 11-11",
-  "col_#{@tabular_columns[9].id}_ids": [@tabular_file_0_3_1.id],
+  "col_#{@tabular_columns[9].id}_ids": [@tabular_file_0_3_2.id],
   "col_#{@tabular_columns[10].id}": "2025-07-01",
 )
 @tabular_file_0_1_1 = create_tabular_file(
