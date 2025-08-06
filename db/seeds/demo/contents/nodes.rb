@@ -40,6 +40,8 @@ save_node route: "article/page", filename: "docs", name: "記事",
   st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 save_node route: "article/page", filename: "watersupply", name: "水道使用 開始・停止受付",
   keywords: %w(サイト名), sort: "updated -1", limit: 20
+save_node route: "article/page", filename: "reiki", name: "例規集", keywords: %w(サイト名),
+  limit: 20, group_ids: [@g_seisaku.id]
 article_map_search = save_node(
   route: "article/map_search", filename: "hinanjo", name: "避難所検索",
   view_route: "category/node", sort: 'order', new_days: 0,
@@ -266,8 +268,6 @@ save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
 save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "show"
 save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
 save_node route: "uploader/file", filename: "dataset", name: "javascript"
-save_node route: "uploader/file", filename: "reiki", name: "例規集", keywords: %w(サイト名),
-  group_ids: [@g_seisaku.id]
 
 ## faq
 save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", st_category_ids: [@categories["faq"].id]

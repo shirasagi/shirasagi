@@ -880,7 +880,7 @@ save_page route: "article/page", filename: "docs/page53.html", name: "就労を�
     @categories["oshirase/sangyo"].id, @categories["kurashi/sodan"].id,
     @categories["sangyo/jinzai"].id
   ],
-  contact_state: "show", contact_group_id: g("シラサギ市/企画政策部/広報課").id,
+  contact_state: "show", contact_group_id: g("シラサギ市/福祉健康部/社会福祉課/福祉政策係").id,
   contact_group_relation: "related", contact_sub_group_ids: [g("シラサギ市/総務部/人事課/人材育成係").id],
   group_ids: [@g_seisaku.id]
 
@@ -1138,7 +1138,9 @@ save_page route: "article/page", filename: "docs/page57.html", name: "社会福�
     @categories["faq/kenko"].id, @categories["guide/fukushi"].id,
     @categories["kenko"].id
   ],
-  contact_state: "show", contact_group_relation: "related", group_ids: [@g_seisaku.id]
+  contact_state: "show", contact_group_id: g("シラサギ市/福祉健康部/社会福祉課/福祉政策係").id,
+  contact_group_relation: "related", contact_sub_group_ids: [g("シラサギ市/福祉健康部/社会福祉課/障がい福祉係").id],
+  group_ids: [@g_seisaku.id]
 
 save_page route: "article/page", filename: "docs/page58.html", name: "児童手当について",
   layout_id: @layouts["pages"].id, form_id: @form4.id, keywords: %w(記事 子育て 子育て支援 子育て・教育),
@@ -1429,5 +1431,10 @@ save_page route: "article/page", filename: "watersupply/page350.html", name: "�
     @categories["faq/kurashi"].id, @categories["guide/hikkoshi"].id,
     @categories["kurashi/suido"].id, @categories["kurashi/sumai"].id
   ],
+  contact_group_id: @contact_group_id, contact_group_relation: "related",
+  group_ids: [@g_seisaku.id]
+
+save_page route: "article/page", filename: "reiki/index.html", name: "例規集",
+  layout_id: @layouts["pages"].id, keywords: %w(例規集),
   contact_group_id: @contact_group_id, contact_group_relation: "related",
   group_ids: [@g_seisaku.id]
