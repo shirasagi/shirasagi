@@ -12,10 +12,15 @@ module Member::Addon::LoginLink
     ret = self.login_link_url.presence
     return ret if ret
 
-    ret = self.parent.redirect_url.presence rescue nil
+    ret = self.parent.url.presence rescue nil
     return ret if ret
 
-    ret = Member::Node::Mypage.site(@cur_site || self.site).first.url rescue nil
+    ret = Member::Node::Mypage.site(@cur_site || self.site).and_public.first.url rescue nil
     return ret if ret
+
+    ret = Member::Node::Login.site(@cur_site || self.site).and_public.first.url rescue nil
+    return ret if ret
+
+    @cur_site.url
   end
 end

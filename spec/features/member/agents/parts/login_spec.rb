@@ -42,4 +42,29 @@ describe "member_agents_parts_logins", type: :feature, dbscope: :example, js: tr
       end
     end
   end
+
+  context "sub site" do
+    let!(:site1) { create(:cms_site_subdir, parent_id: site.id) }
+
+    let!(:layout1) { create_cms_layout cur_site: site1 }
+    let!(:login_node1) { create :member_node_login, cur_site: site1, layout: layout1, redirect_url: "/#{unique_id}/#{unique_id}/" }
+    let!(:login_part1) { create :member_part_login, cur_site: site1, cur_node: login_node1, ajax_view: 'enabled' }
+
+    let!(:layout2) { create_cms_layout login_part1, cur_site: site1 }
+    let!(:node1) { create :cms_node, cur_site: site1, layout: layout2 }
+    let!(:mypage_node1) { create :member_node_mypage, cur_site: site1, layout: layout2 }
+
+    before do
+      Capybara.app_host = "http://#{site.domain}"
+    end
+
+    it "#index" do
+      visit node1.url
+      wait_for_js_ready
+      wait_for_all_ajax_parts
+      expect(page).to have_no_css(".ss-part")
+      expect(page).to have_css(".login", text: I18n.t("ss.login"))
+      expect(page).to have_link(I18n.t("ss.login"), href: login_node1.url)
+    end
+  end
 end
