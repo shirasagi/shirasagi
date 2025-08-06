@@ -234,9 +234,9 @@ save_node route: "cms/page", filename: "shinchaku", name: "新着情報", layout
 ## archive
 save_node route: "cms/archive", filename: "docs/archive", name: "月別アーカイブ", layout_id: @layouts["more"].id,
   page_layout_id: @layouts["pages"].id, conditions: %w(docs), order: 20, archive_view: "list"
-save_node route: "cms/archive", filename: "docs/archive", name: "年別アーカイブ", layout_id: @layouts["more"].id,
+save_node route: "cms/archive", filename: "docs/year", name: "年別アーカイブ", layout_id: @layouts["more"].id,
   page_layout_id: @layouts["pages"].id, order: 20, archive_view: "yearly_list"
-save_node route: "cms/archive", filename: "docs/archive", name: "カレンダー", layout_id: @layouts["more"].id,
+save_node route: "cms/archive", filename: "docs/calendar", name: "カレンダー", layout_id: @layouts["more"].id,
   page_layout_id: @layouts["pages"].id, conditions: %w(docs), order: 30, archive_view: "calendar"
 save_node route: "cms/archive", filename: "list", name: "アーカイブ", layout_id: @layouts["more"].id,
   view_route: 'cms/page'
