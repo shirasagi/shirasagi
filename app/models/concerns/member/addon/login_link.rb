@@ -21,6 +21,6 @@ module Member::Addon::LoginLink
     ret = Member::Node::Login.site(@cur_site || self.site).and_public.first.url rescue nil
     return ret if ret
 
-    @cur_site.url
+    (@cur_site || self.site).url
   end
 end
