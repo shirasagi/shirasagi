@@ -921,6 +921,7 @@ textarea {
         padding-top: 80px;
         background-repeat: no-repeat;
         background-position: center 15px;
+        box-sizing: content-box;
 
         @include mb {
           height: auto !important;

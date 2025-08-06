@@ -245,7 +245,7 @@ save_node route: "cms/archive", filename: "list", name: "アーカイブ", layou
 
 ## photo album
 save_node route: "cms/photo_album", filename: "docs/photo", name: "写真一覧",
-  layout_id: @layouts["pages"].id, conditions: %w(docs), order: 40
+  layout_id: @layouts["more"].id, conditions: %w(docs), order: 40
 
 ## site search
 save_node route: "cms/site_search", filename: "search", name: "サイト内検索", layout_id: @layouts["general"].id,
