@@ -304,22 +304,44 @@ module SS
       })(...arguments)
     SCRIPT
 
+    # WAIT_FOR_ALL_AJAX_PARTS_SCRIPT = <<~SCRIPT.freeze
+    #   (function(resolve) {
+    #     SS.ready(function() {
+    #       if (SS.partCountToLoad === 0) {
+    #         console.log("there are no ajax parts to load");
+    #         resolve(true);
+    #         return;
+    #       }
+    #
+    #       $(document).on("ss:ajaxPartComplete", function() {
+    #         console.log("a ajax part is loaded");
+    #         if (SS.partCountToLoad === 0) {
+    #           resolve(true);
+    #         }
+    #       });
+    #     });
+    #   })(...arguments)
+    # SCRIPT
     WAIT_FOR_ALL_AJAX_PARTS_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
-        SS.ready(function() {
-          if (SS.partCountToLoad === 0) {
-            console.log("there are no ajax parts to load");
-            resolve(true);
-            return;
-          }
+        const promises = [];
 
-          $(document).on("ss:ajaxPartComplete", function() {
-            console.log("a ajax part is loaded");
-            if (SS.partCountToLoad === 0) {
-              resolve(true);
-            }
+        document.querySelectorAll(".ss-part").forEach((element) => {
+          var promise = new Promise((resolveInner, _rejectInner) => {
+            $(element.parentElement || document).one("ss:ajaxPartComplete", () => {
+              resolveInner(true);
+            });
           });
+          promises.push(promise);
         });
+
+        if (promises.length === 0) {
+          // there are no parts to wait.
+          resolve(true);
+          return;
+        }
+
+        Promise.all(promises).then(() => resolve(true));
       })(...arguments)
     SCRIPT
 

@@ -13,6 +13,8 @@ describe "member_agents_parts_logins", type: :feature, dbscope: :example, js: tr
 
     it "#index" do
       visit node.url
+      wait_for_js_ready
+      wait_for_all_ajax_parts
       expect(page).to have_no_css(".ss-part")
       expect(page).to have_css(".login")
     end
@@ -32,6 +34,8 @@ describe "member_agents_parts_logins", type: :feature, dbscope: :example, js: tr
 
       it "#index" do
         visit node.url
+        wait_for_js_ready
+        wait_for_all_ajax_parts
         expect(page).to have_css('div#main')
         expect(page).to have_no_css(".ss-part")
         expect(page).to have_no_css(".login")
