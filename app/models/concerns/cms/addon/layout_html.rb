@@ -8,10 +8,10 @@ module Cms::Addon
       belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
       permit_params :html, :loop_setting_id
 
-      before_save :set_html
+      before_save :set_layout_html
     end
 
-    def set_html
+    def set_layout_html
       if loop_setting_id.present?
         self.html = loop_setting.custom_html
       end

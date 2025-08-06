@@ -3,7 +3,20 @@
 %>
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
+<%= jquery do %>
+  var $addon = $("<%= "##{addon[:id]}" %>");
+  var $loopSettingId = $addon.find('select[name="item[loop_setting_id]"]');
+  var $layout = $addon.find('textarea[name="item[layout]"]');
+  if ($loopSettingId.length) {
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_layout');
+  }
+<% end %>
+
 <dl class="see">
+  <dt class="wide"><%= @model.t :loop_setting_id %><%= @model.tt :loop_setting_id %></dt>
+  <dd class="wide">
+    <%= f.select :loop_setting_id, ancestral_custom_html_settings, include_blank: t('cms.input_directly')  %>
+  </dd>
   <dt class="wide">HTML<%= @model.tt :layout %></dt>
   <dd class="wide">
     <%= f.text_area :layout, style: "height: 400px", class: "html" %>
