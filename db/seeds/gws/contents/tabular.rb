@@ -361,10 +361,10 @@ def create_tabular_file(data)
   item.cur_site ||= @site
   item.cur_user ||= u('admin') if item.respond_to?(:cur_user)
   if item.respond_to?("user_ids=")
-    item.user_ids = (Array[item.user_ids].flatten.compact + [item.cur_user.id]).uniq
+    item.user_ids = ([item.user_ids].flatten.compact + [item.cur_user.id]).uniq
   end
   if item.respond_to?("group_ids=")
-    item.group_ids = (Array[item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
+    item.group_ids = ([item.group_ids].flatten.compact + item.cur_user.group_ids).uniq
   end
   puts item.errors.full_messages unless item.save
   item
