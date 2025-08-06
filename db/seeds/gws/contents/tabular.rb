@@ -395,77 +395,77 @@ create_tabular_file(
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[6],
   "col_#{@tabular_columns[23].id}": "ワゴン",
-  "col_#{@tabular_columns[24].id}": 100,
+  "col_#{@tabular_columns[24].id}": 100
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[6],
   "col_#{@tabular_columns[23].id}": "軽自動車",
-  "col_#{@tabular_columns[24].id}": 300,
+  "col_#{@tabular_columns[24].id}": 300
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[1], form: @tabular_forms[6],
   "col_#{@tabular_columns[23].id}": "セダン",
-  "col_#{@tabular_columns[24].id}": 100,
+  "col_#{@tabular_columns[24].id}": 100
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
   "col_#{@tabular_columns[33].id}": "PC本体",
-  "col_#{@tabular_columns[34].id}": 100,
+  "col_#{@tabular_columns[34].id}": 100
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
   "col_#{@tabular_columns[33].id}": "ケーブル類",
-  "col_#{@tabular_columns[34].id}": 200,
+  "col_#{@tabular_columns[34].id}": 200
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
   "col_#{@tabular_columns[33].id}": "付属品類",
-  "col_#{@tabular_columns[34].id}": 300,
+  "col_#{@tabular_columns[34].id}": 300
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
   "col_#{@tabular_columns[33].id}": "デスク",
-  "col_#{@tabular_columns[34].id}": 400,
+  "col_#{@tabular_columns[34].id}": 400
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
   "col_#{@tabular_columns[33].id}": "イス",
-  "col_#{@tabular_columns[34].id}": 500,
+  "col_#{@tabular_columns[34].id}": 500
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
   "col_#{@tabular_columns[33].id}": "コピー機",
-  "col_#{@tabular_columns[34].id}": 600,
+  "col_#{@tabular_columns[34].id}": 600
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[8],
   "col_#{@tabular_columns[33].id}": "その他",
-  "col_#{@tabular_columns[34].id}": 700,
+  "col_#{@tabular_columns[34].id}": 700
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
   "col_#{@tabular_columns[35].id}": "PC",
-  "col_#{@tabular_columns[36].id}": 100,
+  "col_#{@tabular_columns[36].id}": 100
 )
 @tabular_file_2_9_2 =create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
   "col_#{@tabular_columns[35].id}": "PC周辺機器",
-  "col_#{@tabular_columns[36].id}": 200,
+  "col_#{@tabular_columns[36].id}": 200
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
   "col_#{@tabular_columns[35].id}": "什器",
-  "col_#{@tabular_columns[36].id}": 300,
+  "col_#{@tabular_columns[36].id}": 300
 )
 @tabular_file_2_9_4 = create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
   "col_#{@tabular_columns[35].id}": "事務用品",
-  "col_#{@tabular_columns[36].id}": 400,
+  "col_#{@tabular_columns[36].id}": 400
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[9],
   "col_#{@tabular_columns[35].id}": "その他",
-  "col_#{@tabular_columns[36].id}": 500,
+  "col_#{@tabular_columns[36].id}": 500
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[7],
@@ -475,7 +475,7 @@ create_tabular_file(
   "col_#{@tabular_columns[28].id}": "Wi-Fiルーター",
   "col_#{@tabular_columns[29].id}": 1,
   "in_col_#{@tabular_columns[30].id}": sh_upload_file('dummy_slide05.png'),
-  "in_col_#{@tabular_columns[30].id}": sh_upload_file('dummy_slide08.png')
+  "in_col_#{@tabular_columns[31].id}": sh_upload_file('dummy_slide08.png')
 )
 create_tabular_file(
   cur_site: @site, cur_user: u('sys'), space: @tabular_spaces[2], form: @tabular_forms[7],
