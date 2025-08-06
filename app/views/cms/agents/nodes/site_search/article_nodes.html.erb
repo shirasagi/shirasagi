@@ -39,7 +39,7 @@ $("#ajax-box .submitters a").on("click", cboxLoad);
           <article style="display: none;" class="selected-item" data-id="<%= item.id %>">
             <header>
               <span class="article-node-name"><%= item.name %></span>
-              <%= hidden_field_tag('s[article_node_ids][]', item.id) %>
+              <%= hidden_field_tag('s[article_node_ids][]', item.id, id: nil) %>
               <a class="btn deselect">✕</a>
             </header>
           </article>

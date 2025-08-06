@@ -3,7 +3,7 @@
   <% params.dig(:s, :types).tap do |types| %>
     <% if types %>
       <% types.each do |type| %>
-        <%= hidden_field_tag "s[types][]", type %>
+        <%= hidden_field_tag "s[types][]", type, id: nil %>
       <% end %>
     <% end %>
   <% end %>
