@@ -304,24 +304,6 @@ module SS
       })(...arguments)
     SCRIPT
 
-    # WAIT_FOR_ALL_AJAX_PARTS_SCRIPT = <<~SCRIPT.freeze
-    #   (function(resolve) {
-    #     SS.ready(function() {
-    #       if (SS.partCountToLoad === 0) {
-    #         console.log("there are no ajax parts to load");
-    #         resolve(true);
-    #         return;
-    #       }
-    #
-    #       $(document).on("ss:ajaxPartComplete", function() {
-    #         console.log("a ajax part is loaded");
-    #         if (SS.partCountToLoad === 0) {
-    #           resolve(true);
-    #         }
-    #       });
-    #     });
-    #   })(...arguments)
-    # SCRIPT
     WAIT_FOR_ALL_AJAX_PARTS_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
         const promises = [];
