@@ -76,7 +76,7 @@ module Cms::Model::Part
 
   def ajax_html
     json = url.sub(/\.html$/, ".json")
-    %(<a class="ss-part" data-href="#{json}">#{name}</a>)
+    %(<a class="ss-part" data-href="#{json}" aria-busy="true">#{name}</a>)
   end
 
   def ajax_view_cache_enabled?
