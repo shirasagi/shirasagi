@@ -2,7 +2,7 @@
   <%= form_for :s, url: "", html: { method: :get, class: "gws-workflow-select-forms-search" } do |f| %>
     <% if @s.category_ids %>
       <% @s.category_ids.each do |category_id| %>
-        <%= f.hidden_field "category_ids[]", value: category_id %>
+        <%= f.hidden_field "category_ids[]", value: category_id, id: nil %>
       <% end %>
     <% end %>
     <% if @s.purpose_id.present? %>

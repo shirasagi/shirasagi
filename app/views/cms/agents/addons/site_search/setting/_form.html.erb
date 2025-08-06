@@ -23,7 +23,7 @@
 
   <dt><%= t("cms.node_config") %><%= @model.tt :st_article_node_ids %></dt>
   <dd class="wide" style="line-height: 2.5">
-    <%= f.hidden_field "st_article_node_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "st_article_node_ids[]", value: "", class: "hidden-ids", id: nil %>
     <%= link_to t("cms.apis.nodes.index"), cms_apis_nodes_path(model: 'Article::Node::Page'), class: "ajax-box" %>
   </dd>
   <dd>
@@ -37,7 +37,7 @@
       <tbody>
       <% @item.ordered_st_article_nodes.each do |node| %>
         <tr data-id="<%= node.id %>">
-          <td><%= f.hidden_field "st_article_node_ids[]", value: node.id %> <%= node.name %></td>
+          <td><%= f.hidden_field "st_article_node_ids[]", value: node.id, id: nil %> <%= node.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

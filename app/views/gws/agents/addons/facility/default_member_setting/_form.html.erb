@@ -8,7 +8,7 @@
 <dl class="see gws-addon-facility-default-members">
   <dt><%= @model.t :default_member_ids %><%= @model.tt :default_member_ids %></dt>
   <dd>
-    <%= f.hidden_field "default_member_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "default_member_ids[]", value: "", class: "hidden-ids", id: nil %>
     <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
   </dd>
   <dd>
@@ -22,7 +22,7 @@
       <tbody>
       <% @item.default_members.each do |user| %>
         <tr data-id="<%= user.id %>">
-          <td><%= f.hidden_field "default_member_ids[]", value: user.id %> <%= user.name %></td>
+          <td><%= f.hidden_field "default_member_ids[]", value: user.id, id: nil %> <%= user.name %></td>
           <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
         </tr>
       <% end %>

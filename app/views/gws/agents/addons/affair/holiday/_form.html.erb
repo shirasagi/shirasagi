@@ -1,7 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :holiday_calendar_ids %></dt>
   <dd>
-    <%= f.hidden_field "holiday_calendar_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "holiday_calendar_ids[]", value: "", class: "hidden-ids", id: nil %>
     <%= link_to t("gws/affair.apis.holiday_calendars.index"), gws_affair_apis_holiday_calendars_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>
