@@ -16,14 +16,14 @@ module Cms::Addon
           [ v, v.downcase ]
         end
       end
+    end
 
-      def html_format_shirasagi?
-        html_format == "shirasagi"
-      end
+    def html_format_shirasagi?
+      !html_format_liquid?
+    end
 
-      def html_format_liquid?
-        html_format == "liquid"
-      end
+    def html_format_liquid?
+      html_format == "liquid"
     end
   end
 end
