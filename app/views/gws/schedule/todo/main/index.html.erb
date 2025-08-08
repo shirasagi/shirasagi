@@ -21,7 +21,7 @@
   </span>
   <span class="datetime">
     <%= @model.t(:term) %>: <%= term(item) %>
-    <% if item.todo_state == 'unfinished' && item.end_at < Time.zone.now %>
+    <% if item.todo_state != 'finished' && item.end_at < Time.zone.now %>
     <span class="todo-over"><%= t('gws/schedule/todo.todo_over') %></span>
     <% end %>
   </span>
