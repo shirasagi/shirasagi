@@ -162,12 +162,15 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       click_on name
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       within '#addon-history-agents-addons-backup' do
         # find('a:last').click
         all('a').last.click
       end
 
-      click_on I18n.t('history.restore')
+      within ".nav-menu" do
+        click_on I18n.t('history.restore')
+      end
 
       within 'form' do
         click_on I18n.t('history.buttons.restore')
@@ -177,6 +180,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(Article::Page.all.count).to eq 1
       Article::Page.all.first.tap do |item|
         expect(item.name).to eq name
+        expect(item.column_values.count).to eq 8
         expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value
         expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value)
         expect(item.column_values.find_by(column_id: column3.id).value).to eq column3_value
