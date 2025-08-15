@@ -84,6 +84,7 @@ SS_Preview = (function () {
     }
 
     SS_Preview.instance = new SS_Preview("#ss-preview");
+    document.body.setAttribute("aria-busy", true);
 
     SS_Preview.loadJQuery(function() {
       $.when(
@@ -379,6 +380,9 @@ SS_Preview = (function () {
         $el.css('position', 'relative');
       }
     });
+
+    document.body.setAttribute("aria-busy", false);
+    document.body.dispatchEvent(new CustomEvent("ss:previewInitialized"));
   };
 
   SS_Preview.prototype.initializeLayout = function() {

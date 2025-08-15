@@ -767,6 +767,20 @@ module SS
           break if ready_state.present? && ready_state != 'uninitialized'
 
           sleep 0.1
+        rescue Selenium::WebDriver::Error::WebDriverError
+          # aborted by navigation: loader has changed while resolving nodes
+          # (Session info: chrome=132.0.6834.110)
+          sleep 0.1
+        end
+      end
+    end
+
+    def wait_for_cms_form_preview_initialized
+      Timeout.timeout(wait_timeout) do
+        loop do
+          aria_busy = page.evaluate_script("document?.body?.ariaBusy")
+          break if aria_busy == "true" || aria_busy.is_a?(TrueClass)
+          sleep 0.1
         end
       end
     end
