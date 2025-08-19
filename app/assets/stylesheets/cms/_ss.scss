@@ -45,16 +45,16 @@
     }
   }
   .controller {
-    @include display-flex(flex);
-    @include align-items(center);
+    display: flex;
+    align-items: center;
     width: 100%;
     margin: 5px 0;
   }
   .auto-reload {
-    @include flex-grow(2);
-    @include display-flex(inline-flex);
-    @include justify-content(flex-end);
-    @include align-items(center);
+    flex-grow: 2;
+    display: inline-flex;
+    justify-content: flex-end;
+    align-items: center;
     [type=number] {
       width: 6rem !important;
       margin: 0 .25rem;
@@ -104,7 +104,7 @@ i.calendar-month {
   .state {
     display: inline-block;
     padding: 1px 5px;
-    @include border-radius(3px);
+    border-radius: 3px;
     font-size: 90%;
     font-weight: normal;
     &.state-public, &.state-public-expired, &.state-completed, &.state-closed, &.state-draft, &.state-ready, &.state-request, &.state-request-remind, &.state-edit, &.state-remand, &.state-deletion-locked {
@@ -143,7 +143,7 @@ i.calendar-month {
   .answer-state {
     display: inline-block;
     padding: 1px 5px;
-    @include border-radius(3px);
+    border-radius: 3px;
     font-size: 90%;
     font-weight: normal;
     &.state-open {
@@ -200,7 +200,7 @@ i.calendar-month {
   overflow-y: scroll;
   border: $border-gray4;
   background: $white;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+  box-shadow: 0 3px 12px rgba(0, 0, 0, .2);
   white-space: nowrap;
 }
 
