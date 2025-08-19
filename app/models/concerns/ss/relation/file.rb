@@ -257,6 +257,10 @@ module SS::Relation::File
     def update_relation(item, name, file, class_name:, default_resizing:)
       attributes = {}
       owner_item = SS::Model.container_of(item)
+      if owner_item.is_a?(Cms::Model::Node)
+        owner_item_type = Cms::Node.new(route: owner_item.route).becomes_with_route(owner_item.route).class.name
+        file.owner_item_type = owner_item_type
+      end
 
       return if file.frozen?
 
@@ -265,9 +269,14 @@ module SS::Relation::File
       return if is_branch && SS::File.file_owned?(file, owner_item.master)
 
       if !SS::File.file_owned?(file, owner_item)
-        attributes["owner_item"] = owner_item
-        attributes["owner_item_id"] = owner_item.id
-        attributes["owner_item_type"] = owner_item.class.name
+        if owner_item_type.present? && owner_item.class.name != owner_item_type
+          attributes["owner_item_id"] = owner_item.id
+          attributes["owner_item_type"] = owner_item_type
+        else
+          attributes["owner_item"] = owner_item
+          attributes["owner_item_id"] = owner_item.id
+          attributes["owner_item_type"] = owner_item.class.name
+        end
       end
 
       item.send("#{name}_file_state").tap do |file_state|
@@ -275,7 +284,7 @@ module SS::Relation::File
       end
 
       if class_name == DEFAULT_FILE_CLASS_NAME
-        expected_model = owner_item.class.name.underscore
+        expected_model = (owner_item_type.presence || owner_item.class.name).underscore
       else
         expected_model = default_model(class_name)
       end
