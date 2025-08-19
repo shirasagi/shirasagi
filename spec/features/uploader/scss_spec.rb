@@ -43,6 +43,28 @@ describe "uploader_files", type: :feature, dbscope: :example do
         expect(File.exist?("#{node.path}/invalid.css")).to be_falsey
       end
     end
+
+    # 管理画面の scss では compass-mixins の使用をやめたが、
+    # アップローダーでアップする scss では、まだしばらく compass-mixins を使用可能
+    context "with use of compass-mixins" do
+      it do
+        visit uploader_files_path(site: site, cid: node)
+        click_on I18n.t("ss.links.upload")
+
+        within "form" do
+          attach_file "item[files][]", "#{Rails.root}/spec/fixtures/uploader/compass-mixins.scss"
+
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        expect(page).to have_css("a.file", text: "compass-mixins.scss")
+        expect(page).to have_css("a.file", text: "compass-mixins.css")
+
+        expect(File.size("#{node.path}/compass-mixins.scss")).to be > 0
+        expect(File.size("#{node.path}/compass-mixins.css")).to be > 0
+      end
+    end
   end
 
   context "when a user edits a scss file" do
