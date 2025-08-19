@@ -131,6 +131,15 @@ export function replaceChildren(element, htmlTextOrNode) {
   });
 }
 
+export function replaceWith(element, htmlTextOrNode) {
+  const parentElement = element.parentElement;
+  const dummyElement = _cloneNode(htmlTextOrNode);
+  _markScriptAsNew(dummyElement);
+
+  element.replaceWith(dummyElement);
+  _executeNewScript(parentElement || document.body);
+}
+
 function _cloneNode(htmlTextOrNode) {
   if (htmlTextOrNode instanceof HTMLTemplateElement) {
     return htmlTextOrNode.content.cloneNode(true);
@@ -225,4 +234,32 @@ export function showErrorInListItem(listItemElement, fetchResponse, errorMessage
   }
   errorContainerElement.appendChild(errorListElement);
   ajaxResultElement.appendChild(errorContainerElement);
+}
+
+export function collectFormData(formElement) {
+  if ("CKEDITOR" in window) {
+    // 前処理: CKEditor で編集のものを <textarea> へ反映させる
+    Object.values(CKEDITOR.instances).forEach((editor) => {
+      if (!editor.checkDirty()) {
+        return;
+      }
+      if (editor.elementMode !== CKEDITOR.ELEMENT_MODE_REPLACE) {
+        return;
+      }
+
+      editor.updateElement();
+      editor.resetDirty();
+    });
+  }
+
+  if ("CodeMirror" in window) {
+    document.querySelectorAll("textarea").forEach((textAreaElement) => {
+      const editor = $(textAreaElement).data("editor");
+      if (editor) {
+        editor.save();
+      }
+    });
+  }
+
+  return new FormData(formElement);
 }

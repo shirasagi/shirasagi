@@ -3,23 +3,19 @@ class Cms::SyntaxChecker::UrlSchemeChecker
 
   ATTRIBUTES = %w(href src).freeze
 
-  def check(context, id, idx, raw_html, fragment)
+  def check(context, content)
     attributes_to_check = context.cur_site.syntax_checker_url_scheme_attributes.presence || ATTRIBUTES
     shemes_to_allow = context.cur_site.syntax_checker_url_scheme_schemes.presence || %w(http https)
 
     attributes_to_check.each do |attr|
-      fragment.css("[#{attr}]").each do |node|
+      context.fragment.css("[#{attr}]").each do |node|
         attr_value = node[attr]
         next if attr_value.blank?
         next unless invalid_scheme?(shemes_to_allow, attr_value)
 
-        context.errors << {
-          id: id,
-          idx: idx,
-          code: Cms::SyntaxChecker::Base.outer_html_summary(node),
-          msg: I18n.t('errors.messages.invalid_url_scheme'),
-          detail: I18n.t('errors.messages.syntax_check_detail.invalid_url_scheme'),
-        }
+        code = Cms::SyntaxChecker::Base.outer_html_summary(node)
+        context.errors << Cms::SyntaxChecker::CheckerError.new(
+          context: context, content: content, code: code, checker: self, error: :invalid_url_scheme)
       end
     end
   end

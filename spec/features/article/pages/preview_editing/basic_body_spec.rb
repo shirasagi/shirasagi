@@ -93,9 +93,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               click_on I18n.t("sns.image_paste")
             end
 
-            click_on button_label
+            wait_for_cbox_opened { click_on button_label }
           end
-          click_on I18n.t("ss.buttons.ignore_alert")
+          within_cbox do
+            expect(page).to have_css(".errorExplanation", text: I18n.t("errors.messages.alt_is_included_in_filename"))
+            click_on I18n.t("ss.buttons.ignore_alert")
+          end
         end
         expect(page).to have_css(".ss-preview-notice-wrap", text: notice_message)
 

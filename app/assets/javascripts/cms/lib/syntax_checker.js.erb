@@ -153,7 +153,8 @@ this.Syntax_Checker = (function () {
                 $(self.form.addonSelector).find("button.syntax-check").trigger("click");
               },
               error: function (xhr, status, error) {
-                console.log(error);
+                console.warn(error);
+                alert("<%= I18n.t("cms.auto_correct.failed") %>");
               },
               complete: function (xhr, status) {
                 ev.target.disabled = false;
@@ -365,6 +366,33 @@ this.Syntax_Checker = (function () {
     return defer.promise();
   };
 
+  Syntax_Checker.asyncCheck2 = function ($form, submitter) {
+    Syntax_Checker.reset();
+
+    var defer = $.Deferred();
+    // .cms-body-checker は 2 つある。cms/addon/body と cms/addon/form/page と。
+    // （どちらを選択しても問題ないけど念のため）表示されている方の .cms-body-checker を選択する。
+    var cmsChecker = $form.find(":not(.hide) .cms-body-checker")[0];
+    if (!cmsChecker) {
+      defer.resolve();
+      return defer.promise();
+    }
+
+    var callback = function(ev) {
+      $.each(ev.detail.errors, function() {
+        Syntax_Checker.errors.push(this);
+      });
+      defer.resolve();
+    };
+
+    $form[0].addEventListener("ss:formAlert:done", callback, { once: true });
+
+    var ev = new CustomEvent("ss:formAlert:run", { submitter: submitter });
+    cmsChecker.dispatchEvent(ev);
+
+    return defer.promise();
+  };
+
   Syntax_Checker.reset = function () {
     Syntax_Checker.errors = [];
     Syntax_Checker.errorCount = 0;
@@ -441,14 +469,14 @@ this.Syntax_Checker = (function () {
       contentType: "application/json",
       success: function(data, textStatus, xhr) {
         Syntax_Checker.showServerResult(checks, contents, data, textStatus, xhr);
-        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+        defer.resolve({ status: Syntax_Checker.errors.length === 0 ? "ok" : "failed" });
       },
       error: function (xhr, status, error) {
         Syntax_Checker.resultBox.showServerError();
         defer.reject(null, null, error);
       },
       complete: function (xhr, status) {
-        defer.resolve({ status: Syntax_Checker.errors.length == 0 ? "ok" : "failed" });
+        defer.resolve({ status: Syntax_Checker.errors.length === 0 ? "ok" : "failed" });
       }
     });
   };

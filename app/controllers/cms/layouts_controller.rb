@@ -38,35 +38,41 @@ class Cms::LayoutsController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item = @model.new get_params
 
-    if params.key?(:ignore_syntax_check)
-      render_create @item.valid? && @item.save
-      return
+    result = @item.valid?
+    unless params.key?(:ignore_syntax_check)
+      @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
+      if @syntax_context.errors.present?
+        @item.errors.add :html, :accessibility_error
+        result = false
+      end
     end
 
-    if params.key?(:auto_correct)
-      auto_correct
-      result = syntax_check
+    unless result
       render_create result
       return
     end
-    render_create @item.valid? && syntax_check && @item.save
+
+    render_create @item.save
   end
 
   def update
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
-    if params.key?(:ignore_syntax_check)
-      render_update @item.valid? && @item.save
+
+    result = @item.valid?
+    unless params.key?(:ignore_syntax_check)
+      @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
+      if @syntax_context.errors.present?
+        @item.errors.add :html, :accessibility_error
+        result = false
+      end
+    end
+
+    unless result
+      render_update result
       return
     end
 
-    if params.key?(:auto_correct)
-      auto_correct
-      result = syntax_check
-      render_update result
-      return
-    else
-      render_update @item.valid? && syntax_check && @item.save
-    end
+    render_update @item.save
   end
 end

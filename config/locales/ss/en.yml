@@ -82,6 +82,7 @@ en:
     system_operation: "-- System operation --"
     upload_or_select_from_list: File upload or select file from list
     auto_resizing_label: "%{size} (System setting)"
+    check: Check
 
     views:
       login/login:

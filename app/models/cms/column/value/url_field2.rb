@@ -2,7 +2,7 @@ class Cms::Column::Value::UrlField2 < Cms::Column::Value::Base
   field :html_tag, type: String
   field :html_additional_attr, type: String, default: ''
   field :link_url, type: String
-  field :link_label, type: String
+  field :link_label, type: String, metadata: { syntax_check: { link: true } }
   field :link_target, type: String
   field :link_item_type, type: String
   field :link_item_id, type: Object

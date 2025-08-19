@@ -1,13 +1,14 @@
 class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
   include Cms::ApiFilter
   include Cms::InplaceEditFilter
+  include Cms::SyntaxCheckable
 
   model Cms::Page
 
   layout "ss/ajax_in_iframe"
 
-  before_action :set_cur_node
-  before_action :set_inplace_mode
+  before_action :set_cur_node, only: %i[edit update]
+  before_action :set_inplace_mode, only: %i[edit update]
 
   private
 

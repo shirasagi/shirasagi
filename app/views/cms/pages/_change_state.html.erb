@@ -5,20 +5,20 @@
     <div class="addon-view" id="addon-basic">
       <div class="addon-head">
         <h2><%= t("ss.confirm.target_to_#{@change_state}") %></h2>
-        <div class="cms-accessibility-notice">
-          <%= t('cms.notices.batch_accessibility_check_notice') %>
-        </div>
       </div>
 
       <div class="addon-body">
         <div class="index">
-          <ul class="list-items list-items-grid">
+          <ul class="list-items">
             <% @selected_items.each do |item| %>
-              <% if @change_state == "closed" %>
-                <%= render "cms/pages/confirm_all", item: item, f: f, permitted: item.allowed?(:close, @cur_user, site: @cur_site), message: message %>
-              <% else %>
-                <%= render "cms/pages/confirm_all", item: item, f: f, permitted: item.allowed?(:release, @cur_user, site: @cur_site), message: message %>
-              <% end %>
+              <%=
+                if @change_state == "closed"
+                  permitted = item.allowed?(:close, @cur_user, site: @cur_site)
+                else
+                  permitted = item.allowed?(:release, @cur_user, site: @cur_site)
+                end
+                render "cms/pages/confirm_all", item: item, f: f, permitted: permitted, message: message
+              %>
             <% end %>
           </ul>
         </div>
@@ -26,7 +26,7 @@
     </div>
     <footer class="send ss-sticky ss-sticky-bottom">
       <%= f.submit t("ss.buttons.make_them_#{@change_state}"), class: "btn-danger delete" %>
-      <%= f.button t("ss.buttons.cancel"), class: "btn-default", type: :reset, onclick: "location.href='#{request.url}'; return false;" %>
+      <%= link_to t("ss.buttons.cancel"), request.url, class: "btn-default" %>
     </footer>
   </div>
 <% end %>

@@ -148,14 +148,20 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         expect(page).to have_content(I18n.t("ss.links.make_them_close"))
 
-        within ".list-head" do
-          first("button, input[type='button']", text: I18n.t("ss.links.make_them_close")).click
+        within ".list-head-action" do
+          click_on I18n.t("ss.links.make_them_close")
         end
 
         within "form" do
-          expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_close"))
-          expect(page).to have_no_css("[type='checkbox']")
+          within "[data-id='#{page1.id}']" do
+            message = I18n.t("ss.confirm.contains_links_in_file_close")
+            expect(page).to have_css(".list-item-error", text: message)
+            # expect(page).to have_no_css("[type='checkbox']")
+            expect(page.first("[type='checkbox']")["disabled"]).to eq "true"
+          end
+          click_on I18n.t("ss.links.make_them_close")
         end
+        expect(page).to have_title("400")
 
         visit article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
@@ -209,14 +215,19 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
         expect(page).to have_content(I18n.t("ss.links.make_them_close"))
 
-        within ".list-head" do
-          first("button, input[type='button']", text: I18n.t("ss.links.make_them_close")).click
+        within ".list-head-action" do
+          click_on I18n.t("ss.links.make_them_close")
         end
 
         within "form" do
-          expect(page).to have_content(I18n.t("ss.confirm.contains_links_in_file_ignoring_alert_close"))
-          expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
-          first("[type='checkbox']").click
+          within "[data-id='#{page1.id}']" do
+            expect(page).to have_css("[type='checkbox']")
+            message = I18n.t("ss.confirm.contains_links_in_file_ignoring_alert_close")
+            expect(page).to have_css(".list-item-error", text: message)
+
+            first("[type='checkbox']").click
+          end
+
           click_on I18n.t("ss.links.make_them_close")
         end
 
@@ -232,7 +243,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       let!(:minimum_close_permissions) do
         %w(read_private_cms_nodes read_private_article_pages edit_private_article_pages close_private_article_pages)
       end
-      let!(:page_with_accessibility_error) do
+      let!(:page_with_a11y_error) do
         create :article_page, cur_site: site, cur_user: admin, cur_node: node, group_ids: admin.group_ids, state: "public",
           html: "<img src=\"image.jpg\">"
       end
@@ -240,9 +251,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "can save as draft even if accessibility error exists" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
-        expect(page).to have_css(".list-item[data-id='#{page_with_accessibility_error.id}']")
+        expect(page).to have_css(".list-item[data-id='#{page_with_a11y_error.id}']")
 
-        click_on page_with_accessibility_error.name
+        click_on page_with_a11y_error.name
         wait_for_all_ckeditors_ready
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
@@ -258,7 +269,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
-        Article::Page.find(page_with_accessibility_error.id).tap do |after_page|
+        Article::Page.find(page_with_a11y_error.id).tap do |after_page|
           expect(after_page.state).to eq "closed"
         end
       end
@@ -270,7 +281,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     let!(:minimum_close_permissions) do
       %w(read_private_cms_nodes read_private_article_pages edit_private_article_pages close_private_article_pages)
     end
-    let!(:page_with_accessibility_error) do
+    let!(:page_with_a11y_error) do
       create :article_page, cur_site: site, cur_user: admin, cur_node: node, group_ids: admin.group_ids, state: "public",
         html: "<img src=\"image.jpg\">"
     end
@@ -278,10 +289,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
     it "cannot close page in index view when contains accessibility error" do
       login_user user1
       visit article_pages_path(site: site, cid: node)
-      expect(page).to have_css(".list-item[data-id='#{page_with_accessibility_error.id}']",
-text: page_with_accessibility_error.name)
+      expect(page).to have_css(".list-item[data-id='#{page_with_a11y_error.id}']", text: page_with_a11y_error.name)
 
-      within ".list-item[data-id='#{page_with_accessibility_error.id}']" do
+      within ".list-item[data-id='#{page_with_a11y_error.id}']" do
         first("[type='checkbox']").click
       end
       within ".list-head" do
@@ -290,14 +300,16 @@ text: page_with_accessibility_error.name)
       end
 
       within "form" do
-        expect(page).to have_css("[data-id='#{page_with_accessibility_error.id}'] [type='checkbox']")
-        expect(page).to have_content(I18n.t("errors.messages.check_html"))
+        within "[data-id='#{page_with_a11y_error.id}']" do
+          expect(page).to have_css("[type='checkbox']")
+          expect(page).to have_css(".list-item-error", text: I18n.t("errors.messages.set_img_alt"))
+        end
         click_on I18n.t("ss.links.make_them_close")
       end
 
       wait_for_notice I18n.t("ss.notice.depublished")
 
-      Article::Page.find(page_with_accessibility_error.id).tap do |after_page|
+      Article::Page.find(page_with_a11y_error.id).tap do |after_page|
         expect(after_page.state).to eq "closed"
       end
     end

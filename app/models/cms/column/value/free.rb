@@ -1,5 +1,5 @@
 class Cms::Column::Value::Free < Cms::Column::Value::Base
-  field :value, type: String
+  field :value, type: String, metadata: { syntax_check: { editor: true } }
   field :contains_urls, type: Array, default: []
 
   embeds_ids :files, class_name: "SS::File"

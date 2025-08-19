@@ -138,6 +138,8 @@ Rails.application.routes.draw do
 
     resources :parts, concerns: :deletion do
       get :routes, on: :collection
+      post :check_content, on: :collection
+      post :correct_content, on: :collection
     end
 
     resources :pages, concerns: [:deletion, :copy, :move, :command, :lock, :contains_urls, :michecker, :change_state] do
@@ -145,8 +147,13 @@ Rails.application.routes.draw do
       post :resume_edit, on: :member
       put :publish_all, on: :collection
       put :close_all, on: :collection
+      post :check_content, on: :collection
+      post :correct_content, on: :collection
     end
-    resources :layouts, concerns: :deletion
+    resources :layouts, concerns: :deletion do
+      post :check_content, on: :collection
+      post :correct_content, on: :collection
+    end
     resources :body_layouts, concerns: :deletion
     resources :editor_templates, concerns: [:deletion, :template]
     resources :loop_settings, concerns: :deletion
@@ -454,6 +461,9 @@ Rails.application.routes.draw do
       scope "preview(:preview_date)", module: "preview", as: "preview" do
         namespace "inplace_edit" do
           resources :pages, only: %i[edit update] do
+            post :check_content, on: :collection
+            post :correct_content, on: :collection
+
             resources :column_values, only: %i[new create edit update destroy] do
               post :move_up, on: :member
               post :move_down, on: :member

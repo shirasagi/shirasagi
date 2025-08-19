@@ -337,7 +337,6 @@ ja:
         - "ページの公開期限が切れています。ご確認の上、対応してください。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
       generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
-      batch_accessibility_check_notice: ※ 一括処理の場合、簡易なアクセシビリティチェックなどは実行されません。各ページについて確実にアクセシビリティチェックを実施されたい場合は、ページ単位で処理をされることをお勧めします。
       content_quota_navi:
         - "ショートカットに表示されているフォルダーのおおよその使用量を表示しています。"
         - "対象のフォルダー属性: %{routes} "
@@ -403,6 +402,7 @@ ja:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
       caption: キャプション
+      failed: 自動修正に失敗しました。
     links:
       ruby_on: ふりがなをつける
       ruby_off: ふりがなをはずす
@@ -1199,6 +1199,8 @@ ja:
         description_setting: 概要の連動設定
         description_body: 概要の本文(手動)
         summary_html: サマリー
+      cms/addon/html:
+        html: HTML
       cms/addon/editor_setting:
         color_button: 文字色変更ボタン
         editor_css_path: スタイルシートパス
@@ -2006,6 +2008,7 @@ ja:
       not_found_test_members: テストメンバーが選択されていません。
       plz_check_targets_to_delete: 削除対象が選択されていません。削除したい項目のチェックボックスにチェックを入れてください。
       plz_confirm_move_changes: 移動により影響を受けるコンテンツを確認してください。
+      accessibility_error: のアクセシビリティチェックで確認事項があるため処理を中断しました。下の確認事項を修正してください。
 
     template:
       no_errors: エラーは見つかりませんでした。

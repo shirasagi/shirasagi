@@ -1,5 +1,5 @@
 class Cms::Column::Value::TextArea < Cms::Column::Value::Base
-  field :value, type: String
+  field :value, type: String, metadata: { syntax_check: { value: true } }
 
   permit_values :value
 

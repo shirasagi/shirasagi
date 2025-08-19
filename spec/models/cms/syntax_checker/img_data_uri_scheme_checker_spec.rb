@@ -7,9 +7,13 @@ describe Cms::SyntaxChecker::ImgDataUriSchemeChecker, type: :model, dbscope: :ex
     let(:raw_html) { "<div>#{img_htmls.join("\n<br>\n")}</div>" }
     let(:fragment) { Nokogiri::HTML5.fragment(raw_html) }
     let(:content) do
-      { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+      Cms::SyntaxChecker::Content.new(
+        id: id, name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
     end
-    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], []) }
+    let(:context) do
+      Cms::SyntaxChecker::CheckerContext.new(
+        cur_site: cms_site, cur_user: cms_user, contents: [ content ], html: raw_html, fragment: fragment, idx: idx)
+    end
 
     context "with single img" do
       context "when src is data-url" do
@@ -17,17 +21,17 @@ describe Cms::SyntaxChecker::ImgDataUriSchemeChecker, type: :model, dbscope: :ex
         let(:img_htmls) { [ img_html ] }
 
         it do
-          described_class.new.check(context, id, idx, raw_html, fragment)
+          described_class.new.check(context, content)
 
           expect(context.errors).to have(1).items
           context.errors.first.tap do |error|
-            expect(error[:id]).to eq id
-            expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq img_html
-            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_img_scheme')
-            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_img_scheme')
-            expect(error[:collector]).to be_blank
-            expect(error[:collector_params]).to be_blank
+            expect(error.id).to eq id
+            expect(error.idx).to eq idx
+            expect(error.code).to eq img_html
+            expect(error.full_message).to eq I18n.t('errors.messages.invalid_img_scheme')
+            expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_img_scheme')
+            expect(error.corrector).to be_blank
+            expect(error.corrector_params).to be_blank
           end
         end
       end
@@ -37,7 +41,7 @@ describe Cms::SyntaxChecker::ImgDataUriSchemeChecker, type: :model, dbscope: :ex
         let(:img_htmls) { [ img_html ] }
 
         it do
-          described_class.new.check(context, id, idx, raw_html, fragment)
+          described_class.new.check(context, content)
 
           expect(context.errors).to be_blank
         end
@@ -51,17 +55,17 @@ describe Cms::SyntaxChecker::ImgDataUriSchemeChecker, type: :model, dbscope: :ex
       let(:img_htmls) { [ img_html1, img_html2, img_html3 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(1).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq img_html1
-          expect(error[:msg]).to eq I18n.t('errors.messages.invalid_img_scheme')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_img_scheme')
-          expect(error[:collector]).to be_blank
-          expect(error[:collector_params]).to be_blank
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq img_html1
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_img_scheme')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_img_scheme')
+          expect(error.corrector).to be_blank
+          expect(error.corrector_params).to be_blank
         end
       end
     end

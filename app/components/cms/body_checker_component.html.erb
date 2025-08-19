@@ -1,0 +1,22 @@
+<div class="cms-body-checker" data-controller="cms--body-checker" data-cms--body-checker-check-url-value="<%= check_content_path %>" data-cms--body-checker-correct-url-value="<%= correct_content_path %>">
+  <fieldset class="cms-body-checker-fieldset" data-cms--body-checker-target="fieldset">
+    <legend><%= t("ss.check") %></legend>
+
+    <% checkers.each do |checker| %>
+      <label class="cms-body-checker-item" data-checker="<%= checker %>">
+        <%= checkbox_tag("checks[]", checker, true, id: nil) %>
+        <%= t("cms.#{checker}_check") %>
+      </label>
+    <% end %>
+
+    <%= button_tag t("ss.buttons.run"), name: "btn-run-checkers", type: :button, class: "btn cms-body-checker-run", data: { action: "cms--body-checker#check" } %>
+  </fieldset>
+
+  <div class="cms-body-checker-result" data-cms--body-checker-target="result">
+    <%=
+      if syntax_check_context
+        render Cms::SyntaxCheckerComponent.new(cur_site: cur_site, cur_user: cur_user, checker_context: syntax_check_context)
+      end
+    %>
+  </div>
+</div>
