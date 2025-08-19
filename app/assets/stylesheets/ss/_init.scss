@@ -344,11 +344,11 @@ $border-white: 1px solid $white;
 }
 @mixin grd-red {
   background: #e13026;
-  background-image: linear-gradient(to bottom, #e13026, #b23a3d);
+  background: linear-gradient(to bottom, #e13026, #b23a3d);
 }
 @mixin grd-orange {
   background: #f2d150;
-  background-image: linear-gradient(to bottom, #f2d150, #f2a950);
+  background: linear-gradient(to bottom, #f2d150, #f2a950);
 }
 @mixin btn-disabled {
   border: 1px solid transparent;
