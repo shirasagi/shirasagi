@@ -458,7 +458,7 @@
     text-decoration: underline;
   }
   .fc-content {
-    //@include ellipsis;
+    //text-overflow: ellipsis;
     .fc-title,
     .fc-facility {
       display: inline;
@@ -738,7 +738,7 @@
   text-align: left;
   cursor: auto;
   .popup-title {
-    @include ellipsis;
+    text-overflow: ellipsis;
     font-size: 120%;
     word-wrap: normal;
     word-break: normal;
@@ -829,7 +829,7 @@
   border: 1px solid #ddd;
   border-width: 0 1px;
   background-color: #f9f9f9;
-  @include background(linear-gradient(#fff, #eee));
+  background: linear-gradient(#fff, #eee);
   a {
     color: #444;
     &:hover {
@@ -926,7 +926,7 @@ dl.gws-schedule-repeat {
 }
 
 .gws-schedule-todo-index {
-  @include display-flex;
+  display: flex;
 
   .navi {
     width: 30%;
@@ -999,8 +999,8 @@ dl.gws-schedule-repeat {
   }
 
   .toolbar {
-    @include display-flex(flex);
-    @include justify-content(flex-end);
+    display: flex;
+    justify-content: flex-end;
 
     .btn {
       margin-left: 5px;

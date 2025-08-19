@@ -33,7 +33,7 @@
 }
 
 .gws-workload-graphs {
-  @include display-flex;
+  display: flex;
 
   .navi {
     width: 15%;

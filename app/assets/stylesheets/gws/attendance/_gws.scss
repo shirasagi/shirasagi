@@ -9,7 +9,7 @@
     padding: 5px 0;
     border: $border-gray4;
     background: $white;
-    @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     a {
       display: block;
       padding: 5px 15px;
@@ -69,7 +69,7 @@
     line-height: 1.1;
     text-align: center;
     cursor: pointer;
-    @include border-radius(8px);
+    border-radius: 8px;
 
     .reason {
       display: none;
@@ -84,8 +84,8 @@
 
       color: $black;
       text-align: left;
-      @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
-      @include border-radius(3px);
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
+      border-radius: 3px;
 
       time {
         display: block;

@@ -15,7 +15,7 @@ aside {
 }
 * {
   & {
-    @include box-sizing(border-box);
+    box-sizing: border-box;
   }
 }
 html {
@@ -133,7 +133,7 @@ td {
   padding: 5px 0;
   border: 1px solid #d0d0d0;
   background-color: #fff;
-  @include box-shadow(1px 3px 8px rgba(0, 0, 0, 0.2));
+  box-shadow: 1px 3px 8px rgba(0, 0, 0, 0.2);
 }
 .dropdown-menu--white li {
   border-bottom: 1px solid #eee;
@@ -172,7 +172,7 @@ td {
   right: -55px;
   width: 450px;
   background: #fff;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   @include mb {
     right: 0;
     width: 100%;
@@ -573,8 +573,8 @@ _:future,
   }
   @include mb {
     .application-menu {
-      @include display-flex;
-      @include justify-content(space-between);
+      display: flex;
+      justify-content: space-between;
       clear: both;
     }
   }
@@ -603,9 +603,9 @@ _:future,
     }
   }
   .user {
-    @include display-flex;
+    display: flex;
     float: right;
-    @include align-items(center);
+    align-items: center;
   }
   .sp-menu-button {
     display: none;
@@ -1074,14 +1074,14 @@ _:future,
     margin-bottom: 8px;
   }
   h3.no-icons {
-    @include display-flex;
-    @include align-items(center);
+    display: flex;
+    align-items: center;
     gap: 5px;
     padding: 5px;
 
     .d-inline-flex {
-      @include display-flex(inline-flex);
-      @include align-items(center);
+      display: inline-flex;
+      align-items: center;
       gap: 5px;
     }
     .ml-auto {
@@ -1123,14 +1123,14 @@ _:future,
     }
 
     &.no-icons {
-      @include display-flex;
-      @include align-items(center);
+      display: flex;
+      align-items: center;
       gap: 5px;
       padding: 5px;
 
       .d-inline-flex {
         display: inline-flex;
-        @include align-items(center);
+        align-items: center;
         gap: 5px;
       }
       .ml-auto {
@@ -1783,7 +1783,7 @@ _:future,
   color: #bbb;
 }
 .tree-navi .tree-item {
-  @include display-flex;
+  display: flex;
   margin: 2px 0;
 }
 .tree-navi .tree-item a {
@@ -2029,8 +2029,8 @@ dl.see {
   }
   > dd.short {
     @include mb {
-      @include display-flex;
-      @include align-items(center);
+      display: flex;
+      align-items: center;
       .prefix,
       .postfix {
         margin-left: 5px;
@@ -2039,7 +2039,7 @@ dl.see {
     }
   }
   .cke_chrome {
-    @include box-shadow(none);
+    box-shadow: none;
   }
   > dt.depth-2 {
     padding-left: 20px;
@@ -2088,7 +2088,7 @@ dl.mod-cms-parent_crumbs {
   width: 16px;
   height: 16px;
   margin-left: 5px;
-  @include border-radius(8px);
+  border-radius: 8px;
   background: $orange;
   color: $white;
   line-height: 1.1;
@@ -2224,8 +2224,8 @@ footer.send {
   @include btn-orange-core;
 }
 .btn-inline-flex {
-  @include display-flex(inline-flex);
-  @include align-items(center);
+  display: inline-flex;
+  align-items: center;
   gap: 5px;
 }
 .chorg-revisions {
@@ -2263,7 +2263,7 @@ footer.send {
     padding-top: 25px;
     padding-bottom: 25px;
     clear: both;
-    @include border-radius(3px);
+    border-radius: 3px;
   }
   .upload-drop-area {
     background: $gray1;
@@ -2294,8 +2294,8 @@ footer.send {
 }
 #selected-files,
 .user-files {
-  @include display-flex;
-  @include flex-wrap(wrap);
+  display: flex;
+  flex-wrap: wrap;
   gap: 20px;
   //clear: both;
 }
@@ -2369,7 +2369,7 @@ footer.send {
     padding: 5px;
     overflow: hidden;
     font-size: 90%;
-    @include ellipsis;
+    text-overflow: ellipsis;
   }
   .action {
     display: inline-flex;
@@ -2585,7 +2585,7 @@ footer.send {
       padding: 2px;
       border: 1px solid #d0d0d0;
       background: #fff;
-      @include box-shadow(0 1px 6px #d0d0d0);
+      box-shadow: 0 1px 6px #d0d0d0;
       .image {
         display: inline-block;
         padding: 2px;
@@ -2652,7 +2652,7 @@ footer.send {
   padding: 5px 0;
   border: $border-gray4;
   background: $white;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   a {
     display: block;
     padding: 5px 15px;
@@ -2690,9 +2690,9 @@ div.index {
   }
 
   &.flex-list-head {
-    @include display-flex;
-    @include flex-wrap(wrap);
-    @include align-items(center);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
     gap: 5px;
     margin: 0;
     padding: 10px 14px;
@@ -2717,9 +2717,9 @@ div.index {
     }
 
     .list-head-right {
-      @include display-flex;
-      @include flex-wrap(wrap);
-      @include align-items(center);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
       gap: 5px;
       margin-left: auto;
       @include mb {
@@ -2790,9 +2790,9 @@ div.index {
     .index-search {
       margin: 0;
       @include mb {
-        @include display-flex;
-        @include flex-wrap(wrap);
-        @include align-items(center);
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
       }
     }
     * {
@@ -2820,10 +2820,10 @@ div.index {
 .list-head-search-full {
   @include mb {
     form {
-      @include display-flex;
-      @include flex-wrap(wrap);
-      @include align-items(center);
-      @include justify-content(center);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
     }
     input[type="text"] {
       width: 80% !important;
@@ -2838,7 +2838,7 @@ div.index {
   margin: 10px;
   padding: 0;
   .list-item {
-    @include display-flex;
+    display: flex;
     align-items: center;
     padding: 8px;
     border-bottom: $border-gray1;
@@ -2986,7 +2986,7 @@ div.index {
     }
 
     .ss-ajax-success {
-      @include display-flex;
+      display: flex;
       align-items: center;
       gap: 5px;
     }
@@ -3228,7 +3228,7 @@ table.index.data-table {
     padding: 6px 8px;
   }
   .ui-sortable-helper {
-    @include box-shadow(0 1px 3px #888);
+    box-shadow: 0 1px 3px #888;
     .deselect {
       display: none;
     }
@@ -3258,7 +3258,7 @@ table.form-index.sortable-index {
   margin-top: 2px;
   overflow: auto;
   font-weight: normal;
-  @include box-shadow(1px 2px 4px #888);
+  box-shadow: 1px 2px 4px #888;
 }
 .th-lock thead th {
   position: -webkit-sticky;
@@ -3450,7 +3450,7 @@ form .CodeMirror {
   width: 100%;
   padding: 10px 8px;
   background-color: rgba(90, 90, 90, 0.94);
-  @include box-shadow(0 6px 12px rgba(0, 0, 0, 0.2));
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
   color: #fff;
   line-height: 1.8;
   .wrap {
@@ -3462,7 +3462,7 @@ form .CodeMirror {
   margin: 0 0 20px;
   padding: 20px;
   border: 1px solid $orange;
-  @include border-radius(3px);
+  border-radius: 3px;
   background-color: #fff;
   h2 {
     margin: -20px -20px 25px;
@@ -3485,7 +3485,7 @@ form .CodeMirror {
     display: block;
     margin-bottom: 10px;
     padding: 10px;
-    @include border-radius(3px);
+    border-radius: 3px;
     background: $black2;
     color: $white;
     list-style: none;
@@ -3908,7 +3908,7 @@ form .CodeMirror {
   position: relative;
   border: 1px solid #ccc;
   background-color: #eee;
-  @include background(linear-gradient(top, #ddd, #eee));
+  background: linear-gradient(to bottom, #ddd, #eee);
   line-height: 20px;
 
   span {
@@ -3922,11 +3922,11 @@ form .CodeMirror {
   .usage {
     height: 20px;
     background-color: #6d6;
-    @include background(linear-gradient(top, #dfd, #7d7 90%));
+    background: linear-gradient(to bottom, #dfd, #7d7 90%);
   }
   .usage.over-threshold {
     background-color: #ff0f0f;
-    @include background(linear-gradient(top, #fcc, #ff0f0f));
+    background: linear-gradient(to bottom, #fcc, #ff0f0f);
   }
 }
 // -------------------------------------------------------------------------------------------------
@@ -3961,7 +3961,7 @@ body.ss-ajax-in-iframe {
       padding: 5px 10px;
       *zoom: 1;
       border-radius: 3px;
-      @include background(linear-gradient(top, #fff, #ebecec));
+      background: linear-gradient(to bottom, #fff, #ebecec);
       filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFFFFFFF', endColorstr='#FFEBECEC');
       filter: none \9;
     }
@@ -4008,7 +4008,7 @@ body.ss-ajax-in-iframe {
     width: 200px;
     border: 1px solid #ccc;
     background-color: #fff;
-    @include box-shadow(1px 1px 1px rgba(0, 0, 0, 0.2));
+    box-shadow: 1px 1px 1px rgba(0, 0, 0, 0.2);
   }
   .table-menu.show {
     display: block;
@@ -4040,7 +4040,7 @@ body.ss-ajax-in-iframe {
   .table-editor {
     overflow-x: auto;
     .control {
-      @include transition(0.3s);
+      transition: 0.3s;
       padding: 0;
       border: 1px solid #f2f2f2;
       background-color: $black;
@@ -4077,9 +4077,9 @@ body.ss-ajax-in-iframe {
     .control-top {
       height: 25px;
       &::before {
-        @include display-flex;
-        @include align-items(center);
-        @include justify-content(center);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         content: "▼";
         float: none;
         color: $white;
@@ -4090,9 +4090,9 @@ body.ss-ajax-in-iframe {
       width: 100px;
       min-width: 100px;
       &::before {
-        @include display-flex;
-        @include align-items(center);
-        @include justify-content(center);
+        display: flex;
+        align-items: center;
+        justify-content: center;
         content: "▶︎";
         float: none;
         color: $white;
@@ -4175,9 +4175,9 @@ body.ss-ajax-in-iframe {
 }
 
 .column-value .column-value-header {
-  @include display-flex;
-  @include flex-direction(row);
-  @include flex-wrap(wrap);
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
   padding: 5px 0;
   .column-value-header-group {
     margin-bottom: 10px;
@@ -4395,7 +4395,7 @@ table.check-links-erros {
   border-color: #888;
   background-color: #fff;
   .actions {
-    @include display-flex;
+    display: flex;
     width: 100%;
     background-color: #dcdcdc;
     cursor: pointer;
@@ -4497,7 +4497,7 @@ table.check-links-erros {
       display: inline-block;
     }
     .message-type {
-      @include display-flex;
+      display: flex;
       width: 232px;
       padding: 10px;
       border: solid 1px;

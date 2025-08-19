@@ -11,8 +11,8 @@
   }
 
   &-head {
-    @include display-flex;
-    @include align-items(center);
+    display: flex;
+    align-items: center;
 
     margin-bottom: 10px;
     h5 {
@@ -53,7 +53,7 @@
 
     &__accessibility,
     &__low-vision-result-table {
-      @include display-flex;
+      display: flex;
     }
 
     &__filter {
@@ -155,8 +155,8 @@
       width: calc(100% - 15em - 5px - 1px);
 
       &-controller {
-        @include display-flex;
-        @include justify-content(flex-end);
+        display: flex;
+        justify-content: flex-end;
         margin-bottom: 5px;
         * {
           margin: 0 5px;
@@ -184,8 +184,8 @@
     }
 
     &__low-vision-image {
-      @include display-flex;
-      @include justify-content(center);
+      display: flex;
+      justify-content: center;
 
       &-source,
       &-result {

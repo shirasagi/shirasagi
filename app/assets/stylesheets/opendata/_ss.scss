@@ -111,7 +111,7 @@ textarea.readonly {
       float: left;
       border: 0;
       &:focus {
-        @include box-shadow(none);
+        box-shadow: none;
       }
     }
     input[type="text"] {
@@ -119,7 +119,7 @@ textarea.readonly {
       float: left;
       border: 0;
       &:focus {
-        @include box-shadow(none);
+        box-shadow: none;
       }
     }
     input[type="submit"] {
@@ -154,7 +154,7 @@ div.opendata-csv2rdf-settings-class-search {
   padding: 2px;
   background: #f25a38;
   color: #fff;
-  @include border-radius(3px);
+  border-radius: 3px;
 }
 
 table.opendata-harvest-report {

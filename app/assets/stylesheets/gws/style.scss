@@ -80,14 +80,14 @@
   }
 
   .gws-category-navi-toolbar {
-    @include display-flex;
-    @include align-items(center);
-    @include flex-wrap(wrap);
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
     gap: 5px;
 
     .gws-category-label {
-      @include display-flex;
-      @include align-items(center);
+      display: flex;
+      align-items: center;
       gap: 5px;
     }
   }
@@ -173,13 +173,13 @@
   }
 }
 .gws-category-expr {
-  @include display-flex(inline-flex);
+  display: inline-flex;
   gap: 5px;
 }
 .gws-category-label {
   display: inline-block;
   padding: 1px 5px;
-  @include border-radius(3px);
+  border-radius: 3px;
   background-color: #e8e8e8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #444;
@@ -245,7 +245,7 @@ a.gws-category-label:hover {
   padding: 10px;
   border-radius: 4px;
   background-color: #fff;
-  @include box-shadow(0 1px 6px #666);
+  box-shadow: 0 1px 6px #666;
   &::after {
     content: "";
     position: absolute;
@@ -284,7 +284,7 @@ a.gws-category-label:hover {
   overflow-y: scroll;
   border: $border-gray4;
   background: $white;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
 }
 

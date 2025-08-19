@@ -2,7 +2,6 @@
  *
  */
 
-@import "compass-mixins/lib/compass";
 @import "ss/init";
 
 // -------------------------------------------------------------------------------------------------
@@ -38,9 +37,9 @@
   }
   .ss-preview-dropdown {
     float: left;
-    @include display-flex;
-    @include justify-content(center);
-    @include align-items(center);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     label {
       box-sizing: border-box;
       height: 29px;
@@ -79,18 +78,17 @@
     *zoom: 1;
     border: 1px solid #b23a3d;
     background: #e13026;
+    background: linear-gradient(to bottom, #e13026, #b23a3d);
     color: #fff;
     filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE13026', endColorstr='#FFB23A3D');
     filter: none \9;
-    @include background-image(linear-gradient(top, #e13026, #b23a3d));
     &:hover {
       background: #b23a3d;
     }
   }
   #ss-preview-btn-publish {
     border: 1px solid #0069cc;
-    @include background-image(linear-gradient(top, #007acd, #0069cc));
-    @include filter-gradient(#007acd, #0069cc, vertical);
+    background: linear-gradient(to bottom, #007acd, #0069cc);
     background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3NTIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMDdBQ0QiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMwMDY5Q0MiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c3NTIpIiAvPgo8L3N2Zz4=);
     color: #fff;
     &:hover {
@@ -98,16 +96,16 @@
     }
   }
   & {
-    @include box-shadow(0 1px 5px #666);
+    box-shadow: 0 1px 5px #666;
   }
   .ss-preview-wrap {
-    @include display-flex;
+    display: flex;
   }
   .ss-preview-wrap-column-edit-mode {
     margin-right: auto;
     .ss-preview-wrap-row {
-      @include display-flex;
-      @include flex-wrap(wrap);
+      display: flex;
+      flex-wrap: wrap;
       @include mb {
         display: block;
       }
@@ -163,12 +161,12 @@
   .ss-preview-btn-group {
     display: inline-block;
     &.ss-preview-wrap-row {
-      @include display-flex;
-      @include justify-content(flex-end);
-      @include align-items(center);
-      @include flex-wrap(wrap);
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      flex-wrap: wrap;
       @include mb {
-        @include justify-content(flex-start);
+        justify-content: flex-start;
       }
       label {
         margin: 6px 10px 0 0;
@@ -213,17 +211,17 @@
   padding: 3px 5px 0 0;
   border: 1px solid #000;
   border-left: 3px solid #000;
-  @include transition(0.18s);
+  transition: 0.18s;
   pointer-events: none;
   .ss-preview-overlay-tool {
-    @include display-flex;
+    display: flex;
     position: absolute;
     z-index: 99;
     bottom: 100%;
     left: -3px;
     box-sizing: border-box;
-    @include align-items(center);
-    @include flex-wrap(wrap);
+    align-items: center;
+    flex-wrap: wrap;
     max-width: 100%;
     margin: 0;
     padding: 0 5px;
@@ -283,7 +281,7 @@
   margin: 0;
   padding: 8px;
   background-color: rgb(242, 242, 242);
-  @include box-shadow(0 1px 5px #666);
+  box-shadow: 0 1px 5px #666;
 }
 
 #ss-preview-inplace-item-form {
@@ -333,7 +331,7 @@ div.ss-preview-dialog {
     .ui-dialog-content {
       width: 100%;
       padding: 5px;
-      @include box-sizing(border-box);
+      box-sizing: border-box;
     }
   }
   dt.see {
@@ -480,12 +478,11 @@ table.index {
     margin: 0 0 0 180px;
     padding: 5px 0;
     input[type="text"] {
-      @include box-sizing(border-box);
-      @include box-sizing("inset 0 1px 3px #dcdcdc");
+      box-sizing: border-box;
       width: 80%;
       padding: 6px;
       border: 1px solid #d0d0d0;
-      @include border-radius(3px);
+      border-radius: 3px;
       vertical-align: middle;
     }
   }
@@ -519,7 +516,7 @@ table.index {
       width: 16px;
       height: 16px;
       margin-left: 5px;
-      @include border-radius(8px);
+      border-radius: 8px;
       background: #f25a38;
       color: #fff;
       line-height: 1.1;
@@ -579,10 +576,10 @@ table.index {
       max-width: 100%;
       height: 2.4em;
       padding: 0 4px;
-      @include box-sizing(border-box);
+      box-sizing: border-box;
       border: 1px solid #d0d0d0;
-      @include border-radius(3px);
-      @include box-shadow(inset 0 1px 3px #dcdcdc);
+      border-radius: 3px;
+      box-shadow: inset 0 1px 3px #dcdcdc;
       vertical-align: middle;
     }
     .btn {
