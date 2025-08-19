@@ -36,10 +36,10 @@
     }
   }
   .ss-preview-dropdown {
-    float: left;
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
+    float: left;
     label {
       box-sizing: border-box;
       height: 29px;
@@ -160,9 +160,9 @@
     display: inline-block;
     &.ss-preview-wrap-row {
       display: flex;
-      justify-content: flex-end;
-      align-items: center;
       flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
       @include mb {
         justify-content: flex-start;
       }
@@ -207,9 +207,9 @@
   position: absolute;
   margin: 0 0 0 -5px;
   padding: 3px 5px 0 0;
+  transition: 0.18s;
   border: 1px solid #000;
   border-left: 3px solid #000;
-  transition: 0.18s;
   pointer-events: none;
   .ss-preview-overlay-tool {
     display: flex;
@@ -218,8 +218,8 @@
     bottom: 100%;
     left: -3px;
     box-sizing: border-box;
-    align-items: center;
     flex-wrap: wrap;
+    align-items: center;
     max-width: 100%;
     margin: 0;
     padding: 0 5px;
@@ -327,9 +327,9 @@ div.ss-preview-dialog {
     }
 
     .ui-dialog-content {
+      box-sizing: border-box;
       width: 100%;
       padding: 5px;
-      box-sizing: border-box;
     }
   }
   dt.see {
@@ -571,10 +571,10 @@ table.index {
   }
   dd {
     select {
+      box-sizing: border-box;
       max-width: 100%;
       height: 2.4em;
       padding: 0 4px;
-      box-sizing: border-box;
       border: 1px solid #d0d0d0;
       border-radius: 3px;
       box-shadow: inset 0 1px 3px #dcdcdc;

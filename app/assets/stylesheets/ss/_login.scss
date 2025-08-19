@@ -26,8 +26,8 @@
   margin: 20px 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  box-shadow: 0 1px 3px #ddd;
   background: $white;
+  box-shadow: 0 1px 3px #ddd;
   @include mb {
     width: calc(100% - 20px);
   }
@@ -92,8 +92,8 @@
 
 @include mb {
   .login-box {
-    padding: 10px;
     box-sizing: border-box;
+    padding: 10px;
     header {
       @include clear;
       margin: 0 0 20px;
@@ -149,8 +149,8 @@
 
   .ss-swiper-slide-item {
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
   }
 
   .ss-swiper-slide-item-image {
@@ -180,8 +180,8 @@
 
 @include mb {
   .login-notice {
-    padding: 10px;
     box-sizing: border-box;
+    padding: 10px;
     header {
       @include clear;
       margin: 0 0 20px;

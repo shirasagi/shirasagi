@@ -64,12 +64,12 @@
     position: relative;
     width: 16px;
     height: 16px;
+    border-radius: 8px;
     background: $orange;
     color: $white;
     line-height: 1.1;
     text-align: center;
     cursor: pointer;
-    border-radius: 8px;
 
     .reason {
       display: none;
@@ -80,12 +80,12 @@
       left: 50%;
       margin-left: -50px;
       border: $border-gray4;
+      border-radius: 3px;
       background: $white;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
 
       color: $black;
       text-align: left;
-      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-      border-radius: 3px;
 
       time {
         display: block;

@@ -52,10 +52,10 @@
     margin: 5px 0;
   }
   .auto-reload {
-    flex-grow: 2;
     display: inline-flex;
-    justify-content: flex-end;
+    flex-grow: 2;
     align-items: center;
+    justify-content: flex-end;
     [type="number"] {
       width: 6rem !important;
       margin: 0 0.25rem;

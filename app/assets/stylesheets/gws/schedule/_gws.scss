@@ -738,8 +738,8 @@
   text-align: left;
   cursor: auto;
   .popup-title {
-    text-overflow: ellipsis;
     font-size: 120%;
+    text-overflow: ellipsis;
     word-wrap: normal;
     word-break: normal;
   }
@@ -828,7 +828,7 @@
   padding: 5px 8px;
   border: 1px solid #ddd;
   border-width: 0 1px;
-  background-color: #f9f9f9;
+  background: #f9f9f9;
   background: linear-gradient(#fff, #eee);
   a {
     color: #444;

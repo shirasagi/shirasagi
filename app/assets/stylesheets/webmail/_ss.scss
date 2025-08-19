@@ -5,12 +5,12 @@
 
 .webmail-dropdown-menu,
 .webmail-address-dropdown-menu {
-  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   left: 0;
   margin: 0;
   padding: 5px 0;
   border: 1px solid #ccc;
   background: #fff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   text-align: left;
   a {
     @include truncate;
@@ -48,9 +48,9 @@ li.webmail-accounts {
   float: right;
 }
 .webmail-category-label {
-  border-radius: 3px;
   display: inline-block;
   padding: 1px 5px;
+  border-radius: 3px;
   background-color: #e8e8e8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #444;
@@ -519,8 +519,8 @@ li.webmail-accounts {
 }
 .webmail-addon-mail-body {
   display: flex;
-  flex-direction: column;
   grid-row-gap: 10px;  // for old browsers
+  flex-direction: column;
   row-gap: 10px;
 }
 // form-addresses

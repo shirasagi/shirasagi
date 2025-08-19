@@ -604,8 +604,8 @@ _:future,
   }
   .user {
     display: flex;
-    float: right;
     align-items: center;
+    float: right;
   }
   .sp-menu-button {
     display: none;
@@ -3257,8 +3257,8 @@ table.form-index.sortable-index {
   max-height: 70%;
   margin-top: 2px;
   overflow: auto;
-  font-weight: normal;
   box-shadow: 1px 2px 4px #888;
+  font-weight: normal;
 }
 .th-lock thead th {
   position: -webkit-sticky;
@@ -3906,7 +3906,7 @@ form .CodeMirror {
 .ss-quota-bar {
   position: relative;
   border: 1px solid #ccc;
-  background-color: #eee;
+  background: #eee;
   background: linear-gradient(to bottom, #ddd, #eee);
   line-height: 20px;
 
@@ -3920,11 +3920,11 @@ form .CodeMirror {
   }
   .usage {
     height: 20px;
-    background-color: #6d6;
+    background: #6d6;
     background: linear-gradient(to bottom, #dfd, #7d7 90%);
   }
   .usage.over-threshold {
-    background-color: #ff0f0f;
+    background: #ff0f0f;
     background: linear-gradient(to bottom, #fcc, #ff0f0f);
   }
 }
@@ -4037,8 +4037,8 @@ body.ss-ajax-in-iframe {
   .table-editor {
     overflow-x: auto;
     .control {
-      transition: 0.3s;
       padding: 0;
+      transition: 0.3s;
       border: 1px solid #f2f2f2;
       background-color: $black;
       cursor: pointer;
@@ -4074,10 +4074,10 @@ body.ss-ajax-in-iframe {
     .control-top {
       height: 25px;
       &::before {
+        content: "▼";
         display: flex;
         align-items: center;
         justify-content: center;
-        content: "▼";
         float: none;
         color: $white;
         text-align: center;
@@ -4087,10 +4087,10 @@ body.ss-ajax-in-iframe {
       width: 100px;
       min-width: 100px;
       &::before {
+        content: "▶︎";
         display: flex;
         align-items: center;
         justify-content: center;
-        content: "▶︎";
         float: none;
         color: $white;
         text-align: center;
@@ -4444,7 +4444,7 @@ table.check-links-erros {
     background: #fff;
     letter-spacing: 0.1em;
     line-height: 1.3;
-    word-break: break-word;
+    word-wrap: break-word;
     .error {
       color: #ff0000;
       line-height: 1.5;

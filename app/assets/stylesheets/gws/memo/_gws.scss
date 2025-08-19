@@ -311,8 +311,8 @@ table.index.gws-memo-folder {
     margin: 0;
     padding: 5px 0;
     border: 1px solid #ccc;
-    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     text-align: left;
     a {
       @include truncate;
