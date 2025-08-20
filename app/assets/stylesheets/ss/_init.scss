@@ -323,9 +323,6 @@ $border-white: 1px solid $white;
   }
 }
 
-@mixin lgrad($position, $value...) {
-  background: linear-gradient($position, $value);
-}
 @mixin grd-white {
   background: #fff;
   background: linear-gradient(to bottom, #fff, #ebecec);
