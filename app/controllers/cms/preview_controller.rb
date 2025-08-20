@@ -153,22 +153,30 @@ class Cms::PreviewController < ApplicationController
 
   def convert_html_to_preview(body, options)
     preview_url = cms_preview_path preview_date: params[:preview_date]
-
     body = String.new(body)
     body.gsub!(/(href|src)=".*?"/) do |m|
       url = m.match(/.*?="(.*?)"/)[1]
-      site = @cur_site.same_domain_site_from_path(url)
-
-      if url =~ /^\/(assets|assets-dev)\//
-        m
-      elsif site && (site.id == @cur_site.id) && url =~ /^\/(?!\/)/
-        m.sub(/="/, "=\"#{preview_url}")
-      else
-        m
-      end
+      p_url = Cms::PreviewLink.new(@cur_site, preview_url, params[:path], url)
+      m.sub!(/=".*?"/, "=\"#{p_url.expanded}\"")
+      m += ' data-external-preview="true"' if p_url.external?
+      m
     end
-    body.gsub!(/<form.*?method="get".*?>/) do |m|
-      m.sub(/action="\/(?!\/)/, "action=\"#{preview_url}/")
+    body.gsub!(/<form.*?>/) do |m|
+      method = m.match(/method="(.*?)"/)[1] rescue nil
+      url = m.match(/action="(.*?)"/)[1] rescue nil
+
+      method ||= "get"
+      next m if url.blank?
+
+      case method
+      when "get"
+        p_url = Cms::PreviewLink.new(@cur_site, preview_url, params[:path], url)
+        m.sub!(/action=".*?"/, "action=\"#{p_url.expanded}\"")
+        m.sub!(/>$/, ' data-external-preview="true">') if p_url.external?
+      when "post"
+        m.sub!(/>$/, ' data-external-submit="true">')
+      end
+      m
     end
 
     if rendered = options[:rendered]
