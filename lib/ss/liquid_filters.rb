@@ -131,15 +131,11 @@ module SS::LiquidFilters
   end
 
   def expand_path(input, path)
-    return input if input.blank?
+    return input if input.blank? || path.blank?
 
-    path = path.to_s
-    input = input.to_s
-    if path.start_with?("http://", "https://")
-      ::URI.join(path, input).to_s
-    else
-      ::File.expand_path(input, path)
-    end
+    addressable_path = Addressable::URI.parse(path.to_s)
+    addressable_input = Addressable::URI.parse(input.to_s)
+    addressable_path.join(addressable_input).to_s
   end
 
   def sanitize(input)
