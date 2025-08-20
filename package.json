@@ -41,9 +41,9 @@
   },
   "scripts": {
     "build": "webpack --config webpack.config.js",
-    "lint": "stylelint '{app,db}/**/*.{css,scss,sass}'",
-    "lint:fix": "stylelint '{app,db}/**/*.{css,scss,sass}' --fix",
-    "format": "prettier --write '{app,db}/**/*.{css,scss,sass}'"
+    "lint": "stylelint 'app/**/*.{css,scss,sass}'",
+    "lint:fix": "stylelint 'app/**/*.{css,scss,sass}' --fix",
+    "format": "prettier --write 'app/**/*.{css,scss,sass}'"
   },
   "devDependencies": {
     "@stylistic/stylelint-plugin": "^3.1.3",

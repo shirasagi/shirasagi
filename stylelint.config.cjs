@@ -16,6 +16,7 @@ module.exports = {
   "rules": {
     "no-descending-specificity": null,
     "no-duplicate-selectors": null,
+    "block-no-empty": null,
     "font-family-no-missing-generic-family-keyword": [
       true,
       {
