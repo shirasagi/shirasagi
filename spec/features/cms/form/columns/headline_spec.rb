@@ -33,7 +33,6 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         fill_in 'item[place_holder]', with: place_holder
         click_on I18n.t('ss.buttons.save')
       end
-      find('.ss-dialog .save').click
       wait_for_notice I18n.t('ss.notice.saved')
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name

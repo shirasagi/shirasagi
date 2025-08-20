@@ -17,9 +17,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
     let(:node_category_child1) { create :category_node_page, cur_site: site, cur_node: node_category_root }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
     let(:item) do
-      create(
-        :article_page, cur_site: site, cur_node: node, layout: layout, html: html,
-        category_ids: [ node_category_child1.id ])
+      create(:article_page, cur_site: site, cur_node: node, layout: layout, category_ids: [ node_category_child1.id ])
     end
     let(:edit_path) { edit_article_page_path site.id, node.id, item }
 
@@ -31,6 +29,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
+          fill_in_ckeditor "item[html]", with: html
 
           page.first('#addon-basic a[onclick]').click
           fill_in "item[basename]", with: "sample"
@@ -39,6 +38,8 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         new_window = window_opened_by { page.first("footer.send .preview").click }
         within_window new_window do
           wait_for_document_loading
+          wait_for_cms_form_preview_initialized
+
           expect(page).to have_css("#ss-preview")
           within("#ss-preview") do
             expect(page).to have_content(I18n.t("cms.preview_page2"))
@@ -57,7 +58,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
   context "with root cms page" do
     let(:site) { cms_site }
     let(:layout) { create_cms_layout }
-    let(:item) { create(:cms_page, filename: "404.html", cur_site: site, layout: layout, html: html) }
+    let(:item) { create(:cms_page, filename: "404.html", cur_site: site, layout: layout) }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
 
     let(:edit_path) { edit_cms_page_path site.id, item }
@@ -71,11 +72,14 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
           fill_in "item[basename]", with: "sample"
+          fill_in_ckeditor "item[html]", with: html
         end
 
         new_window = window_opened_by { page.first("footer.send .preview").click }
         within_window new_window do
           wait_for_document_loading
+          wait_for_cms_form_preview_initialized
+
           expect(page).to have_css("#ss-preview")
           within("#ss-preview") do
             expect(page).to have_content(I18n.t("cms.preview_page2"))
@@ -241,6 +245,8 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         new_window = window_opened_by { page.first("footer.send .preview").click }
         within_window new_window do
           wait_for_document_loading
+          wait_for_cms_form_preview_initialized
+
           expect(page).to have_css("#ss-preview")
           within("#ss-preview") do
             expect(page).to have_content(I18n.t("cms.preview_page2"))
@@ -269,7 +275,18 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.count).to eq 1
+        expect(Article::Page.all.count).to eq 1
+        article_page = Article::Page.all.first
+        expect(article_page.column_values.count).to eq 13
+        article_page.column_values.reorder(order: 1, name: 1).to_a.tap do |column_values|
+          column_values[0].tap do |column_value|
+            expect(column_value.value).to eq column1_value
+          end
+          column_values[-1].tap do |column_value|
+            expect(column_value.url).to include(column13_youtube_id)
+            expect(column_value.title).to eq column13_title
+          end
+        end
 
         click_on I18n.t('ss.links.edit')
         wait_for_all_ckeditors_ready
@@ -280,6 +297,8 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         end
         within_window new_window do # new_window is re-used.
           wait_for_document_loading
+          wait_for_cms_form_preview_initialized
+
           expect(page).to have_css("div", text: column1_value)
           expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
           expect(page).to have_css("div", text: column3_value)

@@ -23,14 +23,12 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
     site.save!
   end
 
-  before { login_user user }
-
   describe 'lock and unlock' do
     it do
       expect(user1_this_month_time_card.unlocked?).to be_truthy
       expect(user2_this_month_time_card.unlocked?).to be_truthy
 
-      visit gws_attendance_main_path(site)
+      login_user user, to: gws_attendance_main_path(site)
       within first(".mod-navi") do
         click_on I18n.t('modules.gws/attendance/management/time_card')
       end
@@ -41,6 +39,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       within "form#item-form" do
         click_on I18n.t("gws/attendance.buttons.lock")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       user1_this_month_time_card.reload
       user2_this_month_time_card.reload
@@ -56,6 +55,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       within "form#item-form" do
         click_on I18n.t("gws/attendance.buttons.unlock")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       user1_this_month_time_card.reload
       user2_this_month_time_card.reload
