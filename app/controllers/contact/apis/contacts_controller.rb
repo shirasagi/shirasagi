@@ -124,7 +124,9 @@ class Contact::Apis::ContactsController < ApplicationController
     else
       page = 0
     end
-    aggregator = Aggregator.new(cur_site: @cur_site, cur_user: @cur_user, s: params[:s], page: page, limit: 50)
+    aggregator = Aggregator.new(
+      cur_site: @cur_site, cur_user: @cur_user, s: params[:s], page: page,
+      limit: SS.max_items_per_page)
     @items = aggregator.call
   end
 end
