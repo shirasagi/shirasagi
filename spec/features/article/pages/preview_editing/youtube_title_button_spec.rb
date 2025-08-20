@@ -103,9 +103,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
+          description = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(60)
+
           expect(item.name).to eq name
-          expect(item.description).to eq form.html
-          expect(item.summary).to eq form.html
+          expect(item.description).to eq description
+          expect(item.summary).to eq description
           expect(item.column_values).to be_blank
           expect(item.backups.count).to eq 1
         end

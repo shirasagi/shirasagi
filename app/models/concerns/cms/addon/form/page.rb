@@ -58,6 +58,10 @@ module Cms::Addon::Form::Page
 
   def render_html(registers = nil)
     return html if form.blank?
+
+    site = self.site
+    # DBに未保存の状態でも正しくレンダリングできるように cur_site もチェック
+    site ||= self.cur_site if respond_to?(:cur_site)
     return nil if site.blank?
 
     registers ||= {

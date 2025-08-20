@@ -40,36 +40,52 @@ RSpec.describe SS::Migration20210628000000, dbscope: :example do
     end
 
     it "unset size and migration" do
-      page.column_values = column_values
-      page.save!
-      page.reload
+      Article::Page.find(page.id).tap do |work_page|
+        # page はメンバー変数などで汚染されている；まっさらなページを取得して操作する。
+        work_page.column_values = column_values
+        work_page.save!
+      end
 
-      expect(page.render_html).to eq rendered_html
-      expect(page.size).to eq rendered_html.bytesize
+      Article::Page.find(page.id).tap do |work_page|
+        # page はメンバー変数などで汚染されている；まっさらなページを取得して操作する。
+        expect(work_page.render_html).to eq rendered_html
+        expect(work_page.size).to eq rendered_html.bytesize
+      end
 
       page.unset(:size)
       described_class.new.change
 
-      page.reload
-      expect(page.render_html).to eq rendered_html
-      expect(page.size).to eq rendered_html.bytesize
+      Article::Page.find(page.id).tap do |work_page|
+        # page はメンバー変数などで汚染されている；まっさらなページを取得して操作する。
+        expect(work_page.render_html).to eq rendered_html
+        expect(work_page.size).to eq rendered_html.bytesize
+      end
     end
 
     it "when site removed" do
-      page.column_values = column_values
-      page.save!
-      page.reload
+      Article::Page.find(page.id).tap do |work_page|
+        # page はメンバー変数などで汚染されている；まっさらなページを取得して操作する。
+        work_page.column_values = column_values
+        work_page.save!
+      end
 
-      expect(page.render_html).to eq rendered_html
-      expect(page.size).to eq rendered_html.bytesize
+      Article::Page.find(page.id).tap do |work_page|
+        # page はメンバー変数などで汚染されている；まっさらなページを取得して操作する。
+        expect(work_page.render_html).to eq rendered_html
+        expect(work_page.size).to eq rendered_html.bytesize
+      end
 
       page.unset(:size)
       site.destroy
+
+      # Run migration
       described_class.new.change
 
-      page.reload
-      expect(page.render_html).to eq nil
-      expect(page.size).to eq nil
+      Article::Page.find(page.id).tap do |work_page|
+        # page はメンバー変数などで汚染されている；まっさらなページを取得して操作する。
+        expect(work_page.render_html).to eq nil
+        expect(work_page.size).to eq nil
+      end
     end
   end
 end
