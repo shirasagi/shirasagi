@@ -5,6 +5,13 @@ FactoryBot.define do
     order { rand(999) }
     state { %w(public closed).sample }
     sub_type { %w(static entry).sample }
-    html { unique_id }
+    html do
+      <<~HTML
+        <header>Name: #{name}</header>
+        {% for value in values -%}
+          <div data-name="{{ value.name }}" data-type="{{ value.type }}">{{ value }}</div>
+        {% endfor -%}
+      HTML
+    end
   end
 end
