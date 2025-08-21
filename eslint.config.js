@@ -39,6 +39,7 @@ module.exports = defineConfig([{
     "no-unused-vars": ["warn", {
       "argsIgnorePattern": "^_",
       "caughtErrorsIgnorePattern": "^_",
+      "destructuredArrayIgnorePattern": "^_",
     }],
 
     "no-undef": "off",
