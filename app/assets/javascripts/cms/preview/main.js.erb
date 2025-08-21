@@ -85,14 +85,13 @@ SS_Preview = (function () {
 
     SS_Preview.instance = new SS_Preview("#ss-preview");
 
-    SS_Preview.preventExternalPrevew();
-
     SS_Preview.loadJQuery(function() {
       $.when(
         SS_Preview.lazyLoad(SS_Preview.libs.datetimePicker),
         SS_Preview.lazyLoad(SS_Preview.libs.colorbox),
         SS_Preview.lazyLoad(SS_Preview.libs.dialog)
       ).done(function () {
+        SS_Preview.preventExternalPrevew();
         SS_Preview.instance.initialize(opts);
       });
     });
@@ -170,6 +169,19 @@ SS_Preview = (function () {
 
   SS_Preview.preventExternalPrevew = function () {
     let preventPreview = function (ev) {
+      alert('<%= I18n.t("cms.notices.prevent_external_preview") %>');
+      return false;
+    };
+    let preventSubmit = function (ev) {
+      alert('<%= I18n.t("cms.notices.prevent_external_submit") %>');
+      return false;
+    };
+    $(document).on("click", "a[data-external-preview]", preventPreview);
+    $(document).on("submit", "form[data-external-preview]", preventPreview);
+    $(document).on("submit", "form[data-external-submit]", preventSubmit);
+
+    /*
+    let preventPreview = function (ev) {
       ev.stopPropagation();
       ev.preventDefault();
       alert('<%= I18n.t("cms.notices.prevent_external_preview") %>');
@@ -190,6 +202,7 @@ SS_Preview = (function () {
     document.querySelectorAll("form[data-external-submit]").forEach(function(element) {
       element.addEventListener("submit", preventSubmit, true);
     });
+    */
   };
 
   SS_Preview.notice = function (message) {
