@@ -149,7 +149,7 @@ module SS::Model::Site
 
     def same_domain_site_from_path(path)
       sites = same_domain_sites.sort_by { |site| site.url.count("/") }.reverse
-      sites.find { |site| path.start_with?(site.url) }
+      sites.find { |site| path.start_with?(site.url) || site.url == (path + "/") }
     end
 
     def generate_node_segments
