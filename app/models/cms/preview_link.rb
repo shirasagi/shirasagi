@@ -39,10 +39,8 @@ class Cms::PreviewLink
       return
     end
 
-    full_url = site.full_url.delete_suffix("/")
-    full_root_url = site.full_root_url.delete_suffix("/")
-
-    if url.start_with?(full_url)
+    if url.start_with?(site.full_url) || (url + "/") == site.full_url
+      full_root_url = site.full_root_url.delete_suffix("/")
       path = url.delete_prefix(full_root_url)
       path = "/" + path if path[0] != "/"
       @internal = cur_site_path?(path)

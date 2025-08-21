@@ -157,7 +157,7 @@ class Cms::PreviewController < ApplicationController
     body.gsub!(/(href|src)=".*?"/) do |m|
       url = m.match(/.*?="(.*?)"/)[1]
       p_url = Cms::PreviewLink.new(@cur_site, preview_url, params[:path], url)
-      m.sub!(/=".*?"/, "=\"#{p_url.expanded}\"")
+      m.sub!(/=".*?"/, "=\"#{p_url.expanded}\"") if p_url.expanded != url
       m += ' data-external-preview="true"' if p_url.external?
       m
     end
@@ -171,7 +171,7 @@ class Cms::PreviewController < ApplicationController
       case method
       when "get"
         p_url = Cms::PreviewLink.new(@cur_site, preview_url, params[:path], url)
-        m.sub!(/action=".*?"/, "action=\"#{p_url.expanded}\"")
+        m.sub!(/action=".*?"/, "action=\"#{p_url.expanded}\"") if p_url.expanded != url
         m.sub!(/>$/, ' data-external-preview="true">') if p_url.external?
       when "post"
         m.sub!(/>$/, ' data-external-submit="true">')
