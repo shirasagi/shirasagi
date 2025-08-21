@@ -43,12 +43,15 @@
     "build": "webpack --config webpack.config.js"
   },
   "devDependencies": {
+    "@eslint/eslintrc": "^3.3.1",
+    "@eslint/js": "^9.33.0",
     "autoprefixer": "^10.4.21",
     "clean-webpack-plugin": "^4.0.0",
     "css-loader": "^7.1.2",
     "deepmerge": "^4.3.1",
     "eslint": "^9.29.0",
     "eslint-plugin-ignore-erb": "^0.1.1",
+    "globals": "^16.3.0",
     "js-yaml": "^4.1.0",
     "mini-css-extract-plugin": "^2.9.2",
     "postcss": "^8.5.6",
