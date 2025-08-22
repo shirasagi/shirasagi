@@ -7,7 +7,11 @@ body {
   font-family: sans-serif;
   font-size: 12px;
 }
-h1, h2, h3, h4, h5 {
+h1,
+h2,
+h3,
+h4,
+h5 {
   margin: 0;
   font-size: 120%;
 }
@@ -21,7 +25,12 @@ a:hover {
 
 /* ---------------------------------- */
 
-#ss-small, #ss-medium, #ss-large, #ss-kana, #ss-pc, #ss-mb {
+#ss-small,
+#ss-medium,
+#ss-large,
+#ss-kana,
+#ss-pc,
+#ss-mb {
   display: none;
 }
 
@@ -62,12 +71,16 @@ a:hover {
 
 /* ---------------------------------- */
 
-#menu, #side,
-.tag-article, .tag-aside {
+#menu,
+#side,
+.tag-article,
+.tag-aside {
   margin: 10px;
 }
-#menu h1, #side h1,
-.tag-article h1, .tag-aside h2 {
+#menu h1,
+#side h1,
+.tag-article h1,
+.tag-aside h2 {
   margin: 20px -10px;
   padding: 5px;
   border-bottom: 1px solid #888;

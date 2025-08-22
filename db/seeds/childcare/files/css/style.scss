@@ -27,9 +27,9 @@ html {
 
 body {
   margin: 0 auto;
+  color: $black;
   font-family: $font-base;
   font-size: 100%;
-  color: $black;
 }
 
 h1,
@@ -60,10 +60,10 @@ a {
 
 rp,
 rt {
+  background: $white;
   color: $black;
   font-size: $px10;
   font-weight: normal;
-  background: $white;
 }
 
 rp {
@@ -93,8 +93,8 @@ select,
 input,
 textarea,
 button {
-  font-size: 100%;
   font-family: $font-base;
+  font-size: 100%;
 }
 
 select {
@@ -148,8 +148,8 @@ textarea {
   width: 70%;
   height: 6.5em;
   padding: 12px;
-  line-height: 1.4;
   border: 1px solid $gray3;
+  line-height: 1.4;
 
   @include mb {
     width: 100%;
@@ -185,15 +185,15 @@ textarea {
   li {
     @include li;
 
-    &:before {
+    &::before {
       background: $red;
     }
   }
 }
 
 #ss-notice {
-  color: $red;
   margin-bottom: 30px;
+  color: $red;
 }
 
 .simple-captcha {
@@ -229,10 +229,10 @@ textarea {
 #wrap {
   @include clear;
   position: relative;
-  overflow: visible;
-  @include page-width;
   margin: 0 auto;
   padding: 0;
+  overflow: visible;
+  @include page-width;
 
   @include mb {
     display: block;
@@ -279,8 +279,8 @@ textarea {
     padding: 5px 15px;
 
     #nocssread {
-      float: left;
       padding: 3px 10px 3px 0;
+      float: left;
     }
 
     #size,
@@ -358,8 +358,8 @@ textarea {
 
     @include mb {
       display: block;
-      float: right;
       padding: 10px 0 7px;
+      float: right;
 
       li {
         display: inline-block;
@@ -368,9 +368,9 @@ textarea {
       a {
         display: block;
         padding: 10px;
+        background: $primary3;
         line-height: 1;
         @include border-radius(6px);
-        background: $primary3;
 
         img {
           width: 16px;
@@ -381,13 +381,13 @@ textarea {
   }
 
   #search {
-    float: right;
     padding: 20px 0;
+    float: right;
 
     @include mb {
+      display: none;
       float: none;
       clear: both;
-      display: none;
     }
 
     form {
@@ -397,9 +397,9 @@ textarea {
     }
 
     #search-box {
-      float: left;
       width: 20em;
       padding: .4em 1em 0;
+      float: left;
       border: 0;
       background: none;
 
@@ -413,10 +413,10 @@ textarea {
     }
 
     #search-button {
-      float: left;
-      @include btn-primary-s;
       padding: 5px 10px;
+      float: left;
       border: 0;
+      @include btn-primary-s;
       @include border-radius(0);
 
       @include mb {
@@ -451,10 +451,10 @@ textarea {
 
   ul {
     @include page-width;
+    -js-display: flex;
     padding: 0 15px;
     @include display-flex;
     @include flex-direction(row);
-    -js-display: flex;
 
     @include mb {
       display: block;
@@ -487,21 +487,21 @@ textarea {
 .pagetop {
   display: none;
   position: fixed;
-  bottom: 30px;
   right: 30px;
+  bottom: 30px;
 
   a {
-    position: relative;
     display: block;
+    position: relative;
     padding: 40px 10px 10px;
-    @include border-radius(6px);
-    background: $primary2 url(../img/ic-pagetop.png) no-repeat center 10px;
     opacity: .8;
-    @include box-shadow(0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12));
-    text-align: center;
+    background: $primary2 url(../img/ic-pagetop.png) no-repeat center 10px;
     color: #fff;
     font-size: $px12;
+    text-align: center;
     text-decoration: none;
+    @include border-radius(6px);
+    @include box-shadow(0 2px 2px 0 rgba(0, 0, 0, .14), 0 3px 1px -2px rgba(0, 0, 0, .2), 0 1px 5px 0 rgba(0, 0, 0, .12));
 
     @include mb {
       padding: 0;
@@ -537,8 +537,8 @@ textarea {
 
       @include mb {
         width: 50%;
-        float: left;
         padding: 0;
+        float: left;
         border: 0;
         border-right: 1px solid $white;
         border-bottom: 1px solid $white;
@@ -633,9 +633,9 @@ textarea {
   }
 
   time {
-    clear: left;
-    float: left;
     width: 8em;
+    float: left;
+    clear: left;
 
     @include mb {
       float: none;
@@ -803,14 +803,14 @@ textarea {
   .names {
     @include content-head;
     position: relative;
-    padding-left: 8em;
     padding-bottom: 0;
+    padding-left: 8em;
 
     @include mb {
       padding-left: 5px;
     }
 
-    &:before {
+    &::before {
       content: "新着情報";
       position: absolute;
       top: 10px;
@@ -852,9 +852,9 @@ textarea {
     }
 
     time {
-      clear: left;
-      float: left;
       width: 8em;
+      float: left;
+      clear: left;
 
       @include mb {
         float: none;
@@ -908,8 +908,8 @@ textarea {
     @include clear;
 
     li {
-      float: left;
       width: 20%;
+      float: left;
 
       @include mb {
         width: 50%;
@@ -917,11 +917,11 @@ textarea {
 
       a {
         @include btn-white-m;
+        box-sizing: content-box;
         margin: 0 5px;
         padding-top: 80px;
         background-repeat: no-repeat;
         background-position: center 15px;
-        box-sizing: content-box;
 
         @include mb {
           height: auto !important;
@@ -981,10 +981,10 @@ textarea {
     width: 50%;
 
     a {
+      box-sizing: content-box;
       margin-bottom: 10px;
       padding: 10px 0;
       background-image: none;
-      box-sizing: content-box;
     }
   }
 }
@@ -1045,8 +1045,8 @@ textarea {
 
     @include mb {
       width: 50%;
-      float: left;
       margin-bottom: 0;
+      float: left;
 
       a {
         margin: 0 5px 10px;
@@ -1071,8 +1071,8 @@ textarea {
   }
 
   span {
-    float: left;
     margin: 0 15px 15px 0;
+    float: left;
 
     a {
       display: block;
@@ -1133,12 +1133,12 @@ textarea {
   }
 
   a {
-    position: relative;
     display: block;
+    position: relative;
     padding: 10px 15px 10px 30px;
     @include transition(.3s);
 
-    &:before {
+    &::before {
       content: "";
       position: absolute;
       top: 15px;
@@ -1148,7 +1148,7 @@ textarea {
       border-left: 10px solid $primary1;
     }
 
-    &:after {
+    &::after {
       content: "";
       position: absolute;
       top: 15px;
@@ -1163,7 +1163,7 @@ textarea {
       background: $primary4;
       color: $black;
 
-      &:after {
+      &::after {
         border-left: 10px solid $primary4;
       }
     }
@@ -1240,23 +1240,23 @@ textarea {
 
     .float-left,
     .ss-alignment-left {
-      float: left;
       margin: 0 15px 15px 0;
+      float: left;
 
       @include mb {
-        float: none;
         margin: 0 0 15px;
+        float: none;
       }
     }
 
     .float-right,
     .ss-alignment-right {
-      float: right;
       margin: 0 0 15px 15px;
+      float: right;
 
       @include mb {
-        float: none;
         margin: 0 0 15px;
+        float: none;
       }
     }
 
@@ -1327,8 +1327,8 @@ textarea {
     margin: 0 15px 15px;
 
     .site {
-      float: left;
       margin-right: 10px;
+      float: left;
     }
 
     .fb {
@@ -1350,7 +1350,7 @@ textarea {
     position: relative;
     padding-left: 45px;
 
-    &:before {
+    &::before {
       position: absolute;
       top: 0;
       left: 15px;
@@ -1361,11 +1361,11 @@ textarea {
     }
   }
 
-  .faq-question:before {
+  .faq-question::before {
     content: "Q:";
   }
 
-  .body:before {
+  .body::before {
     content: "A:";
   }
 
@@ -1428,9 +1428,9 @@ textarea {
   @include arrow;
 
   time {
-    clear: left;
-    float: left;
     width: 8em;
+    float: left;
+    clear: left;
 
     @include mb {
       float: none;
@@ -1473,14 +1473,14 @@ textarea {
 
   dt,
   legend {
-    clear: left;
-    float: left;
     width: 12em;
+    float: left;
+    clear: left;
     font-weight: bold;
 
     @include mb {
-      float: none;
       width: 100%;
+      float: none;
     }
   }
 
@@ -1545,10 +1545,10 @@ textarea {
     a{
       margin: 7px;
       padding: 7px 8px;
+      border-radius: 10px;
+      background-color: #bcbcbc;
       text-align: center;
       text-decoration: none;
-      background-color: #bcbcbc;
-      border-radius: 10px;
 
       &:hover{
         text-decoration: solid;
@@ -1568,10 +1568,10 @@ textarea {
 .event-ics-file{
   margin: 7px;
   padding: 7px 8px;
+  border-radius: 10px;
+  background-color: #faffc7;
   text-align: center;
   text-decoration: none;
-  background-color: #faffc7;
-  border-radius: 10px;
 
   &:hover{
     text-decoration: solid;
@@ -1588,9 +1588,9 @@ textarea {
 
   .calendar {
     width: 100%;
-    border: 1px solid #fff;
-    border-collapse: separate;
     border-spacing: 0;
+    border-collapse: separate;
+    border: 1px solid #fff;
     border-radius: 20px;
 
     @include tb {
@@ -1637,18 +1637,18 @@ textarea {
     height: 36px;
     min-height: 36px;
     background: $white;
+    font-size: $px12;
     font-weight: normal;
     vertical-align: middle;
-    font-size: $px12;
 
     &:first-child {
-      background: #ffdeda;
       border-bottom: 1px solid #fff;
+      background: #ffdeda;
     }
 
     &:last-child {
-      background: #e1f0ff;
       border-bottom: 1px solid #fff;
+      background: #e1f0ff;
     }
   }
 
@@ -1656,8 +1656,8 @@ textarea {
     height: 100px;
     min-height: 100px;
     background: #fff;
-    font-weight: bold;
     font-size: $px12;
+    font-weight: bold;
 
     vertical-align: top;
   }
@@ -1754,9 +1754,9 @@ textarea {
   }
 
   dt {
-    clear: left;
-    float: left;
     width: 11em;
+    float: left;
+    clear: left;
 
     @include mb {
       width: 100%;
@@ -1839,16 +1839,16 @@ textarea {
   padding: 0 15px;
 
   dt {
-    clear: left;
-    float: left;
     width: 10em;
     padding: 10px 0;
+    float: left;
+    clear: left;
     font-weight: bold;
 
     @include mb {
-      float: none;
       width: 100%;
       padding-bottom: 0;
+      float: none;
     }
   }
 
@@ -1958,14 +1958,14 @@ textarea {
 
     dt,
     legend {
-      clear: left;
-      float: left;
       width: 10em;
+      float: left;
+      clear: left;
       font-weight: bold;
 
       @include mb {
-        float: none;
         width: 100%;
+        float: none;
       }
     }
 
@@ -1981,8 +1981,8 @@ textarea {
   }
 
   .settings {
-    text-align: right;
     margin-bottom: 30px;
+    text-align: right;
 
     a {
       @include btn-primary-s;
@@ -2012,10 +2012,10 @@ textarea {
   #map-sidebar {
     @include box-sizing(border-box);
     @include content-box;
-    float: left;
     width: 25%;
     margin: 0 0 15px;
     padding: 10px;
+    float: left;
     overflow-y: scroll;
 
     @include mb {
@@ -2036,14 +2036,14 @@ textarea {
 
   #map-canvas {
     @include content-box;
-    float: right;
     width: 75% !important;
     margin: 0 0 15px;
+    float: right;
 
     @include mb {
-      float: none;
       width: 100% !important;
       height: 300px !important;
+      float: none;
     }
   }
 
@@ -2093,13 +2093,13 @@ textarea {
   }
 
   .summary-image {
-    float: right;
     width: 120px;
     margin: 0 15px 30px;
+    float: right;
 
     @include mb {
-      float: none;
       width: 100%;
+      float: none;
     }
   }
 
@@ -2115,16 +2115,16 @@ textarea {
     }
 
     dt {
-      clear: left;
-      float: left;
       width: 12em;
       margin-bottom: 10px;
+      float: left;
+      clear: left;
       font-weight: bold;
 
       @include mb {
-        float: none;
         width: 100%;
         margin-bottom: 0;
+        float: none;
       }
     }
 
@@ -2235,9 +2235,9 @@ h2.ezine-html {
     }
 
     dd {
-      float: left;
       width: 75%;
       padding: 0;
+      float: left;
 
       @include mb {
         width: 100%;
@@ -2289,13 +2289,13 @@ article.post {
   }
 
   .toggle {
-    position: relative;
     display: block;
+    position: relative;
     width: 4em;
     margin-top: -2em;
     padding-left: 15px;
 
-    &:before {
+    &::before {
       content: "";
       position: absolute;
       top: 7px;
@@ -2328,13 +2328,13 @@ article.post {
 .cms-site-search {
   .search-form {
     display: flex;
-    align-items: center;
-    gap: 20px;
     flex-wrap: wrap;
+    align-items: center;
     height: auto;
-    padding: 30px;
     margin: 0 15px 30px;
+    padding: 30px;
     border: 3px solid #cdf0ff;
+    gap: 20px;
 
     @media only screen and (max-width: 600px) {
       flex-wrap: wrap;
@@ -2358,8 +2358,8 @@ article.post {
     }
 
     .site-search-keyword {
-      border: none;
       order: 5;
+      border: none;
       @media only screen and (max-width: 600px) {
         width: 100%;
         margin-top: 5px;
@@ -2381,9 +2381,9 @@ article.post {
           border: 1px solid #ccc;
 
           @media only screen and (max-width: 600px) {
-            padding: 5px;
-            min-width: unset;
             width: 100%;
+            min-width: unset;
+            padding: 5px;
             border-right: 1px solid #ccc;
           }
         }
@@ -2403,11 +2403,11 @@ article.post {
           padding: 6px 10px;
 
           @media only screen and (max-width: 600px) {
+            position: static;
             width: calc((100% - 5px)/2);
             padding: 5px;
-            position: static;
-            line-height: 29px;
             border-left: 1px solid #ccc;
+            line-height: 29px;
           }
         }
         &[type="reset"] {
@@ -2416,11 +2416,11 @@ article.post {
           padding: 6px 10px;
 
           @media only screen and (max-width: 600px) {
+            position: static;
             width: calc((100% - 5px)/2);
             padding: 5px;
-            position: static;
-            line-height: 29px;
             border-left: 1px solid #ccc;
+            line-height: 29px;
           }
         }
       }
@@ -2437,11 +2437,11 @@ article.post {
           padding: 6px 10px;
 
           @media only screen and (max-width: 600px) {
+            position: static;
             width: calc((100% - 5px)/2);
             padding: 5px;
-            position: static;
-            line-height: 29px;
             border-left: 1px solid #ccc;
+            line-height: 29px;
           }
         }
       }
@@ -2487,8 +2487,8 @@ article.post {
           h2{
             margin: 0;
             padding: 0;
-            font-size: $px18;
             background-color: unset;
+            font-size: $px18;
             @media only screen and (max-width: 600px) {
               font-size: $px16;
             }
@@ -2548,9 +2548,9 @@ article.post {
   }
 }
 .accordion {
-  overflow: hidden;
   margin: 20px 0;
   padding: 0 15px 30px;
+  overflow: hidden;
   // padding: 0px 35px;
   background-color: $white;
   @media only screen and (max-width: 600px)  {
@@ -2566,26 +2566,26 @@ article.post {
   }
   summary{
     position: relative;
-    cursor: pointer;
     padding: 8px 12px;
     padding-right: 30px;
+    background-color: #ccf0ff;
     font-size: $px20;
     font-weight: bold;
-    background-color: #ccf0ff;
     list-style: none;
+    cursor: pointer;
 
     @media only screen and (max-width: 600px) {
       font-size: $px18;
     }
 
     .icon-toggle {
+      content: "+";
       position: absolute;
-      right: 12px;
       top: 50%;
+      right: 12px;
       transform: translateY(-50%);
       font-size: 20px;
       font-weight: bold;
-      content: "+";
       pointer-events: none;
     }
 
@@ -2596,8 +2596,8 @@ article.post {
   }
   /* アニメーション用ラッパー */
   .accordion__content {
-    overflow: hidden;
     max-height: 0;
+    overflow: hidden;
     transition: max-height 0.4s ease;
   }
   /* 開いたときの max-height（十分な高さに） */
@@ -2614,9 +2614,9 @@ article.post {
       h3 {
         margin-bottom: 12px;
         padding: 0 8px;
+        border-left: 2px solid #003bbc;
         font-size: $px18;
         font-weight: bold;
-        border-left: 2px solid #003bbc;
 
         @media only screen and (max-width: 600px)  {
           font-size: $px16;
@@ -2624,10 +2624,10 @@ article.post {
       }
       img {
         display: block;
-        margin: 20px auto;
         max-width: 50%;
-        text-align: center;
+        margin: 20px auto;
         border: 2px solid #83bad1;
+        text-align: center;
 
         @media only screen and (max-width: 600px) {
           max-width: 100%;
@@ -2641,8 +2641,8 @@ article.post {
       ul {
         margin-bottom: 20px;
         padding-left: 1em;
-        font-size: $px14;
         list-style-type: disc;
+        font-size: $px14;
       }
     }
   }
@@ -2655,9 +2655,9 @@ body#body--index {
     .ss-swiper-slide {
       position: relative;
       box-sizing: border-box;
-      margin: 0 auto 30px;
       width: calc(100% - 30px);
       max-width: 1050px;
+      margin: 0 auto 30px;
       background: #fff;
       -webkit-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 14%), 0 3px 1px -2px rgba(0, 0, 0, 20%), 0 1px 5px 0 rgba(0, 0, 0, 12%);
       -moz-box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.14), 0 3px 1px -2px rgba(0, 0, 0, 0.2), 0 1px 5px 0 rgba(0, 0, 0, 0.12);
@@ -2684,14 +2684,14 @@ body#body--index {
         }
 
         &.ss-swiper-slide-thumbnail {
+          display: flex;
           position: absolute;
           bottom: 0px;
           left: 0px;
-          width: 100%;
-          padding: 10px;
-          height: 60px;
-          display: flex;
           justify-content: flex-end;
+          width: 100%;
+          height: 60px;
+          padding: 10px;
           @include tb{
             display: none;
           }
@@ -2706,17 +2706,17 @@ body#body--index {
           }
 
           .swiper-wrapper {
-            margin: 0;
             width: 387px;
-            transform: translate3d(0px, 0px, 0px) !important;
+            margin: 0;
             overflow: hidden;
+            transform: translate3d(0px, 0px, 0px) !important;
 
             .swiper-slide {
               display: inline-block;
-              margin-left: 9px;
-              margin-bottom: 5px;
               width: 120px !important;
               height: 40px;
+              margin-bottom: 5px;
+              margin-left: 9px;
 
               &:not(:first-child) {}
             }
@@ -2727,9 +2727,9 @@ body#body--index {
       }
       .ss-swiper-slide-controller {
         position: absolute;
+        z-index: 100;
         right: 20px;
         bottom: 80px;
-        z-index: 100;
 
         @include tb {
           // position: relative;
@@ -2741,9 +2741,9 @@ body#body--index {
 
         button {
           padding: 5px 1.5em;
-          font-weight: bold;
-          background-color: $white;
           border: 4px solid $white;
+          background-color: $white;
+          font-weight: bold;
           @include border-radius(13px);
 
           @include tb {

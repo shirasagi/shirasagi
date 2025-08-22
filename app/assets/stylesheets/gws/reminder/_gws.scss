@@ -4,13 +4,19 @@
     margin-left: 10px;
     font-weight: bold;
   }
-  .notice { padding: 10px 0 20px 10px; }
+  .notice {
+    padding: 10px 0 20px 10px;
+  }
 }
 
 .gws-addon-reminder {
   table.reminder-conditions {
-    td { padding: 5px 5px 5px 0; }
-    .interval { width: 58px; }
+    td {
+      padding: 5px 5px 5px 0;
+    }
+    .interval {
+      width: 58px;
+    }
   }
   #gws-addon-reminder-set {
     margin-top: 5px;

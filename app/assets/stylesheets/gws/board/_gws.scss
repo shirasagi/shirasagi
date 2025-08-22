@@ -16,12 +16,16 @@
   //margin-right: 8px;
   color: #d00;
   font-weight: bold;
-  &:after { content: "New"; }
+  &::after {
+    content: "New";
+  }
 }
 
 // show
 .gws-board {
-  .topic, .comment, .subscribed-users {
+  .topic,
+  .comment,
+  .subscribed-users {
     @include box;
     margin-bottom: 2px;
     header {
@@ -44,13 +48,15 @@
         text-align: right;
       }
     }
-    .files, .links {
+    .files,
+    .links {
       margin: 10px;
       padding: 10px;
       border-radius: 4px;
       background-color: $gray1;
     }
-    .files a, .link-item {
+    .files a,
+    .link-item {
       line-height: 1.5;
       word-wrap: normal;
       word-break: normal;
@@ -94,10 +100,10 @@
       }
       time {
         margin: 0 4px;
-        &:before {
+        &::before {
           content: "(";
         }
-        &:after {
+        &::after {
           content: ")";
         }
       }

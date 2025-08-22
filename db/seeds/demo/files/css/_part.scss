@@ -184,50 +184,50 @@ $smart-margin: 10px;
 
 /* 装飾 */
 @mixin r-arrow-bk5 {
-  position: absolute;
   content: "";
-  width: 0;
-  height: 0;
+  position: absolute;
   top: 34%;
   right: 6px;
-  border-left: 5px solid $black;
+  width: 0;
+  height: 0;
   border-top: 5px solid transparent;
   border-bottom: 5px solid transparent;
+  border-left: 5px solid $black;
 }
 
 @mixin r-arrow-gr5 {
-  position: relative;
   content: "";
-  width: 0;
-  height: 0;
+  display: inline-block;
+  position: relative;
   top: -2px;
   right: -10px;
-  display: inline-block;
-  border-left: 9px solid $green;
+  width: 0;
+  height: 0;
   border-top: 7px solid transparent;
   border-bottom: 7px solid transparent;
+  border-left: 9px solid $green;
 }
 
 @mixin r-arrow-w4 {
-  position: static;
   content: "";
   display: inline-block;
-  border-left: 4px solid #fff;
+  position: static;
+  margin-left: 4px;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
-  margin-left: 4px;
+  border-left: 4px solid #fff;
 }
 
 @mixin r-arrow-gr4 {
-  position: absolute;
   content: "";
-  width: 0;
-  height: 0;
+  position: absolute;
   top: 24%;
   right: -16px;
-  border-left: 5px solid $green;
+  width: 0;
+  height: 0;
   border-top: 4px solid transparent;
   border-bottom: 4px solid transparent;
+  border-left: 5px solid $green;
 }
 
 @mixin li {
@@ -237,12 +237,12 @@ $smart-margin: 10px;
 }
 
 @mixin border-b-bk {
-  position: absolute;
   content: "";
-  width: 100%;
-  height: 1px;
+  position: absolute;
   bottom: -16px;
   left: 0;
+  width: 100%;
+  height: 1px;
   border-bottom: 1px dotted $black;
 }
 
@@ -251,14 +251,14 @@ $smart-margin: 10px;
 
 @mixin btn-blue {
   padding: 8px 50px;
+  transition: .3s ease-in-out;
+  border: 1px solid #003bbc;
+  border-radius: 21px;
+  background-color: #003bbc;
+  color: #fff;
   font-size: $px14;
   font-weight: bold;
   text-decoration: none;
-  border: 1px solid #003bbc;
-  border-radius: 21px;
-  color: #fff;
-  background-color: #003bbc;
-  transition: .3s ease-in-out;
 
   @include tb {
     padding: 7px 42px;
@@ -269,9 +269,9 @@ $smart-margin: 10px;
   }
 
   &:hover {
-    color: #003bbc;
-    background-color: #fff;
     transition: .3s ease-in-out;
+    background-color: #fff;
+    color: #003bbc;
 
     @include tb {}
   }
@@ -279,14 +279,14 @@ $smart-margin: 10px;
 
 @mixin btn-lightblue {
   padding: 8px 50px;
+  transition: .3s ease-in-out;
+  border: 1px solid #ccf0ff;
+  border-radius: 21px;
+  background-color: #ccf0ff;
+  color: #000;
   font-size: $px14;
   font-weight: bold;
   text-decoration: none;
-  border: 1px solid #ccf0ff;
-  border-radius: 21px;
-  color: #000;
-  background-color: #ccf0ff;
-  transition: .3s ease-in-out;
 
   @include tb {
     padding: 7px 42px;
@@ -297,15 +297,17 @@ $smart-margin: 10px;
   }
 
   &:hover {
-    opacity: .7;
     transition: .3s ease-in-out;
+    opacity: .7;
 
     @include tb {}
   }
 }
 
 @mixin btn-green {
+  box-sizing: border-box;
   padding: 16px 22px;
+  transition: .3s ease-in-out;
   border: 1px solid $green;
   border-radius: 10px;
   background: $green;
@@ -313,9 +315,6 @@ $smart-margin: 10px;
   font-size: $px14;
   font-weight: bold;
   text-decoration: none;
-  background: $green;
-  box-sizing: border-box;
-  transition: .3s ease-in-out;
   cursor: pointer;
 
   &:hover,
@@ -341,7 +340,9 @@ $smart-margin: 10px;
 }
 
 @mixin btn-darkblue {
+  box-sizing: border-box;
   padding: 16px 22px;
+  transition: .3s ease-in-out;
   border: 1px solid $darkblue;
   border-radius: 10px;
   background: $darkblue;
@@ -349,9 +350,6 @@ $smart-margin: 10px;
   font-size: $px14;
   font-weight: bold;
   text-decoration: none;
-  background: $darkblue;
-  box-sizing: border-box;
-  transition: .3s ease-in-out;
   cursor: pointer;
 
   &:hover,
@@ -374,17 +372,17 @@ $smart-margin: 10px;
 $PATH_IMG: "/img/";
 @mixin submenu-ic($url){
   height: 40px;
-  background-size: auto 40px;
   background-image: url($PATH_IMG + $url);
   background-repeat: no-repeat;
   background-position: center;
+  background-size: auto 40px;
 }
 
 /* 短縮 */
 @mixin border-radius($value: 0px) {
-  border-radius: $value;
   -webkit-border-radius: $value;
   -moz-border-radius: $value;
+  border-radius: $value;
 }
 
 @mixin border-radius-tl($value: 0px) {
@@ -400,14 +398,14 @@ $PATH_IMG: "/img/";
 }
 
 @mixin border-radius-bl($value: 0px) {
-  border-bottom-left-radius: $value;
   -webkit-border-bottom-left-radius: $value;
+  border-bottom-left-radius: $value;
   -moz-border-radius-bottomleft: $value;
 }
 
 @mixin border-radius-br($value: 0px) {
-  border-bottom-right-radius: $value;
   -webkit-border-bottom-right-radius: $value;
+  border-bottom-right-radius: $value;
   -moz-border-radius-bottomright: $value;
 }
 
@@ -425,27 +423,27 @@ $PATH_IMG: "/img/";
   height: 30px;
   margin: 0 auto;
   overflow: hidden;
+  border: 1px solid #dedcdb;
+  background: $white;
   line-height: 1;
   text-align: center;
-  background: $white;
-  border: 1px solid #dedcdb;
 
   @include tb {
     width: calc(7em + 8px);
     line-height: normal;
   }
 
-  &:before {
-    position: absolute;
+  &::before {
     content: '';
+    position: absolute;
     top: 33%;
     right: 6%;
     width: 0;
     height: 0;
     padding: 0;
-    border-left: 5px solid transparent;
-    border-right: 5px solid transparent;
     border-top: 9px solid #666;
+    border-right: 5px solid transparent;
+    border-left: 5px solid transparent;
     pointer-events: none;
 
     @include tb {
@@ -456,21 +454,21 @@ $PATH_IMG: "/img/";
   select {
     width: 100%;
     padding: 8px 17px 4px 9px;
-    color: #666666;
     padding-right: 1em;
-    cursor: pointer;
-    text-indent: 0.01px;
-    text-overflow: ellipsis;
     border: 0;
     border-radius: 0;
     outline: none;
     background: transparent;
     background-image: none;
     box-shadow: none;
-    -moz-appearance: none;
-    appearance: none;
-    -webkit-appearance: none;
+    color: #666666;
     font-size: $px12;
+    text-indent: 0.01px;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    appearance: none;
 
     @include tb {
       padding: 3px 17px 3px 7px;
@@ -482,8 +480,8 @@ $PATH_IMG: "/img/";
 // 記事レイアウト
 
 @mixin docs{
-  padding-bottom: 30px;
   order: 1;
+  padding-bottom: 30px;
 
   p {
     margin-bottom: 20px;
@@ -509,9 +507,9 @@ $PATH_IMG: "/img/";
   h2 {
     margin: 30px 0 12px;
     padding: 8px 12px;
+    background-color: #ccf0ff;
     font-size: $px18;
     font-weight: bold;
-    background-color: #ccf0ff;
 
     @include tb {
       // margin-top: 32px;
@@ -524,9 +522,9 @@ $PATH_IMG: "/img/";
     // margin-top: 20px;
     margin-bottom: 12px;
     padding: 0 8px;
+    border-left: 2px solid $main-blue;
     font-size: $px16;
     font-weight: bold;
-    border-left: 2px solid $main-blue;
 
     @include tb {
       // margin-top: 18px;
@@ -537,10 +535,10 @@ $PATH_IMG: "/img/";
   h4 {
     // margin-top: 20px; */
     margin-bottom: 12px;
-    font-size: $px16;
-    font-weight: bold;
     // color: #800000;
     color: $main-blue;
+    font-size: $px16;
+    font-weight: bold;
 
     @include tb {
       // margin-top: 18px;
@@ -607,9 +605,9 @@ $PATH_IMG: "/img/";
 
   .genres{
     ul{
+      display: flex;
       padding: 20px 0;
       list-style: none;
-      display: flex;
       gap: 10px;
 
       li{
@@ -677,7 +675,7 @@ $PATH_IMG: "/img/";
   }
 
     /* Files */
-  a[class^="icon-"]:after {
+  a[class^="icon-"]::after {
     content: "";
     display: inline-block;
     width: 20px;

@@ -1,16 +1,16 @@
 @import "part";
 body {
-  /* Font */
-  font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
-  font-size: 16px;
 
-  /* Text color */
-  color: #333;
+  margin: 20px;
 
   /* Remove the background color to make it transparent */
   background-color: #fff;
 
-  margin: 20px;
+  /* Text color */
+  color: #333;
+  /* Font */
+  font-family: sans-serif, Arial, Verdana, "Trebuchet MS";
+  font-size: 16px;
 }
 
 .cke_editable {
@@ -23,26 +23,26 @@ body {
 }
 
 blockquote {
-  font-style: italic;
-  font-family: Georgia, Times, "Times New Roman", serif;
   padding: 2px 0;
+  border-width: 0;
   border-style: solid;
   border-color: #ccc;
-  border-width: 0;
+  font-family: Georgia, Times, "Times New Roman", serif;
+  font-style: italic;
 }
 
 .cke_contents_ltr{
   blockquote {
-    padding-left: 20px;
     padding-right: 8px;
+    padding-left: 20px;
     border-left-width: 5px;
   }
 }
 
 .cke_contents_rtl{
   blockquote {
-    padding-left: 8px;
     padding-right: 20px;
+    padding-left: 8px;
     border-right-width: 5px;
   }
 }
@@ -77,23 +77,23 @@ hr {
 
 img{
   .right {
-    border: 1px solid #ccc;
-    float: right;
     margin-left: 15px;
     padding: 5px;
+    float: right;
+    border: 1px solid #ccc;
   }
   .left {
-    border: 1px solid #ccc;
-    float: left;
     margin-right: 15px;
     padding: 5px;
+    float: left;
+    border: 1px solid #ccc;
   }
 }
 
 pre {
-  white-space: pre-wrap;
   /* CSS 2.1 */
   word-wrap: break-word;
+  white-space: pre-wrap;
   /* IE7 */
   -moz-tab-size: 4;
   tab-size: 4;
@@ -108,27 +108,27 @@ span[lang] {
 }
 
 figure {
-  text-align: center;
+  display: inline-block;
+  margin: 10px 20px;
+  padding: 10px;
   border: solid 1px #ccc;
   border-radius: 2px;
   background: rgba(0, 0, 0, 0.05);
-  padding: 10px;
-  margin: 10px 20px;
-  display: inline-block;
+  text-align: center;
 }
 
 figure{
   >figcaption {
-  text-align: center;
   display: block;
+  text-align: center;
   /* For IE8 */
   }
 }
 
 a{
   >img {
-    padding: 1px;
     margin: 1px;
+    padding: 1px;
     border: none;
     outline: 1px solid #0782C1;
   }

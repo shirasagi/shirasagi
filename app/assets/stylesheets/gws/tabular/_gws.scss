@@ -4,7 +4,7 @@
       a {
         padding: 4px 10px 4px 14px;
 
-        &:before {
+        &::before {
           content: none;
         }
       }
@@ -26,7 +26,7 @@
     padding: 0;
   }
 
-  .badge[data-count='0'] {
+  .badge[data-count="0"] {
     display: none;
   }
 }
@@ -38,7 +38,7 @@
     background-color: $gray3;
     color: $white;
 
-    &[data-count='0'] {
+    &[data-count="0"] {
       display: none;
     }
   }
@@ -54,7 +54,8 @@
 }
 
 .gws-tabular-column {
-  [inputmode="decimal"], [inputmode="numeric"] {
+  [inputmode="decimal"],
+  [inputmode="numeric"] {
     width: 12em;
   }
 }
@@ -100,7 +101,8 @@
 
 .gws-tabular-views-main-box {
   .index {
-    .title, .meta {
+    .title,
+    .meta {
       .gws-tabular-column {
         display: inline-block;
       }

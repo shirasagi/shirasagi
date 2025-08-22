@@ -4,10 +4,10 @@
 
 body {
   margin: 0;
-  line-height: 1.6;
   color: #666;
-  font-size: 12px;
   font-family: sans-serif;
+  font-size: 12px;
+  line-height: 1.6;
 }
 h1, h2, h3, h4, h5 {
   margin: 0;
@@ -129,8 +129,8 @@ dd {
   border-bottom: 1px solid #ddd;
 }
 .pages #emergency div h3 {
-  padding: 0;
   margin: 10px 0 5px;
+  padding: 0;
   border: 0;
 }
 #emergency .tag-article p {
@@ -238,8 +238,8 @@ dd {
 }
 .page .body table {
   margin-bottom: 10px;
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 .page .body th, .page .body td {
   padding: 5px;

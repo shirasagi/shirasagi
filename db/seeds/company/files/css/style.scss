@@ -13,9 +13,9 @@ html {
 }
 body {
   margin: 0 auto;
+  color: $black;
   font-family: $font-base;
   font-size: 100%;
-  color: $black;
 }
 h1, h2, h3, h4, h5 {
   margin: 0;
@@ -65,13 +65,13 @@ img {
     @include clear;
   }
   h1, p {
-    float: left;
     padding: 12px 0;
+    float: left;
   }
   #search {
+    margin-bottom: $item-margin;
     float: right;
     @include clear;
-    margin-bottom: $item-margin;
     h2 {
       display: none;
     }
@@ -80,14 +80,14 @@ img {
       border: $border-gray;
     }
     #search-box {
-      float: left;
       width: 220px;
       padding: 4px 5px;
+      float: left;
       border: 0;
     }
     #search-button {
-      float: left;
       padding: 3px 10px;
+      float: left;
       border: 0;
       background: #333;
       color: $white;
@@ -97,10 +97,10 @@ img {
     }
   }
   #gnav {
-    float: right;
     width: 640px;
-    @include clear;
+    float: right;
     border-right: $border-gray;
+    @include clear;
     h2 {
       display: none;
     }
@@ -180,10 +180,10 @@ img {
   h1 {
     position: relative;
     padding-left: 20px;
-    border-left: $border-red2;
     overflow: hidden;
+    border-left: $border-red2;
     font-size: $px16;
-    &:before {
+    &::before {
       content: ".";
       position: absolute;
       top: 0;
@@ -194,10 +194,10 @@ img {
   }
 }
 #tabs {
-  float: left;
   width: 630px;
   margin-bottom: 40px;
-  header h1:after {
+  float: left;
+  header h1::after {
     content: "NEWS";
     margin-left: $box-margin;
     color: $gray3;
@@ -207,10 +207,10 @@ img {
     @include clear;
     border-bottom: $border-red1;
     a {
-      float: left;
       display: block;
       margin: 0 10px -1px 0;
       padding: 3px 15px 2px;
+      float: left;
       border-bottom: $border-red1;
       background: $hred;
       text-align: center;
@@ -241,30 +241,30 @@ img {
     @include clear;
   }
   .more {
-    float: right;
     width: 100px;
+    float: right;
     @include btn;
     @include look;
   }
   .rss {
-    float: left;
     width: 40px;
-    @include btn;
     padding-left: 25px;
+    float: left;
     background: $orange url(../img/ic-rss.png) no-repeat 5px center;
+    @include btn;
     &:hover {
       background: $horange;
     }
   }
 }
 #inquiry {
-  float: right;
   width: 310px;
   margin-bottom: 40px;
+  float: right;
   .tel {
     padding: 10px 0 10px 30px;
-    font-size: $px24;
     background: url(../img/tel.png) no-repeat left center;
+    font-size: $px24;
   }
   .button a {
     display: block;
@@ -280,13 +280,13 @@ img {
   }
 }
 #product {
+  margin-bottom: 40px;
   clear: both;
   @include clear;
-  margin-bottom: 40px;
   article {
-    float: left;
     width: 220px;
     margin: 0 10px;
+    float: left;
     cursor: pointer;
     &:hover h2 a {
       background: $hred;
@@ -312,13 +312,13 @@ img {
       padding: 100px 0 0;
       border: 0;
       h2 a {
-        position: relative;
         display: block;
+        position: relative;
         padding: 5px 10px;
         background: $red;
         color: $white;
         text-decoration: none;
-        &:after {
+        &::after {
           content: ">";
           position: absolute;
           top: 5px;
@@ -342,8 +342,8 @@ img {
     font-size: $px16;
   }
   li {
-    float: left;
     margin-right: $box-margin;
+    float: left;
     &:last-child {
       margin: 0;
     }
@@ -357,21 +357,21 @@ img {
 .pagetop {
   display: none;
   position: fixed;
-  bottom: 50px;
   right: 0;
+  bottom: 50px;
   a {
-    position: relative;
     display: block;
+    position: relative;
     width: 70px;
     padding: 35px 5px 10px;
-    @include border-radius(5px 0 0 5px);
     background: $black;
     background: rgba(0, 0, 0, .8);
-    text-align: center;
     color: #fff;
     font-size: $px10;
+    text-align: center;
     text-decoration: none;
-    &:after {
+    @include border-radius(5px 0 0 5px);
+    &::after {
       content: "";
       position: absolute;
       top: 10px;
@@ -399,8 +399,8 @@ img {
       width: $page-width;
       margin: 0 auto;
       li {
-        float: left;
         padding: 0 $item-margin;
+        float: left;
         border-right: $border-gray;
         &:last-child {
           border: 0;
@@ -417,17 +417,17 @@ img {
       width: $page-width;
       margin: 0 auto;
       dt {
-        float: left;
         width: 70px;
         margin-right: $box-margin;
+        float: left;
         font-weight: bold;
       }
       dd {
         float: left;
       }
       p {
-        float: right;
         margin-left: $item-margin;
+        float: right;
       }
     }
   }
@@ -439,8 +439,8 @@ img {
 // -----------------------------------------------------------------------------
 // main
 .two #main {
-  float: right;
   width: 710px;
+  float: right;
   .released {
     margin-bottom: $item-margin;
     text-align: right;
@@ -466,12 +466,12 @@ img {
       margin-bottom: $item-margin;
       padding-left: 15px;
       font-size: $px16;
-      &:after {
+      &::after {
         content: "";
+        display: block;
         position: absolute;
         top: 12px;
         left: 0;
-        display: block;
         width: 10px;
         height: 3px;
         background: $red;
@@ -483,7 +483,7 @@ img {
         position: relative;
         padding-left: 18px;
         list-style-type: none;
-        &:after {
+        &::after {
           content: "";
           display: block;
           position: absolute;
@@ -534,8 +534,8 @@ img {
         @include inline-block;
         margin: 0;
         padding: 0 10px;
-        border-left: $border-gray;
         border-bottom: 0;
+        border-left: $border-gray;
         font-size: $px14;
         font-weight: normal;
       }
@@ -556,29 +556,29 @@ footer.contact {
   }
   dl {
     display: inline-block;
-    border: 0;
     margin: 0 $item-margin 0 0;
     padding: 0;
+    border: 0;
     dt, dd {
-      float: none;
       display: inline;
+      float: none;
       font-weight: normal;
     }
   }
 }
 .two #side {
-  float: left;
   width: 230px;
+  float: left;
 }
 .sitemap #main .body ul {
   @include clear;
   margin-bottom: $item-margin;
   li {
-    float: left;
     margin-bottom: $item-margin;
     padding: 0 $box-margin;
+    float: left;
     border-right: $border-gray;
-    &:after {
+    &::after {
       display: none;
     }
     &:first-child {
@@ -600,25 +600,25 @@ footer.contact {
     border-top: $border-red3;
     border-bottom: $border-red3;
     font-size: $px18;
-    &.news:after {
+    &.news::after {
       content: "NEWS";
       display: block;
       color: $gray3;
       font-size: 75%;
     }
-    &.company:after {
+    &.company::after {
       content: "COMPANY";
       display: block;
       color: $gray3;
       font-size: 75%;
     }
-    &.product:after {
+    &.product::after {
       content: "PRODUCT";
       display: block;
       color: $gray3;
       font-size: 75%;
     }
-    &.recruit:after {
+    &.recruit::after {
       content: "RECRUIT";
       display: block;
       color: $gray3;
@@ -648,19 +648,19 @@ footer.contact {
       display: none;
     }
     li a {
-      position: relative;
       display: none;
-      background: $white;
+      position: relative;
       padding: 3px 10px 3px 30px;
+      background: $white;
       text-decoration: none;
       &:hover {
         color: $red;
-        &:after {
+        &::after {
           content: "";
+          display: block;
           position: absolute;
           top: 12px;
           left: 10px;
-          display: block;
           width: 10px;
           height: 3px;
           background: $red;
@@ -683,12 +683,12 @@ footer.contact {
       }
       li.current a {
         color: $red;
-        &:after {
+        &::after {
           content: "";
+          display: block;
           position: absolute;
           top: 12px;
           left: 10px;
-          display: block;
           width: 10px;
           height: 3px;
           background: $red;
@@ -706,7 +706,7 @@ footer.contact {
   background: $black;
   color: $white;
   font-size: $px16;
-  &:before {
+  &::before {
     content: ".";
     position: absolute;
     top: 6px;
@@ -714,7 +714,7 @@ footer.contact {
     border-left: $border-red2;
     text-indent: -9999px;
   }
-  &:after {
+  &::after {
     content: ".";
     position: absolute;
     top: 6px;
@@ -764,10 +764,10 @@ footer.contact {
   }
   div article, article {
     position: relative;
-    float: left;
     width: 210px;
     margin: 0 0 $item-margin $item-margin;
     padding: 140px $item-margin $item-margin;
+    float: left;
     border: 0;
     cursor: pointer;
     &.item-consulting {
@@ -809,15 +809,15 @@ footer.contact {
     &:first-child {
       margin-left: 0;
     }
-    &:after {
+    &::after {
       content: "";
       position: absolute;
       right: 0;
       bottom: 0;
       width: 0;
       height: 0;
-      border-left: 20px solid transparent;
       border-bottom: 20px solid $white;
+      border-left: 20px solid transparent;
     }
     h2 a {
       display: block;
@@ -851,9 +851,9 @@ footer.contact {
     padding: 15px 0;
     border-bottom: $border-dotted;
     dt, legend {
-      float: left;
       width: 230px;
       padding: 0 10px;
+      float: left;
       .required {
         display: block;
         margin-top: 5px;
@@ -861,8 +861,8 @@ footer.contact {
       }
     }
     dd, .fields {
-      float: left;
       padding: 0 $item-margin;
+      float: left;
       input[type=text], input[type=email] {
         width: 300px;
         padding: 5px;
@@ -878,14 +878,14 @@ footer.contact {
     margin-left: 260px;
     input {
       display: block;
-      float: left;
       margin-right: $box-margin;
       padding: 10px 20px;
+      float: left;
       border: 0;
       background: $red;
       color: $white;
-      @include border-radius(3px);
       cursor: pointer;
+      @include border-radius(3px);
       &:hover {
         background: $hred;
         color: $black;
@@ -902,7 +902,7 @@ footer.contact {
         position: relative;
         padding-left: 18px;
         list-style-type: none;
-        &:after {
+        &::after {
           content: "";
           display: block;
           position: absolute;
@@ -955,8 +955,8 @@ footer.contact {
   // -----------------------------------------------------------------------------
   // clear
   #head .wrap, #head #gnav, #wrap, #tabs, #inquiry, #foot nav ul, #foot .addr .wrap {
-    float: none;
     width: 100%;
+    float: none;
     @include box-sizing(border-box);
   }
   // -----------------------------------------------------------------------------
@@ -1008,28 +1008,28 @@ footer.contact {
         @include border-radius(3px);
         text-indent: -9999px;
         cursor: pointer;
-        &:after, &:before {
+        &::after, &::before {
           content: "";
           position: absolute;
           top: 35%;
-          left: 25%;
           right: 25%;
+          left: 25%;
           border: 2px solid #fff;
         }
         &.open {
           background-color: $red;
         }
-        &:after {
+        &::after {
           top: 60%;
         }
       }
     }
     #search {
-      float: none;
-      clear: both;
       width: auto;
       margin-bottom: 0;
       padding: 0 10px;
+      float: none;
+      clear: both;
       border: 0;
       @include box-sizing(border-box);
       h2 {
@@ -1054,8 +1054,8 @@ footer.contact {
       }
       form {
         display: none;
-        float: none;
         position: relative;
+        float: none;
         @include clear;
         #search-box {
           width: 90%;
@@ -1064,13 +1064,13 @@ footer.contact {
         }
         #search-button {
           position: absolute;
-          bottom: 0;
           right: 0;
-          float: none;
+          bottom: 0;
           margin: 0;
           padding: 4px 10px 3px;
-          @include border-radius(0);
+          float: none;
           -webkit-appearance: none;
+          @include border-radius(0);
         }
       }
     }
@@ -1145,8 +1145,8 @@ footer.contact {
   // -----------------------------------------------------------------------------
   // product
   #product article {
-    margin: 0;
     width: 50%;
+    margin: 0;
     &.item-solution {
       background: none;
       header {
@@ -1178,8 +1178,8 @@ footer.contact {
       h2 a {
         padding-right: 25px;
         overflow: hidden;
-        white-space: nowrap;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
@@ -1207,7 +1207,7 @@ footer.contact {
     padding-top: 25px;
     color: transparent;
     text-indent: -9999px;
-    &:after {
+    &::after {
       top: 15px;
       left: 13px;
     }
@@ -1224,7 +1224,7 @@ footer.contact {
     #side-menu h1 {
       margin-bottom: $item-margin;
     }
-    #side-menu h1:after {
+    #side-menu h1::after {
       display: inline-block !important;
       margin-left: $item-margin;
     }
@@ -1235,14 +1235,14 @@ footer.contact {
       .cms-pages {
         @include clear;
         .cms-pages {
-          float: left;
           width: 50%;
           padding-right: 2px;
+          float: left;
           @include box-sizing(border-box);
           a {
             overflow: hidden;
-            white-space: nowrap;
             text-overflow: ellipsis;
+            white-space: nowrap;
           }
           &:nth-child(2n) {
             padding: 0;
@@ -1251,17 +1251,17 @@ footer.contact {
       }
     }
     .product-menu .cms-pages {
-      float: left;
       width: 50%;
       padding-right: 2px;
+      float: left;
       @include box-sizing(border-box);
       &:nth-child {
         padding: 0;
       }
       a {
         overflow: hidden;
-        white-space: nowrap;
         text-overflow: ellipsis;
+        white-space: nowrap;
       }
     }
   }
@@ -1308,9 +1308,9 @@ footer.contact {
     @include box-sizing(border-box);
     padding: 0 10px;
     dl dt, dl dd {
-      float: none;
       width: 100%;
       padding: 0;
+      float: none;
       input, textarea {
         width: 100% !important;
         @include box-sizing(border-box);
@@ -1367,12 +1367,12 @@ footer.contact {
 .cms-site-search {
   .search-form {
     display: flex;
-    align-items: center;
-    gap: 20px;
     flex-wrap: wrap;
+    align-items: center;
     height: auto;
     padding: 30px;
     border: 3px solid #cdf0ff;
+    gap: 20px;
 
     @media only screen and (max-width: 600px) {
       flex-wrap: wrap;
@@ -1395,8 +1395,8 @@ footer.contact {
     }
 
     .site-search-keyword {
-      border: none;
       order: 5;
+      border: none;
       @media only screen and (max-width: 600px) {
         width: 100%;
         margin-top: 5px;
@@ -1418,9 +1418,9 @@ footer.contact {
           border: 1px solid #ccc;
 
           @media only screen and (max-width: 600px) {
-            padding: 5px;
 
             width: 100%;
+            padding: 5px;
             border-right: 1px solid #ccc;
           }
         }
@@ -1440,11 +1440,11 @@ footer.contact {
           padding: 6px 10px;
 
           @media only screen and (max-width: 600px) {
+            position: static;
             width: calc((100% - 5px)/2);
             padding: 5px;
-            position: static;
-            line-height: 29px;
             border-left: 1px solid #ccc;
+            line-height: 29px;
           }
         }
         &[type="reset"] {
@@ -1453,11 +1453,11 @@ footer.contact {
           padding: 6px 10px;
 
           @media only screen and (max-width: 600px) {
+            position: static;
             width: calc((100% - 5px)/2);
             padding: 5px;
-            position: static;
-            line-height: 29px;
             border-left: 1px solid #ccc;
+            line-height: 29px;
           }
         }
       }
@@ -1474,11 +1474,11 @@ footer.contact {
           padding: 6px 10px;
 
           @media only screen and (max-width: 600px) {
+            position: static;
             width: calc((100% - 5px)/2);
             padding: 5px;
-            position: static;
-            line-height: 29px;
             border-left: 1px solid #ccc;
+            line-height: 29px;
           }
         }
       }
@@ -1523,8 +1523,8 @@ footer.contact {
           h2{
             margin: 0;
             padding: 0;
-            font-size: $px18;
             background-color: unset;
+            font-size: $px18;
             @media only screen and (max-width: 600px) {
               font-size: $px16;
             }
@@ -1584,8 +1584,8 @@ footer.contact {
   }
 }
 .accordion {
-  overflow: hidden;
   margin: 20px 0;
+  overflow: hidden;
   // padding: 0px 35px;
   background-color: $white;
   @media only screen and (max-width: 600px)  {
@@ -1601,26 +1601,26 @@ footer.contact {
   }
   summary{
     position: relative;
-    cursor: pointer;
     padding: 8px 12px;
     padding-right: 30px;
+    background-color: #ccf0ff;
     font-size: $px20;
     font-weight: bold;
-    background-color: #ccf0ff;
     list-style: none;
+    cursor: pointer;
 
     @media only screen and (max-width: 600px) {
       font-size: $px18;
     }
 
     .icon-toggle {
+      content: "+";
       position: absolute;
-      right: 12px;
       top: 50%;
+      right: 12px;
       transform: translateY(-50%);
       font-size: 20px;
       font-weight: bold;
-      content: "+";
       pointer-events: none;
     }
 
@@ -1631,8 +1631,8 @@ footer.contact {
   }
   /* アニメーション用ラッパー */
   .accordion__content {
-    overflow: hidden;
     max-height: 0;
+    overflow: hidden;
     transition: max-height 0.4s ease;
   }
   /* 開いたときの max-height（十分な高さに） */
@@ -1649,9 +1649,9 @@ footer.contact {
       h3 {
         margin-bottom: 12px;
         padding: 0 8px;
+        border-left: 2px solid #003bbc;
         font-size: $px18;
         font-weight: bold;
-        border-left: 2px solid #003bbc;
 
         @media only screen and (max-width: 600px)  {
           font-size: $px16;
@@ -1659,10 +1659,10 @@ footer.contact {
       }
       img {
         display: block;
-        margin: 20px auto;
         max-width: 50%;
-        text-align: center;
+        margin: 20px auto;
         border: 2px solid #83bad1;
+        text-align: center;
 
         @media only screen and (max-width: 600px) {
           max-width: 100%;
@@ -1676,8 +1676,8 @@ footer.contact {
       ul {
         margin-bottom: 20px;
         padding-left: 1em;
-        font-size: $px14;
         list-style-type: disc;
+        font-size: $px14;
       }
     }
   }

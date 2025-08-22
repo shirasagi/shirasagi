@@ -8,15 +8,18 @@
   }
   tr.item {
     background: #fff !important;
-    th:hover, td:hover {
+    th:hover,
+    td:hover {
       background: #fff !important;
     }
   }
-  th.time, td.time {
+  th.time,
+  td.time {
     text-align: center;
   }
   tr:not(:last-child) {
-    th, td {
+    th,
+    td {
       border-bottom: 1px solid #dcdcdc !important;
     }
   }
@@ -30,7 +33,8 @@
   }
 }
 .aggregate-capitals {
-  th, td {
+  th,
+  td {
     white-space: nowrap;
   }
   .time {
