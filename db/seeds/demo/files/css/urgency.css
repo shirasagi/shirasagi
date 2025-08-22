@@ -4,8 +4,8 @@ pages - 緊急災害レイアウト
 =================================================================================================== */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\000034}}
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;
@@ -125,9 +125,9 @@ video {
   padding: 0;
   border: 0;
   outline: 0;
+  background: transparent;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003132}}
@@ -162,10 +162,10 @@ q {
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003159}}
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
   content: '';
   content: none;
 }
@@ -174,9 +174,9 @@ q:after {
 a {
   margin: 0;
   padding: 0;
+  background: transparent;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent;
 }
 
 /* change colours to suit your needs */
@@ -210,8 +210,8 @@ dfn[title] {
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003200}}
 table {
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 
 /* change border colour to suit your needs */
@@ -219,10 +219,10 @@ table {
 hr {
   display: block;
   height: 1px;
-  border: 0;
-  border-top: 1px solid #cccccc;
   margin: 1em 0;
   padding: 0;
+  border: 0;
+  border-top: 1px solid #cccccc;
 }
 
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/_init\.scss}line{font-family:\00003215}}
@@ -236,8 +236,8 @@ select {
 /* 緊急災害レイアウト トップ */
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000312}}
 body.body--index__urgency {
-  background-image: none;
   background-color: #ecebe3;
+  background-image: none;
   /* common - 新着情報/注目情報
 ---------------------------------------------------------- */
   /* 新着情報/注目情報 */
@@ -257,15 +257,15 @@ body.body--index__urgency #head {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  min-height: 0%;
   padding: 10px 30px;
   background-color: white;
-  min-height: 0%;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000335}}
 body.body--index__urgency #head .siteinfo {
-  border-bottom: none;
   display: flex;
   align-items: center;
+  border-bottom: none;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000340}}
 body.body--index__urgency #head .siteinfo__logo {
@@ -284,9 +284,9 @@ body.body--index__urgency #head .siteinfo__logo a img {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000354}}
 body.body--index__urgency #head .siteinfo__announce {
   margin-left: 21px;
+  color: #e6000f;
   font-size: 18px;
   font-weight: bold;
-  color: #e6000f;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000354}}
@@ -312,8 +312,8 @@ body.body--index__urgency #head .head__utility-wrap .head__utility .head__utilit
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000391}}
 body.body--index__urgency .emergency {
-  padding: 30px;
   display: flex;
+  padding: 30px;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\0000391}}
@@ -324,9 +324,9 @@ body.body--index__urgency .emergency {
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003101}}
 body.body--index__urgency .emergency__title {
-  width: 200px;
   display: flex;
   align-items: center;
+  width: 200px;
   background-color: #e6000f;
 }
 @media only screen and (max-width: 768px) {
@@ -338,8 +338,8 @@ body.body--index__urgency .emergency__title {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003111}}
 body.body--index__urgency .emergency__title h2 {
   padding: 14px 20px;
-  font-size: 163%;
   color: #fff;
+  font-size: 163%;
   font-weight: normal;
 }
 @media only screen and (max-width: 768px) {
@@ -362,8 +362,8 @@ body.body--index__urgency .emergency__article {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003131}}
 body.body--index__urgency .emergency__article article {
   width: 100%;
-  padding: 5px 15px;
   margin: 10px;
+  padding: 5px 15px;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003131}}
@@ -378,8 +378,8 @@ body.body--index__urgency .emergency__article article h3 {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003145}}
 body.body--index__urgency .emergency__article article a {
   font-size: 14px;
-  text-decoration: none;
   font-weight: bold;
+  text-decoration: none;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003145}}
@@ -395,8 +395,8 @@ body.body--index__urgency .emergency__article article a:hover {
 body.body--index__urgency .whats-new,
 body.body--index__urgency .notice {
   margin-top: 30px;
-  border-radius: 16px;
   overflow: hidden;
+  border-radius: 16px;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003171}}
 body.body--index__urgency .whats-new__header,
@@ -447,9 +447,9 @@ body.body--index__urgency .notice__list article header {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003205}}
 body.body--index__urgency .whats-new__list article header time,
 body.body--index__urgency .notice__list article header time {
+  width: 110px;
   font-size: 12px;
   letter-spacing: 0.5px;
-  width: 110px;
   white-space: nowrap;
 }
 @media only screen and (max-width: 768px) {
@@ -469,16 +469,16 @@ body.body--index__urgency .notice__list article header h2 {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003217}}
   body.body--index__urgency .whats-new__list article header h2,
   body.body--index__urgency .notice__list article header h2 {
-    margin-left: 0;
     display: flex;
+    margin-left: 0;
   }
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003225}}
 body.body--index__urgency .whats-new__list article header h2 a,
 body.body--index__urgency .notice__list article header h2 a {
   font-size: 14px;
-  text-decoration: none;
   font-weight: bold;
+  text-decoration: none;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003225}}
@@ -495,8 +495,8 @@ body.body--index__urgency .notice__list article header h2 a:hover {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003243}}
 .head-content__list-wrap > body.body--index__urgency .whats-new__feed, .head-content__list-wrap >
 body.body--index__urgency .notice__feed {
-  margin-top: 14px;
   justify-content: flex-end;
+  margin-top: 14px;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003243}}
@@ -512,8 +512,8 @@ body.body--index__urgency .notice__feed a {
   font-size: 75%;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003255}}
-.head-content__list-wrap > body.body--index__urgency .whats-new__feed a:after, .head-content__list-wrap >
-body.body--index__urgency .notice__feed a:after {
+.head-content__list-wrap > body.body--index__urgency .whats-new__feed a::after, .head-content__list-wrap >
+body.body--index__urgency .notice__feed a::after {
   top: 6px;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003261}}
@@ -523,8 +523,8 @@ body.body--index__urgency .notice__rss {
   padding-left: 14px;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003265}}
-body.body--index__urgency .whats-new__rss:before,
-body.body--index__urgency .notice__rss:before {
+body.body--index__urgency .whats-new__rss::before,
+body.body--index__urgency .notice__rss::before {
   width: 11px;
   height: 11px;
   background-size: 11px;
@@ -533,9 +533,9 @@ body.body--index__urgency .notice__rss:before {
 body.body--index__urgency .whats-new__no-info,
 body.body--index__urgency .notice__no-info {
   padding: 27px 0;
+  color: #000;
   font-size: 88%;
   font-weight: bold;
-  color: #000;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003282}}
 body.body--index__urgency .hamburger-menu {
@@ -543,8 +543,8 @@ body.body--index__urgency .hamburger-menu {
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003286}}
 body.body--index__urgency #wrap {
-  padding-bottom: 60px;
   min-height: 0%;
+  padding-bottom: 60px;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003286}}
@@ -586,8 +586,8 @@ body.body--index__urgency #wrap #content .head__utility-wrap {
   body.body--index__urgency #wrap #content .head__utility-wrap {
     display: block;
     position: static;
-    margin-top: 30px;
     width: 100%;
+    margin-top: 30px;
   }
 }
 @media only screen and (max-width: 768px) {
@@ -648,8 +648,8 @@ body.body--index__urgency .head-content__area--covid-news, body.body--index__urg
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003393}}
 body.body--index__urgency .head-content__header {
   padding: 14px 20px;
-  color: #fff;
   border-radius: 15px 15px 0 0;
+  color: #fff;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003393}}
@@ -697,8 +697,8 @@ body.body--index__urgency .head-content__item .head-content__item-link {
   display: block;
   padding: 10px 0;
   font-size: 88%;
-  line-height: 1.43;
   font-weight: bold;
+  line-height: 1.43;
   text-decoration: none;
 }
 @media only screen and (max-width: 768px) {
@@ -727,9 +727,9 @@ body.body--index__urgency .head-content__link-wrap {
 body.body--index__urgency .head-content__link {
   position: relative;
   padding-right: 10px;
+  color: #3b4043;
   font-size: 88%;
   font-weight: bold;
-  color: #3b4043;
   text-decoration: none;
 }
 @media only screen and (max-width: 768px) {
@@ -743,24 +743,24 @@ body.body--index__urgency .head-content__link:hover {
   text-decoration: underline;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003479}}
-body.body--index__urgency .head-content__link:after {
+body.body--index__urgency .head-content__link::after {
   content: '';
-  width: 0;
-  height: 0;
-  border-style: solid;
-  border-width: 5px 0 5px 5px;
-  border-color: transparent transparent transparent #585c5f;
   position: absolute;
   top: 50%;
   right: 0;
+  width: 0;
+  height: 0;
   margin-top: -6px;
+  border-width: 5px 0 5px 5px;
+  border-style: solid;
+  border-color: transparent transparent transparent #585c5f;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003493}}
 body.body--index__urgency .head-content__no-info {
   padding: 27px 0;
+  color: #000;
   font-size: 88%;
   font-weight: bold;
-  color: #000;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003493}}
@@ -781,8 +781,8 @@ body.body--index__urgency .head-content__area--urgency {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003512}}
 body.body--index__urgency .head-content__area--urgency .head-content__header {
   display: flex;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
   width: 200px;
   border-radius: 0;
 }
@@ -846,14 +846,14 @@ body.body--index__urgency .head-content__area--urgency .head-content__item .date
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003570}}
 body.body--index__urgency .head-content__area--urgency .head-content__item-link {
-  margin-left: 25px;
   width: calc(100% - 185px);
+  margin-left: 25px;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003570}}
   body.body--index__urgency .head-content__area--urgency .head-content__item-link {
-    margin-left: 0;
     width: 100%;
+    margin-left: 0;
     padding: 0;
   }
 }
@@ -905,22 +905,22 @@ body.body--index__urgency .head-content__area--disaster .head-content__item .dat
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003629}}
 body.body--index__urgency .head-content__area--disaster .head-content__item-link {
-  margin-left: 25px;
   width: calc(100% - 105px);
+  margin-left: 25px;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003629}}
   body.body--index__urgency .head-content__area--disaster .head-content__item-link {
-    margin-left: 0;
     width: 100%;
+    margin-left: 0;
     padding: 0;
   }
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003727}}
 body.body--index__urgency .urgency-content {
-  margin-top: 30px;
   display: flex;
   justify-content: space-between;
+  margin-top: 30px;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003727}}
@@ -945,8 +945,8 @@ body.body--index__urgency .urgency-content__right {
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003744}}
   body.body--index__urgency .urgency-content__right {
-    margin-top: 45px;
     width: 100%;
+    margin-top: 45px;
   }
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003752}}
@@ -961,28 +961,28 @@ body.body--index__urgency .urgency-content__right #relation {
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003759}}
 body.body--index__urgency .urgency-content__right #relation .relation-inner {
-  height: 100%;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  height: 100%;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003766}}
 body.body--index__urgency .urgency-content__right #relation .relation-inner span {
   width: 100%;
-  text-align: center;
   margin-bottom: 10px;
+  text-align: center;
 }
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003772}}
 body.body--index__urgency .urgency-content__right #relation .relation-inner a {
   display: block;
   width: 100%;
-  background-color: #96d7ff;
   padding: 30px 0;
-  font-size: 125%;
+  background-color: #96d7ff;
   color: #231815;
-  text-decoration: none;
+  font-size: 125%;
   font-weight: bold;
+  text-decoration: none;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003772}}
@@ -1008,13 +1008,13 @@ body.body--index__urgency .link-potal {
 body.body--index__urgency .link-potal a {
   display: block;
   padding: 19px 0;
+  border: 2px solid #96d7ff;
+  background-color: #fff;
+  color: #000;
   font-size: 22px;
   font-weight: bold;
-  color: #000;
-  text-decoration: none;
   text-align: center;
-  background-color: #fff;
-  border: 2px solid #96d7ff;
+  text-decoration: none;
 }
 @media only screen and (max-width: 768px) {
 @media -sass-debug-info{filename{font-family:file\:\/\/\/var\/www\/srsg\/public\/sites\/d\/e\/m\/o\/_\/css\/urgency\.scss}line{font-family:\00003805}}

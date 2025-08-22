@@ -1,13 +1,13 @@
 @import "compass-mixins/lib/compass";
 
 body {
-  margin-top: 70px;
   width: 100%;
+  margin-top: 70px;
   overflow-x: hidden;
 }
 .single-data {
-  line-height: 6em;
   font-size: 1.2em;
+  line-height: 6em;
 }
 // -----------------------------------------------------------------------------
 // common parts
@@ -48,18 +48,18 @@ body {
   max-height: inherit !important;
 }
 .navbar-nav > li > a {
-  line-height: 40px;
   transition: all 1s ease;
+  line-height: 40px;
 }
 
 .navbar-inverse {
-  background-color: #fff;
   border-color: #cdcdcd;
+  background-color: #fff;
 }
 
 .navbar-inverse .navbar-nav > li > a:hover, .navbar-inverse .navbar-nav > li > a:focus {
-  color: #fff;
   background-color: #393939;
+  color: #fff;
 }
 
 .navbar-toggle {
@@ -74,18 +74,18 @@ body {
   background-color: inherit;
 }
 #canvas_wrapper {
-  max-width: 100%;
   min-width: 280px;
+  max-width: 100%;
+  margin: auto;
   padding: 4px;
   border: 1px solid #ccc;
-  margin: auto;
 }
 #canvas_wrapper img {
   max-width: none;
 }
 #map-canvas {
-  height: 200px;
   width: 100%;
+  height: 200px;
 }
 
 #join-us {
@@ -94,23 +94,23 @@ body {
 
 #page-top {
   position: fixed;
-  bottom: 20px;
   right: 20px;
+  bottom: 20px;
 }
 #page-top a {
+  display: block;
   width: 80px;
   height: 80px;
+  transition: background-color .5s ease;
+  border-radius: 50%;
+  background: #666 url(../img/pagetop.png) no-repeat center center;
   line-height: 80px;
   text-align: center;
-  display: block;
-  border-radius: 50%;
   text-decoration: none;
-  transition: background-color .5s ease;
-  background: #666 url(../img/pagetop.png) no-repeat center center;
 }
 #page-top a:hover {
-  text-decoration: none;
   background: #f12d77 url(../img/pagetop.png) no-repeat center center;
+  text-decoration: none;
 }
 .send {
   text-align: center;
@@ -118,24 +118,24 @@ body {
 
 .send input {
   display: inline-block;
-  padding: 6px 12px;
   margin-bottom: 0;
+  padding: 6px 12px;
+  border: 1px solid transparent;
+  border-radius: 4px;
+  background-image: none;
   font-size: 14px;
   font-weight: normal;
   line-height: 1.42857143;
   text-align: center;
-  white-space: nowrap;
   vertical-align: middle;
-  -ms-touch-action: manipulation;
-  touch-action: manipulation;
+  white-space: nowrap;
   cursor: pointer;
   -webkit-user-select: none;
   -moz-user-select: none;
   -ms-user-select: none;
   user-select: none;
-  background-image: none;
-  border: 1px solid transparent;
-  border-radius: 4px;
+  -ms-touch-action: manipulation;
+  touch-action: manipulation;
 
   &:focus, &:active:focus, &.active:focus, &.focus, &:active.focus, &.active.focus {
     outline: 5px auto -webkit-focus-ring-color;
@@ -148,36 +148,36 @@ body {
   }
 
   &:active, &.active {
-    background-image: none;
     outline: 0;
+    background-image: none;
     -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
   }
 
   &.disabled, &[disabled] {
-    cursor: not-allowed;
-    filter: alpha(opacity = 65);
+    opacity: .65;
     -webkit-box-shadow: none;
     box-shadow: none;
-    opacity: .65;
+    cursor: not-allowed;
+    filter: alpha(opacity = 65);
   }
 }
 
 .send input {
-  color: #fff;
-  background-color: #337ab7;
   border-color: #2e6da4;
+  background-color: #337ab7;
+  color: #fff;
 
   &:focus, &.focus {
-    color: #fff;
-    background-color: #286090;
     border-color: #122b40;
+    background-color: #286090;
+    color: #fff;
   }
 
   &:hover, &:active, &.active {
-    color: #fff;
-    background-color: #286090;
     border-color: #204d74;
+    background-color: #286090;
+    color: #fff;
   }
 }
 .send input, .btn {
@@ -210,18 +210,18 @@ body {
   width: 100%;
   height: 34px;
   padding: 6px 12px;
-  font-size: 14px;
-  line-height: 1.42857143;
-  color: #5a5a5a;
-  background-color: #fff;
-  background-image: none;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
-  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
   -webkit-transition: border-color ease-in-out .15s, -webkit-box-shadow ease-in-out .15s;
   -o-transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
   transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  background-color: #fff;
+  background-image: none;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  color: #5a5a5a;
+  font-size: 14px;
+  line-height: 1.42857143;
 
   &:focus {
     border-color: #66afe9;
@@ -231,8 +231,8 @@ body {
   }
 
   &::-moz-placeholder {
-    color: #999;
     opacity: 1;
+    color: #999;
   }
 
   &:-ms-input-placeholder, &::-webkit-input-placeholder {
@@ -240,8 +240,8 @@ body {
   }
 
   &[disabled], &[readonly] {
-    background-color: #eee;
     opacity: 1;
+    background-color: #eee;
   }
 }
 .inquiry-form .columns legend {
@@ -268,15 +268,15 @@ body {
     font-size: 1em;
   }
   #feature-section .nav-tabs li a {
-    font-size: 1.5em;
     padding: .5em 0;
+    font-size: 1.5em;
   }
 }
 
 .pagination {
-  text-align: center;
   display: block;
   padding: 8px 15px;
+  text-align: center;
   span {
     display: inline-block;
     margin: 0 5px 10px;
@@ -288,14 +288,14 @@ body {
     a {
       @include transition(background-color .5s ease);
       display: block;
-      text-decoration: none;
+      padding: 8px 15px;
+      border-radius: 3px;
+      background: #d9edf7;
       color: #434343;
       text-align: center;
+      text-decoration: none;
       vertical-align: bottom;
       @include border-radius(3px);
-      border-radius: 3px;
-      padding: 8px 15px;
-      background: #d9edf7;
       &:hover {
         background: #42bfed;
       }
@@ -316,69 +316,69 @@ body {
   .crumbs {
     margin: 0 auto;
     zoom: 1;
-    &:before, &:after {
+    &::before, &::after {
       content: "\0020";
       display: block;
       height: 0;
       overflow: hidden;
     }
-    &:after {
+    &::after {
       clear: both;
     }
     .node, .page {
       float: left;
       a {
-        position: relative;
         display: block;
-        padding: 6px 15px 8px 30px;
+        position: relative;
         margin: 0 10px 0 0;
-        &:before {
+        padding: 6px 15px 8px 30px;
+        &::before {
           content: "";
           position: absolute;
-          left: 0;
           top: 0;
+          left: 0;
           border-top: 17px solid transparent;
           border-bottom: 17px solid transparent;
           border-left: 17px solid #d7d7d7;
         }
-        &:after {
-          position: absolute;
-          right: -25px;
-          top: 0;
+        &::after {
           content: "";
+          position: absolute;
+          z-index: 1;
+          top: 0;
+          right: -25px;
           border-top: 17px solid transparent;
           border-bottom: 17px solid transparent;
           border-left: 17px solid #edeff0;
-          z-index: 1;
         }
       }
     }
     .page:last-child {
-      position: relative;
       display: block;
-      padding: 6px 15px 8px 30px;
+      position: relative;
       margin: 0 10px 0 0;
-      &:before {
+      padding: 6px 15px 8px 30px;
+      &::before {
         content: "";
         position: absolute;
-        left: 0;
         top: 0;
+        left: 0;
         border-top: 17px solid transparent;
         border-bottom: 17px solid transparent;
         border-left: 17px solid #d7d7d7;
       }
-      &:after {
-        position: absolute;
-        right: -23px;
-        top: 0;
+      &::after {
         content: "";
+        position: absolute;
+        z-index: 1;
+        top: 0;
+        right: -23px;
         border-top: 17px solid transparent;
         border-bottom: 17px solid transparent;
         border-left: 17px solid #edeff0;
-        z-index: 1;
       }
     }
-    .page:first-child a:before {
+    .page:first-child a::before {
       border: 0;
     }
     .separator {
@@ -395,7 +395,7 @@ ul.col3-flex {
   @include align-items(stretch);
   padding-left: 0;
   letter-spacing: 2px;
-  &:after {
+  &::after {
     content: "";
     display: block;
     width: 31%;
@@ -404,10 +404,10 @@ ul.col3-flex {
     }
   }
   li {
-    list-style: none;
     width: 31%;
-    border: 1px solid #ccc;
     margin-bottom: 50px;
+    border: 1px solid #ccc;
+    list-style: none;
     @media only screen and (max-width:  768px) {
       width: 48%;
     }
@@ -423,17 +423,17 @@ ul.col3-flex {
         position: relative;
         width: 100%;
         padding: 0;
-        &:after {
-          padding-top: 75%;
-          display: block;
+        &::after {
           content: "";
+          display: block;
+          padding-top: 75%;
         }
         figure {
           position: absolute;
           top: 0;
-          left: 0;
-          bottom: 0;
           right: 0;
+          bottom: 0;
+          left: 0;
           width: 100%;
           overflow: hidden;
           @include display-flex();
@@ -503,20 +503,20 @@ form {
   margin-bottom: 10px;
   text-align: center;
   a {
-    color: #fff;
-    background-color: #286090;
     display: inline-block;
     padding: 6px 12px;
-    font-size: 14px;
+    transition: all .5s ease;
     border: 1px solid transparent;
     border-radius: 4px;
-    transition: all .5s ease;
+    background-color: #286090;
     box-shadow: inset 0 3px 5px rgba(0, 0, 0, .125);
+    color: #fff;
+    font-size: 14px;
     text-decoration: none;
     &:hover {
-      color: #fff;
-      background-color: #204d74;
       border-color: #122b40;
+      background-color: #204d74;
+      color: #fff;
     }
   }
 }
@@ -543,11 +543,11 @@ form {
 }
 
 footer.contact {
-  border: solid 1px #ddd;
   margin-bottom: 10px;
+  border: solid 1px #ddd;
   h2 {
-    padding: 10px;
     margin-top: 0;
+    padding: 10px;
     background: #d9edf7;
   }
   dl, dt, dd {

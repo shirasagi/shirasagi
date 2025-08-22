@@ -1,8 +1,8 @@
 // @import "compass-mixins/lib/compass";
 
 *,
-*:before,
-*:after {
+*::before,
+*::after {
   -webkit-box-sizing: border-box;
   -moz-box-sizing: border-box;
   -o-box-sizing: border-box;
@@ -124,9 +124,9 @@ button {
   padding: 0;
   border: 0;
   outline: 0;
+  background: transparent;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent;
 }
 
 body {
@@ -156,10 +156,10 @@ q {
   quotes: none;
 }
 
-blockquote:before,
-blockquote:after,
-q:before,
-q:after {
+blockquote::before,
+blockquote::after,
+q::before,
+q::after {
   content: '';
   content: none;
 }
@@ -167,9 +167,9 @@ q:after {
 a {
   margin: 0;
   padding: 0;
+  background: transparent;
   font-size: 100%;
   vertical-align: baseline;
-  background: transparent;
 }
 
 /* change colours to suit your needs */
@@ -198,18 +198,18 @@ dfn[title] {
 }
 
 table {
-  border-collapse: collapse;
   border-spacing: 0;
+  border-collapse: collapse;
 }
 
 /* change border colour to suit your needs */
 hr {
   display: block;
   height: 1px;
-  border: 0;
-  border-top: 1px solid #cccccc;
   margin: 1em 0;
   padding: 0;
+  border: 0;
+  border-top: 1px solid #cccccc;
 }
 
 input,
@@ -223,15 +223,15 @@ select {
 @mixin clear {
   zoom: 1;
 
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     content: "\0020";
     display: block;
     height: 0;
     overflow: hidden;
   }
 
-  &:after {
+  &::after {
     clear: both;
   }
 }
