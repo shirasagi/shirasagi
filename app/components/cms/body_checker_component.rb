@@ -2,7 +2,7 @@ class Cms::BodyCheckerComponent < ApplicationComponent
   include ActiveModel::Model
   include Cms::NodeHelper
 
-  attr_accessor :cur_site, :cur_user, :cur_node, :limits, :syntax_check_context
+  attr_accessor :cur_site, :cur_user, :cur_node, :item, :limits, :syntax_check_context
   attr_writer :check_content_path, :correct_content_path
 
   def check_content_path

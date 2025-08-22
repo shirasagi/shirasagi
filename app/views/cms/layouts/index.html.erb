@@ -39,6 +39,7 @@
   <% else %>
     <span class="filename"><%= File.basename item.filename %></span>
   <% end %>
+  <%= syntax_check_violation_count(item) %>
 <% end %>
 
 <%= render template: "cms/crud/index" %>

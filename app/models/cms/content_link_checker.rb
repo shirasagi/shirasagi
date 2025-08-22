@@ -82,7 +82,7 @@ class Cms::ContentLinkChecker
   end
 
   def checker
-    @checker ||= Cms::LinkChecker.new(cur_user: cur_user, root_url: root_full_url)
+    @checker ||= Cms::LinkChecker.new(cur_user: cur_user, root_url: cur_site.full_root_url)
   end
 
   def check_url(full_url)

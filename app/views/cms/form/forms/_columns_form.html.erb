@@ -23,7 +23,7 @@
   </div>
 <% end %>
 <%=
-  component = Cms::BodyCheckerComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node)
+  component = Cms::BodyCheckerComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, item: @item)
   render(component)
 %>
 

@@ -4,14 +4,13 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:admin) { cms_user }
 
-  context "syntax check" do
+  context "shows accessibility errors and link errors" do
     let(:user) { admin }
     let(:html_with_error) do
       <<~HTML
         <p><a href="/#{unique_id}">ﾃｽﾄ</a></p>
       HTML
     end
-    let(:new_or_edit) { %i[new edit].sample }
 
     before do
       @net_connect_allowed = WebMock.net_connect_allowed?
@@ -22,32 +21,67 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
       WebMock.allow_net_connect! if @net_connect_allowed
     end
 
-    it "shows accessibility errors and link errors" do
-      if new_or_edit == :new
+    context "#new" do
+      it do
         login_user user, to: new_cms_layout_path(site: site)
-      else
-        item = create(:cms_layout, cur_site: site)
-        login_user user, to: edit_cms_layout_path(site: site, id: item)
-      end
 
-      within "form#item-form" do
-        fill_in "item[name]", with: "アクセシビリティテスト"
-        fill_in "item[basename]", with: "a11y-test"
-        fill_in_code_mirror "item[html]", with: html_with_error
+        within "form#item-form" do
+          fill_in "item[name]", with: "アクセシビリティテスト"
+          fill_in "item[basename]", with: "a11y-test"
+          fill_in_code_mirror "item[html]", with: html_with_error
 
-        wait_for_event_fired "ss:check:done" do
-          within ".cms-body-checker" do
-            click_on I18n.t("ss.buttons.run")
+          wait_for_event_fired "ss:check:done" do
+            within ".cms-body-checker" do
+              click_on I18n.t("ss.buttons.run")
+            end
           end
         end
-      end
 
-      within "form#item-form" do
-        within "#errorSyntaxChecker" do
-          expect(page).to have_content(I18n.t("errors.messages.invalid_kana_character"))
+        within "form#item-form" do
+          within "#errorSyntaxChecker" do
+            expect(page).to have_content(I18n.t("errors.messages.invalid_kana_character"))
+            expect(page).to have_content(I18n.t("errors.messages.check_link_text"))
+          end
+          within "#errorLinkChecker" do
+            expect(page).to have_content(I18n.t("errors.messages.link_check_failed_not_found"))
+          end
         end
-        within "#errorLinkChecker" do
-          expect(page).to have_content(I18n.t("errors.messages.link_check_failed_not_found"))
+
+        expect(Cms::Layout.all.count).to eq 0
+      end
+    end
+
+    context "#edit" do
+      it do
+        item = create(:cms_layout, cur_site: site)
+        login_user user, to: edit_cms_layout_path(site: site, id: item)
+
+        within "form#item-form" do
+          fill_in "item[name]", with: "アクセシビリティテスト"
+          fill_in "item[basename]", with: "a11y-test"
+          fill_in_code_mirror "item[html]", with: html_with_error
+
+          wait_for_event_fired "ss:check:done" do
+            within ".cms-body-checker" do
+              click_on I18n.t("ss.buttons.run")
+            end
+          end
+        end
+
+        within "form#item-form" do
+          within "#errorSyntaxChecker" do
+            expect(page).to have_content(I18n.t("errors.messages.invalid_kana_character"))
+            expect(page).to have_content(I18n.t("errors.messages.check_link_text"))
+          end
+          within "#errorLinkChecker" do
+            expect(page).to have_content(I18n.t("errors.messages.link_check_failed_not_found"))
+          end
+        end
+
+        Cms::Layout.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 2
         end
       end
     end
@@ -87,6 +121,8 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
         within "#errorSyntaxChecker" do
           expect(page).to have_content(I18n.t("errors.messages.invalid_kana_character"))
         end
+
+        # 権限があれば「警告を無視して保存」チェックボックスが表示される
         expect(page).to have_unchecked_field('ignore_syntax_check')
         check I18n.t("ss.buttons.ignore_alerts_and_save")
         click_button I18n.t("ss.buttons.save")
@@ -96,6 +132,9 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
       Cms::Layout.where(name: "アクセシビリティテスト").first.tap do |layout|
         expect(layout).to be_present
         expect(layout.html).to eq html_with_error
+        # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+        expect(layout.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+        expect(layout.syntax_check_result_violation_count).to eq 1
       end
     end
 
@@ -128,6 +167,9 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
 
       Cms::Layout.where(name: "自動修正テスト").first.tap do |layout|
         expect(layout.html).to eq html_with_error.unicode_normalize(:nfkc)
+        # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+        expect(layout.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+        expect(layout.syntax_check_result_violation_count).to eq 0
       end
     end
   end
@@ -165,6 +207,7 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
         within "#errorSyntaxChecker" do
           expect(page).to have_content(I18n.t("errors.messages.invalid_kana_character"))
         end
+        # 権限がなければ「警告を無視して保存」チェックボックスが表示されない
         expect(page).to have_no_field('ignore_syntax_check')
         expect(page).to have_no_content(I18n.t("ss.buttons.ignore_alerts_and_save"))
       end
@@ -174,6 +217,9 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
         Cms::Layout.all.find(item.id).tap do |after|
           # no edit made
           expect(after.html).to eq item.html
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after.syntax_check_result_violation_count).to eq 1
         end
       end
     end
@@ -183,7 +229,6 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
     let!(:dictionary) { create :cms_word_dictionary, cur_site: site }
     let(:html_with_error) { '<p>ﾃｽﾄ</p><p>①②③④⑤⑥⑦⑧⑨</p>' }
     let(:new_or_edit) { %i[new edit].sample }
-    # let(:name) { unique_id }
 
     it do
       if new_or_edit == :new
@@ -193,8 +238,6 @@ describe "cms_layouts", type: :feature, dbscope: :example, js: true do
         login_user admin, to: edit_cms_layout_path(site: site, id: item)
       end
       within "form#item-form" do
-        # fill_in "item[name]", with: name
-        # fill_in "item[basename]", with: name
         fill_in_code_mirror "item[html]", with: html_with_error
 
         wait_for_event_fired "ss:check:done" do

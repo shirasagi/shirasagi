@@ -14,7 +14,7 @@
   </dd>
   <%=
     component = Cms::BodyCheckerComponent.new(
-      cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, limits: %i[syntax link],
+      cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, item: @item, limits: %i[syntax link],
       syntax_check_context: @syntax_context
     )
     syntax_checker_form = render(component)

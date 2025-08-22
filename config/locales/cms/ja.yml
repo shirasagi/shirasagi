@@ -138,6 +138,7 @@ ja:
     root: ルート
     yearly_archive: 年別アーカイブ
     monthly_archive: 月別アーカイブ
+    syntax_check_violation_count: "アクセシビリティ違反が%{total}件あります。"
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -654,6 +655,10 @@ ja:
         1_year: 1年以上更新なし
         2_years: 2年以上更新なし
         3_years: 3年以上更新なし
+      search_syntax_check_violation:
+        both: 両方
+        have: 有
+        not_have: 無
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
@@ -1337,6 +1342,7 @@ ja:
         search_state: ステータス
         search_first_released: 公開ステータス
         search_approver_state: 承認ステータス
+        search_syntax_check_violation: アクセシビリティ違反
         search_sort: 検索結果の並び順
       cms/task:
         node_id: フォルダー
@@ -1848,6 +1854,9 @@ ja:
         average_sub_total_elapsed: 平均子合計全処理時間
       cms/page_expiration_setting:
         expiration_setting_type: 公開期限
+      cms/syntax_check_result:
+        syntax_check_result_checked: アクセシビリティチェック実施日時
+        syntax_check_result_violation_count: アクセシビリティ違反件数
 
   activemodel:
     attributes:
@@ -2722,6 +2731,8 @@ ja:
         - 検索したいページの公開ステータスを選択します。
       search_approver_state:
         - 検索したいページの承認ステータスを選択します。
+      search_syntax_check_violation:
+        - 検索したいページのアクセシビリティ違反の有無を選択します。
       search_sort:
         - 検索結果のページ並び順を選択します。
         - 指定が無い場合、ファイル名での並び順となります。
@@ -3535,3 +3546,4 @@ ja:
       cms/elasticsearch/indexer/node_release_job: CMS全文検索/フォルダーの公開（配下のページの追加）
       cms/elasticsearch/indexer/page_release_job: CMS全文検索/ページの追加
       cms/form_db/import_urls_job: CMS/定型DBインポート（サイト全体）
+      cms/syntax_check_job: CMS/アクセシビリティチェック

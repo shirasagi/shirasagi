@@ -3,15 +3,16 @@ require 'spec_helper'
 describe "link_checker", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
-  let!(:node) do
-    create_once :article_node_page, filename: "docs", name: "article",
-    group_ids: [cms_group.id], st_form_ids: [form.id]
-  end
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }
+  let!(:node) do
+    create(:article_node_page, cur_site: site, st_form_ids: [form.id], group_ids: [cms_group.id])
+  end
   let!(:column) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 1) }
 
-  let(:ss_file1) { create :ss_file, site: site, user: user }
-  let(:ss_file2) { create :ss_file, site: site, user: user }
+  let!(:bindings) { { user: user, site: site, node: node } }
+  let(:content_path) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
+  let!(:ss_file1) { tmp_ss_file Cms::TempFile, contents: content_path, basename: "logo-#{unique_id}.png", **bindings }
+  let!(:ss_file2) { tmp_ss_file Cms::TempFile, contents: content_path, basename: "logo-#{unique_id}.png", **bindings }
 
   let(:success_url1) { ss_file1.url }
   let(:success_url2) { ::File.join(site.full_url, ss_file2.url) }
@@ -35,9 +36,11 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
   let(:success) { I18n.t("errors.messages.link_check_success") }
   let(:failure) { I18n.t("errors.messages.link_check_failure") }
 
-  let(:edit_path) { edit_article_page_path site.id, node, item }
-
   before do
+    @net_connect_allowed = WebMock.net_connect_allowed?
+    WebMock.disable_net_connect!(allow_localhost: true)
+    WebMock.reset!
+
     stub_request(:get, success_url3).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
     stub_request(:get, success_url4).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
     stub_request(:get, failed_url3).to_return(body: "", status: 404, headers: { 'Content-Type' => 'text/html' })
@@ -55,106 +58,93 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
     login_cms_user
   end
 
+  after do
+    WebMock.reset!
+    WebMock.allow_net_connect! if @net_connect_allowed
+  end
+
   context "check links" do
     context "with cms addon body" do
-      let(:item) { create :article_page, cur_node: node, file_ids: [ss_file1.id, ss_file2.id], state: "public" }
       let(:html) do
-        h = []
-        h << "<a class=\"icon-png\" href=\"#{success_url1}\">#{success_url1}</a>"
-        h << "<a href=\"#{success_url2}\">#{success_url2}</a>"
-        h << "<a href=\"#{success_url3}\">#{success_url3}</a>"
-        h << "<a href=\"#{success_url4}\">#{success_url4}</a>"
-        h << "<a class=\"icon-png\" href=\"#{failed_url1}\">#{failed_url1}</a>"
-        h << "<a href=\"#{failed_url2}\">#{failed_url2}</a>"
-        h << "<a href=\"#{failed_url3}\">#{failed_url3}</a>"
-        h << "<a href=\"#{invalid_url1}\">#{invalid_url1}</a>"
-        h.join
+        <<~HTML
+          <ul>
+            <li><a class="icon-png" href="#{success_url1}">#{success_url1}</a></li>
+            <li><a href="#{success_url2}">#{success_url2}</a></li>
+            <li><a href="#{success_url3}">#{success_url3}</a></li>
+            <li><a href="#{success_url4}">#{success_url4}</a></li>
+            <li><a class="icon-png" href="#{failed_url1}">#{failed_url1}</a></li>
+            <li><a href="#{failed_url2}">#{failed_url2}</a></li>
+            <li><a href="#{failed_url3}">#{failed_url3}</a></li>
+            <li><a href="#{invalid_url1}">#{invalid_url1}</a></li>
+          </ul>
+        HTML
+      end
+      let(:item) do
+        create :article_page, cur_site: site, cur_node: node, html: html, file_ids: [ss_file1.id, ss_file2.id], state: "closed"
       end
 
-      it "publish" do
-        visit edit_path
-        wait_for_all_ckeditors_ready
-        within "form#item-form" do
-          click_on I18n.t("ss.buttons.publish")
-        end
-        wait_for_notice I18n.t('ss.notice.saved')
+      context "new" do
+        it do
+          visit new_article_page_path(site: site, cid: node)
+          wait_for_all_ckeditors_ready
+          within "form#item-form" do
+            ss_select_file ss_file1
+            ss_select_file ss_file2
 
-        article = Article::Page.first
-        expect(article.public?).to be_truthy
-        expect(article.files[0].public?).to be_truthy
-        expect(article.files[1].public?).to be_truthy
-
-        visit edit_path
-        wait_for_all_ckeditors_ready
-        within "form#item-form" do
-          within "#addon-cms-agents-addons-body" do
-            fill_in_ckeditor "item[html]", with: html
-            wait_for_event_fired "ss:check:done" do
-              within ".cms-body-checker" do
-                check I18n.t("cms.link_check")
-                click_on I18n.t("ss.buttons.run")
+            within "#addon-cms-agents-addons-body" do
+              fill_in_ckeditor "item[html]", with: html
+              wait_for_event_fired "ss:check:done" do
+                within ".cms-body-checker" do
+                  check I18n.t("cms.link_check")
+                  click_on I18n.t("ss.buttons.run")
+                end
               end
-            end
 
-            expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url1}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url1}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url1}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url1}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
+            end
           end
         end
       end
 
-      it "close_save" do
-        visit edit_path
-        wait_for_all_ckeditors_ready
-        within "form#item-form" do
-          click_on I18n.t("ss.buttons.withdraw")
-        end
-        click_on I18n.t("ss.buttons.ignore_alert")
-        wait_for_notice I18n.t('ss.notice.saved')
-
-        expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-
-        article = Article::Page.first
-        expect(article.public?).to be_falsey
-        expect(article.files[0].public?).to be_falsey
-        expect(article.files[1].public?).to be_falsey
-
-        visit edit_path
-        wait_for_all_ckeditors_ready
-        within "form#item-form" do
-          within "#addon-cms-agents-addons-body" do
-            fill_in_ckeditor "item[html]", with: html
-            wait_for_event_fired "ss:check:done" do
-              within ".cms-body-checker" do
-                check I18n.t("cms.link_check")
-                click_on I18n.t("ss.buttons.run")
+      context "edit" do
+        it do
+          visit edit_article_page_path(site: site, cid: node, id: item)
+          wait_for_all_ckeditors_ready
+          within "form#item-form" do
+            within "#addon-cms-agents-addons-body" do
+              wait_for_event_fired "ss:check:done" do
+                within ".cms-body-checker" do
+                  check I18n.t("cms.link_check")
+                  click_on I18n.t("ss.buttons.run")
+                end
               end
-            end
 
-            expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url1}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url1}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
-            expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url1}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url2}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url3}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{success} #{success_url4}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url1}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url2}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{failed_url3}")
+              expect(page).to have_css('#errorLinkChecker li', text: "#{failure} #{invalid_url1}")
+            end
           end
         end
       end
 
       context "when link check is unchecked" do
         it do
-          visit edit_path
+          visit edit_article_page_path(site: site, cid: node, id: item)
           wait_for_all_ckeditors_ready
           within "form#item-form" do
             within "#addon-cms-agents-addons-body" do
-              fill_in_ckeditor "item[html]", with: html
               wait_for_event_fired "ss:check:done" do
                 within ".cms-body-checker" do
                   uncheck I18n.t("cms.link_check")
@@ -185,10 +175,10 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
       end
 
       it "publish" do
-        visit edit_path
+        visit edit_article_page_path(site: site, cid: node, id: item)
         wait_for_all_ckeditors_ready
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.publish")
+          wait_for_event_fired("ss:formAlertFinish") { click_on I18n.t("ss.buttons.publish") }
         end
         wait_for_notice I18n.t('ss.notice.saved')
 
@@ -197,7 +187,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         expect(article.files[0].public?).to be_truthy
         expect(article.files[1].public?).to be_truthy
 
-        visit edit_path
+        visit edit_article_page_path(site: site, cid: node, id: item)
         within "form#item-form" do
           within "#addon-cms-agents-addons-form-page" do
             within ".column-value-palette" do
@@ -229,12 +219,15 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
       end
 
       it "close_save" do
-        visit edit_path
+        visit edit_article_page_path(site: site, cid: node, id: item)
         wait_for_all_ckeditors_ready
         within "form#item-form" do
-          click_on I18n.t("ss.buttons.withdraw")
+          wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
         end
-        click_on I18n.t("ss.buttons.ignore_alert")
+        within_cbox do
+          expect(page).to have_content(I18n.t("cms.confirm.close"))
+          click_on I18n.t("ss.buttons.ignore_alert")
+        end
         wait_for_notice I18n.t('ss.notice.saved')
 
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
@@ -244,7 +237,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         expect(article.files[0].public?).to be_falsey
         expect(article.files[1].public?).to be_falsey
 
-        visit edit_path
+        visit edit_article_page_path(site: site, cid: node, id: item)
         within "form#item-form" do
           within "#addon-cms-agents-addons-form-page" do
             within ".column-value-palette" do
@@ -277,7 +270,7 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
 
       context "when link check is unchecked" do
         it do
-          visit edit_path
+          visit edit_article_page_path(site: site, cid: node, id: item)
           wait_for_all_ckeditors_ready
           within "form#item-form" do
             within "#addon-cms-agents-addons-form-page" do
@@ -307,14 +300,14 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
     context "with redirection url" do
       let(:item) { create :article_page, cur_node: node, file_ids: [ss_file1.id, ss_file2.id], state: "public" }
       let(:html) do
-        h = []
-        h << "<a href=\"#{redirection_url5}\">#{redirection_url5}</a>"
-        h << "<a href=\"#{redirection_self_url}\">#{redirection_self_url}</a>"
-        h.join
+        <<~HTML
+          <a href=#{redirection_url5}>#{redirection_url5}</a><br>
+          <a href=#{redirection_self_url}>#{redirection_self_url}</a>
+        HTML
       end
 
       it do
-        visit edit_path
+        visit edit_article_page_path(site: site, cid: node, id: item)
         wait_for_all_ckeditors_ready
         within "#addon-cms-agents-addons-body" do
           fill_in_ckeditor "item[html]", with: html

@@ -70,11 +70,10 @@
       float: left;
     }
     .meta {
-      span {
-        margin-right: 8px;
-      }
+      display: flex;
+      align-items: center;
+      gap: 10px;
       .label {
-        margin-right: 0;
         color: #844;
         &::before {
           content: "[";

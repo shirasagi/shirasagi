@@ -6,10 +6,29 @@ module Cms::SyntaxCheckable
   def set_check_item
     return @item if instance_variable_defined?(:@item)
 
-    @item = @model.new get_params
-    if respond_to?(:change_item_class, true)
-      change_item_class
+    if params[:id].numeric?
+      if respond_to?(:set_items)
+        set_items
+      else
+        @items = @model.all
+        if @model.ancestors.include?(Cms::GroupPermission)
+          @items = @items.allow(:read, @cur_user, site: @cur_site)
+        end
+      end
+      @item = @items.find(params[:id])
+      if respond_to?(:change_item_class, true)
+        change_item_class
+      end
+      # change_item_class を呼び出すと @model が適切にセットされる。
+      # @model が適切な場合にのみ get_params は適切なパラメータを返す。
+      # 例えば @model が Cms::Part の場合、Cms::Part::Free 用の html を get_params は含まない。
+      @item.attributes = get_params
+    else
       @item = @model.new get_params
+      if respond_to?(:change_item_class, true)
+        change_item_class
+        @item = @model.new get_params
+      end
     end
 
     @item
@@ -26,12 +45,12 @@ module Cms::SyntaxCheckable
       head :not_found
       return
     end
+    checks = Set.new(checks)
 
     public_html = @item.try(:render_html) || @item.html
-    form_alert = false
+    syntax_checker_context = nil
     @components = []
-    while checks.count > 0
-      check = checks.shift
+    checks.each do |check|
       case check
       when "syntax", "form_alert"
         syntax_checker_context = Cms::SyntaxChecker.check_page(
@@ -39,10 +58,6 @@ module Cms::SyntaxCheckable
         component = Cms::SyntaxCheckerComponent.new(
           cur_site: @cur_site, cur_user: @cur_user, checker_context: syntax_checker_context)
         @components << component
-
-        if check == "form_alert"
-          form_alert = true
-        end
       when "mobile_size"
         mobile_size_checker = Cms::MobileSizeChecker.check(
           cur_site: @cur_site, cur_user: @cur_user, page: @item, html: public_html)
@@ -60,13 +75,18 @@ module Cms::SyntaxCheckable
       end
     end
 
-    if form_alert
+    if @item.persisted? && @item.is_a?(Cms::SyntaxCheckResult) && syntax_checker_context
+      @item.set_syntax_check_result(syntax_checker_context)
+    end
+
+    if checks.include?("form_alert")
       errors_json = syntax_checker_context.errors.map { _1.to_compat_hash }
       response_json = { status: "ok", errors: errors_json }
       render json: response_json, status: :ok, content_type: json_content_type
-    else
-      render template: "check_content", layout: false
+      return
     end
+
+    render template: "check_content", layout: false
   end
 
   def correct_content
@@ -89,11 +109,17 @@ module Cms::SyntaxCheckable
     end
 
     public_html = @item.try(:render_html) || @item.html
-    result = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item, html: public_html)
+    syntax_checker_context = Cms::SyntaxChecker.check_page(
+      cur_site: @cur_site, cur_user: @cur_user, page: @item, html: public_html)
     @components = [
-      Cms::SyntaxCheckerComponent.new(cur_site: @cur_site, cur_user: @cur_user, checker_context: result)
+      Cms::SyntaxCheckerComponent.new(
+        cur_site: @cur_site, cur_user: @cur_user, checker_context: syntax_checker_context)
     ]
     check_result_html = render_to_string(template: "check_content", layout: false)
+
+    if @item.persisted? && @item.is_a?(Cms::SyntaxCheckResult)
+      @item.set_syntax_check_result(syntax_checker_context)
+    end
 
     json = {
       id: corrector_param.id, column_value_id: corrector_param.column_value_id,

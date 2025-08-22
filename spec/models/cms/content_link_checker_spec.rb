@@ -36,10 +36,10 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       # stub_request(:get, /^#{::Regexp.escape(success_url4)}/).to_return(success_return)
       failed_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
       Addressable::URI.join(site.full_url, failed_url1).to_s.tap do |u|
-        stub_request(:get, u).to_return(failed_return)
+        stub_request(:get, /^#{::Regexp.escape(u)}/).to_return(failed_return)
       end
-      stub_request(:get, failed_url2).to_return(failed_return)
-      stub_request(:get, failed_url3).to_return(failed_return)
+      stub_request(:get, /^#{::Regexp.escape(failed_url2)}/).to_return(failed_return)
+      stub_request(:get, /^#{::Regexp.escape(failed_url3)}/).to_return(failed_return)
     end
 
     after do

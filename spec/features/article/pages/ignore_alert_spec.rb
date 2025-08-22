@@ -34,6 +34,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       page2.reload
       expect(page2.html).to eq html
+      # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+      expect(page2.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+      expect(page2.syntax_check_result_violation_count).to eq 0
     end
   end
 
@@ -54,6 +57,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("li", text: I18n.t('ss.confirm.contains_url_expect'))
           expect(page).to have_no_css('.save')
         end
+
+        Article::Page.find(page2.id).tap do |after_page|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_page.syntax_check_result_violation_count).to eq 0
+        end
       end
     end
 
@@ -69,6 +78,17 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.replace_save")
         end
         wait_for_notice I18n.t("workflow.notice.created_branch_page")
+
+        Article::Page.find(page2.id).tap do |after_page|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_page.syntax_check_result_violation_count).to eq 0
+        end
+        Article::Page.where(master_id: page2.id).first.tap do |new_branch_page|
+          # 親ページのアクセシビリティチェックごと差し替えページに複製されているはず
+          expect(new_branch_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(new_branch_page.syntax_check_result_violation_count).to eq 0
+        end
       end
     end
 
@@ -84,6 +104,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.publish_save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
+
+        Article::Page.find(page2.id).tap do |after_page|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_page.syntax_check_result_violation_count).to eq 0
+        end
       end
     end
   end
@@ -112,6 +138,9 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           Article::Page.find(page1.id).tap do |after_page|
             expect(after_page.status).to eq "closed"
+            # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+            expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(after_page.syntax_check_result_violation_count).to be > 0
           end
         end
       end
@@ -138,9 +167,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
           Article::Page.find(page1.id).tap do |after_page|
             expect(after_page.status).to eq "public"
+            # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+            expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(after_page.syntax_check_result_violation_count).to be > 0
           end
           Article::Page.where(master_id: page1.id).first.tap do |branch_page|
             expect(branch_page.status).to eq "closed"
+            # 親ページのアクセシビリティチェックごと差し替えページに複製されているはず
+            expect(branch_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(branch_page.syntax_check_result_violation_count).to be > 0
           end
         end
       end
@@ -161,6 +196,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
             # 権限「edit_cms_ignore_syntax_check」がないので、ボタン「警告を無視する」は表示されない
             expect(page).to have_no_css('.save')
+          end
+
+          Article::Page.find(page1.id).tap do |after_page|
+            # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+            expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(after_page.syntax_check_result_violation_count).to be > 0
           end
         end
       end

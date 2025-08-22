@@ -1,4 +1,14 @@
-<div class="cms-body-checker" data-controller="cms--body-checker" data-cms--body-checker-check-url-value="<%= check_content_path %>" data-cms--body-checker-correct-url-value="<%= correct_content_path %>">
+<%
+  data = {
+    controller: "cms--body-checker",
+    "cms--body-checker-check-url-value" => check_content_path,
+    "cms--body-checker-correct-url-value" => correct_content_path
+  }
+  if item.persisted?
+    data["cms--body-checker-id-value"] = item.id
+  end
+%>
+<%= tag.div(class: "cms-body-checker", data: data) do %>
   <fieldset class="cms-body-checker-fieldset" data-cms--body-checker-target="fieldset">
     <legend><%= t("ss.check") %></legend>
 
@@ -9,7 +19,10 @@
       </label>
     <% end %>
 
-    <%= button_tag t("ss.buttons.run"), name: "btn-run-checkers", type: :button, class: "btn cms-body-checker-run", data: { action: "cms--body-checker#check" } %>
+    <%=
+      data = { action: "cms--body-checker#check" }
+      button_tag t("ss.buttons.run"), name: "btn-run-checkers", type: :button, class: "btn cms-body-checker-run", data: data
+    %>
   </fieldset>
 
   <div class="cms-body-checker-result" data-cms--body-checker-target="result">
@@ -19,4 +32,4 @@
       end
     %>
   </div>
-</div>
+<% end %>

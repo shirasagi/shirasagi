@@ -41,6 +41,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
+        end
       end
 
       it "#edit 02" do
@@ -58,6 +64,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           # confirm syntax check header is shown to wait for ajax completion
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
+        end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
         end
       end
 
@@ -77,6 +89,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
+        end
       end
 
       it "#edit 04" do
@@ -94,6 +112,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           # confirm syntax check header is shown to wait for ajax completion
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.alt_is_included_in_filename"))
+        end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
         end
       end
 
@@ -113,6 +137,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.alt_is_included_in_filename"))
         end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
+        end
       end
 
       it "#edit 06" do
@@ -131,6 +161,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
         end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 0
+        end
       end
 
       context "when syntax check is unchecked" do
@@ -147,6 +183,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
             end
 
             expect(page).to have_no_css("#errorSyntaxChecker")
+          end
+
+          Article::Page.find(item.id).tap do |after_item|
+            # アクセシビリティチェックを実行していないので、結果は保存されていないはず。
+            expect(after_item.syntax_check_result_checked).to be_blank
+            expect(after_item.syntax_check_result_violation_count).to be_blank
           end
         end
       end
@@ -172,6 +214,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
             # confirm syntax check header is shown to wait for ajax completion
             expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
             expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
+          end
+
+          Article::Page.find(item.id).tap do |after_item|
+            # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+            expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(after_item.syntax_check_result_violation_count).to eq 0
           end
         end
       end
@@ -199,6 +247,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
+        end
       end
 
       it "#edit 02" do
@@ -223,6 +277,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           # confirm syntax check header is shown to wait for ajax completion
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
+        end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
         end
       end
 
@@ -249,6 +309,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.set_img_alt"))
         end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
+        end
       end
 
       it "#edit 04" do
@@ -273,6 +339,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           # confirm syntax check header is shown to wait for ajax completion
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.alt_is_included_in_filename"))
+        end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
         end
       end
 
@@ -299,6 +371,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.messages.alt_is_included_in_filename"))
         end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 1
+        end
       end
 
       it "#edit 06" do
@@ -324,10 +402,16 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
           expect(page).to have_css("#errorSyntaxChecker", text: I18n.t("errors.template.no_errors"))
         end
+
+        Article::Page.find(item.id).tap do |after_item|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_item.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_item.syntax_check_result_violation_count).to eq 0
+        end
       end
 
       context "when syntax check is unchecked" do
-        it "#edit 06" do
+        it do
           visit edit_path
 
           within ".column-value-palette" do
@@ -347,6 +431,12 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
             end
 
             expect(page).to have_no_css("#errorSyntaxChecker")
+          end
+
+          Article::Page.find(item.id).tap do |after_item|
+            # アクセシビリティチェックを実行していないので、結果は保存されていないはず。
+            expect(after_item.syntax_check_result_checked).to be_blank
+            expect(after_item.syntax_check_result_violation_count).to be_blank
           end
         end
       end
@@ -990,7 +1080,6 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
           end
         end
       end
-
 
       context "with cms/column/table" do
         let!(:column1) { create(:cms_column_table, cur_site: site, cur_form: form, required: "optional", order: 1) }

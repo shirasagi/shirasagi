@@ -2,6 +2,7 @@ class Cms::SearchContents::PagesController < ApplicationController
   include Cms::BaseFilter
   include Cms::ApiFilter::Contents
   include Cms::CrudFilter
+  helper Cms::SyntaxCheckableHelper
 
   model Cms::PageSearch
 

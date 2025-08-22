@@ -43,6 +43,7 @@
 @use "cms/quick_edit" as cms_quick_edit;
 @use "cms/addon_file" as cms_addon_file;
 @use "cms/temp_file" as cms_temp_file;
+@use "cms/syntax_check";
 
 // modules
 @use "ads/ss" as ads;

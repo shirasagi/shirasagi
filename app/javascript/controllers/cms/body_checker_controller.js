@@ -4,7 +4,7 @@ import i18next from 'i18next'
 
 export default class extends Controller {
   static targets = [ "fieldset", "result" ]
-  static values = { checkUrl: String, correctUrl: String };
+  static values = { checkUrl: String, correctUrl: String, id: String };
 
   initialize() {
   }
@@ -18,7 +18,7 @@ export default class extends Controller {
   }
 
   async check(_ev) {
-    // console.log(`[${this.identifier}] check`);
+    // console.log(`[${this.identifier}] check`, ev);
     const formElement = this.element.closest("form");
     const formData = collectFormData(formElement);
     // 余分なデータを削除
@@ -33,6 +33,9 @@ export default class extends Controller {
         formData.append("checks[]", element.value);
       }
     });
+    if (this.hasIdValue && this.idValue && !formData.has("id")) {
+      formData.append("id", this.idValue);
+    }
 
     this.fieldsetTarget.disabled = true;
     this.resultTarget.innerHTML = LOADING;
@@ -73,6 +76,9 @@ export default class extends Controller {
     // form alertの場合はアクセシビリティチェックのみを実行する
     formData.delete("checks[]");
     formData.append("checks[]", "form_alert");
+    if (this.hasIdValue && this.idValue && !formData.has("id")) {
+      formData.append("id", this.idValue);
+    }
 
     this.fieldsetTarget.disabled = true;
 

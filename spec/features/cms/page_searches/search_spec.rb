@@ -27,6 +27,7 @@ describe "cms_page_search", type: :feature, dbscope: :example, js: true do
           fill_in "item[search_name]", with: "A"
           click_on I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         click_on I18n.t('ss.buttons.search')
 
@@ -45,6 +46,7 @@ describe "cms_page_search", type: :feature, dbscope: :example, js: true do
           fill_in "item[search_filename]", with: "base/"
           click_on I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         click_on I18n.t('ss.buttons.search')
 
@@ -64,6 +66,7 @@ describe "cms_page_search", type: :feature, dbscope: :example, js: true do
           fill_in "item[name]", with: name
           click_on I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         click_on I18n.t('ss.buttons.search')
 
@@ -79,6 +82,8 @@ describe "cms_page_search", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.delete')
         end
         click_button I18n.t('ss.buttons.delete')
+        wait_for_notice I18n.t("ss.notice.deleted")
+
         click_on I18n.t('ss.buttons.search')
 
         expect(page).to have_css(".search-count", text: "0 件の検索結果")

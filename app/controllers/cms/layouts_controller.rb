@@ -2,6 +2,7 @@ class Cms::LayoutsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include Cms::SyntaxCheckable
+  helper Cms::SyntaxCheckableHelper
 
   model Cms::Layout
 
@@ -39,8 +40,8 @@ class Cms::LayoutsController < ApplicationController
     @item = @model.new get_params
 
     result = @item.valid?
+    @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
     unless params.key?(:ignore_syntax_check)
-      @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
       if @syntax_context.errors.present?
         @item.errors.add :html, :accessibility_error
         result = false
@@ -52,6 +53,9 @@ class Cms::LayoutsController < ApplicationController
       return
     end
 
+    @item.syntax_check_result_checked = Time.zone.now.utc
+    @item.syntax_check_result_violation_count = @syntax_context.errors.select { _1.id.present? }.count
+
     render_create @item.save
   end
 
@@ -60,8 +64,8 @@ class Cms::LayoutsController < ApplicationController
     @item.attributes = get_params
 
     result = @item.valid?
+    @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
     unless params.key?(:ignore_syntax_check)
-      @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
       if @syntax_context.errors.present?
         @item.errors.add :html, :accessibility_error
         result = false
@@ -70,8 +74,12 @@ class Cms::LayoutsController < ApplicationController
 
     unless result
       render_update result
+      @item.set_syntax_check_result(@syntax_context)
       return
     end
+
+    @item.syntax_check_result_checked = Time.zone.now.utc
+    @item.syntax_check_result_violation_count = @syntax_context.errors.select { _1.id.present? }.count
 
     render_update @item.save
   end

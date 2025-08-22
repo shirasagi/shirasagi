@@ -72,7 +72,7 @@
     <% end %>
     </dd>
     <%=
-      component = Cms::BodyCheckerComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node)
+      component = Cms::BodyCheckerComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, item: @item)
       syntax_checker_form = render(component)
       if syntax_checker_form.present?
         tag.dd syntax_checker_form, class: "wide"
