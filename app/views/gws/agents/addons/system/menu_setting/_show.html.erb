@@ -13,7 +13,7 @@
       <div class="input-group gap-5 align-items-center">
         <% unless skip_icon_types.include?(type.to_s) %>
           <% if @item.send("menu_#{type}_icon_image").present? %>
-            <%= image_tag(@item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", style: "width: 32px; height: 32px;", aria: { hidden: true }) %> } %>
+            <%= image_tag(@item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", style: "width: 32px; height: 32px;", aria: { hidden: true }) %>
           <% else %>
             <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>" role="img" aria-hidden="true"></span>
           <% end %>

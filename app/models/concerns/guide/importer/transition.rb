@@ -63,7 +63,8 @@ module Guide::Importer::Transition
       next if v.blank?
 
       if !in_edges[idx]
-        errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.not_found_transition", id: "#{I18n.t("guide.transition")}#{idx + 1}")}"
+        errors.add :base, "#{@row_index}: #{I18n.t("guide.errors.not_found_transition",
+                   id: "#{I18n.t("guide.transition")}#{idx + 1}")}"
         return false
       end
 

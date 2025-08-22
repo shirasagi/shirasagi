@@ -27,6 +27,11 @@ describe Sys::SiteCopyJob, dbscope: :example do
       let(:file_path2) { '/migration' }
       let(:file_path3) { '/migration/fix_ss_files_url/before.html' }
       let(:file_path4) { "/#{unique_id}" }
+      let(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
+      let(:form_column1) do
+        create(:cms_column_text_field, cur_site: site, cur_form: form, input_type: 'text', order: 10)
+      end
+      let(:form_column1_value) { unique_id }
       let!(:node1) do
         create(:cms_node_node, cur_site: site, layout_id: layout.id,
                upper_html: upper_html, loop_html: loop_html, lower_html: lower_html)
@@ -34,7 +39,12 @@ describe Sys::SiteCopyJob, dbscope: :example do
       let!(:node2) do
         create(:article_node_page, cur_site: site, layout_id: layout.id,
                upper_html: upper_html, loop_html: loop_html, lower_html: lower_html,
-               opendata_site_ids: [ 5 ])
+               opendata_site_ids: [ 5 ],
+               condition_forms: [
+                 { form_id: form.id, filters: [
+                   { column_id: form_column1.id, condition_kind: 'any_of', condition_values: [form_column1_value] }
+                 ] }
+               ])
       end
       let!(:node3) do
         create(:facility_node_node, cur_site: site, layout_id: layout.id,
@@ -90,6 +100,14 @@ describe Sys::SiteCopyJob, dbscope: :example do
           expect(dest_node.loop_html).to eq node2.loop_html
           expect(dest_node.lower_html).to eq node2.lower_html
           expect(dest_node.opendata_site_ids).to eq []
+          dest_node.condition_forms.each do |condition_form|
+            expect(condition_form.form_id).not_to eq form.id
+            condition_form.filters.each do |filter|
+              expect(filter.column_id).not_to eq form_column1.id
+              expect(filter.condition_kind).to eq 'any_of'
+              expect(filter.condition_values).to eq [form_column1_value]
+            end
+          end
         end
 
         Cms::Node.site(dest_site).find_by(filename: node3.filename).tap do |dest_node|

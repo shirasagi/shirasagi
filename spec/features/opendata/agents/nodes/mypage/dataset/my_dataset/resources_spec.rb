@@ -72,6 +72,9 @@ describe "opendata_agents_nodes_my_dataset_resources", type: :feature, dbscope: 
       end
       expect(status_code).to eq 200
 
+      expect(Sys::MailLog.count).to eq 0
+      expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
+
       within "table.opendata-dataset-resources" do
         expect(page).to have_no_content(item_name)
         expect(page).to have_content(item_name2)
@@ -87,6 +90,92 @@ describe "opendata_agents_nodes_my_dataset_resources", type: :feature, dbscope: 
       within "table.opendata-resources" do
         expect(page).to have_no_content(item_name)
         expect(page).to have_no_content(item_name2)
+      end
+    end
+
+    context "with route" do
+      let!(:route) do
+        create(
+          :workflow_route, name: unique_id,
+          approvers: [
+            { "level" => 1, "user_id" => cms_user.id }
+          ],
+          required_counts: [ false ]
+        )
+      end
+
+      before do
+        site.app_workflow_route_id = route.id
+        site.dataset_workflow_route_id = route.id
+        site.idea_workflow_route_id = route.id
+        site.save!
+        site.reload
+      end
+
+      it do
+        visit index_url
+        expect(current_path).to eq index_url.path
+        expect(status_code).to eq 200
+        click_link dataset.name
+        click_link 'リソースを管理する'
+        click_link I18n.t('ss.links.new')
+        expect(status_code).to eq 200
+
+        within "form#item-form" do
+          fill_in "item_name", with: item_name
+          fill_in "item_format", with: "CSV"
+          fill_in "item_text", with: item_text
+          attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/opendata/shift_jis.csv"
+          select license.name, from: "item_license_id"
+          click_button I18n.t("ss.buttons.publish_save")
+        end
+        expect(status_code).to eq 200
+
+        within "table.opendata-resources" do
+          expect(page).to have_content(item_name)
+          click_link item_name
+        end
+        expect(status_code).to eq 200
+
+        within "nav.menu" do
+          click_link '編集'
+        end
+        expect(status_code).to eq 200
+
+        within "form#item-form" do
+          fill_in "item_name", with: item_name2
+          fill_in "item_text", with: item_text2
+          click_button I18n.t("ss.buttons.request")
+        end
+        expect(status_code).to eq 200
+
+        expect(Sys::MailLog.count).to eq 1
+        expect(ActionMailer::Base.deliveries.length).to eq Sys::MailLog.count
+        ActionMailer::Base.deliveries.last.tap do |mail|
+          expect(mail.from.first).to eq cms_user.email
+          expect(mail.to.first).to eq cms_user.email
+          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{dataset.name} - #{site.name}"
+          expect(mail.body.multipart?).to be_falsey
+          expect(mail.body.raw_source).to include(member.name)
+          expect(mail.body.raw_source).to include(dataset.name)
+        end
+
+        within "table.opendata-dataset-resources" do
+          expect(page).to have_no_content(item_name)
+          expect(page).to have_content(item_name2)
+        end
+        within "nav.menu" do
+          click_link I18n.t('ss.buttons.delete')
+        end
+        within "form#item-form" do
+          click_button I18n.t('ss.buttons.delete')
+        end
+        expect(status_code).to eq 200
+
+        within "table.opendata-resources" do
+          expect(page).to have_no_content(item_name)
+          expect(page).to have_no_content(item_name2)
+        end
       end
     end
   end

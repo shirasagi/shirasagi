@@ -18,7 +18,7 @@ class Opendata::Workflow::IdeaCommentsController < ApplicationController
 
   def set_route
     route_id = params[:route_id]
-    if "my_group" == route_id
+    if route_id == "my_group"
       @route = nil
     else
       @route = Workflow::Route.find(params[:route_id])

@@ -12,7 +12,8 @@
     calendar_options[:eventStartEditable] = false
   end
 
-  init_options = params[:calendar] || {}
+  # Timecop で today / now が変更されている可能性があるので、現在年月日を明示する
+  init_options = params[:calendar] || { date: I18n.l(Time.zone.today, format: :iso) }
 %>
 <%= jquery do %>
   $(document).on("gws:calendarInitialized", function() {

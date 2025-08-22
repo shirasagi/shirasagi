@@ -41,13 +41,16 @@
       <%
         download_path = url_for(action: "download_logs") rescue nil
         download_path ||= begin
+          options = { id: task }
+          options[:log_sequence] = task.log_sequence if task.log_sequence
+
           if @ss_mode == :cms && @cur_site
             if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
-              download_job_cms_task_path(id: task)
+              download_job_cms_task_path(options)
             end
           else
             if SS::User.allowed?(:edit, @cur_user)
-              download_job_sys_task_path(id: task)
+              download_job_sys_task_path(options)
             end
           end
         end

@@ -14,7 +14,7 @@ class Gws::Tabular::FormMigration
                             .then { BSON::ByteBuffer.new(_1) }
                             .then { Hash.from_bson(_1) }
 
-    if prev_attrs["index_state"] != current_attrs["index_state"] && prev_attrs["index_state"] == "enabled"
+    if prev_attrs["index_state"] != current_attrs["index_state"] && %w(enabled asc desc).include?(prev_attrs["index_state"])
       @drop_indexes ||= []
       @drop_indexes << { field_name => 1 }
     end

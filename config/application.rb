@@ -22,7 +22,7 @@ require_relative "../app/models/ss/config"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.19.1" }
+  mattr_reader(:version) { "1.20.0" }
 
   class Current < ActiveSupport::CurrentAttributes
     attribute :env, :request
@@ -88,6 +88,7 @@ module SS
     config.autoload_paths << "#{config.root}/app/validators"
     config.autoload_paths << "#{config.root}/app/helpers/concerns"
     config.autoload_paths << "#{config.root}/app/jobs/concerns"
+    config.autoload_paths << "#{Rails.root}/private/models"
 
     # Don't generate system test files.
     config.generators.system_tests = nil

@@ -83,12 +83,12 @@ module Cms::Addon::List
 
     def limit
       value = self[:limit].to_i
-      (value < 1 || 1000 < value) ? self.class.default_limit : value
+      (value < 1 || value > 1000) ? self.class.default_limit : value
     end
 
     def new_days
       value = self[:new_days].to_i
-      (value < 0 || 30 < value) ? 30 : value
+      (value < 0 || value > 30) ? 30 : value
     end
 
     def in_new_days?(date)
@@ -190,7 +190,7 @@ module Cms::Addon::List
 
     def sort_by_column_name(pages)
       pages = pages.entries.sort_by do |a|
-        a ? a.column_values.entries.find { |cv| cv.name == sort_column_name }.try(:export_csv_cell) : nil
+        a ? a.column_values.entries.find { |cv| cv.name == sort_column_name }.try(:export_csv_cell).to_s : ''
       end
       sort_column_direction == "desc" ? pages.reverse : pages
     end

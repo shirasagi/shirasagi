@@ -50,6 +50,10 @@ namespace :ss do
         # クローリングリソースの更新
         ::Tasks::SS.invoke_task("opendata:crawl", site.host)
 
+        if ::SS.config.opendata.dig("assoc_job", "realtime").blank?
+          ::Tasks::SS.invoke_task("opendata:assoc_job:perform", site.host)
+        end
+
         # スコア計算（リコメンド機能）
         ::Tasks::SS.invoke_task("recommend:create_similarity_scores", site.host) if ::SS.config.recommend.disable.blank?
 

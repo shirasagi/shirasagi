@@ -42,6 +42,7 @@ describe Gws::Tabular::Gws::ViewsController, type: :feature, dbscope: :example, 
     let(:template_html) do
       <<~HTML.strip
         <p>hello #{unique_id}</p>
+        {% ss_pagination %}
       HTML
     end
     let(:template_style) do

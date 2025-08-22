@@ -487,10 +487,10 @@ $PATH_IMG: "/img/";
 
   p {
     margin-bottom: 20px;
-    font-size: $px14;
+    font-size: $px16;
 
     @include tb {
-      font-size: $px12;
+      font-size: $px14;
       line-height: 1.57;
     }
 
@@ -509,7 +509,7 @@ $PATH_IMG: "/img/";
   h2 {
     margin: 30px 0 12px;
     padding: 8px 12px;
-    font-size: $px15;
+    font-size: $px18;
     font-weight: bold;
     background-color: #ccf0ff;
 
@@ -524,7 +524,7 @@ $PATH_IMG: "/img/";
     // margin-top: 20px;
     margin-bottom: 12px;
     padding: 0 8px;
-    font-size: $px14;
+    font-size: $px16;
     font-weight: bold;
     border-left: 2px solid $main-blue;
 
@@ -537,7 +537,7 @@ $PATH_IMG: "/img/";
   h4 {
     // margin-top: 20px; */
     margin-bottom: 12px;
-    font-size: $px14;
+    font-size: $px16;
     font-weight: bold;
     // color: #800000;
     color: $main-blue;
@@ -552,7 +552,7 @@ $PATH_IMG: "/img/";
   ol {
     margin-bottom: 20px;
     padding-left: 1em;
-    font-size: $px14;
+    font-size: $px16;
 
     @include tb {
       font-size: $px12;
@@ -571,10 +571,6 @@ $PATH_IMG: "/img/";
 
     @include tb {
       font-size: $px14;
-    }
-
-    @include mb {
-      font-size: $px12;
     }
 
     caption {
@@ -643,7 +639,7 @@ $PATH_IMG: "/img/";
 
       .caption {
         margin: 0;
-        font-size: $px13;
+        font-size: $px16;
       }
     }
   }
@@ -671,5 +667,77 @@ $PATH_IMG: "/img/";
         font-size: $px13;
       }
     }
+  }
+
+  .two-photo{
+    display: flex;
+    gap: 20px;
+    padding-left: 0;
+    list-style: none;
+  }
+
+    /* Files */
+  a[class^="icon-"]:after {
+    content: "";
+    display: inline-block;
+    width: 20px;
+    height: 22px;
+    margin-left: 4px;
+    background: url(/img/ic-file.svg) no-repeat right center / contain content-box;
+    vertical-align: sub;
+
+    @include tb {
+      background-size: 14px !important;
+    }
+  }
+
+  a img.icon-external {
+    @include tb {
+      background-size: 16px;
+    }
+  }
+
+  // a.icon-ppt:after,
+  // a.icon-pptx:after {
+  //   background: url(/img/ic_pptx.svg) no-repeat right center;
+  // }
+
+  // a.icon-xlsx:after,
+  // a.icon-xls:after {
+  //   background: url(/img/ic_xlsx.svg) no-repeat right center;
+  // }
+
+  // a.icon-csv:after {
+  //   background: url(/img/ic_csv.svg) no-repeat right center;
+  // }
+
+  // a.icon-jpg:after {
+  //   background: url(/img/ic_jpg.svg) no-repeat right center;
+  // }
+
+  // a.icon-png:after {
+  //   background: url(/img/ic_png.svg) no-repeat right center;
+  // }
+
+  // a.icon-txt:after {
+  //   background: url(/img/ic_txt.svg) no-repeat right center;
+  // }
+
+  // a.icon-docx:after,
+  // a.icon-doc:after {
+  //   background: url(/img/ic_word.svg) no-repeat right center;
+  // }
+
+  // a.icon-zip:after {
+  //   background: url(/img/ic_zip.svg) no-repeat right center;
+  // }
+
+  // // a[href$=".pdf"],
+  // a.icon-pdf:after {
+  //   background: url(/img/ic_pdf.svg) no-repeat right center;
+  // }
+
+  .ss-cke-underline {
+    text-decoration: underline;
   }
 }

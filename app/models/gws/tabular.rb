@@ -8,6 +8,11 @@ module Gws::Tabular
 
   module_function
 
+  def file_class_dir
+    # "private/models" は application.rb にて autoload path に追加されている
+    "#{SS::Application.private_root}/models/gws/tabular"
+  end
+
   def interpret_default_value(source)
     return source if source.blank?
     return source unless LIQUID_TEMPLATE_MARK.any? { source.include?(_1) }
@@ -117,23 +122,13 @@ module Gws::Tabular
     end
   end
 
-  def form_release_from_file_model(file_model, site:)
-    key = [ "form_release_from_file_model", file_model.form_id, file_model.revision, file_model.patch ].join("_")
-    SS.memorize(self, key, expires_in: 1.day) do
-      criteria = ::Gws::Tabular::FormRelease.all
-      criteria = criteria.site(site) if site
-      criteria = criteria.where(form_id: file_model.form_id, revision: file_model.revision, patch: file_model.patch)
-      criteria.first
-    end
-  end
-
   def render_component(component)
     result = ApplicationController.new.render_to_string(component)
     result.to_s.strip.presence
   end
 
   def item_title(item, site:)
-    release = form_release_from_file_model(item.class, site: site)
+    release = item.class.form_release
     columns = released_columns(release, site: site)
     columns ||= item.form.columns.reorder(order: 1, id: 1).to_a
     title_column = columns.first

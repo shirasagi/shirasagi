@@ -241,6 +241,7 @@ save_part route: "key_visual/swiper_slide", filename: "slide/slide.part.html", n
 save_part route: "ads/banner", filename: "sub-menu/banner.part.html", name: "バナー",
   link_action: "direct", sort: "order", mobile_view: "hide"
 save_part route: "cms/page", filename: "topics/recent.part.html", name: "ページリスト", limit: 1
+save_part route: "cms/free", filename: "search/search-info.part.html", name: "サイト内検索説明"
 
 ## -------------------------------------
 puts "# nodes"

@@ -289,7 +289,11 @@ this.Form_Alert = (function () {
     } else if (!SS.isEmptyObject(Form_Alert.alerts["アクセシビリティチェック"])) {
       $.each(Form_Alert.alerts["アクセシビリティチェック"], function(id, alert) {
         if (alert["msg"] == "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
-          allowEdit = false;
+          if ($(submit).attr("name") == "draft_save") {
+            allowEdit = true;
+          } else {
+            allowEdit = false;
+          }
         }
       });
     }
@@ -398,21 +402,26 @@ this.Form_Preview = (function () {
   Form_Preview.page_route;
 
   Form_Preview.render = function () {
-    $("button.preview").not(".form-preview-rendered").on("click", function (e) {
+    $("button.preview").not(".form-preview-rendered").on("click", function (_e) {
       var basename, errors, form, height, i, name, ref, token, v, width;
       name = $("#" + Form_Preview.form_id + " input[name='item[name]']").val();
       basename = $("#" + Form_Preview.form_id + " input[name='item[basename]']").val();
       errors = [];
-      if (!name) {
-        errors.push("タイトルを入力してください。");
-      }
-      if (basename) {
-        if (!/^[\w\-]+(\.html)?$/.test(basename)) {
-          errors.push("は半角英数、アンダースコア、ハイフンのみ使用可能です。");
-        }
-      } else {
-        errors.push("ファイル名を入力してください。");
-      }
+      
+      // プレビューは確認用なので、必須入力チェックをコメントアウト
+      // if (!name) {
+      //   errors.push("タイトルを入力してください。");
+      // }
+
+      // ファイル名の形式チェックもコメントアウト（プレビュー専用なので）
+      // if (basename) {
+      //   if (!/^[\w-]+(\.html)?$/.test(basename)) {
+      //     errors.push("は半角英数、アンダースコア、ハイフンのみ使用可能です。");
+      //   }
+      // } else {
+      //   errors.push("ファイル名を入力してください。");
+      // }
+      
       if (!SS.isEmptyObject(errors)) {
         alert(errors.join("\n"));
         return false;
@@ -485,7 +494,7 @@ this.Form_Save_Event = (function () {
   }
 
   Form_Save_Event.render = function () {
-    return document.onkeydown = function (e) {
+    return document.onkeydown = function (_e) {
       if (event.ctrlKey || event.metaKey) {
         if (event.keyCode === 83) {
           event.keyCode = 0;
@@ -1065,8 +1074,20 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
-    if (Syntax_Checker.errors.length == 1 && Syntax_Checker.errors[0]['msg'] == "アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。") {
-      Syntax_Checker.reset();
+    var warnMessages = ["アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。","動画や音声を含む場合、説明があるか確認してください。"];
+    var allowEdit = true;
+    $.each(Syntax_Checker.errors, function(id, error) {
+      if (warnMessages.includes(error['msg'])) {
+        return true;
+      }
+
+      allowEdit = false;
+    });
+    if (allowEdit) {
+      Syntax_Checker.errors = Syntax_Checker.errors.filter(function (error) {
+        return error['msg'] != warnMessages[0];
+      });
+      Syntax_Checker.errorCount--;
     }
 
     Syntax_Checker.resultBox.showResult(checks, Syntax_Checker.errors);
@@ -1704,7 +1725,7 @@ this.Backlink_Checker = (function () {
 
   Backlink_Checker.itemId = null;
 
-  Backlink_Checker.asyncCheck = function(form, submit, opts) {
+  Backlink_Checker.asyncCheck = function(form, submit, _opts) {
     var defer = $.Deferred();
     if (!Backlink_Checker.enabled || !Backlink_Checker.url || !Backlink_Checker.itemId) {
       defer.resolve();
@@ -1782,7 +1803,7 @@ Cms_TemplateForm.createElementFromHTML = function(html) {
   var div = document.createElement('div');
   div.innerHTML = html.trim();
 
-  return div.firstChild;
+  return div.firstElementChild;
 };
 
 Cms_TemplateForm.prototype.render = function() {
@@ -1858,7 +1879,12 @@ Cms_TemplateForm.prototype.deleteEditors = function() {
 
 Cms_TemplateForm.prototype.loadForm = function(html) {
   this.deleteEditors();
-  this.$formPage.html($(html).html());
+
+  var $html = $(html);
+  var $siblings = $html.siblings();
+  $html = $siblings.length > 0 ? $siblings.first() : $html;
+
+  this.$formPage.html($html.html());
   // SS.render();
   SS.renderAjaxBox();
   SS_DateTimePicker.render();
@@ -1912,19 +1938,19 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
   this.$el = $(el);
 
   var self = this;
-  this.$el.on("change", ".column-value-controller-move-position", function(ev) {
+  this.$el.on("change", ".column-value-controller-move-position", function(_ev) {
     self.movePosition($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-move-up", function(ev) {
+  this.$el.on("click", ".column-value-controller-move-up", function(_ev) {
     self.moveUp($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-move-down", function(ev) {
+  this.$el.on("click", ".column-value-controller-move-down", function(_ev) {
     self.moveDown($(this));
   });
 
-  this.$el.on("click", ".column-value-controller-delete", function(ev) {
+  this.$el.on("click", ".column-value-controller-delete", function(_ev) {
     self.remove($(this));
   });
 
@@ -1940,7 +1966,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
     // $this.trigger("ss:columnAdding");
     $.ajax({
       url: Cms_TemplateForm.paths.formColumn.replace(/:formId/, formId).replace(/:columnId/, columnId),
-      success: function(data, status, xhr) {
+      success: function(data, _status, _xhr) {
         var newColumnElement = Cms_TemplateForm.createElementFromHTML(data);
         var $palette = $this.closest(".column-value-palette");
         $palette.before(newColumnElement);
@@ -1960,7 +1986,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       error: function(xhr, status, error) {
         $this.closest(".column-value-palette").find(".column-value-palette-error").html(error).removeClass("hide");
       },
-      complete: function(xhr, status) {
+      complete: function(_xhr, _status) {
         $this.css('cursor', "pointer");
         $this.closest("fieldset").prop("disabled", false);
       }
@@ -1981,7 +2007,7 @@ Cms_TemplateForm.prototype.bindOne = function(el, options) {
       stop: function (ev, ui) {
         ui.item.trigger("column:afterMove");
       },
-      update: function (ev, ui) {
+      update: function (_ev, _ui) {
         self.resetOrder();
       }
     });
@@ -2140,17 +2166,17 @@ Cms_TemplateForm.insertElement = function($source, $destination, completion) {
       return;
     }
 
-    var sourceBottom = source.offsetTop + source.offsetHeight;
+    // var sourceBottom = source.offsetTop + source.offsetHeight;
     var prev = source.previousElementSibling;
     var prevBottom = prev.offsetTop + prev.offsetHeight;
 
     sourceDisplacement = destination.offsetTop - source.offsetTop;
-    destinationDisplacement = sourceBottom - prevBottom;
+    destinationDisplacement = source.offsetTop + source.offsetHeight - prevBottom;
 
-    var el = destination;
-    while (el !== source) {
-      intermediateElements.push(el);
-      el = el.nextElementSibling;
+    var nextEl = destination;
+    while (nextEl !== source) {
+      intermediateElements.push(nextEl);
+      nextEl = nextEl.nextElementSibling;
     }
   } else if (destination.offsetTop > source.offsetTop) {
     // moveDown
@@ -2160,16 +2186,15 @@ Cms_TemplateForm.insertElement = function($source, $destination, completion) {
     }
 
     var destinationBottom = destination.offsetTop + destination.offsetHeight;
-    var sourceBottom = source.offsetTop + source.offsetHeight;
     var next = source.nextElementSibling;
 
-    sourceDisplacement = destinationBottom - sourceBottom;
+    sourceDisplacement = destinationBottom - (source.offsetTop + source.offsetHeight);
     destinationDisplacement = source.offsetTop - next.offsetTop;
 
-    var el = destination;
-    while (el !== source) {
-      intermediateElements.push(el);
-      el = el.previousElementSibling;
+    var prevEl = destination;
+    while (prevEl !== source) {
+      intermediateElements.push(prevEl);
+      prevEl = prevEl.previousElementSibling;
     }
   }
 
@@ -2454,7 +2479,7 @@ SS_Workflow.prototype = {
 
         location.reload();
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         try {
           var errors = $.parseJSON(xhr.responseText);
           alert(["== Error(Workflow) =="].concat(errors).join("\n"));
@@ -2501,7 +2526,7 @@ SS_Workflow.prototype = {
           location.reload();
         }
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -2524,10 +2549,10 @@ SS_Workflow.prototype = {
     $.ajax({
       type: "GET",
       url: uri,
-      success: function(html, status) {
+      success: function(html, _status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -2552,10 +2577,10 @@ SS_Workflow.prototype = {
       type: "POST",
       url: uri,
       data: data,
-      success: function(html, status) {
+      success: function(html, _status) {
         pThis.$el.find(".workflow-partial-section").html(html);
       },
-      error: function(xhr, status) {
+      error: function(xhr, _status) {
         var msg;
         try {
           var errors = $.parseJSON(xhr.responseText);
@@ -2598,10 +2623,10 @@ SS_Workflow.prototype = {
           type: 'POST',
           url: uri,
           data: data,
-          success: function(html, status) {
+          success: function(_html, _status) {
             location.reload();
           },
-          error: function(xhr, status) {
+          error: function(xhr, _status) {
             try {
               var errors = $.parseJSON(xhr.responseText);
               alert(errors.join("\n"));
@@ -2621,10 +2646,10 @@ SS_Workflow.prototype = {
     var pThis = this;
     $.ajax({
       url: this.fileSelectViewUrl($item.closest("[data-id]").data("id")),
-      success: function(data, status, xhr) {
+      success: function(data, _status, _xhr) {
         pThis.renderFileHtml(data);
       },
-      error: function (xhr, status, error) {
+      error: function (_xhr, _status, _error) {
         alert("== Error(Workflow) ==");
       }
     });
@@ -2646,7 +2671,7 @@ SS_Workflow.prototype = {
   deleteUploadedFile: function($a) {
     $a.closest("div[data-file-id]").remove();
   },
-  onDropFile: function(files, dropArea) {
+  onDropFile: function(files, _dropArea) {
     var pThis = this;
     for (var j = 0, len = files.length; j < len; j++) {
       var file = files[j];
@@ -2654,10 +2679,10 @@ SS_Workflow.prototype = {
       var url = pThis.fileSelectViewUrl(id);
       $.ajax({
         url: url,
-        success: function(data, status, xhr) {
+        success: function(data, _status, _xhr) {
           pThis.renderFileHtml(data);
         },
-        error: function (xhr, status, error) {
+        error: function (_xhr, _status, _error) {
           alert("== Error(Workflow) ==");
         }
       });
@@ -2677,7 +2702,7 @@ SS_WorkflowRerouteBox = function (el, options) {
       success: function (data) {
         pThis.$el.closest("#cboxLoadedContent").html(data);
       },
-      error: function (data, status) {
+      error: function (_data, _status) {
         alert("== Error(Workflow) ==");
       }
     });
@@ -2687,7 +2712,7 @@ SS_WorkflowRerouteBox = function (el, options) {
 
   this.$el.find('.pagination a').on("click", function(e) {
     var url = $(this).attr("href");
-    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, xhr) {
+    pThis.$el.closest("#cboxLoadedContent").load(url, function(response, status, _xhr) {
       if (status === 'error') {
         alert("== Error(Workflow) ==");
       }
@@ -2935,15 +2960,15 @@ this.SS_Addon_TempFile = (function () {
     });
   };
 
-  SS_Addon_TempFile.prototype.onDragEnter = function(ev) {
+  SS_Addon_TempFile.prototype.onDragEnter = function(_ev) {
     this.$selector.addClass('file-dragenter');
   };
 
-  SS_Addon_TempFile.prototype.onDragLeave = function(ev) {
+  SS_Addon_TempFile.prototype.onDragLeave = function(_ev) {
     this.$selector.removeClass('file-dragenter');
   };
 
-  SS_Addon_TempFile.prototype.onDragOver = function(ev) {
+  SS_Addon_TempFile.prototype.onDragOver = function(_ev) {
     if (!this.$selector.hasClass('file-dragenter')) {
       this.$selector.addClass('file-dragenter');
     }
@@ -3069,7 +3094,13 @@ this.SS_SearchUI = (function () {
       data.name = $data.find(".select-item").text() || $item.text() || $data.text();
     }
 
-    var tr = ejs.render(template, {data: data, attr: attr, label: {delete: i18next.t("ss.buttons.delete")}});
+    var deleteLabel;
+    if ("i18next" in window) {
+      deleteLabel = i18next.t("ss.buttons.delete");
+    } else {
+      deleteLabel = "削除";
+    }
+    var tr = ejs.render(template, {data: data, attr: attr, label: { delete: deleteLabel }});
     var $tr = $(tr);
     var $ajaxSelected;
     if (selectTable === "to") {
@@ -3228,7 +3259,7 @@ this.SS_SearchUI = (function () {
     });
   };
 
-  SS_SearchUI.onColorBoxLoaded = function (ev) {
+  SS_SearchUI.onColorBoxLoaded = function (_ev) {
     if (!SS_SearchUI.anchorAjaxBox) {
       // ファイル選択ダイアログの「編集」ボタンのクリックなどで別のモーダルが表示される場合がある。
       // 別のモーダルからキャンセルなどで戻ってきた際に、元々の anchor を利用したい。
@@ -3237,7 +3268,7 @@ this.SS_SearchUI = (function () {
     }
   };
 
-  SS_SearchUI.onColorBoxCleanedUp = function (ev) {
+  SS_SearchUI.onColorBoxCleanedUp = function (_ev) {
     SS_SearchUI.anchorAjaxBox = null;
     selectTable = null;
   };
@@ -3300,11 +3331,11 @@ this.SS_SearchUI = (function () {
         return true;
       }
     });
-    $el.find("#s_group").on("change", function (ev) {
+    $el.find("#s_group").on("change", function (_ev) {
       self.selectItems($el);
       return $el.find("form.search")[0].requestSubmit();
     });
-    $el.find(".submit-on-change").on("change", function (ev) {
+    $el.find(".submit-on-change").on("change", function (_ev) {
       self.selectItems($el);
       return $el.find("form.search")[0].requestSubmit();
     });
@@ -3435,7 +3466,7 @@ this.SS_SearchUI = (function () {
       }
       return false;
     });
-    $el.find(".index").on("change", function (ev) {
+    $el.find(".index").on("change", function (_ev) {
       return self.toggleSelectButton($el);
     });
     return self.toggleSelectButton($el);
@@ -3504,34 +3535,33 @@ this.SS_ListUI = (function () {
       });
       $(this).trigger("ss:checked-all-list-items");
     });
-    $el.find(".list-item").each(function () {
-      var list;
-      list = $(this);
-      list.find("input:checkbox").on("change", function () {
-        return list.toggleClass("checked", $(this).prop("checked"));
-      });
-      list.on("mouseup", function (e) {
-        var menu, offset, relX, relY;
-        if ($(e.target).is('a') || $(e.target).closest('a,label').length) {
-          return;
-        }
-        menu = list.find(".tap-menu");
-        if (menu.is(':visible')) {
-          return menu.hide();
-        }
-        if (menu.hasClass("tap-menu-relative")) {
-          offset = $(this).offset();
-          relX = e.pageX - offset.left;
-          relY = e.pageY - offset.top;
-        } else {
-          relX = e.pageX;
-          relY = e.pageY;
-        }
-        return menu.css("left", relX - menu.width() + 5).css("top", relY).show();
-      });
-      return list.on("mouseleave", function () {
-        return $el.find(".tap-menu").hide();
-      });
+    $el.on("change", ".list-item input:checkbox", function () {
+      var $list = $(this);
+      return $list.toggleClass("checked", $list.prop("checked"));
+    });
+    $el.on("mouseup", ".list-item", function (ev) {
+      var $list = $(this);
+      var $menu, offset, relX, relY;
+      var $target = $(ev.target);
+      if ($target.is('a') || $target.closest('a,label').length) {
+        return;
+      }
+      $menu = $list.find(".tap-menu");
+      if ($menu.is(':visible')) {
+        return $menu.hide();
+      }
+      if ($menu.hasClass("tap-menu-relative")) {
+        offset = $list.offset();
+        relX = ev.pageX - offset.left;
+        relY = ev.pageY - offset.top;
+      } else {
+        relX = ev.pageX;
+        relY = ev.pageY;
+      }
+      return $menu.css("left", relX - $menu.width() + 5).css("top", relY).show();
+    });
+    $el.on("mouseleave", ".list-item", function (_ev) {
+      return $el.find(".tap-menu").hide();
     });
     $el.find(".list-head .destroy-all").each(function() {
       if (this.classList.contains("btn-list-head-action")) {
@@ -3573,6 +3603,69 @@ this.SS_ListUI = (function () {
           ev.$form.append($("<input/>", { name: "ids[]", value: id, type: "hidden" }));
         }
       });
+    });
+    $el.find('.list-head [name="expiration_setting_all"]').on("click", function (ev) {
+      SS_ListUI.changeAllExpirationSetting($el, $(this), ev.target.value);
+      ev.preventDefault();
+    });
+  };
+
+  SS_ListUI.changeAllExpirationSetting = function($el, $this, state) {
+    if (!state) {
+      return;
+    }
+
+    var checkedElements = $el.find(".list-item input:checkbox:checked");
+    checkedElements = $.grep(checkedElements, function(element, _index) {
+      return !!$(element).val();
+    });
+    if (checkedElements.length === 0) {
+      return false;
+    }
+
+    var confirmation = $this.data('confirm') || '';
+    if (confirmation) {
+      if (!confirm(confirmation)) {
+        return false;
+      }
+    }
+
+    $this.attr("disabled", true);
+    $.each(checkedElements, function() {
+      var $element = $(this);
+      $element.replaceWith(SS.loading);
+    });
+
+    var promises = [];
+    $.each(checkedElements, function() {
+      var $element = $(this);
+      var id = $element.val();
+      var action = window.location.pathname + "/" + id + ".json";
+
+      var formData = new FormData();
+      formData.append("_method", "put");
+      formData.append("authenticity_token", $('meta[name="csrf-token"]').attr('content'));
+      formData.append("item[expiration_setting_type]", state);
+
+      var promise = $.ajax({
+        type: "POST",
+        url: action,
+        data: formData,
+        processData: false,
+        contentType: false,
+        cache: false
+      });
+
+      promises.push(promise);
+    });
+
+    $.when.apply($, promises).done(function() {
+      alert(i18next.t("ss.notice.changed"));
+      window.location.reload();
+    }).fail(function(xhr, status, error) {
+      alert("Error!");
+    }).always(function() {
+      $this.attr("disabled", false);
     });
   };
 
@@ -3851,6 +3944,7 @@ String.prototype.padStart||(String.prototype.padStart=function(t,n){return t>>=0
 String.prototype.repeat||(String.prototype.repeat=function(t){if(null==this)throw new TypeError("can't convert "+this+" to object");var r=""+this;if((t=+t)!=t&&(t=0),t<0)throw new RangeError("repeat count must be non-negative");if(t==1/0)throw new RangeError("repeat count must be less than infinity");if(t=Math.floor(t),0==r.length||0==t)return"";if(r.length*t>=1<<28)throw new RangeError("repeat count must not overflow maximum string size");for(var e="";1==(1&t)&&(e+=r),0!=(t>>>=1);)r+=r;return e});
 String.prototype.startsWith||(String.prototype.startsWith=function(t,r){return r=r||0,this.substr(r,t.length)===t});
 String.prototype.trim||(String.prototype.trim=function(){return this.replace(/^[\s\uFEFF\xA0]+|[\s\uFEFF\xA0]+$/g,"")});
+(function(f){if(typeof exports==="object"&&typeof module!=="undefined"){module.exports=f()}else if(typeof define==="function"&&define.amd){define([],f)}else{var g;if(typeof window!=="undefined"){g=window}else if(typeof global!=="undefined"){g=global}else if(typeof self!=="undefined"){g=self}else{g=this}g.ejs=f()}})(function(){var define,module,exports;return function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r}()({1:[function(require,module,exports){"use strict";var fs=require("fs");var path=require("path");var utils=require("./utils");var scopeOptionWarned=false;var _VERSION_STRING=require("../package.json").version;var _DEFAULT_OPEN_DELIMITER="<";var _DEFAULT_CLOSE_DELIMITER=">";var _DEFAULT_DELIMITER="%";var _DEFAULT_LOCALS_NAME="locals";var _NAME="ejs";var _REGEX_STRING="(<%%|%%>|<%=|<%-|<%_|<%#|<%|%>|-%>|_%>)";var _OPTS_PASSABLE_WITH_DATA=["delimiter","scope","context","debug","compileDebug","client","_with","rmWhitespace","strict","filename","async"];var _OPTS_PASSABLE_WITH_DATA_EXPRESS=_OPTS_PASSABLE_WITH_DATA.concat("cache");var _BOM=/^\uFEFF/;var _JS_IDENTIFIER=/^[a-zA-Z_$][0-9a-zA-Z_$]*$/;exports.cache=utils.cache;exports.fileLoader=fs.readFileSync;exports.localsName=_DEFAULT_LOCALS_NAME;exports.promiseImpl=new Function("return this;")().Promise;exports.resolveInclude=function(name,filename,isDir){var dirname=path.dirname;var extname=path.extname;var resolve=path.resolve;var includePath=resolve(isDir?filename:dirname(filename),name);var ext=extname(name);if(!ext){includePath+=".ejs"}return includePath};function resolvePaths(name,paths){var filePath;if(paths.some(function(v){filePath=exports.resolveInclude(name,v,true);return fs.existsSync(filePath)})){return filePath}}function getIncludePath(path,options){var includePath;var filePath;var views=options.views;var match=/^[A-Za-z]+:\\|^\//.exec(path);if(match&&match.length){path=path.replace(/^\/*/,"");if(Array.isArray(options.root)){includePath=resolvePaths(path,options.root)}else{includePath=exports.resolveInclude(path,options.root||"/",true)}}else{if(options.filename){filePath=exports.resolveInclude(path,options.filename);if(fs.existsSync(filePath)){includePath=filePath}}if(!includePath&&Array.isArray(views)){includePath=resolvePaths(path,views)}if(!includePath&&typeof options.includer!=="function"){throw new Error('Could not find the include file "'+options.escapeFunction(path)+'"')}}return includePath}function handleCache(options,template){var func;var filename=options.filename;var hasTemplate=arguments.length>1;if(options.cache){if(!filename){throw new Error("cache option requires a filename")}func=exports.cache.get(filename);if(func){return func}if(!hasTemplate){template=fileLoader(filename).toString().replace(_BOM,"")}}else if(!hasTemplate){if(!filename){throw new Error("Internal EJS error: no file name or template "+"provided")}template=fileLoader(filename).toString().replace(_BOM,"")}func=exports.compile(template,options);if(options.cache){exports.cache.set(filename,func)}return func}function tryHandleCache(options,data,cb){var result;if(!cb){if(typeof exports.promiseImpl=="function"){return new exports.promiseImpl(function(resolve,reject){try{result=handleCache(options)(data);resolve(result)}catch(err){reject(err)}})}else{throw new Error("Please provide a callback function")}}else{try{result=handleCache(options)(data)}catch(err){return cb(err)}cb(null,result)}}function fileLoader(filePath){return exports.fileLoader(filePath)}function includeFile(path,options){var opts=utils.shallowCopy(utils.createNullProtoObjWherePossible(),options);opts.filename=getIncludePath(path,opts);if(typeof options.includer==="function"){var includerResult=options.includer(path,opts.filename);if(includerResult){if(includerResult.filename){opts.filename=includerResult.filename}if(includerResult.template){return handleCache(opts,includerResult.template)}}}return handleCache(opts)}function rethrow(err,str,flnm,lineno,esc){var lines=str.split("\n");var start=Math.max(lineno-3,0);var end=Math.min(lines.length,lineno+3);var filename=esc(flnm);var context=lines.slice(start,end).map(function(line,i){var curr=i+start+1;return(curr==lineno?" >> ":"    ")+curr+"| "+line}).join("\n");err.path=filename;err.message=(filename||"ejs")+":"+lineno+"\n"+context+"\n\n"+err.message;throw err}function stripSemi(str){return str.replace(/;(\s*$)/,"$1")}exports.compile=function compile(template,opts){var templ;if(opts&&opts.scope){if(!scopeOptionWarned){console.warn("`scope` option is deprecated and will be removed in EJS 3");scopeOptionWarned=true}if(!opts.context){opts.context=opts.scope}delete opts.scope}templ=new Template(template,opts);return templ.compile()};exports.render=function(template,d,o){var data=d||utils.createNullProtoObjWherePossible();var opts=o||utils.createNullProtoObjWherePossible();if(arguments.length==2){utils.shallowCopyFromList(opts,data,_OPTS_PASSABLE_WITH_DATA)}return handleCache(opts,template)(data)};exports.renderFile=function(){var args=Array.prototype.slice.call(arguments);var filename=args.shift();var cb;var opts={filename:filename};var data;var viewOpts;if(typeof arguments[arguments.length-1]=="function"){cb=args.pop()}if(args.length){data=args.shift();if(args.length){utils.shallowCopy(opts,args.pop())}else{if(data.settings){if(data.settings.views){opts.views=data.settings.views}if(data.settings["view cache"]){opts.cache=true}viewOpts=data.settings["view options"];if(viewOpts){utils.shallowCopy(opts,viewOpts)}}utils.shallowCopyFromList(opts,data,_OPTS_PASSABLE_WITH_DATA_EXPRESS)}opts.filename=filename}else{data=utils.createNullProtoObjWherePossible()}return tryHandleCache(opts,data,cb)};exports.Template=Template;exports.clearCache=function(){exports.cache.reset()};function Template(text,optsParam){var opts=utils.hasOwnOnlyObject(optsParam);var options=utils.createNullProtoObjWherePossible();this.templateText=text;this.mode=null;this.truncate=false;this.currentLine=1;this.source="";options.client=opts.client||false;options.escapeFunction=opts.escape||opts.escapeFunction||utils.escapeXML;options.compileDebug=opts.compileDebug!==false;options.debug=!!opts.debug;options.filename=opts.filename;options.openDelimiter=opts.openDelimiter||exports.openDelimiter||_DEFAULT_OPEN_DELIMITER;options.closeDelimiter=opts.closeDelimiter||exports.closeDelimiter||_DEFAULT_CLOSE_DELIMITER;options.delimiter=opts.delimiter||exports.delimiter||_DEFAULT_DELIMITER;options.strict=opts.strict||false;options.context=opts.context;options.cache=opts.cache||false;options.rmWhitespace=opts.rmWhitespace;options.root=opts.root;options.includer=opts.includer;options.outputFunctionName=opts.outputFunctionName;options.localsName=opts.localsName||exports.localsName||_DEFAULT_LOCALS_NAME;options.views=opts.views;options.async=opts.async;options.destructuredLocals=opts.destructuredLocals;options.legacyInclude=typeof opts.legacyInclude!="undefined"?!!opts.legacyInclude:true;if(options.strict){options._with=false}else{options._with=typeof opts._with!="undefined"?opts._with:true}this.opts=options;this.regex=this.createRegex()}Template.modes={EVAL:"eval",ESCAPED:"escaped",RAW:"raw",COMMENT:"comment",LITERAL:"literal"};Template.prototype={createRegex:function(){var str=_REGEX_STRING;var delim=utils.escapeRegExpChars(this.opts.delimiter);var open=utils.escapeRegExpChars(this.opts.openDelimiter);var close=utils.escapeRegExpChars(this.opts.closeDelimiter);str=str.replace(/%/g,delim).replace(/</g,open).replace(/>/g,close);return new RegExp(str)},compile:function(){var src;var fn;var opts=this.opts;var prepended="";var appended="";var escapeFn=opts.escapeFunction;var ctor;var sanitizedFilename=opts.filename?JSON.stringify(opts.filename):"undefined";if(!this.source){this.generateSource();prepended+='  var __output = "";\n'+"  function __append(s) { if (s !== undefined && s !== null) __output += s }\n";if(opts.outputFunctionName){if(!_JS_IDENTIFIER.test(opts.outputFunctionName)){throw new Error("outputFunctionName is not a valid JS identifier.")}prepended+="  var "+opts.outputFunctionName+" = __append;"+"\n"}if(opts.localsName&&!_JS_IDENTIFIER.test(opts.localsName)){throw new Error("localsName is not a valid JS identifier.")}if(opts.destructuredLocals&&opts.destructuredLocals.length){var destructuring="  var __locals = ("+opts.localsName+" || {}),\n";for(var i=0;i<opts.destructuredLocals.length;i++){var name=opts.destructuredLocals[i];if(!_JS_IDENTIFIER.test(name)){throw new Error("destructuredLocals["+i+"] is not a valid JS identifier.")}if(i>0){destructuring+=",\n  "}destructuring+=name+" = __locals."+name}prepended+=destructuring+";\n"}if(opts._with!==false){prepended+="  with ("+opts.localsName+" || {}) {"+"\n";appended+="  }"+"\n"}appended+="  return __output;"+"\n";this.source=prepended+this.source+appended}if(opts.compileDebug){src="var __line = 1"+"\n"+"  , __lines = "+JSON.stringify(this.templateText)+"\n"+"  , __filename = "+sanitizedFilename+";"+"\n"+"try {"+"\n"+this.source+"} catch (e) {"+"\n"+"  rethrow(e, __lines, __filename, __line, escapeFn);"+"\n"+"}"+"\n"}else{src=this.source}if(opts.client){src="escapeFn = escapeFn || "+escapeFn.toString()+";"+"\n"+src;if(opts.compileDebug){src="rethrow = rethrow || "+rethrow.toString()+";"+"\n"+src}}if(opts.strict){src='"use strict";\n'+src}if(opts.debug){console.log(src)}if(opts.compileDebug&&opts.filename){src=src+"\n"+"//# sourceURL="+sanitizedFilename+"\n"}try{if(opts.async){try{ctor=new Function("return (async function(){}).constructor;")()}catch(e){if(e instanceof SyntaxError){throw new Error("This environment does not support async/await")}else{throw e}}}else{ctor=Function}fn=new ctor(opts.localsName+", escapeFn, include, rethrow",src)}catch(e){if(e instanceof SyntaxError){if(opts.filename){e.message+=" in "+opts.filename}e.message+=" while compiling ejs\n\n";e.message+="If the above error is not helpful, you may want to try EJS-Lint:\n";e.message+="https://github.com/RyanZim/EJS-Lint";if(!opts.async){e.message+="\n";e.message+="Or, if you meant to create an async function, pass `async: true` as an option."}}throw e}var returnedFn=opts.client?fn:function anonymous(data){var include=function(path,includeData){var d=utils.shallowCopy(utils.createNullProtoObjWherePossible(),data);if(includeData){d=utils.shallowCopy(d,includeData)}return includeFile(path,opts)(d)};return fn.apply(opts.context,[data||utils.createNullProtoObjWherePossible(),escapeFn,include,rethrow])};if(opts.filename&&typeof Object.defineProperty==="function"){var filename=opts.filename;var basename=path.basename(filename,path.extname(filename));try{Object.defineProperty(returnedFn,"name",{value:basename,writable:false,enumerable:false,configurable:true})}catch(e){}}return returnedFn},generateSource:function(){var opts=this.opts;if(opts.rmWhitespace){this.templateText=this.templateText.replace(/[\r\n]+/g,"\n").replace(/^\s+|\s+$/gm,"")}this.templateText=this.templateText.replace(/[ \t]*<%_/gm,"<%_").replace(/_%>[ \t]*/gm,"_%>");var self=this;var matches=this.parseTemplateText();var d=this.opts.delimiter;var o=this.opts.openDelimiter;var c=this.opts.closeDelimiter;if(matches&&matches.length){matches.forEach(function(line,index){var closing;if(line.indexOf(o+d)===0&&line.indexOf(o+d+d)!==0){closing=matches[index+2];if(!(closing==d+c||closing=="-"+d+c||closing=="_"+d+c)){throw new Error('Could not find matching close tag for "'+line+'".')}}self.scanLine(line)})}},parseTemplateText:function(){var str=this.templateText;var pat=this.regex;var result=pat.exec(str);var arr=[];var firstPos;while(result){firstPos=result.index;if(firstPos!==0){arr.push(str.substring(0,firstPos));str=str.slice(firstPos)}arr.push(result[0]);str=str.slice(result[0].length);result=pat.exec(str)}if(str){arr.push(str)}return arr},_addOutput:function(line){if(this.truncate){line=line.replace(/^(?:\r\n|\r|\n)/,"");this.truncate=false}if(!line){return line}line=line.replace(/\\/g,"\\\\");line=line.replace(/\n/g,"\\n");line=line.replace(/\r/g,"\\r");line=line.replace(/"/g,'\\"');this.source+='    ; __append("'+line+'")'+"\n"},scanLine:function(line){var self=this;var d=this.opts.delimiter;var o=this.opts.openDelimiter;var c=this.opts.closeDelimiter;var newLineCount=0;newLineCount=line.split("\n").length-1;switch(line){case o+d:case o+d+"_":this.mode=Template.modes.EVAL;break;case o+d+"=":this.mode=Template.modes.ESCAPED;break;case o+d+"-":this.mode=Template.modes.RAW;break;case o+d+"#":this.mode=Template.modes.COMMENT;break;case o+d+d:this.mode=Template.modes.LITERAL;this.source+='    ; __append("'+line.replace(o+d+d,o+d)+'")'+"\n";break;case d+d+c:this.mode=Template.modes.LITERAL;this.source+='    ; __append("'+line.replace(d+d+c,d+c)+'")'+"\n";break;case d+c:case"-"+d+c:case"_"+d+c:if(this.mode==Template.modes.LITERAL){this._addOutput(line)}this.mode=null;this.truncate=line.indexOf("-")===0||line.indexOf("_")===0;break;default:if(this.mode){switch(this.mode){case Template.modes.EVAL:case Template.modes.ESCAPED:case Template.modes.RAW:if(line.lastIndexOf("//")>line.lastIndexOf("\n")){line+="\n"}}switch(this.mode){case Template.modes.EVAL:this.source+="    ; "+line+"\n";break;case Template.modes.ESCAPED:this.source+="    ; __append(escapeFn("+stripSemi(line)+"))"+"\n";break;case Template.modes.RAW:this.source+="    ; __append("+stripSemi(line)+")"+"\n";break;case Template.modes.COMMENT:break;case Template.modes.LITERAL:this._addOutput(line);break}}else{this._addOutput(line)}}if(self.opts.compileDebug&&newLineCount){this.currentLine+=newLineCount;this.source+="    ; __line = "+this.currentLine+"\n"}}};exports.escapeXML=utils.escapeXML;exports.__express=exports.renderFile;exports.VERSION=_VERSION_STRING;exports.name=_NAME;if(typeof window!="undefined"){window.ejs=exports}},{"../package.json":6,"./utils":2,fs:3,path:4}],2:[function(require,module,exports){"use strict";var regExpChars=/[|\\{}()[\]^$+*?.]/g;var hasOwnProperty=Object.prototype.hasOwnProperty;var hasOwn=function(obj,key){return hasOwnProperty.apply(obj,[key])};exports.escapeRegExpChars=function(string){if(!string){return""}return String(string).replace(regExpChars,"\\$&")};var _ENCODE_HTML_RULES={"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&#34;","'":"&#39;"};var _MATCH_HTML=/[&<>'"]/g;function encode_char(c){return _ENCODE_HTML_RULES[c]||c}var escapeFuncStr="var _ENCODE_HTML_RULES = {\n"+'      "&": "&amp;"\n'+'    , "<": "&lt;"\n'+'    , ">": "&gt;"\n'+'    , \'"\': "&#34;"\n'+'    , "\'": "&#39;"\n'+"    }\n"+"  , _MATCH_HTML = /[&<>'\"]/g;\n"+"function encode_char(c) {\n"+"  return _ENCODE_HTML_RULES[c] || c;\n"+"};\n";exports.escapeXML=function(markup){return markup==undefined?"":String(markup).replace(_MATCH_HTML,encode_char)};function escapeXMLToString(){return Function.prototype.toString.call(this)+";\n"+escapeFuncStr}try{if(typeof Object.defineProperty==="function"){Object.defineProperty(exports.escapeXML,"toString",{value:escapeXMLToString})}else{exports.escapeXML.toString=escapeXMLToString}}catch(err){console.warn("Unable to set escapeXML.toString (is the Function prototype frozen?)")}exports.shallowCopy=function(to,from){from=from||{};if(to!==null&&to!==undefined){for(var p in from){if(!hasOwn(from,p)){continue}if(p==="__proto__"||p==="constructor"){continue}to[p]=from[p]}}return to};exports.shallowCopyFromList=function(to,from,list){list=list||[];from=from||{};if(to!==null&&to!==undefined){for(var i=0;i<list.length;i++){var p=list[i];if(typeof from[p]!="undefined"){if(!hasOwn(from,p)){continue}if(p==="__proto__"||p==="constructor"){continue}to[p]=from[p]}}}return to};exports.cache={_data:{},set:function(key,val){this._data[key]=val},get:function(key){return this._data[key]},remove:function(key){delete this._data[key]},reset:function(){this._data={}}};exports.hyphenToCamel=function(str){return str.replace(/-[a-z]/g,function(match){return match[1].toUpperCase()})};exports.createNullProtoObjWherePossible=function(){if(typeof Object.create=="function"){return function(){return Object.create(null)}}if(!({__proto__:null}instanceof Object)){return function(){return{__proto__:null}}}return function(){return{}}}();exports.hasOwnOnlyObject=function(obj){var o=exports.createNullProtoObjWherePossible();for(var p in obj){if(hasOwn(obj,p)){o[p]=obj[p]}}return o}},{}],3:[function(require,module,exports){},{}],4:[function(require,module,exports){(function(process){function normalizeArray(parts,allowAboveRoot){var up=0;for(var i=parts.length-1;i>=0;i--){var last=parts[i];if(last==="."){parts.splice(i,1)}else if(last===".."){parts.splice(i,1);up++}else if(up){parts.splice(i,1);up--}}if(allowAboveRoot){for(;up--;up){parts.unshift("..")}}return parts}exports.resolve=function(){var resolvedPath="",resolvedAbsolute=false;for(var i=arguments.length-1;i>=-1&&!resolvedAbsolute;i--){var path=i>=0?arguments[i]:process.cwd();if(typeof path!=="string"){throw new TypeError("Arguments to path.resolve must be strings")}else if(!path){continue}resolvedPath=path+"/"+resolvedPath;resolvedAbsolute=path.charAt(0)==="/"}resolvedPath=normalizeArray(filter(resolvedPath.split("/"),function(p){return!!p}),!resolvedAbsolute).join("/");return(resolvedAbsolute?"/":"")+resolvedPath||"."};exports.normalize=function(path){var isAbsolute=exports.isAbsolute(path),trailingSlash=substr(path,-1)==="/";path=normalizeArray(filter(path.split("/"),function(p){return!!p}),!isAbsolute).join("/");if(!path&&!isAbsolute){path="."}if(path&&trailingSlash){path+="/"}return(isAbsolute?"/":"")+path};exports.isAbsolute=function(path){return path.charAt(0)==="/"};exports.join=function(){var paths=Array.prototype.slice.call(arguments,0);return exports.normalize(filter(paths,function(p,index){if(typeof p!=="string"){throw new TypeError("Arguments to path.join must be strings")}return p}).join("/"))};exports.relative=function(from,to){from=exports.resolve(from).substr(1);to=exports.resolve(to).substr(1);function trim(arr){var start=0;for(;start<arr.length;start++){if(arr[start]!=="")break}var end=arr.length-1;for(;end>=0;end--){if(arr[end]!=="")break}if(start>end)return[];return arr.slice(start,end-start+1)}var fromParts=trim(from.split("/"));var toParts=trim(to.split("/"));var length=Math.min(fromParts.length,toParts.length);var samePartsLength=length;for(var i=0;i<length;i++){if(fromParts[i]!==toParts[i]){samePartsLength=i;break}}var outputParts=[];for(var i=samePartsLength;i<fromParts.length;i++){outputParts.push("..")}outputParts=outputParts.concat(toParts.slice(samePartsLength));return outputParts.join("/")};exports.sep="/";exports.delimiter=":";exports.dirname=function(path){if(typeof path!=="string")path=path+"";if(path.length===0)return".";var code=path.charCodeAt(0);var hasRoot=code===47;var end=-1;var matchedSlash=true;for(var i=path.length-1;i>=1;--i){code=path.charCodeAt(i);if(code===47){if(!matchedSlash){end=i;break}}else{matchedSlash=false}}if(end===-1)return hasRoot?"/":".";if(hasRoot&&end===1){return"/"}return path.slice(0,end)};function basename(path){if(typeof path!=="string")path=path+"";var start=0;var end=-1;var matchedSlash=true;var i;for(i=path.length-1;i>=0;--i){if(path.charCodeAt(i)===47){if(!matchedSlash){start=i+1;break}}else if(end===-1){matchedSlash=false;end=i+1}}if(end===-1)return"";return path.slice(start,end)}exports.basename=function(path,ext){var f=basename(path);if(ext&&f.substr(-1*ext.length)===ext){f=f.substr(0,f.length-ext.length)}return f};exports.extname=function(path){if(typeof path!=="string")path=path+"";var startDot=-1;var startPart=0;var end=-1;var matchedSlash=true;var preDotState=0;for(var i=path.length-1;i>=0;--i){var code=path.charCodeAt(i);if(code===47){if(!matchedSlash){startPart=i+1;break}continue}if(end===-1){matchedSlash=false;end=i+1}if(code===46){if(startDot===-1)startDot=i;else if(preDotState!==1)preDotState=1}else if(startDot!==-1){preDotState=-1}}if(startDot===-1||end===-1||preDotState===0||preDotState===1&&startDot===end-1&&startDot===startPart+1){return""}return path.slice(startDot,end)};function filter(xs,f){if(xs.filter)return xs.filter(f);var res=[];for(var i=0;i<xs.length;i++){if(f(xs[i],i,xs))res.push(xs[i])}return res}var substr="ab".substr(-1)==="b"?function(str,start,len){return str.substr(start,len)}:function(str,start,len){if(start<0)start=str.length+start;return str.substr(start,len)}}).call(this,require("_process"))},{_process:5}],5:[function(require,module,exports){var process=module.exports={};var cachedSetTimeout;var cachedClearTimeout;function defaultSetTimout(){throw new Error("setTimeout has not been defined")}function defaultClearTimeout(){throw new Error("clearTimeout has not been defined")}(function(){try{if(typeof setTimeout==="function"){cachedSetTimeout=setTimeout}else{cachedSetTimeout=defaultSetTimout}}catch(e){cachedSetTimeout=defaultSetTimout}try{if(typeof clearTimeout==="function"){cachedClearTimeout=clearTimeout}else{cachedClearTimeout=defaultClearTimeout}}catch(e){cachedClearTimeout=defaultClearTimeout}})();function runTimeout(fun){if(cachedSetTimeout===setTimeout){return setTimeout(fun,0)}if((cachedSetTimeout===defaultSetTimout||!cachedSetTimeout)&&setTimeout){cachedSetTimeout=setTimeout;return setTimeout(fun,0)}try{return cachedSetTimeout(fun,0)}catch(e){try{return cachedSetTimeout.call(null,fun,0)}catch(e){return cachedSetTimeout.call(this,fun,0)}}}function runClearTimeout(marker){if(cachedClearTimeout===clearTimeout){return clearTimeout(marker)}if((cachedClearTimeout===defaultClearTimeout||!cachedClearTimeout)&&clearTimeout){cachedClearTimeout=clearTimeout;return clearTimeout(marker)}try{return cachedClearTimeout(marker)}catch(e){try{return cachedClearTimeout.call(null,marker)}catch(e){return cachedClearTimeout.call(this,marker)}}}var queue=[];var draining=false;var currentQueue;var queueIndex=-1;function cleanUpNextTick(){if(!draining||!currentQueue){return}draining=false;if(currentQueue.length){queue=currentQueue.concat(queue)}else{queueIndex=-1}if(queue.length){drainQueue()}}function drainQueue(){if(draining){return}var timeout=runTimeout(cleanUpNextTick);draining=true;var len=queue.length;while(len){currentQueue=queue;queue=[];while(++queueIndex<len){if(currentQueue){currentQueue[queueIndex].run()}}queueIndex=-1;len=queue.length}currentQueue=null;draining=false;runClearTimeout(timeout)}process.nextTick=function(fun){var args=new Array(arguments.length-1);if(arguments.length>1){for(var i=1;i<arguments.length;i++){args[i-1]=arguments[i]}}queue.push(new Item(fun,args));if(queue.length===1&&!draining){runTimeout(drainQueue)}};function Item(fun,array){this.fun=fun;this.array=array}Item.prototype.run=function(){this.fun.apply(null,this.array)};process.title="browser";process.browser=true;process.env={};process.argv=[];process.version="";process.versions={};function noop(){}process.on=noop;process.addListener=noop;process.once=noop;process.off=noop;process.removeListener=noop;process.removeAllListeners=noop;process.emit=noop;process.prependListener=noop;process.prependOnceListener=noop;process.listeners=function(name){return[]};process.binding=function(name){throw new Error("process.binding is not supported")};process.cwd=function(){return"/"};process.chdir=function(dir){throw new Error("process.chdir is not supported")};process.umask=function(){return 0}},{}],6:[function(require,module,exports){module.exports={name:"ejs",description:"Embedded JavaScript templates",keywords:["template","engine","ejs"],version:"3.1.9",author:"Matthew Eernisse <mde@fleegix.org> (http://fleegix.org)",license:"Apache-2.0",bin:{ejs:"./bin/cli.js"},main:"./lib/ejs.js",jsdelivr:"ejs.min.js",unpkg:"ejs.min.js",repository:{type:"git",url:"git://github.com/mde/ejs.git"},bugs:"https://github.com/mde/ejs/issues",homepage:"https://github.com/mde/ejs",dependencies:{jake:"^10.8.5"},devDependencies:{browserify:"^16.5.1",eslint:"^6.8.0","git-directory-deploy":"^1.5.1",jsdoc:"^4.0.2","lru-cache":"^4.0.1",mocha:"^10.2.0","uglify-js":"^3.3.16"},engines:{node:">=0.10.0"},scripts:{test:"npx jake test"}}},{}]},{},[1])(1)});
 
 
 
@@ -3868,6 +3962,9 @@ String.prototype.trim||(String.prototype.trim=function(){return this.replace(/^[
 
 
 
+
+
+// for 承認ユーザー選択
 
 
 SS_Preview = (function () {
@@ -4048,7 +4145,8 @@ SS_Preview = (function () {
       $.colorbox.close();
     }
     if ($frame.closest(".ui-dialog")[0]) {
-      $frame.dialog("close");
+      var $dialog = $frame.closest(".ss-preview-dialog");
+      $dialog.dialog("close");
     }
   }
 
@@ -4267,7 +4365,8 @@ SS_Preview = (function () {
     var width = frame.contentWindow.document.body.scrollWidth;
     var height = frame.contentWindow.document.body.scrollHeight;
 
-    if ($(frame).closest(".ui-dialog")[0]) {
+    var $frame = $(frame);
+    if ($frame.closest(".ui-dialog")[0]) {
       height += SS_Preview.jqueryDialogMargin.height;
     }
 
@@ -4288,15 +4387,18 @@ SS_Preview = (function () {
       height = maxHeight;
     }
 
-    if ($(frame).closest("#cboxLoadedContent")[0]) {
+    if ($frame.closest("#cboxLoadedContent")[0]) {
       $.colorbox.resize({ width: width, height: height });
     }
 
-    if ($(frame).closest(".ui-dialog")[0]) {
-      $(frame).dialog("option", "width", width)
+    if ($frame.closest(".ui-dialog")[0]) {
+      var $dialog = $frame.closest(".ss-preview-dialog");
+      $dialog.dialog("option", "width", width)
         .dialog("option", "height", height)
         .css("display", "")
         .css("width", "");
+
+      $frame.css("width", "100%").css("height", "100%");
     }
   };
 
@@ -4348,7 +4450,7 @@ SS_Preview = (function () {
         processData: false,
         contentType: false,
         cache: false,
-        success: function(data, textStatus, xhr) {
+        success: function(data, _textStatus, _xhr) {
           SS_Preview.closeWindow($(frame));
           if (typeof data === "string") {
             // data is html
@@ -4362,7 +4464,7 @@ SS_Preview = (function () {
             }
           }
         },
-        error: function(xhr, status, error) {
+        error: function(xhr, _status, _error) {
           var $html = $(xhr.responseText);
           var $itemForm = $html.find("#item-form");
 
@@ -4419,21 +4521,24 @@ SS_Preview = (function () {
       frameborder: "0", allowfullscreen: true,
       src: url
     });
-
     $frame[0].onload = function() { self.initializeFrame($frame[0]); };
 
-    $frame.dialog({
+    var $dialog = $("<div />", { class: "ss-preview-dialog ss-preview-dialog-column" });
+    $dialog.append($frame);
+    $dialog.dialog({
       autoOpen: true,
       width: SS_Preview.initialFrameSize.width,
       height: SS_Preview.initialFrameSize.height,
       minWidth: SS_Preview.minFrameSize.width,
       minHeight: SS_Preview.minFrameSize.height,
       closeOnEscape: false,
-      dialogClass: "ss-preview-dialog ss-preview-dialog-column",
       draggable: true,
       modal: true,
       resizable: true,
-      close: function(ev, ui) {
+      open: function(_ev, _ui) {
+        window.requestAnimationFrame(function() { $dialog.trigger("ss:previewDialogOpened"); });
+      },
+      close: function(_ev, _ui) {
         // explicitly destroy dialog and remove elemtns because dialog elements is still remained
         $(this).dialog('destroy').remove();
       }
@@ -4450,24 +4555,26 @@ SS_Preview = (function () {
     $.ajax({
       url: url,
       type: "GET",
-      success: function(data, textStatus, xhr) {
-        var $frame = $("div#ss-preview-dialog-frame");
-        if (! $frame[0]) {
-          $frame = $("<div></div>", { id: "ss-preview-dialog-frame" });
-        }
+      success: function(data, _textStatus, _xhr) {
+        var $frame = $("<div/>", { id: "ss-preview-dialog-frame" });
         $frame.html(data);
-        $frame.dialog({
+
+        var $dialog = $("<div/>", { class: "ss-preview-dialog ss-preview-dialog-column" });
+        $dialog.append($frame);
+        $dialog.dialog({
           autoOpen: true,
           width: options.width || SS_Preview.initialFrameSize.width,
           height: options.height || SS_Preview.initialFrameSize.height,
           minWidth: options.minWidth || SS_Preview.minFrameSize.width,
           minHeight: options.minHeight || SS_Preview.minFrameSize.height,
           closeOnEscape: false,
-          dialogClass: "ss-preview-dialog ss-preview-dialog-column",
           draggable: true,
           modal: true,
           resizable: true,
-          close: function(ev, ui) {
+          open: function(_ev, _ui) {
+            window.requestAnimationFrame(function() { $dialog.trigger("ss:previewDialogOpened"); });
+          },
+          close: function(_ev, _ui) {
             // explicitly destroy dialog and remove elemtns because dialog elements is still remained
             $(this).dialog('destroy').remove();
           }
@@ -4560,7 +4667,7 @@ SS_Preview = (function () {
       partId = parseInt(partId);
     }
 
-    var founds = $.grep(this.parts, function(part, index) { return part.id === partId });
+    var founds = $.grep(this.parts, function(part, _index) { return part.id === partId });
     if (! founds || founds.length === 0) {
       return null;
     }
@@ -4596,7 +4703,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { _method: "DELETE", authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data && data.location) {
@@ -4630,7 +4737,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data.location) {
@@ -4980,7 +5087,7 @@ SS_Preview = (function () {
       url: url,
       type: "POST",
       data: { authenticity_token: token },
-      success: function(data, textStatus, xhr) {
+      success: function(data, _textStatus, _xhr) {
         self.overlay.hide();
 
         if (data && data.location) {
@@ -5031,7 +5138,7 @@ SS_Preview = (function () {
       dataType: "json",
       cache: false,
       data: {authenticity_token: token}
-    }).done(function(data, status, xhr) {
+    }).done(function(_data, _status, _xhr) {
       self.bindBeforeUnloadOnce();
     }).fail(function(xhr, status, error) {
       if (self.container.notice) {

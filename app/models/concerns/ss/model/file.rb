@@ -196,7 +196,7 @@ module SS::Model::File
       if permit.include?(:readable) && owner_item.respond_to?(:readable?) && owner_item.readable?(user, site: site)
         return true
       end
-      if permit.include?(:member) && owner_item.respond_to?(:member?) && owner_item.member?(user)
+      if permit.include?(:member) && owner_item.respond_to?(:member_include?) && owner_item.member_include?(user)
         return true
       end
       if permit.include?(:role) && owner_item.respond_to?(:allowed?) && owner_item.allowed?(:read, user, site: site)

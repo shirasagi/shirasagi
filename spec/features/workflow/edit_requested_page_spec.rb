@@ -338,11 +338,15 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
         wait_for_all_turbo_frames
 
         click_on I18n.t('ss.links.edit')
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
         within "form#item-form" do
           fill_in "item[name]", with: "replacement"
           click_button I18n.t('ss.buttons.draft_save')
         end
         within_cbox do
+          expect(page).to have_css("#alertExplanation", text: I18n.t('cms.syntax_check'))
+          expect(page).to have_css("#alertExplanation", text: I18n.t("errors.messages.set_img_alt"))
           click_on I18n.t("ss.buttons.ignore_alert")
         end
         wait_for_notice I18n.t("ss.notice.saved")

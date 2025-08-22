@@ -18,7 +18,7 @@ describe Sys::SiteExportJob, dbscope: :example do
     end
 
     it do
-      job = ::Sys::SiteExportJob.new
+      job = Sys::SiteExportJob.new
       job.bind("site_id" => site.id).perform
       output_zip = job.instance_variable_get(:@output_zip)
 

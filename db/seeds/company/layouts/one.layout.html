@@ -11,6 +11,9 @@
     {{ part "breadcrumbs" }}
     <div id="main">
       <header><h1 id="ss-page-name">#{page_name}</h1></header>
+      #{if in_node('/search')}
+              {{ part "search/search-info" }}
+              #{end}
       {{ yield }}
     </div>
   </div>

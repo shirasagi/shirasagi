@@ -23,7 +23,6 @@ module SS::Copy::CmsLayouts
   end
 
   def before_copy_cms_layout(src_layout, dest_layout)
-    Rails.logger.debug("#{src_layout.filename}(#{src_layout.id}): レイアウトのコピーを開始します。")
   end
 
   def after_copy_cms_layout(src_layout, dest_layout)

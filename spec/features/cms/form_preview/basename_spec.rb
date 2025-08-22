@@ -15,7 +15,7 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
     let(:node_category_root) { create :category_node_node, cur_site: site }
     let(:node_category_child1) { create :category_node_page, cur_site: site, cur_node: node_category_root }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
-    let(:item) { create(:article_page, cur_site: site, cur_node: node, html: html, category_ids: [ node_category_child1.id ]) }
+    let(:item) { create(:article_page, cur_site: site, cur_node: node, category_ids: [ node_category_child1.id ]) }
     let(:edit_path) { edit_article_page_path site.id, node.id, item }
 
     before { login_cms_user }
@@ -23,28 +23,31 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
     context "pc form preview" do
       it do
         visit edit_path
-
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
+          fill_in_ckeditor "item[html]", with: html
         end
 
-        page.first("footer.send .preview").click
+        new_window = window_opened_by { page.first("footer.send .preview").click }
+        within_window new_window do
+          wait_for_document_loading
+          # wait_for_cms_form_preview_initialized
 
-        switch_to_window(windows.last)
-        wait_for_document_loading
-
-        expect(page).to have_css("h2", text: "見出し2")
-        expect(page).to have_css("p", text: "内容が入ります。")
-        expect(page).to have_css("h3", text: "見出し3")
-        expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
-        expect(page).to have_css("header h2", text: "カテゴリー")
+          expect(page).to have_css("h2", text: "見出し2")
+          expect(page).to have_css("p", text: "内容が入ります。")
+          expect(page).to have_css("h3", text: "見出し3")
+          expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
+          expect(page).to have_css("header h2", text: "カテゴリー")
+        end
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end
 
   context "with root cms page" do
     let(:site) { cms_site }
-    let(:item) { create(:cms_page, filename: "404.html", cur_site: site, html: html) }
+    let(:item) { create(:cms_page, filename: "404.html", cur_site: site) }
     let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
 
     let(:edit_path) { edit_cms_page_path site.id, item }
@@ -54,21 +57,24 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
     context "pc form preview" do
       it do
         visit edit_path
-
+        wait_for_all_ckeditors_ready
         within "form#item-form" do
           fill_in "item[name]", with: "sample"
+          fill_in_ckeditor "item[html]", with: html
         end
 
-        page.first("footer.send .preview").click
+        new_window = window_opened_by { page.first("footer.send .preview").click }
+        within_window new_window do
+          wait_for_document_loading
+          # wait_for_cms_form_preview_initialized
 
-        switch_to_window(windows.last)
-        wait_for_document_loading
-
-        expect(page).to have_css("h2", text: "見出し2")
-        expect(page).to have_css("p", text: "内容が入ります。")
-        expect(page).to have_css("h3", text: "見出し3")
-        expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
-        expect(page).to have_no_css("header h2", text: "カテゴリー")
+          expect(page).to have_css("h2", text: "見出し2")
+          expect(page).to have_css("p", text: "内容が入ります。")
+          expect(page).to have_css("h3", text: "見出し3")
+          expect(page).to have_css("p", text: "内容が入ります。内容が入ります。")
+          expect(page).to have_no_css("header h2", text: "カテゴリー")
+        end
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end
@@ -220,28 +226,28 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
           end
         end
 
-        page.first("footer.send .preview").click
+        new_window = window_opened_by { page.first("footer.send .preview").click }
+        within_window new_window do
+          wait_for_document_loading
+          wait_for_cms_form_preview_initialized
 
-        switch_to_window(windows.last)
-        wait_for_document_loading
-
-        expect(page).to have_css("div", text: column1_value)
-        expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
-        expect(page).to have_css("div", text: column3_value)
-        expect(page).to have_css("div", text: column4_value)
-        expect(page).to have_css("div", text: column5_value)
-        expect(page).to have_css("div", text: column6_value)
-        expect(page).to have_css("div", text: column7_value)
-        expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
-        expect(page).to have_css("div", text: column9_value)
-        expect(page).to have_css("h1", text: column10_text)
-        expect(page).to have_css("div", text: column11_list)
-        expect(page).to have_css("div", text: column12_caption)
-        expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
-        expect(page).to have_css("iframe[title=\"#{column13_title}\"]")
-
-        switch_to_window(windows.first)
-        wait_for_document_loading
+          expect(page).to have_css("#ss-preview-title", text: I18n.t("cms.preview_page2"))
+          expect(page).to have_css("div", text: column1_value)
+          expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
+          expect(page).to have_css("div", text: column3_value)
+          expect(page).to have_css("div", text: column4_value)
+          expect(page).to have_css("div", text: column5_value)
+          expect(page).to have_css("div", text: column6_value)
+          expect(page).to have_css("div", text: column7_value)
+          expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
+          expect(page).to have_css("div", text: column9_value)
+          expect(page).to have_css("h1", text: column10_text)
+          expect(page).to have_css("div", text: column11_list)
+          expect(page).to have_css("div", text: column12_caption)
+          expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+          expect(page).to have_css("iframe[title=\"#{column13_title}\"]")
+        end
+        new_window.close if Capybara.javascript_driver == :chrome
 
         within "form#item-form" do
           click_on I18n.t('ss.buttons.draft_save')
@@ -251,30 +257,45 @@ describe "cms_form_preview", type: :feature, dbscope: :example, js: true do
         wait_for_all_turbo_frames
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
 
-        expect(Article::Page.count).to eq 1
+        expect(Article::Page.all.count).to eq 1
+        article_page = Article::Page.all.first
+        expect(article_page.column_values.count).to eq 13
+        article_page.column_values.reorder(order: 1, name: 1).to_a.tap do |column_values|
+          column_values[0].tap do |column_value|
+            expect(column_value.value).to eq column1_value
+          end
+          column_values[-1].tap do |column_value|
+            expect(column_value.url).to include(column13_youtube_id)
+            expect(column_value.title).to eq column13_title
+          end
+        end
 
         click_on I18n.t('ss.links.edit')
         wait_for_all_ckeditors_ready
         wait_for_all_turbo_frames
-        page.first("footer.send .preview").click
 
-        switch_to_window(windows.last)
-        wait_for_document_loading
+        new_window = window_opened_by { page.first("footer.send .preview").click }
+        within_window new_window do
+          wait_for_document_loading
+          wait_for_cms_form_preview_initialized
 
-        expect(page).to have_css("div", text: column1_value)
-        expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
-        expect(page).to have_css("div", text: column3_value)
-        expect(page).to have_css("div", text: column4_value)
-        expect(page).to have_css("div", text: column5_value)
-        expect(page).to have_css("div", text: column6_value)
-        expect(page).to have_css("div", text: column7_value)
-        expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
-        expect(page).to have_css("div", text: column9_value)
-        expect(page).to have_css("h1", text: column10_text)
-        expect(page).to have_css("div", text: column11_list)
-        expect(page).to have_css("div", text: column12_caption)
-        expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
-        expect(page).to have_css("iframe[title=\"#{column13_title}\"]")
+          expect(page).to have_css("#ss-preview-title", text: I18n.t("cms.preview_page2"))
+          expect(page).to have_css("div", text: column1_value)
+          expect(page).to have_css("div", text: I18n.l(column2_value.to_date, format: :long))
+          expect(page).to have_css("div", text: column3_value)
+          expect(page).to have_css("div", text: column4_value)
+          expect(page).to have_css("div", text: column5_value)
+          expect(page).to have_css("div", text: column6_value)
+          expect(page).to have_css("div", text: column7_value)
+          expect(page).to have_css("img[alt=\"#{column8_image_text}\"]")
+          expect(page).to have_css("div", text: column9_value)
+          expect(page).to have_css("h1", text: column10_text)
+          expect(page).to have_css("div", text: column11_list)
+          expect(page).to have_css("div", text: column12_caption)
+          expect(page).to have_css("iframe[src=\"#{column13_embed_url}\"]")
+          expect(page).to have_css("iframe[title=\"#{column13_title}\"]")
+        end
+        new_window.close if Capybara.javascript_driver == :chrome
       end
     end
   end

@@ -68,15 +68,15 @@ class Gws::Tabular::View::ListTitleComponent < ApplicationComponent
   end
 
   def render_updated
-    I18n.l(item.updated, format: :picker)
+    item.updated ? I18n.l(item.updated, format: :picker) : nil
   end
 
   def render_created
-    I18n.l(item.created, format: :picker)
+    item.created ? I18n.l(item.created, format: :picker) : nil
   end
 
   def render_deleted
-    I18n.l(item.deleted, format: :picker)
+    item.deleted ? I18n.l(item.deleted, format: :picker) : nil
   end
 
   def render_updated_or_deleted

@@ -34,6 +34,9 @@ production: &production
       parse_command: "timeout 20 ruby bin/extract_pdf_base64.rb"
 
   assoc_job:
+    # realtime: execute association job when after generate files. this is the default value.
+    # skip: not execute association job when after generate files. execute that job on a daily task only.
+    mode: realtime
     perform: later
 
   harvest:

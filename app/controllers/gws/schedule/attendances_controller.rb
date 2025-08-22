@@ -62,13 +62,15 @@ class Gws::Schedule::AttendancesController < ApplicationController
   public
 
   def edit
-    raise "403" unless @cur_schedule.member?(@cur_user) || @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @cur_schedule.member_include?(@cur_user) ||
+                       @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
     @item.valid?
     render(layout: 'ss/ajax')
   end
 
   def update
-    raise "403" unless @cur_schedule.member?(@cur_user) || @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless @cur_schedule.member_include?(@cur_user) ||
+                       @cur_schedule.allowed_for_managers?(:edit, @cur_user, site: @cur_site)
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
 

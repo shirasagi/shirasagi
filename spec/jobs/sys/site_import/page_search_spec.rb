@@ -14,7 +14,7 @@ describe Sys::SiteImportJob, dbscope: :example do
     Sys::SiteExportJob.export_root = tmpdir
 
     begin
-      job = ::Sys::SiteExportJob.new
+      job = Sys::SiteExportJob.new
       job.bind("site_id" => source_site.id).perform
       output_zip = job.instance_variable_get(:@output_zip)
 
@@ -28,7 +28,7 @@ describe Sys::SiteImportJob, dbscope: :example do
     let!(:destination_site) { create :cms_site_unique }
 
     it do
-      job = ::Sys::SiteImportJob.new
+      job = Sys::SiteImportJob.new
       job.bind("site_id" => destination_site.id).perform(file_path)
 
       expect(Cms::PageSearch.site(destination_site).count).to eq 1

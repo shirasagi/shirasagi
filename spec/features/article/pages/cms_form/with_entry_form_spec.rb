@@ -143,10 +143,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
+          description = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(60)
+
           expect(item.name).to eq name
           expect(item.description_setting).to eq 'auto'
-          expect(item.description).to eq form.html
-          expect(item.summary).to eq form.html
+          expect(item.description).to eq description
+          expect(item.summary).to eq description
           expect(item.column_values).to be_blank
           expect(item.backups.count).to eq 1
         end
@@ -349,25 +351,95 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.name).to eq name
           expect(item.column_values).to have(14).items
 
-          expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value1
-          expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value1)
-          expect(item.column_values.find_by(column_id: column3.id).link_label).to eq column3_label1
-          expect(item.column_values.find_by(column_id: column3.id).link_url).to eq column3_url1
-          expect(item.column_values.find_by(column_id: column4.id).value).to eq column4_value1.gsub("\n", "\r\n")
-          expect(item.column_values.find_by(column_id: column5.id).value).to eq column5_value1
-          expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value1
-          expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value1 ]
-          expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text1
-          expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'keyvisual.gif'
-          expect(item.column_values.find_by(column_id: column8.id).file.owner_item_id).to eq item.id
-          expect(item.column_values.find_by(column_id: column9.id).value).to include column9_value1
-          expect(item.column_values.find_by(column_id: column10.id).head).to eq column10_head1
-          expect(item.column_values.find_by(column_id: column10.id).text).to eq column10_text1
-          expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list1
-          expect(item.column_values.find_by(column_id: column12.id).value).to be_present
-          expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id1
-          expect(item.column_values.find_by(column_id: column13.id).title).to eq column13_title1
-          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page1.id
+          item.column_values.find_by(column_id: column1.id).tap do |column_value|
+            expect(column_value.name).to eq column1.name
+            expect(column_value.value).to eq column1_value1
+            expect(column_value.order).to eq 0
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column2.id).tap do |column_value|
+            expect(column_value.name).to eq column2.name
+            expect(column_value.date).to eq Time.zone.parse(column2_value1)
+            expect(column_value.order).to eq 1
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column3.id).tap do |column_value|
+            expect(column_value.name).to eq column3.name
+            expect(column_value.link_label).to eq column3_label1
+            expect(column_value.link_url).to eq column3_url1
+            expect(column_value.order).to eq 2
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column4.id).tap do |column_value|
+            expect(column_value.name).to eq column4.name
+            expect(column_value.value).to eq column4_value1.gsub("\n", "\r\n")
+            expect(column_value.order).to eq 3
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column5.id).tap do |column_value|
+            expect(column_value.name).to eq column5.name
+            expect(column_value.value).to eq column5_value1
+            expect(column_value.order).to eq 4
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column6.id).tap do |column_value|
+            expect(column_value.name).to eq column6.name
+            expect(column_value.value).to eq column6_value1
+            expect(column_value.order).to eq 5
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column7.id).tap do |column_value|
+            expect(column_value.name).to eq column7.name
+            expect(column_value.values).to eq [ column7_value1 ]
+            expect(column_value.order).to eq 6
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column8.id).tap do |column_value|
+            expect(column_value.name).to eq column8.name
+            expect(column_value.file_label).to eq column8_image_text1
+            expect(column_value.file.name).to eq 'keyvisual.gif'
+            expect(column_value.file.owner_item_id).to eq item.id
+            expect(column_value.order).to eq 7
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column9.id).tap do |column_value|
+            expect(column_value.name).to eq column9.name
+            expect(column_value.value).to include column9_value1
+            expect(column_value.order).to eq 8
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column10.id).tap do |column_value|
+            expect(column_value.name).to eq column10.name
+            expect(column_value.head).to eq column10_head1
+            expect(column_value.text).to eq column10_text1
+            expect(column_value.order).to eq 9
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column11.id).tap do |column_value|
+            expect(column_value.name).to eq column11.name
+            expect(column_value.lists).to include column11_list1
+            expect(column_value.order).to eq 10
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column12.id).tap do |column_value|
+            expect(column_value.name).to eq column12.name
+            expect(column_value.value).to be_present
+            expect(column_value.order).to eq 11
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column13.id).tap do |column_value|
+            expect(column_value.name).to eq column13.name
+            expect(column_value.youtube_id).to eq column13_youtube_id1
+            expect(column_value.title).to eq column13_title1
+            expect(column_value.order).to eq 12
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column14.id).tap do |column_value|
+            expect(column_value.name).to eq column14.name
+            expect(column_value.page_id).to eq column14_page1.id
+            expect(column_value.order).to eq 13
+            expect(column_value.alignment).to be_blank
+          end
 
           expect(item.backups.count).to eq 2
         end
@@ -468,25 +540,95 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.name).to eq name
           expect(item.column_values).to have(14).items
 
-          expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value2
-          expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value2)
-          expect(item.column_values.find_by(column_id: column3.id).link_label).to eq column3_label2
-          expect(item.column_values.find_by(column_id: column3.id).link_url).to eq column3_url2
-          expect(item.column_values.find_by(column_id: column4.id).value).to eq column4_value2.gsub("\n", "\r\n")
-          expect(item.column_values.find_by(column_id: column5.id).value).to eq column5_value2
-          expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value2
-          expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value2 ]
-          expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text2
-          expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'logo.png'
-          expect(item.column_values.find_by(column_id: column8.id).file.owner_item_id).to eq item.id
-          expect(item.column_values.find_by(column_id: column9.id).value).to include column9_value2
-          expect(item.column_values.find_by(column_id: column10.id).head).to eq column10_head2
-          expect(item.column_values.find_by(column_id: column10.id).text).to eq column10_text2
-          expect(item.column_values.find_by(column_id: column11.id).lists).to include column11_list2
-          expect(item.column_values.find_by(column_id: column12.id).value).to be_present
-          expect(item.column_values.find_by(column_id: column13.id).youtube_id).to eq column13_youtube_id2
-          expect(item.column_values.find_by(column_id: column13.id).title).to eq column13_title2
-          expect(item.column_values.find_by(column_id: column14.id).page_id).to eq column14_page2.id
+          item.column_values.find_by(column_id: column1.id).tap do |column_value|
+            expect(column_value.name).to eq column1.name
+            expect(column_value.value).to eq column1_value2
+            expect(column_value.order).to eq 0
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column2.id).tap do |column_value|
+            expect(column_value.name).to eq column2.name
+            expect(column_value.date).to eq Time.zone.parse(column2_value2)
+            expect(column_value.order).to eq 1
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column3.id).tap do |column_value|
+            expect(column_value.name).to eq column3.name
+            expect(column_value.link_label).to eq column3_label2
+            expect(column_value.link_url).to eq column3_url2
+            expect(column_value.order).to eq 2
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column4.id).tap do |column_value|
+            expect(column_value.name).to eq column4.name
+            expect(column_value.value).to eq column4_value2.gsub("\n", "\r\n")
+            expect(column_value.order).to eq 3
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column5.id).tap do |column_value|
+            expect(column_value.name).to eq column5.name
+            expect(column_value.value).to eq column5_value2
+            expect(column_value.order).to eq 4
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column6.id).tap do |column_value|
+            expect(column_value.name).to eq column6.name
+            expect(column_value.value).to eq column6_value2
+            expect(column_value.order).to eq 5
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column7.id).tap do |column_value|
+            expect(column_value.name).to eq column7.name
+            expect(column_value.values).to eq [ column7_value2 ]
+            expect(column_value.order).to eq 6
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column8.id).tap do |column_value|
+            expect(column_value.name).to eq column8.name
+            expect(column_value.file_label).to eq column8_image_text2
+            expect(column_value.file.name).to eq 'logo.png'
+            expect(column_value.file.owner_item_id).to eq item.id
+            expect(column_value.order).to eq 7
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column9.id).tap do |column_value|
+            expect(column_value.name).to eq column9.name
+            expect(column_value.value).to include column9_value2
+            expect(column_value.order).to eq 8
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column10.id).tap do |column_value|
+            expect(column_value.name).to eq column10.name
+            expect(column_value.head).to eq column10_head2
+            expect(column_value.text).to eq column10_text2
+            expect(column_value.order).to eq 9
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column11.id).tap do |column_value|
+            expect(column_value.name).to eq column11.name
+            expect(column_value.lists).to include column11_list2
+            expect(column_value.order).to eq 10
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column12.id).tap do |column_value|
+            expect(column_value.name).to eq column12.name
+            expect(column_value.value).to be_present
+            expect(column_value.order).to eq 11
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column13.id).tap do |column_value|
+            expect(column_value.name).to eq column13.name
+            expect(column_value.youtube_id).to eq column13_youtube_id2
+            expect(column_value.title).to eq column13_title2
+            expect(column_value.order).to eq 12
+            expect(column_value.alignment).to be_blank
+          end
+          item.column_values.find_by(column_id: column14.id).tap do |column_value|
+            expect(column_value.name).to eq column14.name
+            expect(column_value.page_id).to eq column14_page2.id
+            expect(column_value.order).to eq 13
+            expect(column_value.alignment).to be_blank
+          end
 
           expect(item.backups.count).to eq 3
         end
@@ -760,62 +902,106 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
+          description = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(60)
+
           expect(item.name).to eq name
           expect(item.description_setting).to eq 'auto'
-          expect(item.description).to eq form.html
-          expect(item.summary).to eq form.html
+          expect(item.description).to eq description
+          expect(item.summary).to eq description
           expect(item.column_values).to have(14).items
 
           item.column_values.find_by(column_id: column1.id).tap do |column_value|
+            expect(column_value.name).to eq column1.name
             expect(column_value.value).to eq column1_value1
+            expect(column_value.order).to eq 0
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column2.id).tap do |column_value|
+            expect(column_value.name).to eq column2.name
             expect(column_value.date).to eq Time.zone.parse(column2_value1)
+            expect(column_value.order).to eq 1
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column3.id).tap do |column_value|
+            expect(column_value.name).to eq column3.name
             expect(column_value.link_label).to eq column3_label1
             expect(column_value.link_url).to eq column3_url1
+            expect(column_value.order).to eq 2
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column4.id).tap do |column_value|
+            expect(column_value.name).to eq column4.name
             expect(column_value.value).to eq column4_value1.gsub("\n", "\r\n")
+            expect(column_value.order).to eq 3
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column5.id).tap do |column_value|
+            expect(column_value.name).to eq column5.name
             expect(column_value.value).to eq column5_value1
+            expect(column_value.order).to eq 4
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column6.id).tap do |column_value|
+            expect(column_value.name).to eq column6.name
             expect(column_value.value).to eq column6_value1
+            expect(column_value.order).to eq 5
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column7.id).tap do |column_value|
+            expect(column_value.name).to eq column7.name
             expect(column_value.values).to eq [ column7_value1 ]
+            expect(column_value.order).to eq 6
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column8.id).tap do |column_value|
+            expect(column_value.name).to eq column8.name
             expect(column_value.file_label).to eq column8_image_text1
             expect(column_value.file.name).to eq 'keyvisual.gif'
             expect(column_value.file.owner_item_id).to eq item.id
+            expect(column_value.order).to eq 7
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column9.id).tap do |column_value|
+            expect(column_value.name).to eq column9.name
             expect(column_value.value).to include column9_value1
             expect(column_value.file_ids).to have(1).items
             column_value.files.first.tap do |file|
               expect(file.name).to eq 'shirasagi.pdf'
               expect(file.owner_item_id).to eq item.id
             end
+            expect(column_value.order).to eq 8
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column10.id).tap do |column_value|
+            expect(column_value.name).to eq column10.name
             expect(column_value.head).to eq column10_head1
             expect(column_value.text).to eq column10_text1
+            expect(column_value.order).to eq 9
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column11.id).tap do |column_value|
+            expect(column_value.name).to eq column11.name
             expect(column_value.lists).to include column11_list1
+            expect(column_value.order).to eq 10
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column12.id).tap do |column_value|
+            expect(column_value.name).to eq column12.name
             expect(column_value.value).to be_present
+            expect(column_value.order).to eq 11
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column13.id).tap do |column_value|
+            expect(column_value.name).to eq column13.name
             expect(column_value.youtube_id).to eq column13_youtube_id1
+            expect(column_value.order).to eq 12
+            expect(column_value.alignment).to be_blank
           end
           item.column_values.find_by(column_id: column14.id).tap do |column_value|
+            expect(column_value.name).to eq column14.name
             expect(column_value.page_id).to eq column14_page1.id
+            expect(column_value.order).to eq 13
+            expect(column_value.alignment).to be_blank
           end
 
           expect(item.backups.count).to eq 1

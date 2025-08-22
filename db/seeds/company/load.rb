@@ -240,6 +240,7 @@ save_part route: "cms/page", filename: "product/solution/solution.part.html", na
   sort: "order", new_days: 0, limit: 20
 save_part route: "cms/page", filename: "product/solution/side-menu.part.html", name: "サイドメニュー",
   sort: "order", new_days: 0, limit: 20, mobile_view: "hide"
+save_part route: "cms/free", filename: "search/search-info.part.html", name: "サイト内検索説明"
 
 ## -------------------------------------
 puts "# pages"

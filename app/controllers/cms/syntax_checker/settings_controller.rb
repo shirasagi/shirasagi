@@ -10,7 +10,7 @@ class Cms::SyntaxChecker::SettingsController < ApplicationController
 
   def set_crumbs
     @crumbs << [t("cms.syntax_check"), cms_syntax_checker_main_path]
-    @crumbs << [t("cms.url_scheme"), url_for(action: :show)]
+    @crumbs << [t("ss.config"), url_for(action: :show)]
   end
 
   def set_item

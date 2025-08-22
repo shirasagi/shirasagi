@@ -3,6 +3,7 @@ class Guide::QuestionDiagram
 
   def initialize(node)
     @node = node
+    @all_build_points = {}
     @all_procedures = {}
     @referenced_questions = Guide::Question.node(node).
       entries.
@@ -96,6 +97,10 @@ class Guide::QuestionDiagram
   private
 
   def build_diagram(point)
+    if @all_build_points[point.id]
+      return @all_build_points[point.id]
+    end
+
     point.transitions = {}
     point.applicable_transitions = {}
     point.not_applicable_transitions = {}
@@ -128,6 +133,8 @@ class Guide::QuestionDiagram
     else
       @all_procedures[point.id] = point
     end
+
+    @all_build_points[point.id] = point
     point
   end
 

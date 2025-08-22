@@ -105,9 +105,9 @@ module Gws::Discussion::Postable
     created > Time.zone.now - site.discussion_new_days.day
   end
 
-  def member?(*args)
+  def member_include?(*args)
     if forum.present? && forum_id != id
-      forum.member?(*args)
+      forum.member_include?(*args)
     end
 
     super
@@ -119,10 +119,10 @@ module Gws::Discussion::Postable
 
     if forum.present? && forum_id != id
       return true if forum.allowed?(:read, user, site: @cur_site || self.site)
-      return true if forum.member?(user)
+      return true if forum.member_include?(user)
     else
       return true if self.allowed?(:read, user, site: @cur_site || self.site)
-      return true if self.member?(user)
+      return true if self.member_include?(user)
     end
 
     false
