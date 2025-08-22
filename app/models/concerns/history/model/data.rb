@@ -50,7 +50,16 @@ module History::Model::Data
 
   def model
     return if ref_class.blank? || ref_class.start_with?('Mongoid::')
-    @model ||= ref_class.constantize rescue nil
+
+    begin
+      @model ||= Cms::Node if ref_class.constantize.include?(Cms::Model::Node)
+      @model ||= Cms::Part if ref_class.constantize.include?(Cms::Model::Part)
+      @model ||= ref_class.constantize
+    rescue
+      nil
+    end
+
+    @model
   end
 
   private
