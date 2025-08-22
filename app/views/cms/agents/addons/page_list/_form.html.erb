@@ -5,17 +5,37 @@
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
   if ($loopFormatSelect.length) {
-    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html', '#item_loop_liquid');
 
     <% if @model.use_liquid %>
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
+      var savedLoopSettingId = '';
+
       if (format === "liquid") {
         $addon.find(".loop-format-shirasagi").addClass("hide");
         $addon.find(".loop-format-liquid").removeClass("hide");
+        // シラサギ形式のloop_setting_idを無効化
+        $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', true);
+        // Liquid形式のloop_setting_idを有効化
+        $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").prop('disabled', false);
+
+        // 保存された値がある場合、Liquid形式のセレクトボックスに移行
+        if (savedLoopSettingId && savedLoopSettingId !== '') {
+          $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").val(savedLoopSettingId);
+        }
       } else {
         $addon.find(".loop-format-shirasagi").removeClass("hide");
         $addon.find(".loop-format-liquid").addClass("hide");
+        // シラサギ形式のloop_setting_idを有効化
+        $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', false);
+        // Liquid形式のloop_setting_idを無効化
+        $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").prop('disabled', true);
+        
+        // 保存された値がある場合、シラサギ形式のセレクトボックスに移行
+        if (savedLoopSettingId && savedLoopSettingId !== '') {
+          $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").val(savedLoopSettingId);
+        }
       }
     };
 
@@ -110,6 +130,7 @@
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
     <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+    <dd><%= f.select :loop_setting_id, ancestral_custom_html_settings, include_blank: t('cms.input_directly') %></dd>
     <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
 <% end %>
