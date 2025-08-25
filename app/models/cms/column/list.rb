@@ -33,6 +33,8 @@ class Cms::Column::List < Cms::Column::Base
   end
 
   def exact_match_to_value(value, opts = {})
+    return if value.blank?
+
     case opts[:operator]
     when 'any_of'
       { lists: /#{::Regexp.escape(value)}/ }

@@ -28,6 +28,8 @@ class Cms::Column::Base
   end
 
   def exact_match_to_value(value, opts = {})
+    return if value.blank?
+
     case opts[:operator]
     when 'any_of'
       { value: /#{::Regexp.escape(value)}/ }
