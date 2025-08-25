@@ -1,7 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :duty_hour_ids %></dt>
   <dd>
-    <%= f.hidden_field "duty_hour_ids[]", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "duty_hour_ids[]", value: "", class: "hidden-ids", id: nil %>
     <%= link_to t("gws/affair.apis.duty_hours.index"), gws_affair_apis_duty_hours_path(single: 1), class: "ajax-box" %>
   </dd>
   <dd>

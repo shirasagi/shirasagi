@@ -7,7 +7,7 @@
     <% eid = "tab-g-#{item.id}" %>
     <% checked = !@item.schedule_tabs_group_ids.include?(item.id) %>
     <dd>
-      <%= hidden_field_tag "item[in_schedule_tabs_group_ids_all][]", item.id %>
+      <%= hidden_field_tag "item[in_schedule_tabs_group_ids_all][]", item.id, id: nil %>
       <%= label_tag eid do %>
       <%= check_box_tag "item[in_schedule_tabs_group_ids][]", item.id, checked, id: eid %> <%= item.name %>
       <% end %>
@@ -19,7 +19,7 @@
     <% eid = "tab-c-#{item.id}" %>
     <% checked = !@item.schedule_tabs_custom_group_ids.include?(item.id) %>
     <dd>
-      <%= hidden_field_tag "item[in_schedule_tabs_custom_group_ids_all][]", item.id %>
+      <%= hidden_field_tag "item[in_schedule_tabs_custom_group_ids_all][]", item.id, id: nil %>
       <%= label_tag eid do %>
       <%= check_box_tag "item[in_schedule_tabs_custom_group_ids][]", item.id, checked, id: eid %> <%= item.name %>
       <% end %>
