@@ -47,12 +47,12 @@ class Cms::FormSearchParam
     opts = {}
     case value
     when Hash
-      opts[:operator] = value[:op] if value[:op].present?
-      value = value[:val] if value[:val].present?
+      opts[:operator] = value[:op].presence
+      value = value[:val].presence
     end
     opts[:operator] ||= 'all'
 
-    return if columns.blank? || value.blank?
+    return {} if columns.blank? || value.blank?
 
     conditions = columns.map do |column|
       column_criteria = column.exact_match_to_value(value, opts)
