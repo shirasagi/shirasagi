@@ -227,8 +227,8 @@ describe Cms::SyntaxChecker, type: :model, dbscope: :example do
               expect(error.name).to eq column1.name
               expect(error.idx).to be_blank
               expect(error.code).to eq link_label
-              expect(error.full_message).to eq I18n.t("errors.messages.check_link_text")
-              expect(error.detail).to eq I18n.t("errors.messages.syntax_check_detail.check_link_text")
+              expect(error.full_message).to eq I18n.t("errors.messages.link_text_too_short", count: 4)
+              expect(error.detail).to be_blank
               expect(error.corrector).to be_blank
               expect(error.corrector_params).to be_blank
             end
@@ -259,6 +259,29 @@ describe Cms::SyntaxChecker, type: :model, dbscope: :example do
               expect(error.full_message).to eq I18n.t('errors.messages.check_interword_space')
               expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.check_interword_space')
               expect(error.corrector).to eq "Cms::SyntaxChecker::InterwordSpaceChecker"
+              expect(error.corrector_params).to be_blank
+            end
+          end
+        end
+
+        context "with unfavorable words" do
+          let!(:unfavorable_word) { create(:cms_unfavorable_word, cur_site: site) }
+          let(:words) { unfavorable_word.body.split(/\R+/) }
+          let(:longest_word) { words.max_by(&:length) }
+          let(:link_label) { longest_word }
+
+          it do
+            context = described_class.check_page(cur_site: site, cur_user: user, page: item, html: item.render_html)
+
+            expect(context.errors).to have(1).items
+            context.errors.first.tap do |error|
+              expect(error.id).to eq "column-value-#{item.column_values.first.id}"
+              expect(error.name).to eq column1.name
+              expect(error.idx).to be_blank
+              expect(error.code).to eq link_label
+              expect(error.full_message).to eq I18n.t('errors.messages.unfavorable_word')
+              expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.unfavorable_word')
+              expect(error.corrector).to be_blank
               expect(error.corrector_params).to be_blank
             end
           end

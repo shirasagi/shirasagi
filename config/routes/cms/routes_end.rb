@@ -165,7 +165,8 @@ Rails.application.routes.draw do
     resources :source_cleaner_templates, concerns: [:deletion, :template]
     namespace 'syntax_checker' do
       get "/" => redirect { |p, req| "#{req.path}/word_dictionaries" }, as: :main
-      resources :word_dictionaries, concerns: [:deletion, :template]
+      resources :word_dictionaries, concerns: [:deletion]
+      resources :unfavorable_words, concerns: [:deletion]
       resource :setting, only: %i[show edit update]
       resource :url_scheme, only: %i[show edit update]
     end

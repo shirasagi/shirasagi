@@ -78,15 +78,51 @@ module Cms::SyntaxChecker
         collector: corrector, collector_params: corrector_params }
     end
   end
+
+  class CheckerFeature
+    include ActiveModel::Model
+
+    attr_accessor :context
+
+    def unfavorable_word_set
+      @unfavorable_word_set ||= begin
+        set = Set.new
+
+        Cms::UnfavorableWord.all.site(context.cur_site).and_enabled.pluck(:body).each do |body|
+          body.split(/\R+/).each do |word|
+            word = word.strip
+            next if word.blank?
+
+            set.add(word)
+          end
+        end
+
+        set
+      end
+    end
+
+    def include_unfavorable_word?(text)
+      return false if text.blank?
+      unfavorable_word_set.include?(text)
+    end
+
+    def link_text_min_length
+      ret = context.cur_site.syntax_checker_link_text_min_length
+      ret || Cms::SyntaxChecker::LinkTextSetting::DEFAULT_SYNTAX_CHECKER_LINK_TEXT_MIN_LENGTH
+    end
+  end
+
   CheckerContext = Data.define(
-    :cur_site, :cur_user, :contents, :idx, :html, :fragment, :header_check, :h_level_check, :errors) do
+    :cur_site, :cur_user, :contents, :idx, :html, :fragment, :header_check, :h_level_check, :errors, :feature) do
     def initialize(cur_site:, cur_user:, contents:, **kwargs)
       super(
         cur_site: cur_site, cur_user: cur_user, contents: contents,
         idx: kwargs[:idx], html: kwargs[:html], fragment: kwargs[:fragment],
         header_check: kwargs.fetch(:header_check, false), h_level_check: kwargs.fetch(:h_level_check, 0),
-        errors: kwargs.fetch(:errors, []))
+        errors: kwargs.fetch(:errors, []), feature: CheckerFeature.new(context: self))
     end
+
+    delegate :include_unfavorable_word?, :link_text_min_length, to: :feature
   end
   CorrectorContext = Struct.new(:cur_site, :cur_user, :content, :params, :result) do
     def set_result(ret)

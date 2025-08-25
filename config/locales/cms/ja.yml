@@ -1042,6 +1042,7 @@ ja:
       cms/task: タスク
       cms/import_page: 取り込みページ
       cms/word_dictionary: 単語置換辞書
+      cms/unfavorable_word: 好ましくない単語
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
@@ -1181,6 +1182,9 @@ ja:
       cms/word_dictionary:
         name: 名前
         body: 設定
+      cms/unfavorable_word:
+        name: 名前
+        body: 単語リスト
       cms/import_job_file:
         name: タイトル
         basename: フォルダー名
@@ -1776,6 +1780,8 @@ ja:
       cms/syntax_checker/url_scheme_setting:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
+      cms/syntax_checker/link_text_setting:
+        syntax_checker_link_text_min_length: 最低長
       cms/line/statistic:
         name: 統計情報
         message_id: メッセージ
@@ -1935,7 +1941,9 @@ ja:
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
       check_interword_space: 単語の文字間のスペースを確認してください。
-      check_link_text: リンクのテキストを確認してください。
+      link_text_too_short: リンクテキストは%{count}文字以上にしてください。
+      alt_too_short: 代替テキストは%{count}文字以上にしてください。
+      title_too_short: タイトルは%{count}文字以上にしてください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
       input_youtube_url: YouTubeのURLを入力してください。
@@ -1951,6 +1959,7 @@ ja:
       internal_link_shouldnt_contain_domains: 内部リンクにはドメインを含めないようにしてください。
       internal_link_should_be_absolute_path: 内部リンクは "/" で始めてください。
       internal_link_shouldnt_be_preview_path: プレビュー用のパスを指定しないようにしてください。
+      unfavorable_word: 好ましくない単語が用いられています。
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -1981,8 +1990,6 @@ ja:
           - 一つのリンク(A)にマークアップしてください。
         check_interword_space:
           - 単語の文字間に不要なスペースが含まれている場合は削除してください。
-        check_link_text:
-          - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
         set_iframe_title:
@@ -2006,6 +2013,8 @@ ja:
           - プレビューパスを指定しないでください。
           - "誤: &lt;a href=\"/.s1/preview/docs/page1.html\">ページタイトル&lt;/a>"
           - "正: &lt;a href=\"/docs/page1.html\">ページタイトル&lt;/a>"
+        unfavorable_word:
+          - リンクテキストや代替テキストは遷移先や画像を表すものを設定してください。
       thums_is_not_an_image: には画像ファイルを指定してください。
       unsupported_encoding: 対応していない文字コードです。
       thumb_is_blank: サムネイル画像が登録されていません。
@@ -2651,9 +2660,20 @@ ja:
         - 表記と置換後の表記をカンマで区切って入力します（CSV 形式で入力します）。
         - 単語を改行で区切って複数個入力することができます。
         - |-
-        - |-
           入力例：
           子供, 子ども
+
+    cms/unfavorable_word:
+      name:
+        - 辞書の名前を入力します。
+      body:
+        - 単語を改行で区切って複数個入力することができます。
+        - |-
+          入力例：
+          写真
+          イラスト
+          ここ
+          こちら
 
     cms/addon/role:
       cms_role_ids:
@@ -3407,6 +3427,11 @@ ja:
         - 使用を許可するスキームを設定します。
         - 既定値は "http, https" です。
         - 安全なウェブサイトの作り方では、http, https 以外のスキームにリンクを設定することは非推奨となっています。危険を承知の上、設定してください。
+
+    cms/syntax_checker/link_text_setting:
+      syntax_checker_link_text_min_length:
+        - リンクテキストや代替テキストの最低長を設定します。
+        - 0 を設定するとリンクテキストや代替テキストの長さをチェックしません。
 
     cms/addon/clipboard_copy:
       clipboard_copy_target:

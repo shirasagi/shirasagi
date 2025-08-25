@@ -40,7 +40,7 @@ describe "cms_parts", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           within "#errorSyntaxChecker" do
             expect(page).to have_content(I18n.t("errors.messages.invalid_kana_character"))
-            expect(page).to have_content(I18n.t("errors.messages.check_link_text"))
+            expect(page).to have_content(I18n.t("errors.messages.link_text_too_short", count: 4))
           end
           within "#errorLinkChecker" do
             expect(page).to have_content(I18n.t("errors.messages.link_check_failed_not_found"))
@@ -71,7 +71,7 @@ describe "cms_parts", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           within "#errorSyntaxChecker" do
             expect(page).to have_content(I18n.t("errors.messages.invalid_kana_character"))
-            expect(page).to have_content(I18n.t("errors.messages.check_link_text"))
+            expect(page).to have_content(I18n.t("errors.messages.link_text_too_short", count: 4))
           end
           within "#errorLinkChecker" do
             expect(page).to have_content(I18n.t("errors.messages.link_check_failed_not_found"))

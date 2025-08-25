@@ -869,7 +869,7 @@ describe "syntax_checker", type: :feature, dbscope: :example, js: true do
 
               # confirm syntax check header is shown to wait for ajax completion
               expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('cms.syntax_check'))
-              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.check_link_text'))
+              expect(page).to have_css("#errorSyntaxChecker", text: I18n.t('errors.messages.link_text_too_short', count: 4))
             end
           end
         end

@@ -42,9 +42,15 @@ class Cms::SyntaxChecker::Column::LinkChecker
   def after_check
     text = column_value.link_label
     return if text.blank? # blank is safe
-    return if text.length > 3 # greater than 3 is safe
 
-    context.errors << Cms::SyntaxChecker::CheckerError.new(
-      context: context, content: content, checker: self, code: text, error: :check_link_text)
+    if context.link_text_min_length > 0 && text.length < context.link_text_min_length # greater than 3 is safe
+      error = I18n.t("errors.messages.link_text_too_short", count: context.link_text_min_length)
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: content, checker: self, code: text, error: error)
+    end
+    if context.include_unfavorable_word?(text)
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: content, checker: self, code: text, error: :unfavorable_word)
+    end
   end
 end

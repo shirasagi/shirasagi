@@ -76,6 +76,26 @@ describe Cms::SyntaxChecker::ImgAltChecker, type: :model, dbscope: :example do
           end
         end
       end
+
+      context "when alt is short" do
+        let(:img_html) { '<img alt="画像" src="/fs/1/1/1/_/logo.png">' }
+        let(:img_htmls) { [ img_html ] }
+
+        it do
+          described_class.new.check(context, content)
+
+          expect(context.errors).to have(1).items
+          context.errors.first.tap do |error|
+            expect(error.id).to eq id
+            expect(error.idx).to eq idx
+            expect(error.code).to eq img_html
+            expect(error.full_message).to eq I18n.t('errors.messages.alt_too_short', count: 4)
+            expect(error.detail).to be_blank
+            expect(error.corrector).to be_blank
+            expect(error.corrector_params).to be_blank
+          end
+        end
+      end
     end
 
     context "with multiple img tags" do
@@ -103,6 +123,29 @@ describe Cms::SyntaxChecker::ImgAltChecker, type: :model, dbscope: :example do
           expect(error.code).to eq img_html2
           expect(error.full_message).to eq I18n.t('errors.messages.alt_is_included_in_filename')
           expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.alt_is_included_in_filename')
+          expect(error.corrector).to be_blank
+          expect(error.corrector_params).to be_blank
+        end
+      end
+    end
+
+    context "with unfavorable words" do
+      let!(:unfavorable_word) { create(:cms_unfavorable_word, cur_site: cms_site) }
+      let(:words) { unfavorable_word.body.split(/\R+/) }
+      let(:longest_word) { words.max_by(&:length) }
+      let(:img_html1) { "<img alt=\"#{longest_word}\" src=\"/fs/1/1/1/_/logo.png\">" }
+      let(:img_htmls) { [ img_html1 ] }
+
+      it do
+        described_class.new.check(context, content)
+
+        expect(context.errors).to have(1).items
+        context.errors.first.tap do |error|
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq img_html1
+          expect(error.full_message).to eq I18n.t('errors.messages.unfavorable_word')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.unfavorable_word')
           expect(error.corrector).to be_blank
           expect(error.corrector_params).to be_blank
         end
