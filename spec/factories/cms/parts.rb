@@ -75,4 +75,10 @@ FactoryBot.define do
   factory :cms_part_history_list, class: Cms::Part::HistoryList, traits: [:cms_part] do
     route { "cms/history_list" }
   end
+
+  factory :cms_part_form_search, class: Cms::Part::FormSearch, traits: [:cms_part] do
+    route { "cms/form_search" }
+    column_name { unique_id }
+    column_kind { %w(any_of start_with end_with all).sample }
+  end
 end

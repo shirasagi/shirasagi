@@ -153,4 +153,14 @@ class Cms::Part
 
     default_scope ->{ where(route: "cms/clipboard_copy") }
   end
+
+  class FormSearch
+    include Cms::Model::Part
+    include Cms::Addon::FormSearch
+    include Cms::Addon::Release
+    include Cms::Addon::GroupPermission
+    include History::Addon::Backup
+
+    default_scope ->{ where(route: "cms/form_search") }
+  end
 end
