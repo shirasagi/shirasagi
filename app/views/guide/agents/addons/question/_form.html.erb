@@ -1,6 +1,6 @@
 <% @render_form = proc do |form_id, form_name, form_not_applicable, form_optional_necessary| %>
   <tr data-id="<%= form_id %>">
-    <td><%= hidden_field_tag "item[in_edges][][point_ids][]", form_id %> <%= form_name %></td>
+    <td><%= hidden_field_tag "item[in_edges][][point_ids][]", form_id, id: nil %> <%= form_name %></td>
     <td>
       <label><%= check_box_tag('item[in_edges][][not_applicable_point_ids][]', form_id, form_not_applicable) %> <%= t('guide.labels.not_applicable') %></label>
     </td>
