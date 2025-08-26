@@ -11,7 +11,11 @@
 }
 
 // colorbox
-#cboxTitle, #cboxCurrent, #cboxNext, #cboxPrevious, #cboxSlideshow {
+#cboxTitle,
+#cboxCurrent,
+#cboxNext,
+#cboxPrevious,
+#cboxSlideshow {
   display: none !important;
 }
 
@@ -33,18 +37,18 @@
 .sanitizer-status {
   display: inline-block;
   padding: 4px 10px;
-  background: rgba(60, 60, 60, .8);
+  background: rgba(60, 60, 60, 0.8);
   color: #fff;
   font-weight: bold;
 }
 .sanitizer-wait {
-  background: rgba(0, 60, 120, .8);
+  background: rgba(0, 60, 120, 0.8);
 }
 .sanitizer-complete {
-  background: rgba(0, 120, 20, .8);
+  background: rgba(0, 120, 20, 0.8);
 }
 .sanitizer-error {
-  background: rgba(180, 0, 0, .8);
+  background: rgba(180, 0, 0, 0.8);
 }
 .sanitizer-none {
   display: none;
@@ -56,5 +60,5 @@
   position: absolute;
 }
 dd > .sanitizer-status {
-  margin-left: .5rem;
+  margin-left: 0.5rem;
 }

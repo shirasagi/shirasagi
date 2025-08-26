@@ -9,7 +9,8 @@
     background: #f8f8f8;
   }
 
-  th, td {
+  th,
+  td {
     padding: 5px;
   }
 
@@ -20,7 +21,8 @@
 
   thead {
     tr:last-child {
-      th, td {
+      th,
+      td {
         border-bottom: $border-gray5;
       }
     }
@@ -30,11 +32,18 @@
     text-align: center;
   }
 
-  .name, .contact-group-name, .contact-charge, .contact-tel, .contact-fax, .contact-email, .contact-postal-code,
+  .name,
+  .contact-group-name,
+  .contact-charge,
+  .contact-tel,
+  .contact-fax,
+  .contact-email,
+  .contact-postal-code,
   .contact-link-name {
     min-width: 15em;
   }
-  .contact-address, .contact-link-url {
+  .contact-address,
+  .contact-link-url {
     min-width: 30em;
   }
   .contact-main-state {

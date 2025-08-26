@@ -22,7 +22,8 @@
     color: #f25a38;
     text-decoration: none;
   }
-  :not(a[data-id]), a[data-id="-"] {
+  :not(a[data-id]),
+  a[data-id="-"] {
     color: #888888;
   }
   @include mb {
@@ -80,7 +81,7 @@
     padding: 10px 12px;
     border-bottom: 1px solid #f2f2f2;
     font-weight: bold;
-    &:before {
+    &::before {
       content: " ";
       margin-right: 6px;
       padding-left: 3px;

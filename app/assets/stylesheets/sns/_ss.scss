@@ -4,7 +4,9 @@
   width: 50%;
   margin-top: 10px;
   float: left;
-  @include mb { width: 100%; }
+  @include mb {
+    width: 100%;
+  }
 }
 .mypage-box.notices {
   width: 100%;
@@ -32,7 +34,8 @@
     &.unseen {
       background-color: #f9e9e3;
     }
-    &.seen:hover, &.unseen:hover {
+    &.seen:hover,
+    &.unseen:hover {
       background-color: #fbeee8;
     }
   }

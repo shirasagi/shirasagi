@@ -1,0 +1,8 @@
+node_modules
+public
+vendor
+*.min.js
+*.min.css
+app/assets/builds/**/*.css
+app/assets/stylesheets/ss/_github-markdown.scss
+app/assets/stylesheets/ss/_shirasagi-icons.scss

@@ -9,8 +9,8 @@
   border-radius: 10px;
   background-color: #fff;
   font-size: 12px;
-  -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
-  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, .2));
+  -webkit-filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
+  filter: drop-shadow(0 1px 4px rgba(0, 0, 0, 0.2));
 
   .post-head {
     padding: 0;
@@ -19,7 +19,8 @@
     margin-top: 15px;
   }
 }
-#marker-popup:after, #marker-popup:before {
+#marker-popup::after,
+#marker-popup::before {
   content: " ";
   position: absolute;
   top: 100%;
@@ -28,13 +29,13 @@
   border: solid transparent;
   pointer-events: none;
 }
-#marker-popup:after {
+#marker-popup::after {
   left: 48px;
   margin-left: -10px;
   border-width: 10px;
   border-top-color: #fff;
 }
-#marker-popup:before {
+#marker-popup::before {
   left: 48px;
   margin-left: -11px;
   border-width: 11px;
@@ -50,8 +51,8 @@
   text-decoration: none;
   cursor: pointer;
 
-  &:before,
-  &:after {
+  &::before,
+  &::after {
     content: "";
     display: block;
     position: absolute;
@@ -62,11 +63,11 @@
     background-color: #000;
   }
 
-  &:before {
+  &::before {
     transform: translate(-50%, -50%) rotate(45deg);
   }
 
-  &:after {
+  &::after {
     transform: translate(-50%, -50%) rotate(-45deg);
   }
 }
@@ -74,8 +75,8 @@
 // markerclusterer
 .marker-cluster-info {
   .marker-info {
-    margin-top: .5rem;
-    padding-top: .5rem;
+    margin-top: 0.5rem;
+    padding-top: 0.5rem;
     border-top: 1px solid #ccc;
   }
   .marker-info:first-child {

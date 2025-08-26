@@ -58,7 +58,7 @@
 @import "opendata/ss";
 
 // fix fullcalendar issue: https://github.com/fullcalendar/fullcalendar/issues/2852
-.fc-icon:after {
+.fc-icon::after {
   margin: 0;
   color: #000;
 }

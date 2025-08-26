@@ -32,7 +32,9 @@
     display: none;
     float: right;
   }
-  .action-attach, .action-paste, .action-thumb {
+  .action-attach,
+  .action-paste,
+  .action-thumb {
     display: none !important;
   }
 }
@@ -98,7 +100,7 @@
       position: sticky;
       bottom: 0;
       padding: 10px;
-      background-color: rgba(255, 255, 255, .5);
+      background-color: rgba(255, 255, 255, 0.5);
     }
   }
 
@@ -195,12 +197,14 @@ a.gws-category-label:hover {
   background-color: #083;
   color: #fff;
 }
-.gws-category-tree, .gws-category-tree-view {
+.gws-category-tree,
+.gws-category-tree-view {
   ul.depth0 {
     margin-top: 10px;
     li {
       display: inline;
-      label, a {
+      label,
+      a {
         display: inline-block;
         margin: 0 5px 10px 0;
       }
@@ -242,7 +246,7 @@ a.gws-category-label:hover {
   border-radius: 4px;
   background-color: #fff;
   @include box-shadow(0 1px 6px #666);
-  &:after {
+  &::after {
     content: "";
     position: absolute;
     bottom: -10px;
@@ -254,17 +258,17 @@ a.gws-category-label:hover {
     border-right: 10px solid transparent;
     border-left: 10px solid transparent;
   }
-  &.top:after {
+  &.top::after {
     top: -20px;
     bottom: auto;
     border-bottom: 10px solid #bbb;
     border-top-color: transparent;
   }
-  &.left:after {
+  &.left::after {
     left: 10px;
     margin: 0;
   }
-  &.right:after {
+  &.right::after {
     right: 10px;
     left: auto;
     margin: 0;
@@ -280,7 +284,7 @@ a.gws-category-label:hover {
   overflow-y: scroll;
   border: $border-gray4;
   background: $white;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+  @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
   white-space: nowrap;
 }
 

@@ -1,4 +1,4 @@
-.ss-tree{
+.ss-tree {
   padding: 0;
   --spacing: 1.5rem;
   --radius: 10px;
@@ -101,7 +101,7 @@
     background-position: calc(-1.5 * var(--radius)) 0;
   }
 
-  .ss-tree-item-link{
+  .ss-tree-item-link {
     display: block;
     flex-grow: 10;
     width: 100%;
@@ -113,22 +113,22 @@
     white-space: nowrap;
 
     &:hover,
-    &:focus{
+    &:focus {
       background: #fbeee8;
       text-decoration: none;
     }
   }
 
-  .ss-tree-subtree{
-    li{
+  .ss-tree-subtree {
+    li {
       margin-left: -1px;
       padding-left: calc(1.5 * var(--spacing) - var(--radius) + 0.5em);
-      &::after{
+      &::after {
         left: calc(var(--spacing) - var(--radius) - 2px);
       }
     }
 
-    summary::before{
+    summary::before {
       left: calc(var(--spacing) - var(--radius) - 2px);
     }
   }
@@ -142,7 +142,7 @@
   border-bottom: 1px solid #f2f2f2;
 
   .cms-nodes-tree-frame-header-title {
-    &:before {
+    &::before {
       content: " ";
       margin-right: 6px;
       padding-left: 3px;

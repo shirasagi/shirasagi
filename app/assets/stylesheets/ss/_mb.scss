@@ -1,5 +1,4 @@
 @include mb {
-
   // -------------------------------------------------------------------------------------------------
   // base
 
@@ -8,7 +7,7 @@
     color: #000;
     font-family: $font-base;
     font-size: 75%;
-    line-height: 1.40;
+    line-height: 1.4;
     word-wrap: break-word;
   }
 
@@ -104,7 +103,12 @@
 
   // -------------------------------------------------------------------------------------------------
   // menu
-  nav.main-menu, nav.sub-menu, nav.nav-menu, nav.page-menu, nav.addon-menu, nav.sns-nav-menu {
+  nav.main-menu,
+  nav.sub-menu,
+  nav.nav-menu,
+  nav.page-menu,
+  nav.addon-menu,
+  nav.sns-nav-menu {
     @include clear;
     margin: 0;
     background-color: $white;
@@ -128,14 +132,15 @@
         background: $gray3;
         color: $black;
         @include ellipsis;
-        &.current, &:hover {
+        &.current,
+        &:hover {
           padding: 8px 4px 5px;
           border: 1px solid $pink;
           background-color: $gray1;
         }
       }
     }
-    div.dropdown-menu a.current:after {
+    div.dropdown-menu a.current::after {
       display: none;
     }
   }
@@ -143,7 +148,8 @@
   #mod-menu a {
     display: block !important;
   }
-  .nav-menu, .sns-nav-menu {
+  .nav-menu,
+  .sns-nav-menu {
     @include clear;
     padding: 10px;
     a {
@@ -155,7 +161,8 @@
       padding: 0;
     }
   }
-  nav.addon-menu header h1, nav.page-menu header h1 {
+  nav.addon-menu header h1,
+  nav.page-menu header h1 {
     border: 0;
   }
   // -------------------------------------------------------------------------------------------------
@@ -175,7 +182,9 @@
     width: 100%;
     table-layout: fixed;
     border: $border-gray3;
-    tr, th, td {
+    tr,
+    th,
+    td {
       display: block;
       @include box-sizing(border-box);
     }
@@ -188,14 +197,14 @@
       th {
         padding: 7px 0;
         float: left;
-        &:before {
+        &::before {
           content: "/";
           margin: 0 2px;
         }
       }
       th.checkbox {
         padding: 5px 2px;
-        &:before {
+        &::before {
           content: "";
           margin: 0;
         }

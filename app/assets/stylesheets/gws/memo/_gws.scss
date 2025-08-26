@@ -16,9 +16,15 @@
       line-height: 1.4;
     }
     .icon-star {
-      &.on    .material-icons { color: #f70; }
-      &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: .8; }
+      &.on .material-icons {
+        color: #f70;
+      }
+      &.off .material-icons {
+        color: #ddd;
+      }
+      &:hover .material-icons {
+        opacity: 0.8;
+      }
     }
     .date {
       margin-left: auto;
@@ -55,13 +61,13 @@
     margin: -5px 0 10px;
     padding: 8px;
     border: 1px solid #fd8;
-    background-color: rgba(255, 255, 0, .2);
+    background-color: rgba(255, 255, 0, 0.2);
     background-color: #ffc;
     text-align: center;
     text-decoration: none;
     &:hover {
       border-color: #fb8;
-      background-color: rgba(255, 255, 0, .35);
+      background-color: rgba(255, 255, 0, 0.35);
       background-color: #ffa;
     }
   }
@@ -100,7 +106,8 @@
       }
     }
 
-    .prev, .next {
+    .prev,
+    .next {
       @include display-flex;
       width: 20px;
       height: 20px;
@@ -139,7 +146,7 @@
 #content-navi.gws-content-navi {
   overflow-x: scroll;
 }
-@media screen and (max-width:1080px) and (min-width:768px) {
+@media screen and (max-width: 1080px) and (min-width: 768px) {
   div {
     &#content-navi.gws-content-navi,
     &.index.gws-memos-index {
@@ -164,7 +171,8 @@
         display: inline-block;
         cursor: pointer;
       }
-      .from, .to {
+      .from,
+      .to {
         width: calc(50% - 100px);
         text-indent: 79.84px;
       }
@@ -181,7 +189,9 @@
         width: 60px;
       }
     }
-    @include mb { display: none; }
+    @include mb {
+      display: none;
+    }
   }
   .info {
     @include truncate;
@@ -201,7 +211,8 @@
         display: inline-block;
       }
     }
-    .from, .to {
+    .from,
+    .to {
       width: calc(50% - 132.84px);
       padding-right: 5px;
       @include mb {
@@ -238,7 +249,7 @@ table.index.gws-memo-folder {
   min-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  &:before {
+  &::before {
     content: "";
     position: absolute;
     top: 0;
@@ -300,7 +311,7 @@ table.index.gws-memo-folder {
     margin: 0;
     padding: 5px 0;
     border: 1px solid #ccc;
-    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+    @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
     background: #fff;
     text-align: left;
     a {
@@ -344,7 +355,8 @@ table.index.gws-memo-folder {
     &.unseen {
       background-color: #f9e9e3;
     }
-    &.seen:hover, &.unseen:hover {
+    &.seen:hover,
+    &.unseen:hover {
       background-color: #fbeee8;
     }
   }

@@ -17,7 +17,7 @@ dl.see.mod-gws-daily-report-custom_form {
     @media only screen and (max-width: 768px) {
       width: 100%;
     }
-    &:nth-of-type(n+2) {
+    &:nth-of-type(n + 2) {
       margin-top: 15px;
       @media only screen and (max-width: 768px) {
         margin-top: 0;
@@ -93,7 +93,8 @@ dl.see.mod-gws-daily-report-custom_form {
   .table-wrap {
     overflow-x: scroll;
     table.index {
-      th, td {
+      th,
+      td {
         white-space: normal;
       }
     }
@@ -115,7 +116,9 @@ dl.see.mod-gws-daily-report-custom_form {
       float: right;
       @include mb {
         margin: 0;
-        .btn-print { display: none; }
+        .btn-print {
+          display: none;
+        }
       }
     }
   }
@@ -132,7 +135,7 @@ dl.see.mod-gws-daily-report-custom_form {
       &:first-child {
         white-space: nowrap;
       }
-      &:nth-child(n+3) {
+      &:nth-child(n + 3) {
         min-width: 170px;
       }
     }
@@ -152,7 +155,8 @@ dl.see.mod-gws-daily-report-custom_form {
     td {
       vertical-align: top;
     }
-    th,td {
+    th,
+    td {
       border: 1px solid #dcdcdc;
     }
   }
@@ -211,7 +215,7 @@ dl.see.mod-gws-daily-report-custom_form {
               color: #38c;
             }
           }
-          &:nth-child(n+2) {
+          &:nth-child(n + 2) {
             width: 12em;
           }
         }

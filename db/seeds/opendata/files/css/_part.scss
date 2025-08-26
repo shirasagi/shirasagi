@@ -119,9 +119,9 @@ $item-margin: 14px;
   }
 }
 @mixin rss {
-  float: left;
   margin-top: 5px;
   padding-left: 26px;
+  float: left;
   background: url(../img/ic-rss.png) no-repeat left center;
 }
 
@@ -131,48 +131,48 @@ $item-margin: 14px;
 }
 @mixin midashi-dataset {
   padding: 10px;
-  font-size: $px16;
   border-bottom: $border-yellow;
   background: $sky;
+  font-size: $px16;
 }
 @mixin midashi-app {
   padding: 10px;
-  font-size: $px16;
   border-bottom: $border-orange;
   background: $green;
+  font-size: $px16;
 }
 @mixin midashi-idea {
   padding: 10px;
-  font-size: $px16;
   border-bottom: $border-red;
   background: $yellow;
+  font-size: $px16;
 }
 @mixin midashi-area {
   padding: 10px;
-  font-size: $px16;
   border-bottom: $border-yellow;
   background: $hgreen;
+  font-size: $px16;
 }
 @mixin midashi-beige {
   padding: 10px;
-  font-size: $px16;
   background: $beige2;
+  font-size: $px16;
 }
 @mixin tab {
   border-bottom: 2px solid $blue;
   @include clear;
   a {
     display: block;
-    float: left;
     min-width: 100px;
     margin-right: 10px;
     padding: 8px 10px 5px;
-    @include border-radius(5px 5px 0 0);
+    float: left;
     background: $gray3;
     color: $black1;
     font-size: $px16;
-    text-decoration: none;
     text-align: center;
+    text-decoration: none;
+    @include border-radius(5px 5px 0 0);
     &:hover, &.current {
       @include grd-blue;
       color: $white;
