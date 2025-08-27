@@ -2,68 +2,41 @@
   addon ||= local_assigns.fetch(:addon, {})
   addon[:display_body] = "hide"
 %>
-
-<%# 元々アイコンが設定されていないためスキップするメニュータイプ %>
-<% skip_icon_types = %w(staff_record links contrast) %>
-
-<% render_menu_setting_conf = proc do |type, fallback_label| %>
-  <dl class="see addon-gws-system-menu-setting">
-    <dt><%= t('gws.site_config') %></dt>
+<% render_menu_setting = proc do |name, select_state: true, edit_icon: true| %>
+  <dl class="see addon-gws-system-menu-setting menu-setting-<%= name %>">
+    <dt><%= @model.t("menu_#{name}_state") %></dt>
     <dd>
       <div class="input-group gap-5 align-items-center">
-        <%= f.select "menu_#{type}_state", { t('ss.options.state.show') => "show" } %>
-        <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}")) %>
-      </div>
-    </dd>
-    <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
-    <dd class="depth-2">
-      <div class="menu-icon-field input-group gap-5 align-items-center">
-        <% if @item.send("menu_#{type}_icon_image").present? %>
-          <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", aria: { hidden: true }, style: "width: 32px; height: 32px;" %>
+        <% if select_state %>
+          <%= f.select "menu_#{name}_state", @item.send("menu_#{name}_state_options") %>
         <% else %>
-          <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>" role="img" aria-hidden="true"></span>
+          <%= f.select "menu_#{name}_state", { t('ss.options.state.show') => "show" } %>
         <% end %>
-        <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
+        <%= f.text_field("menu_#{name}_label", value: @item.send("menu_#{name}_label"), placeholder: @item.send("menu_#{name}_default_label")) %>
       </div>
     </dd>
-  </dl>
-<% end %>
-
-<% render_menu_setting = proc do |type, fallback_label| %>
-  <% if type.to_s == "conf" %>
-    <% render_menu_setting_conf.call(type, fallback_label) %>
-  <% else %>
-    <dl class="see addon-gws-system-menu-setting">
-      <dt><%= @model.t("menu_#{type}_state") %><%= @model.tt("menu_#{type}_state") %></dt>
-      <dd>
-        <div class="input-group gap-5 align-items-center">
-          <%= f.select "menu_#{type}_state", @item.send("menu_#{type}_state_options") %>
-          <%= f.text_field("menu_#{type}_label", value: @item.send("menu_#{type}_label"), placeholder: fallback_label || t("modules.gws/#{type}")) %>
-        </div>
-      </dd>
-      <% unless skip_icon_types.include?(type.to_s) %>
+    <% if edit_icon %>
       <dt class="depth-2"><%= t("gws.buttons.change_menu_icon") %></dt>
       <dd class="depth-2">
         <div class="menu-icon-field input-group gap-5 align-items-center">
-          <% if @item.send("menu_#{type}_icon_image").present? %>
-            <%= image_tag @item.send("menu_#{type}_icon_image").url, class: "icon-#{type.to_s.dasherize}", aria: { hidden: true }, style: "width: 32px; height: 32px;" %>
+          <% if @item.send("menu_#{name}_icon_image").present? %>
+            <%= image_tag @item.send("menu_#{name}_icon_image").url, class: "icon-#{name.to_s.dasherize}", style: "width: 32px; height: 32px;", aria: { hidden: true } %>
           <% else %>
-            <span class="ss-icon ss-icon-<%= type.to_s.dasherize %>" role="img" aria-hidden="true"></span>
+            <span class="ss-icon ss-icon-<%= name.to_s.dasherize %>" role="img" aria-hidden="true"></span>
           <% end %>
-          <%= f.ss_file_field "menu_#{type}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
+          <%= f.ss_file_field "menu_#{name}_icon_image", accepts: SS::File::IMAGE_FILE_EXTENSIONS + [".svg"] %>
         </div>
       </dd>
-      <% end %>
-    </dl>
-  <% end %>
+    <% end %>
+  </dl>
 <% end %>
 
-<% render_menu_setting.call(:portal, t('modules.gws/portal')) %>
+<% render_menu_setting.call(:portal) %>
 <% render_menu_setting.call(:notice) %>
 <% render_menu_setting.call(:schedule) %>
-<% render_menu_setting.call(:todo, t('mongoid.models.gws/schedule/todo')) %>
-<% render_menu_setting.call(:reminder, t('mongoid.models.gws/reminder')) %>
-<% render_menu_setting.call(:presence, t('mongoid.models.gws/presence')) %>
+<% render_menu_setting.call(:todo) %>
+<% render_menu_setting.call(:reminder) %>
+<% render_menu_setting.call(:presence) %>
 <% render_menu_setting.call(:attendance) %>
 <% render_menu_setting.call(:affair) %>
 <% render_menu_setting.call(:daily_report) %>
@@ -83,9 +56,9 @@
 <% render_menu_setting.call(:share) %>
 <% render_menu_setting.call(:shared_address) %>
 <% render_menu_setting.call(:personal_address) %>
-<% render_menu_setting.call(:staff_record, t('gws/staff_record.staff_records')) %>
-<% render_menu_setting.call(:links, t('mongoid.models.gws/link')) %>
-<% render_menu_setting.call(:contrast, t('mongoid.models.gws/contrast')) %>
-<% render_menu_setting.call(:tabular, t('modules.gws/tabular')) %>
+<% render_menu_setting.call(:staff_record, edit_icon: false) %>
+<% render_menu_setting.call(:links, edit_icon: false) %>
+<% render_menu_setting.call(:contrast, edit_icon: false) %>
+<% render_menu_setting.call(:tabular) %>
 <% render_menu_setting.call(:elasticsearch) %>
-<% render_menu_setting.call(:conf, t('gws.site_config')) %>
+<% render_menu_setting.call(:conf, select_state: false) %>
