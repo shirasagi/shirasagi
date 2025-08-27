@@ -1,0 +1,10 @@
+<dl class="see">
+  <dt><%= @model.t :search_node_id %></dt>
+  <dd><%= @item.search_node.try(:name) %></dd>
+
+  <dt><%= @model.t :column_name %></dt>
+  <dd><%= @item.column_name %></dd>
+
+  <dt><%= @model.t :column_kind %></dt>
+  <dd><%= @item.label :column_kind %></dd>
+</dl>

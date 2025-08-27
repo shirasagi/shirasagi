@@ -20,7 +20,18 @@ class Cms::Column::DateField < Cms::Column::Base
     options
   end
 
-  def exact_match_to_value(value)
-    { date: value }
+  def exact_match_to_value(value, operator: 'all')
+    return if value.blank?
+
+    case operator
+    when 'any_of'
+      { date: /#{::Regexp.escape(value)}/ }
+    when 'start_with'
+      { date: /\A#{::Regexp.escape(value)}/ }
+    when 'end_with'
+      { date: /#{::Regexp.escape(value)}\z/ }
+    else
+      { date: value }
+    end
   end
 end

@@ -44,10 +44,17 @@ class Cms::FormSearchParam
   end
 
   def build_column_condition(columns, value)
-    return if columns.blank? || value.blank?
+    case value
+    when Hash
+      operator = value[:op].presence
+      value = value[:val].presence
+    end
+    operator ||= 'all'
+
+    return {} if columns.blank? || value.blank?
 
     conditions = columns.map do |column|
-      column_criteria = column.exact_match_to_value(value)
+      column_criteria = column.exact_match_to_value(value, operator: operator)
       next if column_criteria.blank?
 
       # be sure to set BSON::ObjectId instance for "column_id"
