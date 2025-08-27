@@ -27,10 +27,10 @@ class Cms::Column::Base
     { type: 'input' }
   end
 
-  def exact_match_to_value(value, opts = {})
+  def exact_match_to_value(value, operator: 'all')
     return if value.blank?
 
-    case opts[:operator]
+    case operator
     when 'any_of'
       { value: /#{::Regexp.escape(value)}/ }
     when 'start_with'

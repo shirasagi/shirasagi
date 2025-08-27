@@ -32,10 +32,10 @@ class Cms::Column::List < Cms::Column::Base
     { type: 'textarea', rows: 4 }
   end
 
-  def exact_match_to_value(value, opts = {})
+  def exact_match_to_value(value, operator: 'all')
     return if value.blank?
 
-    case opts[:operator]
+    case operator
     when 'any_of'
       { lists: /#{::Regexp.escape(value)}/ }
     when 'start_with'
