@@ -21,6 +21,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example do
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       expect(current_path).not_to eq sns_login_path
     end
@@ -30,6 +31,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(status_code).to eq 200
     end
   end

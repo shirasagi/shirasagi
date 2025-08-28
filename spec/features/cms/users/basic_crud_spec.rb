@@ -179,6 +179,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
         click_button I18n.t('ss.buttons.import')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
@@ -215,6 +216,7 @@ describe "cms_users", type: :feature, dbscope: :example do
           attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
           click_button I18n.t('ss.buttons.import')
         end
+        wait_for_notice "グループ「A/B/C」が見つかりません。"
         expect(status_code).to eq 200
         expect(current_path).to eq import_path
         expect(page).to have_selector('#errorExplanation ul li', count: 9)
@@ -240,6 +242,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_1.csv"
         click_button I18n.t('ss.buttons.import')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
 
@@ -248,6 +251,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/cms/user/cms_users_2.csv"
         click_button I18n.t('ss.buttons.import')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(status_code).to eq 200
       expect(current_path).to eq index_path
 

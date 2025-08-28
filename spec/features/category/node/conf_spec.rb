@@ -39,6 +39,7 @@ describe "category_node_conf", type: :feature, dbscope: :example do
           fill_in "item[in_partial_basename]", with: "basename"
           click_button I18n.t('ss.buttons.split')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(current_path).to eq conf_path
       end
@@ -63,6 +64,7 @@ describe "category_node_conf", type: :feature, dbscope: :example do
           fill_in "item[in_partial_basename]", with: "basename"
           click_button I18n.t('ss.buttons.split')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(current_path).to eq conf_path
       end
