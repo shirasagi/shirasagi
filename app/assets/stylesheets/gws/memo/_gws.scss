@@ -3,8 +3,8 @@
     padding: 1px 15px 15px;
 
     .d-flex {
-      @include display-flex;
-      @include align-items(center);
+      display: flex;
+      align-items: center;
     }
     .ml-auto {
       margin-left: auto;
@@ -87,19 +87,19 @@
     }
   }
   .move-tool-wrap {
-    @include display-flex;
+    display: flex;
     position: relative;
     z-index: 1;
-    @include align-items(center);
-    @include justify-content(flex-end);
+    align-items: center;
+    justify-content: flex-end;
     padding: 15px;
 
     .page-order {
-      @include display-flex;
+      display: flex;
     }
 
     .move-tool {
-      @include display-flex;
+      display: flex;
       margin-left: 20px;
       @include mb {
         margin-left: 10px;
@@ -108,7 +108,7 @@
 
     .prev,
     .next {
-      @include display-flex;
+      display: flex;
       width: 20px;
       height: 20px;
 
@@ -164,7 +164,7 @@
     padding-bottom: 8px;
     font-weight: bold;
     .head {
-      @include display-flex;
+      display: flex;
       position: relative;
       height: 20px;
       .field {
@@ -196,7 +196,7 @@
   .info {
     @include truncate;
     & {
-      @include display-flex;
+      display: flex;
     }
     @include mb {
       display: block;
@@ -311,8 +311,8 @@ table.index.gws-memo-folder {
     margin: 0;
     padding: 5px 0;
     border: 1px solid #ccc;
-    @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
     background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     text-align: left;
     a {
       @include truncate;

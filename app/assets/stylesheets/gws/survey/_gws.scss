@@ -100,7 +100,7 @@
     margin: 0 0 10px;
     padding: 20px;
     border: 1px solid $orange;
-    @include border-radius(3px);
+    border-radius: 3px;
     background-color: #fff;
     h2 {
       margin: -20px -20px 25px;
@@ -130,8 +130,8 @@
     h2 {
       padding: 6px 18px;
       border: $border-gray5;
+      border-radius: 2px;
       background: $gray1;
-      @include border-radius(2px);
     }
 
     dl.see {

@@ -58,9 +58,9 @@
 
   .portlet-model-ad {
     .slide-wrap {
-      @include display-flex;
-      @include justify-content(center);
-      @include align-items(center);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .ss-swiper-slide {
@@ -78,9 +78,9 @@
     }
 
     .ss-swiper-slide-item {
-      @include display-flex;
-      @include justify-content(center);
-      @include align-items(center);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .ss-swiper-slide-item-image {

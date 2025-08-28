@@ -49,7 +49,7 @@
         padding: 0 10px;
         float: left;
         border-left: $border-black;
-        @include border-radius(0);
+        border-radius: 0;
       }
     }
   }
@@ -74,7 +74,7 @@
     display: none;
   }
   #menu {
-    @include box-sizing(border-box);
+    box-sizing: border-box;
     width: 100%;
     padding: 0;
     float: none;
@@ -128,10 +128,10 @@
         padding: 8px 4px 5px;
         float: left;
         border: $border-gray5;
-        @include border-radius(3px);
+        border-radius: 3px;
         background: $gray3;
         color: $black;
-        @include ellipsis;
+        text-overflow: ellipsis;
         &.current,
         &:hover {
           padding: 8px 4px 5px;
@@ -186,7 +186,7 @@
     th,
     td {
       display: block;
-      @include box-sizing(border-box);
+      box-sizing: border-box;
     }
     thead {
       background-color: $gray3;
@@ -224,7 +224,7 @@
         float: left;
         clear: both;
         overflow: hidden;
-        @include ellipsis;
+        text-overflow: ellipsis;
       }
       td.checkbox {
         margin: 0 -35px -35px 0;
@@ -246,7 +246,7 @@
         position: absolute;
         z-index: 100;
         border: $border-gray3;
-        @include box-shadow(1px 1px 3px #bbb);
+        box-shadow: 1px 1px 3px #bbb;
         a {
           display: block;
           padding: 5px 15px 2px;

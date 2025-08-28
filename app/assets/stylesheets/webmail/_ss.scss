@@ -5,12 +5,12 @@
 
 .webmail-dropdown-menu,
 .webmail-address-dropdown-menu {
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
   left: 0;
   margin: 0;
   padding: 5px 0;
   border: 1px solid #ccc;
   background: #fff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   text-align: left;
   a {
     @include truncate;
@@ -48,9 +48,9 @@ li.webmail-accounts {
   float: right;
 }
 .webmail-category-label {
-  @include border-radius(3px);
   display: inline-block;
   padding: 1px 5px;
+  border-radius: 3px;
   background-color: #e8e8e8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #444;
@@ -214,7 +214,7 @@ li.webmail-accounts {
       font-weight: bold;
     }
     .head {
-      @include display-flex;
+      display: flex;
       position: relative;
       height: 1.2em;
       margin-left: 82px;
@@ -241,7 +241,7 @@ li.webmail-accounts {
   .info {
     @include truncate;
     & {
-      @include display-flex;
+      display: flex;
     }
     @include mb {
       display: block;
@@ -293,8 +293,8 @@ li.webmail-accounts {
     padding: 1px 15px 15px;
 
     .d-flex {
-      @include display-flex;
-      @include align-items(center);
+      display: flex;
+      align-items: center;
     }
     .ml-auto {
       margin-left: auto;
@@ -413,19 +413,19 @@ li.webmail-accounts {
     }
   }
   .move-tool-wrap {
-    @include display-flex;
+    display: flex;
     position: relative;
     z-index: 1;
-    @include align-items(center);
-    @include justify-content(flex-end);
+    align-items: center;
+    justify-content: flex-end;
     padding: 15px;
 
     .page-order {
-      @include display-flex;
+      display: flex;
     }
 
     .move-tool {
-      @include display-flex;
+      display: flex;
       margin-left: 20px;
       @include mb {
         margin-left: 10px;
@@ -434,7 +434,7 @@ li.webmail-accounts {
 
     .prev,
     .next {
-      @include display-flex;
+      display: flex;
       width: 20px;
       height: 20px;
 
@@ -518,9 +518,9 @@ li.webmail-accounts {
   color: #888;
 }
 .webmail-addon-mail-body {
-  @include display-flex();
-  @include flex-direction(column);
-  grid-row-gap: 10px; // for old browsers
+  display: flex;
+  grid-row-gap: 10px;  // for old browsers
+  flex-direction: column;
   row-gap: 10px;
 }
 // form-addresses

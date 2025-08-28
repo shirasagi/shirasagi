@@ -25,9 +25,9 @@
   display: table;
   margin: 20px 10px;
   border: 1px solid #ccc;
-  @include border-radius(3px);
-  @include box-shadow(0 1px 3px #ddd);
+  border-radius: 3px;
   background: $white;
+  box-shadow: 0 1px 3px #ddd;
   @include mb {
     width: calc(100% - 20px);
   }
@@ -92,8 +92,8 @@
 
 @include mb {
   .login-box {
+    box-sizing: border-box;
     padding: 10px;
-    @include box-sizing(border-box);
     header {
       @include clear;
       margin: 0 0 20px;
@@ -148,9 +148,9 @@
   }
 
   .ss-swiper-slide-item {
-    @include display-flex;
-    @include justify-content(center);
-    @include align-items(center);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .ss-swiper-slide-item-image {
@@ -180,8 +180,8 @@
 
 @include mb {
   .login-notice {
+    box-sizing: border-box;
     padding: 10px;
-    @include box-sizing(border-box);
     header {
       @include clear;
       margin: 0 0 20px;

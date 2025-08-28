@@ -16,8 +16,8 @@
   .dropdown-menu {
     padding: 4px;
     border: $border-gray4;
-    @include box-shadow(0 3px 12px rgba(0, 0, 0, 0.2));
     background: $white;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     white-space: nowrap;
     a {
       display: block;

@@ -66,7 +66,7 @@
     .upload-drop-area {
       padding-top: 5px;
       padding-bottom: 10px;
-      @include border-radius(3px);
+      border-radius: 3px;
       background: #f2f2f2;
     }
     .upload-drop-notice {
@@ -95,7 +95,7 @@
   }
   .addon-body.reply .menu .btn {
     background: #f2d150;
-    background-image: -webkit-linear-gradient(top, #f2d150, #f2a950);
+    background: linear-gradient(to bottom, #f2d150, #f2a950);
   }
   .addon-body.reply-menu {
     color: #b30;

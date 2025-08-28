@@ -19,8 +19,8 @@
 
 .column-value-files {
   -js-display: flex;
-  @include display-flex;
-  @include flex-wrap(wrap);
+  display: flex;
+  flex-wrap: wrap;
   margin-top: 10px;
   @include clear;
   @include mb {
@@ -32,6 +32,6 @@
 }
 
 .column-value.ui-sortable-helper {
-  @include box-shadow(0 1px 5px #666);
-  @include opacity(0.8);
+  opacity: 0.8;
+  box-shadow: 0 1px 5px #666;
 }
