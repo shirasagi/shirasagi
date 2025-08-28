@@ -42,6 +42,7 @@ describe "chorg_run", type: :feature, dbscope: :example do
       within "form#item-form" do
         click_button I18n.t("chorg.views.run/confirmation.test.run_button")
       end
+      wait_for_notice I18n.t("chorg.messages.job_started")
       expect(status_code).to eq 200
       expect(current_path).to eq revision_show_path
       revision.reload
@@ -74,6 +75,7 @@ describe "chorg_run", type: :feature, dbscope: :example do
           check Chorg::RunParams.t(:add_newly_created_group_to_site)
           click_button I18n.t("chorg.views.run/confirmation.test.run_button")
         end
+        wait_for_notice I18n.t("chorg.messages.job_started")
         expect(status_code).to eq 200
         expect(current_path).to eq revision_show_path
         revision.reload
@@ -129,6 +131,7 @@ describe "chorg_run", type: :feature, dbscope: :example do
       within "form#item-form" do
         click_button I18n.t("chorg.views.run/confirmation.main.run_button")
       end
+      wait_for_notice I18n.t("chorg.messages.job_started")
       expect(status_code).to eq 200
       expect(current_path).to eq revision_show_path
       revision.reload
@@ -161,6 +164,7 @@ describe "chorg_run", type: :feature, dbscope: :example do
           check Chorg::RunParams.t(:add_newly_created_group_to_site)
           click_button I18n.t("chorg.views.run/confirmation.main.run_button")
         end
+        wait_for_notice I18n.t("chorg.messages.job_started")
         expect(status_code).to eq 200
         expect(current_path).to eq revision_show_path
         revision.reload

@@ -36,6 +36,7 @@ describe "cms_theme_templates", type: :feature, dbscope: :example do
 
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
         expect(page).to have_no_css("form#item-form")
@@ -58,6 +59,7 @@ describe "cms_theme_templates", type: :feature, dbscope: :example do
           select "無効", from: "item_high_contrast_mode"
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(status_code).to eq 200
         expect(current_path).not_to eq sns_login_path
         expect(page).to have_no_css("form#item-form")
@@ -70,6 +72,7 @@ describe "cms_theme_templates", type: :feature, dbscope: :example do
         within "form" do
           click_button I18n.t('ss.buttons.delete')
         end
+        wait_for_notice I18n.t("ss.notice.deleted")
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
       end

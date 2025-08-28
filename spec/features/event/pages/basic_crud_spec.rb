@@ -64,6 +64,7 @@ describe "event_pages", type: :feature, js: true do
         fill_in "destination", with: "docs/destination"
         click_button I18n.t('ss.buttons.move')
       end
+      wait_for_notice I18n.t("ss.notice.moved")
       expect(current_path).to eq move_path
       expect(page).to have_css("form#item-form .current-filename", text: "docs/destination.html")
 
@@ -71,6 +72,7 @@ describe "event_pages", type: :feature, js: true do
         fill_in "destination", with: "docs/sample"
         click_button I18n.t('ss.buttons.move')
       end
+      wait_for_notice I18n.t("ss.notice.moved")
       expect(current_path).to eq move_path
       expect(page).to have_css("form#item-form .current-filename", text: "docs/sample.html")
     end
@@ -80,8 +82,8 @@ describe "event_pages", type: :feature, js: true do
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).to eq index_path
       wait_for_notice I18n.t("ss.notice.saved")
+      expect(current_path).to eq index_path
       expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] modify")
       expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
     end
@@ -92,8 +94,8 @@ describe "event_pages", type: :feature, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(current_path).to eq index_path
       wait_for_notice I18n.t('ss.notice.deleted')
+      expect(current_path).to eq index_path
     end
 
     it "#contains_urls" do
