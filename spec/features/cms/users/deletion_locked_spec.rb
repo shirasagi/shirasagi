@@ -29,6 +29,7 @@ describe "cms_users", type: :feature, dbscope: :example, js: true do
         select I18n.t("ss.options.user_deletion_lock_state.locked"), from: "item[deletion_lock_state]"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       click_on I18n.t("ss.links.back_to_index")
 
@@ -42,6 +43,7 @@ describe "cms_users", type: :feature, dbscope: :example, js: true do
         expect(page).to have_text(I18n.t("ss.info.soft_delete"))
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect(current_path).to eq index_path
       expect(page).to have_css(".list-items", text: user.name)

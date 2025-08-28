@@ -66,6 +66,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           fill_in "item[text]", with: text
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         expect(status_code).to eq 200
         expect(current_path).to eq show_path
@@ -122,6 +123,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(page).to have_css("div#addon-basic .addon-body dl.see dd", text: item.name)
           click_button I18n.t('ss.buttons.delete')
         end
+        wait_for_notice I18n.t("ss.notice.deleted")
 
         expect(status_code).to eq 200
         expect(current_path).to eq index_path
