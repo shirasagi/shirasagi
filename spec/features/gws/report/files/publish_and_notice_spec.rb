@@ -86,8 +86,13 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         expect(mail.from.first).to eq site.sender_address
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         title = "[#{Gws::Report::File.model_name.human(locale: I18n.default_locale)}] 「#{subject.name}」が届きました。"
-        expect(mail.subject).to eq title
-        expect(mail.decoded.to_s).to include(mail.subject)
+        mail.subject.tap do |subject|
+          if subject.start_with?("=?ISO-2022-JP?")
+            subject = NKF.nkf("-w", subject)
+          end
+          expect(subject).to eq title
+          expect(mail.decoded.to_s).to include(subject)
+        end
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(notice_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
@@ -150,8 +155,13 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       ActionMailer::Base.deliveries.last.tap do |mail|
         expect(mail.from.first).to eq site.sender_address
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
-        expect(mail.subject).to eq notice.subject
-        expect(mail.decoded.to_s).to include(mail.subject)
+        mail.subject.tap do |subject|
+          if subject.start_with?("=?ISO-2022-JP?")
+            subject = NKF.nkf("-w", subject)
+          end
+          expect(subject).to eq title
+          expect(mail.decoded.to_s).to include(subject)
+        end
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail.decoded.to_s).to include(notice_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
