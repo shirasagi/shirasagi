@@ -81,7 +81,7 @@ export default class extends Controller {
     let json;
     try {
       json = await response.json();
-    } catch (err) {
+    } catch (_err) {
       json = undefined;
     }
 
