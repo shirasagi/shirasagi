@@ -1,14 +1,15 @@
 // gws-discussion
+@use "ss/init";
 
 .gws-discussion {
   .addon-body {
-    @include clear;
+    @include init.clear;
   }
   .addon-body .no {
     margin-bottom: 10px;
   }
   .addon-body header {
-    @include clear;
+    @include init.clear;
     .contributor {
       margin-bottom: 10px;
       float: left;
@@ -109,7 +110,7 @@
   width: calc(100% - 350px);
   min-height: 400px;
   float: left;
-  @include mb {
+  @include init.mb {
     width: 100%;
     float: none;
   }
@@ -119,7 +120,7 @@
   //border: 1px solid #d0d0d0;
   //border-radius: 3px;
   //background: #fff;
-  @include clear;
+  @include init.clear;
   h2 {
     padding: 10px;
     float: left;
@@ -136,7 +137,7 @@
       width: 240px !important;
     }
   }
-  @include mb {
+  @include init.mb {
     margin: 10px 0;
   }
 }
@@ -148,7 +149,7 @@
   width: 340px;
   margin-left: 10px;
   float: right;
-  @include mb {
+  @include init.mb {
     width: 100%;
     margin: 0;
     float: none;

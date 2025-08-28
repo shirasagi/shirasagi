@@ -1,8 +1,10 @@
+@use "ss/init";
+
 .history-backup {
   th,
   td {
-    border: $border-gray5;
-    @include mb {
+    border: init.$border-gray5;
+    @include init.mb {
       display: block !important;
       border: 0;
     }

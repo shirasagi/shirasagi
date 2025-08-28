@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .gws-memo {
   .addon-head {
     padding: 1px 15px 15px;
@@ -47,7 +49,7 @@
     }
   }
   .request-mdn-notice {
-    @include clear;
+    @include init.clear;
     padding: 5px 15px;
     border-bottom: 1px solid #969696;
     background-color: #cecece;
@@ -101,7 +103,7 @@
     .move-tool {
       display: flex;
       margin-left: 20px;
-      @include mb {
+      @include init.mb {
         margin-left: 10px;
       }
     }
@@ -116,7 +118,7 @@
         display: block;
         width: 100%;
         height: 100%;
-        color: $black;
+        color: init.$black;
       }
       &:not(.inactive):hover {
         a {
@@ -125,7 +127,7 @@
       }
       &.inactive {
         a {
-          color: $gray2;
+          color: init.$gray2;
           pointer-events: none;
         }
       }
@@ -135,7 +137,7 @@
     }
   }
 }
-@include mb {
+@include init.mb {
   .mod-gws-schedule-comments .list-items .list-item .info + .links {
     margin-left: 0;
   }
@@ -189,16 +191,16 @@
         width: 60px;
       }
     }
-    @include mb {
+    @include init.mb {
       display: none;
     }
   }
   .info {
-    @include truncate;
+    @include init.truncate;
     & {
       display: flex;
     }
-    @include mb {
+    @include init.mb {
       display: block;
       clear: both;
     }
@@ -207,7 +209,7 @@
       text-overflow: ellipsis;
       vertical-align: text-top;
       white-space: nowrap;
-      @include mb {
+      @include init.mb {
         display: inline-block;
       }
     }
@@ -215,7 +217,7 @@
     .to {
       width: calc(50% - 132.84px);
       padding-right: 5px;
-      @include mb {
+      @include init.mb {
         width: 100%;
         padding-right: 0;
       }
@@ -224,7 +226,7 @@
       width: calc(50% - 75px);
       padding-right: 5px;
       font-size: 100%;
-      @include mb {
+      @include init.mb {
         width: 100%;
         padding-right: 0;
       }
@@ -315,15 +317,15 @@ table.index.gws-memo-folder {
     box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     text-align: left;
     a {
-      @include truncate;
+      @include init.truncate;
       & {
         padding: 5px 10px;
-        color: $black;
+        color: init.$black;
       }
     }
     a:hover {
-      background-color: $gray1;
-      color: $orange;
+      background-color: init.$gray1;
+      color: init.$orange;
       text-decoration: none;
     }
     .pad {

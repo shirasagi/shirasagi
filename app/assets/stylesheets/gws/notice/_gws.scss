@@ -1,9 +1,11 @@
 // list
+@use "ss/init";
+
 .gws-notices {
   .unread {
     background-color: #f9e9e3;
     &:hover {
-      background: $orange2;
+      background: init.$orange2;
     }
   }
 }

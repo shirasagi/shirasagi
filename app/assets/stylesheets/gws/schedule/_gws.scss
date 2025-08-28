@@ -1,4 +1,5 @@
 // gws-schedule
+@use "ss/init";
 
 .gws-schedule-tool-calendars {
   display: none;
@@ -37,25 +38,25 @@
     width: 190px;
     margin-left: 8px;
   }
-  @include mb {
+  @include init.mb {
     top: auto;
   }
 }
 .gws-schedule-tabs,
 .gws-tabs {
-  @include clear;
+  @include init.clear;
   margin-top: -1px;
   padding: 0 10px;
   a {
     display: block;
     margin: 1px 6px -1px 0;
     float: left;
-    border: 1px solid $gray4;
+    border: 1px solid init.$gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
-    background-color: $gray5;
+    background-color: init.$gray5;
     color: #000;
-    @include mb {
+    @include init.mb {
       margin: 1px 6px 6px 0;
       border-radius: 4px;
     }
@@ -65,23 +66,23 @@
       text-align: center;
     }
     &:hover {
-      border-left-color: $orange;
+      border-left-color: init.$orange;
       background-color: #fff;
       text-decoration: none;
     }
   }
   a.current {
     border-bottom-color: #fff;
-    border-left-color: $orange;
+    border-left-color: init.$orange;
     background-color: #fff;
-    @include mb {
+    @include init.mb {
       border-bottom-color: #bbb;
     }
   }
 }
 .gws-schedule-box {
   header {
-    @include clear;
+    @include init.clear;
     line-height: 1.4;
     .approval-check {
       margin-left: 6px;
@@ -107,7 +108,7 @@
     .search {
       margin: -5px 0 -5px 20px;
       float: right;
-      @include mb {
+      @include init.mb {
         margin: 0;
         float: none;
         input[type="text"] {
@@ -118,7 +119,7 @@
     .operations {
       margin: -5px 0 -5px 20px;
       float: right;
-      @include mb {
+      @include init.mb {
         margin: 0;
         .btn-print {
           display: none;
@@ -133,7 +134,7 @@
 .gws-schedule-search {
   .send {
     padding-top: 0;
-    @include mb {
+    @include init.mb {
       margin-top: 10px;
     }
   }
@@ -195,7 +196,7 @@
     display: inline-block;
     min-width: 1.9em;
     padding: 1px 2px;
-    border: $white 1px solid;
+    border: init.$white 1px solid;
     border-radius: 3px;
     background-color: #d4d4d4;
     color: #fff;
@@ -214,7 +215,7 @@
   .hour.registered {
     cursor: pointer;
     &:hover {
-      background-color: $orange;
+      background-color: init.$orange;
     }
   }
   .active {
@@ -222,10 +223,10 @@
   }
   .reservation.free {
     background-color: transparent;
-    color: $black3;
+    color: init.$black3;
   }
   .reservation.exist {
-    color: $orange;
+    color: init.$orange;
   }
   .user-tooltip {
     position: absolute;
@@ -249,17 +250,17 @@
   font-weight: 800;
   .reservation-valid.free {
     padding-left: 10px;
-    color: $black3;
+    color: init.$black3;
   }
   .reservation-valid.exist {
     padding-left: 10px;
-    color: $orange;
+    color: init.$orange;
   }
   .duplicate-register-message {
     color: #e00;
   }
   .reservation-errors {
-    color: $orange;
+    color: init.$orange;
   }
 }
 #addon-gws-agents-addons-schedule-comments {
@@ -292,10 +293,10 @@
   font-size: 120%;
   cursor: pointer;
   &:hover {
-    border-color: $orange;
-    color: $orange;
+    border-color: init.$orange;
+    color: init.$orange;
   }
-  @include mb {
+  @include init.mb {
     margin: 10px 0 !important;
     clear: both;
   }
@@ -340,7 +341,7 @@
 .fc-view-container {
   background-color: #fff;
 }
-@include mb {
+@include init.mb {
   .fc-right {
     margin: 0 0 10px;
     .fc-button {
@@ -383,7 +384,7 @@
   margin-right: 1px;
   padding: 0 2px;
   border-radius: 2px;
-  color: $white;
+  color: init.$white;
 }
 .fc-event {
   overflow: visible;
@@ -393,7 +394,7 @@
   font-size: 90%;
   cursor: pointer;
   &:hover {
-    color: $black;
+    color: init.$black;
   }
   .fc-content {
     word-wrap: break-word;
@@ -405,7 +406,7 @@
     }
     .fc-category {
       @include fc_event_prefix;
-      background-color: $orange;
+      background-color: init.$orange;
     }
     .fc-facility::before {
       @include fc_event_prefix;
@@ -421,9 +422,9 @@
 .fc-time-grid-event {
   margin-bottom: 1px;
   background-color: #2eb0f2;
-  color: $black;
+  color: init.$black;
   &:hover {
-    color: $black;
+    color: init.$black;
   }
 }
 .fc-time-grid-event .fc-content::before {
@@ -616,7 +617,7 @@
   .fc-timeline-event {
     min-width: calc(1em + 5px);
     background: #2eb0f2;
-    color: $black;
+    color: init.$black;
     .fc-title {
       max-height: 230px;
     }
@@ -732,8 +733,8 @@
   height: 100%;
   min-height: 30px;
   overflow: auto;
-  background: $white;
-  color: $black;
+  background: init.$white;
+  color: init.$black;
   font-weight: normal;
   text-align: left;
   cursor: auto;
@@ -763,7 +764,7 @@
     border-top: 1px solid #eee;
     font-size: 90%;
     .popup-attr {
-      @include clear;
+      @include init.clear;
       margin: 2px 0;
     }
     .popup-label {
@@ -824,7 +825,7 @@
   }
 }
 .calendar-multiple-header {
-  @include clear;
+  @include init.clear;
   padding: 5px 8px;
   border: 1px solid #ddd;
   border-width: 0 1px;
@@ -833,7 +834,7 @@
   a {
     color: #444;
     &:hover {
-      color: $orange;
+      color: init.$orange;
     }
   }
   .approval-check {
@@ -931,8 +932,8 @@ dl.gws-schedule-repeat {
   .navi {
     width: 30%;
     margin-right: 10px;
-    border: $border-gray4;
-    @include box;
+    border: init.$border-gray4;
+    @include init.box;
   }
 
   .main {
@@ -967,7 +968,7 @@ dl.gws-schedule-repeat {
   .comment {
     margin: 5px 0;
     padding: 0 5px;
-    border-bottom: $border-gray1;
+    border-bottom: init.$border-gray1;
   }
 
   .total {
@@ -982,7 +983,7 @@ dl.gws-schedule-repeat {
   }
 
   .user {
-    color: $orange3;
+    color: init.$orange3;
     font-weight: bold;
   }
 
@@ -1007,7 +1008,7 @@ dl.gws-schedule-repeat {
     }
   }
 
-  @include mb {
+  @include init.mb {
     .achievement-rate-unit {
       display: none;
     }

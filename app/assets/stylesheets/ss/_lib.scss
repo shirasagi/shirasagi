@@ -1,6 +1,7 @@
 // -------------------------------------------------------------------------------------------------
 // multiselect.js
 // http://loudev.com/
+@use "init";
 
 .ms-container .ms-selectable,
 .ms-container .ms-selection {
@@ -13,18 +14,18 @@
   border-left: 3px solid #bbb;
 }
 .ms-selection-head {
-  border-color: $orange;
-  color: $orange;
+  border-color: init.$orange;
+  color: init.$orange;
 }
 .ms-list {
-  background: $white;
+  background: init.$white;
 }
 
 // -------------------------------------------------------------------------------------------------
 // clipboard
 
 .clipboard-copy-button {
-  @include btn;
+  @include init.btn;
   margin-left: 4px;
   padding: 1px 4px;
   &.copied {

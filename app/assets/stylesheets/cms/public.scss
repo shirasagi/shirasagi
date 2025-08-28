@@ -2,9 +2,9 @@
  *= require jquery-datetimepicker/build/jquery.datetimepicker.min.css
  *= require_self
  */
-@import "../map/public";
-@import "ss/ckeditor";
-@import "./search";
+@use "../map/public";
+@use "ss/ckeditor";
+@use "./search";
 
 #ss-loading {
   display: none;

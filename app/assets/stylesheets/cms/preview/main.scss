@@ -2,7 +2,7 @@
  *
  */
 
-@import "ss/init";
+@use "ss/init";
 
 // -------------------------------------------------------------------------------------------------
 // preview
@@ -12,7 +12,7 @@
   padding: 5px 0;
   background-color: #323232;
   color: #fff;
-  font-family: $font-base;
+  font-family: init.$font-base;
   font-size: 0.8rem;
   .ss-preview-dropdown,
   #ss-preview-btn-select-draft-page {
@@ -26,12 +26,12 @@
   #ss-preview-btn-select-draft-page,
   input,
   .ss-preview-part-list {
-    @include btn;
+    @include init.btn;
     box-sizing: border-box;
     width: auto;
     height: auto;
     min-height: 2.6em;
-    @include mb {
+    @include init.mb {
       padding: 6px 8px;
     }
   }
@@ -50,7 +50,7 @@
       background: #d9d9d9;
     }
     #ss-preview-btn-select-node {
-      @include btn;
+      @include init.btn;
       box-sizing: border-box;
       height: 29px;
       border: 1px solid #bbb;
@@ -68,7 +68,7 @@
   }
   .ss-preview-part-list {
     height: 2.6em;
-    @include mb {
+    @include init.mb {
       width: calc(100% - 52px);
     }
   }
@@ -104,13 +104,13 @@
     .ss-preview-wrap-row {
       display: flex;
       flex-wrap: wrap;
-      @include mb {
+      @include init.mb {
         display: block;
       }
     }
     .ss-preview-btn-group:nth-child(2) {
       margin-left: 10px;
-      @include mb {
+      @include init.mb {
         margin-left: 0;
       }
     }
@@ -121,7 +121,7 @@
   #ss-preview-date {
     border-right: 0;
     border-radius: 3px 0 0 3px;
-    @include mb {
+    @include init.mb {
       box-sizing: border-box;
       width: 100px;
       padding: 6px 3px;
@@ -163,12 +163,12 @@
       flex-wrap: wrap;
       align-items: center;
       justify-content: flex-end;
-      @include mb {
+      @include init.mb {
         justify-content: flex-start;
       }
       label {
         margin: 6px 10px 0 0;
-        @include mb {
+        @include init.mb {
           width: 100%;
         }
       }
@@ -176,7 +176,7 @@
   }
   .ss-preview-btn-group ~ .ss-preview-btn-group {
     margin-right: 8px;
-    @include mb {
+    @include init.mb {
       margin-left: 0;
     }
   }
@@ -225,7 +225,7 @@
     padding: 0 5px;
     background-color: rgba(0, 0, 0, 0.8);
     pointer-events: none;
-    @include mb {
+    @include init.mb {
       display: block;
     }
     span {
@@ -234,7 +234,7 @@
     button,
     select {
       min-height: 3em;
-      @include btn;
+      @include init.btn;
     }
     select {
       height: 3em;
@@ -337,7 +337,7 @@ div.ss-preview-dialog {
     font-weight: bold;
   }
   textarea {
-    @include input;
+    @include init.input;
     width: 100%;
     height: 6.5em;
     padding: 5px;
@@ -345,15 +345,15 @@ div.ss-preview-dialog {
   }
   .btn-primary,
   .commit {
-    @include btn-red;
+    @include init.btn-red;
   }
   .btn-default {
-    @include btn-gray-l;
+    @include init.btn-gray-l;
   }
   .btn-primary,
   .commit,
   .btn-default {
-    font-size: $px13;
+    font-size: init.$px13;
   }
   .send {
     margin-top: 10px;
@@ -366,7 +366,7 @@ div.ss-preview-dialog {
   dt.wide {
     margin-bottom: 15px;
     color: #a0522d;
-    font-size: $px13;
+    font-size: init.$px13;
     font-weight: bold;
   }
 }
@@ -408,7 +408,7 @@ body.ss-ajax-in-iframe {
 }
 .dropdown-container {
   tr {
-    background: $white;
+    background: init.$white;
     &:hover {
       background: #f8f8f8;
     }
@@ -428,10 +428,10 @@ table.index {
   th,
   td {
     padding: 6px 18px;
-    font-size: $px13;
+    font-size: init.$px13;
     a {
       color: #f25a38;
-      font-size: $px13;
+      font-size: init.$px13;
       text-decoration: none;
     }
   }
@@ -446,7 +446,7 @@ table.index {
   }
   tbody {
     tr {
-      background: $white;
+      background: init.$white;
       &:nth-child(2n) {
         background: #f8f8f8;
       }
@@ -458,11 +458,11 @@ table.index {
 }
 .mod-workflow-request,
 .search-ui-form {
-  font-size: $px12;
+  font-size: init.$px12;
   dl.see > dt ~ dt,
   dl.see > dd ~ dd {
     margin-top: 15px;
-    @include clear;
+    @include init.clear;
   }
   dt {
     min-width: 180px;
@@ -485,7 +485,7 @@ table.index {
     }
   }
   .btn {
-    @include btn;
+    @include init.btn;
   }
   .dropdown-container {
     display: none;
@@ -503,7 +503,7 @@ table.index {
 }
 .search-ui-select {
   .btn {
-    @include btn;
+    @include init.btn;
   }
 }
 .mod-workflow-request {
@@ -540,7 +540,7 @@ table.index {
         list-style: none;
         text-align: left;
         cursor: auto;
-        @include mb {
+        @include init.mb {
           width: 15em;
         }
         &::before {
@@ -581,7 +581,7 @@ table.index {
       vertical-align: middle;
     }
     .btn {
-      @include btn;
+      @include init.btn;
       box-sizing: border-box;
       height: 2.7em;
       padding: 8px 12px;
@@ -598,11 +598,11 @@ table.index {
 .sns-post-confirm {
   h2 {
     color: #a0522d;
-    font-size: $px13;
+    font-size: init.$px13;
     font-weight: bold;
   }
   li {
-    font-size: $px12;
+    font-size: init.$px12;
   }
   margin-bottom: 10px;
 }

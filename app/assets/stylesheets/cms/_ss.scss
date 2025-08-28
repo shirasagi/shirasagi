@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .routes-view {
   article {
     width: 100%;
@@ -81,7 +83,7 @@ i.calendar-month {
 
 .list-item {
   .title.notice-severity-high {
-    color: $pink;
+    color: init.$pink;
     font-weight: bold;
   }
   .title.marked {
@@ -92,7 +94,7 @@ i.calendar-month {
       color: #333;
     }
     a.notice-severity-high {
-      color: $pink;
+      color: init.$pink;
       font-weight: bold;
     }
     .gws-board-flag-new {
@@ -176,16 +178,16 @@ i.calendar-month {
 }
 
 .cms-tabs {
-  @include clear;
+  @include init.clear;
   margin-top: -1px;
   a {
     display: block;
     margin: 1px 0 -1px 6px;
     float: left;
-    border: 1px solid $gray4;
+    border: 1px solid init.$gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
-    background-color: $gray5;
+    background-color: init.$gray5;
     color: #000;
     .tab-name {
       display: block;
@@ -193,14 +195,14 @@ i.calendar-month {
       text-align: center;
     }
     &:hover {
-      border-left-color: $orange;
+      border-left-color: init.$orange;
       background-color: #fff;
       text-decoration: none;
     }
   }
   a.current {
     border-bottom-color: #fff;
-    border-left-color: $orange;
+    border-left-color: init.$orange;
     background-color: #fff;
   }
 }
@@ -212,8 +214,8 @@ i.calendar-month {
   margin: 0;
   padding: 4px;
   overflow-y: scroll;
-  border: $border-gray4;
-  background: $white;
+  border: init.$border-gray4;
+  background: init.$white;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
 }

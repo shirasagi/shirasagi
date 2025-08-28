@@ -1,5 +1,7 @@
 // -------------------------------------------------------------------------------------------------
 // user navigation dropdown
+@use "init";
+
 .user-navigation {
   display: inline-block;
   max-width: 220px;
@@ -14,7 +16,7 @@
     padding: 5px;
     border: 0;
     background-color: transparent;
-    color: $white;
+    color: init.$white;
     &:hover {
       background-color: #424242;
     }
@@ -41,9 +43,9 @@
     width: 260px;
     max-height: unset;
     padding: 5px 0;
-    border: $border-gray4;
-    background-color: $white;
-    color: $black;
+    border: init.$border-gray4;
+    background-color: init.$white;
+    color: init.$black;
   }
   .user-navigation-dropdown-menu-item-list {
     margin: 0;
@@ -65,12 +67,12 @@
     display: flex;
     align-items: center;
     padding: 8px 10px;
-    color: $black;
+    color: init.$black;
     text-decoration: none;
 
     &:hover {
       background: #eee;
-      color: $orange;
+      color: init.$orange;
     }
 
     .caret {

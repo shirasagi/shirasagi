@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .column-value ~ .column-value {
   margin-top: 10px;
 }
@@ -22,8 +24,8 @@
   display: flex;
   flex-wrap: wrap;
   margin-top: 10px;
-  @include clear;
-  @include mb {
+  @include init.clear;
+  @include init.mb {
     margin-top: 10px;
   }
   &:not(:has(.file-view)) {
