@@ -177,7 +177,8 @@ module Cms::SyntaxChecker
     Cms::SyntaxChecker::InterwordSpaceChecker,
     Cms::SyntaxChecker::KanaCharacterChecker,
     Cms::SyntaxChecker::MultibyteCharacterChecker,
-    Cms::SyntaxChecker::ReplaceWordsChecker
+    Cms::SyntaxChecker::ReplaceWordsChecker,
+    Cms::SyntaxChecker::UnfavorableWordsChecker
   ]
 
   COLUMN_VALUE_SYNTAX_CHECKERS = %i[value editor link list table presence].freeze

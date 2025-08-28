@@ -48,9 +48,5 @@ class Cms::SyntaxChecker::Column::LinkChecker
       context.errors << Cms::SyntaxChecker::CheckerError.new(
         context: context, content: content, checker: self, code: text, error: error)
     end
-    if context.include_unfavorable_word?(text)
-      context.errors << Cms::SyntaxChecker::CheckerError.new(
-        context: context, content: content, checker: self, code: text, error: :unfavorable_word)
-    end
   end
 end
