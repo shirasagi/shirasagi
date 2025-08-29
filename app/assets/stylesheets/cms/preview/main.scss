@@ -299,7 +299,7 @@
     display: none;
   }
 
-  @import "cms/column";
+  @include init.cms_column
 }
 
 #ss-preview-form-palette {
