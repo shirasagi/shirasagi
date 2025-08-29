@@ -80,6 +80,7 @@ class Facility::Agents::Nodes::SearchController < ApplicationController
   end
 
   def map_all
+    params[:keyword] = nil
     params[:category_ids] = nil
     params[:service_ids]  = nil
     params[:location_ids] = nil

@@ -1,11 +1,17 @@
 <nav class="tabs">
   <ul>
-    <% query = params.to_unsafe_h.select{ |k, v| %(keyword category_ids service_ids location_ids).index(k) }.to_query %>
+    <%
+      query = {}
+      query[:keyword] = params[:keyword]
+      query[:category_ids] = params[:category_ids]
+      query[:service_ids] = params[:service_ids]
+      query[:location_ids] = params[:location_ids]
+    %>
     <li class="tab map<%= @current == "map" ? " current" : "" %>">
-      <%= link_to t("facility.tab.map"), "./map.html?#{query}" %>
+      <%= link_to t("facility.tab.map"), "./map.html?#{query.to_query}" %>
     </li>
     <li class="tab list<%= @current == "result" ? " current" : "" %>">
-      <%= link_to t("facility.tab.result"), "./result.html?#{query}" %>
+      <%= link_to t("facility.tab.result"), "./result.html?#{query.to_query}" %>
     </li>
   </ul>
 </nav>
