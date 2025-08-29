@@ -17,17 +17,19 @@ module Job
   # そのような環境ではログファイルが残ったままになって、ディスク容量を圧迫する場合がある。
   # find コマンドで古いログを削除する。
   def purge_old_job_logs_by_find(mod: nil)
-    keep_logs = ::SS.config.job.keep_logs
-    return if keep_logs.nil? || keep_logs <= 0
+    Rails.logger.error("#purge_old_job_logs_by_find was obsoleted. nothing will be executed.")
 
-    days = keep_logs.seconds.in_days
-    days *= 1.5 # find コマンドで削除する場合、設定の1.5倍にする
-    days = days.ceil
-    days = 2 if days < 2
-
-    path = "#{::SS::File.root}/job_logs"
-    ::SS::Command.run("find", path, "-type", "f", "-mtime", "+#{days}", "-delete", mod: mod)
-
+    #keep_logs = ::SS.config.job.keep_logs
+    #return if keep_logs.nil? || keep_logs <= 0
+    #
+    #days = keep_logs.seconds.in_days
+    #days *= 1.5 # find コマンドで削除する場合、設定の1.5倍にする
+    #days = days.ceil
+    #days = 2 if days < 2
+    #
+    #path = "#{::SS::File.root}/job_logs"
+    #::SS::Command.run("find", path, "-type", "f", "-mtime", "+#{days}", "-delete", mod: mod)
+    #
     # NOTE: find コマンドで削除後、空ディレクトリが残るが、空ディレクトリは Rake タスク "ss:delete_empty_directories" にて削除される
   end
 end
