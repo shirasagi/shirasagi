@@ -1,7 +1,12 @@
-@use "material-icons/iconfont/material-icons.scss" with (
-  $material-icons-font-path: '~material-icons/iconfont/'
-);
 @use "animate.css";
+// material-icons 1.13.14 は Sass 3 に対応しておらず、@use を用いて組み込むと以下の警告が大量に表示される。
+// そこで、material-icons が Sass 3 に対応するまで @import で組み込むこととする
+//
+// "Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0."
+//@use "material-icons/iconfont/material-icons.scss" with (
+//  $material-icons-font-path: '~material-icons/iconfont/'
+//);
+@import "material-icons/iconfont/material-icons.css";
 
 .material-icons,
 .material-icons-outlined,
