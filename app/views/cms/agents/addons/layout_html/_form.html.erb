@@ -1,6 +1,19 @@
 <%= code_editor ".mod-cms-html-form textarea", mode: :html %>
+<%= jquery do %>
+  var $form = $('.mod-cms-html-form');
+  var $select = $form.find('select[name="item[loop_setting_id]"]');
+
+  if ($select.length) {
+    Cms_Editor_CodeMirror.lock('select[name="item[loop_setting_id]"]', 'textarea[name="item[html]"]');
+  }
+<% end %>
 
 <dl class="see mod-cms-html-form">
+  <dt class="wide"><%= @model.t :loop_setting_id %><%= @model.tt :loop_setting_id %></dt>
+  <dd class="wide">
+    <%= f.select :loop_setting_id, ancestral_custom_html_settings, include_blank: t('cms.input_directly')  %>
+  </dd>
+
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
     <%= f.text_area :html, style: "height: 400px" %>
