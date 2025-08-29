@@ -1,5 +1,7 @@
-@import "material-icons/iconfont/material-icons.css";
-@import "animate.css";
+@use "material-icons/iconfont/material-icons.scss" with (
+  $material-icons-font-path: '~material-icons/iconfont/'
+);
+@use "animate.css";
 
 .material-icons,
 .material-icons-outlined,
