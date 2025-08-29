@@ -1,3 +1,5 @@
+@use "init";
+
 .ss-image-edit-canvas {
   position: relative;
   margin-top: 48px;
@@ -12,8 +14,8 @@
     height: 40px;
     padding: 0 5px;
     border-radius: 2px;
-    background: $black3;
-    color: $white;
+    background: init.$black3;
+    color: init.$white;
     white-space: nowrap;
 
     &::before {
@@ -23,7 +25,7 @@
       left: 20px;
       width: 0;
       height: 0;
-      border-top: 7px solid $black3;
+      border-top: 7px solid init.$black3;
       border-right: 7px solid transparent;
       border-left: 7px solid transparent;
     }
@@ -31,7 +33,7 @@
 
   .confirm {
     margin-top: 10px;
-    color: $orange;
+    color: init.$orange;
   }
 
   .btn-group {
@@ -52,7 +54,7 @@
     }
     input {
       width: 4em;
-      background: $gray4;
+      background: init.$gray4;
     }
   }
 
@@ -64,10 +66,10 @@
     border: 0;
     outline: none;
     background: transparent;
-    color: $white;
+    color: init.$white;
   }
 
   .btn-group ~ .btn-group {
-    border-left: 1px solid $gray2;
+    border-left: 1px solid init.$gray2;
   }
 }

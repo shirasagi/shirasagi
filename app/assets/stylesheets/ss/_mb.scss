@@ -1,11 +1,13 @@
-@include mb {
+@use "init";
+
+@include init.mb {
   // -------------------------------------------------------------------------------------------------
   // base
 
   body {
-    background-color: $gray2;
+    background-color: init.$gray2;
     color: #000;
-    font-family: $font-base;
+    font-family: init.$font-base;
     font-size: 75%;
     line-height: 1.4;
     word-wrap: break-word;
@@ -21,12 +23,12 @@
     min-height: 100%;
   }
   #head {
-    @include clear;
+    @include init.clear;
     height: auto;
     padding: 5px 0;
     background-color: #fff;
     .wrap {
-      @include clear;
+      @include init.clear;
     }
     h1 {
       width: 148px;
@@ -48,17 +50,17 @@
         display: block;
         padding: 0 10px;
         float: left;
-        border-left: $border-black;
+        border-left: init.$border-black;
         border-radius: 0;
       }
     }
   }
   #crumbs {
-    @include clear;
+    @include init.clear;
   }
   #wrap {
-    @include clear;
-    background: $gray2;
+    @include init.clear;
+    background: init.$gray2;
   }
   #navi-back {
     display: none;
@@ -78,13 +80,13 @@
     width: 100%;
     padding: 0;
     float: none;
-    border-top: $border-gray3;
-    background: $white;
+    border-top: init.$border-gray3;
+    background: init.$white;
   }
   #main {
-    @include clear;
+    @include init.clear;
     padding: 10px;
-    background: $gray2;
+    background: init.$gray2;
   }
   #menu + #main .wrap {
     margin: 0;
@@ -109,16 +111,16 @@
   nav.page-menu,
   nav.addon-menu,
   nav.sns-nav-menu {
-    @include clear;
+    @include init.clear;
     margin: 0;
-    background-color: $white;
+    background-color: init.$white;
     header {
       padding: 2px 5px 0;
-      border-bottom: $border-gray3;
-      color: $gray3;
+      border-bottom: init.$border-gray3;
+      color: init.$gray3;
     }
     div {
-      @include clear;
+      @include init.clear;
       padding: 0 10px 10px;
       a {
         display: inline-block;
@@ -127,16 +129,16 @@
         margin: 0 2px 4px;
         padding: 8px 4px 5px;
         float: left;
-        border: $border-gray5;
+        border: init.$border-gray5;
         border-radius: 3px;
-        background: $gray3;
-        color: $black;
+        background: init.$gray3;
+        color: init.$black;
         text-overflow: ellipsis;
         &.current,
         &:hover {
           padding: 8px 4px 5px;
-          border: 1px solid $pink;
-          background-color: $gray1;
+          border: 1px solid init.$pink;
+          background-color: init.$gray1;
         }
       }
     }
@@ -150,11 +152,11 @@
   }
   .nav-menu,
   .sns-nav-menu {
-    @include clear;
+    @include init.clear;
     padding: 10px;
     a {
       display: inline-block;
-      @include btn;
+      @include init.btn;
       padding: 8px 15px 5px;
     }
     div {
@@ -181,7 +183,7 @@
   table.index {
     width: 100%;
     table-layout: fixed;
-    border: $border-gray3;
+    border: init.$border-gray3;
     tr,
     th,
     td {
@@ -189,7 +191,7 @@
       box-sizing: border-box;
     }
     thead {
-      background-color: $gray3;
+      background-color: init.$gray3;
       font-size: 90%;
       tr {
         border: 0;
@@ -212,7 +214,7 @@
     }
     tbody {
       tr {
-        @include clear;
+        @include init.clear;
         padding: 5px 0;
         border-top: 1px solid #ddd;
         background-color: #fff;
@@ -245,12 +247,12 @@
         display: none;
         position: absolute;
         z-index: 100;
-        border: $border-gray3;
+        border: init.$border-gray3;
         box-shadow: 1px 1px 3px #bbb;
         a {
           display: block;
           padding: 5px 15px 2px;
-          border-top: $border-gray3;
+          border-top: init.$border-gray3;
           &:first-child {
             border-width: 0;
           }

@@ -1,7 +1,9 @@
+@use "ss/init";
+
 .mod-workflow-request {
   margin: 0 0 15px;
   padding: 5px 0;
-  background: $gray1;
+  background: init.$gray1;
   h1 {
     padding: 8px 10px;
   }
@@ -28,9 +30,9 @@
 .workflow-level-header {
   margin: 20px 10px 0;
   padding-left: 8px;
-  border-left: 3px solid $orange;
-  color: $black3;
-  font-size: $px16;
+  border-left: 3px solid init.$orange;
+  color: init.$black3;
+  font-size: init.$px16;
   font-weight: bold;
 }
 

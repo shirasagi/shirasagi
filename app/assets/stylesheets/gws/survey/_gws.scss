@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .gws-survey {
   .form-abstract {
     margin: 16px;
@@ -12,7 +14,7 @@
     box-sizing: content-box;
     margin: 16px 0;
     overflow-x: auto;
-    border: $border-gray5;
+    border: init.$border-gray5;
   }
   &.index {
     .form-table {
@@ -20,7 +22,7 @@
     }
   }
   .operations {
-    @include mb {
+    @include init.mb {
       margin-bottom: 16px;
       margin-left: 0;
       float: none;
@@ -28,7 +30,7 @@
   }
   .form-table-header-inner {
     width: 2000px;
-    @include mb {
+    @include init.mb {
       width: auto;
     }
   }
@@ -36,14 +38,14 @@
     width: 100%;
     table {
       width: 100%;
-      background: $white;
-      @include mb {
+      background: init.$white;
+      @include init.mb {
         border-collapse: collapse;
       }
     }
     tr {
-      @include mb {
-        border-bottom: $border-gray5;
+      @include init.mb {
+        border-bottom: init.$border-gray5;
       }
     }
     tr:nth-child(2n) {
@@ -51,36 +53,36 @@
     }
     tr.current,
     tr:hover {
-      background: $gray1;
+      background: init.$gray1;
       // background: #fbeee8
     }
     th,
     td {
       padding: 6px 18px;
       white-space: nowrap;
-      @include mb {
+      @include init.mb {
         display: inline-block;
       }
     }
     thead {
       tr {
-        background: $gray1;
-        @include mb {
+        background: init.$gray1;
+        @include init.mb {
           display: inline-block;
           width: 100%;
           padding: 0 16px;
         }
       }
       th {
-        color: $gray2;
-        @include mb {
+        color: init.$gray2;
+        @include init.mb {
           padding: 6px 0;
         }
         &.deselect {
           width: 100px;
         }
         &::after {
-          @include mb {
+          @include init.mb {
             content: "/";
           }
         }
@@ -88,8 +90,8 @@
     }
     tbody {
       td {
-        border-top: $border-gray5;
-        @include mb {
+        border-top: init.$border-gray5;
+        @include init.mb {
           border-top: 0;
         }
       }
@@ -99,13 +101,13 @@
   .anonymous-notice {
     margin: 0 0 10px;
     padding: 20px;
-    border: 1px solid $orange;
+    border: 1px solid init.$orange;
     border-radius: 3px;
     background-color: #fff;
     h2 {
       margin: -20px -20px 25px;
       padding: 8px 20px;
-      background-color: $orange;
+      background-color: init.$orange;
       color: #fff;
     }
     p,
@@ -129,9 +131,9 @@
 
     h2 {
       padding: 6px 18px;
-      border: $border-gray5;
+      border: init.$border-gray5;
       border-radius: 2px;
-      background: $gray1;
+      background: init.$gray1;
     }
 
     dl.see {
@@ -174,7 +176,7 @@
       margin: 12px;
       padding-left: 8px;
       border-left: 3px solid #f25a38;
-      font-size: $px14;
+      font-size: init.$px14;
       font-weight: bold;
     }
     .description {

@@ -1,3 +1,5 @@
+@use "ss/init";
+
 dl.see.mod-gws-daily-report-custom_form {
   display: flex;
   flex-wrap: wrap;
@@ -103,7 +105,7 @@ dl.see.mod-gws-daily-report-custom_form {
     .search {
       margin: -5px 0 -5px 20px;
       float: right;
-      @include mb {
+      @include init.mb {
         margin: 0;
         float: none;
         input[type="text"] {
@@ -114,7 +116,7 @@ dl.see.mod-gws-daily-report-custom_form {
     .operations {
       margin: -5px 0 -5px 20px;
       float: right;
-      @include mb {
+      @include init.mb {
         margin: 0;
         .btn-print {
           display: none;

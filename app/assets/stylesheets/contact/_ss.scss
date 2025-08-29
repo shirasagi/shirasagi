@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .contact-groups-table-wrap {
   position: relative;
   width: 100%;
@@ -15,15 +17,15 @@
   }
 
   th {
-    background: $gray1;
-    color: $gray2;
+    background: init.$gray1;
+    color: init.$gray2;
   }
 
   thead {
     tr:last-child {
       th,
       td {
-        border-bottom: $border-gray5;
+        border-bottom: init.$border-gray5;
       }
     }
   }

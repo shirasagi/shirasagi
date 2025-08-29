@@ -1,9 +1,11 @@
+@use "ss/init";
+
 // list
 .gws-boards {
   .unread {
     background-color: #f9e9e3;
     &:hover {
-      background: $orange2;
+      background: init.$orange2;
     }
   }
 }
@@ -26,10 +28,10 @@
   .topic,
   .comment,
   .subscribed-users {
-    @include box;
+    @include init.box;
     margin-bottom: 2px;
     header {
-      @include box-head;
+      @include init.box-head;
       .name {
         margin-right: 4px;
       }
@@ -38,11 +40,11 @@
       margin-bottom: 8px;
       padding-left: 8px;
       border-left: 3px solid #2d3e92;
-      color: $black3;
+      color: init.$black3;
       font-weight: bold;
     }
     .body {
-      @include box-body;
+      @include init.box-body;
 
       .meta {
         text-align: right;
@@ -53,7 +55,7 @@
       margin: 10px;
       padding: 10px;
       border-radius: 4px;
-      background-color: $gray1;
+      background-color: init.$gray1;
     }
     .files a,
     .link-item {
@@ -83,7 +85,7 @@
       gap: 2px;
     }
     a.primary {
-      @include grd-orange;
+      @include init.grd-orange;
     }
   }
   .comments {

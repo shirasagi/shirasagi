@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .presence-groups {
   .all-groups {
     margin-bottom: 5px;
@@ -69,7 +71,7 @@
   table.data-table {
     table-layout: fixed;
     tr {
-      background: $white;
+      background: init.$white;
     }
     th.name {
       width: 25%;
@@ -142,7 +144,7 @@
       }
       nav {
         float: right;
-        @include mb {
+        @include init.mb {
           float: none;
           input[type="text"] {
             width: auto !important;

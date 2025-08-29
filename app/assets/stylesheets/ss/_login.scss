@@ -1,5 +1,6 @@
 // -------------------------------------------------------------------------------------------------
 // login
+@use "init";
 
 #page-login {
   position: absolute;
@@ -7,7 +8,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background: $gray1 url(/assets/img/back.png) no-repeat left 60%;
+  background: init.$gray1 url(/assets/img/back.png) no-repeat left 60%;
   background-size: contain;
 
   #main {
@@ -26,9 +27,9 @@
   margin: 20px 10px;
   border: 1px solid #ccc;
   border-radius: 3px;
-  background: $white;
+  background: init.$white;
   box-shadow: 0 1px 3px #ddd;
-  @include mb {
+  @include init.mb {
     width: calc(100% - 20px);
   }
   header {
@@ -64,7 +65,7 @@
     margin: 20px;
     padding: 0;
     input.btn-primary {
-      @include btn-red;
+      @include init.btn-red;
     }
   }
   .sso {
@@ -85,17 +86,17 @@
       font-weight: bold;
     }
     .text {
-      font-size: $px12;
+      font-size: init.$px12;
     }
   }
 }
 
-@include mb {
+@include init.mb {
   .login-box {
     box-sizing: border-box;
     padding: 10px;
     header {
-      @include clear;
+      @include init.clear;
       margin: 0 0 20px;
       h1 {
         float: left;
@@ -178,12 +179,12 @@
   }
 }
 
-@include mb {
+@include init.mb {
   .login-notice {
     box-sizing: border-box;
     padding: 10px;
     header {
-      @include clear;
+      @include init.clear;
       margin: 0 0 20px;
       h1 {
         float: left;

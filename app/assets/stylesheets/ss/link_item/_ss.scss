@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .ss-link-item-table {
   &.ss-link-item-table-show {
     display: grid;
@@ -45,7 +47,7 @@
       }
     }
 
-    @include mb {
+    @include init.mb {
       grid-template-columns: auto auto auto;
 
       .ss-link-item-name-cell,
@@ -120,7 +122,7 @@
       gap: 5px;
     }
 
-    @include mb {
+    @include init.mb {
       grid-template-columns: 1fr;
       grid-template-rows: 1fr;
 

@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .role-permissions {
   .module {
     position: relative;
@@ -6,7 +8,7 @@
   .module-name {
     margin-bottom: 10px;
     padding: 8px 10px;
-    border: $border-gray5;
+    border: init.$border-gray5;
     border-radius: 2px;
     background-color: #fbfbfb;
     font-size: 120%;

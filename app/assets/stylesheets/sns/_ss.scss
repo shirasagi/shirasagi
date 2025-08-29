@@ -1,10 +1,11 @@
-@import "sns/notice";
+@use "ss/init";
+@use "sns/notice";
 
 .mypage-box {
   width: 50%;
   margin-top: 10px;
   float: left;
-  @include mb {
+  @include init.mb {
     width: 100%;
   }
 }

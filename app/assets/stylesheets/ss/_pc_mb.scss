@@ -1,5 +1,6 @@
 // -------------------------------------------------------------------------------------------------
 // base
+@use "init";
 
 header,
 footer,
@@ -25,11 +26,11 @@ html,
 body {
   height: 100%;
   margin: 0;
-  color: $black3;
+  color: init.$black3;
 }
 body {
-  background: $gray1;
-  font-family: $font-base;
+  background: init.$gray1;
+  font-family: init.$font-base;
   line-height: 1.4;
   word-wrap: break-word;
 }
@@ -48,16 +49,16 @@ p {
   font-weight: normal;
 }
 a {
-  color: $orange;
+  color: init.$orange;
   text-decoration: none;
 }
 a:hover {
   text-decoration: underline;
 }
 nav a {
-  color: $black;
+  color: init.$black;
   &:hover {
-    color: $orange;
+    color: init.$orange;
   }
 }
 img {
@@ -161,7 +162,7 @@ td {
 // Popup Notice
 .popup-notice-container {
   position: relative;
-  @include mb {
+  @include init.mb {
     position: static;
   }
 }
@@ -173,7 +174,7 @@ td {
   width: 450px;
   background: #fff;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
-  @include mb {
+  @include init.mb {
     right: 0;
     width: 100%;
     max-width: 450px;
@@ -188,8 +189,8 @@ td {
     height: 0;
     border: 9px solid transparent;
     border-top: 0;
-    border-bottom: 14px solid $white;
-    @include mb {
+    border-bottom: 14px solid init.$white;
+    @include init.mb {
       right: 229px;
     }
   }
@@ -237,18 +238,18 @@ td {
 _::-webkit-full-page-media,
 _:future,
 :root .popup-notice-container .popup-notice::before {
-  @include mb {
+  @include init.mb {
     right: 219px;
   }
 }
 .gws-memo-notice {
   display: inline-block;
-  //color: $white;
+  //color: init.$white;
   a {
-    color: $white;
+    color: init.$white;
     &:hover {
       background: #424242;
-      color: $white;
+      color: init.$white;
     }
   }
   > .ajax-popup-notice {
@@ -272,7 +273,7 @@ _:future,
 .gws-memo-message {
   display: inline-block;
   vertical-align: bottom;
-  @include mb {
+  @include init.mb {
     .popup-notice::before {
       right: 279px;
     }
@@ -281,7 +282,7 @@ _:future,
 _::-webkit-full-page-media,
 _:future,
 :root .gws-memo-message .popup-notice::before {
-  @include mb {
+  @include init.mb {
     right: 268px;
   }
 }
@@ -387,19 +388,19 @@ _:future,
 // -------------------------------------------------------------------------------------------------
 // head
 #head {
-  @include clear;
+  @include init.clear;
   position: relative;
   z-index: 100;
-  border-bottom: $border-gray4;
-  background: $black2;
+  border-bottom: init.$border-gray4;
+  background: init.$black2;
   font-size: 14px;
   .application-name {
     float: left;
-    color: $white;
-    font-size: $px21;
+    color: init.$white;
+    font-size: init.$px21;
     a {
       display: block;
-      color: $white;
+      color: init.$white;
     }
     a:hover {
       text-decoration: none;
@@ -438,19 +439,19 @@ _:future,
   .sns,
   .webmail,
   .gws-search {
-    @include clear;
+    @include init.clear;
     float: left;
-    @include mb {
+    @include init.mb {
       float: none;
     }
     h2 {
       float: left;
       a {
         display: block;
-        color: $white;
+        color: init.$white;
         &.current,
         &:hover {
-          color: $black;
+          color: init.$black;
           text-decoration: none;
         }
       }
@@ -460,10 +461,10 @@ _:future,
       a {
         display: block;
         padding: 15px 10px;
-        color: $white;
+        color: init.$white;
         &:hover {
-          background: $white;
-          color: $black;
+          background: init.$white;
+          color: init.$black;
           text-decoration: none;
         }
       }
@@ -472,14 +473,14 @@ _:future,
   .cms h2 a {
     padding: 15px 20px 15px 55px;
     background: url(/assets/img/ic-cms-off.png) no-repeat 20px center;
-    @include mb {
+    @include init.mb {
       padding: 5px 10px 5px 40px;
       background-position: 10px center;
     }
     &.current,
     &:hover {
-      background: $white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
-      @include mb {
+      background: init.$white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
+      @include init.mb {
         background-position: 10px center;
       }
     }
@@ -487,14 +488,14 @@ _:future,
   .gws h2 a {
     padding: 15px 20px 15px 70px;
     background: url(/assets/img/ic-gws-off.png) no-repeat 20px center;
-    @include mb {
+    @include init.mb {
       padding: 5px 10px 5px 55px;
       background-position: 10px center;
     }
     &.current,
     &:hover {
-      background: $white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
-      @include mb {
+      background: init.$white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
+      @include init.mb {
         background-position: 10px center;
       }
     }
@@ -502,14 +503,14 @@ _:future,
   .sns h2 a {
     padding: 15px 20px 15px 60px;
     background: url(/assets/img/ic-sns-off.png) no-repeat 20px center;
-    @include mb {
+    @include init.mb {
       padding: 5px 10px 5px 45px;
       background-position: 10px center;
     }
     &.current,
     &:hover {
-      background: $white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
-      @include mb {
+      background: init.$white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
+      @include init.mb {
         background-position: 10px center;
       }
     }
@@ -517,14 +518,14 @@ _:future,
   .webmail h2 a {
     padding: 15px 20px 15px 60px;
     background: url(/assets/img/ic-mail-off.png) no-repeat 20px center;
-    @include mb {
+    @include init.mb {
       padding: 5px 10px 5px 45px;
       background-position: 10px center;
     }
     &.current,
     &:hover {
-      background: $white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
-      @include mb {
+      background: init.$white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
+      @include init.mb {
         background-position: 10px center;
       }
     }
@@ -558,7 +559,7 @@ _:future,
       }
     }
   }
-  @include mb {
+  @include init.mb {
     .gws-search {
       width: 100%;
       padding: 15px 15px 15px 20px;
@@ -571,7 +572,7 @@ _:future,
       }
     }
   }
-  @include mb {
+  @include init.mb {
     .application-menu {
       display: flex;
       justify-content: space-between;
@@ -588,7 +589,7 @@ _:future,
     text-align: right;
     text-decoration: none;
     &:hover {
-      background-color: $gray3;
+      background-color: init.$gray3;
     }
     .unseen {
       display: inline-block;
@@ -609,7 +610,7 @@ _:future,
   }
   .sp-menu-button {
     display: none;
-    @include mb {
+    @include init.mb {
       display: block;
       float: right;
       line-height: 1;
@@ -618,7 +619,7 @@ _:future,
         position: relative;
         width: 40px;
         height: 40px;
-        background: $white;
+        background: init.$white;
       }
       span {
         display: block;
@@ -629,7 +630,7 @@ _:future,
         -moz-transition: all 0.4s;
         -webkit-transition: all 0.4s;
         transition: all 0.4s;
-        background: $black;
+        background: init.$black;
       }
       span:first-child {
         top: 10px;
@@ -663,7 +664,7 @@ _:future,
 // -------------------------------------------------------------------------------------------------
 // wrap
 #wrap {
-  @include clear;
+  @include init.clear;
 }
 
 // -------------------------------------------------------------------------------------------------
@@ -676,7 +677,7 @@ _:future,
   padding-bottom: 120px;
   border-right: 1px solid #dcdcdc;
   border-bottom: 1px solid #dcdcdc;
-  background: $white;
+  background: init.$white;
   .icon-material::before {
     top: 6px;
     left: 16px;
@@ -685,7 +686,7 @@ _:future,
     padding-left: 50px;
     font-weight: normal;
   }
-  @include mb {
+  @include init.mb {
     display: none;
     z-index: 200;
     width: 100%;
@@ -735,11 +736,11 @@ _:future,
 // -------------------------------------------------------------------------------------------------
 // site-name
 .site-name {
-  @include clear;
-  @include truncate;
+  @include init.clear;
+  @include init.truncate;
   & {
     padding: 10px 15px;
-    border-bottom: $border-gray5;
+    border-bottom: init.$border-gray5;
     font-weight: bold;
   }
 }
@@ -747,31 +748,31 @@ _:future,
 // -------------------------------------------------------------------------------------------------
 // site-navi
 .site-navi {
-  @include clear;
-  border-bottom: $border-gray5;
+  @include init.clear;
+  border-bottom: init.$border-gray5;
   h2 {
     width: 105px;
     float: left;
     text-align: center;
-    @include mb {
+    @include init.mb {
       width: 50%;
     }
     a {
       display: block;
       padding: 45px 0 10px;
       background: url(/assets/img/ic-preview-off.png) no-repeat center 5px;
-      color: $black;
-      font-size: $px12;
+      color: init.$black;
+      font-size: init.$px12;
       &:hover {
-        background: $gray1 url(/assets/img/ic-preview-on.png) no-repeat center
+        background: init.$gray1 url(/assets/img/ic-preview-on.png) no-repeat center
           5px;
-        color: $orange;
+        color: init.$orange;
         text-decoration: none;
       }
     }
     a,
     a:hover {
-      @include mb {
+      @include init.mb {
         padding: 15px 15px 15px 45px;
         background-position: 4px center;
         text-align: left;
@@ -792,13 +793,13 @@ _:future,
   padding: 10px 10px 10px 50px;
 }
 .main-navi {
-  border-bottom: $border-gray5;
+  border-bottom: init.$border-gray5;
   h2 a,
   .icon-ss {
     display: block;
     position: relative;
     @include navi-icon;
-    color: $black;
+    color: init.$black;
     &::before {
       content: "";
       position: absolute;
@@ -810,7 +811,7 @@ _:future,
     }
     &:hover {
       position: relative;
-      color: $orange;
+      color: init.$orange;
       text-decoration: none;
     }
   }
@@ -818,10 +819,10 @@ _:future,
     background: url(/assets/img/ic-main-navi.png) no-repeat -32px top;
   }
   h2.current {
-    background-color: $gray1;
+    background-color: init.$gray1;
   }
   h2:hover {
-    background-color: $gray1;
+    background-color: init.$gray1;
   }
   h3 {
     display: none;
@@ -857,7 +858,7 @@ _:future,
   border: none;
   background: #fff;
   > a.current {
-    color: $orange;
+    color: init.$orange;
   }
   .icon-ss {
     display: inline-block;
@@ -913,7 +914,7 @@ _:future,
       text-decoration: none;
     }
     li a.current {
-      color: $orange;
+      color: init.$orange;
     }
     .icon-ss,
     .icon-material {
@@ -937,7 +938,7 @@ _:future,
     }
   }
 }
-@include mb {
+@include init.mb {
   #main .main-navi {
     margin-top: 10px;
     margin-bottom: 0;
@@ -947,7 +948,7 @@ _:future,
 // -------------------------------------------------------------------------------------------------
 // mod-navi
 .mod-navi {
-  border-bottom: $border-gray5;
+  border-bottom: init.$border-gray5;
   &:not(.current-navi) {
     h2 {
       padding: 10px 15px;
@@ -959,9 +960,9 @@ _:future,
       a {
         display: block;
         position: relative;
-        background-color: $gray1;
+        background-color: init.$gray1;
         @include navi-icon;
-        color: $black;
+        color: init.$black;
         // &:before {
         //   content: "";
         //   position: absolute;
@@ -973,7 +974,7 @@ _:future,
         // }
         &:hover {
           position: relative;
-          color: $orange;
+          color: init.$orange;
           text-decoration: none;
         }
       }
@@ -997,9 +998,9 @@ _:future,
         padding: 1px 33.59px 1px 8px !important;
       }
 
-      background-color: $gray1;
+      background-color: init.$gray1;
       &:hover {
-        background-color: $gray1;
+        background-color: init.$gray1;
       }
     }
     h2:not(:first-child) {
@@ -1025,7 +1026,7 @@ _:future,
     }
 
     &:hover {
-      background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px
+      background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 35px
         center;
     }
 
@@ -1034,28 +1035,28 @@ _:future,
     }
 
     &.management:hover {
-      background: $gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
+      background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
     }
 
     &.trash:hover {
-      background: $gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+      background: init.$gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
     }
   }
   h3 a {
-    color: $black;
+    color: init.$black;
     &:hover {
-      background: $gray1;
-      color: $orange;
+      background: init.$gray1;
+      color: init.$orange;
       text-decoration: none;
     }
     &.management:hover {
-      background: $gray1;
-      color: $orange;
+      background: init.$gray1;
+      color: init.$orange;
       text-decoration: none;
     }
     &.trash:hover {
-      background: $gray1;
-      color: $orange;
+      background: init.$gray1;
+      color: init.$orange;
       text-decoration: none;
     }
   }
@@ -1095,29 +1096,29 @@ _:future,
   h4 {
     a {
       display: block;
-      color: $black;
+      color: init.$black;
 
       @at-root h4.current a {
-        background-color: $gray1;
+        background-color: init.$gray1;
 
         &.management {
-          background: $gray1;
+          background: init.$gray1;
         }
 
         &.trash {
-          background: $gray1;
+          background: init.$gray1;
         }
       }
 
       &:hover {
-        background: $gray1;
-        color: $orange;
+        background: init.$gray1;
+        color: init.$orange;
         text-decoration: none;
       }
 
       &.management:hover {
-        background: $gray1;
-        color: $orange;
+        background: init.$gray1;
+        color: init.$orange;
         text-decoration: none;
       }
     }
@@ -1147,7 +1148,7 @@ _:future,
       background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
 
       &:hover {
-        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
+        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
           center;
       }
 
@@ -1156,16 +1157,16 @@ _:future,
       }
 
       &.management:hover {
-        background: $gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
       }
     }
   }
   .navi-link:hover {
-    background-color: $gray1;
+    background-color: init.$gray1;
     text-decoration: none;
     cursor: pointer;
   }
-  @include mb {
+  @include init.mb {
     h3:not(.no-icons) {
       a,
       a:hover,
@@ -1185,8 +1186,8 @@ _:future,
     }
     &:hover h2,
     &.active h2 {
-      background: $gray1 url(/assets/img/ic-arrow-on.png) no-repeat 190px center;
-      color: $orange;
+      background: init.$gray1 url(/assets/img/ic-arrow-on.png) no-repeat 190px center;
+      color: init.$orange;
     }
     &.active h2 {
       &::before {
@@ -1197,7 +1198,7 @@ _:future,
         left: 100%;
         border-top: 11px solid transparent;
         border-bottom: 11px solid transparent;
-        border-left: 9px solid $gray4;
+        border-left: 9px solid init.$gray4;
       }
       &::after {
         content: "";
@@ -1207,10 +1208,10 @@ _:future,
         left: 100%;
         border-top: 10px solid transparent;
         border-bottom: 10px solid transparent;
-        border-left: 8px solid $gray1;
+        border-left: 8px solid init.$gray1;
       }
     }
-    @include mb {
+    @include init.mb {
       h2,
       &.active h2,
       &:hover h2 {
@@ -1219,15 +1220,15 @@ _:future,
     }
   }
   .dropdown-menu {
-    @include clear;
+    @include init.clear;
     top: -1px;
     left: 211px;
     width: 400px;
     margin: 0;
     padding: 14px 10px 14px 20px;
-    border: $border-gray4;
+    border: init.$border-gray4;
     border-left: 0;
-    background: $white;
+    background: init.$white;
     li {
       width: 180px;
       float: left;
@@ -1241,7 +1242,7 @@ _:future,
       padding: 8px 0 8px 15px;
       background: url(/assets/img/ic-li.png) no-repeat left center;
     }
-    @include mb {
+    @include init.mb {
       position: static;
       width: 100%;
       li {
@@ -1263,24 +1264,24 @@ _:future,
       &.management {
         background: url(/assets/img/ic-setting.png) no-repeat 60px center;
       }
-      color: $black;
+      color: init.$black;
       &:hover {
-        background: $gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
+        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
           center;
-        color: $orange;
+        color: init.$orange;
         text-decoration: none;
       }
       &:hover.management {
-        background: $gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
-        color: $orange;
+        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+        color: init.$orange;
         text-decoration: none;
       }
     }
     .current a {
-      background-color: $gray1;
+      background-color: init.$gray1;
     }
-    @include mb {
-      @include clear;
+    @include init.mb {
+      @include init.clear;
       li {
         margin-left: 25px;
         float: left;
@@ -1546,13 +1547,13 @@ _:future,
 #main:not(.print-preview) {
   width: 100%;
   padding-bottom: 40px;
-  @include mb {
+  @include init.mb {
     margin: 0 0 100px;
     float: none;
   }
   .wrap {
     margin: 0 10px 0 10px;
-    @include mb {
+    @include init.mb {
       margin: 10px 0;
     }
   }
@@ -1572,24 +1573,24 @@ _:future,
   right: 15px;
   bottom: 15px;
   text-align: right;
-  @include mb {
+  @include init.mb {
     padding: 10px;
   }
 }
 #ss-mb,
 #ss-pc {
   margin-top: 10px;
-  @include btn;
+  @include init.btn;
 }
 // -------------------------------------------------------------------------------------------------
 // breadcrumb
 .breadcrumb {
-  @include clear;
+  @include init.clear;
   margin: 0 0 10px -42px;
-  border-bottom: $border-gray4;
-  background: $gray5;
+  border-bottom: init.$border-gray4;
+  background: init.$gray5;
   list-style: none;
-  @include mb {
+  @include init.mb {
     display: none;
   }
   li {
@@ -1602,7 +1603,7 @@ _:future,
     display: block;
     position: relative;
     padding: 10px 28px;
-    color: $black;
+    color: init.$black;
     &::before {
       content: "";
       position: absolute;
@@ -1620,7 +1621,7 @@ _:future,
       right: -11px;
       border-top: 20px solid transparent;
       border-bottom: 20px solid transparent;
-      border-left: 12px solid $gray5;
+      border-left: 12px solid init.$gray5;
     }
   }
 }
@@ -1628,15 +1629,15 @@ _:future,
 // -------------------------------------------------------------------------------------------------
 // warning
 .warning {
-  @include clear;
+  @include init.clear;
   margin: 0 0 1px;
   padding: 10px;
   background: #f99;
   a {
-    color: $black;
+    color: init.$black;
     font-weight: bold;
   }
-  @include mb {
+  @include init.mb {
     padding-left: 10px;
   }
 }
@@ -1648,18 +1649,18 @@ _:future,
   .nav-menu,
   .sns-nav-menu {
     margin: 20px;
-    @include mb {
+    @include init.mb {
       margin: 0;
       padding: 10px;
     }
     a {
       display: inline-block;
-      @include arrow;
-      color: $black;
+      @include init.arrow;
+      color: init.$black;
       &:hover {
-        color: $orange;
+        color: init.$orange;
       }
-      @include mb {
+      @include init.mb {
         margin-bottom: 16px;
       }
     }
@@ -1685,8 +1686,8 @@ _:future,
       border: transparent 1px solid;
       font-size: 80%;
       &:hover {
-        border: $orange 1px solid;
-        color: $orange;
+        border: init.$orange 1px solid;
+        color: init.$orange;
       }
     }
   }
@@ -1699,7 +1700,7 @@ _:future,
       display: inline-block;
       position: relative;
       padding: 0 20px;
-      color: $black;
+      color: init.$black;
       text-decoration: none;
       .material-icons {
         margin-right: 4px;
@@ -1718,7 +1719,7 @@ _:future,
     margin: 0 10px 10px 220px;
   }
 }
-@include mb {
+@include init.mb {
   #menu {
     .nav-menu {
       margin: 10px 0;
@@ -1737,7 +1738,7 @@ _:future,
 // main-navi
 
 #content-navi {
-  @include box;
+  @include init.box;
   position: relative;
   width: 24%;
   padding: 10px;
@@ -1765,7 +1766,7 @@ _:future,
   width: calc(100% - 24% - 10px);
   float: right;
 }
-@include mb {
+@include init.mb {
   #content-navi {
     width: auto;
     max-height: 200px;
@@ -1808,7 +1809,7 @@ _:future,
     font-size: 13px;
     vertical-align: top;
     &:hover {
-      border-color: $orange;
+      border-color: init.$orange;
       color: #f25a38;
     }
   }
@@ -1843,16 +1844,16 @@ _:future,
   }
 }
 .main-box {
-  @include box;
+  @include init.box;
   padding: 15px 10px;
-  @include mb {
+  @include init.mb {
     margin: 0 10px 10px;
   }
   header {
-    @include box-head;
+    @include init.box-head;
     & {
       margin: -15px -10px 15px;
-      border-bottom: $border-gray1;
+      border-bottom: init.$border-gray1;
     }
   }
   .main-body {
@@ -1863,7 +1864,7 @@ _:future,
 .toggle-head {
   cursor: pointer;
   &:hover {
-    background: $orange2;
+    background: init.$orange2;
   }
 }
 .addon-view,
@@ -1871,9 +1872,9 @@ _:future,
 .index-search,
 .search-form {
   &:not(.print) {
-    @include box;
+    @include init.box;
   }
-  @include mb {
+  @include init.mb {
     margin: 0 10px 10px;
   }
   .see {
@@ -1889,7 +1890,7 @@ _:future,
     position: absolute;
     top: 17px;
     left: 300px;
-    @include mb {
+    @include init.mb {
       top: 13px;
       right: 10px;
       left: auto;
@@ -1897,14 +1898,14 @@ _:future,
     a {
       padding-left: 20px;
       background: url(/assets/img/ic-open.png) no-repeat left center;
-      font-size: $px12;
+      font-size: init.$px12;
     }
   }
 }
 .search-contents-pages,
 .search-contents-form,
 .search-form {
-  @include clear;
+  @include init.clear;
   padding: 10px;
 }
 .list-head-search .index-search,
@@ -1916,12 +1917,12 @@ _:future,
   margin: 10px;
 }
 .addon-head {
-  @include box-head;
+  @include init.box-head;
 }
 .addon-body {
-  @include box-body;
+  @include init.box-body;
   &.print {
-    border-top: $border-black2;
+    border-top: init.$border-black2;
   }
   .images {
     .image {
@@ -1935,21 +1936,21 @@ _:future,
 dl.see {
   margin: 5px 0;
   > dt {
-    @include clear;
+    @include init.clear;
     min-width: 180px;
     padding: 5px 0;
     float: left;
-    color: $orange3;
+    color: init.$orange3;
     font-weight: bold;
-    @include mb {
+    @include init.mb {
       float: none;
     }
   }
   > dd {
-    @include clear;
+    @include init.clear;
     margin: 0 0 0 180px;
     padding: 5px 0;
-    @include mb {
+    @include init.mb {
       margin: 0;
     }
     .prefix,
@@ -1961,7 +1962,7 @@ dl.see {
     input,
     select {
       margin: -5px 0;
-      @include mb {
+      @include init.mb {
         &[type="text"] ~ .btn,
         &[type="text"] ~ label,
         ~ select {
@@ -1980,7 +1981,7 @@ dl.see {
     > .sanitizer-status {
       margin-left: 0.5rem;
     }
-    @include mb {
+    @include init.mb {
       select + input[type="text"] {
         width: 60% !important;
       }
@@ -1999,13 +2000,13 @@ dl.see {
   }
   > dd ~ dd {
     margin-top: 15px;
-    @include mb {
+    @include init.mb {
       margin-top: 0;
     }
   }
   > dd + dd {
     margin-top: 0;
-    @include mb {
+    @include init.mb {
       margin-top: 0;
     }
   }
@@ -2022,13 +2023,13 @@ dl.see {
     button,
     .ajax-box {
       margin: 0 5px 5px 0;
-      @include mb {
+      @include init.mb {
         margin-bottom: 10px;
       }
     }
   }
   > dd.short {
-    @include mb {
+    @include init.mb {
       display: flex;
       align-items: center;
       .prefix,
@@ -2043,7 +2044,7 @@ dl.see {
   }
   > dt.depth-2 {
     padding-left: 20px;
-    @include mb {
+    @include init.mb {
       + dd {
         padding-left: 20px;
       }
@@ -2051,7 +2052,7 @@ dl.see {
   }
   > dt.depth-3 {
     padding-left: 40px;
-    @include mb {
+    @include init.mb {
       + dd {
         padding-left: 40px;
       }
@@ -2059,7 +2060,7 @@ dl.see {
   }
   > dt.depth-4 {
     padding-left: 60px;
-    @include mb {
+    @include init.mb {
       + dd {
         padding-left: 40px;
       }
@@ -2067,7 +2068,7 @@ dl.see {
   }
   > dt.depth-5 {
     padding-left: 80px;
-    @include mb {
+    @include init.mb {
       + dd {
         padding-left: 40px;
       }
@@ -2089,8 +2090,8 @@ dl.mod-cms-parent_crumbs {
   height: 16px;
   margin-left: 5px;
   border-radius: 8px;
-  background: $orange;
-  color: $white;
+  background: init.$orange;
+  color: init.$white;
   line-height: 1.1;
   text-align: center;
   cursor: pointer;
@@ -2136,25 +2137,25 @@ footer.send {
   button {
     min-width: 80px;
     margin: 0 5px;
-    @include mb {
+    @include init.mb {
       margin: 0 4px 4px;
     }
   }
   input.publish_save,
   input.delete {
-    @include btn-red;
+    @include init.btn-red;
   }
   input.branch_save,
   input.draft_save,
   input.save,
   button.save {
-    @include btn-blue;
+    @include init.btn-blue;
   }
   input.branch_save {
-    @include btn-green;
+    @include init.btn-green;
   }
   button.preview {
-    @include btn-white;
+    @include init.btn-white;
     & {
       position: relative;
       margin-top: -2px;
@@ -2203,25 +2204,25 @@ footer.send {
 // button
 
 .btn {
-  @include btn;
+  @include init.btn;
 }
 .btn-primary {
-  @include btn-blue;
+  @include init.btn-blue;
 }
 .btn-default {
-  @include btn-gray-l;
+  @include init.btn-gray-l;
 }
 .btn-success {
-  @include btn-orange;
+  @include init.btn-orange;
 }
 .btn-icon {
-  @include btn-icon;
+  @include init.btn-icon;
 }
 .btn-red {
-  @include btn-red-core;
+  @include init.btn-red-core;
 }
 .btn-orange {
-  @include btn-orange-core;
+  @include init.btn-orange-core;
 }
 .btn-inline-flex {
   display: inline-flex;
@@ -2247,11 +2248,11 @@ footer.send {
 .column-value {
   .upload-menu-select {
     float: right;
-    @include mb {
+    @include init.mb {
       margin-bottom: 10px;
     }
   }
-  @include mb {
+  @include init.mb {
     .upload-menu-new {
       display: inline-block;
       margin-bottom: 10px;
@@ -2266,11 +2267,11 @@ footer.send {
     border-radius: 3px;
   }
   .upload-drop-area {
-    background: $gray1;
+    background: init.$gray1;
   }
   .column-value-upload-drop-area {
     margin-bottom: 10px;
-    background: $white;
+    background: init.$white;
   }
   .upload-drop-notice,
   .column-value-upload-drop-notice {
@@ -2286,8 +2287,8 @@ footer.send {
   }
   #selected-files {
     margin-top: 10px;
-    //@include clear;
-    @include mb {
+    //@include init.clear;
+    @include init.mb {
       margin-top: 10px;
     }
   }
@@ -2303,7 +2304,7 @@ footer.send {
   position: relative;
   width: 164px;
   //margin: 0 28px 20px 0;
-  @include mb {
+  @include init.mb {
     //margin: 0 10px 10px 0;
   }
   &.unused {
@@ -2325,7 +2326,7 @@ footer.send {
     display: block !important;
     min-height: 110px;
     overflow: hidden;
-    border: 5px solid $gray4;
+    border: 5px solid init.$gray4;
     //line-height: 110px;
     text-align: center;
     &:hover {
@@ -2335,9 +2336,9 @@ footer.send {
         display: block;
         z-index: 1000;
         padding: 10px;
-        border: 5px solid $gray4;
-        background: $white;
-        color: $black;
+        border: 5px solid init.$gray4;
+        background: init.$white;
+        color: init.$black;
         line-height: 20px;
         text-align: left;
       }
@@ -2360,8 +2361,8 @@ footer.send {
       height: 110px;
       padding: 10px;
       overflow: hidden;
-      color: $orange;
-      font-size: $px32;
+      color: init.$orange;
+      font-size: init.$px32;
       font-weight: bold;
     }
   }
@@ -2377,7 +2378,7 @@ footer.send {
     align-items: center;
     gap: 5px;
     a {
-      @include btn;
+      @include init.btn;
     }
   }
   * ~ .action {
@@ -2447,8 +2448,8 @@ footer.send {
 #addon-member-agents-addons-photo-spot .see {
   #selected-member-photos {
     margin-top: 30px;
-    @include clear;
-    @include mb {
+    @include init.clear;
+    @include init.mb {
       margin-top: 10px;
     }
   }
@@ -2469,17 +2470,17 @@ footer.send {
   line-height: 2;
   > div {
     padding: 0 24px;
-    @include mb {
+    @include init.mb {
       padding: 0 10px;
     }
   }
   label {
     display: inline-block;
     margin-right: 10px;
-    @include mb {
+    @include init.mb {
       &.parent {
         display: block;
-        border-bottom: $border-gray1;
+        border-bottom: init.$border-gray1;
       }
     }
     input {
@@ -2488,8 +2489,8 @@ footer.send {
   }
   div.parent {
     padding: 15px 24px;
-    border-bottom: $border-gray1;
-    @include mb {
+    border-bottom: init.$border-gray1;
+    @include init.mb {
       padding: 10px;
     }
     &.last-child {
@@ -2497,7 +2498,7 @@ footer.send {
     }
     .child {
       padding-left: 30px;
-      @include mb {
+      @include init.mb {
         padding: 0;
       }
     }
@@ -2512,7 +2513,7 @@ footer.send {
 // mod-map
 .mod-map {
   padding: 0 10px;
-  @include mb {
+  @include init.mb {
     padding: 0 10px;
   }
   .reference-column-name,
@@ -2524,13 +2525,13 @@ footer.send {
     margin: 0;
   }
   .set-zoom-level {
-    @include mb {
+    @include init.mb {
       margin: 0;
     }
   }
   .keyword {
     max-width: 400px;
-    @include mb {
+    @include init.mb {
       max-width: 75%;
     }
   }
@@ -2539,7 +2540,7 @@ footer.send {
     margin-bottom: 5px;
   }
   .marker-setting {
-    @include clear;
+    @include init.clear;
     margin: 20px 0 0;
     dt {
       margin-bottom: 10px;
@@ -2553,7 +2554,7 @@ footer.send {
       padding-bottom: 18px;
       float: left;
       border-radius: 6px;
-      @include mb {
+      @include init.mb {
         margin: 0;
         float: none;
       }
@@ -2568,13 +2569,13 @@ footer.send {
       .marker-text,
       .marker-loc-input {
         width: 240px;
-        @include mb {
+        @include init.mb {
           width: 100%;
         }
       }
       &:last-child {
         width: 260px;
-        @include mb {
+        @include init.mb {
           width: 100%;
         }
       }
@@ -2605,7 +2606,7 @@ footer.send {
     }
   }
   .add-marker {
-    @include btn-orange;
+    @include init.btn-orange;
     & {
       margin: 10px 0 28px;
     }
@@ -2623,11 +2624,11 @@ footer.send {
 // -------------------------------------------------------------------------------------------------
 // search-form
 .list-search {
-  @include clear;
-  @include box;
+  @include init.clear;
+  @include init.box;
   margin-bottom: 15px;
   padding: 12px;
-  @include mb {
+  @include init.mb {
     margin: 0 10px 10px;
   }
   .title {
@@ -2636,7 +2637,7 @@ footer.send {
   }
   form {
     float: right;
-    @include mb {
+    @include init.mb {
       float: none;
     }
   }
@@ -2650,8 +2651,8 @@ footer.send {
   z-index: 100;
   max-width: 140px;
   padding: 5px 0;
-  border: $border-gray4;
-  background: $white;
+  border: init.$border-gray4;
+  background: init.$white;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   a {
     display: block;
@@ -2659,15 +2660,15 @@ footer.send {
     line-height: 1.8;
     white-space: nowrap;
     &:hover {
-      background: $gray1;
+      background: init.$gray1;
     }
   }
 }
 div.index {
-  @include clear;
-  @include box;
+  @include init.clear;
+  @include init.box;
   position: static;
-  @include mb {
+  @include init.mb {
     margin: 0 10px 10px;
   }
   .more {
@@ -2675,12 +2676,12 @@ div.index {
   }
 }
 .list-head {
-  @include clear;
+  @include init.clear;
   margin: 0 0 10px;
   padding: 10px 18px;
-  border-bottom: $border-gray1;
+  border-bottom: init.$border-gray1;
   font-weight: bold;
-  @include mb {
+  @include init.mb {
     padding: 10px 20px;
   }
   .check {
@@ -2722,7 +2723,7 @@ div.index {
       align-items: center;
       gap: 5px;
       margin-left: auto;
-      @include mb {
+      @include init.mb {
         width: 100%;
         margin-left: 0;
       }
@@ -2743,7 +2744,7 @@ div.index {
 .list-head-action {
   margin: 1px 0 10px;
   float: left;
-  @include mb {
+  @include init.mb {
     float: none;
     * {
       margin-bottom: 5px;
@@ -2784,12 +2785,12 @@ div.index {
 .list-head-search {
   margin: 0 0 10px;
   float: right;
-  @include mb {
+  @include init.mb {
     float: none;
     clear: both;
     .index-search {
       margin: 0;
-      @include mb {
+      @include init.mb {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
@@ -2814,11 +2815,11 @@ div.index {
 
   & ~ .alternative-actions {
     padding-left: 5px;
-    border-left: $border-black;
+    border-left: init.$border-black;
   }
 }
 .list-head-search-full {
-  @include mb {
+  @include init.mb {
     form {
       display: flex;
       flex-wrap: wrap;
@@ -2841,8 +2842,8 @@ div.index {
     display: flex;
     align-items: center;
     padding: 8px;
-    border-bottom: $border-gray1;
-    @include mb {
+    border-bottom: init.$border-gray1;
+    @include init.mb {
       display: block;
       padding: 8px 10px;
     }
@@ -2851,11 +2852,11 @@ div.index {
     }
     .checked,
     &:hover {
-      background: $orange2;
+      background: init.$orange2;
     }
     label + .info,
     .info + .links {
-      @include mb {
+      @include init.mb {
         margin-left: 26px;
       }
     }
@@ -2874,10 +2875,10 @@ div.index {
       flex-grow: 10;
     }
     .title {
-      color: $orange;
-      font-size: $px15;
-      @include mb {
-        font-size: $px14;
+      color: init.$orange;
+      font-size: init.$px15;
+      @include init.mb {
+        font-size: init.$px14;
       }
     }
     &.seen {
@@ -3008,7 +3009,7 @@ div.index {
       display: contents;
 
       > * {
-        border-bottom: $border-gray1;
+        border-bottom: init.$border-gray1;
       }
 
       &:last-child > * {
@@ -3016,12 +3017,12 @@ div.index {
       }
 
       &:hover > * {
-        background: $orange2;
+        background: init.$orange2;
       }
 
       label + .info,
       .info + .links {
-        @include mb {
+        @include init.mb {
           margin-left: unset;
         }
       }
@@ -3050,14 +3051,14 @@ div.index {
   }
 }
 .wrap-table {
-  @include mb {
+  @include init.mb {
     overflow: scroll;
     table.index th,
     table.index td {
       display: table-cell;
     }
     table.index thead th {
-      border-bottom: $border-gray5;
+      border-bottom: init.$border-gray5;
     }
     table.index thead th::after {
       display: none;
@@ -3100,19 +3101,19 @@ div.index {
 }
 table.index {
   width: 100%;
-  border: $border-gray5;
-  background: $white;
+  border: init.$border-gray5;
+  background: init.$white;
   tr:nth-child(2n) {
     background: #f8f8f8;
   }
   tr.current,
   tr:hover {
-    background: $gray1;
+    background: init.$gray1;
   }
   th,
   td {
     padding: 6px 18px;
-    @include mb {
+    @include init.mb {
       display: inline-block;
     }
   }
@@ -3130,9 +3131,9 @@ table.index {
     padding-right: 0;
   }
   thead th {
-    border-bottom: $border-gray5;
-    background: $gray1;
-    color: $gray2;
+    border-bottom: init.$border-gray5;
+    background: init.$gray1;
+    color: init.$gray2;
     &.updated {
       width: 160px;
     }
@@ -3142,12 +3143,12 @@ table.index {
     &.deselect {
       width: 100px;
     }
-    @include mb {
+    @include init.mb {
       display: inline-block;
       padding: 5px 0;
       border: 0;
       background: none;
-      @include mb {
+      @include init.mb {
         width: auto !important;
       }
       &::after {
@@ -3164,9 +3165,9 @@ table.index {
   .toggle {
     cursor: pointer;
   }
-  @include mb {
+  @include init.mb {
     thead {
-      background: $gray1;
+      background: init.$gray1;
     }
   }
   .padding {
@@ -3177,15 +3178,15 @@ table.index {
 table.index.data-table {
   border-collapse: collapse;
   tr {
-    background: $white;
+    background: init.$white;
   }
   th,
   td {
     padding: 6px 8px;
-    border: $border-gray5;
+    border: init.$border-gray5;
   }
   th {
-    background: $gray1;
+    background: init.$gray1;
     color: inherit;
   }
 }
@@ -3273,10 +3274,10 @@ select,
 input,
 textarea,
 button {
-  font-family: $font-base;
+  font-family: init.$font-base;
   font-size: 100%;
 }
-@include mb {
+@include init.mb {
   input[type="submit"] {
     -webkit-appearance: none;
   }
@@ -3287,14 +3288,14 @@ button {
 #addon-cms-agents-addons-file .see .cboxElement,
 .addon-view .see .cboxElement {
   &:not(.link) {
-    @include btn;
+    @include init.btn;
     &.add-date {
-      @include btn-orange;
+      @include init.btn-orange;
     }
   }
 }
 select {
-  @include input;
+  @include init.input;
   max-width: 100%;
   height: 2.4em;
   padding: 0 4px;
@@ -3334,7 +3335,7 @@ input[type="url"],
 input[type="email"],
 input[type="number"],
 input[type="tel"] {
-  @include input;
+  @include init.input;
   width: 100%;
   padding: 6px;
 }
@@ -3357,31 +3358,31 @@ input.filename {
 input.datetime {
   width: 12em !important;
   text-align: center;
-  @include mb {
+  @include init.mb {
     text-align: left;
   }
 }
 input.date {
   width: 9em !important;
   text-align: center;
-  @include mb {
+  @include init.mb {
     text-align: left;
   }
 }
 input.time {
   width: 9em;
   text-align: center;
-  @include mb {
+  @include init.mb {
     text-align: left;
   }
 }
-@include mb {
+@include init.mb {
   input[type="file"] {
     margin-bottom: 5px;
   }
 }
 textarea {
-  @include input;
+  @include init.input;
   width: 100%;
   height: 6.5em;
   padding: 5px;
@@ -3397,7 +3398,7 @@ form .CodeMirror {
 }
 // minicolors
 .minicolors-theme-default {
-  @include mb {
+  @include init.mb {
     &.minicolors {
       display: block;
     }
@@ -3414,7 +3415,7 @@ form .CodeMirror {
   }
 }
 //multislelct
-@include mb {
+@include init.mb {
   .ms-container {
     width: auto;
   }
@@ -3461,13 +3462,13 @@ form .CodeMirror {
 .cms-notice {
   margin: 0 0 20px;
   padding: 20px;
-  border: 1px solid $orange;
+  border: 1px solid init.$orange;
   border-radius: 3px;
   background-color: #fff;
   h2 {
     margin: -20px -20px 25px;
     padding: 8px 20px;
-    background-color: $orange;
+    background-color: init.$orange;
     color: #fff;
   }
   p,
@@ -3486,8 +3487,8 @@ form .CodeMirror {
     margin-bottom: 10px;
     padding: 10px;
     border-radius: 3px;
-    background: $black2;
-    color: $white;
+    background: init.$black2;
+    color: init.$white;
     list-style: none;
     + ul {
       margin-bottom: 20px;
@@ -3507,12 +3508,12 @@ form .CodeMirror {
 #alertExplanation {
   margin: 0 0 20px;
   padding: 20px;
-  border-bottom: 1px solid $orange;
+  border-bottom: 1px solid init.$orange;
   background-color: #fff;
   h2 {
     margin: -20px -20px 25px;
     padding: 4px 8px;
-    background: $orange;
+    background: init.$orange;
     color: #fff;
   }
   p,
@@ -3546,9 +3547,9 @@ form .CodeMirror {
   font-family: "Osaka−等幅", "ＭＳ ゴシック", "MS Gothic", monospace;
 }
 .pagination {
-  @include clear;
+  @include init.clear;
   margin: 20px 0;
-  @include mb {
+  @include init.mb {
     padding: 0 10px;
   }
   span a,
@@ -3558,7 +3559,7 @@ form .CodeMirror {
     margin: 0 4px 0 0;
     padding: 10px;
     float: left;
-    border: $border-gray5;
+    border: init.$border-gray5;
     background-color: #fff;
     color: #444;
     text-align: center;
@@ -3600,7 +3601,7 @@ form .CodeMirror {
 #colorbox {
   .menu {
     a {
-      @include btn;
+      @include init.btn;
     }
   }
 }
@@ -3729,7 +3730,7 @@ form .CodeMirror {
     position: absolute;
     top: 65px;
     right: 15px;
-    @include mb {
+    @include init.mb {
       position: static;
     }
     a {
@@ -3835,15 +3836,15 @@ form .CodeMirror {
 // addon cms/opendata_ref/resource
 #addon-cms-agents-addons-opendata_ref-resource .see {
   .od-resource-file {
-    @include clear;
+    @include init.clear;
     display: inline-block;
     width: 240px;
     margin: 8px;
     padding: 8px;
-    border: 1px solid $white;
+    border: 1px solid init.$white;
     vertical-align: top;
     &:hover {
-      border: 1px solid $gray4;
+      border: 1px solid init.$gray4;
     }
   }
   .od-resource-file-img {
@@ -3863,8 +3864,8 @@ form .CodeMirror {
       width: 100%;
       min-height: 110px;
       overflow: hidden;
-      color: $orange;
-      font-size: $px32;
+      color: init.$orange;
+      font-size: init.$px32;
       font-weight: bold;
     }
   }
@@ -3895,7 +3896,7 @@ form .CodeMirror {
 
 // -------------------------------------------------------------------------------------------------
 // hide
-@include mb {
+@include init.mb {
   .hide-mb {
     display: none;
   }
@@ -3933,7 +3934,7 @@ form .CodeMirror {
 body.ss-ajax-in-iframe {
   .upload-menu-select {
     float: right;
-    @include mb {
+    @include init.mb {
       margin-left: 1rem;
       float: none;
     }
@@ -3972,12 +3973,12 @@ body.ss-ajax-in-iframe {
   input,
   select {
     margin-left: 5px;
-    @include mb {
+    @include init.mb {
       margin: 0 0 10px;
     }
   }
   button {
-    @include btn;
+    @include init.btn;
   }
   label + button {
     margin: 1em 0;
@@ -3994,7 +3995,7 @@ body.ss-ajax-in-iframe {
     td {
       padding: 20px 10px;
       border-collapse: collapse;
-      font-size: $px16;
+      font-size: init.$px16;
     }
   }
 
@@ -4022,7 +4023,7 @@ body.ss-ajax-in-iframe {
   .column-table-width {
     width: 8em !important;
     margin-right: 1em;
-    @include mb {
+    @include init.mb {
       input {
         width: 4em !important;
         margin-right: 5px;
@@ -4040,7 +4041,7 @@ body.ss-ajax-in-iframe {
       padding: 0;
       transition: 0.3s;
       border: 1px solid #f2f2f2;
-      background-color: $black;
+      background-color: init.$black;
       cursor: pointer;
       &:hover {
         opacity: 0.8;
@@ -4058,7 +4059,7 @@ body.ss-ajax-in-iframe {
       min-width: 200px;
       max-width: 400px;
       padding: 3px 5px;
-      border: solid 1px $black;
+      border: solid 1px init.$black;
       textarea {
         min-width: 200px !important;
         max-width: 400px;
@@ -4079,7 +4080,7 @@ body.ss-ajax-in-iframe {
         align-items: center;
         justify-content: center;
         float: none;
-        color: $white;
+        color: init.$white;
         text-align: center;
       }
     }
@@ -4092,15 +4093,15 @@ body.ss-ajax-in-iframe {
         align-items: center;
         justify-content: center;
         float: none;
-        color: $white;
+        color: init.$white;
         text-align: center;
       }
     }
     tbody tr:first-child th:last-child {
-      border-right: 1px solid $black;
+      border-right: 1px solid init.$black;
     }
     tbody tr:last-child th:first-child {
-      border-bottom: 1px solid $black;
+      border-bottom: 1px solid init.$black;
     }
   }
 }
@@ -4108,7 +4109,7 @@ body.ss-ajax-in-iframe {
 .column-value-controller-move-up,
 .column-value-controller-move-down,
 .column-value-controller-delete {
-  @include btn;
+  @include init.btn;
   min-height: 2.8em;
 }
 .column-value-palette {
@@ -4156,12 +4157,12 @@ body.ss-ajax-in-iframe {
 .column-value-body select,
 .column-value-cms-column-urlfield2 .column-value-body input[type="text"],
 .list input {
-  @include mb {
+  @include init.mb {
     margin-bottom: 10px;
   }
 }
 .column-value-body select {
-  @include mb {
+  @include init.mb {
     width: auto !important;
   }
 }
@@ -4251,7 +4252,7 @@ body.ss-ajax-in-iframe {
     }
   }
   .request-mdn-notice {
-    @include clear;
+    @include init.clear;
     padding: 5px 15px;
     border-bottom: 1px solid #969696;
     background-color: #cecece;
@@ -4313,15 +4314,15 @@ body.ss-ajax-in-iframe {
     }
   }
   canvas {
-    border: $border-gray4;
+    border: init.$border-gray4;
   }
   .btn-active {
-    @include btn-active;
+    @include init.btn-active;
   }
 }
 
 .ss-popup {
-  text-decoration-color: $gray3;
+  text-decoration-color: init.$gray3;
   text-decoration-line: underline;
   text-decoration-style: dotted;
 
@@ -4530,7 +4531,7 @@ table.check-links-erros {
 .line-crop-area {
   max-width: 640px;
   .btn-active {
-    @include btn-active;
+    @include init.btn-active;
   }
   .image-warp img {
     display: block;

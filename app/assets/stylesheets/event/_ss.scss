@@ -1,5 +1,7 @@
+@use "ss/init";
+
 .event-recurrence ~ .event-recurrence {
-  border-top: $border-gray1;
+  border-top: init.$border-gray1;
 }
 .event-recurrence-row {
   display: flex;

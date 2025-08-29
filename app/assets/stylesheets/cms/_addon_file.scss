@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .cms-addon-file {
   display: flex;
   flex-direction: column;
@@ -8,7 +10,7 @@
     width: 100%;
     padding: 25px 20px;
     border-radius: 3px;
-    background-color: $gray1;
+    background-color: init.$gray1;
     color: #b30;
 
     &.file-dragenter {

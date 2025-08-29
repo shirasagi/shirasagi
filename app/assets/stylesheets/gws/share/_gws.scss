@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .gws-schedule-file-index {
   display: flex;
 
@@ -41,7 +43,7 @@
 .gws-share-apis-folder_crud {
   #item_in_basename {
     min-width: 30em;
-    @include mb {
+    @include init.mb {
       min-width: unset;
     }
   }
