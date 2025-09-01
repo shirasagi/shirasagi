@@ -3,15 +3,52 @@
   var $form = $('.mod-cms-html-form');
   var $select = $form.find('select[name="item[loop_setting_id]"]');
 
-  if ($select.length) {
-    Cms_Editor_CodeMirror.lock('select[name="item[loop_setting_id]"]', 'textarea[name="item[html]"]');
-  }
+
+
+  // スニペット貼り付け機能
+  // 選択可能なループ設定のID => HTML のマップを生成
+  var loopSettingHtmlMap = {};
+  <% Cms::LoopSetting.site(@cur_site).public_state.each do |ls| %>
+    loopSettingHtmlMap['<%= ls.id %>'] = <%= (ls.html || '').to_json.html_safe %>;
+  <% end %>
+
+  $(document).on("click", "[data-action='layout-snippet#insert']", function() {
+    var selectedLoopSettingId = $("select[name='item[loop_setting_id]']").val();
+    console.log("選択されたloop_setting_id:", selectedLoopSettingId);
+
+    if (selectedLoopSettingId && loopSettingHtmlMap[selectedLoopSettingId] !== undefined) {
+      var $htmlArea = $("textarea[name='item[html]']");
+      var newHtml = loopSettingHtmlMap[selectedLoopSettingId] || '';
+
+      // CodeMirror があれば末尾に追記、なければ textarea に追記
+      var cm = $htmlArea.data('editor');
+      if (!cm) {
+        var cmEl = $htmlArea.next('.CodeMirror')[0];
+        if (cmEl && cmEl.CodeMirror) { cm = cmEl.CodeMirror; }
+      }
+
+      if (cm && typeof cm.getDoc === 'function') {
+        var doc = cm.getDoc();
+        var cur = doc.getValue();
+        var needsLF = cur.length > 0 && !/\n$/.test(cur);
+        var lastLine = doc.lastLine();
+        var lastCh = doc.getLine(lastLine).length;
+        doc.replaceRange((needsLF ? "\n" : "") + newHtml, { line: lastLine, ch: lastCh });
+        $htmlArea.val(doc.getValue());
+      } else {
+        var curVal = $htmlArea.val() || '';
+        var needsLF2 = curVal.length > 0 && !/\n$/.test(curVal);
+        $htmlArea.val(curVal + (needsLF2 ? "\n" : "") + newHtml);
+      }
+    }
+  });
 <% end %>
 
 <dl class="see mod-cms-html-form">
   <dt class="wide"><%= @model.t :loop_setting_id %><%= @model.tt :loop_setting_id %></dt>
   <dd class="wide">
     <%= f.select :loop_setting_id, ancestral_html_settings_liquid, include_blank: t('cms.input_directly')  %>
+    <button type="button" data-action="layout-snippet#insert" style="margin-left: 10px;"><%= t('cms.buttons.insert_snippet') %></button>
   </dd>
 
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>

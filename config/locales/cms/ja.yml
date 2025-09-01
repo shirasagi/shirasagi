@@ -267,6 +267,7 @@ ja:
       setting: 設定する
       apply_richmenu: リッチメニューを反映する
       add_template: "テンプレートを追加する（最大5個）"
+      insert_snippet: スニペットを挿入
       youtube_title: YouTubeからタイトルを取得する
     confirm:
       delete_item: 項目を削除してよろしいですか？
