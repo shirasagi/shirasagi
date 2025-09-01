@@ -12,13 +12,20 @@ class Cms::LoopSetting
   field :description, type: String
   field :order, type: Integer
   field :state, type: String, default: "public"
-  field :html_format, type: String, default: "SHIRASAGI"
+  field :html_format, type: String
   permit_params :name, :description, :order, :html_format
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
+  validates :html_format, presence: true, inclusion: { in: %w(shirasagi liquid) }
 
   default_scope -> { order_by(order: 1, name: 1) }
+  scope :public_state, -> { where(state: 'public') }
+  scope :liquid, -> { public_state.where(html_format: 'liquid') }
+  scope :shirasagi, -> { public_state.where(html_format: 'shirasagi') }
 
+  before_validation do
+    self.html_format = html_format.to_s.downcase.presence || 'shirasagi'
+  end
   class << self
     def search(params = {})
       criteria = self.where({})
@@ -45,13 +52,13 @@ class Cms::LoopSetting
         [ v, v.downcase ]
       end
     end
+  end
 
-    def html_format_shirasagi?
-      !html_format_liquid?
-    end
+  def html_format_shirasagi?
+    !html_format_liquid?
+  end
 
-    def html_format_liquid?
-      html_format == "liquid"
-    end
+  def html_format_liquid?
+    html_format == "liquid"
   end
 end
