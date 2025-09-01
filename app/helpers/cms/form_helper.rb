@@ -40,7 +40,7 @@ module Cms::FormHelper
     items
   end
 
-  def ancestral_custom_html_settings
+  def ancestral_html_settings_liquid
     items = []
     Cms::LoopSetting.site(@cur_site).where(state: 'public', html_format: 'liquid').sort(order: 1, name: 1).each do |item|
       items << [item.name, item.id]

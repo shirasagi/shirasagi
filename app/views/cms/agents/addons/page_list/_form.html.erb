@@ -5,7 +5,7 @@
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
   if ($loopFormatSelect.length) {
-    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html', '#item_loop_liquid');
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
     <% if @model.use_liquid %>
     var changeLoopFormat = function() {
@@ -130,7 +130,7 @@
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
     <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <dd><%= f.select :loop_setting_id, ancestral_custom_html_settings, include_blank: t('cms.input_directly') %></dd>
+    <dd><%= f.select :loop_setting_id, ancestral_html_settings_liquid, include_blank: t('cms.input_directly') %></dd>
     <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
 <% end %>

@@ -13,7 +13,7 @@ module Cms::Addon
 
     def set_layout_html
       if loop_setting_id.present?
-        self.html = loop_setting.custom_html
+        self.html = loop_setting.html
       end
     end
   end

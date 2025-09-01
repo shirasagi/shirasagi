@@ -11,7 +11,7 @@
 <dl class="see mod-cms-html-form">
   <dt class="wide"><%= @model.t :loop_setting_id %><%= @model.tt :loop_setting_id %></dt>
   <dd class="wide">
-    <%= f.select :loop_setting_id, ancestral_custom_html_settings, include_blank: t('cms.input_directly')  %>
+    <%= f.select :loop_setting_id, ancestral_html_settings_liquid, include_blank: t('cms.input_directly')  %>
   </dd>
 
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>

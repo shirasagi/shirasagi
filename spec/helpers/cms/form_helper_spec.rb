@@ -76,7 +76,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     end
   end
 
-  describe "#ancestral_custom_html_settings" do
+  describe "#ancestral_html_settings_liquid" do
     let!(:user) { cms_user }
     let!(:site) { cms_site }
     let!(:shirasagi_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
@@ -89,20 +89,20 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     end
 
     it "returns only public liquid format loop settings" do
-      settings = helper.ancestral_custom_html_settings
+      settings = helper.ancestral_html_settings_liquid
       expect(settings.count).to eq 1
       expect(settings.first[0]).to eq liquid_setting.name
       expect(settings.first[1]).to eq liquid_setting.id
     end
 
     it "does not include shirasagi format settings" do
-      settings = helper.ancestral_custom_html_settings
+      settings = helper.ancestral_html_settings_liquid
       shirasagi_names = settings.map { |name, _id| name }
       expect(shirasagi_names).not_to include(shirasagi_setting.name)
     end
 
     it "does not include closed settings" do
-      settings = helper.ancestral_custom_html_settings
+      settings = helper.ancestral_html_settings_liquid
       closed_names = settings.map { |name, _id| name }
       expect(closed_names).not_to include(closed_setting.name)
     end

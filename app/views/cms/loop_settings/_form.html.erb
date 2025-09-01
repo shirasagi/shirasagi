@@ -10,4 +10,7 @@
 
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
   <dd><%= f.select :state, @model.options_for_state %></dd>
+
+  <dt><%= @model.t :html_format %><%= @model.tt :html_format %></dt>
+  <dd><%= f.select :html_format, @model.html_format_options %></dd>
 </dl>

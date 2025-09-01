@@ -913,7 +913,6 @@ ja:
       cms/node_setting: フォルダー設定
       cms/meta: メタ情報
       cms/html: HTML
-      cms/html_custom: HTMLカスタム
       cms/body: 本文
       cms/body_part: 本文パーツ
       cms/editor_setting: エディタ設定
@@ -1185,7 +1184,6 @@ ja:
         description: 説明
         order: 並び順
         state: ステータス
-      cms/addon/html_custom:
         html_format: HTML種別
       cms/command:
         name: タイトル
@@ -3451,7 +3449,7 @@ ja:
         -
         - "・サイト設定にしたがう: この選択はサイト設定の公開期限にしたがうことを意味します。この選択が既定です。"
         - "・無期限: この選択は公開期限を無期限に設定します。この設定をしたページは公開期限切れ警告が通知または表示されることはありません。"
-    cms/addon/html_custom:
+    cms/loop_setting:
       html_format:
         - 設定するHTML種別を選択してください。
         -

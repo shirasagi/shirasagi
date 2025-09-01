@@ -4,7 +4,6 @@ class Cms::LoopSetting
   include SS::Reference::Site
   include Cms::SitePermission
   include Cms::Addon::Html
-  include Cms::Addon::HtmlCustom
 
   set_permission_name "cms_loop_settings", :edit
 
@@ -13,7 +12,8 @@ class Cms::LoopSetting
   field :description, type: String
   field :order, type: Integer
   field :state, type: String, default: "public"
-  permit_params :name, :description, :order
+  field :html_format, type: String, default: "SHIRASAGI"
+  permit_params :name, :description, :order, :html_format
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
 
@@ -40,6 +40,18 @@ class Cms::LoopSetting
       ]
     end
 
-    delegate :html_format_options, to: Cms::Addon::HtmlCustom
+    def html_format_options
+      %w(SHIRASAGI Liquid).map do |v|
+        [ v, v.downcase ]
+      end
+    end
+
+    def html_format_shirasagi?
+      !html_format_liquid?
+    end
+
+    def html_format_liquid?
+      html_format == "liquid"
+    end
   end
 end
