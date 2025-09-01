@@ -59,6 +59,44 @@
 
     $("#item_archive_view").on("change", changeArchiveView);
   <% end %>
+
+  // スニペット貼り付け機能
+  // 選択可能なループ設定のID => HTML のマップを生成
+  var loopSettingHtmlMap = {};
+  <% Cms::LoopSetting.site(@cur_site).public_state.each do |ls| %>
+    loopSettingHtmlMap['<%= ls.id %>'] = <%= (ls.html || '').to_json.html_safe %>;
+  <% end %>
+
+  $("#insert_snippet").on("click", function() {
+    var selectedLoopSettingId = $("select[name='item[loop_setting_id]']:enabled").val();
+    console.log("選択されたloop_setting_id:", selectedLoopSettingId);
+
+    if (selectedLoopSettingId && loopSettingHtmlMap[selectedLoopSettingId] !== undefined) {
+      var $loopArea = $("textarea[name='item[loop_liquid]']");
+      var newHtml = loopSettingHtmlMap[selectedLoopSettingId] || '';
+
+      // CodeMirror があれば末尾に追記、なければ textarea に追記
+      var cm = $loopArea.data('editor');
+      if (!cm) {
+        var cmEl = $loopArea.next('.CodeMirror')[0];
+        if (cmEl && cmEl.CodeMirror) { cm = cmEl.CodeMirror; }
+      }
+
+      if (cm && typeof cm.getDoc === 'function') {
+        var doc = cm.getDoc();
+        var cur = doc.getValue();
+        var needsLF = cur.length > 0 && !/\n$/.test(cur);
+        var lastLine = doc.lastLine();
+        var lastCh = doc.getLine(lastLine).length;
+        doc.replaceRange((needsLF ? "\n" : "") + newHtml, { line: lastLine, ch: lastCh });
+        $loopArea.val(doc.getValue());
+      } else {
+        var curVal = $loopArea.val() || '';
+        var needsLF2 = curVal.length > 0 && !/\n$/.test(curVal);
+        $loopArea.val(curVal + (needsLF2 ? "\n" : "") + newHtml);
+      }
+    }
+  });
 <% end %>
 
 <% if @model.use_conditions %>
@@ -130,7 +168,10 @@
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
     <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
-    <dd><%= f.select :loop_setting_id, ancestral_html_settings_liquid, include_blank: t('cms.input_directly') %></dd>
+    <dd>
+      <%= f.select :loop_setting_id, ancestral_html_settings_liquid, include_blank: t('cms.input_directly') %>
+      <button type="button" id="insert_snippet" style="margin-left: 10px;">スニペットを挿入</button>
+    </dd>
     <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
 <% end %>
