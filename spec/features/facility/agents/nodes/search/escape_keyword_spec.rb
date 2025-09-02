@@ -5,17 +5,19 @@ describe "facility_agents_nodes_search", type: :feature, dbscope: :example, js: 
   let!(:node) { create :facility_node_search, layout: layout }
   let!(:item) { create :facility_node_page, cur_node: node }
 
+  let!(:category_ids_query) { "category_ids%5B%5D=%22%3E%3Cscript%3Ealert%281%29%3C%2Fscript%3E" }
+  let!(:keyword_query) { "keyword=%3C%2Fscript%3E%27%22%3E%3Cimg+src%3Dx+onError%3Dprompt%281%29%3E" }
   let!(:illegal_index_path) do
-    node.url + 'index.html?category_ids%5B%5D=%22%3E%3Cscript%3Ealert%281%29%3C%2Fscript%3E&keyword=%3C%2Fscript%3E%27%22%3E%3Cimg+src%3Dx+onError%3Dprompt%281%29%3E'
+    "#{node.url}index.html?#{category_ids_query}&#{keyword_query}"
   end
   let!(:illegal_result_path) do
-    node.url + 'result.html?category_ids%5B%5D=%22%3E%3Cscript%3Ealert%281%29%3C%2Fscript%3E&keyword=%3C%2Fscript%3E%27%22%3E%3Cimg+src%3Dx+onError%3Dprompt%281%29%3E'
+    "#{node.url}result.html?#{category_ids_query}&#{keyword_query}"
   end
   let!(:illegal_map_path) do
-    node.url + 'map.html?category_ids%5B%5D=%22%3E%3Cscript%3Ealert%281%29%3C%2Fscript%3E&keyword=%3C%2Fscript%3E%27%22%3E%3Cimg+src%3Dx+onError%3Dprompt%281%29%3E'
+    "#{node.url}map.html?#{category_ids_query}&#{keyword_query}"
   end
   let!(:illegal_map_all_path) do
-    node.url + 'map-all.html?category_ids%5B%5D=%22%3E%3Cscript%3Ealert%281%29%3C%2Fscript%3E&keyword=%3C%2Fscript%3E%27%22%3E%3Cimg+src%3Dx+onError%3Dprompt%281%29%3E'
+    "#{node.url}map-all.html?#{category_ids_query}&#{keyword_query}"
   end
   let!(:escaped_keyword) { '</script>\'"><img src=x onError=prompt(1)>' }
 
