@@ -107,7 +107,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq 'admin@example.jp'
         expect(notify_mail.to.first).to eq 'notice@example.jp'
-        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
+        expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
         expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
         expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
@@ -190,7 +190,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq 'admin@example.jp'
         expect(notify_mail.to.first).to eq 'notice@example.jp'
-        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
+        expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
         # no tags
         expect(notify_mail.body.raw_source).not_to include('<script')

@@ -60,7 +60,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
           expect(mail.message_id.to_s).to eq "#{message.id}@#{canonical_domain}"
           expect(mail.sender).to be_nil
           expect(mail.date.to_s).to eq message.created.to_s
-          expect(mail.subject).to eq message.subject
+          expect(mail_subject(mail)).to eq message.subject
           expect(mail.mime_type).to eq "text/plain"
           expect(mail.multipart?).to be_falsey
           mail[:from].to_s.tap do |rfc2822_address|
@@ -170,7 +170,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail.message_id.to_s).to eq "#{message.id}@#{canonical_domain}"
         expect(mail.sender).to be_nil
         expect(mail.date.to_s).to eq message.created.to_s
-        expect(mail.subject).to eq message.subject
+        expect(mail_subject(mail)).to eq message.subject
         expect(mail.mime_type).to eq "text/plain"
         expect(mail.multipart?).to be_falsey
         mail[:from].to_s.tap do |rfc2822_address|
@@ -244,7 +244,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail.message_id.to_s).to eq "#{message.id}@#{canonical_domain}"
         expect(mail.sender).to be_nil
         expect(mail.date.to_s).to eq message.created.to_s
-        expect(mail.subject).to eq message.subject
+        expect(mail_subject(mail)).to eq message.subject
         expect(mail.mime_type).to eq "text/plain"
         expect(mail.multipart?).to be_falsey
         mail[:from].to_s.tap do |rfc2822_address|
@@ -308,7 +308,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail.message_id.to_s).to eq "#{message.id}@#{canonical_domain}"
         expect(mail.sender).to be_nil
         expect(mail.date.to_s).to eq message.created.to_s
-        expect(mail.subject).to eq message.subject
+        expect(mail_subject(mail)).to eq message.subject
         expect(mail.mime_type).to eq "multipart/mixed"
         expect(mail.multipart?).to be_truthy
         mail[:from].to_s.tap do |rfc2822_address|
@@ -380,7 +380,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail.message_id.to_s).to eq "#{message.id}@#{canonical_domain}"
         expect(mail.sender).to be_nil
         expect(mail.date.to_s).to eq message.created.to_s
-        expect(mail.subject).to eq message.subject
+        expect(mail_subject(mail)).to eq message.subject
         expect(mail.mime_type).to eq "text/plain"
         expect(mail.multipart?).to be_falsey
         mail[:from].to_s.tap do |rfc2822_address|
@@ -437,7 +437,7 @@ describe Gws::Memo::MessageExportJob, dbscope: :example do
         expect(mail.message_id.to_s).to eq "#{message.id}@#{canonical_domain}"
         expect(mail.sender).to be_nil
         expect(mail.date.to_s).to eq message.created.to_s
-        expect(mail.subject).to eq message.subject
+        expect(mail_subject(mail)).to eq message.subject
         expect(mail.mime_type).to eq "text/plain"
         expect(mail.multipart?).to be_falsey
         mail[:from].to_s.tap do |rfc2822_address|

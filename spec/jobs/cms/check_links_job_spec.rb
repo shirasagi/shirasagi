@@ -97,14 +97,14 @@ describe Cms::CheckLinksJob, dbscope: :example do
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.check_links_default_sender_address
         expect(mail.to.first).to eq email1
-        expect(mail.subject).to eq "[#{site.name}] Link Check: 3 errors"
-        expect(mail.body.raw_source).to include "[3 errors]"
-        expect(mail.body.raw_source).to include "#{site_url}/"
-        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
-        expect(mail.body.raw_source).to include "#{site_url}/index.html"
-        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
-        expect(mail.body.raw_source).to include "#{site_url}/docs/page1.html"
-        expect(mail.body.raw_source).to include "  - #{site_url}/notfound2.html"
+        expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
+        expect(mail.decoded.to_s).to include "[3 errors]"
+        expect(mail.decoded.to_s).to include "#{site_url}/"
+        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound1.html"
+        expect(mail.decoded.to_s).to include "#{site_url}/index.html"
+        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound1.html"
+        expect(mail.decoded.to_s).to include "#{site_url}/docs/page1.html"
+        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound2.html"
       end
     end
 
@@ -125,7 +125,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(mail.from.first).to eq site.check_links_default_sender_address
         expect(mail.to.first).to eq email1
 
-        expect(mail.subject).to eq "[#{site.name}] Link Check: 3 errors"
+        expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
         expect(mail.multipart?).to be_truthy
         expect(mail.parts[0].body.raw_source).to include "[3 errors]"
         expect(mail.parts[0].body.raw_source).to include "error details are in the attached csv"
@@ -157,14 +157,14 @@ describe Cms::CheckLinksJob, dbscope: :example do
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.check_links_default_sender_address
         expect(mail.to.first).to eq email2
-        expect(mail.subject).to eq "[#{site.name}] Link Check: 3 errors"
-        expect(mail.body.raw_source).to include "[3 errors]"
-        expect(mail.body.raw_source).to include "#{site_url}/"
-        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
-        expect(mail.body.raw_source).to include "#{site_url}/index.html"
-        expect(mail.body.raw_source).to include "  - #{site_url}/notfound1.html"
-        expect(mail.body.raw_source).to include "#{site_url}/docs/page1.html"
-        expect(mail.body.raw_source).to include "  - #{site_url}/notfound2.html"
+        expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
+        expect(mail.decoded.to_s).to include "[3 errors]"
+        expect(mail.decoded.to_s).to include "#{site_url}/"
+        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound1.html"
+        expect(mail.decoded.to_s).to include "#{site_url}/index.html"
+        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound1.html"
+        expect(mail.decoded.to_s).to include "#{site_url}/docs/page1.html"
+        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound2.html"
       end
     end
   end

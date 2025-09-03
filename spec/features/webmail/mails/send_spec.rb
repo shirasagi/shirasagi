@@ -36,9 +36,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
         ActionMailer::Base.deliveries.first.tap do |mail|
           expect(mail.from.first).to eq address
           expect(mail.to.first).to eq user.email
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail.decoded.to_s).to include(item_texts.join("\r\n"))
         end
       end
     end

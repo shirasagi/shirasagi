@@ -79,9 +79,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.to.first).to eq user2.email
           expect(mail.cc.first).to eq user3.email
           expect(mail.bcc.first).to eq user4.email
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail.decoded.to_s).to include(item_texts.join("\r\n"))
         end
 
         # confirm sent box

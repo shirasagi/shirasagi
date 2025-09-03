@@ -102,9 +102,9 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
             ActionMailer::Base.deliveries.last.tap do |mail|
               expect(mail.from.first).to eq site.sender_address
               expect(mail.bcc.first).to eq user2.send_notice_mail_addresses.first
-              expect(mail.subject).to eq I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
+              expect(mail_subject(mail)).to eq I18n.t("gws_notification.gws/workflow/file.request", name: item.name)
               url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice1.id}"
-              expect(mail.decoded.to_s).to include(mail.subject, url)
+              expect(mail.decoded.to_s).to include(mail_subject(mail), url)
               expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
             end
           else

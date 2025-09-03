@@ -92,7 +92,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user1.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -140,7 +140,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user2.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -189,7 +189,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user3.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -239,7 +239,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq user3.email
           expect(mail.to.first).to eq cms_user.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(item.name)
         end
@@ -297,7 +297,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.find { |mail| mail.to.first == user1.email }.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user1.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -306,7 +306,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.find { |mail| mail.to.first == user2.email }.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user2.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -377,7 +377,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user3.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -419,7 +419,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq user3.email
           expect(mail.to.first).to eq cms_user.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(item.name)
         end
@@ -485,7 +485,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user1.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -532,7 +532,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user2.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -580,7 +580,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user3.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -629,7 +629,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq user3.email
           expect(mail.to.first).to eq cms_user.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.remand')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.remand')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(user3.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -691,7 +691,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.find{ |mail| mail.to.first == user1.email }.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user1.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -700,7 +700,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.find{ |mail| mail.to.first == user2.email }.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user2.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -741,7 +741,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq cms_user.email
           expect(mail.to.first).to eq user3.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(cms_user.name)
           expect(mail.body.raw_source).to include(item.name)
@@ -783,7 +783,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         ActionMailer::Base.deliveries.last.tap do |mail|
           expect(mail.from.first).to eq user3.email
           expect(mail.to.first).to eq cms_user.email
-          expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
+          expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail.body.raw_source).to include(item.name)
         end

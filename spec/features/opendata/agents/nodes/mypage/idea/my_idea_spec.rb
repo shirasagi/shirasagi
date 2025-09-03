@@ -120,9 +120,9 @@ describe "opendata_agents_nodes_my_idea", type: :feature, dbscope: :example, js:
       expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.first.tap do |mail|
         expect(mail.to.first).to eq cms_user.email
-        expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item_name} - #{site.name}"
+        expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item_name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include(opendata_member(site: site).name)
+        expect(mail.decoded.to_s).to include(opendata_member(site: site).name)
         expect(mail.body.raw_source).to include(item_name)
         expect(mail.body.raw_source).to include(Opendata::Idea.first.private_show_path)
       end

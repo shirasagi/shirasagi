@@ -66,7 +66,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
@@ -129,7 +129,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(3).items
@@ -177,7 +177,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
@@ -232,7 +232,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
@@ -295,7 +295,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have_at_least(3).items
@@ -343,7 +343,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
@@ -407,7 +407,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
@@ -470,7 +470,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(3).items
@@ -518,7 +518,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items

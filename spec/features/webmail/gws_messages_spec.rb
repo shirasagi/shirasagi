@@ -43,9 +43,9 @@ describe "webmail_gws_messages", type: :feature, dbscope: :example, imap: true, 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
           expect(mail.to.first).to eq user.email
-          expect(mail.subject).to eq item_title
+          expect(mail_subject(mail)).to eq item_title
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail.decoded.to_s).to include(item_texts.join("\r\n"))
         end
         webmail_import_mail(user, ActionMailer::Base.deliveries.first)
 

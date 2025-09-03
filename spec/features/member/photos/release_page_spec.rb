@@ -58,11 +58,11 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       ActionMailer::Base.deliveries.last.tap do |mail|
         expect(mail.from.first).to eq cms_user.email
         expect(mail.to.first).to eq user.email
-        expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
+        expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include(cms_user.name)
-        expect(mail.body.raw_source).to include(item.name)
-        expect(mail.body.raw_source).to include(workflow_comment)
+        expect(mail.decoded.to_s).to include(cms_user.name)
+        expect(mail.decoded.to_s).to include(item.name)
+        expect(mail.decoded.to_s).to include(workflow_comment)
       end
 
       login_user user, to: show_path
@@ -88,9 +88,9 @@ describe "member_photos", type: :feature, dbscope: :example, js: true do
       ActionMailer::Base.deliveries.last.tap do |mail|
         expect(mail.from.first).to eq user.email
         expect(mail.to.first).to eq cms_user.email
-        expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
+        expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include(item.name)
+        expect(mail.decoded.to_s).to include(item.name)
       end
     end
   end

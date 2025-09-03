@@ -11,7 +11,7 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
     it "mail attributes" do
       expect(mail.from.first).to eq node.sender_email
       expect(mail.to.first).to eq "entry@example.jp"
-      expect(mail.subject.to_s).not_to eq ""
+      expect(mail_subject(mail).to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
       expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
@@ -27,9 +27,9 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
       it "mail attributes" do
         expect(mail.from.first).to eq node.sender_email
         expect(mail.to.first).to eq "member@example.jp"
-        expect(mail.subject.to_s).not_to eq ""
+        expect(mail_subject(mail).to_s).not_to eq ""
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source.to_s).not_to eq ""
+        expect(mail.decoded.to_s).not_to eq ""
         expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
@@ -40,7 +40,7 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
       it "mail attributes" do
         expect(mail.from.first).to eq node.sender_email
         expect(mail.to.first).to eq "member@example.jp"
-        expect(mail.subject.to_s).not_to eq ""
+        expect(mail_subject(mail).to_s).not_to eq ""
         expect(mail.body.multipart?).to be_truthy
         expect(mail.body.parts[0].body.to_s).not_to eq ""
         expect(mail.body.parts[1].body.to_s).not_to eq ""
