@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .mod-navi {
   &:has(.gws-tabular-icon-wrap) {
     h2:first-child {
@@ -35,8 +37,8 @@
   .badge {
     padding: 2px 4px;
     border-radius: 20px;
-    background-color: $gray3;
-    color: $white;
+    background-color: init.$gray3;
+    color: init.$white;
 
     &[data-count="0"] {
       display: none;
@@ -168,7 +170,7 @@
     margin: unset;
   }
 
-  @include mb {
+  @include init.mb {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0 10px;

@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .gws-bookmark-head {
   display: inline-block;
   padding: 10px;
@@ -5,14 +7,14 @@
     background-color: #424242;
   }
   .bookmark-icon {
-    color: $white;
+    color: init.$white;
   }
   .dropdown-menu {
     right: 0;
     padding: 5px;
-    border: $border-gray4;
-    background-color: $white;
-    @include mb {
+    border: init.$border-gray4;
+    background-color: init.$white;
+    @include init.mb {
       left: 0;
     }
     .bookmark-notice {

@@ -1,37 +1,3 @@
-.column-value ~ .column-value {
-  margin-top: 10px;
-}
+@use "ss/init";
 
-.column-value-body {
-  padding-bottom: 5px;
-
-  .link-fields {
-    width: 100%;
-  }
-
-  .link-label {
-    width: 30%;
-  }
-  .link-url {
-    width: 50%;
-  }
-}
-
-.column-value-files {
-  -js-display: flex;
-  display: flex;
-  flex-wrap: wrap;
-  margin-top: 10px;
-  @include clear;
-  @include mb {
-    margin-top: 10px;
-  }
-  &:not(:has(.file-view)) {
-    display: none;
-  }
-}
-
-.column-value.ui-sortable-helper {
-  opacity: 0.8;
-  box-shadow: 0 1px 5px #666;
-}
+@include init.cms_column

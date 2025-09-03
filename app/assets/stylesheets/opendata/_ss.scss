@@ -1,4 +1,4 @@
-@import "ss/init";
+@use "ss/init";
 
 div.csv2rdf-settings-table-container {
   width: 90%;
@@ -16,13 +16,13 @@ div.csv2rdf-settings-table-container {
       tr {
         //&:nth-child(even) { background-color: #fff; }
         &:hover {
-          background-color: $gray3;
+          background-color: init.$gray3;
         }
         th {
           font-weight: bold;
         }
       }
-      border-bottom: $border-gray4;
+      border-bottom: init.$border-gray4;
     }
     tbody {
       tr {
@@ -30,13 +30,13 @@ div.csv2rdf-settings-table-container {
           background-color: #fff;
         }
         &:hover {
-          background-color: $gray3;
+          background-color: init.$gray3;
         }
         &.selected {
           font-weight: bold;
         }
         &.last_child {
-          border-bottom: $border-gray4;
+          border-bottom: init.$border-gray4;
         }
       }
       tr.depth1 td.name {
@@ -60,7 +60,7 @@ div.csv2rdf-settings-table-container {
     }
     tr.rdf-prop,
     tr.rdf-class {
-      border-bottom: $border-gray4;
+      border-bottom: init.$border-gray4;
       td {
         padding: 10px 8px;
       }
@@ -97,14 +97,14 @@ textarea.readonly {
 }
 
 .rdf-prop-search-form {
-  @include clear;
+  @include init.clear;
   margin-bottom: 20px;
   padding: 5px 10px;
-  background: $gray3;
+  background: init.$gray3;
   form.index-search {
-    @include clear;
+    @include init.clear;
     float: left;
-    border: 2px solid $white;
+    border: 2px solid init.$white;
     select {
       height: 2em;
       margin-right: 3px;
@@ -127,10 +127,10 @@ textarea.readonly {
       padding: 2px 20px 1px;
       float: left;
       border: 0;
-      background: $gray3;
+      background: init.$gray3;
       &:hover {
-        background: $pink;
-        color: $white;
+        background: init.$pink;
+        color: init.$white;
       }
     }
   }
@@ -212,14 +212,14 @@ table.opendata-harvest-report {
   }
 
   .btn-active {
-    @include btn-active;
+    @include init.btn-active;
   }
 
   .btn-disabled {
-    color: $gray2;
+    color: init.$gray2;
     cursor: default;
     &:hover {
-      @include grd-white;
+      @include init.grd-white;
     }
   }
 
@@ -235,6 +235,6 @@ table.opendata-harvest-report {
   }
 
   .user-agent {
-    text-decoration: underline dashed $gray2;
+    text-decoration: underline dashed init.$gray2;
   }
 }

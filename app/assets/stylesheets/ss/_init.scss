@@ -371,3 +371,44 @@ $border-white: 1px solid $white;
     white-space: normal;
   }
 }
+
+@mixin cms_column {
+  .column-value ~ .column-value {
+    margin-top: 10px;
+  }
+
+  .column-value-body {
+    padding-bottom: 5px;
+
+    .link-fields {
+      width: 100%;
+    }
+
+    .link-label {
+      width: 30%;
+    }
+
+    .link-url {
+      width: 50%;
+    }
+  }
+
+  .column-value-files {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+    @include clear;
+    @include mb {
+      margin-top: 10px;
+    }
+
+    &:not(:has(.file-view)) {
+      display: none;
+    }
+  }
+
+  .column-value.ui-sortable-helper {
+    opacity: 0.8;
+    box-shadow: 0 1px 5px #666;
+  }
+}

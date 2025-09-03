@@ -2,29 +2,29 @@
  *= require gridster/jquery.gridster.min.css
  *= require bxslider
  */
-@import "ss/init";
-@import "board/gws";
-@import "bookmark/gws";
-@import "column/gws";
-@import "facility/gws";
-@import "schedule/gws";
-@import "circular/gws";
-@import "memo/gws";
-@import "portal/gws";
-@import "discussion/gws";
-@import "monitor/gws";
-@import "attendance/gws";
-@import "daily_report/gws";
-@import "reminder/gws";
-@import "presence/gws";
-@import "survey/gws";
-@import "workflow/gws";
-@import "notice/gws";
-@import "share/gws";
-@import "affair/gws";
-@import "workload/gws";
-@import "elasticsearch/gws";
-@import "tabular/gws";
+@use "ss/init";
+@use "board/gws" as gws_board;
+@use "bookmark/gws" as gws_bookmark;
+@use "column/gws" as gws_column;
+@use "facility/gws" as gws_facility;
+@use "schedule/gws" as gws_schedule;
+@use "circular/gws" as gws_circular;
+@use "memo/gws" as gws_memo;
+@use "portal/gws" as gws_portal;
+@use "discussion/gws" as gws_discussion;
+@use "monitor/gws" as gws_monitor;
+@use "attendance/gws" as gws_attendance;
+@use "daily_report/gws" as gws_daily_report;
+@use "reminder/gws" as gws_reminder;
+@use "presence/gws" as gw_presence;
+@use "survey/gws" as gws_survey;
+@use "workflow/gws" as gws_workflow;
+@use "notice/gws" as gws_notice;
+@use "share/gws" as gws_share;
+@use "affair/gws" as gws_affair;
+@use "workload/gws" as gws_workload;
+@use "elasticsearch/gws" as gws_elasticsearch;
+@use "tabular/gws" as gws_tabular;
 
 // File
 .gws-addon-file {
@@ -61,7 +61,7 @@
     color: #333;
   }
   .link-item:hover {
-    background-color: $gray1;
+    background-color: init.$gray1;
     color: #f25a38;
     text-decoration: none;
   }
@@ -74,7 +74,7 @@
   .separator {
     display: none;
   }
-  @include mb {
+  @include init.mb {
     margin-right: 10px;
     margin-left: 10px;
   }
@@ -120,7 +120,7 @@
     margin: 5px 0;
     &.depth-0 {
       padding-top: 10px;
-      border-top: 2px solid $gray1;
+      border-top: 2px solid init.$gray1;
     }
   }
   .category-list ~ .depth-0 {
@@ -223,7 +223,7 @@ a.gws-category-label:hover {
   }
   span.depth0 {
     margin: 10px 0 20px;
-    border-bottom: solid 1px $gray5;
+    border-bottom: solid 1px init.$gray5;
     font-size: 110%;
   }
   ul.depth1 {
@@ -282,8 +282,8 @@ a.gws-category-label:hover {
   margin: 0;
   padding: 4px;
   overflow-y: scroll;
-  border: $border-gray4;
-  background: $white;
+  border: init.$border-gray4;
+  background: init.$white;
   box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
 }
@@ -298,11 +298,11 @@ a.gws-category-label:hover {
 
 // Locale switch
 .gws-locale-switch {
-  color: $white;
+  color: init.$white;
   a {
-    color: $white;
+    color: init.$white;
     &:hover {
-      color: $white;
+      color: init.$white;
     }
   }
 }

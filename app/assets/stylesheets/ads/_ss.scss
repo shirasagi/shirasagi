@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .banners-total {
   padding: 0 0 10px;
   overflow-x: auto;
@@ -9,9 +11,9 @@
     }
     th,
     td {
-      border: $border-gray5;
+      border: init.$border-gray5;
       white-space: nowrap;
-      @include mb {
+      @include init.mb {
         display: table-cell;
       }
     }
