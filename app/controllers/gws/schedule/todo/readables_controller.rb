@@ -23,6 +23,7 @@ class Gws::Schedule::Todo::ReadablesController < ApplicationController
       member(@cur_user).
       without_deleted.
       search(@s).
-      custom_order(params.dig(:s, :sort) || 'end_at_asc')
+      custom_order(params.dig(:s, :sort) || 'end_at_asc').
+      page(params[:page]).per(50)
   end
 end
