@@ -903,11 +903,12 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
           description = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(60)
+          summary = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(120)
 
           expect(item.name).to eq name
           expect(item.description_setting).to eq 'auto'
           expect(item.description).to eq description
-          expect(item.summary).to eq description
+          expect(item.summary).to eq summary
           expect(item.column_values).to have(14).items
 
           item.column_values.find_by(column_id: column1.id).tap do |column_value|
