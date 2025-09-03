@@ -138,6 +138,14 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_memo_reader do
+    after(:build) do |item|
+      item.permissions += %w(
+        edit_private_gws_memo_messages
+      )
+    end
+  end
+
   factory :gws_role, class: Gws::Role, traits: [:gws_role]
 
   factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
