@@ -8,7 +8,7 @@
     end
   end
 %>
-<%= raw html %>
+<%= html.html_safe %>
 <% else %>
 <%= render template: "_sidebar" %>
 <%= render template: "_canvas" %>
