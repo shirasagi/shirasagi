@@ -27,7 +27,6 @@ class ApplicationJob < ActiveJob::Base
     return if rand(100) >= 20
 
     Job.purge_old_job_logs
-    Job.purge_old_job_logs_by_find
   rescue => e
     Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
   end
