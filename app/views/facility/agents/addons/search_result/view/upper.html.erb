@@ -3,15 +3,15 @@
   html = @cur_node.upper_html.gsub(/\#\{(.*?)\}/) do |m|
     name = $1
     if name =~ /keyword/
-      @keyword.to_s
+      html_escape(@keyword.to_s)
     elsif name =~ /category/
-      @categories.pluck(:name).join("、").to_s
+      html_escape(@categories.pluck(:name).join("、"))
     elsif name =~ /service/
-      @services.pluck(:name).join("、").to_s
+      html_escape(@services.pluck(:name).join("、"))
     elsif name =~ /location/
-      @locations.pluck(:name).join("、").to_s
+      html_escape(@locations.pluck(:name).join("、"))
     elsif name =~ /number/
-      @items.count.to_s
+      html_escape(@items.count.to_s)
     else
       m
     end
@@ -24,7 +24,7 @@
     end
   end
 %>
-<%= raw html %>
+<%= html.html_safe %>
 <% else %>
 <dl class="condition">
   <dt class="keyword"><%= t("facility.keyword") %></dt>
