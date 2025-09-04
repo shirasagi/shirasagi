@@ -71,8 +71,8 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
         click_on I18n.t("ss.buttons.close")
       end
 
-      expect(current_path).to eq move_confirm_node_conf_path(site: site, cid: node)
       expect(page).to have_css("form#item-form")
+      expect(current_path).to eq move_confirm_node_conf_path(site: site, cid: node)
     end
 
     it "when slash('/') is given" do

@@ -26,6 +26,7 @@ describe "ezine_members", type: :feature do
         find("input[name='item[state]'][value='enabled']").set(true)   #choose "配信する"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(status_code).to eq 200
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
@@ -44,6 +45,7 @@ describe "ezine_members", type: :feature do
         find("input[name='item[state]'][value='disabled']").set(true)  #choose "配信しない"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -53,6 +55,7 @@ describe "ezine_members", type: :feature do
       within "form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(current_path).to eq index_path
     end
 
@@ -81,6 +84,7 @@ describe "ezine_members", type: :feature do
           check @column5.select_options.first
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(status_code).to eq 200
         expect(current_path).not_to eq new_path
         expect(page).to have_no_css("form#item-form")
@@ -106,6 +110,7 @@ describe "ezine_members", type: :feature do
           end
           click_button I18n.t('ss.buttons.save')
         end
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(current_path).not_to eq sns_login_path
         expect(page).to have_no_css("form#item-form")
         item.reload
@@ -122,6 +127,7 @@ describe "ezine_members", type: :feature do
         within "form" do
           click_button I18n.t('ss.buttons.delete')
         end
+        wait_for_notice I18n.t("ss.notice.deleted")
         expect(current_path).to eq index_path
       end
     end
