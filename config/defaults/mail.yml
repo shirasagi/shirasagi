@@ -16,14 +16,14 @@ production: &production
 
   # message settings
   default_from: noreply@example.jp
-  default_charset: iso-2022-jp
+  default_charset: utf-8
 
 test:
   delivery_method: test
   default_from: noreply@example.jp
-  default_charset: iso-2022-jp
+  default_charset: utf-8
 
 development:
   delivery_method: file
   default_from: noreply@example.jp
-  default_charset: iso-2022-jp
+  default_charset: utf-8
