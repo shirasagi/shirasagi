@@ -139,11 +139,11 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail.to.first).to eq invitee_email
         expect(mail_subject(mail)).to eq '会員招待'
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.decoded.to_s).to include(cms_member.name)
-        expect(mail.decoded.to_s).to include(invitation_message)
-        expect(mail.decoded.to_s).to include(member_invitation_signature.gsub("\n", "\r\n"))
+        expect(mail_body(mail)).to include(cms_member.name)
+        expect(mail_body(mail)).to include(invitation_message)
+        expect(mail_body(mail)).to include(member_invitation_signature.gsub("\n", "\r\n"))
 
-        mail.decoded.to_s =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
+        mail_body(mail) =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
         url = $1
         expect(url).not_to be_nil
         visit url
@@ -229,11 +229,11 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail.to.first).to eq invitee.email
         expect(mail_subject(mail)).to eq 'グループ招待'
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.decoded.to_s).to include(cms_member.name)
-        expect(mail.decoded.to_s).to include(invitation_message)
-        expect(mail.decoded.to_s).to include(group_invitation_signature.gsub("\n", "\r\n"))
+        expect(mail_body(mail)).to include(cms_member.name)
+        expect(mail_body(mail)).to include(invitation_message)
+        expect(mail_body(mail)).to include(group_invitation_signature.gsub("\n", "\r\n"))
 
-        mail.decoded.to_s =~ /(#{::Regexp.escape(node_my_group.full_url)}[^ \t\r\n]+\/accept)/
+        mail_body(mail) =~ /(#{::Regexp.escape(node_my_group.full_url)}[^ \t\r\n]+\/accept)/
         url = $1
         expect(url).not_to be_nil
 
@@ -330,11 +330,11 @@ describe 'members/agents/nodes/my_group', type: :feature, dbscope: :example, js:
         expect(mail.to.first).to eq invitee.email
         expect(mail_subject(mail)).to eq 'グループ招待'
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include(cms_member.name)
-        expect(mail.body.raw_source).to include(invitation_message)
-        expect(mail.body.raw_source).to include(group_invitation_signature.gsub("\n", "\r\n"))
+        expect(mail_body(mail)).to include(cms_member.name)
+        expect(mail_body(mail)).to include(invitation_message)
+        expect(mail_body(mail)).to include(group_invitation_signature.gsub("\n", "\r\n"))
 
-        mail.body.raw_source =~ /(#{::Regexp.escape(node_my_group.full_url)}[^ \t\r\n]+\/accept)/
+        mail_body(mail) =~ /(#{::Regexp.escape(node_my_group.full_url)}[^ \t\r\n]+\/accept)/
         url = $1
         expect(url).not_to be_nil
 

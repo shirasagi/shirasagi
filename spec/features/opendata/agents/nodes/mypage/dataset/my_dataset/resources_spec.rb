@@ -156,8 +156,8 @@ describe "opendata_agents_nodes_my_dataset_resources", type: :feature, dbscope: 
           expect(mail.to.first).to eq cms_user.email
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{dataset.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(member.name)
-          expect(mail.body.raw_source).to include(dataset.name)
+          expect(mail_body(mail)).to include(member.name)
+          expect(mail_body(mail)).to include(dataset.name)
         end
 
         within "table.opendata-dataset-resources" do

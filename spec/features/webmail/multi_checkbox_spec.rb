@@ -81,7 +81,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -144,7 +144,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address1.email, address2.email, address3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -184,7 +184,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address1.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -247,7 +247,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(user3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -310,7 +310,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(user1.email, user2.email, user3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -350,7 +350,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(user1.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -422,7 +422,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -485,7 +485,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address1.email, address2.email, address3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -525,7 +525,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address1.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end

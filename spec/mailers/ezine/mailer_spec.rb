@@ -29,7 +29,7 @@ describe Ezine::Mailer, type: :mailer, dbscope: :example do
         expect(mail.to.first).to eq "member@example.jp"
         expect(mail_subject(mail).to_s).not_to eq ""
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.decoded.to_s).not_to eq ""
+        expect(mail_body(mail)).not_to eq ""
         expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end

@@ -162,7 +162,7 @@ describe Workflow::ReminderJob, dbscope: :example do
             expect(mail.to.first).to eq user2.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
-            expect(mail.decoded.to_s).to include(user1.name, page1.name, site.mypage_domain, page1.private_show_path)
+            expect(mail_body(mail)).to include(user1.name, page1.name, site.mypage_domain, page1.private_show_path)
           end
           expect(SS::Notification.all.count).to eq 1
           SS::Notification.all.first.tap do |notifiction|
@@ -271,7 +271,7 @@ describe Workflow::ReminderJob, dbscope: :example do
             expect(mail.to.first).to eq user2.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
-            expect(mail.decoded.to_s).to include(user1.name, page1.name, site.mypage_domain, page1.private_show_path)
+            expect(mail_body(mail)).to include(user1.name, page1.name, site.mypage_domain, page1.private_show_path)
           end
           expect(SS::Notification.all.count).to eq 1
           SS::Notification.all.first.tap do |notifiction|
@@ -346,7 +346,7 @@ describe Workflow::ReminderJob, dbscope: :example do
             expect(mail.to.first).to eq user3.email
             expect(mail_subject(mail)).to eq I18n.t("workflow.notice.remind.subject", page_name: page1.name, site_name: site.name)
             expect(mail.body.multipart?).to be_falsey
-            expect(mail.decoded.to_s).to include(user1.name, page1.name, site.mypage_domain, page1.private_show_path)
+            expect(mail_body(mail)).to include(user1.name, page1.name, site.mypage_domain, page1.private_show_path)
           end
           expect(SS::Notification.all.count).to eq 1
           SS::Notification.all.first.tap do |notifiction|

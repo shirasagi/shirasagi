@@ -82,12 +82,12 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
         expect(mail.to.first).to eq inquiry_form.notice_emails.first
         expect(mail_subject(mail)).to eq "[自動通知]#{inquiry_form.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.decoded.to_s).to include("「#{inquiry_form.name}」に入力がありました。")
+        expect(mail_body(mail)).to include("「#{inquiry_form.name}」に入力がありました。")
         answer_url = Rails.application.routes.url_helpers.inquiry_answer_url(
           protocol: "http", host: site.domain, site: site, cid: inquiry_form, id: answer
         )
-        expect(mail.body.raw_source).to include(answer_url)
-        expect(mail.body.raw_source).not_to include(name)
+        expect(mail_body(mail)).to include(answer_url)
+        expect(mail_body(mail)).not_to include(name)
       end
     end
   end
@@ -133,12 +133,12 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
         expect(mail.to.first).to eq group1.contact_email
         expect(mail_subject(mail)).to eq "[自動通知]#{inquiry_form.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include("「#{inquiry_form.name}」に入力がありました。")
+        expect(mail_body(mail)).to include("「#{inquiry_form.name}」に入力がありました。")
         answer_url = Rails.application.routes.url_helpers.inquiry_answer_url(
           protocol: "http", host: site.domain, site: site, cid: inquiry_form, id: answer
         )
-        expect(mail.body.raw_source).to include(answer_url)
-        expect(mail.body.raw_source).not_to include(name)
+        expect(mail_body(mail)).to include(answer_url)
+        expect(mail_body(mail)).not_to include(name)
       end
     end
   end

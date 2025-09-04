@@ -79,7 +79,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
 
         #
         # Update
@@ -120,7 +120,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
 
         #
         # Delete
@@ -158,7 +158,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
       end
     end
 
@@ -217,7 +217,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
 
         #
         # Create (another way)
@@ -265,7 +265,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
 
         #
         # Update
@@ -306,7 +306,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
 
         #
         # Delete
@@ -344,7 +344,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
       end
     end
   end

@@ -204,7 +204,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         expect(mail.to.first).to eq email
         expect(mail_subject(mail)).to eq item.name
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.decoded.to_s).to include(item.text)
+        expect(mail_body(mail)).to include(item.text)
 
         expect(Ezine::SentLog.count).to eq 0
       end
@@ -303,7 +303,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(mail.to.first).to eq email
           expect(mail_subject(mail)).to eq item.name
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.decoded.to_s).to include(item.text)
+          expect(mail_body(mail)).to include(item.text)
 
           expect(Ezine::SentLog.count).to eq 1
           Ezine::SentLog.first.tap do |log|
@@ -400,7 +400,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(first_mail.to.first).to eq email0
           expect(mail_subject(first_mail)).to eq item0.name
           expect(first_mail.body.multipart?).to be_falsey
-          expect(first_mail.body.raw_source).to include(item0.text)
+          expect(mail_body(first_mail)).to include(item0.text)
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil
@@ -428,7 +428,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(first_mail.to.first).to eq email1
           expect(mail_subject(first_mail)).to eq item1.name
           expect(first_mail.body.multipart?).to be_falsey
-          expect(first_mail.body.raw_source).to include(item1.text)
+          expect(mail_body(first_mail)).to include(item1.text)
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil
@@ -456,7 +456,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(first_mail.to.first).to eq email2
           expect(mail_subject(first_mail)).to eq item2.name
           expect(first_mail.body.multipart?).to be_falsey
-          expect(first_mail.body.raw_source).to include(item2.text)
+          expect(mail_body(first_mail)).to include(item2.text)
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil

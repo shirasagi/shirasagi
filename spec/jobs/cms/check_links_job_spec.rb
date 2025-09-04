@@ -98,13 +98,13 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(mail.from.first).to eq site.check_links_default_sender_address
         expect(mail.to.first).to eq email1
         expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
-        expect(mail.decoded.to_s).to include "[3 errors]"
-        expect(mail.decoded.to_s).to include "#{site_url}/"
-        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound1.html"
-        expect(mail.decoded.to_s).to include "#{site_url}/index.html"
-        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound1.html"
-        expect(mail.decoded.to_s).to include "#{site_url}/docs/page1.html"
-        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound2.html"
+        expect(mail_body(mail)).to include "[3 errors]"
+        expect(mail_body(mail)).to include "#{site_url}/"
+        expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
+        expect(mail_body(mail)).to include "#{site_url}/index.html"
+        expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
+        expect(mail_body(mail)).to include "#{site_url}/docs/page1.html"
+        expect(mail_body(mail)).to include "  - #{site_url}/notfound2.html"
       end
     end
 
@@ -158,13 +158,13 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(mail.from.first).to eq site.check_links_default_sender_address
         expect(mail.to.first).to eq email2
         expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
-        expect(mail.decoded.to_s).to include "[3 errors]"
-        expect(mail.decoded.to_s).to include "#{site_url}/"
-        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound1.html"
-        expect(mail.decoded.to_s).to include "#{site_url}/index.html"
-        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound1.html"
-        expect(mail.decoded.to_s).to include "#{site_url}/docs/page1.html"
-        expect(mail.decoded.to_s).to include "  - #{site_url}/notfound2.html"
+        expect(mail_body(mail)).to include "[3 errors]"
+        expect(mail_body(mail)).to include "#{site_url}/"
+        expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
+        expect(mail_body(mail)).to include "#{site_url}/index.html"
+        expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
+        expect(mail_body(mail)).to include "#{site_url}/docs/page1.html"
+        expect(mail_body(mail)).to include "  - #{site_url}/notfound2.html"
       end
     end
   end

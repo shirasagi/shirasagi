@@ -118,8 +118,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.to.first).to eq 'notice@example.jp'
         expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
+        expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
       end
 
       ActionMailer::Base.deliveries[1].tap do |notify_mail|
@@ -127,17 +127,17 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.to.first).to eq 'transfers@example.jp'
         expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
+        expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
       end
 
       ActionMailer::Base.deliveries.last.tap do |reply_mail|
         expect(reply_mail.from.first).to eq 'admin@example.jp'
         expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
-        expect(reply_mail.subject).to eq 'お問い合わせを受け付けました'
+        expect(mail_subject(reply_mail)).to eq 'お問い合わせを受け付けました'
         expect(reply_mail.body.multipart?).to be_falsey
-        expect(reply_mail.body.raw_source).to include('上部テキスト')
-        expect(reply_mail.body.raw_source).to include('下部テキスト')
+        expect(mail_body(reply_mail)).to include('上部テキスト')
+        expect(mail_body(reply_mail)).to include('下部テキスト')
       end
     end
 

@@ -75,13 +75,15 @@ describe Jmaxml::Filter, dbscope: :example do
       expect(mail.from).to eq [ action2.sender_email ]
       expect(mail.to.first.to_s).to eq user1.email
       expect(mail_subject(mail)).to eq '震度速報'
-      expect(mail.decoded.to_s).to include('2011年3月11日 14時48分　気象庁発表')
-      expect(mail.decoded.to_s).to include('2011年3月11日 14時46分ごろ地震がありました。')
-      expect(mail.decoded.to_s).to include('岩手県沿岸南部：震度６弱')
-      expect(mail.decoded.to_s).to include('岩手県内陸南部：震度６弱')
-      expect(mail.decoded.to_s).to include('岩手県沿岸北部：震度５強')
-      expect(mail.decoded.to_s).to include('岩手県内陸北部：震度５強')
-      expect(mail.decoded.to_s).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
+      mail_body(mail).tap do |body|
+        expect(body).to include('2011年3月11日 14時48分　気象庁発表')
+        expect(body).to include('2011年3月11日 14時46分ごろ地震がありました。')
+        expect(body).to include('岩手県沿岸南部：震度６弱')
+        expect(body).to include('岩手県内陸南部：震度６弱')
+        expect(body).to include('岩手県沿岸北部：震度５強')
+        expect(body).to include('岩手県内陸北部：震度５強')
+        expect(body).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
+      end
     end
   end
 end

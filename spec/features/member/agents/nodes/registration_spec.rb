@@ -153,9 +153,9 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.to.first).to eq email
       expect(mail_subject(mail)).to eq '登録確認'
       expect(mail.body.multipart?).to be_falsey
-      expect(mail.decoded.to_s).to include(node_registration.reply_upper_text.gsub("\n", "\r\n"))
-      expect(mail.decoded.to_s).to include(node_registration.reply_lower_text.gsub("\n", "\r\n"))
-      expect(mail.decoded.to_s).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.reply_upper_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.reply_lower_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
 
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
@@ -170,7 +170,7 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(member.sex).to eq sex
       expect(member.birthday).to eq birthday
 
-      mail.decoded.to_s =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
+      mail_body(mail) =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
       url = $1
       expect(url).not_to be_nil
       visit url
@@ -193,11 +193,11 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.to.first).to eq email
       expect(mail_subject(mail)).to eq '登録完了'
       expect(mail.body.multipart?).to be_falsey
-      expect(mail.body.raw_source).to include(node_registration.completed_upper_text.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(node_registration.completed_lower_text.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(email)
-      expect(mail.body.raw_source).to include(name)
+      expect(mail_body(mail)).to include(node_registration.completed_upper_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.completed_lower_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(email)
+      expect(mail_body(mail)).to include(name)
 
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
@@ -328,9 +328,9 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.to.first).to eq email
       expect(mail_subject(mail)).to eq '登録確認'
       expect(mail.body.multipart?).to be_falsey
-      expect(mail.body.raw_source).to include(node_registration.reply_upper_text.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(node_registration.reply_lower_text.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.reply_upper_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.reply_lower_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
 
       member = Cms::Member.where(email: email).first
       expect(member.name).to eq name
@@ -434,11 +434,11 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.to.first).to eq member.email
       expect(mail_subject(mail)).to eq 'パスワード再設定案内'
       expect(mail.body.multipart?).to be_falsey
-      expect(mail.body.raw_source).to include(node_registration.reset_password_upper_text.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(node_registration.reset_password_lower_text.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.reset_password_upper_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.reset_password_lower_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
 
-      mail.body.raw_source =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
+      mail_body(mail) =~ /(#{::Regexp.escape(node_registration.full_url)}[^ \t\r\n]+)/
       url = $1
       expect(url).not_to be_nil
       visit url
@@ -484,9 +484,9 @@ describe 'members/agents/nodes/registration', type: :feature, dbscope: :example 
       expect(mail.to.first).to eq member.email
       expect(mail_subject(mail)).to eq '登録確認'
       expect(mail.body.multipart?).to be_falsey
-      expect(mail.body.raw_source).to include(node_registration.reply_upper_text.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(node_registration.reply_lower_text.gsub("\n", "\r\n"))
-      expect(mail.body.raw_source).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.reply_upper_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.reply_lower_text.gsub("\n", "\r\n"))
+      expect(mail_body(mail)).to include(node_registration.sender_signature.gsub("\n", "\r\n"))
     end
   end
 end

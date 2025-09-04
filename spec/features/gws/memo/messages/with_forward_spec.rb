@@ -92,14 +92,14 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.mime_type).to eq "text/plain"
           expect(mail_subject(mail)).to eq forward_subject
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.decoded.to_s).to include(subject)
-          expect(mail.decoded.to_s).to include(texts.join("\r\n"))
+          expect(mail_body(mail)).to include(subject)
+          expect(mail_body(mail)).to include(texts.join("\r\n"))
           url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}"
           url += "/.g#{site.id}/memo/messages/REDIRECT/#{message.id}"
-          expect(mail.decoded.to_s).to include(url)
+          expect(mail_body(mail)).to include(url)
 
           if target != 'bcc'
-            expect(mail.decoded.to_s).to include(recipient.name + "\r\n")
+            expect(mail_body(mail)).to include(recipient.name + "\r\n")
           end
           expect(mail.message_id).to end_with("@#{SS.config.gws.canonical_domain}.mail")
         end
@@ -286,7 +286,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail.mime_type).to eq "text/html"
           expect(mail_subject(mail)).to eq forward_subject
           expect(mail.body.multipart?).to be_falsey
-          mail.decoded.to_s.tap do |body|
+          mail_body(mail).tap do |body|
             expect(body).to include(subject)
             expect(body).to include(html.gsub("\n", "\r\n\r\n"))
             url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}"

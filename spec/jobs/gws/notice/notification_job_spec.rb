@@ -80,9 +80,9 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
         expect(notify_mail.bcc.first).to eq recipient1.email
-        expect(notify_mail_subject(mail)).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
+        expect(mail_subject(notify_mail)).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("/.g#{site.id}/memo/notices/#{notice.id}")
+        expect(mail_body(notify_mail)).to include("/.g#{site.id}/memo/notices/#{notice.id}")
       end
     end
   end
@@ -124,9 +124,9 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
         expect(notify_mail.bcc.first).to eq recipient1.email
-        expect(notify_mail_subject(mail)).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
+        expect(mail_subject(notify_mail)).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("/.g#{site.id}/memo/notices/#{notice.id}")
+        expect(mail_body(notify_mail)).to include("/.g#{site.id}/memo/notices/#{notice.id}")
       end
     end
   end
@@ -192,9 +192,9 @@ describe Gws::Notice::NotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq site.sender_email
         expect(notify_mail.bcc.first).not_to be_nil
-        expect(notify_mail_subject(mail)).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
+        expect(mail_subject(notify_mail)).to eq I18n.t('gws_notification.gws/notice/post.subject', name: notice.name)
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("/.g#{site.id}/memo/notices/#{notice.id}")
+        expect(mail_body(notify_mail)).to include("/.g#{site.id}/memo/notices/#{notice.id}")
       end
     end
   end

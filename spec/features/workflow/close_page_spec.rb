@@ -71,9 +71,9 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(mail.to.first).to eq user1.email
         expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include(cms_user.name)
-        expect(mail.body.raw_source).to include(item.name)
-        expect(mail.body.raw_source).to include(workflow_comment)
+        expect(mail_body(mail)).to include(cms_user.name)
+        expect(mail_body(mail)).to include(item.name)
+        expect(mail_body(mail)).to include(workflow_comment)
       end
 
       #
@@ -108,7 +108,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         expect(mail.to.first).to eq cms_user.email
         expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include(item.name)
+        expect(mail_body(mail)).to include(item.name)
       end
     end
   end

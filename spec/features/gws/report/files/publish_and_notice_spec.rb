@@ -87,9 +87,9 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         title = "[#{Gws::Report::File.model_name.human(locale: I18n.default_locale)}] 「#{subject.name}」が届きました。"
         expect(mail_subject(mail)).to eq title
-        expect(mail.decoded.to_s).to include(mail_subject(mail))
+        expect(mail_body(mail)).to include(mail_subject(mail))
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(notice_url)
+        expect(mail_body(mail)).to include(notice_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
 
@@ -155,10 +155,10 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
             subject = NKF.nkf("-w", subject)
           end
           expect(subject).to eq title
-          expect(mail.decoded.to_s).to include(subject)
+          expect(mail_body(mail)).to include(subject)
         end
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(notice_url)
+        expect(mail_body(mail)).to include(notice_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end

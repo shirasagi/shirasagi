@@ -80,7 +80,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
         # #3786: https://github.com/shirasagi/shirasagi/issues/3786
@@ -131,7 +131,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
           expect(mail_subject(mail)).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-          expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+          expect(mail_body(mail)).to include(mail_subject(mail), url)
           expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
           # #3786: https://github.com/shirasagi/shirasagi/issues/3786
@@ -179,7 +179,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
           expect(mail_subject(mail)).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-          expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+          expect(mail_body(mail)).to include(mail_subject(mail), url)
           expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
           # #3786: https://github.com/shirasagi/shirasagi/issues/3786
@@ -259,7 +259,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
           expect(mail_subject(mail)).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-          expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+          expect(mail_body(mail)).to include(mail_subject(mail), url)
           expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
           # #3786: https://github.com/shirasagi/shirasagi/issues/3786
@@ -308,7 +308,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
           expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
           expect(mail_subject(mail)).to eq notice.subject
           url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
-          expect(mail.decoded.to_s).to include(mail_subject(mail))
+          expect(mail_body(mail)).to include(mail_subject(mail))
           expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
 
           # #3786: https://github.com/shirasagi/shirasagi/issues/3786

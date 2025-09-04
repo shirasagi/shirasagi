@@ -189,7 +189,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           "gws_notification.gws/tabular/file.approve", form: form.i18n_name, name: column1_value1)
         expect(mail_subject(mail)).to eq subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
 

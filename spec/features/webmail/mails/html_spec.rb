@@ -51,7 +51,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail_subject(mail)).to eq "Re: #{item.subject}"
           expect(mail.content_type).to include("text/html")
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.decoded.to_s).to include("<b>test</b>")
+          expect(mail_body(mail)).to include("<b>test</b>")
         end
 
         visit index_path
@@ -75,7 +75,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail_subject(mail)).to eq "Fw: #{item.subject}"
           expect(mail.content_type).to include("text/html")
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include("<b>test</b>")
+          expect(mail_body(mail)).to include("<b>test</b>")
         end
       end
     end

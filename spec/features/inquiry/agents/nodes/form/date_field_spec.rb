@@ -85,14 +85,14 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.to.first).to eq 'notice@example.jp'
         expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
+        expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
         # inquiry_column_date
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(notify_mail.body.raw_source).to include(date_iso8601)
+        expect(mail_body(notify_mail)).to include("- " + node.columns[0].name)
+        expect(mail_body(notify_mail)).to include(date_iso8601)
         # inquiry_column_datetime
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(notify_mail.body.raw_source).to include(datetime_iso8601)
+        expect(mail_body(notify_mail)).to include("- " + node.columns[1].name)
+        expect(mail_body(notify_mail)).to include(datetime_iso8601)
       end
     end
   end
@@ -156,14 +156,14 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(notify_mail.to.first).to eq 'notice@example.jp'
         expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
+        expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
         # inquiry_column_date
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(notify_mail.body.raw_source).to include(date_iso8601)
+        expect(mail_body(notify_mail)).to include("- " + node.columns[0].name)
+        expect(mail_body(notify_mail)).to include(date_iso8601)
         # inquiry_column_datetime
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(notify_mail.body.raw_source).to include(datetime_iso8601)
+        expect(mail_body(notify_mail)).to include("- " + node.columns[1].name)
+        expect(mail_body(notify_mail)).to include(datetime_iso8601)
       end
     end
   end

@@ -41,7 +41,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
           expect(mail.cc).to be_nil
           expect(mail_subject(mail)).to eq "Re: #{item_subject}"
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.decoded.to_s).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
         end
       end
     end

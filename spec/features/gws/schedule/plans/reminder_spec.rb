@@ -206,9 +206,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
           expect(mail.to.length).to eq 1
           expect(mail.to).to include reminder.user.email
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.decoded.to_s).to include "[#{reminder.item.class.t :name}] #{reminder.item.name}"
-          expect(mail.decoded.to_s).to include "[#{reminder.item.class.t :term}] #{term(reminder.item)}"
-          expect(mail.decoded.to_s).to include reminder.user.long_name
+          expect(mail_body(mail)).to include "[#{reminder.item.class.t :name}] #{reminder.item.name}"
+          expect(mail_body(mail)).to include "[#{reminder.item.class.t :term}] #{term(reminder.item)}"
+          expect(mail_body(mail)).to include reminder.user.long_name
         end
       end
     end

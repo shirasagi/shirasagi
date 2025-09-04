@@ -245,7 +245,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
         subject = I18n.t("gws_notification.gws/tabular/file.request", form: form.i18n_name, name: column1_value1)
         expect(mail_subject(mail)).to eq subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
 
@@ -442,7 +442,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           "gws_notification.gws/tabular/file.circular", form: form.i18n_name, name: column1_value2)
         expect(mail_subject(mail)).to eq subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
       ActionMailer::Base.deliveries[-2].tap do |mail|
@@ -452,7 +452,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           "gws_notification.gws/tabular/file.approve", form: form.i18n_name, name: column1_value2)
         expect(mail_subject(mail)).to eq subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
 
@@ -579,7 +579,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
           "gws_notification.gws/tabular/file.comment", form: form.i18n_name, name: column1_value2)
         expect(mail_subject(mail)).to eq subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/"
-        expect(mail.decoded.to_s).to include(mail_subject(mail), url)
+        expect(mail_body(mail)).to include(mail_subject(mail), url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end

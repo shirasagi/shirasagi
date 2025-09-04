@@ -38,7 +38,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.to.first).to eq user.email
           expect(mail_subject(mail)).to eq item_subject
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.decoded.to_s).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
