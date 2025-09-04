@@ -29,8 +29,8 @@ describe "sys_test", type: :feature, dbscope: :example do
       mail = ActionMailer::Base.deliveries.first
       expect(mail.from.first).to eq sys_user.email
       expect(mail.to.first).to eq sys_user.email
-      expect(mail.subject).to eq "TEST MAIL"
-      expect(mail.decoded.to_s).to include("Message")
+      expect(mail_subject(mail)).to eq "TEST MAIL"
+      expect(mail_body(mail)).to include("Message")
     end
   end
 end

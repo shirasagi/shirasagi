@@ -5,7 +5,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true do
     let(:user) { webmail_imap }
     let(:item) do
       mail = Mail.read(Rails.root.join("spec/fixtures/webmail/inlined_content_disposition.eml"))
-      mail.subject = "#{mail.subject} - #{unique_id}"
+      mail.subject = "#{mail_subject(mail)} - #{unique_id}"
       mail
     end
 

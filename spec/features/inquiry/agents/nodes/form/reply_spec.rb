@@ -111,38 +111,38 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       ActionMailer::Base.deliveries.last.tap do |reply_mail|
         expect(reply_mail.from.first).to eq 'admin@example.jp'
         expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
-        expect(reply_mail.subject).to eq 'お問い合わせを受け付けました'
+        expect(mail_subject(reply_mail)).to eq 'お問い合わせを受け付けました'
         expect(reply_mail.body.multipart?).to be_falsey
         # upper
-        expect(reply_mail.body.raw_source).to include('上部テキスト')
+        expect(mail_body(reply_mail)).to include('上部テキスト')
         # inquiry_column_name
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(reply_mail.body.raw_source).to include("シラサギ太郎")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[0].name)
+        expect(mail_body(reply_mail)).to include("シラサギ太郎")
         # inquiry_column_optional
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(reply_mail.body.raw_source).to include("株式会社シラサギ")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[1].name)
+        expect(mail_body(reply_mail)).to include("株式会社シラサギ")
         # inquiry_column_transfers
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[2].name)
-        expect(reply_mail.body.raw_source).to include('キーワード')
+        expect(mail_body(reply_mail)).to include("- " + node.columns[2].name)
+        expect(mail_body(reply_mail)).to include('キーワード')
         # inquiry_column_email
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[3].name)
-        expect(reply_mail.body.raw_source).to include("shirasagi@example.jp")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[3].name)
+        expect(mail_body(reply_mail)).to include("shirasagi@example.jp")
         # inquiry_column_radio
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[4].name)
-        expect(reply_mail.body.raw_source).to include("男性")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[4].name)
+        expect(mail_body(reply_mail)).to include("男性")
         # inquiry_column_select
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[5].name)
-        expect(reply_mail.body.raw_source).to include("50代")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[5].name)
+        expect(mail_body(reply_mail)).to include("50代")
         # inquiry_column_check
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[6].name)
-        expect(reply_mail.body.raw_source).to include("申請について")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[6].name)
+        expect(mail_body(reply_mail)).to include("申請について")
         # inquiry_column_upload_file
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[7].name)
-        expect(reply_mail.body.raw_source).to include("logo.png")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[7].name)
+        expect(mail_body(reply_mail)).to include("logo.png")
         # static
-        expect(reply_mail.body.raw_source).not_to include(I18n.t("inquiry.default_reply_content_static"))
+        expect(mail_body(reply_mail)).not_to include(I18n.t("inquiry.default_reply_content_static"))
         # lower
-        expect(reply_mail.body.raw_source).to include('下部テキスト')
+        expect(mail_body(reply_mail)).to include('下部テキスト')
       end
     end
   end
@@ -216,38 +216,38 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
       ActionMailer::Base.deliveries.last.tap do |reply_mail|
         expect(reply_mail.from.first).to eq 'admin@example.jp'
         expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
-        expect(reply_mail.subject).to eq 'お問い合わせを受け付けました'
+        expect(mail_subject(reply_mail)).to eq 'お問い合わせを受け付けました'
         expect(reply_mail.body.multipart?).to be_falsey
         # upper
-        expect(reply_mail.body.raw_source).to include('上部テキスト')
+        expect(mail_body(reply_mail)).to include('上部テキスト')
         # inquiry_column_name
-        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[0].name)
-        expect(reply_mail.body.raw_source).not_to include("シラサギ太郎")
+        expect(mail_body(reply_mail)).not_to include("- " + node.columns[0].name)
+        expect(mail_body(reply_mail)).not_to include("シラサギ太郎")
         # inquiry_column_optional
-        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[1].name)
-        expect(reply_mail.body.raw_source).not_to include("株式会社シラサギ")
+        expect(mail_body(reply_mail)).not_to include("- " + node.columns[1].name)
+        expect(mail_body(reply_mail)).not_to include("株式会社シラサギ")
         # inquiry_column_transfers
-        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[2].name)
-        expect(reply_mail.body.raw_source).not_to include('キーワード')
+        expect(mail_body(reply_mail)).not_to include("- " + node.columns[2].name)
+        expect(mail_body(reply_mail)).not_to include('キーワード')
         # inquiry_column_email
-        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[3].name)
-        expect(reply_mail.body.raw_source).not_to include("shirasagi@example.jp")
+        expect(mail_body(reply_mail)).not_to include("- " + node.columns[3].name)
+        expect(mail_body(reply_mail)).not_to include("shirasagi@example.jp")
         # inquiry_column_radio
-        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[4].name)
-        expect(reply_mail.body.raw_source).not_to include("男性")
+        expect(mail_body(reply_mail)).not_to include("- " + node.columns[4].name)
+        expect(mail_body(reply_mail)).not_to include("男性")
         # inquiry_column_select
-        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[5].name)
-        expect(reply_mail.body.raw_source).not_to include("50代")
+        expect(mail_body(reply_mail)).not_to include("- " + node.columns[5].name)
+        expect(mail_body(reply_mail)).not_to include("50代")
         # inquiry_column_check
-        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[6].name)
-        expect(reply_mail.body.raw_source).not_to include("申請について")
+        expect(mail_body(reply_mail)).not_to include("- " + node.columns[6].name)
+        expect(mail_body(reply_mail)).not_to include("申請について")
         # inquiry_column_upload_file
-        expect(reply_mail.body.raw_source).not_to include("- " + node.columns[7].name)
-        expect(reply_mail.body.raw_source).not_to include("logo.png")
+        expect(mail_body(reply_mail)).not_to include("- " + node.columns[7].name)
+        expect(mail_body(reply_mail)).not_to include("logo.png")
         # static
-        expect(reply_mail.body.raw_source).to include(I18n.t("inquiry.default_reply_content_static").gsub("\n", "\r\n"))
+        expect(mail_body(reply_mail)).to include(I18n.t("inquiry.default_reply_content_static").gsub("\n", "\r\n"))
         # lower
-        expect(reply_mail.body.raw_source).to include('下部テキスト')
+        expect(mail_body(reply_mail)).to include('下部テキスト')
       end
     end
   end
