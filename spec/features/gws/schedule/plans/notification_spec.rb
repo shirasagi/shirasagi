@@ -127,9 +127,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
         expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
-        expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan.subject", name: plan_name)
-        expect(mail.decoded.to_s).to include(mail.subject)
-        expect(mail.decoded.to_s).to include(mail_url)
+        expect(mail_subject(mail)).to eq I18n.t("gws_notification.gws/schedule/plan.subject", name: plan_name)
+        expect(mail_body(mail)).to include(mail_subject(mail))
+        expect(mail_body(mail)).to include(mail_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end
@@ -237,9 +237,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
         expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
-        expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan.subject", name: plan_name)
-        expect(mail.decoded.to_s).to include(mail.subject)
-        expect(mail.decoded.to_s).to include(mail_url)
+        expect(mail_subject(mail)).to eq I18n.t("gws_notification.gws/schedule/plan.subject", name: plan_name)
+        expect(mail_body(mail)).to include(mail_subject(mail))
+        expect(mail_body(mail)).to include(mail_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end
@@ -353,9 +353,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
         expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
-        expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan/destroy.subject", name: item.name)
-        expect(mail.decoded.to_s).to include(item.name)
-        expect(mail.decoded.to_s).to include(mail_url)
+        expect(mail_subject(mail)).to eq I18n.t("gws_notification.gws/schedule/plan/destroy.subject", name: item.name)
+        expect(mail_body(mail)).to include(item.name)
+        expect(mail_body(mail)).to include(mail_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end
@@ -544,9 +544,9 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         mail = ActionMailer::Base.deliveries.first
         expect(mail.from.first).to eq site.sender_address
         expect(mail.bcc.first).to eq member_user.send_notice_mail_addresses.first
-        expect(mail.subject).to eq I18n.t("gws_notification.gws/schedule/plan/undo_delete.subject", name: item.name)
-        expect(mail.decoded.to_s).to include(item.name)
-        expect(mail.decoded.to_s).to include(mail_url)
+        expect(mail_subject(mail)).to eq I18n.t("gws_notification.gws/schedule/plan/undo_delete.subject", name: item.name)
+        expect(mail_body(mail)).to include(item.name)
+        expect(mail_body(mail)).to include(mail_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
       end
     end

@@ -5,7 +5,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     let(:user) { webmail_imap }
     let(:item) do
       mail = Mail.read(Rails.root.join("spec/fixtures/webmail/mail-3.eml"))
-      mail.subject = "#{mail.subject} - #{unique_id}"
+      mail.subject = "#{mail_subject(mail)} - #{unique_id}"
       mail
     end
 
@@ -48,10 +48,10 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         expect(ActionMailer::Base.deliveries).to have(1).items
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq "Re: #{item.subject}"
+          expect(mail_subject(mail)).to eq "Re: #{item.subject}"
           expect(mail.content_type).to include("text/html")
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include("<b>test</b>")
+          expect(mail_body(mail)).to include("<b>test</b>")
         end
 
         visit index_path
@@ -72,10 +72,10 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
 
         expect(ActionMailer::Base.deliveries).to have(2).items
         ActionMailer::Base.deliveries.last.tap do |mail|
-          expect(mail.subject).to eq "Fw: #{item.subject}"
+          expect(mail_subject(mail)).to eq "Fw: #{item.subject}"
           expect(mail.content_type).to include("text/html")
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include("<b>test</b>")
+          expect(mail_body(mail)).to include("<b>test</b>")
         end
       end
     end
