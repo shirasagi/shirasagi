@@ -39,6 +39,10 @@ class Gws::Notice::Post
   before_save :update_body_size
   before_save :update_file_size
 
+  # indexing to elasticsearch via companion object
+  around_save ::Gws::Elasticsearch::Indexer::NoticePostJob.callback
+  around_destroy ::Gws::Elasticsearch::Indexer::NoticePostJob.callback
+
   default_scope -> {
     order_by released: -1
   }
