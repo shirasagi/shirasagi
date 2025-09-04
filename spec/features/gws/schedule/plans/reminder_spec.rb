@@ -202,13 +202,13 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
             "gws/reminder.notification.subject",
             model: I18n.t("mongoid.models.#{reminder.model}"), name: reminder.name
           )
-          expect(mail.subject).to eq subject
+          expect(mail_subject(mail)).to eq subject
           expect(mail.to.length).to eq 1
           expect(mail.to).to include reminder.user.email
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include "[#{reminder.item.class.t :name}] #{reminder.item.name}"
-          expect(mail.body.raw_source).to include "[#{reminder.item.class.t :term}] #{term(reminder.item)}"
-          expect(mail.body.raw_source).to include reminder.user.long_name
+          expect(mail_body(mail)).to include "[#{reminder.item.class.t :name}] #{reminder.item.name}"
+          expect(mail_body(mail)).to include "[#{reminder.item.class.t :term}] #{term(reminder.item)}"
+          expect(mail_body(mail)).to include reminder.user.long_name
         end
       end
     end

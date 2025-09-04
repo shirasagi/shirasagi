@@ -59,9 +59,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.to).not_to include(address)
           expect(mail.cc).to have(item_ccs.length).items
           expect(mail.cc).to include(*item_ccs)
-          expect(mail.subject).to eq "Re: #{item_subject}"
+          expect(mail_subject(mail)).to eq "Re: #{item_subject}"
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
         end
       end
     end

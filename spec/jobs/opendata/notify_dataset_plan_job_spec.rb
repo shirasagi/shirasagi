@@ -113,8 +113,8 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(today) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
       end
     end
 
@@ -198,7 +198,7 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(today.tomorrow) do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset.private_show_path)
+        expect(mail_body(mail)).to include(dataset.private_show_path)
       end
     end
 
@@ -337,11 +337,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
 
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -356,11 +356,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
 
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).to include(dataset2.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -375,11 +375,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
 
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).to include(dataset2.private_show_path)
+        expect(mail_body(mail)).to include(dataset3.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
   end
@@ -502,11 +502,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2019/2/28")) do #2019/2/28
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path) #2019/2/28
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path) #2019/3/31
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path) #2020/1/31
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/2/28
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path) #2019/3/31
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -520,11 +520,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2019/3/28")) do #2019/3/28
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path) #2019/2/28
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path) #2019/3/31
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path) #2020/1/31
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/2/28
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path) #2019/3/31
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
 
       ActionMailer::Base.deliveries.clear
@@ -532,11 +532,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2019/3/31")) do #2019/3/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).not_to include(dataset1.private_show_path) #2019/2/28
-        expect(mail.decoded.to_s).to include(dataset2.private_show_path) #2019/3/31
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path) #2020/1/31
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset1.private_show_path) #2019/2/28
+        expect(mail_body(mail)).to include(dataset2.private_show_path) #2019/3/31
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -550,11 +550,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2020/1/28")) do #2020/1/28
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path) #2019/2/28
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path) #2019/3/31
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path) #2020/1/31
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/2/28
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path) #2019/3/31
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
 
       ActionMailer::Base.deliveries.clear
@@ -562,11 +562,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2020/1/31")) do #2020/1/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).not_to include(dataset1.private_show_path) #2019/2/28
-        expect(mail.decoded.to_s).to include(dataset2.private_show_path) #2019/3/31
-        expect(mail.decoded.to_s).to include(dataset3.private_show_path) #2020/1/31
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset1.private_show_path) #2019/2/28
+        expect(mail_body(mail)).to include(dataset2.private_show_path) #2019/3/31
+        expect(mail_body(mail)).to include(dataset3.private_show_path) #2020/1/31
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -580,11 +580,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2020/2/28")) do #2020/2/28
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path) #2019/2/28
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path) #2019/3/31
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path) #2020/1/31
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/2/28
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path) #2019/3/31
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path) #2020/1/31
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
 
       ActionMailer::Base.deliveries.clear
@@ -592,11 +592,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2020/2/29")) do #2020/2/29
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).not_to include(dataset1.private_show_path) #2019/2/28
-        expect(mail.decoded.to_s).to include(dataset2.private_show_path) #2019/3/31
-        expect(mail.decoded.to_s).to include(dataset3.private_show_path) #2020/1/31
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset1.private_show_path) #2019/2/28
+        expect(mail_body(mail)).to include(dataset2.private_show_path) #2019/3/31
+        expect(mail_body(mail)).to include(dataset3.private_show_path) #2020/1/31
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
   end
@@ -675,8 +675,8 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2019/11/30")) do #2019/11/30
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path) #2019/11/30
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/11/30
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
       end
     end
 
@@ -709,8 +709,8 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2020/2/29")) do #2020/2/29
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path) #2019/11/30
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/11/30
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
       end
     end
 
@@ -743,8 +743,8 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2020/5/30")) do #2020/5/30
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path) #2019/11/30
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path) #2019/11/30
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
       end
 
       ActionMailer::Base.deliveries.clear
@@ -873,11 +873,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2020/10/31")) do #2020/10/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).to include(dataset2.private_show_path)
+        expect(mail_body(mail)).to include(dataset3.private_show_path)
+        expect(mail_body(mail)).to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -905,11 +905,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2022/10/31")) do #2022/10/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -923,11 +923,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2023/10/31")) do #2021/10/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).not_to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset1.private_show_path)
+        expect(mail_body(mail)).to include(dataset2.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -941,11 +941,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2024/10/31")) do #2024/10/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).to include(dataset3.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -959,11 +959,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2025/10/31")) do #2021/10/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).not_to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset1.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path)
+        expect(mail_body(mail)).to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -977,11 +977,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2026/10/31")) do #2026/10/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).to include(dataset2.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset3.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
 
@@ -1009,11 +1009,11 @@ describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
       Timecop.travel(Date.parse("2028/10/31")) do #2028/10/31
         described_class.bind(site_id: site.id).perform_now
         mail = ActionMailer::Base.deliveries.first
-        expect(mail.decoded.to_s).to include(dataset1.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset2.private_show_path)
-        expect(mail.decoded.to_s).to include(dataset3.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset4.private_show_path)
-        expect(mail.decoded.to_s).not_to include(dataset5.private_show_path)
+        expect(mail_body(mail)).to include(dataset1.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset2.private_show_path)
+        expect(mail_body(mail)).to include(dataset3.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset4.private_show_path)
+        expect(mail_body(mail)).not_to include(dataset5.private_show_path)
       end
     end
   end

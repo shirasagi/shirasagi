@@ -202,9 +202,9 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         expect(mail).not_to be_nil
         # expect(mail.from.first).to eq "test@example.jp"
         expect(mail.to.first).to eq email
-        expect(mail.subject).to eq item.name
+        expect(mail_subject(mail)).to eq item.name
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include(item.text)
+        expect(mail_body(mail)).to include(item.text)
 
         expect(Ezine::SentLog.count).to eq 0
       end
@@ -249,7 +249,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         expect(mail).not_to be_nil
         # expect(mail.from.first).to eq "test@example.jp"
         expect(mail.to.first).to eq email
-        expect(mail.subject).to eq item.name
+        expect(mail_subject(mail)).to eq item.name
         expect(mail.body.multipart?).to be_truthy
         expect(mail.body.parts.count).to eq 2
         expect(mail.body.parts[0].body).to include(item.text)
@@ -301,9 +301,9 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(mail).not_to be_nil
           # expect(mail.from.first).to eq "test@example.jp"
           expect(mail.to.first).to eq email
-          expect(mail.subject).to eq item.name
+          expect(mail_subject(mail)).to eq item.name
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item.text)
+          expect(mail_body(mail)).to include(item.text)
 
           expect(Ezine::SentLog.count).to eq 1
           Ezine::SentLog.first.tap do |log|
@@ -344,7 +344,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(mail).not_to be_nil
           # expect(mail.from.first).to eq "test@example.jp"
           expect(mail.to.first).to eq email
-          expect(mail.subject).to eq item.name
+          expect(mail_subject(mail)).to eq item.name
           expect(mail.body.multipart?).to be_truthy
           expect(mail.body.parts.count).to eq 2
           expect(mail.body.parts[0].body).to include(item.text)
@@ -398,14 +398,14 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(first_mail).not_to be_nil
           # expect(mail.from.first).to eq "test@example.jp"
           expect(first_mail.to.first).to eq email0
-          expect(first_mail.subject).to eq item0.name
+          expect(mail_subject(first_mail)).to eq item0.name
           expect(first_mail.body.multipart?).to be_falsey
-          expect(first_mail.body.raw_source).to include(item0.text)
+          expect(mail_body(first_mail)).to include(item0.text)
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil
           expect(last_mail.to.first).to eq email3
-          expect(last_mail.subject).to eq item0.name
+          expect(mail_subject(last_mail)).to eq item0.name
           expect(last_mail.body.multipart?).to be_truthy
           expect(last_mail.body.parts.count).to eq 2
           expect(last_mail.body.parts[0].body).to include(item0.text)
@@ -426,14 +426,14 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(first_mail).not_to be_nil
           # expect(mail.from.first).to eq "test@example.jp"
           expect(first_mail.to.first).to eq email1
-          expect(first_mail.subject).to eq item1.name
+          expect(mail_subject(first_mail)).to eq item1.name
           expect(first_mail.body.multipart?).to be_falsey
-          expect(first_mail.body.raw_source).to include(item1.text)
+          expect(mail_body(first_mail)).to include(item1.text)
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil
           expect(last_mail.to.first).to eq email4
-          expect(last_mail.subject).to eq item1.name
+          expect(mail_subject(last_mail)).to eq item1.name
           expect(last_mail.body.multipart?).to be_truthy
           expect(last_mail.body.parts.count).to eq 2
           expect(last_mail.body.parts[0].body).to include(item1.text)
@@ -454,14 +454,14 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(first_mail).not_to be_nil
           # expect(mail.from.first).to eq "test@example.jp"
           expect(first_mail.to.first).to eq email2
-          expect(first_mail.subject).to eq item2.name
+          expect(mail_subject(first_mail)).to eq item2.name
           expect(first_mail.body.multipart?).to be_falsey
-          expect(first_mail.body.raw_source).to include(item2.text)
+          expect(mail_body(first_mail)).to include(item2.text)
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil
           expect(last_mail.to.first).to eq email5
-          expect(last_mail.subject).to eq item2.name
+          expect(mail_subject(last_mail)).to eq item2.name
           expect(last_mail.body.multipart?).to be_truthy
           expect(last_mail.body.parts.count).to eq 2
           expect(last_mail.body.parts[0].body).to include(item2.text)

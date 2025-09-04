@@ -98,10 +98,10 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq from_email
         expect(notify_mail.to.to_a).to eq notice_emails
-        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
+        expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
+        expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
       end
     end
   end
@@ -148,10 +148,10 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       notify_mails.each_with_index do |notify_mail, idx|
         expect(notify_mail.from.first).to eq from_email
         expect(notify_mail.to.to_a).to eq [notice_emails[idx]]
-        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
+        expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
+        expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
       end
     end
   end

@@ -66,7 +66,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
@@ -81,7 +81,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -129,7 +129,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(3).items
@@ -144,7 +144,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address1.email, address2.email, address3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -177,14 +177,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
             expect(addresses).to include(address1.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -232,7 +232,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
@@ -247,7 +247,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(user3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -295,7 +295,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have_at_least(3).items
@@ -310,7 +310,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(user1.email, user2.email, user3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -343,14 +343,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
             expect(addresses).to include(user1.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -407,7 +407,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
@@ -422,7 +422,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -470,7 +470,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(3).items
@@ -485,7 +485,7 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
             expect(addresses).to include(address1.email, address2.email, address3.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end
@@ -518,14 +518,14 @@ describe 'webmail_multi_heckbox', type: :feature, dbscope: :example, imap: true,
 
         expect(ActionMailer::Base.deliveries.length).to eq 1
         ActionMailer::Base.deliveries.first.tap do |mail|
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.from.first).to eq user.email
           mail.to.map(&:to_s).tap do |addresses|
             expect(addresses).to have(1).items
             expect(addresses).to include(address1.email)
           end
           expect(mail.body.multipart?).to be_falsey
-          expect(mail.body.raw_source).to include(item_texts.join("\r\n"))
+          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
         end
       end
     end

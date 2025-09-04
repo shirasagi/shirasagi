@@ -83,9 +83,9 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
         ActionMailer::Base.deliveries.each do |mail|
           expect(mail).not_to be_nil
           expect(mail.from.first).to eq SS.config.mail.default_from
-          expect(mail.subject).to eq I18n.t("cms.page_expiration_mail.default_subject")
-          expect(mail.body.raw_source).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
-          expect(mail.body.raw_source).to include(page2.name, page2.private_show_path)
+          expect(mail_subject(mail)).to eq I18n.t("cms.page_expiration_mail.default_subject")
+          expect(mail_body(mail)).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
+          expect(mail_body(mail)).to include(page2.name, page2.private_show_path)
         end
       end
     end
@@ -119,9 +119,9 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
         ActionMailer::Base.deliveries.each do |mail|
           expect(mail).not_to be_nil
           expect(mail.from.first).to eq SS.config.mail.default_from
-          expect(mail.subject).to eq I18n.t("cms.page_expiration_mail.default_subject")
-          expect(mail.body.raw_source).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
-          expect(mail.body.raw_source).to include(page2.name, page2.private_show_path)
+          expect(mail_subject(mail)).to eq I18n.t("cms.page_expiration_mail.default_subject")
+          expect(mail_body(mail)).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
+          expect(mail_body(mail)).to include(page2.name, page2.private_show_path)
         end
       end
     end
@@ -155,9 +155,9 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
         ActionMailer::Base.deliveries.each do |mail|
           expect(mail).not_to be_nil
           expect(mail.from.first).to eq SS.config.mail.default_from
-          expect(mail.subject).to eq I18n.t("cms.page_expiration_mail.default_subject")
-          expect(mail.body.raw_source).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
-          expect(mail.body.raw_source).to include(page2.name, page2.private_show_path)
+          expect(mail_subject(mail)).to eq I18n.t("cms.page_expiration_mail.default_subject")
+          expect(mail_body(mail)).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
+          expect(mail_body(mail)).to include(page2.name, page2.private_show_path)
         end
       end
     end

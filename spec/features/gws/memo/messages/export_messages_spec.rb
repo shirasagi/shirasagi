@@ -102,7 +102,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail["X-Shirasagi-Exported"].decoded).to be_present
           expect(mail.in_reply_to).to be_nil
           expect(mail.references).to be_nil
-          expect(mail.subject).to eq memo.subject
+          expect(mail_subject(mail)).to eq memo.subject
           expect(mail.mime_type).to eq "text/plain"
           expect(mail.multipart?).to be_falsey
           expect(mail.parts).to be_blank
@@ -143,7 +143,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail["X-Shirasagi-Exported"].decoded).to be_present
           expect(mail.in_reply_to).to be_nil
           expect(mail.references).to be_nil
-          expect(mail.subject).to eq memo.subject
+          expect(mail_subject(mail)).to eq memo.subject
           expect(mail.mime_type).to eq "text/plain"
           expect(mail.multipart?).to be_falsey
           expect(mail.parts).to be_blank
@@ -184,7 +184,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail["X-Shirasagi-Exported"].decoded).to be_present
           expect(mail.in_reply_to).to be_nil
           expect(mail.references).to be_nil
-          expect(mail.subject).to eq memo.subject
+          expect(mail_subject(mail)).to eq memo.subject
           expect(mail.mime_type).to eq "text/plain"
           expect(mail.multipart?).to be_falsey
           expect(mail.parts).to be_blank
@@ -224,7 +224,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           expect(mail["X-Shirasagi-Exported"].decoded).to be_present
           expect(mail.in_reply_to).to be_nil
           expect(mail.references).to be_nil
-          expect(mail.subject).to eq memo.subject
+          expect(mail_subject(mail)).to eq memo.subject
           expect(mail.mime_type).to eq "text/html"
           expect(mail.multipart?).to be_falsey
           expect(mail.parts).to be_blank
@@ -270,7 +270,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
             expect(mail["X-Shirasagi-Exported"].decoded).to be_present
             expect(mail.in_reply_to).to be_nil
             expect(mail.references).to be_nil
-            expect(mail.subject).to eq memo.subject
+            expect(mail_subject(mail)).to eq memo.subject
             expect(mail.mime_type).to eq "text/plain"
             expect(mail.multipart?).to be_falsey
             expect(mail.parts).to be_blank

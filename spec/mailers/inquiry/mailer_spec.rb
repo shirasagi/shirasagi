@@ -11,7 +11,7 @@ describe Inquiry::Mailer, type: :mailer, dbscope: :example do
     it "mail attributes" do
       expect(mail.from.first).to eq "from@example.jp"
       expect(mail.to.first).to eq "notice@example.jp"
-      expect(mail.subject.to_s).not_to eq ""
+      expect(mail_subject(mail).to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
       expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end

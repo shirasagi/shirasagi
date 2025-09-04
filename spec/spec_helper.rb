@@ -301,6 +301,29 @@ def wait_for_error(text, wait: nil, selector: nil)
   end
 end
 
+def mail_subject(mail)
+  return if mail.blank?
+
+  subject = mail.subject
+  return subject if subject.blank?
+
+  return subject unless subject.start_with?("=?ISO-2022-JP?")
+
+  NKF.nkf("-w", subject)
+end
+
+def mail_body(mail)
+  return if mail.blank?
+
+  body = mail.body
+  return "" if body.blank?
+
+  raw_source = body.raw_source
+  return "" if raw_source.blank?
+
+  NKF.nkf("-w", raw_source)
+end
+
 # ref.
 #   https://www.relishapp.com/rspec/rspec-expectations/v/2-5/docs/built-in-matchers/be-within-matcher
 #   http://qiita.com/kozy4324/items/9a6530736be7e92954bc

@@ -208,11 +208,11 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
       expect(ActionMailer::Base.deliveries.length).to eq 1
       ActionMailer::Base.deliveries.first.tap do |mail|
         expect(mail.to.first).to eq cms_user.email
-        expect(mail.subject).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item_name} - #{site.name}"
+        expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.request')}]#{item_name} - #{site.name}"
         expect(mail.body.multipart?).to be_falsey
-        expect(mail.body.raw_source).to include(member.name)
-        expect(mail.body.raw_source).to include(item_name)
-        expect(mail.body.raw_source).to include(Opendata::App.first.private_show_path)
+        expect(mail_body(mail)).to include(member.name)
+        expect(mail_body(mail)).to include(item_name)
+        expect(mail_body(mail)).to include(Opendata::App.first.private_show_path)
       end
 
       login_cms_user

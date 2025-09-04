@@ -67,9 +67,9 @@ describe "gws_discussion_forum_thread_comments", type: :feature, dbscope: :examp
     mail = ActionMailer::Base.deliveries.first
     expect(mail.from.first).to eq site.sender_address
     expect(mail.bcc.first).to eq discussion_member.send_notice_mail_addresses.first
-    expect(mail.subject).to eq notification.subject
+    expect(mail_subject(mail)).to eq notification.subject
     url = "#{SS.config.gws.canonical_scheme}://#{SS.config.gws.canonical_domain}/.g#{site.id}/memo/notices/#{notification.id}"
-    expect(mail.decoded.to_s).to include(mail.subject, url)
+    expect(mail_body(mail)).to include(mail_subject(mail), url)
     expect(mail.message_id).to end_with("@#{SS.config.gws.canonical_domain}.mail")
   end
 end
