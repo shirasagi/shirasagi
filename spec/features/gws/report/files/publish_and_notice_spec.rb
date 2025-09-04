@@ -150,13 +150,8 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       ActionMailer::Base.deliveries.last.tap do |mail|
         expect(mail.from.first).to eq site.sender_address
         expect(mail.bcc.first).to eq user1.send_notice_mail_addresses.first
-        mail_subject(mail).tap do |subject|
-          if subject.start_with?("=?ISO-2022-JP?")
-            subject = NKF.nkf("-w", subject)
-          end
-          expect(subject).to eq title
-          expect(mail_body(mail)).to include(subject)
-        end
+        expect(mail_subject(mail)).to eq title
+        expect(mail_body(mail)).to include(mail_subject(mail))
         notice_url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(notice_url)
         expect(mail.message_id).to end_with("@#{site.canonical_domain}.mail")
