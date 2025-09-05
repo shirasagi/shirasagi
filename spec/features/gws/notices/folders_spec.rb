@@ -324,4 +324,56 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-items", text: folder2.name)
     end
   end
+
+  context "empty limit" do
+    let(:name) { unique_id }
+    let(:order) { rand(1..10) }
+
+    it do
+      visit gws_notice_folders_path(site: site)
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.new")
+      end
+      within "form#item-form" do
+        fill_in "item[in_basename]", with: name
+        fill_in "item[order]", with: ""
+
+        within "#addon-gws-agents-addons-member" do
+          wait_for_cbox_opened do
+            click_on I18n.t("ss.apis.users.index")
+          end
+        end
+      end
+      within_cbox do
+        wait_for_cbox_closed do
+          click_on gws_user.name
+        end
+      end
+      within "form#item-form" do
+        within "#addon-gws-agents-addons-member" do
+          expect(page).to have_css(".ajax-selected", text: gws_user.name)
+        end
+
+        fill_in "item[notice_individual_body_size_limit_mb]", with: ""
+        fill_in "item[notice_total_body_size_limit_mb]", with: ""
+        fill_in "item[notice_individual_file_size_limit_mb]", with: ""
+        fill_in "item[notice_total_file_size_limit_mb]", with: ""
+
+        click_on I18n.t("ss.buttons.save")
+      end
+      I18n.t("errors.messages.not_a_number").tap do |message|
+        wait_for_error I18n.t("errors.format", attribute: Gws::Notice::Folder.t(:order), message: message)
+      end
+      I18n.t("errors.messages.greater_than_or_equal_to", count: (1_024 * 1_024).to_fs(:human_size)).tap do |message|
+        attribute = Gws::Notice::Folder.t(:notice_total_body_size_limit)
+        wait_for_error I18n.t("errors.format", attribute: attribute, message: message)
+        attribute = Gws::Notice::Folder.t(:notice_individual_file_size_limit)
+        wait_for_error I18n.t("errors.format", attribute: attribute, message: message)
+        attribute = Gws::Notice::Folder.t(:notice_total_file_size_limit)
+        wait_for_error I18n.t("errors.format", attribute: attribute, message: message)
+      end
+
+      expect(Gws::Notice::Folder.all.count).to eq 0
+    end
+  end
 end
