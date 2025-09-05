@@ -20,10 +20,8 @@
       <%= md_icons.outlined "error_outline", tag: :i, size: 16, title: item.label(:severity), class: "severity-#{item.severity}", aria: { hidden: nil } %>
     <% end %>
     <%= link_to item.name, { action: :show, id: item }, { class: "name" } %>
-    <% if item.term_enabled? %>
-      <%= link_to gws_notice_calendars_path(calendar: redirection_calendar_params(item)), { class: "index-cleander-link" } do %>
-        <i class="material-icons calendar-month md-18">calendar_month</i>
-      <% end %>
+    <% if item.public? && item.term_enabled? %>
+      <%= link_to md_icons.outlined("calendar_month", size: 18, class: "calendar-month"), gws_notice_calendars_path(calendar: redirection_calendar_params(item)), { class: "index-calendar-link", aria: { label: t("ss.navi.calendar") } } %>
     <% end %>
     <% if item.new_flag? %>
       <span class="gws-board-flag-new"></span>

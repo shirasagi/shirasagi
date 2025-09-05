@@ -26,8 +26,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         end
         within ".list-item.unread" do
           expect(page).to have_link item1.name
-          expect(page).to have_css(".index-cleander-link")
-          first(".index-cleander-link").click
+          expect(page).to have_css(".index-calendar-link")
+          first(".index-calendar-link").click
         end
       end
 

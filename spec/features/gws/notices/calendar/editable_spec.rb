@@ -30,7 +30,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.saved')
 
       within ".mod-gws-notice-calendar" do
-        first(".index-cleander-link").click
+        first(".index-calendar-link").click
       end
       # wait for ajax completion
       wait_for_js_ready
