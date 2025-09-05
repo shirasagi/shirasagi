@@ -2,6 +2,7 @@ module Gws
   module Notice
     class Initializer
       Gws::Role.permission :use_gws_notice, module_name: 'gws/notice'
+      Gws::Role.permission :use_gws_notice_back_number, module_name: 'gws/notice'
 
       Gws::Role.permission :read_other_gws_notices, module_name: 'gws/notice'
       Gws::Role.permission :read_private_gws_notices, module_name: 'gws/notice'

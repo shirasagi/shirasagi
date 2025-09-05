@@ -26,6 +26,8 @@ class Gws::Notice::Apis::FolderListController < ApplicationController
         @model.for_post_editor(@cur_site, @cur_user)
       when 'readable', 'calendar'
         @model.for_post_reader(@cur_site, @cur_user)
+      when 'back_number'
+        @model.for_post_back_number(@cur_site, @cur_user)
       else
         @model.none
       end

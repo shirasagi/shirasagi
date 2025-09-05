@@ -39,6 +39,10 @@ module SS::Release
       ])
     end
 
+    def and_public_but_after_close_date(date = Time.zone.now)
+      all.where(state: { "$in" => self.public_states }, close_date: { "$lte" => date })
+    end
+
     def and_closed(date = Time.zone.now)
       conds = [
         { state: nil }, { state: { "$nin" => public_states } }, { :release_date.gt => date }, { :close_date.lte => date }

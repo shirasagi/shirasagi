@@ -1,6 +1,7 @@
+<% mode = ::File.basename(params[:controller]).singularize %>
 <%= jquery do %>
   var treeNavi = new SS_TreeNavi('#content-navi .tree-navi');
-  treeNavi.render(<%== gws_notice_apis_folder_list_path(mode: 'readable', folder_id: '-', id: @folder, format: 'json').to_json %>);
+  treeNavi.render(<%== gws_notice_apis_folder_list_path(mode: mode, folder_id: '-', id: @folder, format: :json).to_json %>);
 <% end %>
 
 <div id="content-navi">
@@ -9,7 +10,7 @@
   </h2>
 
   <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
-    <%= link_to t('gws/notice.all'), gws_notice_readables_path(folder_id: '-') %>
+    <%= link_to t('gws/notice.all'), url_for(action: :index, folder_id: '-') %>
   </div>
 
   <div class="tree-navi"></div>
