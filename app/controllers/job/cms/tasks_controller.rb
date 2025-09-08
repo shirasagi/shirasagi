@@ -12,6 +12,10 @@ class Job::Cms::TasksController < ApplicationController
     raise "403" unless Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
+  def set_deletable
+    @deletable ||= Cms::Tool.allowed?(:edit, @cur_user)
+  end
+
   def item_criteria
     @model.site(@cur_site).exists(at: false)
   end
