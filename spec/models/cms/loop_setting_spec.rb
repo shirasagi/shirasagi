@@ -72,28 +72,40 @@ describe Cms::LoopSetting, dbscope: :example do
         expect(loop_setting.html_format_liquid?).to be false
       end
 
-      it "treats invalid format as shirasagi" do
+      it "rejects invalid format" do
         loop_setting = build(:cms_loop_setting, site: site, html_format: "invalid")
-        expect(loop_setting).to be_valid
-        expect(loop_setting.html_format_shirasagi?).to be true
-        expect(loop_setting.html_format_liquid?).to be false
+        expect(loop_setting).not_to be_valid
+        expect(loop_setting.errors[:html_format]).to include(I18n.t('errors.messages.inclusion'))
       end
     end
 
-    describe "custom_html field" do
-      it "can set custom_html for liquid format" do
-        custom_html = "{% for item in items %}<div>{{ item.name }}</div>{% endfor %}"
-        loop_setting = create(:cms_loop_setting, site: site, html_format: "liquid", custom_html: custom_html)
-
-        expect(loop_setting.custom_html).to eq custom_html
-      end
-
+    describe "html field" do
       it "can set html for shirasagi format" do
         html_content = "<div class='item'>#{unique_id}</div>"
         loop_setting = create(:cms_loop_setting, site: site, html_format: "shirasagi", html: html_content)
 
         expect(loop_setting.html).to eq html_content
       end
+    end
+  end
+
+  describe "HTML content validation" do
+    let(:site) { cms_site }
+
+    it "accepts valid HTML content" do
+      valid_html = "<div class='test'>Content</div>"
+      loop_setting = build(:cms_loop_setting, site: site, html: valid_html)
+      expect(loop_setting).to be_valid
+    end
+
+    it "accepts empty HTML content" do
+      loop_setting = build(:cms_loop_setting, site: site, html: "")
+      expect(loop_setting).to be_valid
+    end
+
+    it "accepts nil HTML content" do
+      loop_setting = build(:cms_loop_setting, site: site, html: nil)
+      expect(loop_setting).to be_valid
     end
   end
 end

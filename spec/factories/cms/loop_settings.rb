@@ -10,6 +10,5 @@ FactoryBot.define do
     order { rand(10..20) }
     html { "html-#{unique_id}" }
     html_format { "shirasagi" }
-    custom_html { nil }
   end
 end

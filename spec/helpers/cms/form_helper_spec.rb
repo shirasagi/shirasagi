@@ -107,4 +107,146 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       expect(closed_names).not_to include(closed_setting.name)
     end
   end
+
+  describe "snippet insertion helper functionality" do
+    let!(:user) { cms_user }
+    let!(:site) { cms_site }
+    let(:liquid_html) { "{% for item in items %}<div class='item'>{{ item.name }}</div>{% endfor %}" }
+    let(:shirasagi_html) { "<div class='item'>#{unique_id}</div>" }
+
+    before do
+      @cur_site = site
+      @cur_user = user
+    end
+
+    describe "multiple liquid format settings" do
+      let!(:liquid_setting1) do
+        create(:cms_loop_setting,
+          site: site,
+          html_format: "liquid",
+          html: liquid_html,
+          state: "public",
+          name: "Liquid Setting 1"
+        )
+      end
+      let!(:liquid_setting2) do
+        create(:cms_loop_setting,
+          site: site,
+          html_format: "liquid",
+          html: liquid_html,
+          state: "public",
+          name: "Liquid Setting 2"
+        )
+      end
+
+      it "returns all public liquid format settings" do
+        settings = helper.ancestral_html_settings_liquid
+        expect(settings.count).to eq 2
+
+        setting_names = settings.map { |name, _id| name }
+        expect(setting_names).to include(liquid_setting1.name)
+        expect(setting_names).to include(liquid_setting2.name)
+      end
+
+      it "returns settings in correct format for select options" do
+        settings = helper.ancestral_html_settings_liquid
+        expect(settings.first).to be_an(Array)
+        expect(settings.first.length).to eq 2
+        expect(settings.first[0]).to be_a(String) # name
+        expect(settings.first[1]).to be_a(Integer) # id
+      end
+    end
+
+    describe "multiple shirasagi format settings" do
+      let!(:shirasagi_setting1) do
+        create(:cms_loop_setting,
+          site: site,
+          html_format: "shirasagi",
+          html: shirasagi_html,
+          state: "public",
+          name: "Shirasagi Setting 1"
+        )
+      end
+      let!(:shirasagi_setting2) do
+        create(:cms_loop_setting,
+          site: site,
+          html_format: "shirasagi",
+          html: shirasagi_html,
+          state: "public",
+          name: "Shirasagi Setting 2"
+        )
+      end
+
+      it "returns all public shirasagi format settings" do
+        settings = helper.ancestral_loop_settings
+        expect(settings.count).to eq 2
+
+        setting_names = settings.map { |name, _id| name }
+        expect(setting_names).to include(shirasagi_setting1.name)
+        expect(setting_names).to include(shirasagi_setting2.name)
+      end
+    end
+
+    describe "mixed format settings" do
+      let!(:liquid_setting) do
+        create(:cms_loop_setting,
+          site: site,
+          html_format: "liquid",
+          html: liquid_html,
+          state: "public",
+          name: "Liquid Setting"
+        )
+      end
+      let!(:shirasagi_setting) do
+        create(:cms_loop_setting,
+          site: site,
+          html_format: "shirasagi",
+          html: shirasagi_html,
+          state: "public",
+          name: "Shirasagi Setting"
+        )
+      end
+
+      it "correctly separates liquid and shirasagi settings" do
+        liquid_settings = helper.ancestral_html_settings_liquid
+        shirasagi_settings = helper.ancestral_loop_settings
+
+        liquid_names = liquid_settings.map { |name, _id| name }
+        shirasagi_names = shirasagi_settings.map { |name, _id| name }
+
+        expect(liquid_names).to include(liquid_setting.name)
+        expect(liquid_names).not_to include(shirasagi_setting.name)
+        expect(shirasagi_names).to include(shirasagi_setting.name)
+        expect(shirasagi_names).not_to include(liquid_setting.name)
+      end
+    end
+
+    describe "empty results" do
+      it "returns empty array when no settings exist" do
+        # Clear all loop settings for this site
+        Cms::LoopSetting.site(site).destroy_all
+
+        liquid_settings = helper.ancestral_html_settings_liquid
+        shirasagi_settings = helper.ancestral_loop_settings
+
+        expect(liquid_settings).to be_empty
+        expect(shirasagi_settings).to be_empty
+      end
+
+      it "returns empty array when only closed settings exist" do
+        # Clear all loop settings for this site
+        Cms::LoopSetting.site(site).destroy_all
+
+        # Create only closed settings
+        create(:cms_loop_setting, site: site, html_format: "liquid", state: "closed")
+        create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "closed")
+
+        liquid_settings = helper.ancestral_html_settings_liquid
+        shirasagi_settings = helper.ancestral_loop_settings
+
+        expect(liquid_settings).to be_empty
+        expect(shirasagi_settings).to be_empty
+      end
+    end
+  end
 end
