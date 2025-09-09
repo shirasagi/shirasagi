@@ -213,4 +213,43 @@ describe MailPage::ImportJob, dbscope: :example do
       expect(page2.state).to eq "public"
     end
   end
+
+  context "perform at multiple_to" do
+    let(:node1) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node1", arrival_days: rand(1..5),
+      mail_page_from_conditions: ["sample@example.jp"],
+      mail_page_to_conditions: ["bosai@example.jp"]
+    end
+    let(:node2) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node2", arrival_days: rand(1..5),
+      mail_page_from_conditions: ["sample@example.jp"],
+      mail_page_to_conditions: ["kotsu@example.jp"]
+    end
+
+    let(:bosai_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/multiple_to/bosai.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+    let(:kotsu_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/multiple_to/kotsu.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+
+    before do
+      node1
+      node2
+    end
+
+    it do
+      perform_enqueued_jobs do
+        kotsu_eml
+        bosai_eml
+        described_class.bind(site_id: site).perform_later(kotsu_eml)
+        described_class.bind(site_id: site).perform_later(bosai_eml)
+      end
+
+      expect(MailPage::Page.site(site).where(filename: /^#{node1.filename}\//).count).to eq 1
+      expect(MailPage::Page.site(site).where(filename: /^#{node2.filename}\//).count).to eq 1
+    end
+  end
 end
