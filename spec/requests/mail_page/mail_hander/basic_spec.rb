@@ -10,17 +10,17 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
   let!(:url) { "http://#{site.domain}/#{node.url}mail" }
   let(:page) { MailPage::Page.site(site).last }
 
-  let(:decoded) { Fs.read("#{Rails.root}/spec/fixtures/mail_page/decoded") }
+  let(:decoded) { Fs.read("#{Rails.root}/spec/fixtures/mail_page/basic/decoded") }
   let(:utf_8_eml) do
     file = "#{Rails.root}/private/files/mail_page_files/#{Time.zone.now.to_i}"
     Fs.mkdir_p "#{Rails.root}/private/files/mail_page_files"
-    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml")
+    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml")
     file
   end
   let(:iso_2022_jp_eml) do
     file = "#{Rails.root}/private/files/mail_page_files/#{Time.zone.now.to_i}"
     Fs.mkdir_p "#{Rails.root}/private/files/mail_page_files"
-    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml")
+    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml")
     file
   end
 
@@ -35,7 +35,7 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
       end
 
       context "post utf-8 mail" do
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
         it "#mail" do
           post(url, params: { data: file })
@@ -45,7 +45,7 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
       end
 
       context "post iso-2022-jp mail" do
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml") }
 
         it "#mail" do
           post(url, params: { data: file })
@@ -65,7 +65,7 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
       end
 
       context "post utf-8 mail" do
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
         it "#mail" do
           perform_enqueued_jobs do
@@ -77,7 +77,7 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
       end
 
       context "post iso-2022-jp mail" do
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml") }
 
         it "#mail" do
           perform_enqueued_jobs do
