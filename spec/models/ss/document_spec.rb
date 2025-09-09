@@ -306,10 +306,12 @@ RSpec.describe SS::Document, type: :model, dbscope: :example do
       total_bsonsize2 = SS::Group.total_bsonsize
       old_total_bsonsize2 = old_total_bsonsize(SS::Group)
 
-
       expect(SS::Group.count).to eq 2
       expect(total_bsonsize2).to be > total_bsonsize1
       expect(total_bsonsize2).to eq old_total_bsonsize2
+
+      total_bsonsize3 = SS::Group.where(name: item1.name).total_bsonsize
+      expect(total_bsonsize3).to eq total_bsonsize1
     end
   end
 end

@@ -95,8 +95,9 @@ module SS::Document
     #end
 
     def total_bsonsize
-      return 0 unless Mongoid::Criteria.new(self).exists?
+      return 0 unless self.criteria.exists?
       pipes = []
+      pipes << { "$match" => self.criteria.selector } if self.criteria.selector.present?
       pipes << { "$project" => { name: 1, object_size: { "$bsonSize" => "$$ROOT" } } }
       pipes << { '$group' => { _id: nil, size: { '$sum' => '$object_size' } } }
       data = self.collection.aggregate(pipes).to_a
