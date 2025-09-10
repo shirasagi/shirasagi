@@ -8,7 +8,12 @@ class MailPage::ImportJob < Cms::ApplicationJob
   def perform(file)
     mail = ::Mail.new(Fs::binread(file))
     from = mail.from[0]
-    to = mail.to[0]
+    if mail.to.size == 1
+      to = mail.to[0]
+    else
+      to = mail["X-Original-To"].value rescue nil
+      raise "failed to extract X-Original-To" if to.blank?
+    end
     body = mail.text_part ? mail.text_part.decoded : mail.decoded
 
     put_log("from: " + from)
