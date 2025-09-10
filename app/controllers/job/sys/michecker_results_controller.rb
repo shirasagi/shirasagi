@@ -14,6 +14,10 @@ class Job::Sys::MicheckerResultsController < ApplicationController
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
   end
 
+  def set_deletable
+    @deletable ||= SS::User.allowed?(:edit, @cur_user)
+  end
+
   def item_criteria
     @model.all.order_by(michecker_last_executed_at: -1)
   end

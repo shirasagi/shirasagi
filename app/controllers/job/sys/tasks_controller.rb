@@ -12,6 +12,10 @@ class Job::Sys::TasksController < ApplicationController
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
   end
 
+  def set_deletable
+    @deletable ||= SS::User.allowed?(:edit, @cur_user)
+  end
+
   def set_search_params
     @s ||= OpenStruct.new(params[:s])
   end
