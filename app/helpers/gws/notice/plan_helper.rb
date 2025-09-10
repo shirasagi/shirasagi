@@ -30,4 +30,32 @@ module Gws::Notice::PlanHelper
   def redirection_calendar_params(item = nil)
     super().merge(date: redirection_date(item))
   end
+
+  def link_to_calendar(item, text: nil, only_icon: false)
+    return unless item.term_enabled?
+
+    unless item.class.public_states.include?(item.state)
+      return only_icon ? nil : text.presence
+    end
+
+    if item.closed? && !@cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number)
+      # @item はバックナンバー。しかし、バックナンバーを表示する権限がない
+      return only_icon ? nil : text.presence
+    end
+
+    calendar_params = redirection_calendar_params(item)
+    search_params = item.closed? ? { content_types: %w(back_numbers) } : SS::EMPTY_HASH
+    path = gws_notice_calendars_path(calendar: calendar_params, s: search_params)
+
+    label = [
+      (only_icon ? nil : text.presence),
+      md_icons.outlined("calendar_month", size: 18, class: "calendar-month")
+    ].compact.join(" ").html_safe
+
+    if only_icon
+      aria = { label: t("ss.navi.calendar") }
+    end
+
+    link_to label, path, class: "index-calendar-link", aria: aria, style: "display: inline-flex; align-items: center; gap: 5px;"
+  end
 end
