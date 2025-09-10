@@ -38,10 +38,15 @@ describe "gws_apis_users", type: :feature, dbscope: :example, js: true do
           wait_for_cbox_opened { click_on I18n.t("ss.apis.users.index") }
         end
       end
+      script = <<~SCRIPT
+        Array.from(
+          document.querySelectorAll("#ajax-box .list-item[data-id]"),
+          (el) => el.dataset.id)
+      SCRIPT
       first_page_ids = second_page_ids = nil
       wait_for_event_fired "ss:ajaxPagination" do
         within_cbox do
-          first_page_ids = page.evaluate_script("Array.from(document.querySelectorAll('#ajax-box .list-item[data-id]'), (el) => el.dataset.id)")
+          first_page_ids = page.evaluate_script(script)
           expect(first_page_ids.length).to eq max_items_per_page
           expect(page).to have_css(".pagination", text: "2")
           within ".pagination" do
@@ -50,7 +55,7 @@ describe "gws_apis_users", type: :feature, dbscope: :example, js: true do
         end
       end
       within_cbox do
-        second_page_ids = page.evaluate_script("Array.from(document.querySelectorAll('#ajax-box .list-item[data-id]'), (el) => el.dataset.id)")
+        second_page_ids = page.evaluate_script(script)
         expect(second_page_ids.length).to eq max_items_per_page
       end
 
