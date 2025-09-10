@@ -22,4 +22,14 @@ class Gws::Elasticsearch::Setting::Notice
 
     [ cate, url_helpers.gws_notice_readables_path(site: cur_site, folder_id: '-', category_id: cate) ]
   end
+
+  private
+
+  def and_public(_date = nil)
+    if cur_user.gws_role_permit_any?(cur_site, :use_gws_notice_back_number)
+      [ { term: { 'state' => 'public' } } ]
+    else
+      super
+    end
+  end
 end
