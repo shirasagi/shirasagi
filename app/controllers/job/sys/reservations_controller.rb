@@ -12,6 +12,10 @@ class Job::Sys::ReservationsController < ApplicationController
     raise "403" unless SS::User.allowed?(:edit, @cur_user)
   end
 
+  def set_deletable
+    @deletable ||= SS::User.allowed?(:edit, @cur_user)
+  end
+
   def item_criteria
     @model.exists(at: true).order_by(at: 1, created: 1)
   end
