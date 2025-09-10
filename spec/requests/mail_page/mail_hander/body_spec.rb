@@ -17,13 +17,13 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
   let(:utf_8_eml) do
     file = "#{Rails.root}/private/files/mail_page_files/#{Time.zone.now.to_i}"
     Fs.mkdir_p "#{Rails.root}/private/files/mail_page_files"
-    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml")
+    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml")
     file
   end
   let(:iso_2022_jp_eml) do
     file = "#{Rails.root}/private/files/mail_page_files/#{Time.zone.now.to_i}"
     Fs.mkdir_p "#{Rails.root}/private/files/mail_page_files"
-    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml")
+    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml")
     file
   end
 
@@ -42,7 +42,7 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
       end
 
       context "post utf-8 mail" do
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
         let(:decoded) { "【UTF-8】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
         let(:start_line) { "【緊急メールサービス】" }
         let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
@@ -58,7 +58,7 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
       end
 
       context "post utf-8_2 mail" do
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8_2.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8_2.eml") }
         let(:decoded) do
           [
             "【台風第７号の接近について】",
@@ -84,7 +84,7 @@ describe "MailPage::Agents::Nodes::PageController", type: :request, dbscope: :ex
       end
 
       context "post iso-2022-jp mail" do
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml") }
         let(:decoded) { "【ISO-2022-JP】\n\nシラサギ役場よりお知らせします。\n暴風警報が発表されました。" }
         let(:start_line) { "【緊急メールサービス】" }
         let(:terminate_line) { "農業用施設等につきましては、十分な管理をお願いします。" }
