@@ -8,7 +8,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
   let(:from_conditions) { %w(sample@example.jp) }
   let(:to_conditions) { %w(example.jp) }
 
-  let(:decoded) { Fs.read("#{Rails.root}/spec/fixtures/mail_page/decoded") }
+  let(:decoded) { Fs.read("#{Rails.root}/spec/fixtures/mail_page/basic/decoded") }
   let(:message) { Cms::Line::Message.site(site).last }
 
   context "public" do
@@ -33,7 +33,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         let!(:url) { "http://#{site.domain}/#{node.url}mail/#{mail_handler.filename}" }
 
         context "post utf-8 mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
           it "#mail" do
             capture_line_bot_client do |capture|
@@ -63,7 +63,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         let!(:url) { "http://#{site.domain}/#{node.url}mail/#{mail_handler.filename}" }
 
         context "post utf-8 mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
           it "#mail" do
             capture_line_bot_client do |capture|
@@ -81,7 +81,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         end
 
         context "post iso-2022-jp mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml") }
 
           it "#mail" do
             capture_line_bot_client do |capture|
@@ -107,7 +107,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         let!(:url) { "http://#{site.domain}/#{node.url}mail/#{mail_handler.filename}" }
 
         context "post utf-8 mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
           it "#mail" do
             capture_line_bot_client do |capture|
@@ -125,7 +125,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         end
 
         context "post iso-2022-jp mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml") }
 
           it "#mail" do
             capture_line_bot_client do |capture|
@@ -151,7 +151,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         let!(:url) { "http://#{site.domain}/#{node.url}mail/#{mail_handler.filename}" }
 
         context "post utf-8 mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
           it "#mail" do
             post(url, params: { data: file }, headers: headers)
@@ -160,7 +160,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
         end
 
         context "post iso-2022-jp mail" do
-          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml") }
+          let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml") }
 
           it "#mail" do
             post(url, params: { data: file }, headers: headers)
@@ -171,7 +171,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
 
       context "no handler" do
         let!(:url) { "http://#{site.domain}/#{node.url}mail/#{unique_id}" }
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
         it "#mail" do
           post(url, params: { data: file }, headers: headers)
@@ -185,7 +185,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
             to_conditions: to_conditions)
         end
         let!(:url) { "http://#{site.domain}/#{node.url}mail/#{mail_handler.filename}" }
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
         it "#mail" do
           expect { post(url, params: { data: file }, headers: headers) }.to raise_error "from conditions unmatched"
@@ -198,7 +198,7 @@ describe "Cms::Agents::Nodes::LineHubController", type: :request, dbscope: :exam
             from_conditions: from_conditions)
         end
         let!(:url) { "http://#{site.domain}/#{node.url}mail/#{mail_handler.filename}" }
-        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml") }
+        let(:file) { Rack::Test::UploadedFile.new("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml") }
 
         it "#mail" do
           expect { post(url, params: { data: file }, headers: headers) }.to raise_error "to conditions unmatched"

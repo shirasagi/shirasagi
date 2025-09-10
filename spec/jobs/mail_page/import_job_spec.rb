@@ -2,46 +2,30 @@ require 'spec_helper'
 
 describe MailPage::ImportJob, dbscope: :example do
   let(:site) { cms_site }
-  let(:node1) { create :mail_page_node_page, layout: create_cms_layout, filename: "node1", arrival_days: rand(1..5) }
-  let(:node2) do
-    create :mail_page_node_page, layout: create_cms_layout, filename: "node2", arrival_days: rand(1..5),
-    mail_page_from_conditions: ["sample@example.jp"],
-    mail_page_to_conditions: ["sample@example.jp"]
-  end
-  let(:node3) do
-    create :mail_page_node_page, layout: create_cms_layout, filename: "node3", arrival_days: rand(1..5),
-    mail_page_from_conditions: ["example.jp"],
-    mail_page_to_conditions: ["example.jp"]
-  end
-
-  let(:decoded) { Fs.read("#{Rails.root}/spec/fixtures/mail_page/decoded") }
-  let(:utf_8_eml) do
-    file = "#{Rails.root}/private/files/mail_page_files/#{Time.zone.now.to_i}"
-    Fs.mkdir_p "#{Rails.root}/private/files/mail_page_files"
-    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/UTF-8.eml")
-    file
-  end
-  let(:iso_2022_jp_eml) do
-    file = "#{Rails.root}/private/files/mail_page_files/#{Time.zone.now.to_i}"
-    Fs.mkdir_p "#{Rails.root}/private/files/mail_page_files"
-    Fs.binwrite file, Fs.binread("#{Rails.root}/spec/fixtures/mail_page/ISO-2022-JP.eml")
-    file
-  end
-
-  let(:top_page) { create :cms_page, filename: "index.html", name: "top", layout: nil }
-  let(:urgency_layout) { create :cms_layout, html: "<html><head></head><body>switched</body></html>" }
-  let(:urgency_node) do
-    create :urgency_node_layout, urgency_mail_page_layout: urgency_layout,
-      filename: "urgency_node"
-  end
-  let(:node4) do
-    create :mail_page_node_page, layout: create_cms_layout, filename: "node4", arrival_days: rand(1..5),
-      mail_page_from_conditions: ["sample@example.jp"],
-      mail_page_to_conditions: ["sample@example.jp"],
-      urgency_state: "enabled", urgency_node: urgency_node
-  end
 
   describe ".perform_later" do
+    let(:node1) { create :mail_page_node_page, layout: create_cms_layout, filename: "node1", arrival_days: rand(1..5) }
+    let(:node2) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node2", arrival_days: rand(1..5),
+      mail_page_from_conditions: ["sample@example.jp"],
+      mail_page_to_conditions: ["sample@example.jp"]
+    end
+    let(:node3) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node3", arrival_days: rand(1..5),
+      mail_page_from_conditions: ["example.jp"],
+      mail_page_to_conditions: ["example.jp"]
+    end
+
+    let(:decoded) { Fs.read("#{Rails.root}/spec/fixtures/mail_page/basic/decoded") }
+    let(:utf_8_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/basic/UTF-8.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+    let(:iso_2022_jp_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+
     context "with UTF-8 eml" do
       before do
         node1
@@ -127,22 +111,145 @@ describe MailPage::ImportJob, dbscope: :example do
         expect(page3.state).to eq "public"
       end
     end
+  end
 
-    context "switch urgency_layout" do
-      before do
-        top_page
-        urgency_layout
-        urgency_node
-        node4
+  context "switch urgency_layout" do
+    let(:top_page) { create :cms_page, filename: "index.html", name: "top", layout: nil }
+    let(:urgency_layout) { create :cms_layout, html: "<html><head></head><body>switched</body></html>" }
+    let(:urgency_node) do
+      create :urgency_node_layout, urgency_mail_page_layout: urgency_layout,
+        filename: "urgency_node"
+    end
+    let(:node) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node", arrival_days: rand(1..5),
+        mail_page_from_conditions: ["sample@example.jp"],
+        mail_page_to_conditions: ["sample@example.jp"],
+        urgency_state: "enabled", urgency_node: urgency_node
+    end
+    let(:iso_2022_jp_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/basic/ISO-2022-JP.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+
+    before do
+      top_page
+      urgency_layout
+      urgency_node
+      node
+      perform_enqueued_jobs do
+        described_class.bind(site_id: site).perform_later(iso_2022_jp_eml)
+      end
+    end
+
+    it do
+      top = Cms::Page.where(filename: "index.html").first
+      expect(top.layout_id).to eq urgency_layout.id
+    end
+  end
+
+  context "perform at same time" do
+    let(:now) { Time.zone.now }
+    let(:node1) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node1", arrival_days: rand(1..5),
+      mail_page_from_conditions: ["bosai@example.jp"],
+      mail_page_to_conditions: ["bosai@example.jp"]
+    end
+    let(:node2) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node2", arrival_days: rand(1..5),
+      mail_page_from_conditions: ["kotsu@example.jp"],
+      mail_page_to_conditions: ["kotsu@example.jp"]
+    end
+
+    let(:bosai_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/same_time/bosai.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+    let(:kotsu_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/same_time/kotsu.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+    let(:bosai_decoded) { Fs.read("#{Rails.root}/spec/fixtures/mail_page/same_time/bosai_decoded") }
+    let(:kotsu_decoded) { Fs.read("#{Rails.root}/spec/fixtures/mail_page/same_time/kotsu_decoded") }
+
+    before do
+      node1
+      node2
+    end
+
+    it do
+      Timecop.freeze(now) do
         perform_enqueued_jobs do
-          described_class.bind(site_id: site).perform_later(iso_2022_jp_eml)
+          kotsu_eml
+          bosai_eml
+          described_class.bind(site_id: site).perform_later(kotsu_eml)
+          described_class.bind(site_id: site).perform_later(bosai_eml)
         end
       end
 
-      it do
-        top = Cms::Page.where(filename: "index.html").first
-        expect(top.layout_id).to eq urgency_layout.id
+      expect(MailPage::Page.site(site).where(filename: /^#{node1.filename}\//).count).to eq 1
+      expect(MailPage::Page.site(site).where(filename: /^#{node2.filename}\//).count).to eq 1
+
+      page1 = MailPage::Page.site(site).where(filename: /^#{node1.filename}\//).first
+      page2 = MailPage::Page.site(site).where(filename: /^#{node2.filename}\//).first
+
+      expect(page1.layout_id).to eq node1.layout_id
+      expect(page1.group_ids).to eq node1.group_ids
+      expect(page1.name).to eq "防災情報"
+      expect(page1.html.split("<br />")).to match_array bosai_decoded.split("\n")
+      expect(page1.mail_page_original_mail).to \
+        include("To: =?UTF-8?B?5LyK6Jek5oKg?= <bosai@example.jp>", "From: =?UTF-8?B?5LyK6Jek5oKg?= <bosai@example.jp>")
+      expect(page1.arrival_start_date).to be_present
+      expect(page1.arrival_close_date).to eq page1.arrival_start_date.advance(days: node1.arrival_days)
+      expect(page1.state).to eq "public"
+
+      expect(page2.layout_id).to eq node2.layout_id
+      expect(page2.group_ids).to eq node2.group_ids
+      expect(page2.name).to eq "交通情報"
+      expect(page2.html.split("<br />")).to match_array kotsu_decoded.split("\n")
+      expect(page2.mail_page_original_mail).to \
+        include("To: =?UTF-8?B?5LyK6Jek5oKg?= <kotsu@example.jp>", "From: =?UTF-8?B?5LyK6Jek5oKg?= <kotsu@example.jp>")
+      expect(page2.arrival_start_date).to be_present
+      expect(page2.arrival_close_date).to eq page2.arrival_start_date.advance(days: node2.arrival_days)
+      expect(page2.state).to eq "public"
+    end
+  end
+
+  context "perform at multiple_to" do
+    let(:node1) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node1", arrival_days: rand(1..5),
+      mail_page_from_conditions: ["sample@example.jp"],
+      mail_page_to_conditions: ["bosai@example.jp"]
+    end
+    let(:node2) do
+      create :mail_page_node_page, layout: create_cms_layout, filename: "node2", arrival_days: rand(1..5),
+      mail_page_from_conditions: ["sample@example.jp"],
+      mail_page_to_conditions: ["kotsu@example.jp"]
+    end
+
+    let(:bosai_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/multiple_to/bosai.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+    let(:kotsu_eml) do
+      data = Fs.binread("#{Rails.root}/spec/fixtures/mail_page/multiple_to/kotsu.eml")
+      SS::MailHandler.write_eml(data, "mail_page")
+    end
+
+    before do
+      node1
+      node2
+    end
+
+    it do
+      perform_enqueued_jobs do
+        kotsu_eml
+        bosai_eml
+        described_class.bind(site_id: site).perform_later(kotsu_eml)
+        described_class.bind(site_id: site).perform_later(bosai_eml)
       end
+
+      expect(MailPage::Page.site(site).where(filename: /^#{node1.filename}\//).count).to eq 1
+      expect(MailPage::Page.site(site).where(filename: /^#{node2.filename}\//).count).to eq 1
     end
   end
 end
