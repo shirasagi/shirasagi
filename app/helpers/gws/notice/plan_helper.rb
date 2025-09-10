@@ -7,11 +7,18 @@ module Gws::Notice::PlanHelper
     params.to_unsafe_h.select { |k, v| k == 's' }.to_query
   end
 
-  def calendar_format(plans, opts = {})
-    events = plans.map do |m|
+  def calendar_format(items)
+    events = items.map do |m|
       m.calendar_format(@cur_user, @cur_site)
     end
     events.compact!
+
+    if @s[:content_types] && @s[:content_types].include?("holidays")
+      HolidayJapan.between(@s[:start], @s[:end]).map do |date, name|
+        events << { className: 'fc-holiday', title: "  #{name}", start: date, allDay: true, editable: false, noPopup: true }
+      end
+    end
+
     events
   end
 

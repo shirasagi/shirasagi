@@ -12,6 +12,8 @@ ja:
     gws_addon_member_head: 投稿者
     severity: 重要度
     back_number: バックナンバー
+    japanese_holiday: 祝日
+    content_type: 表示内容
     links:
       set_seen: 既読にする
       set_seen_all: 全てを既読にする
