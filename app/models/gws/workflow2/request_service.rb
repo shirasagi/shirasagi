@@ -8,7 +8,7 @@ class Gws::Workflow2::RequestService
   attr_accessor :cur_site, :cur_group, :cur_user, :route_id, :route, :item, :ref,
     :workflow_agent_type, :workflow_user_id, :workflow_comment, :workflow_approver_alternate
 
-  validate :validate_item_form
+  validate :validate_item_form, :validate_item_state
 
   def call
     if invalid?
@@ -58,6 +58,12 @@ class Gws::Workflow2::RequestService
 
     if item.form.closed?
       errors.add :base, :unable_to_request_due_to_closed_form
+    end
+  end
+
+  def validate_item_state
+    unless item.workflow_editable_state?
+      errors.add :base, :unable_to_request_application
     end
   end
 

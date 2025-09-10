@@ -8,7 +8,7 @@ class Gws::Workflow2::RequestWithoutApprovalService
   attr_accessor :cur_site, :cur_group, :cur_user, :route_id, :route, :item, :ref,
     :workflow_agent_type, :workflow_user_id, :workflow_comment, :stop_sending_notification
 
-  validate :validate_item_form
+  validate :validate_item_form, :validate_item_state
 
   define_model_callbacks :approve
 
@@ -68,6 +68,12 @@ class Gws::Workflow2::RequestWithoutApprovalService
     end
     if item.form.closed?
       errors.add :base, :unable_to_request_due_to_closed_form
+    end
+  end
+
+  def validate_item_state
+    unless item.workflow_editable_state?
+      errors.add :base, :unable_to_request_application
     end
   end
 
