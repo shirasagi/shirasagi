@@ -16,6 +16,10 @@ class Job::Sns::ReservationsController < ApplicationController
   def filter_permission
   end
 
+  def set_deletable
+    @deletable ||= true
+  end
+
   def item_criteria
     @model.where(user_id: @cur_user.id).exists(at: true).order_by(at: 1, created: 1)
   end
