@@ -3,7 +3,6 @@ class Cms::LoopSetting
   include SS::Document
   include SS::Reference::Site
   include Cms::SitePermission
-  include Cms::Addon::Html
 
   set_permission_name "cms_loop_settings", :edit
 
@@ -13,7 +12,8 @@ class Cms::LoopSetting
   field :order, type: Integer
   field :state, type: String, default: "public"
   field :html_format, type: String
-  permit_params :name, :description, :order, :html_format
+  field :html, type: String
+  permit_params :name, :description, :order, :html_format, :html
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
   validates :html_format, presence: true, inclusion: { in: %w(shirasagi liquid) }

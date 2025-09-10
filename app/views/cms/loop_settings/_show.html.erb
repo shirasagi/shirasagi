@@ -13,4 +13,11 @@
 
   <dt><%= @model.t :html_format %></dt>
   <dd><%= @item.html_format %></dd>
+
+  <dt><%= @model.t :html %></dt>
+  <dd>
+    <% if @item.html.present? %>
+      <%= text_area_tag :html, @item.html, class: "html", style: "height: 200px;", readonly: true %>
+    <% end %>
+  </dd>
 </dl>
