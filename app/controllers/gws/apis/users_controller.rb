@@ -49,6 +49,6 @@ class Gws::Apis::UsersController < ApplicationController
       readable_users(@cur_user, site: @cur_site).
       search(params[:s]).
       order_by_title(@cur_site).
-      page(params[:page]).per(50)
+      page(params[:page]).per(SS.max_items_per_page)
   end
 end

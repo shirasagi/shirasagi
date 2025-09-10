@@ -9,7 +9,7 @@ module SS::Model::Reference
       before_save :update_title_order
 
       scope :order_by_title, ->(site) {
-        order_by "title_orders.#{site.id}" => -1, organization_uid: 1, uid: 1
+        order_by("title_orders.#{site.id}" => -1, organization_uid: 1, uid: 1, id: 1)
       }
     end
 
