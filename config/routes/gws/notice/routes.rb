@@ -28,6 +28,7 @@ Rails.application.routes.draw do
         match :create_my_folder, on: :collection, via: [:get, :post]
         get :copy, on: :member
       end
+      resources :redirects, only: [:show]
     end
 
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
