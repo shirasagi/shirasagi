@@ -15,7 +15,7 @@ class Job::Cms::MicheckerResultsController < ApplicationController
   end
 
   def set_deletable
-    @deletable ||= Cms::Tool.allowed?(:edit, @cur_user)
+    @deletable ||= Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
   def item_criteria
