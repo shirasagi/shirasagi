@@ -35,6 +35,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
 
       it "#index" do
         visit index_path
+        wait_for_all_turbo_frames
         expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)
         expect(page).to have_no_css(".list-item.read", text: item3.name)
@@ -45,7 +46,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.search")
         end
         # wait for ajax completion
-        wait_for_js_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)
@@ -62,6 +63,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
 
       it "#index" do
         visit index_path
+        wait_for_all_turbo_frames
         expect(page).to have_no_css(".list-item.unread", text: item1.name)
         expect(page).to have_no_css(".list-item.unread", text: item2.name)
         expect(page).to have_css(".list-item.read", text: item3.name)
@@ -72,7 +74,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.search")
         end
         # wait for ajax completion
-        wait_for_js_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)

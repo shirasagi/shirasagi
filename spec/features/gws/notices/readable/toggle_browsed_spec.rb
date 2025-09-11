@@ -29,7 +29,8 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        within ".tree-navi" do
+        wait_for_all_turbo_frames
+        within '.gws-notice-folder' do
           expect(page).to have_css('.content-navi-refresh', text: "refresh")
         end
 
@@ -50,8 +51,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        within ".tree-navi" do
-          expect(page).to have_css('.tree-item.is-current', text: folder.name)
+        wait_for_all_turbo_frames
+        within '.gws-notice-folder' do
+          expect(page).to have_css('.ss-tree-item.is-current', text: folder.name)
           expect(page).to have_css('.content-navi-refresh', text: "refresh")
         end
       end
@@ -71,7 +73,8 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        within ".tree-navi" do
+        wait_for_all_turbo_frames
+        within '.gws-notice-folder' do
           expect(page).to have_css('.content-navi-refresh', text: "refresh")
         end
 
@@ -89,8 +92,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        within ".tree-navi" do
-          expect(page).to have_css('.tree-item.is-current', text: folder.name)
+        wait_for_all_turbo_frames
+        within '.gws-notice-folder' do
+          expect(page).to have_css('.ss-tree-item.is-current', text: folder.name)
           expect(page).to have_css('.content-navi-refresh', text: "refresh")
         end
       end
@@ -103,7 +107,8 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        within ".tree-navi" do
+        wait_for_all_turbo_frames
+        within '.gws-notice-folder' do
           expect(page).to have_css('.content-navi-refresh', text: "refresh")
         end
 
@@ -126,8 +131,9 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".list-item.read", text: item4.name)
 
         # wait for ajax completion
-        within ".tree-navi" do
-          expect(page).to have_css('.tree-item.is-current', text: folder.name)
+        wait_for_all_turbo_frames
+        within '.gws-notice-folder' do
+          expect(page).to have_css('.ss-tree-item.is-current', text: folder.name)
           expect(page).to have_css('.content-navi-refresh', text: "refresh")
         end
       end

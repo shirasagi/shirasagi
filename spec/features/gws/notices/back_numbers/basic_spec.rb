@@ -27,7 +27,8 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
 
       it do
         login_user admin, to: gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-')
-        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", count: 4)
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
@@ -45,7 +46,8 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
 
       it do
         login_user admin, to: gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-')
-        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", count: 4)
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
@@ -63,7 +65,8 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
 
       it do
         login_user admin, to: gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-')
-        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", count: 2)
         expect(page).to have_no_css(".list-item", text: item1.name)
         expect(page).to have_css(".list-item", text: item2.name)
@@ -75,7 +78,7 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.search")
         end
         # wait for ajax completion
-        wait_for_js_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_css(".list-item", count: 4)
         expect(page).to have_css(".list-item", text: item1.name)
@@ -94,7 +97,8 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
 
       it do
         login_user admin, to: gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-')
-        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", count: 2)
         expect(page).to have_css(".list-item", text: item1.name)
         expect(page).to have_no_css(".list-item", text: item2.name)
@@ -106,7 +110,7 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.search")
         end
         # wait for ajax completion
-        wait_for_js_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_css(".list-item", count: 4)
         expect(page).to have_css(".list-item", text: item1.name)
@@ -126,7 +130,8 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
 
       it do
         login_user admin, to: gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-')
-        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", count: 4)
         expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)
@@ -144,7 +149,8 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
 
       it do
         login_user admin, to: gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-')
-        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", count: 4)
         expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)
@@ -162,7 +168,8 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
 
       it do
         login_user admin, to: gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-')
-        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", count: 2)
         expect(page).to have_css(".list-item.unread", text: item1.name)
         expect(page).to have_css(".list-item.unread", text: item2.name)
@@ -174,7 +181,7 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.search")
         end
         # wait for ajax completion
-        wait_for_js_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_css(".list-item", count: 4)
         expect(page).to have_css(".list-item.unread", text: item1.name)
@@ -193,7 +200,8 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
 
       it do
         login_user admin, to: gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-')
-        expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+        wait_for_all_turbo_frames
+        expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
         expect(page).to have_css(".list-item", count: 2)
         expect(page).to have_no_css(".list-item", text: item1.name)
         expect(page).to have_no_css(".list-item", text: item2.name)
@@ -205,7 +213,7 @@ describe "gws_notices_back_numbers", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.search")
         end
         # wait for ajax completion
-        wait_for_js_ready
+        wait_for_all_turbo_frames
 
         expect(page).to have_css(".list-item", count: 4)
         expect(page).to have_css(".list-item.unread", text: item1.name)
