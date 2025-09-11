@@ -12,8 +12,8 @@ module Gws::Notice::FoldersTreeComponent::Base
           <%= link_to md_icons.outlined("refresh"), gws_notice_frames_folders_trees_path(mode: mode), title: I18n.t("ss.buttons.reload"), data: { turbo: true } %>
         </div>
 
-        <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
-          <%= link_to t('gws/notice.all'), url_for(action: :index, folder_id: '-') %>
+        <div class="mt-2 mb-2 tree-item">
+          <%= link_to t('gws/notice.all'), url_for(controller: "/gws/notice/\#{mode.pluralize}", action: :index, folder_id: '-'), data: { turbo: false } %>
         </div>
 
         <%= render SS::TreeBaseComponent.new(root_nodes: root_nodes, css_class: "gws-notice-folders-tree") %>
