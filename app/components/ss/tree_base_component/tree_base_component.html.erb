@@ -1,4 +1,10 @@
 <%= header %>
+
+<div class="ss-tree-operations">
+  <%= button_tag t("ss.buttons.expand_all"), name: "expand-all", class: "btn", data: { action: "ss--tree#expandAll" } %>
+  <%= button_tag t("ss.buttons.collapse_all"), name: "collapse-all", class: "btn", data: { action: "ss--tree#collapseAll" } %>
+</div>
+
 <ul class="ss-tree <%= css_class %>" role="tree">
   <% root_nodes.each do |node| %>
     <% if node.children? %>

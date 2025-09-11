@@ -54,4 +54,24 @@ export default class extends Controller {
       el.classList.remove("is-current")
     });
   }
+
+  expandAll() {
+    const trees = Array.from(this.element.querySelectorAll(".ss-tree-subtree-wrap"))
+    for (var i = trees.length - 1; i >= 0; i--) {
+      const tree = trees[i];
+      if (!tree.open) {
+        tree.open = true;
+      }
+    }
+  }
+
+  collapseAll() {
+    const trees = Array.from(this.element.querySelectorAll(".ss-tree-subtree-wrap"))
+    for (var i = trees.length - 1; i >= 0; i--) {
+      const tree = trees[i];
+      if (tree.open) {
+        tree.open = false;
+      }
+    }
+  }
 }
