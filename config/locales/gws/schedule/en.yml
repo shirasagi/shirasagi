@@ -108,9 +108,6 @@ en:
         current_user: Current user
         under_current_group: Users under the current group
         specific: Specific users (specified below)
-    operations:
-      expand_all: Expand all
-      collapse_all: Close all
     facility_reservation:
       index: Check reservation status
       state: Reservation status

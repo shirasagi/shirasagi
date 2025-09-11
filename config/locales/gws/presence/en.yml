@@ -6,9 +6,6 @@ en:
       register_reminder: Register reminders
     links:
       all_groups: All users
-    operations:
-      expand_all: Expand all
-      collapse_all: Close all
 
   modules:
     gws/presence: Presence management
