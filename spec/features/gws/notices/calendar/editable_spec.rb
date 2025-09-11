@@ -17,6 +17,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   context "with readable post" do
     it do
       visit index_path
+      wait_for_all_turbo_frames
 
       within "#menu" do
         click_on I18n.t("ss.links.new")
@@ -34,7 +35,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on "calendar_month"
       end
       # wait for ajax completion
-      wait_for_js_ready
+      wait_for_all_turbo_frames
       within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder.name)
       end
@@ -48,6 +49,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     context "with use_gws_notice_back_number" do
       it do
         visit index_path
+        wait_for_all_turbo_frames
 
         within "#menu" do
           click_on I18n.t("ss.links.new")
@@ -71,7 +73,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
           click_on "calendar_month"
         end
         # wait for ajax completion
-        wait_for_js_ready
+        wait_for_all_turbo_frames
         within "#content-navi-core .gws-notice-folder" do
           expect(page).to have_link(folder.name)
         end

@@ -18,6 +18,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
+      wait_for_all_turbo_frames
       within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder.name)
       end

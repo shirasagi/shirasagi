@@ -19,6 +19,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
+      wait_for_all_turbo_frames
 
       within ".list-items" do
         within ".list-item.read" do
@@ -33,7 +34,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
 
       # wait for ajax completion
-      wait_for_js_ready
+      wait_for_all_turbo_frames
       within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder.name)
       end
