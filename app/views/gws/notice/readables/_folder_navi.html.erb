@@ -1,17 +1,9 @@
-<% mode = ::File.basename(params[:controller]).singularize %>
-<%= jquery do %>
-  var treeNavi = new SS_TreeNavi('#content-navi .tree-navi');
-  treeNavi.render(<%== gws_notice_apis_folder_list_path(mode: mode, folder_id: '-', id: @folder, format: :json).to_json %>);
-<% end %>
-
 <div id="content-navi">
-  <h2 class="content-navi-title">
-    <%= t('mongoid.models.gws/notice/folder') %>
-  </h2>
-
-  <div class="mb-2 tree-item<%= ' is-current' if @folder.blank? %>">
-    <%= link_to t('gws/notice.all'), url_for(action: :index, folder_id: '-') %>
-  </div>
-
-  <div class="tree-navi"></div>
+  <%=
+    mode = ::File.basename(params[:controller]).singularize
+    data = { controller: "ss--tree", "current_node_id" => params[:folder_id].to_s.presence }
+    tag.turbo_frame id: "gws-notices-folder_tree-frame", src: gws_notice_frames_folders_trees_path(mode: mode), data: data do
+      loading
+    end
+  %>
 </div>

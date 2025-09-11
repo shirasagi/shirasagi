@@ -53,5 +53,13 @@ Rails.application.routes.draw do
         resources :comments, concerns: [:deletion], except: [:index, :new, :show]
       end
     end
+
+    namespace "frames" do
+      scope path: ':folder_id/:category_id' do
+        resources :folders_trees, only: %i[index] do
+          post '', action: :super_reload, on: :collection
+        end
+      end
+    end
   end
 end
