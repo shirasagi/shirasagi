@@ -19,7 +19,5 @@ class MailPage::Page
 
   set_permission_name "article_pages"
 
-  field :mail_page_original_mail, type: String
-
   default_scope ->{ where(route: "mail_page/page") }
 end
