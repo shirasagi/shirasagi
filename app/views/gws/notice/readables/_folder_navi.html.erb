@@ -1,9 +1,11 @@
-<div id="content-navi">
-  <%=
-    mode = ::File.basename(params[:controller]).singularize
-    data = { controller: "ss--tree", "current_node_id" => params[:folder_id].to_s.presence }
-    tag.turbo_frame id: "gws-notices-folder_tree-frame", src: gws_notice_frames_folders_trees_path(mode: mode), data: data do
-      loading
-    end
-  %>
+<div id="content-navi-core">
+  <%= render "ss/crud/addon", addon: { id: nil, class: "gws-notice-folder", head: t('mongoid.models.gws/notice/folder'), toggle: false } do %>
+    <%=
+      mode = ::File.basename(params[:controller]).singularize
+      data = { controller: "ss--tree", "current_node_id" => params[:folder_id].to_s.presence }
+      tag.turbo_frame id: "gws-notices-folder_tree-frame", src: gws_notice_frames_folders_trees_path(mode: mode), data: data do
+        loading
+      end
+    %>
+  <% end %>
 </div>

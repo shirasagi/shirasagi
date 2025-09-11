@@ -8,9 +8,6 @@ module Gws::Notice::FoldersTreeComponent::Base
   TEMPLATE = <<~ERB
     <turbo-frame id="gws-notices-folder_tree-frame">
       <%= cache_component do %>
-        <h2 class="content-navi-title">
-          <%= t('mongoid.models.gws/notice/folder') %>
-        </h2>
         <div class="content-navi-refresh">
           <%= link_to md_icons.outlined("refresh"), gws_notice_frames_folders_trees_path(mode: mode), title: I18n.t("ss.buttons.reload"), data: { turbo: true } %>
         </div>
