@@ -241,7 +241,6 @@ describe MailPage::ImportJob, dbscope: :example do
     end
   end
 
-
   context "enable auto_link" do
     let(:node1) do
       create :mail_page_node_page, layout: create_cms_layout, filename: "node1", arrival_days: rand(1..5),
