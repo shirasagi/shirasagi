@@ -3,6 +3,8 @@ module Gws::Elasticsearch
 
   module_function
 
+  mattr_accessor(:max_items_per_page) { 10 }
+
   def index_name_of(site:)
     "g#{site.id}"
   end

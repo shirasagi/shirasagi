@@ -9,6 +9,8 @@ json.items do
             gws_notice_editables_path(folder_id: item.id)
           elsif @cur_mode == 'readable'
             gws_notice_readables_path(folder_id: item.id)
+          elsif @cur_mode == 'back_number'
+            gws_notice_back_numbers_path(folder_id: item.id)
           elsif @cur_mode == 'calendar'
             gws_notice_calendars_path(folder_id: item.id)
           end
