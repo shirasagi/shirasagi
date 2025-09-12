@@ -1,3 +1,22 @@
+<%= jquery do %> Event_Monthly.render(); <% end %>
+
+<%== @cur_node.upper_html %>
+
+<% if @cur_node.st_categories.present? %>
+  <nav class="event-pages-filter" aria-label="<%= t("event.category_filter") %>">
+    <ul>
+      <li class="all">
+        <%= link_to t("event.filter_all"), "#", class: "clicked", "data-id" => "all" %>
+      </li>
+      <% @cur_node.st_categories.order_by(order: 1).each do |cate| %>
+        <li class="<%= cate.basename %>">
+          <%= link_to cate.name, "##{cate.id}", "data-id" => cate.id, role: "button" %>
+        </li>
+      <% end %>
+    </ul>
+  </nav>
+<% end %>
+
 <%= render partial: "tabs", locals: { current: "table" } %>
 
 <div id="event-table" class="event-table">
@@ -11,34 +30,12 @@
     </tr>
     </thead>
     <tbody>
-      <% @events.each_with_index do |(date, events), i| %>
+      <% @events.each_with_index do |(date, cell), i| %>
         <% if (i % 7) == 0 %>
           <tr>
         <% end %>
         <td class="<%= event_td_class(date, @date) %>">
-          <div class="date">
-            <div class="daily">
-              <%= link_to_daily date, name: date.day, path: @cur_node.parent.try(:url).to_s, enable: events.present? %>
-            </div>
-
-            <% if date.national_holiday? %>
-              <div class="holiday"><%= HolidayJapan.name date %></div>
-            <% end %>
-
-            <% if events.blank? && @cur_node.substitute_html.present? %>
-              <div class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></div>
-            <% end %>
-
-            <% events.each do |event, categories| %>
-              <div class="page <%= event.event_dates.multiple_days?(date) ? 'multiple-days' : 'single-day' %>" data-id="<%= categories.pluck(:id).join(" ") %>" data-start-date="<%= tryb { event.event_dates.start_date(date).strftime("%Y/%m/%d") } %>" data-end-date="<%= tryb { event.event_dates.end_date(date).strftime("%Y/%m/%d") } %>">
-                <% if categories.present? %>
-                  <% cate = categories.entries.sort_by{ |c| c.order }.first %>
-                  <div class="data <%= cate.basename %>"><%= link_to cate.name, cate.url %></div>
-                <% end %>
-                <div class="event"><%= link_to (event.event_name.present? ? event.event_name : event.name), event.url %></div>
-              </div>
-            <% end %>
-          </div>
+          <%= render_table_day_events(date, cell) %>
         </td>
         <% if (i % 7) == 6 %>
           </tr>
@@ -47,3 +44,5 @@
       </tbody>
   </table>
 </div>
+
+<%== @cur_node.lower_html %>
