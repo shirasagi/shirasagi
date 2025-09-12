@@ -35,6 +35,7 @@ describe "gws_notices", type: :feature, dbscope: :example do
 
     it do
       visit admin_index_path
+      wait_for_all_turbo_frames
       within ".list-items" do
         expect(page).to have_css('.info', text: item.name)
       end
@@ -48,8 +49,9 @@ describe "gws_notices", type: :feature, dbscope: :example do
       wait_for_notice I18n.t("ss.notice.deleted")
 
       # wait to list folders up to protected from spec failure
-      within "#content-navi" do
-        expect(page).to have_css(".tree-item", text: folder.name)
+      wait_for_all_turbo_frames
+      within "#content-navi-core" do
+        expect(page).to have_css(".ss-tree-item", text: folder.name)
       end
     end
   end

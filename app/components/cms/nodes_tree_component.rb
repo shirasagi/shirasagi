@@ -13,20 +13,8 @@ class Cms::NodesTreeComponent < ApplicationComponent
     [ site.id, results["count"], results["max"].to_i ]
   end
 
-  class NodeItem
-    include ActiveModel::Model
-
-    attr_accessor :item, :url, :children
-
-    delegate :id, :name, :filename, :depth, :route, :view_route, :updated, to: :item
-
-    def children?
-      children.present?
-    end
-  end
-
-  def root_items
-    return @root_items if @root_items
+  def root_nodes
+    return @root_nodes if @root_nodes
     build_tree
   end
 
@@ -44,15 +32,16 @@ class Cms::NodesTreeComponent < ApplicationComponent
   end
 
   def build_tree
-    @root_items = []
+    @root_nodes = []
     parent_map = {}
 
     folders.to_a.each do |node|
       node.site = node.cur_site = site
-      wrap = NodeItem.new(item: node, url: item_url(node), children: [])
+      wrap = SS::TreeBaseComponent::NodeItem.new(
+        id: node.id, name: node.name, depth: node.depth, updated: node.updated, url: item_url(node), opens: false, children: [])
       parent_map[node.filename] = wrap
       if node.depth == 1
-        @root_items << wrap
+        @root_nodes << wrap
         next
       end
 
@@ -66,7 +55,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
       parent_wrap.children << wrap
     end
 
-    @root_items
+    @root_nodes
   end
 
   def item_url(item)

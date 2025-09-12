@@ -1,0 +1,49 @@
+<div id="content-navi-core" class="gws-notice-content-navi">
+  <%= render "ss/crud/addon", addon: { id: nil, class: "gws-notice-folder", head: t('mongoid.models.gws/notice/folder'), toggle: false } do %>
+    <%=
+      mode = ::File.basename(params[:controller]).singularize
+      data = { controller: "ss--tree", "current_node_id" => params[:folder_id].to_s.presence }
+      tag.turbo_frame id: "gws-notice-folder_tree-frame", src: gws_notice_frames_folders_trees_path(mode: mode), data: data do
+        loading
+      end
+    %>
+  <% end %>
+
+  <%= render "ss/crud/addon", addon: { id: nil, class: "gws-notice-content-type", head: t('gws/notice.content_type'), toggle: false } do %>
+    <ul class="gws-notice-content-type-list">
+      <li class="gws-notice-content-type-item">
+        <label>
+          <%= checkbox_tag "s[content_types][]", "readables", true, id: nil, disabled: true %>
+          <%= t('ss.navi.readable') %>
+        </label>
+      </li>
+      <% if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number) %>
+        <li class="gws-notice-content-type-item">
+          <label>
+            <%= checkbox_tag "s[content_types][]", "back_numbers", @s[:content_types] && @s[:content_types].include?("back_numbers"), id: nil %>
+            <%= t('gws/notice.back_number') %>
+          </label>
+        </li>
+      <% end %>
+      <li class="gws-notice-content-type-item">
+        <label>
+          <%= checkbox_tag "s[content_types][]", "holidays", @s[:content_types] && @s[:content_types].include?("holidays"), id: nil %>
+          <%= t('gws/notice.japanese_holiday') %>
+        </label>
+      </li>
+    </ul>
+  <% end %>
+</div>
+
+<%= jquery do %>
+  var $list = $('#content-navi-core .gws-notice-content-type-list');
+  $list.on("change", '[name="s[content_types][]"]', function (ev) {
+    var contentTypes = Array.from($list.find('[name="s[content_types][]"]:checked'), el => el.value);
+    console.log(contentTypes);
+
+    var params = new URLSearchParams(location.search);
+    params.delete("s[content_types][]");
+    contentTypes.forEach(contentType => params.append("s[content_types][]", contentType));
+    location.search = "?" + params.toString();
+  });
+<% end %>

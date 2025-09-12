@@ -145,12 +145,12 @@
     margin-top: 5px;
   }
 }
-#content-navi.gws-content-navi {
+#content-navi-core.gws-content-navi {
   overflow-x: scroll;
 }
 @media screen and (max-width: 1080px) and (min-width: 768px) {
   div {
-    &#content-navi.gws-content-navi,
+    &#content-navi-core.gws-content-navi,
     &.index.gws-memos-index {
       width: 100% !important;
       float: none !important;
@@ -251,14 +251,6 @@ table.index.gws-memo-folder {
   min-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  &::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 100%;
-    width: 12px;
-    height: 1px;
-  }
   .folder {
     background: #fff !important;
   }

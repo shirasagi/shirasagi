@@ -28,7 +28,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
-      within "#content-navi" do
+      wait_for_all_turbo_frames
+      within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder.name)
       end
       within ".gws-schedule-box" do
@@ -42,7 +43,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         fill_in "s[keyword]", with: item1.name
         click_on I18n.t('ss.buttons.search')
       end
-      within "#content-navi" do
+      wait_for_all_turbo_frames
+      within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder.name)
       end
       within ".gws-schedule-box" do

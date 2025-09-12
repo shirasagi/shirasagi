@@ -14,6 +14,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   describe "set seen" do
     it do
       visit gws_notice_readables_path(site: site, folder_id: '-', category_id: '-')
+      wait_for_all_turbo_frames
       click_on item.name
       wait_for_js_ready
       page.accept_confirm do
@@ -25,6 +26,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       expect(item.browsed?(gws_user)).to be_truthy
 
       visit gws_notice_readables_path(site: site, folder_id: '-', category_id: '-')
+      wait_for_all_turbo_frames
       expect(page).to have_no_css(".list-item", text: item.name)
       within "form.index-search" do
         select I18n.t("gws/board.options.browsed_state.read"), from: "s[browsed_state]"
@@ -32,6 +34,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css(".list-item", text: item.name)
 
       visit gws_notice_editables_path(site: site, folder_id: '-', category_id: '-')
+      wait_for_all_turbo_frames
       click_on item.name
       wait_for_js_ready
       within "#addon-gws-agents-addons-notice-member" do
@@ -51,10 +54,12 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_notice_readables_path(site: site, folder_id: '-', category_id: '-')
+      wait_for_all_turbo_frames
       expect(page).to have_no_link(item.name)
       within "form.index-search" do
         select I18n.t("gws/board.options.browsed_state.read"), from: 's[browsed_state]'
       end
+      wait_for_all_turbo_frames
       expect(page).to have_css(".list-item", text: item.name)
 
       click_on item.name

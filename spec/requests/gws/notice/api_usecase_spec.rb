@@ -4,6 +4,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
   let!(:site) { gws_site }
   let(:minimum_permissions) do
     %w(
+      use_gws_notice
       read_private_gws_notices
       read_other_gws_notices
       read_private_gws_notice_folders
@@ -64,7 +65,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
       # login
       params = {
         'authenticity_token' => auth_token,
-        'item[email]' => gws_user.email,
+        'item[email]' => user.email,
         'item[password]' => "pass"
       }
       post sns_login_path(format: :json), params: params
@@ -89,7 +90,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
           # issuer
           iss: application.client_id,
           # subject
-          sub: gws_user.uid,
+          sub: user.uid,
           # scope
           scope: minimum_permissions.join(" "),
           # audience
@@ -166,7 +167,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
         auth_token = JSON.parse(response.body)["auth_token"]
         params = {
           'authenticity_token' => auth_token,
-          'item[email]' => gws_user.email,
+          'item[email]' => user.email,
           'item[password]' => "pass"
         }
         post sns_login_path(format: :json), params: params
@@ -208,7 +209,7 @@ describe 'gws_notice_readables', type: :request, dbscope: :example do
         auth_token = JSON.parse(response.body)["auth_token"]
         params = {
           'authenticity_token' => auth_token,
-          'item[email]' => gws_user.email,
+          'item[email]' => user.email,
           'item[password]' => "pass"
         }
         post sns_login_path(format: :json), params: params

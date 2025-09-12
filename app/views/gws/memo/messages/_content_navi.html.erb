@@ -1,32 +1,34 @@
 <% return unless @folders %>
 
-<div id="content-navi" class="gws-content-navi">
-  <h2 class="content-navi-title"><%= t('gws/memo/message.folder') %></h2>
-  <table class="index gws-memo-folder">
-    <% @folders.each do |item| %>
-      <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.folder_path) %>
-      <% unseen_count = item.unseens.count %>
-      <% unseen = unseen_count > 0 %>
-      <tr class="folder <%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
-        <td class="<%= unseen ? 'unseen' : 'seen' %>">
-          <%= link_to item.trailing_name,
-                      gws_memo_messages_path(folder: item.folder_path ),
-                      { class: "field title depth-#{ item.depth }", 'data-path': item.folder_path } %>
-          <% if unseen %>
-            <span>(<%= unseen_count %>)</span>
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </table>
+<div id="content-navi-core" class="gws-content-navi">
+  <%= render "ss/crud/addon", addon: { id: "memo-folder", head: t('gws/memo/message.folder'), toggle: false } do %>
+    <table class="index gws-memo-folder">
+      <% @folders.each do |item| %>
+        <% droppable = %W(INBOX.Sent INBOX.Draft #{params[:folder]}).exclude?(item.folder_path) %>
+        <% unseen_count = item.unseens.count %>
+        <% unseen = unseen_count > 0 %>
+        <tr class="folder <%= 'droppable' if droppable %> <%= 'current' if item.folder_path == params[:folder] %>">
+          <td class="<%= unseen ? 'unseen' : 'seen' %>">
+            <%= link_to item.trailing_name,
+              gws_memo_messages_path(folder: item.folder_path ),
+              { class: "field title depth-#{ item.depth }", 'data-path': item.folder_path } %>
+            <% if unseen %>
+              <span>(<%= unseen_count %>)</span>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
 
   <% if @cur_site.memo_quota %>
-  <% quota = @model.new %>
-  <div class="content-navi-title" style="margin-top: 10px; border-top: 1px solid #f2f2f2;"><%= t('ss.quota') %></div>
-  <div class="ss-quota-bar">
-    <div class="label"><%= quota.quota_label(@cur_user, @cur_site) %></div>
-    <div class="usage <%= quota.quota_over?(@cur_user, @cur_site) ? 'over-threshold' : '' %>" style="width: <%= quota.quota_percentage(@cur_user, @cur_site) %>%">
-    </div>
-  </div>
+    <% quota = @model.new %>
+    <%= render "ss/crud/addon", addon: { id: "memo-quota", head: t('ss.quota'), toggle: false } do %>
+      <div class="ss-quota-bar">
+        <div class="label"><%= quota.quota_label(@cur_user, @cur_site) %></div>
+        <div class="usage <%= quota.quota_over?(@cur_user, @cur_site) ? 'over-threshold' : '' %>" style="width: <%= quota.quota_percentage(@cur_user, @cur_site) %>%">
+        </div>
+      </div>
+    <% end %>
   <% end %>
 </div>

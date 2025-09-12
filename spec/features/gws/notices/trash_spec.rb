@@ -10,6 +10,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   describe "restore" do
     it do
       visit gws_notice_main_path(site: site)
+      wait_for_all_turbo_frames
       click_on I18n.t("ss.navi.trash")
       wait_for_js_ready
       click_on item.name
@@ -24,7 +25,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       expect(item.deleted).to be_blank
 
       visit gws_notice_main_path(site: site)
-      expect(page).to have_css("#content-navi .content-navi-refresh", text: "refresh")
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#content-navi-core .content-navi-refresh", text: "refresh")
       expect(page).to have_css(".list-item", text: item.name)
     end
   end
@@ -32,6 +34,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   describe "hard delete" do
     it do
       visit gws_notice_main_path(site: site)
+      wait_for_all_turbo_frames
       click_on I18n.t("ss.navi.trash")
       wait_for_js_ready
       click_on item.name
@@ -51,6 +54,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   describe "hard delete all" do
     it do
       visit gws_notice_main_path(site: site)
+      wait_for_all_turbo_frames
       click_on I18n.t("ss.navi.trash")
       wait_for_js_ready
 

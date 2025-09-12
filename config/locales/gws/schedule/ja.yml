@@ -108,9 +108,6 @@ ja:
         current_user: 現在のユーザー
         under_current_group: 現在のグループ下のユーザー
         specific: 特定のユーザー（以下で指定）
-    operations:
-      expand_all: すべて展開
-      collapse_all: すべて閉じる
     facility_reservation:
       index: 予約状況の確認
       state: 予約状況
