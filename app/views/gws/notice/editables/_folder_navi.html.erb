@@ -10,7 +10,7 @@
     <%=
       mode = ::File.basename(params[:controller]).singularize
       data = { controller: "ss--tree", "current_node_id" => params[:folder_id].to_s.presence }
-      tag.turbo_frame id: "gws-notices-folder_tree-frame", src: gws_notice_frames_folders_trees_path(mode: mode), data: data do
+      tag.turbo_frame id: "gws-notice-folder_tree-frame", src: gws_notice_frames_folders_trees_path(mode: mode), data: data do
         loading
       end
     %>
