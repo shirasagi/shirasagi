@@ -1,5 +1,5 @@
 class SS::TreeBaseComponent::TreeChildren < ApplicationComponent
   include ActiveModel::Model
 
-  attr_accessor :children
+  attr_accessor :component, :children
 end

@@ -2,12 +2,12 @@
   <% children.each do |child_node| %>
     <% if child_node.children? %>
       <li class="ss-tree-item" role="treeitem">
-        <details class="ss-tree-subtree-wrap">
+        <details class="ss-tree-subtree-wrap"<% if child_node.opens %> open<% end %>>
           <summary>
             <%= link_to tag.span(child_node.name, class: "ss-tree-item-title"), child_node.url, class: "ss-tree-item-link", data: { turbo: false, node_id: child_node.id } %>
           </summary>
 
-          <%= render SS::TreeBaseComponent::TreeChildren.new(children: child_node.children) %>
+          <%= render SS::TreeBaseComponent::TreeChildren.new(component: component, children: child_node.children) %>
         </details>
       </li>
     <% else %>
