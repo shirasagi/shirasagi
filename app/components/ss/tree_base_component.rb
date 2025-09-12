@@ -5,7 +5,7 @@ class SS::TreeBaseComponent < ApplicationComponent
 
   renders_one :header
 
-  NodeItem = Data.define(:id, :name, :depth, :updated, :url, :children) do
+  NodeItem = Data.define(:id, :name, :depth, :updated, :url, :opens, :children) do
     def children?
       children.present?
     end

@@ -51,8 +51,7 @@ module Gws::Notice::FoldersTreeComponent::Base
       folder.site = folder.cur_site = cur_site
 
       if folder.depth == 1
-        wrap = SS::TreeBaseComponent::NodeItem.new(
-          id: folder.id, name: folder.name, depth: folder.depth, updated: folder.updated, url: item_url(folder), children: [])
+        wrap = new_node_item(folder)
         @root_nodes << wrap
         parent_map[folder.name] = wrap
         next
@@ -67,25 +66,29 @@ module Gws::Notice::FoldersTreeComponent::Base
         parent_wrap = parent_map[parent_name]
 
         split_pos -= 1
+        next unless parent_wrap
 
-        if parent_wrap
-          wrap = SS::TreeBaseComponent::NodeItem.new(
-            id: folder.id, name: base_name, depth: folder.depth, updated: folder.updated, url: item_url(folder), children: [])
-          parent_wrap.children << wrap
-          parent_map[folder.name] = wrap
-          found = true
-          break
-        end
-      end
-
-      unless found
-        wrap = SS::TreeBaseComponent::NodeItem.new(
-          id: folder.id, name: folder.name, depth: folder.depth, updated: folder.updated, url: item_url(folder), children: [])
-        @root_nodes << wrap
+        wrap = new_node_item(folder, base_name)
+        parent_wrap.children << wrap
         parent_map[folder.name] = wrap
+        found = true
+
+        break
       end
+
+      next if found
+
+      wrap = new_node_item(folder)
+      @root_nodes << wrap
+      parent_map[folder.name] = wrap
     end
 
     @root_nodes
+  end
+
+  def new_node_item(folder, name = nil)
+    SS::TreeBaseComponent::NodeItem.new(
+      id: folder.id, name: name || folder.name, depth: folder.depth, updated: folder.updated,
+      url: item_url(folder), opens: cur_site.notice_folder_navi_expand_all?, children: [])
   end
 end

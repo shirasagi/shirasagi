@@ -38,7 +38,7 @@ class Cms::NodesTreeComponent < ApplicationComponent
     folders.to_a.each do |node|
       node.site = node.cur_site = site
       wrap = SS::TreeBaseComponent::NodeItem.new(
-        id: node.id, name: node.name, depth: node.depth, updated: node.updated, url: item_url(node), children: [])
+        id: node.id, name: node.name, depth: node.depth, updated: node.updated, url: item_url(node), opens: false, children: [])
       parent_map[node.filename] = wrap
       if node.depth == 1
         @root_nodes << wrap
