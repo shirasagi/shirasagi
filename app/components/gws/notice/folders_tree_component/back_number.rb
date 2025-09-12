@@ -9,7 +9,9 @@ class Gws::Notice::FoldersTreeComponent::BackNumber < ApplicationComponent
   def folders
     @folders ||= begin
       criteria = Gws::Notice::Folder.all
-      criteria.for_post_back_number(cur_site, cur_user)
+      criteria = criteria.for_post_back_number(cur_site, cur_user)
+      criteria = criteria.only(:id, :site_id, :name, :depth, :updated)
+      criteria
     end
   end
 
