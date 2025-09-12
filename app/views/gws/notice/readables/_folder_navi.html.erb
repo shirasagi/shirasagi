@@ -1,4 +1,4 @@
-<div id="content-navi-core">
+<div id="content-navi-core" class="gws-notice-content-navi">
   <%= render "ss/crud/addon", addon: { id: nil, class: "gws-notice-folder", head: t('mongoid.models.gws/notice/folder'), toggle: false } do %>
     <%=
       mode = ::File.basename(params[:controller]).singularize

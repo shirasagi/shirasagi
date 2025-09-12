@@ -25,12 +25,12 @@
 }
 
 .gws-notice-index {
-  display: flex;
+  display: grid;
+  grid-template-columns: 20vw auto;
   gap: 10px;
+  width: 100%;
 
   .navi {
-    width: 30%;
-
     #content-navi-core {
       width: 100%;
       float: unset;
@@ -39,5 +39,9 @@
 
   .main {
     width: 100%;
+  }
+
+  @include init.mb {
+    display: block;
   }
 }
