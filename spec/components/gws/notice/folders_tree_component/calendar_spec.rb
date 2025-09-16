@@ -36,25 +36,25 @@ describe Gws::Notice::FoldersTreeComponent::Calendar, type: :component, dbscope:
   context "usual case" do
     let!(:folder1) do
       create(
-        :gws_notice_folder, cur_site: site, cur_user: admin, group_ids: [], user_ids: [ admin.id ],
+        :gws_notice_folder, cur_site: site, cur_user: admin, order: 200, group_ids: [], user_ids: [ admin.id ],
         member_group_ids: [], member_ids: [ admin.id ],
         readable_setting_range: "public", readable_group_ids: [], readable_member_ids: [])
     end
     let!(:folder2) do
       create(
-        :gws_notice_folder, cur_site: site, cur_user: admin, group_ids: [], user_ids: [ admin.id ],
+        :gws_notice_folder, cur_site: site, cur_user: admin, order: 100, group_ids: [], user_ids: [ admin.id ],
         member_group_ids: [], member_ids: [ admin.id ],
         readable_setting_range: "select", readable_group_ids: [], readable_member_ids: [ user1.id ])
     end
     let!(:folder3) do
       create(
-        :gws_notice_folder, cur_site: site, cur_user: admin, group_ids: [], user_ids: [ admin.id ],
+        :gws_notice_folder, cur_site: site, cur_user: admin, order: 400, group_ids: [], user_ids: [ admin.id ],
         member_group_ids: [], member_ids: [ admin.id ],
         readable_setting_range: "private", readable_group_ids: [], readable_member_ids: [ admin.id ])
     end
     let!(:folder4) do
       create(
-        :gws_notice_folder, cur_site: site, cur_user: admin, group_ids: [], user_ids: [ admin.id ],
+        :gws_notice_folder, cur_site: site, cur_user: admin, order: 300, group_ids: [], user_ids: [ admin.id ],
         member_group_ids: [], member_ids: [ admin.id, user1.id ],
         readable_setting_range: "private", readable_group_ids: [], readable_member_ids: [ admin.id ])
     end
@@ -98,6 +98,14 @@ describe Gws::Notice::FoldersTreeComponent::Calendar, type: :component, dbscope:
           expect(tree_item_link).to have(1).items
           expect(tree_item_link.text.strip).to include(folder4.name)
         end
+
+        node_ids = html.css(".ss-tree-item-link[data-node-id]").map do |tree_item_link|
+          tree_item_link["data-node-id"].to_i
+        end
+        expect(node_ids).to have(3).items
+        expect(node_ids[0]).to eq folder1.id
+        expect(node_ids[1]).to eq folder4.id
+        expect(node_ids[2]).to eq folder3.id
 
         expect(component.cache_exist?).to be_truthy
       end
