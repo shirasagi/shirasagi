@@ -45,7 +45,7 @@ class Event::MonthCell
   end
 
   def daily_url
-    sprintf("#{node.url}%04d%02d%02d/", year, month, day)
+    format("#{node.url}%04d%02d%02d/", year, month, day)
   end
 
   liquidize do
@@ -66,10 +66,13 @@ class Event::MonthCell
   end
 
   def assigns
-    %w(date year month day events categories holiday? holiday_name
-      substitute_html request_month current_month? active? daily_url).map do |name|
-        [name, send(name)]
-    end.to_h
+    %w(
+      date year month day
+      events categories
+      holiday? holiday_name
+      substitute_html request_month
+      current_month? active? daily_url
+    ).index_with { |name| send(name) }
   end
 
   class Event
@@ -84,7 +87,7 @@ class Event::MonthCell
     end
 
     def name
-      page.event_name.present? ? page.event_name : page.name
+      page.event_name.presence || page.name
     end
 
     def category
