@@ -15,9 +15,9 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
     visit gws_notice_main_path(site: site)
     click_on I18n.t('ss.navi.editable')
     wait_for_all_turbo_frames
-    expect(page).to have_css('.gws-notice-folders-tree', text: folder.name)
+    expect(page).to have_css('.gws-notice-folder_tree', text: folder.name)
 
-    first('.gws-notice-folders-tree', text: folder.name).click
+    first('.gws-notice-folder_tree', text: folder.name).click
     wait_for_all_turbo_frames
     click_on I18n.t('ss.links.new')
 

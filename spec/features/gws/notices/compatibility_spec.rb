@@ -35,7 +35,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       # readable list
       visit gws_notice_main_path(site: site)
       wait_for_all_turbo_frames
-      expect(page).to have_css('.gws-notice-folders-tree', text: folder.name)
+      expect(page).to have_css('.gws-notice-folder_tree', text: folder.name)
       expect(page).to have_css('.list-items', text: v170_item.name)
       within '.list-items' do
         click_on v170_item.name
@@ -46,7 +46,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       visit gws_notice_main_path(site: site)
       click_on I18n.t('ss.navi.editable')
       wait_for_all_turbo_frames
-      expect(page).to have_css('.gws-notice-folders-tree', text: folder.name)
+      expect(page).to have_css('.gws-notice-folder_tree', text: folder.name)
       expect(page).to have_css('.list-items', text: v170_item.name)
 
       within '.list-items' do
@@ -74,11 +74,11 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       # check post
       visit gws_notice_main_path(site: site)
       wait_for_all_turbo_frames
-      expect(page).to have_css('.gws-notice-folders-tree', text: folder.name)
+      expect(page).to have_css('.gws-notice-folder_tree', text: folder.name)
 
-      first('.gws-notice-folders-tree', text: folder.name).click
+      first('.gws-notice-folder_tree', text: folder.name).click
       wait_for_all_turbo_frames
-      expect(page).to have_css('.gws-notice-folders-tree', text: folder.name)
+      expect(page).to have_css('.gws-notice-folder_tree', text: folder.name)
       expect(page).to have_css('.list-items', text: v170_item.name)
     end
   end

@@ -104,7 +104,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       login_user editor, to: gws_notice_main_path(site: site)
       click_on I18n.t('ss.navi.editable')
       wait_for_all_turbo_frames
-      within '.gws-notice-folders-tree' do
+      within '.gws-notice-folder_tree' do
         click_on folder_name
       end
       click_on I18n.t('ss.links.new')
@@ -143,14 +143,14 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       #
       login_user reader, to: gws_notice_main_path(site: site)
       wait_for_all_turbo_frames
-      expect(page).to have_css('.gws-notice-folders-tree', text: folder_name)
+      expect(page).to have_css('.gws-notice-folder_tree', text: folder_name)
       expect(page).to have_css('.list-items', text: notice_name)
 
-      within '.gws-notice-folders-tree' do
+      within '.gws-notice-folder_tree' do
         click_on folder_name
       end
       wait_for_all_turbo_frames
-      expect(page).to have_css('.gws-notice-folders-tree', text: folder_name)
+      expect(page).to have_css('.gws-notice-folder_tree', text: folder_name)
       expect(page).to have_css('.list-items', text: notice_name)
 
       visit gws_portal_path(site: site)
