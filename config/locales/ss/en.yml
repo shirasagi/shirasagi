@@ -441,13 +441,16 @@ en:
         max: 2100/1/1
     state:
       public: Public
+      public_with_close_date: "Public until %{close_date}"
       closed: Private
+      closed_with_release_date: "Private but public from %{release_date}"
       edit: Editing
       draft: Draft
       ready: Ready to be published
       request: Applying
       approve: Approve
       remand: Remand
+      expired: Expired
     options:
       state:
         show: Show

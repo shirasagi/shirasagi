@@ -24,7 +24,7 @@ class Gws::Elasticsearch::Searcher
   end
 
   def size
-    @size ||= 10
+    @size ||= Gws::Elasticsearch.max_items_per_page
   end
 
   def type

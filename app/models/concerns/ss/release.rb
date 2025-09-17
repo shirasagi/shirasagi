@@ -25,24 +25,29 @@ module SS::Release
     validates :close_date, datetime: true
     validate :validate_release_date
     after_validation :set_released, if: -> { state == "public" }
-
-    scope :and_public, ->(date = Time.zone.now) {
-      where(state: { "$in" => self.public_states }, "$and" => [
-        { "$or" => [{ release_date: nil }, { :release_date.lte => date }] },
-        { "$or" => [{ close_date: nil }, { :close_date.gt => date }] },
-      ])
-    }
-    scope :and_closed, ->(date = Time.zone.now) {
-      conds = [
-        { state: nil }, { state: { "$nin" => public_states } }, { :release_date.gt => date }, { :close_date.lte => date }
-      ]
-      where("$and" => [{ "$or" => conds }])
-    }
   end
 
   module ClassMethods
     def released_field_shown?
       !class_variable_get(:@@_hide_released_field)
+    end
+
+    def and_public(date = Time.zone.now)
+      all.where(state: { "$in" => self.public_states }, "$and" => [
+        { "$or" => [{ release_date: nil }, { :release_date.lte => date }] },
+        { "$or" => [{ close_date: nil }, { :close_date.gt => date }] },
+      ])
+    end
+
+    def and_public_but_after_close_date(date = Time.zone.now)
+      all.where(state: { "$in" => self.public_states }, close_date: { "$lte" => date })
+    end
+
+    def and_closed(date = Time.zone.now)
+      conds = [
+        { state: nil }, { state: { "$nin" => public_states } }, { :release_date.gt => date }, { :close_date.lte => date }
+      ]
+      all.where("$and" => [{ "$or" => conds }])
     end
 
     private
@@ -70,8 +75,23 @@ module SS::Release
     updated.to_i > created.to_i && updated.to_i > released.to_i
   end
 
-  def state_with_release_date
-    public? ? "public" : "closed"
+  def state_with_release_date(now = nil)
+    now ||= Time.zone.now
+    if self.class.public_states.include?(state) && close_date.present? && close_date < now
+      I18n.t("ss.state.expired")
+    elsif public?(now)
+      if close_date.present? && close_date > now
+        I18n.t("ss.state.public_with_close_date", close_date: I18n.l(close_date, format: :picker))
+      else
+        I18n.t("ss.state.public")
+      end
+    else
+      if release_date.present? && release_date > now
+        I18n.t("ss.state.closed_with_release_date", release_date: I18n.l(release_date, format: :picker))
+      else
+        I18n.t("ss.state.closed")
+      end
+    end
   end
 
   def state_options

@@ -4,15 +4,15 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { gws_site }
   let(:user) { gws_user }
   let(:folder) { create(:gws_notice_folder) }
-  let(:index_path) { gws_notice_readables_path(site: site, folder_id: folder, category_id: '-') }
+  let(:index_path) { gws_notice_back_numbers_path(site: site, folder_id: folder, category_id: '-') }
 
   let(:today) { Time.zone.today }
   let(:start_on) { today.beginning_of_month }
   let(:end_on) { today.end_of_month }
   let(:browsed) { { user.id => Time.zone.now.utc } }
 
-  let!(:item1) { create :gws_notice_post, folder: folder, start_on: start_on, end_on: end_on }
-  let!(:item2) { create :gws_notice_post, folder: folder, browsed_users_hash: browsed }
+  let!(:item1) { create :gws_notice_post, folder: folder, start_on: start_on, end_on: end_on, close_date: today - 1.day }
+  let!(:item2) { create :gws_notice_post, folder: folder, browsed_users_hash: browsed, close_date: today - 1.day }
 
   context "with auth" do
     before { login_gws_user }

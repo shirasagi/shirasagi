@@ -19,6 +19,10 @@ Rails.application.routes.draw do
         post :toggle_browsed, on: :member
         get :print, on: :member
       end
+      resources :back_numbers, only: [:index, :show] do
+        post :toggle_browsed, on: :member
+        get :print, on: :member
+      end
       resources :calendars, only: [:index, :show] do
         get :events, on: :collection
         get :print, on: :collection

@@ -11,6 +11,9 @@ en:
     total_file_size_current_stats: "%{size} is currently in use. The usage rate is %{percentage}."
     gws_addon_member_head: Contributors
     severity: Severity
+    back_number: Back Issue
+    japanese_holiday: Japanese Holiday
+    content_type: Contents
     links:
       set_seen: Mark as read
       set_seen_all: Mark as read all
@@ -41,6 +44,7 @@ en:
 
   gws_role:
     use_gws_notice: Use of announcements
+    use_gws_notice_back_number: Use of back issues of announcements
     read_other_gws_notices: View announcements (all)
     read_private_gws_notices: View announcements (own)
     edit_other_gws_notices: Edit announcements (all)

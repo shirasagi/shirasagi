@@ -441,13 +441,16 @@ ja:
         max: 2100/1/1
     state:
       public: 公開中
+      public_with_close_date: "公開中（%{close_date}まで）"
       closed: 非公開
+      closed_with_release_date: "非公開（%{release_date}から公開）"
       edit: 編集中
       draft: 下書き
       ready: 公開待ち
       request: 申請中
       approve: 承認
       remand: 差し戻し
+      expired: 期限切れ
     options:
       state:
         show: 表示

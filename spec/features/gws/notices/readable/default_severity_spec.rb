@@ -44,7 +44,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    context "default high" do
+    context "default normal" do
       before do
         site.notice_severity = "normal"
         site.update!

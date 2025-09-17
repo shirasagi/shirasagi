@@ -25,6 +25,8 @@ class Gws::Notice::Apis::FoldersController < ApplicationController
         items = @model.for_post_editor(@cur_site, @cur_user)
       elsif params[:mode] == 'readable'
         items = @model.for_post_reader(@cur_site, @cur_user)
+      elsif params[:mode] == 'back_number'
+        items = @model.for_post_back_number(@cur_site, @cur_user)
       else
         items = @model.none
       end
