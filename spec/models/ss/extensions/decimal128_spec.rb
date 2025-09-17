@@ -94,8 +94,8 @@ describe SS::Extensions::Decimal128 do
 
   describe "#sqrt" do
     it { expect(one.sqrt(Integer(2))).to eq one }
-    it { expect(one.sqrt(Float(2))).to eq one }
-    it { expect(one.sqrt(described_class.new("2.0"))).to eq one }
+    it { expect { one.sqrt(Float(2)) }.to raise_error ArgumentError }
+    it { expect { one.sqrt(described_class.new("2.0")) }.to raise_error ArgumentError }
     it { expect { minus_one.sqrt(2) }.to raise_error FloatDomainError }
   end
 
