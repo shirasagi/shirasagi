@@ -75,8 +75,23 @@ module SS::Release
     updated.to_i > created.to_i && updated.to_i > released.to_i
   end
 
-  def state_with_release_date
-    public? ? "public" : "closed"
+  def state_with_release_date(now = nil)
+    now ||= Time.zone.now
+    if self.class.public_states.include?(state) && close_date.present? && close_date < now
+      I18n.t("ss.state.expired")
+    elsif public?(now)
+      if close_date.present? && close_date > now
+        I18n.t("ss.state.public_with_close_date", close_date: I18n.l(close_date, format: :picker))
+      else
+        I18n.t("ss.state.public")
+      end
+    else
+      if release_date.present? && release_date > now
+        I18n.t("ss.state.closed_with_release_date", release_date: I18n.l(release_date, format: :picker))
+      else
+        I18n.t("ss.state.closed")
+      end
+    end
   end
 
   def state_options
