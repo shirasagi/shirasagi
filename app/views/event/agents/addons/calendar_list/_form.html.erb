@@ -30,6 +30,28 @@
   <dt><%= @model.t :substitute_html %><%= @model.tt :substitute_html %></dt>
   <dd><%= f.text_area :substitute_html, class: :html %></dd>
 
+  <dt><%= @model.t :table_day_loop_liquid %><%= @model.tt :table_day_loop_liquid %></dt>
+  <dd>
+    <%= f.text_area :table_day_loop_liquid, class: :html, style: "height: 240px;" %>
+    <% if example = ::Event::Agents::Nodes::PageController.helpers.example_table_day_loop_liquid %>
+      <div class="form-example">
+        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
+        <div class="form-example-body example-layout-html"><%= example %></div>
+      </div>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :list_day_loop_liquid %><%= @model.tt :list_day_loop_liquid %></dt>
+  <dd>
+    <%= f.text_area :list_day_loop_liquid, class: :html, style: "height: 240px;" %>
+    <% if example = ::Event::Agents::Nodes::PageController.helpers.example_list_day_loop_liquid %>
+      <div class="form-example">
+        <div class="form-example-head example-layout-html"><%= t 'ss.input_example' %></div>
+        <div class="form-example-body example-layout-html"><%= example %></div>
+      </div>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :new_days %><%= @model.tt :new_days %></dt>
   <dd><%= f.number_field :new_days %> <%= t "datetime.prompts.day" %></dd>
 </dl>

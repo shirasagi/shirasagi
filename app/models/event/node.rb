@@ -12,8 +12,8 @@ module Event::Node
     include Cms::Addon::EditorSetting
     include Cms::Addon::NodeTwitterPostSetting
     include Cms::Addon::NodeLinePostSetting
-    include Category::Addon::Setting
     include Event::Addon::CalendarList
+    include Category::Addon::Setting
     include Event::Addon::IcalImport
     include Cms::Addon::TagSetting
     include Cms::Addon::ForMemberNode
