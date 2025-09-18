@@ -38,6 +38,9 @@ ja:
         all: 全て表示
         high: 重要なお知らせ
         normal: 通常のお知らせ
+      notice_folder_navi_open_state:
+        default: 選択フォルダーのみ展開
+        expand_all: すべて展開
     apis:
       posts:
         index: お知らせを選択する
@@ -142,6 +145,7 @@ ja:
         notice_browsed_state: 未読・既読
         notice_severity: 重要度
         notice_toggle_browsed: 既読への変更
+        notice_folder_navi_open_state: フォルダーナビの展開
       gws/addon/notice/calendar:
         start_on: 開始日
         end_on: 終了日
@@ -178,6 +182,14 @@ ja:
         - 表示するお知らせの重要度を選択します。
       notice_toggle_browsed:
         - 既読へ変更する際の動作（設定方法）を選択します。
+      notice_folder_navi_open_state:
+        - フォルダーナビの展開方法を選択します。
+        -
+        - "選択フォルダーのみ展開: 初期状態では選択中のフォルダーのみを展開して表示し、他は閉じます。既定の展開方法です。"
+        - "すべて展開: 初期状態で全てのフォルダーを常に展開します。"
+        -
+        - フォルダーナビはサーバーでキャッシュされているため、フォルダーナビの展開方法を変更しても即座に反映されません。
+        - 展開方法の変更後、1日ぐらいたってから確認してください。
 
     gws/addon/notice/calendar:
       term:

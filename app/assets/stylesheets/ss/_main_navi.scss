@@ -19,6 +19,18 @@
     position: absolute;
     top: 4px;
     right: 4px;
+
+    a {
+      display: inline-flex;
+      color: init.$black3;
+      text-decoration: none;
+
+      &:hover {
+        background-color: init.$gray1;
+        color: init.$orange;
+        cursor: pointer;
+      }
+    }
   }
 
   & + .index,
@@ -76,7 +88,7 @@
   margin: 2px 0;
 }
 .tree-navi .tree-item a {
-  color: #333;
+  color: init.$black3;
 }
 .tree-navi .is-parent {
   font-weight: bold;
@@ -106,7 +118,7 @@
   background: #e5e5e5;
   &:hover {
     border-color: #d0d0d0;
-    color: #333;
+    color: init.$black3;
   }
 }
 .tree-navi .item-name {

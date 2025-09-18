@@ -47,10 +47,17 @@ Rails.application.routes.draw do
     namespace "apis" do
       get "categories" => "categories#index"
       get "folders" => "folders#index"
-      get ":folder_id/:category_id/:mode/folder_list" => "folder_list#index", as: "folder_list"
       scope path: ':notice_id' do
         get 'members' => 'members#index'
         resources :comments, concerns: [:deletion], except: [:index, :new, :show]
+      end
+    end
+
+    namespace "frames" do
+      scope path: ':folder_id/:category_id' do
+        resources :folders_trees, only: %i[index] do
+          post '', action: :super_reload, on: :collection
+        end
       end
     end
   end

@@ -281,6 +281,8 @@ en:
       select_files: Select files
       cancel_upload: Cancel upload
       do_access_to_unreliable_site: Go to external site
+      expand_all: Expand all
+      collapse_all: Close all
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?

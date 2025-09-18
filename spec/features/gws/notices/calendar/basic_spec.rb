@@ -27,6 +27,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
+      wait_for_all_turbo_frames
       within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)
@@ -43,7 +44,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on folder1.name
       end
       # wait for ajax completion
-      wait_for_js_ready
+      wait_for_all_turbo_frames
       within "#content-navi-core" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)
@@ -60,7 +61,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on folder2.name
       end
       # wait for ajax completion
-      wait_for_js_ready
+      wait_for_all_turbo_frames
       within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)
@@ -77,7 +78,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("gws/notice.all")
       end
       # wait for ajax completion
-      wait_for_js_ready
+      wait_for_all_turbo_frames
       within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)
@@ -94,7 +95,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         check I18n.t('gws/notice.back_number')
       end
       # wait for ajax completion
-      wait_for_js_ready
+      wait_for_all_turbo_frames
       within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder1.name)
         expect(page).to have_link(folder2.name)

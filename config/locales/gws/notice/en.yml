@@ -38,6 +38,9 @@ en:
         all: All
         high: High
         normal: Normal
+      notice_folder_navi_open_state:
+        default: Only expand selected folder
+        expand_all: Expand all
     apis:
       posts:
         index: Select announcements
@@ -142,6 +145,7 @@ en:
         notice_browsed_state: Read/Unread
         notice_severity: Severity
         notice_toggle_browsed: Toggle Read/Unread
+        notice_folder_navi_open_state: Folder navi expansion
       gws/addon/notice/calendar:
         start_on: Start date
         end_on: End date
@@ -178,6 +182,14 @@ en:
         - Select the default severity.
       notice_toggle_browsed:
         - Select the toggle method.
+      notice_folder_navi_open_state:
+        - Select how to expand the folder navi.
+        -
+        - "Only expand selected folder: By default, only the selected folder is expanded and displayed, while others remain collapsed. This is the default expansion method."
+        - "Expand all: Expand all folders by default."
+        -
+        - The folder navi is cached on the server, so changes to the folder expansion setting will not take effect immediately.
+        - After changing the folder expansion setting, please check again after about a day.
 
     gws/addon/notice/calendar:
       term:
