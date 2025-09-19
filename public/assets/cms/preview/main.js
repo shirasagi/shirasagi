@@ -3322,6 +3322,9 @@ this.SS_SearchUI = (function () {
           },
           error: function (_data, _status) {
             $el.find(".pagination").html("== Error ==");
+          },
+          complete: function (_xhr, _status) {
+            $("#cboxContent").trigger("ss:ajaxPagination");
           }
         });
 
