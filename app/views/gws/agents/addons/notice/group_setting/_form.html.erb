@@ -18,4 +18,5 @@
 
   <dt><%= @model.t :notice_folder_navi_open_state %><%= @model.tt :notice_folder_navi_open_state %></dt>
   <dd><%= f.select :notice_folder_navi_open_state, @item.notice_folder_navi_open_state_options, include_blank: true %></dd>
+  <dd><%= ss_input_guide :notice_folder_navi_open_state, model: @model %></dd>
 </dl>

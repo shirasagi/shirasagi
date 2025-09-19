@@ -187,15 +187,20 @@ en:
         -
         - "Only expand selected folder: By default, only the selected folder is expanded and displayed, while others remain collapsed. This is the default expansion method."
         - "Expand all: Expand all folders by default."
-        -
-        - The folder navi is cached on the server, so changes to the folder expansion setting will not take effect immediately.
-        - After changing the folder expansion setting, please check again after about a day.
 
     gws/addon/notice/calendar:
       term:
         - Enter the date when you want the announcement to appear in the calendar.
       color:
         - Enter the display color of the announcement in the calendar.
+
+  input_guide:
+    gws/addon/notice/group_setting:
+      notice_folder_navi_open_state_html: |-
+        <p style="color: #e00;">
+          The folder navi is cached on the server, so changes to the folder expansion setting will not take effect immediately.
+          After changing the folder expansion setting, please check again after about a day.
+        </p>
 
   job:
     models:
