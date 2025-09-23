@@ -1,0 +1,100 @@
+name: CI Spec Generator for SHIRASAGI
+
+on:
+  workflow_dispatch:
+    inputs:
+      pr_number:
+        description: 'プルリクエスト番号'
+        required: true
+        type: string
+      target_repo:
+        description: '対象リポジトリ (owner/repo)'
+        required: false
+        default: 'se1987/shirasagi'
+        type: string
+
+jobs:
+  generate-spec-list:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout CI Spec Generator
+      uses: actions/checkout@v4
+      with:
+        repository: tsukudasayoko/genarate_failed_spec_list
+        token: ${{ secrets.GITHUB_TOKEN }}
+        path: ci-spec-generator
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.11'
+        working-directory: ci-spec-generator
+    
+    - name: Install dependencies
+      working-directory: ci-spec-generator
+      run: |
+        pip install -r requirements.txt
+    
+    - name: Update config for target repository
+      working-directory: ci-spec-generator
+      run: |
+        python -c "
+        import yaml
+        with open('config/config.yaml', 'r', encoding='utf-8') as f:
+            config = yaml.safe_load(f)
+        
+        # リポジトリ情報を更新
+        owner, repo = '${{ github.event.inputs.target_repo }}'.split('/')
+        config['github']['repository']['owner'] = owner
+        config['github']['repository']['name'] = repo
+        
+        with open('config/config.yaml', 'w', encoding='utf-8') as f:
+            yaml.dump(config, f, default_flow_style=False, allow_unicode=True)
+        "
+    
+    - name: Generate spec list
+      working-directory: ci-spec-generator
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        PR_NUMBER: ${{ github.event.inputs.pr_number }}
+      run: |
+        python src/main.py --pr-number $PR_NUMBER --verbose
+    
+    - name: Upload spec list as artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: spec-list-${{ github.event.inputs.pr_number }}
+        path: ci-spec-generator/spec_list.txt
+        retention-days: 30
+    
+    - name: Comment on PR
+      if: github.event.inputs.pr_number != ''
+      uses: actions/github-script@v7
+      with:
+        script: |
+          const fs = require('fs');
+          const path = 'ci-spec-generator/spec_list.txt';
+          
+          if (fs.existsSync(path)) {
+            const content = fs.readFileSync(path, 'utf8');
+            const lines = content.trim().split('\n').filter(line => line.trim());
+            
+            let comment = `## 🔍 CI Failed Spec List Generator Results\n\n`;
+            comment += `**PR #${{ github.event.inputs.pr_number }}** の失敗したテストファイル一覧:\n\n`;
+            
+            if (lines.length > 0) {
+              comment += `\`\`\`\n${content}\n\`\`\`\n\n`;
+              comment += `**合計**: ${lines.length}個の失敗したspecファイルを検出しました。\n\n`;
+              comment += `📁 **ダウンロード**: このワークフローの成果物から \`spec-list-${{ github.event.inputs.pr_number }}\` をダウンロードできます。`;
+            } else {
+              comment += `失敗したテストファイルは見つかりませんでした。`;
+            }
+            
+            github.rest.issues.createComment({
+              issue_number: ${{ github.event.inputs.pr_number }},
+              owner: '${{ github.event.inputs.target_repo }}'.split('/')[0],
+              repo: '${{ github.event.inputs.target_repo }}'.split('/')[1],
+              body: comment
+            });
+          }
