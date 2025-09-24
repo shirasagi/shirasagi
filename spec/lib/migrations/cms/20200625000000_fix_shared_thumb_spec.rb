@@ -41,5 +41,15 @@ RSpec.describe SS::Migration20200625000000, dbscope: :example do
 
     page3.reload
     expect(page3.thumb_id).to eq thumb2.id
+
+    SS::File.find(page1.thumb.id).tap do |file|
+      expect(file.model).to eq "article/page"
+    end
+    SS::File.find(page2.thumb.id).tap do |file|
+      expect(file.model).to eq "article/page"
+    end
+    SS::File.find(thumb1.id).tap do |file|
+      expect(file.model).to eq "article/page"
+    end
   end
 end
