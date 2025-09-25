@@ -13,6 +13,7 @@ class SS::Migration20200625000000
       next if file.blank? # unable to fix because thumb has been deleted
 
       file = file.becomes_with_model
+      file = becomes_to_temp_file(file)
 
       owner_item = file.owner_item
 
@@ -35,6 +36,11 @@ class SS::Migration20200625000000
       pages = criteria.in(thumb_id: thumb_ids).to_a
       pages.group_by { |page| page.thumb_id }.each(&block)
     end
+  end
+
+  def becomes_to_temp_file(file)
+    return file unless file.attributes.key?("node_id")
+    file.becomes_with(Cms::TempFile)
   end
 
   def equal_page?(lhs, rhs)
