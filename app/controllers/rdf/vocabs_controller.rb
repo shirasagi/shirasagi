@@ -71,7 +71,7 @@ class Rdf::VocabsController < ApplicationController
     @errors = extract_errors(e)
     respond_to do |format|
       format.html { render }
-      format.json { render json: @errors, status: :unprocessable_entity }
+      format.json { render json: @errors, status: :unprocessable_content }
     end
   end
 end

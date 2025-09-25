@@ -65,7 +65,7 @@ class Gws::Frames::ColumnsController < ApplicationController
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     unless @item.save
-      render edit_component, status: :unprocessable_entity
+      render edit_component, status: :unprocessable_content
       return
     end
 
@@ -77,7 +77,7 @@ class Gws::Frames::ColumnsController < ApplicationController
     raise "403" unless @item.form.allowed?(:delete, @cur_user, site: @cur_site)
 
     unless @item.destroy
-      render show_component, status: :unprocessable_entity
+      render show_component, status: :unprocessable_content
       return
     end
 
@@ -96,7 +96,7 @@ class Gws::Frames::ColumnsController < ApplicationController
     new_item = new_plugin.model_class.instantiate_document(@item.attributes)
     result = new_item.save
     unless result
-      render edit_component, status: :unprocessable_entity
+      render edit_component, status: :unprocessable_content
       return
     end
 

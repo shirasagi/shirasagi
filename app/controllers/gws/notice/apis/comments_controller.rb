@@ -43,7 +43,7 @@ class Gws::Notice::Apis::CommentsController < ApplicationController
     else
       respond_to do |format|
         format.html { redirect_to SS.path_and_query(params[:redirect_to]), notice: @item.errors.full_messages.join("\n") }
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
+        format.json { render json: @item.errors.full_messages, status: :unprocessable_content, content_type: json_content_type }
       end
     end
   end

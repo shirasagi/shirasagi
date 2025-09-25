@@ -33,7 +33,7 @@ class Cms::Form::InitColumnsController < ApplicationController
     @item.order = placement == "bottom" ? cur_form.init_columns.max(:order).to_i + 10 : 10
     unless @item.save
       json = { status: 422, errors: @item.errors.full_messages }
-      render json: json, status: :unprocessable_entity, content_type: json_content_type
+      render json: json, status: :unprocessable_content, content_type: json_content_type
       return
     end
 

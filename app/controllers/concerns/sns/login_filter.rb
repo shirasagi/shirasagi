@@ -39,7 +39,7 @@ module Sns::LoginFilter
       respond_to do |format|
         flash[:alert] = alert
         format.html { render template: "login" }
-        format.json { render json: alert, status: :unprocessable_entity }
+        format.json { render json: alert, status: :unprocessable_content }
       end
     end
   end

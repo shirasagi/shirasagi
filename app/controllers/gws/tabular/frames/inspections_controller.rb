@@ -181,7 +181,7 @@ class Gws::Tabular::Frames::InspectionsController < ApplicationController
     service.attributes = params.require(:item).permit(*Gws::Workflow2::RerouteService::PERMIT_PARAMS)
     unless service.call
       SS::Model.copy_errors(service, @item)
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
       return
     end
 

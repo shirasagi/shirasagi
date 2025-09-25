@@ -70,14 +70,14 @@ module SS::TempUploadsFrame
       :name, :resizing, :quality, :in_file)
     if item_validator.invalid?
       json_data = item_validator.errors.full_messages
-      render json: json_data, status: :unprocessable_entity, content_type: json_content_type
+      render json: json_data, status: :unprocessable_content, content_type: json_content_type
       return
     end
 
     result = item_validator.save
     unless result
       json_data = item_validator.errors.full_messages
-      render json: json_data, status: :unprocessable_entity, content_type: json_content_type
+      render json: json_data, status: :unprocessable_content, content_type: json_content_type
       return
     end
 

@@ -41,7 +41,7 @@ class Cms::Apis::ColumnsController < ApplicationController
 
     result = @item.save
     unless result
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
       return
     end
 

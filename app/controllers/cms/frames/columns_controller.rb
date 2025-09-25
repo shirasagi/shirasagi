@@ -48,7 +48,7 @@ class Cms::Frames::ColumnsController < ApplicationController
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     unless @item.save
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
       return
     end
 
@@ -60,7 +60,7 @@ class Cms::Frames::ColumnsController < ApplicationController
     raise "403" unless @item.form.allowed?(:delete, @cur_user, site: @cur_site)
 
     unless @item.destroy
-      render template: "show", status: :unprocessable_entity
+      render template: "show", status: :unprocessable_content
       return
     end
 

@@ -56,7 +56,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
     if result
       flash["cms.preview.notice"] = t("ss.notice.saved")
     end
-    render_create result, location: location, render: { template: "new", status: :unprocessable_entity }
+    render_create result, location: location, render: { template: "new", status: :unprocessable_content }
   end
 
   def create_as_branch
@@ -102,14 +102,14 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render template: "new", status: :unprocessable_entity
+      render template: "new", status: :unprocessable_content
     end
   end
 
   def save_with_overwrite
     render_opts = {
       location: { action: :edit },
-      render: { template: "edit", status: :unprocessable_entity }
+      render: { template: "edit", status: :unprocessable_content }
     }
 
     result = @item.save
@@ -147,7 +147,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
     end
   end
 
@@ -159,7 +159,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
         format.json { head :no_content }
       end
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
@@ -194,7 +194,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
@@ -203,7 +203,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       json = Hash[@item.column_values.map { |value| [ value.id, value.order ] }]
       render json: json, status: :ok, content_type: json_content_type
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
@@ -216,7 +216,7 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
       json = { location: location }
       render json: json, status: :ok, content_type: json_content_type
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 

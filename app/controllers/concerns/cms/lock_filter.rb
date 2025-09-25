@@ -16,7 +16,7 @@ module Cms::LockFilter
     end
 
     if !@item.respond_to?(:acquire_lock)
-      head :unprocessable_entity
+      head :unprocessable_content
       return
     end
 
@@ -44,7 +44,7 @@ module Cms::LockFilter
     end
 
     if !@item.respond_to?(:release_lock)
-      head :unprocessable_entity
+      head :unprocessable_content
       return
     end
 
