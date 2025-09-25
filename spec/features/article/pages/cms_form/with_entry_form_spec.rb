@@ -143,8 +143,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
-          description = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(60)
-          summary = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(120)
+          html = item.try(:render_html).presence || item.html
+          description = ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(60)
+          summary = ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
 
           expect(item.name).to eq name
           expect(item.description_setting).to eq 'auto'
@@ -904,8 +905,9 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
         expect(article_pages.count).to eq 1
         article_pages.first.tap do |item|
-          description = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(60)
-          summary = ApplicationController.helpers.sanitize(item.render_html, tags: []).squish.truncate(120)
+          html = item.try(:render_html).presence || item.html
+          description = ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(60)
+          summary = ApplicationController.helpers.sanitize(html, tags: []).squish.truncate(120)
 
           expect(item.name).to eq name
           expect(item.description_setting).to eq 'auto'

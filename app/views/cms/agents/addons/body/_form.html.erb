@@ -57,11 +57,6 @@
   <dl class="see mod-cms-body">
     <dd class="wide"><%= f.text_area :html, class: "html", style: "height: 400px;", data: { syntax_check: 'editor', syntax_check_name: t("modules.addons.cms/body") } %></dd>
     <dd class="wide">
-    <%= button_tag t("cms.syntax_check"), { type: :button, class: "btn syntax-check" } if syntax_check %>
-    <%= button_tag t("cms.mobile_size_check"), { type: :button, class: "btn mobile-size-check" } if @cur_site.mobile_enabled? %>
-    <% if !SS::Lgwan.enabled? || SS::Lgwan.web? %>
-      <%= button_tag t("cms.link_check"), { type: :button, class: "btn link-check" } %>
-    <% end %>
     <%= button_tag t("cms.source_cleaner"), { type: :button, class: "btn source-cleaner" } if source_cleaner_conf[:source_cleaner].present? || source_cleaner_conf[:source_cleaner_site_setting].present? %>
     <% if !@inplace_mode && @item.respond_to?(:route) %>
       <%= button_tag t("cms.preview_page"), { type: :button, class: "btn preview" } %>
@@ -76,6 +71,13 @@
       <%= link_to t("cms.apis.related_pages.index"), cms_apis_pages_path(page_params), class: "ajax-box related-pages" %>
     <% end %>
     </dd>
+    <%=
+      component = Cms::BodyCheckerComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, item: @item)
+      syntax_checker_form = render(component)
+      if syntax_checker_form.present?
+        tag.dd syntax_checker_form, class: "wide"
+      end
+    %>
   </dl>
 
   <%= jquery do %>

@@ -5,6 +5,7 @@ class Cms::Layout
   include Cms::Addon::GroupPermission
   include Cms::Addon::LayoutSearch
   include History::Addon::Backup
+  include Cms::SyntaxCheckResult
 
   index({ site_id: 1, filename: 1 }, { unique: true })
 end

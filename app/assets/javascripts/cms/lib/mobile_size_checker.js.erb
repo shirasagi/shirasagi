@@ -172,7 +172,7 @@ this.Mobile_Size_Checker = (function () {
     return defer.promise();
   };
 
-  Mobile_Size_Checker.asyncValidateHtml = function (form, submit, opts) {
+  Mobile_Size_Checker.asyncValidateHtml = function ($form, submitter, opts) {
     var promise = Mobile_Size_Checker.asyncCheckHtmlSize(opts.html);
     promise.done(function() {
       if (Mobile_Size_Checker.errors.length === 0) {

@@ -444,6 +444,7 @@ describe "edit requested page", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.draft_save')
         end
         within_cbox do
+          expect(page).to have_css(".errorExplanation", text: I18n.t("errors.messages.set_img_alt"))
           click_on I18n.t("ss.buttons.ignore_alert")
         end
         wait_for_notice I18n.t("ss.notice.saved")

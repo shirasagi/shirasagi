@@ -7,9 +7,13 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
     let(:raw_html) { "<div>#{head_htmls.join}</div>" }
     let(:fragment) { Nokogiri::HTML5.fragment(raw_html) }
     let(:content) do
-      { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+      Cms::SyntaxChecker::Content.new(
+        id: id, name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
     end
-    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false, 0) }
+    let(:context) do
+      Cms::SyntaxChecker::CheckerContext.new(
+        cur_site: cms_site, cur_user: cms_user, contents: [ content ], html: raw_html, fragment: fragment, idx: idx)
+    end
 
     context "with usual case" do
       let(:head_html1) { "<h2>#{unique_id}</h2>" }
@@ -21,7 +25,7 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:head_htmls) { [ head_html1, head_html2, head_html3, head_html4, head_html5, head_html6 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
         expect(context.errors).to be_blank
       end
     end
@@ -33,17 +37,17 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:head_htmls) { [ head_html1, head_html2, head_html3 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(1).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "h3"
-          expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to be_blank
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "h3"
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to be_blank
         end
       end
     end
@@ -55,17 +59,17 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:head_htmls) { [ head_html1, head_html2, head_html3 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(1).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "h4"
-          expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to be_blank
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "h4"
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to be_blank
         end
       end
     end
@@ -77,17 +81,17 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:head_htmls) { [ head_html1, head_html2, head_html3 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(1).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "h5"
-          expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to be_blank
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "h5"
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to be_blank
         end
       end
     end
@@ -98,7 +102,7 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:head_htmls) { [ head_html1 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to be_blank
       end
@@ -109,17 +113,17 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
         let(:head_htmls) { [ head_html1 ] }
 
         it do
-          described_class.new.check(context, id, idx, raw_html, fragment)
+          described_class.new.check(context, content)
 
           expect(context.errors).to have(1).items
           context.errors.first.tap do |error|
-            expect(error[:id]).to eq id
-            expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq "h#{level}"
-            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
-            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
-            expect(error[:collector]).to eq described_class.name
-            expect(error[:collector_params]).to be_blank
+            expect(error.id).to eq id
+            expect(error.idx).to eq idx
+            expect(error.code).to eq "h#{level}"
+            expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
+            expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+            expect(error.corrector).to eq described_class.name
+            expect(error.corrector_params).to be_blank
           end
         end
       end
@@ -133,17 +137,17 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:head_htmls) { [ head_html1, head_html2, head_html3, head_html4 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(1).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "h4 h5"
-          expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to be_blank
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "h4 h5"
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to be_blank
         end
       end
     end
@@ -152,10 +156,14 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:level) { rand(3..6) }
       let(:head_html1) { "<h#{level}>#{unique_id}</h#{level}>" }
       let(:head_htmls) { [ head_html1 ] }
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true, level) }
+      let(:context) do
+        Cms::SyntaxChecker::CheckerContext.new(
+          cur_site: cms_site, cur_user: cms_user, contents: [ content ],
+          html: raw_html, fragment: fragment, idx: idx, header_check: true, h_level_check: level)
+      end
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.header_check).to eq true
         expect(context.errors).to be_blank
@@ -166,20 +174,24 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:level) { rand(3..6) }
       let(:head_html1) { "<h#{level}>#{unique_id}</h#{level}>" }
       let(:head_htmls) { [ head_html1 ] }
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], false, level) }
+      let(:context) do
+        Cms::SyntaxChecker::CheckerContext.new(
+          cur_site: cms_site, cur_user: cms_user, contents: [ content ],
+          html: raw_html, fragment: fragment, idx: idx, header_check: false, h_level_check: level)
+      end
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.header_check).to eq false
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-            expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq "h#{level}"
-            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
-            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
-            expect(error[:collector]).to eq described_class.name
-            expect(error[:collector_params]).to be_blank
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "h#{level}"
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to be_blank
         end
       end
     end
@@ -188,10 +200,14 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:head_html1) { "<h2>#{unique_id}</h2>" }
       let(:head_html2) { "<h3>#{unique_id}</h3>" }
       let(:head_htmls) { [ head_html1, head_html2 ] }
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true, 2) }
+      let(:context) do
+        Cms::SyntaxChecker::CheckerContext.new(
+          cur_site: cms_site, cur_user: cms_user, contents: [ content ],
+          html: raw_html, fragment: fragment, idx: idx, header_check: true, h_level_check: 2)
+      end
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.header_check).to eq true
         expect(context.errors).to be_blank
@@ -202,29 +218,33 @@ describe Cms::SyntaxChecker::OrderOfHChecker, type: :model, dbscope: :example do
       let(:head_html1) { "<h1>#{unique_id}</h1>" }
       let(:head_html2) { "<h3>#{unique_id}</h3>" }
       let(:head_htmls) { [ head_html1, head_html2 ] }
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], [], true, 1) }
+      let(:context) do
+        Cms::SyntaxChecker::CheckerContext.new(
+          cur_site: cms_site, cur_user: cms_user, contents: [ content ],
+          html: raw_html, fragment: fragment, idx: idx, header_check: true, h_level_check: 1)
+      end
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.header_check).to eq true
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-            expect(error[:idx]).to eq idx
-            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_order_of_h')
-            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
-            expect(error[:collector]).to eq described_class.name
-            expect(error[:collector_params]).to be_blank
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.full_message).to eq I18n.t('errors.messages.invalid_order_of_h')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_order_of_h')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to be_blank
         end
       end
     end
-    
   end
 
   describe "#correct" do
     let(:raw_html) { "<div>#{head_htmls.join}</div>" }
     let(:content) do
-      { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+      Cms::SyntaxChecker::Content.new(
+        id: "item_html", name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
     end
     let(:context) { Cms::SyntaxChecker::CorrectorContext.new(cms_site, cms_user, content, params, raw_html) }
     let(:params) { nil }

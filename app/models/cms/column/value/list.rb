@@ -1,5 +1,5 @@
 class Cms::Column::Value::List < Cms::Column::Value::Base
-  field :lists, type: SS::Extensions::Lines
+  field :lists, type: SS::Extensions::Lines, metadata: { syntax_check: { list: true } }
 
   permit_values lists: []
 

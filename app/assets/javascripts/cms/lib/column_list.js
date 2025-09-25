@@ -2,10 +2,14 @@ Cms_Column_List = function(el) {
   this.$el = $(el);
 };
 
-Cms_Column_List.render = function(el) {
-  var instance = new Cms_Column_List(el);
-  instance.render();
-  return instance;
+Cms_Column_List.render = function(selector) {
+  document.querySelectorAll(selector).forEach(function(el) {
+    SS.justOnce(el, "cms-column-list", function() {
+      var instance = new Cms_Column_List(el);
+      instance.render();
+      return instance;
+    });
+  });
 };
 
 Cms_Column_List.prototype.render = function() {

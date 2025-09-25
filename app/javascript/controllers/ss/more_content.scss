@@ -1,0 +1,32 @@
+.ss-more-content {
+  --max-height: 100px;
+
+  position: relative;
+  max-height: var(--max-height);
+  overflow: hidden;
+
+  &[data-is-open] {
+    max-height: initial;
+
+    .ss-more-content-bottom-wrap {
+      display: none;
+    }
+  }
+
+  .ss-more-content-body-wrap {
+    position: relative;
+  }
+
+  .ss-more-content-bottom-wrap {
+    display: flex;
+    position: absolute;
+    top: var(--max-height);
+    align-items: end;
+    justify-content: center;
+    width: 100%;
+    height: calc(clamp(0px, round(up, 100% - var(--max-height), 1px), 1px) * 60);
+    overflow: hidden;
+    transform: translateY(-100%);
+    background-image: linear-gradient(transparent, #fff 65%);
+  }
+}

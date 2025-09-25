@@ -1,0 +1,53 @@
+<div id="errorSyntaxChecker" class="errorExplanation">
+  <h2><%= t('cms.syntax_check') %></h2>
+
+  <div class="errorExplanationBody">
+    <% if checker_context.errors.blank? %>
+      <p><%= t('errors.template.no_errors') %></p>
+    <% else %>
+      <ul>
+        <% each_grouping_errors do |errors| %>
+          <li class="column-name" data-id="<%= errors[0].id %>"><%= errors[0].name %></li>
+          <% errors.each do |error| %>
+            <% if error.code.present? %>
+              <li class="code"><code><%= error.code %></code></li>
+            <% end %>
+
+            <% if error.full_message.present? %>
+              <ul>
+                <li>
+                  <span class="message detail"><%= error.full_message %>
+                    <% if error.detail.present? %>
+                      <div class="tooltip">!
+                        <ul class="tooltip-content">
+                          <% error.detail.each do |detail| %>
+                            <li><%= detail %></li>
+                          <% end %>
+                        </ul>
+                      </div>
+                    <% end %>
+                  </span>
+
+                  <% if show_auto_correct && error.corrector.present? %>
+                    <%=
+                      correct_param = {
+                        id: error.content.id, column_value_id: error.content.column_value.try(:id).to_s.presence,
+                        corrector: error.corrector, corrector_params: error.corrector_params
+                      }
+                      correct_param = Base64.urlsafe_encode64(correct_param.to_json)
+                      correct_data = {
+                        action: "cms--body-checker#correct",
+                        "cms--body-checker-param-param" => correct_param
+                      }
+                      button_tag t('cms.auto_correct.link'), name: "btn-correct", type: :button, class: 'btn', data: correct_data
+                    %>
+                  <% end %>
+                </li>
+              </ul>
+            <% end %>
+          <% end %>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+</div>

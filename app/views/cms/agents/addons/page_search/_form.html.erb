@@ -219,6 +219,16 @@ this.hideDateForm = function(self) {
   <dt><%= @model.t :search_approver_state %><%= @model.tt :search_approver_state %></dt>
   <dd><%= f.select :search_approver_state, @item.search_approver_state_options, include_blank: true %></dd>
 
+  <dt><%= @model.t :search_syntax_check_violation %><%= @model.tt :search_syntax_check_violation %></dt>
+  <dd>
+    <% @item.search_syntax_check_violation_options.each do |label, value| %>
+      <label>
+        <%= f.radio_button :search_syntax_check_violation, value %>
+        <%= label %>
+      </label>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :search_sort %><%= @model.tt :search_sort %></dt>
   <dd><%= f.select :search_sort, @item.search_sort_options, include_blank: true %></dd>
 </dl>

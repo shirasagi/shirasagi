@@ -3,99 +3,128 @@ module Cms::SyntaxCheckable
 
   private
 
-  def syntax_check
-    contents = build_syntax_check_contents
+  def set_check_item
+    return @item if instance_variable_defined?(:@item)
 
-    @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
-    if @syntax_checker.errors.present?
-      @syntax_checker.errors.each do |error|
-        @item.errors.add :base, error[:msg]
-      end
-      return false
-    end
-    true
-  end
-
-  def build_syntax_check_contents
-    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
-
-    if @item.respond_to?(:column_values)
-      @item.column_values.each_with_index do |column_value, idx|
-        value =
-          if column_value.respond_to?(:in_wrap) && column_value.in_wrap.present?
-            column_value.in_wrap
-          elsif column_value.respond_to?(:value)
-            column_value.value
-          elsif column_value.respond_to?(:html)
-            column_value.html
-          elsif column_value.respond_to?(:text)
-            column_value.text
-          else
-            nil
-          end
-        next if value.blank?
-        contents << {
-          "id" => "column_#{idx}",
-          "content" => value,
-          "resolve" => "html",
-          "type" => "scalar"
-        }
-      end
-    end
-    contents
-  end
-
-  def auto_correct
-    error_index = params[:auto_correct].to_i
-    @item.errors.clear
-
-    # 構文チェックを実行
-    contents = [{ "id" => "html", "content" => @item.html, "resolve" => "html", "type" => "scalar" }]
-    @syntax_checker = Cms::SyntaxChecker.check(cur_site: @cur_site, cur_user: @cur_user, contents: contents)
-
-    before_html = @item.html
-    @syntax_checker.errors.each_with_index do |error, idx|
-      next unless idx == error_index
-      next unless error[:collector].present?
-
-      Rails.logger.debug("[auto_correct] 修正前HTML: #{before_html.inspect}")
-
-      case error[:collector]
-      when "Cms::SyntaxChecker::InterwordSpaceChecker"
-        content_html = error[:code]
+    if params[:id].numeric?
+      if respond_to?(:set_items)
+        set_items
       else
-        content_html = @item.html
+        @items = @model.all
+        if @model.ancestors.include?(Cms::GroupPermission)
+          @items = @items.allow(:read, @cur_user, site: @cur_site)
+        end
       end
-
-      corrected = Cms::SyntaxChecker.correct(
-        cur_site: @cur_site,
-        cur_user: @cur_user,
-        content: {
-          "content" => content_html,
-          "resolve" => "html",
-          "type" => "scalar"
-        },
-        collector: error[:collector],
-        params: (error[:collector_params] || {}).transform_keys(&:to_s)
-      )
-
-      next unless corrected.respond_to?(:result)
-      corrected_html = corrected.result
-
-      Rails.logger.debug("[auto_correct] 修正後HTML: #{corrected_html.inspect}")
-
-      case error[:collector]
-      when "Cms::SyntaxChecker::InterwordSpaceChecker"
-        @item.html = replace_html(before_html, error[:code], corrected_html)
-      else
-        @item.html = corrected_html
+      @item = @items.find(params[:id])
+      if respond_to?(:change_item_class, true)
+        change_item_class
+      end
+      # change_item_class を呼び出すと @model が適切にセットされる。
+      # @model が適切な場合にのみ get_params は適切なパラメータを返す。
+      # 例えば @model が Cms::Part の場合、Cms::Part::Free 用の html を get_params は含まない。
+      @item.attributes = get_params
+    else
+      @item = @model.new get_params
+      if respond_to?(:change_item_class, true)
+        change_item_class
+        @item = @model.new get_params
       end
     end
+
+    @item
   end
 
-  def replace_html(before_html, error_code, corrected_html)
-    pattern = Regexp.new(Regexp.escape(error_code))
-    replaced_text = before_html.gsub(/#{pattern}/, corrected_html)
-    replaced_text
+  public
+
+  def check_content
+    set_check_item
+
+    checks = params.expect(checks: [])
+    checks = checks.map(&:strip).select(&:present?)
+    if checks.blank?
+      head :not_found
+      return
+    end
+    checks = Set.new(checks)
+
+    public_html = @item.try(:render_html) || @item.html
+    syntax_checker_context = nil
+    @components = []
+    checks.each do |check|
+      case check
+      when "syntax", "form_alert"
+        syntax_checker_context = Cms::SyntaxChecker.check_page(
+          cur_site: @cur_site, cur_user: @cur_user, page: @item, html: public_html)
+        component = Cms::SyntaxCheckerComponent.new(
+          cur_site: @cur_site, cur_user: @cur_user, checker_context: syntax_checker_context)
+        @components << component
+      when "mobile_size"
+        mobile_size_checker = Cms::MobileSizeChecker.check(
+          cur_site: @cur_site, cur_user: @cur_user, page: @item, html: public_html)
+        component = Cms::MobileSizeCheckerComponent.new(
+          cur_site: @cur_site, cur_user: @cur_user, checker: mobile_size_checker)
+        @components << component
+      when "link"
+        link_checker = Cms::ContentLinkChecker.check(
+          cur_site: @cur_site, cur_user: @cur_user, page: @item, html: public_html)
+        component = Cms::ContentLinkCheckerComponent.new(
+          cur_site: @cur_site, cur_user: @cur_user, checker: link_checker)
+        @components << component
+      else
+        Rails.logger.info { "unknown check: #{check}" }
+      end
+    end
+
+    if @item.persisted? && @item.is_a?(Cms::SyntaxCheckResult) && syntax_checker_context
+      @item.set_syntax_check_result(syntax_checker_context)
+    end
+
+    if checks.include?("form_alert")
+      errors_json = syntax_checker_context.errors.map { _1.to_compat_hash }
+      response_json = { status: "ok", errors: errors_json }
+      render json: response_json, status: :ok, content_type: json_content_type
+      return
+    end
+
+    render template: "check_content", layout: false
+  end
+
+  def correct_content
+    set_check_item
+
+    corrector_param = Cms::SyntaxChecker::CorrectorParam.parse_params(params.expect(corrector: [:param])[:param])
+
+    Cms::SyntaxChecker.correct_page(cur_site: @cur_site, cur_user: @cur_user, page: @item, params: corrector_param)
+
+    # 修正結果を HTML で取得する
+    if @item.try(:form_id).present?
+      # 描画する addon を制限することで性能向上
+      @addons = @item.addons.select { _1.id == "cms-agents-addons-form-page" }
+      edit_html = render_to_string(template: "new", layout: false)
+      fragment = Nokogiri::HTML5.fragment(edit_html)
+      target_element = fragment.css("##{corrector_param.id}").first
+      corrected_html = target_element.to_html
+    else
+      corrected_html = @item.html
+    end
+
+    public_html = @item.try(:render_html) || @item.html
+    syntax_checker_context = Cms::SyntaxChecker.check_page(
+      cur_site: @cur_site, cur_user: @cur_user, page: @item, html: public_html)
+    @components = [
+      Cms::SyntaxCheckerComponent.new(
+        cur_site: @cur_site, cur_user: @cur_user, checker_context: syntax_checker_context)
+    ]
+    check_result_html = render_to_string(template: "check_content", layout: false)
+
+    if @item.persisted? && @item.is_a?(Cms::SyntaxCheckResult)
+      @item.set_syntax_check_result(syntax_checker_context)
+    end
+
+    json = {
+      id: corrector_param.id, column_value_id: corrector_param.column_value_id,
+      corrected_html: corrected_html, check_result_html: check_result_html,
+    }
+    render json: json, status: :ok, content_type: json_content_type
   end
 end

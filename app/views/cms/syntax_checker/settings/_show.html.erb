@@ -1,4 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :syntax_check %></dt>
   <dd><%= @item.label(:syntax_check) || (@item.syntax_check_enabled? ? t("ss.options.state.enabled") : t("ss.options.state.disabled") ) %></dd>
+
+  <dt><%= @model.t :syntax_checker_link_text_min_length %></dt>
+  <dd><%= @item.syntax_checker_link_text_min_length || Cms::SyntaxChecker::LinkTextSetting::DEFAULT_SYNTAX_CHECKER_LINK_TEXT_MIN_LENGTH %></dd>
 </dl>

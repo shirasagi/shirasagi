@@ -5,6 +5,14 @@ class Cms::MobileSizeChecker
 
   validate :validate_html
 
+  class << self
+    def check(cur_site:, cur_user:, html:, **_unused_options)
+      checker = new(cur_site: cur_site, cur_user: cur_user, html: html)
+      checker.validate
+      checker
+    end
+  end
+
   private
 
   def validate_html

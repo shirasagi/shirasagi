@@ -32,7 +32,9 @@ this.Cms_Editor_Module = (function () {
     if (typeof tinymce !== 'undefined') {
       return tinymce.get(id).setContent(html);
     } else if (typeof CKEDITOR !== 'undefined') {
-      return CKEDITOR.instances[id].setData(html);
+      var editor = CKEDITOR.instances[id];
+      editor.setData(html, { callback: function() { editor.updateElement(); } });
+      return;
     }
   };
 
@@ -49,15 +51,19 @@ this.Cms_Editor_CodeMirror = (function () {
     if (opts == null) {
       opts = {};
     }
-    return $(selector).each(function () {
-      var cm, form;
-      form = $(this);
-      cm = CodeMirror.fromTextArea(form.get(0), opts);
-      cm.setSize(null, form.height());
-      if (opts["readonly"]) {
-        cm.refresh();
-      }
-      return form.data("editor", cm);
+    $(selector).each(function () {
+      var textAreaElement = this;
+      SS.justOnce(textAreaElement, "ss-code-mirror", function() {
+        var $textAreaElement = $(textAreaElement);
+        var cm = CodeMirror.fromTextArea(textAreaElement, opts);
+        cm.setSize(null, $textAreaElement.height());
+        if (opts["readonly"]) {
+          cm.refresh();
+        }
+        $textAreaElement.data("editor", cm);
+
+        return cm;
+      });
     });
   };
 
@@ -152,9 +158,10 @@ this.Cms_Editor_CKEditor = (function () {
 
     // $(selector).ckeditor(opts);
     $(selector).each(function() {
-      var $this = $(this);
+      var textAreaElement = this;
+      var $textAreaElement = $(textAreaElement);
       SS.justOnce(this, "ss-editor", function() {
-        $this.ckeditor(opts);
+        $textAreaElement.ckeditor(opts);
       });
     });
 

@@ -19,23 +19,19 @@ class Cms::SyntaxChecker::EmbeddedMediaChecker
     ::MIME::Types.select { |type| type.content_type.start_with?("audio/", "video/") }.map(&:extensions).flatten.uniq.sort.freeze
   end
 
-  def check(context, id, idx, raw_html, fragment)
+  def check(context, content)
     EMBEDDED_MEDIA_TAGS.each do |tag, attr|
       query = tag.to_s
       query += "[#{attr}]" if attr != "*"
-      fragment.css(query).each do |node|
+      context.fragment.css(query).each do |node|
         if attr != "*"
           attr_value = node[attr]
           next if attr_value.blank? || !media_src?(attr_value)
         end
 
-        context.errors << {
-          id: id,
-          idx: idx,
-          code: Cms::SyntaxChecker::Base.outer_html_summary(node),
-          msg: I18n.t('errors.messages.check_embedded_media'),
-          detail: I18n.t('errors.messages.syntax_check_detail.check_embedded_media')
-        }
+        code = Cms::SyntaxChecker::Base.outer_html_summary(node)
+        context.errors << Cms::SyntaxChecker::CheckerError.new(
+          context: context, content: content, code: code, checker: self, error: :check_embedded_media)
       end
     end
   end

@@ -3,8 +3,7 @@ module Cms::SyntaxChecker::Base
 
   class << self
     def each_html_with_index(content, &block)
-      content = content["content"]
-      Array(content).each_with_index do |value, index|
+      Array(content.content).each_with_index do |value, index|
         value = value.strip
         # 'value' must be wrapped with "<div>"
         value = "<div>#{value}</div>" if !value.start_with?("<div>")
@@ -13,8 +12,8 @@ module Cms::SyntaxChecker::Base
       end
     end
 
-    def each_text_node(fgrament)
-      fgrament.traverse do |node|
+    def each_text_node(fragment)
+      fragment.traverse do |node|
         if node.text?
           yield node
         end
@@ -37,5 +36,8 @@ module Cms::SyntaxChecker::Base
   end
 
   def correct(context)
+  end
+
+  def correct2(content, params: nil)
   end
 end

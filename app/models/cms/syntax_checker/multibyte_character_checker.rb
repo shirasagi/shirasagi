@@ -1,9 +1,9 @@
 class Cms::SyntaxChecker::MultibyteCharacterChecker
   include Cms::SyntaxChecker::Base
 
-  def check(context, id, idx, raw_html, fragment)
+  def check(context, content)
     chars = []
-    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+    Cms::SyntaxChecker::Base.each_text_node(context.fragment) do |text_node|
       each_match(text_node.content) do |matched|
         matched = matched.to_s
         if matched.index(/[#{Cms::SyntaxChecker::FULL_AL_NUM_PAT}]/)
@@ -12,15 +12,10 @@ class Cms::SyntaxChecker::MultibyteCharacterChecker
       end
     end
     if chars.present?
-      context.errors << {
-        id: id,
-        idx: idx,
-        code: chars.join(","),
-        ele: raw_html,
-        msg: I18n.t('errors.messages.invalid_multibyte_character'),
-        detail: I18n.t('errors.messages.syntax_check_detail.invalid_multibyte_character'),
-        collector: self.class.name
-      }
+      code = chars.join(",")
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: content, code: code, checker: self, error: :invalid_multibyte_character,
+        corrector: self.class.name)
     end
   end
 
@@ -40,6 +35,18 @@ class Cms::SyntaxChecker::MultibyteCharacterChecker
     end
 
     context.set_result(ret)
+  end
+
+  def correct2(content, params: nil)
+    fragment = Nokogiri::HTML5.fragment(content)
+
+    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+      text_node.content = text_node.content.gsub(Cms::SyntaxChecker::AL_NUM_REGEX) do |matched|
+        matched.to_s.tr(Cms::SyntaxChecker::FULL_AL_NUM_PAT, Cms::SyntaxChecker::HALF_AL_NUM_PAT)
+      end
+    end
+
+    fragment.to_html
   end
 
   private

@@ -19,7 +19,10 @@ Rails.application.routes.draw do
 
   content "mail_page" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :lock, :copy]
+    resources :pages, concerns: [:deletion, :lock, :copy] do
+      post :check_content, on: :collection
+      post :correct_content, on: :collection
+    end
   end
 
   node "mail_page" do

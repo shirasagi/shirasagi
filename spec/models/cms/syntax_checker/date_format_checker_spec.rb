@@ -8,23 +8,27 @@ describe Cms::SyntaxChecker::DateFormatChecker, type: :model, dbscope: :example 
       let(:raw_html) { "<div><p>#{date_str}</p></div>" }
       let(:fragment) { Nokogiri::HTML5.fragment(raw_html) }
       let(:content) do
-        { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+        Cms::SyntaxChecker::Content.new(
+          id: id, name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
       end
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], []) }
+      let(:context) do
+        Cms::SyntaxChecker::CheckerContext.new(
+          cur_site: cms_site, cur_user: cms_user, contents: [ content ], html: raw_html, fragment: fragment, idx: idx)
+      end
 
       shared_examples "what #check should act" do
         it do
-          described_class.new.check(context, id, idx, raw_html, fragment)
+          described_class.new.check(context, content)
 
           expect(context.errors).to have(1).items
           context.errors.first.tap do |error|
-            expect(error[:id]).to eq id
-            expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq date_str
-            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_date_format')
-            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_date_format')
-            expect(error[:collector]).to eq described_class.name
-            expect(error[:collector_params]).to be_blank
+            expect(error.id).to eq id
+            expect(error.idx).to eq idx
+            expect(error.code).to eq date_str
+            expect(error.full_message).to eq I18n.t('errors.messages.invalid_date_format')
+            expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_date_format')
+            expect(error.corrector).to eq described_class.name
+            expect(error.corrector_params).to be_blank
           end
         end
       end
@@ -52,7 +56,7 @@ describe Cms::SyntaxChecker::DateFormatChecker, type: :model, dbscope: :example 
           let(:date_str) { "2021:#{rand(1..12)}:#{rand(1..28)}" }
 
           it do
-            described_class.new.check(context, id, idx, raw_html, fragment)
+            described_class.new.check(context, content)
             expect(context.errors).to have(0).items
           end
         end
@@ -61,7 +65,7 @@ describe Cms::SyntaxChecker::DateFormatChecker, type: :model, dbscope: :example 
           let(:date_str) { "2021/#{rand(1..12)}/#{rand(32..99)}" }
 
           it do
-            described_class.new.check(context, id, idx, raw_html, fragment)
+            described_class.new.check(context, content)
             expect(context.errors).to have(0).items
           end
         end
@@ -74,32 +78,36 @@ describe Cms::SyntaxChecker::DateFormatChecker, type: :model, dbscope: :example 
       let(:raw_html) { "<div><p>#{date_str1}</p><p>#{date_str2}</p></div>" }
       let(:fragment) { Nokogiri::HTML5.fragment(raw_html) }
       let(:content) do
-        { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+        Cms::SyntaxChecker::Content.new(
+          id: id, name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
       end
-      let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], []) }
+      let(:context) do
+        Cms::SyntaxChecker::CheckerContext.new(
+          cur_site: cms_site, cur_user: cms_user, contents: [ content ], html: raw_html, fragment: fragment, idx: idx)
+      end
 
       shared_examples "what #check should act" do
         it do
-          described_class.new.check(context, id, idx, raw_html, fragment)
+          described_class.new.check(context, content)
 
           expect(context.errors).to have(2).items
           context.errors.first.tap do |error|
-            expect(error[:id]).to eq id
-            expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq date_str1
-            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_date_format')
-            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_date_format')
-            expect(error[:collector]).to eq described_class.name
-            expect(error[:collector_params]).to be_blank
+            expect(error.id).to eq id
+            expect(error.idx).to eq idx
+            expect(error.code).to eq date_str1
+            expect(error.full_message).to eq I18n.t('errors.messages.invalid_date_format')
+            expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_date_format')
+            expect(error.corrector).to eq described_class.name
+            expect(error.corrector_params).to be_blank
           end
           context.errors.second.tap do |error|
-            expect(error[:id]).to eq id
-            expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq date_str2
-            expect(error[:msg]).to eq I18n.t('errors.messages.invalid_date_format')
-            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.invalid_date_format')
-            expect(error[:collector]).to eq described_class.name
-            expect(error[:collector_params]).to be_blank
+            expect(error.id).to eq id
+            expect(error.idx).to eq idx
+            expect(error.code).to eq date_str2
+            expect(error.full_message).to eq I18n.t('errors.messages.invalid_date_format')
+            expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.invalid_date_format')
+            expect(error.corrector).to eq described_class.name
+            expect(error.corrector_params).to be_blank
           end
         end
       end
@@ -117,7 +125,8 @@ describe Cms::SyntaxChecker::DateFormatChecker, type: :model, dbscope: :example 
     context "with single date" do
       let(:raw_html) { "<div><p>#{date_str}</p></div>" }
       let(:content) do
-        { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+        Cms::SyntaxChecker::Content.new(
+          id: "item_html", name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
       end
       let(:params) { nil }
       let(:context) { Cms::SyntaxChecker::CorrectorContext.new(cms_site, cms_user, content, params, raw_html) }
@@ -173,7 +182,8 @@ describe Cms::SyntaxChecker::DateFormatChecker, type: :model, dbscope: :example 
     context "with multiple date" do
       let(:raw_html) { "<div><p>#{date_str1}</p><p>#{date_str2}</p></div>" }
       let(:content) do
-        { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+        Cms::SyntaxChecker::Content.new(
+          id: "item_html", name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
       end
       let(:params) { nil }
       let(:context) { Cms::SyntaxChecker::CorrectorContext.new(cms_site, cms_user, content, params, raw_html) }

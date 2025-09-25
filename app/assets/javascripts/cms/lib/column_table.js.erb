@@ -6,12 +6,7 @@ Cms_Column_Table = function (el) {
 Cms_Column_Table.initialized = false
 Cms_Column_Table.instances = [];
 
-Cms_Column_Table.render = function (el) {
-  var instance = new Cms_Column_Table(el);
-  instance.render();
-
-  Cms_Column_Table.instances.push(instance);
-
+Cms_Column_Table.render = function (selector) {
   if (!Cms_Column_Table.initialized) {
     $(document).on("click", function (event) {
       if (!$(event.target).closest('.control').length) {
@@ -22,7 +17,16 @@ Cms_Column_Table.render = function (el) {
     Cms_Column_Table.initialized = true;
   }
 
-  return instance;
+  document.querySelectorAll(selector).forEach(function (el) {
+    SS.justOnce(el, "cms-column-table", function() {
+      var instance = new Cms_Column_Table(el);
+      instance.render();
+
+      Cms_Column_Table.instances.push(instance);
+
+      return instance;
+    });
+  });
 };
 
 Cms_Column_Table.hideAllTableMenus = function () {

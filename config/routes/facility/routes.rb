@@ -40,7 +40,10 @@ Rails.application.routes.draw do
 
     resources :images, concerns: :deletion
     resources :maps, concerns: :deletion
-    resources :notices, concerns: :deletion
+    resources :notices, concerns: :deletion do
+      post :check_content, on: :collection
+      post :correct_content, on: :collection
+    end
   end
 
   node "facility" do

@@ -1,9 +1,3 @@
-<% if @syntax_checker&.errors.present? && @cur_user.cms_role_permit_any?(@cur_site, "edit_cms_ignore_syntax_check") %>
-  <input type="checkbox" name="ignore_syntax_check" value="1" id="ignore_syntax_check">
-  <label for="ignore_syntax_check">警告を無視する</label>
-<% end %>
-<%= render Cms::SyntaxCheckDetailBoxComponent.new(syntax_checker: @syntax_checker) %>
-
 <dl class="see">
   <dt><%= @model.t :name %><%= @model.tt :name %></dt>
   <dd><%= f.text_field :name %></dd>

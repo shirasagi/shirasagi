@@ -2,9 +2,9 @@ class Cms::SyntaxChecker::InterwordSpaceChecker
   include Cms::SyntaxChecker::Base
 
   # rubocop:disable Lint/UnreachableLoop
-  def check(context, id, idx, raw_html, fragment)
+  def check(context, content)
     chars = []
-    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+    Cms::SyntaxChecker::Base.each_text_node(context.fragment) do |text_node|
       text = text_node.content.strip
       each_match(text) do |_matched_position|
         chars << text
@@ -13,15 +13,10 @@ class Cms::SyntaxChecker::InterwordSpaceChecker
       end
     end
     if chars.present?
-      context.errors << {
-        id: id,
-        idx: idx,
-        code: chars.join(","),
-        ele: raw_html,
-        msg: I18n.t('errors.messages.check_interword_space'),
-        detail: I18n.t('errors.messages.syntax_check_detail.check_interword_space'),
-        collector: self.class.name
-      }
+      code = chars.join(",")
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: content, code: code, checker: self, error: :check_interword_space,
+        corrector: self.class.name)
     end
   end
   # rubocop:enable Lint/UnreachableLoop
@@ -44,6 +39,14 @@ class Cms::SyntaxChecker::InterwordSpaceChecker
     end
 
     context.set_result(ret)
+  end
+
+  def correct2(content, params: nil)
+    text = content.strip
+    each_match(text) do |matched_position|
+      text[matched_position] = Cms::SyntaxChecker::SP
+    end
+    text
   end
 
   private

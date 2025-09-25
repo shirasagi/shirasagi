@@ -22,7 +22,10 @@ Rails.application.routes.draw do
 
   content "image_map" do
     get "/" => redirect { |p, req| "#{req.path}/pages" }, as: :main
-    resources :pages, concerns: [:deletion, :lock, :change_state, :contains_urls]
+    resources :pages, concerns: [:deletion, :lock, :change_state, :contains_urls] do
+      post :check_content, on: :collection
+      post :correct_content, on: :collection
+    end
   end
 
   node "image_map" do

@@ -1,0 +1,12 @@
+<div id="errorMobileChecker" class="errorExplanation">
+  <h2><%= t("cms.mobile_size_check") %></h2>
+  <div class="errorExplanationBody">
+    <% if checker.errors.blank? %>
+      <p><%= t("errors.messages.mobile_size_check_size") %></p>
+    <% else %>
+      <% checker.errors.full_messages.each do |message| %>
+        <p class="error"><%= message %></p>
+      <% end %>
+    <% end %>
+  </div>
+</div>

@@ -1,6 +1,6 @@
 import { Controller } from "@hotwired/stimulus"
 import i18next from 'i18next'
-import {csrfToken, dispatchEvent} from "../../ss/tool"
+import {collectFormData, csrfToken, dispatchEvent} from "../../ss/tool"
 
 function formDataToStringifyJson(formData) {
   const array = [];
@@ -85,19 +85,7 @@ export default class extends Controller {
       return;
     }
 
-    Object.values(CKEDITOR.instances).forEach((editor) => {
-      if (!editor.checkDirty()) {
-        return;
-      }
-      if (editor.elementMode !== CKEDITOR.ELEMENT_MODE_REPLACE) {
-        return;
-      }
-
-      editor.updateElement();
-      editor.resetDirty();
-    });
-
-    const formData = new FormData(this.element);
+    const formData = collectFormData(this.element);
     // 余分なデータを削除
     formData.delete("authenticity_token");
     formData.delete("_method");
