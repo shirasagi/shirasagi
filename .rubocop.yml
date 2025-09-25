@@ -158,6 +158,9 @@ Rails:
 Rails/Output:
   Enabled: false
 
+Rails/StrongParametersExpect:
+  Enabled: false
+
 Style/ArgumentsForwarding:
   Enabled: false
 
