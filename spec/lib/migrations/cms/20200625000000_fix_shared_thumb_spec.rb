@@ -5,8 +5,12 @@ RSpec.describe SS::Migration20200625000000, dbscope: :example do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
   let!(:node) { create :article_node_page, cur_user: user, cur_site: site }
-  let!(:thumb1) { tmp_ss_file(user: user, site: site, contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
-  let!(:thumb2) { tmp_ss_file(user: user, site: site, contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
+  let!(:thumb1) do
+    tmp_ss_file(Cms::TempFile, user: user, site: site, node: node, contents: "#{Rails.root}/spec/fixtures/ss/logo.png")
+  end
+  let!(:thumb2) do
+    tmp_ss_file(Cms::TempFile, user: user, site: site, node: node, contents: "#{Rails.root}/spec/fixtures/ss/logo.png")
+  end
   # page1 and page2 share same thumb
   let!(:page1) { create :article_page, cur_user: user, cur_site: site, cur_node: node, thumb_id: thumb1.id }
   let!(:page2) { create :article_page, cur_user: user, cur_site: site, cur_node: node }
@@ -37,5 +41,15 @@ RSpec.describe SS::Migration20200625000000, dbscope: :example do
 
     page3.reload
     expect(page3.thumb_id).to eq thumb2.id
+
+    SS::File.find(page1.thumb.id).tap do |file|
+      expect(file.model).to eq "article/page"
+    end
+    SS::File.find(page2.thumb.id).tap do |file|
+      expect(file.model).to eq "article/page"
+    end
+    SS::File.find(thumb1.id).tap do |file|
+      expect(file.model).to eq "article/page"
+    end
   end
 end
