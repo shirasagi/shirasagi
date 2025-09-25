@@ -145,8 +145,8 @@ class Gws::Affair::ShiftWork::CalendarController < ApplicationController
       end
     else
       respond_to do |format|
-        format.html { render template: 'shift_record', layout: false, status: :unprocessable_entity }
-        format.json { render json: @cell.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type }
+        format.html { render template: 'shift_record', layout: false, status: :unprocessable_content }
+        format.json { render json: @cell.errors.full_messages, status: :unprocessable_content, content_type: json_content_type }
       end
     end
   end

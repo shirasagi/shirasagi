@@ -45,7 +45,7 @@ class Workflow::Frames::BranchesController < ApplicationController
     service = Workflow::BranchCreationService.new(cur_site: @cur_site, cur_user: @cur_user, item: item)
     result = service.call
     unless result
-      render action: :show, status: :unprocessable_entity and return
+      render action: :show, status: :unprocessable_content and return
     end
 
     item.reload

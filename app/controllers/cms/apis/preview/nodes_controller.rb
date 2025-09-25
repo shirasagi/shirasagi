@@ -22,7 +22,7 @@ class Cms::Apis::Preview::NodesController < ApplicationController
     result = @cur_node.save
 
     if !result
-      render json: @cur_node.errors.full_messages, status: :unprocessable_entity
+      render json: @cur_node.errors.full_messages, status: :unprocessable_content
       return
     end
 
