@@ -63,10 +63,12 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       # 3. 差し替えページを公開する
       visit edit_article_page_path(site: site, cid: article_node, id: branch)
       wait_for_all_ckeditors_ready
-      within "form#item-form" do
-        click_on I18n.t("ss.buttons.publish_save")
-      end
-      wait_for_notice I18n.t("ss.notice.saved")
+      expect do
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.publish_save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+      end.to output(/#{::Regexp.escape(I18n.t("workflow.branch_page"))}/).to_stdout
 
       expect { branch.reload }.to raise_error Mongoid::Errors::DocumentNotFound
       Article::Page.find(article_item.id).tap do |after_page|
