@@ -34,7 +34,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       expect(Article::Page.all.count).to eq 2
       branch = Article::Page.all.where(master_id: article_item.id).first
       expect(branch.released_type).to eq "fixed"
-      expect(branch.released).to be_blank # released_type が fixed の場合、released は master から引き継いでも良さそう
+      expect(branch.released_type).to eq article_item.released_type
+      expect(branch.released).to eq article_item.released
       expect(branch.first_released).to be_blank
 
       # 2. 差し替えページを編集する
