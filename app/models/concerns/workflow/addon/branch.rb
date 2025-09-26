@@ -149,6 +149,12 @@ module Workflow::Addon
 
         self.attributes = attributes
         self.master_id = nil
+        if in_branch.released_type == "fixed"
+          # 複製の際は公開日時はクリアされるのが望ましいかもしれないが、 差し替えページの場合は引き継がれるのが望ましい。
+          # 公開日時種別が「手動の」の場合は特に
+          self.released_type = in_branch.released_type
+          self.released = in_branch.released
+        end
         self.allow_other_user_files if respond_to?(:allow_other_user_files)
       end
       self.save
