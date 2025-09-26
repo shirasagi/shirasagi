@@ -21,7 +21,7 @@ class Cms::Page::GenerateJob < Cms::ApplicationJob
     end
 
     all_segments = site.generate_page_segments
-    unless all_segments.include?(seg)
+    if all_segments.blank? || !all_segments.include?(seg)
       @_segment = nil
       return @_segment
     end
