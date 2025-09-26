@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 describe Cms::Page::GenerateJob, dbscope: :example do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
 
@@ -35,58 +36,159 @@ describe Cms::Page::GenerateJob, dbscope: :example do
   end
 
   describe "#perform without segment" do
+    # このケースの場合、エラーになるのが望ましいんだと思う（が、そうはなっていない）
     before do
       Fs.rm_rf site.path
-      described_class.bind(site_id: site.id).perform_now
+      expect { described_class.bind(site_id: site.id).perform_now }.to output.to_stdout
     end
 
     it do
       expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
       web01_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
       web02_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
       web03_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+
+      expect(SS::Task.all.count).to eq 1
+      SS::Task.all.first.tap do |task|
+        expect(task.site_id).to eq site.id
+        expect(task.name).to eq "cms:generate_pages"
+        expect(task.segment).to be_blank
+        expect(task.state).to eq "completed"
+        expect(task.started.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.closed.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.total_count).to eq 9
+        expect(task.current_count).to eq 9
+      end
     end
   end
 
   describe "#perform with web01" do
     before do
       Fs.rm_rf site.path
-      described_class.bind(site_id: site.id).perform_now(segment: "web01")
+      expect { described_class.bind(site_id: site.id).perform_now(segment: "web01") }.to output.to_stdout
     end
 
     it do
       expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
       web01_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
       web02_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
       web03_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+
+      expect(SS::Task.all.count).to eq 1
+      SS::Task.all.first.tap do |task|
+        expect(task.site_id).to eq site.id
+        expect(task.name).to eq "cms:generate_pages"
+        expect(task.segment).to eq "web01"
+        expect(task.state).to eq "completed"
+        expect(task.started.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.closed.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.total_count).to eq 9
+        expect(task.current_count).to eq 3
+      end
     end
   end
 
   describe "#perform with web02" do
     before do
       Fs.rm_rf site.path
-      described_class.bind(site_id: site.id).perform_now(segment: "web02")
+      expect { described_class.bind(site_id: site.id).perform_now(segment: "web02") }.to output.to_stdout
     end
 
     it do
       expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
       web01_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
       web02_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
       web03_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
+
+      expect(SS::Task.all.count).to eq 1
+      SS::Task.all.first.tap do |task|
+        expect(task.site_id).to eq site.id
+        expect(task.name).to eq "cms:generate_pages"
+        expect(task.segment).to eq "web02"
+        expect(task.state).to eq "completed"
+        expect(task.started.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.closed.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.total_count).to eq 9
+        expect(task.current_count).to eq 3
+      end
     end
   end
 
   describe "#perform with web03" do
     before do
       Fs.rm_rf site.path
-      described_class.bind(site_id: site.id).perform_now(segment: "web03")
+      expect { described_class.bind(site_id: site.id).perform_now(segment: "web03") }.to output.to_stdout
     end
 
     it do
       expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
       web01_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
       web02_expected_path.each { |path| expect(::File.exist?(path)).to be_falsey }
       web03_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+
+      expect(SS::Task.all.count).to eq 1
+      SS::Task.all.first.tap do |task|
+        expect(task.site_id).to eq site.id
+        expect(task.name).to eq "cms:generate_pages"
+        expect(task.segment).to eq "web03"
+        expect(task.state).to eq "completed"
+        expect(task.started.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.closed.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.total_count).to eq 9
+        expect(task.current_count).to eq 3
+      end
+    end
+  end
+
+  describe "#perform with undefined segment" do
+    # このケースの場合、（エラーになるのが望ましいかもしれないが）segment が未指定の場合と同じ動作となる
+    before do
+      Fs.rm_rf site.path
+      expect { described_class.bind(site_id: site.id).perform_now(segment: "undef-#{unique_id}") }.to output.to_stdout
+    end
+
+    it do
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+      end
+
+      web01_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web02_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+      web03_expected_path.each { |path| expect(::File.exist?(path)).to be_truthy }
+
+      expect(SS::Task.all.count).to eq 1
+      SS::Task.all.first.tap do |task|
+        expect(task.site_id).to eq site.id
+        expect(task.name).to eq "cms:generate_pages"
+        expect(task.segment).to be_blank
+        expect(task.state).to eq "completed"
+        expect(task.started.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.closed.in_time_zone).to be_within(30.seconds).of(now)
+        expect(task.total_count).to eq 9
+        expect(task.current_count).to eq 9
+      end
     end
   end
 end
