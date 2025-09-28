@@ -73,6 +73,8 @@ class Inquiry::Agents::Nodes::FormController < ApplicationController
     end
     @to = @to.uniq.compact.sort
     @answer = Inquiry::Answer.new(cur_site: @cur_site, cur_node: @cur_node)
+    @answer.save_mode = 'answer'
+    @answer.section_ids = params.dig(:item, :section_ids)
     @answer.remote_addr = remote_addr
     @answer.user_agent = request.user_agent
     @answer.member = @cur_member

@@ -5,7 +5,7 @@ class Inquiry::Answer
   include Inquiry::Addon::KintoneApp::Answer
   include Cms::Addon::GroupPermission
 
-  attr_accessor :cur_node
+  attr_accessor :cur_node, :save_mode, :section_ids
 
   store_in_default_post
   set_permission_name "inquiry_answers"
@@ -197,6 +197,8 @@ class Inquiry::Answer
       end
     end
     columns.each do |column|
+      next if @save_mode != 'answer'
+      next if section_ids.present? && section_ids[column.id.to_s].try(:size) == 1
       column.validate_data(self, data.select { |d| column.id == d.column_id }.shift, in_reply)
     end
   end

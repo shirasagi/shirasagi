@@ -49,6 +49,7 @@ ja:
         check_box: チェックボックス選択
         upload_file: ファイル投稿
         form_select: フォーム選択
+        section: セクション
       input_confirm:
         disabled: しない
         enabled: する
@@ -90,6 +91,7 @@ ja:
       inquiry/check_box: チェックボックス選択
       inquiry/upload_file: ファイル投稿
       inquiry/form_select: フォーム選択
+      inquiry/section: セクション
 
   modules:
     inquiry: メールフォーム

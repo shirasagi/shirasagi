@@ -1,3 +1,7 @@
+<%= jquery do %>
+  Inquiry_Form.render({ confirm: false, requiredLabel: <%== t('inquiry.required_field').to_json %> });
+<% end %>
+
 <div class="columns">
 <% content = @answer.source_content if @answer %>
 <% if content %>
@@ -7,7 +11,13 @@
   </dl>
 <% end %>
 <% @items.each do |column, data, confirm_data| %>
+  <% if column.input_type != 'section' %>
+    <%= hidden_field_tag "#{f.object_name}[section_ids][#{column.id}][]", @section_id, id: nil %>
+  <% end %>
+
   <%= inquiry_column_tag(column, f: f, confirm: confirm) do %>
+    <%= hidden_field_tag "#{f.object_name}[section_ids][#{column.id}][]", @section_id, id: nil %>
+
     <% if confirm %>
       <% if data.kind_of? Hash %>
         <% data.each do |key, value| %>
@@ -72,6 +82,7 @@
         <% column.select_options.each_with_index do |value, i| %>
           <% opt = { id: "#{f.object_name}_#{column.id}_#{i}" } %>
           <% opt.merge!(column.additional_attr_to_h) %>
+          <% opt.merge!('data-section-id' => column.branch_section_id(i)) %>
           <% checked = (data == value) %>
           <%= label_tag "#{f.object_name}_#{column.id}_#{i}" do %>
             <%= send("#{column.input_type}_tag", "#{f.object_name}[#{column.id}]", value, checked, opt) %><span><%= value %></span>

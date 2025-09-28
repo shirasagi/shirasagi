@@ -13,30 +13,32 @@
 </div>
 
 <% @columns.each do |column| %>
-<div class="main-box">
-  <div class="column" style="overflow: auto; max-height: 200px; border: 1px solid #cccccc;">
-    <table class="index">
-      <thead><tr><th colspan="2"><%= column.name %></th></tr></thead>
-      <tbody>
-        <% if column.input_type =~ /(select|radio_button|check_box)/ %>
-          <% column.select_options.each do |opts| %>
-            <tr>
-              <td><%= opts %></td>
-              <td class="count">
-                <%= @aggregation[{ "column_id" => column.id, "value" => opts }] %>
-                <%= t "ss.units.count" %>
-              </td>
-            </tr>
-          <% end %>
-        <% else %>
-          <% column.answer_data(@answer_data_opts).each do |data| %>
-            <% if data.value.present? %>
-              <tr><td colspan="2"><%= data.value %></td></tr>
+  <% next if column.input_type == 'section' %>
+
+  <div class="main-box">
+    <div class="column" style="overflow: auto; max-height: 200px; border: 1px solid #cccccc;">
+      <table class="index">
+        <thead><tr><th colspan="2"><%= column.name %></th></tr></thead>
+        <tbody>
+          <% if column.input_type =~ /(select|radio_button|check_box)/ %>
+            <% column.select_options.each do |opts| %>
+              <tr>
+                <td><%= opts %></td>
+                <td class="count">
+                  <%= @aggregation[{ "column_id" => column.id, "value" => opts }] %>
+                  <%= t "ss.units.count" %>
+                </td>
+              </tr>
+            <% end %>
+          <% else %>
+            <% column.answer_data(@answer_data_opts).each do |data| %>
+              <% if data.value.present? %>
+                <tr><td colspan="2"><%= data.value %></td></tr>
+              <% end %>
             <% end %>
           <% end %>
-        <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    </div>
   </div>
-</div>
 <% end %>
