@@ -3,14 +3,7 @@
 <% id = value.try(:id) || BSON::ObjectId.new %>
 <% unique_id = id %>
 <% id = "column-value-#{id}" %>
-<%
-  @buttons = []
-  @buttons << :syntax_check if @inplace_syntax_check
-  @buttons << :link_check if @inplace_link_check
-  @buttons << :form_check if @inplace_form_check
 
-  @extra_bodies = []
-%>
 <div id="<%= id %>" class="column-value column-value-<%= column._type.parameterize %> <%= 'column-with-errors' if value.try(:errors).present? %>">
   <div class="column-value-header">
     <div class="column-value-header-group">
