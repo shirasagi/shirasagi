@@ -78,6 +78,11 @@ class Cms::PreviewLink
   end
 
   def cur_site_path?(path)
+    # /fs/
+    if path.start_with?("/fs/")
+      return true
+    end
+
     same_site = site.same_domain_site_from_path(path)
     same_site && (same_site.id == site.id)
   end
