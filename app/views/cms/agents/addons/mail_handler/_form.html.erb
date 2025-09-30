@@ -7,4 +7,9 @@
 
   <dt><%= @model.t :terminate_line %><%= @model.tt :terminate_line %></dt>
   <dd><%= f.text_field :terminate_line %></dd>
+
+  <% if @model.use_mail_body_to_html %>
+    <dt><%= @model.t :auto_link_state %><%= @model.tt :auto_link_state %></dt>
+    <dd><%= f.select :auto_link_state, @item.auto_link_state_options %></dd>
+  <% end %>
 </dl>

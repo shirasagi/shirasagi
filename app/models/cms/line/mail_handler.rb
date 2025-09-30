@@ -2,7 +2,7 @@ class Cms::Line::MailHandler
   include SS::Document
   include SS::Reference::User
   include SS::Reference::Site
-  include Cms::Addon::Line::MailHandler
+  include Cms::Addon::MailHandler
   include Cms::Addon::Line::Message::DeliverCondition
   include Cms::SitePermission
   include Cms::Addon::GroupPermission
