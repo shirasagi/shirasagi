@@ -8,8 +8,9 @@ module Inquiry::FormHelper
       @section_id = "section-#{column.id}"
       return
     end
-    if options[:confirm] && params.dig(:item, :section_ids, column.id.to_s).try(:size) == 1
-      return
+
+    if options[:confirm] && params.dig(:item, :section_ids, column.id.to_s).blank?
+      return if params[:action] == 'confirm'
     end
 
     tag_name = options[:confirm] ? 'dl' : 'fieldset'

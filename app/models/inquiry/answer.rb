@@ -198,7 +198,8 @@ class Inquiry::Answer
     end
     columns.each do |column|
       next if @save_mode != 'answer'
-      next if section_ids.present? && section_ids[column.id.to_s].try(:size) == 1
+      next if section_ids.blank?
+      next if section_ids[column.id.to_s].blank?
       column.validate_data(self, data.select { |d| column.id == d.column_id }.shift, in_reply)
     end
   end

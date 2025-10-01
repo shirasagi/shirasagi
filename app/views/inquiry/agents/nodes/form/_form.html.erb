@@ -11,12 +11,8 @@
   </dl>
 <% end %>
 <% @items.each do |column, data, confirm_data| %>
-  <% if column.input_type != 'section' %>
-    <%= hidden_field_tag "#{f.object_name}[section_ids][#{column.id}][]", @section_id, id: nil %>
-  <% end %>
-
   <%= inquiry_column_tag(column, f: f, confirm: confirm) do %>
-    <%= hidden_field_tag "#{f.object_name}[section_ids][#{column.id}][]", @section_id, id: nil %>
+    <%= hidden_field_tag "#{f.object_name}[section_ids][#{column.id}]", @section_id || 'none', id: nil %>
 
     <% if confirm %>
       <% if data.kind_of? Hash %>

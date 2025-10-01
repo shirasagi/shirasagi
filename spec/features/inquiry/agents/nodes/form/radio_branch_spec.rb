@@ -10,7 +10,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
   let!(:column4_options) { Array.new(3) { |i| "column4-#{i}" } }
 
   let!(:column0) do
-    create :inquiry_column_radio, site: site, node: node, order: 1, select_options: column0_options
+    create :inquiry_column_radio, site: site, node: node, order: 1, select_options: column0_options,
+      name: 'column0'
   end
   let!(:section1) do
     create(:inquiry_column_section, site: site, node: node, order: 10)
@@ -22,7 +23,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
     create(:inquiry_column_section, site: site, node: node, order: 20)
   end
   let!(:column2) do
-    create :inquiry_column_radio, site: site, node: node, order: 21, select_options: column2_options
+    create :inquiry_column_radio, site: site, node: node, order: 21, select_options: column2_options,
+      name: 'column2'
   end
   let!(:section3) do
     create(:inquiry_column_section, site: site, node: node, order: 30)
@@ -34,7 +36,8 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
     create(:inquiry_column_section, site: site, node: node, order: 40)
   end
   let!(:column4) do
-    create :inquiry_column_radio, site: site, node: node, order: 41, select_options: column4_options
+    create :inquiry_column_radio, site: site, node: node, order: 41, select_options: column4_options,
+      name: 'column4'
   end
   let!(:section5) do
     create(:inquiry_column_section, site: site, node: node, order: 50)
