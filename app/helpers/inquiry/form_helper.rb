@@ -9,6 +9,7 @@ module Inquiry::FormHelper
       return
     end
 
+    # 確認画面のみ非表示化 (action: confirm, options: true)
     if options[:confirm] && params.dig(:item, :section_ids, column.id.to_s).blank?
       return if params[:action] == 'confirm'
     end

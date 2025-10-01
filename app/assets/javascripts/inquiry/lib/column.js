@@ -1,3 +1,4 @@
+// できれば app/javascript/controllers/gws/column/radio_controller.js と統合
 function Inquiry_Column_RadioButton(containerClass) {
   this.$el = $(containerClass);
   this.columnIds = {}
