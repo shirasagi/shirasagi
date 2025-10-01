@@ -153,11 +153,11 @@ module SS::Model::Site
     end
 
     def generate_node_segments
-      SS.config.cms.generate_segments["node"][host] rescue nil
+      SS.config.cms.generate_segments["node"][host] rescue SS::EMPTY_ARRAY
     end
 
     def generate_page_segments
-      SS.config.cms.generate_segments["page"][host] rescue nil
+      SS.config.cms.generate_segments["page"][host] rescue SS::EMPTY_ARRAY
     end
 
     private
