@@ -132,7 +132,7 @@ class Workflow::PagesController < ApplicationController
       request_approval
       render json: create_success_response
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
@@ -168,7 +168,7 @@ class Workflow::PagesController < ApplicationController
       request_approval
       render json: create_success_response
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
@@ -236,7 +236,7 @@ class Workflow::PagesController < ApplicationController
     if result
       task.log "succeeded" if task
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
       task.log "failed\n#{@item.errors.full_messages.join("\n")}" if task
       return
     end
@@ -287,7 +287,7 @@ class Workflow::PagesController < ApplicationController
     # 更新履歴が作成されるように変更する
     # @item.skip_history_backup = true if @item.respond_to?(:skip_history_backup)
     if !@item.save
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
       return
     end
 
@@ -325,7 +325,7 @@ class Workflow::PagesController < ApplicationController
     if @item.save
       render json: { notice: t('workflow.notice.request_cancelled') }
     else
-      render json: { workflow_alert: @item.errors.full_messages }, status: :unprocessable_entity
+      render json: { workflow_alert: @item.errors.full_messages }, status: :unprocessable_content
     end
   end
 

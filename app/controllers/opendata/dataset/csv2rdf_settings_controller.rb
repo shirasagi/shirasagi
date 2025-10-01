@@ -93,7 +93,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
             render
           end
         end
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: @item.errors.full_messages, status: :unprocessable_content }
       end
     end
   end
@@ -107,7 +107,7 @@ class Opendata::Dataset::Csv2rdfSettingsController < ApplicationController
     else
       respond_to do |format|
         format.html { render }
-        format.json { render json: @item.errors.full_messages, status: :unprocessable_entity }
+        format.json { render json: @item.errors.full_messages, status: :unprocessable_content }
       end
     end
   end

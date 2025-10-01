@@ -168,7 +168,7 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
     end
     unless service.call
       @item.workflow_state = nil
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
       return
     end
 
@@ -189,7 +189,7 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
     service = Gws::Workflow2::CancelService.new(
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
     unless service.call
-      render template: "show", status: :unprocessable_entity
+      render template: "show", status: :unprocessable_content
       return
     end
 
@@ -210,7 +210,7 @@ class Gws::Workflow2::Frames::ApproversController < ApplicationController
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
     service.attributes = params.require(:item).permit(*Gws::Workflow2::RerouteService::PERMIT_PARAMS)
     unless service.call
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
       return
     end
 
