@@ -8,9 +8,9 @@ module SS
     SS::File.model "ss/user_file", SS::UserFile
     SS::File.model "ss/logo_file", SS::LogoFile
 
-    Liquid::Template.register_filter(SS::LiquidFilters)
-    Liquid::Template.register_tag('ss_pagination', SS::Liquidization::ItemsPagination)
-    Liquid::Template.default_exception_renderer = lambda do |e|
+    Liquid::Environment.default.register_filter(SS::LiquidFilters)
+    Liquid::Environment.default.register_tag('ss_pagination', SS::Liquidization::ItemsPagination)
+    Liquid::Environment.default.exception_renderer = lambda do |e|
       Rails.logger.warn("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
       raise e if !Rails.env.production?
     end
