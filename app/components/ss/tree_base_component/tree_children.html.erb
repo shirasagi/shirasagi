@@ -4,7 +4,7 @@
       <li class="ss-tree-item" role="treeitem">
         <details class="ss-tree-subtree-wrap"<% if child_node.opens %> open<% end %>>
           <summary>
-            <%= link_to tag.span(child_node.name, class: "ss-tree-item-title"), child_node.url, class: "ss-tree-item-link", data: { turbo: false, node_id: child_node.id } %>
+            <%= link_to tag.span(child_node.name, class: "ss-tree-item-title"), child_node.url, class: "ss-tree-item-link", title: child_node.name, data: { turbo: false, node_id: child_node.id } %>
           </summary>
 
           <%= render SS::TreeBaseComponent::TreeChildren.new(component: component, children: child_node.children) %>
@@ -12,7 +12,7 @@
       </li>
     <% else %>
       <li class="ss-tree-item no-children" role="treeitem">
-        <%= link_to tag.span(child_node.name, class: "ss-tree-item-title"), child_node.url, class: "ss-tree-item-link", data: { turbo: false, node_id: child_node.id } %>
+        <%= link_to tag.span(child_node.name, class: "ss-tree-item-title"), child_node.url, class: "ss-tree-item-link", title: child_node.name, data: { turbo: false, node_id: child_node.id } %>
       </li>
     <% end %>
   <% end %>
