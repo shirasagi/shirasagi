@@ -102,7 +102,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./page.html" do
           let(:url) { "./page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -126,8 +126,49 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "page.html" do
           let(:url) { "page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "page.html") }
           let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        # /fs/ and uploader
+        context "/fs/1/_/1.pdf" do
+          let(:url) { "/fs/1/_/1.pdf" }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "fs/1/_/1.pdf") }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "/img/icon.png" do
+          let(:url) { "/img/icon.png" }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "img/icon.png") }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "/sub1/" do
+          let(:url) { "/sub1/" }
+          let(:expanded) { url }
+          let(:external) { true }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "/sub1/page.html" do
+          let(:url) { "/sub1/page.html" }
+          let(:expanded) { url }
+          let(:external) { true }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "/sub1/img/icon.png" do
+          let(:url) { "/sub1/img/icon.png" }
+          let(:expanded) { url }
+          let(:external) { true }
 
           it_behaves_like "expand preview link"
         end
@@ -170,7 +211,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./" do
           let(:url) { "./" }
-          let(:expanded) { cms_preview_path(site: site, path: "node") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -178,7 +219,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./page.html" do
           let(:url) { "./page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "node/page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node/page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -202,7 +243,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "page.html" do
           let(:url) { "page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "node/page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node/page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -246,7 +287,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./" do
           let(:url) { "./" }
-          let(:expanded) { cms_preview_path(site: site, path: "node") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -254,7 +295,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./page.html" do
           let(:url) { "./page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "node/page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node/page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -278,7 +319,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "page.html" do
           let(:url) { "page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "node/page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node/page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -322,7 +363,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./" do
           let(:url) { "./" }
-          let(:expanded) { cms_preview_path(site: site, path: "node") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -330,7 +371,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./page.html" do
           let(:url) { "./page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "node/page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node/page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -354,7 +395,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "page.html" do
           let(:url) { "page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "node/page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node/page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -398,7 +439,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./" do
           let(:url) { "./" }
-          let(:expanded) { cms_preview_path(site: site, path: "node1/node2/node3") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node1/node2/node3") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -406,7 +447,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "./page.html" do
           let(:url) { "./page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "node1/node2/node3/page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node1/node2/node3/page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -414,7 +455,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "../" do
           let(:url) { "../" }
-          let(:expanded) { cms_preview_path(site: site, path: "node1/node2") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node1/node2") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -422,7 +463,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "../../" do
           let(:url) { "../../" }
-          let(:expanded) { cms_preview_path(site: site, path: "node1") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node1") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -430,7 +471,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "page.html" do
           let(:url) { "page.html" }
-          let(:expanded) { cms_preview_path(site: site, path: "node1/node2/node3/page.html") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node1/node2/node3/page.html") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
@@ -545,6 +586,39 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
           let(:url) { "page.html" }
           let(:expanded) { cms_preview_path(site: cur_site, path: "sub1/page.html") }
           let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        # /fs/ and uploader
+        context "/fs/1/_/1.pdf" do
+          let(:url) { "/fs/1/_/1.pdf" }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "fs/1/_/1.pdf") }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "/img/icon.png" do
+          let(:url) { "/img/icon.png" }
+          let(:expanded) { "/img/icon.png" }
+          let(:external) { true }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "/sub1/img/icon.png" do
+          let(:url) { "/sub1/img/icon.png" }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "sub1/img/icon.png") }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "/sub2/img/icon.png" do
+          let(:url) { "/sub2/img/icon.png" }
+          let(:expanded) { "/sub2/img/icon.png" }
+          let(:external) { true }
 
           it_behaves_like "expand preview link"
         end
@@ -772,7 +846,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "href http://{domain}/node/" do
           let(:url) { "http://#{site.domain}/node/" }
-          let(:expanded) { cms_preview_path(site: site, path: "node/") }
+          let(:expanded) { cms_preview_path(site: cur_site, path: "node/") }
           let(:external) { false }
 
           it_behaves_like "expand preview link"
