@@ -12,14 +12,26 @@
     <dl class="see">
       <% if @item.class.readable_setting_included_custom_groups? %>
       <dt><%= @model.t :readable_custom_group_ids %></dt>
-      <dd><%=tryb { br @item.readable_custom_groups.pluck(:name) } %></dd>
+      <dd>
+        <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "10em") do %>
+          <%= tryb { br @item.readable_custom_groups.pluck(:name) } %>
+        <% end %>
+      </dd>
       <% end %>
 
       <dt><%= @model.t :readable_group_ids %></dt>
-      <dd><%=br @item.readable_groups.pluck(:name) %></dd>
+      <dd>
+        <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "10em") do %>
+          <%= br @item.readable_groups.pluck(:name) %>
+        <% end %>
+      </dd>
 
       <dt><%= @model.t :readable_member_ids %></dt>
-      <dd><%=br gws_public_user_long_names(@item.readable_members.pluck(:name)) %></dd>
+      <dd>
+        <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "10em") do %>
+          <%= br gws_public_user_long_names(@item.readable_members.pluck(:name)) %>
+        <% end %>
+      </dd>
     </dl>
   </div>
 </div>
