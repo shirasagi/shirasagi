@@ -9,6 +9,12 @@ class Gws::GroupTreeComponent < ApplicationComponent
     [ site.id, results["count"], results["max"].to_i ]
   end
 
+  NodeItem = Data.define(:id, :name, :full_name, :depth, :updated, :url, :opens, :children) do
+    def children?
+      children.present?
+    end
+  end
+
   class TreeBuilder
     include ActiveModel::Model
 
@@ -62,8 +68,8 @@ class Gws::GroupTreeComponent < ApplicationComponent
 
     def new_node_item(group, depth:)
       opens = depth <= 1
-      SS::TreeBaseComponent::NodeItem.new(
-        id: group.id, name: group.name, depth: depth, updated: group.updated,
+      NodeItem.new(
+        id: group.id, name: group.name, full_name: group.name, depth: depth, updated: group.updated,
         url: item_url_p.call(group), opens: opens, children: [])
     end
 
