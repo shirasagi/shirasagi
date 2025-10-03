@@ -4,10 +4,14 @@ class Gws::Schedule::TreeGroupComponent < ApplicationComponent
 
   attr_accessor :cur_site, :cur_user, :cur_group
 
-  self.cache_key = ->do
+  self.cache_key = -> do
     group_aggregates = all_groups.aggregates(:updated)
     user_aggregates = all_users.aggregates(:updated)
-    [ cur_site.id, group_aggregates["count"], group_aggregates["max"].to_i, user_aggregates["count"], user_aggregates["max"].to_i ]
+    [
+      cur_site.id,
+      group_aggregates["count"], group_aggregates["max"].to_i,
+      user_aggregates["count"], user_aggregates["max"].to_i
+    ]
   end
 
   def root_nodes

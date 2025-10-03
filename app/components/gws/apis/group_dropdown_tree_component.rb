@@ -4,7 +4,7 @@ class Gws::Apis::GroupDropdownTreeComponent < ApplicationComponent
 
   attr_accessor :cur_site
 
-  self.cache_key = ->do
+  self.cache_key = -> do
     group_aggregates = all_groups.aggregates(:updated)
     [ cur_site.id, group_aggregates["count"], group_aggregates["max"].to_i ]
   end
