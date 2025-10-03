@@ -4,15 +4,37 @@
       <li class="ss-tree-item" role="treeitem">
         <details class="ss-tree-subtree-wrap"<% if child_node.opens %> open<% end %>>
           <summary>
-            <%= link_to tag.span(child_node.name, class: "ss-tree-item-title"), child_node.url, class: "ss-tree-item-link", title: child_node.name, data: { turbo: false, node_id: child_node.id } %>
+            <%=
+              element = tag.span(child_node.name, class: "ss-tree-item-title")
+              if child_node.url.present?
+                element = link_to element, child_node.url, class: "ss-tree-item-link", title: child_node.name, data: { turbo: false, node_id: child_node.id }
+              end
+              element
+            %>
+            <%=
+              if shows_updated
+                ss_time_tag child_node.updated, class: "ss-tree-item-updated"
+              end
+            %>
           </summary>
 
-          <%= render SS::TreeBaseComponent::TreeChildren.new(component: component, children: child_node.children) %>
+          <%= render SS::TreeBaseComponent::TreeChildren.new(component: component, children: child_node.children, shows_updated: shows_updated) %>
         </details>
       </li>
     <% else %>
       <li class="ss-tree-item no-children" role="treeitem">
-        <%= link_to tag.span(child_node.name, class: "ss-tree-item-title"), child_node.url, class: "ss-tree-item-link", title: child_node.name, data: { turbo: false, node_id: child_node.id } %>
+        <%=
+          element = tag.span(child_node.name, class: "ss-tree-item-title")
+          if child_node.url.present?
+            element = link_to element, child_node.url, class: "ss-tree-item-link", title: child_node.name, data: { turbo: false, node_id: child_node.id }
+          end
+          element
+        %>
+        <%=
+          if shows_updated
+            ss_time_tag child_node.updated, class: "ss-tree-item-updated"
+          end
+        %>
       </li>
     <% end %>
   <% end %>

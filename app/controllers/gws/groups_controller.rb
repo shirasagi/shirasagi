@@ -45,7 +45,7 @@ class Gws::GroupsController < ApplicationController
     if @search_params
       @items = @items.search(@search_params).page(params[:page]).per(50)
     else
-      @items = @items.tree_sort
+      # @items = @items.tree_sort
     end
   end
 
