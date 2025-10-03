@@ -67,15 +67,19 @@ class Gws::GroupTreeComponent < ApplicationComponent
     end
 
     def new_node_item(group, depth:)
-      opens = depth <= 1
+      opens = depth < 1
       NodeItem.new(
         id: group.id, name: group.name, full_name: group.name, depth: depth, updated: group.updated,
         url: item_url_p.call(group), opens: opens, children: [])
     end
 
     def update_node_item(node, depth:, name:)
-      opens = depth <= 1
-      node.with(depth: depth, name: name, opens: opens)
+      if node.depth == depth && node.name == name
+        node
+      else
+        opens = depth < 1
+        node.with(depth: depth, name: name, opens: opens)
+      end
     end
   end
 
