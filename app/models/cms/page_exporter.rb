@@ -108,7 +108,7 @@ class Cms::PageExporter
       end
     end
     drawer.column :order
-    if respond_to?(:redirect_link_enabled?) && redirect_link_enabled?
+    if criteria.klass.include?(Cms::Addon::RedirectLink) && site.redirect_link_enabled?
       drawer.column :redirect_link
     end
     drawer.column :size
