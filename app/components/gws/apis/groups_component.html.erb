@@ -1,3 +1,22 @@
+<% render_node = proc do |node| %>
+  <tr class="list-item" data-id="<%= node.id %>" data-name="<%= node.name %>" data-depth="<%= node.depth %>">
+    <td class="checkbox only-multi">
+      <input type="checkbox" name="ids[]" value="<%= node.id %>"/>
+    </td>
+    <td class="expandable">
+      <%= link_to node.name, "#", class: "select-item only-multi" %>
+      <%= link_to node.name, "#", class: "select-single-item only-single" %>
+    </td>
+  </tr>
+<% end %>
+
+<% render_nodes = proc do |nodes| %>
+  <% nodes.each do |node| %>
+    <% render_node.call(node) %>
+    <% render_nodes.call(node.children) %>
+  <% end %>
+<% end %>
+
 <%= cache_component do %>
   <div class="search-ui-form">
     <%= form_for :s, url: gws_apis_groups_path(site: cur_site), html: { method: "GET", class: :search } do |f| %>
@@ -17,17 +36,7 @@
     </tr>
     </thead>
     <tbody class="items">
-    <% groups.each do |item| %>
-      <tr class="list-item" data-id="<%= item.id %>" data-name="<%= item.name %>" data-depth="<%= item.depth %>">
-        <td class="checkbox only-multi">
-          <input type="checkbox" name="ids[]" value="<%= item.id %>"/>
-        </td>
-        <td class="expandable">
-          <%= link_to item.trailing_name, "#", class: "select-item only-multi" %>
-          <%= link_to item.trailing_name, "#", class: "select-single-item only-single" %>
-        </td>
-      </tr>
-    <% end %>
+    <% render_nodes.call(root_nodes) %>
     </tbody>
   </table>
 
