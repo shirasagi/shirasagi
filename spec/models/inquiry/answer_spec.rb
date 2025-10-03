@@ -24,6 +24,18 @@ describe Inquiry::Answer, dbscope: :example do
   let(:user_agent) { unique_id }
   subject { Inquiry::Answer.new(cur_site: site, cur_node: node, remote_addr: remote_addr, user_agent: user_agent) }
 
+  before do
+    # enable validation
+    subject.save_mode = 'answer'
+    subject.section_ids = {
+      name_column.id.to_s => 'none',
+      email_column.id.to_s => 'none',
+      radio_column.id.to_s => 'none',
+      select_column.id.to_s => 'none',
+      check_column.id.to_s => 'none',
+    }
+  end
+
   describe "create answer" do
     let(:name) { unique_id }
     let(:email) { "#{unique_id}@example.jp" }

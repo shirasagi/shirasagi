@@ -7,6 +7,8 @@
 <%= sanitize(@node.reply_content_static.presence || I18n.t("inquiry.default_reply_content_static"), tags: []) %>
 <% else %>
 <% @answer.data.each do |data| %>
+<% next if data.column.input_type == 'section' %>
+<% next if data.value.blank? %>
 <%= "- #{sanitize(data.column.name, tags: [])}" %>
 <%= convert_to_lines(sanitize(data.value.to_s, tags: [])) %>
 <%= "" %>

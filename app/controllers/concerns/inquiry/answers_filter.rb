@@ -21,7 +21,7 @@ module Inquiry::AnswersFilter
 
     columns = (@cur_inquiry_form || @cur_node).becomes_with_route("inquiry/form").columns.order_by(order: 1).to_a
     headers = %w(id state comment).map { |key| @model.t(key) }
-    headers += columns.map(&:name)
+    headers += columns.delete_if { |c| c.input_type == 'section' }.map(&:name)
     headers += %w(source_url source_name inquiry_page_url inquiry_page_name created updated).map { |key| @model.t(key) }
     csv = I18n.with_locale(I18n.default_locale) do
       CSV.generate do |data|
@@ -40,6 +40,7 @@ module Inquiry::AnswersFilter
           row << (item.label :state)
           row << item.comment
           columns.each do |column|
+            next if column.input_type == 'section'
             row << values[column.id]
           end
           row << item.source_full_url

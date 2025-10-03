@@ -18,15 +18,24 @@
     <div class="gws-column-item-toolbar-list" data-controller="gws--column--item-toolbar">
       <div class="gws-column-item-toolbar-item-group">
         <div class="gws-column-item-toolbar-item gws-column-item-edit">
-          <%= link_to edit_inquiry_frames_column_path(id: item, ref: ref), class: "btn", title: I18n.t("ss.links.edit"), data: { turbo: true } do %>
+          <%= link_to edit_inquiry_frames_column_path(id: item, ref: ref), class: "btn", title: t("ss.links.edit"), data: { turbo: true } do %>
             <%= md_icons.outlined "edit", size: 15, style: "vertical-align: -3px" %>
           <% end %>
         </div>
-        <div class="gws-column-item-toolbar-item gws-column-item-detail">
-          <%= button_tag name: "detail", type: :button, class: "btn btn-gws-column-item-detail", title: t("gws/column.links.edit_in_detail"), data: { ref: edit_inquiry_apis_column_path(form_id: item.form, id: item, ref: ref) } do %>
-            <%= md_icons.outlined "open_in_new", size: 15, style: "vertical-align: -3px" %>
-          <% end %>
-        </div>
+        <% if item.input_type != 'section'%>
+          <div class="gws-column-item-toolbar-item gws-column-item-detail">
+            <%= button_tag name: "detail", type: :button, class: "btn btn-gws-column-item-detail", title: t("gws/column.links.edit_in_detail"), data: { ref: edit_inquiry_apis_column_path(form_id: item.form, id: item, ref: ref) } do %>
+              <%= md_icons.outlined "open_in_new", size: 15, style: "vertical-align: -3px" %>
+            <% end %>
+          </div>
+        <% end %>
+        <% if item.input_type == 'radio_button'%>
+          <div class="gws-column-item-toolbar-item gws-column-item-edit">
+            <%= link_to edit_inquiry_frames_column_path(id: item, ref: ref, form: 'branch'), class: "btn", title: t("gws/column.links.edit_conditional_branch"), data: { turbo: true } do %>
+              <span class="material-icons-outlined md-16" style="vertical-align: -3px">format_list_bulleted</span>
+            <% end %>
+          </div>
+        <% end %>
       </div>
       <div class="gws-column-item-toolbar-item-group">
         <div class="gws-column-item-toolbar-item gws-column-item-delete">

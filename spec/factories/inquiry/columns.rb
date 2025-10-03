@@ -154,4 +154,10 @@ FactoryBot.define do
     date_inputter { "picker" }
     order { 110 }
   end
+
+  factory :inquiry_column_section, class: Inquiry::Column do
+    name { "セクション" }
+    input_type { "section" }
+    order { 110 }
+  end
 end
