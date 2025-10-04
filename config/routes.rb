@@ -24,7 +24,7 @@ class ActionDispatch::Routing::Mapper
   def content(ns, **opts, &block)
     name = opts[:name] || ns.tr("/", "_")
     mod  = opts[:module] || ns
-    namespace(name, path: ".s:site/#{ns}:cid", module: mod, cid: /\w+/, &block)
+    namespace(name, path: ".s:site/#{ns}-:cid", module: mod, cid: /\d+/, &block)
   end
 
   def node(ns, &block)
@@ -48,6 +48,9 @@ end
 
 Rails.application.routes.draw do
   SS::Initializer
+
+  # old path (redirect_to_new_path)
+  get ".s:site/:name:cid/*path" => "cms/contents#redirect_to_new_path", name: /[a-z]+/, cid: /\d+/
 
   namespace "sns", path: ".mypage" do
     get   "/"      => "mypage#index", as: :mypage

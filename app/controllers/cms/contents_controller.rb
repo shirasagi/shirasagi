@@ -11,6 +11,15 @@ class Cms::ContentsController < ApplicationController
 
   public
 
+  # 削除予定
+  # get ".s:site/:name:cid/*path" => "cms/contents#redirect_to_new_path", name: /[a-z]+/, cid: /\d+/
+  def redirect_to_new_path
+    query_string = request.query_string
+    url = request.path.sub(/\/([a-z]+)(\d+)(\/|$)/, '/\\1-\\2/') + (query_string.present? ? "?#{query_string}" : '')
+    raise '404' if url.include?(request.path)
+    redirect_to url
+  end
+
   def index
     @sys_notices = Sys::Notice.and_public.cms_admin_notice.reorder(notice_severity: 1, released: -1).page(1).per(5)
     @cms_notices = Cms::Notice.site(@cur_site).and_public.target_to(@cur_user).reorder(notice_severity: 1, released: -1).page(1).per(5)
