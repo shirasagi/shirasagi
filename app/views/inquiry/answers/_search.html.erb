@@ -12,7 +12,7 @@
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <% if @cur_user.cms_role_permit_any?(@cur_site, "read_other_inquiry_answers") %>
-      <%= select_tag("s[group]", options_for_select(@groups.to_options, @group.try(:id)), include_blank: t("inquiry.group")) %>
+      <%= select_tag("s[group]", render(Cms::OptionsForSelectGroupComponent.new(cur_site: @cur_site, selected: @group.try(:id))), include_blank: t("inquiry.group")) %>
     <% end %>
     <span style="margin-right: 10px;">
       <%= f.select :year, @years, include_blank: true %>

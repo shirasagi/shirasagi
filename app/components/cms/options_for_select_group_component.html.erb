@@ -1,0 +1,22 @@
+<% render_node = proc do |node| %>
+  <%
+    if node.depth == 0
+      label = tag.span(node.name)
+    elsif node.depth == 1
+      label = tag.span("+----#{node.name}")
+    else
+      label = "#{"&nbsp;" * 8 * (node.depth - 2)}#{tag.span("+----#{node.name}")}".html_safe
+    end
+  %>
+
+  <%= tag.option label, value: node.id, selected: selected == node.id, aria: { label: node.full_name } %>
+<% end %>
+
+<% render_nodes = proc do |nodes| %>
+  <% nodes.each do |node| %>
+    <% render_node.call(node) %>
+    <% render_nodes.call(node.children) %>
+  <% end %>
+<% end %>
+
+<% render_nodes.call(root_nodes) %>
