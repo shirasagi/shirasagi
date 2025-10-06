@@ -3,11 +3,8 @@
 </div>
 
 <div class="main-box">
-  <% if @search_params.blank? %>
-    <%=
-      component = Gws::GroupTreeComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, state: params.dig(:s, :state).to_s.presence)
-      render component
-    %>
+  <% if @component %>
+    <%= render @component %>
   <% else %>
     <table class="index groups">
       <thead>
