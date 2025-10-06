@@ -6,7 +6,7 @@ class Cms::GroupTreeComponent < ApplicationComponent
 
   self.cache_key = -> do
     results = items.aggregates(:updated)
-    [ site.id, results["count"], results["max"].to_i ]
+    [ cur_site.id, results["count"], results["max"].to_i ]
   end
 
   def root_nodes
@@ -26,6 +26,6 @@ class Cms::GroupTreeComponent < ApplicationComponent
   end
 
   def item_url(group)
-    gws_group_path(site: cur_site, id: group)
+    cms_group_path(site: cur_site, id: group)
   end
 end
