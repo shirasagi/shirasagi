@@ -32,7 +32,7 @@ class Gws::GroupsController < ApplicationController
   public
 
   def index
-    # 修正したら app/controllers/cms/groups_controller.rb も同じように修正すべし
+    # 修正したら app/controllers/cms/groups_controller.rb など、同じような個所が何か所かあるので同じように修正すべし
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
     @search_params = params[:s]

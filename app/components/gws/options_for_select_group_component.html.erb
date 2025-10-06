@@ -9,7 +9,7 @@
     end
   %>
 
-  <%= tag.option label, value: node.id, selected: selected == node.id, aria: { label: node.full_name } %>
+  <%= tag.option label, value: node.id, aria: { label: node.full_name } %>
 <% end %>
 
 <% render_nodes = proc do |nodes| %>

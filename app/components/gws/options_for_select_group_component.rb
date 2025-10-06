@@ -1,4 +1,4 @@
-class Cms::OptionsForSelectGroupComponent < ApplicationComponent
+class Gws::OptionsForSelectGroupComponent < ApplicationComponent
   include ActiveModel::Model
   include SS::CacheableComponent
 
@@ -17,7 +17,7 @@ class Cms::OptionsForSelectGroupComponent < ApplicationComponent
 
   def items
     @items ||= begin
-      criteria = Cms::Group.unscoped.site(cur_site)
+      criteria = Gws::Group.unscoped.site(cur_site)
       criteria = criteria.active
       criteria = criteria.reorder(order: 1, id: 1)
       criteria

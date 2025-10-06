@@ -1,8 +1,8 @@
-class Cms::OptionsForSelectGroupComponent < ApplicationComponent
+class Gws::Portal::GroupTreeComponent < ApplicationComponent
   include ActiveModel::Model
   include SS::CacheableComponent
 
-  attr_accessor :cur_site, :selected
+  attr_accessor :cur_site, :cur_user, :cur_group, :state
 
   self.cache_key = -> do
     results = items.aggregates(:updated)
@@ -17,14 +17,15 @@ class Cms::OptionsForSelectGroupComponent < ApplicationComponent
 
   def items
     @items ||= begin
-      criteria = Cms::Group.unscoped.site(cur_site)
-      criteria = criteria.active
+      criteria = Gws::Group.site(cur_site)
+      criteria = criteria.state(state)
+      # criteria = criteria.allow(:read, cur_user, site: cur_site)
       criteria = criteria.reorder(order: 1, id: 1)
       criteria
     end
   end
 
-  def item_url(_group)
-    nil
+  def item_url(group)
+    gws_portal_group_path(site: cur_site, group: group)
   end
 end

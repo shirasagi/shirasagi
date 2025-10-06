@@ -30,8 +30,6 @@ class Gws::Portal::Setting::UsersController < ApplicationController
   def index
     raise "403" unless Gws::Portal::UserSetting.allowed?(:read, @cur_user, site: @cur_site, only: :other)
 
-    @groups = @cur_site.descendants.active.tree_sort(root_name: @cur_site.name)
-
     @items = @model.site(@cur_site).
       state(params.dig(:s, :state)).
       in(group_ids: group_ids).
