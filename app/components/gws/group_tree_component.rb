@@ -6,7 +6,7 @@ class Gws::GroupTreeComponent < ApplicationComponent
 
   self.cache_key = -> do
     results = items.aggregates(:updated)
-    [ site.id, results["count"], results["max"].to_i ]
+    [ cur_site.id, results["count"], results["max"].to_i ]
   end
 
   NodeItem = Data.define(:id, :name, :full_name, :depth, :updated, :url, :opens, :children) do
