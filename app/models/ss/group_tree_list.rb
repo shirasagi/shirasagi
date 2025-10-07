@@ -14,7 +14,7 @@ class SS::GroupTreeList
     def build(model, options)
       items = model.is_a?(Array) ? model : model.all.to_a
 
-      root_items = Gws::GroupTreeComponent::TreeBuilder.new(items: items, item_url_p: ->(_group){ nil }).call
+      root_items = Gws::GroupTreeComponent::TreeBuilder.new(items: items, item_url_p: ->(_group){}).call
       root_name = options[:root_name].presence
       root_name = /^#{::Regexp.escape(root_name)}\// if root_name
 
@@ -49,48 +49,8 @@ class SS::GroupTreeList
     end
 
     def compare_orders(lhs, rhs)
-      # lhs_item, lhs_parts, lhs_orders, lhs_ids = lhs
-      lhs_item = lhs.original_item
-      lhs_parts = lhs_item.name.split("/")
-      lhs_orders = [ lhs.order || 0 ]
-      lhs_ids = [ lhs.id ]
-      lhs_parent = lhs.parent
-      while lhs_parent
-        lhs_orders << (lhs_parent.order || 0)
-        lhs_ids << lhs_parent.id
-        lhs_parent = lhs_parent.parent
-      end
-      lhs_orders.reverse!
-      lhs_ids.reverse!
-      if lhs_orders.length < lhs_parts.length
-        missing_count = lhs_parts.length - lhs_orders.length
-        lhs_orders.prepend(*Array.new(missing_count) { MAX_ORDER })
-      end
-      if lhs_ids.length < lhs_parts.length
-        missing_count = lhs_parts.length - lhs_ids.length
-        lhs_ids.prepend(*Array.new(missing_count) { MAX_ORDER })
-      end
-
-      rhs_item = rhs.original_item
-      rhs_parts = rhs_item.name.split("/")
-      rhs_orders = [ rhs.order ]
-      rhs_ids = [ rhs.id ]
-      rhs_parent = rhs.parent
-      while rhs_parent
-        rhs_orders << (rhs_parent.order || 0)
-        rhs_ids << rhs_parent.id
-        rhs_parent = rhs_parent.parent
-      end
-      rhs_orders.reverse!
-      rhs_ids.reverse!
-      if rhs_orders.length < rhs_parts.length
-        missing_count = rhs_parts.length - rhs_orders.length
-        rhs_orders.prepend(*Array.new(missing_count) { MAX_ORDER })
-      end
-      if rhs_ids.length < rhs_parts.length
-        missing_count = rhs_parts.length - rhs_ids.length
-        rhs_ids.prepend(*Array.new(missing_count) { MAX_ORDER })
-      end
+      lhs_item, lhs_parts, lhs_orders, lhs_ids = decompose_node(lhs)
+      rhs_item, rhs_parts, rhs_orders, rhs_ids = decompose_node(rhs)
 
       d = 0
       max = lhs_orders.length >= rhs_orders.length ? lhs_orders.length : rhs_orders.length
@@ -111,6 +71,31 @@ class SS::GroupTreeList
 
       d = lhs_item.id <=> rhs_item.id if d == 0
       d
+    end
+
+    def decompose_node(node)
+      item = node.original_item
+      parts = item.name.split("/")
+      orders = [ node.order || 0 ]
+      ids = [ node.id ]
+      parent = node.parent
+      while parent
+        orders << (parent.order || 0)
+        ids << parent.id
+        parent = parent.parent
+      end
+      orders.reverse!
+      ids.reverse!
+      if orders.length < parts.length
+        missing_count = parts.length - orders.length
+        orders.prepend(*Array.new(missing_count) { MAX_ORDER })
+      end
+      if ids.length < parts.length
+        missing_count = parts.length - ids.length
+        ids.prepend(*Array.new(missing_count) { MAX_ORDER })
+      end
+
+      [ item, parts, orders, ids ]
     end
   end
 
