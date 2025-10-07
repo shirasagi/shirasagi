@@ -50,7 +50,9 @@ class Gws::Tabular::Space
 
       search_fields = I18n.available_locales.map { |lang| "i18n_name.#{lang}" }
       search_fields += I18n.available_locales.map { |lang| "i18n_description.#{lang}" }
-      search_fields.append "memo"
+      if params[:keyword_gws]
+        search_fields.append "memo"
+      end
       all.keyword_in(params[:keyword], *search_fields)
     end
 
