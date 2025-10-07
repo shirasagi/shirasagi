@@ -15,7 +15,7 @@ class Gws::Tabular::SpacesController < ApplicationController
       criteria = criteria.and_public
       criteria = criteria.without_deleted
       criteria = criteria.readable(@cur_user, site: @cur_site)
-      criteria.only(:id, :site_id, :i18n_name, :order, :updated)
+      criteria.only(:id, :site_id, :i18n_name, :i18n_description, :order, :updated)
     end
   end
 

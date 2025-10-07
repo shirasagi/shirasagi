@@ -13,6 +13,7 @@ class Gws::Tabular::Space
   permission_include_custom_groups
 
   field :i18n_name, type: String, localize: true
+  field :i18n_description, type: String, localize: true
   field :state, type: String, default: 'closed'
   field :order, type: Integer, default: 0
   belongs_to_file :icon
@@ -20,9 +21,12 @@ class Gws::Tabular::Space
 
   alias name i18n_name
   alias name= i18n_name=
+  alias description i18n_description
+  alias description= i18n_description=
 
   permit_params :name, :state, :order, :memo
   permit_params :i18n_name, i18n_name_translations: I18n.available_locales
+  permit_params :i18n_description, i18n_description_translations: I18n.available_locales
 
   validate :validate_i18n_name
   validates :state, presence: true, inclusion: { in: %w(public closed), allow_blank: true }
@@ -45,6 +49,7 @@ class Gws::Tabular::Space
       return all if params[:keyword].blank?
 
       search_fields = I18n.available_locales.map { |lang| "i18n_name.#{lang}" }
+      search_fields += I18n.available_locales.map { |lang| "i18n_description.#{lang}" }
       search_fields.append "memo"
       all.keyword_in(params[:keyword], *search_fields)
     end

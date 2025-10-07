@@ -25,7 +25,9 @@
     %>
   </span>
   <span class="state"><%= item.state_label %></span>
-  <span class="order"><%= item.order %></span>
+  <% if item.order %>
+    <span class="order"><%= item.order %></span>
+  <% end %>
 <% end %>
 
 <% @index_extra = proc do |item| %>
