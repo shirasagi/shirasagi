@@ -33,7 +33,7 @@ module Gws::Notice::FoldersTreeComponent::Base
         url: item_url_p.call(group), opens: opens, children: [])
     end
 
-    def update_node_item(node, depth:, name:)
+    def update_node_item(node, depth:, name:, **_optional_kw_args)
       if node.depth == depth && node.name == name
         node
       else
