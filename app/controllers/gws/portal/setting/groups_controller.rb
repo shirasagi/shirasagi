@@ -42,7 +42,8 @@ class Gws::Portal::Setting::GroupsController < ApplicationController
       @component = nil
     else
       @items = nil
-      @component = Gws::Portal::GroupTreeComponent.new(cur_site: @cur_site)
+      @component = Gws::Portal::GroupTreeComponent.new(
+        cur_site: @cur_site, cur_user: @cur_user, cur_group: @cur_group, state: state)
     end
   end
 end
