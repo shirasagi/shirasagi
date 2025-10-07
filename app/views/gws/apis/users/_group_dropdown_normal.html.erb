@@ -1,1 +1,5 @@
-<%= select_tag "s[group]", render(Gws::OptionsForSelectGroupComponent.new(cur_site: @cur_site, selected: @group.try(:id) || @cur_site.id)) %>
+<%=
+  options_component = Gws::OptionsForSelectGroupComponent.new(cur_site: @cur_site)
+  options = render(options_component)
+  select_tag "s[group]", options, disabled: true, aria: { busy: true }, data: { controller: "ss--option-selector", selected: @group.try(:id) || @cur_site.id }
+%>

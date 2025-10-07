@@ -2,7 +2,7 @@ class Gws::OptionsForSelectGroupComponent < ApplicationComponent
   include ActiveModel::Model
   include SS::CacheableComponent
 
-  attr_accessor :cur_site, :selected
+  attr_accessor :cur_site
 
   self.cache_key = -> do
     results = items.aggregates(:updated)

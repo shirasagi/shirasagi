@@ -19,8 +19,6 @@
   <% end %>
 <% end %>
 
-<div data-controller="ss--option-selector" data-current-select="<%= selected %>">
-  <%= cache_component do %>
-    <% render_nodes.call(root_nodes) %>
-  <% end %>
-</div>
+<%= cache_component do %>
+  <% render_nodes.call(root_nodes) %>
+<% end %>
