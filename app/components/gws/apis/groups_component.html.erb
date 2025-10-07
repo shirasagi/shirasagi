@@ -1,5 +1,5 @@
 <% render_node = proc do |node| %>
-  <tr class="list-item" data-id="<%= node.id %>" data-name="<%= node.full_name %>" data-depth="<%= node.depth %>">
+  <tr class="list-item" data-id="<%= node.id %>" data-name="<%= node.original_item.name %>" data-depth="<%= node.depth %>">
     <td class="checkbox only-multi">
       <input type="checkbox" name="ids[]" value="<%= node.id %>"/>
     </td>

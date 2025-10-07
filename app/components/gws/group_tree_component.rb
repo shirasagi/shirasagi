@@ -9,7 +9,11 @@ class Gws::GroupTreeComponent < ApplicationComponent
     [ cur_site.id, results["count"], results["max"].to_i ]
   end
 
-  NodeItem = Data.define(:id, :name, :full_name, :depth, :updated, :url, :opens, :children) do
+  NodeItem = Data.define(:original_item, :name, :depth, :url, :opens, :parent, :children) do
+    extend Forwardable
+
+    delegate %i[id order updated] => :original_item
+
     def children?
       children.present?
     end
@@ -48,7 +52,7 @@ class Gws::GroupTreeComponent < ApplicationComponent
           split_pos -= 1
           next unless parent_node
 
-          node = update_node_item(node, depth: split_pos + 1, name: base_name)
+          node = update_node_item(node, depth: split_pos + 1, name: base_name, parent: parent_node)
           name_node_map[group.name] = node
           parent_node.children << node
           found = true
@@ -58,7 +62,7 @@ class Gws::GroupTreeComponent < ApplicationComponent
 
         next if found
 
-        node = update_node_item(node, depth: 0, name: group.name)
+        node = update_node_item(node, depth: 0, name: group.name, parent: nil)
         name_node_map[group.name] = node
         root_nodes << node
       end
@@ -68,17 +72,17 @@ class Gws::GroupTreeComponent < ApplicationComponent
 
     def new_node_item(group, depth:)
       opens = depth < 1
-      NodeItem.new(
-        id: group.id, name: group.name, full_name: group.name, depth: depth, updated: group.updated,
-        url: item_url_p.call(group), opens: opens, children: [])
+      Gws::GroupTreeComponent::NodeItem.new(
+        original_item: group, name: group.name, depth: depth,
+        url: item_url_p.call(group), opens: opens, parent: nil, children: [])
     end
 
-    def update_node_item(node, depth:, name:)
+    def update_node_item(node, depth:, name:, parent:)
       if node.depth == depth && node.name == name
         node
       else
         opens = depth < 1
-        node.with(depth: depth, name: name, opens: opens)
+        node.with(name: name, depth: depth, parent: parent, opens: opens)
       end
     end
   end
