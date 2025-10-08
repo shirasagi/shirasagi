@@ -13,18 +13,20 @@
   <% end %>
 <% end %>
 
-<dt><%= t "cms.group" %></dt>
-<dd>
-  <button class="dropdown btn" type="button">
-    <span class="current-group"></span>
-    <span class="caret">&#x25BC;</span>
-  </button>
-  <%= hidden_field_tag("s[group]", nil) %>
-  <div class="dropdown-container">
-    <table class="index groups">
-      <tbody>
-      <% render_nodes.call(root_nodes) %>
-      </tbody>
-    </table>
-  </div>
-</dd>
+<%= cache_component do %>
+  <dt><%= t "cms.group" %></dt>
+  <dd>
+    <button class="dropdown btn" type="button">
+      <span class="current-group"></span>
+      <span class="caret">&#x25BC;</span>
+    </button>
+    <%= hidden_field_tag("s[group]", nil) %>
+    <div class="dropdown-container">
+      <table class="index groups">
+        <tbody>
+        <% render_nodes.call(root_nodes) %>
+        </tbody>
+      </table>
+    </div>
+  </dd>
+<% end %>
