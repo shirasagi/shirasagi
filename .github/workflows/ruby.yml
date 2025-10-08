@@ -245,14 +245,8 @@ jobs:
           comment_selector='.user.login=="github-actions[bot]" and ((.body | startswith("## 🚨 CI Test Failures Summary (Unified)")) or (.body | startswith("## ✅ CI Test Status (Unified)")))'
           existing_id=$(gh api repos/${repo}/issues/${pr_number}/comments --paginate --jq "[.[] | select(${comment_selector})] | last | .id // empty")
 
-          if [ "${STATUS}" = "failure" ]; then
-            if [ -n "$existing_id" ]; then
-              gh api repos/${repo}/issues/comments/${existing_id} -X PATCH -F body=@"${COMMENT_FILE}"
-            else
-              gh pr comment ${pr_number} --body-file "${COMMENT_FILE}"
-            fi
+          if [ -n "$existing_id" ]; then
+            gh api repos/${repo}/issues/comments/${existing_id} -X PATCH -F body=@"${COMMENT_FILE}"
           else
-            if [ -n "$existing_id" ]; then
-              gh api repos/${repo}/issues/comments/${existing_id} -X PATCH -F body=@"${COMMENT_FILE}"
-            fi
+            gh pr comment ${pr_number} --body-file "${COMMENT_FILE}"
           fi
