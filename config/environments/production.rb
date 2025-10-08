@@ -9,6 +9,7 @@ Rails.application.configure do
 
   # Eager load code on boot for better performance and memory savings (ignored by Rake tasks).
   config.eager_load = true
+  config.rake_eager_load = true
 
   # Don't include all helpers
   # include_all_helpers が true の場合、"Cms::ListHelper#render_page_list" ではなく
