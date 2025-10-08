@@ -6,12 +6,24 @@
 <dl class="see mod-gws-owner_permission">
   <% if @item.class.permission_included_custom_groups? %>
   <dt><%= @model.t :custom_group_ids %></dt>
-  <dd><%=tryb { br @item.custom_groups.pluck(:name) } %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "10em") do %>
+      <%= tryb { br @item.custom_groups.pluck(:name) } %>
+    <% end %>
+  </dd>
   <% end %>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%=br @item.groups.pluck(:name) %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "10em") do %>
+      <%= br @item.groups.pluck(:name) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :user_ids %></dt>
-  <dd><%=br gws_public_user_long_names(@item.users.pluck(:name)) %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "10em") do %>
+      <%= br gws_public_user_long_names(@item.users.pluck(:name)) %>
+    <% end %>
+  </dd>
 </dl>

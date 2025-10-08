@@ -14,22 +14,24 @@
             <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
           </dd>
           <dd>
-            <table class="index ajax-selected">
-              <thead>
-                <tr>
-                  <th class="name"><%= t("mongoid.models.gws/user") %></th>
-                  <th></th>
-                </tr>
-              </thead>
-              <tbody>
-                <% @users.each do |user| %>
-                  <tr data-id="<%= user.id %>">
-                    <td><%= f.hidden_field "user_ids[]", value: user.id, id: nil %> <%= user.name %></td>
-                    <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+              <table class="index ajax-selected">
+                <thead>
+                  <tr>
+                    <th class="name"><%= t("mongoid.models.gws/user") %></th>
+                    <th></th>
                   </tr>
-                <% end %>
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  <% @users.each do |user| %>
+                    <tr data-id="<%= user.id %>">
+                      <td><%= f.hidden_field "user_ids[]", value: user.id, id: nil %> <%= user.name %></td>
+                      <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+                    </tr>
+                  <% end %>
+                </tbody>
+              </table>
+            <% end %>
           </dd>
         </dl>
         <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />

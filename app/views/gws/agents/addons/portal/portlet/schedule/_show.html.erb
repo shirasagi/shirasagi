@@ -1,5 +1,9 @@
 <dl class="see">
   <dt><%= @item.t :schedule_member_ids %></dt>
   <dd><%= @item.label(:schedule_member_mode) || t("gws/schedule.options.member_mode.default") %></dd>
-  <dd><%= br gws_public_user_long_names(@item.find_schedule_members(@portal).map(&:long_name)) %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= br gws_public_user_long_names(@item.find_schedule_members(@portal).map(&:long_name)) %>
+    <% end %>
+  </dd>
 </dl>

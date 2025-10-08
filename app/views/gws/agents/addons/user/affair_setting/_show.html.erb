@@ -6,8 +6,16 @@
   <dd><%= @item.staff_address_uid %></dd>
 
   <dt><%= @model.t :gws_superior_group_ids %></dt>
-  <dd><%=br @item.gws_superior_groups.pluck(:name) %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= br @item.gws_superior_groups.pluck(:name) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :gws_superior_user_ids %></dt>
-  <dd><%=br @item.gws_superior_users.map { |item| item.long_name } %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= br @item.gws_superior_users.map { |item| item.long_name } %>
+    <% end %>
+  </dd>
 </dl>

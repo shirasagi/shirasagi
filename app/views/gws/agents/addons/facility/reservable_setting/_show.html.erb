@@ -8,9 +8,17 @@
 <div class="gws-addon-facility-reservable-setting">
   <dl class="see">
     <dt><%= @model.t :reservable_group_ids %></dt>
-    <dd><%=br @item.reservable_group_names %></dd>
+    <dd>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <%= br @item.reservable_group_names %>
+      <% end %>
+    </dd>
 
     <dt><%= @model.t :reservable_member_ids %></dt>
-    <dd><%=br @item.reservable_member_names %></dd>
+    <dd>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <%= br @item.reservable_member_names %>
+      <% end %>
+    </dd>
   </dl>
 </div>

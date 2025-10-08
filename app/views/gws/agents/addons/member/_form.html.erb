@@ -13,17 +13,19 @@
       <%= link_to t("gws.apis.custom_groups.index"), gws_apis_custom_groups_path, class: "btn ajax-box" %>
     </dd>
     <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-        <% @item.member_custom_groups.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "member_custom_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-        <% end %>
-        </tbody>
-      </table>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Gws::CustomGroup.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+          <% @item.member_custom_groups.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "member_custom_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
     </dd>
   </dl>
   <% end %>
@@ -37,22 +39,24 @@
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
     </dd>
     <dd>
-      <table class="index ajax-selected">
-        <thead>
-        <tr>
-          <th class="name"><%= Gws::Group.t :name %></th>
-          <th class="deselect"></th>
-        </tr>
-        </thead>
-        <tbody>
-        <% @item.member_groups.active.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "member_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <table class="index ajax-selected">
+          <thead>
+          <tr>
+            <th class="name"><%= Gws::Group.t :name %></th>
+            <th class="deselect"></th>
           </tr>
-        <% end %>
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+          <% @item.member_groups.active.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "member_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+          </tbody>
+        </table>
+      <% end %>
     </dd>
   </dl>
 
@@ -66,17 +70,19 @@
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>
     <dd>
-      <table class="index ajax-selected <%= 'sortable-index' if @item.class.keep_members_order? %>">
-        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-          <% @item.sorted_members.each do |user| %>
-          <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "member_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <table class="index ajax-selected <%= 'sortable-index' if @item.class.keep_members_order? %>">
+          <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% @item.sorted_members.each do |user| %>
+            <tr data-id="<%= user.id %>">
+              <td><%= f.hidden_field "member_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
     </dd>
   </dl>
   <% end %>

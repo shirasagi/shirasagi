@@ -9,13 +9,25 @@
   <dl class="see">
     <% if @item.class.subscription_setting_included_custom_groups? %>
     <dt><%= @model.t :subscribed_custom_group_ids %></dt>
-    <dd><%=tryb { br @item.subscribed_custom_groups.pluck(:name) } %></dd>
+    <dd>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <%= tryb { br @item.subscribed_custom_groups.pluck(:name) } %>
+      <% end %>
+    </dd>
     <% end %>
 
     <dt><%= @model.t :subscribed_group_ids %></dt>
-    <dd><%=br @item.subscribed_groups.pluck(:name) %></dd>
+    <dd>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <%= br @item.subscribed_groups.pluck(:name) %>
+      <% end %>
+    </dd>
 
     <dt><%= @model.t :subscribed_member_ids %></dt>
-    <dd><%=br @item.subscribed_members.pluck(:name) %></dd>
+    <dd>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <%= br @item.subscribed_members.pluck(:name) %>
+      <% end %>
+    </dd>
   </dl>
 </div>

@@ -5,22 +5,24 @@
     <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index ajax-selected">
-      <thead>
-        <tr>
-          <th class="name"><%= Gws::Group.t :name %></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @item.superior_groups.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "superior_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <table class="index ajax-selected">
+        <thead>
+          <tr>
+            <th class="name"><%= Gws::Group.t :name %></th>
+            <th></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @item.superior_groups.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "superior_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </dd>
 </dl>
 
@@ -31,21 +33,23 @@
     <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index ajax-selected">
-      <thead>
-      <tr>
-        <th class="name"><%= Gws::Group.t :name %></th>
-        <th></th>
-      </tr>
-      </thead>
-      <tbody>
-        <% @item.superior_users.each do |user| %>
-          <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "superior_user_ids[]", value: user.id, id: nil %> <%= user.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <table class="index ajax-selected">
+        <thead>
+        <tr>
+          <th class="name"><%= Gws::Group.t :name %></th>
+          <th></th>
+        </tr>
+        </thead>
+        <tbody>
+          <% @item.superior_users.each do |user| %>
+            <tr data-id="<%= user.id %>">
+              <td><%= f.hidden_field "superior_user_ids[]", value: user.id, id: nil %> <%= user.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </dd>
 </dl>

@@ -4,6 +4,10 @@
 
   <% if @model.use_member_ids? %>
     <dt><%= @model.t :member_ids %></dt>
-    <dd><%=br @item.members.map(&:long_name).join("\n") %></dd>
+    <dd>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <%= br @item.members.map(&:long_name).join("\n") %>
+      <% end %>
+    </dd>
   <% end %>
 </dl>

@@ -9,5 +9,9 @@
   <dd><%= @item.label :on_remand %></dd>
 
   <dt><%= @model.t :group_ids %></dt>
-  <dd><%= br @item.groups.order_by(name: 1).map{|c| c.name } %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= br @item.groups.order_by(name: 1).map{|c| c.name } %>
+    <% end %>
+  </dd>
 </dl>

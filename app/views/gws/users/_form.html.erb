@@ -86,17 +86,19 @@
     <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index ajax-selected">
-      <thead><tr><th class="name"><%= Sys::Group.t :name %></th><th class="deselect"></th></tr></thead>
-      <tbody>
-        <% @item.groups.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <table class="index ajax-selected">
+        <thead><tr><th class="name"><%= Sys::Group.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+          <% @item.groups.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </dd>
 </dl>
 
