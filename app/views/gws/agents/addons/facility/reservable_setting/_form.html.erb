@@ -15,17 +15,19 @@
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>
     <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-          <% @item.reservable_groups.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "reservable_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Gws::Group.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% @item.reservable_groups.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "reservable_group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
     </dd>
   </dl>
 
@@ -38,17 +40,19 @@
       <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
     </dd>
     <dd>
-      <table class="index ajax-selected">
-        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
-        <tbody>
-          <% @item.reservable_members.each do |user| %>
-          <tr data-id="<%= user.id %>">
-            <td><%= f.hidden_field "reservable_member_ids[]", value: user.id, id: nil %> <%= user.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
-          <% end %>
-        </tbody>
-      </table>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <table class="index ajax-selected">
+          <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+          <tbody>
+            <% @item.reservable_members.each do |user| %>
+            <tr data-id="<%= user.id %>">
+              <td><%= f.hidden_field "reservable_member_ids[]", value: user.id, id: nil %> <%= user.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
     </dd>
   </dl>
 </div>

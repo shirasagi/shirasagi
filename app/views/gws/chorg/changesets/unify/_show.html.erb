@@ -11,5 +11,9 @@
   <dt><%= t "chorg.views.#{params[:type]}_changesets.before_unify" %></dt>
   <dd></dd>
   <dt><%= t "chorg.views.#{params[:type]}_changesets.name" %></dt>
-  <dd><%= br @item.sources.map { |e| e["name"] } %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= br @item.sources.map { |e| e["name"] } %>
+    <% end %>
+  </dd>
 </dl>

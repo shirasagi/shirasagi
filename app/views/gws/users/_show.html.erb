@@ -75,11 +75,13 @@ SS_Clipboard.renderCopy();
 
   <dt><%= @model.t :group_ids %></dt>
   <dd>
-    <% @item.groups.order_by(name: 1).select{ |c| Gws::Group.site(@cur_site).pluck(:id).include?(c.id) }.each do |c| %>
-      <% if main_group && main_group.id == c.id %>
-        <strong><b><%= c.name %></b></strong><br />
-      <% else %>
-        <%= c.name %><br />
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <% @item.groups.order_by(name: 1).select{ |c| Gws::Group.site(@cur_site).pluck(:id).include?(c.id) }.each do |c| %>
+        <% if main_group && main_group.id == c.id %>
+          <strong><b><%= c.name %></b></strong><br />
+        <% else %>
+          <%= c.name %><br />
+        <% end %>
       <% end %>
     <% end %>
   </dd>
