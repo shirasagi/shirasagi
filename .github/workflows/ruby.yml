@@ -158,15 +158,101 @@ jobs:
           # driver: random
           # RSPEC_LOCALE: en
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
-      - name: Create comment
-        if: ${{ failure() }}
+      - name: Collect failure specs
+        if: ${{ failure() && github.event_name == 'pull_request' }}
         run: |
-          if [ ! -e failures ]; then
+          if [ ! -s failures ]; then
             exit 0
           fi
-          echo "https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}" >> comment
-          echo "${{ github.job }}(${{ matrix.id }}) failed examples:" >> comment
-          cat failures >> comment
-          gh pr comment ${{ github.event.pull_request.number }} -F comment
+          mkdir -p ci_failures
+          cp failures "ci_failures/failures-${{ matrix.id }}.txt"
+      - name: Upload failure specs artifact
+        if: ${{ failure() && github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-failures-${{ matrix.id }}
+          path: ci_failures/
+          if-no-files-found: ignore
+
+  aggregate:
+    name: Aggregate CI Results
+    runs-on: ubuntu-22.04
+    needs: test
+    if: ${{ always() && github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download failure artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ci-failures-*
+          merge-multiple: true
+          path: ./aggregated-failures
+        continue-on-error: true
+      - name: Build comment body
+        id: summary
+        run: |
+          set -euo pipefail
+          run_url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          mkdir -p tmp
+          comment_file="tmp/comment.md"
+          status="success"
+
+          if compgen -G "aggregated-failures/**/*.txt" > /dev/null; then
+            failures=$(find aggregated-failures -type f -name '*.txt' -print0 | xargs -0 cat | sed 's/\r$//' | awk 'NF' | sort -u)
+            if [ -n "$failures" ]; then
+              status="failure"
+              count=$(printf "%s\n" "$failures" | wc -l | tr -d ' ')
+              {
+                echo "## 🚨 CI Test Failures Summary (Unified)"
+                echo
+                echo "**Total failed files:** ${count}"
+                echo
+                echo "**Failed test files:**"
+                echo
+                printf '%s\n' "$failures" | sed 's/^/- /'
+                echo
+                echo "**CI Run:** ${run_url}"
+              } > "$comment_file"
+            fi
+          fi
+
+          if [ "$status" = "success" ]; then
+            {
+              echo "## ✅ CI Test Status (Unified)"
+              echo
+              echo "すべて成功しました。"
+              echo
+              echo "**CI Run:** ${run_url}"
+            } > "$comment_file"
+          fi
+
+          if [ -s "$comment_file" ]; then
+            echo "comment_path=$comment_file" >> "$GITHUB_OUTPUT"
+          fi
+          echo "status=$status" >> "$GITHUB_OUTPUT"
+      - name: Upsert pull request comment
+        if: ${{ steps.summary.outputs.comment_path != '' }}
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_FILE: ${{ steps.summary.outputs.comment_path }}
+          STATUS: ${{ steps.summary.outputs.status }}
+        run: |
+          set -euo pipefail
+          pr_number="${{ github.event.pull_request.number }}"
+          repo="${{ github.repository }}"
+          comment_selector='.user.login=="github-actions[bot]" and ((.body | startswith("## 🚨 CI Test Failures Summary (Unified)")) or (.body | startswith("## ✅ CI Test Status (Unified)")))'
+          existing_id=$(gh api repos/${repo}/issues/${pr_number}/comments --paginate --jq "[.[] | select(${comment_selector})] | last | .id // empty")
+
+          if [ "${STATUS}" = "failure" ]; then
+            if [ -n "$existing_id" ]; then
+              gh api repos/${repo}/issues/comments/${existing_id} -X PATCH -F body=@"${COMMENT_FILE}"
+            else
+              gh pr comment ${pr_number} --body-file "${COMMENT_FILE}"
+            fi
+          else
+            if [ -n "$existing_id" ]; then
+              gh api repos/${repo}/issues/comments/${existing_id} -X PATCH -F body=@"${COMMENT_FILE}"
+            fi
+          fi
