@@ -17,30 +17,37 @@ module Event::EventHelper
     %w(jan feb mar apr may jun jul aug sep oct nov dec)[month - 1]
   end
 
-  def event_dl_class(date)
-    cls = %w(sun mon tue wed thu fri sat)[date.wday]
-    date.national_holiday? ? "#{cls} holiday" : cls
+  def event_td_class(date, cur_month = nil)
+    cls = []
+    cls << %w(sun mon tue wed thu fri sat)[date.wday]
+    cls << event_today_class(date)
+    cls << "holiday" if date.national_holiday?
+    cls << event_month_class(date, cur_month) if cur_month
+    cls.join(" ")
   end
 
-  def event_td_class(date, cdate)
-    cls = event_dl_class(date)
+  alias event_dl_class event_td_class
+
+  def event_today_class(date)
     today = Time.zone.today
     if date > today
-      cls = "#{cls} future"
+      "future"
     elsif date < today
-      cls = "#{cls} past"
+      "past"
     else
-      cls = "#{cls} today"
+      "today"
     end
+  end
 
+  def event_month_class(date, cur_month)
     first_date = date.to_date.beginning_of_month
-    first_cdate = cdate.to_date.beginning_of_month
-    if first_date > first_cdate
-      "#{cls} next-month"
-    elsif first_date < first_cdate
-      "#{cls} prev-month"
+    first_cur_month = cur_month.to_date.beginning_of_month
+    if first_date > first_cur_month
+      "next-month"
+    elsif first_date < first_cur_month
+      "prev-month"
     else
-      cls
+      ""
     end
   end
 
@@ -95,5 +102,4 @@ module Event::EventHelper
       name
     end
   end
-
 end
