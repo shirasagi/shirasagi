@@ -11,9 +11,10 @@ FactoryBot.define do
       if name
         { I18n.default_locale => name }.with_indifferent_access
       else
-        i18n_translations(prefix: "form")
+        i18n_translations(prefix: "space")
       end
     end
+    i18n_description_translations { i18n_translations(prefix: "description", count: 2, join: "\n") }
     state { %w(public closed).sample }
     order { rand(0..500) }
     memo { Array.new(2) { "memo-#{unique_id}" }.join("\n") }
