@@ -3,7 +3,17 @@ require 'spec_helper'
 describe "cms_groups", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
 
-  before { login_cms_user }
+  before do
+    @save_perform_caching = Cms::GroupTreeComponent.perform_caching
+    Cms::GroupTreeComponent.perform_caching = true
+
+    login_cms_user
+  end
+
+  after do
+    Cms::GroupTreeComponent.perform_caching = @save_perform_caching
+    Rails.cache.clear
+  end
 
   context "basic crud" do
     it do
@@ -31,6 +41,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         click_on I18n.t('ss.buttons.delete')
       end
       wait_for_notice I18n.t("ss.notice.deleted")
+      expect(page).to have_css(".ss-tree-item", count: 1)
     end
   end
 
@@ -58,6 +69,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
 
     it "#import" do
       visit cms_groups_path(site: site)
+      expect(page).to have_css(".ss-tree-item", count: 2)
       click_on I18n.t("ss.links.import")
 
       perform_enqueued_jobs do
@@ -69,6 +81,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
         end
         wait_for_notice I18n.t('ss.notice.started_import')
       end
+      expect(page).to have_css(".ss-tree-item", count: 8)
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
@@ -182,6 +195,7 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
 
     it do
       visit cms_groups_path(site: site)
+      expect(page).to have_css(".ss-tree-item", count: 2)
       click_on group_name
       click_on I18n.t("ss.links.edit")
       wait_for_js_ready
@@ -195,12 +209,14 @@ describe "cms_groups", type: :feature, dbscope: :example, js: true do
       expect(group.expiration_date).to eq expiration_date
 
       visit cms_groups_path(site: site)
-      expect(page).to have_no_css(".expandable", text: group_name)
+      expect(page).to have_css(".ss-tree-item", count: 1)
+      expect(page).to have_no_css(".ss-tree-item", text: group_name)
 
       select I18n.t("ss.options.state.all"), from: "s[state]"
       click_on I18n.t('ss.buttons.search')
 
-      expect(page).to have_css(".expandable", text: group_name)
+      expect(page).to have_css(".ss-tree-item", count: 2)
+      expect(page).to have_css(".ss-tree-item", text: group_name)
 
       click_on group_name
       click_on I18n.t("ss.links.edit")

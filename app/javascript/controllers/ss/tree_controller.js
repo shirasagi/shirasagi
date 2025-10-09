@@ -25,16 +25,10 @@ export default class extends Controller {
       return;
     }
 
-    this.element.querySelectorAll(`[data-node-id="${this.currentNodeId}"]`).forEach((el) => {
-      const treeItemElement = el.closest(".ss-tree-item")
-      if (treeItemElement) {
-        treeItemElement.classList.add("is-current");
-      }
-
-      const detailsElement = el.closest(".ss-tree-subtree-wrap")
-      if (detailsElement) {
-        this.#openAllParents(detailsElement);
-      }
+    this.element.querySelectorAll(`[data-node-id="${this.currentNodeId}"]`).forEach((treeItemElement) => {
+      treeItemElement.classList.add("is-current");
+      const detailsElement = treeItemElement.querySelector(".ss-tree-subtree-wrap")
+      this.#openAllParents(detailsElement || treeItemElement);
     });
 
     this.element.setAttribute("data-ss-tree", "completed");

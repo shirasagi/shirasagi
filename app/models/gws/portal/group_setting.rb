@@ -21,6 +21,18 @@ class Gws::Portal::GroupSetting
   validates :name, presence: true, length: { maximum: 20 }
   validates :portal_group_id, presence: true, uniqueness: { scope: :site_id }
 
+  class << self
+    def build_new_setting(group, site:)
+      new(
+        site: site, cur_site: site, portal_group: group,
+        name: group.organization? ? I18n.t("gws/portal.tabs.root_portal") : group.trailing_name.truncate(20),
+        readable_setting_range: group.organization? ? "public" : "select",
+        readable_group_ids: group.organization? ? [] : [group.id],
+        group_ids: [group.id]
+      )
+    end
+  end
+
   def portlet_models
     %w(
       free links schedule bookmark report workflow circular monitor

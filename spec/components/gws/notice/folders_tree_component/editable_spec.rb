@@ -83,25 +83,25 @@ describe Gws::Notice::FoldersTreeComponent::Editable, type: :component, dbscope:
           expect(collapse_all.text.strip).to eq I18n.t("ss.buttons.collapse_all")
         end
 
-        html.css(".ss-tree-item-link[data-node-id='#{folder1.id}']").tap do |tree_item_link|
-          expect(tree_item_link).to have(1).items
-          expect(tree_item_link.text.strip).to include(folder1.name)
+        html.css(".ss-tree-item[data-node-id='#{folder1.id}']").tap do |tree_item|
+          expect(tree_item).to have(1).items
+          expect(tree_item.text.strip).to include(folder1.name)
         end
-        html.css(".ss-tree-item-link[data-node-id='#{folder2.id}']").tap do |tree_item_link|
-          expect(tree_item_link).to have(1).items
-          expect(tree_item_link.text.strip).to include(folder2.name)
+        html.css(".ss-tree-item[data-node-id='#{folder2.id}']").tap do |tree_item|
+          expect(tree_item).to have(1).items
+          expect(tree_item.text.strip).to include(folder2.name)
         end
-        html.css(".ss-tree-item-link[data-node-id='#{folder3.id}']").tap do |tree_item_link|
-          expect(tree_item_link).to have(1).items
-          expect(tree_item_link.text.strip).to include(folder3.name)
+        html.css(".ss-tree-item[data-node-id='#{folder3.id}']").tap do |tree_item|
+          expect(tree_item).to have(1).items
+          expect(tree_item.text.strip).to include(folder3.name)
         end
-        html.css(".ss-tree-item-link[data-node-id='#{folder4.id}']").tap do |tree_item_link|
-          expect(tree_item_link).to have(1).items
-          expect(tree_item_link.text.strip).to include(folder4.name)
+        html.css(".ss-tree-item[data-node-id='#{folder4.id}']").tap do |tree_item|
+          expect(tree_item).to have(1).items
+          expect(tree_item.text.strip).to include(folder4.name)
         end
 
-        node_ids = html.css(".ss-tree-item-link[data-node-id]").map do |tree_item_link|
-          tree_item_link["data-node-id"].to_i
+        node_ids = html.css(".ss-tree-item[data-node-id]").map do |tree_item|
+          tree_item["data-node-id"].to_i
         end
         expect(node_ids).to have(4).items
         expect(node_ids[0]).to eq folder2.id
@@ -137,20 +137,20 @@ describe Gws::Notice::FoldersTreeComponent::Editable, type: :component, dbscope:
           expect(collapse_all.text.strip).to eq I18n.t("ss.buttons.collapse_all")
         end
 
-        html.css(".ss-tree-item-link[data-node-id='#{folder1.id}']").tap do |tree_item_link|
-          expect(tree_item_link).to have(1).items
-          expect(tree_item_link.text.strip).to include(folder1.name)
+        html.css(".ss-tree-item[data-node-id='#{folder1.id}']").tap do |tree_item|
+          expect(tree_item).to have(1).items
+          expect(tree_item.text.strip).to include(folder1.name)
         end
-        html.css(".ss-tree-item-link[data-node-id='#{folder2.id}']").tap do |tree_item_link|
-          expect(tree_item_link).to have(1).items
-          expect(tree_item_link.text.strip).to include(folder2.name)
+        html.css(".ss-tree-item[data-node-id='#{folder2.id}']").tap do |tree_item|
+          expect(tree_item).to have(1).items
+          expect(tree_item.text.strip).to include(folder2.name)
         end
-        html.css(".ss-tree-item-link[data-node-id='#{folder3.id}']").tap do |tree_item_link|
-          expect(tree_item_link).to be_blank
+        html.css(".ss-tree-item[data-node-id='#{folder3.id}']").tap do |tree_item|
+          expect(tree_item).to be_blank
         end
-        html.css(".ss-tree-item-link[data-node-id='#{folder4.id}']").tap do |tree_item_link|
-          expect(tree_item_link).to have(1).items
-          expect(tree_item_link.text.strip).to include(folder4.name)
+        html.css(".ss-tree-item[data-node-id='#{folder4.id}']").tap do |tree_item|
+          expect(tree_item).to have(1).items
+          expect(tree_item.text.strip).to include(folder4.name)
         end
 
         expect(component.cache_exist?).to be_truthy

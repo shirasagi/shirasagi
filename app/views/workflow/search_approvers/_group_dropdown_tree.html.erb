@@ -1,35 +1,19 @@
-<% @groups ||= @cur_site.descendants_and_self.active.tree_sort(root_name: @cur_site.name) %>
+<%= render Cms::Apis::GroupDropdownTreeComponent.new(cur_site: @cur_site) %>
 
 <%= jquery do %>
   SS_TreeUI.render("form.search .index.groups", { descendants_check: true });
   SS_Dropdown.render();
 
-  $("form.search .index.groups .select-group").on("click", function(e) {
-    $("#ajax-box #s_group").val($(e.target).data("id"));
+  $("form.search .index.groups .select-group").on("click", function(ev) {
+    $("form.search [name='s[group]']").val($(ev.target).data("id"));
     SS_SearchUI.selectItems()
-    $("#ajax-box form.search")[0].requestSubmit()
+    $(this).closest('form.search')[0].requestSubmit();
 
-    e.preventDefault();
-    e.stopPropagation();
+    ev.preventDefault();
+    ev.stopPropagation();
     return false;
   });
-<% end %>
 
-<dt><%= t "cms.group" %></dt>
-<dd>
-  <button class="dropdown btn" type="button"><%= @group.try(:name) %> <span class="caret">&#x25BC;</span></button>
-  <%= hidden_field_tag("s[group]", @group.try(:id)) %>
-  <div class="dropdown-container">
-    <table class="index groups">
-      <tbody>
-      <% @groups.each do |item| %>
-        <tr data-depth="<%= item.depth %>" class="toggle">
-          <td class="expandable">
-            <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
-          </td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
-  </div>
-</dd>
+  $("form.search .current-group").text(<%== @group.try(:name).to_json %>);
+  $("form.search [name='s[group]']").val(<%== @group.try(:id).to_json %>);
+<% end %>

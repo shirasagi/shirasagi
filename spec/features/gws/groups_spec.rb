@@ -3,7 +3,17 @@ require 'spec_helper'
 describe "gws_groups", type: :feature, dbscope: :example, js: true do
   let!(:site) { gws_site }
 
-  before { login_gws_user }
+  before do
+    @save_perform_caching = Gws::GroupTreeComponent.perform_caching
+    Gws::GroupTreeComponent.perform_caching = true
+
+    login_gws_user
+  end
+
+  after do
+    Gws::GroupTreeComponent.perform_caching = @save_perform_caching
+    Rails.cache.clear
+  end
 
   context "basic crud" do
     let(:name) { "#{site.name}/#{unique_id}" }

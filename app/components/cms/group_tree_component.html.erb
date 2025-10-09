@@ -1,0 +1,12 @@
+<%= cache_component do %>
+  <div class="cms-groups-tree-wrap" data-controller="ss--tree">
+    <%= render SS::TreeBaseComponent.new(root_nodes: root_nodes, css_class: "cms-groups-tree", shows_updated: true) do |component| %>
+      <% component.with_tree_header do %>
+        <div style="display: flex; background: #f2f2f2; color: #999">
+          <span style="display: inline-flex; flex-grow: 10; padding: 6px 18px;"><%= Cms::Group.t :name %></span>
+          <span class="datetime" style="display: inline-flex; padding: 6px 18px;"><%= Cms::Group.t :updated %></span>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+<% end %>

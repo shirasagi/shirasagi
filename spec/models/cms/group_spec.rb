@@ -62,6 +62,8 @@ describe Cms::Group, type: :model, dbscope: :example do
       subject { described_class.tree_sort.to_a }
 
       it do
+        expect(subject).to have(8).items
+
         expect(subject[0].name).to eq 'AA'
         expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'AA'
@@ -101,6 +103,8 @@ describe Cms::Group, type: :model, dbscope: :example do
       subject { root.descendants.active.tree_sort(root_name: root.name).to_a }
 
       it do
+        expect(subject).to have(7).items
+
         expect(subject[0].name).to eq 'AA/BBB'
         expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'BBB'
@@ -136,6 +140,8 @@ describe Cms::Group, type: :model, dbscope: :example do
       subject { second_depth_group.descendants.active.tree_sort(root_name: second_depth_group.name).to_a }
 
       it do
+        expect(subject).to have(2).items
+
         expect(subject[0].name).to eq 'AA/BBB/DDDD'
         expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'DDDD'
@@ -150,6 +156,8 @@ describe Cms::Group, type: :model, dbscope: :example do
       subject { described_class.tree_sort(root_name: "#{unique_id}/#{unique_id}").to_a }
 
       it do
+        expect(subject).to have(8).items
+
         expect(subject[0].name).to eq 'AA'
         expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'AA'
@@ -200,6 +208,8 @@ describe Cms::Group, type: :model, dbscope: :example do
 
     subject { described_class.tree_sort.to_options }
     it do
+      expect(subject).to have(8).items
+
       expect(subject[0]).to eq [ 'AA', 1 ]
       expect(subject[1]).to eq [ '+---- BBB', 2 ]
       expect(subject[2]).to eq [ '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;+---- DDDD', 4 ]
@@ -228,6 +238,8 @@ describe Cms::Group, type: :model, dbscope: :example do
       subject { described_class.where(name: /^A\//).tree_sort.to_a }
 
       it do
+        expect(subject).to have(7).items
+
         expect(subject[0].name).to eq 'A/AA'
         expect(subject[0].depth).to eq 0
         expect(subject[0].trailing_name).to eq 'A/AA'

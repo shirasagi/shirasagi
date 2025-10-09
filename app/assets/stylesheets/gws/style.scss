@@ -25,6 +25,7 @@
 @use "workload/gws" as gws_workload;
 @use "elasticsearch/gws" as gws_elasticsearch;
 @use "tabular/gws" as gws_tabular;
+@use "group/gws" as gws_group;
 
 // File
 .gws-addon-file {

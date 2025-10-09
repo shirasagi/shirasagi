@@ -1,0 +1,59 @@
+<% render_node = proc do |node| %>
+  <tr class="list-item" data-id="<%= node.id %>" data-name="<%= node.original_item.name %>" data-depth="<%= node.depth %>">
+    <td class="checkbox only-multi">
+      <input type="checkbox" name="ids[]" value="<%= node.id %>"/>
+    </td>
+    <td class="expandable">
+      <%= link_to node.name, "#", class: "select-item only-multi" %>
+      <%= link_to node.name, "#", class: "select-single-item only-single" %>
+    </td>
+  </tr>
+<% end %>
+
+<% render_nodes = proc do |nodes| %>
+  <% nodes.each do |node| %>
+    <% render_node.call(node) %>
+    <% render_nodes.call(node.children) %>
+  <% end %>
+<% end %>
+
+<%= cache_component do %>
+  <div class="search-ui-form">
+    <%= form_for :s, url: cms_apis_groups_path(site: cur_site), html: { method: "GET", class: :search } do |f| %>
+      <%= hidden_field_tag :single, nil %>
+      <div class="input-group">
+        <%= f.text_field :keyword, value: params[:s].try(:[], :keyword), placeholder: t("ss.keyword") %>
+        <%= f.submit t("ss.buttons.search"), class: :btn %>
+      </div>
+    <% end %>
+  </div>
+
+  <table class="index groups">
+    <thead class="list-head">
+    <tr>
+      <th class="checkbox only-multi"><input type="checkbox"/></th>
+      <th class="name"><%= Cms::Group.t :name %></th>
+    </tr>
+    </thead>
+    <tbody class="items">
+    <% render_nodes.call(root_nodes) %>
+    </tbody>
+  </table>
+
+  <div class="search-ui-select only-multi">
+    <%= button_tag t("ss.apis.groups.select"), { type: :button, class: "select-items btn" } %>
+  </div>
+<% end %>
+
+<%= javascript_tag do %>
+  SS.ready(function() {
+    <% if multi %>
+      $("#ajax-box .only-single").remove();
+    <% else %>
+      $('[name="single"]').val(1);
+      $("#ajax-box .only-multi").remove();
+    <% end %>
+    SS_SearchUI.modal();
+    SS_TreeUI.render(".index.groups", { descendants_check: true });
+  });
+<% end %>

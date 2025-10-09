@@ -36,21 +36,26 @@ class Cms::GroupsController < ApplicationController
   public
 
   def index
+    # 修正したら app/controllers/gws/groups_controller.rb も同じように修正すべし
     raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
 
     @search_params = params[:s]
     @search_params = @search_params.except(:state).delete_if { |k, v| v.blank? } if @search_params
     @search_params = @search_params.presence if @search_params
 
-    @items = @model.unscoped.site(@cur_site).
-      state(params.dig(:s, :state)).
-      allow(:read, @cur_user, site: @cur_site)
+    state = params.dig(:s, :state).to_s.presence
 
-    if @search_params
-      @items = @items.search(@search_params).
-        order_by(name: 1, order: 1, id: 1)
+    if @search_params || @state == "disabled"
+      criteria = @model.unscoped.site(@cur_site)
+      criteria = criteria.state(state)
+      criteria = criteria.allow(:read, @cur_user, site: @cur_site)
+      criteria = criteria.search(@search_params)
+      criteria = criteria.reorder(name: 1, order: 1, id: 1)
+      @items = criteria.page(params[:page]).per(SS.max_items_per_page)
+      @component = nil
     else
-      @items = @items.tree_sort
+      @items = nil
+      @component = Cms::GroupTreeComponent.new(cur_site: @cur_site, cur_user: @cur_user, state: state)
     end
   end
 

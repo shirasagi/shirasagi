@@ -1,0 +1,5 @@
+<%= cache_component do %>
+  <div class="gws-portal-groups-tree-wrap" data-controller="ss--tree">
+    <%= render SS::TreeBaseComponent.new(root_nodes: root_nodes, css_class: "gws-portal-groups-tree") %>
+  </div>
+<% end %>

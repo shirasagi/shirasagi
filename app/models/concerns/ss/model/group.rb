@@ -100,7 +100,7 @@ module SS::Model::Group
     end
 
     def tree_sort(options = {})
-      SS::TreeList.build self, options
+      SS::GroupTreeList.build self, options
     end
 
     def roots

@@ -38,8 +38,6 @@ class Gws::Affair::Attendance::Apis::Management::UsersController < ApplicationCo
 
     @group ||= @cur_group
     @group ||= @cur_site
-
-    @groups = @manageable_groups.tree_sort(root_name: @cur_site.name)
   end
 
   def set_custom_group
