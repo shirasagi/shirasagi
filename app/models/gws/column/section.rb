@@ -1,6 +1,8 @@
 class Gws::Column::Section < Gws::Column::Base
   include Gws::Column::TextLike
 
+  before_save :set_required_optional
+
   class << self
     def as_plugin
       @plugin ||= Gws::Plugin.new(plugin_type: "column", path: "gws/section", model_class: self)
