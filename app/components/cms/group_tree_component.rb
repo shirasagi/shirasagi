@@ -13,13 +13,16 @@ class Cms::GroupTreeComponent < ApplicationComponent
     @root_nodes ||= Gws::GroupTreeComponent::TreeBuilder.new(items: items, item_url_p: method(:item_url)).call
   end
 
+  def render?
+    cur_user.cms_role_permit_any?(cur_site, :edit_cms_groups)
+  end
+
   private
 
   def items
     @items ||= begin
       criteria = Cms::Group.unscoped.site(cur_site)
       criteria = criteria.state(state)
-      criteria = criteria.allow(:read, cur_user, site: cur_site)
       criteria = criteria.reorder(order: 1, id: 1)
       criteria
     end

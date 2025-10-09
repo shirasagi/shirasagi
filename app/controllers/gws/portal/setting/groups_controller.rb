@@ -35,9 +35,8 @@ class Gws::Portal::Setting::GroupsController < ApplicationController
     if @search_params || state == "disabled"
       criteria = @model.unscoped.site(@cur_site)
       criteria = criteria.state(state)
-      # criteria = criteria.allow(:read, @cur_user, site: @cur_site)
       criteria = criteria.search(@search_params)
-      criteria = criteria.reorder(name: 1, order: 1, id: 1)
+      criteria = criteria.reorder(order: 1, id: 1)
       @items = criteria.page(params[:page]).per(SS.max_items_per_page)
       @component = nil
     else

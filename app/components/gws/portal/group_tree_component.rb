@@ -17,9 +17,8 @@ class Gws::Portal::GroupTreeComponent < ApplicationComponent
 
   def items
     @items ||= begin
-      criteria = Gws::Group.site(cur_site)
+      criteria = Gws::Group.unscoped.site(cur_site)
       criteria = criteria.state(state)
-      # criteria = criteria.allow(:read, cur_user, site: cur_site)
       criteria = criteria.reorder(order: 1, id: 1)
       criteria
     end

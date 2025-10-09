@@ -99,13 +99,16 @@ class Gws::GroupTreeComponent < ApplicationComponent
     @root_nodes ||= TreeBuilder.new(items: items, item_url_p: method(:item_url)).call
   end
 
+  def render?
+    cur_user.gws_role_permit_any?(cur_site, :edit_gws_groups)
+  end
+
   private
 
   def items
     @items ||= begin
-      criteria = Gws::Group.site(cur_site)
+      criteria = Gws::Group.unscoped.site(cur_site)
       criteria = criteria.state(state)
-      criteria = criteria.allow(:read, cur_user, site: cur_site)
       criteria = criteria.reorder(order: 1, id: 1)
       criteria
     end

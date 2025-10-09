@@ -25,7 +25,7 @@ class Gws::Presence::TreeGroupComponent < ApplicationComponent
 
   def all_groups
     @all_groups ||= begin
-      criteria = Gws::Group.site(cur_site)
+      criteria = Gws::Group.unscoped.site(cur_site)
       criteria = criteria.active
       criteria = criteria.reorder(order: 1, id: 1)
       criteria
