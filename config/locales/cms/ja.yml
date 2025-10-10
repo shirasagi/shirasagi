@@ -268,6 +268,7 @@ ja:
       setting: 設定する
       apply_richmenu: リッチメニューを反映する
       add_template: "テンプレートを追加する（最大5個）"
+      insert_snippet: スニペットを挿入
       youtube_title: YouTubeからタイトルを取得する
     confirm:
       delete_item: 項目を削除してよろしいですか？
@@ -1194,6 +1195,8 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
+        state: ステータス
+        html_format: HTML種別
       cms/command:
         name: タイトル
         description: 説明
@@ -3488,6 +3491,15 @@ ja:
         -
         - "・サイト設定にしたがう: この選択はサイト設定の公開期限にしたがうことを意味します。この選択が既定です。"
         - "・無期限: この選択は公開期限を無期限に設定します。この設定をしたページは公開期限切れ警告が通知または表示されることはありません。"
+    cms/loop_setting:
+      html_format:
+        - 設定するHTML種別を選択してください。
+        -
+        - ・SHIRASAGI
+        - 従来のループHTMLを設定します。
+        -
+        - ・Liquid
+        - Liquid形式のHTMLを設定します。
 
   all_content:
     page_id: ページID
