@@ -108,4 +108,24 @@ describe Cms::LoopSetting, dbscope: :example do
       expect(loop_setting).to be_valid
     end
   end
+
+  describe "state" do
+    let(:site) { cms_site }
+
+    it "defaults to public" do
+      loop_setting = create(:cms_loop_setting, site: site, state: nil)
+      expect(loop_setting.state).to eq "public"
+    end
+
+    it "accepts closed" do
+      loop_setting = build(:cms_loop_setting, site: site, state: "closed")
+      expect(loop_setting).to be_valid
+    end
+
+    it "rejects invalid values" do
+      loop_setting = build(:cms_loop_setting, site: site, state: "invalid")
+      expect(loop_setting).not_to be_valid
+      expect(loop_setting.errors[:state]).to include(I18n.t('errors.messages.inclusion'))
+    end
+  end
 end

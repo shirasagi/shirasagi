@@ -13,17 +13,19 @@ class Cms::LoopSetting
   field :state, type: String, default: "public"
   field :html_format, type: String
   field :html, type: String
-  permit_params :name, :description, :order, :html_format, :html
+  permit_params :name, :description, :order, :state, :html_format, :html
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
+  validates :state, inclusion: { in: %w(public closed) }
   validates :html_format, presence: true, inclusion: { in: %w(shirasagi liquid) }
 
   default_scope -> { order_by(order: 1, name: 1) }
-  scope :public_state, -> { where(state: 'public') }
+  scope :public_state, -> { where(:state.in => [nil, 'public']) }
   scope :liquid, -> { public_state.where(html_format: 'liquid') }
-  scope :shirasagi, -> { public_state.where(html_format: 'shirasagi') }
+  scope :shirasagi, -> { public_state.where(:html_format.in => [nil, 'shirasagi']) }
 
   before_validation do
+    self.state = state.to_s.downcase.presence || 'public'
     self.html_format = html_format.to_s.downcase.presence || 'shirasagi'
   end
   class << self
