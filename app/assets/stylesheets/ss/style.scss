@@ -14,51 +14,54 @@
  */
 
 // base
-@import "init";
-@import "lib";
-@import "pc_mb";
-@import "shirasagi-icons";
+@use "init";
+@use "lib";
+@use "pc_mb";
+@use "shirasagi-icons";
 
 // core
-@import "github-markdown";
-@import "ss/ckeditor";
-@import "ss/login";
-@import "ss/addon";
-@import "ss/image_editor";
-@import "ss/pdfjs";
-@import "ss/sticky";
-@import "ss/user_navi";
-@import "ss/tree";
-@import "ss/btn_group";
-@import "ss/file_field";
-@import "ss/link_item/ss";
-@import "sys/ss";
-@import "sns/ss";
-@import "cms/ss";
-@import "cms/column";
-@import "cms/column2";
-@import "cms/michecker";
-@import "cms/quick_edit";
-@import "cms/addon_file";
-@import "cms/temp_file";
+@use "github-markdown";
+@use "ss/list_item";
+@use "ss/ckeditor";
+@use "ss/login";
+@use "ss/addon";
+@use "ss/image_editor";
+@use "ss/pdfjs";
+@use "ss/sticky";
+@use "ss/user_navi";
+@use "ss/tree";
+@use "ss/btn_group";
+@use "ss/file_field";
+@use "ss/link_item/ss" as link_item;
+@use "ss/main_navi";
+@use "sys/ss" as sys;
+@use "sns/ss" as sns;
+@use "cms/ss" as cms;
+@use "cms/column" as cms_column;
+@use "cms/column2" as cms_column2;
+@use "cms/michecker" as cms_michecker;
+@use "cms/quick_edit" as cms_quick_edit;
+@use "cms/addon_file" as cms_addon_file;
+@use "cms/temp_file" as cms_temp_file;
+@use "cms/syntax_check";
 
 // modules
-@import "ads/ss";
-@import "contact/ss";
-@import "event/ss";
-@import "guide/ss";
-@import "history/ss";
-@import "inquiry/ss";
-@import "kana/ss";
-@import "workflow/ss";
-@import "translate/ss";
-@import "webmail/ss";
+@use "ads/ss" as ads;
+@use "contact/ss" as contact;
+@use "event/ss" as event;
+@use "guide/ss" as guide;
+@use "history/ss" as history;
+@use "inquiry/ss" as inquiry;
+@use "kana/ss" as kana;
+@use "workflow/ss" as workflow;
+@use "translate/ss" as translate;
+@use "webmail/ss" as webmail;
 
 // opendata
-@import "opendata/ss";
+@use "opendata/ss" as opendata;
 
 // fix fullcalendar issue: https://github.com/fullcalendar/fullcalendar/issues/2852
-.fc-icon:after {
+.fc-icon::after {
   margin: 0;
   color: #000;
 }

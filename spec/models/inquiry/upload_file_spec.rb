@@ -64,6 +64,10 @@ describe Inquiry::Answer, dbscope: :example do
       item = described_class.new(cur_site: site, cur_node: node)
       item.set_data(data)
 
+      # enable validation
+      item.save_mode = 'answer'
+      item.section_ids = { item.data[0].column_id.to_s => 'none' }
+
       expect(SS::File.where(site_id: site.id).count).to eq 1
       ss_file = SS::File.where(site_id: site.id).first
 

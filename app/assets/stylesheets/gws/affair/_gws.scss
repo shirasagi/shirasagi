@@ -1,4 +1,5 @@
 // gws/affair
+@use "ss/init";
 
 .overtime-results {
   margin-bottom: 10px;
@@ -8,15 +9,18 @@
   }
   tr.item {
     background: #fff !important;
-    th:hover, td:hover {
+    th:hover,
+    td:hover {
       background: #fff !important;
     }
   }
-  th.time, td.time {
+  th.time,
+  td.time {
     text-align: center;
   }
   tr:not(:last-child) {
-    th, td {
+    th,
+    td {
       border-bottom: 1px solid #dcdcdc !important;
     }
   }
@@ -30,7 +34,8 @@
   }
 }
 .aggregate-capitals {
-  th, td {
+  th,
+  td {
     white-space: nowrap;
   }
   .time {
@@ -41,19 +46,19 @@
   }
 }
 .gws-affair-overtime-aggregate-tabs {
-  @include clear;
+  @include init.clear;
   margin-top: -1px;
   padding: 0 10px;
   a {
     display: block;
     margin: 1px 6px -1px 0;
     float: left;
-    border: 1px solid $gray4;
+    border: 1px solid init.$gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
-    background-color: $gray5;
+    background-color: init.$gray5;
     color: #000;
-    @include mb {
+    @include init.mb {
       margin: 1px 6px 6px 0;
       border-radius: 4px;
     }
@@ -63,15 +68,15 @@
       text-align: center;
     }
     &:hover {
-      border-left-color: $orange;
+      border-left-color: init.$orange;
       background-color: #fff;
       text-decoration: none;
     }
     &.current {
       border-bottom-color: #fff;
-      border-left-color: $orange;
+      border-left-color: init.$orange;
       background-color: #fff;
-      @include mb {
+      @include init.mb {
         border-bottom-color: #bbb;
       }
     }
@@ -90,10 +95,10 @@ table.affair-overtime-aggregate {
   position: relative;
   width: 16px;
   height: 16px;
-  background: $orange;
-  color: $white;
+  border-radius: 8px;
+  background: init.$orange;
+  color: init.$white;
   line-height: 1.1;
-  @include border-radius(8px);
   text-align: center;
   cursor: pointer;
 }

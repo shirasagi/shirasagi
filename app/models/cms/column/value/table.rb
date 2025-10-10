@@ -1,5 +1,5 @@
 class Cms::Column::Value::Table < Cms::Column::Value::Base
-  field :value, type: String
+  field :value, type: String, metadata: { syntax_check: { table: true } }
 
   permit_values :value
 

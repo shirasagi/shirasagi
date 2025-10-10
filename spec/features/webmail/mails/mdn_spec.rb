@@ -33,12 +33,12 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
       ActionMailer::Base.deliveries.first.tap do |mdn_reply_mail|
         expect(mdn_reply_mail.from.first).to eq mdn_mail.to.first
         expect(mdn_reply_mail.to.first).to eq mdn_mail[:disposition_notification_to].to_s
-        expect(mdn_reply_mail.subject).to eq "開封済み：#{mdn_mail.subject}"
+        expect(mail_subject(mdn_reply_mail)).to eq "開封済み：#{mdn_mail.subject}"
         expect(mdn_reply_mail.body.multipart?).to be_truthy
         expect(mdn_reply_mail.parts.length).to eq 3
         mdn_reply_mail.parts[0].tap do |part|
           expect(part.content_type).to include("text/plain")
-          body = part.body.raw_source.encode("UTF-8", "iso-2022-jp")
+          body = mail_body(part)
           expect(body).to include(mdn_mail.to.first, "メッセージが開封されました。", I18n.l(now, format: :picker))
         end
         mdn_reply_mail.parts[1].tap do |part|

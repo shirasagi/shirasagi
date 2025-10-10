@@ -9,7 +9,24 @@ class Cms::Page::GenerateJob < Cms::ApplicationJob
   self.action = :generate
 
   def segment
-    arguments.dig(0, :segment)
+    # Cms::Agents::Tasks::NodesController へ引き継がれないように、インスタンス変数の先頭に "_" をつける
+    return @_segment if instance_variable_defined?(:@_segment)
+
+    options = arguments.last.then { _1.is_a?(Hash) && _1.extractable_options? ? _1 : SS::EMPTY_HASH }
+    seg = options[:segment] || options["segment"]
+
+    if seg.blank?
+      @_segment = nil
+      return @_segment
+    end
+
+    all_segments = site.generate_page_segments
+    if all_segments.blank? || !all_segments.include?(seg)
+      @_segment = nil
+      return @_segment
+    end
+
+    @_segment = seg
   end
 
   def task_cond

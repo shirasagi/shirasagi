@@ -11,6 +11,9 @@ en:
     total_file_size_current_stats: "%{size} is currently in use. The usage rate is %{percentage}."
     gws_addon_member_head: Contributors
     severity: Severity
+    back_number: Back Issue
+    japanese_holiday: Japanese Holiday
+    content_type: Contents
     links:
       set_seen: Mark as read
       set_seen_all: Mark as read all
@@ -35,12 +38,16 @@ en:
         all: All
         high: High
         normal: Normal
+      notice_folder_navi_open_state:
+        default: Only expand selected folder
+        expand_all: Expand all
     apis:
       posts:
         index: Select announcements
 
   gws_role:
     use_gws_notice: Use of announcements
+    use_gws_notice_back_number: Use of back issues of announcements
     read_other_gws_notices: View announcements (all)
     read_private_gws_notices: View announcements (own)
     edit_other_gws_notices: Edit announcements (all)
@@ -138,6 +145,7 @@ en:
         notice_browsed_state: Read/Unread
         notice_severity: Severity
         notice_toggle_browsed: Toggle Read/Unread
+        notice_folder_navi_open_state: Folder navi expansion
       gws/addon/notice/calendar:
         start_on: Start date
         end_on: End date
@@ -174,12 +182,25 @@ en:
         - Select the default severity.
       notice_toggle_browsed:
         - Select the toggle method.
+      notice_folder_navi_open_state:
+        - Select how to expand the folder navi.
+        -
+        - "Only expand selected folder: By default, only the selected folder is expanded and displayed, while others remain collapsed. This is the default expansion method."
+        - "Expand all: Expand all folders by default."
 
     gws/addon/notice/calendar:
       term:
         - Enter the date when you want the announcement to appear in the calendar.
       color:
         - Enter the display color of the announcement in the calendar.
+
+  input_guide:
+    gws/addon/notice/group_setting:
+      notice_folder_navi_open_state_html: |-
+        <p style="color: #e00;">
+          The folder navi is cached on the server, so changes to the folder expansion setting will not take effect immediately.
+          After changing the folder expansion setting, please check again after about a day.
+        </p>
 
   job:
     models:

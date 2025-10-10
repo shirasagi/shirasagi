@@ -149,15 +149,15 @@ module SS::Model::Site
 
     def same_domain_site_from_path(path)
       sites = same_domain_sites.sort_by { |site| site.url.count("/") }.reverse
-      sites.find { |site| path.start_with?(site.url) }
+      sites.find { |site| path.start_with?(site.url) || site.url == (path + "/") }
     end
 
     def generate_node_segments
-      SS.config.cms.generate_segments["node"][host] rescue nil
+      SS.config.cms.generate_segments["node"][host] rescue SS::EMPTY_ARRAY
     end
 
     def generate_page_segments
-      SS.config.cms.generate_segments["page"][host] rescue nil
+      SS.config.cms.generate_segments["page"][host] rescue SS::EMPTY_ARRAY
     end
 
     private

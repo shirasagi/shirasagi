@@ -1,9 +1,11 @@
+@use "ss/init";
+
 // list
 .gws-boards {
   .unread {
     background-color: #f9e9e3;
     &:hover {
-      background: $orange2;
+      background: init.$orange2;
     }
   }
 }
@@ -16,16 +18,20 @@
   //margin-right: 8px;
   color: #d00;
   font-weight: bold;
-  &:after { content: "New"; }
+  &::after {
+    content: "New";
+  }
 }
 
 // show
 .gws-board {
-  .topic, .comment, .subscribed-users {
-    @include box;
+  .topic,
+  .comment,
+  .subscribed-users {
+    @include init.box;
     margin-bottom: 2px;
     header {
-      @include box-head;
+      @include init.box-head;
       .name {
         margin-right: 4px;
       }
@@ -34,23 +40,25 @@
       margin-bottom: 8px;
       padding-left: 8px;
       border-left: 3px solid #2d3e92;
-      color: $black3;
+      color: init.$black3;
       font-weight: bold;
     }
     .body {
-      @include box-body;
+      @include init.box-body;
 
       .meta {
         text-align: right;
       }
     }
-    .files, .links {
+    .files,
+    .links {
       margin: 10px;
       padding: 10px;
       border-radius: 4px;
-      background-color: $gray1;
+      background-color: init.$gray1;
     }
-    .files a, .link-item {
+    .files a,
+    .link-item {
       line-height: 1.5;
       word-wrap: normal;
       word-break: normal;
@@ -77,7 +85,7 @@
       gap: 2px;
     }
     a.primary {
-      @include grd-orange;
+      @include init.grd-orange;
     }
   }
   .comments {
@@ -94,10 +102,10 @@
       }
       time {
         margin: 0 4px;
-        &:before {
+        &::before {
           content: "(";
         }
-        &:after {
+        &::after {
           content: ")";
         }
       }

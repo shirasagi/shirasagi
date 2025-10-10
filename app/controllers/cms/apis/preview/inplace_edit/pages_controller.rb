@@ -1,13 +1,14 @@
 class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
   include Cms::ApiFilter
   include Cms::InplaceEditFilter
+  include Cms::SyntaxCheckable
 
   model Cms::Page
 
   layout "ss/ajax_in_iframe"
 
-  before_action :set_cur_node
-  before_action :set_inplace_mode
+  before_action :set_cur_node, only: %i[edit update]
+  before_action :set_inplace_mode, only: %i[edit update]
 
   private
 
@@ -37,7 +38,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
     result = @item.save
 
     if !result
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
       return
     end
 
@@ -85,7 +86,7 @@ class Cms::Apis::Preview::InplaceEdit::PagesController < ApplicationController
       flash["cms.preview.notice"] = I18n.t("workflow.notice.created_branch_page")
       render json: { location: location }, status: :ok, content_type: json_content_type
     else
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
     end
   end
 

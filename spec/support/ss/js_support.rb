@@ -306,20 +306,24 @@ module SS
 
     WAIT_FOR_ALL_AJAX_PARTS_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
-        SS.ready(function() {
-          if (SS.partCountToLoad === 0) {
-            console.log("there are no ajax parts to load");
-            resolve(true);
-            return;
-          }
+        const promises = [];
 
-          $(document).on("ss:ajaxPartComplete", function() {
-            console.log("a ajax part is loaded");
-            if (SS.partCountToLoad === 0) {
-              resolve(true);
-            }
+        document.querySelectorAll(".ss-part").forEach((element) => {
+          var promise = new Promise((resolveInner, _rejectInner) => {
+            $(element.parentElement || document).one("ss:ajaxPartComplete", () => {
+              resolveInner(true);
+            });
           });
+          promises.push(promise);
         });
+
+        if (promises.length === 0) {
+          // there are no parts to wait.
+          resolve(true);
+          return;
+        }
+
+        Promise.all(promises).then(() => resolve(true));
       })(...arguments)
     SCRIPT
 
@@ -762,6 +766,20 @@ module SS
           ready_state = page.evaluate_script("document.readyState")
           break if ready_state.present? && ready_state != 'uninitialized'
 
+          sleep 0.1
+        rescue Selenium::WebDriver::Error::WebDriverError
+          # aborted by navigation: loader has changed while resolving nodes
+          # (Session info: chrome=132.0.6834.110)
+          sleep 0.1
+        end
+      end
+    end
+
+    def wait_for_cms_form_preview_initialized
+      Timeout.timeout(wait_timeout) do
+        loop do
+          aria_busy = page.evaluate_script("document?.body?.ariaBusy")
+          break if aria_busy == "true" || aria_busy.is_a?(TrueClass)
           sleep 0.1
         end
       end

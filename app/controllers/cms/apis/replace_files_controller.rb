@@ -25,7 +25,7 @@ class Cms::Apis::ReplaceFilesController < ApplicationController
       flash[:notice] = opts[:notice] if opts[:notice]
       render json: items_json, status: :ok, content_type: json_content_type
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity, content_type: json_content_type
+      render json: @item.errors.full_messages, status: :unprocessable_content, content_type: json_content_type
     end
   end
 

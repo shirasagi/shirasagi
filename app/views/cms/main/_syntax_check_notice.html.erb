@@ -1,0 +1,13 @@
+<%
+  violation_count = @item.try(:syntax_check_result_violation_count)
+  return if violation_count.blank? || violation_count == 0
+%>
+<div class="cms-notice syntax-check-violation">
+  <h2 style="display: flex; align-items: center; gap: 5px;">
+    <%= md_icons.outlined "accessibility" %>
+    <%= t("cms.syntax_check") %>
+  </h2>
+  <ul>
+    <li><%= t("cms.syntax_check_violation_count", count: violation_count, total: violation_count.to_fs(:delimited)) %></li>
+  </ul>
+</div>

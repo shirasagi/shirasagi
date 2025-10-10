@@ -1,7 +1,9 @@
+@use "ss/init";
+
 .mod-inquiry-captcha {
   .simple-captcha {
     padding: 5px;
-    border: $border-gray5;
+    border: init.$border-gray5;
   }
 
   .image {

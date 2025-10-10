@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "inquiry_answers", type: :feature, dbscope: :example do
+describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:faq_node) { create :faq_node_page, cur_site: site }
   let(:node) { create :inquiry_node_form, cur_site: site, faq: faq_node }

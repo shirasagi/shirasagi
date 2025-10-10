@@ -19,12 +19,14 @@ shared_examples "crud flow" do
     within 'form#item-form' do
       click_button I18n.t('ss.buttons.save')
     end
+    wait_for_notice I18n.t("ss.notice.saved")
 
     # delete/destroy
     click_link I18n.t('ss.links.delete')
     within 'form#item-form' do
       click_button I18n.t('ss.buttons.delete')
     end
+    wait_for_notice I18n.t("ss.notice.deleted")
 
     expect(current_path).to eq index_path
   end

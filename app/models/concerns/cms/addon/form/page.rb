@@ -12,7 +12,7 @@ module Cms::Addon::Form::Page
     field :column_values_updated, type: DateTime
     field :form_contains_urls, type: Array, default: []
 
-    permit_params :form_id, column_values: [ :_type, :column_id, :order, :alignment, in_wrap: {} ]
+    permit_params :form_id, column_values: [ :_id, :_type, :column_id, :order, :alignment, in_wrap: {} ]
     accepts_nested_attributes_for :column_values
 
     # default validation `validates_associated :column_values` is not suitable for column_values.
@@ -58,6 +58,10 @@ module Cms::Addon::Form::Page
 
   def render_html(registers = nil)
     return html if form.blank?
+
+    site = self.site
+    # DBに未保存の状態でも正しくレンダリングできるように cur_site もチェック
+    site ||= self.cur_site if respond_to?(:cur_site)
     return nil if site.blank?
 
     registers ||= {

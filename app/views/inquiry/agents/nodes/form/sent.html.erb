@@ -13,6 +13,10 @@
 <% if @saved_params.present? %>
   <div class="columns">
     <% @columns.each do |column| %>
+      <% data = @saved_params.data[column.id.to_s] %>
+      <% next if column.input_type == 'section' %>
+      <% next if data.nil? %>
+
       <%= inquiry_column_tag(column, confirm: true) do %>
         <%
           data = @saved_params.data[column.id.to_s]

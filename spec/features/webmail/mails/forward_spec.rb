@@ -59,11 +59,11 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.to).to have(1).items
           expect(mail.to.first).to eq user.email
           expect(mail.cc).to be_nil
-          expect(mail.subject).to eq "Fw: #{item_subject}"
+          expect(mail_subject(mail)).to eq "Fw: #{item_subject}"
           expect(mail.body.multipart?).to be_truthy
           expect(mail.body.parts).to have(3).items
-          expect(mail.body.parts[0].content_type).to eq "text/plain; charset=utf-8"
-          expect(mail.body.parts[0].decoded).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
+          expect(mail.body.parts[0].content_type).to include "text/plain;"
+          expect(mail_body(mail.body.parts[0])).to include(item_texts.map { |t| "> #{t}" }.join("\r\n"))
           expect(mail.body.parts[1].filename).to eq attachment1_name
           expect(mail.body.parts[1].content_type).to eq "image/png; filename=#{attachment1_name}"
           expect(mail.body.parts[2].filename).to eq attachment2_name

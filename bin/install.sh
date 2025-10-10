@@ -127,8 +127,8 @@ fi
 # asdf プラグインと言語のインストール
 echo "Installing asdf plugins and languages..."
 asdf plugin add ruby https://github.com/asdf-vm/asdf-ruby.git
-asdf install ruby 3.3.8
-asdf global ruby 3.3.8
+asdf install ruby 3.3.9
+asdf global ruby 3.3.9
 
 if ! command -v ruby >/dev/null; then
   echo 'Rubyのインストールに失敗しました'
@@ -136,8 +136,8 @@ if ! command -v ruby >/dev/null; then
 fi
 
 asdf plugin add nodejs https://github.com/asdf-vm/asdf-nodejs.git
-asdf install nodejs 20.5.0
-asdf global nodejs 20.5.0
+asdf install nodejs 24.8.0
+asdf global nodejs 24.8.0
 
 if ! command -v node >/dev/null; then
   echo 'Node.js のインストールに失敗しました'

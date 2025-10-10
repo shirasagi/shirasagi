@@ -86,7 +86,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "form" do
-        expect(page).to have_css("[data-id='#{item_master.id}'] [type='checkbox']")
+        within "[data-id='#{item_master.id}']" do
+          expect(page).to have_css("[type='checkbox']")
+          expect(page).to have_css(".list-item-error", text: I18n.t("errors.messages.branch_is_already_existed"))
+        end
         expect(page).to have_no_css("[data-id='#{item_branch.id}']")
         click_on I18n.t('ss.buttons.make_them_public')
       end
@@ -140,7 +143,10 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within "form" do
-        expect(page).to have_css("[data-id='#{item_branch.id}'] [type='checkbox']")
+        within "[data-id='#{item_branch.id}']" do
+          expect(page).to have_css("[type='checkbox']")
+          expect(page).to have_no_css(".list-item-error")
+        end
         expect(page).to have_no_css("[data-id='#{item_master.id}']")
         click_on I18n.t('ss.buttons.make_them_public')
       end

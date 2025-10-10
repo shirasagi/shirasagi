@@ -25,9 +25,9 @@ html {
 
 body {
   margin: 0 auto;
+  color: $text;
   font-family: $font-base;
   font-size: 100%;
-  color: $text;
 }
 
 h1,
@@ -95,8 +95,8 @@ img {
     padding: 5px 10px;
 
     #nocssread {
-      float: left;
       padding-right: 10px;
+      float: left;
       border-right: $border-hgry;
       @include u-arrow;
     }
@@ -176,9 +176,9 @@ img {
 
     #ss-voice-controller {
       position: absolute;
+      z-index: 999;
       top: 2.5em;
       right: 0;
-      z-index: 999;
     }
 
     #ss-kana {
@@ -215,38 +215,38 @@ img {
   width: 200px;
   margin: 5px 0 0 auto;
   overflow: hidden;
-  text-align: center;
   background: #ffffff;
+  text-align: center;
 
   select {
     width: 100%;
     padding: 4px 38px 4px 8px;
-    color: #666666;
     padding-right: 1em;
-    cursor: pointer;
-    text-indent: 0.01px;
-    text-overflow: ellipsis;
     border: 1px solid #bbbbbb;
     border-radius: 0;
     outline: none;
     background: transparent;
     background-image: none;
     box-shadow: none;
+    color: #666666;
+    text-indent: 0.01px;
+    text-overflow: ellipsis;
+    cursor: pointer;
     -webkit-appearance: none;
     appearance: none;
   }
 
-  &:before {
+  &::before {
+    content: '';
     position: absolute;
     top: 0.8em;
     right: 0.9em;
     width: 0;
     height: 0;
     padding: 0;
-    content: '';
-    border-left: 6px solid transparent;
-    border-right: 6px solid transparent;
     border-top: 6px solid #666666;
+    border-right: 6px solid transparent;
+    border-left: 6px solid transparent;
     pointer-events: none;
   }
 }
@@ -273,13 +273,13 @@ img {
   @include clear;
 
   .logo {
-    float: left;
     padding: 0px 0 0 17px;
+    float: left;
 
     @include mb {
-      float: none;
       display: block;
       padding: 10px;
+      float: none;
 
       img {
         width: 180px;
@@ -293,9 +293,9 @@ img {
     margin-bottom: 5px;
 
     @include mb {
-      float: none;
       display: block;
       padding: 0 10px;
+      float: none;
     }
 
     .u-menu {
@@ -321,10 +321,10 @@ img {
     }
 
     .l-menu {
-      clear: both;
-      text-align: right;
       padding-bottom: 10px;
+      clear: both;
       line-height: 0;
+      text-align: right;
 
       @include mb {
         width: 100%;
@@ -337,8 +337,8 @@ img {
         border: $border-hgry;
 
         @include mb {
-          float: none;
           position: relative;
+          float: none;
           @include border-radius(0);
         }
       }
@@ -356,8 +356,8 @@ img {
       }
 
       #search-button {
-        padding: 5px 10px;
         margin: 0;
+        padding: 5px 10px;
         border: 0;
         background: #333;
         color: $t-white;
@@ -398,8 +398,8 @@ img {
     @include clear;
     width: 1078px;
     margin: 0 auto;
-    border-left: $border-lblue;
     border-right: $border-hblue;
+    border-left: $border-lblue;
 
     @include mb {
       border-top: $border-lblue;
@@ -421,20 +421,20 @@ img {
       @include inline-block;
       width: 178px;
       padding: 5px 0 4px;
-      border-left: $border-hblue;
       border-right: $border-lblue;
+      border-left: $border-hblue;
       color: $t-white;
       font-size: $px16;
-      text-decoration: none;
       text-align: center;
+      text-decoration: none;
 
       @include mb {
-        width: auto;
         display: block;
-        @include box-sizing(border-box);
+        width: auto;
         border-top: $border-hblue;
         border-bottom: $border-lblue;
         font-size: 100%;
+        @include box-sizing(border-box);
       }
     }
 
@@ -469,15 +469,15 @@ img {
 #navi .wrap li ul,
 #navi .wrap .current ul {
   position: absolute;
+  z-index: 100;
   left: -1px;
   width: 180px;
   height: 0;
   overflow: hidden;
-  border-left: $border-lblue;
   border-right: $border-hblue;
   border-bottom: 2px solid $orange;
+  border-left: $border-lblue;
   background: $hblue;
-  z-index: 100;
 
   @include mb {
     display: none;
@@ -488,11 +488,11 @@ img {
   }
 
   li {
+    padding: 0;
     float: none;
     border: 0;
-    border-left: $border-hblue;
     border-right: $border-lblue;
-    padding: 0;
+    border-left: $border-hblue;
 
     a {
       display: block;
@@ -509,10 +509,10 @@ img {
       &:focus {
         @include li;
         padding: 5px 10px 3px 25px;
-        color: $link;
-        text-decoration: none;
         background-color: #fff;
         background-position: 12px 14px;
+        color: $link;
+        text-decoration: none;
       }
     }
   }
@@ -539,8 +539,8 @@ img {
 // -----------------------------------------------------------------------------
 // main addition
 #main {
-  float: left;
   width: 712px;
+  float: left;
 }
 
 .one #main {
@@ -551,9 +551,9 @@ img {
 #addition .left,
 #main .center,
 #addition .center {
-  float: left;
   width: 344px;
   margin-right: $box-margin;
+  float: left;
 }
 
 #main .center {
@@ -569,15 +569,15 @@ img {
 }
 
 #addition .right {
-  float: right;
   width: 344px;
+  float: right;
 }
 
 // -----------------------------------------------------------------------------
 // side
 #side {
-  float: right;
   width: 344px;
+  float: right;
 }
 
 // -----------------------------------------------------------------------------
@@ -600,25 +600,25 @@ img {
     padding: 0 10px;
 
     dt {
-      float: left;
-      clear: both;
       width: 148px;
       margin-right: 12px;
+      float: left;
+      clear: both;
       font-weight: bold;
     }
 
     dd {
-      float: left;
       width: 920px;
+      float: left;
 
       a {
         @include inline-block;
         margin-left: 12px;
         padding: 3px 4px 0 13px;
         border: 1px solid #999;
-        line-height: 1;
         background: $hgry url(../img/r-arrow-w.png) no-repeat 4px 4px;
         color: $text;
+        line-height: 1;
         text-decoration: none;
       }
     }
@@ -705,8 +705,8 @@ img {
 
   article {
     padding: $item-margin $item-margin 0;
-    border-left: 2px solid #c42c00;
     border-right: 2px solid #c42c00;
+    border-left: 2px solid #c42c00;
     background: #ffffa4;
 
     &:last-child {
@@ -756,9 +756,9 @@ death;
   }
 
   li {
-    float: left;
     width: 166px;
     padding: 4px 0;
+    float: left;
     border-bottom: $border-hgry;
 
     &:nth-child(2n+1) {
@@ -812,9 +812,9 @@ qa;
   }
 
   li {
-    float: left;
     width: 166px;
     padding: 4px 0;
+    float: left;
     border-bottom: $border-hgry;
 
     &:nth-child(2n+1) {
@@ -865,8 +865,8 @@ qa;
       }
 
       a {
-        border: $border-hgry;
         padding: 5px 0 2px 40px;
+        border: $border-hgry;
       }
     }
   }
@@ -878,8 +878,8 @@ qa;
   }
 
   li {
-    float: left;
     width: 166px;
+    float: left;
 
     &:nth-child(2n+1) {
       margin-right: $item-margin;
@@ -924,10 +924,10 @@ qa;
 
 #population {
   dt {
-    float: left;
     width: 58px;
     margin: 0 12px 3px 0;
     padding: 0 3px;
+    float: left;
     background: #ffeacc;
 
     &:nth-child(4) {
@@ -936,10 +936,10 @@ qa;
   }
 
   dd {
-    float: left;
     width: 90px;
     margin: 0 0 3px;
     padding: 0 3px;
+    float: left;
     background: #fff;
 
     &:nth-child(2n) {
@@ -956,8 +956,8 @@ qa;
   @include clear;
 
   .thumb {
-    float: left;
     margin-right: $item-margin;
+    float: left;
   }
 
   h2 {
@@ -974,9 +974,9 @@ qa;
 }
 
 #connect a {
-  float: left;
   display: block;
   margin-bottom: $item-margin;
+  float: left;
 
   &:nth-child(2n+1) {
     margin-right: $item-margin;
@@ -1041,10 +1041,10 @@ qa;
 
   h2 {
     padding: 3px 6px 0;
-    border-left: 5px solid $orange;
     border-bottom: 2px solid $orange;
-    @include grd-blue;
+    border-left: 5px solid $orange;
     color: $t-white;
+    @include grd-blue;
   }
 
   .pages header {
@@ -1060,7 +1060,7 @@ qa;
     display: inline;
   }
 
-  .new h2:after {
+  .new h2::after {
     content: "NEW";
     margin-left: 5px;
     color: #e03300;
@@ -1077,10 +1077,10 @@ qa;
   }
 
   .rss {
-    float: left;
-    @include inline-block;
     padding-left: 20px;
+    float: left;
     background: url(../img/ic-rss.png) no-repeat left center;
+    @include inline-block;
 
     @include mb {
       width: 30%;
@@ -1142,8 +1142,8 @@ qa;
 
   .ss-image-box-item {
     display: block;
-    float: left;
     margin-right: 12px;
+    float: left;
 
     @include mb {
       margin: 0 0 10px 10px;
@@ -1165,8 +1165,8 @@ qa;
   @include clear;
 
   .site {
-    float: left;
     margin-right: 15px;
+    float: left;
   }
 
   .fb {
@@ -1183,11 +1183,11 @@ qa;
 .pagetop {
   display: none;
   position: fixed;
-  bottom: 0;
-  right: 0;
   z-index: 100;
-  @include border-radius(5px 0 0 0);
+  right: 0;
+  bottom: 0;
   background: rgba(0, 0, 0, .6);
+  @include border-radius(5px 0 0 0);
 
   a {
     display: block;
@@ -1209,10 +1209,10 @@ qa;
   margin-bottom: $item-margin;
   padding: 3px 6px 0;
   border-left: 5px solid $orange;
-  @include grd-blue;
+  color: $t-white;
   font-size: $px18;
   font-weight: bold;
-  color: $t-white;
+  @include grd-blue;
 
   @include mb {
     margin: $item-margin 0;
@@ -1257,7 +1257,7 @@ qa;
     margin-left: 10px;
   }
 
-  .new h2:after {
+  .new h2::after {
     content: "NEW";
     margin-left: 5px;
     color: #e03300;
@@ -1281,11 +1281,11 @@ qa;
     background: url(../img/ic-rss.png) no-repeat left center;
 
     @include mb {
-      float: left;
       width: 30%;
-      @include inline-block;
       padding: 3px 0 3px 30px;
+      float: left;
       background: $hblue url(../img/ic-rss.png) no-repeat 10px center;
+      @include inline-block;
     }
   }
 
@@ -1294,9 +1294,9 @@ qa;
     @include r-arrow;
 
     @include mb {
-      float: left;
       width: 70%;
       padding: 3px 0 3px 15px;
+      float: left;
       @include r-arrow-s;
     }
   }
@@ -1344,10 +1344,10 @@ qa;
   margin-bottom: $box-margin;
 
   article {
-    float: left;
     width: 325px;
     margin: 0 24px 24px 0;
     padding: 6px;
+    float: left;
     border: $border-hgry;
     border-left: 5px solid $blue;
     cursor: pointer;
@@ -1377,7 +1377,7 @@ qa;
     @include r-arrow;
   }
 
-  .new h2:after {
+  .new h2::after {
     content: "NEW";
     margin-left: 5px;
     color: #e03300;
@@ -1474,9 +1474,9 @@ qa;
 // categories
 .categories {
   margin-bottom: $box-margin;
+  clear: both;
   border-top: $border-hgry;
   text-align: right;
-  clear: both;
 
   header {
     @include inline-block;
@@ -1491,8 +1491,8 @@ qa;
       @include inline-block;
       margin: 0;
       padding: 0 10px;
-      border-left: $border-hgry;
       border-bottom: 0;
+      border-left: $border-hgry;
       font-size: $px14;
       font-weight: normal;
       list-style: none;
@@ -1640,8 +1640,8 @@ body[class*="body--institution-shisetsu-"] article.body {
 
     dt,
     legend {
-      float: left;
       min-width: 15%;
+      float: left;
       font-weight: bold;
     }
   }
@@ -1677,8 +1677,8 @@ body[class*="body--institution-shisetsu-"] article.body {
 
   .float-left,
   .ss-alignment-left {
-    float: left;
     margin: 0 $item-margin $item-margin 0;
+    float: left;
 
     @include mb {
       margin: 0;
@@ -1688,8 +1688,8 @@ body[class*="body--institution-shisetsu-"] article.body {
 
   .float-right,
   .ss-alignment-right {
-    float: right;
     margin: 0 0 $item-margin $item-margin;
+    float: right;
 
     @include mb {
       margin: 0;
@@ -1760,8 +1760,8 @@ body[class*="body--institution-shisetsu-"] article.body {
       margin: 0 10px 20px;
     }
 
-    &:before,
-    &:after {
+    &::before,
+    &::after {
       display: none;
     }
   }
@@ -1772,9 +1772,9 @@ body[class*="body--institution-shisetsu-"] article.body {
 }
 
 .sitemap-body h2 {
-  clear: both;
   margin: $item-margin 0 6px;
   padding: 3px 10px 0;
+  clear: both;
   background: $hblue;
   font-size: $px16;
   font-weight: bold;
@@ -1786,9 +1786,9 @@ body[class*="body--institution-shisetsu-"] article.body {
 
 #sitemap li,
 .sitemap-body h3 {
-  float: left;
   margin-bottom: 10px;
   padding: 0 10px;
+  float: left;
   border-right: $border-hgry;
   background: none;
   list-style: none;
@@ -1802,14 +1802,14 @@ body[class*="body--institution-shisetsu-"] article.body {
 
   dl {
     display: inline-block;
-    border: 0;
     margin: 0 $item-margin 0 0;
     padding: 0;
+    border: 0;
 
     dt,
     dd {
-      float: none;
       display: inline;
+      float: none;
       font-weight: normal;
     }
   }
@@ -1963,28 +1963,28 @@ footer.contact {
 }
 
 #event-list {
-  clear: both;
   margin-bottom: 2em;
+  clear: both;
   border-top: 1px solid #ccc;
 
   dl {
     margin: 0;
     padding: 6px 10px 3px;
-    border-bottom: 1px solid #ccc;
     zoom: 1;
+    border-bottom: 1px solid #ccc;
 
-    &:before {
+    &::before {
       content: "\0020";
       display: block;
       height: 0;
       overflow: hidden;
     }
 
-    &:after {
+    &::after {
       content: "\0020";
-      clear: both;
       display: block;
       height: 0;
+      clear: both;
       overflow: hidden;
     }
 
@@ -2011,8 +2011,8 @@ footer.contact {
   }
 
   dt {
-    float: left;
     width: 20%;
+    float: left;
   }
 
   dd {
@@ -2112,13 +2112,13 @@ footer.contact {
   @include clear;
 
   dt {
-    clear: both;
-    @include float(left);
     width: 150px;
     margin: 0 $box-margin $item-margin 0;
     padding: 3px 5px;
-    @include border-radius(3px);
+    clear: both;
     background: $hblue;
+    @include float(left);
+    @include border-radius(3px);
   }
 
   dd {
@@ -2132,8 +2132,8 @@ footer.contact {
 
 #calendar {
   header.title {
-    color: $blue;
     border-top: 2px solid $blue;
+    color: $blue;
   }
 
   .calendar-nav {
@@ -2214,8 +2214,8 @@ footer.contact {
 
   span.list,
   span.table {
-    float: right;
     margin-left: 10px;
+    float: right;
 
     a {
       display: inline-block;
@@ -2224,8 +2224,8 @@ footer.contact {
       @include btn-gry;
 
       @include mb {
-        margin-left: 0;
         margin-right: 10px;
+        margin-left: 0;
       }
     }
 
@@ -2241,10 +2241,10 @@ footer.contact {
 
 .one #calendar-search form {
   h2 {
-    border: 0;
     min-width: 160px;
-    font-size: $px14;
+    border: 0;
     color: $text;
+    font-size: $px14;
 
     @include mb {
       width: 100%;
@@ -2286,9 +2286,9 @@ footer.contact {
       width: auto;
       min-width: 160px;
       border: 0;
+      color: $text;
       font-size: $px14;
       font-weight: normal;
-      color: $text;
     }
 
     &.keyword input {
@@ -2318,13 +2318,13 @@ footer.contact {
 }
 
 .content-box .content-body.search {
-  border: 0;
   padding: 0;
+  border: 0;
 
   form {
+    margin-bottom: 24px;
     padding: 10px;
     border: 1px solid #cdcdcd;
-    margin-bottom: 24px;
   }
 
   .event-pages {
@@ -2396,10 +2396,10 @@ footer.contact {
       width: 1rem;
       height: 1rem;
       padding: 2px;
-      line-height: 1;
       overflow: hidden;
       border: 1px solid #cdcdcd;
       background: $hblue;
+      line-height: 1;
       text-align: center;
       white-space: nowrap;
 
@@ -2443,16 +2443,16 @@ footer.contact {
   h2,
   legend,
   .keyword label {
-    clear: both;
     display: block;
+    box-sizing: border-box;
     width: 100%;
     margin-bottom: 6px;
     padding: 0 10px;
+    clear: both;
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px16;
     font-weight: bold;
-    box-sizing: border-box;
 
   }
 
@@ -2510,22 +2510,22 @@ footer.contact {
 }
 
 .event-ics-file {
-  float: right;
   margin-right: 15px;
   margin-bottom: 20px;
   padding: 6px 12px 6px 30px;
+  float: right;
   border: 1px solid $orange;
-  @include border-radius(5px);
-  text-decoration: none;
-  color: #000;
   background-image: url(../img/u-arrow.png);
   background-repeat: no-repeat;
   background-position: 10px 52%;
+  color: #000;
+  text-decoration: none;
+  @include border-radius(5px);
 
   &:hover {
-    color: #000;
     background-color: #f48b22;
     background-image: url(../img/u-arrow-white.png);
+    color: #000;
   }
 
   @include mb {
@@ -2541,17 +2541,17 @@ footer.contact {
   .content-head {
     position: relative;
     padding: 3px 10px;
-    color: $blue;
-    font-size: $px17;
     border: 1px solid #cdcdcd;
     border-top: solid 2px $blue;
     border-bottom: 0;
+    color: $blue;
+    font-size: $px17;
 
-    &:after {
+    &::after {
       content: "";
       position: absolute;
-      bottom: 0;
       right: 0;
+      bottom: 0;
       left: 0;
       width: calc(100% - 14px);
       margin: auto;
@@ -2601,18 +2601,18 @@ footer.contact {
   dl,
   fieldset {
     @include clear;
-    clear: both;
     width: 100%;
     margin-bottom: $box-margin;
+    clear: both;
 
     dt,
     legend {
-      clear: both;
-      float: left;
       width: 200px;
       padding: 6px $item-margin;
-      font-weight: bold;
+      float: left;
+      clear: both;
       background: $hblue;
+      font-weight: bold;
       @include border-radius(3px);
 
       .required {
@@ -2624,9 +2624,9 @@ footer.contact {
 
     dd,
     .fields {
-      float: left;
       width: 832px;
       padding: 0 $item-margin;
+      float: left;
 
       p {
         margin-bottom: 0;
@@ -2685,8 +2685,8 @@ footer.contact {
   }
 
   .simple-captcha {
-    padding-left: 236px;
     margin-bottom: $box-margin;
+    padding-left: 236px;
   }
 }
 
@@ -2699,8 +2699,8 @@ footer.contact {
 
   dl dt {
     width: 100%;
-    float: none;
     padding: 0;
+    float: none;
     background: none;
     font-weight: bold;
 
@@ -2710,9 +2710,9 @@ footer.contact {
   }
 
   dl dd {
-    float: none;
     width: 100%;
     padding: 0;
+    float: none;
   }
 
   .fields {
@@ -2735,10 +2735,10 @@ footer.contact {
   padding: $item-margin $item-margin 0 50px;
   border: 2px solid $hblue;
 
-  &:before {
+  &::before {
     content: "Q:";
-    position: absolute;
     display: block;
+    position: absolute;
     left: 12px;
     color: $blue;
     font-size: $px16;
@@ -2750,10 +2750,10 @@ footer.contact {
   position: relative;
   padding: $item-margin $item-margin 0 50px;
 
-  &:before {
+  &::before {
     content: "A:";
-    position: absolute;
     display: block;
+    position: absolute;
     left: 12px;
     color: $red;
     font-size: $px16;
@@ -2768,9 +2768,9 @@ footer.contact {
   background: $hblue;
 
   .category {
-    float: left;
     margin-right: $box-margin;
     margin-bottom: $item-margin;
+    float: left;
 
     select {
       padding: 5px;
@@ -2778,8 +2778,8 @@ footer.contact {
   }
 
   .keyword {
-    float: left;
     margin-bottom: $item-margin;
+    float: left;
 
     input {
       width: 300px;
@@ -2803,16 +2803,16 @@ footer.contact {
 
   h2,
   legend {
-    clear: both;
     display: block;
+    box-sizing: border-box;
     width: 100%;
     margin-bottom: 6px;
     padding: 0 10px;
+    clear: both;
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px16;
     font-weight: bold;
-    box-sizing: border-box;
   }
 
   .cms-nodes h2 {
@@ -2852,8 +2852,8 @@ footer.contact {
       &.service,
       &.location {
         @include mb {
-          padding: 0 10px;
           box-sizing: border-box;
+          padding: 0 10px;
         }
       }
     }
@@ -2872,13 +2872,13 @@ footer.contact {
     @include clear;
 
     dt {
-      clear: both;
       width: 160px;
-      @include float(left);
       margin-right: $box-margin;
       padding: 3px 10px;
-      @include border-radius(3px);
+      clear: both;
       background: $hblue;
+      @include float(left);
+      @include border-radius(3px);
     }
 
     dd {
@@ -2942,12 +2942,12 @@ footer.contact {
   }
 
   #map-sidebar {
-    float: left;
     width: 180px;
     height: 480px !important;
     padding: 9px;
-    border: $border-hgry;
+    float: left;
     overflow-y: scroll;
+    border: $border-hgry;
 
     .column {
       margin-bottom: 5px;
@@ -2965,8 +2965,8 @@ footer.contact {
     position: relative;
     width: 100% !important;
     height: 500px !important;
-    overflow: hidden;
     margin-bottom: $item-margin;
+    overflow: hidden;
 
     .marker-info {
       width: 300px;
@@ -3013,8 +3013,8 @@ footer.contact {
 
   .columns {
     .column {
-      clear: both;
       padding: 6px 0;
+      clear: both;
       border-bottom: $border-hgry;
 
       h2 {
@@ -3036,8 +3036,8 @@ footer.contact {
 
         li {
           @include float(left);
-          list-style: none;
           background: url(../img/ic-li.png) no-repeat center left 2px;
+          list-style: none;
 
           a {
             display: block;
@@ -3078,13 +3078,13 @@ footer.contact {
     @include clear;
 
     dt {
-      clear: both;
-      @include float(left);
       width: 150px;
       margin: 0 $box-margin $item-margin 0;
       padding: 3px 5px;
-      @include border-radius(3px);
+      clear: both;
       background: $hblue;
+      @include float(left);
+      @include border-radius(3px);
     }
 
     dd {
@@ -3094,8 +3094,8 @@ footer.contact {
     }
 
     +p {
-      border: $border-hgry;
       padding: 4px;
+      border: $border-hgry;
     }
   }
 
@@ -3162,15 +3162,15 @@ footer.contact {
 
   h2,
   legend {
-    clear: both;
+    box-sizing: border-box;
     width: 100%;
     margin-bottom: 6px;
     padding: 0 10px;
+    clear: both;
     border-bottom: 2px solid $blue;
     color: $blue;
     font-size: $px16;
     font-weight: bold;
-    box-sizing: border-box;
   }
 
   .category,
@@ -3183,8 +3183,8 @@ footer.contact {
   }
 
   .send {
-    clear: both;
     margin-top: 1em;
+    clear: both;
     text-align: center;
 
     input {
@@ -3200,10 +3200,10 @@ footer.contact {
   list-style: none;
 
   li {
-    float: left;
     width: 325px;
     margin: 0 24px 24px 0;
     padding: 6px;
+    float: left;
     border: $border-hgry;
     border-left: 5px solid $blue;
     cursor: pointer;
@@ -3231,18 +3231,18 @@ footer.contact {
 
   dl {
     @include clear;
-    clear: both;
     width: 100%;
     margin-bottom: $box-margin;
+    clear: both;
 
     dt {
-      clear: both;
-      float: left;
       width: 200px;
       margin-bottom: $item-margin;
       padding: 6px $item-margin;
-      font-weight: bold;
+      float: left;
+      clear: both;
       background: $hblue;
+      font-weight: bold;
       @include border-radius(3px);
 
       .required {
@@ -3253,10 +3253,10 @@ footer.contact {
     }
 
     dd {
-      float: left;
       width: 464px;
       margin-bottom: $item-margin;
       padding: 0 $item-margin;
+      float: left;
 
       p {
         margin-bottom: 0;
@@ -3298,8 +3298,8 @@ footer.contact {
   }
 
   .simple-captcha {
-    padding-left: 236px;
     margin-bottom: $box-margin;
+    padding-left: 236px;
   }
 }
 
@@ -3395,10 +3395,10 @@ footer.contact {
 #recent-photo {
   li {
     width: 50%;
-    float: left;
     padding: 12px 0 0;
-    list-style: none;
+    float: left;
     border: 0;
+    list-style: none;
     text-align: center;
   }
 
@@ -3413,8 +3413,8 @@ footer.contact {
 
 #side-blog {
   li {
-    list-style: none;
     padding: 12px 0 0;
+    list-style: none;
 
     span {
       display: block;
@@ -3452,8 +3452,8 @@ footer.contact {
 
   .photo {
     width: 166px;
-    float: left;
     padding: 0 6px 12px;
+    float: left;
     text-align: center;
 
     @include mb {
@@ -3534,13 +3534,13 @@ footer.contact {
     }
 
     dt {
-      clear: both;
       width: 160px;
-      @include float(left);
       margin: 0 $box-margin 12px 0;
       padding: 3px 10px;
-      @include border-radius(3px);
+      clear: both;
       background: $hblue;
+      @include float(left);
+      @include border-radius(3px);
     }
 
     dd {
@@ -3553,10 +3553,10 @@ footer.contact {
 
       dt,
       dd {
-        float: none;
         display: block;
         width: 100%;
         margin: 0;
+        float: none;
         @include box-sizing(border-box);
       }
     }
@@ -3580,8 +3580,8 @@ footer.contact {
     @include float(left);
 
     @include mb {
-      clear: both;
       padding: 0 10px;
+      clear: both;
     }
 
     h2 {
@@ -3716,8 +3716,8 @@ footer.contact {
 }
 
 .blog-center {
-  float: right;
   width: 500px;
+  float: right;
 
   .blog {
     margin-bottom: 12px;
@@ -3748,8 +3748,8 @@ footer.contact {
 }
 
 .blog-left {
-  float: left;
   width: 198px;
+  float: left;
   border: $border-hgry;
 }
 
@@ -3797,9 +3797,9 @@ footer.contact {
 
   .blog-center,
   .blog-left {
-    float: none;
     width: auto;
     margin: 10px;
+    float: none;
   }
 }
 
@@ -3915,14 +3915,14 @@ footer.contact {
 
   a {
     display: block;
-    float: left;
     margin-left: $item-margin;
     padding: 3px 30px;
+    float: left;
+    color: $text;
+    text-decoration: none;
     @include border-top-left-radius(3px);
     @include border-top-right-radius(3px);
     @include grd-gry;
-    color: $text;
-    text-decoration: none;
 
     @include mb {
       margin: 0 10px 10px 0;
@@ -4032,8 +4032,8 @@ table.member-invited-group {
   }
 
   .file-view {
-    float: left;
     margin: 0 12px 12px 0;
+    float: left;
 
     .thumb {
       display: block;
@@ -4045,9 +4045,9 @@ table.member-invited-group {
       background: $t-white;
       font-size: $px30;
       font-weight: bold;
-      text-decoration: none;
-      text-align: center;
       line-height: 90px;
+      text-align: center;
+      text-decoration: none;
 
       &:hover,
       &:focus {
@@ -4062,12 +4062,12 @@ table.member-invited-group {
     .action a,
     .menu a {
       display: inline-block;
-      @include btn-gry;
       margin-bottom: 12px;
       padding: .2em 1em;
       color: $text;
-      text-decoration: none;
       letter-spacing: 0;
+      text-decoration: none;
+      @include btn-gry;
     }
   }
 
@@ -4079,12 +4079,12 @@ table.member-invited-group {
 
 .body--mypage-anpi {
   form.search {
-    float: left;
     margin-bottom: 10px;
+    float: left;
 
     @include mb {
-      float: none;
       padding: 0 10px;
+      float: none;
     }
 
     select {
@@ -4098,12 +4098,12 @@ table.member-invited-group {
 }
 
 .member-anpi-map {
-  float: right;
   margin-bottom: 10px;
+  float: right;
 
   @include mb {
-    float: none;
     padding: 0 10px;
+    float: none;
   }
 
   a {
@@ -4173,42 +4173,42 @@ table.member-invited-group {
   .category,
   .condition {
     @include clear;
-    clear: both;
     width: 100%;
     margin-bottom: $box-margin;
+    clear: both;
 
     h2,
     dt {
-      clear: both;
-      float: left;
       width: 100px;
       padding: 6px $item-margin;
-      font-weight: bold;
+      float: left;
+      clear: both;
       background: $hblue;
+      font-weight: bold;
       @include border-radius(3px);
 
       @include mb {
         @include box-sizing(border-box);
-        float: none;
         width: 100%;
         margin-bottom: $item-margin;
+        float: none;
       }
     }
 
     input,
     select,
     dd {
-      float: left;
       min-width: 400px;
       margin: 8px $item-margin;
+      float: left;
 
       @include mb {
         @include box-sizing(border-box);
-        float: none;
         width: 100%;
         min-width: auto;
         min-width: initial;
         margin: 0;
+        float: none;
       }
     }
   }
@@ -4304,9 +4304,9 @@ table.member-invited-group {
   #footer-navi,
   #main .category-nodes article,
   #main .cms-nodes article {
-    float: none;
     width: 100%;
     padding: 0;
+    float: none;
   }
 
   #tool,
@@ -4333,8 +4333,8 @@ table.member-invited-group {
   #links-life,
   #category-list,
   #month {
-    margin-bottom: $smart-margin;
     margin-top: 0;
+    margin-bottom: $smart-margin;
 
     header h2 {
       margin-bottom: 0;
@@ -4349,7 +4349,7 @@ table.member-invited-group {
       margin-left: 0 !important;
     }
 
-    .new h2:after {
+    .new h2::after {
       display: none;
     }
   }
@@ -4378,8 +4378,8 @@ table.member-invited-group {
 
   #online nav,
   #propose nav {
-    background: none;
     padding: 0;
+    background: none;
   }
 
   #online li a,
@@ -4410,10 +4410,10 @@ table.member-invited-group {
 
     a {
       display: block;
-      @include ic-doc;
       overflow: hidden;
-      white-space: nowrap;
       text-overflow: ellipsis;
+      white-space: nowrap;
+      @include ic-doc;
     }
   }
 
@@ -4477,16 +4477,16 @@ table.member-invited-group {
 
       .name {
         display: block;
-        float: left;
         width: 33%;
+        float: left;
         @include box-sizing(border-box);
       }
 
       .name:last-child {
         width: 34%;
-        white-space: nowrap;
         overflow: hidden;
         text-overflow: ellipsis;
+        white-space: nowrap;
         @include box-sizing(border-box);
       }
     }
@@ -4513,16 +4513,16 @@ table.member-invited-group {
     @include box-sizing(border-box);
 
     dl dt {
-      font-weight: normal;
       color: $blue;
+      font-weight: normal;
     }
 
     dl dd a {
       display: block;
       margin: 0;
       padding: 8px 8px 5px;
-      text-align: center;
       background-position: 28% center;
+      text-align: center;
     }
   }
 
@@ -4531,19 +4531,19 @@ table.member-invited-group {
     border-top: 1px solid #999;
 
     a {
-      float: left;
       display: block;
       width: 50%;
-      @include box-sizing(border-box);
-      @include r-arrow-s;
       margin: 0;
       padding-left: 22px;
+      float: left;
       border: 1px solid #999;
       border-top: 0;
       background-color: $hgry;
       background-position: 9px 10px;
       color: $text;
       text-decoration: none;
+      @include box-sizing(border-box);
+      @include r-arrow-s;
 
       &:nth-child(2n+1) {
         border-right: 0;
@@ -4625,14 +4625,14 @@ table.member-invited-group {
     a {
       display: block;
       width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
       @include box-sizing(border-box);
       @include r-arrow-s;
-      overflow: hidden;
-      white-space: nowrap;
-      text-overflow: ellipsis;
     }
 
-    .new h2:after {
+    .new h2::after {
       display: none;
     }
   }
@@ -4705,8 +4705,8 @@ table.member-invited-group {
 
   #event-list {
     dt {
-      float: none;
       width: 100%;
+      float: none;
       @include box-sizing(border-box);
     }
 
@@ -4806,7 +4806,7 @@ table.member-invited-group {
   .faq .body {
     padding: $smart-margin;
 
-    &:before {
+    &::before {
       position: static;
     }
   }
@@ -4842,10 +4842,10 @@ table.member-invited-group {
 
       dt,
       dd {
-        float: none;
         display: block;
         width: 100%;
         margin: 0;
+        float: none;
         @include box-sizing(border-box);
       }
     }
@@ -4878,14 +4878,14 @@ table.member-invited-group {
     }
 
     .body {
-      float: none;
       width: 100%;
+      float: none;
     }
 
     .summary-image {
       display: inline-block;
-      float: none;
       margin-bottom: 10px;
+      float: none;
     }
 
     .see {
@@ -4896,10 +4896,10 @@ table.member-invited-group {
 
       dt,
       dd {
-        float: none;
         display: block;
         width: 100%;
         margin: 0;
+        float: none;
         @include box-sizing(border-box);
       }
     }
@@ -4918,7 +4918,7 @@ table.member-invited-group {
         @include float(left);
         background: none;
 
-        &:after {
+        &::after {
           content: " / ";
         }
       }
@@ -4948,9 +4948,9 @@ table.member-invited-group {
   #colorbox .category div,
   #colorbox .service div,
   #colorbox .location div {
-    float: none;
     display: block;
     width: 100%;
+    float: none;
   }
 
   #colorbox .send input {
@@ -5030,9 +5030,9 @@ table.member-invited-group {
 // chat
 #chat {
   position: fixed;
+  z-index: 9999;
   right: 0;
   bottom: 120px;
-  z-index: 9999;
 
   @include mb {
     bottom: 0;
@@ -5050,14 +5050,14 @@ table.member-invited-group {
   }
 
   .chat-open {
-    position: relative;
-    @include box-sizing(border-box);
     display: none;
+    position: relative;
     width: 375px;
     height: 480px;
+    overflow: hidden;
     border: 3px solid #333;
     background: #ccc;
-    overflow: hidden;
+    @include box-sizing(border-box);
 
     @include mb {
       width: 100%;
@@ -5080,8 +5080,8 @@ table.member-invited-group {
 
     .chat-items {
       height: calc(480px - 8.2em);
-      overflow: scroll;
       padding: 10px;
+      overflow: scroll;
 
       @include mb {
         height: calc(100vh - 8.2em);
@@ -5089,9 +5089,9 @@ table.member-invited-group {
     }
 
     .chat-item {
-      clear: both;
       margin-bottom: 15px;
       padding: 10px;
+      clear: both;
       border-radius: 6px;
     }
 
@@ -5100,7 +5100,7 @@ table.member-invited-group {
       margin-left: 70px;
       background: #fff;
 
-      &:before {
+      &::before {
         content: "";
         position: absolute;
         top: 0;
@@ -5110,7 +5110,7 @@ table.member-invited-group {
         background: url(../img/chat-man.jpg) no-repeat center center;
       }
 
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         top: 14px;
@@ -5126,13 +5126,13 @@ table.member-invited-group {
       padding: 0;
 
       a {
-        position: relative;
         display: block;
+        position: relative;
         padding: 5px 10px 5px 25px;
         border-radius: 0;
         background: #fff;
 
-        &:before {
+        &::before {
           content: "";
           position: absolute;
           top: 12px;
@@ -5146,8 +5146,8 @@ table.member-invited-group {
 
     .chat-item.user {
       display: inline-block;
-      float: right;
       margin-left: 90px;
+      float: right;
       background: #e9ffff;
     }
 
@@ -5289,10 +5289,10 @@ table.member-invited-group {
   margin: 64px 0 16px;
   padding-top: 16px;
   border-top: 1px dotted #888;
-  font-weight: bold;
-  font-size: $px14;
-  font-weight: normal;
   color: $text;
+  font-size: $px14;
+  font-weight: bold;
+  font-weight: normal;
 }
 
 .guide-node-form {
@@ -5328,21 +5328,21 @@ table.member-invited-group {
         opacity: 0.7;
       }
 
-      &:after {
+      &::after {
         content: "";
         position: absolute;
         top: 0;
-        bottom: 0;
         right: 10px;
-        margin: auto;
+        bottom: 0;
         width: 5px;
         height: 5px;
+        margin: auto;
+        transform: rotate(135deg);
         border-top: 2px solid #000;
         border-right: 2px solid #000;
-        transform: rotate(135deg);
       }
 
-      &.toggle-arrow:after {
+      &.toggle-arrow::after {
         content: "";
         transform: rotate(315deg);
       }
@@ -5387,11 +5387,11 @@ table.member-invited-group {
 
     a {
       display: inline-block;
-      min-width: 200px;
       box-sizing: border-box;
-      @include btn-org;
-      text-decoration: none;
+      min-width: 200px;
       color: #000;
+      text-decoration: none;
+      @include btn-org;
     }
   }
 
@@ -5401,19 +5401,18 @@ table.member-invited-group {
     text-align: center;
 
     a {
-      position: relative;
       display: inline-block;
-      min-width: 200px;
+      position: relative;
       box-sizing: border-box;
+      min-width: 200px;
       padding: 8px 24px 8px 54px;
+      transition-duration: 0.3s;
       border-radius: 10px;
       font-size: $px14;
       font-weight: bold;
       text-decoration: none;
-      transition-duration: 0.3s;
-      box-sizing: border-box;
 
-      &:before {
+      &::before {
         content: "";
         position: absolute;
         top: 0;
@@ -5424,7 +5423,7 @@ table.member-invited-group {
       }
 
       &:hover {
-        &:before {
+        &::before {
           content: "";
           background: url(../img/ic-arrow-g-fback-w.svg) no-repeat left center;
         }
@@ -5445,15 +5444,15 @@ table.member-invited-group {
   }
 
   .close-btn {
+    box-sizing: border-box;
     width: 180px;
     margin: 0 auto;
     padding: 5px 0px;
     border-radius: 6px;
-    text-align: center;
     color: #fff;
-    box-sizing: border-box;
-    @include transition(0.3s);
+    text-align: center;
     cursor: pointer;
+    @include transition(0.3s);
 
     span {
       padding-right: 5px;
@@ -5465,16 +5464,16 @@ table.member-invited-group {
 
   .print-btn {
     display: block;
+    box-sizing: border-box;
     width: 100%;
     margin-bottom: 30px;
     padding: 8px;
+    border: 1px solid #dadada;
+    border-radius: 6px;
+    background: #dadada;
+    font-weight: bold;
     text-align: center;
     text-decoration: none;
-    font-weight: bold;
-    border-radius: 6px;
-    border: 1px solid #dadada;
-    background: #dadada;
-    box-sizing: border-box;
   }
 
   .your-answers {
@@ -5482,11 +5481,11 @@ table.member-invited-group {
   }
 
   .answer-state {
-    float: left;
     display: inline-block;
     min-width: 50px;
     margin-right: 10px;
     padding: 5px 10px;
+    float: left;
     border-radius: 10px;
     text-align: center;
 
@@ -5530,17 +5529,17 @@ table.member-invited-group {
 
     a {
       @include btn-org;
-      text-decoration: none;
       color: #000;
+      text-decoration: none;
     }
   }
 
   .progress {
     font-size: $px18;
-    text-align: center;
     font-weight: bold;
+    text-align: center;
 
-    .evaluated-length:after {
+    .evaluated-length::after {
       content: "/";
       margin-left: 5px;
     }
@@ -5549,8 +5548,8 @@ table.member-invited-group {
 
 .body--purpose-guide #main {
   @include mb {
-    padding: 0 15px 15px;
     box-sizing: border-box;
+    padding: 0 15px 15px;
   }
 }
 
@@ -5578,16 +5577,16 @@ table.member-invited-group {
       }
 
       .swiper-wrapper {
-        margin-left: 0;
         width: 620px;
-        transform: translate3d(0px, 0px, 0px) !important;
+        margin-left: 0;
         overflow: hidden;
+        transform: translate3d(0px, 0px, 0px) !important;
 
         .swiper-slide {
           display: inline-block;
-          margin-bottom: 5px;
           width: 120px !important;
           height: 35px;
+          margin-bottom: 5px;
 
           &:not(:first-child) {
             margin-left: 5px;
@@ -5600,17 +5599,17 @@ table.member-invited-group {
 
     .ss-swiper-slide-controller {
       display: flex;
-      justify-content: flex-end;
       position: static;
+      justify-content: flex-end;
 
       @include mb {
         display: none;
       }
 
       button {
+        padding-left: 15px;
         border: none;
         color: #fff;
-        padding-left: 15px;
 
         &.ss-swiper-slide-play {
           margin-right: 12px;
@@ -5656,8 +5655,8 @@ body#body--kanko-info-index {
   }
 
   header {
-    border-bottom: 1px solid #ccc;
     padding: 9px 12px;
+    border-bottom: 1px solid #ccc;
 
     time {
       display: inline-block;
@@ -5674,8 +5673,8 @@ body[class*="body--institution-shisetsu-"] .map .body {
   width: 100%;
 
   h2 {
-    color: $text;
     border-bottom: none;
+    color: $text;
   }
 }
 
@@ -5703,8 +5702,8 @@ body.body--search {
             @include btn-gry;
 
             @include mb {
-              margin-left: 0;
               margin-right: 10px;
+              margin-left: 0;
             }
 
             @include btn-org;

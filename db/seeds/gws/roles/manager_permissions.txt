@@ -119,6 +119,7 @@ edit_private_gws_monitor_posts
 read_private_gws_monitor_posts
 trash_private_gws_monitor_posts
 use_gws_notice
+use_gws_notice_back_number
 delete_private_gws_notices
 edit_private_gws_notices
 read_private_gws_notices

@@ -225,25 +225,62 @@ describe SS::LiquidFilters, dbscope: :example do
       let(:value) { "<img src=\"/one.png\"><img src=\"/two.png\">" }
       it { is_expected.to eq "/one.png" }
     end
+
+    context "with data-url" do
+      let(:value) { "<img src=\"data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D\" />" }
+      it { is_expected.to eq "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D" }
+    end
   end
 
   describe "expand_path" do
-    let(:path) { "http://www.example.jp/" }
-    let(:source) { "{{ value || expand_path: \"#{path}\"}}" }
+    context "with full url like node's full_url" do
+      let(:path) { "https://www.example.jp/#{unique_id}/" }
+      let(:source) { "{{ value || expand_path: \"#{path}\"}}" }
 
-    context "with blank" do
-      let(:value) { "" }
-      it { is_expected.to eq "" }
+      context "with blank" do
+        let(:value) { "" }
+        it { is_expected.to eq "" }
+      end
+
+      context "with relative path" do
+        let(:value) { "img/cover.png" }
+        it { is_expected.to eq "#{path}img/cover.png" }
+      end
+
+      context "with absolute path" do
+        let(:value) { "/img/cover.png" }
+        it { is_expected.to eq "https://www.example.jp/img/cover.png" }
+      end
+
+      context "with data-url" do
+        let(:value) { "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D" }
+        it { is_expected.to eq "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D" }
+      end
     end
 
-    context "with relative path" do
-      let(:value) { "img/cover.png" }
-      it { is_expected.to eq "http://www.example.jp/img/cover.png" }
-    end
+    context "with simple path like node's url" do
+      let(:path) { "/#{unique_id}/" }
+      let(:source) { "{{ value || expand_path: \"#{path}\"}}" }
 
-    context "with absolute path" do
-      let(:value) { "/img/cover.png" }
-      it { is_expected.to eq "http://www.example.jp/img/cover.png" }
+      context "with blank" do
+        let(:value) { "" }
+        it { is_expected.to eq "" }
+      end
+
+      context "with relative path" do
+        let(:value) { "img/cover.png" }
+        it { is_expected.to eq "#{path}img/cover.png" }
+      end
+
+      context "with absolute path" do
+        let(:value) { "/img/cover.png" }
+        it { is_expected.to eq "/img/cover.png" }
+      end
+
+      context "with data-url" do
+        let(:value) { "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D" }
+        it { is_expected.to eq "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw%3D%3D" }
+      end
     end
   end
 

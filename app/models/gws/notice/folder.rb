@@ -60,6 +60,7 @@ class Gws::Notice::Folder
       or_conds = self.readable_conditions(user, site: site)
       self.site(site).where('$and' => [{ '$or' => or_conds }])
     end
+    alias for_post_back_number for_post_reader
 
     private
 

@@ -41,12 +41,12 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq default_from
         expect(notify_mail.to.first).to eq reminder.user.email
-        expect(notify_mail.subject).to eq "[リマインダー] スケジュール - #{schedule.name}"
+        expect(mail_subject(notify_mail)).to eq "[リマインダー] スケジュール - #{schedule.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("[タイトル] #{schedule.name}")
-        expect(notify_mail.body.raw_source).to include("[日時] #{I18n.l(schedule.start_at.to_date, format: :gws_long)}")
-        expect(notify_mail.body.raw_source).to include("[参加ユーザー]\r\n")
-        expect(notify_mail.body.raw_source).to include(schedule.members.first.long_name)
+        expect(mail_body(notify_mail)).to include("[タイトル] #{schedule.name}")
+        expect(mail_body(notify_mail)).to include("[日時] #{I18n.l(schedule.start_at.to_date, format: :gws_long)}")
+        expect(mail_body(notify_mail)).to include("[参加ユーザー]\r\n")
+        expect(mail_body(notify_mail)).to include(schedule.members.first.long_name)
       end
     end
 
@@ -79,12 +79,12 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq default_from
         expect(notify_mail.to.first).to eq reminder.user.email
-        expect(notify_mail.subject).to eq "[リマインダー] スケジュール - #{schedule.name}"
+        expect(mail_subject(notify_mail)).to eq "[リマインダー] スケジュール - #{schedule.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("[タイトル] #{schedule.name}")
-        expect(notify_mail.body.raw_source).to include("[日時] #{I18n.l(schedule.start_at.to_date, format: :gws_long)}")
-        expect(notify_mail.body.raw_source).to include("[参加ユーザー]\r\n")
-        expect(notify_mail.body.raw_source).to include(schedule.members.first.long_name)
+        expect(mail_body(notify_mail)).to include("[タイトル] #{schedule.name}")
+        expect(mail_body(notify_mail)).to include("[日時] #{I18n.l(schedule.start_at.to_date, format: :gws_long)}")
+        expect(mail_body(notify_mail)).to include("[参加ユーザー]\r\n")
+        expect(mail_body(notify_mail)).to include(schedule.members.first.long_name)
       end
 
       expect(Gws::Job::Log.count).to eq 2
@@ -118,12 +118,12 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq sender_email
         expect(notify_mail.to.first).to eq reminder.user.email
-        expect(notify_mail.subject).to eq "[リマインダー] スケジュール - #{schedule.name}"
+        expect(mail_subject(notify_mail)).to eq "[リマインダー] スケジュール - #{schedule.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("[タイトル] #{schedule.name}")
-        expect(notify_mail.body.raw_source).to include("[日時] #{I18n.l(schedule.start_at.to_date, format: :gws_long)}")
-        expect(notify_mail.body.raw_source).to include("[参加ユーザー]\r\n")
-        expect(notify_mail.body.raw_source).to include(schedule.members.first.long_name)
+        expect(mail_body(notify_mail)).to include("[タイトル] #{schedule.name}")
+        expect(mail_body(notify_mail)).to include("[日時] #{I18n.l(schedule.start_at.to_date, format: :gws_long)}")
+        expect(mail_body(notify_mail)).to include("[参加ユーザー]\r\n")
+        expect(mail_body(notify_mail)).to include(schedule.members.first.long_name)
       end
     end
   end
@@ -146,12 +146,12 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq default_from
         expect(notify_mail.to.first).to eq reminder.user.email
-        expect(notify_mail.subject).to eq "[リマインダー] スケジュール - #{schedule.name}"
+        expect(mail_subject(notify_mail)).to eq "[リマインダー] スケジュール - #{schedule.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("[タイトル] #{schedule.name}")
-        expect(notify_mail.body.raw_source).to include("[日時] #{I18n.l(schedule.start_at.to_date, format: :gws_long)}")
-        expect(notify_mail.body.raw_source).to include("[参加ユーザー]\r\n")
-        expect(notify_mail.body.raw_source).to include(schedule.members.first.long_name)
+        expect(mail_body(notify_mail)).to include("[タイトル] #{schedule.name}")
+        expect(mail_body(notify_mail)).to include("[日時] #{I18n.l(schedule.start_at.to_date, format: :gws_long)}")
+        expect(mail_body(notify_mail)).to include("[参加ユーザー]\r\n")
+        expect(mail_body(notify_mail)).to include(schedule.members.first.long_name)
       end
     end
   end

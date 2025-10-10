@@ -1,12 +1,13 @@
 // Portal
+@use "ss/init";
 
 // portlets
 .gws-portlets {
   margin: -10px;
-  @include mb {
+  @include init.mb {
     margin: 0 10px;
     .portlets {
-      @include clear;
+      @include init.clear;
       width: 100%;
       height: auto !important;
       margin: 0 0 60px;
@@ -35,8 +36,8 @@
   .portlet-title {
     margin: -15px -10px 15px;
     padding: 8px 10px;
-    border-bottom: $border-gray1;
-    background: rgba(0, 0, 0, .02);
+    border-bottom: init.$border-gray1;
+    background: rgba(0, 0, 0, 0.02);
     font-weight: bold;
   }
   .portlet-model-schedule .main-box.with-tabs {
@@ -58,9 +59,9 @@
 
   .portlet-model-ad {
     .slide-wrap {
-      @include display-flex;
-      @include justify-content(center);
-      @include align-items(center)
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .ss-swiper-slide {
@@ -78,9 +79,9 @@
     }
 
     .ss-swiper-slide-item {
-      @include display-flex;
-      @include justify-content(center);
-      @include align-items(center);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .ss-swiper-slide-item-image {
@@ -110,11 +111,11 @@
 }
 .gws-portlets-layouts {
   .portlet-item {
-    background-color: rgba(0, 0, 0, .01);
+    background-color: rgba(0, 0, 0, 0.01);
     background-image: url(/assets/img/gws/bg-plan.png);
     cursor: move;
     &:hover {
-      background-color: rgba(0, 0, 0, .05);
+      background-color: rgba(0, 0, 0, 0.05);
       box-shadow: 0 1px 5px #bbb;
     }
   }
@@ -122,7 +123,7 @@
     box-shadow: 0 1px 10px #bbb;
   }
   .preview-holder {
-    background-color: rgba(0, 0, 0, .3);
+    background-color: rgba(0, 0, 0, 0.3);
     background-image: url(/assets/img/gws/bg-plan.png);
   }
   .gs-resize-handle-both {
@@ -130,7 +131,7 @@
     height: 12px;
   }
   .portlet-html .edit-portlet {
-    @include btn;
+    @include init.btn;
     display: block;
     position: absolute;
     z-index: 1;

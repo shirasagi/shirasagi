@@ -240,7 +240,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
     end
     unless service.call
       @item.workflow_state = nil
-      render template: "edit", status: :unprocessable_entity
+      render template: "edit", status: :unprocessable_content
       return
     end
 
@@ -297,7 +297,7 @@ class Gws::Tabular::Frames::ApproversController < ApplicationController
       cur_site: @cur_site, cur_group: @cur_group, cur_user: @cur_user, item: @item, ref: ref)
     unless service.call
       SS::Model.copy_errors(service, @item)
-      render template: "show", status: :unprocessable_entity
+      render template: "show", status: :unprocessable_content
       return
     end
 

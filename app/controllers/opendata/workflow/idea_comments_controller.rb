@@ -81,7 +81,7 @@ class Opendata::Workflow::IdeaCommentsController < ApplicationController
       request_approval
       render json: { workflow_state: @item.workflow_state }
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
 
   end
@@ -120,7 +120,7 @@ class Opendata::Workflow::IdeaCommentsController < ApplicationController
 
       render json: { workflow_state: workflow_state }
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
@@ -139,7 +139,7 @@ class Opendata::Workflow::IdeaCommentsController < ApplicationController
       end
       render json: { workflow_state: @item.workflow_state }
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 

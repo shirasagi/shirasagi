@@ -21,7 +21,7 @@ new Gws_Affair_Menu("<%= current_navi %>", "ss_affair_navi_site_<%= @cur_site.id
 <% end %>
 
 <nav class="mod-navi current-navi">
-  <%= gws_menu_icon(:affair, 'modules.gws/affair', gws_affair_main_path) %>
+  <%= gws_menu_icon(:affair, gws_affair_main_path) %>
 
   <!-- 庶務事務/出退勤 -->
   <h3><%= link_to(t('modules.gws/affair/attendance'), "", class: "toggle-narrow-page") %></h3>

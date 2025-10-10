@@ -1,6 +1,7 @@
 class Cms::PageSearchContentsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
+  helper Cms::SyntaxCheckableHelper
 
   navi_view "cms/main/navi"
   menu_view nil

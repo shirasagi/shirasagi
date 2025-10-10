@@ -9,11 +9,11 @@ module Cms::OpendataRef::PageFilter
     file_id = safe_params[:file_id]
     key_values = safe_params.except(:file_id)
     if key_values.present? && @item.update_opendata_resources!(file_id, key_values).blank?
-      return render json: [ @item.errors.full_messages ], status: :unprocessable_entity
+      return render json: [ @item.errors.full_messages ], status: :unprocessable_content
     end
 
     head :no_content
   rescue => e
-    render json: [ e.message ], status: :unprocessable_entity
+    render json: [ e.message ], status: :unprocessable_content
   end
 end

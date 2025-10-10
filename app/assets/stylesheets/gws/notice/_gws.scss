@@ -1,9 +1,11 @@
 // list
+@use "ss/init";
+
 .gws-notices {
   .unread {
     background-color: #f9e9e3;
     &:hover {
-      background: $orange2;
+      background: init.$orange2;
     }
   }
 }
@@ -12,5 +14,34 @@
 .gws-notice-calendar {
   .fc-content .fc-date {
     display: none;
+  }
+}
+
+.gws-notice-content-navi {
+  .gws-notice-content-type-list {
+    margin: 0;
+    padding: 0;
+  }
+}
+
+.gws-notice-index {
+  display: grid;
+  grid-template-columns: 20vw auto;
+  gap: 10px;
+  width: 100%;
+
+  .navi {
+    #content-navi-core {
+      width: 100%;
+      float: unset;
+    }
+  }
+
+  .main {
+    width: 100%;
+  }
+
+  @include init.mb {
+    display: block;
   }
 }

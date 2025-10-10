@@ -12,31 +12,35 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
   let!(:selectable_page4) { create :article_page, cur_site: site, cur_node: node2, state: "closed" }
 
   let!(:column1) do
-    create(:cms_column_text_field, cur_site: site, cur_form: form, order: 1, input_type: 'text')
+    create(:cms_column_text_field, cur_site: site, cur_form: form, order: rand(1..10), input_type: 'text')
   end
   let!(:column2) do
-    create(:cms_column_date_field, cur_site: site, cur_form: form, order: 2)
+    create(:cms_column_date_field, cur_site: site, cur_form: form, order: rand(11..20))
   end
   let!(:column3) do
-    create(:cms_column_url_field, cur_site: site, cur_form: form, order: 3, html_tag: '')
+    create(:cms_column_url_field, cur_site: site, cur_form: form, order: rand(21..30), html_tag: '')
   end
   let!(:column4) do
-    create(:cms_column_text_area, cur_site: site, cur_form: form, order: 4)
+    create(:cms_column_text_area, cur_site: site, cur_form: form, order: rand(31..40))
   end
   let!(:column5) do
-    create(:cms_column_select, cur_site: site, cur_form: form, order: 5)
+    create(:cms_column_select, cur_site: site, cur_form: form, order: rand(41..50))
   end
   let!(:column6) do
-    create(:cms_column_radio_button, cur_site: site, cur_form: form, order: 6)
+    create(:cms_column_radio_button, cur_site: site, cur_form: form, order: rand(51..60))
   end
   let!(:column7) do
-    create(:cms_column_check_box, cur_site: site, cur_form: form, order: 7)
+    create(:cms_column_check_box, cur_site: site, cur_form: form, order: rand(61..70))
   end
   let!(:column8) do
-    create(:cms_column_file_upload, cur_site: site, cur_form: form, required: "required", order: 8, file_type: "image")
+    create(
+      :cms_column_file_upload, cur_site: site, cur_form: form, required: "required", order: rand(71..80),
+      file_type: "image")
   end
   let!(:column9) do
-    create(:cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: 9, node_ids: [node2.id])
+    create(
+      :cms_column_select_page, cur_site: site, cur_form: form, required: "optional", order: rand(81..90),
+      node_ids: [node2.id])
   end
   let(:name) { unique_id }
   let(:column1_value) { unique_id }
@@ -136,7 +140,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
         click_on I18n.t('ss.buttons.publish_save')
       end
-      click_on I18n.t('ss.buttons.ignore_alert')
+      within_cbox do
+        expect(page).to have_css("#alertExplanation", text: I18n.t('cms.syntax_check'))
+        expect(page).to have_css("#alertExplanation", text: I18n.t('cms.column_file_upload.image.file_label_place_holder'))
+        click_on I18n.t('ss.buttons.ignore_alert')
+      end
       expect(page).to have_no_css('#notice', text: I18n.t('ss.notice.saved'))
       expect(page).to have_selector('#errorExplanation ul li', count: 1)
       msg = I18n.t("mongoid.attributes.cms/column/value/file_upload.file_id") + I18n.t("errors.messages.blank")
@@ -173,16 +181,61 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(article_pages.count).to eq 1
       article_pages.first.tap do |item|
         expect(item.name).to eq name
-        expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value
-        expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value)
-        expect(item.column_values.find_by(column_id: column3.id).value).to eq column3_value
-        expect(item.column_values.find_by(column_id: column4.id).value).to eq column4_value.gsub("\n", "\r\n")
-        expect(item.column_values.find_by(column_id: column5.id).value).to eq column5_value
-        expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value
-        expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value ]
-        expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'logo.png'
-        expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text
-        expect(item.column_values.find_by(column_id: column9.id).page_id).to eq column9_page_id
+        item.column_values.find_by(column_id: column1.id).tap do |column_value|
+          expect(column_value.name).to eq column1.name
+          expect(column_value.value).to eq column1_value
+          expect(column_value.order).to eq column1.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column2.id).tap do |column_value|
+          expect(column_value.name).to eq column2.name
+          expect(column_value.date).to eq Time.zone.parse(column2_value)
+          expect(column_value.order).to eq column2.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column3.id).tap do |column_value|
+          expect(column_value.name).to eq column3.name
+          expect(column_value.value).to eq column3_value
+          expect(column_value.order).to eq column3.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column4.id).tap do |column_value|
+          expect(column_value.name).to eq column4.name
+          expect(column_value.value).to eq column4_value.gsub("\n", "\r\n")
+          expect(column_value.order).to eq column4.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column5.id).tap do |column_value|
+          expect(column_value.name).to eq column5.name
+          expect(column_value.value).to eq column5_value
+          expect(column_value.order).to eq column5.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column6.id).tap do |column_value|
+          expect(column_value.name).to eq column6.name
+          expect(column_value.value).to eq column6_value
+          expect(column_value.order).to eq column6.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column7.id).tap do |column_value|
+          expect(column_value.name).to eq column7.name
+          expect(column_value.values).to eq [ column7_value ]
+          expect(column_value.order).to eq column7.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column8.id).tap do |column_value|
+          expect(column_value.name).to eq column8.name
+          expect(column_value.file.name).to eq 'logo.png'
+          expect(column_value.file_label).to eq column8_image_text
+          expect(column_value.order).to eq column8.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column9.id).tap do |column_value|
+          expect(column_value.name).to eq column9.name
+          expect(column_value.page_id).to eq column9_page_id
+          expect(column_value.order).to eq column9.order
+          expect(column_value.alignment).to be_blank
+        end
         expect(item.backups.count).to eq 1
       end
       expect(SS::File.all.unscoped.count).to eq 1
@@ -258,16 +311,61 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(article_pages.count).to eq 1
       article_pages.first.tap do |item|
         expect(item.name).to eq name
-        expect(item.column_values.find_by(column_id: column1.id).value).to eq column1_value2
-        expect(item.column_values.find_by(column_id: column2.id).date).to eq Time.zone.parse(column2_value2)
-        expect(item.column_values.find_by(column_id: column3.id).value).to eq column3_value2
-        expect(item.column_values.find_by(column_id: column4.id).value).to eq column4_value2.gsub("\n", "\r\n")
-        expect(item.column_values.find_by(column_id: column5.id).value).to eq column5_value2
-        expect(item.column_values.find_by(column_id: column6.id).value).to eq column6_value2
-        expect(item.column_values.find_by(column_id: column7.id).values).to eq [ column7_value2 ]
-        expect(item.column_values.find_by(column_id: column8.id).file.name).to eq 'keyvisual.gif'
-        expect(item.column_values.find_by(column_id: column8.id).file_label).to eq column8_image_text2
-        expect(item.column_values.find_by(column_id: column9.id).page_id).to eq column9_page_id2
+        item.column_values.find_by(column_id: column1.id).tap do |column_value|
+          expect(column_value.name).to eq column1.name
+          expect(column_value.value).to eq column1_value2
+          expect(column_value.order).to eq column1.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column2.id).tap do |column_value|
+          expect(column_value.name).to eq column2.name
+          expect(column_value.date).to eq Time.zone.parse(column2_value2)
+          expect(column_value.order).to eq column2.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column3.id).tap do |column_value|
+          expect(column_value.name).to eq column3.name
+          expect(column_value.value).to eq column3_value2
+          expect(column_value.order).to eq column3.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column4.id).tap do |column_value|
+          expect(column_value.name).to eq column4.name
+          expect(column_value.value).to eq column4_value2.gsub("\n", "\r\n")
+          expect(column_value.order).to eq column4.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column5.id).tap do |column_value|
+          expect(column_value.name).to eq column5.name
+          expect(column_value.value).to eq column5_value2
+          expect(column_value.order).to eq column5.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column6.id).tap do |column_value|
+          expect(column_value.name).to eq column6.name
+          expect(column_value.value).to eq column6_value2
+          expect(column_value.order).to eq column6.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column7.id).tap do |column_value|
+          expect(column_value.name).to eq column7.name
+          expect(column_value.values).to eq [ column7_value2 ]
+          expect(column_value.order).to eq column7.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column8.id).tap do |column_value|
+          expect(column_value.name).to eq column8.name
+          expect(column_value.file.name).to eq 'keyvisual.gif'
+          expect(column_value.file_label).to eq column8_image_text2
+          expect(column_value.order).to eq column8.order
+          expect(column_value.alignment).to be_blank
+        end
+        item.column_values.find_by(column_id: column9.id).tap do |column_value|
+          expect(column_value.name).to eq column9.name
+          expect(column_value.page_id).to eq column9_page_id2
+          expect(column_value.order).to eq column9.order
+          expect(column_value.alignment).to be_blank
+        end
         expect(item.backups.count).to eq 2
       end
       expect(SS::File.all.unscoped.count).to eq 1

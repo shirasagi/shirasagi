@@ -2,6 +2,7 @@ class Cms::PartsController < ApplicationController
   include Cms::BaseFilter
   include Cms::PartFilter
   include Cms::SyntaxCheckable
+  helper Cms::SyntaxCheckableHelper
 
   model Cms::Part
 
@@ -45,45 +46,55 @@ class Cms::PartsController < ApplicationController
     change_item_class
     @item.attributes = get_params
 
-    if params.key?(:ignore_syntax_check)
-      render_create @item.valid? && @item.save
-      return
+    result = @item.valid?
+    if @item.is_a?(Cms::SyntaxCheckResult)
+      @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
+    end
+    if !params.key?(:ignore_syntax_check) && @syntax_context && @syntax_context.errors.present?
+      @item.errors.add :html, :accessibility_error
+      result = false
     end
 
-    if params.key?(:auto_correct)
-      auto_correct
-      result = syntax_check
+    unless result
       render_create result
       return
     end
 
-    if @item.respond_to?(:html)
-      render_create @item.valid? && syntax_check && @item.save
-    else
-      render_create @item.valid? && @item.save
+    if @item.is_a?(Cms::SyntaxCheckResult)
+      @item.syntax_check_result_checked = Time.zone.now.utc
+      @item.syntax_check_result_violation_count = @syntax_context.errors.select { _1.id.present? }.count
     end
+
+    render_create @item.save
   end
 
   def update
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
-    if params.key?(:ignore_syntax_check)
-      render_update @item.valid? && @item.save
-      return
+
+    result = @item.valid?
+    if @item.is_a?(Cms::SyntaxCheckResult)
+      @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
+    end
+    if !params.key?(:ignore_syntax_check) && @syntax_context && @syntax_context.errors.present?
+      @item.errors.add :html, :accessibility_error
+      result = false
     end
 
-    if params.key?(:auto_correct)
-      auto_correct
-      result = syntax_check
+    unless result
       render_update result
+      if @item.is_a?(Cms::SyntaxCheckResult)
+        @item.set_syntax_check_result(@syntax_context)
+      end
       return
     end
 
-    if @item.respond_to?(:html)
-      render_update @item.valid? && syntax_check && @item.save
-    else
-      render_update @item.valid? && @item.save
+    if @item.is_a?(Cms::SyntaxCheckResult)
+      @item.syntax_check_result_checked = Time.zone.now.utc
+      @item.syntax_check_result_violation_count = @syntax_context.errors.select { _1.id.present? }.count
     end
+
+    render_update @item.save
   end
 
   def routes

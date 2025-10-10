@@ -114,7 +114,7 @@ module Tasks
 
           %i[
             feed_all_memos feed_all_boards feed_all_faqs feed_all_qnas feed_all_surveys feed_all_circulars
-            feed_all_monitors feed_all_reports feed_all_workflows feed_all_workflows2 feed_all_files
+            feed_all_monitors feed_all_reports feed_all_workflows feed_all_workflows2 feed_all_files feed_all_notices
           ].each do |method|
             ::Tasks::Gws::Es.send(method)
           end
@@ -319,6 +319,24 @@ module Tasks
 
           puts 'gws/share/file'
           job = ::Gws::Elasticsearch::Indexer::ShareFileJob.bind(site_id: site)
+          job.perform_now(action: 'index', id: :all)
+        end
+      end
+
+      def feed_all_notices
+        ::Tasks::Gws::Base.with_site(ENV['site']) do |site|
+          if !site.menu_elasticsearch_visible?
+            puts 'elasticsearch was not enabled'
+            break
+          end
+
+          if site.elasticsearch_client.nil?
+            puts 'elasticsearch was not configured'
+            break
+          end
+
+          puts 'gws/notice/post'
+          job = ::Gws::Elasticsearch::Indexer::NoticePostJob.bind(site_id: site)
           job.perform_now(action: 'index', id: :all)
         end
       end

@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .gws-elasticsearch-json-view {
   max-height: 30em;
   overflow: auto;
@@ -19,7 +21,7 @@
         padding-left: 1em;
       }
     }
-    @include mb {
+    @include init.mb {
       margin: 0 10px 10px;
     }
   }

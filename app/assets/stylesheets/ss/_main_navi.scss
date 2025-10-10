@@ -1,0 +1,137 @@
+@use "init";
+
+// -------------------------------------------------------------------------------------------------
+// main-navi
+@mixin content-navi-core {
+  position: relative;
+  width: 24%;
+  float: left;
+
+  .addon-view {
+    position: relative;
+  }
+
+  .addon-body {
+    padding: 10px;
+  }
+
+  .content-navi-refresh {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+
+    a {
+      display: inline-flex;
+      color: init.$black3;
+      text-decoration: none;
+
+      &:hover {
+        background-color: init.$gray1;
+        color: init.$orange;
+        cursor: pointer;
+      }
+    }
+  }
+
+  & + .index,
+  &  ~ .content-main {
+    width: calc(100% - 24% - 10px);
+    float: right;
+  }
+
+  @include init.mb {
+    width: auto;
+    max-height: 200px;
+    margin: 0 10px 10px;
+    float: none;
+    overflow: scroll;
+
+    .addon-view {
+      margin: 0 0 10px 0;
+    }
+
+    & + .index,
+    &  ~ .content-main {
+      width: auto;
+      float: none;
+    }
+  }
+}
+
+#content-navi-core {
+  @include content-navi-core;
+}
+
+#content-navi {
+  @include init.box;
+  @include content-navi-core;
+  & {
+    padding: 10px;
+  }
+  .content-navi-title {
+    margin: -10px -10px 10px;
+    padding: 10px 12px;
+    border-bottom: 1px solid #f2f2f2;
+    font-weight: bold;
+    &::before {
+      content: " ";
+      margin-right: 6px;
+      padding-left: 3px;
+      background: #f25a38;
+    }
+  }
+}
+
+.tree-navi .loading {
+  color: #bbb;
+}
+.tree-navi .tree-item {
+  display: flex;
+  margin: 2px 0;
+}
+.tree-navi .tree-item a {
+  color: init.$black3;
+}
+.tree-navi .is-parent {
+  font-weight: bold;
+}
+.tree-navi .is-current {
+  background: #f2f2f2;
+}
+.tree-navi .item-pad {
+  padding-left: 20px;
+}
+.tree-navi .item-mark {
+  padding: 2px;
+  .material-icons {
+    padding: 1px;
+    border: 1px solid #d0d0d0;
+    border-radius: 2px;
+    background-color: #fff;
+    font-size: 13px;
+    vertical-align: top;
+    &:hover {
+      border-color: init.$orange;
+      color: #f25a38;
+    }
+  }
+}
+.tree-navi .tree-item.no-child .material-icons {
+  background: #e5e5e5;
+  &:hover {
+    border-color: #d0d0d0;
+    color: init.$black3;
+  }
+}
+.tree-navi .item-name {
+  flex-grow: 10;
+  padding: 2px;
+  overflow: hidden;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  &:hover {
+    background: #f2f2f2;
+    color: #f25a38;
+  }
+}

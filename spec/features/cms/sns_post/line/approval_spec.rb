@@ -25,8 +25,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
       it "#edit" do
         capture_line_bot_client do |capture|
           # edit
-          login_cms_user
-          visit edit_path
+          login_cms_user to: edit_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
@@ -47,6 +48,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -68,9 +71,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # approve
           login_user user1, to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -85,9 +92,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: I18n.t("ss.options.state.expired"))
           end
@@ -102,8 +113,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
       it "#edit" do
         capture_line_bot_client do |capture|
           # edit
-          login_cms_user
-          visit edit_path
+          login_cms_user to: edit_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
@@ -124,6 +136,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -145,9 +159,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # approve
           login_user user1, to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -162,9 +180,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
           end
@@ -189,9 +211,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
       it "#edit" do
         capture_line_bot_client do |capture|
           # create branch
-          login_cms_user
-          visit show_path
+          login_cms_user to: show_path
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
@@ -203,10 +226,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on item.name
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-          expect(page).to have_link I18n.t("ss.links.edit")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # edit
           click_on I18n.t("ss.links.edit")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]',
@@ -226,6 +252,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -247,10 +275,14 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # approve
           login_user user1, to: show_path
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
@@ -271,9 +303,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
           end
@@ -301,8 +337,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
       it "#edit" do
         capture_line_bot_client do |capture|
           # 1. edit
-          login_cms_user
-          visit edit_path
+          login_cms_user to: edit_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
@@ -324,6 +361,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -345,9 +384,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # 1. approve
           login_user user1, to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -362,9 +405,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
           end
@@ -384,8 +431,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(Cms::SnsPostLog::Line.count).to eq 1
 
           # 2. edit (enable line_edit_auto_post)
-          login_cms_user
-          visit edit_path
+          login_cms_user to: edit_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
@@ -412,6 +460,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 1
           expect(Cms::SnsPostLog::Line.count).to eq 1
@@ -432,9 +482,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # 2. approve
           login_user user1, to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -449,9 +503,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
           end
@@ -459,8 +517,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(Cms::SnsPostLog::Line.count).to eq 2
 
           # 3. edit (disable line_edit_auto_post)
-          login_cms_user
-          visit edit_path
+          login_cms_user to: edit_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
@@ -487,6 +546,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("workflow.restart_workflow"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 2
           expect(Cms::SnsPostLog::Line.count).to eq 2
@@ -507,9 +568,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # 3. approve
           login_user user1, to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -524,9 +589,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
           end
@@ -539,9 +608,10 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
       it "#edit" do
         capture_line_bot_client do |capture|
           # 1. create branch
-          login_cms_user
-          visit show_path
+          login_cms_user to: show_path
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
@@ -553,10 +623,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on item.name
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-          expect(page).to have_link I18n.t("ss.links.edit")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # 1. edit
           click_on I18n.t("ss.links.edit")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]',
@@ -576,6 +649,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 0
           expect(capture.broadcast.messages).to eq nil
@@ -597,15 +672,21 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # 1. approve
           login_user user1, to: show_path
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -620,9 +701,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
           end
@@ -642,8 +727,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(Cms::SnsPostLog::Line.count).to eq 1
 
           # 2. create branch
-          login_cms_user
-          visit show_path
+          login_cms_user to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             wait_for_event_fired "turbo:frame-load" do
@@ -654,10 +740,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on item.name
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-          expect(page).to have_link I18n.t("ss.links.edit")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # 2. edit (enable line_edit_auto_post)
           click_on I18n.t("ss.links.edit")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           ensure_addon_opened("#addon-cms-agents-addons-line_poster")
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css('select[name="item[line_auto_post]"] option[selected]',
@@ -679,6 +768,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 1
           expect(Cms::SnsPostLog::Line.count).to eq 1
@@ -699,15 +790,21 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # approve
           login_user user1, to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -722,9 +819,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
           end
@@ -732,8 +833,9 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
           expect(Cms::SnsPostLog::Line.count).to eq 2
 
           # 3. create branch
-          login_cms_user
-          visit show_path
+          login_cms_user to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             wait_for_event_fired "turbo:frame-load" do
@@ -744,7 +846,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on item.name
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-          expect(page).to have_link I18n.t("ss.links.edit")
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # 3. edit (disable line_edit_auto_post)
           click_on I18n.t("ss.links.edit")
@@ -769,6 +872,8 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             wait_for_notice I18n.t('ss.notice.saved')
           end
           expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           expect(capture.broadcast.count).to eq 2
           expect(Cms::SnsPostLog::Line.count).to eq 2
@@ -789,14 +894,20 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             click_on I18n.t("workflow.buttons.request")
           end
           expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           # approve
           login_user user1, to: show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-workflow-agents-addons-branch" do
             wait_for_turbo_frame "#workflow-branch-frame"
             expect(page).to have_link item.name
             click_on item.name
           end
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
 
           perform_enqueued_jobs do
             within ".mod-workflow-approve" do
@@ -811,9 +922,13 @@ describe "article_pages line post", type: :feature, dbscope: :example, js: true 
             within "#addon-cms-agents-addons-release" do
               expect(page).to have_css("dd", text: I18n.t("ss.options.state.public"))
             end
+            wait_for_all_ckeditors_ready
+            wait_for_all_turbo_frames
           end
 
           visit show_path
+          wait_for_all_ckeditors_ready
+          wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-line_poster" do
             expect(page).to have_css("dd", text: line_text_message)
           end

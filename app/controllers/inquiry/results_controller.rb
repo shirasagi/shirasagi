@@ -45,6 +45,8 @@ class Inquiry::ResultsController < ApplicationController
       CSV.generate do |data|
         data << [t("inquiry.total_count"), @answer_count]
         @columns.each do |column|
+          next if column.input_type == 'section'
+
           data << []
           data << [column.name]
           if /(select|radio_button|check_box)/.match?(column.input_type)

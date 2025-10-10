@@ -12,7 +12,6 @@
     <% end %>
   <% end %>
 
-  <% if false %>
   <dt><%= @model.t :i18n_description %></dt>
   <% if I18n.available_locales.length == 1 %>
     <dd><%= sanitize ss_auto_link_urls br(@item.i18n_description, html_escape: false) %></dd>
@@ -24,7 +23,6 @@
         <%= sanitize ss_auto_link_urls br(@item.i18n_description_translations[lang], html_escape: false) %>
       </dd>
     <% end %>
-  <% end %>
   <% end %>
 
   <dt><%= @model.t :state %></dt>

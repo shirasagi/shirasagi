@@ -17,12 +17,22 @@ class Gws::Tabular::Gws::SpacesController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site }
   end
 
+  def search_params
+    @search_params ||= begin
+      s = params[:s]
+      if s && s[:keyword].present?
+        s[:keyword_gws] = true
+      end
+      s
+    end
+  end
+
   def base_items
     @base_items ||= begin
       criteria = @model.site(@cur_site)
       criteria = criteria.without_deleted
       criteria = criteria.allow(:read, @cur_user, site: @cur_site)
-      criteria = criteria.search(params[:s])
+      criteria = criteria.search(search_params)
       criteria
     end
   end

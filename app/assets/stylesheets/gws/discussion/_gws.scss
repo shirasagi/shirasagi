@@ -1,14 +1,15 @@
 // gws-discussion
+@use "ss/init";
 
 .gws-discussion {
   .addon-body {
-    @include clear;
+    @include init.clear;
   }
   .addon-body .no {
     margin-bottom: 10px;
   }
   .addon-body header {
-    @include clear;
+    @include init.clear;
     .contributor {
       margin-bottom: 10px;
       float: left;
@@ -29,8 +30,7 @@
   .addon-body .updated {
     padding: 0 0 0 7px;
   }
-  .markdown
-  .files {
+  .markdown .files {
     margin: 5px;
     padding: 15px;
     border-radius: 4px;
@@ -67,7 +67,7 @@
     .upload-drop-area {
       padding-top: 5px;
       padding-bottom: 10px;
-      @include border-radius(3px);
+      border-radius: 3px;
       background: #f2f2f2;
     }
     .upload-drop-notice {
@@ -81,7 +81,7 @@
   .selected-files {
     margin-top: 10px;
     span {
-      margin: 0 1em .5em 0;
+      margin: 0 1em 0.5em 0;
     }
   }
   .deselect {
@@ -96,7 +96,7 @@
   }
   .addon-body.reply .menu .btn {
     background: #f2d150;
-    background-image: -webkit-linear-gradient(top, #f2d150, #f2a950);
+    background: linear-gradient(to bottom, #f2d150, #f2a950);
   }
   .addon-body.reply-menu {
     color: #b30;
@@ -110,7 +110,7 @@
   width: calc(100% - 350px);
   min-height: 400px;
   float: left;
-  @include mb {
+  @include init.mb {
     width: 100%;
     float: none;
   }
@@ -120,7 +120,7 @@
   //border: 1px solid #d0d0d0;
   //border-radius: 3px;
   //background: #fff;
-  @include clear;
+  @include init.clear;
   h2 {
     padding: 10px;
     float: left;
@@ -133,11 +133,11 @@
     select {
       width: 160px;
     }
-    input[type=text] {
+    input[type="text"] {
       width: 240px !important;
     }
   }
-  @include mb {
+  @include init.mb {
     margin: 10px 0;
   }
 }
@@ -149,7 +149,7 @@
   width: 340px;
   margin-left: 10px;
   float: right;
-  @include mb {
+  @include init.mb {
     width: 100%;
     margin: 0;
     float: none;

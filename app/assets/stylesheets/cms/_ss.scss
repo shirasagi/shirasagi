@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .routes-view {
   article {
     width: 100%;
@@ -25,7 +27,8 @@
 .task-box {
   .info {
     margin: 0 0 15px;
-    dt, dd {
+    dt,
+    dd {
       display: inline-block;
       padding: 5px 10px;
     }
@@ -45,19 +48,19 @@
     }
   }
   .controller {
-    @include display-flex(flex);
-    @include align-items(center);
+    display: flex;
+    align-items: center;
     width: 100%;
     margin: 5px 0;
   }
   .auto-reload {
-    @include flex-grow(2);
-    @include display-flex(inline-flex);
-    @include justify-content(flex-end);
-    @include align-items(center);
-    [type=number] {
+    display: inline-flex;
+    flex-grow: 2;
+    align-items: center;
+    justify-content: flex-end;
+    [type="number"] {
       width: 6rem !important;
-      margin: 0 .25rem;
+      margin: 0 0.25rem;
       text-align: center;
     }
   }
@@ -80,7 +83,7 @@ i.calendar-month {
 
 .list-item {
   .title.notice-severity-high {
-    color: $pink;
+    color: init.$pink;
     font-weight: bold;
   }
   .title.marked {
@@ -91,32 +94,44 @@ i.calendar-month {
       color: #333;
     }
     a.notice-severity-high {
-      color: $pink;
+      color: init.$pink;
       font-weight: bold;
     }
     .gws-board-flag-new {
       margin-left: 8px;
     }
-    .index-cleander-link {
+    .index-calendar-link {
       margin-left: 6px;
     }
   }
   .state {
     display: inline-block;
     padding: 1px 5px;
-    @include border-radius(3px);
+    border-radius: 3px;
     font-size: 90%;
     font-weight: normal;
-    &.state-public, &.state-public-expired, &.state-completed, &.state-closed, &.state-draft, &.state-ready, &.state-request, &.state-request-remind, &.state-edit, &.state-remand, &.state-deletion-locked {
+    &.state-public,
+    &.state-public-expired,
+    &.state-completed,
+    &.state-closed,
+    &.state-draft,
+    &.state-ready,
+    &.state-request,
+    &.state-request-remind,
+    &.state-edit,
+    &.state-remand,
+    &.state-deletion-locked {
       color: #fff;
     }
-    &.state-public, &.state-completed {
+    &.state-public,
+    &.state-completed {
       background-color: #2f7e42;
     }
     &.state-public-expired {
       background-color: #2f7e42;
     }
-    &.state-closed, &.state-draft {
+    &.state-closed,
+    &.state-draft {
       background-color: #6c757d;
     }
     &.state-ready {
@@ -139,39 +154,40 @@ i.calendar-month {
     }
   }
 }
-.list-item, .see {
+.list-item,
+.see {
   .answer-state {
     display: inline-block;
     padding: 1px 5px;
-    @include border-radius(3px);
+    border-radius: 3px;
     font-size: 90%;
     font-weight: normal;
     &.state-open {
-      background-color: rgba(237, 128, 119, .4);
+      background-color: rgba(237, 128, 119, 0.4);
     }
     &.state-processing {
-      background-color: rgba(68, 136, 197, .4);
+      background-color: rgba(68, 136, 197, 0.4);
     }
     &.state-processed {
-      background-color: rgba(94, 181, 166, .4);
+      background-color: rgba(94, 181, 166, 0.4);
     }
     &.state-closed {
-      background-color: rgba(176, 190, 60, .4);
+      background-color: rgba(176, 190, 60, 0.4);
     }
   }
 }
 
 .cms-tabs {
-  @include clear;
+  @include init.clear;
   margin-top: -1px;
   a {
     display: block;
     margin: 1px 0 -1px 6px;
     float: left;
-    border: 1px solid $gray4;
+    border: 1px solid init.$gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
-    background-color: $gray5;
+    background-color: init.$gray5;
     color: #000;
     .tab-name {
       display: block;
@@ -179,14 +195,14 @@ i.calendar-month {
       text-align: center;
     }
     &:hover {
-      border-left-color: $orange;
+      border-left-color: init.$orange;
       background-color: #fff;
       text-decoration: none;
     }
   }
   a.current {
     border-bottom-color: #fff;
-    border-left-color: $orange;
+    border-left-color: init.$orange;
     background-color: #fff;
   }
 }
@@ -198,9 +214,9 @@ i.calendar-month {
   margin: 0;
   padding: 4px;
   overflow-y: scroll;
-  border: $border-gray4;
-  background: $white;
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+  border: init.$border-gray4;
+  background: init.$white;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   white-space: nowrap;
 }
 
@@ -219,7 +235,8 @@ i.calendar-month {
     background-color: #dcdcdc;
     color: #000;
     text-decoration: none;
-    &.current, &:hover {
+    &.current,
+    &:hover {
       border-bottom-color: #fff;
       border-left-color: #f25a38;
       background-color: #fff;
@@ -235,8 +252,12 @@ i.calendar-month {
 // Preview links
 .cms-preview-links {
   color: #aaa;
-  a { margin: 0 5px; }
-  a:first-of-type { margin-left: 0; }
+  a {
+    margin: 0 5px;
+  }
+  a:first-of-type {
+    margin-left: 0;
+  }
 }
 
 // Accessibility check notice

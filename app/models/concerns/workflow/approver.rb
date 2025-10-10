@@ -581,47 +581,11 @@ module Workflow::Approver
     !accessibility_errors?(@cur_user, @cur_site)
   end
 
-  def build_syntax_check_contents
-    contents = []
-    if self.respond_to?(:html) && self.html.present?
-      contents << { "id" => "html", "content" => self.html, "resolve" => "html", "type" => "scalar" }
-    end
-
-    if self.respond_to?(:column_values)
-      self.column_values.each_with_index do |column_value, idx|
-        value =
-          if column_value.respond_to?(:in_wrap) && column_value.in_wrap.present?
-            column_value.in_wrap
-          elsif column_value.respond_to?(:value)
-            column_value.value
-          elsif column_value.respond_to?(:html)
-            column_value.html
-          elsif column_value.respond_to?(:text)
-            column_value.text
-          else
-            nil
-          end
-        next if value.blank?
-        contents << {
-          "id" => "column_#{idx}",
-          "content" => value,
-          "resolve" => "html",
-          "type" => "scalar"
-        }
-      end
-    end
-    contents
-  end
-
   def accessibility_errors?(user, site)
     return false unless accessibility_check_target?
-    contents = build_syntax_check_contents
-    return false if contents.blank?
 
-    result = Cms::SyntaxChecker.check(cur_site: site, cur_user: user, contents: contents)
-
-    accessibility_error = result.errors.any? { |error| error[:msg].present? }
-    accessibility_error
+    result = Cms::SyntaxChecker.check_page(cur_site: site, cur_user: user, page: self)
+    result.errors.any?
   end
 
   private

@@ -40,6 +40,8 @@ save_node route: "article/page", filename: "docs", name: "記事",
   st_form_ids: [@form.id, @form2.id, @form3.id, @form4.id, @form5.id], st_form_default_id: @form4.id
 save_node route: "article/page", filename: "watersupply", name: "水道使用 開始・停止受付",
   keywords: %w(サイト名), sort: "updated -1", limit: 20
+save_node route: "article/page", filename: "reiki", name: "例規集", keywords: %w(サイト名),
+  limit: 20, group_ids: [@g_seisaku.id]
 article_map_search = save_node(
   route: "article/map_search", filename: "hinanjo", name: "避難所検索",
   view_route: "category/node", sort: 'order', new_days: 0,
@@ -234,16 +236,16 @@ save_node route: "cms/page", filename: "shinchaku", name: "新着情報", layout
 ## archive
 save_node route: "cms/archive", filename: "docs/archive", name: "月別アーカイブ", layout_id: @layouts["more"].id,
   page_layout_id: @layouts["pages"].id, conditions: %w(docs), order: 20, archive_view: "list"
-save_node route: "cms/archive", filename: "docs/archive", name: "年別アーカイブ", layout_id: @layouts["more"].id,
+save_node route: "cms/archive", filename: "docs/year", name: "年別アーカイブ", layout_id: @layouts["more"].id,
   page_layout_id: @layouts["pages"].id, order: 20, archive_view: "yearly_list"
-save_node route: "cms/archive", filename: "docs/archive", name: "カレンダー", layout_id: @layouts["more"].id,
+save_node route: "cms/archive", filename: "docs/calendar", name: "カレンダー", layout_id: @layouts["more"].id,
   page_layout_id: @layouts["pages"].id, conditions: %w(docs), order: 30, archive_view: "calendar"
 save_node route: "cms/archive", filename: "list", name: "アーカイブ", layout_id: @layouts["more"].id,
   view_route: 'cms/page'
 
 ## photo album
 save_node route: "cms/photo_album", filename: "docs/photo", name: "写真一覧",
-  layout_id: @layouts["pages"].id, conditions: %w(docs), order: 40
+  layout_id: @layouts["more"].id, conditions: %w(docs), order: 40
 
 ## site search
 save_node route: "cms/site_search", filename: "search", name: "サイト内検索", layout_id: @layouts["general"].id,
@@ -266,8 +268,6 @@ save_node route: "uploader/file", filename: "css", name: "CSS", shortcut: "show"
 save_node route: "uploader/file", filename: "img", name: "画像", shortcut: "show"
 save_node route: "uploader/file", filename: "js", name: "javascript", shortcut: "show"
 save_node route: "uploader/file", filename: "dataset", name: "javascript"
-save_node route: "uploader/file", filename: "reiki", name: "例規集", keywords: %w(サイト名),
-  group_ids: [@g_seisaku.id]
 
 ## faq
 save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", st_category_ids: [@categories["faq"].id]

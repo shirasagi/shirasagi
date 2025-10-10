@@ -12,22 +12,18 @@ class Cms::SyntaxChecker::DateFormatChecker
     end
   end
 
-  def check(context, id, idx, raw_html, fragment)
-    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+  def check(context, content)
+    Cms::SyntaxChecker::Base.each_text_node(context.fragment) do |text_node|
       dates = text_node.content.scan(DATE_REGEX)
       next if dates.blank?
 
       dates = dates.select { |date| self.class.valid_date?(date) }
       next if dates.blank?
 
-      context.errors << {
-        id: id,
-        idx: idx,
-        code: dates.join(","),
-        msg: I18n.t('errors.messages.invalid_date_format'),
-        detail: I18n.t('errors.messages.syntax_check_detail.invalid_date_format'),
-        collector: self.class.name
-      }
+      code = dates.join(",")
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: content, code: code, checker: self, error: :invalid_date_format,
+        corrector: self.class.name)
     end
   end
 
@@ -51,5 +47,21 @@ class Cms::SyntaxChecker::DateFormatChecker
     end
 
     context.set_result(ret)
+  end
+
+  def correct2(content, params: nil)
+    fragment = Nokogiri::HTML5.fragment(content)
+
+    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+      text_node.content = text_node.content.gsub(DATE_REGEX) do |matched|
+        if self.class.valid_date?(matched)
+          I18n.l(matched.in_time_zone.to_date, format: :long)
+        else
+          matched
+        end
+      end
+    end
+
+    fragment.to_html
   end
 end

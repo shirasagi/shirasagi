@@ -1,6 +1,8 @@
 // Standard
 :root {
-  --bs-font-monospace: SFMono-Regular,Menlo,Monaco,Consolas,'Liberation Mono','Courier New',monospace;
+  --bs-font-monospace:
+    SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New",
+    monospace;
   --font-size-sm: 13px;
   --font-size-md: 14px;
   --color-border-gray: #d2d2d2;
@@ -14,7 +16,9 @@
 html {
   background: var(--color-page-body-bg);
   //font: 14px/1.5 var(--bs-font-sans-serif);
-  &:focus-within { scroll-behavior: smooth; }
+  &:focus-within {
+    scroll-behavior: smooth;
+  }
 }
 body {
   min-height: 100%;
@@ -68,7 +72,7 @@ body {
     color: #999;
     .link-item {
       display: inline-block;
-      margin: 0 .25rem;
+      margin: 0 0.25rem;
       color: #444;
     }
     .link-item:hover {
@@ -106,7 +110,8 @@ body {
 }
 .form-db-main {
   padding: 80px 0;
-  #task-form, .addon-views {
+  #task-form,
+  .addon-views {
     max-width: 1000px;
     padding: 10px;
   }
@@ -121,9 +126,11 @@ footer.send {
   width: 100%;
   padding: 15px;
   border-top: 1px solid var(--color-border-gray);
-  background: rgba(240, 240, 240, .75);
+  background: rgba(240, 240, 240, 0.75);
   gap: 1rem;
-  .pagination { margin: 0; }
+  .pagination {
+    margin: 0;
+  }
 }
 
 // Errors
@@ -145,7 +152,7 @@ footer.send {
     background: var(--color-table-cell-bg);
   }
   > :not(caption) > * > * {
-    padding: .5rem;
+    padding: 0.5rem;
     border: 1px solid var(--color-border-gray);
     font-weight: 400;
     vertical-align: top;
@@ -165,7 +172,8 @@ footer.send {
   .row-link-disabled {
     cursor: auto;
   }
-  .td-icon, .td-check {
+  .td-icon,
+  .td-check {
     width: 40px;
     height: 100%;
     padding: 0;
@@ -176,7 +184,7 @@ footer.send {
     padding-bottom: 1px;
   }
   .td-icon > .dropdown-menu {
-    left: -.2rem !important;
+    left: -0.2rem !important;
   }
 }
 .table-db {
@@ -203,7 +211,9 @@ footer.send {
     z-index: 1;
   }
   > :not(caption) > * > td {
-    &.type-integer, &.type-double, &.type-float {
+    &.type-integer,
+    &.type-double,
+    &.type-float {
       color: #05e;
       text-align: right;
     }
@@ -227,7 +237,7 @@ footer.send {
     .input-json {
       width: calc(100vw - 85px);
       height: calc(100vh - 175px);
-      padding: .5rem;
+      padding: 0.5rem;
       line-height: 1.2;
     }
   }

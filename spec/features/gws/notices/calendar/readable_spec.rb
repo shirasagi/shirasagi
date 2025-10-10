@@ -19,6 +19,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it "#index" do
       visit index_path
+      wait_for_all_turbo_frames
 
       within ".list-items" do
         within ".list-item.read" do
@@ -26,14 +27,15 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
         end
         within ".list-item.unread" do
           expect(page).to have_link item1.name
-          expect(page).to have_css(".index-cleander-link")
-          first(".index-cleander-link").click
+          expect(page).to have_css(".index-calendar-link")
+
+          click_on "calendar_month"
         end
       end
 
       # wait for ajax completion
-      wait_for_js_ready
-      within "#content-navi" do
+      wait_for_all_turbo_frames
+      within "#content-navi-core .gws-notice-folder" do
         expect(page).to have_link(folder.name)
       end
       within ".gws-schedule-box" do

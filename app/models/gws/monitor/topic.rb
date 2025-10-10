@@ -103,7 +103,7 @@ class Gws::Monitor::Topic
     deleted.blank? || deleted > Time.zone.now
   end
 
-  def closed?
+  def closed?(_date = nil)
     article_state == 'closed'
   end
 

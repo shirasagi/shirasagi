@@ -1,5 +1,5 @@
 <nav class="mod-navi current-navi">
-  <%= gws_menu_icon(:notice, 'modules.gws/notice', gws_notice_main_path) %>
+  <%= gws_menu_icon(:notice, gws_notice_main_path) %>
 
   <%
     options = { folder_id: "-", category_id: "-" }
@@ -7,6 +7,9 @@
     options[:category_id] = params[:category_id] if params[:category_id].present?
   %>
   <h3><%= link_to t('ss.navi.readable'), gws_notice_readables_path(options), class: 'readable' %></h3>
+  <% if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number) %>
+    <h3><%= link_to t('gws/notice.back_number'), gws_notice_back_numbers_path(options), class: 'back_numbers' %></h3>
+  <% end %>
   <h3><%= link_to t('ss.navi.calendar'), gws_notice_calendars_path(options), class: 'readable' %></h3>
 
   <% if Gws::Notice::Post.allowed?(:edit, @cur_user, site: @cur_site) %>

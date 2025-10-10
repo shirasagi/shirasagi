@@ -16,6 +16,7 @@ class Gws::Schedule::Todo::TrashesController < ApplicationController
       allow(:trash, @cur_user, site: @cur_site).
       only_deleted.
       search(params[:s]).
-      order_by(deleted: -1)
+      order_by(deleted: -1).
+      page(params[:page]).per(50)
   end
 end

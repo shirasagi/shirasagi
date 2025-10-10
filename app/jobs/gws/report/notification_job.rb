@@ -1,3 +1,5 @@
+require 'nkf'
+
 class Gws::Report::NotificationJob < Gws::ApplicationJob
   def perform(item_id, added_member_ids, removed_member_ids)
     @item = Gws::Report::File.site(site).find(item_id)
@@ -28,7 +30,12 @@ class Gws::Report::NotificationJob < Gws::ApplicationJob
     message.cur_user = @user
     message.member_ids = [recipient.id]
     message.send_date = Time.zone.now
-    message.subject = mail.subject
+    mail.header[:subject].tap do |subject|
+      message.subject = subject.decoded
+      if message.subject.start_with?("=?ISO-2022-JP?")
+        message.subject = NKF.nkf("-w", message.subject)
+      end
+    end
     message.format = 'text'
     message.url = mail.decoded
     message.save!

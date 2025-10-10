@@ -1,0 +1,23 @@
+<div id="errorLinkChecker" class="errorExplanation">
+  <h2><%= t("cms.link_check") %></h2>
+  <div class="errorExplanationBody">
+    <% if checker.extracted_urls.blank? %>
+      <p><%= t("errors.template.no_links") %></p>
+    <% else %>
+      <p><%= t("errors.template.check_links") %></p>
+
+      <ul>
+        <% checker.extracted_urls.each do |anchor_or_url, normalized_url| %>
+          <% result = checker.results[normalized_url] %>
+          <li data-status="<%= result_status(result) %>" data-url="<%= anchor_or_url %>" data-normalized-url="<%= normalized_url %>">
+            <%= result_status_label(result) %>
+            <span class="url"><%= anchor_or_url %></span>
+            <% if result[:message] %>
+              <div class="message detail"><%= br result[:message] %></div>
+            <% end %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+  </div>
+</div>

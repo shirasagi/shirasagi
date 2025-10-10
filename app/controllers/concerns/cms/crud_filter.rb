@@ -2,7 +2,6 @@ module Cms::CrudFilter
   extend ActiveSupport::Concern
   include SS::CrudFilter
   include Cms::LockFilter
-  include Cms::SyntaxCheckable
 
   included do
     menu_view "cms/crud/menu"
@@ -113,12 +112,10 @@ module Cms::CrudFilter
     # アクセシビリティチェック
     item_errors = {}
     items.each do |item|
-      @item = item
-      item_errors[item.id] ||= {}
-      if syntax_check
-        next
-      else
-        item_errors[item.id][:syntax_error] = t("errors.messages.check_html")
+      syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: item)
+      if syntax_context.errors.present?
+        item_errors[item.id] ||= {}
+        item_errors[item.id][:syntax_context] = syntax_context
       end
     end
     item_errors

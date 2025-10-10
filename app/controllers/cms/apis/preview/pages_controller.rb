@@ -63,7 +63,7 @@ class Cms::Apis::Preview::PagesController < ApplicationController
     if result
       task.log "succeeded" if task
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
       task.log "failed\n#{@item.errors.full_messages.join("\n")}" if task
       return
     end

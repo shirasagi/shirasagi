@@ -32,8 +32,10 @@ class Inquiry::Column
   field :html, type: String, default: ""
   field :order, type: Integer, default: 0
   field :max_upload_file_size, type: Integer, default: 0, overwrite: true
+  field :branch_section_ids, type: Array, default: []
 
-  permit_params :id, :node_id, :state, :name, :html, :order, :max_upload_file_size
+  permit_params :id, :node_id, :state, :name, :html, :order, :max_upload_file_size,
+    branch_section_ids: []
 
   validates :node_id, :state, :name, :max_upload_file_size, presence: true
 
@@ -57,7 +59,21 @@ class Inquiry::Column
     value < 0 ? 0 : value
   end
 
+  def branch_section_options
+    form.columns.where(input_type: 'section').order_by(order: 1).map do |c|
+      [I18n.t('gws/column.show_section', name: c.name), c.id]
+    end
+  end
+
+  def branch_section_id(index)
+    return 'none' if branch_section_ids[index] == ''
+    return branch_section_ids[index] if branch_section_ids[index]
+    nil
+  end
+
   def validate_data(answer, data, in_reply)
+    return if input_type == 'section'
+
     if required?(in_reply)
       if data.blank? || data.value.blank?
         answer.errors.add :base, "#{name}#{I18n.t('errors.messages.blank')}"

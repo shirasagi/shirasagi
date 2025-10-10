@@ -2,8 +2,7 @@
  *
  */
 
-@import "compass-mixins/lib/compass";
-@import "ss/init";
+@use "ss/init";
 
 // -------------------------------------------------------------------------------------------------
 // preview
@@ -13,29 +12,34 @@
   padding: 5px 0;
   background-color: #323232;
   color: #fff;
-  font-family: $font-base;
-  font-size: .8rem;
-  .ss-preview-dropdown ,#ss-preview-btn-select-draft-page {
+  font-family: init.$font-base;
+  font-size: 0.8rem;
+  .ss-preview-dropdown,
+  #ss-preview-btn-select-draft-page {
     display: inline-block;
     color: #000;
     text-decoration: none;
     vertical-align: top;
   }
-  button, select, #ss-preview-btn-select-draft-page, input, .ss-preview-part-list {
-    @include btn;
+  button,
+  select,
+  #ss-preview-btn-select-draft-page,
+  input,
+  .ss-preview-part-list {
+    @include init.btn;
     box-sizing: border-box;
     width: auto;
     height: auto;
     min-height: 2.6em;
-    @include mb {
+    @include init.mb {
       padding: 6px 8px;
     }
   }
   .ss-preview-dropdown {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     float: left;
-    @include display-flex;
-    @include justify-content(center);
-    @include align-items(center);
     label {
       box-sizing: border-box;
       height: 29px;
@@ -46,7 +50,7 @@
       background: #d9d9d9;
     }
     #ss-preview-btn-select-node {
-      @include btn;
+      @include init.btn;
       box-sizing: border-box;
       height: 29px;
       border: 1px solid #bbb;
@@ -64,27 +68,25 @@
   }
   .ss-preview-part-list {
     height: 2.6em;
-    @include mb {
+    @include init.mb {
       width: calc(100% - 52px);
     }
   }
   // scss-lint:disable PropertySpelling
-  #ss-preview-btn-workflow-start, #ss-preview-btn-workflow-approve {
+  #ss-preview-btn-workflow-start,
+  #ss-preview-btn-workflow-approve {
     *zoom: 1;
     border: 1px solid #b23a3d;
     background: #e13026;
+    background: linear-gradient(to bottom, #e13026, #b23a3d);
     color: #fff;
-    filter: progid:DXImageTransform.Microsoft.gradient(gradientType=0, startColorstr='#FFE13026', endColorstr='#FFB23A3D');
-    filter: none \9;
-    @include background-image(linear-gradient(top, #e13026, #b23a3d));
     &:hover {
       background: #b23a3d;
     }
   }
   #ss-preview-btn-publish {
     border: 1px solid #0069cc;
-    @include background-image(linear-gradient(top, #007acd, #0069cc));
-    @include filter-gradient(#007acd, #0069cc, vertical);
+    background: linear-gradient(to bottom, #007acd, #0069cc);
     background: url(data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIHZpZXdCb3g9IjAgMCAxIDEiIHByZXNlcnZlQXNwZWN0UmF0aW89Im5vbmUiPgo8bGluZWFyR3JhZGllbnQgaWQ9Imc3NTIiIGdyYWRpZW50VW5pdHM9InVzZXJTcGFjZU9uVXNlIiB4MT0iMCUiIHkxPSIwJSIgeDI9IjAlIiB5Mj0iMTAwJSI+CjxzdG9wIHN0b3AtY29sb3I9IiMwMDdBQ0QiIG9mZnNldD0iMCIvPjxzdG9wIHN0b3AtY29sb3I9IiMwMDY5Q0MiIG9mZnNldD0iMSIvPgo8L2xpbmVhckdyYWRpZW50Pgo8cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iMSIgaGVpZ2h0PSIxIiBmaWxsPSJ1cmwoI2c3NTIpIiAvPgo8L3N2Zz4=);
     color: #fff;
     &:hover {
@@ -92,23 +94,23 @@
     }
   }
   & {
-    @include box-shadow(0 1px 5px #666);
+    box-shadow: 0 1px 5px #666;
   }
   .ss-preview-wrap {
-    @include display-flex;
+    display: flex;
   }
   .ss-preview-wrap-column-edit-mode {
     margin-right: auto;
     .ss-preview-wrap-row {
-      @include display-flex;
-      @include flex-wrap(wrap);
-      @include mb {
+      display: flex;
+      flex-wrap: wrap;
+      @include init.mb {
         display: block;
       }
     }
     .ss-preview-btn-group:nth-child(2) {
       margin-left: 10px;
-      @include mb {
+      @include init.mb {
         margin-left: 0;
       }
     }
@@ -119,7 +121,7 @@
   #ss-preview-date {
     border-right: 0;
     border-radius: 3px 0 0 3px;
-    @include mb {
+    @include init.mb {
       box-sizing: border-box;
       width: 100px;
       padding: 6px 3px;
@@ -157,16 +159,16 @@
   .ss-preview-btn-group {
     display: inline-block;
     &.ss-preview-wrap-row {
-      @include display-flex;
-      @include justify-content(flex-end);
-      @include align-items(center);
-      @include flex-wrap(wrap);
-      @include mb {
-        @include justify-content(flex-start);
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      @include init.mb {
+        justify-content: flex-start;
       }
       label {
         margin: 6px 10px 0 0;
-        @include mb {
+        @include init.mb {
           width: 100%;
         }
       }
@@ -174,15 +176,15 @@
   }
   .ss-preview-btn-group ~ .ss-preview-btn-group {
     margin-right: 8px;
-    @include mb {
+    @include init.mb {
       margin-left: 0;
     }
   }
   .ss-preview-btn-toggle-inplace {
-    &:after {
+    &::after {
       content: " onにする";
     }
-    &.ss-preview-active:after {
+    &.ss-preview-active::after {
       content: " offにする";
     }
   }
@@ -205,33 +207,34 @@
   position: absolute;
   margin: 0 0 0 -5px;
   padding: 3px 5px 0 0;
+  transition: 0.18s;
   border: 1px solid #000;
   border-left: 3px solid #000;
-  @include transition(.18s);
   pointer-events: none;
   .ss-preview-overlay-tool {
-    @include display-flex;
+    display: flex;
     position: absolute;
     z-index: 99;
     bottom: 100%;
     left: -3px;
     box-sizing: border-box;
-    @include align-items(center);
-    @include flex-wrap(wrap);
+    flex-wrap: wrap;
+    align-items: center;
     max-width: 100%;
     margin: 0;
     padding: 0 5px;
-    background-color: rgba(0, 0, 0, .8);
+    background-color: rgba(0, 0, 0, 0.8);
     pointer-events: none;
-    @include mb {
+    @include init.mb {
       display: block;
     }
     span {
       color: #fff;
     }
-    button, select {
+    button,
+    select {
       min-height: 3em;
-      @include btn;
+      @include init.btn;
     }
     select {
       height: 3em;
@@ -242,14 +245,16 @@
     .ss-preview-btn-group {
       z-index: 101;
       padding: 5px 5px 5px 0;
-      font-size: .8rem;
+      font-size: 0.8rem;
       pointer-events: auto;
-      button, select, input {
+      button,
+      select,
+      input {
         position: relative;
         z-index: 10;
       }
     }
-    .ss-preview-overlay-btn-group-edit:before {
+    .ss-preview-overlay-btn-group-edit::before {
       content: "";
       position: absolute;
       z-index: 0;
@@ -263,9 +268,9 @@
     display: inline-block;
   }
   .ss-preview-overlay-name {
-    margin: 0 .75rem;
+    margin: 0 0.75rem;
     color: #fff;
-    font-size: .8em;
+    font-size: 0.8em;
   }
 }
 
@@ -274,7 +279,7 @@
   margin: 0;
   padding: 8px;
   background-color: rgb(242, 242, 242);
-  @include box-shadow(0 1px 5px #666);
+  box-shadow: 0 1px 5px #666;
 }
 
 #ss-preview-inplace-item-form {
@@ -290,9 +295,11 @@
     display: none;
   }
 
-  .hide { display: none; }
+  .hide {
+    display: none;
+  }
 
-  @import "cms/column";
+  @include init.cms_column
 }
 
 #ss-preview-form-palette {
@@ -320,9 +327,9 @@ div.ss-preview-dialog {
     }
 
     .ui-dialog-content {
+      box-sizing: border-box;
       width: 100%;
       padding: 5px;
-      @include box-sizing(border-box);
     }
   }
   dt.see {
@@ -330,38 +337,42 @@ div.ss-preview-dialog {
     font-weight: bold;
   }
   textarea {
-    @include input;
+    @include init.input;
     width: 100%;
     height: 6.5em;
     padding: 5px;
     line-height: 1.4;
   }
-  .btn-primary, .commit {
-    @include btn-red;
-
+  .btn-primary,
+  .commit {
+    @include init.btn-red;
   }
   .btn-default {
-    @include btn-gray-l;
+    @include init.btn-gray-l;
   }
-  .btn-primary, .commit, .btn-default {
-    font-size: $px13;
+  .btn-primary,
+  .commit,
+  .btn-default {
+    font-size: init.$px13;
   }
   .send {
     margin-top: 10px;
     text-align: center;
-    input, button {
+    input,
+    button {
       vertical-align: top;
     }
   }
   dt.wide {
     margin-bottom: 15px;
     color: #a0522d;
-    font-size: $px13;
+    font-size: init.$px13;
     font-weight: bold;
   }
 }
 
-.ss-preview-page, .ss-preview-column {
+.ss-preview-page,
+.ss-preview-column {
   min-height: 1em;
 }
 body.ss-ajax-in-iframe {
@@ -397,7 +408,7 @@ body.ss-ajax-in-iframe {
 }
 .dropdown-container {
   tr {
-    background: $white;
+    background: init.$white;
     &:hover {
       background: #f8f8f8;
     }
@@ -414,12 +425,13 @@ table.index {
     padding-right: 0;
     text-align: center;
   }
-  th, td {
+  th,
+  td {
     padding: 6px 18px;
-    font-size: $px13;
+    font-size: init.$px13;
     a {
       color: #f25a38;
-      font-size: $px13;
+      font-size: init.$px13;
       text-decoration: none;
     }
   }
@@ -434,7 +446,7 @@ table.index {
   }
   tbody {
     tr {
-      background: $white;
+      background: init.$white;
       &:nth-child(2n) {
         background: #f8f8f8;
       }
@@ -444,11 +456,13 @@ table.index {
     margin-bottom: 15px;
   }
 }
-.mod-workflow-request, .search-ui-form {
-  font-size: $px12;
-  dl.see > dt ~ dt, dl.see > dd ~ dd {
+.mod-workflow-request,
+.search-ui-form {
+  font-size: init.$px12;
+  dl.see > dt ~ dt,
+  dl.see > dd ~ dd {
     margin-top: 15px;
-    @include clear;
+    @include init.clear;
   }
   dt {
     min-width: 180px;
@@ -461,18 +475,17 @@ table.index {
   dd {
     margin: 0 0 0 180px;
     padding: 5px 0;
-    input[type=text] {
-      @include box-sizing(border-box);
-      @include box-sizing("inset 0 1px 3px #dcdcdc");
+    input[type="text"] {
+      box-sizing: border-box;
       width: 80%;
       padding: 6px;
       border: 1px solid #d0d0d0;
-      @include border-radius(3px);
+      border-radius: 3px;
       vertical-align: middle;
     }
   }
   .btn {
-    @include btn;
+    @include init.btn;
   }
   .dropdown-container {
     display: none;
@@ -490,7 +503,7 @@ table.index {
 }
 .search-ui-select {
   .btn {
-    @include btn;
+    @include init.btn;
   }
 }
 .mod-workflow-request {
@@ -501,7 +514,7 @@ table.index {
       width: 16px;
       height: 16px;
       margin-left: 5px;
-      @include border-radius(8px);
+      border-radius: 8px;
       background: #f25a38;
       color: #fff;
       line-height: 1.1;
@@ -527,10 +540,10 @@ table.index {
         list-style: none;
         text-align: left;
         cursor: auto;
-        @include mb {
+        @include init.mb {
           width: 15em;
         }
-        &:before {
+        &::before {
           content: "";
           position: absolute;
           top: -13px;
@@ -542,7 +555,7 @@ table.index {
           border-left: 12px solid transparent;
           background-color: #fff;
         }
-        &:after {
+        &::after {
           content: "";
           position: absolute;
           top: -12px;
@@ -558,17 +571,17 @@ table.index {
   }
   dd {
     select {
+      box-sizing: border-box;
       max-width: 100%;
       height: 2.4em;
       padding: 0 4px;
-      @include box-sizing(border-box);
       border: 1px solid #d0d0d0;
-      @include border-radius(3px);
-      @include box-shadow(inset 0 1px 3px #dcdcdc);
+      border-radius: 3px;
+      box-shadow: inset 0 1px 3px #dcdcdc;
       vertical-align: middle;
     }
     .btn {
-      @include btn;
+      @include init.btn;
       box-sizing: border-box;
       height: 2.7em;
       padding: 8px 12px;
@@ -585,11 +598,11 @@ table.index {
 .sns-post-confirm {
   h2 {
     color: #a0522d;
-    font-size: $px13;
+    font-size: init.$px13;
     font-weight: bold;
   }
   li {
-    font-size: $px12;
+    font-size: init.$px12;
   }
   margin-bottom: 10px;
 }

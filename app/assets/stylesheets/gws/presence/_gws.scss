@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .presence-groups {
   .all-groups {
     margin-bottom: 5px;
@@ -7,7 +9,8 @@
       margin-left: 10px;
     }
   }
-  .tree-groups, .custom-groups {
+  .tree-groups,
+  .custom-groups {
     margin-bottom: 5px;
     .list-item {
       background: #fff;
@@ -68,7 +71,7 @@
   table.data-table {
     table-layout: fixed;
     tr {
-      background: $white;
+      background: init.$white;
     }
     th.name {
       width: 25%;
@@ -92,7 +95,8 @@
         vertical-align: middle;
         white-space: normal;
       }
-      .presence-state, .select-presence-state {
+      .presence-state,
+      .select-presence-state {
         display: inline-block;
         vertical-align: middle;
         &.active {
@@ -140,7 +144,7 @@
       }
       nav {
         float: right;
-        @include mb {
+        @include init.mb {
           float: none;
           input[type="text"] {
             width: auto !important;

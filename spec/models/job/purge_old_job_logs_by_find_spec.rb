@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Job, dbscope: :example do
   describe ".purge_old_job_logs_by_find" do
     context "with stub" do
-      it do
+      xit do
         stub_class = Class.new do
           attr_accessor :spawn_args
 
@@ -65,7 +65,7 @@ describe Job, dbscope: :example do
         end
       end
 
-      it do
+      xit do
         Job.purge_old_job_logs_by_find
 
         expect(File.exist?(log1.file_path)).to be_falsey

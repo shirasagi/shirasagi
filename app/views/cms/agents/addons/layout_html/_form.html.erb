@@ -1,4 +1,5 @@
-<%= code_editor ".mod-cms-html-form textarea", mode: :html %>
+<% addon ||= local_assigns.fetch(:addon, {})%>
+
 <%= jquery do %>
   var $form = $('.mod-cms-html-form');
   var $select = $form.find('select[name="item[loop_setting_id]"]');
@@ -50,7 +51,6 @@
     <%= f.select :loop_setting_id, ancestral_html_settings_liquid, include_blank: t('cms.input_directly')  %>
     <button type="button" data-action="layout-snippet#insert" style="margin-left: 10px;"><%= t('cms.buttons.insert_snippet') %></button>
   </dd>
-
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
     <%= f.text_area :html, style: "height: 400px" %>
@@ -62,4 +62,23 @@
       </div>
     <% end %>
   </dd>
+  <%=
+    component = Cms::BodyCheckerComponent.new(
+      cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node, item: @item, limits: %i[syntax link],
+      syntax_check_context: @syntax_context
+    )
+    syntax_checker_form = render(component)
+    if syntax_checker_form.present?
+      tag.dd syntax_checker_form, class: "wide"
+    end
+  %>
 </dl>
+
+<%= code_editor "##{addon[:id]} textarea", mode: :html %>
+
+<% if @syntax_context&.errors.present? && @cur_user.cms_role_permit_any?(@cur_site, "edit_cms_ignore_syntax_check") %>
+  <label>
+    <%= check_box_tag "ignore_syntax_check", 1, false, id: nil %>
+    <%= t("ss.buttons.ignore_alerts_and_save") %>
+  </label>
+<% end %>

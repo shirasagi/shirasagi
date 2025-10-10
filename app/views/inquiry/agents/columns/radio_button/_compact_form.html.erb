@@ -1,1 +1,36 @@
+<% if params[:form] == 'branch' %>
+
+<div class="gws-column-form-grid-list">
+  <fieldset class="gws-column-form-grid">
+    <legend><%= f.label :conditinal_branch, model.t(:conditinal_branch) %><%= model.tt :conditinal_branch %></legend>
+
+    <table style="border-spacing: 5px;">
+      <tr>
+        <td style="width: 200px;"></td>
+        <td></td>
+      </tr>
+      <% @item.select_options.each_with_index do |option, idx| %>
+        <% next if option.blank? %>
+        <tr>
+          <td>
+            <div style="width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+              <%= idx + 1 %>.
+              <%= option %>
+            </div>
+          </td>
+          <td>
+            <%= select_tag "item[branch_section_ids][]",
+              options_for_select(@item.branch_section_options, @item.branch_section_ids[idx]),
+              { id: nil, style: "width: 300px;", include_blank: '' } %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  </fieldset>
+</div>
+
+<% else # params[:detail] %>
+
 <%= render 'inquiry/agents/columns/main/compact_form', local_assigns %>
+
+<% end %>

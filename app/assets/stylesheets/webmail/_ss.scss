@@ -1,26 +1,28 @@
 // Webmail
+@use "ss/init";
 
 // -------------------------------------------------------------------------------------------------
 // menu and common
 
-.webmail-dropdown-menu, .webmail-address-dropdown-menu {
-  @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+.webmail-dropdown-menu,
+.webmail-address-dropdown-menu {
   left: 0;
   margin: 0;
   padding: 5px 0;
   border: 1px solid #ccc;
   background: #fff;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
   text-align: left;
   a {
-    @include truncate;
+    @include init.truncate;
     & {
       padding: 5px 10px;
-      color: $black;
+      color: init.$black;
     }
   }
   a:hover {
-    background-color: $gray1;
-    color: $orange;
+    background-color: init.$gray1;
+    color: init.$orange;
     text-decoration: none;
   }
   .pad {
@@ -38,7 +40,7 @@
     }
   }
 }
-#menu .nav-menu .webmail-dropdown:after {
+#menu .nav-menu .webmail-dropdown::after {
   content: none !important;
 }
 li.webmail-accounts {
@@ -47,9 +49,9 @@ li.webmail-accounts {
   float: right;
 }
 .webmail-category-label {
-  @include border-radius(3px);
   display: inline-block;
   padding: 1px 5px;
+  border-radius: 3px;
   background-color: #e8e8e8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #444;
@@ -67,9 +69,15 @@ li.webmail-accounts {
 
 .webmail-navi {
   .reload {
-    &:hover { background: none !important; }
-    &:hover .material-icons { color: $orange; }
-    &.disabled .material-icons { color: rgba(0, 0, 0, .2); }
+    &:hover {
+      background: none !important;
+    }
+    &:hover .material-icons {
+      color: init.$orange;
+    }
+    &.disabled .material-icons {
+      color: rgba(0, 0, 0, 0.2);
+    }
   }
 }
 .webmail-navi-mailboxes {
@@ -81,7 +89,7 @@ li.webmail-accounts {
     padding: 7px 8px 9px;
   }
   .unseen {
-    color: $orange;
+    color: init.$orange;
     font-weight: bold;
   }
   .unseen.count0 {
@@ -96,8 +104,9 @@ li.webmail-accounts {
     a:last-child {
       margin-bottom: 8px;
     }
-    a.current, a:hover {
-      background-color: $gray1;
+    a.current,
+    a:hover {
+      background-color: init.$gray1;
     }
     a:hover {
       text-decoration: none;
@@ -111,7 +120,7 @@ li.webmail-accounts {
       vertical-align: top;
     }
     .mailbox--noselect .material-icons {
-      color: rgba(0, 0, 0, .5);
+      color: rgba(0, 0, 0, 0.5);
     }
   }
   .droppable-hover {
@@ -139,7 +148,8 @@ li.webmail-accounts {
 // -------------------------------------------------------------------------------------------------
 // mails
 
-.webmail-mails-head, .webmail-address-head {
+.webmail-mails-head,
+.webmail-address-head {
   .dropdown {
     display: inline;
     font-weight: normal;
@@ -173,13 +183,18 @@ li.webmail-accounts {
 
 @media print {
   .webmail-print {
-    #head, #foot, #navi, #crumbs, #menu {
+    #head,
+    #foot,
+    #navi,
+    #crumbs,
+    #menu {
       display: none;
     }
-    #page:after {
+    #page::after {
       display: none;
     }
-    #main, #main .wrap {
+    #main,
+    #main .wrap {
       margin: 0;
     }
   }
@@ -192,23 +207,32 @@ li.webmail-accounts {
     padding: 5px 8px;
   }
   .list-item-head {
-    @include mb { display: none; }
+    @include init.mb {
+      display: none;
+    }
     & {
       padding-bottom: 8px;
       font-weight: bold;
     }
     .head {
-      @include display-flex;
+      display: flex;
       position: relative;
       height: 1.2em;
       margin-left: 82px;
       .field {
-         display: inline-block;
-         cursor: pointer;
-       }
-      .from, .to { width: 194px; }
-      .title { width: calc(100% - 425px); }
-      .datetime { width: 10em; }
+        display: inline-block;
+        cursor: pointer;
+      }
+      .from,
+      .to {
+        width: 194px;
+      }
+      .title {
+        width: calc(100% - 425px);
+      }
+      .datetime {
+        width: 10em;
+      }
       .size {
         width: 95px;
         text-align: right;
@@ -216,11 +240,11 @@ li.webmail-accounts {
     }
   }
   .info {
-    @include truncate;
+    @include init.truncate;
     & {
-      @include display-flex;
+      display: flex;
     }
-    @include mb {
+    @include init.mb {
       display: block;
     }
     .field {
@@ -230,13 +254,16 @@ li.webmail-accounts {
       vertical-align: text-top;
       white-space: nowrap;
     }
-    .from, .to {
+    .from,
+    .to {
       width: 200px;
       padding-right: 5px;
-      a { color: inherit; }
+      a {
+        color: inherit;
+      }
     }
     .icon-reply {
-      margin-right: .2rem;
+      margin-right: 0.2rem;
       color: #a5f;
       vertical-align: top;
     }
@@ -245,7 +272,7 @@ li.webmail-accounts {
       width: -webkit-calc(100% - 400px);
       padding-right: 5px;
       font-size: 100%;
-      @include mb {
+      @include init.mb {
         width: 100%;
       }
     }
@@ -267,8 +294,8 @@ li.webmail-accounts {
     padding: 1px 15px 15px;
 
     .d-flex {
-      @include display-flex;
-      @include align-items(center);
+      display: flex;
+      align-items: center;
     }
     .ml-auto {
       margin-left: auto;
@@ -282,14 +309,20 @@ li.webmail-accounts {
     .icon-star {
       //margin: 12px 0 0;
       //float: right;
-      &.on    .material-icons { color: #f70; }
-      &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: .8; }
+      &.on .material-icons {
+        color: #f70;
+      }
+      &.off .material-icons {
+        color: #ddd;
+      }
+      &:hover .material-icons {
+        opacity: 0.8;
+      }
     }
     .from {
       float: left;
       line-height: 1.4;
-      @include mb {
+      @include init.mb {
         margin-bottom: 10px;
         float: none;
       }
@@ -325,7 +358,7 @@ li.webmail-accounts {
     }
   }
   .request-mdn-notice {
-    @include clear;
+    @include init.clear;
     padding: 5px 15px;
     border-bottom: 1px solid #969696;
     background-color: #cecece;
@@ -339,13 +372,13 @@ li.webmail-accounts {
     margin: -5px 0 10px;
     padding: 8px;
     border: 1px solid #fd8;
-    background-color: rgba(255, 255, 0, .2);
+    background-color: rgba(255, 255, 0, 0.2);
     background-color: #ffc;
     text-align: center;
     text-decoration: none;
     &:hover {
       border-color: #fb8;
-      background-color: rgba(255, 255, 0, .35);
+      background-color: rgba(255, 255, 0, 0.35);
       background-color: #ffa;
     }
   }
@@ -381,27 +414,28 @@ li.webmail-accounts {
     }
   }
   .move-tool-wrap {
-    @include display-flex;
+    display: flex;
     position: relative;
     z-index: 1;
-    @include align-items(center);
-    @include justify-content(flex-end);
+    align-items: center;
+    justify-content: flex-end;
     padding: 15px;
 
     .page-order {
-      @include display-flex;
+      display: flex;
     }
 
     .move-tool {
-      @include display-flex;
+      display: flex;
       margin-left: 20px;
-      @include mb {
+      @include init.mb {
         margin-left: 10px;
       }
     }
 
-    .prev, .next {
-      @include display-flex;
+    .prev,
+    .next {
+      display: flex;
       width: 20px;
       height: 20px;
 
@@ -409,7 +443,7 @@ li.webmail-accounts {
         display: block;
         width: 100%;
         height: 100%;
-        color: $black;
+        color: init.$black;
       }
       &:not(.inactive):hover {
         a {
@@ -418,7 +452,7 @@ li.webmail-accounts {
       }
       &.inactive {
         a {
-          color: $gray2;
+          color: init.$gray2;
           pointer-events: none;
         }
       }
@@ -456,7 +490,7 @@ li.webmail-accounts {
     height: auto;
   }
   .selected-address {
-    @include clear;
+    @include init.clear;
     margin-top: 10px;
     cursor: pointer;
     span {
@@ -485,9 +519,9 @@ li.webmail-accounts {
   color: #888;
 }
 .webmail-addon-mail-body {
-  @include display-flex();
-  @include flex-direction(column);
+  display: flex;
   grid-row-gap: 10px;  // for old browsers
+  flex-direction: column;
   row-gap: 10px;
 }
 // form-addresses
@@ -531,16 +565,16 @@ li.webmail-accounts {
 // tab
 
 .webmail-tabs {
-  @include clear;
+  @include init.clear;
   margin-top: -1px;
   a {
     display: block;
     margin: 1px 0 -1px 6px;
     float: left;
-    border: 1px solid $gray4;
+    border: 1px solid init.$gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
-    background-color: $gray5;
+    background-color: init.$gray5;
     color: #000;
     .tab-name {
       display: block;
@@ -548,14 +582,14 @@ li.webmail-accounts {
       text-align: center;
     }
     &:hover {
-      border-left-color: $orange;
+      border-left-color: init.$orange;
       background-color: #fff;
       text-decoration: none;
     }
   }
   a.current {
     border-bottom-color: #fff;
-    border-left-color: $orange;
+    border-left-color: init.$orange;
     background-color: #fff;
   }
 }

@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .gws-column-list-toolbar-list {
   display: flex;
   flex-wrap: wrap;
@@ -15,7 +17,7 @@
   width: 100%;
   cursor: grab;
   &:hover {
-    background-color: $orange2;
+    background-color: init.$orange2;
   }
 
   .header {
@@ -28,15 +30,15 @@
   .btn-close {
     position: absolute;
     right: 0;
-    color: $black3;
+    color: init.$black3;
   }
 }
 
 .gws-column-item-drag-handle-icon {
-  color: $gray4;
+  color: init.$gray4;
   cursor: grab;
   &:hover {
-    background-color: $orange2;
+    background-color: init.$orange2;
   }
 }
 
@@ -59,7 +61,7 @@
 }
 
 .gws-column-item-divider {
-  border: 1px solid $gray1;
+  border: 1px solid init.$gray1;
 }
 
 .gws-column-item-toolbar-list {
@@ -81,11 +83,15 @@
   grid-template-columns: 1fr 1fr;
   gap: 5px;
   border-width: 1px;
-  @include mb {
+  @include init.mb {
     grid-template-columns: 1fr;
   }
 
-  select, textarea, input[type="text"], input[type="number"], input[type="url"]  {
+  select,
+  textarea,
+  input[type="text"],
+  input[type="number"],
+  input[type="url"] {
     width: 100%;
   }
 

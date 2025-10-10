@@ -138,6 +138,7 @@ ja:
     root: ルート
     yearly_archive: 年別アーカイブ
     monthly_archive: 月別アーカイブ
+    syntax_check_violation_count: "アクセシビリティ違反が%{total}件あります。"
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -335,13 +336,14 @@ ja:
       line_statistics_exceeded_units_by_month: 月内に発行したユニット名が1000を超えている為、統計情報を取得できませんでした。
       page_expiration_header: ページの公開期限が切れています。
       page_expiration_body:
-        - "ページの公開期限が切れていますので確認の上、対応を願いいたします。"
+        - "ページの公開期限が切れています。ご確認の上、対応してください。"
       line_mail_handler_subject: "【%{subject}】\n\n%{body}"
       generation_report_jos_is_started: "書き出し性能レポート作成ジョブを実行しました。"
-      batch_accessibility_check_notice: ※ 一括処理の場合、簡易なアクセシビリティチェックなどは実行されません。各ページについて確実にアクセシビリティチェックを実施されたい場合は、ページ単位で処理をされることをお勧めします。
       content_quota_navi:
         - "ショートカットに表示されているフォルダーのおおよその使用量を表示しています。"
         - "対象のフォルダー属性: %{routes} "
+      prevent_external_preview: 別サイトに遷移しようとしています。プレビュー時は別サイトへは遷移できません。
+      prevent_external_submit: プレビューでフォームデータの送信(POST)はできません。
     apis:
       categories:
         index: カテゴリーを選択する
@@ -402,6 +404,7 @@ ja:
       link: 自動修正
       notice: アクセシビリティチェック（保存時に自動で修正されます）
       caption: キャプション
+      failed: 自動修正に失敗しました。
     links:
       ruby_on: ふりがなをつける
       ruby_off: ふりがなをはずす
@@ -653,6 +656,10 @@ ja:
         1_year: 1年以上更新なし
         2_years: 2年以上更新なし
         3_years: 3年以上更新なし
+      search_syntax_check_violation:
+        both: 両方
+        have: 有
+        not_have: 無
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
@@ -1036,6 +1043,7 @@ ja:
       cms/task: タスク
       cms/import_page: 取り込みページ
       cms/word_dictionary: 単語置換辞書
+      cms/unfavorable_word: 好ましくない単語
       cms/loop_setting: ループHTML
       cms/command: コマンド
       cms/form: 定型フォーム
@@ -1175,6 +1183,9 @@ ja:
       cms/word_dictionary:
         name: 名前
         body: 設定
+      cms/unfavorable_word:
+        name: 名前
+        body: 単語リスト
       cms/import_job_file:
         name: タイトル
         basename: フォルダー名
@@ -1200,6 +1211,8 @@ ja:
         description_setting: 概要の連動設定
         description_body: 概要の本文(手動)
         summary_html: サマリー
+      cms/addon/html:
+        html: HTML
       cms/addon/editor_setting:
         color_button: 文字色変更ボタン
         editor_css_path: スタイルシートパス
@@ -1336,6 +1349,7 @@ ja:
         search_state: ステータス
         search_first_released: 公開ステータス
         search_approver_state: 承認ステータス
+        search_syntax_check_violation: アクセシビリティ違反
         search_sort: 検索結果の並び順
       cms/task:
         node_id: フォルダー
@@ -1769,6 +1783,8 @@ ja:
       cms/syntax_checker/url_scheme_setting:
         syntax_checker_url_scheme_attributes: 属性
         syntax_checker_url_scheme_schemes: スキーム
+      cms/syntax_checker/link_text_setting:
+        syntax_checker_link_text_min_length: 最低長
       cms/line/statistic:
         name: 統計情報
         message_id: メッセージ
@@ -1847,6 +1863,9 @@ ja:
         average_sub_total_elapsed: 平均子合計全処理時間
       cms/page_expiration_setting:
         expiration_setting_type: 公開期限
+      cms/syntax_check_result:
+        syntax_check_result_checked: アクセシビリティチェック実施日時
+        syntax_check_result_violation_count: アクセシビリティ違反件数
 
   activemodel:
     attributes:
@@ -1925,7 +1944,9 @@ ja:
       invalid_date_format: 日付の表記は○年○月○日としてください。
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
       check_interword_space: 単語の文字間のスペースを確認してください。
-      check_link_text: リンクのテキストを確認してください。
+      link_text_too_short: リンクテキストは%{count}文字以上にしてください。
+      alt_too_short: 代替テキストは%{count}文字以上にしてください。
+      title_too_short: タイトルは%{count}文字以上にしてください。
       check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
       set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
       input_youtube_url: YouTubeのURLを入力してください。
@@ -1941,6 +1962,7 @@ ja:
       internal_link_shouldnt_contain_domains: 内部リンクにはドメインを含めないようにしてください。
       internal_link_should_be_absolute_path: 内部リンクは "/" で始めてください。
       internal_link_shouldnt_be_preview_path: プレビュー用のパスを指定しないようにしてください。
+      unfavorable_word: 好ましくない単語が用いられています。
       syntax_check_detail:
         set_img_alt:
           - 画像の内容を示す代替テキストを設定してください。
@@ -1971,8 +1993,6 @@ ja:
           - 一つのリンク(A)にマークアップしてください。
         check_interword_space:
           - 単語の文字間に不要なスペースが含まれている場合は削除してください。
-        check_link_text:
-          - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
           - 動画や音声を本文に埋め込む場合は説明を記述してください。
         set_iframe_title:
@@ -1996,6 +2016,8 @@ ja:
           - プレビューパスを指定しないでください。
           - "誤: &lt;a href=\"/.s1/preview/docs/page1.html\">ページタイトル&lt;/a>"
           - "正: &lt;a href=\"/docs/page1.html\">ページタイトル&lt;/a>"
+        unfavorable_word:
+          - リンクテキストや代替テキストは遷移先や画像を表すものを設定してください。
       thums_is_not_an_image: には画像ファイルを指定してください。
       unsupported_encoding: 対応していない文字コードです。
       thumb_is_blank: サムネイル画像が登録されていません。
@@ -2007,6 +2029,7 @@ ja:
       not_found_test_members: テストメンバーが選択されていません。
       plz_check_targets_to_delete: 削除対象が選択されていません。削除したい項目のチェックボックスにチェックを入れてください。
       plz_confirm_move_changes: 移動により影響を受けるコンテンツを確認してください。
+      accessibility_error: のアクセシビリティチェックで確認事項があるため処理を中断しました。下の確認事項を修正してください。
 
     template:
       no_errors: エラーは見つかりませんでした。
@@ -2640,9 +2663,20 @@ ja:
         - 表記と置換後の表記をカンマで区切って入力します（CSV 形式で入力します）。
         - 単語を改行で区切って複数個入力することができます。
         - |-
-        - |-
           入力例：
           子供, 子ども
+
+    cms/unfavorable_word:
+      name:
+        - 辞書の名前を入力します。
+      body:
+        - 単語を改行で区切って複数個入力することができます。
+        - |-
+          入力例：
+          写真
+          イラスト
+          ここ
+          こちら
 
     cms/addon/role:
       cms_role_ids:
@@ -2720,6 +2754,8 @@ ja:
         - 検索したいページの公開ステータスを選択します。
       search_approver_state:
         - 検索したいページの承認ステータスを選択します。
+      search_syntax_check_violation:
+        - 検索したいページのアクセシビリティ違反の有無を選択します。
       search_sort:
         - 検索結果のページ並び順を選択します。
         - 指定が無い場合、ファイル名での並び順となります。
@@ -3395,6 +3431,11 @@ ja:
         - 既定値は "http, https" です。
         - 安全なウェブサイトの作り方では、http, https 以外のスキームにリンクを設定することは非推奨となっています。危険を承知の上、設定してください。
 
+    cms/syntax_checker/link_text_setting:
+      syntax_checker_link_text_min_length:
+        - リンクテキストや代替テキストの最低長を設定します。
+        - 0 を設定するとリンクテキストや代替テキストの長さをチェックしません。
+
     cms/addon/clipboard_copy:
       clipboard_copy_target:
         - コピー対象を選択してください。
@@ -3542,3 +3583,4 @@ ja:
       cms/elasticsearch/indexer/node_release_job: CMS全文検索/フォルダーの公開（配下のページの追加）
       cms/elasticsearch/indexer/page_release_job: CMS全文検索/ページの追加
       cms/form_db/import_urls_job: CMS/定型DBインポート（サイト全体）
+      cms/syntax_check_job: CMS/アクセシビリティチェック

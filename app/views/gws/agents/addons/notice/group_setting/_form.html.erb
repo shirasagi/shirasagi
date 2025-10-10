@@ -15,4 +15,8 @@
 
   <dt><%= @model.t :notice_toggle_browsed %><%= @model.tt :notice_toggle_browsed %></dt>
   <dd><%= f.select :notice_toggle_browsed, @item.notice_toggle_browsed_options %></dd>
+
+  <dt><%= @model.t :notice_folder_navi_open_state %><%= @model.tt :notice_folder_navi_open_state %></dt>
+  <dd><%= f.select :notice_folder_navi_open_state, @item.notice_folder_navi_open_state_options, include_blank: true %></dd>
+  <dd><%= ss_input_guide :notice_folder_navi_open_state, model: @model %></dd>
 </dl>

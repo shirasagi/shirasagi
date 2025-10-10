@@ -8,16 +8,22 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
 
   context "basic crud" do
     let(:name_translations) { i18n_translations(prefix: "name") }
+    let(:description_translations) { i18n_translations(prefix: "description", count: 2, join: "\n") }
     let(:name_ja) { name_translations[:ja] }
     let(:name_en) { name_translations[:en] }
+    let(:description_ja) { description_translations[:ja] }
+    let(:description_en) { description_translations[:en] }
     let(:state) { %w(public closed).sample }
     let(:state_label) { I18n.t("ss.options.state.#{state}") }
     let(:order) { rand(1..10) }
     let(:memo) { Array.new(2) { "memo-#{unique_id}" } }
 
     let(:name2_translations) { i18n_translations(prefix: "name") }
+    let(:description2_translations) { i18n_translations(prefix: "description", count: 2, join: "\n") }
     let(:name2_ja) { name2_translations[:ja] }
     let(:name2_en) { name2_translations[:en] }
+    let(:description2_ja) { description2_translations[:ja] }
+    let(:description2_en) { description2_translations[:en] }
     let(:state2) { %w(public closed).sample }
     let(:state2_label) { I18n.t("ss.options.state.#{state2}") }
     let(:order2) { rand(11..20) }
@@ -32,6 +38,8 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
       within "form#item-form" do
         fill_in "item[i18n_name_translations][ja]", with: name_ja
         fill_in "item[i18n_name_translations][en]", with: name_en
+        fill_in "item[i18n_description_translations][ja]", with: description_ja
+        fill_in "item[i18n_description_translations][en]", with: description_en
         select state_label, from: "item[state]"
         fill_in "item[order]", with: order
         fill_in "item[memo]", with: memo.join("\n")
@@ -44,6 +52,8 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
       Gws::Tabular::Space.all.first.tap do |space|
         expect(space.i18n_name_translations[:ja]).to eq name_ja
         expect(space.i18n_name_translations[:en]).to eq name_en
+        expect(space.i18n_description_translations[:ja]).to eq description_ja.gsub("\n", "\r\n")
+        expect(space.i18n_description_translations[:en]).to eq description_en.gsub("\n", "\r\n")
         expect(space.state).to eq state
         expect(space.order).to eq order
         expect(space.memo).to eq memo.join("\r\n")
@@ -75,6 +85,8 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
       within "form#item-form" do
         fill_in "item[i18n_name_translations][ja]", with: name2_ja
         fill_in "item[i18n_name_translations][en]", with: name2_en
+        fill_in "item[i18n_description_translations][ja]", with: description2_ja
+        fill_in "item[i18n_description_translations][en]", with: description2_en
         select state2_label, from: "item[state]"
         fill_in "item[order]", with: order2
         fill_in "item[memo]", with: memo2.join("\n")
@@ -87,6 +99,8 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
       Gws::Tabular::Space.all.first.tap do |space|
         expect(space.i18n_name_translations[:ja]).to eq name2_ja
         expect(space.i18n_name_translations[:en]).to eq name2_en
+        expect(space.i18n_description_translations[:ja]).to eq description2_ja.gsub("\n", "\r\n")
+        expect(space.i18n_description_translations[:en]).to eq description2_en.gsub("\n", "\r\n")
         expect(space.state).to eq state2
         expect(space.order).to eq order2
         expect(space.memo).to eq memo2.join("\r\n")
@@ -124,6 +138,8 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
       Gws::Tabular::Space.all.first.tap do |space|
         expect(space.i18n_name_translations[:ja]).to eq name2_ja
         expect(space.i18n_name_translations[:en]).to eq name2_en
+        expect(space.i18n_description_translations[:ja]).to eq description2_ja.gsub("\n", "\r\n")
+        expect(space.i18n_description_translations[:en]).to eq description2_en.gsub("\n", "\r\n")
         expect(space.state).to eq state2
         expect(space.order).to eq order2
         expect(space.memo).to eq memo2.join("\r\n")
@@ -163,6 +179,8 @@ describe Gws::Tabular::Gws::SpacesController, type: :feature, dbscope: :example,
       Gws::Tabular::Space.all.first.tap do |space|
         expect(space.i18n_name_translations[:ja]).to eq name2_ja
         expect(space.i18n_name_translations[:en]).to eq name2_en
+        expect(space.i18n_description_translations[:ja]).to eq description2_ja.gsub("\n", "\r\n")
+        expect(space.i18n_description_translations[:en]).to eq description2_en.gsub("\n", "\r\n")
         expect(space.state).to eq state2
         expect(space.order).to eq order2
         expect(space.memo).to eq memo2.join("\r\n")

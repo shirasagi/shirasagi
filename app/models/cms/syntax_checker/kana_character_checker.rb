@@ -3,21 +3,16 @@ class Cms::SyntaxChecker::KanaCharacterChecker
 
   HALF_WIDTH_KANA_REGX = /[｡-ﾟ]+/.freeze
 
-  def check(context, id, idx, raw_html, fragment)
+  def check(context, content)
     chars = []
-    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+    Cms::SyntaxChecker::Base.each_text_node(context.fragment) do |text_node|
       chars += text_node.content.scan(HALF_WIDTH_KANA_REGX)
     end
     if chars.present?
-      context.errors << {
-        id: id,
-        idx: idx,
-        code: chars.join(","),
-        ele: raw_html,
-        msg: I18n.t('errors.messages.invalid_kana_character'),
-        detail: I18n.t('errors.messages.syntax_check_detail.invalid_kana_character'),
-        collector: self.class.name
-      }
+      code = chars.join(",")
+      context.errors << Cms::SyntaxChecker::CheckerError.new(
+        context: context, content: content, code: code, checker: self, error: :invalid_kana_character,
+        corrector: self.class.name)
     end
   end
 
@@ -38,5 +33,18 @@ class Cms::SyntaxChecker::KanaCharacterChecker
     end
 
     context.set_result(ret)
+  end
+
+  def correct2(content, params: nil)
+    fragment = Nokogiri::HTML5.fragment(content)
+
+    Cms::SyntaxChecker::Base.each_text_node(fragment) do |text_node|
+      text_node.content = text_node.content.gsub(HALF_WIDTH_KANA_REGX) do |matched|
+        # NKF.nkf('-w -X', matched)
+        matched.unicode_normalize(:nfkc)
+      end
+    end
+
+    fragment.to_html
   end
 end

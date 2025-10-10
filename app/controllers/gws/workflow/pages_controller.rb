@@ -80,7 +80,7 @@ class Gws::Workflow::PagesController < ApplicationController
       @item.class.destroy_workflow_files(save_workflow_circulations)
       render json: { workflow_state: @item.workflow_state }
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
@@ -122,7 +122,7 @@ class Gws::Workflow::PagesController < ApplicationController
       @item.class.destroy_workflow_files(save_workflow_circulations)
       render json: { workflow_state: @item.workflow_state }
     else
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
   end
 
@@ -146,7 +146,7 @@ class Gws::Workflow::PagesController < ApplicationController
     end
 
     if !@item.save
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
       return
     end
 
@@ -200,7 +200,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
     @item.remand_workflow_approver_state(@cur_user, comment: params[:remand_comment])
     if !@item.save
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
     end
 
     begin
@@ -246,7 +246,7 @@ class Gws::Workflow::PagesController < ApplicationController
 
     if !@item.update_current_workflow_circulation_state(@cur_user, "seen", comment: comment, file_ids: file_ids)
       @item.errors.add :base, :unable_to_update_cirulaton_state
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
       return
     end
 
@@ -274,7 +274,7 @@ class Gws::Workflow::PagesController < ApplicationController
     end
 
     if !@item.save
-      render json: @item.errors.full_messages, status: :unprocessable_entity
+      render json: @item.errors.full_messages, status: :unprocessable_content
       return
     end
 

@@ -70,6 +70,7 @@
   </div>
   <div class="column-value-body">
     <% if !show %>
+      <%= hidden_field_tag "#{f.object_name}[][_id]", unique_id, id: nil %>
       <%= hidden_field_tag "#{f.object_name}[][column_id]", column.id, id: nil %>
       <%= hidden_field_tag "#{f.object_name}[][_type]", column.value_type, id: nil %>
     <% end %>

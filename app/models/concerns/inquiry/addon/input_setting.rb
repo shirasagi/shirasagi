@@ -5,7 +5,7 @@ module Inquiry::Addon
 
     INPUT_TYPES = %w(
       text_field text_area email_field number_field date_field datetime_field
-      radio_button select check_box upload_file form_select
+      radio_button select check_box upload_file form_select section
     ).freeze
 
     included do
