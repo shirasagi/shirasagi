@@ -1,7 +1,7 @@
 class SS::Migration20251010000000
   include SS::Migration::Base
 
-  depends_on "20250801000000"
+  depends_on "20250820000000"
 
   def change
     each_loop_setting do |loop_setting|
