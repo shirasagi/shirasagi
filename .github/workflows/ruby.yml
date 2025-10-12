@@ -248,5 +248,5 @@ jobs:
           if [ -n "$existing_id" ]; then
             gh api repos/${repo}/issues/comments/${existing_id} -X PATCH -F body=@"${COMMENT_FILE}"
           else
-            gh pr comment ${pr_number} --body-file "${COMMENT_FILE}"
+            gh pr comment ${pr_number} --repo "${repo}" --body-file "${COMMENT_FILE}"
           fi
