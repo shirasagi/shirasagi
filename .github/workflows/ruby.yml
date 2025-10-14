@@ -192,17 +192,19 @@ jobs:
         continue-on-error: true
       - name: Build comment body
         id: summary
+        env:
+          TEST_RESULT: ${{ needs.test.result }}
         run: |
           set -euo pipefail
           run_url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
           mkdir -p tmp
           comment_file="tmp/comment.md"
-          status="success"
-
+          status="${TEST_RESULT:-success}"
+          comment_status="success"
+          failures=""
           if compgen -G "aggregated-failures/**/*.txt" > /dev/null; then
             failures=$(find aggregated-failures -type f -name '*.txt' -print0 | xargs -0 cat | sed 's/\r$//' | awk 'NF' | sort -u)
             if [ -n "$failures" ]; then
-              status="failure"
               count=$(printf "%s\n" "$failures" | wc -l | tr -d ' ')
               {
                 echo "## 🚨 CI Test Failures Summary (Unified)"
@@ -215,10 +217,20 @@ jobs:
                 echo
                 echo "**CI Run:** ${run_url}"
               } > "$comment_file"
+              comment_status="failure"
             fi
           fi
 
-          if [ "$status" = "success" ]; then
+          if [ "$comment_status" != "failure" ] && [ "$status" != "success" ]; then
+            comment_status="failure"
+            {
+              echo "## 🚨 CI Test Status (Unified)"
+              echo
+              echo "CIはステータス「${status}」で終了しましたが、失敗したテストの詳細を取得できませんでした。"
+              echo
+              echo "**CI Run:** ${run_url}"
+            } > "$comment_file"
+          elif [ "$status" = "success" ]; then
             {
               echo "## ✅ CI Test Status (Unified)"
               echo
@@ -226,12 +238,13 @@ jobs:
               echo
               echo "**CI Run:** ${run_url}"
             } > "$comment_file"
+            comment_status="success"
           fi
 
           if [ -s "$comment_file" ]; then
             echo "comment_path=$comment_file" >> "$GITHUB_OUTPUT"
           fi
-          echo "status=$status" >> "$GITHUB_OUTPUT"
+          echo "status=$comment_status" >> "$GITHUB_OUTPUT"
       - name: Upsert pull request comment
         if: ${{ steps.summary.outputs.comment_path != '' }}
         env:
