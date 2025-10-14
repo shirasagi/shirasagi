@@ -72,7 +72,7 @@ module Cms::ListHelper
       render_list_with_shirasagi(cur_item, default_page_loop_html, &block)
     else
       source = cur_item.loop_liquid.presence || default_page_loop_liquid
-      assigns = { "pages" => @items.to_a, "forms" => cur_item.try(:st_forms).to_a }
+      assigns = { "pages" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
   end
