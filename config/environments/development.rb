@@ -9,6 +9,7 @@ Rails.application.configure do
 
   # Do not eager load code on boot.
   config.eager_load = false
+  config.rake_eager_load = true
 
   # Don't include all helpers
   # include_all_helpers が true の場合、"Cms::ListHelper#render_page_list" ではなく
@@ -104,11 +105,4 @@ Rails.application.configure do
   # config.logger = ActiveSupport::Logger.new("#{Rails.root}/log/development.log")
   config.log_formatter = ::Logger::Formatter.new
   config.log_level = ENV['DEVELOPMENT_LOG_LEVEL'] || :debug
-
-  # HACK: Load initializers without load routes in rake tasks.
-  config.after_initialize do
-    Dir["#{config.root}/app/models/**/initializer.rb"].each do |file|
-      require file
-    end
-  end
 end

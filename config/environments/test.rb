@@ -16,6 +16,7 @@ Rails.application.configure do
   # recommended that you enable it in continuous integration systems to ensure eager
   # loading is working properly before deploying your code.
   config.eager_load = ENV["CI"].present?
+  config.rake_eager_load = true
 
   # Configure public file server for tests with cache-control for performance.
   config.public_file_server.headers = { "cache-control" => "public, max-age=3600" }
@@ -87,11 +88,4 @@ Rails.application.configure do
 
   # Use a real queuing backend for Active Job (and separate queues per environment).
   config.active_job.queue_adapter = :test
-
-  # HACK: Load initializers without load routes in rake tasks.
-  config.after_initialize do
-    Dir["#{config.root}/app/models/**/initializer.rb"].each do |file|
-      require file
-    end
-  end
 end
