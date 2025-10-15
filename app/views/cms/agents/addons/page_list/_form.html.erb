@@ -4,38 +4,27 @@
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
+  var $liquidSnippetSelect = $addon.find(".loop-format-liquid .js-loop-snippet-select");
+  var $liquidSnippetHiddenField = $addon.find(".loop-format-liquid .js-loop-snippet-hidden-field");
   if ($loopFormatSelect.length) {
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
     <% if @model.use_liquid %>
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
-      var savedLoopSettingId = '';
 
       if (format === "liquid") {
         $addon.find(".loop-format-shirasagi").addClass("hide");
         $addon.find(".loop-format-liquid").removeClass("hide");
-        // シラサギ形式のloop_setting_idを無効化
         $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', true);
-        // Liquid形式のloop_setting_idを有効化
-        $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").prop('disabled', false);
-
-        // 保存された値がある場合、Liquid形式のセレクトボックスに移行
-        if (savedLoopSettingId && savedLoopSettingId !== '') {
-          $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").val(savedLoopSettingId);
-        }
+        $liquidSnippetSelect.prop('disabled', false);
+        $liquidSnippetHiddenField.prop('disabled', false);
       } else {
         $addon.find(".loop-format-shirasagi").removeClass("hide");
         $addon.find(".loop-format-liquid").addClass("hide");
-        // シラサギ形式のloop_setting_idを有効化
         $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', false);
-        // Liquid形式のloop_setting_idを無効化
-        $addon.find(".loop-format-liquid select[name='item[loop_setting_id]']").prop('disabled', true);
-        
-        // 保存された値がある場合、シラサギ形式のセレクトボックスに移行
-        if (savedLoopSettingId && savedLoopSettingId !== '') {
-          $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").val(savedLoopSettingId);
-        }
+        $liquidSnippetSelect.prop('disabled', true).val('');
+        $liquidSnippetHiddenField.prop('disabled', true).val('').trigger('change');
       }
     };
 
@@ -63,40 +52,96 @@
   // スニペット貼り付け機能
   // 選択可能なループ設定のID => HTML のマップを生成
   var loopSettingHtmlMap = {};
-  <% Cms::LoopSetting.site(@cur_site).public_state.each do |ls| %>
+  <% Cms::LoopSetting.site(@cur_site).liquid.each do |ls| %>
     loopSettingHtmlMap['<%= ls.id %>'] = <%= (ls.html || '').to_json.html_safe %>;
   <% end %>
 
-  $(document).on("click", "[data-action='loop-snippet#insert']", function() {
-    var selectedLoopSettingId = $("select[name='item[loop_setting_id]']:enabled").val();
-    console.log("選択されたloop_setting_id:", selectedLoopSettingId);
+  var getCodeMirrorInstance = function($textarea) {
+    if (!$textarea || !$textarea.length) { return null; }
+    var cm = $textarea.data('editor');
+    if (cm) { return cm; }
+    var cmEl = $textarea.next('.CodeMirror')[0];
+    if (cmEl && cmEl.CodeMirror) { return cmEl.CodeMirror; }
+    return null;
+  };
 
-    if (selectedLoopSettingId && loopSettingHtmlMap[selectedLoopSettingId] !== undefined) {
-      var $loopArea = $("textarea[name='item[loop_liquid]']");
-      var newHtml = loopSettingHtmlMap[selectedLoopSettingId] || '';
+  var appendSnippetToTextarea = function($textarea, snippetHtml, attempt) {
+    attempt = attempt || 0;
+    if (!$textarea.length) { return; }
 
-      // CodeMirror があれば末尾に追記、なければ textarea に追記
-      var cm = $loopArea.data('editor');
-      if (!cm) {
-        var cmEl = $loopArea.next('.CodeMirror')[0];
-        if (cmEl && cmEl.CodeMirror) { cm = cmEl.CodeMirror; }
-      }
+    var cm = getCodeMirrorInstance($textarea);
+    if (cm && typeof cm.getDoc === 'function') {
+      var doc = cm.getDoc();
+      var cur = doc.getValue();
+      var needsLF = cur.length > 0 && !/\n$/.test(cur);
+      var lastLine = doc.lastLine();
+      var lastCh = doc.getLine(lastLine).length;
+      doc.replaceRange((needsLF ? "\n" : "") + snippetHtml, { line: lastLine, ch: lastCh });
+      $textarea.val(doc.getValue());
+      return;
+    }
 
-      if (cm && typeof cm.getDoc === 'function') {
-        var doc = cm.getDoc();
-        var cur = doc.getValue();
-        var needsLF = cur.length > 0 && !/\n$/.test(cur);
-        var lastLine = doc.lastLine();
-        var lastCh = doc.getLine(lastLine).length;
-        doc.replaceRange((needsLF ? "\n" : "") + newHtml, { line: lastLine, ch: lastCh });
-        $loopArea.val(doc.getValue());
-      } else {
-        var curVal = $loopArea.val() || '';
-        var needsLF2 = curVal.length > 0 && !/\n$/.test(curVal);
-        $loopArea.val(curVal + (needsLF2 ? "\n" : "") + newHtml);
+    var curVal = $textarea.val() || '';
+    var needsLF2 = curVal.length > 0 && !/\n$/.test(curVal);
+    $textarea.val(curVal + (needsLF2 ? "\n" : "") + snippetHtml);
+    if (attempt < 10) {
+      setTimeout(function() { appendSnippetToTextarea($textarea, snippetHtml, attempt + 1); }, 50);
+    }
+  };
+
+  var handleLoopSnippetInsert = function($select, state) {
+    state = state || {};
+    var attempt = state.attempt || 0;
+    var selectedLoopSettingId = state.snippetId || $select.val();
+    if (!selectedLoopSettingId) {
+      return;
+    }
+
+    $select.data('loopSnippetPendingId', selectedLoopSettingId);
+
+    var snippetHtml = loopSettingHtmlMap[selectedLoopSettingId];
+    if (snippetHtml === undefined) {
+      $select.val('');
+      $select.removeData('loopSnippetPendingId');
+      return;
+    }
+
+    var hiddenFieldSelector = $select.data('loopSnippetHiddenField') || "input[name='item[loop_setting_id]']";
+    if (hiddenFieldSelector) {
+      var $hiddenField = $(hiddenFieldSelector);
+      if ($hiddenField.length) {
+        $hiddenField.prop('disabled', false).val(selectedLoopSettingId).trigger('change');
       }
     }
-  });
+
+    var targetSelector = $select.data('loopSnippetTarget');
+    var $loopArea = targetSelector ? $(targetSelector) : $();
+    appendSnippetToTextarea($loopArea, snippetHtml, attempt);
+
+    $select.val('');
+    $select.removeData('loopSnippetPendingId');
+  };
+
+  var bindLoopSnippetSelect = function($select) {
+    if (!$select || !$select.length) { return; }
+
+    $select.on("change", function() {
+      handleLoopSnippetInsert($select, { attempt: 0 });
+    });
+
+    var $parentForm = $select.closest('form');
+    if ($parentForm.length) {
+      $parentForm.on('submit', function() {
+        var pendingId = $select.data('loopSnippetPendingId');
+        var currentVal = $select.val();
+        var snippetId = pendingId || currentVal;
+        if (!snippetId) { return; }
+        handleLoopSnippetInsert($select, { snippetId: snippetId, attempt: 0 });
+      });
+    }
+  };
+
+  bindLoopSnippetSelect($liquidSnippetSelect);
 <% end %>
 
 <% if @model.use_conditions %>
@@ -167,11 +212,24 @@
 
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
-    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
+    <dt><%= t('cms.labels.snippets') %></dt>
     <dd>
-      <%= f.select :loop_setting_id, ancestral_html_settings_liquid, include_blank: t('cms.input_directly') %>
-      <button type="button" data-action="loop-snippet#insert" style="margin-left: 10px;"><%= t('cms.buttons.insert_snippet') %></button>
+      <%= f.hidden_field :loop_setting_id,
+        id: "#{addon[:id]}_loop_setting_id_liquid",
+        class: 'js-loop-snippet-hidden-field',
+        disabled: (@item.try(:loop_format) != 'liquid') %>
+      <% snippet_options = render(SS::OptionsForSelectComponent.new(options: ancestral_html_settings_liquid)) %>
+      <%= select_tag 'loop_snippet_selector',
+        safe_join([content_tag(:option, t('cms.input_directly'), value: ''), snippet_options]),
+        id: "loop_snippet_selector",
+        class: 'js-loop-snippet-select',
+        data: {
+          loop_snippet_target: '#item_loop_liquid',
+          loop_snippet_hidden_field: "input[name='item[loop_setting_id]']"
+        },
+        disabled: (@item.try(:loop_format) != 'liquid') %>
     </dd>
+    <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
     <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
 <% end %>

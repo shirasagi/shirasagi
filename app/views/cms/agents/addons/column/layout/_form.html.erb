@@ -1,57 +1,122 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
+  snippet_dom_id = addon[:id] || "#{f.object_name}_loop_snippet"
 %>
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
-  var $loopSettingId = $addon.find('select[name="item[loop_setting_id]"]');
-  var $layout = $addon.find('textarea[name="item[layout]"]');
+  var $loopSnippetSelect = $addon.find('.js-loop-snippet-select');
 
   // スニペット貼り付け機能
-  // 選択可能なループ設定のID => HTML のマップを生成
   var loopSettingHtmlMap = {};
-  <% Cms::LoopSetting.site(@cur_site).public_state.each do |ls| %>
+  <% Cms::LoopSetting.site(@cur_site).liquid.each do |ls| %>
     loopSettingHtmlMap['<%= ls.id %>'] = <%= (ls.html || '').to_json.html_safe %>;
   <% end %>
 
-  $(document).on("click", "[data-action='column-layout-snippet#insert']", function() {
-    var selectedLoopSettingId = $("select[name='item[loop_setting_id]']").val();
-    console.log("選択されたloop_setting_id:", selectedLoopSettingId);
+  var getCodeMirrorInstance = function($textarea) {
+    if (!$textarea || !$textarea.length) { return null; }
+    var cm = $textarea.data('editor');
+    if (cm) { return cm; }
+    var cmEl = $textarea.next('.CodeMirror')[0];
+    if (cmEl && cmEl.CodeMirror) { return cmEl.CodeMirror; }
+    return null;
+  };
 
-    if (selectedLoopSettingId && loopSettingHtmlMap[selectedLoopSettingId] !== undefined) {
-      var $layoutArea = $("textarea[name='item[layout]']");
-      var newHtml = loopSettingHtmlMap[selectedLoopSettingId] || '';
+  var appendSnippetToTextarea = function($textarea, snippetHtml, attempt) {
+    attempt = attempt || 0;
+    if (!$textarea.length) { return; }
 
-      // CodeMirror があれば末尾に追記、なければ textarea に追記
-      var cm = $layoutArea.data('editor');
-      if (!cm) {
-        var cmEl = $layoutArea.next('.CodeMirror')[0];
-        if (cmEl && cmEl.CodeMirror) { cm = cmEl.CodeMirror; }
-      }
+    var cm = getCodeMirrorInstance($textarea);
+    if (cm && typeof cm.getDoc === 'function') {
+      var doc = cm.getDoc();
+      var currentValue = doc.getValue();
+      var needsLF = currentValue.length > 0 && !/\n$/.test(currentValue);
+      var lastLine = doc.lastLine();
+      var lastCh = doc.getLine(lastLine).length;
+      doc.replaceRange((needsLF ? "\n" : "") + snippetHtml, { line: lastLine, ch: lastCh });
+      $textarea.val(doc.getValue());
+      return;
+    }
 
-      if (cm && typeof cm.getDoc === 'function') {
-        var doc = cm.getDoc();
-        var cur = doc.getValue();
-        var needsLF = cur.length > 0 && !/\n$/.test(cur);
-        var lastLine = doc.lastLine();
-        var lastCh = doc.getLine(lastLine).length;
-        doc.replaceRange((needsLF ? "\n" : "") + newHtml, { line: lastLine, ch: lastCh });
-        $layoutArea.val(doc.getValue());
-      } else {
-        var curVal = $layoutArea.val() || '';
-        var needsLF2 = curVal.length > 0 && !/\n$/.test(curVal);
-        $layoutArea.val(curVal + (needsLF2 ? "\n" : "") + newHtml);
+    var currentText = $textarea.val() || '';
+    var needsLF2 = currentText.length > 0 && !/\n$/.test(currentText);
+    $textarea.val(currentText + (needsLF2 ? "\n" : "") + snippetHtml);
+    if (attempt < 10) {
+      setTimeout(function() { appendSnippetToTextarea($textarea, snippetHtml, attempt + 1); }, 50);
+    }
+  };
+
+  var handleSnippetInsert = function($select, state) {
+    state = state || {};
+    var attempt = state.attempt || 0;
+    var selectedLoopSettingId = state.snippetId || $select.val();
+    if (!selectedLoopSettingId) {
+      return;
+    }
+
+    $select.data('loopSnippetPendingId', selectedLoopSettingId);
+
+    var snippetHtml = loopSettingHtmlMap[selectedLoopSettingId];
+    if (snippetHtml === undefined) {
+      $select.val('');
+      $select.removeData('loopSnippetPendingId');
+      return;
+    }
+
+    var hiddenFieldSelector = $select.data('loopSnippetHiddenField') || "input[name='item[loop_setting_id]']";
+    if (hiddenFieldSelector) {
+      var $hiddenField = $(hiddenFieldSelector);
+      if ($hiddenField.length) {
+        $hiddenField.prop('disabled', false).val(selectedLoopSettingId).trigger('change');
       }
     }
-  });
+
+    var targetSelector = $select.data('loopSnippetTarget');
+    var $layoutArea = targetSelector ? $(targetSelector) : $();
+    appendSnippetToTextarea($layoutArea, snippetHtml, attempt);
+
+    $select.val('');
+    $select.removeData('loopSnippetPendingId');
+  };
+
+  var bindLoopSnippetSelect = function($select) {
+    if (!$select || !$select.length) { return; }
+
+    $select.on('change', function() {
+      handleSnippetInsert($select, { attempt: 0 });
+    });
+
+    var $parentForm = $select.closest('form');
+    if ($parentForm.length) {
+      $parentForm.on('submit', function() {
+        var pendingId = $select.data('loopSnippetPendingId');
+        var currentVal = $select.val();
+        var snippetId = pendingId || currentVal;
+        if (!snippetId) { return; }
+        handleSnippetInsert($select, { snippetId: snippetId, attempt: 0 });
+      });
+    }
+  };
+
+  bindLoopSnippetSelect($loopSnippetSelect);
 <% end %>
 
 <dl class="see">
-  <dt class="wide"><%= @model.t :loop_setting_id %><%= @model.tt :loop_setting_id %></dt>
+  <dt class="wide"><%= t('cms.labels.snippets') %></dt>
   <dd class="wide">
-    <%= f.select :loop_setting_id, ancestral_html_settings_liquid, include_blank: t('cms.input_directly')  %>
-    <button type="button" data-action="column-layout-snippet#insert" style="margin-left: 10px;"><%= t('cms.buttons.insert_snippet') %></button>
+    <%= f.hidden_field :loop_setting_id,
+      id: "#{snippet_dom_id}_loop_setting_id_hidden",
+      class: 'js-loop-snippet-hidden-field' %>
+    <% snippet_options = render(SS::OptionsForSelectComponent.new(options: ancestral_html_settings_liquid)) %>
+    <%= select_tag 'loop_snippet_selector',
+      safe_join([content_tag(:option, t('cms.input_directly'), value: ''), snippet_options]),
+      id: "#{snippet_dom_id}_loop_snippet_selector",
+      class: 'js-loop-snippet-select',
+      data: {
+        loop_snippet_target: '#item_layout',
+        loop_snippet_hidden_field: "input[name='item[loop_setting_id]']"
+      } %>
   </dd>
   <dt class="wide">HTML<%= @model.tt :layout %></dt>
   <dd class="wide">

@@ -270,6 +270,8 @@ ja:
       add_template: "テンプレートを追加する（最大5個）"
       insert_snippet: スニペットを挿入
       youtube_title: YouTubeからタイトルを取得する
+    labels:
+      snippets: Snippets
     confirm:
       delete_item: 項目を削除してよろしいですか？
       close: 非公開状態で保存しようとしています
