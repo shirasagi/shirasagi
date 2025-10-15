@@ -319,10 +319,6 @@ en:
       messages:
         taken: Already exists.
 
-  cms:
-    labels:
-      snippets: Snippets
-
   views:
     pagination:
       first: "«"

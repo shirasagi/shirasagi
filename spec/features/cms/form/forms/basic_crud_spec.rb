@@ -133,7 +133,8 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
     end
 
     it 'preserves directly entered HTML when loop_setting_id is set' do
-      custom_html = "<div class='custom-form'>{% for item in items %}<div class='custom-item'>{{ item.name }}</div>{% endfor %}</div>"
+      custom_html = "<div class='custom-form'>{% for item in items %}" \
+                    "<div class='custom-item'>{{ item.name }}</div>{% endfor %}</div>"
 
       visit cms_forms_path(site)
       click_on I18n.t('ss.links.new')

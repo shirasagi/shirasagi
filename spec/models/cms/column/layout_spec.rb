@@ -83,7 +83,8 @@ layout: "{% for item in items %}{{ item.name }}{% endfor %}")
 
     describe "saving behavior" do
       it "preserves directly entered layout when loop_setting_id is set" do
-        custom_layout = "<div class='custom-layout'>{% for item in items %}<div class='custom-item'>{{ item.name }}</div>{% endfor %}</div>"
+        custom_layout = "<div class='custom-layout'>{% for item in items %}" \
+                        "<div class='custom-item'>{{ item.name }}</div>{% endfor %}</div>"
         column = create(:cms_column_free, cur_site: site, cur_form: form, layout: custom_layout,
 loop_setting_id: liquid_setting.id)
 
