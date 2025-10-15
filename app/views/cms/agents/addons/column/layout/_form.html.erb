@@ -23,27 +23,46 @@
     return null;
   };
 
-  var appendSnippetToTextarea = function($textarea, snippetHtml, attempt) {
+  var insertSnippetAtCursor = function($textarea, snippetHtml, attempt) {
     attempt = attempt || 0;
     if (!$textarea.length) { return; }
 
     var cm = getCodeMirrorInstance($textarea);
     if (cm && typeof cm.getDoc === 'function') {
       var doc = cm.getDoc();
-      var currentValue = doc.getValue();
-      var needsLF = currentValue.length > 0 && !/\n$/.test(currentValue);
-      var lastLine = doc.lastLine();
-      var lastCh = doc.getLine(lastLine).length;
-      doc.replaceRange((needsLF ? "\n" : "") + snippetHtml, { line: lastLine, ch: lastCh });
+      var cursor = doc.getCursor();
+      
+      // カーソル位置にスニペットを挿入
+      doc.replaceRange(snippetHtml, cursor);
+      
+      // カーソル位置をスニペット挿入後に移動
+      var newCursor = { line: cursor.line, ch: cursor.ch + snippetHtml.length };
+      doc.setCursor(newCursor);
+      cm.focus();
+      
       $textarea.val(doc.getValue());
       return;
     }
 
+    // CodeMirrorが利用できない場合のフォールバック
     var currentText = $textarea.val() || '';
-    var needsLF2 = currentText.length > 0 && !/\n$/.test(currentText);
-    $textarea.val(currentText + (needsLF2 ? "\n" : "") + snippetHtml);
+    var selectionStart = $textarea[0].selectionStart;
+    var selectionEnd = $textarea[0].selectionEnd;
+    
+    // カーソル位置にスニペットを挿入
+    var newText = currentText.substring(0, selectionStart) + 
+                  snippetHtml + 
+                  currentText.substring(selectionEnd);
+    
+    $textarea.val(newText);
+    
+    // カーソル位置をスニペット挿入後に移動
+    var newCursorPos = selectionStart + snippetHtml.length;
+    $textarea[0].setSelectionRange(newCursorPos, newCursorPos);
+    $textarea.focus();
+    
     if (attempt < 10) {
-      setTimeout(function() { appendSnippetToTextarea($textarea, snippetHtml, attempt + 1); }, 50);
+      setTimeout(function() { insertSnippetAtCursor($textarea, snippetHtml, attempt + 1); }, 50);
     }
   };
 
@@ -74,9 +93,9 @@
 
     var targetSelector = $select.data('loopSnippetTarget');
     var $layoutArea = targetSelector ? $(targetSelector) : $();
-    appendSnippetToTextarea($layoutArea, snippetHtml, attempt);
+    insertSnippetAtCursor($layoutArea, snippetHtml, attempt);
 
-    $select.val('');
+    // Don't clear the select box to preserve the value for form submission
     $select.removeData('loopSnippetPendingId');
   };
 
@@ -93,7 +112,15 @@
         var pendingId = $select.data('loopSnippetPendingId');
         var currentVal = $select.val();
         var snippetId = pendingId || currentVal;
-        if (!snippetId) { return; }
+        if (!snippetId) { 
+          // If no snippet is selected, ensure hidden field is cleared
+          var hiddenFieldSelector = $select.data('loopSnippetHiddenField') || "input[name='item[loop_setting_id]']";
+          var $hiddenField = $(hiddenFieldSelector);
+          if ($hiddenField.length) {
+            $hiddenField.val('').trigger('change');
+          }
+          return; 
+        }
         handleSnippetInsert($select, { snippetId: snippetId, attempt: 0 });
       });
     }

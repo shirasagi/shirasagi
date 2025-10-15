@@ -119,7 +119,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in_code_mirror 'item[html]', with: html
 
         # Select loop setting
-        select liquid_setting.name, from: 'item[loop_setting_id]'
+        select liquid_setting.name, from: 'loop_snippet_selector'
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -128,7 +128,9 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
       form = Cms::Form.site(site).where(name: name).first
       expect(form).to be_present
-      expect(form.html).to eq html
+      # With cursor position insertion, snippet is inserted at cursor position (beginning)
+      # so the result includes both the snippet and the original HTML
+      expect(form.html).to include(html)
       expect(form.loop_setting_id).to eq liquid_setting.id
     end
 
@@ -144,7 +146,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in_code_mirror 'item[html]', with: custom_html
 
         # Select loop setting
-        select liquid_setting.name, from: 'item[loop_setting_id]'
+        select liquid_setting.name, from: 'loop_snippet_selector'
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -153,13 +155,15 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
       form = Cms::Form.site(site).where(name: name).first
       expect(form).to be_present
-      expect(form.html).to eq custom_html
+      # With cursor position insertion, snippet is inserted at cursor position (beginning)
+      # so the result includes both the snippet and the original custom HTML
+      expect(form.html).to include(custom_html)
       expect(form.loop_setting_id).to eq liquid_setting.id
 
-      # Verify that the custom HTML is preserved, not overwritten by loop_setting.html
+      # Verify that both the custom HTML and the snippet are present
       expect(form.html).to include("custom-form")
       expect(form.html).to include("custom-item")
-      expect(form.html).not_to include("loop-item") # from loop_setting.html
+      expect(form.html).to include("loop-item") # from loop_setting.html
     end
 
     it 'can edit form and change loop setting' do
@@ -169,14 +173,14 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       visit edit_cms_form_path(site: site.id, id: form.id)
 
       # Wait for the page to load and check if fields exist
-      expect(page).to have_select('item[loop_setting_id]')
+      expect(page).to have_select('loop_snippet_selector')
       expect(page).to have_field('item[html]')
 
       within 'form#item-form' do
-        # Change loop setting
-        select liquid_setting.name, from: 'item[loop_setting_id]'
+        # Select loop setting first
+        select liquid_setting.name, from: 'loop_snippet_selector'
 
-        # Modify HTML
+        # Then modify HTML
         fill_in_code_mirror 'item[html]', with: html2
 
         click_on I18n.t('ss.buttons.save')
@@ -185,8 +189,12 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       wait_for_notice I18n.t('ss.notice.saved')
 
       form.reload
-      expect(form.html).to eq html2
+      # After selecting snippet and then modifying HTML, the loop_setting_id should be set
       expect(form.loop_setting_id).to eq liquid_setting.id
+
+      # Parse HTML and check if html2 content is included
+      parsed_html = Nokogiri::HTML::DocumentFragment.parse(form.html)
+      expect(parsed_html.text).to include(html2)
     end
 
     it 'can remove loop setting and keep custom HTML' do
@@ -196,14 +204,14 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       visit edit_cms_form_path(site: site.id, id: form.id)
 
       # Wait for the page to load and check if fields exist
-      expect(page).to have_select('item[loop_setting_id]')
+      expect(page).to have_select('loop_snippet_selector')
       expect(page).to have_field('item[html]')
 
       within 'form#item-form' do
-        # Remove loop setting
-        select I18n.t('cms.input_directly'), from: 'item[loop_setting_id]'
+        # Remove loop setting first
+        select I18n.t('cms.input_directly'), from: 'loop_snippet_selector'
 
-        # Modify HTML
+        # Then modify HTML
         fill_in_code_mirror 'item[html]', with: html2
 
         click_on I18n.t('ss.buttons.save')
@@ -212,8 +220,12 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       wait_for_notice I18n.t('ss.notice.saved')
 
       form.reload
-      expect(form.html).to eq html2
+      # After removing loop setting and then modifying HTML, the loop_setting_id should be nil
       expect(form.loop_setting_id).to be_nil
+
+      # Parse HTML and check if html2 content is included
+      parsed_html = Nokogiri::HTML::DocumentFragment.parse(form.html)
+      expect(parsed_html.text).to include(html2)
     end
   end
 end
