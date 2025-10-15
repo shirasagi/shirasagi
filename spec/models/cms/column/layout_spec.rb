@@ -18,7 +18,8 @@ describe Cms::Column::Base, type: :model, dbscope: :example do
 
     describe "layout field" do
       it "can set layout content" do
-        layout_content = "<div class='custom-layout'>{% for item in items %}<div class='custom-item'>{{ item.name }}</div>{% endfor %}</div>"
+        layout_content = "<div class='custom-layout'>{% for item in items %}" \
+                         "<div class='custom-item'>{{ item.name }}</div>{% endfor %}</div>"
         column = build(:cms_column_free, cur_site: site, cur_form: form, layout: layout_content)
 
         expect(column).to be_valid
