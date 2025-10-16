@@ -16,17 +16,19 @@
     <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
   </dd>
   <dd>
-    <table class="index ajax-selected sortable-index">
-      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
-      <tbody>
-      <% @item.from_members.each do |user| %>
-        <tr data-id="<%= user.id %>">
-          <td><%= f.hidden_field "from_member_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
-          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <table class="index ajax-selected sortable-index">
+        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+        <% @item.from_members.each do |user| %>
+          <tr data-id="<%= user.id %>">
+            <td><%= f.hidden_field "from_member_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </dd>
 </dl>
 
@@ -39,17 +41,19 @@
     <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
   </dd>
   <dd>
-    <table class="index ajax-selected sortable-index">
-      <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
-      <tbody>
-      <% @item.to_members.each do |user| %>
-        <tr data-id="<%= user.id %>">
-          <td><%= f.hidden_field "to_member_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
-          <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-        </tr>
-      <% end %>
-      </tbody>
-    </table>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <table class="index ajax-selected sortable-index">
+        <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
+        <tbody>
+        <% @item.to_members.each do |user| %>
+          <tr data-id="<%= user.id %>">
+            <td><%= f.hidden_field "to_member_ids[]", value: user.id, id: nil %> <%= gws_public_user_long_name(user.long_name) %></td>
+            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+          </tr>
+        <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </dd>
 </dl>
 

@@ -28,67 +28,69 @@
   });
 <% end %>
 
-<table class="index">
-  <thead>
-    <tr>
-      <th><%= Gws::User.t(:name) %></th>
-      <th style="width: 50%"><%= @model.t(:approval_state) %></th>
-      <th><%= @model.t(:approval_member_ids) %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @item.approval_members.each do |member| %>
-    <tr>
-      <td><%= gws_public_user_long_name(member.long_name) %></td>
-      <td>
-        <% approval = @item.approval_member(member) %>
-        <% if member == @cur_user %>
-          <%= content_tag 'span', class: 'approvals',
-                          data: { schedule_id: @item.id.to_s, member_id: member.id, init_value: approval.approval_state || '' } do %>
-            <% %w(unknown approve deny).each do |value| %>
-              <label class="mr-1">
-                <%= radio_button_tag("item[approvals][#{member.id}][state]", value, approval.approval_state == value, class: 'approval') %>
-                <%= I18n.t("gws/schedule.options.approval_state.#{value}") %>
-              </label>
+<%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+  <table class="index">
+    <thead>
+      <tr>
+        <th><%= Gws::User.t(:name) %></th>
+        <th style="width: 50%"><%= @model.t(:approval_state) %></th>
+        <th><%= @model.t(:approval_member_ids) %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @item.approval_members.each do |member| %>
+      <tr>
+        <td><%= gws_public_user_long_name(member.long_name) %></td>
+        <td>
+          <% approval = @item.approval_member(member) %>
+          <% if member == @cur_user %>
+            <%= content_tag 'span', class: 'approvals',
+                            data: { schedule_id: @item.id.to_s, member_id: member.id, init_value: approval.approval_state || '' } do %>
+              <% %w(unknown approve deny).each do |value| %>
+                <label class="mr-1">
+                  <%= radio_button_tag("item[approvals][#{member.id}][state]", value, approval.approval_state == value, class: 'approval') %>
+                  <%= I18n.t("gws/schedule.options.approval_state.#{value}") %>
+                </label>
+              <% end %>
             <% end %>
+          <% else %>
+            <%= approval.label(:approval_state) %>
           <% end %>
-        <% else %>
-          <%= approval.label(:approval_state) %>
-        <% end %>
-      </td>
-      <td>
-        <% if approval.approval_state == "approve" %>
-          <%=  gws_public_user_long_name(approval.user.long_name) %>
-        <% end %>
-      </td>
-    </tr>
-    <% end %>
+        </td>
+        <td>
+          <% if approval.approval_state == "approve" %>
+            <%=  gws_public_user_long_name(approval.user.long_name) %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
 
-    <% @item.approval_facilities.each do |facility| %>
-    <tr>
-      <td><%= facility.name %></td>
-      <td>
-        <% approval = @item.approval_facility_member(facility) %>
-        <% if facility.user_ids.include?(@cur_user.id) %>
-          <%= content_tag 'span', class: 'approvals',
-                          data: { schedule_id: @item.id.to_s, member_id: @cur_user.id, facility_id: facility.id, init_value: approval.approval_state || '' } do %>
-            <% %w(unknown approve deny).each do |value| %>
-              <label class="mr-1">
-                <%= radio_button_tag("item[approvals][facility-#{facility.id}][state]", value, approval.approval_state == value, class: 'approval') %>
-                <%= I18n.t("gws/schedule.options.approval_state.#{value}") %>
-              </label>
+      <% @item.approval_facilities.each do |facility| %>
+      <tr>
+        <td><%= facility.name %></td>
+        <td>
+          <% approval = @item.approval_facility_member(facility) %>
+          <% if facility.user_ids.include?(@cur_user.id) %>
+            <%= content_tag 'span', class: 'approvals',
+                            data: { schedule_id: @item.id.to_s, member_id: @cur_user.id, facility_id: facility.id, init_value: approval.approval_state || '' } do %>
+              <% %w(unknown approve deny).each do |value| %>
+                <label class="mr-1">
+                  <%= radio_button_tag("item[approvals][facility-#{facility.id}][state]", value, approval.approval_state == value, class: 'approval') %>
+                  <%= I18n.t("gws/schedule.options.approval_state.#{value}") %>
+                </label>
+              <% end %>
             <% end %>
+          <% else %>
+            <%= approval.label(:approval_state) %>
           <% end %>
-        <% else %>
-          <%= approval.label(:approval_state) %>
-        <% end %>
-      </td>
-      <td>
-        <% if approval.approval_state == "approve" %>
-          <%= gws_public_user_long_name(approval.user.long_name) %>
-        <% end %>
-      </td>
-    </tr>
-    <% end %>
-  </tbody>
-</table>
+        </td>
+        <td>
+          <% if approval.approval_state == "approve" %>
+            <%= gws_public_user_long_name(approval.user.long_name) %>
+          <% end %>
+        </td>
+      </tr>
+      <% end %>
+    </tbody>
+  </table>
+<% end %>

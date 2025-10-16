@@ -23,21 +23,23 @@ end
     <%= link_to t("ss.apis.groups.index"), groups_path, class: "ajax-box groups" %>
   </dd>
   <dd>
-    <table class="index ajax-selected">
-      <thead>
-        <tr>
-          <th class="name"><%= Cms::Group.t :name %></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @item.groups.each do |group| %>
-          <tr data-id="<%= group.id %>">
-            <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <table class="index ajax-selected">
+        <thead>
+          <tr>
+            <th class="name"><%= Cms::Group.t :name %></th>
+            <th></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @item.groups.each do |group| %>
+            <tr data-id="<%= group.id %>">
+              <td><%= f.hidden_field "group_ids[]", value: group.id, id: nil %> <%= group.name %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
   </dd>
 </dl>

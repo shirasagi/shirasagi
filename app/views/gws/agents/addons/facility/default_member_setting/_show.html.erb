@@ -5,9 +5,13 @@
   end
 %>
 
-<dl class="see gws-addon-facility-default-members">
+<div class="gws-addon-facility-default-members">
   <dl class="see">
     <dt><%= @model.t :default_member_ids %></dt>
-    <dd><%=br @item.default_members.map(&:long_name) %></dd>
+    <dd>
+      <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+        <%= br @item.default_members.map(&:long_name) %>
+      <% end %>
+    </dd>
   </dl>
 </div>
