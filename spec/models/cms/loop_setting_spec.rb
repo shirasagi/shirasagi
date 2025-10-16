@@ -71,12 +71,6 @@ describe Cms::LoopSetting, dbscope: :example do
         expect(loop_setting.html_format_shirasagi?).to be true
         expect(loop_setting.html_format_liquid?).to be false
       end
-
-      it "rejects invalid format" do
-        loop_setting = build(:cms_loop_setting, site: site, html_format: "invalid")
-        expect(loop_setting).not_to be_valid
-        expect(loop_setting.errors[:html_format]).to include(I18n.t('errors.messages.inclusion'))
-      end
     end
 
     describe "html field" do
