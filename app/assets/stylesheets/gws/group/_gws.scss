@@ -1,0 +1,21 @@
+.gws-groups-tree {
+  .ss-tree-item {
+    &.no-children {
+      display: flex;
+    }
+  }
+
+  .ss-tree-subtree-wrap {
+    summary {
+      display: flex;
+    }
+  }
+
+  .ss-tree-item-link {
+    width: unset;
+  }
+
+  .ss-tree-item-updated {
+    margin-left: auto;
+  }
+}

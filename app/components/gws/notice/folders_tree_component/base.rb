@@ -21,6 +21,27 @@ module Gws::Notice::FoldersTreeComponent::Base
     </turbo-frame>
   ERB
 
+  class TreeBuilder < Gws::GroupTreeComponent::TreeBuilder
+    include ActiveModel::Model
+
+    attr_accessor :expands
+
+    def new_node_item(group, depth:)
+      opens = expands ? true : false
+      SS::TreeBaseComponent::NodeItem.new(
+        id: group.id, name: group.name, depth: depth, updated: group.updated,
+        url: item_url_p.call(group), opens: opens, children: [])
+    end
+
+    def update_node_item(node, depth:, name:, **_optional_kw_args)
+      if node.depth == depth && node.name == name
+        node
+      else
+        node.with(depth: depth, name: name)
+      end
+    end
+  end
+
   included do
     attr_accessor :cur_site, :cur_user
 
@@ -37,58 +58,10 @@ module Gws::Notice::FoldersTreeComponent::Base
   end
 
   def root_nodes
-    return @root_nodes if @root_nodes
-    build_tree
-  end
-
-  private
-
-  def build_tree
-    @root_nodes = []
-    parent_map = {}
-
-    folders.to_a.each do |folder|
-      folder.site = folder.cur_site = cur_site
-
-      if folder.depth == 1
-        wrap = new_node_item(folder)
-        @root_nodes << wrap
-        parent_map[folder.name] = wrap
-        next
-      end
-
-      name_parts = folder.name.split("/")
-      split_pos = name_parts.length - 1
-      found = false
-      while split_pos > 0
-        parent_name = name_parts[0..(split_pos - 1)].join("/")
-        base_name = name_parts[split_pos..- 1].join("/")
-        parent_wrap = parent_map[parent_name]
-
-        split_pos -= 1
-        next unless parent_wrap
-
-        wrap = new_node_item(folder, base_name)
-        parent_wrap.children << wrap
-        parent_map[folder.name] = wrap
-        found = true
-
-        break
-      end
-
-      next if found
-
-      wrap = new_node_item(folder)
-      @root_nodes << wrap
-      parent_map[folder.name] = wrap
+    @root_nodes ||= begin
+      builder = TreeBuilder.new(
+        items: folders, item_url_p: method(:item_url), expands: cur_site.notice_folder_navi_expand_all?)
+      builder.call
     end
-
-    @root_nodes
-  end
-
-  def new_node_item(folder, name = nil)
-    SS::TreeBaseComponent::NodeItem.new(
-      id: folder.id, name: name || folder.name, depth: folder.depth, updated: folder.updated,
-      url: item_url(folder), opens: cur_site.notice_folder_navi_expand_all?, children: [])
   end
 end

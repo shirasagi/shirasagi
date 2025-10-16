@@ -44,6 +44,7 @@
 @use "cms/addon_file" as cms_addon_file;
 @use "cms/temp_file" as cms_temp_file;
 @use "cms/syntax_check";
+@use "cms/group";
 
 // modules
 @use "ads/ss" as ads;

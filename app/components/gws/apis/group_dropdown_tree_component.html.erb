@@ -1,22 +1,29 @@
+<% render_node = proc do |node| %>
+  <tr data-depth="<%= node.depth %>" class="toggle">
+    <td class="expandable">
+      <%= link_to node.name, "#", class: "select-group", data: { id: node.id } %>
+    </td>
+  </tr>
+<% end %>
+
+<% render_nodes = proc do |nodes| %>
+  <% nodes.each do |node| %>
+    <% render_node.call(node) %>
+    <% render_nodes.call(node.children) if node.children.present? %>
+  <% end %>
+<% end %>
+
 <%= cache_component do %>
-  <button class="dropdown btn" type="button" <% if groups.count == 0 %>disabled<% end %>><span class="current-group"></span> <span class="caret">&#x25BC;</span></button>
+  <button class="dropdown btn" type="button" <% if root_nodes.count == 0 %>disabled<% end %>>
+    <span class="current-group"></span>
+    <span class="caret">&#x25BC;</span>
+  </button>
 
   <%= hidden_field_tag "s[group]", "", id: nil %>
   <div class="dropdown-container">
     <table class="index groups">
       <tbody>
-      <tr data-depth="0" class="toggle">
-        <td class="expandable">
-          <%= link_to site_root.name, "#", class: "select-group", data: { id: site_root.id } %>
-        </td>
-      </tr>
-      <% groups.each do |item| %>
-        <tr data-depth="<%= item.depth - cur_site.depth + 1 %>" class="toggle">
-          <td class="expandable">
-            <%= link_to item.trailing_name, "#", class: "select-group", data: { id: item.id } %>
-          </td>
-        </tr>
-      <% end %>
+      <% render_nodes.call(root_nodes) %>
       </tbody>
     </table>
   </div>

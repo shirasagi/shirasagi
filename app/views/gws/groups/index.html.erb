@@ -1,38 +1,36 @@
-<%= jquery do %>
-SS_TreeUI.render(".index.groups", { descendants_check: true });
-<% end %>
-
 <div class="list-search">
   <%= render template: "_search" %>
 </div>
 
 <div class="main-box">
-  <table class="index groups">
-    <thead>
-      <tr>
-        <th><%= @model.t :name %></th>
-        <th class="datetime"><%= @model.t :updated %></th>
-      </tr>
-    </thead>
+  <% if @component %>
+    <%= render @component %>
+  <% else %>
+    <table class="index groups">
+      <thead>
+        <tr>
+          <th><%= @model.t :name %></th>
+          <th class="datetime"><%= @model.t :updated %></th>
+        </tr>
+      </thead>
 
-    <tbody>
-      <% @items.each do |item| %>
-      <% depth   = @search_params ? "" : %( data-depth=#{item.depth}) %>
-      <% name    = @search_params ? item.name : item.trailing_name %>
-      <tr<%= depth %>>
-        <nav class="tap-menu">
-          <%= link_to t('ss.links.show'), action: :show, id: item %>
-          <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
-        </nav>
-        <td class="expandable">
-          <%= link_to name, { action: :show, id: item}, class: "title" %>
-        </td>
-        <td><%= ss_time_tag item.updated, type: :date %></td>
-      </tr>
-      <% end %>
-    </tbody>
-  </table>
+      <tbody>
+        <% @items.each do |item| %>
+        <tr>
+          <nav class="tap-menu">
+            <%= link_to t('ss.links.show'), action: :show, id: item %>
+            <%= link_to t('ss.links.edit'), action: :edit, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+            <%= link_to t('ss.links.delete'), action: :delete, id: item if item.allowed?(:edit, @cur_user, site: @cur_site) %>
+          </nav>
+          <td class="expandable">
+            <%= link_to item.name, { action: :show, id: item}, class: "title" %>
+          </td>
+          <td><%= ss_time_tag item.updated, type: :date %></td>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <%= paginate @items if @items.try(:current_page) %>
+  <% end %>
 </div>
-
-<%= paginate @items if @items.try(:current_page) %>

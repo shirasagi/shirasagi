@@ -76,7 +76,6 @@ module Inquiry::AnswersFilter
     if params[:s].present? && params[:s][:group].present?
       @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
     end
-    @groups = Cms::Group.site(@cur_site).active.tree_sort
 
     @items = @items.order_by(updated: -1).page(params[:page]).per(50)
   end
