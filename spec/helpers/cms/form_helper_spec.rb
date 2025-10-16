@@ -153,7 +153,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         expect(settings.first).to be_an(Array)
         expect(settings.first.length).to eq 2
         expect(settings.first[0]).to be_a(String) # name
-        expect(settings.first[1]).to be_a(BSON::ObjectId) # id
+        expect(settings.first[1]).to satisfy { |id| id.is_a?(Integer) || id.is_a?(BSON::ObjectId) } # id (seqidで整数またはBSON::ObjectId)
       end
     end
 
