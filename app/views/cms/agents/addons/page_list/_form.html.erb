@@ -4,18 +4,27 @@
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
+  var $liquidSnippetSelect = $addon.find(".loop-format-liquid .js-loop-snippet-select");
+  var $liquidSnippetHiddenField = $addon.find(".loop-format-liquid .js-loop-snippet-hidden-field");
   if ($loopFormatSelect.length) {
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
     <% if @model.use_liquid %>
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
+
       if (format === "liquid") {
         $addon.find(".loop-format-shirasagi").addClass("hide");
         $addon.find(".loop-format-liquid").removeClass("hide");
+        $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', true);
+        $liquidSnippetSelect.prop('disabled', false);
+        $liquidSnippetHiddenField.prop('disabled', false);
       } else {
         $addon.find(".loop-format-shirasagi").removeClass("hide");
         $addon.find(".loop-format-liquid").addClass("hide");
+        $addon.find(".loop-format-shirasagi select[name='item[loop_setting_id]']").prop('disabled', false);
+        $liquidSnippetSelect.prop('disabled', true).val('');
+        $liquidSnippetHiddenField.prop('disabled', true).val('').trigger('change');
       }
     };
 
@@ -39,6 +48,127 @@
 
     $("#item_archive_view").on("change", changeArchiveView);
   <% end %>
+
+  // スニペット貼り付け機能
+  // 選択可能なループ設定のID => HTML のマップを生成
+  var loopSettingHtmlMap = {};
+  <% Cms::LoopSetting.site(@cur_site).liquid.each do |ls| %>
+    loopSettingHtmlMap['<%= ls.id %>'] = <%= (ls.html || '').to_json.html_safe %>;
+  <% end %>
+
+  var getCodeMirrorInstance = function($textarea) {
+    if (!$textarea || !$textarea.length) { return null; }
+    var cm = $textarea.data('editor');
+    if (cm) { return cm; }
+    var cmEl = $textarea.next('.CodeMirror')[0];
+    if (cmEl && cmEl.CodeMirror) { return cmEl.CodeMirror; }
+    return null;
+  };
+
+  var insertSnippetAtCursor = function($textarea, snippetHtml, attempt) {
+    attempt = attempt || 0;
+    if (!$textarea.length) { return; }
+
+    var cm = getCodeMirrorInstance($textarea);
+    if (cm && typeof cm.getDoc === 'function') {
+      var doc = cm.getDoc();
+      var cursor = doc.getCursor();
+      
+      // カーソル位置にスニペットを挿入
+      doc.replaceRange(snippetHtml, cursor);
+      
+      // カーソル位置をスニペット挿入後に移動
+      var newCursor = { line: cursor.line, ch: cursor.ch + snippetHtml.length };
+      doc.setCursor(newCursor);
+      cm.focus();
+      
+      $textarea.val(doc.getValue());
+      return;
+    }
+
+    // CodeMirrorが利用できない場合のフォールバック
+    var currentText = $textarea.val() || '';
+    var selectionStart = $textarea[0].selectionStart;
+    var selectionEnd = $textarea[0].selectionEnd;
+    
+    // カーソル位置にスニペットを挿入
+    var newText = currentText.substring(0, selectionStart) + 
+                  snippetHtml + 
+                  currentText.substring(selectionEnd);
+    
+    $textarea.val(newText);
+    
+    // カーソル位置をスニペット挿入後に移動
+    var newCursorPos = selectionStart + snippetHtml.length;
+    $textarea[0].setSelectionRange(newCursorPos, newCursorPos);
+    $textarea.focus();
+    
+    if (attempt < 10) {
+      setTimeout(function() { insertSnippetAtCursor($textarea, snippetHtml, attempt + 1); }, 50);
+    }
+  };
+
+  var handleLoopSnippetInsert = function($select, state) {
+    state = state || {};
+    var attempt = state.attempt || 0;
+    var selectedLoopSettingId = state.snippetId || $select.val();
+    if (!selectedLoopSettingId) {
+      return;
+    }
+
+    $select.data('loopSnippetPendingId', selectedLoopSettingId);
+
+    var snippetHtml = loopSettingHtmlMap[selectedLoopSettingId];
+    if (snippetHtml === undefined) {
+      $select.val('');
+      $select.removeData('loopSnippetPendingId');
+      return;
+    }
+
+    var hiddenFieldSelector = $select.data('loopSnippetHiddenField') || "input[name='item[loop_setting_id]']";
+    if (hiddenFieldSelector) {
+      var $hiddenField = $(hiddenFieldSelector);
+      if ($hiddenField.length) {
+        $hiddenField.prop('disabled', false).val(selectedLoopSettingId).trigger('change');
+      }
+    }
+
+    var targetSelector = $select.data('loopSnippetTarget');
+    var $loopArea = targetSelector ? $(targetSelector) : $();
+    insertSnippetAtCursor($loopArea, snippetHtml, attempt);
+
+    // Don't clear the select box to preserve the value for form submission
+    $select.removeData('loopSnippetPendingId');
+  };
+
+  var bindLoopSnippetSelect = function($select) {
+    if (!$select || !$select.length) { return; }
+
+    $select.on("change", function() {
+      handleLoopSnippetInsert($select, { attempt: 0 });
+    });
+
+    var $parentForm = $select.closest('form');
+    if ($parentForm.length) {
+      $parentForm.on('submit', function() {
+        var pendingId = $select.data('loopSnippetPendingId');
+        var currentVal = $select.val();
+        var snippetId = pendingId || currentVal;
+        if (!snippetId) { 
+          // If no snippet is selected, ensure hidden field is cleared
+          var hiddenFieldSelector = $select.data('loopSnippetHiddenField') || "input[name='item[loop_setting_id]']";
+          var $hiddenField = $(hiddenFieldSelector);
+          if ($hiddenField.length) {
+            $hiddenField.val('').trigger('change');
+          }
+          return; 
+        }
+        handleLoopSnippetInsert($select, { snippetId: snippetId, attempt: 0 });
+      });
+    }
+  };
+
+  bindLoopSnippetSelect($liquidSnippetSelect);
 <% end %>
 
 <% if @model.use_conditions %>
@@ -109,6 +239,23 @@
 
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
+    <dt><%= t('cms.labels.snippets') %></dt>
+    <dd>
+      <%= f.hidden_field :loop_setting_id,
+        id: "#{addon[:id]}_loop_setting_id_liquid",
+        class: 'js-loop-snippet-hidden-field',
+        disabled: (@item.try(:loop_format) != 'liquid') %>
+      <% snippet_options = render(SS::OptionsForSelectComponent.new(options: ancestral_html_settings_liquid)) %>
+      <%= select_tag 'loop_snippet_selector',
+        safe_join([content_tag(:option, t('cms.input_directly'), value: ''), snippet_options]),
+        id: "loop_snippet_selector",
+        class: 'js-loop-snippet-select',
+        data: {
+          loop_snippet_target: '#item_loop_liquid',
+          loop_snippet_hidden_field: "input[name='item[loop_setting_id]']"
+        },
+        disabled: (@item.try(:loop_format) != 'liquid') %>
+    </dd>
     <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
     <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
