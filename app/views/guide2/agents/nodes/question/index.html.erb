@@ -1,0 +1,17 @@
+<%= jquery do %>
+    const form = new Guide2_Form('.guide2-form-canvas');
+    form.questions = <%== @item.guide2_questions.order(order: 1).to_json %>;
+    form.results = <%== @item.guide2_results.order(order: 1).to_json %>;
+    form.resultsUrl = <%== "#{@cur_node.url}results.html".to_json %>;
+    form.render();
+<% end %>
+
+<style>
+.question-footer { margin: 20px 0 0; }
+</style>
+
+<div class="guide2-form-canvas">
+  <% if @item.guide2_questions.size == 0 %>
+    <div class="no-data">質問が登録されておりません。</div>
+  <% end %>
+</div>

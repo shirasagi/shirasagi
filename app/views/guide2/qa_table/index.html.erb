@@ -1,0 +1,142 @@
+<style>
+.guide2-head {
+  position: fixed;
+  left: 5px;
+  top: 5px;
+  z-index: 1;
+  border: 1px solid #888;
+  border-radius: 4px;
+  padding: 10px;
+  background: #fff;
+}
+.guide2-table {
+  .result-label { background: #ffe7d4 !important; }
+  .result-value { background: #ffe7d4 !important; }
+  .question-label { background: #d0f9de !important; }
+  .question-value { background: #d0f9de !important; }
+  .yes-no-lable { background: #e5f7ff !important; }
+  .yes-no-value { background: #e5f7ff !important; }
+  .type-number { width: 70px !important; }
+}
+</style>
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  // stop
+  document.querySelectorAll('.js-remove-question').forEach(el => {
+    el.addEventListener('click', () => {
+      el.closest('tr').remove();
+    })
+  });
+  document.querySelectorAll('.js-remove-result').forEach(el => {
+    el.addEventListener('click', () => {
+      const no = el.dataset.no
+      el.closest('table').querySelectorAll('tr').forEach(tr => {
+        console.log( tr.querySelectorAll('td')[no] )
+      });
+    })
+  });
+})
+</script>
+<%
+  results_hash = @item.guide2_results_hash
+  questions_hash = @item.guide2_questions_hash
+  results = @item.guide2_results.order(order: 1)
+  questions = @item.guide2_questions.order(order: 1)
+  condition_options = @item.guide2_condition_options
+%>
+<%= form_with scope: :item, url: url_for(action: :update), html: { method: "post", id: "item-form", multipart: true, autocomplete: :off } do |f| %>
+  <div class="guide2-head">
+    <%= f.submit t("ss.buttons.save"), class: :btn %>
+    <% if Rails.env.development? %>
+      <div>resulsts: <%= results_hash %></div>
+      <div>questions: <%= questions_hash %></div>
+      <div>total: <%= @item.guide2_total_hash %></div>
+    <% end %>
+  </div>
+
+  <table class="form-db-table table-db guide2-table">
+    <%
+      new_result_id = nil
+      new_question_id = BSON::ObjectId.new
+    %>
+    <% Guide2::Result.table_fields.each do |name| %>
+      <tr>
+        <% Guide2::Question.table_fields.each do %>
+          <th></th>
+        <% end %>
+
+        <!-- 1: results header -->
+        <th class="result-label"><%= Guide2::Result.t(name) %><%= Guide2::Result.tt(name) %></th>
+
+        <!-- 2: results data -->
+        <% results.to_a.push({}).each_with_index do |result, idx| %>
+          <%= f.hidden_field_tag "results[#{idx}][id]", result.try(:id) || new_result_id, id: nil if name == :name %>
+
+          <% if name == :order %>
+            <td class="result-value">
+              <%= number_field_tag "results[#{idx}][#{name}]", result.try(name), id: nil, min: 0, class: 'type-number' %>
+            </td>
+          <% else %>
+            <td class="result-value">
+              <%= text_area_tag "results[#{idx}][#{name}]", result.try(name), id: nil %>
+
+              <%= result.try(:id) if Rails.env.development? && name == :name %>
+            </td>
+          <% end %>
+        <% end %>
+      </tr>
+    <% end %>
+
+    <!-- 3: questions header -->
+    <tr>
+      <th>質問</th>
+      <% Guide2::Question.table_fields.each do |name| %>
+        <th class="question-label"><%= Guide2::Question.t(name) %><%= Guide2::Question.tt(name) %></th>
+      <% end %>
+      <% results.to_a.push({}).each do |result| %>
+        <th class="yes-no-lable">手続きの表示条件</th>
+      <% end %>
+    </tr>
+
+    <!-- 4: questions data -->
+    <% questions.to_a.push({}).each_with_index do |question, idx| %>
+      <tr>
+        <th>
+          <a class="js-remove-question">削除</a>
+        </th>
+        <% Guide2::Question.table_fields.each do |name| %>
+          <%= f.hidden_field_tag "questions[#{idx}][id]", question.try(:id) || new_question_id, id: nil if name == :name %>
+
+          <% if name == :group_name %>
+            <td class="question-value">
+              <%= text_field_tag "questions[#{idx}][#{name}]", question.try(name), id: nil, class: 'group-name' %>
+            </td>
+          <% elsif name == :order %>
+            <td class="question-value">
+              <%= number_field_tag "questions[#{idx}][#{name}]", question.try(name), id: nil, min: 0, class: 'type-number' %>
+            </td>
+          <% else %>
+            <td class="question-value">
+              <%= text_area_tag "questions[#{idx}][#{name}]", question.try(name), id: nil %>
+
+              <%= question.try(:id) if Rails.env.development? && name == :name %>
+            </td>
+          <% end %>
+        <% end %>
+
+        <!-- 5: result conditions -->
+        <% results.to_a.push({}).each_with_index do |result, idx2| %>
+          <td class="yes-no-value">
+            <%
+              question_id = question.try(:id) || new_question_id
+              selected = (result.try(:conditions) || []).find { |c| question_id.to_s == c[:_id] } || {}
+              options = options_for_select(condition_options, selected: selected[:value])
+            %>
+            <%= hidden_field_tag "results[#{idx2}][conditions][][_id]", question.try(:_id) || new_question_id, id: nil %>
+            <%= select_tag "results[#{idx2}][conditions][][value]", options, include_blank: '', id: nil %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </table>
+<% end %>

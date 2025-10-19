@@ -1,0 +1,30 @@
+<style>
+.guidance-results-item {
+  margin-bottom: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+}
+</style>
+
+<div class="guide2-form-canvas">
+
+  <div class="results-items">
+    <% @items.each do |item| %>
+      <div class="result-item">
+        <div><%= Guide2::Result.t(:name) %>: <%= item.name %></div>
+
+        <% if item.location.present? %>
+          <div><%= Guide2::Result.t(:location) %>: <%=br item.location %></div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <% if @items.size == 0 %>
+    <div class="no-data">関連する手続きが見つかりませんでした。</div>
+  <% end %>
+
+  <div class="results-footer">
+    <%= link_to t('ss.links.back'), @cur_node.url %>
+  </div>
+</div>

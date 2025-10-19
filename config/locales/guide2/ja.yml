@@ -1,0 +1,82 @@
+ja:
+  guide2:
+    qa_table: 質問＆手続き
+    options:
+      condition:
+        'YES': "YES"
+        'NO': "NO"
+        'OR': "OR (YES)"
+
+  cms_role:
+    read_other_guide2_results: 手続きの閲覧（全て）
+    read_private_guide2_results: 手続きの閲覧（所有）
+    edit_other_guide2_results: 手続きの編集（全て）
+    edit_private_guide2_results: 手続きの編集（所有）
+    delete_other_guide2_results: 手続きの削除（全て）
+    delete_private_guide2_results: 手続きの削除（所有）
+
+  modules:
+    guide2: 目的別ガイド2
+    addons:
+      guide2/question_node: 質問
+      guide2/procedure: 手続き
+
+  cms:
+    nodes:
+      guide2/question: 質問＆手続き
+
+  mongoid:
+    models:
+      guide2/question: 質問
+      guide2/result: 手続き
+    attributes:
+      guide2/result:
+        name: 手続き名
+        location: 手続きの場所
+
+        id: ID
+        order: 並び順
+        text: 説明
+        condition_and: 表示条件AND
+        condition_or1: 表示条件OR1
+        condition_or2: 表示条件OR2
+        condition_or3: 表示条件OR3
+      guide2/question:
+        name: 質問文
+        question_id: 質問ID
+        conditions: 質問の表示条件
+        group_name: "廃止: 質問グループ"
+        order: 並び順
+
+        question_key: 質問キー
+        question_type: 選択方法
+        question_item: 質問項目
+        condition_and: 表示条件AND
+        condition_or1: 表示条件OR1
+        condition_or2: 表示条件OR2
+        condition_or3: 表示条件OR3
+      guide2/addon/question_node:
+        guide2_questions: 質問
+      guide2/diagram/edge:
+        value: 選択肢の質問
+
+  tooltip:
+    guide2/result:
+      name:
+        - 手続きの名称を入力します。
+      location:
+        - 手続きの場所を入力します。
+      order:
+        - 手続きの並び順を指定します。
+    guide2/question:
+      name:
+        - 質問の文章を入力します。
+      group_name:
+        - 質問のグループを入力します。
+        - 回答で結果を得られた場合、同じグループはスキップされます。
+      order:
+        - 質問の並び順を指定します。
+
+  job:
+    models:
+      guide2/procedure/import_job: 目的別ガイド2手続きインポート
