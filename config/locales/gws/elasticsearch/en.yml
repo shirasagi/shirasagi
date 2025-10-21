@@ -77,3 +77,4 @@ en:
       gws/elasticsearch/indexer/workflow_file_job: Full-text search/Workflow indexer
       gws/elasticsearch/indexer/workflow_form_job: Full-text search/Workflow indexer
       gws/elasticsearch/indexer/workflow2_file_job: Full-text search/Workflow2 indexer
+      gws/elasticsearch/indexer/notice_post_job: Full-text search/Announcements indexer

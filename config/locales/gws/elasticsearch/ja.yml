@@ -77,3 +77,4 @@ ja:
       gws/elasticsearch/indexer/workflow_file_job: 全文検索/ワークフローインデクサー
       gws/elasticsearch/indexer/workflow_form_job: 全文検索/ワークフローインデクサー
       gws/elasticsearch/indexer/workflow2_file_job: 全文検索/ワークフロー2インデクサー
+      gws/elasticsearch/indexer/notice_post_job: 全文検索/お知らせインデクサー
