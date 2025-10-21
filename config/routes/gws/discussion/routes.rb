@@ -52,7 +52,10 @@ Rails.application.routes.draw do
             end
           end
         end
-        resources :todos, concerns: [:plans, :todos, :copy]
+        resources :todos, concerns: [:plans, :todos] do
+          get :copy, on: :member
+          post :copy, on: :member
+        end
         resources :bookmarks, only: [:index, :destroy], concerns: [:deletion]
         resources :topics, concerns: [:deletion, :copy]
       end
