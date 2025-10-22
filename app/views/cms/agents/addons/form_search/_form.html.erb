@@ -1,0 +1,10 @@
+<dl class="see mod-cms-form-search">
+  <dt><%= @model.t :search_node_id %><%= @model.tt :search_node_id %></dt>
+  <dd><%= f.select :search_node_id, @item.search_node_options, include_blank: '' %></dd>
+
+  <dt><%= @model.t :column_name %><%= @model.tt :column_name %></dt>
+  <dd><%= f.text_field :column_name %></dd>
+
+  <dt><%= @model.t :column_kind %><%= @model.tt :column_kind %></dt>
+  <dd><%= f.select :column_kind, @item.column_kind_options, include_blank: '' %></dd>
+</dl>

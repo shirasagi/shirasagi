@@ -1,0 +1,10 @@
+<div class="cms-form-search">
+<%= form_for :s, url: @url, multipart: true, method: "get" do |f| %>
+  <%= hidden_field_tag "#{f.object_name}[col][#{@cur_part.column_name}][op]", (@cur_part.column_kind.presence || 'all'), id: nil %>
+  <%= text_field_tag "#{f.object_name}[col][#{@cur_part.column_name}][val]", (@s[:col][@cur_part.column_name][:val] rescue nil), id: nil %>
+  <div class="submitters">
+    <%= submit_tag t('article.search'), name: :search %>
+    <%= submit_tag t('article.reset'), name: :reset %>
+  </div>
+<% end %>
+</div>

@@ -57,5 +57,11 @@ describe 'cms_agents_nodes_form_search', type: :feature, dbscope: :example, js: 
     visit form_search_node.full_url + "?" + query.to_query
     expect(page).to have_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
     expect(page).to have_no_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
+
+    # with operator
+    query = { s: { col: { column1.name => { op: 'all', val: select_options1[0] } } } }
+    visit form_search_node.full_url + "?" + query.to_query
+    expect(page).to have_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
+    expect(page).to have_no_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
   end
 end

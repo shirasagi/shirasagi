@@ -61,7 +61,18 @@ class Cms::Column::UrlField2 < Cms::Column::Base
     { type: 'textarea', rows: 2 }
   end
 
-  def exact_match_to_value(value)
-    { link_label: value }
+  def exact_match_to_value(value, operator: 'all')
+    return if value.blank?
+
+    case operator
+    when 'any_of'
+      { link_label: /#{::Regexp.escape(value)}/ }
+    when 'start_with'
+      { link_label: /\A#{::Regexp.escape(value)}/ }
+    when 'end_with'
+      { link_label: /#{::Regexp.escape(value)}\z/ }
+    else
+      { link_label: value }
+    end
   end
 end
