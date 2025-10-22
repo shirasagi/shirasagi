@@ -70,7 +70,9 @@ this.Cms_Form = (function () {
     if (typeof tinymce !== 'undefined') {
       return tinymce.get(id).setContent(html);
     } else if (typeof CKEDITOR !== 'undefined') {
-      return CKEDITOR.instances[id].setData(html);
+      var editor = CKEDITOR.instances[id];
+      editor.setData(html, { callback: function() { editor.updateElement(); } });
+      return;
     }
   };
 

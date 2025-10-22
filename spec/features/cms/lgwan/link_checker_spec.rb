@@ -41,14 +41,18 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
       it do
         visit new_path
         within "#addon-cms-agents-addons-body" do
-          expect(page).to have_button I18n.t("cms.link_check")
+          within ".cms-body-checker" do
+            expect(page).to have_content I18n.t("cms.link_check")
+          end
         end
       end
 
       it do
         visit edit_path1
         within "#addon-cms-agents-addons-body" do
-          expect(page).to have_button I18n.t("cms.link_check")
+          within ".cms-body-checker" do
+            expect(page).to have_content I18n.t("cms.link_check")
+          end
         end
       end
 
@@ -59,8 +63,10 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
             click_on column.name
           end
         end
-        within "#addon-cms-agents-addons-body" do
-          expect(page).to have_button I18n.t("cms.link_check")
+        within "#addon-cms-agents-addons-form-page" do
+          within ".cms-body-checker" do
+            expect(page).to have_content I18n.t("cms.link_check")
+          end
         end
       end
     end
@@ -70,7 +76,9 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         with_lgwan_web do
           visit new_path
           within "#addon-cms-agents-addons-body" do
-            expect(page).to have_button I18n.t("cms.link_check")
+            within ".cms-body-checker" do
+              expect(page).to have_content I18n.t("cms.link_check")
+            end
           end
         end
       end
@@ -79,7 +87,9 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
         with_lgwan_web do
           visit edit_path1
           within "#addon-cms-agents-addons-body" do
-            expect(page).to have_button I18n.t("cms.link_check")
+            within ".cms-body-checker" do
+              expect(page).to have_content I18n.t("cms.link_check")
+            end
           end
         end
       end
@@ -92,8 +102,10 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
               click_on column.name
             end
           end
-          within "#addon-cms-agents-addons-body" do
-            expect(page).to have_button I18n.t("cms.link_check")
+          within "#addon-cms-agents-addons-form-page" do
+            within ".cms-body-checker" do
+              expect(page).to have_content I18n.t("cms.link_check")
+            end
           end
         end
       end
@@ -103,18 +115,14 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
       it do
         with_lgwan_cms do
           visit new_path
-          within "#addon-cms-agents-addons-body" do
-            expect(page).to have_no_button I18n.t("cms.link_check")
-          end
+          expect(page).to have_no_content I18n.t("cms.link_check")
         end
       end
 
       it do
         with_lgwan_cms do
           visit edit_path1
-          within "#addon-cms-agents-addons-body" do
-            expect(page).to have_no_button I18n.t("cms.link_check")
-          end
+          expect(page).to have_no_content I18n.t("cms.link_check")
         end
       end
 
@@ -126,8 +134,8 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
               click_on column.name
             end
           end
-          within "#addon-cms-agents-addons-body" do
-            expect(page).to have_no_button I18n.t("cms.link_check")
+          within "#addon-cms-agents-addons-form-page" do
+            expect(page).to have_no_content I18n.t("cms.link_check")
           end
         end
       end

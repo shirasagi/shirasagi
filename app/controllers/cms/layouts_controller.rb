@@ -2,6 +2,7 @@ class Cms::LayoutsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
   include Cms::SyntaxCheckable
+  helper Cms::SyntaxCheckableHelper
 
   model Cms::Layout
 
@@ -38,35 +39,48 @@ class Cms::LayoutsController < ApplicationController
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item = @model.new get_params
 
-    if params.key?(:ignore_syntax_check)
-      render_create @item.valid? && @item.save
-      return
+    result = @item.valid?
+    @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
+    unless params.key?(:ignore_syntax_check)
+      if @syntax_context.errors.present?
+        @item.errors.add :html, :accessibility_error
+        result = false
+      end
     end
 
-    if params.key?(:auto_correct)
-      auto_correct
-      result = syntax_check
+    unless result
       render_create result
       return
     end
-    render_create @item.valid? && syntax_check && @item.save
+
+    @item.syntax_check_result_checked = Time.zone.now.utc
+    @item.syntax_check_result_violation_count = @syntax_context.errors.select { _1.id.present? }.count
+
+    render_create @item.save
   end
 
   def update
     raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     @item.attributes = get_params
-    if params.key?(:ignore_syntax_check)
-      render_update @item.valid? && @item.save
+
+    result = @item.valid?
+    @syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
+    unless params.key?(:ignore_syntax_check)
+      if @syntax_context.errors.present?
+        @item.errors.add :html, :accessibility_error
+        result = false
+      end
+    end
+
+    unless result
+      render_update result
+      @item.set_syntax_check_result(@syntax_context)
       return
     end
 
-    if params.key?(:auto_correct)
-      auto_correct
-      result = syntax_check
-      render_update result
-      return
-    else
-      render_update @item.valid? && syntax_check && @item.save
-    end
+    @item.syntax_check_result_checked = Time.zone.now.utc
+    @item.syntax_check_result_violation_count = @syntax_context.errors.select { _1.id.present? }.count
+
+    render_update @item.save
   end
 end

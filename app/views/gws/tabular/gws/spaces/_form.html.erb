@@ -12,7 +12,6 @@
     <% end %>
   <% end %>
 
-  <% if false %>
   <dt><%= @model.t :i18n_description %><%= @model.tt :i18n_description %></dt>
   <% if I18n.available_locales.length == 1 %>
     <dd><%= f.text_area :i18n_description %></dd>
@@ -24,7 +23,6 @@
         <%= text_area_tag "#{f.object_name}[i18n_description_translations][#{lang}]", @item.i18n_description_translations[lang] %>
       </dd>
     <% end %>
-  <% end %>
   <% end %>
 
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>

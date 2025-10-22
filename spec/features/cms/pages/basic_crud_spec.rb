@@ -102,23 +102,24 @@ describe "cms/pages", type: :feature, dbscope: :example do
       within "form" do
         click_button I18n.t("ss.buttons.delete")
       end
+      wait_for_notice I18n.t('ss.notice.deleted')
       expect(current_path).to eq index_path
     end
 
     context "other delete pattern" do
       let(:user) { cms_user }
 
-      it "permited and contains_urls" do
+      it "permitted and contains_urls" do
         visit delete_path2
         expect(page).to have_css(".delete")
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(current_path).to eq index_path
         wait_for_notice I18n.t('ss.notice.deleted')
+        expect(current_path).to eq index_path
       end
 
-      it "not permited and contains_urls" do
+      it "not permitted and contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(delete_private_cms_pages delete_other_cms_pages))
         visit delete_path2
@@ -126,7 +127,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
         expect(page).to have_css(".addon-head", text: I18n.t('ss.confirm.contains_url_expect'))
       end
 
-      it "not permited and not contains_urls" do
+      it "not permitted and not contains_urls" do
         role = user.cms_roles[0]
         role.update(permissions: %w(delete_private_cms_pages delete_other_cms_pages))
         visit delete_path3
@@ -134,8 +135,8 @@ describe "cms/pages", type: :feature, dbscope: :example do
         within "form" do
           click_on I18n.t("ss.buttons.delete")
         end
-        expect(current_path).to eq index_path
         wait_for_notice I18n.t('ss.notice.deleted')
+        expect(current_path).to eq index_path
       end
     end
   end
@@ -154,45 +155,95 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     context "#draft_save" do
       let(:user) { cms_user }
 
-      it "permited and contains_urls" do
+      it "permitted and contains_urls" do
         visit edit_path2
-        within "form" do
-          click_on I18n.t("ss.buttons.withdraw")
+        wait_for_all_ckeditors_ready
+        within "form#item-form" do
+          wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
         end
-        expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+
+        new_window = nil
+        within_cbox do
+          expect(page).to have_content(I18n.t('cms.confirm.close'))
+          expect(page).to have_link(I18n.t('cms.confirm.check_contains_urls'))
+          expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+
+          new_window = window_opened_by { click_on I18n.t('cms.confirm.check_contains_urls') }
+        end
+
+        within_window new_window do
+          wait_for_document_loading
+          wait_for_js_ready
+          expect(page).to have_css(".list-head", text: I18n.t("cms.confirm.contains_urls_exists"))
+          expect(page).to have_css(".list-item", text: item3.name)
+          expect(page).to have_css(".list-item", count: 1)
+        end
       end
 
-      it "permited and not contains_urls" do
+      it "permitted and not contains_urls" do
         visit edit_path3
-        within "form" do
-          click_on I18n.t("ss.buttons.withdraw")
+        wait_for_all_ckeditors_ready
+        within "form#item-form" do
+          wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
         end
-        expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+
+        within_cbox do
+          expect(page).to have_content(I18n.t('cms.confirm.close'))
+          expect(page).to have_no_content(I18n.t('cms.confirm.check_contains_urls'))
+          expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+        end
       end
 
-      it "not permited and contains_urls" do
+      it "not permitted and contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(edit_private_cms_pages edit_other_cms_pages
-                                    release_private_cms_pages release_other_cms_pages
-                                    close_private_cms_pages close_other_cms_pages))
+        role.update(permissions: %w(
+          read_private_cms_pages read_other_cms_pages
+          edit_private_cms_pages edit_other_cms_pages
+          release_private_cms_pages release_other_cms_pages
+          close_private_cms_pages close_other_cms_pages))
         visit edit_path2
-        within "form" do
-          click_on I18n.t("ss.buttons.withdraw")
+        wait_for_all_ckeditors_ready
+        within "form#item-form" do
+          wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
         end
-        expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
-        expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
+
+        new_window = nil
+        within_cbox do
+          expect(page).to have_css(".errorExplanation", text: I18n.t('cms.confirm.close'))
+          expect(page).to have_link(I18n.t('cms.confirm.check_contains_urls'))
+          expect(page).to have_css(".errorExplanation", text: I18n.t('ss.confirm.contains_url_expect'))
+          expect(page).not_to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+
+          new_window = window_opened_by { click_on I18n.t('cms.confirm.check_contains_urls') }
+        end
+
+        within_window new_window do
+          wait_for_document_loading
+          wait_for_js_ready
+          expect(page).to have_css(".list-head", text: I18n.t("cms.confirm.contains_urls_exists"))
+          expect(page).to have_css(".list-item", text: item3.name)
+          expect(page).to have_css(".list-item", count: 1)
+        end
       end
 
-      it "not permited and not contains_urls" do
+      it "not permitted and not contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(edit_private_cms_pages edit_other_cms_pages
-                                    release_private_cms_pages release_other_cms_pages
-                                    close_private_cms_pages close_other_cms_pages))
+        role.update(permissions: %w(
+          read_private_cms_pages read_other_cms_pages
+          edit_private_cms_pages edit_other_cms_pages
+          release_private_cms_pages release_other_cms_pages
+          close_private_cms_pages close_other_cms_pages))
         visit edit_path3
-        within "form" do
-          click_on I18n.t("ss.buttons.withdraw")
+        wait_for_all_ckeditors_ready
+        within "form#item-form" do
+          wait_for_cbox_opened { click_on I18n.t("ss.buttons.withdraw") }
         end
-        expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+
+        within_cbox do
+          expect(page).to have_css(".errorExplanation", text: I18n.t('cms.confirm.close'))
+          expect(page).to have_no_link(I18n.t('cms.confirm.check_contains_urls'))
+          expect(page).to have_css('.save', text: I18n.t('ss.buttons.ignore_alert'))
+        end
       end
     end
   end

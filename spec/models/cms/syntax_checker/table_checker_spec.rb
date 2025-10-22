@@ -7,9 +7,13 @@ describe Cms::SyntaxChecker::TableChecker, type: :model, dbscope: :example do
     let(:raw_html) { "<div>#{table_htmls.join("\n<br>\n")}</div>" }
     let(:fragment) { Nokogiri::HTML5.fragment(raw_html) }
     let(:content) do
-      { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+      Cms::SyntaxChecker::Content.new(
+        id: id, name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
     end
-    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], []) }
+    let(:context) do
+      Cms::SyntaxChecker::CheckerContext.new(
+        cur_site: cms_site, cur_user: cms_user, contents: [ content ], html: raw_html, fragment: fragment, idx: idx)
+    end
 
     context "with single table" do
       let(:table_html) do
@@ -26,26 +30,26 @@ describe Cms::SyntaxChecker::TableChecker, type: :model, dbscope: :example do
       let(:table_htmls) { [ table_html ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(2).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq table_html.gsub(/\R/, '').gsub('&nbsp;', "")
-          expect(error[:msg]).to eq I18n.t('errors.messages.set_table_caption')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.set_table_caption')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(tag: 'caption')
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq table_html.gsub(/\R/, '').gsub('&nbsp;', "")
+          expect(error.full_message).to eq I18n.t('errors.messages.set_table_caption')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.set_table_caption')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(tag: 'caption')
         end
         context.errors.second.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "<tr><th></th><th></th></tr>"
-          expect(error[:msg]).to eq I18n.t('errors.messages.set_th_scope')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.set_th_scope')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(tag: 'th')
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "<tr><th></th><th></th></tr>"
+          expect(error.full_message).to eq I18n.t('errors.messages.set_th_scope')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.set_th_scope')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(tag: 'th')
         end
       end
     end
@@ -89,44 +93,44 @@ describe Cms::SyntaxChecker::TableChecker, type: :model, dbscope: :example do
       let(:table_htmls) { [ table_html1, table_html2, table_html3 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(4).items
         context.errors[0].tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq table_html1.gsub(/\R/, '').gsub('&nbsp;', "")
-          expect(error[:msg]).to eq I18n.t('errors.messages.set_table_caption')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.set_table_caption')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(tag: 'caption')
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq table_html1.gsub(/\R/, '').gsub('&nbsp;', "")
+          expect(error.full_message).to eq I18n.t('errors.messages.set_table_caption')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.set_table_caption')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(tag: 'caption')
         end
         context.errors[1].tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "<tr><th></th><th></th></tr>"
-          expect(error[:msg]).to eq I18n.t('errors.messages.set_th_scope')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.set_th_scope')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(tag: 'th')
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "<tr><th></th><th></th></tr>"
+          expect(error.full_message).to eq I18n.t('errors.messages.set_th_scope')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.set_th_scope')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(tag: 'th')
         end
         context.errors[2].tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq table_html2.gsub(/\R/, '').gsub('&nbsp;', "")
-          expect(error[:msg]).to eq I18n.t('errors.messages.set_table_caption')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.set_table_caption')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(tag: 'caption')
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq table_html2.gsub(/\R/, '').gsub('&nbsp;', "")
+          expect(error.full_message).to eq I18n.t('errors.messages.set_table_caption')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.set_table_caption')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(tag: 'caption')
         end
         context.errors[3].tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to include "<tr><th></th><td></td></tr>"
-          expect(error[:msg]).to eq I18n.t('errors.messages.set_th_scope')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.set_th_scope')
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(tag: 'th')
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to include "<tr><th></th><td></td></tr>"
+          expect(error.full_message).to eq I18n.t('errors.messages.set_th_scope')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.set_th_scope')
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(tag: 'th')
         end
       end
     end
@@ -135,7 +139,8 @@ describe Cms::SyntaxChecker::TableChecker, type: :model, dbscope: :example do
   describe "#correct" do
     let(:raw_html) { "<div>#{table_htmls.join("\n<br>\n")}</div>" }
     let(:content) do
-      { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+      Cms::SyntaxChecker::Content.new(
+        id: "item_html", name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
     end
     let(:context) { Cms::SyntaxChecker::CorrectorContext.new(cms_site, cms_user, content, params, raw_html) }
 

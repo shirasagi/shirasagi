@@ -7,9 +7,13 @@ describe Cms::SyntaxChecker::ReplaceWordsChecker, type: :model, dbscope: :exampl
     let(:raw_html) { "<div>#{texts.map { |text| "<p>#{text}</p>" }.join}</div>" }
     let(:fragment) { Nokogiri::HTML5.fragment(raw_html) }
     let(:content) do
-      { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+      Cms::SyntaxChecker::Content.new(
+        id: id, name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
     end
-    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], []) }
+    let(:context) do
+      Cms::SyntaxChecker::CheckerContext.new(
+        cur_site: cms_site, cur_user: cms_user, contents: [ content ], html: raw_html, fragment: fragment, idx: idx)
+    end
     let!(:word_dictionary) { create :cms_word_dictionary }
 
     context "with single paragraph" do
@@ -17,26 +21,26 @@ describe Cms::SyntaxChecker::ReplaceWordsChecker, type: :model, dbscope: :exampl
       let(:texts) { [ text ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(2).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "③"
-          expect(error[:msg]).to eq I18n.t('errors.messages.replace_word', from: "③", to: "3")
-          expect(error[:detail]).to be_blank
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(replace_from: "③", replace_to: "3")
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "③"
+          expect(error.full_message).to eq I18n.t('errors.messages.replace_word', from: "③", to: "3")
+          expect(error.detail).to be_blank
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(replace_from: "③", replace_to: "3")
         end
         context.errors.second.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "Ⅲ"
-          expect(error[:msg]).to eq I18n.t('errors.messages.replace_word', from: "Ⅲ", to: "3")
-          expect(error[:detail]).to be_blank
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(replace_from: "Ⅲ", replace_to: "3")
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "Ⅲ"
+          expect(error.full_message).to eq I18n.t('errors.messages.replace_word', from: "Ⅲ", to: "3")
+          expect(error.detail).to be_blank
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(replace_from: "Ⅲ", replace_to: "3")
         end
       end
     end
@@ -48,35 +52,35 @@ describe Cms::SyntaxChecker::ReplaceWordsChecker, type: :model, dbscope: :exampl
       let(:texts) { [ text1, text2, text3 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(3).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "③"
-          expect(error[:msg]).to eq I18n.t('errors.messages.replace_word', from: "③", to: "3")
-          expect(error[:detail]).to be_blank
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(replace_from: "③", replace_to: "3")
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "③"
+          expect(error.full_message).to eq I18n.t('errors.messages.replace_word', from: "③", to: "3")
+          expect(error.detail).to be_blank
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(replace_from: "③", replace_to: "3")
         end
         context.errors.second.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "Ⅲ"
-          expect(error[:msg]).to eq I18n.t('errors.messages.replace_word', from: "Ⅲ", to: "3")
-          expect(error[:detail]).to be_blank
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(replace_from: "Ⅲ", replace_to: "3")
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "Ⅲ"
+          expect(error.full_message).to eq I18n.t('errors.messages.replace_word', from: "Ⅲ", to: "3")
+          expect(error.detail).to be_blank
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(replace_from: "Ⅲ", replace_to: "3")
         end
         context.errors.third.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq "㌘"
-          expect(error[:msg]).to eq I18n.t('errors.messages.replace_word', from: "㌘", to: "グラム")
-          expect(error[:detail]).to be_blank
-          expect(error[:collector]).to eq described_class.name
-          expect(error[:collector_params]).to include(replace_from: "㌘", replace_to: "グラム")
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq "㌘"
+          expect(error.full_message).to eq I18n.t('errors.messages.replace_word', from: "㌘", to: "グラム")
+          expect(error.detail).to be_blank
+          expect(error.corrector).to eq described_class.name
+          expect(error.corrector_params).to include(replace_from: "㌘", replace_to: "グラム")
         end
       end
     end
@@ -85,7 +89,8 @@ describe Cms::SyntaxChecker::ReplaceWordsChecker, type: :model, dbscope: :exampl
   describe "#correct" do
     let(:raw_html) { "<div>#{texts.map { |text| "<p>#{text}</p>" }.join}</div>" }
     let(:content) do
-      { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+      Cms::SyntaxChecker::Content.new(
+        id: "item_html", name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
     end
     let(:context) { Cms::SyntaxChecker::CorrectorContext.new(cms_site, cms_user, content, params, raw_html) }
 

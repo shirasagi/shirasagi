@@ -82,6 +82,7 @@ en:
     system_operation: "-- System operation --"
     upload_or_select_from_list: File upload or select file from list
     auto_resizing_label: "%{size} (System setting)"
+    check: Check
 
     views:
       login/login:
@@ -281,6 +282,8 @@ en:
       select_files: Select files
       cancel_upload: Cancel upload
       do_access_to_unreliable_site: Go to external site
+      expand_all: Expand all
+      collapse_all: Close all
     confirm:
       change_state: Are you sure you want to change your publication status?
       delete: Are you sure you want to delete it?
@@ -441,13 +444,16 @@ en:
         max: 2100/1/1
     state:
       public: Public
+      public_with_close_date: "Public until %{close_date}"
       closed: Private
+      closed_with_release_date: "Private but public from %{release_date}"
       edit: Editing
       draft: Draft
       ready: Ready to be published
       request: Applying
       approve: Approve
       remand: Remand
+      expired: Expired
     options:
       state:
         show: Show

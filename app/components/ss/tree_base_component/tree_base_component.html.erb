@@ -1,0 +1,54 @@
+<%= header %>
+
+<div class="ss-tree-operations">
+  <%= button_tag t("ss.buttons.expand_all"), name: "expand-all", class: "btn", data: { action: "ss--tree#expandAll" } %>
+  <%= button_tag t("ss.buttons.collapse_all"), name: "collapse-all", class: "btn", data: { action: "ss--tree#collapseAll" } %>
+</div>
+
+<%= tree_header %>
+
+<ul class="ss-tree <%= css_class %>" role="tree">
+  <% root_nodes.each do |node| %>
+    <% if node.children? %>
+      <li class="ss-tree-item" role="treeitem" data-node-id="<%= node.id %>">
+        <details class="ss-tree-subtree-wrap"<% if node.opens %> open<% end %>>
+          <summary>
+            <%=
+              element = tag.span(node.name, class: "ss-tree-item-title")
+              if node.url.present?
+                element = link_to(element, node.url, class: "ss-tree-item-link", title: node.name, data: { turbo: false })
+              end
+              element
+            %>
+            <%=
+              if shows_updated
+                ss_time_tag node.updated, class: "ss-tree-item-updated"
+              end
+            %>
+          </summary>
+
+          <%=
+            if node.children?
+              render SS::TreeBaseComponent::TreeChildren.new(component: self, children: node.children, shows_updated: shows_updated)
+            end
+          %>
+        </details>
+      </li>
+    <% else %>
+      <li class="ss-tree-item no-children" role="treeitem" data-node-id="<%= node.id %>">
+        <%=
+          element = tag.span(node.name, class: "ss-tree-item-title")
+          if node.url.present?
+            element = link_to element, node.url, class: "ss-tree-item-link", title: node.name, data: { turbo: false }
+          end
+          element
+        %>
+        <%=
+          if shows_updated
+            ss_time_tag node.updated, class: "ss-tree-item-updated"
+          end
+        %>
+      </li>
+    <% end %>
+  <% end %>
+</ul>

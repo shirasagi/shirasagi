@@ -107,45 +107,45 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq 'admin@example.jp'
         expect(notify_mail.to.first).to eq 'notice@example.jp'
-        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
+        expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
-        expect(notify_mail.body.raw_source).to include("「#{node.name}」に入力がありました。")
-        expect(notify_mail.body.raw_source).to include(inquiry_answer_path(site: site, cid: node, id: answer))
+        expect(mail_body(notify_mail)).to include("「#{node.name}」に入力がありました。")
+        expect(mail_body(notify_mail)).to include(inquiry_answer_path(site: site, cid: node, id: answer))
         # inquiry_column_name
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(notify_mail.body.raw_source).to include("シラサギ太郎")
+        expect(mail_body(notify_mail)).to include("- " + node.columns[0].name)
+        expect(mail_body(notify_mail)).to include("シラサギ太郎")
         # inquiry_column_optional
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(notify_mail.body.raw_source).to include("株式会社シラサギ")
+        expect(mail_body(notify_mail)).to include("- " + node.columns[1].name)
+        expect(mail_body(notify_mail)).to include("株式会社シラサギ")
         # inquiry_column_email
-        expect(notify_mail.body.raw_source).to include("- " + node.columns[3].name)
-        expect(notify_mail.body.raw_source).to include("shirasagi@example.jp")
+        expect(mail_body(notify_mail)).to include("- " + node.columns[3].name)
+        expect(mail_body(notify_mail)).to include("shirasagi@example.jp")
         # no tags
-        expect(notify_mail.body.raw_source).not_to include('<script')
-        expect(notify_mail.body.raw_source).not_to include('<a')
+        expect(mail_body(notify_mail)).not_to include('<script')
+        expect(mail_body(notify_mail)).not_to include('<a')
       end
 
       ActionMailer::Base.deliveries.last.tap do |reply_mail|
         expect(reply_mail.from.first).to eq node.from_email
         expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
-        expect(reply_mail.subject).to eq node.reply_subject
+        expect(mail_subject(reply_mail)).to eq node.reply_subject
         expect(reply_mail.body.multipart?).to be_falsey
         # upper
-        expect(reply_mail.body.raw_source).to include('上部テキスト')
+        expect(mail_body(reply_mail)).to include('上部テキスト')
         # inquiry_column_name
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[0].name)
-        expect(reply_mail.body.raw_source).to include("シラサギ太郎")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[0].name)
+        expect(mail_body(reply_mail)).to include("シラサギ太郎")
         # inquiry_column_optional
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[1].name)
-        expect(reply_mail.body.raw_source).to include("株式会社シラサギ")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[1].name)
+        expect(mail_body(reply_mail)).to include("株式会社シラサギ")
         # inquiry_column_email
-        expect(reply_mail.body.raw_source).to include("- " + node.columns[3].name)
-        expect(reply_mail.body.raw_source).to include("shirasagi@example.jp")
+        expect(mail_body(reply_mail)).to include("- " + node.columns[3].name)
+        expect(mail_body(reply_mail)).to include("shirasagi@example.jp")
         # lower
-        expect(reply_mail.body.raw_source).to include('下部テキスト')
+        expect(mail_body(reply_mail)).to include('下部テキスト')
         # no tags
-        expect(reply_mail.body.raw_source).not_to include('<script')
-        expect(reply_mail.body.raw_source).not_to include('<a')
+        expect(mail_body(reply_mail)).not_to include('<script')
+        expect(mail_body(reply_mail)).not_to include('<a')
       end
 
       login_cms_user
@@ -190,21 +190,21 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
       ActionMailer::Base.deliveries.first.tap do |notify_mail|
         expect(notify_mail.from.first).to eq 'admin@example.jp'
         expect(notify_mail.to.first).to eq 'notice@example.jp'
-        expect(notify_mail.subject).to eq "[自動通知]#{node.name} - #{site.name}"
+        expect(mail_subject(notify_mail)).to eq "[自動通知]#{node.name} - #{site.name}"
         expect(notify_mail.body.multipart?).to be_falsey
         # no tags
-        expect(notify_mail.body.raw_source).not_to include('<script')
-        expect(notify_mail.body.raw_source).not_to include('<a')
+        expect(mail_body(notify_mail)).not_to include('<script')
+        expect(mail_body(notify_mail)).not_to include('<a')
       end
 
       ActionMailer::Base.deliveries.last.tap do |reply_mail|
         expect(reply_mail.from.first).to eq node.from_email
         expect(reply_mail.to.first).to eq 'shirasagi@example.jp'
-        expect(reply_mail.subject).to eq node.reply_subject
+        expect(mail_subject(reply_mail)).to eq node.reply_subject
         expect(reply_mail.body.multipart?).to be_falsey
         # no tags
-        expect(reply_mail.body.raw_source).not_to include('<script')
-        expect(reply_mail.body.raw_source).not_to include('<a')
+        expect(mail_body(reply_mail)).not_to include('<script')
+        expect(mail_body(reply_mail)).not_to include('<a')
       end
     end
   end

@@ -1,4 +1,6 @@
 // gws/attendance
+@use "ss/init";
+
 .gws-attendance {
   position: relative;
 
@@ -7,21 +9,25 @@
     position: absolute;
     z-index: 100;
     padding: 5px 0;
-    border: $border-gray4;
-    background: $white;
-    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
+    border: init.$border-gray4;
+    background: init.$white;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     a {
       display: block;
       padding: 5px 15px;
       line-height: 1.8;
       white-space: nowrap;
-      &:hover { background: $gray1; }
+      &:hover {
+        background: init.$gray1;
+      }
     }
   }
 
   .attendance-box {
-    @include box;
-    @include mb { margin: 0 10px 10px; }
+    @include init.box;
+    @include init.mb {
+      margin: 0 10px 10px;
+    }
   }
 
   .attendance-box-container {
@@ -33,8 +39,8 @@
 
   .attendance-box-title {
     padding: 8px 10px;
-    border-bottom: $border-gray1;
-    background: rgba(0, 0, 0, .02);
+    border-bottom: init.$border-gray1;
+    background: rgba(0, 0, 0, 0.02);
     font-weight: bold;
   }
 
@@ -42,14 +48,17 @@
     padding: 8px 10px;
   }
 
-  .nav-menu, .nav-operation {
+  .nav-menu,
+  .nav-operation {
     display: inline-block;
     margin: 5px 0;
   }
 
   .nav-operation {
     float: right;
-    @include mb { float: none; }
+    @include init.mb {
+      float: none;
+    }
   }
 
   .reason-tooltip {
@@ -57,12 +66,12 @@
     position: relative;
     width: 16px;
     height: 16px;
-    background: $orange;
-    color: $white;
+    border-radius: 8px;
+    background: init.$orange;
+    color: init.$white;
     line-height: 1.1;
     text-align: center;
     cursor: pointer;
-    @include border-radius(8px);
 
     .reason {
       display: none;
@@ -72,19 +81,19 @@
       bottom: 100%;
       left: 50%;
       margin-left: -50px;
-      border: $border-gray4;
-      background: $white;
+      border: init.$border-gray4;
+      border-radius: 3px;
+      background: init.$white;
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
 
-      color: $black;
+      color: init.$black;
       text-align: left;
-      @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
-      @include border-radius(3px);
 
       time {
         display: block;
         padding: 5px;
-        border-top: $border-gray1;
-        color: $gray2;
+        border-top: init.$border-gray1;
+        color: init.$gray2;
         font-size: 80%;
         text-align: right;
       }
@@ -93,7 +102,7 @@
         padding: 5px;
       }
 
-      &:after {
+      &::after {
         content: " ";
         position: absolute;
         top: 100%;
@@ -101,7 +110,7 @@
         margin-left: -5px;
         border-width: 5px;
         border-style: solid;
-        border-color: $gray4 transparent transparent;
+        border-color: init.$gray4 transparent transparent;
       }
     }
   }
@@ -115,16 +124,18 @@
     border-collapse: collapse;
     white-space: nowrap;
 
-    th, td {
+    th,
+    td {
       padding: 5px;
-      border: 1px solid $gray4;
+      border: 1px solid init.$gray4;
     }
 
     th {
-      background-color: $gray1;
+      background-color: init.$gray1;
     }
 
-    th.time, td.time {
+    th.time,
+    td.time {
       width: 6em;
     }
 
@@ -144,27 +155,29 @@
 
     th {
       padding: 5px;
-      border: 1px solid $gray4;
+      border: 1px solid init.$gray4;
     }
 
     td {
       padding: 5px;
-      border: 1px solid $gray4;
+      border: 1px solid init.$gray4;
     }
 
     tr.header {
-      background-color: $gray1;
+      background-color: init.$gray1;
     }
 
     tr.current {
       background-color: #ffffae;
     }
 
-    th.date, td.date {
+    th.date,
+    td.date {
       width: 7.5em;
     }
 
-    th.time, td.time {
+    th.time,
+    td.time {
       width: 6em;
     }
 
@@ -172,15 +185,19 @@
       text-align: center;
     }
 
-    th.leave, td.leave {
+    th.leave,
+    td.leave {
       min-width: 6em;
     }
 
-    th.memo, td.memo {
+    th.memo,
+    td.memo {
       min-width: 6em;
     }
 
-    tr.holiday, tr.sunday, tr.weekly-leave {
+    tr.holiday,
+    tr.sunday,
+    tr.weekly-leave {
       td.date {
         color: #f00;
       }
@@ -235,16 +252,16 @@
 
     .time-card {
       th {
-        border: 1px solid $black;
+        border: 1px solid init.$black;
         font-weight: bold;
       }
 
       td {
-        border: 1px solid $black;
+        border: 1px solid init.$black;
       }
 
       tr.header {
-        background-color: $gray1;
+        background-color: init.$gray1;
       }
 
       tr.current {
@@ -274,14 +291,15 @@
         border-spacing: 0;
         border-collapse: collapse;
 
-        th, td {
+        th,
+        td {
           padding: 5px;
-          border: 1px solid $gray4;
+          border: 1px solid init.$gray4;
         }
 
         th {
           width: 5em;
-          background: $gray1;
+          background: init.$gray1;
         }
 
         td.time {

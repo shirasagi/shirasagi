@@ -46,8 +46,8 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: true do
       within "form#task-form" do
         click_button I18n.t("ss.buttons.run")
       end
-      expect(current_path).to eq index_path
       wait_for_notice I18n.t('ss.tasks.started')
+      expect(current_path).to eq index_path
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task.state).to eq "ready"
@@ -108,8 +108,8 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: true do
       within "form#task-form" do
         click_button I18n.t("ss.buttons.run")
       end
-      expect(current_path).to eq web01_path
       wait_for_notice I18n.t('ss.tasks.started')
+      expect(current_path).to eq web01_path
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task).to eq nil
@@ -123,8 +123,8 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: true do
       within "form#task-form" do
         click_button I18n.t("ss.buttons.run")
       end
-      expect(current_path).to eq web02_path
       wait_for_notice I18n.t('ss.tasks.started')
+      expect(current_path).to eq web02_path
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task).to eq nil
@@ -138,8 +138,8 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: true do
       within "form#task-form" do
         click_button I18n.t("ss.buttons.run")
       end
-      expect(current_path).to eq web03_path
       wait_for_notice I18n.t('ss.tasks.started')
+      expect(current_path).to eq web03_path
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task).to eq nil

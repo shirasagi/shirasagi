@@ -1,14 +1,22 @@
+#frozen_string_literal: true
+
 module Sys::Addon
   module SamlSetting
     extend ActiveSupport::Concern
     extend SS::Addon
 
     # https://learn.microsoft.com/en-us/windows-server/identity/ad-fs/troubleshooting/ad-fs-tshoot-azure
-    DEFAULT_AUTHN_CONTEXT = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport".freeze
+    DEFAULT_AUTHN_CONTEXT = "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport"
     AUTHN_CONTEXT_MAP = {
-      "password_protected_transport".freeze => "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport".freeze,
-      "windows".freeze => "urn:federation:authentication:windows".freeze,
+      "password_protected_transport" => "urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport",
+      "windows" => "urn:federation:authentication:windows",
     }.freeze
+    NAME_ID_FORMATS = %w(
+      urn:oasis:names:tc:SAML:2.0:nameid-format:email
+      urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
+      urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
+      urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
+    ).freeze
 
     included do
       field :entity_id, type: String
@@ -36,11 +44,7 @@ module Sys::Addon
     end
 
     def name_id_format_options
-      %w(
-        urn:oasis:names:tc:SAML:2.0:nameid-format:persistent
-        urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress
-        urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified
-      ).map do |v|
+      NAME_ID_FORMATS.map do |v|
         [ v, v ]
       end
     end

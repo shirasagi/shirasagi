@@ -9,8 +9,8 @@ $font-head: "Arial Black", Futura, Meiryo, "メイリオ", Verdana, "MS PGothic"
 
 html {
   color: #444;
-  font-size: 75%;
   font-family: $font-base;
+  font-size: 75%;
   line-height: 1.4;
 }
 body {
@@ -54,14 +54,14 @@ html, body {
     padding: 10px 10px 5px;
     a {
       color: #444;
-      font-size: 200%;
       font-family: $font-head;
+      font-size: 200%;
       text-decoration: none;
     }
   }
   nav {
-    float: right;
     margin-top: -35px;
+    float: right;
   }
 }
 #navi {
@@ -75,16 +75,16 @@ html, body {
     padding: 0 15px;
   }
   a {
-    float: left;
     display: block;
     min-width: 120px;
     padding: 0 10px;
+    float: left;
     border-right: 1px solid #eee;
     color: #fff;
     font-size: 120%;
+    line-height: 2.5;
     text-align: center;
     text-decoration: none;
-    line-height: 2.5;
     &:first-child {
       border-left: 1px solid #eee;
     }
@@ -183,9 +183,9 @@ html, body {
       > header h1 {
         margin: 20px 0 10px;
         padding: 4px 8px;
+        border-width: 0 0 1px 5px;
         border-style: solid;
         border-color: #259;
-        border-width: 0 0 1px 5px;
       }
     }
   }
@@ -211,12 +211,12 @@ aside h2 {
     }
   }
   article.new {
-    h2:after {
+    h2::after {
+      content: "NEW";
       margin-left: 4px;
       color: #e00;
       font-size: 90%;
       font-weight: bold;
-      content: "NEW";
     }
   }
 }
@@ -254,13 +254,13 @@ aside h2 {
   #head {
     padding: 0;
     h1 {
-      float: none;
       padding: 10px 10px 5px;
+      float: none;
     }
     nav {
-      float: none;
       margin: 0;
       padding: 0 10px 5px;
+      float: none;
       text-align: right;
     }
   }

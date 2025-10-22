@@ -87,11 +87,21 @@ module SS::Document
       ancestors.select { |x| x.respond_to?(:addon_name) }
     end
 
+    #def total_bsonsize
+    #  return 0 unless Mongoid::Criteria.new(self).exists?
+    #  map = %(function(){ emit(1, Object.bsonsize(this)); })
+    #  reduce = %(function(k, v){ if (0 == v.length) return 0; return Array.sum(v); })
+    #  data = map_reduce(map, reduce).out(inline: 1).first.try(:[], :value).to_i || 0
+    #end
+
     def total_bsonsize
-      return 0 unless Mongoid::Criteria.new(self).exists?
-      map = %(function(){ emit(1, Object.bsonsize(this)); })
-      reduce = %(function(k, v){ if (0 == v.length) return 0; return Array.sum(v); })
-      data = map_reduce(map, reduce).out(inline: 1).first.try(:[], :value).to_i || 0
+      return 0 unless self.criteria.exists?
+      pipes = []
+      pipes << { "$match" => self.criteria.selector } if self.criteria.selector.present?
+      pipes << { "$project" => { name: 1, object_size: { "$bsonSize" => "$$ROOT" } } }
+      pipes << { '$group' => { _id: nil, size: { '$sum' => '$object_size' } } }
+      data = self.collection.aggregate(pipes).to_a
+      data[0]["size"]
     end
 
     def labels

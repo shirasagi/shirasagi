@@ -106,7 +106,7 @@ module History::LogFilter::View
     else
       respond_to do |format|
         format.html { render template: "delete" }
-        format.json { render json: :error, status: :unprocessable_entity }
+        format.json { render json: :error, status: :unprocessable_content }
       end
     end
   end

@@ -3,25 +3,26 @@ require 'spec_helper'
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:now) { Time.zone.now.change(usec: 0) }
   let(:site) { cms_site }
+  let(:admin) { cms_user }
   let!(:group) { create(:cms_group, name: unique_id) }
-  let!(:user1) { create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", group_ids: [ group.id ]) }
-  let!(:node) { create :article_node_page, filename: "docs", name: "article" }
+  let!(:user1) { create(:cms_test_user, group_ids: [ group.id ]) }
+  let!(:node) { create :article_node_page, cur_site: site }
   let!(:item1) do
     Timecop.freeze(now - 3.hours) do
-      create(:article_page, cur_node: node, cur_user: user1, group_ids: user1.group_ids, state: item_state)
+      create(:article_page, cur_site: site, cur_node: node, cur_user: user1, group_ids: user1.group_ids, state: item_state)
     end
   end
   let!(:item2) do
     Timecop.freeze(now - 2.hours) do
-      create(:article_page, cur_node: node, cur_user: cms_user, group_ids: cms_user.group_ids, state: item_state)
+      create(:article_page, cur_site: site, cur_node: node, cur_user: admin, group_ids: admin.group_ids, state: item_state)
     end
   end
   let(:index_path) { article_pages_path site.id, node }
 
   context "Manipulate Permissions and check accessibility" do
     before do
-      cms_user.cms_roles.each do |role|
-        role.permissions = role.permissions - ["close_other_article_pages" , "release_other_article_pages"]
+      admin.cms_roles.each do |role|
+        role.permissions = role.permissions - %w(close_other_article_pages release_other_article_pages)
         role.save!
       end
 
@@ -32,7 +33,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         Timecop.freeze(now) do
-          login_cms_user to: index_path
+          login_user admin, to: index_path
           within ".list-head" do
             wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
             click_button I18n.t("ss.links.make_them_public")
@@ -71,7 +72,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it do
         Timecop.freeze(now) do
-          login_cms_user to: index_path
+          login_user admin, to: index_path
           within ".list-head" do
             wait_for_event_fired("ss:checked-all-list-items") { find('input[type="checkbox"]').set(true) }
             click_button I18n.t('ss.links.make_them_close')

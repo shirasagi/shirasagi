@@ -2,12 +2,14 @@ module Cms::PageFilter
   extend ActiveSupport::Concern
   include Cms::CrudFilter
   include Cms::MicheckerFilter
+  include Cms::SyntaxCheckable
 
   included do
     before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :move, :copy, :contains_urls]
     before_action :set_contains_urls_items, only: [:contains_urls, :edit, :update, :delete, :destroy]
     before_action :deny_update_with_contains_urls, only: [:update]
     before_action :deny_destroy_with_contains_urls, only: [:destroy]
+    helper Cms::SyntaxCheckableHelper
   end
 
   private
@@ -232,7 +234,20 @@ module Cms::PageFilter
       raise "403" unless @item.allowed?(:release, @cur_user, site: @cur_site, node: @cur_node)
       @item.state = "ready" if @item.try(:release_date).present?
     end
-    render_create @item.save
+
+    result = @item.save
+    unless result
+      render_create result
+      return
+    end
+
+    if @item.is_a?(Cms::Addon::Body) || @item.is_a?(Cms::Addon::Form::Page)
+      # ページ作成時にアクセシビリティチェック結果を保存する
+      syntax_context = Cms::SyntaxChecker.check_page(cur_site: @cur_site, cur_user: @cur_user, page: @item)
+      @item.set_syntax_check_result(syntax_context)
+    end
+
+    render_create true
   end
 
   def update

@@ -51,16 +51,25 @@
   <% if item.try(:route) %>
     <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
   <% end %>
-  <% if respond_to?(:colored_state_label) %>
-    <%= colored_state_label(item) %>
-  <% end %>
-  <% if item.try(:tags) %>
-    <span class="tags"><%= item.tags.join(",") %></span>
-  <% end %>
+  <%=
+    if respond_to?(:colored_state_label)
+      colored_state_label(item)
+    end
+  %>
+  <%=
+    item.try(:tags).then do |tags|
+      if tags.present?
+        tag.span tags.join(","), class: "tags"
+      end
+    end
+  %>
   <% if (item.try(:close_date) && params[:action] == "index_wait_close") %>
-    <br>
     <span class="close_date"><%= t("ss.views.index.close_date") %> <%= ss_time_tag item.close_date %></span>
   <% end %>
+  <%=
+    # inquiry/answers や inquiry/feedbacks など cms/pages_filter を組み込んでいないコントローラーがある
+    try(:syntax_check_violation_count, item)
+  %>
 <% end %>
 
 <%= render template: "cms/crud/index" %>

@@ -1,4 +1,5 @@
 // gws-workload
+@use "ss/init";
 
 .gws-workload-navi {
   margin-bottom: 10px;
@@ -18,27 +19,28 @@
     color: #333;
   }
   .link-item:hover {
-    background-color: $gray1;
+    background-color: init.$gray1;
     color: #f25a38;
     text-decoration: none;
   }
-  :not(a[data-id]), a[data-id="-"] {
+  :not(a[data-id]),
+  a[data-id="-"] {
     color: #888888;
   }
-  @include mb {
+  @include init.mb {
     margin-right: 10px;
     margin-left: 10px;
   }
 }
 
 .gws-workload-graphs {
-  @include display-flex;
+  display: flex;
 
   .navi {
     width: 15%;
     margin-right: 10px;
-    border: $border-gray4;
-    @include box;
+    border: init.$border-gray4;
+    @include init.box;
   }
   .main {
     flex: 1;
@@ -47,7 +49,7 @@
     border-radius: 3px;
     background: #fff;
     .head {
-      @include clear;
+      @include init.clear;
       .search {
         float: left;
       }
@@ -80,7 +82,7 @@
     padding: 10px 12px;
     border-bottom: 1px solid #f2f2f2;
     font-weight: bold;
-    &:before {
+    &::before {
       content: " ";
       margin-right: 6px;
       padding-left: 3px;

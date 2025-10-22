@@ -25,16 +25,10 @@ export default class extends Controller {
       return;
     }
 
-    this.element.querySelectorAll(`[data-node-id="${this.currentNodeId}"]`).forEach((el) => {
-      const treeItemElement = el.closest(".ss-tree-item")
-      if (treeItemElement) {
-        treeItemElement.classList.add("is-current");
-      }
-
-      const detailsElement = el.closest(".ss-tree-subtree-wrap")
-      if (detailsElement) {
-        this.#openAllParents(detailsElement);
-      }
+    this.element.querySelectorAll(`[data-node-id="${this.currentNodeId}"]`).forEach((treeItemElement) => {
+      treeItemElement.classList.add("is-current");
+      const detailsElement = treeItemElement.querySelector(".ss-tree-subtree-wrap")
+      this.#openAllParents(detailsElement || treeItemElement);
     });
 
     this.element.setAttribute("data-ss-tree", "completed");
@@ -53,5 +47,25 @@ export default class extends Controller {
     this.element.querySelectorAll(".is-current").forEach((el) => {
       el.classList.remove("is-current")
     });
+  }
+
+  expandAll() {
+    const trees = Array.from(this.element.querySelectorAll(".ss-tree-subtree-wrap"))
+    for (var i = trees.length - 1; i >= 0; i--) {
+      const tree = trees[i];
+      if (!tree.open) {
+        tree.open = true;
+      }
+    }
+  }
+
+  collapseAll() {
+    const trees = Array.from(this.element.querySelectorAll(".ss-tree-subtree-wrap"))
+    for (var i = trees.length - 1; i >= 0; i--) {
+      const tree = trees[i];
+      if (tree.open) {
+        tree.open = false;
+      }
+    }
   }
 }

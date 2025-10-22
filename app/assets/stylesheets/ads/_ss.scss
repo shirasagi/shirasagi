@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .banners-total {
   padding: 0 0 10px;
   overflow-x: auto;
@@ -7,19 +9,23 @@
       font-size: 120%;
       text-align: left;
     }
-    th, td {
-      border: $border-gray5;
+    th,
+    td {
+      border: init.$border-gray5;
       white-space: nowrap;
-      @include mb { display: table-cell; }
+      @include init.mb {
+        display: table-cell;
+      }
     }
     thead th {
       display: table-cell;
       text-align: center;
-      &:after { display: none; }
+      &::after {
+        display: none;
+      }
     }
     tbody td {
       text-align: right;
     }
   }
 }
-

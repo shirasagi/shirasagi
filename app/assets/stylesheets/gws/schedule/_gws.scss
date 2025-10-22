@@ -1,4 +1,5 @@
 // gws-schedule
+@use "ss/init";
 
 .gws-schedule-tool-calendars {
   display: none;
@@ -37,24 +38,25 @@
     width: 190px;
     margin-left: 8px;
   }
-  @include mb {
+  @include init.mb {
     top: auto;
   }
 }
-.gws-schedule-tabs, .gws-tabs {
-  @include clear;
+.gws-schedule-tabs,
+.gws-tabs {
+  @include init.clear;
   margin-top: -1px;
   padding: 0 10px;
   a {
     display: block;
     margin: 1px 6px -1px 0;
     float: left;
-    border: 1px solid $gray4;
+    border: 1px solid init.$gray4;
     border-left: 3px solid #bbb;
     border-radius: 0 4px 0 0;
-    background-color: $gray5;
+    background-color: init.$gray5;
     color: #000;
-    @include mb {
+    @include init.mb {
       margin: 1px 6px 6px 0;
       border-radius: 4px;
     }
@@ -64,23 +66,23 @@
       text-align: center;
     }
     &:hover {
-      border-left-color: $orange;
+      border-left-color: init.$orange;
       background-color: #fff;
       text-decoration: none;
     }
   }
   a.current {
     border-bottom-color: #fff;
-    border-left-color: $orange;
+    border-left-color: init.$orange;
     background-color: #fff;
-    @include mb {
+    @include init.mb {
       border-bottom-color: #bbb;
     }
   }
 }
 .gws-schedule-box {
   header {
-    @include clear;
+    @include init.clear;
     line-height: 1.4;
     .approval-check {
       margin-left: 6px;
@@ -106,7 +108,7 @@
     .search {
       margin: -5px 0 -5px 20px;
       float: right;
-      @include mb {
+      @include init.mb {
         margin: 0;
         float: none;
         input[type="text"] {
@@ -117,9 +119,11 @@
     .operations {
       margin: -5px 0 -5px 20px;
       float: right;
-      @include mb {
+      @include init.mb {
         margin: 0;
-        .btn-print { display: none; }
+        .btn-print {
+          display: none;
+        }
       }
     }
     h2 .search {
@@ -130,7 +134,7 @@
 .gws-schedule-search {
   .send {
     padding-top: 0;
-    @include mb {
+    @include init.mb {
       margin-top: 10px;
     }
   }
@@ -162,7 +166,11 @@
   .sun {
     color: #e00;
   }
-  .label, .member, .facility, .hour-wrap, .reservation {
+  .label,
+  .member,
+  .facility,
+  .hour-wrap,
+  .reservation {
     display: table-cell;
   }
   .label {
@@ -170,7 +178,8 @@
     margin: 1px 0;
     padding: 5px 1px;
   }
-  .member, .facility {
+  .member,
+  .facility {
     width: 16rem;
     margin: 1px 0;
     padding: 5px 10px 5px 1px;
@@ -187,7 +196,7 @@
     display: inline-block;
     min-width: 1.9em;
     padding: 1px 2px;
-    border: $white 1px solid;
+    border: init.$white 1px solid;
     border-radius: 3px;
     background-color: #d4d4d4;
     color: #fff;
@@ -206,7 +215,7 @@
   .hour.registered {
     cursor: pointer;
     &:hover {
-      background-color: $orange;
+      background-color: init.$orange;
     }
   }
   .active {
@@ -214,10 +223,10 @@
   }
   .reservation.free {
     background-color: transparent;
-    color: $black3;
+    color: init.$black3;
   }
   .reservation.exist {
-    color: $orange;
+    color: init.$orange;
   }
   .user-tooltip {
     position: absolute;
@@ -241,17 +250,17 @@
   font-weight: 800;
   .reservation-valid.free {
     padding-left: 10px;
-    color: $black3;
+    color: init.$black3;
   }
   .reservation-valid.exist {
     padding-left: 10px;
-    color: $orange;
+    color: init.$orange;
   }
   .duplicate-register-message {
     color: #e00;
   }
   .reservation-errors {
-    color: $orange;
+    color: init.$orange;
   }
 }
 #addon-gws-agents-addons-schedule-comments {
@@ -284,10 +293,10 @@
   font-size: 120%;
   cursor: pointer;
   &:hover {
-    border-color: $orange;
-    color: $orange;
+    border-color: init.$orange;
+    color: init.$orange;
   }
-  @include mb {
+  @include init.mb {
     margin: 10px 0 !important;
     clear: both;
   }
@@ -295,7 +304,8 @@
 .fc-view table {
   box-sizing: border-box;
 }
-.fc-right .fc-button, .fc-today-button {
+.fc-right .fc-button,
+.fc-today-button {
   min-width: 50px;
 }
 .fc-month-view .fc-body .fc-row {
@@ -318,7 +328,7 @@
 
   .fc-icon {
     &.fc-icon-gws-schedule-calendar-reload {
-      &:after {
+      &::after {
         content: "\E5D5";
         left: -1px;
         font-family: "Material Icons";
@@ -331,7 +341,7 @@
 .fc-view-container {
   background-color: #fff;
 }
-@include mb {
+@include init.mb {
   .fc-right {
     margin: 0 0 10px;
     .fc-button {
@@ -374,7 +384,7 @@
   margin-right: 1px;
   padding: 0 2px;
   border-radius: 2px;
-  color: $white;
+  color: init.$white;
 }
 .fc-event {
   overflow: visible;
@@ -384,7 +394,7 @@
   font-size: 90%;
   cursor: pointer;
   &:hover {
-    color: $black;
+    color: init.$black;
   }
   .fc-content {
     word-wrap: break-word;
@@ -396,14 +406,15 @@
     }
     .fc-category {
       @include fc_event_prefix;
-      background-color: $orange;
+      background-color: init.$orange;
     }
-    .fc-facility:before {
+    .fc-facility::before {
       @include fc_event_prefix;
       content: "設";
       background-color: #777;
     }
-    .fc-title,.fc-facility {
+    .fc-title,
+    .fc-facility {
       display: block;
     }
   }
@@ -411,15 +422,16 @@
 .fc-time-grid-event {
   margin-bottom: 1px;
   background-color: #2eb0f2;
-  color: $black;
+  color: init.$black;
   &:hover {
-    color: $black;
+    color: init.$black;
   }
 }
-.fc-time-grid-event .fc-content:before {
+.fc-time-grid-event .fc-content::before {
   float: left;
 }
-.fc-time-grid-event .fc-time, .fc-time-grid-event.fc-short .fc-title {
+.fc-time-grid-event .fc-time,
+.fc-time-grid-event.fc-short .fc-title {
   font-size: 90%;
 }
 .fc-time-grid-event .fc-resizer {
@@ -442,11 +454,15 @@
   background-color: #fd8;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
-  &:hover { color: #000; text-decoration: underline; }
+  &:hover {
+    color: #000;
+    text-decoration: underline;
+  }
   .fc-content {
-    //@include ellipsis;
-    .fc-title,.fc-facility {
-       display: inline;
+    //text-overflow: ellipsis;
+    .fc-title,
+    .fc-facility {
+      display: inline;
     }
   }
   &.fc-resizable {
@@ -465,32 +481,32 @@
   background-color: #bdf;
   color: #000;
 }
-.fc-event-private .fc-title:before {
+.fc-event-private .fc-title::before {
   @include fc_event_prefix;
   content: "秘";
   background-color: #f0b;
 }
-.fc-event-user-attendance-unknown .fc-title:before {
+.fc-event-user-attendance-unknown .fc-title::before {
   @include fc_event_prefix;
   content: "未";
   background-color: #f0b;
 }
-.fc-event-user-attendance-absence .fc-title:before {
+.fc-event-user-attendance-absence .fc-title::before {
   @include fc_event_prefix;
   content: "不";
   background-color: #f0b;
 }
-.fc-event-approval-request .fc-title:before {
+.fc-event-approval-request .fc-title::before {
   @include fc_event_prefix;
   content: "申";
   background-color: #84e;
 }
-.fc-event-approval-approve .fc-title:before {
+.fc-event-approval-approve .fc-title::before {
   @include fc_event_prefix;
   content: "認";
   background-color: #84e;
 }
-.fc-event-approval-deny .fc-title:before {
+.fc-event-approval-deny .fc-title::before {
   @include fc_event_prefix;
   content: "否";
   background-color: #84e;
@@ -500,7 +516,9 @@
   background: #9d6;
   background-image: url(/assets/img/gws/bg-plan.png);
   color: #000;
-  &:hover { color: #000; }
+  &:hover {
+    color: #000;
+  }
 }
 
 .fc-event-work {
@@ -578,7 +596,8 @@
 }
 // View: timelineDay
 .fc-timelineDay-view {
-  .fc-scrollpane, .fc-scrollpane-inner {
+  .fc-scrollpane,
+  .fc-scrollpane-inner {
     overflow: visible;
   }
   .fc-scrollpane > div {
@@ -598,7 +617,7 @@
   .fc-timeline-event {
     min-width: calc(1em + 5px);
     background: #2eb0f2;
-    color: $black;
+    color: init.$black;
     .fc-title {
       max-height: 230px;
     }
@@ -607,18 +626,38 @@
 // View: basicHour
 .fc-basicHour-view {
   .fc-hour- {
-    &0,&1,&2,&3,&4,&5,&6,&7 {
+    &0,
+    &1,
+    &2,
+    &3,
+    &4,
+    &5,
+    &6,
+    &7 {
       background-color: #f4f4f4;
     }
-    &8,&9,&10,&11 {
+    &8,
+    &9,
+    &10,
+    &11 {
       background: #ffebeb;
       color: #e00;
     }
-    &12,&13,&14,&15,&16,&17 {
+    &12,
+    &13,
+    &14,
+    &15,
+    &16,
+    &17 {
       background: #fff0d0;
       color: #f60;
     }
-    &18,&19,&20,&21,&22,&23 {
+    &18,
+    &19,
+    &20,
+    &21,
+    &22,
+    &23 {
       background: #e0f4ff;
       color: #04d;
     }
@@ -654,7 +693,8 @@
 // Print View
 .print-preview {
   .fc-unthemed {
-    th, td {
+    th,
+    td {
       border-style: solid;
       border-color: #000;
     }
@@ -670,12 +710,13 @@
   .fc-event .fc-content {
     white-space: normal !important;
   }
-  .fc-day-grid-event, .fc-timeline-event {
+  .fc-day-grid-event,
+  .fc-timeline-event {
     padding: 1px 0;
     border-bottom: 1px solid #555;
     background-color: #f4f4f4 !important;
   }
-  .fc-event .fc-content:before {
+  .fc-event .fc-content::before {
     border: 1px solid #333;
     border-width: 0 1px;
     background-color: transparent;
@@ -692,14 +733,14 @@
   height: 100%;
   min-height: 30px;
   overflow: auto;
-  background: $white;
-  color: $black;
+  background: init.$white;
+  color: init.$black;
   font-weight: normal;
   text-align: left;
   cursor: auto;
   .popup-title {
-    @include ellipsis;
     font-size: 120%;
+    text-overflow: ellipsis;
     word-wrap: normal;
     word-break: normal;
   }
@@ -723,7 +764,7 @@
     border-top: 1px solid #eee;
     font-size: 90%;
     .popup-attr {
-      @include clear;
+      @include init.clear;
       margin: 2px 0;
     }
     .popup-label {
@@ -752,7 +793,9 @@
     padding-top: 8px;
     border-top: 1px solid #eee;
     text-align: center;
-    a { margin: 0 10px; }
+    a {
+      margin: 0 10px;
+    }
   }
 }
 
@@ -776,20 +819,23 @@
   }
 }
 .calendar.multiple {
-  .fc-toolbar, .fc-head {
+  .fc-toolbar,
+  .fc-head {
     display: none;
   }
 }
 .calendar-multiple-header {
-  @include clear;
+  @include init.clear;
   padding: 5px 8px;
   border: 1px solid #ddd;
   border-width: 0 1px;
-  background-color: #f9f9f9;
-  @include background(linear-gradient(#fff, #eee));
+  background: #f9f9f9;
+  background: linear-gradient(#fff, #eee);
   a {
     color: #444;
-    &:hover { color: $orange; }
+    &:hover {
+      color: init.$orange;
+    }
   }
   .approval-check {
     margin-left: 6px;
@@ -866,7 +912,7 @@ dl.gws-schedule-repeat {
 .todo-over {
   margin-left: 5px;
   color: #e00;
-  &:before {
+  &::before {
     content: "\E002";
     display: inline;
     font-family: "Material Icons";
@@ -881,13 +927,13 @@ dl.gws-schedule-repeat {
 }
 
 .gws-schedule-todo-index {
-  @include display-flex;
+  display: flex;
 
   .navi {
     width: 30%;
     margin-right: 10px;
-    border: $border-gray4;
-    @include box;
+    border: init.$border-gray4;
+    @include init.box;
   }
 
   .main {
@@ -909,7 +955,7 @@ dl.gws-schedule-repeat {
     padding: 10px 12px;
     border-bottom: 1px solid #f2f2f2;
     font-weight: bold;
-    &:before {
+    &::before {
       content: " ";
       margin-right: 6px;
       padding-left: 3px;
@@ -922,7 +968,7 @@ dl.gws-schedule-repeat {
   .comment {
     margin: 5px 0;
     padding: 0 5px;
-    border-bottom: $border-gray1;
+    border-bottom: init.$border-gray1;
   }
 
   .total {
@@ -937,7 +983,7 @@ dl.gws-schedule-repeat {
   }
 
   .user {
-    color: $orange3;
+    color: init.$orange3;
     font-weight: bold;
   }
 
@@ -954,15 +1000,15 @@ dl.gws-schedule-repeat {
   }
 
   .toolbar {
-    @include display-flex(flex);
-    @include justify-content(flex-end);
+    display: flex;
+    justify-content: flex-end;
 
     .btn {
       margin-left: 5px;
     }
   }
 
-  @include mb {
+  @include init.mb {
     .achievement-rate-unit {
       display: none;
     }
@@ -970,9 +1016,26 @@ dl.gws-schedule-repeat {
 }
 
 .gws-schedule-csv {
-  .import-log { min-height: 2em; }
-  .import-loading { color: #bbb; }
-  .import-exist { color: #bbb; }
-  .import-saved { color: #06d; }
-  .import-error { color: #e00; }
+  .import-log {
+    min-height: 2em;
+  }
+  .import-loading {
+    color: #bbb;
+  }
+  .import-exist {
+    color: #bbb;
+  }
+  .import-saved {
+    color: #06d;
+  }
+  .import-error {
+    color: #e00;
+  }
+}
+
+.gws-schedule-tree-group {
+  .ss-tree-item-link {
+    color: #f25a38;
+    text-decoration: none;
+  }
 }

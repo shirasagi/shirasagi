@@ -52,6 +52,7 @@ class History::Backup
     data = restore_data(data, opts)
     data.delete("_id")
     data.delete("state")
+    data["column_values"] ||= [] if model.ancestors.include?(Cms::Addon::Form::Page)
 
     begin
       if ref_item != @nest_parent && @nest_parent.present?
@@ -68,17 +69,6 @@ class History::Backup
       before.state = nil if before
 
       self.update
-
-      column_value_ids = []
-      current.data["column_values"].each do |column_value|
-        column_value_ids << column_value["_id"]
-      end
-    
-      if column_value_ids.present?
-        column_value_ids.each do |id|
-          item.column_values.where(id: id).first&.destroy
-        end
-      end
 
       if current
         # don't touch "updated"

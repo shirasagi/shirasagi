@@ -5,8 +5,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
   field :html_additional_attr, type: String, default: ''
   belongs_to :file, class_name: 'SS::File'
   field :file_name, type: String
-  field :file_label, type: String
-  field :text, type: String
+  field :file_label, type: String, metadata: { syntax_check: { value: true, presence: ->{ file_label_syntax_check_presence } } }
+  field :text, type: String, metadata: { syntax_check: { value: true, presence: ->{ text_syntax_check_presence } } }
   field :image_html_type, type: String
   field :link_url, type: String
 
@@ -333,6 +333,26 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
       end
     end
   end
+
+  def file_label_syntax_check_presence
+    file_type = column.try(:file_type) || "image"
+    case file_type
+    when "image", "banner"
+      { message: I18n.t("cms.column_file_upload.image.file_label_place_holder") }
+    when "attachment"
+      attribute = I18n.t("cms.column_file_upload.attachment.file_label")
+      { message: I18n.t("errors.format", attribute: attribute, message: I18n.t("errors.messages.blank")) }
+    else
+      false
+    end
+  end
+
+  # rubocop:disable Naming/PredicateMethod
+  def text_syntax_check_presence
+    file_type = column.try(:file_type) || "image"
+    file_type == "video"
+  end
+  # rubocop:enable Naming/PredicateMethod
 
   class << self
     def form_example_layout

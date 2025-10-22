@@ -1,7 +1,15 @@
 <dl class="see mod-gws-group-affair_setting">
   <dt><%= @model.t :superior_group_ids %></dt>
-  <dd><%=br @item.superior_groups.pluck(:name) %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= br @item.superior_groups.pluck(:name) %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :superior_user_ids %></dt>
-  <dd><%=br @item.superior_users.map { |item| item.long_name } %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= br @item.superior_users.map { |item| item.long_name } %>
+    <% end %>
+  </dd>
 </dl>

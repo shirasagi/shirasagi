@@ -16,23 +16,25 @@
     <%= link_to t("chorg.views.#{params[:type]}_changesets.select_group"), gws_apis_groups_path, class: "ajax-box" %>
   </dd>
   <dd>
-    <table class="index ajax-selected">
-      <thead>
-      <tr>
-        <th class="name"><%= Cms::Group.t :name %></th>
-        <th style="width: 7.5em;"></th>
-      </tr>
-      </thead>
-      <tbody>
-      <% if @item.sources.present? %>
-        <% @item.sources.each do |source| %>
-          <tr data-id="<%= source["id"] %>">
-            <td><%= hidden_field_tag "#{f.object_name}[sources][][id]", source["id"], id: nil %> <%= source["name"] %></td>
-            <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
-          </tr>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <table class="index ajax-selected">
+        <thead>
+        <tr>
+          <th class="name"><%= Cms::Group.t :name %></th>
+          <th style="width: 7.5em;"></th>
+        </tr>
+        </thead>
+        <tbody>
+        <% if @item.sources.present? %>
+          <% @item.sources.each do |source| %>
+            <tr data-id="<%= source["id"] %>">
+              <td><%= hidden_field_tag "#{f.object_name}[sources][][id]", source["id"], id: nil %> <%= source["name"] %></td>
+              <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
+            </tr>
+          <% end %>
         <% end %>
-      <% end %>
-      </tbody>
-    </table>
+        </tbody>
+      </table>
+    <% end %>
   </dd>
 </dl>

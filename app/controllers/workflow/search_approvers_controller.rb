@@ -12,8 +12,6 @@ class Workflow::SearchApproversController < ApplicationController
       @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
     end
     @group ||= Cms::Group.site(@cur_site).in(id: @cur_user.group_ids).active.first
-
-    @groups = Cms::Group.site(@cur_site).active.tree_sort
   end
 
   def group_ids

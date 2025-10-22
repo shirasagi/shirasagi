@@ -1,5 +1,7 @@
+@use "ss/init";
+
 .gws-schedule-file-index {
-  @include display-flex;
+  display: flex;
 
   .gws-share-file-folder-navi {
     width: 30%;
@@ -41,7 +43,7 @@
 .gws-share-apis-folder_crud {
   #item_in_basename {
     min-width: 30em;
-    @include mb {
+    @include init.mb {
       min-width: unset;
     }
   }

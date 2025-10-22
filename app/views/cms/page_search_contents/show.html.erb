@@ -16,7 +16,7 @@
 
   <ul class="list-items">
     <% @results.each do |item| %>
-      <li class="list-item">
+      <li class="list-item" data-id="<%= item.id %>">
         <label class="check"><input type="checkbox" name="ids[]" value="<%= item.id %>"/></label>
         <nav class="tap-menu">
           <%= link_to t("cms.content"), item.private_show_path %>
@@ -53,6 +53,7 @@
               end
             %>
             <%= tag.span("( #{term.join(", ")} )") if term.present? %>
+            <%= syntax_check_violation_count(item) %>
           </div>
         </div>
       </li>

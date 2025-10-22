@@ -276,4 +276,42 @@ RSpec.describe SS::Document, type: :model, dbscope: :example do
       end
     end
   end
+
+  describe ".total_bsonsize" do
+    # map_reduce を使用した過去の total_bsonsize
+    def old_total_bsonsize(klass)
+      return 0 unless Mongoid::Criteria.new(klass).exists?
+      map = %(function(){ emit(1, Object.bsonsize(this)); })
+      reduce = %(function(k, v){ if (0 == v.length) return 0; return Array.sum(v); })
+      data = klass.map_reduce(map, reduce).out(inline: 1).first.try(:[], :value).to_i || 0
+    end
+
+    let(:item1) { create :ss_group, name: unique_id }
+    let(:item2) { create :ss_group, name: unique_id }
+
+    it do
+      expect(SS::Group.count).to eq 0
+      expect(SS::Group.total_bsonsize).to eq 0
+      expect(old_total_bsonsize(SS::Group)).to eq 0
+
+      item1
+      total_bsonsize1 = SS::Group.total_bsonsize
+      old_total_bsonsize1 = old_total_bsonsize(SS::Group)
+
+      expect(SS::Group.count).to eq 1
+      expect(total_bsonsize1).to be > 0
+      expect(total_bsonsize1).to eq old_total_bsonsize1
+
+      item2
+      total_bsonsize2 = SS::Group.total_bsonsize
+      old_total_bsonsize2 = old_total_bsonsize(SS::Group)
+
+      expect(SS::Group.count).to eq 2
+      expect(total_bsonsize2).to be > total_bsonsize1
+      expect(total_bsonsize2).to eq old_total_bsonsize2
+
+      total_bsonsize3 = SS::Group.where(name: item1.name).total_bsonsize
+      expect(total_bsonsize3).to eq total_bsonsize1
+    end
+  end
 end

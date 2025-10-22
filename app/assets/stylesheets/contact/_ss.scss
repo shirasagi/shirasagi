@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .contact-groups-table-wrap {
   position: relative;
   width: 100%;
@@ -9,19 +11,21 @@
     background: #f8f8f8;
   }
 
-  th, td {
+  th,
+  td {
     padding: 5px;
   }
 
   th {
-    background: $gray1;
-    color: $gray2;
+    background: init.$gray1;
+    color: init.$gray2;
   }
 
   thead {
     tr:last-child {
-      th, td {
-        border-bottom: $border-gray5;
+      th,
+      td {
+        border-bottom: init.$border-gray5;
       }
     }
   }
@@ -30,11 +34,18 @@
     text-align: center;
   }
 
-  .name, .contact-group-name, .contact-charge, .contact-tel, .contact-fax, .contact-email, .contact-postal-code,
+  .name,
+  .contact-group-name,
+  .contact-charge,
+  .contact-tel,
+  .contact-fax,
+  .contact-email,
+  .contact-postal-code,
   .contact-link-name {
     min-width: 15em;
   }
-  .contact-address, .contact-link-url {
+  .contact-address,
+  .contact-link-url {
     min-width: 30em;
   }
   .contact-main-state {

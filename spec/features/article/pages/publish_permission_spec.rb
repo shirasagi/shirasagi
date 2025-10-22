@@ -57,7 +57,6 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           first("[type='checkbox']").click
         end
         within ".list-head" do
-          expect(page).to have_content(I18n.t("ss.links.make_them_public"))
           click_on I18n.t("ss.links.make_them_public")
         end
 
@@ -148,16 +147,15 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           first("[type='checkbox']").click
         end
 
-        expect(page).to have_content(I18n.t("ss.links.make_them_public"))
-
         within ".list-head" do
-          first("button, input[type='button']", text: I18n.t("ss.links.make_them_public")).click
+          click_on I18n.t("ss.links.make_them_public")
         end
 
         within "form" do
           expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
           click_on I18n.t("ss.links.make_them_public")
         end
+        wait_for_notice I18n.t("ss.notice.published")
 
         visit article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
@@ -206,17 +204,14 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           first("[type='checkbox']").click
         end
 
-        expect(page).to have_content(I18n.t("ss.links.make_them_public"))
-
         within ".list-head" do
-          first("button, input[type='button']", text: I18n.t("ss.links.make_them_public")).click
+          click_on I18n.t("ss.links.make_them_public")
         end
 
         within "form" do
           expect(page).to have_css("[data-id='#{page1.id}'] [type='checkbox']")
           click_on I18n.t("ss.links.make_them_public")
         end
-
         wait_for_notice I18n.t("ss.notice.published")
 
         Article::Page.find(page1.id).tap do |after_page|
@@ -228,7 +223,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
   # アクセシビリティエラーがあるページを一括公開する
   context "when page is closed with accessibility error" do
-    let!(:page_with_accessibility_error) do
+    let!(:page_with_a11y_error) do
       create :article_page, cur_site: site, cur_user: admin, cur_node: node, group_ids: admin.group_ids, state: "closed",
         html: "<img src=\"image.jpg\">"
     end
@@ -241,30 +236,35 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "cannot publish page in index view when contains accessibility error" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
-        expect(page).to have_css(".list-item[data-id='#{page_with_accessibility_error.id}']",
-        text: page_with_accessibility_error.name)
+        expect(page).to have_css(".list-item[data-id='#{page_with_a11y_error.id}']", text: page_with_a11y_error.name)
 
-        within ".list-item[data-id='#{page_with_accessibility_error.id}']" do
+        within ".list-item[data-id='#{page_with_a11y_error.id}']" do
           first("[type='checkbox']").click
         end
-        within ".list-head" do
-          expect(page).to have_content(I18n.t("ss.links.make_them_public"))
-          first("button, input[type='button']", text: I18n.t("ss.links.make_them_public")).click
+        within ".list-head-action" do
+          click_on I18n.t('ss.links.make_them_public')
         end
 
         within "form" do
-          expect(page).to have_no_css("[data-id='#{page_with_accessibility_error.id}'] [type='checkbox']")
-          expect(page).to have_content(I18n.t("errors.messages.check_html"))
+          within "[data-id='#{page_with_a11y_error.id}']" do
+            # expect(page).to have_no_css("[type='checkbox']")
+            expect(page.first("[type='checkbox']")['disabled']).to eq "true"
+            expect(page).to have_css(".list-item-error", text: I18n.t("errors.messages.set_img_alt"))
+          end
+
+          click_on I18n.t('ss.links.make_them_public')
         end
+        expect(page).to have_title("400")
 
         visit article_pages_path(site: site, cid: node)
-        expect(page).to have_css(".list-item[data-id='#{page_with_accessibility_error.id}']")
+        expect(page).to have_css(".list-item[data-id='#{page_with_a11y_error.id}']")
 
-        Article::Page.find(page_with_accessibility_error.id).tap do |after_page|
+        Article::Page.find(page_with_a11y_error.id).tap do |after_page|
           expect(after_page.state).to eq "closed"
         end
       end
     end
+
     # 「警告を無視して保存する」権限あり
     context "with ignore syntax check permission" do
       let!(:minimum_publish_permissions) do
@@ -275,27 +275,27 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       it "can publish page in index view when contains accessibility error" do
         login_user user1
         visit article_pages_path(site: site, cid: node)
-        expect(page).to have_css(".list-item[data-id='#{page_with_accessibility_error.id}']",
-          text: page_with_accessibility_error.name)
+        expect(page).to have_css(".list-item[data-id='#{page_with_a11y_error.id}']", text: page_with_a11y_error.name)
 
-        within ".list-item[data-id='#{page_with_accessibility_error.id}']" do
+        within ".list-item[data-id='#{page_with_a11y_error.id}']" do
           first("[type='checkbox']").click
         end
-        within ".list-head" do
-          expect(page).to have_content(I18n.t("ss.links.make_them_public"))
-          first("button, input[type='button']", text: I18n.t("ss.links.make_them_public")).click
+        within ".list-head-action" do
+          click_on I18n.t('ss.links.make_them_public')
         end
 
         within "form" do
-          expect(page).to have_css("[data-id='#{page_with_accessibility_error.id}'] [type='checkbox']")
-          expect(page).to have_content(I18n.t("errors.messages.check_html"))
-          first("[type='checkbox']").click
+          within "[data-id='#{page_with_a11y_error.id}']" do
+            expect(page).to have_css("[type='checkbox']")
+            expect(page).to have_css(".list-item-error", text: I18n.t("errors.messages.set_img_alt"))
+
+            first("[type='checkbox']").click
+          end
           click_on I18n.t("ss.links.make_them_public")
         end
-
         wait_for_notice I18n.t("ss.notice.published")
 
-        Article::Page.find(page_with_accessibility_error.id).tap do |after_page|
+        Article::Page.find(page_with_a11y_error.id).tap do |after_page|
           expect(after_page.state).to eq "public"
         end
       end

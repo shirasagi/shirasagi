@@ -13,6 +13,9 @@ class Inquiry::Mailer < ApplicationMailer
     @answer_data = []
     if @node.notice_content == "include_answers"
       @answer.data.each do |data|
+        next if data.column.input_type == 'section'
+        next if data.value.blank?
+
         @answer_data << "- #{data.column.name}"
         @answer_data << data.value.to_s
         @answer_data << ""

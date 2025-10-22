@@ -7,24 +7,28 @@ describe Cms::SyntaxChecker::EmbeddedMediaChecker, type: :model, dbscope: :examp
     let(:raw_html) { "<div>#{media_htmls.join("\n<br>\n")}</div>" }
     let(:fragment) { Nokogiri::HTML5.fragment(raw_html) }
     let(:content) do
-      { "resolve" => "html", "content" => raw_html, "type" => "scalar" }
+      Cms::SyntaxChecker::Content.new(
+        id: id, name: Cms::Page.t(:html), resolve: "html", content: raw_html, type: "scalar")
     end
-    let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], []) }
+    let(:context) do
+      Cms::SyntaxChecker::CheckerContext.new(
+        cur_site: cms_site, cur_user: cms_user, contents: [ content ], html: raw_html, fragment: fragment, idx: idx)
+    end
 
     context "with single embedded media tag" do
       shared_examples "what embedded media tag is" do
         it do
-          described_class.new.check(context, id, idx, raw_html, fragment)
+          described_class.new.check(context, content)
 
           expect(context.errors).to have(1).items
           context.errors.first.tap do |error|
-            expect(error[:id]).to eq id
-            expect(error[:idx]).to eq idx
-            expect(error[:code]).to eq media_html
-            expect(error[:msg]).to eq I18n.t('errors.messages.check_embedded_media')
-            expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.check_embedded_media')
-            expect(error[:collector]).to be_blank
-            expect(error[:collector_params]).to be_blank
+            expect(error.id).to eq id
+            expect(error.idx).to eq idx
+            expect(error.code).to eq media_html
+            expect(error.full_message).to eq I18n.t('errors.messages.check_embedded_media')
+            expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.check_embedded_media')
+            expect(error.corrector).to be_blank
+            expect(error.corrector_params).to be_blank
           end
         end
       end
@@ -76,7 +80,7 @@ describe Cms::SyntaxChecker::EmbeddedMediaChecker, type: :model, dbscope: :examp
         let(:media_htmls) { [ media_html ] }
 
         it do
-          described_class.new.check(context, id, idx, raw_html, fragment)
+          described_class.new.check(context, content)
           expect(context.errors).to be_blank
         end
       end
@@ -100,7 +104,7 @@ describe Cms::SyntaxChecker::EmbeddedMediaChecker, type: :model, dbscope: :examp
         let(:media_htmls) { [ media_html ] }
 
         it do
-          described_class.new.check(context, id, idx, raw_html, fragment)
+          described_class.new.check(context, content)
           expect(context.errors).to be_blank
         end
       end
@@ -113,17 +117,17 @@ describe Cms::SyntaxChecker::EmbeddedMediaChecker, type: :model, dbscope: :examp
       let(:media_htmls) { [ media_html1, media_html2, media_html3 ] }
 
       it do
-        described_class.new.check(context, id, idx, raw_html, fragment)
+        described_class.new.check(context, content)
 
         expect(context.errors).to have(3).items
         context.errors.first.tap do |error|
-          expect(error[:id]).to eq id
-          expect(error[:idx]).to eq idx
-          expect(error[:code]).to eq media_html1
-          expect(error[:msg]).to eq I18n.t('errors.messages.check_embedded_media')
-          expect(error[:detail]).to eq I18n.t('errors.messages.syntax_check_detail.check_embedded_media')
-          expect(error[:collector]).to be_blank
-          expect(error[:collector_params]).to be_blank
+          expect(error.id).to eq id
+          expect(error.idx).to eq idx
+          expect(error.code).to eq media_html1
+          expect(error.full_message).to eq I18n.t('errors.messages.check_embedded_media')
+          expect(error.detail).to eq I18n.t('errors.messages.syntax_check_detail.check_embedded_media')
+          expect(error.corrector).to be_blank
+          expect(error.corrector_params).to be_blank
         end
       end
     end

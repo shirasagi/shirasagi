@@ -7,10 +7,18 @@
   <dd><%= @item.name %></dd>
 
   <dt><%= @model.t :from_member_ids %></dt>
-  <dd><%= gws_public_user_long_names(@item.from_members.map(&:long_name)).join('; ') %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= gws_public_user_long_names(@item.from_members.map(&:long_name)).join('; ') %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :to_member_ids %></dt>
-  <dd><%= gws_public_user_long_names(@item.to_members.map(&:long_name)).join('; ') %></dd>
+  <dd>
+    <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
+      <%= gws_public_user_long_names(@item.to_members.map(&:long_name)).join('; ') %>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :subject %></dt>
   <dd><%= @item.subject %></dd>

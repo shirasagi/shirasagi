@@ -19,6 +19,10 @@ Rails.application.routes.draw do
         post :toggle_browsed, on: :member
         get :print, on: :member
       end
+      resources :back_numbers, only: [:index, :show] do
+        post :toggle_browsed, on: :member
+        get :print, on: :member
+      end
       resources :calendars, only: [:index, :show] do
         get :events, on: :collection
         get :print, on: :collection
@@ -28,6 +32,7 @@ Rails.application.routes.draw do
         match :create_my_folder, on: :collection, via: [:get, :post]
         get :copy, on: :member
       end
+      resources :redirects, only: [:show]
     end
 
     resources :trashes, concerns: [:deletion], except: [:new, :create, :edit, :update] do
@@ -42,10 +47,17 @@ Rails.application.routes.draw do
     namespace "apis" do
       get "categories" => "categories#index"
       get "folders" => "folders#index"
-      get ":folder_id/:category_id/:mode/folder_list" => "folder_list#index", as: "folder_list"
       scope path: ':notice_id' do
         get 'members' => 'members#index'
         resources :comments, concerns: [:deletion], except: [:index, :new, :show]
+      end
+    end
+
+    namespace "frames" do
+      scope path: ':folder_id/:category_id' do
+        resources :folders_trees, only: %i[index] do
+          post '', action: :super_reload, on: :collection
+        end
       end
     end
   end

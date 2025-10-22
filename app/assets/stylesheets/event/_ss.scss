@@ -1,5 +1,7 @@
+@use "ss/init";
+
 .event-recurrence ~ .event-recurrence {
-  border-top: $border-gray1;
+  border-top: init.$border-gray1;
 }
 .event-recurrence-row {
   display: flex;
@@ -54,7 +56,8 @@ dl.see > dd .event-recurrence input {
   flex-wrap: wrap;
   padding: 5px;
 
-  .prev-month .day, .next-month .day {
+  .prev-month .day,
+  .next-month .day {
     visibility: hidden;
   }
 

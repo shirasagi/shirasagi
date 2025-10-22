@@ -1,7 +1,7 @@
 <dl class="see">
   <dt><%= @model.t :member_group_id %><%= @model.tt :member_group_id %></dt>
   <dd>
-    <%= f.hidden_field "member_group_id", value: "", class: "hidden-ids" %>
+    <%= f.hidden_field "member_group_id", value: "", class: "hidden-ids", id: nil %>
     <%= link_to t("ss.apis.groups.index"), gws_apis_groups_path(single: 1), class: "btn ajax-box" %>
     <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-groups" %>
     <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-groups" %>
@@ -28,14 +28,15 @@
 
 <% if @model.use_member_ids? %>
 <dl class="see">
-  <dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
-  <dd>
-    <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids" %>
-    <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
-    <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
-    <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
-  </dd>
-  <dd>
+<dt><%= @model.t :member_ids %><%= @model.tt :member_ids %></dt>
+<dd>
+  <%= f.hidden_field "member_ids[]", value: "", class: "hidden-ids", id: nil %>
+  <%= link_to t("ss.apis.users.index"), gws_apis_users_path, class: "btn ajax-box" %>
+  <%= link_to t("ss.buttons.copy"), "#", class: "btn js-copy-users" %>
+  <%= link_to t("ss.buttons.paste"), "#", class: "btn js-paste-users" %>
+</dd>
+<dd>
+  <%= render SS::MoreContentComponent.new(cur_site: @cur_site, cur_user: @cur_user, max_height: "20em") do %>
     <table class="index ajax-selected">
       <thead><tr><th class="name"><%= Gws::User.t :name %></th><th class="deselect"></th></tr></thead>
       <tbody>
@@ -54,6 +55,7 @@
         <% end %>
       </tbody>
     </table>
+    <% end %>
   </dd>
 </dl>
 <% end %>

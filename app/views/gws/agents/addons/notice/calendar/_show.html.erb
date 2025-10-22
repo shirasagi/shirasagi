@@ -3,10 +3,7 @@
 <dl class="see mod-gws-notice-calendar">
   <dt><%= @model.t :term %></dt>
   <dd>
-    <%= term(@item) %>
-    <%= link_to gws_notice_calendars_path(calendar: redirection_calendar_params), { class: "index-cleander-link" } do %>
-      <i class="material-icons calendar-month md-18">calendar_month</i>
-    <% end %>
+    <%= link_to_calendar @item, text: term(@item) %>
   </dd>
 
   <% if params["controller"] =~ /editable/ && @item.color.present? %>

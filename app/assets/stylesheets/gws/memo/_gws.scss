@@ -1,10 +1,12 @@
+@use "ss/init";
+
 .gws-memo {
   .addon-head {
     padding: 1px 15px 15px;
 
     .d-flex {
-      @include display-flex;
-      @include align-items(center);
+      display: flex;
+      align-items: center;
     }
     .ml-auto {
       margin-left: auto;
@@ -16,9 +18,15 @@
       line-height: 1.4;
     }
     .icon-star {
-      &.on    .material-icons { color: #f70; }
-      &.off   .material-icons { color: #ddd; }
-      &:hover .material-icons { opacity: .8; }
+      &.on .material-icons {
+        color: #f70;
+      }
+      &.off .material-icons {
+        color: #ddd;
+      }
+      &:hover .material-icons {
+        opacity: 0.8;
+      }
     }
     .date {
       margin-left: auto;
@@ -41,7 +49,7 @@
     }
   }
   .request-mdn-notice {
-    @include clear;
+    @include init.clear;
     padding: 5px 15px;
     border-bottom: 1px solid #969696;
     background-color: #cecece;
@@ -55,13 +63,13 @@
     margin: -5px 0 10px;
     padding: 8px;
     border: 1px solid #fd8;
-    background-color: rgba(255, 255, 0, .2);
+    background-color: rgba(255, 255, 0, 0.2);
     background-color: #ffc;
     text-align: center;
     text-decoration: none;
     &:hover {
       border-color: #fb8;
-      background-color: rgba(255, 255, 0, .35);
+      background-color: rgba(255, 255, 0, 0.35);
       background-color: #ffa;
     }
   }
@@ -81,27 +89,28 @@
     }
   }
   .move-tool-wrap {
-    @include display-flex;
+    display: flex;
     position: relative;
     z-index: 1;
-    @include align-items(center);
-    @include justify-content(flex-end);
+    align-items: center;
+    justify-content: flex-end;
     padding: 15px;
 
     .page-order {
-      @include display-flex;
+      display: flex;
     }
 
     .move-tool {
-      @include display-flex;
+      display: flex;
       margin-left: 20px;
-      @include mb {
+      @include init.mb {
         margin-left: 10px;
       }
     }
 
-    .prev, .next {
-      @include display-flex;
+    .prev,
+    .next {
+      display: flex;
       width: 20px;
       height: 20px;
 
@@ -109,7 +118,7 @@
         display: block;
         width: 100%;
         height: 100%;
-        color: $black;
+        color: init.$black;
       }
       &:not(.inactive):hover {
         a {
@@ -118,7 +127,7 @@
       }
       &.inactive {
         a {
-          color: $gray2;
+          color: init.$gray2;
           pointer-events: none;
         }
       }
@@ -128,7 +137,7 @@
     }
   }
 }
-@include mb {
+@include init.mb {
   .mod-gws-schedule-comments .list-items .list-item .info + .links {
     margin-left: 0;
   }
@@ -136,12 +145,12 @@
     margin-top: 5px;
   }
 }
-#content-navi.gws-content-navi {
+#content-navi-core.gws-content-navi {
   overflow-x: scroll;
 }
-@media screen and (max-width:1080px) and (min-width:768px) {
+@media screen and (max-width: 1080px) and (min-width: 768px) {
   div {
-    &#content-navi.gws-content-navi,
+    &#content-navi-core.gws-content-navi,
     &.index.gws-memos-index {
       width: 100% !important;
       float: none !important;
@@ -157,14 +166,15 @@
     padding-bottom: 8px;
     font-weight: bold;
     .head {
-      @include display-flex;
+      display: flex;
       position: relative;
       height: 20px;
       .field {
         display: inline-block;
         cursor: pointer;
       }
-      .from, .to {
+      .from,
+      .to {
         width: calc(50% - 100px);
         text-indent: 79.84px;
       }
@@ -181,14 +191,16 @@
         width: 60px;
       }
     }
-    @include mb { display: none; }
+    @include init.mb {
+      display: none;
+    }
   }
   .info {
-    @include truncate;
+    @include init.truncate;
     & {
-      @include display-flex;
+      display: flex;
     }
-    @include mb {
+    @include init.mb {
       display: block;
       clear: both;
     }
@@ -197,14 +209,15 @@
       text-overflow: ellipsis;
       vertical-align: text-top;
       white-space: nowrap;
-      @include mb {
+      @include init.mb {
         display: inline-block;
       }
     }
-    .from, .to {
+    .from,
+    .to {
       width: calc(50% - 132.84px);
       padding-right: 5px;
-      @include mb {
+      @include init.mb {
         width: 100%;
         padding-right: 0;
       }
@@ -213,7 +226,7 @@
       width: calc(50% - 75px);
       padding-right: 5px;
       font-size: 100%;
-      @include mb {
+      @include init.mb {
         width: 100%;
         padding-right: 0;
       }
@@ -238,14 +251,6 @@ table.index.gws-memo-folder {
   min-width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
-  &:before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 100%;
-    width: 12px;
-    height: 1px;
-  }
   .folder {
     background: #fff !important;
   }
@@ -300,19 +305,19 @@ table.index.gws-memo-folder {
     margin: 0;
     padding: 5px 0;
     border: 1px solid #ccc;
-    @include box-shadow(0 3px 12px rgba(0, 0, 0, .2));
     background: #fff;
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2);
     text-align: left;
     a {
-      @include truncate;
+      @include init.truncate;
       & {
         padding: 5px 10px;
-        color: $black;
+        color: init.$black;
       }
     }
     a:hover {
-      background-color: $gray1;
-      color: $orange;
+      background-color: init.$gray1;
+      color: init.$orange;
       text-decoration: none;
     }
     .pad {
@@ -344,7 +349,8 @@ table.index.gws-memo-folder {
     &.unseen {
       background-color: #f9e9e3;
     }
-    &.seen:hover, &.unseen:hover {
+    &.seen:hover,
+    &.unseen:hover {
       background-color: #fbeee8;
     }
   }

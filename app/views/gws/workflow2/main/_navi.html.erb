@@ -15,7 +15,7 @@
 %>
 
 <nav class="mod-navi current-navi">
-  <%= gws_menu_icon(:workflow2, 'modules.gws/workflow2', gws_workflow2_files_main_path) %>
+  <%= gws_menu_icon(:workflow2, gws_workflow2_files_main_path) %>
 
   <h3><%= link_to t('gws/workflow2.navi.new_application'), gws_workflow2_select_forms_path(state: "all", mode: "by_keyword") %></h3>
   <h4><%= link_to t('gws/workflow2.navi.find_by_keyword'), gws_workflow2_select_forms_path(state: "all", mode: "by_keyword") %></h4>

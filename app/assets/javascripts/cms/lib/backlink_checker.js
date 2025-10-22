@@ -8,7 +8,7 @@ this.Backlink_Checker = (function () {
 
   Backlink_Checker.itemId = null;
 
-  Backlink_Checker.asyncCheck = function(form, submit, _opts) {
+  Backlink_Checker.asyncCheck = function($form, submitter, _opts) {
     var defer = $.Deferred();
     if (!Backlink_Checker.enabled || !Backlink_Checker.url || !Backlink_Checker.itemId) {
       defer.resolve();
@@ -18,7 +18,7 @@ this.Backlink_Checker = (function () {
     $.ajax({
       url: Backlink_Checker.url,
       method: "post",
-      data: { item: { id: Backlink_Checker.itemId, submit: submit.name } },
+      data: { item: { id: Backlink_Checker.itemId, submit: submitter.name } },
       cache: false,
       success: function(data) {
         if (data["errors"] && data["errors"].length > 0) {

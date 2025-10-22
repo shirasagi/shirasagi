@@ -30,5 +30,6 @@ module Inquiry
     Inquiry::Column.plugin 'inquiry/check_box'
     Inquiry::Column.plugin 'inquiry/upload_file'
     Inquiry::Column.plugin 'inquiry/form_select'
+    Inquiry::Column.plugin 'inquiry/section'
   end
 end

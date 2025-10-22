@@ -64,7 +64,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
     end
     expect(ActionMailer::Base.deliveries.length).to eq 2
     ActionMailer::Base.deliveries[0].tap do |mail|
-      expect(mail.subject).to eq page1.name
+      expect(mail_subject(mail)).to eq page1.name
       expect(mail.from).to have(1).items
       expect(mail.from).to include(node.sender_email)
       expect(mail.to).to have(1).items
@@ -72,7 +72,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
       expect(mail.bcc).to be_blank
     end
     ActionMailer::Base.deliveries[1].tap do |mail|
-      expect(mail.subject).to eq page1.name
+      expect(mail_subject(mail)).to eq page1.name
       expect(mail.from).to have(1).items
       expect(mail.from).to include(node.sender_email)
       expect(mail.to).to have(1).items
@@ -96,7 +96,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
     end
     expect(ActionMailer::Base.deliveries.length).to eq 4
     ActionMailer::Base.deliveries[2].tap do |mail|
-      expect(mail.subject).to eq page2.name
+      expect(mail_subject(mail)).to eq page2.name
       expect(mail.from).to have(1).items
       expect(mail.from).to include(node.sender_email)
       expect(mail.to).to have(1).items
@@ -104,7 +104,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
       expect(mail.bcc).to be_blank
     end
     ActionMailer::Base.deliveries[3].tap do |mail|
-      expect(mail.subject).to eq page2.name
+      expect(mail_subject(mail)).to eq page2.name
       expect(mail.from).to have(1).items
       expect(mail.from).to include(node.sender_email)
       expect(mail.to).to have(1).items

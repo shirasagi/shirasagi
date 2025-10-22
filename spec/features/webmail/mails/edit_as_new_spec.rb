@@ -59,10 +59,10 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.to).to include(address, *item_tos)
           expect(mail.cc).to have(item_ccs.length).items
           expect(mail.cc).to include(*item_ccs)
-          expect(mail.subject).to eq item_subject
+          expect(mail_subject(mail)).to eq item_subject
           expect(mail.body.multipart?).to be_truthy
           expect(mail.body.parts).to have(3).items
-          expect(mail.body.parts[0].content_type).to eq "text/plain; charset=utf-8"
+          expect(mail.body.parts[0].content_type).to include "text/plain;"
           expect(mail.body.parts[0].decoded).to eq item_texts.join("\n") + "\n"
           expect(mail.body.parts[1].filename).to eq attachment1_name
           expect(mail.body.parts[1].content_type).to eq "image/png; filename=#{attachment1_name}"

@@ -42,6 +42,12 @@ module Cms::Addon
       end
     end
 
+    def search_syntax_check_violation_options
+      %w(both have not_have).map do |w|
+        [ I18n.t("cms.options.search_syntax_check_violation.#{w}"), w ]
+      end
+    end
+
     def status_options
       [
         [I18n.t('ss.options.state.public'), 'public'],
@@ -179,6 +185,7 @@ module Cms::Addon
       field :search_approved_start, type: DateTime
       field :search_approved_close, type: DateTime
       field :search_approved_after, type: Integer
+      field :search_syntax_check_violation, type: String
       field :search_sort, type: String
       embeds_ids :search_categories, class_name: "Category::Node::Base"
       embeds_ids :search_groups, class_name: "SS::Group"
@@ -193,6 +200,7 @@ module Cms::Addon
       permit_params :search_released_condition, :search_released_start, :search_released_close, :search_released_after
       permit_params :search_updated_condition, :search_updated_start, :search_updated_close, :search_updated_after
       permit_params :search_approved_condition, :search_approved_start, :search_approved_close, :search_approved_after
+      permit_params :search_syntax_check_violation
       permit_params search_category_ids: [], search_group_ids: [], search_node_ids: [], search_layout_ids: []
       permit_params search_user_ids: [], search_routes: []
 
@@ -205,6 +213,7 @@ module Cms::Addon
       validates :search_updated_close, datetime: true
       validates :search_approved_start, datetime: true
       validates :search_approved_close, datetime: true
+      validates :search_syntax_check_violation, inclusion: { in: %w(both have not_have), allow_blank: true }
     end
 
     class Searcher
@@ -213,6 +222,7 @@ module Cms::Addon
       HANDLERS = %i[
         search_name search_filename search_nodes search_layouts search_keyword search_categories search_groups search_routes
         search_users search_state search_released search_updated search_approved search_approver search_first_released
+        search_syntax_check_violation
         sort
       ].freeze
 
@@ -385,6 +395,19 @@ module Cms::Addon
           @criteria = @criteria.where(:first_released.exists => false)
         when "published"
           @criteria = @criteria.where(:first_released.exists => true)
+        end
+      end
+
+      def search_syntax_check_violation
+        case @item.search_syntax_check_violation
+        when "have"
+          @criteria = @criteria.where(syntax_check_result_violation_count: { "$gt" => 0 })
+        when "not_have"
+          conditions = [
+            { syntax_check_result_violation_count: 0 },
+            { syntax_check_result_violation_count: { "$exists" => false } }
+          ]
+          @criteria = @criteria.where("$and" => [{ "$or" => conditions }])
         end
       end
 

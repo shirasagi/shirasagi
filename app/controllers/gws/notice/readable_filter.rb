@@ -2,6 +2,7 @@ module Gws::Notice::ReadableFilter
   extend ActiveSupport::Concern
 
   included do
+    before_action :check_permission
     before_action :set_folders
     before_action :set_folder
     before_action :set_categories
@@ -11,6 +12,10 @@ module Gws::Notice::ReadableFilter
   end
 
   private
+
+  def check_permission
+    raise "404" unless Gws::Notice.allowed?(:use, @cur_user, site: @cur_site)
+  end
 
   def set_folders
     @folders ||= Gws::Notice::Folder.for_post_reader(@cur_site, @cur_user)
@@ -48,5 +53,47 @@ module Gws::Notice::ReadableFilter
     @items = @model.site(@cur_site).and_public.
       readable(@cur_user, site: @cur_site).
       without_deleted
+  end
+
+  def set_item
+    @item ||= begin
+      item = @items.find(params[:id])
+      item.attributes = fix_params
+      item
+    end
+  rescue Mongoid::Errors::DocumentNotFound => e
+    return render_destroy(true) if params[:action] == 'destroy'
+    raise e
+  end
+
+  public
+
+  def index
+    @categories = @categories.tree_sort
+    @items = @items.search(@s).page(params[:page]).per(50)
+  end
+
+  def show
+    if @cur_site.notice_toggle_by_read? && params[:toggled].blank? && !@item.browsed?(@cur_user)
+      @item.set_browsed!(@cur_user)
+      @item.reload
+    end
+    render
+  end
+
+  def toggle_browsed
+    if @item.browsed?(@cur_user)
+      @item.unset_browsed!(@cur_user)
+    else
+      @item.set_browsed!(@cur_user)
+    end
+
+    render_update true, location: { action: :show, toggled: 1 }
+  rescue => e
+    render_update false, render: { template: :show, toggled: 1 }
+  end
+
+  def print
+    render template: "print", layout: 'ss/print'
   end
 end

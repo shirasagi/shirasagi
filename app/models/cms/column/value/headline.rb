@@ -1,6 +1,6 @@
 class Cms::Column::Value::Headline < Cms::Column::Value::Base
   field :head, type: String
-  field :text, type: String
+  field :text, type: String, metadata: { syntax_check: { value: true } }
 
   permit_values :head, :text
 

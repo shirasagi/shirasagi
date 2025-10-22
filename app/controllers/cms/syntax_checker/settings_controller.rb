@@ -22,7 +22,7 @@ class Cms::SyntaxChecker::SettingsController < ApplicationController
   end
 
   def get_params
-    params.require(:item).permit(:syntax_check)
+    params.require(:item).permit(:syntax_check, :syntax_checker_link_text_min_length)
   rescue
     raise "400"
   end

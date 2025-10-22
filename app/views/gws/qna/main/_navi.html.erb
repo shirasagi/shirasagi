@@ -1,5 +1,5 @@
 <nav class="mod-navi current-navi">
-  <%= gws_menu_icon(:qna, 'modules.gws/qna', gws_qna_main_path) %>
+  <%= gws_menu_icon(:qna, gws_qna_main_path) %>
   <h3><%= link_to t('ss.navi.readable'), gws_qna_topics_path(mode: '-', category: '-') %></h3>
 
   <% if Gws::Qna::Post.allowed?(:edit, @cur_user, site: @cur_site) %>

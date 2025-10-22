@@ -6,9 +6,19 @@
 <% end %>
 
 <% @index_title = proc do |item| %>
-  <%= link_to item.main_path(space: item), style: "display: flex; gap: 5px; align-items: center;" do %>
+  <%= link_to item.main_path(space: item), class: "title" do %>
     <span><%= item.i18n_name %></span>
   <% end %>
 <% end %>
 
-<%= render template: "gws/crud/index" %>
+<% @index_meta = proc do |item| %>
+  <% if item.i18n_description.present? %>
+    <div class="description">
+      <%= sanitize ss_auto_link_urls br(item.i18n_description, html_escape: false) %>
+    </div>
+  <% end %>
+<% end %>
+
+<div class="gws-tabular-space-list-wrap">
+  <%= render template: "gws/crud/index" %>
+</div>

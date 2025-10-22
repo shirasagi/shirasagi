@@ -34,92 +34,195 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       page2.reload
       expect(page2.html).to eq html
+      # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+      expect(page2.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+      expect(page2.syntax_check_result_violation_count).to eq 0
     end
   end
 
-  context "when draft_save is clicked" do
-    it do
-      visit article_pages_path(site: site, cid: node)
-      click_on page2.name
-      click_on I18n.t("ss.buttons.edit")
+  context "with backlink" do
+    context "when withdraw is clicked" do
+      it do
+        visit article_pages_path(site: site, cid: node)
+        click_on page2.name
+        click_on I18n.t("ss.buttons.edit")
 
-      within "form#item-form" do
-        fill_in_ckeditor "item[html]", with: html
+        within "form#item-form" do
+          fill_in_ckeditor "item[html]", with: html
 
-        click_on I18n.t("ss.buttons.withdraw")
+          click_on I18n.t("ss.buttons.withdraw")
+        end
+
+        within_cbox do
+          expect(page).to have_css("li", text: I18n.t('ss.confirm.contains_url_expect'))
+          expect(page).to have_no_css('.save')
+        end
+
+        Article::Page.find(page2.id).tap do |after_page|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_page.syntax_check_result_violation_count).to eq 0
+        end
       end
+    end
 
-      within "#cboxLoadedContent" do
-        expect(page).to have_css("li", text: I18n.t('ss.confirm.contains_url_expect'))
-        expect(page).to have_no_css('.save')
+    context "when replace_save is clicked" do
+      it do
+        visit article_pages_path(site: site, cid: node)
+        click_on page2.name
+        click_on I18n.t("ss.buttons.edit")
+
+        within "form#item-form" do
+          fill_in_ckeditor "item[html]", with: html
+
+          click_on I18n.t("ss.buttons.replace_save")
+        end
+        wait_for_notice I18n.t("workflow.notice.created_branch_page")
+
+        Article::Page.find(page2.id).tap do |after_page|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_page.syntax_check_result_violation_count).to eq 0
+        end
+        Article::Page.where(master_id: page2.id).first.tap do |new_branch_page|
+          # 親ページのアクセシビリティチェックごと差し替えページに複製されているはず
+          expect(new_branch_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(new_branch_page.syntax_check_result_violation_count).to eq 0
+        end
+      end
+    end
+
+    context "when publish_save is clicked" do
+      it do
+        visit article_pages_path(site: site, cid: node)
+        click_on page2.name
+        click_on I18n.t("ss.buttons.edit")
+
+        within "form#item-form" do
+          fill_in_ckeditor "item[html]", with: html
+
+          click_on I18n.t("ss.buttons.publish_save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        Article::Page.find(page2.id).tap do |after_page|
+          # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+          expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+          expect(after_page.syntax_check_result_violation_count).to eq 0
+        end
       end
     end
   end
 
-  context "with order_of_h checker error" do
-    let(:html) { "<h6>#{unique_id}</h6>" }
+  context "with syntax check" do
+    shared_examples "ignore button on clicking withdraw / replace_save / publish_save" do
+      context "when withdraw is clicked" do
+        it do
+          visit article_pages_path(site: site, cid: node)
+          click_on page1.name
+          click_on I18n.t("ss.buttons.edit")
 
-    it do
-      visit article_pages_path(site: site, cid: node)
-      click_on page1.name
-      click_on I18n.t("ss.buttons.edit")
+          within "form#item-form" do
+            fill_in_ckeditor "item[html]", with: html
 
-      within "form#item-form" do
-        fill_in_ckeditor "item[html]", with: html
+            click_on I18n.t("ss.buttons.withdraw")
+          end
 
-        click_on I18n.t("ss.buttons.withdraw")
+          within_cbox do
+            expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
+            expect(page).to have_css('.save', text: I18n.t("ss.buttons.ignore_alert"))
+
+            click_on I18n.t("ss.buttons.ignore_alert")
+          end
+          wait_for_notice I18n.t("ss.notice.saved")
+
+          Article::Page.find(page1.id).tap do |after_page|
+            expect(after_page.status).to eq "closed"
+            # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+            expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(after_page.syntax_check_result_violation_count).to be > 0
+          end
+        end
       end
 
-      within "#cboxLoadedContent" do
-        expect(page).to have_css("li", text: I18n.t('errors.messages.invalid_order_of_h'))
-        expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
-        expect(page).to have_css('.save')
+      context "when replace_save is clicked" do
+        it do
+          visit article_pages_path(site: site, cid: node)
+          click_on page1.name
+          click_on I18n.t("ss.buttons.edit")
+
+          within "form#item-form" do
+            fill_in_ckeditor "item[html]", with: html
+
+            click_on I18n.t("ss.buttons.replace_save")
+          end
+
+          within_cbox do
+            expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
+            expect(page).to have_css('.save', text: I18n.t("ss.buttons.ignore_alert"))
+
+            click_on I18n.t("ss.buttons.ignore_alert")
+          end
+          wait_for_notice I18n.t("workflow.notice.created_branch_page")
+
+          Article::Page.find(page1.id).tap do |after_page|
+            expect(after_page.status).to eq "public"
+            # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+            expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(after_page.syntax_check_result_violation_count).to be > 0
+          end
+          Article::Page.where(master_id: page1.id).first.tap do |branch_page|
+            expect(branch_page.status).to eq "closed"
+            # 親ページのアクセシビリティチェックごと差し替えページに複製されているはず
+            expect(branch_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(branch_page.syntax_check_result_violation_count).to be > 0
+          end
+        end
+      end
+
+      context "when publish_save is clicked" do
+        it do
+          visit article_pages_path(site: site, cid: node)
+          click_on page1.name
+          click_on I18n.t("ss.buttons.edit")
+
+          within "form#item-form" do
+            fill_in_ckeditor "item[html]", with: html
+
+            click_on I18n.t("ss.buttons.publish_save")
+          end
+
+          within_cbox do
+            expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
+            # 権限「edit_cms_ignore_syntax_check」がないので、ボタン「警告を無視する」は表示されない
+            expect(page).to have_no_css('.save')
+          end
+
+          Article::Page.find(page1.id).tap do |after_page|
+            # アクセシビリティチェックを実行すると、常に結果が保存/更新される
+            expect(after_page.syntax_check_result_checked.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+            expect(after_page.syntax_check_result_violation_count).to be > 0
+          end
+        end
       end
     end
-  end
 
-  context "with embedded_media checker error" do
-    let(:html) { '<embed type="video/webm" src="/fs/1/1/1/_/video.mp4">' }
+    context "with order_of_h checker error" do
+      let(:html) { "<h6>#{unique_id}</h6>" }
 
-    it do
-      visit article_pages_path(site: site, cid: node)
-      click_on page1.name
-      click_on I18n.t("ss.buttons.edit")
-
-      within "form#item-form" do
-        fill_in_ckeditor "item[html]", with: html
-
-        click_on I18n.t("ss.buttons.withdraw")
-      end
-
-      within "#cboxLoadedContent" do
-        expect(page).to have_css("li", text: I18n.t('errors.messages.check_embedded_media'))
-        expect(page).to have_no_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
-        expect(page).to have_css('.save')
-      end
+      it_behaves_like "ignore button on clicking withdraw / replace_save / publish_save"
     end
-  end
 
-  context "with order_of_h checker error and embedded_media checker error" do
-    let(:html) { "<h6>#{unique_id}</h6>" + '<embed type="video/webm" src="/fs/1/1/1/_/video.mp4">' }
+    context "with embedded_media checker error" do
+      let(:html) { '<embed type="video/webm" src="/fs/1/1/1/_/video.mp4">' }
 
-    it do
-      visit article_pages_path(site: site, cid: node)
-      click_on page1.name
-      click_on I18n.t("ss.buttons.edit")
+      it_behaves_like "ignore button on clicking withdraw / replace_save / publish_save"
+    end
 
-      within "form#item-form" do
-        fill_in_ckeditor "item[html]", with: html
+    context "with order_of_h checker error and embedded_media checker error" do
+      let(:html) { "<h6>#{unique_id}</h6>" + '<embed type="video/webm" src="/fs/1/1/1/_/video.mp4">' }
 
-        click_on I18n.t("ss.buttons.withdraw")
-      end
-
-      within "#cboxLoadedContent" do
-        expect(page).to have_css("li", text: I18n.t('errors.messages.invalid_order_of_h'))
-        expect(page).to have_css("li", text: I18n.t('errors.messages.check_embedded_media'))
-        expect(page).to have_css("li", text: I18n.t('cms.confirm.disallow_edit_ignore_syntax_check'))
-        expect(page).to have_css('.save')
-      end
+      it_behaves_like "ignore button on clicking withdraw / replace_save / publish_save"
     end
   end
 end

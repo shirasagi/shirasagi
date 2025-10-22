@@ -39,8 +39,8 @@ describe "cms_node_import", type: :feature, dbscope: :example, js: true do
           click_button I18n.t('ss.buttons.import')
         end
 
+        wait_for_error error_message
         expect(current_path).to eq index_path
-        expect(page).to have_css("#errorExplanation li", text: error_message)
       end
     end
   end

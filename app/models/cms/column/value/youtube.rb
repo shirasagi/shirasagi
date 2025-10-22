@@ -4,7 +4,7 @@ class Cms::Column::Value::Youtube < Cms::Column::Value::Base
   field :width, type: Integer
   field :height, type: Integer
   field :auto_width, type: String, default: -> { "disabled" }
-  field :title, type: String
+  field :title, type: String, metadata: { syntax_check: { value: true, presence: true } }
 
   permit_values :url, :youtube_id, :width, :height, :auto_width, :title
 

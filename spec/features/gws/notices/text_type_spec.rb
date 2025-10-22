@@ -15,7 +15,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_notice_editables_path(site: site, folder_id: folder, category_id: "-")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#content-navi-core", text: "refresh")
 
       click_on I18n.t("ss.links.new")
       within "#item-form" do
@@ -45,7 +46,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_notice_editables_path(site: site, folder_id: folder, category_id: "-")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#content-navi-core", text: "refresh")
 
       click_on I18n.t("ss.links.new")
       within "#item-form" do
@@ -75,7 +77,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_notice_editables_path(site: site, folder_id: folder, category_id: "-")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#content-navi-core", text: "refresh")
 
       click_on I18n.t("ss.links.new")
       within "#item-form" do
@@ -105,7 +108,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_notice_editables_path(site: site, folder_id: folder, category_id: "-")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#content-navi-core", text: "refresh")
 
       click_on I18n.t("ss.links.new")
       within "#item-form" do
@@ -136,7 +140,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_notice_editables_path(site: site, folder_id: folder, category_id: "-")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#content-navi-core", text: "refresh")
 
       click_on I18n.t("ss.links.new")
       within "#item-form" do
@@ -166,7 +171,8 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
 
     it do
       visit gws_notice_editables_path(site: site, folder_id: folder, category_id: "-")
-      expect(page).to have_css("#content-navi", text: "refresh")
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#content-navi-core", text: "refresh")
 
       click_on I18n.t("ss.links.new")
       within "#item-form" do

@@ -3,9 +3,9 @@ class Cms::SyntaxChecker::InternalLinkChecker
 
   ATTRIBUTES = %w(href src).freeze
 
-  def check(context, id, idx, raw_html, fragment)
+  def check(context, content)
     ATTRIBUTES.each do |attr|
-      fragment.css("[#{attr}]").each do |node|
+      context.fragment.css("[#{attr}]").each do |node|
         attr_value = node[attr]
         next if attr_value.blank?
 
@@ -13,12 +13,12 @@ class Cms::SyntaxChecker::InternalLinkChecker
         next if !url || !internal_link?(context, url)
 
         if url.scheme.present? || url.host.present?
-          add_error(context, id, idx, node, :internal_link_shouldnt_contain_domains)
+          add_error(context, content, node, :internal_link_shouldnt_contain_domains)
         elsif url.path.present?
           if !url.path.start_with?("/")
-            add_error(context, id, idx, node, :internal_link_should_be_absolute_path)
+            add_error(context, content, node, :internal_link_should_be_absolute_path)
           elsif url.path.start_with?("/.s#{context.cur_site.id}/preview/")
-            add_error(context, id, idx, node, :internal_link_shouldnt_be_preview_path)
+            add_error(context, content, node, :internal_link_shouldnt_be_preview_path)
           end
         end
       end
@@ -27,14 +27,10 @@ class Cms::SyntaxChecker::InternalLinkChecker
 
   private
 
-  def add_error(context, id, idx, node, error)
-    context.errors << {
-      id: id,
-      idx: idx,
-      code: Cms::SyntaxChecker::Base.outer_html_summary(node),
-      msg: I18n.t("errors.messages.#{error}"),
-      detail: I18n.t("errors.messages.syntax_check_detail.#{error}"),
-    }
+  def add_error(context, content, node, error)
+    code = Cms::SyntaxChecker::Base.outer_html_summary(node)
+    context.errors << Cms::SyntaxChecker::CheckerError.new(
+      context: context, content: content, code: code, checker: self, error: error)
   end
 
   def internal_link?(context, url)

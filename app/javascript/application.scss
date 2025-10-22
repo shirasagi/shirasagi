@@ -1,24 +1,59 @@
+@use "animate.css";
+// material-icons 1.13.14 は Sass 3 に対応しておらず、@use を用いて組み込むと以下の警告が大量に表示される。
+// そこで、material-icons が Sass 3 に対応するまで @import で組み込むこととする
+//
+// "Global built-in functions are deprecated and will be removed in Dart Sass 3.0.0."
+//@use "material-icons/iconfont/material-icons.scss" with (
+//  $material-icons-font-path: '~material-icons/iconfont/'
+//);
 @import "material-icons/iconfont/material-icons.css";
-@import 'animate.css';
 
-.material-icons, .material-icons-outlined, .material-icons-round, .material-icons-sharp, .material-icons-two-tone {
+.material-icons,
+.material-icons-outlined,
+.material-icons-round,
+.material-icons-sharp,
+.material-icons-two-tone {
   /* Rules for sizing the icon. */
-  &.md-13 { font-size: 13px; }
-  &.md-14 { font-size: 14px; }
-  &.md-15 { font-size: 15px; }
-  &.md-16 { font-size: 16px; }
-  &.md-18 { font-size: 18px; }
-  &.md-24 { font-size: 24px; }
-  &.md-36 { font-size: 36px; }
-  &.md-48 { font-size: 48px; }
+  &.md-13 {
+    font-size: 13px;
+  }
+  &.md-14 {
+    font-size: 14px;
+  }
+  &.md-15 {
+    font-size: 15px;
+  }
+  &.md-16 {
+    font-size: 16px;
+  }
+  &.md-18 {
+    font-size: 18px;
+  }
+  &.md-24 {
+    font-size: 24px;
+  }
+  &.md-36 {
+    font-size: 36px;
+  }
+  &.md-48 {
+    font-size: 48px;
+  }
 
   /* Rules for using icons as black on a light background. */
-  &.md-dark { color: rgba(0, 0, 0, 0.54); }
-  &.md-dark.md-inactive { color: rgba(0, 0, 0, 0.26); }
+  &.md-dark {
+    color: rgba(0, 0, 0, 0.54);
+  }
+  &.md-dark.md-inactive {
+    color: rgba(0, 0, 0, 0.26);
+  }
 
   /* Rules for using icons as white on a dark background. */
-  &.md-light { color: rgba(255, 255, 255, 1); }
-  &.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
+  &.md-light {
+    color: rgba(255, 255, 255, 1);
+  }
+  &.md-light.md-inactive {
+    color: rgba(255, 255, 255, 0.3);
+  }
 }
 
 .ss-list-item-overlay {
@@ -26,7 +61,7 @@
   position: absolute;
   padding: 5px;
   overflow: auto;
-  background: rgba(220, 220, 220, .9);
+  background: rgba(220, 220, 220, 0.9);
 
   .errorExplanation {
     width: 100%;
@@ -69,7 +104,7 @@
   height: 90vh;
 
   &[open] {
-    animation: show-dialog .5s ease normal;
+    animation: show-dialog 0.5s ease normal;
   }
 }
 
@@ -87,14 +122,14 @@
   display: flex;
   -ms-flex-wrap: wrap;
   flex-wrap: wrap;
-  gap: 5px
+  gap: 5px;
 }
 
 .ss-dnd-list-vertical {
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
   -ms-flex-direction: column;
-  flex-direction: column
+  flex-direction: column;
 }
 
 .ss-dnd-list-item {
@@ -110,28 +145,28 @@
   padding: 5px;
   border: 1px solid #dcdcdc;
   cursor: -webkit-grab;
-  cursor: grab
+  cursor: grab;
 }
 
 .ss-dnd-grid {
   display: grid;
-  gap: 5px 0
+  gap: 5px 0;
 }
 
 .ss-dnd-grid-item {
-  display: contents
+  display: contents;
 }
 
-.ss-dnd-grid-item>* {
+.ss-dnd-grid-item > * {
   padding: 5px;
   border-top: 1px solid #dcdcdc;
-  border-bottom: 1px solid #dcdcdc
+  border-bottom: 1px solid #dcdcdc;
 }
 
-.ss-dnd-grid-item>*:first-child {
-  border-left: 1px solid #dcdcdc
+.ss-dnd-grid-item > *:first-child {
+  border-left: 1px solid #dcdcdc;
 }
 
-.ss-dnd-grid-item>*:last-child {
-  border-right: 1px solid #dcdcdc
+.ss-dnd-grid-item > *:last-child {
+  border-right: 1px solid #dcdcdc;
 }

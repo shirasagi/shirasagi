@@ -134,7 +134,7 @@ this.hideDateForm = function(self) {
 <dl class="see mod-cms-page-search">
   <dt><%= @model.t :search_layout_ids %><%= @model.tt :search_layout_ids %></dt>
   <dd>
-    <%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", nil, class: "hidden-ids" %>
+    <%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", nil, class: "hidden-ids", id: nil %>
     <%= link_to t("cms.apis.layouts.index"), cms_apis_layouts_path , class: "btn ajax-box" %>
   </dd>
   <dd>
@@ -148,7 +148,7 @@ this.hideDateForm = function(self) {
       <tbody>
       <% @item.search_layouts.each do |item| %>
           <tr data-id="<%= item.id %>">
-            <td><%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", item.id, id: nil%> <%= item.name %></td>
+            <td><%= hidden_field_tag "#{f.object_name}[search_layout_ids][]", item.id, id: nil %> <%= item.name %></td>
             <td><%= link_to t("ss.buttons.delete"), "#", class: "deselect btn" %></td>
           </tr>
       <% end %>
@@ -218,6 +218,16 @@ this.hideDateForm = function(self) {
 
   <dt><%= @model.t :search_approver_state %><%= @model.tt :search_approver_state %></dt>
   <dd><%= f.select :search_approver_state, @item.search_approver_state_options, include_blank: true %></dd>
+
+  <dt><%= @model.t :search_syntax_check_violation %><%= @model.tt :search_syntax_check_violation %></dt>
+  <dd>
+    <% @item.search_syntax_check_violation_options.each do |label, value| %>
+      <label>
+        <%= f.radio_button :search_syntax_check_violation, value %>
+        <%= label %>
+      </label>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :search_sort %><%= @model.tt :search_sort %></dt>
   <dd><%= f.select :search_sort, @item.search_sort_options, include_blank: true %></dd>

@@ -13,7 +13,7 @@
 
 <% if links.present? %>
 <nav class="mod-navi current-navi">
-  <%= gws_menu_icon(:board, 'modules.gws/board', gws_board_main_path) %>
+  <%= gws_menu_icon(:board, gws_board_main_path) %>
   <h3><%= link_to t('ss.navi.readable'), gws_board_topics_path(mode: '-', category: '-') %></h3>
   <% links.each do |link| %>
   <h3><%= link %></h3>

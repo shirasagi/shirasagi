@@ -1,0 +1,9 @@
+<div class="ss-more-content" data-controller="ss--more-content"<%if max_height %> style="--max-height: <%= max_height %>"<% end %>>
+  <div class="ss-more-content-body-wrap" data-ss--more-content-target="body" aria-expanded="false">
+    <%= content %>
+
+    <div class="ss-more-content-bottom-wrap" data-ss--more-content-target="bottom">
+      <%= button_tag t("ss.links.more_all"), type: :button, class: "btn", data: { action: "ss--more-content#expandAll" } %>
+    </div>
+  </div>
+</div>

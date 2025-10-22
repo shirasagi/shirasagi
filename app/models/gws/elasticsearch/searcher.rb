@@ -3,7 +3,9 @@ class Gws::Elasticsearch::Searcher
   include SS::PermitParams
 
   DEFAULT_FIELD_NAME = 'text_index'.freeze
-  WELL_KNOWN_TYPES = %w(all board faq qna report workflow workflow_form workflow2 circular monitor survey share memo).freeze
+  WELL_KNOWN_TYPES = %w(
+    all notice board faq qna report workflow workflow_form workflow2 circular monitor survey share memo
+  ).freeze
 
   attr_accessor :setting, :index, :type, :field_name, :keyword, :from, :size
 
@@ -22,7 +24,7 @@ class Gws::Elasticsearch::Searcher
   end
 
   def size
-    @size ||= 10
+    @size ||= Gws::Elasticsearch.max_items_per_page
   end
 
   def type

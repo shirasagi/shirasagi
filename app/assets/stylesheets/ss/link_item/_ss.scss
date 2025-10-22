@@ -1,3 +1,5 @@
+@use "ss/init";
+
 .ss-link-item-table {
   &.ss-link-item-table-show {
     display: grid;
@@ -8,7 +10,8 @@
       display: none;
     }
 
-    .ss-link-item-name, .ss-link-item-url {
+    .ss-link-item-name,
+    .ss-link-item-url {
       display: -webkit-box;
       overflow: hidden;
       -webkit-line-clamp: 3;
@@ -16,11 +19,15 @@
       text-overflow: ellipsis;
     }
 
-    thead, tbody, tfoot, tr {
+    thead,
+    tbody,
+    tfoot,
+    tr {
       display: contents;
     }
 
-    th, td {
+    th,
+    td {
       display: flex;
       align-items: center;
       width: 100%;
@@ -40,10 +47,11 @@
       }
     }
 
-    @include mb {
+    @include init.mb {
       grid-template-columns: auto auto auto;
 
-      .ss-link-item-name-cell, .ss-link-item-url-cell {
+      .ss-link-item-name-cell,
+      .ss-link-item-url-cell {
         grid-column: 1 / span 3;
       }
     }
@@ -55,7 +63,9 @@
     grid-template-rows: 1fr 1fr;
     align-items: center;
 
-    thead, tbody, tfoot {
+    thead,
+    tbody,
+    tfoot {
       display: contents;
     }
 
@@ -67,7 +77,8 @@
       grid-template-rows: subgrid;
     }
 
-    th, td {
+    th,
+    td {
       display: inline-flex;
       width: 100%;
       height: 100%;
@@ -79,7 +90,8 @@
       margin: 0;
     }
 
-    select, button {
+    select,
+    button {
       margin: 0;
     }
 
@@ -110,7 +122,7 @@
       gap: 5px;
     }
 
-    @include mb {
+    @include init.mb {
       grid-template-columns: 1fr;
       grid-template-rows: 1fr;
 

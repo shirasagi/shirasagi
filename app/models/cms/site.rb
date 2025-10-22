@@ -32,6 +32,7 @@ class Cms::Site
   include SS::Addon::MaintenanceMode
   include Cms::SyntaxChecker::MainSetting
   include Cms::SyntaxChecker::UrlSchemeSetting
+  include Cms::SyntaxChecker::LinkTextSetting
   include SS::Ldap::SiteSetting
   include Cms::Ldap::ImportSetting
   include Chorg::SiteSetting

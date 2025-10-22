@@ -80,7 +80,7 @@ module Gws::ColumnFilter2
     @item.required = cur_form.columns.reorder(order: -1).only(:required).first.try(:required) || "required"
     unless @item.save
       json = { status: 422, errors: @item.errors.full_messages }
-      render json: json, status: :unprocessable_entity, content_type: json_content_type
+      render json: json, status: :unprocessable_content, content_type: json_content_type
       return
     end
 

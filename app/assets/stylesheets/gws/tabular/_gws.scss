@@ -1,10 +1,12 @@
+@use "ss/init";
+
 .mod-navi {
   &:has(.gws-tabular-icon-wrap) {
     h2:first-child {
       a {
         padding: 4px 10px 4px 14px;
 
-        &:before {
+        &::before {
           content: none;
         }
       }
@@ -26,7 +28,7 @@
     padding: 0;
   }
 
-  .badge[data-count='0'] {
+  .badge[data-count="0"] {
     display: none;
   }
 }
@@ -35,10 +37,10 @@
   .badge {
     padding: 2px 4px;
     border-radius: 20px;
-    background-color: $gray3;
-    color: $white;
+    background-color: init.$gray3;
+    color: init.$white;
 
-    &[data-count='0'] {
+    &[data-count="0"] {
       display: none;
     }
   }
@@ -54,7 +56,8 @@
 }
 
 .gws-tabular-column {
-  [inputmode="decimal"], [inputmode="numeric"] {
+  [inputmode="decimal"],
+  [inputmode="numeric"] {
     width: 12em;
   }
 }
@@ -100,7 +103,8 @@
 
 .gws-tabular-views-main-box {
   .index {
-    .title, .meta {
+    .title,
+    .meta {
       .gws-tabular-column {
         display: inline-block;
       }
@@ -166,7 +170,7 @@
     margin: unset;
   }
 
-  @include mb {
+  @include init.mb {
     display: grid;
     grid-template-columns: 1fr;
     gap: 0 10px;
@@ -207,4 +211,11 @@
 
 .list-head-action-gws-tabular-approve {
   display: inline-block;
+}
+
+.gws-tabular-space-list-wrap {
+  .description {
+    padding: 10px;
+    font-size: 0.9rem;
+  }
 }

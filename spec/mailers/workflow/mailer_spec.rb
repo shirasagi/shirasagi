@@ -21,7 +21,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
     it "mail attributes" do
       expect(mail.from.first).to eq user1.email
       expect(mail.to.first).to eq user2.email
-      expect(mail.subject.to_s).not_to eq ""
+      expect(mail_subject(mail).to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
       expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
@@ -41,7 +41,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
     it "mail attributes" do
       expect(mail.from.first).to eq user1.email
       expect(mail.to.first).to eq user2.email
-      expect(mail.subject.to_s).not_to eq ""
+      expect(mail_subject(mail).to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
       expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
@@ -62,7 +62,7 @@ describe Workflow::Mailer, type: :mailer, dbscope: :example do
     it "mail attributes" do
       expect(mail.from.first).to eq user1.email
       expect(mail.to.first).to eq user2.email
-      expect(mail.subject.to_s).not_to eq ""
+      expect(mail_subject(mail).to_s).not_to eq ""
       expect(mail.body.to_s).not_to eq ""
       expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end

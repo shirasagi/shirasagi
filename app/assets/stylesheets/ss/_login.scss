@@ -1,5 +1,6 @@
 // -------------------------------------------------------------------------------------------------
 // login
+@use "init";
 
 #page-login {
   position: absolute;
@@ -7,7 +8,7 @@
   right: 0;
   bottom: 0;
   left: 0;
-  background: $gray1 url(/assets/img/back.png) no-repeat left 60%;
+  background: init.$gray1 url(/assets/img/back.png) no-repeat left 60%;
   background-size: contain;
 
   #main {
@@ -25,10 +26,10 @@
   display: table;
   margin: 20px 10px;
   border: 1px solid #ccc;
-  @include border-radius(3px);
-  @include box-shadow(0 1px 3px #ddd);
-  background: $white;
-  @include mb {
+  border-radius: 3px;
+  background: init.$white;
+  box-shadow: 0 1px 3px #ddd;
+  @include init.mb {
     width: calc(100% - 20px);
   }
   header {
@@ -55,14 +56,16 @@
     display: block;
     margin-bottom: 5px;
   }
-  input[type="text"], input[type="password"], input[type="email"] {
+  input[type="text"],
+  input[type="password"],
+  input[type="email"] {
     width: 300px;
   }
   footer.send {
     margin: 20px;
     padding: 0;
     input.btn-primary {
-      @include btn-red;
+      @include init.btn-red;
     }
   }
   .sso {
@@ -79,19 +82,21 @@
       }
     }
     .name {
-      margin-bottom: .5em;
+      margin-bottom: 0.5em;
       font-weight: bold;
     }
-    .text { font-size: $px12; }
+    .text {
+      font-size: init.$px12;
+    }
   }
 }
 
-@include mb {
+@include init.mb {
   .login-box {
+    box-sizing: border-box;
     padding: 10px;
-    @include box-sizing(border-box);
     header {
-      @include clear;
+      @include init.clear;
       margin: 0 0 20px;
       h1 {
         float: left;
@@ -144,9 +149,9 @@
   }
 
   .ss-swiper-slide-item {
-    @include display-flex;
-    @include justify-content(center);
-    @include align-items(center);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .ss-swiper-slide-item-image {
@@ -174,12 +179,12 @@
   }
 }
 
-@include mb {
+@include init.mb {
   .login-notice {
+    box-sizing: border-box;
     padding: 10px;
-    @include box-sizing(border-box);
     header {
-      @include clear;
+      @include init.clear;
       margin: 0 0 20px;
       h1 {
         float: left;

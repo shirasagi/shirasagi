@@ -5,6 +5,7 @@ SS_TreeUI.render(".index.groups", { descendants_check: true });
 
 <div class="search-ui-form">
   <%= form_for :s, url: { action: :index }, html: { method: "GET", class: :search } do |f| %>
+    <%= hidden_field_tag :single, @single %>
     <div class="input-group">
       <%= f.text_field :name, value: params[:s].try(:[], :name), placeholder: t("ss.keyword") %>
       <%= f.submit t("ss.apis.groups.search"), class: :btn %>

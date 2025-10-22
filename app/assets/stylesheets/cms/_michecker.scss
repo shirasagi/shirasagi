@@ -1,18 +1,20 @@
+@use "ss/init";
+
 .michecker {
   width: 100%;
   height: 100%;
 
   .btn:disabled {
-    color: $gray2;
+    color: init.$gray2;
   }
 
   &-inactive {
-    color: $gray2;
+    color: init.$gray2;
   }
 
   &-head {
-    @include display-flex;
-    @include align-items(center);
+    display: flex;
+    align-items: center;
 
     margin-bottom: 10px;
     h5 {
@@ -25,7 +27,7 @@
   }
 
   &-settings {
-    color: $black;
+    color: init.$black;
   }
 
   &__main {
@@ -43,7 +45,7 @@
   &__footer {
     width: 100%;
     padding: 10px;
-    border-top: 1px solid $gray2;
+    border-top: 1px solid init.$gray2;
   }
 
   &-report {
@@ -51,8 +53,9 @@
       margin-bottom: 5px;
     }
 
-    &__accessibility, &__low-vision-result-table {
-      @include display-flex;
+    &__accessibility,
+    &__low-vision-result-table {
+      display: flex;
     }
 
     &__filter {
@@ -67,7 +70,7 @@
       &-item-all {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e160";
 
           display: inline;
@@ -85,7 +88,7 @@
       &-item-error {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e000";
 
           display: inline;
@@ -99,7 +102,7 @@
       &-item-warning {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e002";
 
           display: inline;
@@ -113,7 +116,7 @@
       &-item-caution {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e001";
 
           display: inline;
@@ -127,7 +130,7 @@
       &-item-notice {
         padding: 5px;
 
-        &:before {
+        &::before {
           content: "\e8b2";
 
           display: inline;
@@ -143,8 +146,8 @@
         min-width: 16px;
         padding: 0 2px;
         border-radius: 4px;
-        background-color: $gray3;
-        color: $white;
+        background-color: init.$gray3;
+        color: init.$white;
         font-size: 80%;
         text-align: center;
       }
@@ -154,8 +157,8 @@
       width: calc(100% - 15em - 5px - 1px);
 
       &-controller {
-        @include display-flex;
-        @include justify-content(flex-end);
+        display: flex;
+        justify-content: flex-end;
         margin-bottom: 5px;
         * {
           margin: 0 5px;
@@ -175,7 +178,7 @@
         display: inline-block;
         min-width: 16px;
         padding: 0 2px;
-        border: 1px solid $gray3;
+        border: 1px solid init.$gray3;
         border-radius: 4px;
         font-size: 80%;
         text-align: center;
@@ -183,10 +186,11 @@
     }
 
     &__low-vision-image {
-      @include display-flex;
-      @include justify-content(center);
+      display: flex;
+      justify-content: center;
 
-      &-source, &-result {
+      &-source,
+      &-result {
         display: inline-block;
         max-width: 50%;
       }
