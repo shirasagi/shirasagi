@@ -60,16 +60,28 @@ class Cms::Form::FormsController < ApplicationController
   public
 
   def update
-    previous_loop_setting_id = @item.loop_setting_id
     attributes = get_params
-
-    loop_setting_value = attributes[:loop_setting_id]
-    loop_setting_value = attributes["loop_setting_id"] if loop_setting_value.blank?
-    if loop_setting_value.blank? && previous_loop_setting_id.present?
-      attributes[:loop_setting_id] = previous_loop_setting_id
-    end
+    loop_snippet_selector = params[:loop_snippet_selector]
 
     @item.attributes = attributes
+
+    case loop_snippet_selector
+    when ""
+      @item.loop_setting_id_will_change!
+      @item.loop_setting = nil
+    when nil
+      # keep submitted value
+    else
+      casted_id =
+        if loop_snippet_selector.respond_to?(:to_s) && loop_snippet_selector.to_s.match?(/\A\d+\z/)
+          loop_snippet_selector.to_i
+        else
+          loop_snippet_selector
+        end
+      @item.loop_setting_id_will_change!
+      @item.loop_setting_id = casted_id
+    end
+
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
     if @item.state == "closed" && form_is_in_use?

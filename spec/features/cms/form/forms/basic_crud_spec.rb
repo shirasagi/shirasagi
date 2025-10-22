@@ -210,7 +210,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       within 'form#item-form' do
         # Remove loop setting first
         select I18n.t('cms.input_directly'), from: 'loop_snippet_selector'
-
         # Then modify HTML
         fill_in_code_mirror 'item[html]', with: html2
 
