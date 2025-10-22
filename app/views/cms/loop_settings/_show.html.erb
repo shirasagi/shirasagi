@@ -7,4 +7,17 @@
 
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.order %></dd>
+
+  <dt><%= @model.t :state %></dt>
+  <dd><%= I18n.t("ss.options.state.#{@item.state}") %></dd>
+
+  <dt><%= @model.t :html_format %></dt>
+  <dd><%= @item.html_format %></dd>
+
+  <dt><%= @model.t :html %></dt>
+  <dd>
+    <% if @item.html.present? %>
+      <%= text_area_tag :html, @item.html, class: "html", style: "height: 200px;", readonly: true %>
+    <% end %>
+  </dd>
 </dl>
