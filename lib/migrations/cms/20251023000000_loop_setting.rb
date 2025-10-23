@@ -1,0 +1,14 @@
+class SS::Migration20251023000000
+  include SS::Migration::Base
+
+  depends_on "20250820000000"
+
+  def change
+    Cms::LoopSetting.all.each do |loop_setting|
+      next if loop_setting.html_format.present?
+      next if loop_setting.state.present?
+      loop_setting.update!(html_format: "shirasagi")
+      loop_setting.update!(state: "public")
+    end
+  end
+end
