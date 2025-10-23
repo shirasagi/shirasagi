@@ -212,7 +212,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     url  = url.sub(/\?.*/, "")
     url  = Addressable::URI.unencode(url)
-    file = "#{@site.path}#{url}"
+    file = "#{@site.root_path}#{url}"
     file = File.join(file, "index.html") if Fs.directory?(file)
     Fs.file?(file) ? file : nil
   end
