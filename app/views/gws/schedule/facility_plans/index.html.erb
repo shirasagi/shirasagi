@@ -24,7 +24,7 @@
       <% if @facility.approval_check? %>
         <span class="approval-check"><%= t("gws/facility.views.required_approval") %></span>
       <% end %>
-      <% if @facility.reservable?(@cur_user) %>
+      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && @facility.reservable?(@cur_user) %>
         <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
       <% end %>
     </h2>
