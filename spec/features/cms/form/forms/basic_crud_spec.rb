@@ -96,4 +96,132 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       expect(json.present?).to be_truthy
     end
   end
+
+  context 'layout html functionality' do
+    let!(:liquid_setting) do
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
+        state: "public",
+        name: "Test Liquid Setting #{unique_id}"
+      )
+    end
+
+    before { login_cms_user }
+
+    it 'can create form with layout html and loop setting' do
+      visit cms_forms_path(site)
+      click_on I18n.t('ss.links.new')
+
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+        fill_in_code_mirror 'item[html]', with: html
+
+        # Select loop setting
+        select liquid_setting.name, from: 'loop_snippet_selector'
+
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      form = Cms::Form.site(site).where(name: name).first
+      expect(form).to be_present
+      # With cursor position insertion, snippet is inserted at cursor position (beginning)
+      # so the result includes both the snippet and the original HTML
+      expect(form.html).to include(html)
+    end
+
+    it 'preserves directly entered HTML when loop_setting_id is set' do
+      custom_html = "<div class='custom-form'>{% for item in items %}" \
+                    "<div class='custom-item'>{{ item.name }}</div>{% endfor %}</div>"
+
+      visit cms_forms_path(site)
+      click_on I18n.t('ss.links.new')
+
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+        fill_in_code_mirror 'item[html]', with: custom_html
+
+        # Select loop setting
+        select liquid_setting.name, from: 'loop_snippet_selector'
+
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      form = Cms::Form.site(site).where(name: name).first
+      expect(form).to be_present
+      # With cursor position insertion, snippet is inserted at cursor position (beginning)
+      # so the result includes both the snippet and the original custom HTML
+      expect(form.html).to include(custom_html)
+
+      # Verify that both the custom HTML and the snippet are present
+      expect(form.html).to include("custom-form")
+      expect(form.html).to include("custom-item")
+      expect(form.html).to include("loop-item") # from loop_setting.html
+    end
+
+    it 'can edit form and change loop setting' do
+      # Create form first
+      form = create(:cms_form, cur_site: site, name: name, html: html)
+
+      visit edit_cms_form_path(site: site.id, id: form.id)
+
+      # Wait for the page to load and check if fields exist
+      expect(page).to have_select('loop_snippet_selector')
+      expect(page).to have_field('item[html]')
+
+      within 'form#item-form' do
+        # Select loop setting first
+        select liquid_setting.name, from: 'loop_snippet_selector'
+
+        # Then modify HTML
+        fill_in_code_mirror 'item[html]', with: html2
+
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      form.reload
+      # After selecting snippet and then modifying HTML, loop_setting_id は変更されない前提
+
+      # Parse HTML and check if html2 content is included
+      parsed_html = Nokogiri::HTML::DocumentFragment.parse(form.html)
+      expect(parsed_html.text).to include(html2)
+    end
+
+    it 'can remove loop setting and keep custom HTML' do
+      # Create form with loop setting
+      form = create(:cms_form, cur_site: site, name: name, html: html, loop_setting_id: liquid_setting.id)
+
+      visit edit_cms_form_path(site: site.id, id: form.id)
+
+      # Wait for the page to load and check if fields exist
+      expect(page).to have_select('loop_snippet_selector')
+      expect(page).to have_field('item[html]')
+
+      within 'form#item-form' do
+        # Remove loop setting first
+        select I18n.t('cms.input_directly'), from: 'loop_snippet_selector'
+        # Then modify HTML
+        fill_in_code_mirror 'item[html]', with: html2
+
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      form.reload
+      # After removing loop setting and then modifying HTML, the loop_setting_id should be nil
+      expect(form.loop_setting_id).to be_nil
+
+      # Parse HTML and check if html2 content is included
+      parsed_html = Nokogiri::HTML::DocumentFragment.parse(form.html)
+      expect(parsed_html.text).to include(html2)
+    end
+  end
 end
