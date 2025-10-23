@@ -25,7 +25,6 @@ class Gws::Survey::EditableFilesController < ApplicationController
     @forms ||= begin
       criteria = Gws::Survey::Form.site(@cur_site)
       criteria = criteria.allow(:read, @cur_user, site: @cur_site)
-      criteria = criteria.order_by(order: 1, created: 1)
       criteria
     end
   end

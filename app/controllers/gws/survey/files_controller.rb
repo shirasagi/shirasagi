@@ -26,7 +26,6 @@ class Gws::Survey::FilesController < ApplicationController
       criteria = Gws::Survey::Form.site(@cur_site).without_deleted
       criteria = criteria.and_public
       criteria = criteria.readable(@cur_user, site: @cur_site)
-      criteria = criteria.order_by(order: 1, created: 1)
       criteria
     end
   end
