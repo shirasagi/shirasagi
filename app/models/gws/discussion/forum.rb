@@ -50,7 +50,7 @@ class Gws::Discussion::Forum
 
   def save_clone
     item = self.class.new
-    item.attributes = self.attributes
+    item.attributes = self.attributes.select { |k| self.fields.key?(k) }
     item.id = nil
 
     item.created = item.updated = Time.zone.now
