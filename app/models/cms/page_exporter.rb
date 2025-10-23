@@ -13,8 +13,20 @@ class Cms::PageExporter
 
   def enum_csv(options = {})
     has_form = options[:form].present?
+
+    if !options.key?(:model)
+      options = options.dup
+      if mode_faq?
+        options[:model] = Faq::Page
+      elsif mode_event?
+        options[:model] = Event::Page
+      else
+        options[:model] = Article::Page
+      end
+    end
+
     drawer = SS::Csv.draw(:export, context: self) do |drawer|
-      draw_basic(drawer)
+      draw_basic(drawer, options[:model])
       draw_node_setting(drawer) if mode_all?
       draw_meta(drawer)
       if mode_all?
@@ -40,17 +52,6 @@ class Cms::PageExporter
       draw_state(drawer)
     end
 
-    if !options.key?(:model)
-      options = options.dup
-      if mode_faq?
-        options[:model] = Faq::Page
-      elsif mode_event?
-        options[:model] = Event::Page
-      else
-        options[:model] = Article::Page
-      end
-    end
-
     drawer.enum(criteria, options)
   end
 
@@ -72,7 +73,7 @@ class Cms::PageExporter
     mode == "all"
   end
 
-  def draw_basic(drawer)
+  def draw_basic(drawer, model)
     if mode_all?
       drawer.column :page_id do
         drawer.head { I18n.t("all_content.page_id") }
@@ -108,7 +109,7 @@ class Cms::PageExporter
       end
     end
     drawer.column :order
-    if respond_to?(:redirect_link_enabled?) && redirect_link_enabled?
+    if model.include?(Cms::Addon::RedirectLink) && site.redirect_link_enabled?
       drawer.column :redirect_link
     end
     drawer.column :size
