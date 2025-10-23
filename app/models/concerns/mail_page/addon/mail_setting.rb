@@ -17,8 +17,6 @@ module MailPage::Addon
     end
 
     def create_page_from_mail(mail)
-      body = extract_body(mail)
-
       page = MailPage::Page.new
       page.site = self.site
       page.cur_node = self
@@ -27,8 +25,7 @@ module MailPage::Addon
       page.group_ids = self.group_ids
 
       page.name = mail.subject
-      page.html = body.gsub("\n", "<br />")
-      page.mail_page_original_mail = mail.to_s
+      page.html = mail_body_to_html(extract_body(mail))
       page.arrival_start_date = Time.zone.now
       page.arrival_close_date = page.arrival_start_date.advance(days: arrival_days)
 
