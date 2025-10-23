@@ -20,39 +20,8 @@
 <%= render partial: "tabs", locals: { current: "list" } %>
 
 <div id="event-list">
-  <% @events.each do |date, pages| %>
-  <dl class="<%= event_dl_class date %>">
-    <dt>
-      <%= time_tag(date) do %>
-      <%= link_to_daily date, name: "#{date.month}#{t_date('month')}#{date.day}#{t_date('day')}" %>
-      <span class="wday">(<abbr title="<%= t_wday(date) %><%= t_date('wday') %>"><%= t_wday(date) %></abbr><span class="unit"><%= t_date('wday') %></span>)</span>
-      <% end %>
-    </dt>
-
-    <% if date.national_holiday? %>
-    <dd class="holiday"><%= HolidayJapan.name date %></dd>
-    <% end %>
-
-    <% if pages.blank? && @cur_node.substitute_html.present? %>
-      <dd class="no-event"><%= sanitize @cur_node.substitute_html.html_safe %></dd>
-    <% end %>
-
-    <% pages.each do |page, categories| %>
-    <dd class="page <%= page.event_dates.multiple_days?(date) ? 'multiple-days' : 'single-day' %>" data-id="<%= categories.pluck(:id).join(" ") %>" data-start-date="<%= tryb { page.event_dates.start_date(date).strftime("%Y/%m/%d") } %>" data-end-date="<%= tryb { page.event_dates.end_date(date).strftime("%Y/%m/%d") } %>">
-      <article class="<%= @cur_node.render_loop_html(page, html: '#{new}') %>">
-        <% if categories.present? %>
-          <% cate = categories.entries.sort_by{ |c| c.order }.first %>
-          <div class="<%= cate.basename %>">
-            <%= link_to cate.name, cate.url %>
-          </div>
-        <% end %>
-        <header>
-          <h2><%= link_to (page.event_name.present? ? page.event_name : page.name), page.url %></h2>
-        </header>
-      </article>
-    </dd>
-    <% end %>
-  </dl>
+  <% @events.each do |date, cell| %>
+    <%= render_list_day_events(date, cell) %>
   <% end %>
 </div>
 
