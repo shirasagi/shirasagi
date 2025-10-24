@@ -146,6 +146,10 @@ ja:
         notice_severity: 重要度
         notice_toggle_browsed: 既読への変更
         notice_folder_navi_open_state: フォルダーナビの展開
+        notice_back_number_menu_state: バックナンバーメニュー
+        notice_back_number_menu_label: バックナンバーメニューラベル
+        notice_calendar_menu_state: カレンダーメニュー
+        notice_calendar_menu_label: カレンダーメニューラベル
       gws/addon/notice/calendar:
         start_on: 開始日
         end_on: 終了日

@@ -146,6 +146,10 @@ en:
         notice_severity: Severity
         notice_toggle_browsed: Toggle Read/Unread
         notice_folder_navi_open_state: Folder navi expansion
+        notice_back_number_menu_state: Back Issue Menu
+        notice_back_number_menu_label: Back Issue Menu Label
+        notice_calendar_menu_state: Calendar Menu
+        notice_calendar_menu_label: Calendar Menu Label
       gws/addon/notice/calendar:
         start_on: Start date
         end_on: End date
