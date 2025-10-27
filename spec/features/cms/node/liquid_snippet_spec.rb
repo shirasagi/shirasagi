@@ -41,9 +41,9 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
   it "inserts public liquid snippets into loop_liquid while excluding closed snippets" do
     visit edit_node_conf_path(site.id, node)
 
-    ensure_addon_opened('#addon-cms-agents-addons-page_list')
+    ensure_addon_opened('#addon-event-agents-addons-page_list')
 
-    within '#addon-cms-agents-addons-page_list' do
+    within '#addon-event-agents-addons-page_list' do
       select('Liquid', from: 'item[loop_format]') if page.has_select?('item[loop_format]')
       wait_for_js_ready
 
