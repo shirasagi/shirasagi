@@ -3,8 +3,14 @@
   <dd><%= f.text_field :name %></dd>
 
   <dt><%= @model.t :description %><%= @model.tt :description %></dt>
-  <dd><%= f.text_field :description %></dd>
+  <dd><%= f.text_area :description %></dd>
 
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
+
+  <dt><%= @model.t :state %><%= @model.tt :state %></dt>
+  <dd><%= f.select :state, Cms::LoopSetting.options_for_state %></dd>
+
+  <dt><%= @model.t :html_format %><%= @model.tt :html_format %></dt>
+  <dd><%= f.select :html_format, Cms::LoopSetting.html_format_options %></dd>
 </dl>
