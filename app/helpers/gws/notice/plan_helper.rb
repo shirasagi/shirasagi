@@ -38,8 +38,8 @@ module Gws::Notice::PlanHelper
       return only_icon ? nil : text.presence
     end
 
-    if item.closed? && !@cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number)
-      # @item はバックナンバー。しかし、バックナンバーを表示する権限がない
+    if item.closed? && !@cur_site.notice_back_number_menu_visible?
+      # @item はバックナンバー。しかし、バックナンバーが非表示に設定されている
       return only_icon ? nil : text.presence
     end
 

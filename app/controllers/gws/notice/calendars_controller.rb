@@ -27,7 +27,7 @@ class Gws::Notice::CalendarsController < ApplicationController
     criteria = @model.all.site(@cur_site)
     criteria = criteria.readable(@cur_user, site: @cur_site)
     criteria = criteria.without_deleted
-    if @s[:content_types].try(:include?, "back_numbers") && @cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number)
+    if @s[:content_types].try(:include?, "back_numbers") && @cur_site.notice_back_number_menu_visible?
       criteria = criteria.where(state: { "$in" => @model.public_states })
     else
       criteria = criteria.and_public

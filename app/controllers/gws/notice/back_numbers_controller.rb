@@ -16,9 +16,9 @@ class Gws::Notice::BackNumbersController < ApplicationController
   private
 
   def check_permission
-    # :use_gws_notice と :use_gws_notice_back_number の両方が必要
+    # :use_gws_notice ＆サイト設定で表示になっている必要がある。
     super
-    raise "404" unless @cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number)
+    raise "404" unless @cur_site.notice_back_number_menu_visible?
   end
 
   def append_view_paths

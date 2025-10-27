@@ -46,7 +46,11 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   end
 
   context "with back number post" do
-    context "with use_gws_notice_back_number" do
+    context "when notice_back_number_menu_state is set to 'show'" do
+      before do
+        site.update!(notice_back_number_menu_state: 'show')
+      end
+
       it do
         visit index_path
         wait_for_all_turbo_frames
@@ -83,12 +87,9 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
       end
     end
 
-    context "without use_gws_notice_back_number" do
+    context "when notice_back_number_menu_state is set to 'hide'" do
       before do
-        gws_user.gws_roles.to_a.each do |gws_role|
-          gws_role.permissions = gws_role.permissions - %w(use_gws_notice_back_number)
-          gws_role.save!
-        end
+        site.update!(notice_back_number_menu_state: 'hide')
       end
 
       it do

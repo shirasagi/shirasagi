@@ -1,4 +1,4 @@
-<% return unless @cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number) %>
+<% return unless @cur_site.notice_back_number_menu_visible? %>
 
 <div class="gws-tabs gws-notice-tabs">
   <%= link_to gws_notice_readables_path, class: [ "readables", request.path.start_with?(gws_notice_readables_path) ? "current" : nil ] do %>
