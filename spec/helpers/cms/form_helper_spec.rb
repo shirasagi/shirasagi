@@ -93,6 +93,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       expect(settings.count).to eq 1
       expect(settings.first[0]).to eq liquid_setting.name
       expect(settings.first[1]).to eq liquid_setting.id
+      expect(settings.first[2]).to include("data-snippet" => liquid_setting.html)
     end
 
     it "does not include shirasagi format settings" do
@@ -151,9 +152,10 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       it "returns settings in correct format for select options" do
         settings = helper.ancestral_html_settings_liquid
         expect(settings.first).to be_an(Array)
-        expect(settings.first.length).to eq 2
+        expect(settings.first.length).to eq 3
         expect(settings.first[0]).to be_a(String) # name
         expect(settings.first[1]).to be_a(Integer)
+        expect(settings.first[2]).to include("data-snippet" => a_kind_of(String))
       end
     end
 

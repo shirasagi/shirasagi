@@ -44,7 +44,7 @@ module Cms::FormHelper
     items = []
     settings = Cms::LoopSetting.site(@cur_site).liquid
     settings.each do |item|
-      items << [item.name, item.id]
+      items << [item.name, item.id, { "data-snippet" => item.html.to_s }]
     end
     items
   end

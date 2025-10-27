@@ -1,6 +1,18 @@
 <% addon ||= local_assigns.fetch(:addon, {})%>
 
 <dl class="see">
+  <dt class="wide"><%= t("cms.labels.snippets") %></dt>
+  <dd class="wide">
+    <% snippet_options = ancestral_html_settings_liquid %>
+    <%= select_tag(
+          'loop_snippet_selector',
+          tag.option(t("cms.input_directly"), value: "").html_safe +
+          snippet_options.map { |name, id, attrs|
+            tag.option(name, value: id, data: { snippet: attrs["data-snippet"] })
+          }.join.html_safe,
+          id: 'loop_snippet_selector'
+        ) %>
+  </dd>
   <dt class="wide"><%= @model.t :html %><%= @model.tt :html %></dt>
   <dd class="wide">
     <%= f.text_area :html, style: "height: 400px" %>
@@ -23,6 +35,66 @@
     end
   %>
 </dl>
+
+<%= jquery do %>
+  console.log("Initializing loop snippet selector");
+  $('#loop_snippet_selector').on('change', function() {
+    console.log('loop_snippet_selector changed');
+    var $select = $(this);
+    var $option = $select.find(':selected');
+    
+    if (!$option.val()) {
+      console.log('No value selected');
+      return;
+    }
+    
+    var snippet = $option.data('snippet');
+    console.log('Selected snippet:', snippet);
+    
+    if (!snippet) {
+      console.log('No snippet data found');
+      return;
+    }
+    
+    var $textarea = $select.closest('dl').find('textarea');
+    console.log('Found textarea:', $textarea.length);
+    
+    if ($textarea.length === 0) {
+      console.log('No textarea found');
+      return;
+    }
+    
+    var editor = $textarea.data('editor');
+    if (editor) {
+      console.log('Using CodeMirror editor');
+      var doc = editor.getDoc();
+      var cursor = doc.getCursor();
+      doc.replaceRange(snippet, cursor);
+      editor.focus();
+      editor.save();
+      console.log('Snippet inserted via CodeMirror at cursor position');
+    } else {
+      console.log('No CodeMirror found, using fallback');
+      var textarea = $textarea[0];
+      var start = textarea.selectionStart || textarea.value.length;
+      var end = textarea.selectionEnd || start;
+      
+      textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(end);
+      
+      var cursor = start + snippet.length;
+      if (textarea.setSelectionRange) {
+        textarea.setSelectionRange(cursor, cursor);
+      }
+      
+      textarea.dispatchEvent(new Event('input', { bubbles: true }));
+      textarea.dispatchEvent(new Event('change', { bubbles: true }));
+      console.log('Snippet inserted via textarea at cursor position');
+    }
+    
+    $select.val('');
+  });
+  console.log('Loop snippet selector initialized');
+<% end %>
 
 <%= code_editor "##{addon[:id]} textarea", mode: :html %>
 
