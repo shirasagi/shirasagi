@@ -37,6 +37,13 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
   before do
     login_cms_user
   end
+  def loop_snippet_select
+    find('.loop-snippet-selector', visible: :all)
+  end
+
+  def select_loop_snippet(option_text)
+    select option_text, from: loop_snippet_select[:id]
+  end
 
   it "inserts public liquid snippets into loop_liquid while excluding closed snippets" do
     visit edit_node_conf_path(site.id, node)
@@ -47,9 +54,9 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       select('Liquid', from: 'item[loop_format]') if page.has_select?('item[loop_format]')
       wait_for_js_ready
 
-      expect(page).to have_select('loop_snippet_selector', wait: 5)
+      expect(page).to have_css('.loop-snippet-selector', wait: 5)
 
-      option_texts = find('#loop_snippet_selector').all('option').map(&:text)
+      option_texts = loop_snippet_select.all('option').map(&:text)
 
       expect(option_texts).to include(liquid_setting_high.name)
       expect(option_texts).to include(liquid_setting_low.name)
@@ -60,9 +67,9 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
 
       fill_in_code_mirror 'item[loop_liquid]', with: "existing-liquid-content"
 
-      select liquid_setting_high.name, from: 'loop_snippet_selector'
+      select_loop_snippet(liquid_setting_high.name)
 
-      expect(find('#loop_snippet_selector').value).to eq ""
+      expect(loop_snippet_select.value).to eq ""
 
       textarea_value = find('#item_loop_liquid', visible: false).value
       expect(textarea_value).to include("existing-liquid-content")

@@ -5,6 +5,13 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
   let(:name) { unique_id }
   let(:html) { unique_id }
   let(:html2) { unique_id }
+  def loop_snippet_select
+    find('.loop-snippet-selector', visible: :all)
+  end
+
+  def select_loop_snippet(option_text)
+    select option_text, from: loop_snippet_select[:id]
+  end
 
   context 'basic crud' do
     before { login_cms_user }
@@ -119,7 +126,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in_code_mirror 'item[html]', with: html
 
         # Select loop setting
-        select liquid_setting.name, from: 'loop_snippet_selector'
+        select_loop_snippet(liquid_setting.name)
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -145,7 +152,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in_code_mirror 'item[html]', with: custom_html
 
         # Select loop setting
-        select liquid_setting.name, from: 'loop_snippet_selector'
+        select_loop_snippet(liquid_setting.name)
 
         click_on I18n.t('ss.buttons.save')
       end

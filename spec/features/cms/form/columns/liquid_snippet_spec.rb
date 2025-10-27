@@ -39,6 +39,13 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
   before do
     login_cms_user
   end
+  def loop_snippet_select
+    find('.loop-snippet-selector', visible: :all)
+  end
+
+  def select_loop_snippet(option_text)
+    select option_text, from: loop_snippet_select[:id]
+  end
 
   it "allows inserting liquid snippets into column layout field" do
     visit cms_form_path(site, form)
@@ -63,9 +70,9 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       sleep 1
 
       # Find the layout field in the dialog
-      expect(page).to have_select('loop_snippet_selector', wait: 10)
+      expect(page).to have_css('.loop-snippet-selector', wait: 10)
 
-      option_texts = find('#loop_snippet_selector').all('option').map(&:text)
+      option_texts = loop_snippet_select.all('option').map(&:text)
       expect(option_texts).to include(liquid_setting_primary.name)
       expect(option_texts).to include(liquid_setting_secondary.name)
       expect(option_texts).not_to include(liquid_setting_closed.name)
@@ -75,7 +82,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
 
       fill_in_code_mirror 'item[layout]', with: "existing-column-layout"
 
-      select liquid_setting_secondary.name, from: 'loop_snippet_selector'
+      select_loop_snippet(liquid_setting_secondary.name)
 
       textarea_value = find('#item_layout', visible: false).value
       expect(textarea_value).to include("existing-column-layout")
