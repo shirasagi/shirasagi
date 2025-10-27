@@ -139,8 +139,16 @@ jobs:
           if [ $? -ne 0 ]; then
             exit 1
           fi
-          set -o pipefail
-          echo $file_list | xargs bundle exec rspec --profile 10 | bundle exec ruby .travis.d/extract_spec_failures.rb
+          set +e
+          echo $file_list | xargs bundle exec rspec --profile 10 2>&1 | tee rspec_output.txt
+          rspec_exit_code=${PIPESTATUS[0]}
+          set -e
+          # Always extract failures from RSpec output, even if RSpec failed
+          if [ -s rspec_output.txt ]; then
+            cat rspec_output.txt | bundle exec ruby .travis.d/extract_spec_failures.rb
+          fi
+          # Exit with the original RSpec exit code
+          exit $rspec_exit_code
         env:
           TZ: "Asia/Tokyo"
           LANG: ja_JP.UTF-8
@@ -189,6 +197,13 @@ jobs:
           pattern: ci-failures-*
           merge-multiple: true
           path: ./aggregated-failures
+        continue-on-error: true
+      - name: Debug failure artifacts
+        run: |
+          echo "=== Checking aggregated-failures ==="
+          ls -la aggregated-failures/ || echo "aggregated-failures directory does not exist"
+          find aggregated-failures -type f 2>/dev/null || echo "No files found in aggregated-failures"
+          echo "=== End debug ==="
         continue-on-error: true
       - name: Build comment body
         id: summary
