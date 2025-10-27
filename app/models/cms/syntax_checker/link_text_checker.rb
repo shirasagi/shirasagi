@@ -5,7 +5,7 @@ class Cms::SyntaxChecker::LinkTextChecker
     context.fragment.css("a[href]").each do |a_node|
       code = Cms::SyntaxChecker::Base.outer_html_summary(a_node)
 
-      text = extract_link_text(context, a_node)
+      text = Cms::SyntaxChecker::Base.extract_a11y_label(context, a_node)
       if text
         text = text.strip
       else
@@ -18,60 +18,6 @@ class Cms::SyntaxChecker::LinkTextChecker
   end
 
   private
-
-  def extract_link_text(context, a_node)
-    if a_node.key?("aria-labelledby")
-      aria_labelled_by = a_node["aria-labelledby"]
-      if aria_labelled_by.present?
-        return context.fragment.css("##{aria_labelled_by}").text
-      else
-        return
-      end
-    end
-
-    if a_node.key?("aria-label")
-      return a_node["aria-label"]
-    end
-
-    text_parts = []
-    img_elements = a_node.css("[aria-labelledby],[aria-label],[alt],[title]")
-    img_elements.each do |img_element|
-      if img_element.key?("aria-labelledby")
-        aria_labelled_by = img_element["aria-labelledby"]
-        if aria_labelled_by.present?
-          aria_labelled_by_elment = context.fragment.css("##{aria_labelled_by}")
-          if aria_labelled_by_elment
-            text_parts << aria_labelled_by_elment.text
-          end
-        end
-        next
-      end
-
-      if img_element.key?("aria-label")
-        text_parts << img_element["aria-label"]
-        next
-      end
-
-      if img_element.key?("alt")
-        text_parts << img_element["alt"]
-        next
-      end
-
-      if img_element.key?("title")
-        text_parts << img_element["title"]
-        next
-      end
-    end
-
-    text_parts.compact!
-    if text_parts.present?
-      return text_parts.join(" ")
-    end
-
-    return a_node.text if a_node.text.present?
-
-    a_node["title"]
-  end
 
   def check_unfavorable_word(context, content, text, code)
     return if text.blank?
