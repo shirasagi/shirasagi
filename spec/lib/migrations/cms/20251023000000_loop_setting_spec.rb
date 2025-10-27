@@ -51,4 +51,58 @@ RSpec.describe SS::Migration20251023000000, dbscope: :example do
     expect(loop_setting_preserved[:html_format]).to eq 'liquid'
     expect(loop_setting_preserved[:html]).to eq "<div>{{ item.title }}</div>"
   end
+
+  context "when only html_format is missing" do
+    let!(:loop_setting_without_format) do
+      create(:cms_loop_setting,
+        site: site,
+        html: "<div>{{ item.name }}</div>",
+        state: 'closed',
+        html_format: 'liquid')
+    end
+
+    before do
+      loop_setting_without_format.collection.update_one(
+        { "_id" => loop_setting_without_format._id },
+        { "$unset" => { "html_format" => "" } }
+      )
+      loop_setting_without_format.reload
+
+      described_class.new.change
+    end
+
+    it "fills only html_format while keeping state" do
+      loop_setting_without_format.reload
+
+      expect(loop_setting_without_format[:state]).to eq 'closed'
+      expect(loop_setting_without_format[:html_format]).to eq 'shirasagi'
+    end
+  end
+
+  context "when only state is missing" do
+    let!(:loop_setting_without_state) do
+      create(:cms_loop_setting,
+        site: site,
+        html: "<div>{{ item.name }}</div>",
+        state: 'public',
+        html_format: 'liquid')
+    end
+
+    before do
+      loop_setting_without_state.collection.update_one(
+        { "_id" => loop_setting_without_state._id },
+        { "$unset" => { "state" => "" } }
+      )
+      loop_setting_without_state.reload
+
+      described_class.new.change
+    end
+
+    it "fills only state while keeping html_format" do
+      loop_setting_without_state.reload
+
+      expect(loop_setting_without_state[:state]).to eq 'public'
+      expect(loop_setting_without_state[:html_format]).to eq 'liquid'
+    end
+  end
 end
