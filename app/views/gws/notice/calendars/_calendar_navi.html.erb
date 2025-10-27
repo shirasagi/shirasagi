@@ -21,7 +21,7 @@
         <li class="gws-notice-content-type-item">
           <label>
             <%= checkbox_tag "s[content_types][]", "back_numbers", @s[:content_types] && @s[:content_types].include?("back_numbers"), id: nil %>
-            <%= t('gws/notice.back_number') %>
+            <%= @cur_site.notice_back_number_menu_label.presence || t('gws/notice.back_number') %>
           </label>
         </li>
       <% end %>
