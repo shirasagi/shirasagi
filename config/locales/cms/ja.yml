@@ -2048,6 +2048,12 @@ ja:
       check_links: 次のリンクを確認しました。
 
   tooltip:
+    cms:
+      labels:
+        snippets:
+          - サイト設定のループHTMLで作成したHTMLを選択して挿入できます。
+          - 選択したHTMLは、現在のカーソル位置に追加されます。
+          - HTMLはLiquid形式で記述する必要があります。
     cms/addon/readable_setting:
       readable_setting_range:
         - <b>全公開</b> - 誰でも閲覧できます。

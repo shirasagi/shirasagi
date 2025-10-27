@@ -5,7 +5,7 @@
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <dl class="see">
-  <dt class="wide"><%= t("cms.labels.snippets") %></dt>
+  <dt class="wide"><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
   <dd class="wide">
     <% snippet_options = ancestral_html_settings_liquid %>
     <%= select_tag(

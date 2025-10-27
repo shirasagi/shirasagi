@@ -110,7 +110,7 @@
 
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
-    <dt><%= t("cms.labels.snippets") %></dt>
+    <dt><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
     <dd>
       <% snippet_options = ancestral_html_settings_liquid %>
       <%= select_tag(
