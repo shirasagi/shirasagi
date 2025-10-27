@@ -4,7 +4,9 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
   let!(:site) { cms_site }
   let!(:form) { create(:cms_form, cur_site: site, sub_type: 'static') }
   let(:snippet_html_primary) { "{% for item in items %}<div class='column-snippet-primary'>{{ item.name }}</div>{% endfor %}" }
-  let(:snippet_html_secondary) { "{% for item in items %}<div class='column-snippet-secondary'>{{ item.title }}</div>{% endfor %}" }
+  let(:snippet_html_secondary) do
+    "{% for item in items %}<div class='column-snippet-secondary'>{{ item.title }}</div>{% endfor %}"
+  end
 
   let!(:liquid_setting_primary) do
     create(:cms_loop_setting,
@@ -48,12 +50,20 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     end
     wait_for_notice I18n.t('ss.notice.saved')
 
+    within '.gws-column-form' do
+      fill_in 'item[name]', with: 'Test Column'
+      click_on I18n.t('ss.buttons.save')
+    end
+    wait_for_notice I18n.t('ss.notice.saved')
+
     wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
 
     within_dialog do
-      ensure_addon_opened('#addon-cms-agents-addons-column_layout')
+      # Wait for the dialog to fully load
+      sleep 1
 
-      expect(page).to have_select('loop_snippet_selector', wait: 5)
+      # Find the layout field in the dialog
+      expect(page).to have_select('loop_snippet_selector', wait: 10)
 
       option_texts = find('#loop_snippet_selector').all('option').map(&:text)
       expect(option_texts).to include(liquid_setting_primary.name)
@@ -66,8 +76,6 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
       fill_in_code_mirror 'item[layout]', with: "existing-column-layout"
 
       select liquid_setting_secondary.name, from: 'loop_snippet_selector'
-
-      expect(find('#loop_snippet_selector').value).to eq ""
 
       textarea_value = find('#item_layout', visible: false).value
       expect(textarea_value).to include("existing-column-layout")

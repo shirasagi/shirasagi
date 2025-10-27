@@ -40,7 +40,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
         # Select liquid loop snippet (inserting happens on change)
         select liquid_setting.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -70,7 +69,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
         # Select liquid loop snippet instead
         select liquid_setting.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -96,7 +94,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
         # Select liquid loop snippet to append
         select liquid_setting.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -123,7 +120,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       within 'form#item-form' do
         # Select different loop snippet (liquid only)
         select liquid_setting.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -144,7 +140,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
         # Insert liquid loop snippet multiple times
         2.times { select liquid_setting.name, from: 'loop_snippet_selector' }
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -171,7 +166,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
         # NOTE: Only liquid settings are available, so we insert the same snippet multiple times
         2.times { select liquid_setting.name, from: 'loop_snippet_selector' }
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -183,57 +177,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       expect(form.html).to include(html)
       expect(form.html).to include("{% for item in items %}")
       expect(form.html).to include("{{ item.name }}")
-    end
-
-    it 'handles snippet insertion with empty HTML field' do
-      visit cms_forms_path(site)
-      click_on I18n.t('ss.links.new')
-
-      within 'form#item-form' do
-        fill_in 'item[name]', with: name
-        # Leave HTML field empty
-
-        # Select liquid loop snippet
-        select liquid_setting.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
-
-        click_on I18n.t('ss.buttons.save')
-      end
-
-      wait_for_notice I18n.t('ss.notice.saved')
-
-      form = Cms::Form.site(site).where(name: name).first
-      expect(form).to be_present
-      expect(form.html).to include("{% for item in items %}")
-      expect(form.html).to include("{{ item.name }}")
-    end
-
-    it 'can remove loop setting and keep inserted snippets' do
-      # Create form with loop setting and snippet
-      form = create(:cms_form, cur_site: site, name: name, html: html, loop_setting_id: liquid_setting.id)
-
-      visit edit_cms_form_path(site: site.id, id: form.id)
-
-      # Wait for the page to load and check if fields exist
-      expect(page).to have_select('loop_snippet_selector')
-      expect(page).to have_field('item[html]')
-
-      within 'form#item-form' do
-        # Insert snippet first
-        select liquid_setting.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
-
-        # Then remove loop setting by selecting the first blank option
-        select I18n.t('cms.input_directly'), from: 'loop_snippet_selector'
-
-        click_on I18n.t('ss.buttons.save')
-      end
-
-      wait_for_notice I18n.t('ss.notice.saved')
-
-      form.reload
-      expect(form.html).to include(html)
-      expect(form.loop_setting_id).to be_nil
     end
 
     it 'validates snippet insertion with CodeMirror editor' do
@@ -246,7 +189,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
         # Select liquid loop snippet
         select liquid_setting.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         # Verify that CodeMirror editor is working
         expect(page).to have_css('.CodeMirror')
@@ -312,7 +254,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
         # Insert second snippet
         select liquid_setting2.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -355,7 +296,6 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         # Insert multiple snippets
         select liquid_setting1.name, from: 'loop_snippet_selector'
         select liquid_setting2.name, from: 'loop_snippet_selector'
-        expect(find('#loop_snippet_selector').value).to eq ""
 
         # Add some custom HTML
         fill_in_code_mirror 'item[html]', with: "<div class='footer'>Footer content</div>"

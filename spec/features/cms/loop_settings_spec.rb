@@ -80,7 +80,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: "shirasagi-setting-#{unique_id}"
           fill_in "item[description]", with: "description-#{unique_id}"
-          fill_in "loop_setting_html", with: shirasagi_html
+          fill_in "item[html]", with: shirasagi_html
 
           select "SHIRASAGI", from: "item[html_format]"
 
@@ -99,7 +99,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: "liquid-setting-#{unique_id}"
           fill_in "item[description]", with: "description-#{unique_id}"
-          fill_in "loop_setting_html", with: liquid_html
+          fill_in "item[html]", with: liquid_html
 
           select "Liquid", from: "item[html_format]"
 
@@ -118,7 +118,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: "closed-setting-#{unique_id}"
           fill_in "item[description]", with: "description-#{unique_id}"
-          fill_in "loop_setting_html", with: shirasagi_html
+          fill_in "item[html]", with: shirasagi_html
 
           select I18n.t('ss.options.state.closed'), from: "item[state]"
           select "SHIRASAGI", from: "item[html_format]"
@@ -155,7 +155,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
       it "displays Liquid format loop setting" do
         visit cms_loop_setting_path site.id, liquid_item
         expect(status_code).to eq 200
-        expect(page).to have_content("liquid")
+        expect(page).to have_content("Liquid")
         expect(page).to have_content(liquid_html)
       end
     end
@@ -166,7 +166,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: "name-#{unique_id}"
           fill_in "item[description]", with: "description-#{unique_id}"
-          fill_in "loop_setting_html", with: shirasagi_html
+          fill_in "item[html]", with: shirasagi_html
           click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
@@ -183,7 +183,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         visit edit_cms_loop_setting_path site.id, shirasagi_item
         within "form#item-form" do
           fill_in "item[name]", with: "updated-shirasagi-#{unique_id}"
-          fill_in "loop_setting_html", with: shirasagi_html
+          fill_in "item[html]", with: shirasagi_html
           select "SHIRASAGI", from: "item[html_format]"
           click_button I18n.t('ss.buttons.save')
         end
@@ -200,7 +200,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         visit edit_cms_loop_setting_path site.id, liquid_item
         within "form#item-form" do
           fill_in "item[name]", with: "updated-liquid-#{unique_id}"
-          fill_in "loop_setting_html", with: liquid_html
+          fill_in "item[html]", with: liquid_html
           select "Liquid", from: "item[html_format]"
           click_button I18n.t('ss.buttons.save')
         end
@@ -216,7 +216,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
       it "changes format from SHIRASAGI to Liquid" do
         visit edit_cms_loop_setting_path site.id, shirasagi_item
         within "form#item-form" do
-          fill_in "loop_setting_html", with: liquid_html
+          fill_in "item[html]", with: liquid_html
           select "Liquid", from: "item[html_format]"
           click_button I18n.t('ss.buttons.save')
         end
@@ -230,7 +230,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
       it "changes format from Liquid to SHIRASAGI" do
         visit edit_cms_loop_setting_path site.id, liquid_item
         within "form#item-form" do
-          fill_in "loop_setting_html", with: shirasagi_html
+          fill_in "item[html]", with: shirasagi_html
           select "SHIRASAGI", from: "item[html_format]"
           click_button I18n.t('ss.buttons.save')
         end
@@ -244,7 +244,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
       it "updates state to closed" do
         visit edit_cms_loop_setting_path site.id, shirasagi_item
         within "form#item-form" do
-          fill_in "loop_setting_html", with: shirasagi_html
+          fill_in "item[html]", with: shirasagi_html
           select I18n.t('ss.options.state.closed'), from: "item[state]"
           select "SHIRASAGI", from: "item[html_format]"
           click_button I18n.t('ss.buttons.save')
@@ -280,7 +280,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: shirasagi_name
           fill_in "item[description]", with: "E2E test SHIRASAGI format"
-          fill_in "loop_setting_html", with: shirasagi_html
+          fill_in "item[html]", with: shirasagi_html
           select "SHIRASAGI", from: "item[html_format]"
           click_button I18n.t('ss.buttons.save')
         end
@@ -297,7 +297,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         within "form#item-form" do
           fill_in "item[name]", with: liquid_name
           fill_in "item[description]", with: "E2E test Liquid format"
-          fill_in "loop_setting_html", with: liquid_html
+          fill_in "item[html]", with: liquid_html
           select "Liquid", from: "item[html_format]"
           click_button I18n.t('ss.buttons.save')
         end
@@ -316,7 +316,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         # 4. SHIRASAGI形式の設定を編集
         visit edit_cms_loop_setting_path site.id, shirasagi_setting
         within "form#item-form" do
-          fill_in "loop_setting_html", with: shirasagi_html
+          fill_in "item[html]", with: shirasagi_html
           click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
@@ -327,7 +327,7 @@ describe "cms_loop_settings", type: :feature, dbscope: :example do
         # 5. Liquid形式の設定を編集
         visit edit_cms_loop_setting_path site.id, liquid_setting
         within "form#item-form" do
-          fill_in "loop_setting_html", with: liquid_html
+          fill_in "item[html]", with: liquid_html
           click_button I18n.t('ss.buttons.save')
         end
         expect(status_code).to eq 200
