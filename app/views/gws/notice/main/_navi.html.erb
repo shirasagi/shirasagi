@@ -10,7 +10,9 @@
   <% if @cur_site.notice_back_number_menu_visible? %>
     <h3><%= link_to @cur_site.notice_back_number_menu_label.presence || t('gws/notice.back_number'), gws_notice_back_numbers_path(options), class: 'back_numbers' %></h3>
   <% end %>
-  <h3><%= link_to @cur_site.notice_calendar_menu_label.presence || t('ss.navi.calendar'), gws_notice_calendars_path(options), class: 'calendars' %></h3>
+  <% if @cur_site.notice_calendar_menu_visible? %>
+    <h3><%= link_to @cur_site.notice_calendar_menu_label.presence || t('ss.navi.calendar'), gws_notice_calendars_path(options), class: 'calendars' %></h3>
+  <% end %>
 
   <% if Gws::Notice::Post.allowed?(:edit, @cur_user, site: @cur_site) %>
     <h3><%= link_to t('ss.navi.editable'), gws_notice_editables_path(folder_id: "-", category_id: "-"), class: 'management' %></h3>
