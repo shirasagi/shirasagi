@@ -28,4 +28,3 @@ RSpec.describe 'CI Workflow Failure Test', type: :model, dbscope: :example do
     end
   end
 end
-
