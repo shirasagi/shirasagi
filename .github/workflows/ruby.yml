@@ -139,9 +139,11 @@ jobs:
           if [ $? -ne 0 ]; then
             exit 1
           fi
+          set -o pipefail
           set +e
           echo $file_list | xargs bundle exec rspec --profile 10 2>&1 | tee rspec_output.txt
-          rspec_exit_code=${PIPESTATUS[0]}
+          rspec_exit_code=${PIPESTATUS[1]}
+          set +o pipefail
           set -e
           # Always extract failures from RSpec output, even if RSpec failed
           if [ -s rspec_output.txt ]; then
