@@ -43,10 +43,6 @@ class Gws::Notice::Post
   around_save ::Gws::Elasticsearch::Indexer::NoticePostJob.callback
   around_destroy ::Gws::Elasticsearch::Indexer::NoticePostJob.callback
 
-  default_scope -> {
-    order_by released: -1
-  }
-
   class << self
     def search(params)
       all.search_keyword(params).
