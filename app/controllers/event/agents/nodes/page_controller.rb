@@ -3,6 +3,7 @@ class Event::Agents::Nodes::PageController < ApplicationController
   include Cms::ForMemberFilter::Node
   include Event::EventHelper
   helper Event::EventHelper
+  helper Event::CalendarListHelper
   helper Event::IcalHelper
   helper Map::EventHelper
 
@@ -148,18 +149,15 @@ class Event::Agents::Nodes::PageController < ApplicationController
 
   def set_events(dates)
     @events = {}
-    dates.each do |d|
-      @events[d] = []
+    st_categories = @cur_node.st_categories.and_public(@cur_date).order_by(order: 1).to_a
+    dates.each do |date|
+      @events[date] = Event::MonthCell.new(@cur_node, @month, date, st_categories)
     end
     dates = dates.map { |m| m.mongoize }
-    node_category_ids = @cur_node.st_categories.pluck(:id)
     events(dates).each do |page|
-      page.event_dates.each do |d|
-        next unless @events[d]
-        @events[d] << [
-          page,
-          page.categories.in(id: node_category_ids).and_public(@cur_date).order_by(order: 1)
-        ]
+      page.event_dates.each do |date|
+        next unless @events[date]
+        @events[date].add(page)
       end
     end
   end
