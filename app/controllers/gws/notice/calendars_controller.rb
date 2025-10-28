@@ -14,7 +14,8 @@ class Gws::Notice::CalendarsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
-    @crumbs << [@cur_site.notice_calendar_menu_label.presence || t('ss.navi.calendar'), action: :index, folder_id: '-', category_id: '-']
+    label = @cur_site.notice_calendar_menu_label.presence || t('ss.navi.calendar')
+    @crumbs << [label, url_for(action: :index, folder_id: '-', category_id: '-')]
   end
 
   # override Gws::BaseFilter#set_gws_assets

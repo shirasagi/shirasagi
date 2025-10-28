@@ -37,7 +37,8 @@ class Gws::Notice::BackNumbersController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
-    @crumbs << [@cur_site.notice_back_number_menu_label.presence || t('gws/notice.back_number'), url_for(action: :index, folder_id: '-', category_id: '-')]
+    label = @cur_site.notice_back_number_menu_label.presence || t('gws/notice.back_number')
+    @crumbs << [label, url_for(action: :index, folder_id: '-', category_id: '-')]
   end
 
   def set_items
