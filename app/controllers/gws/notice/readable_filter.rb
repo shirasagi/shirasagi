@@ -70,7 +70,7 @@ module Gws::Notice::ReadableFilter
 
   def index
     @categories = @categories.tree_sort
-    @items = @items.search(@s).page(params[:page]).per(50)
+    @items = @items.search(@s).reorder(released: -1, id: -1).page(params[:page]).per(50)
   end
 
   def show
