@@ -62,7 +62,7 @@ module Gws::Portal::PortalFilter
           @notices = @notices.and_unread(@cur_user)
         end
 
-        @notices = @notices.reorder(severity: -1, released: -1)
+        @notices = @notices.reorder(severity: -1, released: -1, id: -1)
         @notices = @notices.page(1).per(5)
       else
         @notices = Gws::Notice::Post.none
