@@ -58,6 +58,23 @@ describe "gws_sites", type: :feature, dbscope: :example, js: true do
       expect(site.workflow_route_circulation_superior).to eq workflow_route_circulation_superior
       expect(site.workflow_route_circulation_title).to eq workflow_route_circulation_title
       expect(site.workflow_route_circulation_occupation).to eq workflow_route_circulation_occupation
+
+      visit gws_site_path(site: site)
+      click_on I18n.t("ss.links.edit")
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      site.reload
+      expect(site.workflow_new_days).to eq workflow_new_days
+      expect(site.workflow_my_group).to eq workflow_my_group
+      expect(site.workflow_route_approver_superior).to eq workflow_route_approver_superior
+      expect(site.workflow_route_approver_title).to eq workflow_route_approver_title
+      expect(site.workflow_route_approver_occupation).to eq workflow_route_approver_occupation
+      expect(site.workflow_route_circulation_superior).to eq workflow_route_circulation_superior
+      expect(site.workflow_route_circulation_title).to eq workflow_route_circulation_title
+      expect(site.workflow_route_circulation_occupation).to eq workflow_route_circulation_occupation
     end
   end
 end
