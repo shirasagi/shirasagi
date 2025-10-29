@@ -82,7 +82,7 @@ class Sys::SiteExportJob < SS::ApplicationJob
 
     zip = Sys::SiteExport::Zip.new(
       path: @output_zip, exclude_public_files: @exclude_public_files,
-      output_dir: @output_dir, site_dir: @src_site.path, task: @task
+      output_dir: @output_dir, src_site: @src_site, task: @task
     )
     zip.compress
   end
