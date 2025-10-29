@@ -44,8 +44,4 @@ class Gws::Column::Base
 
     update_forms.each { |callback| callback.call(form) }
   end
-
-  def set_required_optional
-    self.required = 'optional'
-  end
 end
