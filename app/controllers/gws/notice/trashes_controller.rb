@@ -42,6 +42,6 @@ class Gws::Notice::TrashesController < ApplicationController
   public
 
   def index
-    @items = @items.page(params[:page]).per(50)
+    @items = @items.reorder(updated: -1, id: -1).page(params[:page]).per(50)
   end
 end

@@ -51,6 +51,7 @@ module Gws::Addon::Portal::Portlet
         and_public.
         readable(user, site: portal.site).
         search(search).
+        reorder(released: -1, id: -1).
         page(1).
         per(limit)
     end
