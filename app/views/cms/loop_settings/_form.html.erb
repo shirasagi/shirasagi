@@ -9,8 +9,8 @@
   <dd><%= f.number_field :order %></dd>
 
   <dt><%= @model.t :state %><%= @model.tt :state %></dt>
-  <dd><%= f.select :state, Cms::LoopSetting.options_for_state %></dd>
+  <dd><%= f.select :state, @item.state_options %></dd>
 
   <dt><%= @model.t :html_format %><%= @model.tt :html_format %></dt>
-  <dd><%= f.select :html_format, Cms::LoopSetting.html_format_options %></dd>
+  <dd><%= f.select :html_format, @item.html_format_options %></dd>
 </dl>

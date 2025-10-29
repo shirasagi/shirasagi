@@ -35,11 +35,19 @@ describe Cms::LoopSetting, dbscope: :example do
       end
     end
 
-    describe "html_format options" do
-      it "returns correct options" do
-        options = described_class.html_format_options
-        expect(options).to include(%w[SHIRASAGI shirasagi])
-        expect(options).to include(%w[Liquid liquid])
+    describe "options helpers" do
+      let(:loop_setting) { described_class.new }
+
+      it "returns state options for label helper" do
+        options = loop_setting.state_options
+        expect(options).to include([I18n.t('ss.options.state.public'), 'public'])
+        expect(options).to include([I18n.t('ss.options.state.closed'), 'closed'])
+      end
+
+      it "returns html_format options for label helper" do
+        options = loop_setting.html_format_options
+        expect(options).to include([I18n.t('cms.options.loop_format.shirasagi'), 'shirasagi'])
+        expect(options).to include([I18n.t('cms.options.loop_format.liquid'), 'liquid'])
       end
     end
 

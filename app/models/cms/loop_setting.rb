@@ -37,19 +37,6 @@ class Cms::LoopSetting
       end
       criteria
     end
-
-    def options_for_state
-      [
-        [I18n.t('ss.options.state.public'), 'public'],
-        [I18n.t('ss.options.state.closed'), 'closed']
-      ]
-    end
-
-    def html_format_options
-      %w(SHIRASAGI Liquid).map do |v|
-        [ v, v.downcase ]
-      end
-    end
   end
 
   def html_format_shirasagi?
@@ -58,5 +45,17 @@ class Cms::LoopSetting
 
   def html_format_liquid?
     html_format == "liquid"
+  end
+
+  def state_options
+    %w(public closed).map do |v|
+      [I18n.t("ss.options.state.#{v}"), v]
+    end
+  end
+
+  def html_format_options
+    %w(shirasagi liquid).map do |v|
+      [I18n.t("cms.options.loop_format.#{v}"), v]
+    end
   end
 end

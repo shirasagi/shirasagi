@@ -9,8 +9,8 @@
   <dd><%= @item.order %></dd>
 
   <dt><%= @model.t :state %></dt>
-  <dd><%= I18n.t("ss.options.state.#{@item.state}") %></dd>
+  <dd><%= @item.label(:state) %></dd>
 
   <dt><%= @model.t :html_format %></dt>
-  <dd><%= I18n.t("cms.options.loop_format.#{@item.html_format}") %></dd>
+  <dd><%= @item.label(:html_format) %></dd>
 </dl>
