@@ -4,9 +4,7 @@ module Cms::Addon::Column::Layout
 
   included do
     field :layout, type: String
-    field :loop_setting_id, type: Integer
-    belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
-    permit_params :layout, :loop_setting_id
+    permit_params :layout
     validates :layout, liquid_format: true
   end
 end

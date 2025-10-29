@@ -5,9 +5,7 @@ module Cms::Addon
 
     included do
       field :html, type: String
-      field :loop_setting_id, type: Integer
-      belongs_to :loop_setting, class_name: 'Cms::LoopSetting'
-      permit_params :html, :loop_setting_id
+      permit_params :html
     end
   end
 end
