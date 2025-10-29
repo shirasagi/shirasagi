@@ -27,7 +27,7 @@
   <header>
     <h2>
       <%= gws_public_user_long_name((@user || @cur_user).long_name) %>
-      <% if @user.blank? || @user.id == @cur_user.id %>
+      <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && (@user.blank? || @user.id == @cur_user.id) %>
         <%= link_to t('gws/schedule.links.add_plan'), { action: :new }, { class: 'add-plan' } %>
       <% end %>
     </h2>
