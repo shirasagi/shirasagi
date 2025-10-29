@@ -6,8 +6,6 @@ class Gws::Column::Title < Gws::Column::Base
 
   permit_params :title, :explanation
 
-  before_save :set_required_optional
-
   class << self
     def as_plugin
       @plugin ||= Gws::Plugin.new(plugin_type: "column", path: "gws/title", model_class: self)
