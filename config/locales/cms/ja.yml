@@ -1956,7 +1956,7 @@ ja:
       link_text_too_short: リンクテキストは%{count}文字以上にしてください。
       alt_too_short: 代替テキストは%{count}文字以上にしてください。
       title_too_short: タイトルは%{count}文字以上にしてください。
-      check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      check_embedded_media: 動画や音声を本文に埋め込む場合は説明を記述してください。
       set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
       input_youtube_url: YouTubeのURLを入力してください。
       youtube_title_fetch_failed: タイトルの取得に失敗しました。
@@ -2003,7 +2003,7 @@ ja:
         check_interword_space:
           - 単語の文字間に不要なスペースが含まれている場合は削除してください。
         check_embedded_media:
-          - 動画や音声を本文に埋め込む場合は説明を記述してください。
+          - 動画や音声には説明テキストが必要です。
         set_iframe_title:
           - iframe要素またはframe要素には、アクセシビリティのためにtitle属性を設定する必要があります。
         alt_is_included_in_filename:
