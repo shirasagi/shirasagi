@@ -1923,7 +1923,7 @@ ja:
       invalid_adjacent_a: 隣接する同じリンクを一つのリンクにまとめてください。
       check_interword_space: 単語の文字間のスペースを確認してください。
       check_link_text: リンクのテキストを確認してください。
-      check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      check_embedded_media: 動画や音声を本文に埋め込む場合は説明を記述してください。
       set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
       input_youtube_url: YouTubeのURLを入力してください。
       youtube_title_fetch_failed: タイトルの取得に失敗しました。
@@ -1971,7 +1971,7 @@ ja:
         check_link_text:
           - リンク内のテキストは遷移先を表すものを設定してください。
         check_embedded_media:
-          - 動画や音声を本文に埋め込む場合は説明を記述してください。
+          - 動画や音声には説明テキストが必要です。
         set_iframe_title:
           - iframe要素またはframe要素には、アクセシビリティのためにtitle属性を設定する必要があります。
         alt_is_included_in_filename:

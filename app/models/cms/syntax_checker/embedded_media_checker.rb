@@ -29,6 +29,10 @@ class Cms::SyntaxChecker::EmbeddedMediaChecker
           next if attr_value.blank? || !media_src?(attr_value)
         end
 
+        text = Cms::SyntaxChecker::Base.extract_a11y_label(fragment, node)
+        text = text.strip if text
+        next if text.present?
+
         context.errors << {
           id: id,
           idx: idx,
