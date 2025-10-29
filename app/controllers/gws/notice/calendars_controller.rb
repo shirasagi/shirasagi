@@ -14,7 +14,8 @@ class Gws::Notice::CalendarsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
-    @crumbs << [t('ss.navi.calendar'), action: :index, folder_id: '-', category_id: '-']
+    label = @cur_site.notice_calendar_menu_label.presence || t('ss.navi.calendar')
+    @crumbs << [label, url_for(action: :index, folder_id: '-', category_id: '-')]
   end
 
   # override Gws::BaseFilter#set_gws_assets
@@ -27,7 +28,7 @@ class Gws::Notice::CalendarsController < ApplicationController
     criteria = @model.all.site(@cur_site)
     criteria = criteria.readable(@cur_user, site: @cur_site)
     criteria = criteria.without_deleted
-    if @s[:content_types].try(:include?, "back_numbers") && @cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number)
+    if @s[:content_types].try(:include?, "back_numbers") && @cur_site.notice_back_number_menu_visible?
       criteria = criteria.where(state: { "$in" => @model.public_states })
     else
       criteria = criteria.and_public

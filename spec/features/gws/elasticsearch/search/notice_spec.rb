@@ -9,7 +9,6 @@ describe "gws_elasticsearch_search_notice", type: :feature, dbscope: :example, j
   let(:permissions) do
     %w(
       use_gws_notice
-      use_gws_notice_back_number
       read_private_gws_notices
       edit_private_gws_notices
       delete_private_gws_notices
@@ -343,7 +342,11 @@ describe "gws_elasticsearch_search_notice", type: :feature, dbscope: :example, j
     before { login_user(user2) }
 
     context "search all" do
-      context "with use_gws_notice_back_number" do
+      context "when notice_back_number_menu_state is set to 'show'" do
+        before do
+          site.update!(notice_back_number_menu_state: 'show')
+        end
+
         it do
           visit index_path
           within '.index form' do
@@ -365,14 +368,9 @@ describe "gws_elasticsearch_search_notice", type: :feature, dbscope: :example, j
         end
       end
 
-      context "without use_gws_notice_back_number" do
-        let(:permissions) do
-          %w(
-            use_gws_notice
-            read_private_gws_notices
-            edit_private_gws_notices
-            delete_private_gws_notices
-          )
+      context "when notice_back_number_menu_state is set to 'hide'" do
+        before do
+          site.update!(notice_back_number_menu_state: 'hide')
         end
 
         it do

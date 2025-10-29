@@ -24,7 +24,7 @@ class Gws::Notice::RedirectsController < ApplicationController
       return
     end
 
-    if @cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number)
+    if @cur_site.notice_back_number_menu_visible?
       redirect_to gws_notice_back_number_path
       return
     end

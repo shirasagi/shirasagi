@@ -18,6 +18,24 @@ module Gws::Addon::Notice::GroupSetting
 
     permit_params :notice_new_days, :notice_severity, :notice_browsed_state, :notice_toggle_browsed
     permit_params :notice_folder_navi_open_state
+
+    %w(back_number calendar).each do |name|
+      field "notice_#{name}_menu_state", type: String, default: 'show'
+      field "notice_#{name}_menu_label", type: String, localize: true
+
+      validates "notice_#{name}_menu_state", inclusion: { in: %w(show hide), allow_blank: true }
+      validates "notice_#{name}_menu_label", length: { maximum: 40 }
+
+      permit_params "notice_#{name}_menu_state", "notice_#{name}_menu_label"
+
+      alias_method("notice_#{name}_menu_state_options", "notice_menu_state_options")
+      define_method("notice_#{name}_menu_invisible?") do
+        send("notice_#{name}_menu_state") == "hide"
+      end
+      define_method("notice_#{name}_menu_visible?") do
+        !send("notice_#{name}_menu_invisible?")
+      end
+    end
   end
 
   def notice_new_days
@@ -50,5 +68,19 @@ module Gws::Addon::Notice::GroupSetting
 
   def notice_folder_navi_expand_all?
     notice_folder_navi_open_state == "expand_all"
+  end
+
+  def notice_menu_state_options
+    %w(show hide).map do |v|
+      [ I18n.t("ss.options.state.#{v}"), v ]
+    end
+  end
+
+  def notice_back_number_menu_label_placeholder
+    I18n.t("gws/notice.back_number")
+  end
+
+  def notice_calendar_menu_label_placeholder
+    I18n.t('ss.navi.calendar')
   end
 end

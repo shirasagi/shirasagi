@@ -3,7 +3,7 @@
   addon[:display_body] = "hide"
 %>
 
-<dl class="see addon-gws-notice-group-setting">
+<dl class="see">
   <dt><%= @model.t :notice_new_days %></dt>
   <dd><%= @item.notice_new_days %> <%= t("datetime.prompts.day") %></dd>
 
@@ -18,4 +18,17 @@
 
   <dt><%= @model.t :notice_folder_navi_open_state %></dt>
   <dd><%= @item.label(:notice_folder_navi_open_state) || t("gws/notice.options.notice_folder_navi_open_state.default") %></dd>
+
+  <% %w(back_number calendar).each do |type| %>
+    <dt><%= @model.t("notice_#{type}_menu_state") %></dt>
+    <dd>
+      <%=
+        if @item.send("notice_#{type}_menu_visible?")
+          @item.try("notice_#{type}_menu_label").presence || @item.try("notice_#{type}_menu_label_placeholder")
+        else
+          @item.label("notice_#{type}_menu_state")
+        end
+      %>
+    </dd>
+  <% end %>
 </dl>

@@ -3,7 +3,7 @@
   addon[:display_body] = "hide"
 %>
 
-<dl class="see addon-gws-notice-group-setting">
+<dl class="see">
   <dt><%= @model.t :notice_new_days %><%= @model.tt :notice_new_days %></dt>
   <dd class="short"><%= f.number_field :notice_new_days %> <span class="postfix"><%= t("datetime.prompts.day") %></span></dd>
 
@@ -19,4 +19,14 @@
   <dt><%= @model.t :notice_folder_navi_open_state %><%= @model.tt :notice_folder_navi_open_state %></dt>
   <dd><%= f.select :notice_folder_navi_open_state, @item.notice_folder_navi_open_state_options, include_blank: true %></dd>
   <dd><%= ss_input_guide :notice_folder_navi_open_state, model: @model %></dd>
+
+  <% %w(back_number calendar).each do |type| %>
+    <dt><%= @model.t("notice_#{type}_menu_state") %><%= @model.tt("notice_#{type}_menu_state") %></dt>
+    <dd>
+      <div class="input-group gap-5 align-items-center">
+        <%= f.select "notice_#{type}_menu_state", @item.send("notice_#{type}_menu_state_options") %>
+        <%= f.text_field("notice_#{type}_menu_label", value: @item.send("notice_#{type}_menu_label"), placeholder: @item.send("notice_#{type}_menu_label_placeholder")) %>
+      </div>
+    </dd>
+  <% end %>
 </dl>
