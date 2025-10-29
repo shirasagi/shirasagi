@@ -47,7 +47,6 @@ ja:
 
   gws_role:
     use_gws_notice: お知らせの利用
-    use_gws_notice_back_number: お知らせバックナンバーの利用
     read_other_gws_notices: お知らせの閲覧（全て）
     read_private_gws_notices: お知らせの閲覧（所有）
     edit_other_gws_notices: お知らせの編集（全て）
@@ -146,6 +145,10 @@ ja:
         notice_severity: 重要度
         notice_toggle_browsed: 既読への変更
         notice_folder_navi_open_state: フォルダーナビの展開
+        notice_back_number_menu_state: バックナンバーメニュー
+        notice_back_number_menu_label: バックナンバーメニューラベル
+        notice_calendar_menu_state: カレンダーメニュー
+        notice_calendar_menu_label: カレンダーメニューラベル
       gws/addon/notice/calendar:
         start_on: 開始日
         end_on: 終了日

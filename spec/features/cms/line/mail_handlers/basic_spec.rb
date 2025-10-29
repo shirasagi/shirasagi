@@ -30,17 +30,17 @@ describe "cms/line/mail_handlers", type: :feature, dbscope: :example, js: true d
       wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic dd", text: name)
       expect(page).to have_css("#addon-basic dd", text: filename)
-      expect(page).to have_css("#addon-cms-agents-addons-line-mail_handler dd",
+      expect(page).to have_css("#addon-cms-agents-addons-mail_handler dd",
         text: I18n.t('cms.options.subject_state.include'))
-      expect(page).to have_css("#addon-cms-agents-addons-line-mail_handler dd", text: terminate_line)
-      expect(page).to have_css("#addon-cms-agents-addons-line-mail_handler dd", text: start_line)
+      expect(page).to have_css("#addon-cms-agents-addons-mail_handler dd", text: terminate_line)
+      expect(page).to have_css("#addon-cms-agents-addons-mail_handler dd", text: start_line)
     end
 
     it "#show" do
       visit show_path
       expect(page).to have_css("#addon-basic dd", text: item.name)
       expect(page).to have_css("#addon-basic dd", text: item.filename)
-      expect(page).to have_css("#addon-cms-agents-addons-line-mail_handler dd",
+      expect(page).to have_css("#addon-cms-agents-addons-mail_handler dd",
         text: I18n.t('cms.options.subject_state.disabled'))
     end
 
@@ -57,10 +57,10 @@ describe "cms/line/mail_handlers", type: :feature, dbscope: :example, js: true d
       wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#addon-basic dd", text: name)
       expect(page).to have_css("#addon-basic dd", text: filename)
-      expect(page).to have_css("#addon-cms-agents-addons-line-mail_handler dd",
+      expect(page).to have_css("#addon-cms-agents-addons-mail_handler dd",
         text: I18n.t('cms.options.subject_state.include'))
-      expect(page).to have_css("#addon-cms-agents-addons-line-mail_handler dd", text: terminate_line)
-      expect(page).to have_css("#addon-cms-agents-addons-line-mail_handler dd", text: start_line)
+      expect(page).to have_css("#addon-cms-agents-addons-mail_handler dd", text: terminate_line)
+      expect(page).to have_css("#addon-cms-agents-addons-mail_handler dd", text: start_line)
     end
 
     it "#delete" do

@@ -29,6 +29,10 @@ class Cms::SyntaxChecker::EmbeddedMediaChecker
           next if attr_value.blank? || !media_src?(attr_value)
         end
 
+        text = Cms::SyntaxChecker::Base.extract_a11y_label(context, node)
+        text = text.strip if text
+        next if text.present?
+
         code = Cms::SyntaxChecker::Base.outer_html_summary(node)
         context.errors << Cms::SyntaxChecker::CheckerError.new(
           context: context, content: content, code: code, checker: self, error: :check_embedded_media)

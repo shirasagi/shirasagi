@@ -16,9 +16,9 @@ class Gws::Notice::BackNumbersController < ApplicationController
   private
 
   def check_permission
-    # :use_gws_notice と :use_gws_notice_back_number の両方が必要
+    # :use_gws_notice ＆サイト設定で表示になっている必要がある。
     super
-    raise "404" unless @cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number)
+    raise "404" unless @cur_site.notice_back_number_menu_visible?
   end
 
   def append_view_paths
@@ -37,7 +37,8 @@ class Gws::Notice::BackNumbersController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_notice_label || t('modules.gws/notice'), gws_notice_main_path]
-    @crumbs << [t('gws/notice.back_number'), url_for(action: :index, folder_id: '-', category_id: '-')]
+    label = @cur_site.notice_back_number_menu_label.presence || t('gws/notice.back_number')
+    @crumbs << [label, url_for(action: :index, folder_id: '-', category_id: '-')]
   end
 
   def set_items

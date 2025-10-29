@@ -18,7 +18,7 @@ class Gws::Discussion::Post
 
   def save_clone(new_forum, new_topic)
     item = self.class.new
-    item.attributes = self.attributes
+    item.attributes = self.attributes.select { |k| self.fields.key?(k) }
     item.id = nil
     item.name = new_topic.name
 

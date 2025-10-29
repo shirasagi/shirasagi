@@ -69,7 +69,6 @@ edit_private_gws_monitor_posts
 read_private_gws_monitor_posts
 trash_private_gws_monitor_posts
 use_gws_notice
-use_gws_notice_back_number
 read_private_gws_notices
 use_gws_portal_group_settings
 use_gws_portal_organization_settings

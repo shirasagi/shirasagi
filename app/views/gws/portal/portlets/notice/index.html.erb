@@ -21,7 +21,7 @@
               <%= md_icons.outlined "error_outline", tag: :i, size: 16, title: item.label(:severity), class: "severity-#{item.severity}", aria: { hidden: nil } %>
             <% end %>
             <%= link_to item.name, gws_notice_readable_path(folder_id: '-', category_id: '-', id: item), class: 'name' %>
-            <% if item.term_enabled? %>
+            <% if @cur_site.notice_calendar_menu_visible? && item.term_enabled? %>
               <%= link_to gws_notice_calendars_path(@portal.notice_calendar_params(item)), { class: "index-calendar-link" } do %>
                 <i class="material-icons calendar-month md-18">calendar_month</i>
               <% end %>

@@ -26,7 +26,7 @@ class Gws::Elasticsearch::Setting::Notice
   private
 
   def and_public(_date = nil)
-    if cur_user.gws_role_permit_any?(cur_site, :use_gws_notice_back_number)
+    if cur_site.notice_back_number_menu_visible?
       [ { term: { 'state' => 'public' } } ]
     else
       super

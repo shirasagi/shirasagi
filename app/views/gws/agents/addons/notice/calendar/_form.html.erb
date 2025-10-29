@@ -1,3 +1,10 @@
+<%
+  return unless @cur_site.notice_calendar_menu_visible?
+
+  addon ||= local_assigns.fetch(:addon, {})
+  addon[:head] = @cur_site.notice_calendar_menu_label.presence || t('ss.navi.calendar')
+%>
+
 <dl class="see mod-gws-notice-calendar">
   <dt><%= @model.t :term %><%= @model.tt :term %></dt>
   <dd>

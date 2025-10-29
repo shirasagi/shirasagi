@@ -1015,7 +1015,7 @@ ja:
       cms/line/service/image_map: イメージマップ
       cms/line/statistic/body: 統計情報
       cms/line/statistic/info: 詳細情報
-      cms/line/mail_handler: 本文設定
+      cms/mail_handler: メール本文設定
       cms/clipboard_copy: クリップボードへコピー
       cms/logo_setting: ロゴ設定
       cms/print: 印刷ボタンの設定
@@ -1666,10 +1666,11 @@ ja:
         order: 並び順
         handle_state: ステータス
         statistic_state: 統計情報
-      cms/addon/line/mail_handler:
+      cms/addon/mail_handler:
         subject_state: メールタイトル
         start_line: 開始文字列
         terminate_line: 終端文字列
+        auto_link_state: HTMLオートリンク
       cms/addon/line/deliver_category/pick_up:
         st_page_ids: ページ
       cms/line/test_member:
@@ -1958,7 +1959,7 @@ ja:
       link_text_too_short: リンクテキストは%{count}文字以上にしてください。
       alt_too_short: 代替テキストは%{count}文字以上にしてください。
       title_too_short: タイトルは%{count}文字以上にしてください。
-      check_embedded_media: 動画や音声を含む場合、説明があるか確認してください。
+      check_embedded_media: 動画や音声を本文に埋め込む場合は説明を記述してください。
       set_iframe_title: iframe要素またはframe要素にtitle属性を設定してください。
       input_youtube_url: YouTubeのURLを入力してください。
       youtube_title_fetch_failed: タイトルの取得に失敗しました。
@@ -2005,7 +2006,7 @@ ja:
         check_interword_space:
           - 単語の文字間に不要なスペースが含まれている場合は削除してください。
         check_embedded_media:
-          - 動画や音声を本文に埋め込む場合は説明を記述してください。
+          - 動画や音声には説明テキストが必要です。
         set_iframe_title:
           - iframe要素またはframe要素には、アクセシビリティのためにtitle属性を設定する必要があります。
         alt_is_included_in_filename:
@@ -2367,7 +2368,7 @@ ja:
       statistic_state:
         - 有効にするとメッセージ送信時に統計情報を保存します。
 
-    cms/addon/line/mail_handler:
+    cms/addon/mail_handler:
       subject_state:
         - メールタイトルを本文内に含めるか設定できます。
       start_line:
@@ -2377,6 +2378,8 @@ ja:
         - メール本文の終端文字列を入力します。
         - 本文内に終端文字列がある場合、それ以降の文章が削除されます。
         - メールのシグネチャを削除する為に利用できます。
+      auto_link_state:
+        - メール本文をHTMLに変換する際にリンクとメールアドレスをaタグに置換するか設定します。
 
     cms/site:
       name:

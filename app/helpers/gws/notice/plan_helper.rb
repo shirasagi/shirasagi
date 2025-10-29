@@ -32,14 +32,15 @@ module Gws::Notice::PlanHelper
   end
 
   def link_to_calendar(item, text: nil, only_icon: false)
+    return unless @cur_site.notice_calendar_menu_visible?
     return unless item.term_enabled?
 
     unless item.class.public_states.include?(item.state)
       return only_icon ? nil : text.presence
     end
 
-    if item.closed? && !@cur_user.gws_role_permit_any?(@cur_site, :use_gws_notice_back_number)
-      # @item はバックナンバー。しかし、バックナンバーを表示する権限がない
+    if item.closed? && !@cur_site.notice_back_number_menu_visible?
+      # @item はバックナンバー。しかし、バックナンバーが非表示に設定されている
       return only_icon ? nil : text.presence
     end
 
@@ -53,7 +54,7 @@ module Gws::Notice::PlanHelper
     ].compact.join(" ").html_safe
 
     if only_icon
-      aria = { label: t("ss.navi.calendar") }
+      aria = { label: @cur_site.notice_calendar_menu_label.presence || t("ss.navi.calendar") }
     end
 
     link_to label, path, class: "index-calendar-link", aria: aria, style: "display: inline-flex; align-items: center; gap: 5px;"

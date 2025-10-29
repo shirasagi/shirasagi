@@ -13,13 +13,15 @@ module MailPage::Node
     include Event::Addon::PageList
     include Category::Addon::Setting
     include MailPage::Addon::MailSetting
-    include Cms::Addon::Line::MailHandler
+    include Cms::Addon::MailHandler
     include Urgency::Addon::MailPage
     include Cms::Addon::Release
     include Cms::Addon::GroupPermission
     include History::Addon::Backup
     include Cms::ChildList
     include Cms::Lgwan::Node
+
+    self.use_mail_body_to_html = true
 
     default_scope ->{ where(route: "mail_page/page") }
   end
