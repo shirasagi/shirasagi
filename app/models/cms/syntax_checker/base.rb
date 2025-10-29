@@ -31,6 +31,60 @@ module Cms::SyntaxChecker::Base
     def outer_html_summary(node)
       node.to_s.gsub(/[\r\n]|&nbsp;|\u00a0/, "")
     end
+
+    def extract_a11y_label(fragment, node)
+      if node.key?("aria-labelledby")
+        aria_labelled_by = node["aria-labelledby"]
+        if aria_labelled_by.present?
+          return fragment.css("##{aria_labelled_by}").text
+        else
+          return
+        end
+      end
+
+      if node.key?("aria-label")
+        return node["aria-label"]
+      end
+
+      text_parts = []
+      img_elements = node.css("[aria-labelledby],[aria-label],[alt],[title]")
+      img_elements.each do |img_element|
+        if img_element.key?("aria-labelledby")
+          aria_labelled_by = img_element["aria-labelledby"]
+          if aria_labelled_by.present?
+            aria_labelled_by_elment = fragment.css("##{aria_labelled_by}")
+            if aria_labelled_by_elment
+              text_parts << aria_labelled_by_elment.text
+            end
+          end
+          next
+        end
+
+        if img_element.key?("aria-label")
+          text_parts << img_element["aria-label"]
+          next
+        end
+
+        if img_element.key?("alt")
+          text_parts << img_element["alt"]
+          next
+        end
+
+        if img_element.key?("title")
+          text_parts << img_element["title"]
+          next
+        end
+      end
+
+      text_parts.compact!
+      if text_parts.present?
+        return text_parts.join(" ")
+      end
+
+      return node.text if node.text.present?
+
+      node["title"]
+    end
   end
 
   def check(context, id, idx, raw_html, fragment)

@@ -11,7 +11,7 @@ describe Cms::SyntaxChecker::EmbeddedMediaChecker, type: :model, dbscope: :examp
     end
     let(:context) { Cms::SyntaxChecker::CheckerContext.new(cms_site, cms_user, [ content ], []) }
 
-    context "with single embedded media tag" do
+    context "with single embedded media tag without label" do
       shared_examples "what embedded media tag is" do
         it do
           described_class.new.check(context, id, idx, raw_html, fragment)
@@ -103,6 +103,85 @@ describe Cms::SyntaxChecker::EmbeddedMediaChecker, type: :model, dbscope: :examp
           described_class.new.check(context, id, idx, raw_html, fragment)
           expect(context.errors).to be_blank
         end
+      end
+    end
+
+    context "with single embedded media tag with label" do
+      shared_examples "what embedded media tag is" do
+        it do
+          described_class.new.check(context, id, idx, raw_html, fragment)
+          expect(context.errors).to be_blank
+        end
+      end
+
+      context "when embed tag is given" do
+        let(:media_html) { '<embed type="video/webm" src="/fs/1/1/1/_/video.mp4" title="動画の説明テキスト">' }
+        let(:media_htmls) { [ media_html ] }
+
+        it_behaves_like "what embedded media tag is"
+      end
+
+      context "when embed with data-url tag is given" do
+        let(:media_html) do
+          '<embed type="video/webm" src="data:video/webm;base64,SGVsbG8sIFdvcmxkIQ==" aria-label="動画の説明テキスト">'
+        end
+        let(:media_htmls) { [ media_html ] }
+
+        it_behaves_like "what embedded media tag is"
+      end
+
+      context "when video tag is given" do
+        let(:media_html) do
+          <<~HTML
+            <video type="video/webm" src="/fs/1/1/1/_/video.mp4" aria-labelledby="vide-description"></video>
+            <div id="vide-description">動画の説明テキスト</div>
+          HTML
+        end
+        let(:media_htmls) { [ media_html ] }
+
+        it_behaves_like "what embedded media tag is"
+      end
+
+      context "when audio tag is given" do
+        let(:media_html) { '<audio controls="" src="/fs/1/1/1/_/sound.mp3" title="音声の説明テキスト"></audio>' }
+        let(:media_htmls) { [ media_html ] }
+
+        it_behaves_like "what embedded media tag is"
+      end
+
+      context "when iframe with media file is given" do
+        let(:media_html) { '<iframe src="/fs/1/1/1/_/sound.mp3" aria-label="音声の説明テキスト"></iframe>' }
+        let(:media_htmls) { [ media_html ] }
+
+        it_behaves_like "what embedded media tag is"
+      end
+
+      context "when iframe with youtube is given" do
+        let(:media_html) do
+          <<~HTML
+            <iframe src="https://www.youtube.com/watch?v=D63lFSqYGT4" aria-labelledby="youtube-description"></iframe>
+            <div id="youtube-description">動画の説明テキスト</div>
+          HTML
+        end
+        let(:media_htmls) { [ media_html ] }
+
+        it_behaves_like "what embedded media tag is"
+      end
+
+      context "when a-tag with media file is given" do
+        let(:media_html) { '<a href="/fs/1/1/1/_/sound.mp3" title="音声の説明テキスト"></a>' }
+        let(:media_htmls) { [ media_html ] }
+
+        it_behaves_like "what embedded media tag is"
+      end
+
+      context "when a-tag with youtube is given" do
+        let(:media_html) do
+          '<a href="https://www.youtube.com/watch?v=D63lFSqYGT4" aria-label="動画の説明テキスト"></a>'
+        end
+        let(:media_htmls) { [ media_html ] }
+
+        it_behaves_like "what embedded media tag is"
       end
     end
 
