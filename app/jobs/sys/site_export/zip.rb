@@ -1,11 +1,14 @@
 class Sys::SiteExport::Zip
   include ActiveModel::Model
 
-  attr_accessor :path, :output_dir, :site_dir, :exclude_public_files, :task
+  attr_accessor :path, :output_dir, :src_site, :exclude_public_files, :task
+
+  def site_dir
+    src_site.path
+  end
 
   def compress
-    task_log "-- archive \"#{@output_dir}/\" and \"#{@site_dir}\" to \"#{@path}\""
-
+    task_log "-- archive \"#{@output_dir}/\" and \"#{site_dir}\" to \"#{@path}\""
     entry_set = Set.new
     comment = "shirasagi #{SS.version} site export data created at #{Time.zone.now.iso8601}"
     SS::Zip::Writer.create(@path, comment: comment) do |zip|
@@ -46,10 +49,10 @@ class Sys::SiteExport::Zip
     source_files = source_files.select { |_src_file, dest_file| dest_file.present? }
     enumerators << source_files
 
-    if FileTest.directory?(@site_dir)
-      pub_files = Find.find(@site_dir).lazy
+    if FileTest.directory?(site_dir)
+      pub_files = Find.find(site_dir).lazy
       pub_files = pub_files.reject { |src_file| excluded_public?(src_file) }
-      pub_files = pub_files.map { |src_file| [ src_file, src_file.sub(/^#{@site_dir}/, 'public') ] }
+      pub_files = pub_files.map { |src_file| [ src_file, src_file.sub(/^#{site_dir}/, 'public') ] }
       enumerators << pub_files
     end
 
@@ -80,9 +83,24 @@ class Sys::SiteExport::Zip
     end
   end
 
+  def same_domain_site_paths
+    @same_domain_site_paths ||= begin
+      paths = src_site.same_domain_sites.map(&:path) - [site_dir]
+      paths.map { |path| path + "/" }
+    end
+  end
+
   def excluded_public?(path)
     return true if path.start_with?(site_fs_path)
     return true if @exclude_public_files.include?(path)
+
+    # 自身が親サイトの場合、子サイトのpublicを除外する
+    if src_site.children.present?
+      same_domain_site_paths.each do |site_path|
+        return true if path.start_with?(site_path)
+      end
+    end
+
     false
   end
 end
