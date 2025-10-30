@@ -151,7 +151,10 @@ class Webmail::MailsController < ApplicationController
   def edit
     raise "404" unless @item.draft?
 
-    @item.set_ref_files(@item.attachments)
+    ref_files = @item.attachments.map do |attachment|
+      Webmail::PartFile.new(webmail_mode: @webmail_mode, account: params[:account], mail: @item, part: attachment)
+    end
+    @item.set_ref_files(ref_files)
 
     @dedicated = true
     render layout: "ss/dedicated"
@@ -179,7 +182,10 @@ class Webmail::MailsController < ApplicationController
     if resp
       @item.destroy_files
     else
-      @item.set_ref_files(@item.attachments)
+      ref_files = @item.attachments.map do |attachment|
+        Webmail::PartFile.new(webmail_mode: @webmail_mode, account: params[:account], mail: @item, part: attachment)
+      end
+      @item.set_ref_files(ref_files)
     end
 
     render_create resp, render_opts
