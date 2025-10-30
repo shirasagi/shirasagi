@@ -4,7 +4,7 @@ module Cms::SyntaxChecker::Base
   class << self
     def each_html_with_index(content, &block)
       Array(content.content).each_with_index do |value, index|
-        value = value.strip
+        value = value.to_s.strip
         # 'value' must be wrapped with "<div>"
         value = "<div>#{value}</div>" if !value.start_with?("<div>")
 
