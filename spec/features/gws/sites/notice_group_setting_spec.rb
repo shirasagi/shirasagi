@@ -18,7 +18,7 @@ describe "gws_sites", type: :feature, dbscope: :example, js: true do
   let(:notice_back_number_menu_state_label) { I18n.t("ss.options.state.#{notice_back_number_menu_state}") }
   let(:notice_back_number_menu_label) { "back_number-#{unique_id}" }
   let(:notice_calendar_menu_state) { %w(show hide).sample }
-  let(:notice_calendar_menu_state_label) { I18n.t("ss.options.state.#{notice_back_number_menu_state}") }
+  let(:notice_calendar_menu_state_label) { I18n.t("ss.options.state.#{notice_calendar_menu_state}") }
   let(:notice_calendar_menu_label) { "calendar-#{unique_id}" }
 
   context "basic crud" do
