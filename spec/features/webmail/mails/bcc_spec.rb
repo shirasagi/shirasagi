@@ -8,6 +8,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     let(:user4) { create :webmail_user, name: unique_id, email: "#{unique_id}@example.jp" }
     let(:item_subject) { "subject-#{unique_id}" }
     let(:item_texts) { Array.new(rand(1..10)) { "message-#{unique_id}" } }
+    let(:content) { Rails.root.join("spec/fixtures/ss/shirasagi.pdf") }
 
     shared_examples "webmail/mails send with bcc flow" do
       before do
@@ -35,6 +36,8 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "bcc", with: user4.email + "\n"
             fill_in "item[subject]", with: item_subject
             fill_in "item[text]", with: item_texts.join("\n")
+
+            ss_upload_file content, addon: "#addon-webmail-agents-addons-mail_file"
 
             click_on I18n.t('ss.buttons.draft_save')
           end
@@ -80,8 +83,11 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           expect(mail.cc.first).to eq user3.email
           expect(mail.bcc.first).to eq user4.email
           expect(mail_subject(mail)).to eq item_subject
-          expect(mail.body.multipart?).to be_falsey
-          expect(mail_body(mail)).to include(item_texts.join("\r\n"))
+          expect(mail.body.multipart?).to be_truthy
+          expect(mail.parts).to have(2).items
+          expect(mail_body(mail.parts[0])).to include(item_texts.join("\r\n"))
+          expect(mail.parts[1]["Content-Type"].decoded).to include("application/pdf")
+          expect(mail.parts[1]["Content-Disposition"].decoded).to include(::File.basename(content))
         end
 
         # confirm sent box
