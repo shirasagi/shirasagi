@@ -115,8 +115,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       it "cannot publish page in edit view without ignore_alert permission" do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         click_on page1.name
@@ -128,6 +127,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           click_on I18n.t("ss.buttons.publish_save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         within "#menu" do
           click_on I18n.t("article.page_navi.back_to_index")

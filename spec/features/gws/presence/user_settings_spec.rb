@@ -30,6 +30,7 @@ describe "gws_presence_user_settings", type: :feature, dbscope: :example do
         select I18n.t("ss.options.state.enabled"), from: 'item[sync_unavailable_state]'
         click_button I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within first('#navi') do
         expect(page).to have_text I18n.t("mongoid.models.gws/user_setting")
