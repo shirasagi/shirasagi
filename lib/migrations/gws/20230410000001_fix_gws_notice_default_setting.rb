@@ -16,9 +16,6 @@ class SS::Migration20230410000001
     if portal.portal_notice_browsed_state.blank?
       portal.set(portal_notice_browsed_state: site.notice_browsed_state)
     end
-    if portal.portal_notice_severity.blank?
-      portal.set(portal_notice_severity: site.notice_severity)
-    end
   end
 
   def change_portlet(portlet)
