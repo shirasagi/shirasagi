@@ -528,5 +528,52 @@ describe Article::Page::ImportJob, dbscope: :example do
         expect(page6.category_ids).to match_array []
       end
     end
+
+    context "with form" do
+      let(:path) { "#{Rails.root}/spec/fixtures/article/article_import_test_6.csv" }
+      let(:ss_file) do
+        SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
+          ::FileUtils.cp(path, file.path)
+        end
+      end
+      let!(:form) { create(:cms_form, cur_site: site, state: 'public', name: '定型フォーム1', sub_type: 'static') }
+      let!(:column) { create(:cms_column_free, cur_site: site, cur_form: form, name: '自由入力', required: "optional", order: 1) }
+      let!(:node) do
+        create :article_node_page, cur_site: site, st_form_ids: [form.id], st_form_default_id: form.id
+      end
+
+      before do
+        job = Article::Page::ImportJob.bind(site_id: site.id, node_id: node.id, user_id: cms_user.id)
+        expect { ss_perform_now(job, ss_file.id) }.to output(include("import start #{ss_file.name}\n")).to_stdout
+      end
+
+      it do
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        end
+
+        expect(Article::Page.site(site).count).to eq 2
+
+        Article::Page.site(site).where(filename: "#{node.filename}/test_1.html").first.tap do |page|
+          expect(page).to be_present
+          expect(page.form).to eq form
+          expect(page.column_values.count).to eq 1
+          page.column_values.first.tap do |column_value|
+            expect(column_value.value).to eq 'test_1_column_value_free'
+            expect(column_value.alignment).to be_nil
+          end
+        end
+        Article::Page.site(site).where(filename: "#{node.filename}/test_2.html").first.tap do |page|
+          expect(page).to be_present
+          expect(page.form).to eq form
+          expect(page.column_values.count).to eq 1
+          page.column_values.first.tap do |column_value|
+            expect(column_value.value).to eq 'test_2_column_value_free'
+            expect(column_value.alignment).to be_nil
+          end
+        end
+      end
+    end
   end
 end

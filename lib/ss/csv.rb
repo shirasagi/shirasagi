@@ -422,7 +422,7 @@ class SS::Csv
     end
 
     def split_column_name_for_csv(name)
-      name.split(/(?<!\\)\//, 2)
+      name.split(/(?<!\\)\//)
     end
 
     def escape_column_name_for_csv(name)
