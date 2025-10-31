@@ -116,7 +116,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
           end
           within first("form .index tbody tr") do
-            fill_in "item[files][][name]", with: "modify-1.gif"
+            # 全角括弧と全角数字を入力
+            fill_in "item[files][][name]", with: "ファイル（１）.gif"
           end
           wait_for_cbox_closed do
             within "form" do
@@ -126,7 +127,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
         within "form#item-form" do
           within ".column-value-cms-column-fileupload" do
-            expect(page).to have_css('.file-view', text: 'modify-1.gif')
+            # 全角括弧と全角数字は半角へ自動的に返還される
+            expect(page).to have_css('.file-view', text: "ファイル(1).gif")
 
             fill_in "item[column_values][][in_wrap][text]", with: ss_japanese_text
           end
