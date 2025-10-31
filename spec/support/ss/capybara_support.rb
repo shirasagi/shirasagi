@@ -42,6 +42,7 @@ module SS::CapybaraSupport
       options.add_argument('window-size=1280,800')
       options.add_argument('log-level=0')
       options.add_argument('lang=ja-JP')
+      options.add_argument('disable-search-engine-choice-screen')
       if headless != '0'
         options.add_argument('headless=new')
         options.add_argument('disable-gpu')

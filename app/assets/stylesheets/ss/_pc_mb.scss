@@ -479,7 +479,8 @@ _:future,
     }
     &.current,
     &:hover {
-      background: init.$white url(/assets/img/ic-cms-on.png) no-repeat 20px center;
+      background: init.$white url(/assets/img/ic-cms-on.png) no-repeat 20px
+        center;
       @include init.mb {
         background-position: 10px center;
       }
@@ -494,7 +495,8 @@ _:future,
     }
     &.current,
     &:hover {
-      background: init.$white url(/assets/img/ic-gws-on.png) no-repeat 20px center;
+      background: init.$white url(/assets/img/ic-gws-on.png) no-repeat 20px
+        center;
       @include init.mb {
         background-position: 10px center;
       }
@@ -509,7 +511,8 @@ _:future,
     }
     &.current,
     &:hover {
-      background: init.$white url(/assets/img/ic-sns-on.png) no-repeat 20px center;
+      background: init.$white url(/assets/img/ic-sns-on.png) no-repeat 20px
+        center;
       @include init.mb {
         background-position: 10px center;
       }
@@ -524,7 +527,8 @@ _:future,
     }
     &.current,
     &:hover {
-      background: init.$white url(/assets/img/ic-mail-on.png) no-repeat 20px center;
+      background: init.$white url(/assets/img/ic-mail-on.png) no-repeat 20px
+        center;
       @include init.mb {
         background-position: 10px center;
       }
@@ -764,8 +768,8 @@ _:future,
       color: init.$black;
       font-size: init.$px12;
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-preview-on.png) no-repeat center
-          5px;
+        background: init.$gray1 url(/assets/img/ic-preview-on.png) no-repeat
+          center 5px;
         color: init.$orange;
         text-decoration: none;
       }
@@ -1035,11 +1039,13 @@ _:future,
     }
 
     &.management:hover {
-      background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 35px center;
+      background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 35px
+        center;
     }
 
     &.trash:hover {
-      background: init.$gray1 url(/assets/img/ic-trash.png) no-repeat 35px center;
+      background: init.$gray1 url(/assets/img/ic-trash.png) no-repeat 35px
+        center;
     }
   }
   h3 a {
@@ -1148,8 +1154,8 @@ _:future,
       background: url(/assets/img/ic-arrow16-off.png) no-repeat 60px center;
 
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
-          center;
+        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat
+          60px center;
       }
 
       &.management {
@@ -1157,7 +1163,8 @@ _:future,
       }
 
       &.management:hover {
-        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px
+          center;
       }
     }
   }
@@ -1186,7 +1193,8 @@ _:future,
     }
     &:hover h2,
     &.active h2 {
-      background: init.$gray1 url(/assets/img/ic-arrow-on.png) no-repeat 190px center;
+      background: init.$gray1 url(/assets/img/ic-arrow-on.png) no-repeat 190px
+        center;
       color: init.$orange;
     }
     &.active h2 {
@@ -1266,13 +1274,14 @@ _:future,
       }
       color: init.$black;
       &:hover {
-        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat 60px
-          center;
+        background: init.$gray1 url(/assets/img/ic-arrow16-on.png) no-repeat
+          60px center;
         color: init.$orange;
         text-decoration: none;
       }
       &:hover.management {
-        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px center;
+        background: init.$gray1 url(/assets/img/ic-setting.png) no-repeat 60px
+          center;
         color: init.$orange;
         text-decoration: none;
       }
@@ -4282,3 +4291,11 @@ span[class*=" ss-icon-"]::before {
   margin-right: 5px !important;
   font-size: 32px !important;
 }
+
+// select > optgroup.title {
+//   font-weight: bold;
+//   color: #000;
+//   padding: 3px 6px;
+//   font-size: 1em;
+//   background: none;
+// }

@@ -9,5 +9,7 @@ FactoryBot.define do
     description { "description-#{unique_id}" }
     order { rand(10..20) }
     html { "html-#{unique_id}" }
+    html_format { "shirasagi" }
+    state { "public" }
   end
 end
