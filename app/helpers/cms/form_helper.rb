@@ -61,4 +61,38 @@ module Cms::FormHelper
     st_forms = st_forms.allow(:read, @cur_user, site: @cur_site)
     st_forms.order_by(update: 1)
   end
+
+  # 指定データ配列(snippet_option_list)を select用optgroup(option)構造へ変換
+  #
+  # items: [["test/test1", id1, {data}], ["test/test2", id2, {data}], ["root", id3, {data}]]
+  # 戻り値: HTML Safe
+  def options_with_optgroup_for_snippets(items, input_direct_label: nil)
+    input_direct_label ||= t("cms.input_directly")
+    groups = Hash.new { |h, k| h[k] = [] }
+    nogroup = []
+    items.each do |name, id, attrs|
+      if name.include?("/")
+        group, leaf = name.split("/", 2)
+        groups[group] << [leaf, id, attrs]
+      else
+        nogroup << [name, id, attrs]
+      end
+    end
+    html = []
+    # 直接入力optionはグループ外で必ず先頭
+    html << tag.option(input_direct_label, value: "")
+    # グループ外（ルート）option
+    nogroup.each do |name, id, attrs|
+      html << tag.option(name, value: id, data: attrs)
+    end
+    # グループoptgroup(全グループでclass: 'title')
+    groups.keys.sort.each do |group|
+      html << tag.optgroup(label: group, class: 'title') do
+        groups[group].map do |leaf, id, attrs|
+          tag.option(leaf, value: id, data: attrs)
+        end.join.html_safe
+      end
+    end
+    safe_join(html)
+  end
 end
