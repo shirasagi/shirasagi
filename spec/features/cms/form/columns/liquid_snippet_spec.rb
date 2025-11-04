@@ -82,7 +82,15 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
 
       fill_in_code_mirror 'item[layout]', with: "existing-column-layout"
 
+      # Ensure CodeMirror value is synced to textarea before selecting snippet
+      textarea = find('#item_layout', visible: false)
+      page.execute_script("$(arguments[0]).data('editor')?.save()", textarea)
+      wait_for_js_ready
+
       select_loop_snippet(liquid_setting_secondary.name)
+
+      # Wait for JavaScript to process the change event and insert snippet
+      wait_for_js_ready
 
       textarea_value = find('#item_layout', visible: false).value
       expect(textarea_value).to include("existing-column-layout")

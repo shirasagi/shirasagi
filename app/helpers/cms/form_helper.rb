@@ -83,13 +83,23 @@ module Cms::FormHelper
     html << tag.option(input_direct_label, value: "")
     # グループ外（ルート）option
     nogroup.each do |name, id, attrs|
-      html << tag.option(name, value: id, data: attrs)
+      # data-snippetキーをsnippetキーに変換（Railsのtag.optionはdata-プレフィックスなしを期待）
+      data_attrs = attrs.dup
+      if data_attrs.key?("data-snippet")
+        data_attrs["snippet"] = data_attrs.delete("data-snippet")
+      end
+      html << tag.option(name, value: id, data: data_attrs)
     end
     # グループoptgroup(全グループでclass: 'title')
     groups.keys.sort.each do |group|
       html << tag.optgroup(label: group, class: 'title') do
         groups[group].map do |leaf, id, attrs|
-          tag.option(leaf, value: id, data: attrs)
+          # data-snippetキーをsnippetキーに変換（Railsのtag.optionはdata-プレフィックスなしを期待）
+          data_attrs = attrs.dup
+          if data_attrs.key?("data-snippet")
+            data_attrs["snippet"] = data_attrs.delete("data-snippet")
+          end
+          tag.option(leaf, value: id, data: data_attrs)
         end.join.html_safe
       end
     end
