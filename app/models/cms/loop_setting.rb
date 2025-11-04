@@ -18,6 +18,7 @@ class Cms::LoopSetting
   validates :description, length: { maximum: 400 }
   validates :html_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
   validates :state, inclusion: { in: %w(public closed), allow_blank: true }
+  validates :html, liquid_format: true, if: ->{ html_format_liquid? }
 
   default_scope -> { order_by(order: 1, name: 1) }
   scope :public_state, -> { where(:state.in => [nil, 'public']) }
