@@ -88,6 +88,13 @@ describe Cms::LoopSetting, dbscope: :example do
 
         expect(loop_setting.html).to eq html_content
       end
+
+      it "can set html for liquid format" do
+        liquid_content = "{% for item in items %}<div class='item'>{{ item.name }}</div>{% endfor %}"
+        loop_setting = create(:cms_loop_setting, site: site, html_format: "liquid", html: liquid_content)
+
+        expect(loop_setting.html).to eq liquid_content
+      end
     end
   end
 
@@ -108,6 +115,69 @@ describe Cms::LoopSetting, dbscope: :example do
     it "accepts nil HTML content" do
       loop_setting = build(:cms_loop_setting, site: site, html: nil)
       expect(loop_setting).to be_valid
+    end
+  end
+
+  describe "Liquid format validation" do
+    let(:site) { cms_site }
+
+    context "when html_format is liquid" do
+      it "accepts valid liquid template" do
+        valid_liquid = "{% for item in items %}<div>{{ item.name }}</div>{% endfor %}"
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", html: valid_liquid)
+        expect(loop_setting).to be_valid
+      end
+
+      it "accepts valid liquid syntax with conditions" do
+        valid_liquid = "{% if items.size > 0 %}{% for item in items %}<div>{{ item.name }}</div>{% endfor %}{% endif %}"
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", html: valid_liquid)
+        expect(loop_setting).to be_valid
+      end
+
+      it "accepts plain HTML without liquid tags" do
+        plain_html = "<div class='layout'><p>Content</p></div>"
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", html: plain_html)
+        expect(loop_setting).to be_valid
+      end
+
+      it "accepts empty HTML content" do
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", html: "")
+        expect(loop_setting).to be_valid
+      end
+
+      it "accepts nil HTML content" do
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", html: nil)
+        expect(loop_setting).to be_valid
+      end
+
+      it "rejects invalid liquid template" do
+        invalid_liquid = "{% for item in items %}<div>{{ item.name }}</div>{% endfor"
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", html: invalid_liquid)
+        expect(loop_setting).not_to be_valid
+        expect(loop_setting.errors[:html]).to be_present
+      end
+
+      it "rejects malformed liquid syntax" do
+        invalid_liquid = "{% if items.size > 0 %}{% for item in items %}<div>{{ item.name }}</div>{% endfor %}{% endif"
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", html: invalid_liquid)
+        expect(loop_setting).not_to be_valid
+        expect(loop_setting.errors[:html]).to be_present
+      end
+    end
+
+    context "when html_format is shirasagi" do
+      it "does not validate liquid format" do
+        # shirasagi形式では、Liquidバリデーションが適用されないため、無効なLiquidテンプレートでも受け入れられる
+        invalid_liquid = "{% for item in items %}<div>{{ item.name }}</div>{% endfor"
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "shirasagi", html: invalid_liquid)
+        expect(loop_setting).to be_valid
+      end
+
+      it "accepts valid HTML content" do
+        valid_html = "<div class='test'>Content</div>"
+        loop_setting = build(:cms_loop_setting, site: site, html_format: "shirasagi", html: valid_html)
+        expect(loop_setting).to be_valid
+      end
     end
   end
 
