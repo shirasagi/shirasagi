@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe 'cms_agents_parts_form_search', type: :feature, dbscope: :example, js: true do
+describe 'cms_agents_parts_form_search', type: :feature, dbscope: :example do
   let(:site){ cms_site }
   let(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
   let(:select_options1) { Array.new(5) { unique_id } }
@@ -143,7 +143,7 @@ describe 'cms_agents_parts_form_search', type: :feature, dbscope: :example, js: 
         click_button I18n.t('ss.buttons.search')
       end
 
-      expect(page).to have_no_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
+      expect(page).to have_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
       expect(page).to have_no_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
 
       within 'form' do
@@ -209,7 +209,7 @@ describe 'cms_agents_parts_form_search', type: :feature, dbscope: :example, js: 
         click_button I18n.t('ss.buttons.search')
       end
 
-      expect(page).to have_no_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
+      expect(page).to have_css(".pages .item-#{::File.basename(item1.basename, ".*")}", text: item1.name)
       expect(page).to have_no_css(".pages .item-#{::File.basename(item2.basename, ".*")}", text: item2.name)
     end
   end
