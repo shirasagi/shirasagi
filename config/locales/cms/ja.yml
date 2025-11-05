@@ -63,6 +63,8 @@ ja:
     failed_service_log: 'error %{row_num}行目 施設の用途『%{service}』が存在しないので登録できませんでした。新規に『%{service}』を作成した上で、インポートを実行してください。'
     failed_group_log: 'error %{row_num}行目 管理グループ『%{group}』が存在しないので登録できませんでした。新規に『%{group}』を作成した上で、インポートを実行してください。'
     loop_html: ループHTML
+    labels:
+      snippets: スニペット
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
     image_resize: 画像リサイズ
@@ -1201,6 +1203,7 @@ ja:
         name: タイトル
         description: 説明
         order: 並び順
+        html_format: HTML種別
       cms/command:
         name: タイトル
         description: 説明
@@ -2046,6 +2049,12 @@ ja:
       check_links: 次のリンクを確認しました。
 
   tooltip:
+    cms:
+      labels:
+        snippets:
+          - サイト設定のループHTMLで作成したHTMLを選択して挿入できます。
+          - 選択したHTMLは、現在のカーソル位置に追加されます。
+          - HTMLはLiquid形式で記述する必要があります。
     cms/addon/readable_setting:
       readable_setting_range:
         - <b>全公開</b> - 誰でも閲覧できます。
@@ -2078,7 +2087,6 @@ ja:
         - 作成するフォルダー名を設定します。
       import_date:
         - インポートを実行する日時を設定できます。
-
     cms/addon/captcha:
       captcha:
         - フォームに画像認証を利用する場合は「使用する」を選択してください。
@@ -2566,6 +2574,9 @@ ja:
       sort_column_name:
         - 定型フォームを利用した並び替え方法を指定します。
         - 通常の並び順よりもこちらを優先します。
+
+    cms/loop_setting:
+      html_format: *loop_format
 
     cms/addon/tabs:
       conditions:

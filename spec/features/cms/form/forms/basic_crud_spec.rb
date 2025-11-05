@@ -5,6 +5,13 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
   let(:name) { unique_id }
   let(:html) { unique_id }
   let(:html2) { unique_id }
+  def loop_snippet_select
+    find('.loop-snippet-selector', visible: :all)
+  end
+
+  def select_loop_snippet(option_text)
+    select option_text, from: loop_snippet_select[:id]
+  end
 
   context 'basic crud' do
     before { login_cms_user }
@@ -95,5 +102,74 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       expect(json.size).to eq 2
       expect(json.present?).to be_truthy
     end
+  end
+
+  context 'layout html functionality' do
+    let!(:liquid_setting) do
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
+        state: "public",
+        name: "Test Liquid Setting #{unique_id}"
+      )
+    end
+
+    before { login_cms_user }
+
+    it 'can create form with layout html and loop setting' do
+      visit cms_forms_path(site)
+      click_on I18n.t('ss.links.new')
+
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+        fill_in_code_mirror 'item[html]', with: html
+
+        # Select loop setting
+        select_loop_snippet(liquid_setting.name)
+
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      form = Cms::Form.site(site).where(name: name).first
+      expect(form).to be_present
+      # With cursor position insertion, snippet is inserted at cursor position (beginning)
+      # so the result includes both the snippet and the original HTML
+      expect(form.html).to include(html)
+    end
+
+    it 'preserves directly entered HTML when loop_setting_id is set' do
+      custom_html = "<div class='custom-form'>{% for item in items %}" \
+                    "<div class='custom-item'>{{ item.name }}</div>{% endfor %}</div>"
+
+      visit cms_forms_path(site)
+      click_on I18n.t('ss.links.new')
+
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+        fill_in_code_mirror 'item[html]', with: custom_html
+
+        # Select loop setting
+        select_loop_snippet(liquid_setting.name)
+
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      form = Cms::Form.site(site).where(name: name).first
+      expect(form).to be_present
+      # With cursor position insertion, snippet is inserted at cursor position (beginning)
+      # so the result includes both the snippet and the original custom HTML
+      expect(form.html).to include(custom_html)
+
+      # Verify that both the custom HTML and the snippet are present
+      expect(form.html).to include("custom-form")
+      expect(form.html).to include("custom-item")
+      expect(form.html).to include("loop-item") # from loop_setting.html
+    end
+
   end
 end

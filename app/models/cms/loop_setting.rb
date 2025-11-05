@@ -11,11 +11,19 @@ class Cms::LoopSetting
   field :name, type: String
   field :description, type: String
   field :order, type: Integer
-  permit_params :name, :description, :order
+  field :html_format, type: String, default: "shirasagi"
+  field :state, type: String, default: "public"
+  permit_params :name, :description, :order, :html_format, :state, :html
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
+  validates :html_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
+  validates :state, inclusion: { in: %w(public closed), allow_blank: true }
+  validates :html, liquid_format: true, if: ->{ html_format_liquid? }
 
   default_scope -> { order_by(order: 1, name: 1) }
+  scope :public_state, -> { where(:state.in => [nil, 'public']) }
+  scope :liquid, -> { public_state.where(html_format: 'liquid') }
+  scope :shirasagi, -> { public_state.where(:html_format.in => [nil, 'shirasagi']) }
 
   class << self
     def search(params = {})
@@ -29,6 +37,26 @@ class Cms::LoopSetting
         criteria = criteria.keyword_in params[:keyword], :name, :html
       end
       criteria
+    end
+  end
+
+  def html_format_shirasagi?
+    !html_format_liquid?
+  end
+
+  def html_format_liquid?
+    html_format == "liquid"
+  end
+
+  def state_options
+    %w(public closed).map do |v|
+      [I18n.t("ss.options.state.#{v}"), v]
+    end
+  end
+
+  def html_format_options
+    %w(shirasagi liquid).map do |v|
+      [I18n.t("cms.options.loop_format.#{v}"), v]
     end
   end
 end

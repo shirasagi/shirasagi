@@ -1,4 +1,5 @@
 <% addon ||= local_assigns.fetch(:addon, {}) %>
+<% snippet_select_id = "#{addon[:id]}_loop_snippet_selector" %>
 
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 <%= jquery do %>
@@ -109,7 +110,66 @@
 
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
+    <dt><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
+    <dd>
+      <% snippet_options = ancestral_html_settings_liquid %>
+      <%= select_tag(
+            'loop_snippet_selector',
+            options_with_optgroup_for_snippets(snippet_options),
+            id: snippet_select_id,
+            class: 'loop-snippet-selector'
+          ) %>
+    </dd>
     <dt><%= @model.t :loop_liquid %><%= @model.tt :loop_liquid %></dt>
     <dd><%= f.text_area :loop_liquid, class: :html, style: "height: 300px;" %></dd>
   </dl>
+  
+  <%= jquery do %>
+    var $addon = $("<%= "##{addon[:id]}" %>");
+    $addon.find('.loop-snippet-selector').on('change', function() {
+      var $select = $(this);
+      var $option = $select.find(':selected');
+      
+      if (!$option.val()) {
+        return;
+      }
+      
+      var snippet = $option.data('snippet');
+      
+      if (!snippet) {
+        return;
+      }
+      
+      var $textarea = $select.closest('dl').find('textarea');
+      
+      if ($textarea.length === 0) {
+        return;
+      }
+      
+      var editor = $textarea.data('editor');
+      if (editor) {
+        var doc = editor.getDoc();
+        var cursor = doc.getCursor();
+        doc.replaceRange(snippet, cursor);
+        editor.focus();
+        editor.save();
+      } else {
+        var textarea = $textarea[0];
+        var start = textarea.selectionStart || textarea.value.length;
+        var end = textarea.selectionEnd || start;
+        
+        textarea.value = textarea.value.substring(0, start) + snippet + textarea.value.substring(end);
+        
+        var cursor = start + snippet.length;
+        if (textarea.setSelectionRange) {
+          textarea.setSelectionRange(cursor, cursor);
+        }
+        
+        textarea.dispatchEvent(new Event('input', { bubbles: true }));
+        textarea.dispatchEvent(new Event('change', { bubbles: true }));
+      }
+      
+      $select.val('');
+    });
+  <% end %>
 <% end %>
