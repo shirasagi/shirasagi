@@ -1,5 +1,5 @@
 <%= jquery do %>
-  var sort = new SS_SortableForm('.mod-image_map-image_setting .area-states', { limit: 20 });
+  var sort = new SS_SortableForm('.mod-image_map-image_setting .area-states', { limit: 100 });
   sort.renderItems(<%== @item.area_states.to_json %>);
 <% end %>
 
