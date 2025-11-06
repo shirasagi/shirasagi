@@ -57,7 +57,7 @@ describe "sys/auth/saml", type: :feature, dbscope: :example do
 
         click_on I18n.t("ss.buttons.save")
       end
-      message = I18n.t("errors.format", attribute: Sys::Auth::Saml.t(:x509_cert), message: I18n.t("errors.messages.invalid"))
+      message = I18n.t("errors.format", attribute: Sys::Auth::Saml.t(:x509_cert), message: I18n.t("errors.messages.blank"))
       expect(page).to have_css("#errorExplanation li", text: message)
 
       expect(Sys::Auth::Saml.count).to eq 0
