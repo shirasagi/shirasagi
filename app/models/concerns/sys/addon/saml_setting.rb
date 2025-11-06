@@ -58,7 +58,12 @@ module Sys::Addon
     end
 
     def fingerprint
-      cert = OpenSSL::X509::Certificate.new(SS::Crypto.decrypt(x509_cert))
+      return if x509_cert.blank?
+
+      decrypted_x509_cert = SS::Crypto.decrypt(x509_cert)
+      return if decrypted_x509_cert.blank?
+
+      cert = OpenSSL::X509::Certificate.new(decrypted_x509_cert)
       Digest::SHA1.hexdigest(cert.to_der).upcase.scan(/../).join(":")
     end
 
