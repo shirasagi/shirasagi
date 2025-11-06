@@ -48,16 +48,21 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         wait_event_to_fire "ss:tempFile:addedWaitingList" do
           attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         end
-      end
-      wait_for_cbox_closed do
-        within_dialog do
-          within "form" do
-            click_on I18n.t("ss.buttons.upload")
+        within first("form .index tbody tr") do
+          # 全角括弧と全角数字を入力
+          fill_in "item[files][][name]", with: "ファイル（１）.jpg"
+        end
+        wait_for_cbox_closed do
+          within_dialog do
+            within "form" do
+              click_on I18n.t("ss.buttons.upload")
+            end
           end
         end
       end
       within '.file-view' do
-        expect(page).to have_css('.name', text: 'keyvisual.jpg')
+        # 全角括弧と全角数字は半角へ自動的に返還される
+        expect(page).to have_css('.name', text: "ファイル(1).jpg")
         expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
       end
 
@@ -70,7 +75,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       wait_for_notice I18n.t('ss.notice.saved')
 
       within '.list-items' do
-        expect(page).to have_content('keyvisual.jpg')
+        expect(page).to have_content("ファイル(1).jpg")
         expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
       end
 
@@ -98,11 +103,12 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
       click_on I18n.t("ss.links.edit")
       within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
-        fill_in "item[name]", with: "modify"
+        fill_in "item[name]", with: "ファイル（２）"
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css('.sanitizer-wait', text: I18n.t('ss.options.sanitizer_state.wait'))
+      expect(page).to have_content("ファイル(2)")
 
       file.reload
       file_path = file.path
