@@ -1074,7 +1074,7 @@ this.Syntax_Checker = (function () {
       Syntax_Checker.afterCheck();
     }
 
-    var warnMessages = ["アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。","動画や音声を含む場合、説明があるか確認してください。"];
+    var warnMessages = ["アクセシビリティチェックで確認事項があるため、処理を中断します。確認事項を全て修正してから操作を続行してください。","動画や音声を本文に埋め込む場合は説明を記述してください。"];
     var allowEdit = true;
     $.each(Syntax_Checker.errors, function(id, error) {
       if (warnMessages.includes(error['msg'])) {
