@@ -22,7 +22,7 @@ require_relative "../app/models/ss/config"
 Bundler.require(*Rails.groups)
 
 module SS
-  mattr_reader(:version) { "1.20.1" }
+  mattr_reader(:version) { "1.20.2" }
 
   class Current < ActiveSupport::CurrentAttributes
     attribute :env, :request
