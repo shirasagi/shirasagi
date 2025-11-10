@@ -1,0 +1,58 @@
+<div class="addon-views">
+  <%= render "ss/crud/addon", addon: { id: "cms-all-contents-moves-execute-result", head: t("cms.all_contents_moves.execute_result_head") } do %>
+    <dl class="see">
+      <dt><%= t("cms.all_contents_moves.success_count") %></dt>
+      <dd><%= @execute_result["success_count"] %></dd>
+      <dt><%= t("cms.all_contents_moves.error_count") %></dt>
+      <dd><%= @execute_result["error_count"] %></dd>
+    </dl>
+
+    <table class="index">
+      <thead>
+        <tr>
+          <th><%= t("all_content.page_id") %></th>
+          <th><%= t("mongoid.attributes.cms/model/page.filename") %></th>
+          <th><%= t("cms.all_contents_moves.destination_filename") %></th>
+          <th><%= t("ss.search_result") %></th>
+          <th><%= t("errors.template.header", count: 1) %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @execute_result["results"].each do |result| %>
+          <tr class="<%= result["success"] ? "success" : "error" %>">
+            <td><%= result["page_id"] %></td>
+            <td><%= result["filename"] %></td>
+            <td><%= result["destination_filename"] %></td>
+            <td>
+              <% if result["success"] %>
+                <span class="status success"><%= t("ss.notice.moved") %></span>
+              <% else %>
+                <span class="status error"><%= t("ss.notice.unable_to_change") %></span>
+              <% end %>
+            </td>
+            <td>
+              <% if result["errors"].present? %>
+                <ul class="errors">
+                  <% result["errors"].each do |error| %>
+                    <li><%= error %></li>
+                  <% end %>
+                </ul>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+
+    <p class="description">
+      <% if @execute_task %>
+        <%= link_to t("ss.links.job_log"), job_cms_task_path(id: @execute_task.id), target: "_blank" %>
+      <% end %>
+    </p>
+  <% end %>
+</div>
+
+<footer class="send ss-sticky ss-sticky-bottom">
+  <%= link_to t("ss.buttons.back"), { action: :index }, class: "btn-back" %>
+</footer>
+

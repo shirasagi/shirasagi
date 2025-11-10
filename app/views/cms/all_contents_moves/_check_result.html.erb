@@ -1,0 +1,76 @@
+<%= form_tag({ action: :execute }, { method: :post }) do %>
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "cms-all-contents-moves-check-result", head: t("cms.all_contents_moves.check_result_head") } do %>
+      <table class="index">
+        <thead>
+          <tr>
+            <th class="checkbox"><input type="checkbox" id="select-all" /></th>
+            <th><%= t("all_content.page_id") %></th>
+            <th><%= t("mongoid.attributes.cms/model/page.name") %></th>
+            <th><%= t("mongoid.attributes.cms/model/page.filename") %></th>
+            <th><%= t("cms.all_contents_moves.destination_filename") %></th>
+            <th><%= t("mongoid.attributes.ss/document.state") %></th>
+            <th><%= t("errors.template.header", count: 1) %></th>
+            <th><%= t("cms.all_contents_moves.confirmations") %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @check_result["rows"].each_with_index do |row, index| %>
+            <tr class="<%= row["status"] %>">
+              <td class="checkbox">
+                <% if row["status"] == "ok" || row["status"] == "confirmation" %>
+                  <%= check_box_tag "selected_ids[]", row["id"], false, id: "selected_ids_#{index}" %>
+                <% end %>
+              </td>
+              <td><%= row["id"] %></td>
+              <td><%= row["title"] %></td>
+              <td><%= row["filename"] %></td>
+              <td><%= row["destination_filename"] %></td>
+              <td>
+                <% case row["status"] %>
+                <% when "ok" %>
+                  <span class="status ok">OK</span>
+                <% when "confirmation" %>
+                  <span class="status confirmation"><%= t("cms.all_contents_moves.status_confirmation") %></span>
+                <% when "error" %>
+                  <span class="status error"><%= t("ss.state.closed") %></span>
+                <% end %>
+              </td>
+              <td>
+                <% if row["errors"].present? %>
+                  <ul class="errors">
+                    <% row["errors"].each do |error| %>
+                      <li><%= error %></li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </td>
+              <td>
+                <% if row["confirmations"].present? %>
+                  <ul class="confirmations">
+                    <% row["confirmations"].each do |confirmation| %>
+                      <li><%= "#{t("cms.all_contents_moves.confirmation_type_#{confirmation['type']}")}: #{confirmation['id']}" %></li>
+                    <% end %>
+                  </ul>
+                <% end %>
+              </td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= submit_tag t("ss.buttons.move"), name: 'execute', class: :save, data: { confirm: t("ss.confirm.move"), disable_with: t("ss.buttons.moving") } %>
+    <%= link_to t("ss.buttons.back"), { action: :index }, class: "btn-back" %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+$("#select-all").on("change", function() {
+  var checked = $(this).prop("checked");
+  $("input[name='selected_ids[]']").prop("checked", checked);
+});
+<% end %>
+

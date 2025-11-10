@@ -292,7 +292,6 @@ module Cms::PageFilter
       @filename = @item.filename
       return
     end
-    raise "400" if @item.respond_to?(:branch?) && @item.branch?
 
     if confirm
       @source = "/#{@item.filename}"
@@ -303,7 +302,6 @@ module Cms::PageFilter
     end
 
     @source = "/#{@item.filename}"
-    raise "403" unless @item.allowed?(:move, @cur_user, site: @cur_site, node: @cur_node)
 
     node = Cms::Node.site(@cur_site).filename(::File.dirname(destination)).first
 
@@ -323,15 +321,16 @@ module Cms::PageFilter
     end
 
     task.run_with(rejected: rejected) do
-      task.log "# #{I18n.t("ss.buttons.move")}"
-      task.log "#{@item.filename}(#{@item.id})"
-      result = @item.move(destination)
+      service = Cms::Page::MoveService.new(
+        cur_site: @cur_site,
+        cur_user: @cur_user,
+        source: @item,
+        destination: destination,
+        task: task
+      )
+
+      result = service.move
       render_update result, location: location, render: { template: "move" }, notice: t('ss.notice.moved')
-      if result
-        task.log "moved to #{destination}"
-      else
-        task.log "failed\n#{@item.errors.full_messages.join("\n")}"
-      end
     end
   end
 
