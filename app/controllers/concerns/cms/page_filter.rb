@@ -324,6 +324,7 @@ module Cms::PageFilter
       service = Cms::Page::MoveService.new(
         cur_site: @cur_site,
         cur_user: @cur_user,
+        cur_node: @cur_node,
         source: @item,
         destination: destination,
         task: task

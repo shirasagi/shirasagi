@@ -4,7 +4,7 @@ class Cms::AllContentsMovesController < ApplicationController
   navi_view "cms/main/navi"
 
   before_action :check_permission
-  before_action :set_task, only: [:index, :execute]
+  before_action :set_task, only: [:index, :execute, :reset]
 
   private
 
@@ -116,13 +116,6 @@ class Cms::AllContentsMovesController < ApplicationController
       return
     end
 
-    if !@task.ready
-      @errors = [t('ss.notice.already_job_started')]
-      @check_result = check_result
-      render action: :index
-      return
-    end
-
     # 選択された行をフィルタリング
     selected_rows = check_result["rows"].select { |row| selected_ids.include?(row["id"].to_s) }
     if selected_rows.blank?
@@ -144,10 +137,27 @@ class Cms::AllContentsMovesController < ApplicationController
     # 実行ジョブ用のタスクを作成
     execute_job_class = Cms::AllContentsMoves::ExecuteJob
     execute_task = execute_job_class.task_class.find_or_create_by(site_id: @cur_site.id, name: execute_job_class.task_name)
-    
+
+    if !execute_task.ready
+      @errors = [t('ss.notice.already_job_started')]
+      @check_result = check_result
+      render action: :index
+      return
+    end
+
     job = Cms::AllContentsMoves::ExecuteJob.bind(site_id: @cur_site, user_id: @cur_user)
     job.perform_later(@task.id)
     redirect_to({ action: :index }, { notice: t('ss.notice.started_import') })
+  end
+
+  def reset
+    clear_task_files(@task, %w[check_result.json execute_data.json])
+
+    execute_job_class = Cms::AllContentsMoves::ExecuteJob
+    execute_task = execute_job_class.task_class.find_by(site_id: @cur_site.id, name: execute_job_class.task_name)
+    clear_task_files(execute_task, %w[execute_result.json])
+
+    redirect_to({ action: :index }, { notice: t('cms.all_contents_moves.reset_notice') })
   end
 
   private
@@ -214,5 +224,15 @@ class Cms::AllContentsMovesController < ApplicationController
       drawer.body { |item| item.groups.pluck(:name).join("\n") }
     end
   end
-end
 
+  def clear_task_files(task, filenames)
+    return if task.blank?
+    base_dir = task.base_dir
+    return if base_dir.blank?
+
+    filenames.each do |filename|
+      path = File.join(base_dir, filename)
+      FileUtils.rm_f(path)
+    end
+  end
+end

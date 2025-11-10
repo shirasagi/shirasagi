@@ -340,6 +340,7 @@ Rails.application.routes.draw do
     get "all_contents/moves/template(.:format)" => "all_contents_moves#template", as: "all_contents_moves_template"
     post "all_contents/moves(.:format)" => "all_contents_moves#index", as: "all_contents_moves_check"
     post "all_contents/moves/execute(.:format)" => "all_contents_moves#execute", as: "all_contents_moves_execute"
+    post "all_contents/moves/reset(.:format)" => "all_contents_moves#reset", as: "all_contents_moves_reset"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]

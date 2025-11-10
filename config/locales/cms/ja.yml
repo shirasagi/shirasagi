@@ -271,6 +271,8 @@ ja:
       confirmation_type_part: パーツ
       success_count: 成功件数
       error_count: エラー件数
+      confirm_reset: チェック結果を削除してよろしいですか？
+      reset_notice: チェック結果をリセットしました。
       errors:
         check_result_not_found: チェック結果が見つかりません。
         no_selection: 移動対象が選択されていません。

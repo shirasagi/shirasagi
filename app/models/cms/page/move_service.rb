@@ -1,7 +1,7 @@
 class Cms::Page::MoveService
   include ActiveModel::Model
 
-  attr_accessor :cur_site, :cur_user, :source, :destination, :task
+  attr_accessor :cur_site, :cur_user, :cur_node, :source, :destination, :task
 
   validate :validate_destination
 
@@ -9,7 +9,9 @@ class Cms::Page::MoveService
     return false if invalid?
 
     raise "400" if source.respond_to?(:branch?) && source.branch?
-    raise "403" unless source.allowed?(:move, cur_user, site: cur_site)
+    permission_options = { site: cur_site }
+    permission_options[:node] = cur_node if cur_node
+    raise "403" unless source.allowed?(:move, cur_user, **permission_options)
 
     source.cur_site = cur_site
     source.cur_user = cur_user
@@ -76,4 +78,3 @@ class Cms::Page::MoveService
     end
   end
 end
-

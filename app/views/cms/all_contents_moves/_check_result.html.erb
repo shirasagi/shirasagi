@@ -64,6 +64,7 @@
   <footer class="send ss-sticky ss-sticky-bottom">
     <%= submit_tag t("ss.buttons.move"), name: 'execute', class: :save, data: { confirm: t("ss.confirm.move"), disable_with: t("ss.buttons.moving") } %>
     <%= link_to t("ss.buttons.back"), { action: :index }, class: "btn-back" %>
+    <%= link_to t("ss.buttons.reset"), cms_all_contents_moves_reset_path, method: :post, class: "btn-default", data: { confirm: t("cms.all_contents_moves.confirm_reset") } %>
   </footer>
 <% end %>
 
@@ -73,4 +74,3 @@ $("#select-all").on("change", function() {
   $("input[name='selected_ids[]']").prop("checked", checked);
 });
 <% end %>
-
