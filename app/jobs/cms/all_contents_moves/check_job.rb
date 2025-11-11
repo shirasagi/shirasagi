@@ -112,6 +112,7 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
 
       # 差し替えページのチェック
       if page.respond_to?(:branch?) && page.branch?
+        row_data["status"] = "error"
         row_data["errors"] << I18n.t("cms.all_contents_moves.errors.branch_page_can_not_move")
         rows << row_data
         next
@@ -172,7 +173,7 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
             row_data["confirmations"] << { "type" => "part", "id" => linking_page.id }
           end
         end
-      else
+      elsif row_data["status"] != "confirmation"
         row_data["status"] = "ok"
       end
 
