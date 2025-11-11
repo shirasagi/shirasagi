@@ -1,0 +1,97 @@
+<%
+  # 一括移動専用のカスタマイズ
+  status_message = local_assigns.fetch(:status_message, nil)
+  on_complete = local_assigns.fetch(:on_complete, nil)
+  job_log_path = local_assigns.fetch(:job_log_path, nil)
+  url = local_assigns.fetch(:url, nil)
+  
+  # セグメントラベルを構築
+  custom_segment_label = if task.segment.present?
+    status_message.present? ? "#{task.segment}: #{status_message}" : task.segment
+  end
+  
+  # 状態表示テキストを取得
+  state_display_text = if task.state.present?
+    I18n.t("job.state.#{task.state}", default: task.state)
+  end
+%>
+
+<div class="job-status" id="job-status-<%= task.id %>">
+  <dl class="see">
+    <% if custom_segment_label.present? %>
+      <dt><%= task.t :segment %></dt>
+      <dd class="segment"><%= custom_segment_label %></dd>
+    <% end %>
+    
+    <dt><%= task.t :state %></dt>
+    <dd>
+      <span class="state" data-state="<%= task.state || '' %>">
+        <% if state_display_text.present? %>
+          <%= state_display_text %>
+        <% else %>
+          <span class="state-placeholder">-</span>
+        <% end %>
+      </span>
+    </dd>
+    
+    <% if job_log_path %>
+      <dt><%= t("ss.links.job_log") %></dt>
+      <dd><%= link_to t("ss.links.job_log"), job_log_path, target: "_blank" %></dd>
+    <% end %>
+  </dl>
+</div>
+
+<%= jquery do %>
+  (function() {
+    var $el = $("#job-status-<%= task.id %>");
+    var $state = $el.find(".state");
+    var currentState = $state.data("state");
+    <% if url.present? %>
+    var checkUrl = "<%= j(url) %>";
+    var interval = <%= SS.config.job.reload_interval || 10 %> * 1000;
+    var timerId;
+    
+    var checkJobStatus = function() {
+      $.ajax({
+        url: checkUrl,
+        cache: false,
+        dataType: "json",
+        success: function(data) {
+          var newState = data.state || "";
+          var newStateLabel = data.state_label || "";
+          var displayText = newStateLabel || newState || "";
+          
+          // 状態が変わった場合、または表示テキストが変わった場合に更新
+          if (newState !== currentState || (displayText && $state.text() !== displayText)) {
+            currentState = newState;
+            
+            if (displayText) {
+              $state
+                .text(displayText)
+                .data("state", newState)
+                .find(".state-placeholder").remove();
+            }
+          }
+          
+          // ジョブが完了したら画面をリロード
+          <% if on_complete.present? %>
+          if (newState === "completed" || newState === "failed" || newState === "interrupted") {
+            clearInterval(timerId);
+            <%= on_complete.html_safe %>
+          }
+          <% end %>
+        },
+        error: function() {
+          // エラーが発生しても継続してポーリング
+        }
+      });
+    };
+    
+    // 定期的にジョブの状態をチェック
+    timerId = setInterval(checkJobStatus, interval);
+    // 初回は即座にチェック
+    checkJobStatus();
+    <% end %>
+  })();
+<% end %>
+
