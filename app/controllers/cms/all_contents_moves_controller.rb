@@ -35,9 +35,9 @@ class Cms::AllContentsMovesController < ApplicationController
 
   def load_execute_result
     execute_job_class = Cms::AllContentsMoves::ExecuteJob
-    execute_task = execute_job_class.task_class.find_by(site_id: @cur_site.id, name: execute_job_class.task_name)
+    execute_task = execute_job_class.task_class.where(site_id: @cur_site.id, name: execute_job_class.task_name).first
     return nil unless execute_task&.base_dir
-    
+
     result_path = "#{execute_task.base_dir}/execute_result.json"
     return nil unless File.exist?(result_path)
 
@@ -55,7 +55,7 @@ class Cms::AllContentsMovesController < ApplicationController
       @execute_result = load_execute_result
       if @execute_result
         execute_job_class = Cms::AllContentsMoves::ExecuteJob
-        @execute_task = execute_job_class.task_class.find_by(site_id: @cur_site.id, name: execute_job_class.task_name)
+        @execute_task = execute_job_class.task_class.where(site_id: @cur_site.id, name: execute_job_class.task_name).first
       end
       render
       return
@@ -92,7 +92,8 @@ class Cms::AllContentsMovesController < ApplicationController
   end
 
   def template
-    enumerable = enum_csv_template(encoding: "Shift_JIS")
+    exporter = Cms::AllContentsMovesExporter.new(site: @cur_site)
+    enumerable = exporter.enum_csv(encoding: "Shift_JIS")
 
     filename = "all_contents_moves_template_#{Time.zone.now.to_i}.csv"
 
@@ -154,76 +155,13 @@ class Cms::AllContentsMovesController < ApplicationController
     clear_task_files(@task, %w[check_result.json execute_data.json])
 
     execute_job_class = Cms::AllContentsMoves::ExecuteJob
-    execute_task = execute_job_class.task_class.find_by(site_id: @cur_site.id, name: execute_job_class.task_name)
+    execute_task = execute_job_class.task_class.where(site_id: @cur_site.id, name: execute_job_class.task_name).first
     clear_task_files(execute_task, %w[execute_result.json])
 
     redirect_to({ action: :index }, { notice: t('cms.all_contents_moves.reset_notice') })
   end
 
   private
-
-  def enum_csv_template(options = {})
-    encoding = options[:encoding] || "Shift_JIS"
-    drawer = SS::Csv.draw(:export, context: self) do |drawer|
-      draw_basic(drawer)
-      draw_meta(drawer)
-      draw_contact(drawer)
-      draw_groups(drawer)
-    end
-
-    drawer.enum(template_criteria, options.merge(model: Cms::Page, encoding: encoding))
-  end
-
-  def template_criteria
-    Cms::Page.site(@cur_site).all
-  end
-
-  def draw_basic(drawer)
-    drawer.column :page_id do
-      drawer.head { I18n.t("all_content.page_id") }
-      drawer.body { |item| item.id }
-    end
-    drawer.column :name
-    drawer.column :filename do
-      drawer.head { I18n.t("mongoid.attributes.cms/model/page.filename") }
-      drawer.body { |item| item.filename }
-    end
-    drawer.column :index_name
-    drawer.column :layout do
-      drawer.head { I18n.t("mongoid.attributes.cms/reference/layout.layout") }
-      drawer.body { |item| item.layout.try(:name) }
-    end
-    drawer.column :order
-  end
-
-  def draw_meta(drawer)
-    drawer.column :keywords
-    drawer.column :description
-    drawer.column :summary_html
-  end
-
-  def draw_contact(drawer)
-    drawer.column :contact_state, type: :label
-    drawer.column :contact_group do
-      drawer.head { I18n.t("mongoid.attributes.cms/addon/contact/group.contact_group") }
-      drawer.body { |item| item.contact_group.try(:name) }
-    end
-    drawer.column :contact_charge
-    drawer.column :contact_tel
-    drawer.column :contact_fax
-    drawer.column :contact_email
-    drawer.column :contact_postal_code
-    drawer.column :contact_address
-    drawer.column :contact_link_url
-    drawer.column :contact_link_name
-  end
-
-  def draw_groups(drawer)
-    drawer.column :groups do
-      drawer.head { I18n.t("mongoid.attributes.cms/addon/group_permission.groups") }
-      drawer.body { |item| item.groups.pluck(:name).join("\n") }
-    end
-  end
 
   def clear_task_files(task, filenames)
     return if task.blank?
