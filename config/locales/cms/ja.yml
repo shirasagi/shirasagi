@@ -292,7 +292,7 @@ ja:
         destination_folder_not_public: 公開中のページを非公開フォルダーに移動することはできません。
         user_not_bound: ユーザーがジョブにバインドされていません。
       status:
-        reading_csv: CSVを読み込み中です。
+        reading_csv: CSVファイルを読み込み中です。
         executing: 実行中です。
     roles:
       admin: 管理者
