@@ -56,24 +56,28 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
         row_data[key.to_s] = value
       end
 
-      page_id = row[page_id_header].to_s.strip
+      page_id_raw = row[page_id_header].to_s.strip
       destination_filename = row[filename_header].to_s.strip
 
-      row_data["id"] = page_id
+      row_data["id"] = page_id_raw
       row_data["destination_filename"] = destination_filename
 
       # ページIDのチェック
-      if page_id.blank?
+      if page_id_raw.blank?
         row_data["errors"] << I18n.t("cms.all_contents_moves.errors.page_id_blank")
         rows << row_data
         next
       end
 
-      unless BSON::ObjectId.legal?(page_id)
+      # ページIDの形式チェック（Integer型のみ）
+      unless page_id_raw.numeric?
         row_data["errors"] << I18n.t("cms.all_contents_moves.errors.invalid_page_id")
         rows << row_data
         next
       end
+
+      page_id = page_id_raw.to_i
+      row_data["id"] = page_id
 
       # ページの取得
       page = Cms::Page.site(site).where(id: page_id).first

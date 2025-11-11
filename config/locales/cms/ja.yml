@@ -287,6 +287,7 @@ ja:
         branch_page_can_not_move: 差し替え用ページは移動できません。
         page_locked: "ページがロックされています。（ロック者: %{user}）"
         destination_folder_not_public: 公開中のページを非公開フォルダーに移動することはできません。
+        user_not_bound: ユーザーがジョブにバインドされていません。
     roles:
       admin: 管理者
       user: 編集者

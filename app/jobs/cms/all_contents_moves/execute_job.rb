@@ -16,7 +16,7 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
     end
 
     check_result = JSON.parse(File.read(check_result_path))
-    
+
     # 実行データを読み込む
     execute_data_path = "#{check_task.base_dir}/execute_data.json"
     unless File.exist?(execute_data_path)
@@ -25,10 +25,25 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
     end
 
     execute_data = JSON.parse(File.read(execute_data_path))
-    selected_ids = execute_data["selected_ids"] || []
-    
-    # 選択された行をフィルタリング
-    selected_rows = check_result["rows"].select { |row| selected_ids.include?(row["id"].to_s) }
+    selected_ids = Array(execute_data["selected_ids"]).filter_map do |id|
+      normalized = id.to_s.strip
+      next if normalized.blank? || !normalized.numeric?
+      normalized.to_i
+    end
+
+    # 選択された行をフィルタリング（ページIDは整数で比較）
+    selected_rows = check_result["rows"].select do |row|
+      row_id = row["id"]
+      normalized_row_id = row_id.to_s.strip
+      next false if normalized_row_id.blank? || !normalized_row_id.numeric?
+
+      selected_ids.include?(normalized_row_id.to_i)
+    end
+
+    if user.blank?
+      task.log I18n.t("cms.all_contents_moves.errors.user_not_bound")
+      return
+    end
 
     service = Cms::Page::MoveService.new(cur_site: site, cur_user: user, task: task)
     results = []
@@ -36,7 +51,7 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
     task.total_count = selected_rows.size
     selected_rows.each do |row_data|
       task.count
-      page_id = row_data["id"]
+      page_id = row_data["id"].to_i
       destination_filename = row_data["destination_filename"]
 
       task.log "Moving page #{page_id} to #{destination_filename}"
@@ -80,4 +95,3 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
     task.log "Execute completed: #{execute_result[:success_count]} succeeded, #{execute_result[:error_count]} failed"
   end
 end
-
