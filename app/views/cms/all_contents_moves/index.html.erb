@@ -21,6 +21,15 @@ SS_Notice.renderNotice("<%= flash[:notice] %>", { type: "notice" });
   <% if @execute_result %>
     <%= render "execute_result" %>
   <% else %>
+    <%# ページ移動ジョブが実行中の場合、先頭に状態を表示 %>
+    <% if @execute_task && (@execute_task.running? || @execute_task.ready?) %>
+      <%= render "cms/all_contents_moves/job_status", 
+          task: @execute_task, 
+          url: job_cms_task_path(id: @execute_task.id, format: :json),
+          status_message: t('cms.all_contents_moves.status.executing'),
+          job_log_path: job_cms_task_path(id: @execute_task.id),
+          on_complete: "setTimeout(function() { location.reload(); }, 1000);" %>
+    <% end %>
     <%= render "check_result" %>
   <% end %>
 <% elsif @task.running? || @task.ready? %>

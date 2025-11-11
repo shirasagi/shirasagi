@@ -293,7 +293,7 @@ ja:
         user_not_bound: ユーザーがジョブにバインドされていません。
       status:
         reading_csv: CSVファイルを読み込み中です。
-        executing: 実行中です。
+        executing: ページを移動しています。
     roles:
       admin: 管理者
       user: 編集者

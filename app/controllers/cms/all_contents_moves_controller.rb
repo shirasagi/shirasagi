@@ -56,8 +56,11 @@ class Cms::AllContentsMovesController < ApplicationController
       # 実行ジョブのタスクを取得（結果がある場合、または実行中の場合）
       execute_job_class = Cms::AllContentsMoves::ExecuteJob
       @execute_task = execute_job_class.task_class.where(site_id: @cur_site.id, name: execute_job_class.task_name).first
-      # 実行中またはready状態の場合のみ使用
-      @execute_task = nil unless @execute_task&.running? || @execute_task&.ready? || @execute_result
+      # 実行中またはready状態、または結果がある場合のみ使用
+      # 完了したタスクで結果がない場合はnilに設定（結果がある場合は表示するため保持）
+      if @execute_task && !@execute_task.running? && !@execute_task.ready? && !@execute_result
+        @execute_task = nil
+      end
       render
       return
     end
@@ -149,6 +152,12 @@ class Cms::AllContentsMovesController < ApplicationController
       @check_result = check_result
       render action: :index
       return
+    end
+
+    # チェックタスクのセグメント（CSVファイル名）を実行タスクに引き継ぐ
+    if @task.segment.present?
+      execute_task.segment = @task.segment
+      execute_task.save!
     end
 
     job = Cms::AllContentsMoves::ExecuteJob.bind(site_id: @cur_site, user_id: @cur_user)
