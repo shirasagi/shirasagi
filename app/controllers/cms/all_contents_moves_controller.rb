@@ -53,10 +53,11 @@ class Cms::AllContentsMovesController < ApplicationController
     if request.get? || request.head?
       @check_result = load_check_result
       @execute_result = load_execute_result
-      if @execute_result
-        execute_job_class = Cms::AllContentsMoves::ExecuteJob
-        @execute_task = execute_job_class.task_class.where(site_id: @cur_site.id, name: execute_job_class.task_name).first
-      end
+      # 実行ジョブのタスクを取得（結果がある場合、または実行中の場合）
+      execute_job_class = Cms::AllContentsMoves::ExecuteJob
+      @execute_task = execute_job_class.task_class.where(site_id: @cur_site.id, name: execute_job_class.task_name).first
+      # 実行中またはready状態の場合のみ使用
+      @execute_task = nil unless @execute_task&.running? || @execute_task&.ready? || @execute_result
       render
       return
     end
