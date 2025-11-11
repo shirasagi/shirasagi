@@ -82,6 +82,10 @@ class Cms::AllContentsMovesController < ApplicationController
       return
     end
 
+    # CSVファイル名をタスクに保存
+    @task.segment = file.original_filename
+    @task.save!
+
     temp_file = SS::TempFile.new
     temp_file.in_file = file
     temp_file.save!

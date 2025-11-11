@@ -19,12 +19,21 @@ SS_Notice.renderNotice("<%= flash[:notice] %>", { type: "notice" });
 
 <% if @task.running? || @task.ready? %>
   <div class="job-status">
-    <p><%= t("ss.notice.job_started") %></p>
+    <% if @task.segment.present? %>
+      <p><%= "#{@task.segment}: #{t('cms.all_contents_moves.status.reading_csv')}" %></p>
+    <% else %>
+      <p><%= t("ss.notice.job_started") %></p>
+    <% end %>
     <p><%= link_to t("ss.links.job_log"), job_cms_task_path(id: @task.id), target: "_blank" %></p>
   </div>
 <% elsif @execute_task && (@execute_task.running? || @execute_task.ready?) %>
   <div class="job-status">
-    <p><%= t("ss.notice.job_started") %></p>
+    <% csv_filename = @execute_task.segment.presence || @task.segment %>
+    <% if csv_filename.present? %>
+      <p><%= "#{csv_filename}: #{t('cms.all_contents_moves.status.executing')}" %></p>
+    <% else %>
+      <p><%= t("ss.notice.job_started") %></p>
+    <% end %>
     <p><%= link_to t("ss.links.job_log"), job_cms_task_path(id: @execute_task.id), target: "_blank" %></p>
   </div>
 <% elsif @check_result %>
