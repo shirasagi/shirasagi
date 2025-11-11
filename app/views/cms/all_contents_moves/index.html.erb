@@ -17,18 +17,6 @@ SS_Notice.renderNotice("<%= flash[:notice] %>", { type: "notice" });
   <% end %>
 </div>
 
-<% if @errors %>
-  <div id="errorExplanation" class="errorExplanation">
-    <h2><%= t('errors.template.header', count: @errors.length) %></h2>
-    <p><%= t('errors.template.body', count: @errors.length) %></p>
-    <ul>
-      <% @errors.each do |error| %>
-        <li><%= error %></li>
-      <% end %>
-    </ul>
-  </div>
-<% end %>
-
 <% if @task.running? || @task.ready? %>
   <div class="job-status">
     <p><%= t("ss.notice.job_started") %></p>

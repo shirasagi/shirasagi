@@ -5,7 +5,7 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
   self.task_name = "cms:all_contents_moves:check"
 
   PAGE_ID_HEADER = -> { I18n.t("all_content.page_id") }
-  FILENAME_HEADER = -> { I18n.t("mongoid.attributes.cms/model/page.filename") }
+  FILENAME_HEADER = -> { I18n.t("cms.all_contents_moves.destination_filename") }
 
   class << self
     def valid_csv?(file)
@@ -192,4 +192,3 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
     end
   end
 end
-
