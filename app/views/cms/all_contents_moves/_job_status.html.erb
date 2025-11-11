@@ -1,16 +1,16 @@
 <%
-  # 一括移動専用のカスタマイズ
+  # ローカル変数の取得
   status_message = local_assigns.fetch(:status_message, nil)
   on_complete = local_assigns.fetch(:on_complete, nil)
   job_log_path = local_assigns.fetch(:job_log_path, nil)
   url = local_assigns.fetch(:url, nil)
   
-  # セグメントラベルを構築
+  # セグメントラベルの構築
   custom_segment_label = if task.segment.present?
     status_message.present? ? "#{task.segment}: #{status_message}" : task.segment
   end
   
-  # 状態表示テキストを取得
+  # 状態表示テキストの取得
   state_display_text = if task.state.present?
     I18n.t("job.state.#{task.state}", default: task.state)
   end
@@ -46,10 +46,25 @@
     var $el = $("#job-status-<%= task.id %>");
     var $state = $el.find(".state");
     var currentState = $state.data("state");
+    
     <% if url.present? %>
     var checkUrl = "<%= j(url) %>";
     var interval = <%= SS.config.job.reload_interval || 10 %> * 1000;
     var timerId;
+    var completedStates = ["completed", "failed", "interrupted"];
+    
+    var updateStateDisplay = function(newState, displayText) {
+      if (displayText) {
+        $state
+          .text(displayText)
+          .data("state", newState)
+          .find(".state-placeholder").remove();
+      }
+    };
+    
+    var isCompleted = function(state) {
+      return completedStates.indexOf(state) !== -1;
+    };
     
     var checkJobStatus = function() {
       $.ajax({
@@ -64,25 +79,20 @@
           // 状態が変わった場合、または表示テキストが変わった場合に更新
           if (newState !== currentState || (displayText && $state.text() !== displayText)) {
             currentState = newState;
-            
-            if (displayText) {
-              $state
-                .text(displayText)
-                .data("state", newState)
-                .find(".state-placeholder").remove();
-            }
+            updateStateDisplay(newState, displayText);
           }
           
           // ジョブが完了したら画面をリロード
           <% if on_complete.present? %>
-          if (newState === "completed" || newState === "failed" || newState === "interrupted") {
+          if (isCompleted(newState)) {
             clearInterval(timerId);
             <%= on_complete.html_safe %>
           }
           <% end %>
         },
-        error: function() {
+        error: function(xhr, status, error) {
           // エラーが発生しても継続してポーリング
+          console.warn("Failed to check job status:", error);
         }
       });
     };
@@ -94,4 +104,3 @@
     <% end %>
   })();
 <% end %>
-

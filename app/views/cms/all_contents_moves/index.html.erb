@@ -17,35 +17,43 @@ SS_Notice.renderNotice("<%= flash[:notice] %>", { type: "notice" });
   <% end %>
 </div>
 
+<%
+  # アクティブなタスクとステータスメッセージを決定
+  active_task = nil
+  status_message_key = nil
+  
+  if @check_result
+    # チェック結果がある場合
+    if @execute_result
+      # 実行結果がある場合は結果を表示（タスクは表示しない）
+    elsif @execute_task&.running? || @execute_task&.ready?
+      active_task = @execute_task
+      status_message_key = 'cms.all_contents_moves.status.executing'
+    end
+  elsif @task&.running? || @task&.ready?
+    active_task = @task
+    status_message_key = 'cms.all_contents_moves.status.reading_csv'
+  elsif @execute_task&.running? || @execute_task&.ready?
+    active_task = @execute_task
+    status_message_key = 'cms.all_contents_moves.status.executing'
+  end
+%>
+
+<% if active_task %>
+  <%= render "cms/all_contents_moves/job_status",
+      task: active_task,
+      url: job_cms_task_path(id: active_task.id, format: :json),
+      status_message: t(status_message_key),
+      job_log_path: job_cms_task_path(id: active_task.id),
+      on_complete: "setTimeout(function() { location.reload(); }, 1000);" %>
+<% end %>
+
 <% if @check_result %>
   <% if @execute_result %>
     <%= render "execute_result" %>
   <% else %>
-    <%# ページ移動ジョブが実行中の場合、先頭に状態を表示 %>
-    <% if @execute_task && (@execute_task.running? || @execute_task.ready?) %>
-      <%= render "cms/all_contents_moves/job_status", 
-          task: @execute_task, 
-          url: job_cms_task_path(id: @execute_task.id, format: :json),
-          status_message: t('cms.all_contents_moves.status.executing'),
-          job_log_path: job_cms_task_path(id: @execute_task.id),
-          on_complete: "setTimeout(function() { location.reload(); }, 1000);" %>
-    <% end %>
     <%= render "check_result" %>
   <% end %>
-<% elsif @task.running? || @task.ready? %>
-  <%= render "cms/all_contents_moves/job_status", 
-      task: @task, 
-      url: job_cms_task_path(id: @task.id, format: :json),
-      status_message: t('cms.all_contents_moves.status.reading_csv'),
-      job_log_path: job_cms_task_path(id: @task.id),
-      on_complete: "setTimeout(function() { location.reload(); }, 1000);" %>
-<% elsif @execute_task && (@execute_task.running? || @execute_task.ready?) %>
-  <%= render "cms/all_contents_moves/job_status", 
-      task: @execute_task, 
-      url: job_cms_task_path(id: @execute_task.id, format: :json),
-      status_message: t('cms.all_contents_moves.status.executing'),
-      job_log_path: job_cms_task_path(id: @execute_task.id),
-      on_complete: "setTimeout(function() { location.reload(); }, 1000);" %>
-<% else %>
+<% elsif !active_task %>
   <%= render "upload_form" %>
 <% end %>
