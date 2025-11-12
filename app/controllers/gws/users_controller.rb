@@ -173,12 +173,13 @@ class Gws::UsersController < ApplicationController
 
   def download_template
     @items = @model.none
+    encoding = "UTF-8"
     filename = 'gws_users_template.csv'
     webmail_support = params[:webmail_support].present?
     response.status = 200
     send_enum(
-      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site, webmail_support: webmail_support),
-      type: 'text/csv; charset=Shift_JIS', filename: filename
+      Gws::UserCsv::Exporter.enum_csv(@items, site: @cur_site, encoding: encoding, webmail_support: webmail_support),
+      type: "text/csv; charset=#{encoding}", filename: filename
     )
   end
 

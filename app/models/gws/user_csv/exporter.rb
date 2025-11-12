@@ -63,7 +63,7 @@ class Gws::UserCsv::Exporter
           case encoding
           when "Shift_JIS"
             y << encode_sjis(csv)
-          when "UTF-8"
+          else # "UTF-8"
             y << SS::Csv::UTF8_BOM + csv
           end
         end
