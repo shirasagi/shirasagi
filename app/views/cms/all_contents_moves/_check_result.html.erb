@@ -1,6 +1,18 @@
 <%= form_tag({ action: :execute }, { method: :post }) do %>
   <div class="addon-views">
     <%= render "ss/crud/addon", addon: { id: "cms-all-contents-moves-check-result", head: t("cms.all_contents_moves.check_result_head") } do %>
+      <% if @errors.present? %>
+      <div id="errorExplanation" class="errorExplanation">
+        <h2><%= t('errors.template.header', count: @errors.length) %></h2>
+        <p><%= t('errors.template.body', count: @errors.length) %></p>
+        <ul>
+          <% @errors.each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+
       <table class="index">
         <thead>
           <tr>
