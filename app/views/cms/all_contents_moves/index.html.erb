@@ -21,8 +21,12 @@ SS_Notice.renderNotice("<%= flash[:notice] %>", { type: "notice" });
   # アクティブなタスクとステータスメッセージを決定
   active_task = nil
   status_message_key = nil
-  
-  if @check_result
+
+  if @task&.running? || @task&.ready?
+    # チェックジョブが動作中の場合は常に最優先で表示
+    active_task = @task
+    status_message_key = 'cms.all_contents_moves.status.reading_csv'
+  elsif @check_result
     # チェック結果がある場合
     if @execute_result
       # 実行結果がある場合は結果を表示（タスクは表示しない）
@@ -30,9 +34,6 @@ SS_Notice.renderNotice("<%= flash[:notice] %>", { type: "notice" });
       active_task = @execute_task
       status_message_key = 'cms.all_contents_moves.status.executing'
     end
-  elsif @task&.running? || @task&.ready?
-    active_task = @task
-    status_message_key = 'cms.all_contents_moves.status.reading_csv'
   elsif @execute_task&.running? || @execute_task&.ready?
     active_task = @execute_task
     status_message_key = 'cms.all_contents_moves.status.executing'

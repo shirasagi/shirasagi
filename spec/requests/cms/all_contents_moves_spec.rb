@@ -61,6 +61,18 @@ describe Cms::AllContentsMovesController, type: :feature, dbscope: :example do
         visit index_path
         expect(status_code).to eq 200
       end
+
+      context 'when check job is still running' do
+        before do
+          task.update(state: "running")
+        end
+
+        it 'shows job status for the check job' do
+          visit index_path
+          expect(page).to have_css('.job-status')
+          expect(page).to have_content(I18n.t('job.state.running'))
+        end
+      end
     end
   end
 
