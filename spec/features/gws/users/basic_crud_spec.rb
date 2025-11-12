@@ -80,6 +80,11 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
 
       expect(downloads.first).to be_present
       expect(::File.file?(downloads.first)).to be_truthy
+      SS::Csv.open(downloads.first) do |csv|
+        csv_table = csv.read
+        expect(csv_table.length).to eq 0
+        expect(csv_table.headers).to have_at_least(20).items
+      end
 
       #import
       sys_role1
