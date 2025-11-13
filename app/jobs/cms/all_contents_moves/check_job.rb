@@ -163,15 +163,17 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
       if linking_pages.present?
         row_data["status"] = "confirmation"
         linking_pages.each do |linking_page|
-          if linking_page.is_a?(Cms::Node)
-            row_data["confirmations"] << { "type" => "node", "id" => linking_page.id }
-          elsif linking_page.is_a?(Cms::Page)
-            row_data["confirmations"] << { "type" => "page", "id" => linking_page.id }
-          elsif linking_page.is_a?(Cms::Layout)
-            row_data["confirmations"] << { "type" => "layout", "id" => linking_page.id }
-          elsif linking_page.is_a?(Cms::Part)
-            row_data["confirmations"] << { "type" => "part", "id" => linking_page.id }
-          end
+          confirmation_type = case linking_page
+                              when Cms::Node
+                                "node"
+                              when Cms::Page
+                                "page"
+                              when Cms::Layout
+                                "layout"
+                              when Cms::Part
+                                "part"
+                              end
+          row_data["confirmations"] << { "type" => confirmation_type, "id" => linking_page.id } if confirmation_type
         end
       elsif row_data["status"] != "confirmation"
         row_data["status"] = "ok"
