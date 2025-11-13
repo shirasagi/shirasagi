@@ -3,8 +3,11 @@ this.Event_Monthly = (function () {
   }
 
   Event_Monthly.render = function () {
-    $(".event-pages-filter a[data-id!=all]").on('click', function () {
-      $(".event-pages-filter a[data-id=all]").removeClass("clicked");
+    var $filter = $(".event-pages-filter");
+    var $body = $("#event-list, #event-table");
+
+    $filter.find("a[data-id!=all]").on('click', function () {
+      $filter.find("a[data-id=all]").removeClass("clicked");
 
       if ($(this).hasClass("clicked")) {
         $(this).removeClass("clicked");
@@ -13,14 +16,14 @@ this.Event_Monthly = (function () {
       }
 
       var dataIds = [];
-      $(".event-pages-filter a.clicked").each(function () {
+      $filter.find("a.clicked").each(function () {
         var dataId = parseInt($(this).attr("data-id"));
         if (!isNaN(dataId)) {
           return dataIds.push(dataId);
         }
       });
 
-      $("#event-list .page").each(function () {
+      $body.find("[data-id]").each(function () {
         var pageDataIds = [];
         $.each($(this).attr("data-id").split(" "), function () {
           return pageDataIds.push(parseInt(this));
@@ -43,11 +46,11 @@ this.Event_Monthly = (function () {
       return false;
     });
 
-    $(".event-pages-filter a[data-id=all]").on('click', function () {
+    $filter.find("a[data-id=all]").on('click', function () {
       if (!$(this).hasClass("clicked")) {
         $(this).addClass("clicked");
-        $(".event-pages-filter a[data-id!=all]").removeClass("clicked");
-        $("#event-list .page").show();
+        $filter.find("a[data-id!=all]").removeClass("clicked");
+        $body.find("[data-id]").show();
       }
       return false;
     });

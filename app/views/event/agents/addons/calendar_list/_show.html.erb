@@ -31,6 +31,20 @@
     <% end %>
   </dd>
 
+  <dt><%= @model.t :table_day_loop_liquid %></dt>
+  <dd>
+    <% if @item.table_day_loop_liquid.present? %>
+      <%= text_area_tag :table_day_loop_liquid, @item.table_day_loop_liquid, class: "html", style: "height: 240px;" %>
+    <% end %>
+  </dd>
+
+  <dt><%= @model.t :list_day_loop_liquid %></dt>
+  <dd>
+    <% if @item.list_day_loop_liquid.present? %>
+      <%= text_area_tag :list_day_loop_liquid, @item.list_day_loop_liquid, class: "html", style: "height: 240px;" %>
+    <% end %>
+  </dd>
+
   <dt><%= @model.t :new_days %></dt>
   <dd><%= @item.send :new_days %> <%= t "datetime.prompts.day" %></dd>
 </dl>
