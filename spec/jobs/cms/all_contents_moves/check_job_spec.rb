@@ -114,6 +114,7 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
+        expect(result["rows"].first["errors"]).to include(I18n.t("cms.all_contents_moves.errors.page_id_blank"))
       end
     end
 
@@ -137,6 +138,7 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
+        expect(result["rows"].first["errors"]).to include(I18n.t("cms.all_contents_moves.errors.invalid_page_id"))
       end
     end
 
@@ -160,6 +162,7 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
+        expect(result["rows"].first["errors"]).to include(I18n.t("cms.all_contents_moves.errors.page_not_found"))
       end
     end
 
@@ -183,6 +186,7 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
+        expect(result["rows"].first["errors"]).to include(I18n.t("cms.all_contents_moves.errors.same_filename"))
       end
     end
 
@@ -254,6 +258,7 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
+        expect(result["rows"].first["errors"]).to include(I18n.t("cms.all_contents_moves.errors.branch_page_can_not_move"))
       end
     end
   end

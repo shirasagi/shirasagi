@@ -27,9 +27,9 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
     File.write("#{task.base_dir}/check_result.json", result.to_json) if task.base_dir
 
     task.log "Check completed: #{result[:rows].size} rows processed"
-    task.log "  OK: #{result[:rows].count { |r| r[:status] == 'ok' }}"
-    task.log "  Confirmation: #{result[:rows].count { |r| r[:status] == 'confirmation' }}"
-    task.log "  Error: #{result[:rows].count { |r| r[:status] == 'error' }}"
+    task.log "  OK: #{result[:rows].count { |r| r['status'] == 'ok' }}"
+    task.log "  Confirmation: #{result[:rows].count { |r| r['status'] == 'confirmation' }}"
+    task.log "  Error: #{result[:rows].count { |r| r['status'] == 'error' }}"
   ensure
     file.destroy rescue nil
   end
