@@ -1,8 +1,17 @@
-<%= render "ss/crud/addon", addon: { head: head, css_class: css_class, toggle: true } do %>
-  <% @forum.overall_members.order_by_title(@cur_site).each do |member| %>
-    <p>
-      <%= gws_public_user_long_name(member.long_name) %>
-      <%= member.title(@cur_site).try(:name) %>
-    </p>
+<%= render "ss/crud/addon", addon: { head: head, class: css_class, toggle: true } do %>
+  <% @grouped_members.each do |group, group_members| %>
+    <div class="contributor-group <%= 'no-group-header' unless group&.section_name.present? %>">
+      <% if group&.section_name.present? %>
+        <div class="contributor">
+          <%= group.section_name %>
+        </div>
+      <% end %>
+      <% group_members.each do |member| %>
+        <p>
+          <%= gws_public_user_long_name(member.long_name) %>
+          <%= member.title(@cur_site).try(:name) %>
+        </p>
+      <% end %>
+    </div>
   <% end %>
 <% end %>

@@ -393,6 +393,32 @@ RSpec.describe Gws::Schedule::Todo, type: :model, dbscope: :example do
         expect(items[0].id.to_s).to eq item2.id.to_s
       end
     end
+
+    context "when main group order differs" do
+      let!(:group1) { create(:gws_group, name: "#{site.name}/#{unique_id}", order: 10) }
+      let!(:group2) { create(:gws_group, name: "#{site.name}/#{unique_id}", order: 20) }
+      let!(:user1) do
+        create(:gws_user, cur_site: site, uid: "T1001", gws_role_ids: gws_user.gws_role_ids,
+               group_ids: [group1.id], in_gws_main_group_id: group1.id)
+      end
+      let!(:user2) do
+        create(:gws_user, cur_site: site, uid: "T1002", gws_role_ids: gws_user.gws_role_ids,
+               group_ids: [group2.id], in_gws_main_group_id: group2.id)
+      end
+      let!(:item1) { create :gws_schedule_todo, cur_site: site, cur_user: user1, member_ids: [user1.id], user_ids: [user1.id] }
+      let!(:item2) { create :gws_schedule_todo, cur_site: site, cur_user: user2, member_ids: [user2.id], user_ids: [user2.id] }
+
+      it "sorts users by ascending main group order" do
+        ordered_users = []
+        described_class.all.group_by_user(site: site) do |user, _items|
+          ordered_users << user
+        end
+
+        # 主管課 order が小さいユーザーから順に取得されることを確認
+        expect(ordered_users.map(&:id)).to eq [user1.id, user2.id]
+        expect(user1.gws_main_group_orders[site.id.to_s]).to be < user2.gws_main_group_orders[site.id.to_s]
+      end
+    end
   end
 
   describe ".group_by_end_at" do

@@ -3,12 +3,23 @@
 
   <ul class="list-items">
     <% @items.group_by_user(site: @cur_site) do |user, items| %>
+      <% main_group = tryb { user.gws_main_group(@cur_site) } %>
       <li class="list-item gws-schedule-todo-list-item-header" id="user-<%= user.id %>" data-depth="0" data-group="user-<%= user.id %>">
         <span class="list-item-indent"></span>
         <span class="material-icons md-18 list-item-switch">expand_less</span>
         <label class="check"></label>
         <div class="info">
-          <span><%= gws_public_user_long_name(user.long_name) %></span>
+          <span>
+            <%= gws_public_user_long_name(user.long_name) %>
+            <% if main_group.present? %>
+              <% group_label = main_group.section_name %>
+              <% if group_label.present? %>
+                <span class="group">
+                  （<%= group_label %>）
+                </span>
+              <% end %>
+            <% end %>
+          </span>
         </div>
       </li>
 
