@@ -91,6 +91,9 @@ namespace :ss do
 
       # 集計グループの更新
       ::Tasks::SS.invoke_task("gws:aggregation:group:update")
+
+      # main_group_orders の更新
+      ::Tasks::SS.invoke_task("gws:main_group_orders:update")
     end
   end
 end
