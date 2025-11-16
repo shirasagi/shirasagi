@@ -25,6 +25,9 @@ class Gws::Schedule::Todo
   permission_include_custom_groups
   readable_setting_include_custom_groups
 
+  index({ overall_start_at: 1, overall_end_at: 1, site_id: 1 })
+  index({ site_id: 1, member_ids: 1, end_at: 1 })
+
   field :color, type: String
   field :todo_state, type: String, default: 'unfinished'
   field :achievement_rate, type: Integer
@@ -251,51 +254,20 @@ class Gws::Schedule::Todo
     end
 
     def group_by_user(site:)
-      # load all items
-      items = self.all.to_a
+      users_items = Hash.new { |hash, key| hash[key] = [] }
 
-      expanded = []
-      items.each do |item|
-        expanded += item.overall_members.map do |user|
-          title_order =  user.title_orders.present? ? user.title_orders[site.id.to_s] || 0 : 0
-          [ title_order, user.organization_uid.presence || '', user.uid.presence || '', user, item ]
+      self.all.to_a.each do |item|
+        item.overall_members.each do |user|
+          next if user.blank?
+
+          users_items[user] << item
         end
       end
 
-      expanded.sort! do |lhs, rhs|
-        # 0: title's order, this field is descending order
-        cmp = rhs[0] <=> lhs[0]
-        # 1: organization uid, this field is ascending order
-        cmp = lhs[1] <=> rhs[1] if cmp == 0
-        # 2: uid, this field is ascending order
-        cmp = lhs[2] <=> rhs[2] if cmp == 0
-        # final result
-        cmp
-      end
+      ordered_users = Gws::User.order_users_by_title(users_items.keys, cur_site: site)
 
-      last_user = nil
-      users_items = []
-      expanded.each do |_title_order, _organization_uid, _uid, user, item|
-        if last_user.nil?
-          last_user = user
-          users_items << item
-          next
-        end
-
-        if last_user.id != user.id
-          yield last_user, users_items
-
-          last_user = user
-          users_items.clear
-          users_items << item
-          next
-        end
-
-        users_items << item
-      end
-
-      if users_items.present?
-        yield last_user, users_items
+      ordered_users.each do |user|
+        yield user, users_items[user]
       end
     end
 
