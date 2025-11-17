@@ -54,7 +54,7 @@ export default class extends Controller {
   #openDialogByCBox() {
     const selected = [];
     const apiUrl = new URL(this.apiValue, location.origin);
-    this._selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
+    // this._selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
 
     $.colorbox({
       fixed: true, open: true, href: apiUrl.toString(), width: "90%", height: "90%",
@@ -74,11 +74,10 @@ export default class extends Controller {
   }
 
   #openDialogBySS() {
-    // not implemented yet.
     const apiUrl = new URL(this.apiValue, location.origin);
-    this._selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
+    const selected = this._selectedIds();
 
-    Dialog.showModal(apiUrl.toString()).then((result) => {
+    Dialog.showModal(apiUrl.toString(), { detail: { selected: Array.from(selected) } }).then((result) => {
       this._renderResult(result.returnValue)
     })
   }
