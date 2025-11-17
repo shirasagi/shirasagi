@@ -1,29 +1,18 @@
 require 'spec_helper'
 
-describe 'gws_memo_filters', type: :feature, dbscope: :example do
-  context "basic crud", js: true do
+describe 'gws_memo_filters', type: :feature, dbscope: :example, js: true do
+  context "basic crud" do
     let!(:site) { gws_site }
-    let!(:item) { create :gws_memo_filter }
-    let!(:folder) { create :gws_memo_folder }
+    let!(:folder) { create :gws_memo_folder, cur_site: site }
     let!(:index_path) { gws_memo_filters_path site }
-    let!(:new_path) { new_gws_memo_filter_path site }
-    let!(:show_path) { gws_memo_filter_path site, item }
-    let!(:edit_path) { edit_gws_memo_filter_path site, item }
-    let!(:delete_path) { delete_gws_memo_filter_path site, item }
 
-    before { login_gws_user }
-
-    it "#index" do
-      visit index_path
-      expect(current_path).not_to eq sns_login_path
-    end
-
-    it "#new" do
-      visit new_path
-
+    it do
+      login_gws_user to: index_path
+      click_on I18n.t("ss.links.new")
       within "form#item-form" do
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_error I18n.t("errors.messages.blank")
       expect(page).to have_selector("div#errorExplanation ul li", count: 3)
 
       name = "name-#{unique_id}"
@@ -33,31 +22,46 @@ describe 'gws_memo_filters', type: :feature, dbscope: :example do
         select folder.name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(first('#addon-basic')).to have_text(name)
-    end
+      wait_for_notice I18n.t("ss.notice.saved")
+      expect(page).to have_css('#addon-basic', text: name)
 
-    it "#show" do
-      visit show_path
-      expect(current_path).not_to eq sns_login_path
-    end
+      expect(Gws::Memo::Filter.all.count).to eq 1
+      Gws::Memo::Filter.all.first.tap do |item|
+        expect(item.site_id).to eq site.id
+        expect(item.name).to eq name
+        expect(item.subject).to be_present
+        expect(item.folder_id).to eq folder.id
+      end
 
-    it "#edit" do
-      visit edit_path
+      visit index_path
+      click_on name
+      click_on I18n.t("ss.links.edit")
 
       name = "modify-#{unique_id}"
       within "form#item-form" do
         fill_in "item[name]", with: name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(first('#addon-basic')).to have_text(name)
-    end
+      wait_for_notice I18n.t("ss.notice.saved")
+      expect(page).to have_css('#addon-basic', text: name)
 
-    it "#delete" do
-      visit delete_path
+      expect(Gws::Memo::Filter.all.count).to eq 1
+      Gws::Memo::Filter.all.first.tap do |item|
+        expect(item.site_id).to eq site.id
+        expect(item.name).to eq name
+        expect(item.subject).to be_present
+        expect(item.folder_id).to eq folder.id
+      end
+
+      visit index_path
+      click_on name
+      click_on I18n.t("ss.links.delete")
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(current_path).to eq index_path
+      wait_for_notice I18n.t("ss.notice.deleted")
+
+      expect(Gws::Memo::Filter.all.count).to eq 0
     end
   end
 end
