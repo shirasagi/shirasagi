@@ -78,6 +78,12 @@ class DialogFrame {
     this._dialog.addEventListener("close", () => this.#onClose())
     this._dialogContent.addEventListener("ss:modal-close", () => this.closeModal())
     this._dialogContent.addEventListener("ss:modal-select", (ev) => this.#onSelect(ev.detail.item))
+    this._dialog.addEventListener("ss:requestDialogDetail", (ev) => {
+      const caller = ev.detail?.caller;
+      if (caller && this.observer) {
+        dispatchEvent(caller, "ss:dialogDetail", this.observer.dialogDetail());
+      }
+    });
   }
 
   disconnect() {
@@ -176,7 +182,8 @@ export default class Dialog {
       promise1 = new Promise((resolve) => {
         this._dialogFrame.observer = {
           onClose: () => this.#onClose(resolve),
-          onSelect: ($itemEl) => this.#onSelect($itemEl)
+          onSelect: ($itemEl) => this.#onSelect($itemEl),
+          dialogDetail: () => this.options?.detail
         }
       })
 
@@ -186,7 +193,8 @@ export default class Dialog {
       promise1 = new Promise((resolve) => {
         this._dialogFrame.observer = {
           onClose: () => this.#onClose(resolve),
-          onSelect: ($itemEl) => this.#onSelect($itemEl)
+          onSelect: ($itemEl) => this.#onSelect($itemEl),
+          dialogDetail: () => this.options?.detail
         }
       })
       const promise2 = this._dialogFrame.showModal()
