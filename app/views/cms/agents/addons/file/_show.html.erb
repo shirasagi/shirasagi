@@ -5,10 +5,10 @@
 %>
 
 <dl class="see">
-  <dd class="wide">
-  <dt>
+  <dt class="wide">
     <%= tt('cms/addon/file.description', 'tooltip') %>
   </dt>
+  <dd class="wide">
     <div id="selected-files">
       <% @item.files.try(:each) do |file| %>
         <%
