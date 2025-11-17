@@ -543,7 +543,7 @@ Rails.application.routes.draw do
       get :delete, on: :member
     end
     resources :max_file_sizes, concerns: :deletion
-    resource :image_resize, except: %i[new create destroy]
+    resource :image_resize, except: %i[new create]
     resources :nodes, concerns: [:deletion, :change_state, :import] do
       match :download, on: :collection, via: %i[get post]
     end

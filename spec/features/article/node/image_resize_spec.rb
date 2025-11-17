@@ -74,10 +74,19 @@ describe "article_node_map_search", type: :feature, dbscope: :example, js: true 
       visit article_pages_path(site: site, cid: article_node)
       click_on I18n.t("cms.node_config")
       within "#addon-cms-agents-addons-image_resize_setting" do
-        expect(page).to have_content(state_label1)
-        expect(page).to have_content(max_width1)
-        expect(page).to have_content(max_height1)
+        expect(page).to have_content(state_label2)
+        expect(page).to have_content(max_width2)
+        expect(page).to have_content(max_height2)
+
+        click_on I18n.t("cms.add_image_resize")
       end
+
+      page.accept_confirm(I18n.t("ss.confirm.delete")) do
+        click_on I18n.t("ss.links.delete")
+      end
+      wait_for_notice I18n.t("ss.notice.deleted")
+
+      expect(Cms::ImageResize.all.count).to eq 0
     end
   end
 end
