@@ -101,7 +101,7 @@ Rails.application.routes.draw do
 
     namespace "apis" do
       get "groups" => "groups#index"
-      get "users" => "users#index"
+      match "users" => "users#index", via: %i[get post]
       get "multi_checkboxes" => "multi_checkboxes#index"
       get "user_titles" => "user_titles#index"
       get "user_occupations" => "user_occupations#index"
