@@ -18,11 +18,6 @@ const DEFAULT_TEMPLATE = `
   <% } %>
 `;
 
-// 選択された項目の数が多ければ多いほど URL が長くなる。
-// URL が長くなりすぎると 414 URI Too Long エラーが発生するリスクが高くなる。
-// そこで、選択された項目数を制限する。
-const MAX_SELECTED_ID_COUNT = 100;
-
 export default class extends Controller {
   static values = {
     api: String,
