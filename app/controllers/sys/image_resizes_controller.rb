@@ -26,4 +26,8 @@ class Sys::ImageResizesController < ApplicationController
     return render_destroy(true) if params[:action] == 'destroy'
     raise e
   end
+
+  def crud_redirect_url
+    url_for(action: :show)
+  end
 end

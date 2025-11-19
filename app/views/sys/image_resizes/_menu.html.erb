@@ -2,6 +2,15 @@
   <% if params[:action] =~ /edit|update|delete/ %>
     <%= link_to t('ss.links.back_to_show'), url_for(action: :show), class: "back-to-show" if @item.allowed?(:edit, @cur_user) %>
   <% else %>
-    <%= link_to t('ss.links.edit'), url_for(action: :edit), class: :edit if @item.allowed?(:edit, @cur_user) %>
+    <%=
+      if @item.allowed?(:edit, @cur_user)
+        link_to t('ss.links.edit'), url_for(action: :edit), class: :edit
+      end
+    %>
+    <%=
+      if @item.persisted? && @item.allowed?(:delete, @cur_user)
+        link_to t('ss.links.delete'), url_for(action: :destroy), class: :delete, method: :delete, data: { confirm: t("ss.confirm.delete") }
+      end
+    %>
   <% end %>
 </nav>
