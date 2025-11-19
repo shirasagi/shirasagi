@@ -3,10 +3,10 @@ require 'spec_helper'
 describe "inquiry_forms", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
-  let!(:node) { create :inquiry_node_node, cur_site: site, view_route: "inquiry/form" }
+  let!(:node) { create :inquiry_node_node, cur_site: site }
   let!(:faq_node) { create :faq_node_page, cur_site: site }
   let!(:faq_node2) { create :faq_node_page, cur_site: site }
-  let(:index_path)  { inquiry_nodes_path site.id, node }
+  let(:index_path) { inquiry_nodes_path site.id, node }
   let(:now) { Time.zone.now.change(sec: 0) }
 
   context "basic crud" do
