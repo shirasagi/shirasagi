@@ -19,7 +19,7 @@ module Inquiry::Addon
 
     def kintone_app_activation_options
       [
-        [I18n.t('ss.options.state.disabled'), 'disbaled'],
+        [I18n.t('ss.options.state.disabled'), 'disabled'],
         [I18n.t('ss.options.state.enabled'), 'enabled']
       ]
     end
