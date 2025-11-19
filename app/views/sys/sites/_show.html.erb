@@ -39,6 +39,6 @@
 
   <% if @item.deleted %>
   <dt><%= @model.t :deleted %></dt>
-  <dd><%= l(@item.deleted, format: :picker) %></dd>
+  <dd><%= ss_time_tag @item.deleted %></dd>
   <% end %>
 </dl>
