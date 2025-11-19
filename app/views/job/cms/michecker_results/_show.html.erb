@@ -10,7 +10,7 @@
 
   <dt><%= @model.t :michecker_last_executed_at %></dt>
   <dd>
-    <%= @item.michecker_last_executed_at.try { |time| I18n.l(time, format: :picker) } %>
+    <%= ss_time_tag @item.michecker_last_executed_at %>
     <% if @item.started && @item.closed %>
       in
       <%= (@item.closed - @item.started).to_f %><%= t("datetime.prompts.second") %>

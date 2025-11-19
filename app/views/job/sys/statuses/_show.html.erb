@@ -15,5 +15,5 @@
   <dd><%= @item.try(:current_count).try { |num| num.to_fs(:delimited) } %></dd>
 
   <dt><%= @model.t :updated %></dt>
-  <dd><%= @item.try(:updated).try { |time| I18n.l(time, format: :picker) } %></dd>
+  <dd><%= ss_time_tag @item.try(:updated) %></dd>
 </dl>
