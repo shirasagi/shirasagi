@@ -16,4 +16,8 @@ class Cms::Node::ImageResizesController < ApplicationController
     @item.attributes = fix_params
     @item
   end
+
+  def crud_redirect_url
+    url_for(action: :show)
+  end
 end

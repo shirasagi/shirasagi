@@ -76,6 +76,14 @@ describe "sys_image_resizes", type: :feature, dbscope: :example, js: true do
           expect(image_resize.size).to be_blank
           expect(image_resize.quality).to be_blank
         end
+
+        visit sys_image_resize_path
+        page.accept_confirm(I18n.t("ss.confirm.delete")) do
+          click_on I18n.t("ss.links.delete")
+        end
+        wait_for_notice I18n.t("ss.notice.deleted")
+
+        expect(SS::ImageResize.all.count).to eq 0
       end
     end
 
@@ -136,6 +144,14 @@ describe "sys_image_resizes", type: :feature, dbscope: :example, js: true do
           expect(image_resize.size).to eq size2 * 1_024 * 1_024
           expect(image_resize.quality).to eq quality2
         end
+
+        visit sys_image_resize_path
+        page.accept_confirm(I18n.t("ss.confirm.delete")) do
+          click_on I18n.t("ss.links.delete")
+        end
+        wait_for_notice I18n.t("ss.notice.deleted")
+
+        expect(SS::ImageResize.all.count).to eq 0
       end
     end
   end

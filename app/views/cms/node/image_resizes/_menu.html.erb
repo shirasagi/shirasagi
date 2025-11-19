@@ -7,5 +7,8 @@
     <% if @item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
       <%= link_to t('ss.links.edit'), { action: :edit }, class: :edit %>
     <% end %>
+    <% if @item.persisted? && @item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node) %>
+      <%= link_to t('ss.links.delete'), url_for(action: :destroy), class: :delete, method: :delete, data: { confirm: t("ss.confirm.delete") } %>
+    <% end %>
   <% end %>
 </nav>

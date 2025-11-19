@@ -15,19 +15,17 @@
     <table class="index">
       <thead>
         <tr>
-          <th><%= model.t :name %></th>
-          <th><%= model.t :extensions %></th>
-          <th><%= model.t :size %></th>
           <th><%= model.t :state %></th>
+          <th><%= model.t :max_width %></th>
+          <th><%= model.t :max_height %></th>
         </tr>
       </thead>
       <tbody>
         <% items.each do |item| %>
           <tr>
-            <td><%= item.name %></td>
-            <td><%= item.extensions %></td>
-            <td><%= number_to_human_size(item.size) %></td>
             <td><%= item.label :state %></td>
+            <td><%= item.max_width %></td>
+            <td><%= item.max_height %></td>
           </tr>
         <% end %>
       </tbody>
