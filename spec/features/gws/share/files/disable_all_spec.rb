@@ -7,14 +7,12 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
   let!(:item) { create :gws_share_file, folder_id: folder.id, category_ids: [category.id], memo: "test" }
   let(:index_path) { gws_share_folder_files_path site, folder }
 
-  before { login_gws_user }
-
   describe "disable(soft delete) all" do
     it do
       expect(item.deleted).to be_blank
       expect(item.histories.count).to eq 1
 
-      visit index_path
+      login_gws_user to: index_path
       within ".tree-navi" do
         expect(page).to have_css(".item-name", text: folder.name)
       end
@@ -43,6 +41,23 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         expect(history.item_id).to eq item.id.to_s
         expect(Fs.file?(history.path)).to be_truthy
         expect(history.path).to eq item.histories.last.path
+      end
+    end
+
+    describe "if user don't have permissions to delete" do
+      before do
+        user = gws_user
+        user.gws_roles.each do |role|
+          role.update!(permissions: role.permissions - %w(delete_other_gws_share_files delete_private_gws_share_files))
+        end
+      end
+
+      it do
+        login_gws_user to: index_path
+        within ".list-head-action" do
+          expect(page).to have_content I18n.t("gws/share.links.file_download")
+          expect(page).to have_no_content I18n.t("ss.links.delete")
+        end
       end
     end
   end
