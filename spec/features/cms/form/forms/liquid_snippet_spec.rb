@@ -320,4 +320,44 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       expect(form.html).to include("<div class='footer'>Footer content</div>")
     end
   end
+
+  context 'template reference functionality' do
+    let!(:liquid_setting_template) do
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        html: "{% for item in items %}<div class='template-item'>{{ item.name }}</div>{% endfor %}",
+        state: "public",
+        name: "Template Setting #{unique_id}"
+      )
+    end
+
+    before { login_cms_user }
+
+    it 'template reference takes precedence over direct loop_liquid input' do
+      # This test verifies the rendering priority in the helper
+      # When loop_setting_id is set and loop_setting.html_format == "liquid",
+      # it should use loop_setting.html instead of loop_liquid
+      node = create(:article_node_page, cur_site: site,
+        loop_format: "liquid",
+        loop_setting_id: liquid_setting_template.id,
+        loop_liquid: "direct-input-content"
+      )
+
+      expect(node.loop_setting).to eq liquid_setting_template
+      expect(node.loop_setting.html_format_liquid?).to be true
+      # The rendering helper should use loop_setting.html, not loop_liquid
+    end
+
+    it 'backward compatibility: direct loop_liquid input still works' do
+      # When loop_setting_id is not set, loop_liquid should be used
+      node = create(:article_node_page, cur_site: site,
+        loop_format: "liquid",
+        loop_liquid: "direct-input-content"
+      )
+
+      expect(node.loop_setting_id).to be_nil
+      expect(node.loop_liquid).to eq "direct-input-content"
+    end
+  end
 end

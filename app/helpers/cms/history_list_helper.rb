@@ -50,7 +50,13 @@ module Cms::HistoryListHelper
     if cur_item.loop_format_shirasagi?
       render_list_with_shirasagi(cur_item, default_loop_html)
     else
-      source = cur_item.loop_liquid.presence || default_loop_liquid
+      source = if cur_item.loop_setting.present? && cur_item.loop_setting.html_format_liquid?
+                 cur_item.loop_setting.html
+               elsif cur_item.loop_liquid.presence
+                 cur_item.loop_liquid
+               else
+                 default_loop_liquid
+               end
       assigns = { "items" => @items }
       render_list_with_liquid(source, assigns)
     end

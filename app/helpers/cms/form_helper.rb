@@ -31,9 +31,13 @@ module Cms::FormHelper
     items
   end
 
-  def ancestral_loop_settings
+  def ancestral_loop_settings(format = nil)
     items = []
-    settings = Cms::LoopSetting.site(@cur_site).shirasagi
+    if format == "liquid"
+      settings = Cms::LoopSetting.site(@cur_site).liquid
+    else
+      settings = Cms::LoopSetting.site(@cur_site).shirasagi
+    end
     settings.each do |item|
       items << [item.name, item.id]
     end

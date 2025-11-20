@@ -9,6 +9,8 @@
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
 
     <% if @model.use_liquid %>
+    Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
+
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
       if (format === "liquid") {
@@ -110,6 +112,10 @@
 
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
+    <% if @model.use_loop_html %>
+      <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
+      <dd><%= f.select :loop_setting_id, ancestral_loop_settings("liquid"), { include_blank: t('cms.input_directly') }, { id: 'item_loop_setting_id_liquid' } %></dd>
+    <% end %>
     <dt><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
     <dd>
       <% snippet_options = ancestral_html_settings_liquid %>

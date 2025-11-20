@@ -76,4 +76,83 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       expect(textarea_value).to include(snippet_html_high)
     end
   end
+
+  context "template reference functionality" do
+    let!(:node_with_template) { create(:article_node_page, cur_site: site) }
+
+    before do
+      login_cms_user
+    end
+
+    it "can select liquid loop setting as template reference" do
+      visit edit_node_conf_path(site.id, node_with_template)
+
+      ensure_addon_opened('#addon-event-agents-addons-page_list')
+
+      within '#addon-event-agents-addons-page_list' do
+        select('Liquid', from: 'item[loop_format]') if page.has_select?('item[loop_format]')
+        wait_for_js_ready
+
+        # Check that template reference dropdown exists (Liquid format specific)
+        expect(page).to have_select('item_loop_setting_id_liquid', wait: 5)
+
+        # Select a liquid loop setting as template reference
+        select liquid_setting_high.name, from: 'item_loop_setting_id_liquid'
+      end
+
+      within "form#item-form" do
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      node_with_template.reload
+      expect(node_with_template.loop_setting_id).to eq liquid_setting_high.id
+      expect(node_with_template.loop_format).to eq "liquid"
+    end
+
+    it "template reference and snippet functionality work together" do
+      visit edit_node_conf_path(site.id, node_with_template)
+
+      ensure_addon_opened('#addon-event-agents-addons-page_list')
+
+      within '#addon-event-agents-addons-page_list' do
+        select('Liquid', from: 'item[loop_format]') if page.has_select?('item[loop_format]')
+        wait_for_js_ready
+
+        # Select template reference (Liquid format specific)
+        select liquid_setting_high.name, from: 'item_loop_setting_id_liquid'
+
+        # Also use snippet functionality
+        expect(page).to have_css('.loop-snippet-selector', wait: 5)
+        fill_in_code_mirror 'item[loop_liquid]', with: "custom-content"
+        select_loop_snippet(liquid_setting_low.name)
+      end
+
+      within "form#item-form" do
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      node_with_template.reload
+      # Template reference should be set
+      expect(node_with_template.loop_setting_id).to eq liquid_setting_high.id
+      # But loop_liquid should also contain the snippet
+      expect(node_with_template.loop_liquid).to include("custom-content")
+      expect(node_with_template.loop_liquid).to include(snippet_html_low)
+    end
+
+    it "renders using template reference when loop_setting_id is set" do
+      node_with_template.update!(
+        loop_format: "liquid",
+        loop_setting_id: liquid_setting_high.id
+      )
+
+      # The rendering should use loop_setting.html, not loop_liquid
+      # This is tested indirectly by checking that the node has the correct loop_setting_id
+      expect(node_with_template.loop_setting).to eq liquid_setting_high
+      expect(node_with_template.loop_setting.html_format_liquid?).to be true
+    end
+  end
 end

@@ -38,10 +38,15 @@
 
     <% if @model.use_loop_settings %>
       <% if @item.loop_format_liquid? %>
-        <% if @item.loop_liquid.present? %>
-          <dt><%= @model.t :loop_liquid %></dt>
-          <dd><%= text_area_tag :loop_liquid, @item.loop_liquid, class: "html", style: "height: 100px;"  %></dd>
+        <dt><%= @model.t :loop_html %></dt>
+        <% if @item.loop_setting.present? && @item.loop_setting.html_format_liquid? %>
+          <dd><%= tryb{@item.loop_setting.name} %></dd>
         <% end %>
+        <dd>
+          <% if @item.loop_liquid.present? %>
+            <%= text_area_tag :loop_liquid, @item.loop_liquid, class: "html", style: "height: 100px;"  %>
+          <% end %>
+        </dd>
       <% else %>
         <% if @item.upper_html.present? %>
           <dt><%= @model.t :upper_html %></dt>
