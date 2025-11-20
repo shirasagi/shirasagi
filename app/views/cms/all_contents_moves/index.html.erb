@@ -22,19 +22,20 @@ SS_Notice.renderNotice("<%= flash[:notice] %>", { type: "notice" });
   active_task = nil
   status_message_key = nil
 
-  if @task&.running? || @task&.ready?
-    # チェックジョブが動作中の場合は常に最優先で表示
+  # チェックジョブが動作中または待機中の場合は最優先で表示
+  if @task && (@task.running? || @task.ready?)
     active_task = @task
     status_message_key = 'cms.all_contents_moves.status.reading_csv'
+  # チェック結果がある場合
   elsif @check_result
-    # チェック結果がある場合
     if @execute_result
       # 実行結果がある場合は結果を表示（タスクは表示しない）
-    elsif @execute_task&.running? || @execute_task&.ready?
+    elsif @execute_task && (@execute_task.running? || @execute_task.ready?)
       active_task = @execute_task
       status_message_key = 'cms.all_contents_moves.status.executing'
     end
-  elsif @execute_task&.running? || @execute_task&.ready?
+  # チェック結果がなく、実行ジョブが動作中の場合
+  elsif @execute_task && (@execute_task.running? || @execute_task.ready?)
     active_task = @execute_task
     status_message_key = 'cms.all_contents_moves.status.executing'
   end
