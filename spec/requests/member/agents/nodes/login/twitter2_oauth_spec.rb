@@ -70,7 +70,7 @@ describe Member::Agents::Nodes::LoginController, type: :request, dbscope: :examp
       expect(query_values["client_id"]).to eq client_id
       expect(query_values["redirect_uri"]).to eq "#{node.full_url}twitter2/callback"
       expect(query_values["response_type"]).to eq "code"
-      expect(query_values["scope"]).to be_blank
+      expect(query_values["scope"]).to include('tweet.read', 'users.read')
       expect(query_values["state"]).to be_present
 
       get "#{node.full_url}twitter2/callback?#{{state: query_values["state"], code: code}.to_query}"

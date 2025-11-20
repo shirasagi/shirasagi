@@ -11,7 +11,8 @@ module Member::Addon
     def twitter2_oauth_strategy
       options = {
         client_id: twitter2_client_id.presence || SS.config.oauth.try(:twitter2_client_id),
-        client_secret: twitter2_client_secret.presence || SS.config.oauth.try(:twitter2_client_secret)
+        client_secret: twitter2_client_secret.presence || SS.config.oauth.try(:twitter2_client_secret),
+        scope: 'tweet.read users.read'
       }
 
       [ OmniAuth::Strategies::Twitter2, options ]
