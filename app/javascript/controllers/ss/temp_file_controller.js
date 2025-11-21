@@ -64,22 +64,6 @@ export default class extends Controller {
     this.element.addEventListener("ss:tempFile:upload", (ev) => {
       this.#appendFilesToWaitingList(ev.detail.files)
     });
-    // this.element.addEventListener("ss:dialogDetail", (ev) => {
-    //   // ダイアログの初期化パラメータ―。
-    //   //
-    //   // selected: 選択されている項目情報が含まれている。
-    //   this._selected = ev.detail?.selected;
-    //   this.#disableAlreadySelectedFiles();
-    // });
-    //
-    // if (this.element.querySelector(".file-view[data-id]")) {
-    //   const dialogElement = this.element.closest(".ss-dialog");
-    //   if (dialogElement) {
-    //     // ダイアログにメッセージ ss:requestDialogDetail を送ると、本要素にメッセージ ss:dialogDetail が送られ、
-    //     // そのパラメータに選択されている項目情報など、ダイアログの初期化パラメータが含まれている。
-    //     dispatchEvent(dialogElement, "ss:requestDialogDetail", {caller: this.element});
-    //   }
-    // }
   }
 
   optionTargetConnected(element) {
@@ -166,21 +150,6 @@ export default class extends Controller {
       dispatchEvent(this.element, "ss:ajaxRemoved");
     }, { once: true });
   }
-
-  // #disableAlreadySelectedFiles() {
-  //   if (!this._selected) {
-  //     return;
-  //   }
-  //
-  //   this._selected.forEach((id) => {
-  //     const fileElement = this.element.querySelector(`.file-view[data-id="${id}"]`)
-  //     if (!fileElement) {
-  //       return;
-  //     }
-  //
-  //     fileElement.classList.add("selected");
-  //   })
-  // }
 
   async #selectFiles() {
     const files = this.fileUploadShadowTarget.files;

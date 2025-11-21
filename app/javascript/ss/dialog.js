@@ -78,12 +78,6 @@ class DialogFrame {
     this._dialog.addEventListener("close", () => this.#onClose())
     this._dialogContent.addEventListener("ss:modal-close", () => this.closeModal())
     this._dialogContent.addEventListener("ss:modal-select", (ev) => this.#onSelect(ev.detail.item))
-    this._dialog.addEventListener("ss:requestDialogDetail", (ev) => {
-      const caller = ev.detail?.caller;
-      if (caller && this.observer) {
-        dispatchEvent(caller, "ss:dialogDetail", this.observer.dialogDetail());
-      }
-    });
   }
 
   disconnect() {
@@ -182,8 +176,7 @@ export default class Dialog {
       promise1 = new Promise((resolve) => {
         this._dialogFrame.observer = {
           onClose: () => this.#onClose(resolve),
-          onSelect: ($itemEl) => this.#onSelect($itemEl),
-          dialogDetail: () => this.options?.detail
+          onSelect: ($itemEl) => this.#onSelect($itemEl)
         }
       })
 
@@ -193,8 +186,7 @@ export default class Dialog {
       promise1 = new Promise((resolve) => {
         this._dialogFrame.observer = {
           onClose: () => this.#onClose(resolve),
-          onSelect: ($itemEl) => this.#onSelect($itemEl),
-          dialogDetail: () => this.options?.detail
+          onSelect: ($itemEl) => this.#onSelect($itemEl)
         }
       })
       const promise2 = this._dialogFrame.showModal()
@@ -206,7 +198,11 @@ export default class Dialog {
       } else if (this.src instanceof DocumentFragment) {
         this._dialogFrame.renderContent(this.src)
       } else {
-        const response = await fetch(this.src, {headers: {'X-SS-DIALOG': true}})
+        const fetchOptions = { method: this.options?.data ? "POST" : "GET", headers: { 'X-SS-DIALOG': true } }
+        if (this.options?.data) {
+          fetchOptions.body = this.options.data
+        }
+        const response = await fetch(this.src, fetchOptions)
         const html = await response.text()
         this._dialogFrame.renderContent(html)
       }
