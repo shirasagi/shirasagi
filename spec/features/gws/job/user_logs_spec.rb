@@ -79,7 +79,9 @@ describe "gws_job_user_logs", type: :feature, dbscope: :example, js: true do
 
     it do
       login_user user1, to: gws_job_user_logs_path(site: site)
-      click_on I18n.t("ss.links.download")
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.download")
+      end
 
       within "form#item-form" do
         select I18n.t("ss.options.duration.1_year"), from: "item[save_term]"
