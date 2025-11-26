@@ -1,74 +1,91 @@
 require 'spec_helper'
 
-describe "gws_faq_topics", type: :feature, dbscope: :example do
-  context "basic crud", js: true do
-    let(:site) { gws_site }
-    let(:item) { create :gws_faq_topic }
-    let!(:category) { create :gws_faq_category }
-    let(:index_path) { gws_faq_topics_path site, '-', '-' }
-    let(:new_path) { new_gws_faq_topic_path site, '-', '-' }
-    let(:show_path) { gws_faq_topic_path site, '-', '-', item }
-    let(:edit_path) { edit_gws_faq_topic_path site, '-', '-', item }
-    let(:delete_path) { delete_gws_faq_topic_path site, '-', '-', item }
+describe "gws_faq_topics", type: :feature, dbscope: :example, js: true do
+  let(:site) { gws_site }
+  let!(:category1) { create :gws_faq_category, cur_site: site }
+  let!(:category2) { create :gws_faq_category, cur_site: site }
+  let(:now) { Time.zone.now.change(usec: 0) }
 
-    before { login_gws_user }
+  before { login_gws_user }
 
-    it "#index" do
-      visit index_path
-      expect(current_path).not_to eq sns_login_path
-    end
+  context "basic crud" do
+    let(:name) { "name-#{unique_id}" }
+    let(:name2) { "name-#{unique_id}" }
+    let(:text) { Array.new(2) { "text-#{unique_id}" } }
 
-    it "#new" do
-      now = Time.zone.at(Time.zone.now.to_i)
+    it do
+      visit gws_faq_topics_path(site: site, mode: '-', category: '-')
+      wait_for_js_ready
+
       Timecop.freeze(now) do
-        visit new_path
-        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
-        within_cbox do
-          wait_for_cbox_closed { click_on category.name }
+        within ".nav-menu" do
+          click_on I18n.t("ss.links.new")
         end
 
         within "form#item-form" do
-          fill_in "item[name]", with: "name"
-          fill_in "item[text]", with: "text"
+          fill_in "item[name]", with: name
+          fill_in "item[text]", with: text.join("\n")
+
+          wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
+        end
+        wait_for_cbox do
+          wait_for_cbox_closed { click_on category1.name }
+        end
+        within "form#item-form" do
+          within "#addon-gws-agents-addons-faq-category" do
+            expect(page).to have_css(".ajax-selected [data-id='#{category1.id}']", text: category1.name)
+          end
           click_button I18n.t('ss.buttons.save')
         end
-        expect(current_path).not_to eq new_path
-
-        item = Gws::Faq::Topic.site(site).first
-        expect(item.name).to eq "name"
-        expect(item.text).to eq "text"
-        expect(item.state).to eq "public"
-        expect(item.mode).to eq "thread"
-        expect(item.descendants_updated).to eq now
-        expect(item.descendants_files_count).to eq 0
-        expect(item.category_ids).to eq [category.id]
+        wait_for_notice I18n.t("ss.notice.saved")
       end
-    end
 
-    it "#show" do
-      visit show_path
-      expect(current_path).not_to eq sns_login_path
-    end
+      item = Gws::Faq::Topic.site(site).first
+      expect(item.name).to eq name
+      expect(item.text).to eq text.join("\r\n")
+      expect(item.state).to eq "public"
+      expect(item.mode).to eq "thread"
+      expect(item.descendants_updated).to eq now
+      expect(item.descendants_files_count).to eq 0
+      expect(item.category_ids).to eq [category1.id]
+      expect(item.deleted).to be_blank
 
-    it "#edit" do
-      visit edit_path
-      wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
-      within_cbox do
-        wait_for_cbox_closed { click_on category.name }
+      visit gws_faq_topics_path(site: site, mode: '-', category: '-')
+      click_on item.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.edit")
       end
       within "form#item-form" do
-        fill_in "item[name]", with: "modify"
+        fill_in "item[name]", with: name2
+        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
+      end
+      within_cbox do
+        wait_for_cbox_closed { click_on category2.name }
+      end
+      within "form#item-form" do
+        within "#addon-gws-agents-addons-faq-category" do
+          expect(page).to have_css(".ajax-selected [data-id='#{category2.id}']", text: category2.name)
+        end
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq sns_login_path
-    end
+      wait_for_notice I18n.t("ss.notice.saved")
 
-    it "#delete" do
-      visit delete_path
+      item.reload
+      expect(item.name).to eq name2
+      expect(item.category_ids).to include(category1.id, category2.id)
+
+      visit gws_faq_topics_path(site: site, mode: '-', category: '-')
+      click_on item.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
-      expect(current_path).to eq index_path
+      wait_for_notice I18n.t("ss.notice.deleted")
+
+      item.reload
+      expect(item.deleted).to be_present
     end
   end
 end

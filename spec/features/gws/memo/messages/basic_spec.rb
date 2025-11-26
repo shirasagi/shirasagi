@@ -264,7 +264,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           find('.set-seen-all').click
         end
       end
-      wait_for_js_ready
+      wait_for_notice I18n.t("ss.notice.set_seen_all")
       expect(page).to have_css(".list-item.seen")
       expect(page).to have_no_css(".list-item.unseen")
 
@@ -278,7 +278,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
           find('.unset-seen-all').click
         end
       end
-      wait_for_js_ready
+      wait_for_notice I18n.t("ss.notice.unset_seen_all")
       expect(page).to have_css(".list-item.unseen")
       expect(page).to have_no_css(".list-item.seen")
     end
