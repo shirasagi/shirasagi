@@ -6,7 +6,7 @@
   <span class="id">#<%= item.id %></span>
   <% if item.updated %>
     <%# 滅多なことでは updated は nil にはならないが、過去の電子職員録のインポートで nil になる可能性があるので nil チェックを入れてから表示する %>
-    <span class="datetime"><%= I18n.l(item.updated, format: :picker) %></span>
+    <span class="datetime"><%= ss_time_tag item.updated %></span>
   <% end %>
   <span class="state"><%= item.active_state_name %></span>
 
