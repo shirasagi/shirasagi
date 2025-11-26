@@ -9,13 +9,13 @@ module SS::Model::Reference
       before_save :update_title_order
 
       scope :order_by_title, ->(site) {
-        order_by "title_orders.#{site.id}" => -1, "gws_main_group_orders.#{site.id}" => 1, organization_uid: 1, uid: 1, id: 1
+        order_by "title_orders.#{site.id}" => -1, "gws_main_group_orders.#{site.id}" => 1, organization_uid_numeric: 1, uid: 1, id: 1
       }
     end
 
     class_methods do
       def update_all_title_orders(title)
-        self.where(title_ids: title.id).each do |item|
+        self.where(title_ids: title.id).find_each do |item|
           item.send(:set_title_order, title.group_id, title.order)
           item.save
         end
@@ -36,11 +36,19 @@ module SS::Model::Reference
           diff = lhs_main_group_order <=> rhs_main_group_order
           next diff if diff != 0
 
-          diff = lhs_user.organization_uid <=> rhs_user.organization_uid
+          # 職員番号を数値として比較（organization_uid_numericフィールドを使用）
+          lhs_organization_uid_numeric = lhs_user.organization_uid_numeric || 0
+          rhs_organization_uid_numeric = rhs_user.organization_uid_numeric || 0
+          diff = lhs_organization_uid_numeric <=> rhs_organization_uid_numeric
           next diff if diff != 0
 
           diff = lhs_user.uid <=> rhs_user.uid
-          diff
+          next diff if diff != 0
+
+          diff = lhs_user.id <=> rhs_user.id
+          next diff if diff != 0
+
+          0
         end
       end
     end

@@ -51,11 +51,13 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       aggregation.aggregate_worktime_datasets
       datasets = aggregation.worktime_datasets
 
-      expect(datasets[0][:label]).to eq "gws-sys"
-      expect(datasets[1][:label]).to eq "gw-admin"
+      gws_sys = datasets.find { |dataset| dataset[:label] == "gws-sys" }
+      gw_admin = datasets.find { |dataset| dataset[:label] == "gw-admin" }
 
-      expect(datasets[0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      expect(datasets[1][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(gws_sys).to be_present
+      expect(gw_admin).to be_present
+      expect(gws_sys[:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(gw_admin[:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
 
     it "overtime_datasets" do
@@ -64,11 +66,13 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       aggregation.aggregate_overtime_datasets
       datasets = aggregation.overtime_datasets
 
-      expect(datasets[0][:label]).to eq "gws-sys"
-      expect(datasets[1][:label]).to eq "gw-admin"
+      gws_sys = datasets.find { |dataset| dataset[:label] == "gws-sys" }
+      gw_admin = datasets.find { |dataset| dataset[:label] == "gw-admin" }
 
-      expect(datasets[0][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-      expect(datasets[1][:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(gws_sys).to be_present
+      expect(gw_admin).to be_present
+      expect(gws_sys[:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      expect(gw_admin[:data]).to eq [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
 
     it "client_datasets" do
