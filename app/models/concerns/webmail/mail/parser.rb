@@ -143,8 +143,12 @@ module Webmail::Mail::Parser
 
     is_outlook16 = self.x_mailer == MICROSOFT_OUTLOOK16
     resp = imap.conn.uid_fetch(uid, attr)
-    self.text = Webmail::MailPart.decode(resp[0].attr["BODY[#{text_part_no}]"], text_part, outlook16: is_outlook16)
-    self.html = Webmail::MailPart.decode(resp[0].attr["BODY[#{html_part_no}]"], html_part, outlook16: is_outlook16, html_safe: true)
+    resp[0].attr["BODY[#{text_part_no}]"].tap do |data|
+      self.text = Webmail::MailPart.decode(data, text_part, outlook16: is_outlook16)
+    end
+    resp[0].attr["BODY[#{html_part_no}]"].tap do |data|
+      self.html = Webmail::MailPart.decode(data, html_part, outlook16: is_outlook16, html_safe: true)
+    end
   end
 
   def parse_rfc822_body
