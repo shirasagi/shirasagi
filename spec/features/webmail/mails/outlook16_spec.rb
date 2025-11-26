@@ -20,8 +20,9 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     it do
       login_user user, to: index_path
 
-      first("li.list-item").click
+      click_on "テスト"
       wait_for_js_ready
+      expect(page).to have_css(".subject", text: "テスト")
       expect(page).to have_css(".body--text", text: "テスト")
     end
   end

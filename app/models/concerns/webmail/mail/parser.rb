@@ -36,6 +36,7 @@ module Webmail::Mail::Parser
 
   def parse_header
     mail = ::Mail.read_from_string(header)
+    x_mailer = mail[:x_mailer].decoded
 
     self.attributes = {
       message_id: mail.message_id,
@@ -47,11 +48,11 @@ module Webmail::Mail::Parser
       reply_to: parse_address_field(mail[:reply_to]),
       in_reply_to: mail.in_reply_to,
       references: parse_references(mail.references),
-      subject: parse_subject(mail),
+      subject: parse_subject(mail, x_mailer),
       content_type: mail.mime_type,
       has_attachment: (mail.mime_type =='multipart/mixed' ? true : nil),
       disposition_notification_to: parse_address_field(mail[:disposition_notification_to]),
-      x_mailer: mail[:x_mailer]
+      x_mailer: x_mailer
     }
   end
 
@@ -82,8 +83,9 @@ module Webmail::Mail::Parser
   end
 
   # Be Carefule: this method must run within Webmail.activate_cp50221 for ISO-2022-JP text
-  def parse_subject(mail)
-    decode_jp(mail.subject, nil)
+  def parse_subject(mail, x_mailer)
+    encoding = x_mailer == MICROSOFT_OUTLOOK16 ? "CP50220" : nil
+    decode_jp(mail.subject, encoding)
   end
 
   def parse_body_structure

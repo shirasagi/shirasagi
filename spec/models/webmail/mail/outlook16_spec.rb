@@ -27,6 +27,7 @@ describe Webmail::Mail, type: :model, dbscope: :example, imap: true do
       imap.examine(mailbox)
       items = imap.mails.mailbox(mailbox).all
       item = imap.mails.find(items[0].uid, :body)
+      expect(item.display_subject).to include("テスト")
       expect(item.text).to include("テスト")
     end
   end
