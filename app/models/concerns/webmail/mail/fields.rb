@@ -29,10 +29,15 @@ module Webmail::Mail::Fields
   def display_address(address)
     return {} if address.blank?
     begin
+      if x_mailer == Webmail::Mail::Parser::MICROSOFT_OUTLOOK16
+        address = address.encode('UTF-8', 'CP50220', invalid: :replace, undef: :replace) rescue address
+      end
+
       addr = ::Mail::Address.new(address)
       name = addr.display_name.presence || addr.address
       OpenStruct.new(name: name, email: addr.address, address: address)
-    rescue
+    rescue => e
+      Rails.logger.info { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       OpenStruct.new(name: address, email: nil, address: address)
     end
   end

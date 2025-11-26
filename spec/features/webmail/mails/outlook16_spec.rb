@@ -20,10 +20,12 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
     it do
       login_user user, to: index_path
 
-      click_on "テスト"
+      click_on "件名テスト"
       wait_for_js_ready
-      expect(page).to have_css(".subject", text: "テスト")
-      expect(page).to have_css(".body--text", text: "テスト")
+      expect(page).to have_css(".subject", text: "件名テスト")
+      expect(page).to have_css(".from", text: "差出人テスト")
+      expect(page).to have_css(".address-field", text: "宛先テスト")
+      expect(page).to have_css(".body--text", text: "本文テスト")
     end
   end
 end
