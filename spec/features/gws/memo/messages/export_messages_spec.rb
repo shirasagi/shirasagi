@@ -13,6 +13,8 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     before { login_gws_user }
 
     def export_memo(memo, format: nil)
+      clear_downloads
+
       visit gws_memo_export_messages_path(site)
       within "form#item-form" do
         choose "item_export_filter_selected"
@@ -23,7 +25,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_cbox_closed { click_on memo.subject }
       end
       within "form#item-form" do
-        expect(page).to have_content(memo.subject)
+        expect(page).to have_css("#addon-basic .ajax-selected", text: memo.subject)
       end
       perform_enqueued_jobs do
         within "form#item-form" do
@@ -48,13 +50,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
 
         within ".popup-notice-items .list-item.unseen" do
-          click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
+          click_on I18n.t("gws/memo/message.export.subject")
         end
         wait_for_js_ready
       end
 
       within ".gws-memo-notices .body" do
-        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+        message = I18n.t("gws/memo/message.export.notify_message", link: "").split("\n").first
         expect(page).to have_content(message)
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
@@ -62,6 +64,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
 
       wait_for_download
+      expect(downloads.count).to eq 1
 
       exported = {}
       Zip::File.open(downloads.first) do |zip_file|
@@ -322,7 +325,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
       end
 
       within ".gws-memo-notices .body" do
-        message = I18n.t("gws/memo/message.export_failed.notify_message", locale: I18n.default_locale).split("\n").first
+        message = I18n.t("gws/memo/message.export_failed.notify_message").split("\n").first
         expect(page).to have_content(message)
       end
     end
@@ -389,13 +392,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
 
         within ".popup-notice-items .list-item.unseen" do
-          click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
+          click_on I18n.t("gws/memo/message.export.subject")
         end
         wait_for_js_ready
       end
 
       within ".gws-memo-notices .body" do
-        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+        message = I18n.t("gws/memo/message.export.notify_message", link: "").split("\n").first
         expect(page).to have_content(message)
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
@@ -469,13 +472,13 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
         wait_for_js_ready
 
         within ".popup-notice-items .list-item.unseen" do
-          click_on I18n.t("gws/memo/message.export.subject", locale: I18n.default_locale)
+          click_on I18n.t("gws/memo/message.export.subject")
         end
         wait_for_js_ready
       end
 
       within ".gws-memo-notices .body" do
-        message = I18n.t("gws/memo/message.export.notify_message", link: "", locale: I18n.default_locale).split("\n").first
+        message = I18n.t("gws/memo/message.export.notify_message", link: "").split("\n").first
         expect(page).to have_content(message)
         expect(page).to have_link(href: /\.zip$/)
         first("a").click
