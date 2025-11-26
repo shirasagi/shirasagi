@@ -36,7 +36,7 @@ module Webmail::Mail::Parser
 
   def parse_header
     mail = ::Mail.read_from_string(header)
-    x_mailer = mail[:x_mailer].decoded
+    x_mailer = mail[:x_mailer].try(:decoded)
 
     self.attributes = {
       message_id: mail.message_id,
