@@ -106,26 +106,26 @@ organization_uid: organization_uid8
     end
 
     it "sorts users by title order, main group order, organization uid, uid, and id" do
-      # ユーザーを作成（作成順序は意図的にランダム）
-      user_t2_g2_u8
-      user_t2_g2_u7
-      user_t2_g1_u6
-      user_t2_g1_u5
-      user_t1_g2_u4
-      user_t1_g2_u3
-      user_t1_g1_u2
-      user_t1_g1_u1
+      # ユーザーを作成
+      user_t2_g2_u8  # title2(20), group2(20), organization_uid: "6" (6)
+      user_t2_g2_u7  # title2(20), group2(20), organization_uid: "5" (5)
+      user_t2_g1_u6  # title2(20), group1(10), organization_uid: "102" (102)
+      user_t2_g1_u5  # title2(20), group1(10), organization_uid: "99" (99)
+      user_t1_g2_u4  # title1(10), group2(20), organization_uid: "101" (101)
+      user_t1_g2_u3  # title1(10), group2(20), organization_uid: "1" (1)
+      user_t1_g1_u2  # title1(10), group1(10), organization_uid: "9999" (9999)
+      user_t1_g1_u1  # title1(10), group1(10), organization_uid: "100" (100)
 
-      # order_by_titleスコープでソートされた結果を取得
+      # order_by_titleスコープでソートされたユーザーの期待値
       expected_users = [
-        user_t2_g1_u6,
-        user_t2_g1_u5,
-        user_t2_g2_u7,
-        user_t2_g2_u8,
-        user_t1_g1_u1,
-        user_t1_g1_u2,
-        user_t1_g2_u3,
-        user_t1_g2_u4
+        user_t2_g1_u5,  # organization_uid: "99" (99)
+        user_t2_g1_u6,  # organization_uid: "102" (102)
+        user_t2_g2_u7,  # organization_uid: "5" (5)
+        user_t2_g2_u8,  # organization_uid: "6" (6)
+        user_t1_g1_u1,  # organization_uid: "100" (100)
+        user_t1_g1_u2,  # organization_uid: "9999" (9999)
+        user_t1_g2_u3,  # organization_uid: "1" (1)
+        user_t1_g2_u4   # organization_uid: "101" (101)
       ]
 
       sorted_users = Gws::User.site(site).in(id: expected_users.map(&:id)).order_by_title(site)
@@ -232,6 +232,80 @@ organization_uid: "100"
       nil1_index = sorted_users.find_index { |u| u.id == user_uid_nil1.id }
       nil2_index = sorted_users.find_index { |u| u.id == user_uid_nil2.id }
       expect(nil1_index).to be < nil2_index
+    end
+
+    it "sorts users by organization_uid_numeric in numeric order, not string order" do
+      # 職員番号が数値として正しくソートされることを確認
+      # 文字列比較では "10081" < "5880" となるが、数値比較では 5880 < 10081 となる
+      title_same = create :gws_user_title, order: 15
+      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
+
+      user_5880 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "5880"
+      user_8885 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "8885"
+      user_10081 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "10081"
+      user_10143 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "10143"
+      user_10144 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "10144"
+
+      # organization_uid_numericが自動設定されていることを確認
+      expect(user_5880.reload.organization_uid_numeric).to eq 5880
+      expect(user_8885.reload.organization_uid_numeric).to eq 8885
+      expect(user_10081.reload.organization_uid_numeric).to eq 10_081
+      expect(user_10143.reload.organization_uid_numeric).to eq 10_143
+      expect(user_10144.reload.organization_uid_numeric).to eq 10_144
+
+      # ソートが正しく機能することを確認するため、IDの順番をランダムにする
+      target_ids = [
+        user_5880.id,
+        user_8885.id,
+        user_10081.id,
+        user_10143.id,
+        user_10144.id
+      ].shuffle
+
+      Rails.logger.debug do
+        "[Gws::UserSpec#sorts users by organization_uid_numeric in numeric order, not string order] target_ids: #{target_ids.inspect}"
+      end
+
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+      # 数値順でソートされていることを確認（5880 < 8885 < 10081 < 10143 < 10144）
+      sorted_ids = sorted_users.map(&:id)
+      expect(sorted_ids).to eq [
+        user_5880.id,
+        user_8885.id,
+        user_10081.id,
+        user_10143.id,
+        user_10144.id
+      ]
+    end
+
+    it "updates organization_uid_numeric when organization_uid changes" do
+      user = create :gws_user, organization_id: site.id, organization_uid: "100"
+      expect(user.organization_uid_numeric).to eq 100
+
+      user.organization_uid = "200"
+      user.save
+      expect(user.reload.organization_uid_numeric).to eq 200
+    end
+
+    it "sets organization_uid_numeric to nil when organization_uid is blank" do
+      user = create :gws_user, organization_id: site.id, organization_uid: "100"
+      expect(user.organization_uid_numeric).to eq 100
+
+      user.organization_uid = nil
+      user.save
+      expect(user.reload.organization_uid_numeric).to be_nil
+    end
+
+    it "handles non-numeric organization_uid by converting to nil" do
+      # 数値に変換できない職員番号の場合、nilに変換される
+      user = create :gws_user, organization_id: site.id, organization_uid: "abc"
+      expect(user.organization_uid_numeric).to be_nil
     end
   end
 
@@ -421,7 +495,7 @@ organization_uid: "100"
 
     it "handles UserMainGroupOrderUpdateJob with non-existent groups" do
       # 存在しないグループのorderを更新しようとした場合の処理
-      user = create :gws_user, group_ids: [group1.id]
+      _user = create :gws_user, group_ids: [group1.id]
 
       # グループを削除
       group1.destroy
