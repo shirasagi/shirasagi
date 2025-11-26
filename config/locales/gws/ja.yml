@@ -259,6 +259,7 @@ ja:
       gws/user:
         gws_main_group_ids: グループ（主）
         gws_default_group_ids: グループ（既定）
+        title_ids: 役職
       gws/custom_group:
         name: グループ名
         order: 表示順
