@@ -235,7 +235,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
         ].join("\r\n") + "\r\n"
       end
       let(:mail) { ::Mail.read_from_string(header) }
-      subject { Webmail::Mail.new.parse_subject(mail) }
+      subject { Webmail::Mail.new.parse_subject(mail, nil) }
 
       it { is_expected.to eq "タイトル 題名" }
     end
@@ -247,7 +247,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
         ].join("\r\n") + "\r\n"
       end
       let(:mail) { ::Mail.read_from_string(header) }
-      subject { Webmail::Mail.new.parse_subject(mail) }
+      subject { Webmail::Mail.new.parse_subject(mail, nil) }
 
       it { is_expected.to eq "タイトル 題名" }
     end
@@ -259,7 +259,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
         ].join("\r\n") + "\r\n"
       end
       let(:mail) { ::Mail.read_from_string(header) }
-      subject { Webmail::Mail.new.parse_subject(mail) }
+      subject { Webmail::Mail.new.parse_subject(mail, nil) }
 
       it { is_expected.to eq "タイトル 題名" }
     end
@@ -283,7 +283,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
         ].join("\r\n") + "\r\n"
       end
       let(:mail) { ::Mail.read_from_string(header) }
-      subject { Webmail::Mail.new.parse_subject(mail) }
+      subject { Webmail::Mail.new.parse_subject(mail, nil) }
 
       it { is_expected.to eq "髙﨑 ①②③" }
     end
@@ -295,7 +295,7 @@ describe Webmail::Mail::Parser, type: :model, dbscope: :example do
         ].join("\r\n") + "\r\n"
       end
       let(:mail) { ::Mail.read_from_string(header) }
-      subject { Webmail::Mail.new.parse_subject(mail) }
+      subject { Webmail::Mail.new.parse_subject(mail, nil) }
 
       it { is_expected.to eq "担当：山��" }
     end
