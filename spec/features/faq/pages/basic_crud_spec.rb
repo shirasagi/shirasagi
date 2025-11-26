@@ -1,30 +1,17 @@
 require 'spec_helper'
 
 describe "faq_pages", type: :feature, js: true do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :faq_node_page, filename: "docs", name: "faq" }
-  subject(:item) { Faq::Page.last }
-  subject(:index_path) { faq_pages_path site.id, node }
-  subject(:new_path) { new_faq_page_path site.id, node }
-  subject(:show_path) { faq_page_path site.id, node, item }
-  subject(:edit_path) { edit_faq_page_path site.id, node, item }
-  subject(:delete_path) { delete_faq_page_path site.id, node, item }
-  subject(:delete_path2) { delete_faq_page_path site.id, node, item2 }
-  subject(:move_path) { move_faq_page_path site.id, node, item }
-  subject(:copy_path) { copy_faq_page_path site.id, node, item }
-  subject(:import_path) { import_faq_pages_path site.id, node }
-  subject(:contains_urls_path) { contains_urls_faq_page_path site.id, node, item }
+  let!(:site) { cms_site }
+  let!(:node) { create :faq_node_page, cur_site: site }
 
-  context "with auth" do
-    before { login_cms_user }
+  context "basic crud" do
+    let(:index_path) { faq_pages_path site.id, node }
 
-    it "#index" do
-      visit index_path
-      expect(current_path).not_to eq sns_login_path
-    end
+    it do
+      login_cms_user to: index_path
 
-    it "#new" do
-      visit new_path
+      click_on I18n.t("ss.links.new")
+      wait_for_all_ckeditors_ready
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         click_on I18n.t("ss.links.input")
@@ -35,18 +22,9 @@ describe "faq_pages", type: :feature, js: true do
       end
       wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-      expect(current_path).not_to eq new_path
-      expect(page).to have_no_css("form#item-form")
-    end
 
-    it "#show" do
-      visit show_path
-      expect(page).to have_css("#addon-basic", text: item.name)
-      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-    end
-
-    it "#edit" do
-      visit edit_path
+      click_on I18n.t("ss.links.edit")
+      wait_for_all_ckeditors_ready
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
         fill_in_ckeditor "item[question]", with: "<p>modified question</p>"
@@ -55,52 +33,70 @@ describe "faq_pages", type: :feature, js: true do
       end
       wait_for_notice I18n.t('ss.notice.saved')
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
-    end
 
-    it "#move" do
-      visit move_path
-      within "form" do
-        fill_in "destination", with: "docs/destination"
-        click_button I18n.t('ss.buttons.move')
-      end
-      expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form .current-filename", text: "docs/destination.html")
-
-      within "form" do
-        fill_in "destination", with: "docs/sample"
-        click_button I18n.t('ss.buttons.move')
-      end
-      expect(current_path).to eq move_path
-      expect(page).to have_css("form#item-form .current-filename", text: "docs/sample.html")
-    end
-
-    it "#copy" do
-      visit copy_path
-      within "form" do
-        click_button I18n.t('ss.buttons.save')
-      end
-      expect(current_path).to eq index_path
-      expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] modify")
-      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
-    end
-
-    it "#delete" do
-      visit delete_path
+      click_on I18n.t("ss.links.delete")
       expect(page).to have_css(".delete")
       within "form" do
         click_on I18n.t("ss.buttons.delete")
       end
-      expect(current_path).to eq index_path
       wait_for_notice I18n.t('ss.notice.deleted')
     end
+  end
 
-    it "#contains_urls" do
-      visit contains_urls_path
+  describe "#move" do
+    let!(:item) { create :faq_page, cur_site: site, cur_node: node }
+    let(:move_path) { move_faq_page_path site.id, node, item }
+
+    it do
+      login_cms_user to: move_path
+      within "form" do
+        fill_in "destination", with: "#{node.filename}/destination"
+        click_button I18n.t('ss.buttons.move')
+      end
+      wait_for_notice I18n.t('ss.notice.moved')
+      expect(page).to have_css("form#item-form .current-filename", text: "#{node.filename}/destination.html")
+      expect(current_path).to eq move_path
+
+      within "form" do
+        fill_in "destination", with: "#{node.filename}/sample"
+        click_button I18n.t('ss.buttons.move')
+      end
+      wait_for_notice I18n.t('ss.notice.moved')
+      expect(page).to have_css("form#item-form .current-filename", text: "#{node.filename}/sample.html")
+      expect(current_path).to eq move_path
+    end
+  end
+
+  describe "#copy" do
+    let!(:item) { create :faq_page, cur_site: site, cur_node: node }
+    let(:copy_path) { copy_faq_page_path site.id, node, item }
+
+    it do
+      login_cms_user to: copy_path
+      within "form#item-form" do
+        click_button I18n.t('ss.buttons.save')
+      end
+      wait_for_notice I18n.t('ss.notice.saved')
+      expect(page).to have_css("a", text: "[#{I18n.t('workflow.cloned_name_prefix')}] #{item.name}")
+      expect(page).to have_css(".state", text: I18n.t("ss.state.edit"))
+    end
+  end
+
+  describe "#contains_urls" do
+    let!(:item) { create :faq_page, cur_site: site, cur_node: node }
+    let(:contains_urls_path) { contains_urls_faq_page_path site.id, node, item }
+
+    it do
+      login_cms_user to: contains_urls_path
       expect(page).to have_css("#addon-basic", text: item.name)
     end
+  end
 
-    it "#import" do
-      visit import_path
+  describe "#import" do
+    let(:import_path) { import_faq_pages_path site.id, node }
+
+    it do
+      login_cms_user to: import_path
 
       within "form#task-form" do
         attach_file "item[file]", "#{Rails.root}/spec/fixtures/faq/import_job/faq_pages.csv"
@@ -111,21 +107,16 @@ describe "faq_pages", type: :feature, js: true do
       expect(page).to have_content I18n.t("ss.notice.started_import")
     end
   end
-end
-
-describe "faq_pages", type: :feature, js: true do
-  subject(:site) { cms_site }
-  subject(:node) { create_once :faq_node_page, filename: "docs", name: "faq" }
-  let!(:item2) { create(:faq_page, cur_node: node) }
-  let!(:html) { "<p><a href=\"#{item2.url}\">関連記事リンク1</a></p>" }
-  let!(:item3) { create(:faq_page, cur_node: node, html: html) }
-  subject(:edit_path) { edit_faq_page_path site.id, node, item3 }
-  subject(:edit_path2) { edit_faq_page_path site.id, node, item2 }
-
-  before { login_cms_user }
 
   context "#draft_save" do
     let(:user) { cms_user }
+    let!(:item2) { create(:faq_page, cur_site: site, cur_node: node) }
+    let!(:html) { "<p><a href=\"#{item2.url}\">関連記事リンク1</a></p>" }
+    let!(:item3) { create(:faq_page, cur_site: site, cur_node: node, html: html) }
+    let(:edit_path) { edit_faq_page_path site.id, node, item3 }
+    let(:edit_path2) { edit_faq_page_path site.id, node, item2 }
+
+    before { login_cms_user }
 
     it "permited and contains_urls" do
       visit edit_path2
