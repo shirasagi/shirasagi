@@ -1,16 +1,33 @@
-<div class="list-head">
-  <label class="check"><input type="checkbox" /></label>
+<% actions = [] %>
 
-  <div class="list-head-action">
-    <%= render template: "_list_head_tags" %>
-    <div class="list-head-action-destroy">
-      <% if @mode == 'trash' %>
-        <%= ss_button_to t("ss.links.delete"), "", class: "destroy-all btn btn-list-head-action", method: "delete", confirm: t('ss.confirm.hard_delete') %>
-      <% else %>
-        <%= ss_button_to t("ss.links.delete"), url_for(action: :soft_delete_all), class: "soft-delete-all btn btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete') %>
+<%
+  if @model.allowed?(:delete, @cur_user, site: @cur_site)
+    actions << tag.div(class: "list-head-action-destroy") do
+      if @mode == 'trash'
+        ss_button_to(t("ss.links.delete"), "", class: "destroy-all btn btn-red btn-list-head-action", method: "delete", confirm: t('ss.confirm.hard_delete'))
+      else
+        ss_button_to(t("ss.links.delete"), url_for(action: :soft_delete_all), class: "soft-delete-all btn btn-red btn-list-head-action", method: "post", confirm: t('ss.confirm.soft_delete'))
+      end
+    end
+  end
+%>
+
+<div class="list-head">
+  <% if actions.present? %>
+    <label class="check"><input type="checkbox" /></label>
+  <% else %>
+    <style media="all">
+      .index .list-items .check { display: none; }
+    </style>
+  <% end %>
+
+  <% if actions.present? %>
+    <div class="list-head-action">
+      <% actions.each do |action| %>
+        <%= action %>
       <% end %>
     </div>
-  </div>
+  <% end %>
 
   <%= render template: "_search" %>
 </div>
