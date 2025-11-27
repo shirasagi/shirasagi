@@ -25,7 +25,7 @@ describe 'GET gws/apis/users#index', type: :request, dbscope: :example do
 
   it do
     get sns_auth_token_path(format: :json)
-    auth_token = JSON.parse(response.body)["auth_token"]
+    auth_token = response.parsed_body["auth_token"]
 
     login_params = {
       'authenticity_token' => auth_token,
@@ -40,7 +40,7 @@ describe 'GET gws/apis/users#index', type: :request, dbscope: :example do
     }
     post gws_apis_users_path(site: site, format: :html), params: users_params
 
-    fragment = Nokogiri::HTML.fragment(response.body)
+    fragment = response.parsed_body
     fragment.css(".list-item[data-id='#{user.id}']").tap do |list_items|
       expect(list_items).to have(1).items
       list_item = list_items[0]
