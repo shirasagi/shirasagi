@@ -54,7 +54,7 @@ export default class extends Controller {
   #openDialogByCBox() {
     const apiUrl = new URL(this.apiValue, location.origin);
     const initialSelectedIds = Array.from(this._selectedIds());
-    const cboxData = initialSelectedIds.length > 0 ? { selected: initialSelectedIds } : undefined;
+    const cboxData = initialSelectedIds.length > 0 ? { _method: "GET", selected: initialSelectedIds } : undefined;
 
     const selected = [];
     $.colorbox({
@@ -80,6 +80,7 @@ export default class extends Controller {
     const initialSelectedIds = this._selectedIds();
     if (initialSelectedIds.size > 0) {
       data = new FormData();
+      data.append("_method", "GET");
       initialSelectedIds.forEach((id) => { data.append("selected[]", id) });
     }
 
