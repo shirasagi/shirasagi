@@ -31,9 +31,7 @@ Rails.application.routes.draw do
 
     namespace :apis do
       scope ':space/:form/:view' do
-        resources :files, only: %i[index] do
-          post :index, on: :collection
-        end
+        resources :files, only: %i[index]
       end
       namespace :gws do
         scope ':space' do
