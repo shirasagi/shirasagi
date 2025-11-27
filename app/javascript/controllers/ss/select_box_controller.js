@@ -52,12 +52,13 @@ export default class extends Controller {
   }
 
   #openDialogByCBox() {
-    const selected = [];
     const apiUrl = new URL(this.apiValue, location.origin);
-    this._selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
+    const initialSelectedIds = Array.from(this._selectedIds());
+    const cboxData = initialSelectedIds.length > 0 ? { _method: "GET", selected: initialSelectedIds } : undefined;
 
+    const selected = [];
     $.colorbox({
-      fixed: true, open: true, href: apiUrl.toString(), width: "90%", height: "90%",
+      fixed: true, open: true, href: apiUrl.toString(), data: cboxData, width: "90%", height: "90%",
       onComplete: () => {
         const $ajaxBox = SS_SearchUI.anchorAjaxBox || $.colorbox.element();
         $ajaxBox.data('on-select', ($selectedItem) => {
@@ -74,12 +75,17 @@ export default class extends Controller {
   }
 
   #openDialogBySS() {
-    // not implemented yet.
     const apiUrl = new URL(this.apiValue, location.origin);
-    this._selectedIds().forEach((id) => apiUrl.searchParams.append("selected[]", id));
+    let data = undefined;
+    const initialSelectedIds = this._selectedIds();
+    if (initialSelectedIds.size > 0) {
+      data = new FormData();
+      data.append("_method", "GET");
+      initialSelectedIds.forEach((id) => { data.append("selected[]", id) });
+    }
 
-    Dialog.showModal(apiUrl.toString()).then((result) => {
-      this._renderResult(result.returnValue)
+    Dialog.showModal(apiUrl.toString(), { data: data }).then((result) => {
+      this._renderResult(result.returnValue);
     })
   }
 
