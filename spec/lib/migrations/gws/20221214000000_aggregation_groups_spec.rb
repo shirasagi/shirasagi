@@ -10,6 +10,6 @@ RSpec.describe SS::Migration20221214000000, dbscope: :example do
     Rails.application.load_tasks
     described_class.new.change
 
-    expect(Gws::Aggregation::Group.count).to eq 10
+    expect(Gws::Aggregation::Group.count).to eq 11
   end
 end
