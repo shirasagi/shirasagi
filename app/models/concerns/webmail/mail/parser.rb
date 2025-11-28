@@ -1,6 +1,8 @@
 module Webmail::Mail::Parser
   extend ActiveSupport::Concern
 
+  MICROSOFT_OUTLOOK16 = "Microsoft Outlook 16.0".freeze
+
   attr_accessor :header, :rfc822, :body_structure,
     :text_part_no, :text_part,
     :html_part_no, :html_part
@@ -34,6 +36,7 @@ module Webmail::Mail::Parser
 
   def parse_header
     mail = ::Mail.read_from_string(header)
+    x_mailer = mail[:x_mailer].try(:decoded)
 
     self.attributes = {
       message_id: mail.message_id,
@@ -45,10 +48,11 @@ module Webmail::Mail::Parser
       reply_to: parse_address_field(mail[:reply_to]),
       in_reply_to: mail.in_reply_to,
       references: parse_references(mail.references),
-      subject: parse_subject(mail),
+      subject: parse_subject(mail, x_mailer),
       content_type: mail.mime_type,
       has_attachment: (mail.mime_type =='multipart/mixed' ? true : nil),
-      disposition_notification_to: parse_address_field(mail[:disposition_notification_to])
+      disposition_notification_to: parse_address_field(mail[:disposition_notification_to]),
+      x_mailer: x_mailer
     }
   end
 
@@ -79,8 +83,9 @@ module Webmail::Mail::Parser
   end
 
   # Be Carefule: this method must run within Webmail.activate_cp50221 for ISO-2022-JP text
-  def parse_subject(mail)
-    decode_jp(mail.subject, nil)
+  def parse_subject(mail, x_mailer)
+    encoding = x_mailer == MICROSOFT_OUTLOOK16 ? "CP50220" : nil
+    decode_jp(mail.subject, encoding)
   end
 
   def parse_body_structure
@@ -138,9 +143,14 @@ module Webmail::Mail::Parser
     attr << "BODY[#{html_part_no}]" if html_part_no
     return if attr.blank?
 
+    is_outlook16 = self.x_mailer == MICROSOFT_OUTLOOK16
     resp = imap.conn.uid_fetch(uid, attr)
-    self.text = Webmail::MailPart.decode(resp[0].attr["BODY[#{text_part_no}]"], text_part, charset: true)
-    self.html = Webmail::MailPart.decode(resp[0].attr["BODY[#{html_part_no}]"], html_part, charset: true, html_safe: true)
+    resp[0].attr["BODY[#{text_part_no}]"].tap do |data|
+      self.text = Webmail::MailPart.decode(data, text_part, outlook16: is_outlook16)
+    end
+    resp[0].attr["BODY[#{html_part_no}]"].tap do |data|
+      self.html = Webmail::MailPart.decode(data, html_part, outlook16: is_outlook16, html_safe: true)
+    end
   end
 
   def parse_rfc822_body

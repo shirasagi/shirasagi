@@ -43,6 +43,7 @@ class Webmail::Mail
   field :subject, type: String
   field :has_attachment, type: ::Mongoid::Boolean
   field :disposition_notification_to, type: Array, default: []
+  field :x_mailer, type: String
 
   permit_params :reply_uid, :forward_uid, :in_reply_to, :references,
     :subject, :text, :html, :format,
