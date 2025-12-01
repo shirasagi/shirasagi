@@ -47,6 +47,6 @@ def set_value_to_hidden_input(selector, value)
   end
 end
 
-def login_ss_user
-  login_user ss_user
+def login_ss_user(to: nil)
+  login_user ss_user, to: to
 end

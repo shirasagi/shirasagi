@@ -1,24 +1,61 @@
+<%
+  cms_sites = SS.cms_sites(@cur_user)
+  gws_sites = SS.gws_sites(@cur_user).map { _1.gws_group }
+%>
+
+<% from_site_options = capture do %>
+  <optgroup label=<%= t "cms.site" %>>
+    <% cms_sites.each do |cms_site| %>
+      <option value="cms:<%= cms_site.id %>" data-description="<%= cms_site.sender_address %>"><%= cms_site.name %></option>
+    <% end %>
+  </optgroup>
+  <optgroup label=<%= t "gws.group" %>>
+    <% gws_sites.each do |gws_site| %>
+      <option value="gws:<%= gws_site.id %>" data-description="<%= gws_site.sender_address %>"><%= gws_site.name %></option>
+    <% end %>
+  </optgroup>
+<% end %>
+
 <%= form_for :item, url: { action: :create }, html: { id: "item-form", multipart: true } do |f| %>
+  <div class="main-box">
+    <article id="http-tester">
+      <div class="view">
+        <h2>Mail From</h2>
+        <div class="input-group gap-5 align-items-center">
+          <label style="display: inline-flex; align-items: center; word-break: keep-all;">
+            <%= f.radio_button :from_type, "site" %> サイトから選択:
+          </label>
+          <span data-controller="ss--select-with-description">
+            <%= f.select :from_site, from_site_options %>
+            <span class="description"></span>
+          </span>
+        </div>
+        <div class="input-group gap-5 align-items-center">
+          <label style="display: inline-flex; align-items: center; word-break: keep-all;">
+            <%= f.radio_button :from_type, "manual" %> 手動で入力:
+          </label>
+          <%= f.text_field :from_manual %>
+        </div>
 
-<div class="main-box">
-  <article id="http-tester">
-    <div class="view">
-      <h2>Mail From</h2>
-      <div><%= f.text_field :from, required: true %></div>
+        <h2>Mail To</h2>
+        <div><%= f.text_field :to %></div>
 
-      <h2>Mail To</h2>
-      <div><%= f.text_field :to, required: true %></div>
+        <h2>Mail Cc</h2>
+        <div><%= f.text_field :cc %></div>
 
-      <h2>Subject</h2>
-      <div><%= f.text_field :subject, required: true %></div>
+        <h2>Mail Bcc</h2>
+        <div><%= f.text_field :bcc %></div>
 
-      <h2>Body</h2>
-      <div><%= f.text_area :body, required: true %></div>
-    </div>
-  </article>
+        <h2>Subject</h2>
+        <div><%= f.text_field :subject %></div>
 
-  <footer class="send">
-    <%= f.submit t("ss.buttons.send"), class: "send btn-primary", data: { disable_with: t("ss.buttons.sending") } %>
-  </footer>
-</div>
+        <h2>Body</h2>
+        <div><%= f.text_area :body %></div>
+      </div>
+    </article>
+
+    <footer class="send">
+      <%= f.submit t("ss.buttons.send"), class: "send btn-primary", data: { disable_with: t("ss.buttons.sending") } %>
+    </footer>
+  </div>
 <% end %>
