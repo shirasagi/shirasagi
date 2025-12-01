@@ -45,6 +45,9 @@
 
         <h2>Mail Bcc</h2>
         <div><%= f.text_field :bcc %></div>
+        <div>
+          グループウェアの一部の機能では to を空にし、全ての宛先を bcc にセットしてメールを送信します。
+        </div>
 
         <h2>Subject</h2>
         <div><%= f.text_field :subject %></div>
