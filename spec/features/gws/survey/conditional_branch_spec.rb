@@ -193,7 +193,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("ss.buttons.answer")
       end
-      message = "#{section1_text_column.name}#{I18n.t("errors.messages.blank")}"
+      message = I18n.t("errors.format", attribute: section1_text_column.name, message: I18n.t("errors.messages.blank"))
       wait_for_error message
 
       within "form#item-form" do
@@ -219,7 +219,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
 
         click_on I18n.t("ss.buttons.answer")
       end
-      message = "#{section2_text_column.name}#{I18n.t("errors.messages.blank")}"
+      message = I18n.t("errors.format", attribute: section2_text_column.name, message: I18n.t("errors.messages.blank"))
       wait_for_error message
 
       within "form#item-form" do
@@ -248,7 +248,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         page.execute_script(script)
         click_on I18n.t("ss.buttons.answer")
       end
-      message = "#{radio_column.name}#{I18n.t("errors.messages.blank")}"
+      message = I18n.t("errors.format", attribute: radio_column.name, message: I18n.t("errors.messages.blank"))
       wait_for_error message
 
       within "form#item-form" do
