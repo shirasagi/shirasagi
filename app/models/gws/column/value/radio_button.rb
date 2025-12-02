@@ -18,17 +18,17 @@ class Gws::Column::Value::RadioButton < Gws::Column::Value::Base
     return if column.blank?
 
     if column.required? && value.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+      record.errors.add(:base, SS.format_error(name, :blank))
     end
 
     return if value.blank?
 
     unless column.select_options.include?(value) || Gws::Column::RadioButton::OTHER_VALUE == value
-      record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+      record.errors.add(:base, SS.format_error(name, I18n.t('errors.messages.inclusion', value: value)))
     end
 
     if Gws::Column::RadioButton::OTHER_VALUE == value && column.other_required? && other_value.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+      record.errors.add(:base, SS.format_error(name, :blank))
     end
   end
 

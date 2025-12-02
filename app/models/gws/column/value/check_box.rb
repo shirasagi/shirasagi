@@ -7,14 +7,14 @@ class Gws::Column::Value::CheckBox < Gws::Column::Value::Base
     return if column.blank?
 
     if column.required? && values.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+      record.errors.add(:base, SS.format_error(name, :blank))
     end
 
     return if values.blank?
 
     diff = values - column.select_options
     if diff.present?
-      record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: diff.join(', ')))
+      record.errors.add(:base, SS.format_error(name, I18n.t('errors.messages.inclusion', value: diff.join(', '))))
     end
   end
 
