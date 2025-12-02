@@ -108,7 +108,7 @@ module Tasks
         each_sites do |site|
           begin
             puts "#{site.host}: #{site.name}"
-            Cms::ReloadSiteUsageJob.bind(site_id: site).perform_now
+            ::Cms::ReloadSiteUsageJob.bind(site_id: site).perform_now
           rescue => e
             Rails.logger.error("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
             puts("Failed to update usage: #{site.host}")
