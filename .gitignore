@@ -58,3 +58,11 @@ ehthumbs.db
 
 # デバッグ用
 .rdbgrc.breakpoints
+
+# cursor
+.cursor/
+
+# docs
+,memo/
+/docs/
+AGENTS.md
