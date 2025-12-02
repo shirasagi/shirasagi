@@ -29,11 +29,9 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
           click_on gws_user.long_name
         end
       end
-      page.accept_confirm I18n.t("gws.confirm.readable_setting.empty") do
-        within "form#item-form" do
-          fill_in "item[name]", with: name
-          click_on I18n.t('ss.buttons.save')
-        end
+      within "form#item-form" do
+        fill_in "item[name]", with: name
+        click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
@@ -51,11 +49,9 @@ describe "gws_custom_groups", type: :feature, dbscope: :example, js: true do
       within ".nav-menu" do
         click_on I18n.t("ss.links.edit")
       end
-      page.accept_confirm I18n.t("gws.confirm.readable_setting.empty") do
-        within "form#item-form" do
-          fill_in "item[name]", with: name2
-          click_on I18n.t('ss.buttons.save')
-        end
+      within "form#item-form" do
+        fill_in "item[name]", with: name2
+        click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
