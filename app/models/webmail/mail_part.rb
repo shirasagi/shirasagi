@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 require 'kconv'
 
 class Webmail::MailPart
@@ -55,19 +57,27 @@ class Webmail::MailPart
       parts.map { |sec, part| new(part, sec) }
     end
 
-    def decode(data, part, options = {})
+    def decode(data, part, charset: true, html_safe: false, outlook16: false)
       return if data.blank?
 
       body = ::Mail::Body.new(data)
       body.encoding = part.encoding
 
       data = body.decoded
-      if options && options[:charset]
+      if charset
         charset = part.param ? part.param['CHARSET'].presence : nil
         charset = 'CP50220' if charset.try(:upcase) == 'ISO-2022-JP'
+        # X-Mailer: Microsoft Outlook 16.0 の場合、
+        # contentに関する記述が「Content-Language: ja」しか見当たらず、
+        # エンコーディングに関するヘッダーが存在しない。
+        # このようなメールの本文を確認すると Base64 や QP でエンコーディングされずに ISO-2022-JP が直接記述されていた。
+        # そのようなメールを文字化けせずに表示させるために、ISO-2022-jp（実体は CP50220）を設定する。
+        if outlook16 && (charset.blank? || charset.upcase == "US-ASCII")
+          charset = 'CP50220'
+        end
         data = data.encode('UTF-8', charset, invalid: :replace, undef: :replace) rescue data if charset
       end
-      if part.subtype == 'HTML' && options && options[:html_safe]
+      if part.subtype == 'HTML' && html_safe
         data = data.html_safe
       end
       data
