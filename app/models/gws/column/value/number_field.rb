@@ -7,20 +7,22 @@ class Gws::Column::Value::NumberField < Gws::Column::Value::Base
     return if column.blank?
 
     if column.required? && decimal.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+      record.errors.add(:base, SS.format_error(name, :blank))
     end
 
     return if decimal.blank?
 
     if column.min_decimal.present?
       if decimal < column.min_decimal
-        record.errors.add(:base, name + I18n.t('errors.messages.greater_than_or_equal_to', count: column.min_decimal))
+        message = SS.format_error(name, I18n.t('errors.messages.greater_than_or_equal_to', count: column.min_decimal))
+        record.errors.add(:base, message)
       end
     end
 
     if column.max_decimal.present?
       if decimal > column.max_decimal
-        record.errors.add(:base, name + I18n.t('errors.messages.less_than_or_equal_to', count: column.max_decimal))
+        message = SS.format_error(name, I18n.t('errors.messages.less_than_or_equal_to', count: column.max_decimal))
+        record.errors.add(:base, message)
       end
     end
   end

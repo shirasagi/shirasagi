@@ -167,6 +167,13 @@ module SS
     false
   end
 
+  def format_error(attribute, message)
+    if message.is_a?(Symbol)
+      message = I18n.t("errors.messages.#{message}")
+    end
+    I18n.t("errors.format", attribute: attribute, message: message)
+  end
+
   def cms_sites(cur_user)
     return SS::EMPTY_ARRAY if SS.config.cms.disable
 

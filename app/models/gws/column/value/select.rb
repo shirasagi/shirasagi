@@ -5,13 +5,13 @@ class Gws::Column::Value::Select < Gws::Column::Value::Base
     return if column.blank?
 
     if column.required? && value.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+      record.errors.add(:base, SS.format_error(name, :blank))
     end
 
     return if value.blank?
 
     unless column.select_options.include?(value)
-      record.errors.add(:base, name + I18n.t('errors.messages.inclusion', value: value))
+      record.errors.add(:base, SS.format_error(name, I18n.t('errors.messages.inclusion', value: value)))
     end
   end
 end
