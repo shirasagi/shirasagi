@@ -40,16 +40,16 @@ module Gws::Aggregation
         # set parent and children
         item.children = []
         @items.each do |group|
-          if (item.name =~ /^#{group.name}\//) && (item.depth == group.depth + 1)
+          if (item.name =~ /^#{::Regexp.escape(group.name)}\//) && (item.depth == group.depth + 1)
             item.parent = group
           end
-          if (group.name =~ /^#{item.name}\//) && (item.depth == group.depth - 1)
+          if (group.name =~ /^#{::Regexp.escape(item.name)}\//) && (item.depth == group.depth - 1)
             item.children << group
           end
         end
 
         # set descendants
-        item.descendants = @items.select { |group| group.name =~ /^#{item.name}\// }
+        item.descendants = @items.select { |group| group.name =~ /^#{::Regexp.escape(item.name)}\// }
       end
     end
 

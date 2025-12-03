@@ -22,7 +22,7 @@ def login_user(user, pass: nil, login_path: nil, to: nil)
   within "form" do
     fill_in "item[email]", with: user.email.presence || user.uid
     fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"
-    set_value_to_hidden_input('input#ref', ref)
+    set_value_to_hidden_input('input[name="ref"]', ref)
     click_button I18n.t("ss.login", locale: I18n.default_locale)
   end
   # rubocop:disable Rails/I18nLocaleAssignment
@@ -47,6 +47,6 @@ def set_value_to_hidden_input(selector, value)
   end
 end
 
-def login_ss_user
-  login_user ss_user
+def login_ss_user(to: nil)
+  login_user ss_user, to: to
 end

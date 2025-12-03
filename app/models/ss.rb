@@ -173,4 +173,18 @@ module SS
     end
     I18n.t("errors.format", attribute: attribute, message: message)
   end
+
+  def cms_sites(cur_user)
+    return SS::EMPTY_ARRAY if SS.config.cms.disable
+
+    SS::Site.without_deleted.select do |site|
+      cur_user.groups.active.in(name: site.groups.active.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ } ).present?
+    end
+  end
+
+  def gws_sites(cur_user)
+    return SS::EMPTY_ARRAY if SS.config.gws.disable
+
+    cur_user.root_groups.select { |group| group.gws_use? }
+  end
 end
