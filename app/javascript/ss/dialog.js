@@ -198,7 +198,11 @@ export default class Dialog {
       } else if (this.src instanceof DocumentFragment) {
         this._dialogFrame.renderContent(this.src)
       } else {
-        const response = await fetch(this.src, {headers: {'X-SS-DIALOG': true}})
+        const fetchOptions = { method: this.options?.data ? "POST" : "GET", headers: { 'X-SS-DIALOG': true } }
+        if (this.options?.data) {
+          fetchOptions.body = this.options.data
+        }
+        const response = await fetch(this.src, fetchOptions)
         const html = await response.text()
         this._dialogFrame.renderContent(html)
       }
