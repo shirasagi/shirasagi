@@ -97,7 +97,11 @@ class Cms::Form
   end
 
   def render_html(page, registers)
-    layout = html.presence || build_default_html
+    layout = if loop_setting.present? && loop_setting.html_format_liquid?
+               loop_setting.html
+             else
+               html.presence || build_default_html
+             end
     template = ::Cms.parse_liquid(layout, registers)
     assigns = { "values" => page.column_values.to_liquid, "page" => page.to_liquid }
     template.render(assigns).html_safe

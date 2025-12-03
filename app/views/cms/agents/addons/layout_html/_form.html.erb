@@ -1,7 +1,18 @@
 <% addon ||= local_assigns.fetch(:addon, {})%>
 <% snippet_select_id = "#{addon[:id]}_loop_snippet_selector" %>
+<% loop_setting_select_id = "#{addon[:id]}_loop_setting_id" %>
 
 <dl class="see">
+  <dt class="wide"><%= t("cms.labels.loop_html") %><%= tt("cms.labels.loop_html") %></dt>
+  <dd class="wide">
+    <% loop_setting_options = ancestral_loop_settings("liquid") %>
+    <%= f.select :loop_setting_id,
+          options_with_optgroup_for_loop_settings(loop_setting_options),
+          { include_blank: true },
+          id: loop_setting_select_id,
+          class: 'loop-setting-selector'
+        %>
+  </dd>
   <dt class="wide"><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
   <dd class="wide">
     <% snippet_options = ancestral_html_settings_liquid %>
@@ -37,6 +48,58 @@
 
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
+  var $loopSettingSelect = $addon.find('#<%= loop_setting_select_id %>');
+  var $htmlTextarea = $addon.find('textarea[name*="[html]"]');
+  
+  // ループHTML設定の選択時にテキストエリアをロック/アンロックし、HTMLを読み込む
+  if ($loopSettingSelect.length && $htmlTextarea.length) {
+    Cms_Editor_CodeMirror.lock('#<%= loop_setting_select_id %>', '#<%= addon[:id] %> textarea[name*="[html]"]');
+    
+    var updateLoopHtml = function() {
+      var loopSettingId = $loopSettingSelect.val();
+      if (loopSettingId) {
+        // AJAXでループHTML設定のHTMLを取得
+        $.ajax({
+          url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            if (data && data.html) {
+              var editor = $htmlTextarea.data('editor');
+              if (editor) {
+                editor.setValue(data.html);
+                editor.setOption('readOnly', true);
+              } else {
+                $htmlTextarea.val(data.html);
+                $htmlTextarea.prop('readonly', true);
+              }
+            }
+          },
+          error: function(xhr, status, error) {
+            console.error('Loop setting fetch error:', xhr, status, error);
+          }
+        });
+      } else {
+        // ループHTML設定が選択されていない場合、テキストエリアをアンロック
+        var editor = $htmlTextarea.data('editor');
+        if (editor) {
+          editor.setOption('readOnly', false);
+        } else {
+          $htmlTextarea.prop('readonly', false);
+        }
+      }
+    };
+    
+    // 初期状態を設定（既にloop_setting_idが設定されている場合）
+    if ($loopSettingSelect.val()) {
+      updateLoopHtml();
+    }
+    
+    // 選択変更時にHTMLを更新
+    $loopSettingSelect.on('change', updateLoopHtml);
+  }
+  
+  // スニペットの選択処理
   $addon.find('.loop-snippet-selector').on('change', function() {
     var $select = $(this);
     var $option = $select.find(':selected');

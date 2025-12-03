@@ -48,7 +48,10 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     let!(:user) { cms_user }
     let!(:site) { cms_site }
     let!(:shirasagi_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
-    let!(:liquid_setting) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "public") }
+    let!(:liquid_setting) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "ループHTML設定") }
+    let!(:liquid_setting_snippet) do
+      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "スニペット/テストスニペット")
+    end
     let!(:closed_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "closed") }
 
     before do
@@ -74,21 +77,37 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       closed_names = settings.map { |name, _id| name }
       expect(closed_names).not_to include(closed_setting.name)
     end
+
+    context "with liquid format" do
+      it "returns liquid format settings that do not start with 'スニペット/'" do
+        settings = helper.ancestral_loop_settings("liquid")
+        setting_names = settings.map { |name, _id| name }
+        expect(setting_names).to include(liquid_setting.name)
+        expect(setting_names).not_to include(liquid_setting_snippet.name)
+      end
+    end
   end
 
   describe "#ancestral_html_settings_liquid" do
     let!(:user) { cms_user }
     let!(:site) { cms_site }
     let!(:shirasagi_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
-    let!(:liquid_setting) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "public") }
-    let!(:closed_setting) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "closed") }
+    let!(:liquid_setting) do
+      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "スニペット/テストスニペット")
+    end
+    let!(:liquid_setting_non_snippet) do
+      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "ループHTML設定")
+    end
+    let!(:closed_setting) do
+      create(:cms_loop_setting, site: site, html_format: "liquid", state: "closed", name: "スニペット/クローズドスニペット")
+    end
 
     before do
       @cur_site = site
       @cur_user = user
     end
 
-    it "returns only public liquid format loop settings" do
+    it "returns only public liquid format loop settings that start with 'スニペット/'" do
       settings = helper.ancestral_html_settings_liquid
       expect(settings.count).to eq 1
       expect(settings.first[0]).to eq liquid_setting.name
@@ -106,6 +125,12 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       settings = helper.ancestral_html_settings_liquid
       closed_names = settings.map { |name, _id| name }
       expect(closed_names).not_to include(closed_setting.name)
+    end
+
+    it "does not include liquid settings that do not start with 'スニペット/'" do
+      settings = helper.ancestral_html_settings_liquid
+      setting_names = settings.map { |name, _id| name }
+      expect(setting_names).not_to include(liquid_setting_non_snippet.name)
     end
   end
 
@@ -127,7 +152,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
-          name: "Liquid Setting 1"
+          name: "スニペット/Liquid Setting 1"
         )
       end
       let!(:liquid_setting2) do
@@ -136,17 +161,27 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
-          name: "Liquid Setting 2"
+          name: "スニペット/Liquid Setting 2"
+        )
+      end
+      let!(:liquid_setting_non_snippet) do
+        create(:cms_loop_setting,
+          site: site,
+          html_format: "liquid",
+          html: liquid_html,
+          state: "public",
+          name: "Liquid Setting Non Snippet"
         )
       end
 
-      it "returns all public liquid format settings" do
+      it "returns all public liquid format settings that start with 'スニペット/'" do
         settings = helper.ancestral_html_settings_liquid
         expect(settings.count).to eq 2
 
         setting_names = settings.map { |name, _id| name }
         expect(setting_names).to include(liquid_setting1.name)
         expect(setting_names).to include(liquid_setting2.name)
+        expect(setting_names).not_to include(liquid_setting_non_snippet.name)
       end
 
       it "returns settings in correct format for select options" do
@@ -190,13 +225,22 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     end
 
     describe "mixed format settings" do
-      let!(:liquid_setting) do
+      let!(:liquid_setting_snippet) do
         create(:cms_loop_setting,
           site: site,
           html_format: "liquid",
           html: liquid_html,
           state: "public",
-          name: "Liquid Setting"
+          name: "スニペット/Liquid Setting"
+        )
+      end
+      let!(:liquid_setting_non_snippet) do
+        create(:cms_loop_setting,
+          site: site,
+          html_format: "liquid",
+          html: liquid_html,
+          state: "public",
+          name: "Liquid Setting Non Snippet"
         )
       end
       let!(:shirasagi_setting) do
@@ -209,17 +253,23 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         )
       end
 
-      it "correctly separates liquid and shirasagi settings" do
-        liquid_settings = helper.ancestral_html_settings_liquid
-        shirasagi_settings = helper.ancestral_loop_settings
+      it "correctly separates snippet and loop settings" do
+        snippet_settings = helper.ancestral_html_settings_liquid
+        loop_settings = helper.ancestral_loop_settings
+        loop_settings_liquid = helper.ancestral_loop_settings("liquid")
 
-        liquid_names = liquid_settings.map { |name, _id| name }
-        shirasagi_names = shirasagi_settings.map { |name, _id| name }
+        snippet_names = snippet_settings.map { |name, _id| name }
+        loop_names = loop_settings.map { |name, _id| name }
+        loop_liquid_names = loop_settings_liquid.map { |name, _id| name }
 
-        expect(liquid_names).to include(liquid_setting.name)
-        expect(liquid_names).not_to include(shirasagi_setting.name)
-        expect(shirasagi_names).to include(shirasagi_setting.name)
-        expect(shirasagi_names).not_to include(liquid_setting.name)
+        expect(snippet_names).to include(liquid_setting_snippet.name)
+        expect(snippet_names).not_to include(liquid_setting_non_snippet.name)
+        expect(snippet_names).not_to include(shirasagi_setting.name)
+        expect(loop_names).to include(shirasagi_setting.name)
+        expect(loop_names).not_to include(liquid_setting_snippet.name)
+        expect(loop_names).not_to include(liquid_setting_non_snippet.name)
+        expect(loop_liquid_names).to include(liquid_setting_non_snippet.name)
+        expect(loop_liquid_names).not_to include(liquid_setting_snippet.name)
       end
     end
 

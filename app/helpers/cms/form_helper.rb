@@ -33,12 +33,15 @@ module Cms::FormHelper
 
   def ancestral_loop_settings(format = nil)
     items = []
+    snippet_prefix = "#{t("cms.labels.snippets")}/"
     if format == "liquid"
       settings = Cms::LoopSetting.site(@cur_site).liquid
     else
       settings = Cms::LoopSetting.site(@cur_site).shirasagi
     end
     settings.each do |item|
+      # 「スニペット/」で始まるものは除外（スニペット用なので）
+      next if item.name.start_with?(snippet_prefix)
       items << [item.name, item.id]
     end
     items
@@ -46,8 +49,11 @@ module Cms::FormHelper
 
   def ancestral_html_settings_liquid
     items = []
+    snippet_prefix = "#{t("cms.labels.snippets")}/"
     settings = Cms::LoopSetting.site(@cur_site).liquid
     settings.each do |item|
+      # 「スニペット/」で始まるものだけを返す
+      next unless item.name.start_with?(snippet_prefix)
       items << [item.name, item.id, { "data-snippet" => item.html.to_s }]
     end
     items
@@ -68,18 +74,22 @@ module Cms::FormHelper
 
   # 指定データ配列(snippet_option_list)を select用optgroup(option)構造へ変換
   #
-  # items: [["test/test1", id1, {data}], ["test/test2", id2, {data}], ["root", id3, {data}]]
+  # items: [["スニペット/ページ/ページ名", id1, {data}], ["スニペット/ページ/ページID", id2, {data}], ["スニペット/タグ", id3, {data}]]
   # 戻り値: HTML Safe
   def options_with_optgroup_for_snippets(items, input_direct_label: nil)
     input_direct_label ||= t("cms.input_directly")
+    snippet_prefix = "#{t("cms.labels.snippets")}/"
     groups = Hash.new { |h, k| h[k] = [] }
     nogroup = []
     items.each do |name, id, attrs|
-      if name.include?("/")
-        group, leaf = name.split("/", 2)
+      # 「スニペット/」プレフィックスを除外
+      display_name = name.start_with?(snippet_prefix) ? name.sub(/^#{Regexp.escape(snippet_prefix)}/, "") : name
+
+      if display_name.include?("/")
+        group, leaf = display_name.split("/", 2)
         groups[group] << [leaf, id, attrs]
       else
-        nogroup << [name, id, attrs]
+        nogroup << [display_name, id, attrs]
       end
     end
     html = []
@@ -104,6 +114,40 @@ module Cms::FormHelper
             data_attrs["snippet"] = data_attrs.delete("data-snippet")
           end
           tag.option(leaf, value: id, data: data_attrs)
+        end.join.html_safe
+      end
+    end
+    safe_join(html)
+  end
+
+  # 指定データ配列(loop_setting_option_list)を select用optgroup(option)構造へ変換
+  #
+  # items: [["test/test1", id1], ["test/test2", id2], ["root", id3]]
+  # 戻り値: HTML Safe
+  def options_with_optgroup_for_loop_settings(items, input_direct_label: nil)
+    input_direct_label ||= t("cms.input_directly")
+    groups = Hash.new { |h, k| h[k] = [] }
+    nogroup = []
+    items.each do |name, id|
+      if name.include?("/")
+        group, leaf = name.split("/", 2)
+        groups[group] << [leaf, id]
+      else
+        nogroup << [name, id]
+      end
+    end
+    html = []
+    # 直接入力optionはグループ外で必ず先頭
+    html << tag.option(input_direct_label, value: "")
+    # グループ外（ルート）option
+    nogroup.each do |name, id|
+      html << tag.option(name, value: id)
+    end
+    # グループoptgroup(全グループでclass: 'title')
+    groups.keys.sort.each do |group|
+      html << tag.optgroup(label: group, class: 'title') do
+        groups[group].map do |leaf, id|
+          tag.option(leaf, value: id)
         end.join.html_safe
       end
     end

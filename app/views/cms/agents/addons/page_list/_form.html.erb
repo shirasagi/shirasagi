@@ -5,11 +5,82 @@
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
+  
+  // SHIRASAGI形式のループHTML設定の読み込み
+  var updateLoopHtmlShirasagi = function() {
+    var $loopSettingSelect = $('#item_loop_setting_id');
+    var $loopHtmlTextarea = $('#item_loop_html');
+    var loopSettingId = $loopSettingSelect.val();
+    
+    if (loopSettingId && $loopHtmlTextarea.length) {
+      $.ajax({
+        url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          if (data && data.html) {
+            var editor = $loopHtmlTextarea.data('editor');
+            if (editor) {
+              editor.setValue(data.html);
+            } else {
+              $loopHtmlTextarea.val(data.html);
+            }
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Loop setting fetch error:', xhr, status, error);
+        }
+      });
+    }
+  };
+  
+  // Liquid形式のループHTML設定の読み込み
+  var updateLoopHtmlLiquid = function() {
+    var $loopSettingSelect = $('#item_loop_setting_id_liquid');
+    var $loopLiquidTextarea = $('#item_loop_liquid');
+    var loopSettingId = $loopSettingSelect.val();
+    
+    if (loopSettingId && $loopLiquidTextarea.length) {
+      $.ajax({
+        url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
+        method: 'GET',
+        dataType: 'json',
+        success: function(data) {
+          if (data && data.html) {
+            var editor = $loopLiquidTextarea.data('editor');
+            if (editor) {
+              editor.setValue(data.html);
+            } else {
+              $loopLiquidTextarea.val(data.html);
+            }
+          }
+        },
+        error: function(xhr, status, error) {
+          console.error('Loop setting fetch error:', xhr, status, error);
+        }
+      });
+    }
+  };
+  
   if ($loopFormatSelect.length) {
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
+    
+    // SHIRASAGI形式のループHTML設定変更時にHTMLを読み込む
+    $('#item_loop_setting_id').on('change', updateLoopHtmlShirasagi);
+    // 初期状態で既にloop_setting_idが設定されている場合もHTMLを読み込む
+    if ($('#item_loop_setting_id').val()) {
+      updateLoopHtmlShirasagi();
+    }
 
     <% if @model.use_liquid %>
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
+    
+    // Liquid形式のループHTML設定変更時にHTMLを読み込む
+    $('#item_loop_setting_id_liquid').on('change', updateLoopHtmlLiquid);
+    // 初期状態で既にloop_setting_idが設定されている場合もHTMLを読み込む
+    if ($('#item_loop_setting_id_liquid').val()) {
+      updateLoopHtmlLiquid();
+    }
 
     var changeLoopFormat = function() {
       var format = $loopFormatSelect.val();
@@ -89,7 +160,14 @@
 
     <% if @model.use_loop_html %>
       <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-      <dd><%= f.select :loop_setting_id, ancestral_loop_settings, include_blank: t('cms.input_directly') %></dd>
+      <dd>
+        <%= select_tag(
+              'item[loop_setting_id]',
+              options_with_optgroup_for_loop_settings(ancestral_loop_settings),
+              id: 'item_loop_setting_id',
+              name: 'item[loop_setting_id]'
+            ) %>
+      </dd>
       <dd><%= f.text_area :loop_html, class: :html, style: "height: 100px;" %></dd>
     <% end %>
 
@@ -114,7 +192,14 @@
   <dl class="see loop-format-liquid">
     <% if @model.use_loop_html %>
       <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
-      <dd><%= f.select :loop_setting_id, ancestral_loop_settings("liquid"), { include_blank: t('cms.input_directly') }, { id: 'item_loop_setting_id_liquid' } %></dd>
+      <dd>
+        <%= select_tag(
+              'item[loop_setting_id]',
+              options_with_optgroup_for_loop_settings(ancestral_loop_settings("liquid")),
+              id: 'item_loop_setting_id_liquid',
+              name: 'item[loop_setting_id]'
+            ) %>
+      </dd>
     <% end %>
     <dt><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
     <dd>
