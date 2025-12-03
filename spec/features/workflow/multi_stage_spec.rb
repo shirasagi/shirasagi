@@ -49,13 +49,16 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         #
         # admin: send request
         #
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-request" do
           select route_name, from: "workflow_route"
           click_on I18n.t("workflow.buttons.select")
+        end
 
+        expect(page).to have_css("[name='workflow[comment]']")
+        within ".mod-workflow-request" do
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
@@ -103,6 +106,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user1: approve request
         #
         login_user user1, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -151,6 +155,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user2: approve request
         #
         login_user user2, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
@@ -200,6 +205,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user3: approve request, he is the last one
         #
         login_user user3, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
@@ -260,8 +266,8 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
       end
 
       it do
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
 
         #
         # admin: send request
@@ -317,6 +323,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user1: approve request
         #
         login_user user1, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -347,6 +354,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user2: approve request
         #
         login_user user2, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
@@ -388,6 +396,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user3: approve request, he is the last one
         #
         login_user user3, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
@@ -440,8 +449,8 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
       end
 
       it do
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
 
         #
         # admin: send request
@@ -496,6 +505,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user1: approve request
         #
         login_user user1, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -543,6 +553,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user2: approve request
         #
         login_user user2, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment2
@@ -591,6 +602,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user3: remand request, he is the last one
         #
         login_user user3, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: remand_comment3
@@ -654,8 +666,8 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
       end
 
       it do
-        login_cms_user
-        visit show_path
+        login_cms_user to: show_path
+        wait_for_all_turbo_frames
 
         #
         # admin: send request
@@ -711,6 +723,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user1: approve request
         #
         login_user user1, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment1
@@ -752,6 +765,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
         # user3: approve request, user2 no needs to approve request
         #
         login_user user3, to: show_path
+        wait_for_all_turbo_frames
 
         within ".mod-workflow-approve" do
           fill_in "remand[comment]", with: approve_comment3
