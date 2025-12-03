@@ -7,7 +7,7 @@ class Gws::Column::Value::DateField < Gws::Column::Value::Base
     return if column.blank?
 
     if column.required? && date.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+      record.errors.add(:base, SS.format_error(name, :blank))
     end
 
     return if date.blank?

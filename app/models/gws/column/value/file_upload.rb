@@ -11,7 +11,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
     return if column.blank?
 
     if column.required? && files.blank?
-      record.errors.add(:base, name + I18n.t('errors.messages.blank'))
+      record.errors.add(:base, SS.format_error(name, :blank))
     end
 
     return if files.blank?
@@ -22,7 +22,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
         size: ApplicationController.helpers.number_to_human(files.count),
         limit: ApplicationController.helpers.number_to_human(column.upload_file_count)
       )
-      record.errors.add(:base, "#{name}#{message}")
+      record.errors.add(:base, SS.format_error(name, message))
     end
 
     # files.each do |file|
@@ -33,7 +33,7 @@ class Gws::Column::Value::FileUpload < Gws::Column::Value::Base
     #       size: ApplicationController.helpers.number_to_human_size(file.size),
     #       limit: ApplicationController.helpers.number_to_human_size(column.max_upload_file_size)
     #     )
-    #     record.errors.add(:base, "#{name}#{message}")
+    #     record.errors.add(:base, SS.format_error(name, message))
     #   end
     # end
   end

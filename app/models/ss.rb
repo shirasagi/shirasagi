@@ -166,4 +166,11 @@ module SS
     return true if err.to_s == HTTP_STATUS_CODE_NOT_FOUND
     false
   end
+
+  def format_error(attribute, message)
+    if message.is_a?(Symbol)
+      message = I18n.t("errors.messages.#{message}")
+    end
+    I18n.t("errors.format", attribute: attribute, message: message)
+  end
 end
