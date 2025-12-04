@@ -141,15 +141,9 @@ module Cms::FormHelper
     nogroup = []
     items.each do |item|
       # 後方互換性のため、配列の長さで判定
-      if item.length >= 3
-        name = item[0]
-        id = item[1]
-        description = item[2]
-      else
-        name = item[0]
-        id = item[1]
-        description = nil
-      end
+      name = item[0]
+      id = item[1]
+      description = item.length >= 3 ? item[2] : nil
 
       if name.include?("/")
         group, leaf = name.split("/", 2)
