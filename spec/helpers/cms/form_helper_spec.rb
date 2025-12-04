@@ -85,6 +85,20 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         expect(setting_names).to include(liquid_setting.name)
         expect(setting_names).not_to include(liquid_setting_snippet.name)
       end
+
+      it "includes description in returned settings" do
+        liquid_setting_with_description = create(:cms_loop_setting,
+          site: site,
+          html_format: "liquid",
+          state: "public",
+          name: "ループHTML設定（説明付き）",
+          description: "これは説明です"
+        )
+        settings = helper.ancestral_loop_settings("liquid")
+        setting_with_desc = settings.find { |name, _id| name == liquid_setting_with_description.name }
+        expect(setting_with_desc).to be_present
+        expect(setting_with_desc[2]).to eq "これは説明です"
+      end
     end
   end
 
@@ -131,6 +145,36 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       settings = helper.ancestral_html_settings_liquid
       setting_names = settings.map { |name, _id| name }
       expect(setting_names).not_to include(liquid_setting_non_snippet.name)
+    end
+
+    it "includes description in returned settings when present" do
+      liquid_setting_with_description = create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        state: "public",
+        name: "スニペット/テストスニペット（説明付き）",
+        description: "これはスニペットの説明です"
+      )
+      settings = helper.ancestral_html_settings_liquid
+      setting_with_desc = settings.find { |name, _id| name == liquid_setting_with_description.name }
+      expect(setting_with_desc).to be_present
+      expect(setting_with_desc[2]).to include("data-snippet" => liquid_setting_with_description.html)
+      expect(setting_with_desc[2]).to include("data-description" => "これはスニペットの説明です")
+    end
+
+    it "does not include description key when description is blank" do
+      liquid_setting_no_description = create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        state: "public",
+        name: "スニペット/テストスニペット（説明なし）",
+        description: nil
+      )
+      settings = helper.ancestral_html_settings_liquid
+      setting_no_desc = settings.find { |name, _id| name == liquid_setting_no_description.name }
+      expect(setting_no_desc).to be_present
+      expect(setting_no_desc[2]).to include("data-snippet" => liquid_setting_no_description.html)
+      expect(setting_no_desc[2]).not_to have_key("data-description")
     end
   end
 
@@ -298,6 +342,132 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
 
         expect(liquid_settings).to be_empty
         expect(shirasagi_settings).to be_empty
+      end
+    end
+  end
+
+  describe "#options_with_optgroup_for_loop_settings" do
+    let!(:user) { cms_user }
+    let!(:site) { cms_site }
+
+    before do
+      @cur_site = site
+      @cur_user = user
+    end
+
+    context "with description" do
+      it "includes data-description attribute in option tags" do
+        items = [
+          ["テスト設定", 1, "これは説明です"],
+          ["グループ/子設定", 2, "子設定の説明"]
+        ]
+        html = helper.options_with_optgroup_for_loop_settings(items)
+        doc = Nokogiri::HTML::DocumentFragment.parse(html)
+
+        # 直接入力オプションを確認
+        direct_input = doc.css('option[value=""]').first
+        expect(direct_input).to be_present
+        expect(direct_input.text).to include("直接入力")
+
+        # 説明付きオプションを確認
+        option_with_desc = doc.css('option[value="1"]').first
+        expect(option_with_desc).to be_present
+        expect(option_with_desc.text).to eq "テスト設定"
+        expect(option_with_desc['data-description']).to eq "これは説明です"
+
+        # グループ内のオプションを確認
+        optgroup = doc.css('optgroup[label="グループ"]').first
+        expect(optgroup).to be_present
+        option_in_group = optgroup.css('option[value="2"]').first
+        expect(option_in_group).to be_present
+        expect(option_in_group.text).to eq "子設定"
+        expect(option_in_group['data-description']).to eq "子設定の説明"
+      end
+
+      it "does not include data-description attribute when description is blank" do
+        items = [
+          ["テスト設定", 1, nil],
+          ["テスト設定2", 2, ""]
+        ]
+        html = helper.options_with_optgroup_for_loop_settings(items)
+        doc = Nokogiri::HTML::DocumentFragment.parse(html)
+
+        option1 = doc.css('option[value="1"]').first
+        expect(option1).to be_present
+        expect(option1['data-description']).to be_nil
+
+        option2 = doc.css('option[value="2"]').first
+        expect(option2).to be_present
+        expect(option2['data-description']).to be_nil
+      end
+
+      it "maintains backward compatibility with items without description" do
+        items = [
+          ["テスト設定", 1],
+          ["グループ/子設定", 2]
+        ]
+        html = helper.options_with_optgroup_for_loop_settings(items)
+        doc = Nokogiri::HTML::DocumentFragment.parse(html)
+
+        option1 = doc.css('option[value="1"]').first
+        expect(option1).to be_present
+        expect(option1.text).to eq "テスト設定"
+        expect(option1['data-description']).to be_nil
+      end
+    end
+  end
+
+  describe "#options_with_optgroup_for_snippets" do
+    let!(:user) { cms_user }
+    let!(:site) { cms_site }
+
+    before do
+      @cur_site = site
+      @cur_user = user
+    end
+
+    context "with description" do
+      it "includes data-description attribute in option tags" do
+        items = [
+          ["スニペット/テストスニペット", 1, { "data-snippet" => "{{ test }}", "data-description" => "これは説明です" }],
+          ["スニペット/グループ/子スニペット", 2, { "data-snippet" => "{{ child }}", "data-description" => "子スニペットの説明" }]
+        ]
+        html = helper.options_with_optgroup_for_snippets(items)
+        doc = Nokogiri::HTML::DocumentFragment.parse(html)
+
+        # 直接入力オプションを確認
+        direct_input = doc.css('option[value=""]').first
+        expect(direct_input).to be_present
+        expect(direct_input.text).to include("直接入力")
+
+        # 説明付きオプションを確認（「スニペット/」プレフィックスが削除される）
+        option_with_desc = doc.css('option[value="1"]').first
+        expect(option_with_desc).to be_present
+        expect(option_with_desc.text).to eq "テストスニペット"
+        expect(option_with_desc['data-snippet']).to eq "{{ test }}"
+        expect(option_with_desc['data-description']).to eq "これは説明です"
+
+        # グループ内のオプションを確認
+        optgroup = doc.css('optgroup[label="グループ"]').first
+        expect(optgroup).to be_present
+        option_in_group = optgroup.css('option[value="2"]').first
+        expect(option_in_group).to be_present
+        expect(option_in_group.text).to eq "子スニペット"
+        expect(option_in_group['data-snippet']).to eq "{{ child }}"
+        expect(option_in_group['data-description']).to eq "子スニペットの説明"
+      end
+
+      it "does not include data-description attribute when description is blank" do
+        items = [
+          ["スニペット/テストスニペット", 1, { "data-snippet" => "{{ test }}" }]
+        ]
+        html = helper.options_with_optgroup_for_snippets(items)
+        doc = Nokogiri::HTML::DocumentFragment.parse(html)
+
+        option = doc.css('option[value="1"]').first
+        expect(option).to be_present
+        expect(option['data-snippet']).to eq "{{ test }}"
+        expect(option['data-description']).to be_nil
       end
     end
   end
