@@ -5,12 +5,21 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
   let(:name) { unique_id }
   let(:html) { unique_id }
   let(:html2) { unique_id }
+  # スニペットのドロップダウンを取得
   def loop_snippet_select
     find('.loop-snippet-selector', visible: :all)
   end
 
+  # スニペットのドロップダウンから選択
   def select_loop_snippet(option_text)
     select option_text, from: loop_snippet_select[:id]
+  end
+
+  # ループHTML（テンプレート参照）のドロップダウンから選択
+  def select_template_reference(option_text)
+    # 定型フォームでは、ループHTML（テンプレート参照）のドロップダウンのIDが動的
+    find('.loop-setting-selector', visible: :all)
+    select option_text, from: find('.loop-setting-selector', visible: :all)[:id]
   end
 
   context 'loop html snippet functionality' do
@@ -21,7 +30,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 20,
-        name: "Test Liquid Setting #{unique_id}"
+        name: "スニペット/Test Liquid Setting #{unique_id}"
       )
     end
 
@@ -45,8 +54,15 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in 'item[name]', with: name
         fill_in_code_mirror 'item[html]', with: html
 
-        # Select liquid loop snippet (inserting happens on change)
-        select_loop_snippet(liquid_setting.name)
+        # スニペットのドロップダウンを確認
+        expect(page).to have_css('.loop-snippet-selector', wait: 5)
+        # ループHTML（テンプレート参照）のドロップダウンも存在する
+        expect(page).to have_css('.loop-setting-selector', visible: :all)
+
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        # スニペットのドロップダウンから選択
+        select_loop_snippet(snippet_display)
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -68,15 +84,19 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in 'item[name]', with: name
         fill_in_code_mirror 'item[html]', with: html
 
+        # スニペットのドロップダウンを確認
+        expect(page).to have_css('.loop-snippet-selector', wait: 5)
         # NOTE: Shirasagi settings are not available in the dropdown for forms
         # as ancestral_html_settings_liquid only returns liquid format settings
         # This test verifies that only liquid settings are available
         option_texts = loop_snippet_select.all('option').map(&:text)
-        expect(option_texts).to include(liquid_setting.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        expect(option_texts).to include(snippet_display)
         expect(option_texts).not_to include(shirasagi_setting.name)
 
-        # Select liquid loop snippet instead
-        select_loop_snippet(liquid_setting.name)
+        # スニペットのドロップダウンから選択
+        select_loop_snippet(snippet_display)
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -100,8 +120,10 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in 'item[name]', with: name
         fill_in_code_mirror 'item[html]', with: existing_html
 
-        # Select liquid loop snippet to append
-        select_loop_snippet(liquid_setting.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        # スニペットのドロップダウンから選択
+        select_loop_snippet(snippet_display)
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -122,12 +144,15 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       visit edit_cms_form_path(site: site.id, id: form.id)
 
       # Wait for the page to load and check if fields exist
-      expect(page).to have_css('.loop-snippet-selector')
+      expect(page).to have_css('.loop-snippet-selector', wait: 5) # スニペットのドロップダウン
+      expect(page).to have_css('.loop-setting-selector', visible: :all) # ループHTML（テンプレート参照）のドロップダウン
       expect(page).to have_field('item[html]')
 
       within 'form#item-form' do
-        # Select different loop snippet (liquid only)
-        select_loop_snippet(liquid_setting.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        # スニペットのドロップダウンから選択
+        select_loop_snippet(snippet_display)
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -146,8 +171,10 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in 'item[name]', with: name
         fill_in_code_mirror 'item[html]', with: html
 
-        # Insert liquid loop snippet multiple times
-        2.times { select_loop_snippet(liquid_setting.name) }
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        # スニペットのドロップダウンから複数回選択
+        2.times { select_loop_snippet(snippet_display) }
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -172,8 +199,11 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in 'item[name]', with: name
         fill_in_code_mirror 'item[html]', with: html
 
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
         # NOTE: Only liquid settings are available, so we insert the same snippet multiple times
-        2.times { select_loop_snippet(liquid_setting.name) }
+        # スニペットのドロップダウンから複数回選択
+        2.times { select_loop_snippet(snippet_display) }
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -195,8 +225,10 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in 'item[name]', with: name
         fill_in_code_mirror 'item[html]', with: html
 
-        # Select liquid loop snippet
-        select_loop_snippet(liquid_setting.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        # スニペットのドロップダウンから選択
+        select_loop_snippet(snippet_display)
 
         # Verify that CodeMirror editor is working
         expect(page).to have_css('.CodeMirror')
@@ -222,7 +254,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html: "{% for item in items %}<div class='loop-item-1'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 5,
-        name: "Liquid Setting 1 #{unique_id}"
+        name: "スニペット/Liquid Setting 1 #{unique_id}"
       )
     end
 
@@ -233,7 +265,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html: "{% for item in items %}<div class='loop-item-2'>{{ item.title }}</div>{% endfor %}",
         state: "public",
         order: 15,
-        name: "Liquid Setting 2 #{unique_id}"
+        name: "スニペット/Liquid Setting 2 #{unique_id}"
       )
     end
 
@@ -243,7 +275,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html_format: "liquid",
         html: "{% for item in items %}<div class='closed-item'>{{ item.content }}</div>{% endfor %}",
         state: "closed",
-        name: "Closed Setting #{unique_id}"
+        name: "スニペット/Closed Setting #{unique_id}"
       )
     end
 
@@ -257,11 +289,12 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in 'item[name]', with: name
         fill_in_code_mirror 'item[html]', with: html
 
-        # Insert first snippet
-        select_loop_snippet(liquid_setting1.name)
-
-        # Insert second snippet
-        select_loop_snippet(liquid_setting2.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet1_display = liquid_setting1.name.sub(/^スニペット\//, "")
+        snippet2_display = liquid_setting2.name.sub(/^スニペット\//, "")
+        # スニペットのドロップダウンから複数のスニペットを挿入
+        select_loop_snippet(snippet1_display)
+        select_loop_snippet(snippet2_display)
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -282,14 +315,20 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       click_on I18n.t('ss.links.new')
 
       within 'form#item-form' do
+        # スニペットのドロップダウンを確認
+        expect(page).to have_css('.loop-snippet-selector', wait: 5)
         # Check that only public settings are available
         option_texts = loop_snippet_select.all('option').map(&:text)
-        expect(option_texts).to include(liquid_setting1.name)
-        expect(option_texts).to include(liquid_setting2.name)
-        expect(option_texts).not_to include(closed_setting.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet1_display = liquid_setting1.name.sub(/^スニペット\//, "")
+        snippet2_display = liquid_setting2.name.sub(/^スニペット\//, "")
+        closed_display = closed_setting.name.sub(/^スニペット\//, "")
+        expect(option_texts).to include(snippet1_display)
+        expect(option_texts).to include(snippet2_display)
+        expect(option_texts).not_to include(closed_display)
 
         sorted_names = option_texts.reject(&:blank?)
-        expect(sorted_names.index(liquid_setting1.name)).to be < sorted_names.index(liquid_setting2.name)
+        expect(sorted_names.index(snippet1_display)).to be < sorted_names.index(snippet2_display)
       end
     end
 
@@ -301,9 +340,12 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in 'item[name]', with: name
         fill_in_code_mirror 'item[html]', with: "<div class='header'>Header content</div>"
 
-        # Insert multiple snippets
-        select_loop_snippet(liquid_setting1.name)
-        select_loop_snippet(liquid_setting2.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet1_display = liquid_setting1.name.sub(/^スニペット\//, "")
+        snippet2_display = liquid_setting2.name.sub(/^スニペット\//, "")
+        # スニペットのドロップダウンから複数のスニペットを挿入
+        select_loop_snippet(snippet1_display)
+        select_loop_snippet(snippet2_display)
 
         # Add some custom HTML
         fill_in_code_mirror 'item[html]', with: "<div class='footer'>Footer content</div>"
@@ -322,6 +364,17 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
   end
 
   context 'template reference functionality' do
+    let!(:liquid_setting) do
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
+        state: "public",
+        order: 20,
+        name: "スニペット/Test Liquid Setting #{unique_id}"
+      )
+    end
+
     let!(:liquid_setting_template) do
       create(:cms_loop_setting,
         site: site,
@@ -334,30 +387,92 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
 
     before { login_cms_user }
 
-    it 'template reference takes precedence over direct loop_liquid input' do
-      # This test verifies the rendering priority in the helper
-      # When loop_setting_id is set and loop_setting.html_format == "liquid",
-      # it should use loop_setting.html instead of loop_liquid
-      node = create(:article_node_page, cur_site: site,
-        loop_format: "liquid",
-        loop_setting_id: liquid_setting_template.id,
-        loop_liquid: "direct-input-content"
-      )
+    it 'can select liquid loop setting as template reference' do
+      visit cms_forms_path(site)
+      click_on I18n.t('ss.links.new')
 
-      expect(node.loop_setting).to eq liquid_setting_template
-      expect(node.loop_setting.html_format_liquid?).to be true
-      # The rendering helper should use loop_setting.html, not loop_liquid
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+
+        # ループHTML（テンプレート参照）のドロップダウンを確認
+        expect(page).to have_css('.loop-setting-selector', visible: :all, wait: 5)
+        # スニペットのドロップダウンも存在する
+        expect(page).to have_css('.loop-snippet-selector', visible: :all)
+
+        # ループHTML（テンプレート参照）のドロップダウンから選択
+        select_template_reference(liquid_setting_template.name)
+
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      form = Cms::Form.site(site).where(name: name).first
+      expect(form).to be_present
+      expect(form.loop_setting_id).to eq liquid_setting_template.id
+      expect(form.loop_setting.html).to eq liquid_setting_template.html
     end
 
-    it 'backward compatibility: direct loop_liquid input still works' do
-      # When loop_setting_id is not set, loop_liquid should be used
-      node = create(:article_node_page, cur_site: site,
-        loop_format: "liquid",
-        loop_liquid: "direct-input-content"
+    it 'template reference and snippet functionality work together' do
+      visit cms_forms_path(site)
+      click_on I18n.t('ss.links.new')
+
+      within 'form#item-form' do
+        fill_in 'item[name]', with: name
+        fill_in_code_mirror 'item[html]', with: html
+
+        # スニペットのドロップダウンとループHTML（テンプレート参照）のドロップダウンを区別
+        expect(page).to have_css('.loop-snippet-selector', visible: :all, wait: 5) # スニペットのドロップダウン
+        expect(page).to have_css('.loop-setting-selector', visible: :all) # ループHTML（テンプレート参照）のドロップダウン
+
+        # まずスニペットのドロップダウンからスニペットを挿入
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        select_loop_snippet(snippet_display) # スニペットのドロップダウンを使用
+        wait_for_js_ready
+
+        # その後、ループHTML（テンプレート参照）のドロップダウンからテンプレート参照を選択
+        select_template_reference(liquid_setting_template.name) # ループHTML（テンプレート参照）のドロップダウンを使用
+        wait_for_js_ready
+      end
+
+      within "form#item-form" do
+        click_on I18n.t('ss.buttons.save')
+      end
+
+      wait_for_notice I18n.t('ss.notice.saved')
+
+      form = Cms::Form.site(site).where(name: name).first
+      expect(form).to be_present
+      # Template reference should be set
+      expect(form.loop_setting_id).to eq liquid_setting_template.id
+      # loop_setting_idが設定されている場合、htmlは無視され、loop_setting.htmlが使用される
+      expect(form.loop_setting.html).to eq liquid_setting_template.html
+    end
+
+    it 'template reference takes precedence over direct html input' do
+      # This test verifies the rendering priority in the helper
+      # When loop_setting_id is set and loop_setting.html_format == "liquid",
+      # it should use loop_setting.html instead of html
+      form = create(:cms_form, cur_site: site,
+        name: name,
+        loop_setting_id: liquid_setting_template.id,
+        html: "direct-input-content"
       )
 
-      expect(node.loop_setting_id).to be_nil
-      expect(node.loop_liquid).to eq "direct-input-content"
+      expect(form.loop_setting).to eq liquid_setting_template
+      expect(form.loop_setting.html_format_liquid?).to be true
+      # The rendering helper should use loop_setting.html, not html
+    end
+
+    it 'backward compatibility: direct html input still works' do
+      # When loop_setting_id is not set, html should be used
+      form = create(:cms_form, cur_site: site,
+        name: name,
+        html: "direct-input-content"
+      )
+
+      expect(form.loop_setting_id).to be_nil
+      expect(form.html).to eq "direct-input-content"
     end
   end
 end

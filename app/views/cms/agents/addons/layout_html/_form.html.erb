@@ -2,6 +2,8 @@
 <% snippet_select_id = "#{addon[:id]}_loop_snippet_selector" %>
 <% loop_setting_select_id = "#{addon[:id]}_loop_setting_id" %>
 
+<%= code_editor "##{addon[:id]} textarea", mode: :html %>
+
 <dl class="see">
   <dt class="wide"><%= t("cms.labels.loop_html") %><%= tt("cms.labels.loop_html") %></dt>
   <dd class="wide">
@@ -50,14 +52,27 @@
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopSettingSelect = $addon.find('#<%= loop_setting_select_id %>');
   var $htmlTextarea = $addon.find('textarea[name*="[html]"]');
+  var $snippetSelect = $addon.find('.loop-snippet-selector');
   
   // ループHTML設定の選択時にテキストエリアをロック/アンロックし、HTMLを読み込む
   if ($loopSettingSelect.length && $htmlTextarea.length) {
-    Cms_Editor_CodeMirror.lock('#<%= loop_setting_select_id %>', '#<%= addon[:id] %> textarea[name*="[html]"]');
+    // CodeMirrorエディタの初期化を待つ
+    var initLock = function() {
+      var $codeMirror = $htmlTextarea.next('.CodeMirror');
+      if ($codeMirror.length && $codeMirror[0].CodeMirror) {
+        Cms_Editor_CodeMirror.lock('#<%= loop_setting_select_id %>', '#<%= addon[:id] %> textarea[name*="[html]"]');
+      } else {
+        setTimeout(initLock, 100);
+      }
+    };
+    initLock();
     
     var updateLoopHtml = function() {
       var loopSettingId = $loopSettingSelect.val();
       if (loopSettingId) {
+        // ループHTML設定が選択されている場合、スニペットのプルダウンを無効にする
+        $snippetSelect.prop('disabled', true);
+        
         // AJAXでループHTML設定のHTMLを取得
         $.ajax({
           url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
@@ -80,7 +95,9 @@
           }
         });
       } else {
-        // ループHTML設定が選択されていない場合、テキストエリアをアンロック
+        // ループHTML設定が選択されていない場合、テキストエリアをアンロックし、スニペットのプルダウンを有効にする
+        $snippetSelect.prop('disabled', false);
+        
         var editor = $htmlTextarea.data('editor');
         if (editor) {
           editor.setOption('readOnly', false);
@@ -102,6 +119,13 @@
   // スニペットの選択処理
   $addon.find('.loop-snippet-selector').on('change', function() {
     var $select = $(this);
+    
+    // ループHTML設定が選択されている場合はスニペットの挿入を無効にする
+    if ($loopSettingSelect.length && $loopSettingSelect.val()) {
+      $select.val('');
+      return;
+    }
+    
     var $option = $select.find(':selected');
     
     if (!$option.val()) {
@@ -146,8 +170,6 @@
     $select.val('');
   });
 <% end %>
-
-<%= code_editor "##{addon[:id]} textarea", mode: :html %>
 
 <% if @syntax_context&.errors.present? && @cur_user.cms_role_permit_any?(@cur_site, "edit_cms_ignore_syntax_check") %>
   <label>
