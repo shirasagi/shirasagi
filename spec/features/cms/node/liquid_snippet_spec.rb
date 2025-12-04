@@ -160,7 +160,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
         # ループHTML（テンプレート参照）のドロップダウンを確認（スニペットのドロップダウンとは別）
         expect(page).to have_select('item_loop_setting_id_liquid', wait: 5)
 
-        # ループHTML（テンプレート参照）のドロップダウンから選択（スニペットのドロップダウンではない）
+        # ループHTML（テンプレート参照）のドロップダウンから選択
         select_template_reference(template_setting.name)
       end
 
@@ -173,6 +173,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       node_with_template.reload
       expect(node_with_template.loop_setting_id).to eq template_setting.id
       expect(node_with_template.loop_format).to eq "liquid"
+      expect(node_with_template.loop_setting.html).to eq template_setting.html
     end
 
     it "template reference and snippet functionality work together" do

@@ -43,7 +43,8 @@
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopSettingSelect = $addon.find('#<%= loop_setting_select_id %>');
   var $layoutTextarea = $addon.find('textarea[name*="[layout]"]');
-  
+  var $snippetSelect = $addon.find('.loop-snippet-selector');
+
   // ループHTML設定の選択時にテキストエリアをロック/アンロックし、HTMLを読み込む
   if ($loopSettingSelect.length && $layoutTextarea.length) {
     Cms_Editor_CodeMirror.lock('#<%= loop_setting_select_id %>', '#<%= addon[:id] %> textarea[name*="[layout]"]');
@@ -51,6 +52,9 @@
     var updateLoopHtml = function() {
       var loopSettingId = $loopSettingSelect.val();
       if (loopSettingId) {
+        // ループHTML設定が選択されている場合、スニペットのプルダウンを無効にする
+        $snippetSelect.prop('disabled', true);
+        
         // AJAXでループHTML設定のHTMLを取得
         $.ajax({
           url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
@@ -73,7 +77,9 @@
           }
         });
       } else {
-        // ループHTML設定が選択されていない場合、テキストエリアをアンロック
+        // ループHTML設定が選択されていない場合、テキストエリアをアンロックし、スニペットのプルダウンを有効にする
+        $snippetSelect.prop('disabled', false);
+        
         var editor = $layoutTextarea.data('editor');
         if (editor) {
           editor.setOption('readOnly', false);
@@ -95,6 +101,13 @@
   // スニペットの選択処理
   $addon.find('.loop-snippet-selector').on('change', function() {
     var $select = $(this);
+    
+    // ループHTML設定が選択されている場合はスニペットの挿入を無効にする
+    if ($loopSettingSelect.length && $loopSettingSelect.val()) {
+      $select.val('');
+      return;
+    }
+    
     var $option = $select.find(':selected');
     
     if (!$option.val()) {

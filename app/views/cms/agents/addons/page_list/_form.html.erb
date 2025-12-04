@@ -38,27 +38,36 @@
   var updateLoopHtmlLiquid = function() {
     var $loopSettingSelect = $('#item_loop_setting_id_liquid');
     var $loopLiquidTextarea = $('#item_loop_liquid');
+    var $snippetSelect = $addon.find('.loop-snippet-selector');
     var loopSettingId = $loopSettingSelect.val();
     
-    if (loopSettingId && $loopLiquidTextarea.length) {
-      $.ajax({
-        url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-          if (data && data.html) {
-            var editor = $loopLiquidTextarea.data('editor');
-            if (editor) {
-              editor.setValue(data.html);
-            } else {
-              $loopLiquidTextarea.val(data.html);
+    if (loopSettingId) {
+      // ループHTML設定が選択されている場合、スニペットのプルダウンを無効にする
+      $snippetSelect.prop('disabled', true);
+      
+      if ($loopLiquidTextarea.length) {
+        $.ajax({
+          url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            if (data && data.html) {
+              var editor = $loopLiquidTextarea.data('editor');
+              if (editor) {
+                editor.setValue(data.html);
+              } else {
+                $loopLiquidTextarea.val(data.html);
+              }
             }
+          },
+          error: function(xhr, status, error) {
+            console.error('Loop setting fetch error:', xhr, status, error);
           }
-        },
-        error: function(xhr, status, error) {
-          console.error('Loop setting fetch error:', xhr, status, error);
-        }
-      });
+        });
+      }
+    } else {
+      // ループHTML設定が選択されていない場合、スニペットのプルダウンを有効にする
+      $snippetSelect.prop('disabled', false);
     }
   };
   
@@ -194,7 +203,7 @@
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
     <% if @model.use_loop_html %>
-      <dt><%= @model.t :loop_html %><%= @model.tt :loop_html %></dt>
+      <dt></dt>
       <dd>
         <%= select_tag(
               'item[loop_setting_id]',
@@ -221,8 +230,17 @@
   
   <%= jquery do %>
     var $addon = $("<%= "##{addon[:id]}" %>");
+    var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
+    
     $addon.find('.loop-snippet-selector').on('change', function() {
       var $select = $(this);
+      
+      // ループHTML設定が選択されている場合はスニペットの挿入を無効にする
+      if ($loopSettingSelectLiquid.length && $loopSettingSelectLiquid.val()) {
+        $select.val('');
+        return;
+      }
+      
       var $option = $select.find(':selected');
       
       if (!$option.val()) {
