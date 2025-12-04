@@ -111,7 +111,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html_format: "liquid",
         html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
         state: "public",
-        name: "Test Liquid Setting #{unique_id}"
+        name: "スニペット/Test Liquid Setting #{unique_id}"
       )
     end
 
@@ -126,7 +126,9 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in_code_mirror 'item[html]', with: html
 
         # Select loop setting
-        select_loop_snippet(liquid_setting.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        select_loop_snippet(snippet_display)
 
         click_on I18n.t('ss.buttons.save')
       end
@@ -152,7 +154,9 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         fill_in_code_mirror 'item[html]', with: custom_html
 
         # Select loop setting
-        select_loop_snippet(liquid_setting.name)
+        # スニペットドロップダウンでは「スニペット/」プレフィックスが削除される
+        snippet_display = liquid_setting.name.sub(/^スニペット\//, "")
+        select_loop_snippet(snippet_display)
 
         click_on I18n.t('ss.buttons.save')
       end
