@@ -11,7 +11,7 @@
     <% loop_setting_options = ancestral_loop_settings("liquid") %>
     <%= f.select :loop_setting_id,
           options_with_optgroup_for_loop_settings(loop_setting_options),
-          { include_blank: true },
+          {},
           id: loop_setting_select_id,
           class: 'loop-setting-selector'
         %>
@@ -96,6 +96,11 @@
     
     // 選択変更時にHTMLを更新
     $loopSettingSelect.on('change', updateLoopHtml);
+  }
+  
+  // スニペットセレクターの初期値を「直接入力」に設定
+  if ($snippetSelect.length && !$snippetSelect.val()) {
+    $snippetSelect.val('');
   }
   
   // スニペットの選択処理
