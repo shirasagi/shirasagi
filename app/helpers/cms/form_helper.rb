@@ -42,7 +42,7 @@ module Cms::FormHelper
     settings.each do |item|
       # 「スニペット/」で始まるものは除外（スニペット用なので）
       next if item.name.start_with?(snippet_prefix)
-      items << [item.name, item.id]
+      items << [item.name, item.id, item.description]
     end
     items
   end
@@ -54,7 +54,9 @@ module Cms::FormHelper
     settings.each do |item|
       # 「スニペット/」で始まるものだけを返す
       next unless item.name.start_with?(snippet_prefix)
-      items << [item.name, item.id, { "data-snippet" => item.html.to_s }]
+      attrs = { "data-snippet" => item.html.to_s }
+      attrs["data-description"] = item.description if item.description.present?
+      items << [item.name, item.id, attrs]
     end
     items
   end
@@ -102,6 +104,10 @@ module Cms::FormHelper
       if data_attrs.key?("data-snippet")
         data_attrs["snippet"] = data_attrs.delete("data-snippet")
       end
+      # data-descriptionキーをdescriptionキーに変換（Railsのtag.optionはdata-プレフィックスなしを期待）
+      if data_attrs.key?("data-description")
+        data_attrs["description"] = data_attrs.delete("data-description")
+      end
       html << tag.option(name, value: id, data: data_attrs)
     end
     # グループoptgroup(全グループでclass: 'title')
@@ -113,6 +119,10 @@ module Cms::FormHelper
           if data_attrs.key?("data-snippet")
             data_attrs["snippet"] = data_attrs.delete("data-snippet")
           end
+          # data-descriptionキーをdescriptionキーに変換（Railsのtag.optionはdata-プレフィックスなしを期待）
+          if data_attrs.key?("data-description")
+            data_attrs["description"] = data_attrs.delete("data-description")
+          end
           tag.option(leaf, value: id, data: data_attrs)
         end.join.html_safe
       end
@@ -122,32 +132,44 @@ module Cms::FormHelper
 
   # 指定データ配列(loop_setting_option_list)を select用optgroup(option)構造へ変換
   #
-  # items: [["test/test1", id1], ["test/test2", id2], ["root", id3]]
+  # items: [["test/test1", id1, description1], ["test/test2", id2, description2], ["root", id3, description3]]
+  # または [["test/test1", id1], ["test/test2", id2], ["root", id3]] (後方互換性のため)
   # 戻り値: HTML Safe
   def options_with_optgroup_for_loop_settings(items, input_direct_label: nil)
     input_direct_label ||= t("cms.input_directly")
     groups = Hash.new { |h, k| h[k] = [] }
     nogroup = []
-    items.each do |name, id|
+    items.each do |item|
+      # 後方互換性のため、配列の長さで判定
+      if item.length >= 3
+        name, id, description = item[0], item[1], item[2]
+      else
+        name, id, description = item[0], item[1], nil
+      end
+      
       if name.include?("/")
         group, leaf = name.split("/", 2)
-        groups[group] << [leaf, id]
+        groups[group] << [leaf, id, description]
       else
-        nogroup << [name, id]
+        nogroup << [name, id, description]
       end
     end
     html = []
     # 直接入力optionはグループ外で必ず先頭
     html << tag.option(input_direct_label, value: "")
     # グループ外（ルート）option
-    nogroup.each do |name, id|
-      html << tag.option(name, value: id)
+    nogroup.each do |name, id, description|
+      option_attrs = { value: id }
+      option_attrs[:data] = { description: description } if description.present?
+      html << tag.option(name, **option_attrs)
     end
     # グループoptgroup(全グループでclass: 'title')
     groups.keys.sort.each do |group|
       html << tag.optgroup(label: group, class: 'title') do
-        groups[group].map do |leaf, id|
-          tag.option(leaf, value: id)
+        groups[group].map do |leaf, id, description|
+          option_attrs = { value: id }
+          option_attrs[:data] = { description: description } if description.present?
+          tag.option(leaf, **option_attrs)
         end.join.html_safe
       end
     end
