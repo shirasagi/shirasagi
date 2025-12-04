@@ -206,7 +206,7 @@
 <% if @model.use_loop_settings && @model.use_liquid %>
   <dl class="see loop-format-liquid">
     <% if @model.use_loop_html %>
-      <dt></dt>
+      <dt><%= t("cms.labels.loop_html") %><%= tt("cms.labels.loop_html") %></dt>
       <dd>
         <%= ss_stimulus_tag "ss/select_with_description" do %>
           <%= select_tag(

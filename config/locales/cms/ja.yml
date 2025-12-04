@@ -65,7 +65,7 @@ ja:
     loop_html: ループHTML
     labels:
       snippets: スニペット
-      loop_html: ループHTML
+      loop_html: ループHTMLテンプレート
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
     image_resize: 画像リサイズ
@@ -2057,6 +2057,12 @@ ja:
           - 「スニペット/」から始まるタイトルのループHTML設定が表示されます。
           - 選択したHTMLは、現在のカーソル位置に追加されます。
           - HTMLはLiquid形式で記述する必要があります。
+          - スニペットは呼び出し時にコピーされるため、サイト設定で編集した内容は既に挿入されたコードには反映されません。
+        loop_html:
+          - サイト設定のループHTMLで作成したテンプレートを選択して挿入できます。
+          - 「スニペット/」で始まらないタイトルのループHTML設定が表示されます。
+          - HTMLはLiquid形式で記述する必要があります。
+          - ループHTMLテンプレートはサイト設定で編集した内容は自動的に反映されます。PCプレビューで確認できます。
     cms/addon/readable_setting:
       readable_setting_range:
         - <b>全公開</b> - 誰でも閲覧できます。
