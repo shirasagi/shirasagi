@@ -142,11 +142,15 @@ module Cms::FormHelper
     items.each do |item|
       # 後方互換性のため、配列の長さで判定
       if item.length >= 3
-        name, id, description = item[0], item[1], item[2]
+        name = item[0]
+        id = item[1]
+        description = item[2]
       else
-        name, id, description = item[0], item[1], nil
+        name = item[0]
+        id = item[1]
+        description = nil
       end
-      
+
       if name.include?("/")
         group, leaf = name.split("/", 2)
         groups[group] << [leaf, id, description]
