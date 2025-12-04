@@ -63,8 +63,13 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
   # ループHTML（テンプレート参照）のドロップダウンから選択
   def select_template_reference(option_text)
     # カラムでは、ループHTML（テンプレート参照）のドロップダウンのIDが動的
-    find('.loop-setting-selector', visible: :all)
-    select option_text, from: find('.loop-setting-selector', visible: :all)[:id]
+    selector = find('.loop-setting-selector', visible: :all)
+    if option_text.blank?
+      # 空のオプションを選択する場合は、直接option要素を選択（最初の空のオプションを選択）
+      selector.find('option[value=""]', match: :first).select_option
+    else
+      select option_text, from: selector[:id]
+    end
   end
 
   it "allows inserting liquid snippets into column layout field" do
