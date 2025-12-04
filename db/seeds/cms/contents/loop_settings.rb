@@ -839,7 +839,9 @@ save_loop_setting(
   html_format: "liquid",
   state: "public",
   order: 242,
-  html: "{% for category in page.categories %}<span class=\"category {{ category.filename | replace: '/', '-' }}\"><a href=\"{{ category.url }}\">{{ category.name }}</a></span>{% endfor %}"
+  html: "{% for category in page.categories %}" \
+        "<span class=\"category {{ category.filename | replace: '/', '-' }}\">" \
+        "<a href=\"{{ category.url }}\">{{ category.name }}</a></span>{% endfor %}"
 )
 
 save_loop_setting(
@@ -896,7 +898,8 @@ save_loop_setting(
   html_format: "liquid",
   state: "public",
   order: 271,
-  html: "{% assign img_src = page.html | ss_img_src | expand_path: page.parent.url %}{{ img_src | default: \"/assets/img/dummy.png\" }}"
+  html: "{% assign img_src = page.html | ss_img_src | expand_path: page.parent.url %}" \
+        "{{ img_src | default: \"/assets/img/dummy.png\" }}"
 )
 
 save_loop_setting(
@@ -905,7 +908,9 @@ save_loop_setting(
   html_format: "liquid",
   state: "public",
   order: 272,
-  html: "{% assign thumb_src = page.thumb.url %}{% assign img_src = page.html | ss_img_src | expand_path: page.parent.url %}{{ thumb_src | default: img_src | default: \"/assets/img/dummy.png\" }}"
+  html: "{% assign thumb_src = page.thumb.url %}" \
+        "{% assign img_src = page.html | ss_img_src | expand_path: page.parent.url %}" \
+        "{{ thumb_src | default: img_src | default: \"/assets/img/dummy.png\" }}"
 )
 
 save_loop_setting(
@@ -924,7 +929,16 @@ save_loop_setting(
   html_format: "liquid",
   state: "public",
   order: 280,
-  html: "{% for event_date_range in page.event_dates %}{% if event_date_range.size == 1 %}<time datetime=\"{{ event_date_range.first }}\">{{ event_date_range.first | ss_date }}</time>{% else %}<time datetime=\"{{ event_date_range.first }}\">{{ event_date_range.first | ss_date }}</time>〜<time datetime=\"{{ event_date_range.last }}\">{{ event_date_range.last | ss_date }}</time>{% endif %}{% endfor %}"
+  html: "{% for event_date_range in page.event_dates %}" \
+        "{% if event_date_range.size == 1 %}" \
+        "<time datetime=\"{{ event_date_range.first }}\">" \
+        "{{ event_date_range.first | ss_date }}</time>" \
+        "{% else %}" \
+        "<time datetime=\"{{ event_date_range.first }}\">" \
+        "{{ event_date_range.first | ss_date }}</time>〜" \
+        "<time datetime=\"{{ event_date_range.last }}\">" \
+        "{{ event_date_range.last | ss_date }}</time>" \
+        "{% endif %}{% endfor %}"
 )
 
 save_loop_setting(

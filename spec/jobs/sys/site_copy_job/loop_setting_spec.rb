@@ -118,7 +118,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
       task.target_host_host = target_host_host
       task.target_host_domains = [ target_host_domain ]
       task.source_site_id = site.id
-      task.copy_contents = ["loop_settings", "pages"]
+      task.copy_contents = %w[loop_settings pages]
       task.save!
 
       perform_enqueued_jobs do
