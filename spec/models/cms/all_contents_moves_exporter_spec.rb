@@ -1,4 +1,5 @@
 require 'spec_helper'
+require 'csv'
 
 describe Cms::AllContentsMovesExporter, dbscope: :example do
   let(:site) { cms_site }
@@ -72,7 +73,7 @@ describe Cms::AllContentsMovesExporter, dbscope: :example do
 
       it "includes all pages in CSV" do
         csv_rows = exporter.enum_csv.to_a
-        page_ids_in_csv = csv_rows[1..-1].map { |row| row.split(",").first.to_i rescue nil }.compact
+        page_ids_in_csv = csv_rows[1..-1].map { |row| CSV.parse_line(row)&.first&.to_i }.compact
 
         expect(page_ids_in_csv).to include(page.id)
         expect(page_ids_in_csv).to include(page2.id)
@@ -136,7 +137,7 @@ describe Cms::AllContentsMovesExporter, dbscope: :example do
 
       it "exports only pages matching criteria" do
         csv_rows = exporter.enum_csv.to_a
-        page_ids_in_csv = csv_rows[1..-1].map { |row| row.split(",").first.to_i rescue nil }.compact
+        page_ids_in_csv = csv_rows[1..-1].map { |row| CSV.parse_line(row)&.first&.to_i }.compact
 
         expect(page_ids_in_csv).to include(custom_page.id)
         expect(page_ids_in_csv).not_to include(page.id)
