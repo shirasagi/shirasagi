@@ -324,5 +324,180 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         expect(snippet_select).not_to be_disabled
       end
     end
+
+    context "error handling when loop HTML fails to load" do
+      it "displays error message when AJAX request fails with 404" do
+        visit cms_form_path(site, form)
+
+        click_on I18n.t('cms.buttons.manage_columns')
+
+        within '.gws-column-list-toolbar[data-placement="top"]' do
+          wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/free') }
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        within '.gws-column-form' do
+          fill_in 'item[name]', with: 'Test Column Error'
+          click_on I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
+
+        within_dialog do
+          wait_for_all_turbo_frames
+          sleep 1
+
+          # 存在しないループHTML設定のIDを選択するために、削除された設定を作成
+          deleted_setting = create(:cms_loop_setting,
+            site: site,
+            html_format: "liquid",
+            state: "public",
+            name: "Deleted Template")
+          deleted_setting_id = deleted_setting.id
+          deleted_setting.destroy
+
+          # ループHTML（テンプレート参照）のドロップダウンから削除された設定を選択
+          # ドロップダウンには表示されないので、JavaScriptで直接選択をシミュレート
+          page.execute_script(<<~JS)
+            var $select = $('.loop-setting-selector');
+            var $option = $('<option>', { value: '#{deleted_setting_id}', text: 'Deleted Template' });
+            $select.append($option);
+            $select.val('#{deleted_setting_id}').trigger('change');
+          JS
+
+          # エラーメッセージが表示されることを確認
+          expect(page).to have_css('.loop-html-error.errorExplanation', wait: 10)
+          expect(page).to have_css('.loop-html-error h2', text: I18n.t("errors.template.header.one"))
+          expect(page).to have_css('.loop-html-error p', text: I18n.t("errors.template.body"))
+          expect(page).to have_css('.loop-html-error li', text: I18n.t("cms.notices.loop_html_not_found"))
+          expect(page).to have_css('.loop-html-error[role="alert"]')
+
+          # リトライボタンが表示されることを確認
+          expect(page).to have_css('.loop-html-error .btn-retry', text: I18n.t("ss.buttons.reload"))
+
+          # テキストエリアがアンロックされていることを確認
+          textarea = find('#item_layout', visible: false)
+          expect(textarea).not_to be_readonly
+        end
+      end
+
+      it "displays error message when AJAX request fails with 500" do
+        visit cms_form_path(site, form)
+
+        click_on I18n.t('cms.buttons.manage_columns')
+
+        within '.gws-column-list-toolbar[data-placement="top"]' do
+          wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/free') }
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        within '.gws-column-form' do
+          fill_in 'item[name]', with: 'Test Column Server Error'
+          click_on I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
+
+        within_dialog do
+          wait_for_all_turbo_frames
+          sleep 1
+
+          # サーバーエラーをシミュレートするために、$.ajaxをモック
+          page.execute_script(<<~JS)
+            // 元の$.ajaxをwindowオブジェクトに保存（グローバルスコープで保持）
+            if (!window._originalAjax) {
+              window._originalAjax = $.ajax;
+            }
+            $.ajax = function(options) {
+              if (options.url && options.url.includes('loop_setting')) {
+                // 500エラーをシミュレート
+                options.error({
+                  status: 500,
+                  statusText: 'Internal Server Error',
+                  responseText: 'Server Error'
+                }, 'error', 'Internal Server Error');
+                return;
+              }
+              return window._originalAjax.apply(this, arguments);
+            };
+          JS
+
+          # ループHTML（テンプレート参照）のドロップダウンから選択
+          select_template_reference(liquid_setting_template.name)
+          wait_for_js_ready
+
+          # エラーメッセージが表示されることを確認
+          expect(page).to have_css('.loop-html-error.errorExplanation', wait: 10)
+          expect(page).to have_css('.loop-html-error li', text: I18n.t("cms.notices.loop_html_server_error"))
+
+          # リトライボタンが表示されることを確認
+          expect(page).to have_css('.loop-html-error .btn-retry', text: I18n.t("ss.buttons.reload"))
+
+          # リトライボタンがクリック可能であることを確認（実際のクリックは行わない）
+          retry_button = find('.loop-html-error .btn-retry')
+          expect(retry_button).to be_visible
+          expect(retry_button).not_to be_disabled
+        end
+      end
+
+      it "displays generic error message for other AJAX errors" do
+        visit cms_form_path(site, form)
+
+        click_on I18n.t('cms.buttons.manage_columns')
+
+        within '.gws-column-list-toolbar[data-placement="top"]' do
+          wait_for_event_fired("gws:column:added") { click_on I18n.t('cms.columns.cms/free') }
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        within '.gws-column-form' do
+          fill_in 'item[name]', with: 'Test Column Generic Error'
+          click_on I18n.t('ss.buttons.save')
+        end
+        wait_for_notice I18n.t('ss.notice.saved')
+
+        wait_for_cbox_opened { find('.btn-gws-column-item-detail').click }
+
+        within_dialog do
+          wait_for_all_turbo_frames
+          sleep 1
+
+          # 一般的なエラーをシミュレート
+          page.execute_script(<<~JS)
+            // 元の$.ajaxをwindowオブジェクトに保存（グローバルスコープで保持）
+            if (!window._originalAjax) {
+              window._originalAjax = $.ajax;
+            }
+            $.ajax = function(options) {
+              if (options.url && options.url.includes('loop_setting')) {
+                // 403エラーをシミュレート
+                options.error({
+                  status: 403,
+                  statusText: 'Forbidden',
+                  responseText: 'Forbidden'
+                }, 'error', 'Forbidden');
+                return;
+              }
+              return window._originalAjax.apply(this, arguments);
+            };
+          JS
+
+          # ループHTML（テンプレート参照）のドロップダウンから選択
+          select_template_reference(liquid_setting_template.name)
+          wait_for_js_ready
+
+          # エラーメッセージが表示されることを確認
+          expect(page).to have_css('.loop-html-error.errorExplanation', wait: 10)
+          expect(page).to have_css('.loop-html-error li', text: I18n.t("cms.notices.loop_html_load_error"))
+
+          # アクセシビリティ属性が設定されていることを確認
+          error_div = find('.loop-html-error', visible: :all)
+          expect(error_div['role']).to eq('alert')
+          expect(error_div['aria-live']).to eq('polite')
+        end
+      end
+    end
   end
 end

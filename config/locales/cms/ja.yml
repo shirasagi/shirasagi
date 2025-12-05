@@ -300,6 +300,9 @@ ja:
       generate_locked: 書き出しを停止しました。
       generate_unlocked: 書き出しの停止を解除しました。
       over_content_quota: 使用容量を超過しているフォルダがあります。
+      loop_html_load_error: ループHTMLテンプレートの読み込みに失敗しました。
+      loop_html_not_found: 選択されたループHTMLテンプレートが見つかりませんでした。
+      loop_html_server_error: サーバーエラーが発生しました。しばらくしてから再度お試しください。
       check_links_report:
         - "%{time} 時点でのレポートです。"
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"

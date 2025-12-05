@@ -55,8 +55,82 @@
   if ($loopSettingSelect.length && $layoutTextarea.length) {
     Cms_Editor_CodeMirror.lock('#<%= loop_setting_select_id %>', '#<%= addon[:id] %> textarea[name*="[layout]"]');
     
+    // エラーメッセージを取得する関数（HTTPステータスコードに基づいて適切なメッセージを返す）
+    var getErrorMessage = function(xhr) {
+      if (xhr.status === 404) {
+        return '<%= I18n.t("cms.notices.loop_html_not_found") %>';
+      } else if (xhr.status >= 500) {
+        return '<%= I18n.t("cms.notices.loop_html_server_error") %>';
+      }
+      return '<%= I18n.t("cms.notices.loop_html_load_error") %>';
+    };
+    
+    // エラーメッセージを表示する関数
+    var showLoopHtmlError = function(message, retryCallback) {
+      // 既存のエラーメッセージを削除
+      clearLoopHtmlError();
+      
+      // エラーメッセージコンテナを作成（シラサギの標準的なエラー表示構造に従う）
+      var $errorDiv = $('<div>', {
+        class: 'loop-html-error errorExplanation',
+        role: 'alert',
+        'aria-live': 'polite'
+      });
+      
+      // ヘッダー（シラサギの標準キーを使用）
+      var $errorHeader = $('<h2>').text('<%= I18n.t("errors.template.header.one") %>');
+      
+      // 本文（シラサギの標準キーを使用）
+      var $errorBody = $('<p>').text('<%= I18n.t("errors.template.body") %>');
+      
+      // エラーメッセージリスト
+      var $errorList = $('<ul>');
+      var $errorItem = $('<li>').text(message);
+      $errorList.append($errorItem);
+      
+      $errorDiv.append($errorHeader);
+      $errorDiv.append($errorBody);
+      $errorDiv.append($errorList);
+      
+      // リトライボタンを追加（エラー表示の後に配置）
+      if (retryCallback) {
+        var $retryButton = $('<button>', {
+          type: 'button',
+          class: 'btn btn-retry',
+          text: '<%= I18n.t("ss.buttons.reload") %>'
+        }).on('click', function() {
+          clearLoopHtmlError();
+          retryCallback();
+        });
+        $errorDiv.append($('<div>', { class: 'error-actions' }).append($retryButton));
+      }
+      
+      // テキストエリアの前に挿入
+      $layoutTextarea.before($errorDiv);
+    };
+    
+    // エラーメッセージを削除する関数
+    var clearLoopHtmlError = function() {
+      $layoutTextarea.closest('dd').find('.loop-html-error').remove();
+    };
+    
+    // テキストエリアをアンロックする関数
+    var unlockTextarea = function() {
+      $snippetSelect.prop('disabled', false);
+      var editor = $layoutTextarea.data('editor');
+      if (editor) {
+        editor.setOption('readOnly', false);
+      } else {
+        $layoutTextarea.prop('readonly', false);
+      }
+    };
+    
     var updateLoopHtml = function() {
       var loopSettingId = $loopSettingSelect.val();
+      
+      // エラーメッセージをクリア
+      clearLoopHtmlError();
+      
       if (loopSettingId) {
         // ループHTML設定が選択されている場合、スニペットのプルダウンを無効にする
         $snippetSelect.prop('disabled', true);
@@ -80,18 +154,19 @@
           },
           error: function(xhr, status, error) {
             console.error('Loop setting fetch error:', xhr, status, error);
+            
+            // エラー時にテキストエリアをアンロック
+            unlockTextarea();
+            
+            // エラーメッセージを表示（リトライ機能付き）
+            showLoopHtmlError(getErrorMessage(xhr), function() {
+              updateLoopHtml();
+            });
           }
         });
       } else {
         // ループHTML設定が選択されていない場合、テキストエリアをアンロックし、スニペットのプルダウンを有効にする
-        $snippetSelect.prop('disabled', false);
-        
-        var editor = $layoutTextarea.data('editor');
-        if (editor) {
-          editor.setOption('readOnly', false);
-        } else {
-          $layoutTextarea.prop('readonly', false);
-        }
+        unlockTextarea();
       }
     };
     
