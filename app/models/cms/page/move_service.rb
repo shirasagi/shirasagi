@@ -74,6 +74,7 @@ class Cms::Page::MoveService
 
     return unless source
 
+    source.errors.clear
     source.validate_destination_filename(destination)
     source.errors.each do |error|
       errors.add :destination, error.message
