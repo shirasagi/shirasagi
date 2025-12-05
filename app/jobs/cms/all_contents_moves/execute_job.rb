@@ -111,7 +111,8 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
       return create_error_result(page_id, row_data["filename"], destination_filename)
     end
 
-    service.move_page(page, destination_filename)
+    result = service.move_page(page, destination_filename)
+    normalize_move_result(result, page_id, row_data["filename"], destination_filename)
   end
 
   def create_error_result(page_id, filename, destination_filename)
@@ -122,6 +123,29 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
       filename: filename,
       destination_filename: destination_filename
     }
+  end
+
+  def normalize_move_result(result, page_id, filename, destination_filename)
+    # service.move_page が既に正しい構造を返しているが、
+    # 将来の変更に備えて明示的に正規化する
+    if result.is_a?(Hash) && result.key?(:success)
+      # 既に正しい構造の場合は、不足しているメタデータを補完
+      normalized = result.dup
+      normalized[:page_id] ||= page_id
+      normalized[:filename] ||= filename
+      normalized[:destination_filename] ||= destination_filename
+      normalized[:errors] = Array(normalized[:errors])
+      normalized
+    else
+      # 予期しない形式の場合は、エラー結果として正規化
+      {
+        success: false,
+        errors: result.is_a?(Hash) ? Array(result[:errors] || result[:error] || ["Unknown error"]) : ["Unexpected result format"],
+        page_id: page_id,
+        filename: filename,
+        destination_filename: destination_filename
+      }
+    end
   end
 
   def log_move_result(result, destination_filename)
