@@ -28,7 +28,13 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
     task.log "Error: Check task #{check_task_id} not found"
     return nil
   else
-    file_path = "#{check_task.base_dir}/#{filename}"
+    base_dir = check_task.base_dir
+    unless base_dir.present?
+      task.log "Error: Task base_dir is not available"
+      return nil
+    end
+
+    file_path = File.join(base_dir, filename)
     unless File.exist?(file_path)
       task.log "Error: #{filename} not found"
       return nil

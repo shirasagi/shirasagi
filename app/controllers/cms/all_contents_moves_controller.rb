@@ -117,32 +117,47 @@ class Cms::AllContentsMovesController < ApplicationController
       return
     end
 
+    validation_error = validate_execute_params(check_result)
+    if validation_error
+      @errors = [validation_error]
+      @check_result = check_result
+      render action: :index
+      return
+    end
+
+    selected_ids = params[:selected_ids] || []
+    save_execute_data(selected_ids)
+
+    execute_task = prepare_execute_task
+    unless execute_task
+      @errors = [t('ss.notice.already_job_started')]
+      @check_result = check_result
+      render action: :index
+      return
+    end
+
+    start_execute_job(execute_task)
+  end
+
+  def validate_execute_params(check_result)
     selected_ids = params[:selected_ids] || []
     if selected_ids.blank?
-      @errors = [t("cms.all_contents_moves.errors.no_selection")]
-      @check_result = check_result
-      render action: :index
-      return
+      return t("cms.all_contents_moves.errors.no_selection")
     end
 
-    # 選択された行をフィルタリング
     selected_rows = check_result.fetch("rows", []).select { |row| selected_ids.include?(row["id"].to_s) }
     if selected_rows.blank?
-      @errors = [t("cms.all_contents_moves.errors.invalid_selection")]
-      @check_result = check_result
-      render action: :index
-      return
+      return t("cms.all_contents_moves.errors.invalid_selection")
     end
 
-    # base_dirの存在を検証
     unless @task.base_dir
-      @errors = [t("cms.all_contents_moves.errors.task_base_dir_not_available")]
-      @check_result = check_result
-      render action: :index
-      return
+      return t("cms.all_contents_moves.errors.task_base_dir_not_available")
     end
 
-    # 中間生成物を保存
+    nil
+  end
+
+  def save_execute_data(selected_ids)
     execute_data = {
       task_id: @task.id,
       selected_ids: selected_ids.map(&:to_s),
@@ -150,24 +165,23 @@ class Cms::AllContentsMovesController < ApplicationController
     }
     FileUtils.mkdir_p(@task.base_dir)
     File.write("#{@task.base_dir}/execute_data.json", execute_data.to_json)
+  end
 
-    # 実行ジョブ用のタスクを作成
+  def prepare_execute_task
     execute_job_class = Cms::AllContentsMoves::ExecuteJob
     execute_task = execute_job_class.task_class.find_or_create_by(site_id: @cur_site.id, name: execute_job_class.task_name)
 
-    if !execute_task.ready
-      @errors = [t('ss.notice.already_job_started')]
-      @check_result = check_result
-      render action: :index
-      return
-    end
+    return nil unless execute_task.ready
 
-    # チェックタスクのセグメント（CSVファイル名）を実行タスクに引き継ぐ
     if @task.segment.present?
       execute_task.segment = @task.segment
       execute_task.save!
     end
 
+    execute_task
+  end
+
+  def start_execute_job(execute_task)
     job = Cms::AllContentsMoves::ExecuteJob.bind(site_id: @cur_site, user_id: @cur_user)
     job.perform_later(@task.id)
     redirect_to({ action: :index }, { notice: t('ss.notice.started_import') })

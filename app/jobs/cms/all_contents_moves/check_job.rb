@@ -42,27 +42,7 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
     filename_header = FILENAME_HEADER.call
 
     SS::Csv.foreach_row(file, headers: true) do |row, _index|
-      row_data = build_row_data(row, page_id_header, filename_header)
-      next rows << row_data if row_data["errors"].present?
-
-      page_id = row_data["id"].to_i
-      page = find_page(page_id)
-      unless page
-        row_data["errors"] << I18n.t("cms.all_contents_moves.errors.page_not_found")
-        rows << row_data
-        next
-      end
-
-      row_data["filename"] = page.filename
-      row_data["title"] = page.name
-
-      destination_filename = normalize_destination_filename(row_data["destination_filename"])
-      row_data["destination_filename"] = destination_filename
-
-      validate_row(row_data, page, destination_filename)
-      next rows << row_data if row_data["errors"].present?
-
-      check_linking_pages(row_data, page)
+      row_data = process_csv_row(row, page_id_header, filename_header)
       rows << row_data
     end
 
@@ -71,6 +51,30 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
       task_id: task.id,
       created_at: Time.zone.now.iso8601
     }
+  end
+
+  def process_csv_row(row, page_id_header, filename_header)
+    row_data = build_row_data(row, page_id_header, filename_header)
+    return row_data if row_data["errors"].present?
+
+    page_id = row_data["id"].to_i
+    page = find_page(page_id)
+    unless page
+      row_data["errors"] << I18n.t("cms.all_contents_moves.errors.page_not_found")
+      return row_data
+    end
+
+    row_data["filename"] = page.filename
+    row_data["title"] = page.name
+
+    destination_filename = normalize_destination_filename(row_data["destination_filename"])
+    row_data["destination_filename"] = destination_filename
+
+    validate_row(row_data, page, destination_filename)
+    return row_data if row_data["errors"].present?
+
+    check_linking_pages(row_data, page)
+    row_data
   end
 
   def build_row_data(row, page_id_header, filename_header)
