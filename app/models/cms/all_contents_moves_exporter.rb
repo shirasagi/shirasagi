@@ -27,10 +27,31 @@ class Cms::AllContentsMovesExporter < Cms::PageExporter
   end
 
   def each_page(&block)
-    page_criteria = Cms::Page.site(site).all
-    all_page_ids = page_criteria.pluck(:id)
-    all_page_ids.each_slice(20) do |page_ids|
-      page_criteria.in(id: page_ids).to_a.each(&block)
+    page_criteria = Cms::Page.site(site).includes(:layout, :contact_group)
+    page_criteria.find_in_batches(batch_size: 20) do |pages|
+      # Eager-load groups for this batch to avoid N+1 queries
+      eager_load_groups_for_pages(pages)
+      pages.each(&block)
+    end
+  end
+
+  def eager_load_groups_for_pages(pages)
+    # Collect all group_ids from pages in this batch
+    all_group_ids = pages.flat_map(&:group_ids).compact.uniq
+    return if all_group_ids.empty?
+
+    # Load all groups in one query
+    groups_by_id = SS::Group.in(id: all_group_ids).index_by(&:id)
+
+    # Pre-assign groups to each page to avoid N+1 queries
+    pages.each do |page|
+      page.group_ids.each do |group_id|
+        group = groups_by_id[group_id]
+        next unless group
+
+        # Add group to page's groups association cache
+        page.groups << group unless page.groups.include?(group)
+      end
     end
   end
 
