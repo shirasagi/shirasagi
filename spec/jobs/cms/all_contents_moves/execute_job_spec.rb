@@ -164,10 +164,11 @@ describe Cms::AllContentsMoves::ExecuteJob, dbscope: :example do
         ss_perform_now(job, check_task.id)
 
         execute_task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:execute")
+        expect(execute_task).to be_present, "execute_task should be created"
         result_path = "#{execute_task.base_dir}/execute_result.json"
         result = JSON.parse(File.read(result_path))
 
-        expect(result["error_count"]).to be >= 0
+        expect(result["error_count"]).to be >= 1
         expect(result["results"]).to be_present
       end
     end
