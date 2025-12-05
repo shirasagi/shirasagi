@@ -1,0 +1,140 @@
+<%
+  # ローカル変数の取得
+  task = local_assigns.fetch(:task, nil)
+  status_message = local_assigns.fetch(:status_message, nil)
+  on_complete = local_assigns.fetch(:on_complete, nil)
+  job_log_path = local_assigns.fetch(:job_log_path, nil)
+  url = local_assigns.fetch(:url, nil)
+  
+  # taskが存在しない、または必要なメソッドをサポートしていない場合は早期リターン
+  if task.blank? || !task.respond_to?(:segment) || !task.respond_to?(:state) || !task.respond_to?(:id)
+    return
+  end
+  
+  # セグメントラベルの構築
+  custom_segment_label = if task&.segment.present?
+    status_message.present? ? "#{task.segment}: #{status_message}" : task.segment
+  end
+  
+  # 状態表示テキストの取得
+  state_display_text = if task&.state.present?
+    I18n.t("job.state.#{task.state}", default: task.state)
+  end
+%>
+
+<div class="job-status" id="job-status-<%= task.id %>">
+  <dl class="see">
+    <% if custom_segment_label.present? %>
+      <dt><%= task.t :segment %></dt>
+      <dd class="segment"><%= custom_segment_label %></dd>
+    <% end %>
+    
+    <dt><%= task.t :state %></dt>
+    <dd>
+      <span class="state" data-state="<%= task&.state || '' %>">
+        <% if state_display_text.present? %>
+          <%= state_display_text %>
+        <% else %>
+          <span class="state-placeholder">-</span>
+        <% end %>
+      </span>
+    </dd>
+    
+    <% if job_log_path %>
+      <dt><%= t("ss.links.job_log") %></dt>
+      <dd><%= link_to t("ss.links.job_log"), job_log_path, target: "_blank", rel: "noopener noreferrer" %></dd>
+    <% end %>
+  </dl>
+</div>
+
+<%= jquery do %>
+  (function() {
+    var $el = $("#job-status-<%= task.id %>");
+    var $state = $el.find(".state");
+    var currentState = $state.data("state");
+    
+    <% if url.present? %>
+    var checkUrl = "<%= j(url) %>";
+    var interval = <%= SS.config.job&.reload_interval || 10 %> * 1000;
+    var timerId;
+    var completedStates = ["completed", "failed", "interrupted"];
+    
+    var updateStateDisplay = function(newState, displayText) {
+      if (displayText) {
+        $state
+          .text(displayText)
+          .data("state", newState)
+          .find(".state-placeholder").remove();
+      }
+    };
+    
+    var isCompleted = function(state) {
+      return completedStates.indexOf(state) !== -1;
+    };
+    
+
+    // テキストを正規化する関数（トリム、空白圧縮、HTMLエンティティデコード）
+    var normalizeText = function(text) {
+      if (!text) return "";
+      // HTMLエンティティをデコードするために一時的なDOM要素を使用
+      var temp = $('<div>').html(text).text();
+      // トリムと内部空白の正規化（複数の空白を1つのスペースに）
+      return temp.trim().replace(/\s+/g, ' ');
+    };
+    
+    var checkJobStatus = function() {
+      $.ajax({
+        url: checkUrl,
+        cache: false,
+        dataType: "json",
+        success: function(data) {
+          var newState = data.state || "";
+          var newStateLabel = data.state_label || "";
+          var displayText = newStateLabel || newState || "";
+          
+          // 状態が変わった場合、または表示テキストが変わった場合に更新
+          // 比較前に両側を正規化して、余分な空白やHTMLエンティティの影響を排除
+          if (newState !== currentState || (displayText && normalizeText($state.text()) !== normalizeText(displayText))) {
+            currentState = newState;
+            updateStateDisplay(newState, displayText);
+          }
+          
+          // ジョブが完了したら画面をリロード
+          <% if on_complete.present? %>
+          if (isCompleted(newState)) {
+            clearInterval(timerId);
+            <%= on_complete.html_safe %>
+          }
+          <% end %>
+        },
+        error: function(xhr, status, error) {
+          // エラーが発生しても継続してポーリング
+          console.warn("Failed to check job status:", error);
+        }
+      });
+    };
+    
+    // タイマーをクリアする関数
+    var clearTimer = function() {
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+    };
+    
+    // 定期的にジョブの状態をチェック
+    timerId = setInterval(checkJobStatus, interval);
+    // 初回は即座にチェック
+    checkJobStatus();
+    
+    // ページアンロード時にタイマーをクリア
+    $(window).on("beforeunload", clearTimer);
+    
+    // Turbo/Turbolinksのページキャッシュ前にタイマーをクリア
+    $(document).on("turbo:before-cache turbolinks:before-cache", clearTimer);
+    
+    // Turbo/Turbolinksのページ再レンダリング前にタイマーをクリア
+    $(document).on("turbo:before-render turbolinks:before-render", clearTimer);
+    <% end %>
+  })();
+<% end %>
