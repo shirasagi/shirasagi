@@ -1,5 +1,5 @@
 <%= jquery do %>
-SS_Notice.renderNotice("<%= flash[:notice] %>", { type: "notice" });
+SS_Notice.renderNotice("<%= j(flash[:notice].to_s) %>", { type: "notice" });
 <% end %>
 
 <div class="cms-tabs">
