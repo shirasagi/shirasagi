@@ -108,9 +108,22 @@ describe Cms::AllContentsMovesExporter, dbscope: :example do
 
       it "includes contact group information in CSV" do
         csv_rows = exporter.enum_csv.to_a
-        data_row = csv_rows.find { |row| row.include?(page_with_contact.id.to_s) }
-        expect(data_row).to be_present
-        # Contact information should be included
+        header_row = CSV.parse_line(csv_rows[0])
+        data_row_raw = csv_rows.find { |row| row.include?(page_with_contact.id.to_s) }
+        expect(data_row_raw).to be_present
+
+        data_row = CSV.parse_line(data_row_raw)
+        contact_group_name_index = header_row.index(I18n.t("mongoid.attributes.cms/model/page.contact_group_name"))
+        contact_tel_index = header_row.index(Cms::Page.t(:contact_tel))
+        contact_email_index = header_row.index(Cms::Page.t(:contact_email))
+
+        expect(contact_group_name_index).to be_present
+        expect(contact_tel_index).to be_present
+        expect(contact_email_index).to be_present
+
+        expect(data_row[contact_group_name_index]).to eq(page_with_contact.contact_group_name)
+        expect(data_row[contact_tel_index]).to eq(page_with_contact.contact_tel)
+        expect(data_row[contact_email_index]).to eq(page_with_contact.contact_email)
       end
     end
 
@@ -119,9 +132,15 @@ describe Cms::AllContentsMovesExporter, dbscope: :example do
 
       it "includes groups information in CSV" do
         csv_rows = exporter.enum_csv.to_a
-        data_row = csv_rows.find { |row| row.include?(page.id.to_s) }
-        expect(data_row).to be_present
-        # Groups should be included
+        header_row = CSV.parse_line(csv_rows[0])
+        data_row_raw = csv_rows.find { |row| row.include?(page.id.to_s) }
+        expect(data_row_raw).to be_present
+
+        data_row = CSV.parse_line(data_row_raw)
+        groups_index = header_row.index(I18n.t("mongoid.attributes.cms/addon/group_permission.groups"))
+
+        expect(groups_index).to be_present
+        expect(data_row[groups_index]).to include(group.name)
       end
     end
 
