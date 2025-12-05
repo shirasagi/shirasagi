@@ -126,7 +126,7 @@ class Cms::AllContentsMovesController < ApplicationController
     end
 
     # 選択された行をフィルタリング
-    selected_rows = check_result["rows"].select { |row| selected_ids.include?(row["id"].to_s) }
+    selected_rows = check_result.fetch("rows", []).select { |row| selected_ids.include?(row["id"].to_s) }
     if selected_rows.blank?
       @errors = [t("cms.all_contents_moves.errors.invalid_selection")]
       @check_result = check_result
