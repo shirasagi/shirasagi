@@ -6,22 +6,47 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
   let(:node) { create(:cms_node_page, cur_site: site) }
   let(:page) { create(:cms_page, cur_site: site, cur_node: node, filename: "#{node.filename}/page1.html") }
 
+  # CSV生成ヘルパー
+  def build_csv_content(rows)
+    page_id_header = I18n.t("all_content.page_id")
+    filename_header = I18n.t("cms.all_contents_moves.destination_filename")
+    CSV.generate(headers: true) do |csv|
+      csv << [page_id_header, filename_header]
+      rows.each { |row| csv << row }
+    end
+  end
+
+  def create_csv_file(content)
+    Fs::UploadedFile.create_from_file(
+      tmpfile(extname: ".csv") { |f| f.write(content) },
+      basename: "spec"
+    )
+  end
+
+  def create_ss_file(content)
+    SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
+      ::File.write(file.path, content)
+    end
+  end
+
+  # ジョブ実行と結果取得ヘルパー
+  def perform_job_and_get_result(ss_file_id)
+    job = described_class.bind(site_id: site.id, user_id: user.id)
+    ss_perform_now(job, ss_file_id)
+
+    task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
+    expect(task).to be_present
+
+    result_path = "#{task.base_dir}/check_result.json"
+    expect(File.exist?(result_path)).to be_truthy
+
+    JSON.parse(File.read(result_path))
+  end
+
   describe ".valid_csv?" do
     context "with valid CSV file" do
-      let(:csv_content) do
-        page_id_header = I18n.t("all_content.page_id")
-        filename_header = I18n.t("cms.all_contents_moves.destination_filename")
-        CSV.generate(headers: true) do |csv|
-          csv << [page_id_header, filename_header]
-          csv << [page.id, "#{node.filename}/page2.html"]
-        end
-      end
-      let(:csv_file) do
-        Fs::UploadedFile.create_from_file(
-          tmpfile(extname: ".csv") { |f| f.write(csv_content) },
-          basename: "spec"
-        )
-      end
+      let(:csv_content) { build_csv_content([[page.id, "#{node.filename}/page2.html"]]) }
+      let(:csv_file) { create_csv_file(csv_content) }
 
       it "returns true" do
         expect(described_class.valid_csv?(csv_file)).to be_truthy
@@ -35,12 +60,7 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
           csv << [page.id, "#{node.filename}/page2.html"]
         end
       end
-      let(:csv_file) do
-        Fs::UploadedFile.create_from_file(
-          tmpfile(extname: ".csv") { |f| f.write(csv_content) },
-          basename: "spec"
-        )
-      end
+      let(:csv_file) { create_csv_file(csv_content) }
 
       it "returns false" do
         expect(described_class.valid_csv?(csv_file)).to be_falsey
@@ -62,32 +82,13 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
   end
 
   describe "#perform" do
-    let(:csv_content) do
-      page_id_header = I18n.t("all_content.page_id")
-      filename_header = I18n.t("cms.all_contents_moves.destination_filename")
-      CSV.generate(headers: true) do |csv|
-        csv << [page_id_header, filename_header]
-        csv << [page.id, "#{node.filename}/page2.html"]
-      end
-    end
-    let(:ss_file) do
-      SS::TempFile.create_empty!(name: "#{unique_id}.csv", filename: "#{unique_id}.csv", content_type: 'text/csv') do |file|
-        ::File.write(file.path, csv_content)
-      end
-    end
+    let(:default_csv_content) { build_csv_content([[page.id, "#{node.filename}/page2.html"]]) }
+    let(:ss_file) { create_ss_file(default_csv_content) }
 
     context "with valid page" do
       it "creates check result with ok status" do
-        job = described_class.bind(site_id: site.id, user_id: user.id)
-        ss_perform_now(job, ss_file.id)
+        result = perform_job_and_get_result(ss_file.id)
 
-        task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
-        expect(task).to be_present
-
-        result_path = "#{task.base_dir}/check_result.json"
-        expect(File.exist?(result_path)).to be_truthy
-
-        result = JSON.parse(File.read(result_path))
         expect(result["rows"]).to be_present
         expect(result["rows"].first["status"]).to eq("ok")
         expect(result["rows"].first["id"]).to eq(page.id)
@@ -95,22 +96,11 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
     end
 
     context "with blank page_id" do
-      let(:csv_content) do
-        page_id_header = I18n.t("all_content.page_id")
-        filename_header = I18n.t("cms.all_contents_moves.destination_filename")
-        CSV.generate(headers: true) do |csv|
-          csv << [page_id_header, filename_header]
-          csv << ["", "#{node.filename}/page2.html"]
-        end
-      end
+      let(:csv_content) { build_csv_content([["", "#{node.filename}/page2.html"]]) }
+      let(:ss_file) { create_ss_file(csv_content) }
 
       it "creates check result with error status" do
-        job = described_class.bind(site_id: site.id, user_id: user.id)
-        ss_perform_now(job, ss_file.id)
-
-        task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
-        result_path = "#{task.base_dir}/check_result.json"
-        result = JSON.parse(File.read(result_path))
+        result = perform_job_and_get_result(ss_file.id)
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
@@ -119,22 +109,11 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
     end
 
     context "with invalid page_id format" do
-      let(:csv_content) do
-        page_id_header = I18n.t("all_content.page_id")
-        filename_header = I18n.t("cms.all_contents_moves.destination_filename")
-        CSV.generate(headers: true) do |csv|
-          csv << [page_id_header, filename_header]
-          csv << ["invalid", "#{node.filename}/page2.html"]
-        end
-      end
+      let(:csv_content) { build_csv_content([["invalid", "#{node.filename}/page2.html"]]) }
+      let(:ss_file) { create_ss_file(csv_content) }
 
       it "creates check result with error status" do
-        job = described_class.bind(site_id: site.id, user_id: user.id)
-        ss_perform_now(job, ss_file.id)
-
-        task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
-        result_path = "#{task.base_dir}/check_result.json"
-        result = JSON.parse(File.read(result_path))
+        result = perform_job_and_get_result(ss_file.id)
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
@@ -143,22 +122,11 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
     end
 
     context "with non-existent page_id" do
-      let(:csv_content) do
-        page_id_header = I18n.t("all_content.page_id")
-        filename_header = I18n.t("cms.all_contents_moves.destination_filename")
-        CSV.generate(headers: true) do |csv|
-          csv << [page_id_header, filename_header]
-          csv << [999_999, "#{node.filename}/page2.html"]
-        end
-      end
+      let(:csv_content) { build_csv_content([[999_999, "#{node.filename}/page2.html"]]) }
+      let(:ss_file) { create_ss_file(csv_content) }
 
       it "creates check result with error status" do
-        job = described_class.bind(site_id: site.id, user_id: user.id)
-        ss_perform_now(job, ss_file.id)
-
-        task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
-        result_path = "#{task.base_dir}/check_result.json"
-        result = JSON.parse(File.read(result_path))
+        result = perform_job_and_get_result(ss_file.id)
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
@@ -167,22 +135,11 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
     end
 
     context "with same filename" do
-      let(:csv_content) do
-        page_id_header = I18n.t("all_content.page_id")
-        filename_header = I18n.t("cms.all_contents_moves.destination_filename")
-        CSV.generate(headers: true) do |csv|
-          csv << [page_id_header, filename_header]
-          csv << [page.id, page.filename]
-        end
-      end
+      let(:csv_content) { build_csv_content([[page.id, page.filename]]) }
+      let(:ss_file) { create_ss_file(csv_content) }
 
       it "creates check result with error status" do
-        job = described_class.bind(site_id: site.id, user_id: user.id)
-        ss_perform_now(job, ss_file.id)
-
-        task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
-        result_path = "#{task.base_dir}/check_result.json"
-        result = JSON.parse(File.read(result_path))
+        result = perform_job_and_get_result(ss_file.id)
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
@@ -191,22 +148,11 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
     end
 
     context "with destination filename without extension" do
-      let(:csv_content) do
-        page_id_header = I18n.t("all_content.page_id")
-        filename_header = I18n.t("cms.all_contents_moves.destination_filename")
-        CSV.generate(headers: true) do |csv|
-          csv << [page_id_header, filename_header]
-          csv << [page.id, "#{node.filename}/page2"]
-        end
-      end
+      let(:csv_content) { build_csv_content([[page.id, "#{node.filename}/page2"]]) }
+      let(:ss_file) { create_ss_file(csv_content) }
 
       it "adds .html extension automatically" do
-        job = described_class.bind(site_id: site.id, user_id: user.id)
-        ss_perform_now(job, ss_file.id)
-
-        task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
-        result_path = "#{task.base_dir}/check_result.json"
-        result = JSON.parse(File.read(result_path))
+        result = perform_job_and_get_result(ss_file.id)
 
         expect(result["rows"].first["destination_filename"]).to eq("#{node.filename}/page2.html")
       end
@@ -215,17 +161,10 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
     context "with linking pages" do
       let(:linking_page) { create(:cms_page, cur_site: site, cur_node: node, html: "<a href=\"#{page.url}\">link</a>") }
 
-      before do
-        linking_page
-      end
+      before { linking_page }
 
       it "creates check result with confirmation status" do
-        job = described_class.bind(site_id: site.id, user_id: user.id)
-        ss_perform_now(job, ss_file.id)
-
-        task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
-        result_path = "#{task.base_dir}/check_result.json"
-        result = JSON.parse(File.read(result_path))
+        result = perform_job_and_get_result(ss_file.id)
 
         expect(result["rows"].first["status"]).to eq("confirmation")
         expect(result["rows"].first["confirmations"]).to be_present
@@ -239,22 +178,11 @@ describe Cms::AllContentsMoves::CheckJob, dbscope: :example do
         page.save!
         page
       end
-      let(:csv_content) do
-        page_id_header = I18n.t("all_content.page_id")
-        filename_header = I18n.t("cms.all_contents_moves.destination_filename")
-        CSV.generate(headers: true) do |csv|
-          csv << [page_id_header, filename_header]
-          csv << [branch_page.id, "#{node.filename}/page2.html"]
-        end
-      end
+      let(:csv_content) { build_csv_content([[branch_page.id, "#{node.filename}/page2.html"]]) }
+      let(:ss_file) { create_ss_file(csv_content) }
 
       it "creates check result with error status" do
-        job = described_class.bind(site_id: site.id, user_id: user.id)
-        ss_perform_now(job, ss_file.id)
-
-        task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:check")
-        result_path = "#{task.base_dir}/check_result.json"
-        result = JSON.parse(File.read(result_path))
+        result = perform_job_and_get_result(ss_file.id)
 
         expect(result["rows"].first["status"]).to eq("error")
         expect(result["rows"].first["errors"]).to be_present
