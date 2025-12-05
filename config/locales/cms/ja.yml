@@ -281,6 +281,7 @@ ja:
         check_result_not_found: チェック結果が見つかりません。
         no_selection: 移動対象が選択されていません。
         invalid_selection: 無効な選択です。
+        task_base_dir_not_available: タスクのベースディレクトリが利用できません。チェック処理を再実行してください。
         page_id_blank: ページIDが空白です。
         invalid_page_id: 無効なページIDです。
         page_not_found: ページが見つかりません。

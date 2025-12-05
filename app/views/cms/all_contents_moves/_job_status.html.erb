@@ -1,17 +1,23 @@
 <%
   # ローカル変数の取得
+  task = local_assigns.fetch(:task, nil)
   status_message = local_assigns.fetch(:status_message, nil)
   on_complete = local_assigns.fetch(:on_complete, nil)
   job_log_path = local_assigns.fetch(:job_log_path, nil)
   url = local_assigns.fetch(:url, nil)
   
+  # taskが存在しない、または必要なメソッドをサポートしていない場合は早期リターン
+  if task.blank? || !task.respond_to?(:segment) || !task.respond_to?(:state) || !task.respond_to?(:id)
+    return
+  end
+  
   # セグメントラベルの構築
-  custom_segment_label = if task.segment.present?
+  custom_segment_label = if task&.segment.present?
     status_message.present? ? "#{task.segment}: #{status_message}" : task.segment
   end
   
   # 状態表示テキストの取得
-  state_display_text = if task.state.present?
+  state_display_text = if task&.state.present?
     I18n.t("job.state.#{task.state}", default: task.state)
   end
 %>
@@ -25,7 +31,7 @@
     
     <dt><%= task.t :state %></dt>
     <dd>
-      <span class="state" data-state="<%= task.state || '' %>">
+      <span class="state" data-state="<%= task&.state || '' %>">
         <% if state_display_text.present? %>
           <%= state_display_text %>
         <% else %>
@@ -49,7 +55,7 @@
     
     <% if url.present? %>
     var checkUrl = "<%= j(url) %>";
-    var interval = <%= SS.config.job.reload_interval || 10 %> * 1000;
+    var interval = <%= SS.config.job&.reload_interval || 10 %> * 1000;
     var timerId;
     var completedStates = ["completed", "failed", "interrupted"];
     

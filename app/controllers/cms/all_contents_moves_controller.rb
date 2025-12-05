@@ -134,14 +134,22 @@ class Cms::AllContentsMovesController < ApplicationController
       return
     end
 
+    # base_dirの存在を検証
+    unless @task.base_dir
+      @errors = [t("cms.all_contents_moves.errors.task_base_dir_not_available")]
+      @check_result = check_result
+      render action: :index
+      return
+    end
+
     # 中間生成物を保存
     execute_data = {
       task_id: @task.id,
       selected_ids: selected_ids.map(&:to_s),
       created_at: Time.zone.now.iso8601
     }
-    FileUtils.mkdir_p(@task.base_dir) if @task.base_dir
-    File.write("#{@task.base_dir}/execute_data.json", execute_data.to_json) if @task.base_dir
+    FileUtils.mkdir_p(@task.base_dir)
+    File.write("#{@task.base_dir}/execute_data.json", execute_data.to_json)
 
     # 実行ジョブ用のタスクを作成
     execute_job_class = Cms::AllContentsMoves::ExecuteJob
