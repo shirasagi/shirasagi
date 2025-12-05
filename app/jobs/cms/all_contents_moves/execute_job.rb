@@ -22,26 +22,39 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
 
   private
 
-  def load_check_result(check_task_id)
+  def load_json_from_task(check_task_id, filename, validator: nil)
     check_task = Cms::Task.find(check_task_id)
-    check_result_path = "#{check_task.base_dir}/check_result.json"
-    unless File.exist?(check_result_path)
-      task.log "Error: check_result.json not found"
+  rescue Mongoid::Errors::DocumentNotFound, ActiveRecord::RecordNotFound => e
+    task.log "Error: Check task #{check_task_id} not found"
+    return nil
+  else
+    file_path = "#{check_task.base_dir}/#{filename}"
+    unless File.exist?(file_path)
+      task.log "Error: #{filename} not found"
       return nil
     end
 
-    JSON.parse(File.read(check_result_path))
+    begin
+      parsed_data = JSON.parse(File.read(file_path))
+    rescue JSON::ParserError => e
+      task.log "Error: Failed to parse #{filename}: #{e.message}"
+      return nil
+    end
+
+    if validator && !validator.call(parsed_data)
+      task.log "Error: #{filename} has invalid structure"
+      return nil
+    end
+
+    parsed_data
+  end
+
+  def load_check_result(check_task_id)
+    load_json_from_task(check_task_id, "check_result.json")
   end
 
   def load_execute_data(check_task_id)
-    check_task = Cms::Task.find(check_task_id)
-    execute_data_path = "#{check_task.base_dir}/execute_data.json"
-    unless File.exist?(execute_data_path)
-      task.log "Error: execute_data.json not found"
-      return nil
-    end
-
-    JSON.parse(File.read(execute_data_path))
+    load_json_from_task(check_task_id, "execute_data.json")
   end
 
   def filter_selected_rows(check_result, execute_data)
