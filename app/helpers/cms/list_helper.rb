@@ -55,7 +55,13 @@ module Cms::ListHelper
     if cur_item.loop_format_shirasagi?
       render_list_with_shirasagi(cur_item, default_node_loop_html, &block)
     else
-      source = cur_item.loop_liquid.presence || default_node_loop_liquid
+      source = if cur_item.loop_setting.present? && cur_item.loop_setting.html_format_liquid?
+                 cur_item.loop_setting.html
+               elsif cur_item.loop_liquid.presence
+                 cur_item.loop_liquid
+               else
+                 default_node_loop_liquid
+               end
       assigns = { "nodes" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end
@@ -71,7 +77,13 @@ module Cms::ListHelper
     if cur_item.loop_format_shirasagi?
       render_list_with_shirasagi(cur_item, default_page_loop_html, &block)
     else
-      source = cur_item.loop_liquid.presence || default_page_loop_liquid
+      source = if cur_item.loop_setting.present? && cur_item.loop_setting.html_format_liquid?
+                 cur_item.loop_setting.html
+               elsif cur_item.loop_liquid.presence
+                 cur_item.loop_liquid
+               else
+                 default_page_loop_liquid
+               end
       assigns = { "pages" => @items.to_a }
       render_list_with_liquid(source, assigns)
     end

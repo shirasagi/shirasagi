@@ -396,6 +396,7 @@ Rails.application.routes.draw do
       get "members" => "members#index"
       get "sites" => "sites#index"
       get "layouts" => "layouts#index"
+      get "loop_settings/:id" => "loop_settings#show", as: :loop_setting
       put "reload_site_usages" => "site_usages#reload"
       get "users" => "users#index"
       get "node_tree/:id" => "node_tree#index", as: :node_tree
