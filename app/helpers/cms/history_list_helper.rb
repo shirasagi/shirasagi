@@ -53,6 +53,7 @@ module Cms::HistoryListHelper
       source = if cur_item.loop_setting.present? &&
                   cur_item.loop_setting.respond_to?(:html_format_liquid?) &&
                   cur_item.loop_setting.html_format_liquid? &&
+                  cur_item.loop_setting.respond_to?(:html) &&
                   cur_item.loop_setting.html.presence
                  cur_item.loop_setting.html
                elsif cur_item.loop_liquid.presence
