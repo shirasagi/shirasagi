@@ -137,7 +137,8 @@ class Cms::AllContentsMoves::CheckJob < Cms::ApplicationJob
 
       # ロックチェック
       if page.respond_to?(:locked?) && page.locked?
-        row_data["errors"] << I18n.t("cms.all_contents_moves.errors.page_locked", user: page.lock_owner.long_name)
+        lock_owner_name = page.lock_owner&.long_name || I18n.t("cms.all_contents_moves.errors.unknown_lock_owner")
+        row_data["errors"] << I18n.t("cms.all_contents_moves.errors.page_locked", user: lock_owner_name)
         rows << row_data
         next
       end
