@@ -14,7 +14,7 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
     return unless execute_data
 
     selected_rows = filter_selected_rows(check_result, execute_data)
-    return unless validate_user
+    return unless validate_user?
 
     results = execute_moves(selected_rows)
     save_execute_result(results)
@@ -77,7 +77,7 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
     end
   end
 
-  def validate_user
+  def validate_user?
     if user.blank?
       task.log I18n.t("cms.all_contents_moves.errors.user_not_bound")
       return false

@@ -12,7 +12,7 @@ class Cms::Page::MoveService
 
     permission_options = { site: cur_site }
     permission_options[:node] = cur_node if cur_node
-    raise ActionController::Forbidden unless source.allowed?(:move, cur_user, **permission_options)
+    raise SS::ForbiddenError unless source.allowed?(:move, cur_user, **permission_options)
 
     source.cur_site = cur_site
     source.cur_user = cur_user
@@ -53,7 +53,7 @@ class Cms::Page::MoveService
       filename: page.filename,
       destination_filename: destination_filename
     }
-  rescue ArgumentError, ActionController::BadRequest, ActionController::Forbidden => e
+  rescue ArgumentError, ActionController::BadRequest, SS::ForbiddenError => e
     Rails.logger.warn("Page move failed: #{e.class} - #{e.message} (page_id: #{page.id}, destination: #{destination_filename})")
     {
       success: false,
@@ -74,6 +74,8 @@ class Cms::Page::MoveService
 
     return unless source
 
+    source.cur_site = cur_site
+    source.cur_user = cur_user
     source.errors.clear
     source.validate_destination_filename(destination)
     source.errors.each do |error|
