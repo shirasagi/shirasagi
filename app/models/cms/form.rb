@@ -98,7 +98,7 @@ class Cms::Form
 
   def render_html(page, registers)
     layout = if loop_setting.present? && loop_setting.html_format_liquid?
-               loop_setting.html
+               loop_setting.html.presence || html.presence || build_default_html
              else
                html.presence || build_default_html
              end
