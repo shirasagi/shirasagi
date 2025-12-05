@@ -78,8 +78,11 @@ describe Cms::AllContentsMoves::ExecuteJob, dbscope: :example do
         ss_perform_now(job, check_task.id)
 
         execute_task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:execute")
-        result_path = "#{execute_task.base_dir}/execute_result.json" if execute_task&.base_dir
-        expect(File.exist?(result_path)).to be_falsey if result_path
+        expect(execute_task).to be_present
+        expect(execute_task.base_dir).to be_present
+
+        result_path = "#{execute_task.base_dir}/execute_result.json"
+        expect(File.exist?(result_path)).to be_falsey
       end
     end
 
@@ -226,8 +229,7 @@ describe Cms::AllContentsMoves::ExecuteJob, dbscope: :example do
         job = described_class.bind(site_id: site.id)
         ss_perform_now(job, check_task.id)
 
-        execute_task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:execute")
-        result_path = "#{execute_task.base_dir}/execute_result.json" if execute_task&.base_dir
+        _execute_task = Cms::Task.find_by(site_id: site.id, name: "cms:all_contents_moves:execute")
         # User not bound should be handled gracefully
       end
     end
