@@ -103,10 +103,27 @@
       });
     };
     
+    // タイマーをクリアする関数
+    var clearTimer = function() {
+      if (timerId) {
+        clearInterval(timerId);
+        timerId = null;
+      }
+    };
+    
     // 定期的にジョブの状態をチェック
     timerId = setInterval(checkJobStatus, interval);
     // 初回は即座にチェック
     checkJobStatus();
+    
+    // ページアンロード時にタイマーをクリア
+    $(window).on("beforeunload", clearTimer);
+    
+    // Turbo/Turbolinksのページキャッシュ前にタイマーをクリア
+    $(document).on("turbo:before-cache turbolinks:before-cache", clearTimer);
+    
+    // Turbo/Turbolinksのページ再レンダリング前にタイマーをクリア
+    $(document).on("turbo:before-render turbolinks:before-render", clearTimer);
     <% end %>
   })();
 <% end %>
