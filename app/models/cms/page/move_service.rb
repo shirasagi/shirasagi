@@ -6,12 +6,13 @@ class Cms::Page::MoveService
   validate :validate_destination
 
   def move
-    raise "400" if source.respond_to?(:branch?) && source.branch?
+    raise ArgumentError, "source is required" if source.nil?
+    raise ActionController::BadRequest if source.respond_to?(:branch?) && source.branch?
     return false if invalid?
 
     permission_options = { site: cur_site }
     permission_options[:node] = cur_node if cur_node
-    raise "403" unless source.allowed?(:move, cur_user, **permission_options)
+    raise ActionController::Forbidden unless source.allowed?(:move, cur_user, **permission_options)
 
     source.cur_site = cur_site
     source.cur_user = cur_user
