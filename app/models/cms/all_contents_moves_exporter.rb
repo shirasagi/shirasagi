@@ -27,7 +27,7 @@ class Cms::AllContentsMovesExporter < Cms::PageExporter
   end
 
   def each_page(&block)
-    page_criteria = Cms::Page.site(site).includes(:layout, :contact_group)
+    page_criteria = Cms::Page.site(site).includes(:layout, contact_group: :contact_groups)
     page_criteria.find_in_batches(batch_size: 20) do |pages|
       # Eager-load groups for this batch to avoid N+1 queries
       eager_load_groups_for_pages(pages)
@@ -94,7 +94,10 @@ class Cms::AllContentsMovesExporter < Cms::PageExporter
         contact_group = item.try(:contact_group)
         next if contact_group.blank?
 
-        contact = contact_group.contact_groups.where(id: contact_id).first
+        # Try in-memory lookup first (for eager-loaded associations)
+        contact = contact_group.contact_groups.find { |c| c.id.to_s == contact_id.to_s }
+        # Fallback to database query if not found in memory (shouldn't happen with proper eager-loading)
+        contact ||= contact_group.contact_groups.where(id: contact_id).first
         next if contact.blank?
 
         contact.name.presence || contact.id.to_s
