@@ -53,7 +53,8 @@ class Cms::Page::MoveService
       filename: page.filename,
       destination_filename: destination_filename
     }
-  rescue => e
+  rescue ArgumentError, ActionController::BadRequest, ActionController::Forbidden => e
+    Rails.logger.warn("Page move failed: #{e.class} - #{e.message} (page_id: #{page.id}, destination: #{destination_filename})")
     {
       success: false,
       errors: [e.message],
