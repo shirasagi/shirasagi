@@ -165,8 +165,18 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
       error_count: results.count { |r| !r[:success] }
     }
 
-    FileUtils.mkdir_p(task.base_dir) if task.base_dir
-    File.write("#{task.base_dir}/execute_result.json", execute_result.to_json) if task.base_dir
+    base = task.base_dir
+    return unless base
+
+    path = File.join(base, "execute_result.json")
+    begin
+      FileUtils.mkdir_p(base)
+      File.write(path, execute_result.to_json)
+    rescue => e
+      task.log "Error: Failed to save execute_result.json: #{e.message}"
+      task.log "  Path: #{path}"
+      task.log "  Backtrace: #{e.backtrace.first(5).join("\n  ")}" if e.backtrace
+    end
 
     task.log "Execute completed: #{execute_result[:success_count]} succeeded, #{execute_result[:error_count]} failed"
   end
