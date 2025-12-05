@@ -152,7 +152,8 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
     if result[:success]
       task.log "  Success: moved to #{destination_filename}"
     else
-      task.log "  Error: #{result[:errors].join(', ')}"
+      error_message = Array(result[:errors]).join(', ')
+      task.log "  Error: #{error_message}"
     end
   end
 
