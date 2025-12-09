@@ -92,6 +92,11 @@ class Cms::AllContentsMoves::ExecuteJob < Cms::ApplicationJob
   end
 
   def execute_moves(selected_rows)
+    if user.blank?
+      task.log I18n.t("cms.all_contents_moves.errors.user_not_bound")
+      return []
+    end
+
     service = Cms::Page::MoveService.new(cur_site: site, cur_user: user, task: task)
     results = []
 

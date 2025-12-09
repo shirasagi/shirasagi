@@ -4,6 +4,7 @@ class Cms::Page::MoveService
   attr_accessor :cur_site, :cur_user, :cur_node, :source, :destination, :task
 
   validate :validate_destination
+  validates :cur_user, presence: true
 
   def move
     raise ArgumentError, "source is required" if source.nil?
@@ -53,8 +54,9 @@ class Cms::Page::MoveService
       filename: page.filename,
       destination_filename: destination_filename
     }
-  rescue ArgumentError, ActionController::BadRequest, SS::ForbiddenError => e
+  rescue => e
     Rails.logger.warn("Page move failed: #{e.class} - #{e.message} (page_id: #{page.id}, destination: #{destination_filename})")
+    Rails.logger.warn(e.backtrace.join("\n")) if e.backtrace
     {
       success: false,
       errors: [e.message],
