@@ -158,10 +158,12 @@ class Inquiry::Answer
   end
 
   def source_full_url
-    if source_url.present?
-      uri = ::Addressable::URI.parse(site.full_url)
-      uri.path = source_url
-      uri.to_s
+    return if source_url.blank?
+
+    if source_url.start_with?("/")
+      ::File.join(site.full_url, source_url)
+    else
+      source_url
     end
   end
 
