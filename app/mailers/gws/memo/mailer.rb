@@ -19,6 +19,7 @@ class Gws::Memo::Mailer < ApplicationMailer
     end
 
     bcc = @cur_site.exclude_disallowed_emails(forward_emails)
+    bcc.uniq!
     return false if bcc.blank?
 
     mail(from: from, bcc: forward_emails, subject: subject, message_id: Gws.generate_message_id(@cur_site)) do |format|
@@ -47,6 +48,7 @@ class Gws::Memo::Mailer < ApplicationMailer
     set_group_settings
     bcc = @users.map(&:send_notice_mail_addresses).flatten
     bcc = @cur_site.exclude_disallowed_emails(bcc)
+    bcc.uniq!
     return false if bcc.blank?
 
     mail(from: @from, bcc: bcc, subject: subject, body: @body, message_id: Gws.generate_message_id(@cur_site))
