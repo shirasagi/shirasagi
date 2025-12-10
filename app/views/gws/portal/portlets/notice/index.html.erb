@@ -32,7 +32,7 @@
           </div>
 
           <div class="meta">
-            <span class="datetime"><%= ss_time_tag item.updated %></span>
+            <span class="datetime"><%= ss_time_tag item.released || item.updated %></span>
             <span class="browsed"><%= t("gws/board.options.browsed_state.#{item.browsed?(@cur_user) ? 'read' : 'unread'}") %></span>
             <span class="user"><%= gws_public_user_long_name(item.contributor_name.presence || item.user_long_name) %></span>
             <% if attr = item.label(:severity).presence %>
