@@ -7,10 +7,8 @@
 
     <dl class="see">
       <dt><%= t "ss.keyword" %></dt>
-      <dd>
-        <%= f.text_field :name, value: params.dig(:s_group, :name) %>
-        <%= f.submit  t("ss.buttons.search"), class: :btn %>
-      </dd>
+      <dd><%= f.text_field :name, value: params.dig(:s_group, :name) %></dd>
+      <dd><%= f.submit t("ss.buttons.search"), class: :btn %></dd>
     </dl>
   <% end %>
 </div>
