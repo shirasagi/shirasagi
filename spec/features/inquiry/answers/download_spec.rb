@@ -140,5 +140,50 @@ describe "inquiry_answers", type: :feature, dbscope: :example do
         expect(csv_lines[1][14]).to eq answer.updated.strftime('%Y/%m/%d %H:%M')
       end
     end
+
+    context "with source_url" do
+      let(:answer2) { Inquiry::Answer.new(cur_site: site, cur_node: node, remote_addr: remote_addr, user_agent: user_agent) }
+
+      before do
+        data = {}
+        data[name_column.id] = [name]
+        data[email_column.id] = [email, email]
+        data[radio_column.id] = [radio_value]
+        data[select_column.id] = [select_value]
+        data[check_column.id] = [check_value]
+
+        answer2.set_data(data)
+        answer2.source_url = source_url
+        answer2.save!
+      end
+
+      context "path (normal case)" do
+        let(:source_url) { "/docs/page.html" }
+
+        it do
+          visit index_path
+          click_on I18n.t('ss.links.download')
+          expect(status_code).to eq 200
+
+          csv_lines = CSV.parse(page.html.encode("UTF-8"))
+          expect(csv_lines.length).to eq 3
+          expect(csv_lines[1][10]).to eq ::File.join(site.full_url, source_url)
+        end
+      end
+
+      context "full_url (invalid case?)" do
+        let(:source_url) { "https://sample.example.jp" }
+
+        it do
+          visit index_path
+          click_on I18n.t('ss.links.download')
+          expect(status_code).to eq 200
+
+          csv_lines = CSV.parse(page.html.encode("UTF-8"))
+          expect(csv_lines.length).to eq 3
+          expect(csv_lines[1][10]).to eq source_url
+        end
+      end
+    end
   end
 end
