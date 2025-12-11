@@ -83,6 +83,15 @@ ja:
     upload_or_select_from_list: ファイルアップロードまたは一覧から選択
     auto_resizing_label: "%{size}（システム設定）"
     check: チェック
+    overflow_user:
+      one: "他1つのユーザー"
+      other: "他%{count}ユーザー"
+    overflow_group:
+      one: "他1つのグループ"
+      other: "他%{count}グループ"
+    overflow_custom_group:
+      one: "他1つのカスタムグループ"
+      other: "他%{count}カスタムグループ"
 
     views:
       login/login:

@@ -3,6 +3,9 @@ ja:
     facility: 設備
     category: カテゴリー
     manage_columns: 追加入力を管理する
+    overflow_facility:
+      one: "他1つの設備"
+      other: "他%{count}設備"
     views:
       required_approval: 要承認
     prompts:
