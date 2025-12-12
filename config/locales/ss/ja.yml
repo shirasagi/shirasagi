@@ -84,13 +84,13 @@ ja:
     auto_resizing_label: "%{size}（システム設定）"
     check: チェック
     overflow_user:
-      one: "他1つのユーザー"
+      one: "他1人のユーザー"
       other: "他%{count}ユーザー"
     overflow_group:
-      one: "他1つのグループ"
+      one: "他1件のグループ"
       other: "他%{count}グループ"
     overflow_custom_group:
-      one: "他1つのカスタムグループ"
+      one: "他1件のカスタムグループ"
       other: "他%{count}カスタムグループ"
 
     views:
