@@ -4,17 +4,20 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
   include Gws::Memo::Helper
 
   def perform(*args)
-    opts = args.extract_options!
-    @datetime = Time.zone.now
-    @message_ids = args[0]
-    @root_url = opts[:root_url].to_s
-    @output_zip = SS::ZipCreator.new("gws-memo-messages.zip", user, site: site)
-    @output_format = opts[:format].to_s.presence || "json"
-    @backup_filter = opts[:backup_filter].to_s.presence || "selected"
-    @backup_items = 0
+    I18n.with_locale(I18n.default_locale) do
+      opts = args.extract_options!
+      @datetime = Time.zone.now
+      @message_ids = args[0]
+      @root_url = opts[:root_url].to_s
+      @output_zip = SS::ZipCreator.new("gws-memo-messages.zip", user, site: site)
+      @output_format = opts[:format].to_s.presence || "json"
+      @backup_filter = opts[:backup_filter].to_s.presence || "selected"
+      @backup_items = 0
 
-    backup_gws_memo_messages
-    @output_zip.close
+      backup_gws_memo_messages
+    ensure
+      @output_zip.close if @output_zip
+    end
 
     if @backup_items == 0
       create_notify_message(failed: true, failed_message: I18n.t("gws/memo/message.backup_failed.empty_messages"))
@@ -22,9 +25,7 @@ class Gws::Memo::MessageBackupJob < Gws::ApplicationJob
     end
 
     create_notify_message
-    Rails.logger.info("#{@backup_items.to_fs(:delimied)} 件のメッセージのバックアアップを実行しました。")
-  ensure
-    @output_zip.close if @output_zip
+    Rails.logger.info { "#{@backup_items.to_fs(:delimied)} 件のメッセージのバックアアップを実行しました。" }
   end
 
   private
