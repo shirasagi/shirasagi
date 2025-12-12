@@ -35,7 +35,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
       item.save!
     end
 
-    Timecop.freeze(now - 4.day) do
+    Timecop.freeze(now - 4.days) do
       item.state = "public"
       item.released = now - 3.days - 12.hours
       item.release_date = now - 3.days - 12.hours
@@ -55,7 +55,7 @@ describe "gws_notices_readables", type: :feature, dbscope: :example, js: true do
       item.save!
     end
 
-    Timecop.freeze(now - 7.day) do
+    Timecop.freeze(now - 7.days) do
       item.state = "public"
       item.deleted = now - 7.days - 12.hours
       item.save!
