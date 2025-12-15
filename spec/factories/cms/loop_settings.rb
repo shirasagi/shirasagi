@@ -11,5 +11,6 @@ FactoryBot.define do
     html { "html-#{unique_id}" }
     html_format { "shirasagi" }
     state { "public" }
+    setting_type { "template" }
   end
 end

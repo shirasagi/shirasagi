@@ -33,15 +33,14 @@ module Cms::FormHelper
 
   def ancestral_loop_settings(format = nil)
     items = []
-    snippet_prefix = "#{t("cms.labels.snippets")}/"
     if format == "liquid"
       settings = Cms::LoopSetting.site(@cur_site).liquid
     else
       settings = Cms::LoopSetting.site(@cur_site).shirasagi
     end
     settings.each do |item|
-      # 「スニペット/」で始まるものは除外（スニペット用なので）
-      next if item.name.start_with?(snippet_prefix)
+      # setting_type == "template"のデータのみを返す
+      next unless item.setting_type_template?
       items << [item.name, item.id, item.description]
     end
     items
@@ -49,13 +48,13 @@ module Cms::FormHelper
 
   def ancestral_html_settings_liquid
     items = []
-    snippet_prefix = "#{t("cms.labels.snippets")}/"
     settings = Cms::LoopSetting.site(@cur_site).liquid
     settings.each do |item|
-      # 「スニペット/」で始まるものだけを返す
-      next unless item.name.start_with?(snippet_prefix)
+      # setting_type == "snippet"のデータのみを返す
+      next unless item.setting_type_snippet?
       attrs = { "data-snippet" => item.html.to_s }
       attrs["data-description"] = item.description if item.description.present?
+      # enum化により、名前をそのまま使用（プレフィックス削除不要）
       items << [item.name, item.id, attrs]
     end
     items
@@ -80,18 +79,15 @@ module Cms::FormHelper
   # 戻り値: HTML Safe
   def options_with_optgroup_for_snippets(items, input_direct_label: nil)
     input_direct_label ||= t("cms.input_directly")
-    snippet_prefix = "#{t("cms.labels.snippets")}/"
     groups = Hash.new { |h, k| h[k] = [] }
     nogroup = []
     items.each do |name, id, attrs|
-      # 「スニペット/」プレフィックスを除外
-      display_name = name.start_with?(snippet_prefix) ? name.sub(/^#{Regexp.escape(snippet_prefix)}/, "") : name
-
-      if display_name.include?("/")
-        group, leaf = display_name.split("/", 2)
+      # enum化により、プレフィックス判定は不要（ancestral_html_settings_liquidで既にフィルタリング済み）
+      if name.include?("/")
+        group, leaf = name.split("/", 2)
         groups[group] << [leaf, id, attrs]
       else
-        nogroup << [display_name, id, attrs]
+        nogroup << [name, id, attrs]
       end
     end
     html = []

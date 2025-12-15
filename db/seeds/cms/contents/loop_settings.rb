@@ -20,6 +20,7 @@ save_loop_setting(
   description: "日付、タイトル、リンクを含む基本的な記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 10,
   html: <<~'HTML'
     <article class="item-#{class} #{new} #{current}">
@@ -37,6 +38,7 @@ save_loop_setting(
   description: "記事のサマリー（要約）を含む記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 20,
   html: <<~'HTML'
     <article class="item-#{class} #{new} #{current}">
@@ -57,6 +59,7 @@ save_loop_setting(
   description: "カテゴリー情報を含む記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 30,
   html: <<~'HTML'
     <article class="item-#{class} #{new} #{current}">
@@ -77,6 +80,7 @@ save_loop_setting(
   description: "サムネイル画像を含む記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 40,
   html: <<~'HTML'
     <article class="item-#{class} #{new} #{current}">
@@ -110,6 +114,7 @@ save_loop_setting(
   description: "イベントの開催日時情報を含む記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 50,
   html: <<~'HTML'
     <article class="item-#{class} #{new} #{current}">
@@ -138,6 +143,7 @@ save_loop_setting(
   description: "タグ情報を含む記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 60,
   html: <<~'HTML'
     <article class="item-#{class} #{new} #{current}">
@@ -161,6 +167,7 @@ save_loop_setting(
   description: "タイトルとリンクのみのシンプルなリストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 70,
   html: <<~'HTML'
     <ul>
@@ -177,6 +184,7 @@ save_loop_setting(
   description: "カード形式で表示する記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 80,
   html: <<~'HTML'
     <div class="card-list">
@@ -213,6 +221,7 @@ save_loop_setting(
   description: "テーブル形式で表示する記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 90,
   html: <<~'HTML'
     <table class="list-table">
@@ -250,6 +259,7 @@ save_loop_setting(
   description: "ノード（フォルダー）一覧を表示するテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 100,
   html: <<~'HTML'
     <article class="item-#{class} #{current}">
@@ -266,6 +276,7 @@ save_loop_setting(
   description: "グループ、更新日時などの詳細情報を含む記事リストテンプレート（SHIRASAGI形式）",
   html_format: "shirasagi",
   state: "public",
+  setting_type: "template",
   order: 110,
   html: <<~'HTML'
     <article class="item-#{class} #{new} #{current}">
@@ -300,6 +311,7 @@ save_loop_setting(
   description: "日付、タイトル、リンクを含む基本的な記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 10,
   html: <<~HTML
     {% for page in pages %}
@@ -319,6 +331,7 @@ save_loop_setting(
   description: "記事のサマリー（要約）を含む記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 20,
   html: <<~HTML
     {% for page in pages %}
@@ -341,6 +354,7 @@ save_loop_setting(
   description: "カテゴリー情報を含む記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 30,
   html: <<~HTML
     {% for page in pages %}
@@ -369,6 +383,7 @@ save_loop_setting(
   description: "サムネイル画像を含む記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 40,
   html: <<~HTML
     {% for page in pages %}
@@ -406,6 +421,7 @@ save_loop_setting(
   description: "イベントの開催日時情報を含む記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 50,
   html: <<~HTML
     {% for page in pages %}
@@ -445,6 +461,7 @@ save_loop_setting(
   description: "タグ情報を含む記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 60,
   html: <<~HTML
     {% for page in pages %}
@@ -472,6 +489,7 @@ save_loop_setting(
   description: "タイトルとリンクのみのシンプルなリストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 70,
   html: <<~HTML
     <ul>
@@ -490,6 +508,7 @@ save_loop_setting(
   description: "カード形式で表示する記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 80,
   html: <<~HTML
     <div class="card-list">
@@ -534,6 +553,7 @@ save_loop_setting(
   description: "テーブル形式で表示する記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 90,
   html: <<~HTML
     <table class="list-table">
@@ -573,6 +593,7 @@ save_loop_setting(
   description: "ノード（フォルダー）一覧を表示するテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 100,
   html: <<~HTML
     {% for node in nodes %}
@@ -591,6 +612,7 @@ save_loop_setting(
   description: "グループ、更新日時などの詳細情報を含む記事リストテンプレート",
   html_format: "liquid",
   state: "public",
+  setting_type: "template",
   order: 110,
   html: <<~HTML
     {% for page in pages %}
@@ -627,12 +649,14 @@ save_loop_setting(
   description: "ページ名を表示",
   html_format: "liquid",
   state: "public",
+  setting_type: "snippet",
   order: 200,
   html: "{{ page.name }}"
 )
 
 save_loop_setting(
   name: "スニペット/ページ/ページ一覧名",
+  setting_type: "snippet",
   description: "ページの一覧名を表示（index_nameがない場合はname）",
   html_format: "liquid",
   state: "public",
@@ -642,6 +666,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページURL",
+  setting_type: "snippet",
   description: "ページのURLを表示",
   html_format: "liquid",
   state: "public",
@@ -651,6 +676,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページフルURL",
+  setting_type: "snippet",
   description: "ページのフルURLを表示",
   html_format: "liquid",
   state: "public",
@@ -660,6 +686,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページID",
+  setting_type: "snippet",
   description: "ページのIDを表示",
   html_format: "liquid",
   state: "public",
@@ -669,6 +696,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページサマリー",
+  setting_type: "snippet",
   description: "ページのサマリーを表示",
   html_format: "liquid",
   state: "public",
@@ -678,6 +706,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページ概要",
+  setting_type: "snippet",
   description: "ページの概要を表示",
   html_format: "liquid",
   state: "public",
@@ -687,6 +716,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページHTML",
+  setting_type: "snippet",
   description: "ページのHTMLを表示",
   html_format: "liquid",
   state: "public",
@@ -697,6 +727,7 @@ save_loop_setting(
 # ページ変数 - 日付・時刻
 save_loop_setting(
   name: "スニペット/ページ/ページ日時",
+  setting_type: "snippet",
   description: "ページの日時を表示（デフォルトフォーマット）",
   html_format: "liquid",
   state: "public",
@@ -706,6 +737,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページ日時（長い形式）",
+  setting_type: "snippet",
   description: "ページの日時を表示（長い形式：2024年1月1日）",
   html_format: "liquid",
   state: "public",
@@ -715,6 +747,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページ日時（ISO形式）",
+  setting_type: "snippet",
   description: "ページの日時を表示（ISO形式：2024-01-01）",
   html_format: "liquid",
   state: "public",
@@ -724,6 +757,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/ページ日時（短い形式）",
+  setting_type: "snippet",
   description: "ページの日時を表示（短い形式：1/1）",
   html_format: "liquid",
   state: "public",
@@ -733,6 +767,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/更新日時",
+  setting_type: "snippet",
   description: "ページの更新日時を表示",
   html_format: "liquid",
   state: "public",
@@ -742,6 +777,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/公開日時",
+  setting_type: "snippet",
   description: "ページの公開日時を表示",
   html_format: "liquid",
   state: "public",
@@ -751,6 +787,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/作成日時",
+  setting_type: "snippet",
   description: "ページの作成日時を表示",
   html_format: "liquid",
   state: "public",
@@ -761,6 +798,7 @@ save_loop_setting(
 # ページ変数 - リンク
 save_loop_setting(
   name: "スニペット/ページ/リンク（ページ名）",
+  setting_type: "snippet",
   description: "ページ名をリンクとして表示",
   html_format: "liquid",
   state: "public",
@@ -770,6 +808,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/リンク（タイトル）",
+  setting_type: "snippet",
   description: "ページ名をh2タグでリンクとして表示",
   html_format: "liquid",
   state: "public",
@@ -780,6 +819,7 @@ save_loop_setting(
 # ページ変数 - CSSクラス・状態
 save_loop_setting(
   name: "スニペット/ページ/CSSクラス",
+  setting_type: "snippet",
   description: "ページのCSSクラスを表示",
   html_format: "liquid",
   state: "public",
@@ -789,6 +829,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/新着判定",
+  setting_type: "snippet",
   description: "ページが新着の場合に表示",
   html_format: "liquid",
   state: "public",
@@ -798,6 +839,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/現在ページ判定",
+  setting_type: "snippet",
   description: "ページが現在のページの場合に表示",
   html_format: "liquid",
   state: "public",
@@ -807,6 +849,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/CSSクラス属性（新着・現在）",
+  setting_type: "snippet",
   description: "CSSクラス、新着、現在ページの判定を含むクラス属性",
   html_format: "liquid",
   state: "public",
@@ -817,6 +860,7 @@ save_loop_setting(
 # ページ変数 - カテゴリー
 save_loop_setting(
   name: "スニペット/ページ/カテゴリー名（連結）",
+  setting_type: "snippet",
   description: "カテゴリー名をカンマ区切りで表示",
   html_format: "liquid",
   state: "public",
@@ -826,6 +870,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/カテゴリーリンク",
+  setting_type: "snippet",
   description: "カテゴリーをリンクとして表示",
   html_format: "liquid",
   state: "public",
@@ -835,6 +880,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/カテゴリー（spanタグ）",
+  setting_type: "snippet",
   description: "カテゴリーをspanタグで表示",
   html_format: "liquid",
   state: "public",
@@ -846,6 +892,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/カテゴリーCSSクラス",
+  setting_type: "snippet",
   description: "カテゴリーのbasenameにitem-を付けてスペース区切りで表示",
   html_format: "liquid",
   state: "public",
@@ -856,6 +903,7 @@ save_loop_setting(
 # ページ変数 - タグ
 save_loop_setting(
   name: "スニペット/ページ/タグ",
+  setting_type: "snippet",
   description: "ページのタグをスペース区切りで表示",
   html_format: "liquid",
   state: "public",
@@ -866,6 +914,7 @@ save_loop_setting(
 # ページ変数 - グループ
 save_loop_setting(
   name: "スニペット/ページ/管理グループ",
+  setting_type: "snippet",
   description: "ページの管理グループ名をカンマ区切りで表示",
   html_format: "liquid",
   state: "public",
@@ -875,6 +924,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/管理グループ（最初）",
+  setting_type: "snippet",
   description: "ページの最初の管理グループ名を表示",
   html_format: "liquid",
   state: "public",
@@ -885,6 +935,7 @@ save_loop_setting(
 # ページ変数 - 画像
 save_loop_setting(
   name: "スニペット/ページ/サムネイル画像URL",
+  setting_type: "snippet",
   description: "ページのサムネイル画像URLを表示",
   html_format: "liquid",
   state: "public",
@@ -894,6 +945,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/画像src",
+  setting_type: "snippet",
   description: "ページHTMLから最初の画像のsrcを取得（デフォルト画像あり）",
   html_format: "liquid",
   state: "public",
@@ -904,6 +956,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/サムネイルsrc",
+  setting_type: "snippet",
   description: "サムネイル画像URL（なければHTMLから画像、それもなければデフォルト画像）",
   html_format: "liquid",
   state: "public",
@@ -915,6 +968,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/画像タグ（サムネイル）",
+  setting_type: "snippet",
   description: "サムネイル画像をimgタグで表示",
   html_format: "liquid",
   state: "public",
@@ -925,6 +979,7 @@ save_loop_setting(
 # ページ変数 - イベント
 save_loop_setting(
   name: "スニペット/ページ/イベント開催日時",
+  setting_type: "snippet",
   description: "イベントの開催日時を表示",
   html_format: "liquid",
   state: "public",
@@ -943,6 +998,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/イベント申込締切",
+  setting_type: "snippet",
   description: "イベントの申込締切を表示",
   html_format: "liquid",
   state: "public",
@@ -952,6 +1008,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/イベントタイトル",
+  setting_type: "snippet",
   description: "イベントタイトルを表示",
   html_format: "liquid",
   state: "public",
@@ -962,6 +1019,7 @@ save_loop_setting(
 # ノード変数
 save_loop_setting(
   name: "スニペット/ノード/ノード名",
+  setting_type: "snippet",
   description: "ノード名を表示",
   html_format: "liquid",
   state: "public",
@@ -971,6 +1029,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ノード/ノードURL",
+  setting_type: "snippet",
   description: "ノードのURLを表示",
   html_format: "liquid",
   state: "public",
@@ -980,6 +1039,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ノード/ノード内ページ数",
+  setting_type: "snippet",
   description: "ノード内のページ数を表示",
   html_format: "liquid",
   state: "public",
@@ -990,6 +1050,7 @@ save_loop_setting(
 # フィルター - 日付・時刻
 save_loop_setting(
   name: "スニペット/フィルター/日付（デフォルト形式）",
+  setting_type: "snippet",
   description: "日付をデフォルトフォーマットで表示（%Y/%1m/%1d）",
   html_format: "liquid",
   state: "public",
@@ -999,6 +1060,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/フィルター/日付（ISO形式）",
+  setting_type: "snippet",
   description: "日付をISO形式で表示（%Y-%m-%d）",
   html_format: "liquid",
   state: "public",
@@ -1008,6 +1070,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/フィルター/日付（長い形式）",
+  setting_type: "snippet",
   description: "日付を長い形式で表示（%Y年%1m月%1d日）",
   html_format: "liquid",
   state: "public",
@@ -1017,6 +1080,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/フィルター/日付（短い形式）",
+  setting_type: "snippet",
   description: "日付を短い形式で表示（%1m/%1d）",
   html_format: "liquid",
   state: "public",
@@ -1026,6 +1090,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/フィルター/日時（デフォルト形式）",
+  setting_type: "snippet",
   description: "日時をデフォルトフォーマットで表示（%Y/%1m/%1d %H:%M）",
   html_format: "liquid",
   state: "public",
@@ -1035,6 +1100,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/フィルター/日時（長い形式）",
+  setting_type: "snippet",
   description: "日時を長い形式で表示（%Y年%1m月%1d日 %H時%M分）",
   html_format: "liquid",
   state: "public",
@@ -1045,6 +1111,7 @@ save_loop_setting(
 # フィルター - その他
 save_loop_setting(
   name: "スニペット/フィルター/ファイルサイズ（人間可読形式）",
+  setting_type: "snippet",
   description: "ファイルサイズを人が視認しやすい形式で表示",
   html_format: "liquid",
   state: "public",
@@ -1054,6 +1121,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/フィルター/数値（3桁区切り）",
+  setting_type: "snippet",
   description: "数値を3桁区切り文字列に変換",
   html_format: "liquid",
   state: "public",
@@ -1063,6 +1131,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/フィルター/HTMLサニタイズ",
+  setting_type: "snippet",
   description: "HTMLとして不適切な文字を削除",
   html_format: "liquid",
   state: "public",
@@ -1073,6 +1142,7 @@ save_loop_setting(
 # 定型フォーム - value変数
 save_loop_setting(
   name: "スニペット/定型フォーム/定型フォームHTML",
+  setting_type: "snippet",
   description: "定型フォームの入力値をHTML化したもの（既定値）",
   html_format: "liquid",
   state: "public",
@@ -1082,6 +1152,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/定型フォーム/定型フォーム入力値",
+  setting_type: "snippet",
   description: "定型フォームの入力値（一行入力、複数行入力など）",
   html_format: "liquid",
   state: "public",
@@ -1091,6 +1162,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/定型フォーム/定型フォームブロック名",
+  setting_type: "snippet",
   description: "定型フォームのブロック名称",
   html_format: "liquid",
   state: "public",
@@ -1100,6 +1172,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/定型フォーム/定型フォーム日付",
+  setting_type: "snippet",
   description: "定型フォームの日付入力値を表示",
   html_format: "liquid",
   state: "public",
@@ -1109,6 +1182,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/定型フォーム/リンク（定型フォーム）",
+  setting_type: "snippet",
   description: "定型フォームのURL入力値をリンクとして表示",
   html_format: "liquid",
   state: "public",
@@ -1119,6 +1193,7 @@ save_loop_setting(
 # 時間タグ
 save_loop_setting(
   name: "スニペット/ページ/timeタグ（日付）",
+  setting_type: "snippet",
   description: "日付をtimeタグで表示",
   html_format: "liquid",
   state: "public",
@@ -1128,6 +1203,7 @@ save_loop_setting(
 
 save_loop_setting(
   name: "スニペット/ページ/timeタグ（日時）",
+  setting_type: "snippet",
   description: "日時をtimeタグで表示",
   html_format: "liquid",
   state: "public",

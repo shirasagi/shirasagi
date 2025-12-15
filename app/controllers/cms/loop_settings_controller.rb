@@ -15,4 +15,12 @@ class Cms::LoopSettingsController < ApplicationController
   def fix_params
     { cur_site: @cur_site }
   end
+
+  public
+
+  def index
+    @items = @model.site(@cur_site).
+      search(params[:s]).
+      page(params[:page]).per(50)
+  end
 end

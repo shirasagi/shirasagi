@@ -13,11 +13,13 @@ class Cms::LoopSetting
   field :order, type: Integer
   field :html_format, type: String, default: "shirasagi"
   field :state, type: String, default: "public"
-  permit_params :name, :description, :order, :html_format, :state, :html
+  field :setting_type, type: String, default: "template"
+  permit_params :name, :description, :order, :html_format, :state, :html, :setting_type
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
   validates :html_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
   validates :state, inclusion: { in: %w(public closed), allow_blank: true }
+  validates :setting_type, inclusion: { in: %w(template snippet), allow_blank: true }
   validates :html, liquid_format: true, if: ->{ html_format_liquid? }
 
   default_scope -> { order_by(order: 1, name: 1) }
@@ -35,6 +37,16 @@ class Cms::LoopSetting
       end
       if params[:keyword].present?
         criteria = criteria.keyword_in params[:keyword], :name, :html
+      end
+      if params[:html_format].present?
+        if params[:html_format] == "liquid"
+          criteria = criteria.liquid
+        elsif params[:html_format] == "shirasagi"
+          criteria = criteria.shirasagi
+        end
+      end
+      if params[:setting_type].present?
+        criteria = criteria.where(setting_type: params[:setting_type])
       end
       criteria
     end
@@ -57,6 +69,20 @@ class Cms::LoopSetting
   def html_format_options
     %w(shirasagi liquid).map do |v|
       [I18n.t("cms.options.loop_format.#{v}"), v]
+    end
+  end
+
+  def setting_type_template?
+    !setting_type_snippet?
+  end
+
+  def setting_type_snippet?
+    setting_type == "snippet"
+  end
+
+  def setting_type_options
+    %w(template snippet).map do |v|
+      [I18n.t("cms.options.setting_type.#{v}"), v]
     end
   end
 end

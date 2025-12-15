@@ -553,6 +553,9 @@ ja:
       loop_format:
         shirasagi: SHIRASAGI
         liquid: Liquid
+      setting_type:
+        template: テンプレート
+        snippet: スニペット
       alignment:
         flow: 自動
         left: 左
@@ -2608,6 +2611,10 @@ ja:
         - 検索エンジン用のページ概要の設定に利用します。
         - ループHTML設定を選択するフォーム画面で、この説明が表示されます。
       html_format: *loop_format
+      setting_type:
+        - ループHTML設定の種類を選択します。
+        - "テンプレート: 完全なループ構造を含むテンプレートを、ページリスト全体の表示に使用します。"
+        - "スニペット: 短いコード片を、ループHTMLの編集画面でカーソル位置に挿入するために使用します。"
 
     cms/addon/tabs:
       conditions:

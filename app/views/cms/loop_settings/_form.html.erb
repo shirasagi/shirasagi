@@ -13,4 +13,7 @@
 
   <dt><%= @model.t :html_format %><%= @model.tt :html_format %></dt>
   <dd><%= f.select :html_format, @item.html_format_options %></dd>
+
+  <dt><%= @model.t :setting_type %><%= @model.tt :setting_type %></dt>
+  <dd><%= f.select :setting_type, @item.setting_type_options %></dd>
 </dl>

@@ -50,7 +50,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     let!(:shirasagi_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
     let!(:liquid_setting) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "ループHTML設定") }
     let!(:liquid_setting_snippet) do
-      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "スニペット/テストスニペット")
+      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", setting_type: "snippet", name: "スニペット/テストスニペット")
     end
     let!(:closed_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "closed") }
 
@@ -79,7 +79,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     end
 
     context "with liquid format" do
-      it "returns liquid format settings that do not start with 'スニペット/'" do
+      it "returns liquid format settings that are not snippet type" do
         settings = helper.ancestral_loop_settings("liquid")
         setting_names = settings.map { |name, _id| name }
         expect(setting_names).to include(liquid_setting.name)
@@ -107,13 +107,13 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     let!(:site) { cms_site }
     let!(:shirasagi_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
     let!(:liquid_setting) do
-      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "スニペット/テストスニペット")
+      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", setting_type: "snippet", name: "スニペット/テストスニペット")
     end
     let!(:liquid_setting_non_snippet) do
-      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "ループHTML設定")
+      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", setting_type: "template", name: "ループHTML設定")
     end
     let!(:closed_setting) do
-      create(:cms_loop_setting, site: site, html_format: "liquid", state: "closed", name: "スニペット/クローズドスニペット")
+      create(:cms_loop_setting, site: site, html_format: "liquid", state: "closed", setting_type: "snippet", name: "スニペット/クローズドスニペット")
     end
 
     before do
@@ -121,7 +121,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       @cur_user = user
     end
 
-    it "returns only public liquid format loop settings that start with 'スニペット/'" do
+    it "returns only public liquid format loop settings that are snippet type" do
       settings = helper.ancestral_html_settings_liquid
       expect(settings.count).to eq 1
       expect(settings.first[0]).to eq liquid_setting.name
@@ -141,7 +141,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
       expect(closed_names).not_to include(closed_setting.name)
     end
 
-    it "does not include liquid settings that do not start with 'スニペット/'" do
+    it "does not include non-snippet liquid settings" do
       settings = helper.ancestral_html_settings_liquid
       setting_names = settings.map { |name, _id| name }
       expect(setting_names).not_to include(liquid_setting_non_snippet.name)
@@ -152,6 +152,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         site: site,
         html_format: "liquid",
         state: "public",
+        setting_type: "snippet",
         name: "スニペット/テストスニペット（説明付き）",
         description: "これはスニペットの説明です"
       )
@@ -167,6 +168,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         site: site,
         html_format: "liquid",
         state: "public",
+        setting_type: "snippet",
         name: "スニペット/テストスニペット（説明なし）",
         description: nil
       )
@@ -196,6 +198,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
+          setting_type: "snippet",
           name: "スニペット/Liquid Setting 1"
         )
       end
@@ -205,6 +208,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
+          setting_type: "snippet",
           name: "スニペット/Liquid Setting 2"
         )
       end
@@ -214,11 +218,12 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
+          setting_type: "template",
           name: "Liquid Setting Non Snippet"
         )
       end
 
-      it "returns all public liquid format settings that start with 'スニペット/'" do
+      it "returns all public liquid format settings that are snippet type" do
         settings = helper.ancestral_html_settings_liquid
         expect(settings.count).to eq 2
 
@@ -275,6 +280,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
+          setting_type: "snippet",
           name: "スニペット/Liquid Setting"
         )
       end
@@ -284,6 +290,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
+          setting_type: "template",
           name: "Liquid Setting Non Snippet"
         )
       end
@@ -440,7 +447,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         expect(direct_input).to be_present
         expect(direct_input.text).to include("直接入力")
 
-        # 説明付きオプションを確認（「スニペット/」プレフィックスが削除される）
+        # 説明付きオプションを確認（グループ化される）
         option_with_desc = doc.css('option[value="1"]').first
         expect(option_with_desc).to be_present
         expect(option_with_desc.text).to eq "テストスニペット"
@@ -448,11 +455,11 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         expect(option_with_desc['data-description']).to eq "これは説明です"
 
         # グループ内のオプションを確認
-        optgroup = doc.css('optgroup[label="グループ"]').first
+        optgroup = doc.css('optgroup[label="スニペット"]').first
         expect(optgroup).to be_present
         option_in_group = optgroup.css('option[value="2"]').first
         expect(option_in_group).to be_present
-        expect(option_in_group.text).to eq "子スニペット"
+        expect(option_in_group.text).to eq "グループ/子スニペット"
         expect(option_in_group['data-snippet']).to eq "{{ child }}"
         expect(option_in_group['data-description']).to eq "子スニペットの説明"
       end
