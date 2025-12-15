@@ -45,6 +45,7 @@ module Cms::Addon::List
 
       before_validation :validate_conditions
       before_validation :validate_loop_format
+      before_validation :clear_loop_liquid, if: -> { loop_setting_id.present? }
 
       validates :no_items_display_state, inclusion: { in: %w(show hide), allow_blank: true }
       validates :loop_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
@@ -211,6 +212,10 @@ module Cms::Addon::List
       options = loop_format_options.to_h.invert.with_indifferent_access
       return if options[loop_format]
       self.loop_format = options.keys.first
+    end
+
+    def clear_loop_liquid
+      self.loop_liquid = nil
     end
 
     def interpret_default_location(default_site, &block)

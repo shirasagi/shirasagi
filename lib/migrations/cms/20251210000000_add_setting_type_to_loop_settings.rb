@@ -20,8 +20,6 @@ class SS::Migration20251210000000
         attrs[:setting_type] = "template"
       end
 
-      next if attrs.blank?
-
       loop_setting.set(attrs)
     end
   end

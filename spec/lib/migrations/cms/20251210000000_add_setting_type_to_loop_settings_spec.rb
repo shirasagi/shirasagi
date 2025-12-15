@@ -95,8 +95,6 @@ RSpec.describe SS::Migration20251210000000, dbscope: :example do
         { "$unset" => { "setting_type" => "" } }
       )
       loop_setting_template.reload
-
-      described_class.new.change
     end
 
     it "sets setting_type to 'template'" do

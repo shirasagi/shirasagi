@@ -65,6 +65,22 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
     select option_text, from: 'item_loop_setting_id_liquid'
   end
 
+  def read_code_mirror(locator, **options)
+    options[:visible] = :all
+    element = find(:fillable_field, locator, **options)
+
+    page.evaluate_script(<<~JS, element)
+      (function() {
+        var $textarea = $(arguments[0]);
+        var editor = $textarea.data('editor');
+        if (editor) {
+          return editor.getValue() || '';
+        }
+        return $textarea.val() || '';
+      })();
+    JS
+  end
+
   it "inserts public liquid snippets into loop_liquid while excluding closed snippets" do
     visit edit_node_conf_path(site.id, node)
 
@@ -205,6 +221,9 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
         wait_for_js_ready
 
         # loop_setting_idが設定されている場合、loop_liquidはテンプレート参照の内容で上書きされる
+        loop_liquid_value = read_code_mirror('item[loop_liquid]')
+        expect(loop_liquid_value.to_s.strip).to satisfy { |v| v.blank? || v == template_setting.html.to_s.strip },
+          "Expected loop_liquid editor value to be blank or template html, but got: #{loop_liquid_value.inspect}"
       end
 
       within "form#item-form" do
@@ -216,18 +235,18 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       node_with_template.reload
       # Template reference should be set
       expect(node_with_template.loop_setting_id).to eq template_setting.id
+      expect(node_with_template.loop_liquid).to be_blank
       # loop_setting_idが設定されている場合、loop_liquidは無視され、loop_setting.htmlが使用される
       expect(node_with_template.loop_setting.html).to eq template_setting.html
     end
 
-    it "renders using template reference when loop_setting_id is set" do
+    it "sets correct loop_setting association when loop_setting_id is present" do
       node_with_template.update!(
         loop_format: "liquid",
         loop_setting_id: template_setting.id
       )
 
-      # The rendering should use loop_setting.html, not loop_liquid
-      # This is tested indirectly by checking that the node has the correct loop_setting_id
+      # Verify association is set to template reference when loop_setting_id is provided
       expect(node_with_template.loop_setting).to eq template_setting
       expect(node_with_template.loop_setting.html_format_liquid?).to be true
     end

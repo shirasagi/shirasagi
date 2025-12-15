@@ -155,7 +155,7 @@
         
         // AJAXでループHTML設定のHTMLを取得
         $.ajax({
-          url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
+          url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', encodeURIComponent(loopSettingId)),
           method: 'GET',
           dataType: 'json',
           success: function(data) {
