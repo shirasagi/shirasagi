@@ -6,10 +6,15 @@ class Sys::SitesController < ApplicationController
 
   menu_view "sys/crud/menu"
 
+  before_action :check_permissions
   before_action :set_search_param
   after_action :reload_nginx, only: [:create, :update, :destroy, :destroy_all]
 
   private
+
+  def check_permissions
+    raise "403" unless @cur_user.sys_role_permit_any?(:edit_sys_sites)
+  end
 
   def permit_fields
     super + [:upload_policy]
@@ -32,16 +37,22 @@ class Sys::SitesController < ApplicationController
   public
 
   def index
-    raise "403" unless @model.allowed?(:read, @cur_user)
     @items = @model.allow(:read, @cur_user).
       state(params.dig(:s, :state)).
       search(@s).
       order_by(_id: -1)
   end
 
+  def show
+    render
+  end
+
+  def new
+    @item = @model.new pre_params.merge(fix_params)
+  end
+
   def create
     @item = @model.new get_params
-    raise "403" unless @item.allowed?(:edit, @cur_user)
     result = @item.save
 
     if result
@@ -59,8 +70,20 @@ class Sys::SitesController < ApplicationController
     render_create result
   end
 
+  def edit
+    render
+  end
+
+  def update
+    @item.attributes = get_params
+    render_update @item.update
+  end
+
+  def delete
+    render
+  end
+
   def destroy
-    raise "403" unless @item.allowed?(:delete, @cur_user)
     render_destroy @item.disable
   end
 
