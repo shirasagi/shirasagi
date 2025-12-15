@@ -10,6 +10,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
     create(:cms_loop_setting,
       site: site,
       html_format: "shirasagi",
+      setting_type: "template",
       state: "public",
       order: 10,
       name: "Shirasagi Template")
@@ -19,6 +20,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
     create(:cms_loop_setting,
       site: site,
       html_format: "liquid",
+      setting_type: "snippet",
       state: "public",
       order: 20,
       name: "スニペット/Liquid Snippet High",
@@ -29,6 +31,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
     create(:cms_loop_setting,
       site: site,
       html_format: "liquid",
+      setting_type: "snippet",
       state: "public",
       order: 5,
       name: "スニペット/Liquid Snippet Low",
@@ -39,6 +42,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
     create(:cms_loop_setting,
       site: site,
       html_format: "liquid",
+      setting_type: "snippet",
       state: "closed",
       name: "スニペット/Liquid Snippet Closed")
   end
@@ -138,6 +142,7 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
       create(:cms_loop_setting,
         site: site,
         html_format: "liquid",
+        setting_type: "template",
         state: "public",
         order: 15,
         name: "Template Reference",

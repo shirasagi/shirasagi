@@ -109,6 +109,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
       create(:cms_loop_setting,
         site: site,
         html_format: "liquid",
+        setting_type: "snippet",
         html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         name: "スニペット/Test Liquid Setting #{unique_id}"

@@ -12,6 +12,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     create(:cms_loop_setting,
       site: site,
       html_format: "liquid",
+      setting_type: "snippet",
       state: "public",
       order: 30,
       name: "スニペット/Column Snippet Primary",
@@ -22,6 +23,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     create(:cms_loop_setting,
       site: site,
       html_format: "liquid",
+      setting_type: "snippet",
       state: "public",
       order: 10,
       name: "スニペット/Column Snippet Secondary",
@@ -32,6 +34,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     create(:cms_loop_setting,
       site: site,
       html_format: "liquid",
+      setting_type: "snippet",
       state: "closed",
       name: "スニペット/Column Snippet Closed")
   end
@@ -40,6 +43,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     create(:cms_loop_setting,
       site: site,
       html_format: "liquid",
+      setting_type: "template",
       state: "public",
       order: 15,
       name: "Template Reference",
