@@ -48,10 +48,16 @@ RSpec.describe SS::Migration20251210000000, dbscope: :example do
 
   before do
     # Check that setting_type is actually unset in the database before migration
-    raw_doc_snippet_before = loop_setting_with_snippet_prefix.collection.find({ "_id" => loop_setting_with_snippet_prefix._id }).first
+    raw_doc_snippet_before =
+      loop_setting_with_snippet_prefix.collection
+        .find("_id" => loop_setting_with_snippet_prefix._id)
+        .first
     expect(raw_doc_snippet_before["setting_type"]).to be_nil
 
-    raw_doc_template_before = loop_setting_without_snippet_prefix.collection.find({ "_id" => loop_setting_without_snippet_prefix._id }).first
+    raw_doc_template_before =
+      loop_setting_without_snippet_prefix.collection
+        .find("_id" => loop_setting_without_snippet_prefix._id)
+        .first
     expect(raw_doc_template_before["setting_type"]).to be_nil
 
     # Run migration

@@ -48,9 +48,22 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     let!(:user) { cms_user }
     let!(:site) { cms_site }
     let!(:shirasagi_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
-    let!(:liquid_setting) { create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", name: "ループHTML設定") }
+    let!(:liquid_setting) do
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        state: "public",
+        name: "ループHTML設定"
+      )
+    end
     let!(:liquid_setting_snippet) do
-      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", setting_type: "snippet", name: "スニペット/テストスニペット")
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        state: "public",
+        setting_type: "snippet",
+        name: "スニペット/テストスニペット"
+      )
     end
     let!(:closed_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "closed") }
 
@@ -107,13 +120,31 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     let!(:site) { cms_site }
     let!(:shirasagi_setting) { create(:cms_loop_setting, site: site, html_format: "shirasagi", state: "public") }
     let!(:liquid_setting) do
-      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", setting_type: "snippet", name: "スニペット/テストスニペット")
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        state: "public",
+        setting_type: "snippet",
+        name: "スニペット/テストスニペット"
+      )
     end
     let!(:liquid_setting_non_snippet) do
-      create(:cms_loop_setting, site: site, html_format: "liquid", state: "public", setting_type: "template", name: "ループHTML設定")
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        state: "public",
+        setting_type: "template",
+        name: "ループHTML設定"
+      )
     end
     let!(:closed_setting) do
-      create(:cms_loop_setting, site: site, html_format: "liquid", state: "closed", setting_type: "snippet", name: "スニペット/クローズドスニペット")
+      create(:cms_loop_setting,
+        site: site,
+        html_format: "liquid",
+        state: "closed",
+        setting_type: "snippet",
+        name: "スニペット/クローズドスニペット"
+      )
     end
 
     before do
@@ -436,8 +467,16 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
     context "with description" do
       it "includes data-description attribute in option tags" do
         items = [
-          ["スニペット/テストスニペット", 1, { "data-snippet" => "{{ test }}", "data-description" => "これは説明です" }],
-          ["スニペット/グループ/子スニペット", 2, { "data-snippet" => "{{ child }}", "data-description" => "子スニペットの説明" }]
+          [
+            "スニペット/テストスニペット",
+            1,
+            { "data-snippet" => "{{ test }}", "data-description" => "これは説明です" }
+          ],
+          [
+            "スニペット/グループ/子スニペット",
+            2,
+            { "data-snippet" => "{{ child }}", "data-description" => "子スニペットの説明" }
+          ]
         ]
         html = helper.options_with_optgroup_for_snippets(items)
         doc = Nokogiri::HTML::DocumentFragment.parse(html)
