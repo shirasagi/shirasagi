@@ -164,54 +164,15 @@ save_loop_setting(
 # シンプルなリスト（タイトルとリンクのみ）
 save_loop_setting(
   name: "リスト/シンプルリスト（SHIRASAGI形式）",
-  description: "タイトルとリンクのみのシンプルなリストテンプレート（SHIRASAGI形式）",
+  description: "タイトルとリンクのみのシンプルなリストテンプレート（SHIRASAGI形式）。外側の <ul> は upper_html/lower_html 側で設定してください（または Liquid 版のテンプレートをご利用ください）。",
   html_format: "shirasagi",
   state: "public",
   setting_type: "template",
   order: 70,
   html: <<~'HTML'
-    <ul>
     <li class="item-#{class} #{new} #{current}">
       <a href="#{url}">#{index_name}</a>
     </li>
-    </ul>
-  HTML
-)
-
-# カード形式のリスト
-save_loop_setting(
-  name: "リスト/カード形式リスト（SHIRASAGI形式）",
-  description: "カード形式で表示する記事リストテンプレート（SHIRASAGI形式）",
-  html_format: "shirasagi",
-  state: "public",
-  setting_type: "template",
-  order: 80,
-  html: <<~'HTML'
-    <div class="card-list">
-    <div class="card item-#{class} #{new} #{current}">
-      #{if thumb.src}
-      <div class="card-image">
-        <img src="#{thumb.src}" alt="#{name}">
-      </div>
-      #{elsif img.src}
-      <div class="card-image">
-        <img src="#{img.src}" alt="#{name}">
-      </div>
-      #{end}
-      <div class="card-body">
-        <time datetime="#{date}">#{date.short}</time>
-        <h3 class="card-title">
-          <a href="#{url}">#{index_name}</a>
-        </h3>
-        #{if summary}
-        <p class="card-text">#{summary}</p>
-        #{end}
-        #{if categories}
-        <div class="card-categories">#{categories}</div>
-        #{end}
-      </div>
-    </div>
-    </div>
   HTML
 )
 
@@ -224,32 +185,21 @@ save_loop_setting(
   setting_type: "template",
   order: 90,
   html: <<~'HTML'
-    <table class="list-table">
-      <thead>
-        <tr>
-          <th>日付</th>
-          <th>タイトル</th>
-          <th>カテゴリー</th>
-        </tr>
-      </thead>
-      <tbody>
-      <tr class="item-#{class} #{new} #{current}">
-        <td class="date">
-          <time datetime="#{date}">#{date.short}</time>
-        </td>
-        <td class="title">
-          <a href="#{url}">#{index_name}</a>
-        </td>
-        <td class="categories">
-          #{if categories}
-            #{categories}
-          #{else}
-            -
-          #{end}
-        </td>
-      </tr>
-      </tbody>
-    </table>
+    <tr class="item-#{class} #{new} #{current}">
+      <td class="date">
+        <time datetime="#{date}">#{date.short}</time>
+      </td>
+      <td class="title">
+        <a href="#{url}">#{index_name}</a>
+      </td>
+      <td class="categories">
+        #{if categories}
+          #{categories}
+        #{else}
+          -
+        #{end}
+      </td>
+    </tr>
   HTML
 )
 
@@ -499,51 +449,6 @@ save_loop_setting(
     </li>
     {% endfor %}
     </ul>
-  HTML
-)
-
-# カード形式のリスト
-save_loop_setting(
-  name: "リスト/カード形式リスト",
-  description: "カード形式で表示する記事リストテンプレート",
-  html_format: "liquid",
-  state: "public",
-  setting_type: "template",
-  order: 80,
-  html: <<~HTML
-    <div class="card-list">
-    {% for page in pages %}
-    <div class="card item-{{ page.css_class }} {% if page.new? %}new{% endif %} {% if page.current? %}current{% endif %}">
-      {% assign thumb_src = page.thumb.url %}
-      {% assign img_src = page.html | ss_img_src | expand_path: page.parent.url %}
-      {% if thumb_src %}
-      <div class="card-image">
-        <img src="{{ thumb_src }}" alt="{{ page.name }}">
-      </div>
-      {% elsif img_src %}
-      <div class="card-image">
-        <img src="{{ img_src }}" alt="{{ page.name }}">
-      </div>
-      {% endif %}
-      <div class="card-body">
-        <time datetime="{{ page.date }}">{{ page.date | ss_date: "short" }}</time>
-        <h3 class="card-title">
-          <a href="{{ page.url }}">{{ page.index_name | default: page.name }}</a>
-        </h3>
-        {% if page.summary %}
-        <p class="card-text">{{ page.summary }}</p>
-        {% endif %}
-        {% if page.categories.size > 0 %}
-        <div class="card-categories">
-          {% for category in page.categories %}
-          <span class="badge">{{ category.name }}</span>
-          {% endfor %}
-        </div>
-        {% endif %}
-      </div>
-    </div>
-    {% endfor %}
-    </div>
   HTML
 )
 

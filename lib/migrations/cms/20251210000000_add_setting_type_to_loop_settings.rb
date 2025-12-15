@@ -4,7 +4,7 @@ class SS::Migration20251210000000
   depends_on "20251023000000"
 
   def change
-    Cms::LoopSetting.all.each do |loop_setting|
+    Cms::LoopSetting.all.find_each(batch_size: 1_000) do |loop_setting|
       # DB に実際に保存されている値を取得（デフォルト値が補完された attributes は使わない）
       raw = loop_setting.collection.find({ "_id" => loop_setting.id }).first || {}
       attrs = {}

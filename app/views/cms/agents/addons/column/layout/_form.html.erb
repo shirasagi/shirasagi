@@ -50,19 +50,22 @@
   var $loopSettingSelect = $addon.find('#<%= loop_setting_select_id %>');
   var $layoutTextarea = $addon.find('textarea[name*="[layout]"]');
   var $snippetSelect = $addon.find('.loop-snippet-selector');
+  var lockSelector = '#<%= loop_setting_select_id %>';
+  var lockTarget = '#<%= addon[:id] %> textarea[name*="[layout]"]';
+  var isDev = <%= Rails.env.development? ? "true" : "false" %>;
 
   // ループHTML設定の選択時にテキストエリアをロック/アンロックし、HTMLを読み込む
-  if ($loopSettingSelect.length && $layoutTextarea.length) {
-    Cms_Editor_CodeMirror.lock('#<%= loop_setting_select_id %>', '#<%= addon[:id] %> textarea[name*="[layout]"]');
-    
     // エラーメッセージを取得する関数（HTTPステータスコードに基づいて適切なメッセージを返す）
     var getErrorMessage = function(xhr) {
       if (xhr.status === 404) {
-        return '<%= I18n.t("cms.notices.loop_html_not_found") %>';
+        return <%= I18n.t("cms.notices.loop_html_not_found").to_json.html_safe %>;
       } else if (xhr.status >= 500) {
-        return '<%= I18n.t("cms.notices.loop_html_server_error") %>';
+        return <%= I18n.t("cms.notices.loop_html_server_error").to_json.html_safe %>;
       }
-      return '<%= I18n.t("cms.notices.loop_html_load_error") %>';
+      return <%= I18n.t("cms.notices.loop_html_load_error").to_json.html_safe %>;
+    };
+      }
+      return <%= I18n.t("cms.notices.loop_html_load_error").to_json.html_safe %>;
     };
     
     // エラーメッセージを表示する関数
@@ -78,10 +81,10 @@
       });
       
       // ヘッダー（シラサギの標準キーを使用）
-      var $errorHeader = $('<h2>').text('<%= I18n.t("errors.template.header.one") %>');
+      var $errorHeader = $('<h2>').text(<%= I18n.t("errors.template.header.one").to_json.html_safe %>);
       
       // 本文（シラサギの標準キーを使用）
-      var $errorBody = $('<p>').text('<%= I18n.t("errors.template.body") %>');
+      var $errorBody = $('<p>').text(<%= I18n.t("errors.template.body").to_json.html_safe %>);
       
       // エラーメッセージリスト
       var $errorList = $('<ul>');
@@ -97,7 +100,7 @@
         var $retryButton = $('<button>', {
           type: 'button',
           class: 'btn btn-retry',
-          text: '<%= I18n.t("ss.buttons.reload") %>'
+          text: <%= I18n.t("ss.buttons.reload").to_json.html_safe %>
         }).on('click', function() {
           clearLoopHtmlError();
           retryCallback();
@@ -117,12 +120,45 @@
     // テキストエリアをアンロックする関数
     var unlockTextarea = function() {
       $snippetSelect.prop('disabled', false);
-      var editor = $layoutTextarea.data('editor');
-      if (editor) {
-        editor.setOption('readOnly', false);
-      } else {
-        $layoutTextarea.prop('readonly', false);
+      Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
+    };
+
+    // 機微情報を含み得る xhr 全体はログに出さず、表示してもよい情報だけを要約して返す
+    var sanitizeForConsole = function(value, maxLen) {
+      if (value === undefined || value === null) {
+        return null;
       }
+
+      var s = String(value);
+      s = s.replace(/[\r\n\t]+/g, ' ').replace(/\s\s+/g, ' ').trim();
+      if (maxLen && s.length > maxLen) {
+        s = s.substring(0, maxLen) + '…';
+      }
+      return s;
+    };
+
+    var buildAjaxErrorLog = function(xhr, status, error) {
+      var httpStatus = xhr && typeof xhr.status !== 'undefined' ? xhr.status : null;
+      var statusText = xhr && xhr.statusText ? xhr.statusText : null;
+      var messageParts = [];
+      if (status) { messageParts.push(status); }
+      if (error) { messageParts.push(error); }
+      if (statusText) { messageParts.push(statusText); }
+
+      var log = {
+        status: httpStatus,
+        message: sanitizeForConsole(messageParts.filter(Boolean).join(' / '), 200)
+      };
+
+      // 開発時のみ、レスポンス本文の短い抜粋を出す（本番では内部情報を出さない）
+      if (isDev) {
+        var responseSnippet = sanitizeForConsole(xhr && xhr.responseText, 300);
+        if (responseSnippet) {
+          log.responseSnippet = responseSnippet;
+        }
+      }
+
+      return log;
     };
     
     var updateLoopHtml = function() {
@@ -137,7 +173,7 @@
         
         // AJAXでループHTML設定のHTMLを取得
         $.ajax({
-          url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
+          url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', encodeURIComponent(loopSettingId)),
           method: 'GET',
           dataType: 'json',
           success: function(data) {
@@ -153,7 +189,12 @@
             }
           },
           error: function(xhr, status, error) {
-            console.error('Loop setting fetch error:', xhr, status, error);
+            var log = buildAjaxErrorLog(xhr, status, error);
+            if (isDev) {
+              console.error('Loop setting fetch error:', log);
+            } else {
+              console.error('Loop setting fetch error:', { status: log.status, message: log.message });
+            }
             
             // エラー時にテキストエリアをアンロック
             unlockTextarea();

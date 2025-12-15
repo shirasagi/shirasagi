@@ -8,6 +8,12 @@ class Cms::LoopSettingsController < ApplicationController
 
   private
 
+  def search_params
+    params.require(:s).permit(:html_format, :setting_type, :keyword)
+  rescue ActionController::ParameterMissing
+    ActionController::Parameters.new
+  end
+
   def set_crumbs
     @crumbs << [t('mongoid.models.cms/loop_setting'), action: :index]
   end
@@ -19,8 +25,10 @@ class Cms::LoopSettingsController < ApplicationController
   public
 
   def index
+    @s = OpenStruct.new(search_params.to_h)
+    s = @s.to_h
     @items = @model.site(@cur_site).
-      search(params[:s]).
+      search(s).
       page(params[:page]).per(50)
   end
 end

@@ -220,10 +220,10 @@ describe "cms node liquid snippets", type: :feature, dbscope: :example, js: true
         select_template_reference(template_setting.name) # ループHTML（テンプレート参照）のドロップダウンを使用
         wait_for_js_ready
 
-        # loop_setting_idが設定されている場合、loop_liquidはテンプレート参照の内容で上書きされる
+        # UI上はテンプレートHTMLが表示されることがあるが、loop_setting_id を使う場合は loop_liquid は保存/有効値としては空（無視）になる
         loop_liquid_value = read_code_mirror('item[loop_liquid]')
-        expect(loop_liquid_value.to_s.strip).to satisfy { |v| v.blank? || v == template_setting.html.to_s.strip },
-          "Expected loop_liquid editor value to be blank or template html, but got: #{loop_liquid_value.inspect}"
+        expect(loop_liquid_value).to be_blank,
+          "Expected loop_liquid editor value to be blank when loop_setting_id is used, but got: #{loop_liquid_value.inspect}"
       end
 
       within "form#item-form" do

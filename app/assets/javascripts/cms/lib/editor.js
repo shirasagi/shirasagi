@@ -47,6 +47,20 @@ this.Cms_Editor_CodeMirror = (function () {
     //Render codeMirror
   }
 
+  Cms_Editor_CodeMirror.findEditor = function (target) {
+    var $target, cm, codeMirrorElement;
+    $target = $(target);
+    cm = $target.data("editor");
+    if (cm) {
+      return cm;
+    }
+    codeMirrorElement = $target.next('.CodeMirror')[0];
+    if (codeMirrorElement && codeMirrorElement.CodeMirror) {
+      return codeMirrorElement.CodeMirror;
+    }
+    return null;
+  };
+
   Cms_Editor_CodeMirror.render = function (selector, opts) {
     if (opts == null) {
       opts = {};
@@ -75,14 +89,38 @@ this.Cms_Editor_CodeMirror = (function () {
   };
 
   Cms_Editor_CodeMirror.setOption = function (selector, target) {
-    var cm;
-    cm = $(target).next('.CodeMirror')[0].CodeMirror;
+    var $target, cm;
+    cm = Cms_Editor_CodeMirror.findEditor(target);
     if ($(selector).val() === '') {
+      if (cm) {
+        cm.setOption('mode', 'text/html');
+        return cm.setOption('readOnly', false);
+      } else {
+        $target = $(target);
+        return $target.prop('readonly', false);
+      }
+    } else {
+      if (cm) {
+        cm.setOption('mode', 'text/plain');
+        return cm.setOption('readOnly', true);
+      } else {
+        $target = $(target);
+        return $target.prop('readonly', true);
+      }
+    }
+  };
+
+  // lock(...) の対になる API。selector の値に関わらず、編集可能な状態へ戻す。
+  // lock 時に変更している状態（mode / readOnly）をこのメソッドに集約し、呼び出し側での手動操作を避ける。
+  Cms_Editor_CodeMirror.unlock = function (_selector, target) {
+    var $target, cm;
+    cm = Cms_Editor_CodeMirror.findEditor(target);
+    if (cm) {
       cm.setOption('mode', 'text/html');
       return cm.setOption('readOnly', false);
     } else {
-      cm.setOption('mode', 'text/plain');
-      return cm.setOption('readOnly', true);
+      $target = $(target);
+      return $target.prop('readonly', false);
     }
   };
 

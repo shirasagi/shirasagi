@@ -19,7 +19,7 @@ class Cms::Apis::LoopSettingsController < ApplicationController
     unless @item.state == "public" || @item.state.blank?
       raise SS::ForbiddenError
     end
-  rescue Mongoid::Errors::DocumentNotFound
+  rescue Mongoid::Errors::DocumentNotFound, BSON::Error::InvalidObjectId
     raise SS::NotFoundError
   end
 end

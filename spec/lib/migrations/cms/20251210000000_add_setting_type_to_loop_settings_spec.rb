@@ -100,6 +100,8 @@ RSpec.describe SS::Migration20251210000000, dbscope: :example do
         { "_id" => loop_setting_template._id },
         { "$unset" => { "setting_type" => "" } }
       )
+      # unset のあとに再度 migration を実行して setting_type を補完する
+      described_class.new.change
       loop_setting_template.reload
     end
 

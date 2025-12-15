@@ -59,6 +59,8 @@
   var $loopSettingSelect = $addon.find('#<%= loop_setting_select_id %>');
   var $htmlTextarea = $addon.find('textarea[name*="[html]"]');
   var $snippetSelect = $addon.find('.loop-snippet-selector');
+  var lockSelector = '#<%= loop_setting_select_id %>';
+  var lockTarget = '#<%= addon[:id] %> textarea[name*="[html]"]';
   
   // ループHTML設定の選択時にテキストエリアをロック/アンロックし、HTMLを読み込む
   if ($loopSettingSelect.length && $htmlTextarea.length) {
@@ -66,7 +68,7 @@
     var initLock = function() {
       var $codeMirror = $htmlTextarea.next('.CodeMirror');
       if ($codeMirror.length && $codeMirror[0].CodeMirror) {
-        Cms_Editor_CodeMirror.lock('#<%= loop_setting_select_id %>', '#<%= addon[:id] %> textarea[name*="[html]"]');
+        Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
       } else {
         setTimeout(initLock, 100);
       }
@@ -135,12 +137,7 @@
     // テキストエリアをアンロックする関数
     var unlockTextarea = function() {
       $snippetSelect.prop('disabled', false);
-      var editor = $htmlTextarea.data('editor');
-      if (editor) {
-        editor.setOption('readOnly', false);
-      } else {
-        $htmlTextarea.prop('readonly', false);
-      }
+      Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
     };
     
     var updateLoopHtml = function() {
