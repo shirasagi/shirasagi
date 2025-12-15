@@ -118,7 +118,7 @@ class Service::Account
   def sites
     return @sites if @sites
     org_ids = organizations.map { |m| m.root.id }.uniq
-    SS::Site.any_in(group_ids: org_ids)
+    Cms::Site.any_in(group_ids: org_ids)
   end
 
   private

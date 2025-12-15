@@ -4,10 +4,10 @@ class SS::Migration20161226000000
   depends_on "20160225000000"
 
   def change
-    SS::Site.remove_indexes
-    SS::Site.each do |site|
+    Cms::Site.remove_indexes
+    Cms::Site.each do |site|
       site.without_record_timestamps { site.save! }
     end
-    SS::Site.create_indexes
+    Cms::Site.create_indexes
   end
 end

@@ -22,7 +22,7 @@ module Gws::Model::File
     field :size, type: Integer
     field :content_type, type: String
 
-    belongs_to :site, class_name: "SS::Site"
+    belongs_to :site, class_name: "Cms::Site"
 
     attr_accessor :in_data_url
 

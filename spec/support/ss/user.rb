@@ -11,7 +11,7 @@ def ss_group
 end
 
 def ss_site
-  ss_site = SS::Site.where(host: build(:ss_site).host).first
+  ss_site = Cms::Site.where(host: build(:ss_site).host).first
   ss_site ||= create(:ss_site, group_ids: [ss_group.id])
   ss_site
 end

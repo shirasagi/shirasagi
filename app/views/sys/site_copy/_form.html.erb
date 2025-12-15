@@ -12,7 +12,7 @@
   <dd><%= f.text_field :target_host_subdir %></dd>
 
   <dt><%= @model.t :target_host_parent_id %><%= @model.tt :target_host_parent_id %></dt>
-  <dd><%= f.select :target_host_parent_id, options_from_collection_for_select(SS::Site.all, :id, :name), include_blank: true %></dd>
+  <dd><%= f.select :target_host_parent_id, options_from_collection_for_select(Cms::Site.all, :id, :name), include_blank: true %></dd>
 
   <dt><%= @model.t :source_site_id %><%= @model.tt :source_site_id %></dt>
   <dd>

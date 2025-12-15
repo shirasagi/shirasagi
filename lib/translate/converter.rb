@@ -30,7 +30,7 @@ class Translate::Converter
     doc = Nokogiri.parse(html)
 
     # sub sites
-    site_urls = SS::Site.all.select { |site| @site.full_root_url == site.full_root_url }.map(&:url)
+    site_urls = Cms::Site.all.select { |site| @site.full_root_url == site.full_root_url }.map(&:url)
     site_urls = site_urls.sort_by { |url| url.count("/") }.reverse
 
     # links

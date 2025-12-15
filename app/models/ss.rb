@@ -177,7 +177,7 @@ module SS
   def cms_sites(cur_user)
     return SS::EMPTY_ARRAY if SS.config.cms.disable
 
-    SS::Site.without_deleted.select do |site|
+    Cms::Site.without_deleted.select do |site|
       cur_user.groups.active.in(name: site.groups.active.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ } ).present?
     end
   end
