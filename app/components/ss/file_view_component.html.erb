@@ -54,7 +54,9 @@
       <%= attach_action %>
       <% if file.image? %>
         <%= image_paste_action %>
-        <%= thumb_paste_action %>
+        <% if show_attach_thumb %>
+          <%= thumb_paste_action %>
+        <% end %>
       <% end %>
     <% end %>
     <% if show_delete %>

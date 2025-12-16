@@ -22,8 +22,9 @@ describe Chorg::MainRunner, dbscope: :example do
     context 'with default delete_method (disable_if_possible)' do
       it do
         # execute
-        job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.delete")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -73,8 +74,9 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.delete")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1

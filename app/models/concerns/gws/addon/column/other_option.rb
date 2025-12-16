@@ -8,7 +8,6 @@ module Gws::Addon::Column::OtherOption
     field :other_state, type: String, default: 'disabled'
     field :other_required, type: String, default: 'optional'
     permit_params :other_state, :other_required
-    permit_params branch_section_ids: []
   end
 
   def other_state_options

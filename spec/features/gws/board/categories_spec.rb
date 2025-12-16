@@ -74,8 +74,7 @@ describe "gws_board_categories", type: :feature, dbscope: :example, js: true do
       click_button I18n.t('ss.buttons.delete')
       wait_for_notice I18n.t("ss.notice.deleted")
 
-      category = Gws::Board::Category.site(site).where(name: name).first
-      expect(category).to be_nil
+      expect { category.reload }.to raise_error Mongoid::Errors::DocumentNotFound
 
       expect(page).to have_no_css("div.info")
     end

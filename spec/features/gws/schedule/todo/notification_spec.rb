@@ -231,7 +231,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       expect(Gws::Schedule::Todo.without_deleted.count).to eq 0
       expect(Gws::Schedule::Todo.only_deleted.count).to eq 1
       todo.reload
-      expect(todo.deleted).to be_present
+      expect(todo.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
       expect(SS::Notification.count).to eq 8
       SS::Notification.order_by(created: -1).first.tap do |message|
@@ -357,7 +357,7 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       wait_for_notice I18n.t('ss.notice.deleted')
 
       todo.reload
-      expect(todo.deleted).to be_present
+      expect(todo.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
       expect(SS::Notification.count).to eq 4
       SS::Notification.order_by(created: -1).first.tap do |message|

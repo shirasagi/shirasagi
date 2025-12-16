@@ -7,20 +7,45 @@ describe Gws::Elasticsearch::Indexer::ShareFileJob, dbscope: :example, es: true 
   let(:content) { tmpfile { |file| file.write('0123456789') } }
   let(:up) { Fs::UploadedFile.create_from_file(content, basename: 'spec', content_type: 'application/octet-stream') }
 
-  before do
-    # enable elastic search
-    site.menu_elasticsearch_state = 'show'
-    site.save!
+  describe '#convert_to_doc' do
+    let!(:file) { create(:gws_share_file, cur_site: site, cur_user: user, in_file: up) }
 
-    # gws:es:ingest:init
-    Gws::Elasticsearch.init_ingest(site: site)
-    # gws:es:drop
-    Gws::Elasticsearch.drop_index(site: site) rescue nil
-    # gws:es:create_indexes
-    Gws::Elasticsearch.create_index(site: site)
+    it do
+      job = described_class.new
+      job.site_id = site.id
+      job.user_id = user.id
+      job.instance_variable_set(:@id, file.id.to_s)
+      id, doc = job.send(:convert_to_doc)
+      unhandled_keys = [] if Rails.env.test?
+      Gws::Elasticsearch.mappings_keys.each do |key|
+        unless doc.key?(key.to_sym)
+          unhandled_keys << key
+        end
+      end
+
+      omittable_fields = %i[
+        id mode text groups group_names release_date close_date released
+        member_ids member_group_ids member_custom_group_ids text_index data file site_id attachment
+      ]
+      unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
+      expect(unhandled_keys).to be_blank
+    end
   end
 
   describe '.callback' do
+    before do
+      # enable elastic search
+      site.menu_elasticsearch_state = 'show'
+      site.save!
+
+      # gws:es:ingest:init
+      Gws::Elasticsearch.init_ingest(site: site)
+      # gws:es:drop
+      Gws::Elasticsearch.drop_index(site: site) rescue nil
+      # gws:es:create_indexes
+      Gws::Elasticsearch.create_index(site: site)
+    end
+
     context 'when model was created' do
       it do
         file = nil

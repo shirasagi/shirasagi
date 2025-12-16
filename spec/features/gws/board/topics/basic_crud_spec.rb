@@ -154,7 +154,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
           item.reload
           expect(item.notification_noticed_at).to be_present
-          expect(item.deleted).to be_present
+          expect(item.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
           expect(SS::Notification.all.count).to eq 1
           notice = SS::Notification.first
@@ -283,7 +283,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
           item.reload
           expect(item.notification_noticed_at).to be_present
-          expect(item.deleted).to be_present
+          expect(item.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
           expect(SS::Notification.all.count).to eq 1
           notice = SS::Notification.first

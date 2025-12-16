@@ -7,20 +7,90 @@ describe Gws::Elasticsearch::Indexer::BoardTopicJob, dbscope: :example, es: true
   let(:file) { tmp_ss_file(user: user, contents: File.binread(file_path), binary: true, content_type: 'image/png') }
   let(:category) { create(:gws_board_category, cur_site: site) }
 
-  before do
-    # enable elastic search
-    site.menu_elasticsearch_state = 'show'
-    site.save!
+  describe '.convert_to_doc' do
+    let!(:topic) do
+      create(
+        :gws_board_topic, cur_site: site, cur_user: user, category_ids: [category.id], file_ids: [file.id],
+        contributor_model: "Gws::User", contributor_id: user.id, contributor_name: user.name
+      )
+    end
 
-    # gws:es:ingest:init
-    Gws::Elasticsearch.init_ingest(site: site)
-    # gws:es:drop
-    Gws::Elasticsearch.drop_index(site: site) rescue nil
-    # gws:es:create_indexes
-    Gws::Elasticsearch.create_index(site: site)
+    it do
+      id, doc = described_class.convert_to_doc(site, topic, topic)
+      unhandled_keys = [] if Rails.env.test?
+      Gws::Elasticsearch.mappings_keys.each do |key|
+        unless doc.key?(key.to_sym)
+          unhandled_keys << key
+        end
+      end
+
+      expect(id).to eq "gws_board_posts-post-#{topic.id}"
+      expect(doc[:collection_name]).to eq topic.collection_name.to_sym
+      expect(doc[:url]).to eq "/.g#{site.id}/board/-/-/topics/#{topic.id}#post-#{topic.id}"
+      expect(doc[:name]).to eq topic.name
+      expect(doc[:text]).to eq topic.text
+      expect(doc[:categories]).to eq [ category.name ]
+      expect(doc[:user_name]).to eq user.name
+      expect(doc[:mode]).to eq topic.mode
+      expect(doc[:release_date]).to be_blank
+      expect(doc[:close_date]).to be_blank
+      expect(doc[:released]).to eq topic.released.iso8601
+      expect(doc[:state]).to eq topic.state
+      expect(doc[:member_ids]).to eq topic.member_ids
+      expect(doc[:member_group_ids]).to eq topic.member_group_ids
+      expect(doc[:member_custom_group_ids]).to eq topic.member_custom_group_ids
+      expect(doc[:readable_group_ids]).to eq topic.readable_group_ids
+      expect(doc[:readable_custom_group_ids]).to eq topic.readable_custom_group_ids
+      expect(doc[:readable_member_ids]).to eq topic.readable_member_ids
+      expect(doc[:group_ids]).to eq topic.group_ids
+      expect(doc[:user_ids]).to eq topic.group_ids
+      expect(doc[:custom_group_ids]).to eq topic.custom_group_ids
+      expect(doc[:updated]).to eq topic.updated.iso8601
+      expect(doc[:created]).to eq topic.created.iso8601
+
+      omittable_fields = %i[id groups group_names text_index data file site_id attachment]
+      unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
+      expect(unhandled_keys).to be_blank
+    end
+  end
+
+  describe '.convert_file_to_doc' do
+    let!(:topic) do
+      create(
+        :gws_board_topic, cur_site: site, cur_user: user, category_ids: [category.id], file_ids: [file.id],
+        contributor_model: "Gws::User", contributor_id: user.id, contributor_name: user.name
+      )
+    end
+
+    it do
+      id, doc = described_class.convert_file_to_doc(site, topic, topic, topic.files.first)
+      unhandled_keys = [] if Rails.env.test?
+      Gws::Elasticsearch.mappings_keys.each do |key|
+        unless doc.key?(key.to_sym)
+          unhandled_keys << key
+        end
+      end
+
+      omittable_fields = %i[id mode text user_name groups group_names member_group_ids text_index site_id attachment]
+      unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
+      expect(unhandled_keys).to be_blank
+    end
   end
 
   describe '.callback' do
+    before do
+      # enable elastic search
+      site.menu_elasticsearch_state = 'show'
+      site.save!
+
+      # gws:es:ingest:init
+      Gws::Elasticsearch.init_ingest(site: site)
+      # gws:es:drop
+      Gws::Elasticsearch.drop_index(site: site) rescue nil
+      # gws:es:create_indexes
+      Gws::Elasticsearch.create_index(site: site)
+    end
+
     context 'when model was created' do
       it do
         topic = nil

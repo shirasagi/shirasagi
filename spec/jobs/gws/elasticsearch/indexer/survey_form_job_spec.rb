@@ -4,20 +4,83 @@ describe Gws::Elasticsearch::Indexer::SurveyFormJob, dbscope: :example, es: true
   let(:site) { create(:gws_group) }
   let(:user) { gws_user }
 
-  before do
-    # enable elastic search
-    site.menu_elasticsearch_state = 'show'
-    site.save!
+  describe '#convert_to_doc' do
+    let!(:cate) { create :gws_survey_category, cur_site: site }
+    let!(:contributor) { create :gws_user, group_ids: user.group_ids }
+    let!(:form) do
+      create(
+        :gws_survey_form, cur_site: site, cur_user: user, category_ids: [ cate.id ],
+        contributor_model: contributor.class.name, contributor_id: contributor.id,
+        contributor_name: contributor.name
+      )
+    end
+    let(:choice) { "choice-#{unique_id}" }
+    let!(:column) do
+      create(
+        :gws_column_select, cur_site: site, form: form, required: "optional", select_options: [ choice ]
+      )
+    end
 
-    # gws:es:ingest:init
-    Gws::Elasticsearch.init_ingest(site: site)
-    # gws:es:drop
-    Gws::Elasticsearch.drop_index(site: site) rescue nil
-    # gws:es:create_indexes
-    Gws::Elasticsearch.create_index(site: site)
+    it do
+      job = described_class.new
+      job.site_id = site.id
+      job.user_id = user.id
+      job.instance_variable_set(:@id, form.id.to_s)
+      id, doc = job.send(:convert_to_doc)
+      unhandled_keys = [] if Rails.env.test?
+      Gws::Elasticsearch.mappings_keys.each do |key|
+        unless doc.key?(key.to_sym)
+          unhandled_keys << key
+        end
+      end
+
+      expect(id).to eq "gws_survey_forms-survey-#{form.id}"
+      expect(doc[:collection_name]).to eq form.collection_name
+      expect(doc[:url]).to eq "/.g#{site.id}/survey/-/-/editables/#{form.id}"
+
+      # 英語テキストは英語用フィールドへ、日本語テキストは日本語フィールドへ。
+      # そうすることで、無駄なインデクシングを減らし、Elasticsearch のインデクシングサイズを最適に保ち、かつ、
+      # 検索時のトークンの照合回数を減らすことで検索性能の向上・維持に務める。
+      expect(doc[:name]).to eq form.name
+      expect(doc[:text]).to include form.description
+      expect(doc[:text]).to include(include(column.name))
+      expect(doc[:text]).to include(include(choice))
+      expect(doc[:categories]).to eq [ cate.name ]
+      expect(doc[:user_name]).to eq user.long_name
+
+      expect(doc[:state]).to eq form.state
+      expect(doc[:readable_group_ids]).to eq form.readable_group_ids
+      expect(doc[:readable_custom_group_ids]).to eq form.readable_custom_group_ids
+      expect(doc[:readable_member_ids]).to eq form.readable_member_ids
+      expect(doc[:group_ids]).to eq form.group_ids
+      expect(doc[:user_ids]).to eq form.group_ids
+      expect(doc[:custom_group_ids]).to eq form.custom_group_ids
+      expect(doc[:updated]).to eq form.updated.iso8601
+      expect(doc[:created]).to eq form.created.iso8601
+
+      omittable_fields = %i[
+        id mode groups group_names released member_ids member_group_ids member_custom_group_ids
+        text_index data file site_id attachment
+      ]
+      unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
+      expect(unhandled_keys).to be_blank
+    end
   end
 
   describe '.callback' do
+    before do
+      # enable elastic search
+      site.menu_elasticsearch_state = 'show'
+      site.save!
+
+      # gws:es:ingest:init
+      Gws::Elasticsearch.init_ingest(site: site)
+      # gws:es:drop
+      Gws::Elasticsearch.drop_index(site: site) rescue nil
+      # gws:es:create_indexes
+      Gws::Elasticsearch.create_index(site: site)
+    end
+
     context 'when model was created' do
       it do
         form = nil
