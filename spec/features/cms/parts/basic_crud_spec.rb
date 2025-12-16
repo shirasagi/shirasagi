@@ -15,30 +15,27 @@ describe "cms_parts", type: :feature, js: true do
     it "#index" do
       visit index_path
       expect(current_path).not_to eq sns_login_path
-    end
 
-    it "#new" do
+      # it "#new" do
       visit new_path
       within "form#item-form" do
         fill_in "item[name]", with: "sample"
         fill_in "item[basename]", with: "sample"
         click_button I18n.t('ss.buttons.save')
       end
+      # 正常に新規作成できたことを確認
       wait_for_notice I18n.t("ss.notice.saved")
+      expect(page).to have_content("sample")
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
-      # 正常に新規作成できたことを確認
-      expect(page).to have_content("sample")
-    end
 
-    it "#show" do
+      # it "#show" do
       visit show_path
       expect(current_path).not_to eq sns_login_path
       # 詳細画面にパーツ名が表示されていることを確認
       expect(page).to have_content(item.name)
-    end
 
-    it "#edit" do
+      # it "#edit" do
       visit edit_path
       within "form#item-form" do
         fill_in "item[name]", with: "modify"
@@ -47,9 +44,8 @@ describe "cms_parts", type: :feature, js: true do
       wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
-    end
 
-    it "#delete" do
+      # it "#delete" do
       visit delete_path
       within "form" do
         click_button I18n.t('ss.buttons.delete')

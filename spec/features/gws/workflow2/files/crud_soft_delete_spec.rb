@@ -50,7 +50,7 @@ describe "gws_workflow2_files", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.deleted')
       expect(Gws::Workflow2::File.site(site).count).to eq 1
       Gws::Workflow2::File.site(site).first.tap do |workflow|
-        expect(workflow.deleted).not_to be_nil
+        expect(workflow.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
       end
     end
   end

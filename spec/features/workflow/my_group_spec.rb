@@ -124,11 +124,10 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        expect(item.workflow_approvers).to \
-          include({
-            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
-            created: be_within(30.seconds).of(Time.zone.now)
-          })
+        expect(item.workflow_approvers).to include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve',
+          comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)}
+        )
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
         expect(item.backups.count).to eq 3
         item.backups.first.tap do |backup|
@@ -172,16 +171,14 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "approve"
         expect(item.state).to eq "public"
-        expect(item.workflow_approvers).to \
-          include({
-            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
-            created: be_within(30.seconds).of(Time.zone.now)
-          })
-        expect(item.workflow_approvers).to \
-          include({
-            level: 1, user_id: user2.id, editable: '', state: 'approve', comment: approve_comment2, file_ids: nil,
-            created: be_within(30.seconds).of(Time.zone.now)
-          })
+        expect(item.workflow_approvers).to include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve',
+          comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
+        })
+        expect(item.workflow_approvers).to include({
+          level: 1, user_id: user2.id, editable: '', state: 'approve',
+          comment: approve_comment2, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
+        })
         # backup is created because page is in public
         expect(item.backups.count).to eq 4
         item.backups.first.tap do |backup|
@@ -312,11 +309,10 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "remand"
         expect(item.state).to eq "closed"
-        expect(item.workflow_approvers).to \
-          include({
-            level: 1, user_id: user1.id, editable: '', state: 'remand', comment: remand_comment1,
-            created: be_within(30.seconds).of(Time.zone.now)
-          })
+        expect(item.workflow_approvers).to include({
+          level: 1, user_id: user1.id, editable: '', state: 'remand',
+          comment: remand_comment1, created: be_within(30.seconds).of(Time.zone.now)
+        })
         expect(item.workflow_approvers).to \
           include({level: 1, user_id: user2.id, editable: '', state: 'other_remanded', comment: ''})
         expect(item.backups.count).to eq 3
@@ -435,11 +431,10 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "request"
         expect(item.state).to eq "closed"
-        expect(item.workflow_approvers).to \
-          include({
-            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
-            created: be_within(30.seconds).of(Time.zone.now)
-          })
+        expect(item.workflow_approvers).to include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve',
+          comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
+        })
         expect(item.workflow_approvers).to include({level: 1, user_id: user2.id, editable: '', state: 'request', comment: ''})
         expect(item.backups.count).to eq 3
         item.backups.first.tap do |backup|
@@ -483,16 +478,14 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
         item.reload
         expect(item.workflow_state).to eq "remand"
         expect(item.state).to eq "closed"
-        expect(item.workflow_approvers).to \
-          include({
-            level: 1, user_id: user1.id, editable: '', state: 'approve', comment: approve_comment1, file_ids: nil,
-            created: be_within(30.seconds).of(Time.zone.now)
-          })
-        expect(item.workflow_approvers).to \
-          include({
-            level: 1, user_id: user2.id, editable: '', state: 'remand', comment: remand_comment2,
-            created: be_within(30.seconds).of(Time.zone.now)
-          })
+        expect(item.workflow_approvers).to include({
+          level: 1, user_id: user1.id, editable: '', state: 'approve',
+          comment: approve_comment1, file_ids: nil, created: be_within(30.seconds).of(Time.zone.now)
+        })
+        expect(item.workflow_approvers).to include({
+          level: 1, user_id: user2.id, editable: '', state: 'remand',
+          comment: remand_comment2, created: be_within(30.seconds).of(Time.zone.now)
+        })
         expect(item.backups.count).to eq 4
         item.backups.first.tap do |backup|
           expect(backup.user_id).to eq user2.id

@@ -146,6 +146,26 @@ FactoryBot.define do
     end
   end
 
+  trait :gws_role_circular_post_user do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_circular
+        read_private_gws_circular_posts
+      )
+    end
+  end
+
+  trait :gws_role_circular_post_editor do
+    after(:build) do |item|
+      item.permissions += %w(
+        use_gws_circular
+        read_private_gws_circular_posts
+        edit_private_gws_circular_posts
+        delete_private_gws_circular_posts
+      )
+    end
+  end
+
   factory :gws_role, class: Gws::Role, traits: [:gws_role]
 
   factory :gws_role_admin, class: Gws::Role, traits: [:gws_role, :gws_role_admin]
