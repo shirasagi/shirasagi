@@ -114,8 +114,9 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site.id, task_id: task.id, user_id: user.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task, user_id: user)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.division")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -366,8 +367,9 @@ describe Chorg::MainRunner, dbscope: :example do
 
       it do
         # execute
-        job = described_class.bind(site_id: site.id, task_id: task.id, user_id: user.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task, user_id: user)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.division")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1

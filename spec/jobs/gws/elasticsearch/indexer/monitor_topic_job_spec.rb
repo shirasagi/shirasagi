@@ -7,20 +7,74 @@ describe Gws::Elasticsearch::Indexer::MonitorTopicJob, dbscope: :example, es: tr
   let(:file) { tmp_ss_file(user: user, contents: File.binread(file_path), binary: true, content_type: 'image/png') }
   let(:category) { create(:gws_monitor_category, cur_site: site) }
 
-  before do
-    # enable elastic search
-    site.menu_elasticsearch_state = 'show'
-    site.save!
+  describe '.convert_to_doc' do
+    let!(:contributor) { create :gws_user, group_ids: user.group_ids }
+    let!(:topic) do
+      create(
+        :gws_monitor_topic, cur_site: site, cur_user: user, attend_group_ids: user.group_ids,
+        category_ids: [category.id], file_ids: [file.id], contributor_model: contributor.class.name,
+        contributor_id: contributor.id, contributor_name: contributor.name
+      )
+    end
 
-    # gws:es:ingest:init
-    Gws::Elasticsearch.init_ingest(site: site)
-    # gws:es:drop
-    Gws::Elasticsearch.drop_index(site: site) rescue nil
-    # gws:es:create_indexes
-    Gws::Elasticsearch.create_index(site: site)
+    it do
+      id, doc = described_class.convert_to_doc(site, topic, topic)
+      unhandled_keys = [] if Rails.env.test?
+      Gws::Elasticsearch.mappings_keys.each do |key|
+        unless doc.key?(key.to_sym)
+          unhandled_keys << key
+        end
+      end
+
+      omittable_fields = %i[
+        id groups group_names member_ids member_group_ids member_custom_group_ids
+        readable_member_ids readable_custom_group_ids text_index data file site_id attachment]
+      unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
+      expect(unhandled_keys).to be_blank
+    end
+  end
+
+  describe '.convert_file_to_doc' do
+    let!(:contributor) { create :gws_user, group_ids: user.group_ids }
+    let!(:topic) do
+      create(
+        :gws_monitor_topic, cur_site: site, cur_user: user, attend_group_ids: user.group_ids,
+        category_ids: [category.id], file_ids: [file.id], contributor_model: contributor.class.name,
+        contributor_id: contributor.id, contributor_name: contributor.name
+      )
+    end
+
+    it do
+      id, doc = described_class.convert_file_to_doc(site, topic, topic, topic.files.first)
+      unhandled_keys = [] if Rails.env.test?
+      Gws::Elasticsearch.mappings_keys.each do |key|
+        unless doc.key?(key.to_sym)
+          unhandled_keys << key
+        end
+      end
+
+      omittable_fields = %i[
+        id mode user_name groups group_names text member_ids member_group_ids member_custom_group_ids
+        readable_member_ids readable_custom_group_ids text_index site_id attachment]
+      unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
+      expect(unhandled_keys).to be_blank
+    end
   end
 
   describe '.callback' do
+    before do
+      # enable elastic search
+      site.menu_elasticsearch_state = 'show'
+      site.save!
+
+      # gws:es:ingest:init
+      Gws::Elasticsearch.init_ingest(site: site)
+      # gws:es:drop
+      Gws::Elasticsearch.drop_index(site: site) rescue nil
+      # gws:es:create_indexes
+      Gws::Elasticsearch.create_index(site: site)
+    end
+
     context 'when model was created' do
       it do
         topic = nil

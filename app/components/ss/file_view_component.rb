@@ -6,7 +6,7 @@ class SS::FileViewComponent < ApplicationComponent
   include ApplicationHelper
 
   attr_accessor :cur_site, :cur_user, :cur_node, :file, :item
-  attr_writer :page, :name, :show_properties, :show_attach, :show_delete, :show_copy_url, :show_opendata
+  attr_writer :page, :name, :show_properties, :show_attach, :show_attach_thumb, :show_delete, :show_copy_url, :show_opendata
 
   renders_one :attach_action
   renders_one :image_paste_action
@@ -65,6 +65,11 @@ class SS::FileViewComponent < ApplicationComponent
     true
   end
 
+  def show_attach_thumb
+    return @show_attach_thumb if instance_variable_defined?(:@show_attach_thumb)
+    show_attach
+  end
+
   def show_delete
     return @show_delete if instance_variable_defined?(:@show_delete)
     true
@@ -81,23 +86,23 @@ class SS::FileViewComponent < ApplicationComponent
   end
 
   def default_attach_action
-    link_to t("sns.file_attach"), "#file-#{file.id}", class: "action-attach"
+    button_tag t("sns.file_attach"), type: :button, name: 'file_attach', class: "btn action-attach"
   end
 
   def default_image_paste_action
-    link_to t("sns.image_paste"), "#file-#{file.id}", class: "action-paste"
+    button_tag t("sns.image_paste"), type: :button, name: 'image_paste', class: "btn action-paste"
   end
 
   def default_thumb_paste_action
-    link_to t("sns.thumb_paste"), "#file-#{file.id}", class: "action-thumb"
+    button_tag t("sns.thumb_paste"), type: :button, name: 'thumb_paste', class: "btn action-thumb"
   end
 
   def default_delete_action
-    link_to t("ss.buttons.delete"), "#file-#{file.id}", class: "action-delete"
+    button_tag t("ss.buttons.delete"), type: :button, name: 'delete', class: "btn action-delete"
   end
 
   def default_copy_url_action
-    link_to t("ss.buttons.copy_url"), "#file-#{file.id}", class: "action-copy-url"
+    button_tag t("ss.buttons.copy_url"), type: :button, name: 'copy_url', class: "btn action-copy-url"
   end
 
   def file_type_label

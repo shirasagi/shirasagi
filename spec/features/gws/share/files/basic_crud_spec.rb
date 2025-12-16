@@ -136,7 +136,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
 
       file.reload
-      expect(file.deleted).to be_present
+      expect(file.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
       expect(file.histories.count).to eq 3
       file.histories.first.tap do |history|

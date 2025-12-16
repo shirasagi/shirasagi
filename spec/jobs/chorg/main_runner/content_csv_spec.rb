@@ -80,10 +80,10 @@ describe Chorg::MainRunner, dbscope: :example do
       expect { Cms::User.find_by(uid: 'import_user1') }.to raise_error Mongoid::Errors::DocumentNotFound
       expect { Cms::User.find_by(uid: 'import_user2') }.to raise_error Mongoid::Errors::DocumentNotFound
 
-      job = described_class.bind(site_id: site.id, user_id: user.id, task_id: task.id)
+      job = described_class.bind(site_id: site, user_id: user, task_id: task)
       expect do
         ss_perform_now(job, revision.name, job_opts)
-      end.to output(include("[新設] 成功: 2, 失敗: 0\n")).to_stdout
+      end.to output(include("[#{I18n.t("chorg.options.changeset_type.add")}] 成功: 2, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 2
