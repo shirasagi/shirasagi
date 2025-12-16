@@ -9,9 +9,9 @@ class Cms::LoopSettingsController < ApplicationController
   private
 
   def search_params
-    params.require(:s).permit(:html_format, :setting_type, :keyword)
-  rescue ActionController::ParameterMissing
-    ActionController::Parameters.new
+    # params[:s] が無い場合でも、必ず permit 済み Parameters を返す
+    # (Rails 8 では未permitの Parameters を to_h すると例外になる)
+    params.fetch(:s, ActionController::Parameters.new).permit(:html_format, :setting_type, :keyword)
   end
 
   def set_crumbs
