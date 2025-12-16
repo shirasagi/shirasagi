@@ -65,15 +65,38 @@
   // ループHTML設定の選択時にテキストエリアをロック/アンロックし、HTMLを読み込む
   if ($loopSettingSelect.length && $htmlTextarea.length) {
     // CodeMirrorエディタの初期化を待つ
+    var lockAttempts = 0;
+    var maxRetries = 50;
     var initLock = function() {
-      var $codeMirror = $htmlTextarea.next('.CodeMirror');
-      if ($codeMirror.length && $codeMirror[0].CodeMirror) {
-        Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
-      } else {
-        setTimeout(initLock, 100);
-      }
+      return new Promise(function(resolve) {
+        var tryLock = function() {
+          lockAttempts++;
+          var $codeMirror = $htmlTextarea.next('.CodeMirror');
+          if ($codeMirror.length && $codeMirror[0].CodeMirror) {
+            Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
+            resolve(true);
+            return;
+          }
+
+          if (lockAttempts < maxRetries) {
+            setTimeout(tryLock, 100);
+            return;
+          }
+
+          if (window.Cms_Editor_CodeMirror && typeof window.Cms_Editor_CodeMirror.unlock === 'function') {
+            window.Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
+          }
+          if (window.console && typeof window.console.warn === 'function') {
+            window.console.warn("CodeMirror initialization timed out; stop retrying initLock()", {
+              selector: lockSelector, target: lockTarget, attempts: lockAttempts, maxRetries: maxRetries
+            });
+          }
+          resolve(false);
+        };
+        tryLock();
+      });
     };
-    initLock();
+    var initLockPromise = initLock();
     
     // エラーメッセージを取得する関数
     var getErrorMessage = function(xhr) {
@@ -186,9 +209,12 @@
     };
     
     // 初期状態を設定（既にloop_setting_idが設定されている場合）
-    if ($loopSettingSelect.val()) {
-      updateLoopHtml();
-    }
+    // initLock() は非同期（CodeMirror初期化待ち）なので、完了後に updateLoopHtml() を実行する
+    initLockPromise.then(function() {
+      if ($loopSettingSelect.val()) {
+        updateLoopHtml();
+      }
+    });
     
     // 選択変更時にHTMLを更新
     $loopSettingSelect.on('change', updateLoopHtml);

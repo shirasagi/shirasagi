@@ -6,76 +6,220 @@
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
   
-  // SHIRASAGI形式のループHTML設定の読み込み
-  var updateLoopHtmlShirasagi = function() {
-    var $loopSettingSelect = $('#item_loop_setting_id');
-    var $loopHtmlTextarea = $('#item_loop_html');
-    var loopSettingId = $loopSettingSelect.val();
-    
-    if (loopSettingId && $loopHtmlTextarea.length) {
-      $.ajax({
-        url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
-        method: 'GET',
-        dataType: 'json',
-        success: function(data) {
-          if (data && data.html) {
-            var editor = $loopHtmlTextarea.data('editor');
-            if (editor) {
-              editor.setValue(data.html);
-            } else {
-              $loopHtmlTextarea.val(data.html);
-            }
-          }
-        },
-        error: function(xhr, status, error) {
-          console.error('Loop setting fetch error:', xhr, status, error);
-        }
-      });
+  var setLoopHtmlValue = function($textarea, value) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+    var editor = $textarea.data('editor');
+    if (editor) {
+      editor.setValue(value);
+      editor.save();
+    } else {
+      $textarea.val(value);
     }
   };
-  
-  // Liquid形式のループHTML設定の読み込み
-  var updateLoopHtmlLiquid = function() {
-    var $loopSettingSelect = $('#item_loop_setting_id_liquid');
-    var $loopLiquidTextarea = $('#item_loop_liquid');
-    var $snippetSelect = $addon.find('.loop-snippet-selector');
-    var loopSettingId = $loopSettingSelect.val();
-    
-    if (loopSettingId) {
-      // ループHTML設定が選択されている場合、スニペットのプルダウンを無効にする
-      $snippetSelect.prop('disabled', true);
-      
-      if ($loopLiquidTextarea.length) {
-        $.ajax({
-          url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
-          method: 'GET',
-          dataType: 'json',
-          success: function(data) {
-            if (data && data.html) {
-              var editor = $loopLiquidTextarea.data('editor');
-              if (editor) {
-                editor.setValue(data.html);
-              } else {
-                $loopLiquidTextarea.val(data.html);
-              }
-            }
-          },
-          error: function(xhr, status, error) {
-            console.error('Loop setting fetch error:', xhr, status, error);
-          }
-        });
+
+  var getLoopHtmlValue = function($textarea) {
+    if (!$textarea || $textarea.length === 0) {
+      return '';
+    }
+    var editor = $textarea.data('editor');
+    if (editor) {
+      return editor.getValue() || '';
+    }
+    return $textarea.val() || '';
+  };
+
+  var setLoopHtmlLoadingState = function($textarea, isLoading) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+
+    $textarea.prop('disabled', isLoading);
+    var editor = $textarea.data('editor');
+    if (editor) {
+      editor.setOption('readOnly', isLoading ? 'nocursor' : false);
+    }
+  };
+
+  // When loop setting is selected, textarea is preview-only.
+  // Keep it selectable/copyable, but do not submit it (avoid accidental overwrite / validation conflict).
+  var setTextareaSubmittable = function($textarea, submittable) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+
+    if (submittable) {
+      var originalName = $textarea.data('original-name');
+      if (originalName) {
+        $textarea.attr('name', originalName);
       }
     } else {
-      // ループHTML設定が選択されていない場合、スニペットのプルダウンを有効にする
-      $snippetSelect.prop('disabled', false);
+      if (!$textarea.data('original-name')) {
+        $textarea.data('original-name', $textarea.attr('name'));
+      }
+      $textarea.removeAttr('name');
     }
+  };
+
+  var clearLoopHtmlMessage = function($textarea) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+    var $msg = $textarea.data('loop-html-message');
+    if ($msg && $msg.length) {
+      $msg.removeClass('is-loading is-error');
+      $msg.text('').hide();
+    }
+  };
+
+  var showLoopHtmlLoading = function($textarea, message) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+
+    var $msg = $textarea.data('loop-html-message');
+    if (!$msg || $msg.length === 0) {
+      $msg = $('<p class="loop-html-fetch-message" role="status" aria-live="polite" style="margin-top: 4px; display: none;"></p>');
+      $msg.insertAfter($textarea);
+      $textarea.data('loop-html-message', $msg);
+    }
+
+    $msg.removeClass('is-error').addClass('is-loading')
+      .css('color', '#666')
+      .text(message || <%= t("ss.notice.loading").to_json.html_safe %>)
+      .show();
+  };
+
+  var showLoopHtmlError = function($textarea, message) {
+    if (!$textarea || $textarea.length === 0) {
+      return;
+    }
+
+    var $msg = $textarea.data('loop-html-message');
+    if (!$msg || $msg.length === 0) {
+      $msg = $('<p class="loop-html-fetch-message" role="alert" style="margin-top: 4px; display: none;"></p>');
+      $msg.insertAfter($textarea);
+      $textarea.data('loop-html-message', $msg);
+    }
+
+    $msg.removeClass('is-loading').addClass('is-error')
+      .css('color', '#c00')
+      .text(message)
+      .show();
+  };
+
+  // 共通のループHTML設定読み込み（SHIRASAGI/Liquid 両対応）
+  var updateLoopHtml = function(loopSettingSelectId, loopHtmlTextareaId, snippetSelectSelector) {
+    var $loopSettingSelect = $(loopSettingSelectId);
+    var $loopHtmlTextarea = $(loopHtmlTextareaId);
+    var loopSettingId = $loopSettingSelect.val();
+    var $snippetSelect = snippetSelectSelector ? $addon.find(snippetSelectSelector) : $();
+
+    clearLoopHtmlMessage($loopHtmlTextarea);
+
+    // ループHTML設定が選択されている場合はスニペットを無効化（未選択なら有効化）
+    if ($snippetSelect.length) {
+      $snippetSelect.prop('disabled', !!loopSettingId);
+    }
+
+    // ループHTML設定が選択されている場合はtextareaを送信対象から外す（未選択なら送信する）
+    setTextareaSubmittable($loopHtmlTextarea, !loopSettingId);
+
+    if (!loopSettingId || $loopHtmlTextarea.length === 0) {
+      return;
+    }
+
+    // ロード中は textarea / snippet を一時的に無効化
+    if ($snippetSelect.length) {
+      $snippetSelect.prop('disabled', true);
+    }
+    setLoopHtmlLoadingState($loopHtmlTextarea, true);
+    showLoopHtmlLoading($loopHtmlTextarea);
+
+    $.ajax({
+      url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
+      method: 'GET',
+      dataType: 'json',
+      success: function(data) {
+        if (data && data.html != null) {
+          setLoopHtmlValue($loopHtmlTextarea, data.html);
+        }
+        clearLoopHtmlMessage($loopHtmlTextarea);
+      },
+      error: function(xhr, status, error) {
+        console.error('Loop setting fetch error:', xhr, status, error);
+        showLoopHtmlError($loopHtmlTextarea, <%= t("ss.errors.messages.unexpected_error").to_json.html_safe %>);
+      },
+      complete: function() {
+        setLoopHtmlLoadingState($loopHtmlTextarea, false);
+        if ($snippetSelect.length) {
+          $snippetSelect.prop('disabled', !!loopSettingId);
+        }
+      }
+    });
+  };
+
+  // SHIRASAGI形式のループHTML設定の読み込み
+  var updateLoopHtmlShirasagi = function() {
+    updateLoopHtml('#item_loop_setting_id', '#item_loop_html');
+  };
+
+  // Liquid形式のループHTML設定の読み込み
+  var updateLoopHtmlLiquid = function() {
+    updateLoopHtml('#item_loop_setting_id_liquid', '#item_loop_liquid', '.loop-snippet-selector');
+  };
+
+  var confirmDiscardDirectInputIfNeeded = function($select, $textarea) {
+    if (!$select || $select.length === 0) {
+      return true;
+    }
+    if ($select.data('suppress-loop-setting-confirm')) {
+      return true;
+    }
+
+    var prev = $select.data('previous-value') || '';
+    var next = $select.val() || '';
+    if (prev !== '' || next === '') {
+      return true;
+    }
+
+    var currentValue = (getLoopHtmlValue($textarea) || '').trim();
+    if (currentValue === '') {
+      return true;
+    }
+
+    return confirm(<%= t("cms.confirm.switch_to_loop_setting_discards_direct_input").to_json.html_safe %>);
+  };
+  
+  var revertSelectToPreviousValue = function($select) {
+    if (!$select || $select.length === 0) {
+      return;
+    }
+
+    var prev = $select.data('previous-value') || '';
+    $select.data('suppress-loop-setting-confirm', true);
+    $select.val(prev);
+    $select.trigger('change');
+    $select.data('suppress-loop-setting-confirm', false);
   };
   
   if ($loopFormatSelect.length) {
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id', '#item_loop_html');
     
     // SHIRASAGI形式のループHTML設定変更時にHTMLを読み込む
-    $('#item_loop_setting_id').on('change', updateLoopHtmlShirasagi);
+    var $loopSettingSelectShirasagiOnly = $('#item_loop_setting_id');
+    var $loopHtmlTextareaShirasagi = $('#item_loop_html');
+    $loopSettingSelectShirasagiOnly.data('previous-value', $loopSettingSelectShirasagiOnly.val() || '');
+    $loopSettingSelectShirasagiOnly.on('change', function(_ev) {
+      if (!confirmDiscardDirectInputIfNeeded($loopSettingSelectShirasagiOnly, $loopHtmlTextareaShirasagi)) {
+        revertSelectToPreviousValue($loopSettingSelectShirasagiOnly);
+        return;
+      }
+
+      updateLoopHtmlShirasagi();
+      $loopSettingSelectShirasagiOnly.data('previous-value', $loopSettingSelectShirasagiOnly.val() || '');
+    });
     // 初期状態で既にloop_setting_idが設定されている場合もHTMLを読み込む
     if ($('#item_loop_setting_id').val()) {
       updateLoopHtmlShirasagi();
@@ -85,9 +229,19 @@
     Cms_Editor_CodeMirror.lock('#item_loop_setting_id_liquid', '#item_loop_liquid');
     var $loopSettingSelectShirasagi = $('#item_loop_setting_id');
     var $loopSettingSelectLiquid = $('#item_loop_setting_id_liquid');
+    var $loopHtmlTextareaLiquid = $('#item_loop_liquid');
+    $loopSettingSelectLiquid.data('previous-value', $loopSettingSelectLiquid.val() || '');
     
     // Liquid形式のループHTML設定変更時にHTMLを読み込む
-    $('#item_loop_setting_id_liquid').on('change', updateLoopHtmlLiquid);
+    $('#item_loop_setting_id_liquid').on('change', function(_ev) {
+      if (!confirmDiscardDirectInputIfNeeded($loopSettingSelectLiquid, $loopHtmlTextareaLiquid)) {
+        revertSelectToPreviousValue($loopSettingSelectLiquid);
+        return;
+      }
+
+      updateLoopHtmlLiquid();
+      $loopSettingSelectLiquid.data('previous-value', $loopSettingSelectLiquid.val() || '');
+    });
     // 初期状態で既にloop_setting_idが設定されている場合もHTMLを読み込む
     if ($('#item_loop_setting_id_liquid').val()) {
       updateLoopHtmlLiquid();

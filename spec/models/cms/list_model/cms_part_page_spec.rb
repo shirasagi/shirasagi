@@ -240,4 +240,32 @@ describe Cms::Addon::List::Model do
       end
     end
   end
+
+  describe "loop_liquid / loop_setting_id" do
+    let!(:node) { create :cms_node_node, cur_site: site, layout: layout }
+
+    it "rejects setting both loop_liquid and loop_setting_id simultaneously" do
+      loop_setting = create(:cms_loop_setting, site: site)
+      part = build(
+        :cms_part_page, cur_site: site, cur_node: node,
+        loop_format: "liquid", loop_liquid: "liquid-#{unique_id}", loop_setting_id: loop_setting.id
+      )
+
+      expect(part.valid?).to be_falsey
+      expect(part.errors[:base]).to include(I18n.t("cms.errors.messages.loop_liquid_and_loop_setting_id_are_exclusive"))
+      expect(part.loop_liquid).to be_present
+    end
+
+    it "clears loop_liquid only when loop_setting_id is newly set (nil -> value)" do
+      loop_setting = create(:cms_loop_setting, site: site)
+      part = create(
+        :cms_part_page, cur_site: site, cur_node: node,
+        loop_format: "liquid", loop_liquid: "liquid-#{unique_id}", loop_setting_id: nil
+      )
+
+      part.loop_setting_id = loop_setting.id
+      expect(part.valid?).to be_truthy
+      expect(part.loop_liquid).to be_blank
+    end
+  end
 end

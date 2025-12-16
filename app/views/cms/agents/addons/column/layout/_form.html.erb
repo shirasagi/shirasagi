@@ -64,9 +64,6 @@
       }
       return <%= I18n.t("cms.notices.loop_html_load_error").to_json.html_safe %>;
     };
-      }
-      return <%= I18n.t("cms.notices.loop_html_load_error").to_json.html_safe %>;
-    };
     
     // エラーメッセージを表示する関数
     var showLoopHtmlError = function(message, retryCallback) {
@@ -218,7 +215,6 @@
     
     // 選択変更時にHTMLを更新
     $loopSettingSelect.on('change', updateLoopHtml);
-  }
   
   // スニペットセレクターの初期値を「直接入力」に設定
   if ($snippetSelect.length && !$snippetSelect.val()) {

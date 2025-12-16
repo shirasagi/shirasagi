@@ -277,6 +277,7 @@ ja:
       close: 非公開状態で保存しようとしています
       convert_to_cms_page: 固定ページに変換してよろしいですか？
       converted_html: 取り込んだHTMLはWYSIWYGエディタ内に展開される為、HTMLが変換される可能性があります。
+      switch_to_loop_setting_discards_direct_input: "ループ設定に切り替えると、直接入力したループHTMLは保存されません。\n切り替えてよろしいですか？"
       check_contains_urls: このページへのリンクを確認する。
       check_linked_url_list: リンクを貼っているページを確認する
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
@@ -1090,6 +1091,8 @@ ja:
       cms/generation_report/aggregation: 書き出し性能履歴の集計結果
       cms/source_cleaner_template: ソースクリーニング
     errors:
+      messages:
+        loop_liquid_and_loop_setting_id_are_exclusive: ループHTML（Liquid形式：直接入力）と、ループ設定（テンプレート）は同時に設定できません。どちらか一方を選択してください。
       models:
         cms/content:
           unsafe_numeric_filename: は、数字のみで構成されていますが、数字のみのファイル名は自由に使用できません。アルファベットを1文字以上加えてください。
