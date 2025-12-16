@@ -5,6 +5,7 @@
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
   var $loopFormatSelect = $addon.find("select[name='item[loop_format]']");
+  var lastLoopSettingXhr = null;
   
   var setLoopHtmlValue = function($textarea, value) {
     if (!$textarea || $textarea.length === 0) {
@@ -118,6 +119,12 @@
 
     clearLoopHtmlMessage($loopHtmlTextarea);
 
+    // Abort previous request to prevent stale response from overwriting newer data
+    if (lastLoopSettingXhr) {
+      lastLoopSettingXhr.abort();
+      lastLoopSettingXhr = null;
+    }
+
     // ループHTML設定が選択されている場合はスニペットを無効化（未選択なら有効化）
     if ($snippetSelect.length) {
       $snippetSelect.prop('disabled', !!loopSettingId);
@@ -127,6 +134,7 @@
     setTextareaSubmittable($loopHtmlTextarea, !loopSettingId);
 
     if (!loopSettingId || $loopHtmlTextarea.length === 0) {
+      setLoopHtmlLoadingState($loopHtmlTextarea, false);
       return;
     }
 
@@ -137,27 +145,42 @@
     setLoopHtmlLoadingState($loopHtmlTextarea, true);
     showLoopHtmlLoading($loopHtmlTextarea);
 
-    $.ajax({
-      url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', loopSettingId),
+    var url = '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', encodeURIComponent(loopSettingId));
+    var xhr = $.ajax({
+      url: url,
       method: 'GET',
       dataType: 'json',
       success: function(data) {
+        if (xhr !== lastLoopSettingXhr) {
+          return;
+        }
         if (data && data.html != null) {
           setLoopHtmlValue($loopHtmlTextarea, data.html);
         }
         clearLoopHtmlMessage($loopHtmlTextarea);
       },
-      error: function(xhr, status, error) {
-        console.error('Loop setting fetch error:', xhr, status, error);
+      error: function(xhr2, status, error) {
+        if (xhr !== lastLoopSettingXhr) {
+          return;
+        }
+        if (status === 'abort') {
+          return;
+        }
+        console.error('Loop setting fetch error:', xhr2, status, error);
         showLoopHtmlError($loopHtmlTextarea, <%= t("ss.errors.messages.unexpected_error").to_json.html_safe %>);
       },
       complete: function() {
+        if (xhr !== lastLoopSettingXhr) {
+          return;
+        }
+        lastLoopSettingXhr = null;
         setLoopHtmlLoadingState($loopHtmlTextarea, false);
         if ($snippetSelect.length) {
           $snippetSelect.prop('disabled', !!loopSettingId);
         }
       }
     });
+    lastLoopSettingXhr = xhr;
   };
 
   // SHIRASAGI形式のループHTML設定の読み込み

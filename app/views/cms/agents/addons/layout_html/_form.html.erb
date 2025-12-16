@@ -179,13 +179,19 @@
           method: 'GET',
           dataType: 'json',
           success: function(data) {
-            if (data && data.html) {
+            // data.html が空文字でも反映されるよう、truthy 判定ではなくプロパティ存在で判定する
+            if (data && Object.prototype.hasOwnProperty.call(data, 'html')) {
+              var html = data.html;
+              if (html === null) {
+                html = '';
+              }
+
               var editor = $htmlTextarea.data('editor');
               if (editor) {
-                editor.setValue(data.html);
+                editor.setValue(html);
                 editor.setOption('readOnly', true);
               } else {
-                $htmlTextarea.val(data.html);
+                $htmlTextarea.val(html);
                 $htmlTextarea.prop('readonly', true);
               }
             }
