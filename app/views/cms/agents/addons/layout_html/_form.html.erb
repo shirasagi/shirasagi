@@ -73,7 +73,9 @@
           lockAttempts++;
           var $codeMirror = $htmlTextarea.next('.CodeMirror');
           if ($codeMirror.length && $codeMirror[0].CodeMirror) {
-            Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
+            if (window.Cms_Editor_CodeMirror && typeof window.Cms_Editor_CodeMirror.lock === 'function') {
+              window.Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
+            }
             resolve(true);
             return;
           }
@@ -160,7 +162,17 @@
     // テキストエリアをアンロックする関数
     var unlockTextarea = function() {
       $snippetSelect.prop('disabled', false);
-      Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
+
+      // CodeMirror が存在しない／初期化されていない場合でも、textarea が readonly のまま残らないように解除する
+      var editor = $htmlTextarea.data('editor');
+      if (editor) {
+        editor.setOption('readOnly', false);
+      }
+      $(lockTarget).prop('readonly', false);
+
+      if (window.Cms_Editor_CodeMirror && typeof window.Cms_Editor_CodeMirror.unlock === 'function') {
+        window.Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
+      }
     };
     
     var updateLoopHtml = function() {

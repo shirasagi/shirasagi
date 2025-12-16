@@ -85,4 +85,19 @@ class Cms::LoopSetting
       [I18n.t("cms.options.setting_type.#{v}"), v]
     end
   end
+
+  SearchForm = Struct.new(:html_format, :setting_type, :keyword, keyword_init: true) do
+    class << self
+      def from(params)
+        params ||= {}
+        params = params.to_h if params.respond_to?(:to_h)
+
+        new(
+          html_format: params[:html_format] || params["html_format"],
+          setting_type: params[:setting_type] || params["setting_type"],
+          keyword: params[:keyword] || params["keyword"]
+        )
+      end
+    end
+  end
 end

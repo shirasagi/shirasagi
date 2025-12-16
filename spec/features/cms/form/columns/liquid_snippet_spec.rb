@@ -330,6 +330,17 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
     end
 
     context "error handling when loop HTML fails to load" do
+      after do
+        page.execute_script(<<~JS)
+          if (window._originalAjax) {
+            if (window.$ && window.$.ajax) {
+              window.$.ajax = window._originalAjax;
+            }
+            delete window._originalAjax;
+          }
+        JS
+      end
+
       it "displays error message when AJAX request fails with 404" do
         visit cms_form_path(site, form)
 
@@ -375,7 +386,10 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
           expect(page).to have_css('.loop-html-error h2', text: I18n.t("errors.template.header.one"))
           expect(page).to have_css('.loop-html-error p', text: I18n.t("errors.template.body"))
           expect(page).to have_css('.loop-html-error li', text: I18n.t("cms.notices.loop_html_not_found"))
-          expect(page).to have_css('.loop-html-error[role="alert"]')
+          # アクセシビリティ属性が設定されていることを確認
+          error_div = find('.loop-html-error', visible: :all)
+          expect(error_div['role']).to eq('alert')
+          expect(error_div['aria-live']).to eq('polite')
 
           # リトライボタンが表示されることを確認
           expect(page).to have_css('.loop-html-error .btn-retry', text: I18n.t("ss.buttons.reload"))
@@ -435,6 +449,10 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
           # エラーメッセージが表示されることを確認
           expect(page).to have_css('.loop-html-error.errorExplanation', wait: 10)
           expect(page).to have_css('.loop-html-error li', text: I18n.t("cms.notices.loop_html_server_error"))
+          # アクセシビリティ属性が設定されていることを確認
+          error_div = find('.loop-html-error', visible: :all)
+          expect(error_div['role']).to eq('alert')
+          expect(error_div['aria-live']).to eq('polite')
 
           # リトライボタンが表示されることを確認
           expect(page).to have_css('.loop-html-error .btn-retry', text: I18n.t("ss.buttons.reload"))

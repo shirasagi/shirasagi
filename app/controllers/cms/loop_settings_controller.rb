@@ -25,8 +25,8 @@ class Cms::LoopSettingsController < ApplicationController
   public
 
   def index
-    @s = OpenStruct.new(search_params.to_h)
-    s = @s.to_h
+    s = search_params.to_h.symbolize_keys
+    @s = @model::SearchForm.from(s)
     @items = @model.site(@cur_site).
       search(s).
       page(params[:page]).per(50)

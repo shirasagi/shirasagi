@@ -183,6 +183,15 @@
                 $layoutTextarea.val(data.html);
                 $layoutTextarea.prop('readonly', true);
               }
+
+              // unlockTextarea() と対称に、成功時は CodeMirror/textarea 側もロックする
+              // lockSelector / lockTarget が未定義の場合は何もしない（エラーや二重ロック回避）
+              if (lockSelector && lockTarget && window.Cms_Editor_CodeMirror && typeof Cms_Editor_CodeMirror.lock === 'function') {
+                Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
+              }
+
+              // ループHTML設定が有効な間はスニペットのプルダウンを無効のままにする
+              $snippetSelect.prop('disabled', true);
             }
           },
           error: function(xhr, status, error) {

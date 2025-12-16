@@ -240,7 +240,7 @@ save_loop_setting(
         #{end}
         #{if updated}
         <div class="updated">
-          更新日時: <time datetime="#{updated}">#{time}</time>
+          更新日時: <time datetime="#{updated}">#{updated.long}</time>
         </div>
         #{end}
       </header>

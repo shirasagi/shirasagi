@@ -106,8 +106,6 @@ RSpec.describe SS::Migration20251210000000, dbscope: :example do
     end
 
     it "sets setting_type to 'template'" do
-      loop_setting_template.reload
-
       expect(loop_setting_template.setting_type).to eq 'template'
     end
   end

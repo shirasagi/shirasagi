@@ -1,4 +1,4 @@
-<% @s ||= OpenStruct.new %>
+<% @s ||= @model::SearchForm.from(params[:s]) %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <dl class="see">
