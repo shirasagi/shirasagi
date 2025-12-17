@@ -24,9 +24,13 @@
         </div>
         <div class="event-recurrence-time-row">
           <label><%= radio_button_tag "all_day_#{index}", "0", recurr.kind != "date", id: nil, class: "event-recurrence-all-day-radio" %></label>
-          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", recurr.start_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
+          <%
+            start_datetime = recurr.start_datetime.try { |time| I18n.l(time, format: :hh_mm) } if recurr.kind != "date"
+            end_datetime = recurr.end_datetime.try { |time| I18n.l(time, format: :hh_mm) }  if recurr.kind != "date"
+          %>
+          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_start_time]", start_datetime %>
           <%= t("ss.wave_dash") %>
-          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
+          <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", end_datetime %>
         </div>
       </div>
 
@@ -64,7 +68,7 @@
     <% end %>
 
     <%# for new record %>
-    <% render_recurrence.call OpenStruct.new, @item.event_recurrences.length  %>
+    <% render_recurrence.call OpenStruct.new(kind: "date"), @item.event_recurrences.length  %>
 
     <div class="event-recurrence">
       <div class="event-recurrence-row">
@@ -72,7 +76,7 @@
       </div>
     </div>
     <script type="text/html" id="event-recurrence-template">
-      <% render_recurrence.call OpenStruct.new, @item.event_recurrences.length + 1 %>
+      <% render_recurrence.call OpenStruct.new(kind: "date"), @item.event_recurrences.length + 1 %>
     </script>
   </dd>
 
