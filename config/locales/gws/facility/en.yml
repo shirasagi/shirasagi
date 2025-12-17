@@ -3,6 +3,9 @@ en:
     facility: Facilities
     category: Category
     manage_columns: Manage additional inputs
+    overflow_facility:
+      one: "1 other facility"
+      other: "%{count} other facilities"
     views:
       required_approval: Required approval
     prompts:
