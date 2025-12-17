@@ -8,7 +8,6 @@
 <% render_recurrence = proc do |recurr, index| %>
   <div class="event-recurrence">
     <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", "1", id: nil %>
-    <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_all_day]", "1", id: nil %>
 
     <div class="event-recurrence-row">
       <%= button_tag t("ss.buttons.delete"), type: "button", class: "btn event-recurrence-delete-btn" %>
@@ -18,7 +17,6 @@
         <%= ss_date_field_tag "#{f.object_name}[event_recurrences][][in_until_on]", recurr.until_on, {}, { id: nil, class: "event-recurrence-date-until-on" } %>
       </div>
 
-      <% if false %>
       <div class="event-recurrence-time">
         <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_all_day]", recurr.kind == "date" ? "1" : "0", id: nil %>
         <div class="event-recurrence-time-row">
@@ -31,7 +29,6 @@
           <%= time_field_tag "#{f.object_name}[event_recurrences][][in_end_time]", recurr.end_datetime.try { |time| I18n.l(time, format: :hh_mm) } %>
         </div>
       </div>
-      <% end %>
 
       <div class="event-recurrence-excludes">
         <% disp = recurr.exclude_dates.try { |dates| dates.map { |date| I18n.l(date.to_date, format: :picker) }.join(",") } %>
