@@ -33,13 +33,15 @@
     width: calc(100% - 20px);
   }
   header {
+    display: flex;
+    align-items: baseline;
+
     h2 {
-      display: inline-block;
-      width: 300px;
+      display: inline-flex;
     }
     .version {
-      padding: 2px;
-      float: right;
+      margin-left: auto;
+      padding: 0 5px;
       color: #888;
       font-size: 90%;
     }
