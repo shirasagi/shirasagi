@@ -25,7 +25,14 @@ module Event::CalendarListHelper
               </div>
             {% endif %}
             <div class="event">
-              <a href="{{ event.url }}">{{ event.name }}</a>
+              <a href="{{ event.url }}">
+                <span class="name">{{ event.name }}</span>
+                {% for datetime in event.datetimes %}
+                  {% if datetime.kind == "datetime" %}
+                    <span class="{{ datetime.kind }}">{{ datetime.start_at | ss_time: "h_mm" }} - {{ datetime.end_at | ss_time: "h_mm" }}</span>
+                  {% endif %}
+                {% endfor %}
+              </a>
             </div>
           </div>
         {% endfor %}
@@ -63,7 +70,14 @@ module Event::CalendarListHelper
                 </div>
               {% endif %}
               <header>
-                <h2> <a href="{{ event.url }}">{{ event.name }}</a></h2>
+                <h2>
+                  <span class="name">{{ event.name }}</span>
+                  {% for datetime in event.datetimes %}
+                    {% if datetime.kind == "datetime" %}
+                      <span class="{{ datetime.kind }}">{{ datetime.start_at | ss_time: "h_mm" }} - {{ datetime.end_at | ss_time: "h_mm" }}</span>
+                    {% endif %}
+                  {% endfor %}
+                </h2>
               </header>
             </article>
           </dd>

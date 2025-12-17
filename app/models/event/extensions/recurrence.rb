@@ -184,16 +184,16 @@ class Event::Extensions::Recurrence
     @event_dates ||= collect_event_dates
   end
 
-  def collect_event_dates(excludes: true)
+  def collect_event_dates(excludes: true, formatter: :format_date)
     case frequency
     when "daily"
-      collect_daily_event_dates(excludes: excludes)
+      collect_daily_event_dates(excludes: excludes, formatter: formatter)
     when "weekly"
-      collect_weekly_event_dates(excludes: excludes)
+      collect_weekly_event_dates(excludes: excludes, formatter: formatter)
     else # non-recurrence
       date = start_at.to_date
       if !excludes || exclude_dates.blank? || !exclude_dates.include?(date)
-        [ date ]
+        [ send(formatter, date) ]
       else
         []
       end
@@ -256,14 +256,14 @@ class Event::Extensions::Recurrence
     # rubocop:enable Style/YodaCondition
   end
 
-  def collect_daily_event_dates(excludes:)
+  def collect_daily_event_dates(excludes:, formatter: :format_date)
     date = start_date
     to = until_on.try(:to_date) || date + TERM_LIMIT
     ret = []
     loop do
       next if excludes && excluded_date?(date)
 
-      ret << date
+      ret << send(formatter, date)
     ensure
       date += 1.day
       break if date > to
@@ -271,7 +271,7 @@ class Event::Extensions::Recurrence
     ret
   end
 
-  def collect_weekly_event_dates(excludes:)
+  def collect_weekly_event_dates(excludes:, formatter: :format_date)
     from = start_date
     to = until_on || from + TERM_LIMIT
 
@@ -281,15 +281,31 @@ class Event::Extensions::Recurrence
       next if excludes && excluded_date?(date)
 
       if by_days.present? && by_days.include?(date.wday)
-        ret << date
+        ret << send(formatter, date)
       end
       if includes_holiday && date.national_holiday?
-        ret << date
+        ret << send(formatter, date)
       end
     ensure
       date += 1.day
       break if  date > to
     end
     ret
+  end
+
+  def format_date(date)
+    date
+  end
+
+  def format_datetime(date)
+    if kind == "date"
+      { date: date, kind: kind }
+    else
+      start_at = date.in_time_zone.change(hour: start_datetime.hour, min: start_datetime.min)
+      end_at = date.in_time_zone.change(hour: end_datetime.hour, min: end_datetime.min)
+
+      dump({ date: date, start_at: start_at, end_at: end_at, kind: kind })
+      { date: date, start_at: start_at, end_at: end_at, kind: kind }
+    end
   end
 end
