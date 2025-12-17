@@ -43,6 +43,9 @@ class Event::Extensions::Recurrence
         self.end_at = start_at + 1.day
       end
     end
+    if start_at > end_at
+      self.end_at = self.start_at
+    end
   end
   # rubocop:enable Style/IfInsideElse
 
@@ -303,8 +306,6 @@ class Event::Extensions::Recurrence
     else
       start_at = date.in_time_zone.change(hour: start_datetime.hour, min: start_datetime.min)
       end_at = date.in_time_zone.change(hour: end_datetime.hour, min: end_datetime.min)
-
-      dump({ date: date, start_at: start_at, end_at: end_at, kind: kind })
       { date: date, start_at: start_at, end_at: end_at, kind: kind }
     end
   end

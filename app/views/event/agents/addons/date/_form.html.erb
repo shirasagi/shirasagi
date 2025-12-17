@@ -64,11 +64,11 @@
     <%= hidden_field_tag "#{f.object_name}[event_recurrences][][in_update_from_view]", nil, id: nil %>
 
     <% @item.event_recurrences.each_with_index do |recurr, index| %>
-      <% render_recurrence.call recurr, index %>
+      <% render_recurrence.call recurr, (index + 1) %>
     <% end %>
 
     <%# for new record %>
-    <% render_recurrence.call OpenStruct.new(kind: "date"), @item.event_recurrences.length  %>
+    <% render_recurrence.call OpenStruct.new(kind: "date"), @item.event_recurrences.length + 1 %>
 
     <div class="event-recurrence">
       <div class="event-recurrence-row">
@@ -76,7 +76,7 @@
       </div>
     </div>
     <script type="text/html" id="event-recurrence-template">
-      <% render_recurrence.call OpenStruct.new(kind: "date"), @item.event_recurrences.length + 1 %>
+      <% render_recurrence.call OpenStruct.new(kind: "date"), "none" %>
     </script>
   </dd>
 
