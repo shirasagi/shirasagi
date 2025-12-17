@@ -3,7 +3,7 @@ module Chorg::SiteSetting
   extend SS::Translation
 
   included do
-    embeds_ids :chorg_sites, class_name: "SS::Site"
+    embeds_ids :chorg_sites, class_name: "Cms::Site"
     permit_params chorg_site_ids: []
   end
 end

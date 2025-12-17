@@ -3,7 +3,7 @@ module Job::SS::Binding::Site
 
   included do
     # site class
-    mattr_accessor(:site_class, instance_accessor: false) { SS::Site }
+    mattr_accessor(:site_class, instance_accessor: false) { Cms::Site }
     # site
     attr_accessor :site_id
   end

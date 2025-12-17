@@ -243,7 +243,7 @@ module Cms::Model::Node
     full_url = self.full_url rescue nil
     return unless full_url
 
-    SS::Site.each do |s|
+    Cms::Site.each do |s|
       if s.full_url == full_url
         errors.add :basename, :invalid
         break

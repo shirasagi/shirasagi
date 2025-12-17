@@ -23,8 +23,8 @@ module SS::Model::Site
     field :upload_policy, type: String
     embeds_ids :groups, class_name: "SS::Group"
 
-    belongs_to :parent, class_name: "SS::Site", inverse_of: :children
-    has_many :children, class_name: "SS::Site", inverse_of: :parent, dependent: nil
+    belongs_to :parent, class_name: "Cms::Site", inverse_of: :children
+    has_many :children, class_name: "Cms::Site", inverse_of: :parent, dependent: nil
 
     attr_accessor :cur_domain
 
@@ -144,7 +144,7 @@ module SS::Model::Site
     end
 
     def same_domain_sites
-      @_same_domain_sites ||= SS::Site.all.select { |site| self.full_root_url == site.full_root_url }
+      @_same_domain_sites ||= Cms::Site.all.select { |site| self.full_root_url == site.full_root_url }
     end
 
     def same_domain_site_from_path(path)
@@ -205,7 +205,7 @@ module SS::Model::Site
       end
 
       def find_by_domain(host, path = nil)
-        sites = SS::Site.in(domains: host).to_a
+        sites = Cms::Site.in(domains: host).to_a
         if sites.size <= 1
           site = sites.first
         else
@@ -225,7 +225,7 @@ module SS::Model::Site
           end
         end
 
-        #site ||= SS::Site.first if Rails.env.development?
+        #site ||= Cms::Site.first if Rails.env.development?
         site.cur_domain = host if site
         site
       end

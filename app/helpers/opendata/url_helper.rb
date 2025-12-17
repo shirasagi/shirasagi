@@ -22,21 +22,18 @@ module Opendata::UrlHelper
   def dataset_enabled?
     # node = Opendata::Node::Dataset.site(@cur_site).first
     # node.present?
-    @cur_site = Cms::Site.find(@cur_site.id) if @cur_site.is_a?(SS::Site)
     @cur_site.dataset_enabled?
   end
 
   def app_enabled?
     # node = Opendata::Node::App.site(@cur_site).first
     # node.present?
-    @cur_site = Cms::Site.find(@cur_site.id) if @cur_site.is_a?(SS::Site)
     @cur_site.app_enabled?
   end
 
   def idea_enabled?
     # node = Opendata::Node::Idea.site(@cur_site).first
     # node.present?
-    @cur_site = Cms::Site.find(@cur_site.id) if @cur_site.is_a?(SS::Site)
     @cur_site.idea_enabled?
   end
 

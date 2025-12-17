@@ -1,7 +1,7 @@
 require 'spec_helper'
 
-describe SS::Site do
-  subject(:model) { SS::Site }
+describe Cms::Site do
+  subject(:model) { Cms::Site }
 
   describe "#save and #find" do
     subject(:factory) { :ss_site }

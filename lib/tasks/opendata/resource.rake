@@ -20,7 +20,7 @@ namespace :opendata do
   end
 
   task :crawl, [:site] => :environment do |task, args|
-    site = SS::Site.where(host: args[:site] || ENV["site"]).first
+    site = Cms::Site.where(host: args[:site] || ENV["site"]).first
     datasets = Opendata::Dataset.site(site)
     datasets.each do |ds|
       next if ds.url_resources.blank?

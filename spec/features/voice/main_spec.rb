@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "voice_main", type: :feature, dbscope: :example, open_jtalk: true do
   let(:voice_site) do
-    SS::Site.find_or_create_by(name: "VoiceSite", host: "voicehost", domains: unique_domain)
+    Cms::Site.find_or_create_by(name: "VoiceSite", host: "voicehost", domains: unique_domain)
   end
   let(:ua) { 'shirasagi rspec' }
 

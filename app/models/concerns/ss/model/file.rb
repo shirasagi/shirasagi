@@ -27,7 +27,7 @@ module SS::Model::File
     field :size, type: Integer, default: 0
     field :content_type, type: String
 
-    belongs_to :site, class_name: "SS::Site"
+    belongs_to :site, class_name: "Cms::Site"
 
     belongs_to :owner_item, class_name: "Object", polymorphic: true
 

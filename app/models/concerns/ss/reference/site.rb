@@ -8,7 +8,7 @@ module SS::Reference::Site
 
     attr_accessor :cur_site
 
-    belongs_to :site, class_name: "SS::Site"
+    belongs_to :site, class_name: "Cms::Site"
 
     validates :site_id, presence: true, if: ->{ self.class.site_required }
     before_validation :set_site_id, if: ->{ @cur_site }
