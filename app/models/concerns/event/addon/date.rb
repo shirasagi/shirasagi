@@ -8,7 +8,6 @@ module Event::Addon
     included do
       field :event_name, type: String
       field :event_dates, type: Event::Extensions::EventDates
-      field :event_datetimes, type: Hash
       field :event_recurrences, type: Event::Extensions::Recurrences
       field :event_deadline, type: DateTime
 
@@ -28,6 +27,10 @@ module Event::Addon
       if respond_to? :liquidize
         include Event::LiquidHandlers
       end
+    end
+
+    def collect_event_date_specifics
+      @event_dates_specifics ||= event_recurrences.collect_event_date_specifics
     end
 
     module ClassMethods
@@ -86,7 +89,6 @@ module Event::Addon
 
     def set_event_dates_from_recurrences
       self.event_dates = event_recurrences.collect_event_dates
-      self.event_datetimes = event_recurrences.collect_event_datetimes
     end
 
     def validate_event

@@ -27,9 +27,13 @@ module Event::CalendarListHelper
             <div class="event">
               <a href="{{ event.url }}">
                 <span class="name">{{ event.name }}</span>
-                {% for datetime in event.datetimes %}
-                  {% if datetime.kind == "datetime" %}
-                    <span class="{{ datetime.kind }}">{{ datetime.start_at | ss_time: "h_mm" }} - {{ datetime.end_at | ss_time: "h_mm" }}</span>
+                {% for specific in event.specifics %}
+                  {% if specific.datetime? %}
+                    <span class="{{ specific.kind }}">
+                      <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="start">{{ specific.start_at | ss_time: "h_mm" }}</time>
+                      <span class="unit">-</span>
+                      <time datetime="{{ specific.end_at | ss_time: "iso" }}" class="end">{{ specific.end_at | ss_time: "h_mm" }}</time>
+                    </span>
                   {% endif %}
                 {% endfor %}
               </a>
@@ -71,12 +75,18 @@ module Event::CalendarListHelper
               {% endif %}
               <header>
                 <h2>
-                  <span class="name">{{ event.name }}</span>
-                  {% for datetime in event.datetimes %}
-                    {% if datetime.kind == "datetime" %}
-                      <span class="{{ datetime.kind }}">{{ datetime.start_at | ss_time: "h_mm" }} - {{ datetime.end_at | ss_time: "h_mm" }}</span>
-                    {% endif %}
-                  {% endfor %}
+                  <a href="{{ event.url }}">
+                    <span class="name">{{ event.name }}</span>
+                    {% for specific in event.specifics %}
+                      {% if specific.datetime? %}
+                        <span class="{{ specific.kind }}">
+                          <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="start">{{ specific.start_at | ss_time: "h_mm" }}</time>
+                          <span class="unit">-</span>
+                          <time datetime="{{ specific.end_at | ss_time: "iso" }}" class="end">{{ specific.end_at | ss_time: "h_mm" }}</time>
+                        </span>
+                      {% endif %}
+                    {% endfor %}
+                  </a>
                 </h2>
               </header>
             </article>

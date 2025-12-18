@@ -165,6 +165,60 @@ class Event::Extensions::Recurrence
     end
   end
 
+  class Specific
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+    include SS::Liquidization
+
+    attribute :kind, :string
+    attribute :date, :date
+    attribute :start_at, :datetime
+    attribute :end_at, :datetime
+
+    def all_day?
+      kind == "date"
+    end
+
+    def datetime?
+      !all_day?
+    end
+
+    def hash
+      attributes.hash
+    end
+
+    def eql?(other)
+      self == other
+    end
+
+    def ==(other)
+      hash == other.hash
+    end
+
+    def <=>(other)
+      return nil unless other.is_a?(Specific)
+
+      if all_day? && other.all_day?
+        0
+      elsif all_day? && other.datetime?
+        -1
+      elsif datetime? && other.all_day?
+        1
+      else
+        start_at <=> other.start_at
+      end
+    end
+
+    liquidize do
+      export :kind
+      export :date
+      export :start_at
+      export :end_at
+      export :all_day?
+      export :datetime?
+    end
+  end
+
   liquidize do
     export :start_date
     export :start_datetime
@@ -300,13 +354,13 @@ class Event::Extensions::Recurrence
     date
   end
 
-  def format_datetime(date)
+  def format_specific(date)
     if kind == "date"
-      { date: date, kind: kind }
+      Specific.new(date: date, kind: kind)
     else
       start_at = date.in_time_zone.change(hour: start_datetime.hour, min: start_datetime.min)
       end_at = date.in_time_zone.change(hour: end_datetime.hour, min: end_datetime.min)
-      { date: date, start_at: start_at, end_at: end_at, kind: kind }
+      Specific.new(date: date, start_at: start_at, end_at: end_at, kind: kind)
     end
   end
 end

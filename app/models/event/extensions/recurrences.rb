@@ -19,18 +19,18 @@ class Event::Extensions::Recurrences
     values.map { |recurrence| recurrence.collect_event_dates }.flatten.uniq.sort
   end
 
-  def collect_event_datetimes
-    hash = {}
-    values.map { |recurrence| recurrence.collect_event_dates(formatter: :format_datetime) }.flatten.uniq.each do |value|
-      key = value[:date].in_time_zone.to_i.to_s
-      if value[:kind] == "date"
-        hash[key] = [value]
+  def collect_event_date_specifics
+    all_days = {}
+    datetimes = {}
+    values.map { |recurrence| recurrence.collect_event_dates(formatter: :format_specific) }.flatten.uniq.each do |specific|
+      if specific.all_day?
+        all_days[specific.date] = [specific]
       else
-        hash[key] ||= []
-        hash[key] << value
+        datetimes[specific.date] ||= []
+        datetimes[specific.date] << specific
       end
     end
-    hash.sort_by { |k, _| k.to_i }.to_h
+    datetimes.merge(all_days).sort_by { |k, _| k }.to_h
   end
 
   def start_time_between(from_time, to_time)

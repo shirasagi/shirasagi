@@ -160,6 +160,9 @@ class Event::Agents::Nodes::PageController < ApplicationController
         @events[date].add(page)
       end
     end
+    @events.each do |_, cell|
+      cell.sort_events!
+    end
   end
 
   def set_markers(dates)

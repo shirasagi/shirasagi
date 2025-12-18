@@ -48,6 +48,10 @@ class Event::MonthCell
     format("#{node.url}%04d%02d%02d/", year, month, day)
   end
 
+  def sort_events!
+    @events.sort_by! { |event| event.specifics.first }
+  end
+
   liquidize do
     export :node
     export :request_month
@@ -118,9 +122,8 @@ class Event::MonthCell
       end_date.strftime("%Y/%m/%d") rescue nil
     end
 
-    def datetimes
-      return if page.event_datetimes.blank?
-      page.event_datetimes[date.in_time_zone.to_i.to_s]
+    def specifics
+      page.collect_event_date_specifics[date] || []
     end
 
     delegate :url, :full_url, :event_dates, to: :page
@@ -139,7 +142,7 @@ class Event::MonthCell
       export :data_id
       export :data_start_date
       export :data_end_date
-      export :datetimes
+      export :specifics
     end
   end
 end
