@@ -28,7 +28,7 @@ describe "gws_faq_topics", type: :feature, dbscope: :example, js: true do
 
           wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
         end
-        wait_for_cbox do
+        within_cbox do
           wait_for_cbox_closed { click_on category1.name }
         end
         within "form#item-form" do

@@ -16,7 +16,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
       # execute
       job = described_class.bind(site_id: site, task_id: task)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to\
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
         output(include("[#{I18n.t("chorg.options.changeset_type.add")}] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded

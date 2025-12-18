@@ -62,7 +62,7 @@ describe "article_pages remove_files_recursively", type: :feature, dbscope: :exa
           click_link I18n.t("ss.links.change")
         end
       end
-      wait_for_cbox do
+      within_cbox do
         click_link I18n.t("cms.nodes.ads/banner")
       end
       wait_for_js_ready

@@ -96,10 +96,10 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       end
       wait_for_all_turbo_frames
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("gws/tabular.apis.files.index", name: class_form.i18n_name) }
+        wait_for_cbox_opened { click_on I18n.t("gws/tabular.apis.files.index", name: class_form.i18n_name) }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on class_name1 }
+      within_cbox do
+        wait_for_cbox_closed { click_on class_name1 }
       end
       within "form#item-form" do
         expect(page).to have_css("[data-column-id='#{item_class_column.id}']", text: class_name1)
@@ -117,10 +117,10 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       end
       wait_for_all_turbo_frames
       within "form#item-form" do
-        wait_cbox_open { click_on I18n.t("gws/tabular.apis.files.index", name: class_form.i18n_name) }
+        wait_for_cbox_opened { click_on I18n.t("gws/tabular.apis.files.index", name: class_form.i18n_name) }
       end
-      wait_for_cbox do
-        wait_cbox_close { click_on class_name2 }
+      within_cbox do
+        wait_for_cbox_closed { click_on class_name2 }
       end
       within "form#item-form" do
         expect(page).to have_css("[data-column-id='#{item_class_column.id}']", text: class_name2)
