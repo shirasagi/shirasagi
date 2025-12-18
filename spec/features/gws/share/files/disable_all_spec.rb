@@ -30,7 +30,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       end
 
       item.reload
-      expect(item.deleted).to be_present
+      expect(item.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
       expect(item.histories.count).to eq 2
       item.histories.first.tap do |history|

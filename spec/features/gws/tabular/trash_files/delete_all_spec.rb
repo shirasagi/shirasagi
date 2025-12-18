@@ -58,7 +58,7 @@ describe Gws::Tabular::TrashFilesController, type: :feature, dbscope: :example, 
       visit gws_tabular_trash_files_path(site: site, space: space, form: form, view: view)
       wait_for_all_turbo_frames
       expect(page).to have_css(".list-item", count: 2)
-      wait_event_to_fire("ss:checked-all-list-items") do
+      wait_for_event_fired("ss:checked-all-list-items") do
         find('.list-head input[type="checkbox"]').set(true)
       end
       page.accept_confirm(I18n.t("ss.confirm.delete")) do

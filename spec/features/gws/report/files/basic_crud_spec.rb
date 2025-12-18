@@ -179,7 +179,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       expect(file.name).to eq name2
       expect(file.column_values.count).to eq form.columns.count
       expect(file.state).to eq "closed"
-      expect(file.deleted).to be_present
+      expect(file.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
       #
       # Undo Delete

@@ -65,7 +65,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
         login_user user1, to: index_path
         wait_for_turbo_frame "#cms-nodes-tree-frame"
         click_link "tune"
-        wait_for_ajax
+        wait_for_js_ready
 
         within ".quick-edit-grid" do
           within "tr[data-id='#{item.id}']" do
@@ -79,7 +79,7 @@ describe "category_nodes_base", type: :feature, dbscope: :example, js: :true do
         login_user user2, to: index_path
         wait_for_turbo_frame "#cms-nodes-tree-frame"
         click_link "tune"
-        wait_for_ajax
+        wait_for_js_ready
         within ".quick-edit-grid" do
           within "tr[data-id='#{item.id}']" do
             fill_in "name", with: "user2 name"

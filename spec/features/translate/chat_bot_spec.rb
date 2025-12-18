@@ -61,12 +61,12 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
         within "#chat-1" do
           expect(page).to have_css("a.chat-suggest", text: suggest1)
           click_link suggest1
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_text(response1)
           expect(page).to have_css("a.chat-suggest", text: suggest2)
           click_link suggest2
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_text(response2)
           search_link = first("a", text: I18n.t("chat.links.open_site_search"))
@@ -81,17 +81,17 @@ describe "translate/public_filter", type: :feature, dbscope: :example, js: true,
         expect(page).to have_css("#translate-tool-1", text: I18n.t("translate.views.select_lang"))
         expect(page).to have_css("#translate-tool-1", text: lang_en.name)
         select lang_en.name, from: "translate-tool-1"
-        wait_for_ajax
+        wait_for_js_ready
 
         within "#chat-1" do
           expect(page).to have_css("a.chat-suggest", text: "[en:#{suggest1}]")
           click_link "[en:#{suggest1}]"
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_text("[en:#{response1}]")
           expect(page).to have_css("a.chat-suggest", text: "[en:#{suggest2}]")
           click_link "[en:#{suggest2}]"
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_text("[en:#{response2}]")
           search_link = first("a", text: "[en:#{I18n.t("chat.links.open_site_search")}]")

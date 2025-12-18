@@ -246,7 +246,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
             end
           end
           within_dialog do
-            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            wait_for_event_fired "ss:tempFile:addedWaitingList" do
               attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
             end
           end

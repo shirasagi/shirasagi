@@ -24,8 +24,9 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site.id, user_id: user1.id, task_id: task.id)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site, user_id: user1, task_id: task)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
+        output(include("[#{I18n.t("chorg.options.changeset_type.unify")}] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Gws::Job::Log.count).to eq 1
@@ -76,8 +77,9 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site.id, user_id: user.id, task_id: task.id)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[分割] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site, user_id: user, task_id: task)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
+        output(include("[#{I18n.t("chorg.options.changeset_type.division")}] 成功: 1, 失敗: 0\n")).to_stdout
 
       expect(Gws::Group.where(id: group0.id).first.active?).to be_truthy
       new_group1 = Cms::Group.where(name: changeset.destinations[0]['name']).first
@@ -106,8 +108,9 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
 
     it do
       # execute
-      job = described_class.bind(site_id: site.id, task_id: task.id)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site, task_id: task)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
+        output(include("[#{I18n.t("chorg.options.changeset_type.delete")}] 成功: 1, 失敗: 0\n")).to_stdout
 
       expect(Gws::Group.where(id: group.id).first.active?).to be_falsey
 

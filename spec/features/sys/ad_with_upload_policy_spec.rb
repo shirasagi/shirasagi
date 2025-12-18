@@ -76,7 +76,7 @@ describe "sys_ad_with_upload_policy", type: :feature, dbscope: :example, js: tru
         end
       end
       within_dialog do
-        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        wait_for_event_fired "ss:tempFile:addedWaitingList" do
           attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         end
       end

@@ -36,7 +36,7 @@ describe "cms/line/messages/deliver_plans", type: :feature, dbscope: :example, j
     within "table.index" do
       expect(page).to have_selector("tr.list-item", count: 7)
     end
-    wait_event_to_fire("ss:checked-all-list-items") { find("table.index .list-head input[type=checkbox]").click }
+    wait_for_event_fired("ss:checked-all-list-items") { find("table.index .list-head input[type=checkbox]").click }
     within ".list-head-action-destroy" do
       click_on I18n.t("ss.buttons.delete")
     end
