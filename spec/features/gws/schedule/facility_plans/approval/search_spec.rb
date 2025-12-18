@@ -22,7 +22,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       visit gws_schedule_facilities_path(site: site)
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
       within first(".fc-event") do
@@ -32,21 +32,21 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       # unknown
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do
-          wait_cbox_open { first("input[value='unknown']").click }
+          wait_for_cbox_opened { first("input[value='unknown']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
       end
       wait_for_notice I18n.t('ss.notice.saved')
-      wait_for_ajax
+      wait_for_js_ready
 
       # search
       visit gws_schedule_facilities_path(site: site)
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
 
@@ -58,7 +58,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
 
@@ -70,7 +70,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-request", text: item.name)
       end
 
@@ -82,7 +82,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-request", text: item.name)
       end
     end
@@ -92,7 +92,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       visit gws_schedule_facilities_path(site: site)
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
       within first(".fc-event") do
@@ -102,21 +102,21 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       # approve
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do
-          wait_cbox_open { first("input[value='approve']").click }
+          wait_for_cbox_opened { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
       end
       wait_for_notice I18n.t('ss.notice.saved')
-      wait_for_ajax
+      wait_for_js_ready
 
       # search
       visit gws_schedule_facilities_path(site: site)
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-approve", text: item.name)
       end
 
@@ -128,7 +128,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-approve", text: item.name)
       end
 
@@ -141,7 +141,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-approve", text: item.name)
       end
 
@@ -153,7 +153,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-approve", text: item.name)
       end
     end
@@ -163,7 +163,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       visit gws_schedule_facilities_path(site: site)
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
       within first(".fc-event") do
@@ -173,21 +173,21 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       # deny
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do
-          wait_cbox_open { first("input[value='deny']").click }
+          wait_for_cbox_opened { first("input[value='deny']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
       end
       wait_for_notice I18n.t('ss.notice.saved')
-      wait_for_ajax
+      wait_for_js_ready
 
       # search
       visit gws_schedule_facilities_path(site: site)
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-deny", text: item.name)
       end
 
@@ -199,7 +199,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-deny", text: item.name)
       end
 
@@ -212,7 +212,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-deny", text: item.name)
       end
 
@@ -224,7 +224,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-deny", text: item.name)
       end
     end
@@ -237,7 +237,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       visit gws_schedule_facilities_path(site: site)
 
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".fc-event-approval-request", text: item.name)
       end
       within "#calendar-controller" do
@@ -255,7 +255,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       # search
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-request", text: item.name)
         expect(page).to have_css(".fc-event-approval-request", text: name)
       end
@@ -268,7 +268,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-request", text: item.name)
         expect(page).to have_css(".fc-event-approval-request", text: name)
       end
@@ -281,7 +281,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-request", text: item.name)
         expect(page).to have_no_css(".fc-event-approval-request", text: name)
       end
@@ -294,7 +294,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         end
       end
       within ".gws-schedule-box" do
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".fc-event-approval-request", text: item.name)
         expect(page).to have_css(".fc-event-approval-request", text: name)
       end

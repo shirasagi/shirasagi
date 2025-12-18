@@ -77,7 +77,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         fill_in "item[name]", with: title2
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_text(I18n.t("gws/schedule.facility_reservation.exist"))
         click_on I18n.t("ss.buttons.close")
       end
@@ -108,10 +108,10 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do
-          wait_cbox_open { first("input[value='approve']").click }
+          wait_for_cbox_opened { first("input[value='approve']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
@@ -129,7 +129,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         fill_in "item[name]", with: title2
         click_button I18n.t('ss.buttons.save')
       end
-      wait_for_cbox do
+      within_cbox do
         expect(page).to have_text(I18n.t("gws/schedule.facility_reservation.exist"))
         click_on I18n.t("ss.buttons.close")
       end
@@ -160,10 +160,10 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
       end
       within "#addon-gws-agents-addons-schedule-approval" do
         within "span[data-facility-id='#{facility.id}']" do
-          wait_cbox_open { first("input[value='deny']").click }
+          wait_for_cbox_opened { first("input[value='deny']").click }
         end
       end
-      wait_for_cbox do
+      within_cbox do
         within "#ajax-box form#item-form" do
           click_on I18n.t("ss.buttons.save")
         end
@@ -199,7 +199,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
         expect(page).to have_css(".fc-event-approval-deny", text: title1)
         expect(page).to have_no_css(".fc-event-approval-request", text: title2)
       end
-      wait_for_ajax
+      wait_for_js_ready
     end
   end
 end

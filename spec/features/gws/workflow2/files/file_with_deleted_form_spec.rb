@@ -89,7 +89,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
     it do
       visit gws_workflow2_files_path(site: site, state: "all")
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       within ".list-head-action" do
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
@@ -109,7 +109,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       item.save!
 
       visit gws_workflow2_files_path(site: site, state: "all")
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       within ".list-head-action" do
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")

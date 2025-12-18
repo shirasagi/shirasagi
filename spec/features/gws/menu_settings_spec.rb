@@ -72,7 +72,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
           end
         end
         within_dialog do
-          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          wait_for_event_fired "ss:tempFile:addedWaitingList" do
             attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
           end
           wait_for_cbox_closed do
@@ -134,7 +134,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
             end
           end
           within_dialog do
-            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            wait_for_event_fired "ss:tempFile:addedWaitingList" do
               attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
             end
             wait_for_cbox_closed do
@@ -196,7 +196,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
           end
         end
         within_dialog do
-          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          wait_for_event_fired "ss:tempFile:addedWaitingList" do
             attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
           end
           wait_for_cbox_closed do
@@ -276,7 +276,7 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
           end
         end
         within_dialog do
-          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          wait_for_event_fired "ss:tempFile:addedWaitingList" do
             attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/test_icon.svg"
           end
           wait_for_cbox_closed do

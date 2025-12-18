@@ -25,7 +25,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     it do
       # execute
       job = described_class.bind(site_id: site, user_id: user1, task_id: task)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to\
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
         output(include("[#{I18n.t("chorg.options.changeset_type.unify")}] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
@@ -78,7 +78,7 @@ describe Gws::Chorg::MainRunner, dbscope: :example do
     it do
       # execute
       job = described_class.bind(site_id: site, user_id: user, task_id: task)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to\
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
         output(include("[#{I18n.t("chorg.options.changeset_type.division")}] 成功: 1, 失敗: 0\n")).to_stdout
 
       expect(Gws::Group.where(id: group0.id).first.active?).to be_truthy

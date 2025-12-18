@@ -667,7 +667,7 @@ module SS
 
     #
     # Usage
-    #   wait_all_ckeditors_ready
+    #   wait_for_all_ckeditors_ready
     #
     def wait_for_all_ckeditors_ready
       wait_for_js_ready
@@ -942,7 +942,7 @@ module SS
         end
       end
       within_dialog do
-        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        wait_for_event_fired "ss:tempFile:addedWaitingList" do
           attach_file "in_files", file_paths
         end
       end
@@ -1035,7 +1035,7 @@ module SS
         end
       end
       within_dialog do
-        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        wait_for_event_fired "ss:tempFile:addedWaitingList" do
           attach_file "in_files", path
         end
       end

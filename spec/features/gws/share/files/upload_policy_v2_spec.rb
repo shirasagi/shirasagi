@@ -45,7 +45,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         end
       end
       within_dialog do
-        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        wait_for_event_fired "ss:tempFile:addedWaitingList" do
           attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         end
         within first("form .index tbody tr") do
@@ -185,7 +185,7 @@ describe "gws_share_files_upload_policy", type: :feature, dbscope: :example, js:
         end
       end
       within_dialog do
-        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        wait_for_event_fired "ss:tempFile:addedWaitingList" do
           attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
         end
       end
