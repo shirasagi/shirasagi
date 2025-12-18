@@ -3,6 +3,7 @@ class Gws::Column::RadioButton < Gws::Column::Base
   include Gws::Addon::Column::OtherOption
 
   field :branch_section_ids, type: Array, default: []
+  permit_params branch_section_ids: []
 
   class << self
     def as_plugin
