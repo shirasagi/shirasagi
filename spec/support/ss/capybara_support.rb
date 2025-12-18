@@ -39,6 +39,9 @@ module SS::CapybaraSupport
       options = Selenium::WebDriver::Chrome::Options.new
       options.add_preference('download.prompt_for_download', false)
       options.add_preference('download.default_directory', SS::DownloadHelpers.path)
+      options.add_preference('credentials_enable_service', false)
+      options.add_preference('profile.password_manager_enabled', false)
+      options.add_preference('profile.password_manager_leak_detection', false)
       options.add_argument('window-size=1280,800')
       options.add_argument('log-level=0')
       options.add_argument('lang=ja-JP')
