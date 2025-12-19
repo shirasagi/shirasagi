@@ -71,8 +71,10 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   def release_node(node)
     node.cur_site = @site
 
-    if node.public?
+    if node.public? ||
+       (node.state == "ready" && node.close_date.present? && node.close_date <= @time)
       node.state = "closed"
+      node.release_date = nil
       node.close_date = nil
     elsif node.state == "ready"
       node.state = "public"
@@ -156,11 +158,11 @@ class Cms::Agents::Tasks::NodesController < ApplicationController
   def release
     @task.log "# #{@site.name}"
 
-    time = Time.zone.now
+    @time = Time.zone.now
 
     cond = [
-      { state: "ready", release_date: { "$lte" => time } },
-      { state: "public", close_date: { "$lte" => time } }
+      { state: "ready", release_date: { "$lte" => @time } },
+      { state: "public", close_date: { "$lte" => @time } }
     ]
     nodes = Cms::Node.site(@site).where("$or" => cond)
 

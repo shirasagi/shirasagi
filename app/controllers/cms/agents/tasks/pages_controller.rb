@@ -96,12 +96,12 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
   def release
     @task.log "# #{@site.name}"
 
-    time = Time.zone.now
+    @time = Time.zone.now
     cond = [
       # condition for pages to be public
-      { state: "ready", release_date: { "$lte" => time } },
+      { state: "ready", release_date: { "$lte" => @time } },
       # condition for pages to be closed
-      { state: "public", close_date: { "$lte" => time } }
+      { state: "public", close_date: { "$lte" => @time } }
     ]
 
     pages = Cms::Page.site(@site).where("$or" => cond)
@@ -122,8 +122,10 @@ class Cms::Agents::Tasks::PagesController < ApplicationController
   def release_page(page)
     page.cur_site = @site
 
-    if page.public?
+    if page.public? ||
+       (page.state == "ready" && page.close_date.present? && page.close_date <= @time)
       page.state = "closed"
+      page.release_date = nil
       page.close_date = nil
     elsif page.state == "ready"
       page.state = "public"
