@@ -20,7 +20,7 @@ describe 'gws_memo_forwards', type: :feature, dbscope: :example, js: true do
         click_button I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
-      expect(first('#addon-basic')).to have_text(email1)
+      expect(page).to have_css('#addon-basic', text: email1)
 
       expect(Gws::Memo::Forward.all.count).to eq 1
       Gws::Memo::Forward.all.first.tap do |forward|

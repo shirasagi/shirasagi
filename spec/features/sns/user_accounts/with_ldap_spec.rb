@@ -46,8 +46,8 @@ describe "ldap_pass_change", type: :feature, dbscope: :example, ldap: true, js: 
         fill_in "item[password]", with: new_password
         click_on I18n.t("ss.login", locale: I18n.default_locale)
       end
-      expect(current_path).to eq sns_mypage_path
       expect(page).to have_css("nav.user .user-name", text: user.name)
+      expect(current_path).to eq sns_mypage_path
     end
   end
 end

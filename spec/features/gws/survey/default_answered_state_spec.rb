@@ -78,7 +78,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         select I18n.t("gws/survey.options.answered_state.both"), from: "s[answered_state]"
         click_on I18n.t("ss.buttons.search")
       end
-
+      wait_for_all_turbo_frames
       within ".list-items" do
         expect(page).to have_link item1.name
         expect(page).to have_link item2.name
@@ -112,7 +112,7 @@ describe "gws_survey", type: :feature, dbscope: :example, js: true do
         select I18n.t("gws/survey.options.answered_state.both"), from: "s[answered_state]"
         click_on I18n.t("ss.buttons.search")
       end
-
+      wait_for_all_turbo_frames
       within ".list-items" do
         expect(page).to have_link item1.name
         expect(page).to have_link item2.name

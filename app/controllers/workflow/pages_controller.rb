@@ -130,6 +130,7 @@ class Workflow::PagesController < ApplicationController
 
     if result
       request_approval
+      flash[:notice] = t("workflow.notice.requested")
       render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_content
@@ -166,6 +167,7 @@ class Workflow::PagesController < ApplicationController
 
     if result
       request_approval
+      flash[:notice] = t("workflow.notice.requested")
       render json: create_success_response
     else
       render json: @item.errors.full_messages, status: :unprocessable_content
@@ -267,6 +269,7 @@ class Workflow::PagesController < ApplicationController
       )
     end
 
+    flash[:notice] = t("workflow.notice.approved")
     render json: create_success_response
   end
 
@@ -306,6 +309,8 @@ class Workflow::PagesController < ApplicationController
         url: params[:url], comment: params[:remand_comment]
       )
     end
+
+    flash[:notice] = t("workflow.notice.remanded")
     render json: create_success_response
   end
 

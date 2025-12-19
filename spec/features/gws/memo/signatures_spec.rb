@@ -26,7 +26,8 @@ describe 'gws_memo_signatures', type: :feature, dbscope: :example do
         fill_in "item[text]", with: "signature"
         click_button I18n.t('ss.buttons.save')
       end
-      expect(first('#addon-basic')).to have_text(name)
+      wait_for_notice I18n.t("ss.notice.saved")
+      expect(page).to have_css('#addon-basic', text: name)
     end
 
     it "#show" do
@@ -42,7 +43,8 @@ describe 'gws_memo_signatures', type: :feature, dbscope: :example do
         fill_in "item[name]", with: name
         click_button I18n.t('ss.buttons.save')
       end
-      expect(first('#addon-basic')).to have_text(name)
+      wait_for_notice I18n.t("ss.notice.saved")
+      expect(page).to have_css('#addon-basic', text: name)
     end
 
     it "#delete" do
@@ -50,6 +52,7 @@ describe 'gws_memo_signatures', type: :feature, dbscope: :example do
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(current_path).to eq index_path
     end
   end

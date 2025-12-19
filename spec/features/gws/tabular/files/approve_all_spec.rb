@@ -39,7 +39,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
   let!(:column1) do
     create(
       :gws_tabular_column_text_field, cur_site: site, cur_form: form, order: 10, required: "required",
-      input_type: "single", validation_type: "none", i18n_state: "disabled")
+      input_type: "single", i18n_default_value_translations: nil, validation_type: "none", i18n_state: "disabled")
   end
   let!(:column2) do
     create(
@@ -247,6 +247,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
     before do
       # required な項目をクリアすることで、不備がある投稿をシミュレーションする
       file_item.unset("col_#{column1.id}")
+      expect(file_item.send("col_#{column1.id}")).to be_blank
     end
 
     it do

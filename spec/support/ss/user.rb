@@ -28,7 +28,7 @@ end
 
 def login_user(user, pass: nil, login_path: nil, to: nil)
   visit login_path.presence || sns_login_path
-  ref = to.presence || '/robots.txt'
+  ref = to.presence || sns_connection_path
   within "form" do
     fill_in "item[email]", with: user.email.presence || user.uid
     fill_in "item[password]", with: pass.presence || user.in_password.presence || ss_pass
@@ -44,7 +44,11 @@ def login_user(user, pass: nil, login_path: nil, to: nil)
   if ref == '/robots.txt'
     expect(page).to have_content('User-agent')
   else
-    expect(page).to have_css('#head', text: user.name)
+    Retriable.retriable(on: [ Selenium::WebDriver::Error::WebDriverError ]) do
+      within "#head" do
+        expect(page).to have_css('.user-name', text: user.name)
+      end
+    end
   end
 end
 
