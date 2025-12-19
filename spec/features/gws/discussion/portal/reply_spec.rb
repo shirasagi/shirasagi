@@ -47,8 +47,8 @@ describe "gws_discussion_forum_portal", type: :feature, dbscope: :example, js: t
     within "form#item-form" do
       click_button I18n.t('ss.buttons.delete')
     end
-    expect(current_path).to eq index_path
     wait_for_notice I18n.t("ss.notice.deleted")
+    expect(current_path).to eq index_path
     expect(page).to have_no_text(text)
   end
 end

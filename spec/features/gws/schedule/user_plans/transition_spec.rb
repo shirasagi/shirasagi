@@ -44,12 +44,14 @@ describe "gws_schedule_user_plans", type: :feature, dbscope: :example, js: true 
     it "click event" do
       visit index_path
       first(".fc-content", text: item1.name).click
+      expect(page).to have_css("#addon-basic", text: item1.name)
       expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item1)
     end
 
     it "click allday event" do
       visit index_path
       first(".fc-content", text: item2.name).click
+      expect(page).to have_css("#addon-basic", text: item2.name)
       expect(current_path).to eq gws_schedule_user_plan_path(site, gws_user, item2)
     end
   end

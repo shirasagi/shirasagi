@@ -52,6 +52,7 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment1
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_notice I18n.t("workflow.notice.requested")
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
@@ -75,7 +76,7 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(remand_comment1)}/)
 
         item.reload
@@ -101,6 +102,7 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           fill_in "workflow[comment]", with: workflow_comment2
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_notice I18n.t("workflow.notice.requested")
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
@@ -124,7 +126,7 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment1)}/)
 
         item.reload
@@ -146,7 +148,7 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment2)}/)
 
         item.reload
@@ -169,7 +171,7 @@ describe "restart", type: :feature, dbscope: :example, js: true do
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         expect(page).to have_css(".mod-workflow-view dd", text: /#{::Regexp.escape(approve_comment3)}/)
 
         item.reload

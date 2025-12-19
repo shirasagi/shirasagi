@@ -22,8 +22,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       it do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         click_on page1.name
@@ -49,8 +48,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       it do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         within ".list-item[data-id='#{page1.id}']" do
@@ -88,8 +86,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       it "cannot publish page in edit view without ignore_alert permission when linked from block" do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         click_on page1.name
@@ -101,10 +98,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within "form#item-form" do
           click_on I18n.t("ss.buttons.publish_save")
         end
-
-        within "#menu" do
-          click_on I18n.t("article.page_navi.back_to_index")
-        end
+        wait_for_notice I18n.t("ss.notice.saved")
 
         visit article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
@@ -132,6 +126,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         within "#menu" do
           click_on I18n.t("article.page_navi.back_to_index")
         end
+        expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         Article::Page.find(page1.id).tap do |after_page|
           expect(after_page.state).to eq "public"
@@ -139,8 +134,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       it "cannot publish page in index view" do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         within ".list-item[data-id='#{page1.id}']" do
@@ -172,8 +166,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       it "can publish page in edit view without ignore_alert permission" do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         click_on page1.name
@@ -196,8 +189,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
       # 被リンクがある記事は一括公開操作が可能
       it "can publish page in index view without ignore_alert permission" do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page1.id}']", text: page1.name)
 
         within ".list-item[data-id='#{page1.id}']" do
@@ -234,14 +226,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       it "cannot publish page in index view when contains accessibility error" do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page_with_a11y_error.id}']", text: page_with_a11y_error.name)
 
         within ".list-item[data-id='#{page_with_a11y_error.id}']" do
           first("[type='checkbox']").click
         end
-        within ".list-head-action" do
+        within ".list-head" do
           click_on I18n.t('ss.links.make_them_public')
         end
 
@@ -273,14 +264,13 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       it "can publish page in index view when contains accessibility error" do
-        login_user user1
-        visit article_pages_path(site: site, cid: node)
+        login_user user1, to: article_pages_path(site: site, cid: node)
         expect(page).to have_css(".list-item[data-id='#{page_with_a11y_error.id}']", text: page_with_a11y_error.name)
 
         within ".list-item[data-id='#{page_with_a11y_error.id}']" do
           first("[type='checkbox']").click
         end
-        within ".list-head-action" do
+        within ".list-head" do
           click_on I18n.t('ss.links.make_them_public')
         end
 
