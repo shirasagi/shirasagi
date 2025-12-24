@@ -789,7 +789,10 @@ this.SS = (function () {
   SS.onDoubleClickGuardClick = function(ev) {
     var $element = $(ev.target);
     var timeout = $element.data("ss-timeout") || SS.defaultTimeoutMillis;
-
+    if (ev.isDefaultPrevented()) {
+      return;
+    }
+    
     $.rails.disableFormElement($element);
     if (timeout > -1) {
       setTimeout(function () {
