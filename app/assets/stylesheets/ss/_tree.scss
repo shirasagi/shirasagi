@@ -105,7 +105,6 @@
     display: block;
     flex-grow: 10;
     width: 100%;
-    padding: 2px;
     overflow: hidden;
     color: #333;
     text-decoration: none;
@@ -117,6 +116,11 @@
       background: #fbeee8;
       text-decoration: none;
     }
+  }
+
+  .ss-tree-item-title {
+    display: inline-block;
+    padding: 2px;
   }
 
   .ss-tree-subtree {
