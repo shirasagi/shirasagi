@@ -10,8 +10,8 @@
     padding-left: calc(1.5 * var(--spacing) - var(--radius) - 2px);
 
     &.is-current {
-      .ss-tree-subtree-wrap {
-        summary {
+      > .ss-tree-subtree-wrap {
+        > summary {
           a {
             background: #fbeee8;
           }
@@ -105,7 +105,6 @@
     display: block;
     flex-grow: 10;
     width: 100%;
-    padding: 2px;
     overflow: hidden;
     color: #333;
     text-decoration: none;
@@ -117,6 +116,11 @@
       background: #fbeee8;
       text-decoration: none;
     }
+  }
+
+  .ss-tree-item-title {
+    display: inline-block;
+    padding: 2px;
   }
 
   .ss-tree-subtree {
