@@ -39,8 +39,8 @@ module Cms::FormHelper
       settings = Cms::LoopSetting.site(@cur_site).shirasagi
     end
     settings.each do |item|
-      # setting_type == "template"のデータのみを返す
-      next unless item.setting_type_template?
+      # loop_html_setting_type == "template"のデータのみを返す
+      next unless item.loop_html_setting_type_template?
       items << [item.name, item.id, item.description]
     end
     items
@@ -50,8 +50,8 @@ module Cms::FormHelper
     items = []
     settings = Cms::LoopSetting.site(@cur_site).liquid
     settings.each do |item|
-      # setting_type == "snippet"のデータのみを返す
-      next unless item.setting_type_snippet?
+      # loop_html_setting_type == "snippet"のデータのみを返す
+      next unless item.loop_html_setting_type_snippet?
       attrs = { "data-snippet" => item.html.to_s }
       attrs["data-description"] = item.description if item.description.present?
       # enum化により、名前をそのまま使用（プレフィックス削除不要）

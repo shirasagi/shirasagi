@@ -9,6 +9,7 @@ class SS::Migration20251023000000
       attrs = {}
       attrs[:html_format] = "shirasagi" if raw["html_format"].blank?
       attrs[:state] = "public" if raw["state"].blank?
+      attrs[:loop_html_setting_type] = "template" if raw["loop_html_setting_type"].blank?
       next if attrs.blank?
 
       loop_setting.set(attrs)

@@ -30,7 +30,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 20,
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/Test Liquid Setting #{unique_id}"
       )
     end
@@ -255,7 +255,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html: "{% for item in items %}<div class='loop-item-1'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 5,
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/Liquid Setting 1 #{unique_id}"
       )
     end
@@ -267,7 +267,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html: "{% for item in items %}<div class='loop-item-2'>{{ item.title }}</div>{% endfor %}",
         state: "public",
         order: 15,
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/Liquid Setting 2 #{unique_id}"
       )
     end
@@ -278,7 +278,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html_format: "liquid",
         html: "{% for item in items %}<div class='closed-item'>{{ item.content }}</div>{% endfor %}",
         state: "closed",
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/Closed Setting #{unique_id}"
       )
     end
@@ -375,7 +375,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html: "{% for item in items %}<div class='loop-item'>{{ item.name }}</div>{% endfor %}",
         state: "public",
         order: 20,
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/Test Liquid Setting #{unique_id}"
       )
     end
@@ -386,7 +386,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
         html_format: "liquid",
         html: "{% for item in items %}<div class='template-item'>{{ item.name }}</div>{% endfor %}",
         state: "public",
-        setting_type: "template",
+        loop_html_setting_type: "template",
         name: "Template Setting #{unique_id}"
       )
     end
@@ -514,7 +514,7 @@ describe Cms::Form::FormsController, type: :feature, dbscope: :example, js: true
             site: site,
             html_format: "liquid",
             state: "public",
-            setting_type: "template",
+            loop_html_setting_type: "template",
             name: "Deleted Template")
           deleted_setting_id = deleted_setting.id
           deleted_setting.destroy

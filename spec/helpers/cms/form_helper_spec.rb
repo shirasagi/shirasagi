@@ -61,7 +61,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         site: site,
         html_format: "liquid",
         state: "public",
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/テストスニペット"
       )
     end
@@ -124,7 +124,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         site: site,
         html_format: "liquid",
         state: "public",
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/テストスニペット"
       )
     end
@@ -133,7 +133,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         site: site,
         html_format: "liquid",
         state: "public",
-        setting_type: "template",
+        loop_html_setting_type: "template",
         name: "ループHTML設定"
       )
     end
@@ -142,7 +142,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         site: site,
         html_format: "liquid",
         state: "closed",
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/クローズドスニペット"
       )
     end
@@ -183,7 +183,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         site: site,
         html_format: "liquid",
         state: "public",
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/テストスニペット（説明付き）",
         description: "これはスニペットの説明です"
       )
@@ -199,7 +199,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
         site: site,
         html_format: "liquid",
         state: "public",
-        setting_type: "snippet",
+        loop_html_setting_type: "snippet",
         name: "スニペット/テストスニペット（説明なし）",
         description: nil
       )
@@ -229,7 +229,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
-          setting_type: "snippet",
+          loop_html_setting_type: "snippet",
           name: "スニペット/Liquid Setting 1"
         )
       end
@@ -239,7 +239,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
-          setting_type: "snippet",
+          loop_html_setting_type: "snippet",
           name: "スニペット/Liquid Setting 2"
         )
       end
@@ -249,7 +249,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
-          setting_type: "template",
+          loop_html_setting_type: "template",
           name: "Liquid Setting Non Snippet"
         )
       end
@@ -311,7 +311,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
-          setting_type: "snippet",
+          loop_html_setting_type: "snippet",
           name: "スニペット/Liquid Setting"
         )
       end
@@ -321,7 +321,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "liquid",
           html: liquid_html,
           state: "public",
-          setting_type: "template",
+          loop_html_setting_type: "template",
           name: "Liquid Setting Non Snippet"
         )
       end
@@ -331,6 +331,7 @@ describe Cms::FormHelper, type: :helper, dbscope: :example do
           html_format: "shirasagi",
           html: shirasagi_html,
           state: "public",
+          loop_html_setting_type: "template",
           name: "Shirasagi Setting"
         )
       end

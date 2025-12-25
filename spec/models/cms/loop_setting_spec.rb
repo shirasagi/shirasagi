@@ -28,9 +28,9 @@ describe Cms::LoopSetting, dbscope: :example do
       it { expect(subject.selector.to_h).to include("html_format" => "liquid") }
     end
 
-    context "when setting_type is given" do
-      subject { described_class.search(setting_type: "snippet") }
-      it { expect(subject.selector.to_h).to include("setting_type" => "snippet") }
+    context "when loop_html_setting_type is given" do
+      subject { described_class.search(loop_html_setting_type: "snippet") }
+      it { expect(subject.selector.to_h).to include("loop_html_setting_type" => "snippet") }
     end
   end
 
@@ -44,8 +44,8 @@ describe Cms::LoopSetting, dbscope: :example do
         expect(subject.html_format).to eq "shirasagi"
       end
 
-      it "has default setting_type" do
-        expect(subject.setting_type).to eq "template"
+      it "has default loop_html_setting_type" do
+        expect(subject.loop_html_setting_type).to eq "template"
       end
     end
 
@@ -64,10 +64,10 @@ describe Cms::LoopSetting, dbscope: :example do
         expect(options).to include([I18n.t('cms.options.loop_format.liquid'), 'liquid'])
       end
 
-      it "returns setting_type options for label helper" do
-        options = loop_setting.setting_type_options
-        expect(options).to include([I18n.t('cms.options.setting_type.template'), 'template'])
-        expect(options).to include([I18n.t('cms.options.setting_type.snippet'), 'snippet'])
+      it "returns loop_html_setting_type options for label helper" do
+        options = loop_setting.loop_html_setting_type_options
+        expect(options).to include([I18n.t('cms.options.loop_html_setting_type.template'), 'template'])
+        expect(options).to include([I18n.t('cms.options.loop_html_setting_type.snippet'), 'snippet'])
       end
     end
 
@@ -210,7 +210,7 @@ describe Cms::LoopSetting, dbscope: :example do
         name: "loop-setting-#{unique_id}"
       )
       expect(loop_setting.state).to eq "public"
-      expect(loop_setting.setting_type).to eq "template"
+      expect(loop_setting.loop_html_setting_type).to eq "template"
     end
 
     it "accepts closed" do
@@ -225,7 +225,7 @@ describe Cms::LoopSetting, dbscope: :example do
     end
   end
 
-  describe "setting_type" do
+  describe "loop_html_setting_type" do
     let(:site) { cms_site }
 
     it "defaults to template" do
@@ -233,27 +233,27 @@ describe Cms::LoopSetting, dbscope: :example do
         cur_site: site,
         name: "loop-setting-#{unique_id}"
       )
-      expect(loop_setting.setting_type).to eq "template"
+      expect(loop_setting.loop_html_setting_type).to eq "template"
     end
 
     it "accepts snippet" do
-      loop_setting = build(:cms_loop_setting, site: site, setting_type: "snippet")
+      loop_setting = build(:cms_loop_setting, site: site, loop_html_setting_type: "snippet")
       expect(loop_setting).to be_valid
-      expect(loop_setting.setting_type_snippet?).to be true
-      expect(loop_setting.setting_type_template?).to be false
+      expect(loop_setting.loop_html_setting_type_snippet?).to be true
+      expect(loop_setting.loop_html_setting_type_template?).to be false
     end
 
     it "accepts template" do
-      loop_setting = build(:cms_loop_setting, site: site, setting_type: "template")
+      loop_setting = build(:cms_loop_setting, site: site, loop_html_setting_type: "template")
       expect(loop_setting).to be_valid
-      expect(loop_setting.setting_type_template?).to be true
-      expect(loop_setting.setting_type_snippet?).to be false
+      expect(loop_setting.loop_html_setting_type_template?).to be true
+      expect(loop_setting.loop_html_setting_type_snippet?).to be false
     end
 
     it "rejects invalid values" do
-      loop_setting = build(:cms_loop_setting, site: site, setting_type: "invalid")
+      loop_setting = build(:cms_loop_setting, site: site, loop_html_setting_type: "invalid")
       expect(loop_setting).not_to be_valid
-      expect(loop_setting.errors[:setting_type]).to include(I18n.t('errors.messages.inclusion'))
+      expect(loop_setting.errors[:loop_html_setting_type]).to include(I18n.t('errors.messages.inclusion'))
     end
   end
 end
