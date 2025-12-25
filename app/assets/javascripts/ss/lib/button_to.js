@@ -53,10 +53,16 @@ SS_ButtonTo.invokeAction = function(ev) {
   var confirmation = $button.data('ss-confirmation');
   if (confirmation) {
     if (!confirm(confirmation)) {
+      // mark canceled for other handlers in this same click event
       ev.preventDefault();
       return;
     }
   }
+
+  // mark this click event as "will submit" for other handlers (e.g. double click guard)
+  // NOTE: we intentionally set this before ev.preventDefault() because some handlers
+  //       treat defaultPrevented as "canceled".
+  ev.ssButtonToSubmit = true;
 
   ev.preventDefault();
 
