@@ -2,26 +2,14 @@
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <dl class="see">
-      <dt><%= @model.t :html_format %></dt>
       <dd>
         <%= f.select :html_format, @model.new.html_format_options,
           { selected: @s.html_format, include_blank: t("ss.all") },
           { data: { controller: "ss--submit-on-change" } } %>
-      </dd>
-
-      <dt><%= @model.t :setting_type %></dt>
-      <dd>
         <%= f.select :setting_type, @model.new.setting_type_options,
           { selected: @s.setting_type, include_blank: t("ss.all") },
           { data: { controller: "ss--submit-on-change" } } %>
-      </dd>
-
-      <dt><%= t("ss.keyword") %></dt>
-      <dd>
-        <%= f.text_field :keyword, value: @s.keyword, style: "width: 300px;" %>
-      </dd>
-
-      <dd>
+        <%= f.text_field :keyword, value: @s.keyword, placeholder: t('cms.search_contents_fields.keyword_place_holder'), style: "width: 300px;" %>
         <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
       </dd>
     </dl>
