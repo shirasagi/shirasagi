@@ -65,6 +65,7 @@ ja:
     loop_html: ループHTML
     labels:
       snippets: スニペット
+      loop_html: ループHTMLテンプレート
     max_file_size: 最大ファイルサイズ
     max_file_size_setting: 最大ファイルサイズ設定
     image_resize: 画像リサイズ
@@ -276,6 +277,7 @@ ja:
       close: 非公開状態で保存しようとしています
       convert_to_cms_page: 固定ページに変換してよろしいですか？
       converted_html: 取り込んだHTMLはWYSIWYGエディタ内に展開される為、HTMLが変換される可能性があります。
+      switch_to_loop_setting_discards_direct_input: "ループ設定に切り替えると、直接入力したループHTMLは保存されません。\n切り替えてよろしいですか？"
       check_contains_urls: このページへのリンクを確認する。
       check_linked_url_list: リンクを貼っているページを確認する
       contains_urls_exists: このページへのリンク、関連記事、添付ファイルが以下のページに含まれています。
@@ -299,6 +301,9 @@ ja:
       generate_locked: 書き出しを停止しました。
       generate_unlocked: 書き出しの停止を解除しました。
       over_content_quota: 使用容量を超過しているフォルダがあります。
+      loop_html_load_error: ループHTMLテンプレートの読み込みに失敗しました。
+      loop_html_not_found: 選択されたループHTMLテンプレートが見つかりませんでした。
+      loop_html_server_error: サーバーエラーが発生しました。しばらくしてから再度お試しください。
       check_links_report:
         - "%{time} 時点でのレポートです。"
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
@@ -549,6 +554,9 @@ ja:
       loop_format:
         shirasagi: SHIRASAGI
         liquid: Liquid
+      loop_html_setting_type:
+        template: テンプレート
+        snippet: スニペット
       alignment:
         flow: 自動
         left: 左
@@ -1083,6 +1091,8 @@ ja:
       cms/generation_report/aggregation: 書き出し性能履歴の集計結果
       cms/source_cleaner_template: ソースクリーニング
     errors:
+      messages:
+        loop_liquid_and_loop_setting_id_are_exclusive: ループHTML（Liquid形式：直接入力）と、ループ設定（テンプレート）は同時に設定できません。どちらか一方を選択してください。
       models:
         cms/content:
           unsafe_numeric_filename: は、数字のみで構成されていますが、数字のみのファイル名は自由に使用できません。アルファベットを1文字以上加えてください。
@@ -1204,6 +1214,7 @@ ja:
         description: 説明
         order: 並び順
         html_format: HTML種別
+        loop_html_setting_type: 種類
       cms/command:
         name: タイトル
         description: 説明
@@ -2053,8 +2064,15 @@ ja:
       labels:
         snippets:
           - サイト設定のループHTMLで作成したHTMLを選択して挿入できます。
+          - 設定タイプが「スニペット」のループHTML設定が表示されます。
           - 選択したHTMLは、現在のカーソル位置に追加されます。
           - HTMLはLiquid形式で記述する必要があります。
+          - スニペットは呼び出し時にコピーされるため、サイト設定で編集した内容は既に挿入されたコードには反映されません。
+        loop_html:
+          - サイト設定のループHTMLで作成したテンプレートを選択して挿入できます。
+          - 設定タイプが「テンプレート」のループHTML設定が表示されます。
+          - HTMLはLiquid形式で記述する必要があります。
+          - ループHTMLテンプレートはサイト設定で編集した内容は自動的に反映されます。PCプレビューで確認できます。
     cms/addon/readable_setting:
       readable_setting_range:
         - <b>全公開</b> - 誰でも閲覧できます。
@@ -2488,6 +2506,13 @@ ja:
         -
         - "SHIRASAGI: シラサギ形式で上部 HTML, ループ HTML, 下部 HTMLを記述します。"
         - "Liquid: Liquid 形式でループ HTML を記述します。"
+        -
+        - "Liquid形式では、従来のループHTMLの機能に加えて、スニペットとして呼び出す機能があります。"
+        - "スニペットとして呼び出すためには、サイト設定で「スニペット」として設定してください。"
+        - "スニペットとして呼び出されたループHTMLは、サイト設定で変更しても、呼び出し先に反映されません（呼び出し時にコピーされます）。"
+        - "【使い分けの目安】"
+        - "・スニペット: 短いコード片（例: {{ page.name }}）を、ループHTMLの編集画面でカーソル位置に挿入するために使用"
+        - "・ループHTML: 完全なループ構造（{% for page in pages %}...{% endfor %}）を含むテンプレートを、ページリスト全体の表示に使用"
       upper_html:
         - リスト部分の上部に任意の内容のHTMLを記述することが可能です。
         - |-
@@ -2576,7 +2601,18 @@ ja:
         - 通常の並び順よりもこちらを優先します。
 
     cms/loop_setting:
+      name:
+        - ループHTML設定の名前を入力します。
+        - "「/」で区切ると、「大見出し/小見出し」の形式で表示されます。（例：記事/基本記事リスト）"
+      description:
+        - ループHTML設定の説明を入力します。
+        - 検索エンジン用のページ概要の設定に利用します。
+        - ループHTML設定を選択するフォーム画面で、この説明が表示されます。
       html_format: *loop_format
+      loop_html_setting_type:
+        - ループHTML設定の種類を選択します。
+        - "テンプレート: 完全なループ構造を含むテンプレートを、ページリスト全体の表示に使用します。"
+        - "スニペット: 短いコード片を、ループHTMLの編集画面でカーソル位置に挿入するために使用します。"
 
     cms/addon/tabs:
       conditions:
