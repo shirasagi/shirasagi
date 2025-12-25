@@ -6,8 +6,8 @@
         <%= f.select :html_format, @model.new.html_format_options,
           { selected: @s.html_format, include_blank: t("ss.all") },
           { data: { controller: "ss--submit-on-change" } } %>
-        <%= f.select :setting_type, @model.new.setting_type_options,
-          { selected: @s.setting_type, include_blank: t("ss.all") },
+        <%= f.select :loop_html_setting_type, @model.new.loop_html_setting_type_options,
+          { selected: @s.loop_html_setting_type, include_blank: t("ss.all") },
           { data: { controller: "ss--submit-on-change" } } %>
         <%= f.text_field :keyword, value: @s.keyword, placeholder: t('cms.search_contents_fields.keyword_place_holder'), style: "width: 300px;" %>
         <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
