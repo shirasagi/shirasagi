@@ -97,7 +97,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
           fill_in "item[name]", with: "Re"
           fill_in "item[poster]", with: "poster"
           fill_in "item[text]", with: "text text"
-          fill_in "item[delete_key]", with: ss_pass
+          fill_in "item[delete_key]", with: "pass"
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: SS::Captcha.order_by(id: -1).first.captcha_text
@@ -139,7 +139,7 @@ describe 'board_agents_nodes_anpi_post', type: :feature, dbscope: :example do
       expect(status_code).to eq 200
       within 'div.board-post-form' do
         within 'div.columns' do
-          fill_in "item[delete_key]", with: ss_pass
+          fill_in "item[delete_key]", with: "pass"
         end
         within 'div.simple-captcha' do
           fill_in "answer[captcha_answer]", with: SS::Captcha.order_by(id: -1).first.captcha_text
