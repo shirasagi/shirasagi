@@ -48,6 +48,10 @@ class Cms::LoopSetting
         end
       end
       if params[:loop_html_setting_type].present?
+        # シラサギ形式では snippet は選べない（画面切替時にパラメータだけ残るケース対策）
+        if params[:html_format] == "shirasagi" && params[:loop_html_setting_type] == "snippet"
+          return criteria
+        end
         criteria = criteria.where(loop_html_setting_type: params[:loop_html_setting_type])
       end
       criteria

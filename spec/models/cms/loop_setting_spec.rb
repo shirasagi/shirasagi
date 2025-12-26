@@ -32,6 +32,12 @@ describe Cms::LoopSetting, dbscope: :example do
       subject { described_class.search(loop_html_setting_type: "snippet") }
       it { expect(subject.selector.to_h).to include("loop_html_setting_type" => "snippet") }
     end
+
+    context "when html_format is shirasagi and loop_html_setting_type is snippet" do
+      subject { described_class.search(html_format: "shirasagi", loop_html_setting_type: "snippet") }
+      it { expect(subject.selector.to_h).to include("html_format" => include("$in" => include(nil, "shirasagi"))) }
+      it { expect(subject.selector.to_h).not_to include("loop_html_setting_type" => "snippet") }
+    end
   end
 
   describe "html_format" do
@@ -237,7 +243,8 @@ describe Cms::LoopSetting, dbscope: :example do
     end
 
     it "accepts snippet" do
-      loop_setting = build(:cms_loop_setting, site: site, loop_html_setting_type: "snippet")
+      # snippet は liquid 形式のみ選択可能（shirasagi は template 固定）
+      loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", loop_html_setting_type: "snippet")
       expect(loop_setting).to be_valid
       expect(loop_setting.loop_html_setting_type_snippet?).to be true
       expect(loop_setting.loop_html_setting_type_template?).to be false
@@ -251,7 +258,9 @@ describe Cms::LoopSetting, dbscope: :example do
     end
 
     it "rejects invalid values" do
-      loop_setting = build(:cms_loop_setting, site: site, loop_html_setting_type: "invalid")
+      # shirasagi だと normalize_loop_html_setting_type により template に補正されるため、
+      # バリデーションを確認するために liquid を指定する
+      loop_setting = build(:cms_loop_setting, site: site, html_format: "liquid", loop_html_setting_type: "invalid")
       expect(loop_setting).not_to be_valid
       expect(loop_setting.errors[:loop_html_setting_type]).to include(I18n.t('errors.messages.inclusion'))
     end
