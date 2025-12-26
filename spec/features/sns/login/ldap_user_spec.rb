@@ -18,7 +18,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true, ldap: true do
 
         within "form" do
           fill_in "item[email]", with: ldap_user.uid
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_on I18n.t("ss.login")
         end
         expect(current_path).to eq sns_mypage_path
@@ -32,7 +32,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true, ldap: true do
 
         within "form" do
           fill_in "item[email]", with: ldap_user.email
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_on I18n.t("ss.login")
         end
         expect(current_path).to eq sns_mypage_path

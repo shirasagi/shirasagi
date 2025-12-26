@@ -30,7 +30,7 @@ describe 'GET gws/apis/users#index', type: :request, dbscope: :example do
     login_params = {
       'authenticity_token' => auth_token,
       'item[email]' => user.email,
-      'item[password]' => "pass"
+      'item[password]' => ss_pass
     }
     post sns_login_path(format: :json), params: login_params
 

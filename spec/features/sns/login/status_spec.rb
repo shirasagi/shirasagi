@@ -7,7 +7,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
     visit sns_login_path
     within "form" do
       fill_in "item[email]", with: user.email
-      fill_in "item[password]", with: user.in_password.presence || "pass"
+      fill_in "item[password]", with: user.in_password.presence || ss_pass
       click_on I18n.t("ss.login")
     end
     expect(page).to have_css(".user .user-name", text: user.name)

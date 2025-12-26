@@ -211,7 +211,7 @@ describe SS::User, dbscope: :example do
         let(:entity) do
           {
             uid: unique_id,
-            in_password: 'pass',
+            in_password: ss_pass,
             name: unique_id,
           }
         end
@@ -226,7 +226,7 @@ describe SS::User, dbscope: :example do
         let(:entity) do
           {
             uid: unique_id,
-            in_password: 'pass',
+            in_password: ss_pass,
             name: unique_id,
             account_expiration_date: now + 7.days
           }
@@ -242,7 +242,7 @@ describe SS::User, dbscope: :example do
         let(:entity) do
           {
             uid: unique_id,
-            in_password: 'pass',
+            in_password: ss_pass,
             name: unique_id,
             account_expiration_date: now - 7.days
           }
@@ -260,7 +260,7 @@ describe SS::User, dbscope: :example do
         let(:entity) do
           {
             uid: unique_id,
-            in_password: 'pass',
+            in_password: ss_pass,
             name: unique_id,
             account_start_date: now - 7.days
           }
@@ -276,7 +276,7 @@ describe SS::User, dbscope: :example do
         let(:entity) do
           {
             uid: unique_id,
-            in_password: 'pass',
+            in_password: ss_pass,
             name: unique_id,
             account_start_date: now - 7.days,
             account_expiration_date: now + 7.days
@@ -293,7 +293,7 @@ describe SS::User, dbscope: :example do
         let(:entity) do
           {
             uid: unique_id,
-            in_password: 'pass',
+            in_password: ss_pass,
             name: unique_id,
             account_start_date: now - 7.days,
             account_expiration_date: now - 3.days
@@ -312,7 +312,7 @@ describe SS::User, dbscope: :example do
         let(:entity) do
           {
             uid: unique_id,
-            in_password: 'pass',
+            in_password: ss_pass,
             name: unique_id,
             account_start_date: now + 3.days,
           }
@@ -328,7 +328,7 @@ describe SS::User, dbscope: :example do
         let(:entity) do
           {
             uid: unique_id,
-            in_password: 'pass',
+            in_password: ss_pass,
             name: unique_id,
             account_start_date: now + 3.days,
             account_expiration_date: now + 7.days,

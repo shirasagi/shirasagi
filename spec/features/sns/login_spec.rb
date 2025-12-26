@@ -17,7 +17,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         visit sns_login_path
         within "form" do
           fill_in "item[email]", with: sys_user.email
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
         expect(page).to have_css("nav.user .user-name", text: sys_user.name)
@@ -41,7 +41,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         visit sns_login_path(ref: sns_cur_user_profile_path)
         within "form" do
           fill_in "item[email]", with: sys_user.email
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
         expect(page).to have_css("nav.user .user-name", text: sys_user.name)
@@ -67,7 +67,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         visit sns_login_path(ref: ref)
         within "form" do
           fill_in "item[email]", with: sys_user.email
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
         expect(page).to have_css("nav.user .user-name", text: sys_user.name)
@@ -101,7 +101,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         visit sns_login_path(ref: "https://www.google.com/")
         within "form" do
           fill_in "item[email]", with: sys_user.email
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
         expect(page).to have_css("nav.user .user-name", text: sys_user.name)
@@ -127,7 +127,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         visit sns_login_path
         within "form" do
           fill_in "item[email]", with: subject.email
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
         expect(page).to have_css("nav.user .user-name", text: subject.name)
@@ -142,7 +142,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         visit sns_login_path
         within "form" do
           fill_in "item[email]", with: subject.name
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
         expect(page).to have_css("nav.user .user-name", text: subject.name)
@@ -157,7 +157,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
         visit sns_login_path
         within "form" do
           fill_in "item[email]", with: subject.organization_uid
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
         within ".login-box" do
@@ -183,7 +183,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
           visit sns_login_path
           within "form" do
             fill_in "item[email]", with: subject.organization_uid
-            fill_in "item[password]", with: "pass"
+            fill_in "item[password]", with: ss_pass
             click_button I18n.t("ss.login")
           end
           expect(current_path).to eq sns_mypage_path
@@ -197,7 +197,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
     let(:base_dn) { "dc=example,dc=jp" }
     let(:group) { create(:cms_group, name: unique_id, ldap_dn: base_dn) }
     let(:user_dn) { "uid=user1, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
-    let(:password) { "pass" }
+    let(:password) { ss_pass }
     subject { create(:cms_ldap_user, ldap_dn: user_dn, group: group) }
 
     before do
@@ -223,7 +223,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
   context "when email/password get parameters is given" do
     let(:role) { sys_role }
-    let(:user) { create(:sys_user, in_password: "pass", sys_role_ids: [role.id]) }
+    let(:user) { create(:sys_user, in_password: ss_pass, sys_role_ids: [role.id]) }
     # bookmark support
     it "valid login" do
       visit sns_login_path(email: user.email)

@@ -12,7 +12,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
       visit login_path
       within "form" do
         fill_in "item[email]", with: "wrong"
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       expect(current_path).to eq login_path
@@ -21,7 +21,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
     context 'with duplicated organization_uid' do
       let(:group) { create(:cms_group, name: unique_id) }
       let(:user2) do
-        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
+        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: ss_pass,
                organization_uid: user.organization_uid, organization_id: group.id,
                group_ids: [group.id], cms_role_ids: [cms_role.id])
       end
@@ -34,7 +34,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
         visit login_path
         within "form" do
           fill_in "item[email]", with: user2.organization_uid
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_button I18n.t("ss.login")
         end
         expect(current_path).to eq login_path
@@ -47,7 +47,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       expect(current_path).to eq main_path
@@ -57,7 +57,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.organization_uid
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       expect(current_path).to eq main_path
@@ -79,7 +79,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
       visit cms_login_path(site: site, ref: cms_layouts_path(site: site))
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       wait_for_js_ready
@@ -96,7 +96,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
       visit cms_login_path(site: site, ref: ref)
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       wait_for_js_ready
@@ -121,7 +121,7 @@ describe "cms_login", type: :feature, dbscope: :example, js: true do
       visit cms_login_path(site: site, ref: "https://www.google.com/")
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
 
