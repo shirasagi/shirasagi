@@ -23,7 +23,7 @@ describe Webmail::GroupExport::Importer, type: :model, dbscope: :example do
     expect(imap_setting.name).to eq "account1"
     expect(imap_setting.from).to eq "name1"
     expect(imap_setting.imap_account).to eq "g1@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
 
     group = Webmail::Group.find(2)
     expect(group.name).to eq "シラサギ市/企画政策部"
@@ -34,7 +34,7 @@ describe Webmail::GroupExport::Importer, type: :model, dbscope: :example do
     expect(imap_setting.name).to eq "account2"
     expect(imap_setting.from).to eq "name2"
     expect(imap_setting.imap_account).to eq "g2@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
 
     group = Webmail::Group.find(3)
     expect(group.name).to eq "シラサギ市/企画政策部/政策課"
@@ -45,13 +45,13 @@ describe Webmail::GroupExport::Importer, type: :model, dbscope: :example do
     expect(imap_setting.name).to eq "account3-1"
     expect(imap_setting.from).to eq "name3-1"
     expect(imap_setting.imap_account).to eq "g3-1@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
 
     imap_setting = group.imap_settings[1]
     expect(imap_setting.name).to eq "account3-2"
     expect(imap_setting.from).to eq "name3-2"
     expect(imap_setting.imap_account).to eq "g3-2@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
 
     # second import
     importer = described_class.new
@@ -70,7 +70,7 @@ describe Webmail::GroupExport::Importer, type: :model, dbscope: :example do
     expect(imap_setting.name).to eq "account1"
     expect(imap_setting.from).to eq "name1"
     expect(imap_setting.imap_account).to eq "g1@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
 
     group = Webmail::Group.find(2)
     expect(group.name).to eq "シラサギ市/企画政策部"
@@ -81,7 +81,7 @@ describe Webmail::GroupExport::Importer, type: :model, dbscope: :example do
     expect(imap_setting.name).to eq "account2"
     expect(imap_setting.from).to eq "name2"
     expect(imap_setting.imap_account).to eq "g2@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
 
     group = Webmail::Group.find(3)
     expect(group.name).to eq "シラサギ市/企画政策部/政策課"
@@ -92,18 +92,18 @@ describe Webmail::GroupExport::Importer, type: :model, dbscope: :example do
     expect(imap_setting.name).to eq "account3-1"
     expect(imap_setting.from).to eq "name3-1"
     expect(imap_setting.imap_account).to eq "g3-1@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
 
     imap_setting = group.imap_settings[1]
     expect(imap_setting.name).to eq "account3-2"
     expect(imap_setting.from).to eq "name3-2"
     expect(imap_setting.imap_account).to eq "g3-2@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
 
     imap_setting = group.imap_settings[2]
     expect(imap_setting.name).to eq "account3-3"
     expect(imap_setting.from).to eq "name3-3"
     expect(imap_setting.imap_account).to eq "g3-3@example.jp"
-    expect(imap_setting.decrypt_imap_password).to eq ss_pass
+    expect(imap_setting.decrypt_imap_password).to eq "pass"
   end
 end
