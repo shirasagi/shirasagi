@@ -33,7 +33,7 @@ module Gws
         site_id: site.id,
         permissions: Gws::Role.permission_names
       )
-      Gws::User.create(name: "管理者", uid: "sup", in_password: "pass",
+      Gws::User.create(name: "管理者", uid: "sup", in_password: ss_pass,
         group_ids: [site.id], gws_role_ids: [role.id], organization_id: site.id,
         deletion_lock_state: "locked"
       )

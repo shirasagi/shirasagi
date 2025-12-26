@@ -6,6 +6,6 @@ FactoryBot.define do
     email { unique_email }
     poster_url { unique_url }
     text { "post" }
-    delete_key { "pass" }
+    delete_key { ss_pass }
   end
 end

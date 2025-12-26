@@ -33,7 +33,7 @@ describe "cms_users", type: :feature, dbscope: :example do
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         expect(page).to have_css('#item_email_errors', text: '')
-        fill_in "item[in_password]", with: "pass"
+        fill_in "item[in_password]", with: ss_pass
         check "item[cms_role_ids][]"
         click_on I18n.t("ss.buttons.save")
       end

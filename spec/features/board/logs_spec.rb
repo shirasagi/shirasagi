@@ -24,7 +24,7 @@ describe "board_posts", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: "sample"
         fill_in "item[poster]", with: "sample"
         fill_in "item[text]", with: "sample"
-        fill_in "item[delete_key]", with: "pass"
+        fill_in "item[delete_key]", with: ss_pass
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
