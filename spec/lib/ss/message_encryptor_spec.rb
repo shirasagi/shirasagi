@@ -12,12 +12,12 @@ describe SS::MessageEncryptor do
     expect(described_class.secret).to eq SS::Crypto.salt[0..31]
     expect(described_class.basic_auth).to eq [basic_auth_user, basic_auth_pass]
     expect(described_class.encryptor.class).to eq ::ActiveSupport::MessageEncryptor
-    expect(described_class.http_basic_authentication).to eq %w(user pass)
+    expect(described_class.http_basic_authentication).to eq [ "user", ss_pass ]
     expect(described_class.encrypt('user')).not_to eq 'user'
     expect(described_class.encrypt(ss_pass)).not_to eq ss_pass
     expect(described_class.encrypt(%w(user pass))).not_to eq %w(user pass)
     expect(described_class.decrypt(basic_auth_user)).to eq 'user'
     expect(described_class.decrypt(basic_auth_pass)).to eq ss_pass
-    expect(described_class.decrypt([basic_auth_user, basic_auth_pass])).to eq %w(user pass)
+    expect(described_class.decrypt([basic_auth_user, basic_auth_pass])).to eq [ "user", ss_pass ]
   end
 end
