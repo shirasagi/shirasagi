@@ -73,10 +73,19 @@ module Gws
     end
 
     def import_users
+      csv = ::File.binread("#{::Rails.root}/spec/fixtures/gws/affair/affair_users.csv")
+      csv.encode!("UTF-8", "CP932")
+      csv.gsub!("pass", ss_pass)
+
+      file = SS::TmpDir.tmpfile(extname: ".csv", binary: true) do |f|
+        f.write SS::Csv::UTF8_BOM
+        f.write csv
+      end
+
       item = Gws::UserCsv::Importer.new
       item.cur_site = site
       item.cur_user = sup
-      item.in_file = Rack::Test::UploadedFile.new("#{::Rails.root}/spec/fixtures/gws/affair/affair_users.csv")
+      item.in_file = Rack::Test::UploadedFile.new(file)
       item.import
       puts "import affair users : #{Gws::User.all.count}"
     end
