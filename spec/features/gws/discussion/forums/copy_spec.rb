@@ -12,7 +12,6 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
   let!(:post2_1) { create :gws_discussion_post, forum: forum, topic: topic2, parent: topic2 }
   let!(:post2_2) { create :gws_discussion_post, forum: forum, topic: topic2, parent: topic2, file_ids: [file2.id] }
 
-  let(:name) { "copy" }
   let!(:copy_path) { copy_gws_discussion_forum_path(mode: '-', site: site, id: forum) }
 
   let(:file1) { tmp_ss_file(user: user, contents: unique_id, basename: "text.txt") }
@@ -27,6 +26,7 @@ describe "gws_discussion_forums", type: :feature, dbscope: :example, js: true do
       fill_in "item[name]", with: "copy"
       click_button I18n.t('ss.buttons.save')
     end
+    wait_for_notice I18n.t("ss.notice.saved")
 
     # new forum
     new_forum = Gws::Discussion::Forum.where(name: "copy").first
