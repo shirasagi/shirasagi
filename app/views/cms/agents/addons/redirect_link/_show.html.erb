@@ -1,4 +1,4 @@
-<% return if !@item.class.redirect_link_enabled? %>
+<% return if !@cur_site.redirect_link_enabled? %>
 <% return if @item.redirect_link.blank? %>
 
 <dl class="see mod-cms-page_link">
