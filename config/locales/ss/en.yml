@@ -219,6 +219,7 @@ en:
       cancel: Cancel
       edit: Edit
       delete: Delete
+      delete_all: Delete All
       deleting: Deleting
       search: Search
       replace: Replace
