@@ -1,24 +1,15 @@
-<% @s ||= @model::SearchForm.from(params[:s]) %>
 <%
-  loop_html_setting_type_options = @model.new.loop_html_setting_type_options
   html_format = @s&.html_format
   loop_setting = @model.new(html_format: html_format)
-  loop_html_setting_type_include_blank = (html_format.blank? || html_format == 'liquid')
+  is_shirasagi = html_format.present? && loop_setting.html_format_shirasagi?
 
-  if html_format.present? && loop_setting.html_format_shirasagi?
+  loop_html_setting_type_options = @model.new.loop_html_setting_type_options
+  loop_html_setting_type_include_blank = (html_format.blank? || html_format == 'liquid')
+  if is_shirasagi
     # シラサギ形式は「テンプレート」固定（検索UI上もテンプレートのみ表示）
     loop_html_setting_type_options = loop_html_setting_type_options.select { |_, v| v == 'template' }
+    loop_html_setting_type_include_blank = false
   end
-
-  # 初期表示はテンプレート（ただし「すべて」を明示的に選んだ場合は維持する）
-  loop_html_setting_type_selected =
-    if html_format.present? && loop_setting.html_format_shirasagi?
-      'template'
-    elsif params.dig(:s, :loop_html_setting_type).nil?
-      'template'
-    else
-      @s.loop_html_setting_type
-    end
 %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
@@ -28,7 +19,7 @@
           { selected: @s.html_format, include_blank: t("ss.all") },
           { data: { controller: "ss--submit-on-change" } } %>
         <%= f.select :loop_html_setting_type, loop_html_setting_type_options,
-          { selected: loop_html_setting_type_selected, include_blank: (t("ss.all") if loop_html_setting_type_include_blank) },
+          { selected: @s.loop_html_setting_type, include_blank: (t("ss.all") if loop_html_setting_type_include_blank) },
           { data: { controller: "ss--submit-on-change" } } %>
         <%= f.text_field :keyword, value: @s.keyword, placeholder: t('cms.search_contents_fields.keyword_place_holder'), style: "width: 300px;" %>
         <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />

@@ -49,9 +49,7 @@ class Cms::LoopSetting
       end
       if params[:loop_html_setting_type].present?
         # シラサギ形式では snippet は選べない（画面切替時にパラメータだけ残るケース対策）
-        if params[:html_format] == "shirasagi" && params[:loop_html_setting_type] == "snippet"
-          return criteria
-        end
+        return criteria if params[:html_format] == "shirasagi" && params[:loop_html_setting_type] == "snippet"
         criteria = criteria.where(loop_html_setting_type: params[:loop_html_setting_type])
       end
       criteria
@@ -89,21 +87,6 @@ class Cms::LoopSetting
   def loop_html_setting_type_options
     %w(template snippet).map do |v|
       [I18n.t("cms.options.loop_html_setting_type.#{v}"), v]
-    end
-  end
-
-  SearchForm = Struct.new(:html_format, :loop_html_setting_type, :keyword, keyword_init: true) do
-    class << self
-      def from(params)
-        params ||= {}
-        params = params.to_h if params.respond_to?(:to_h)
-
-        new(
-          html_format: params[:html_format] || params["html_format"],
-          loop_html_setting_type: params[:loop_html_setting_type] || params["loop_html_setting_type"],
-          keyword: params[:keyword] || params["keyword"]
-        )
-      end
     end
   end
 
