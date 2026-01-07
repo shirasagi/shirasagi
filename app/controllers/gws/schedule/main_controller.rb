@@ -11,7 +11,8 @@ class Gws::Schedule::MainController < ApplicationController
       return
     end
 
-    menu = Gws::Schedule.enum_menu_items(@cur_site, @cur_user).first
+    menu = Gws::Schedule.enum_tab_items(@cur_site, @cur_user).first
+    menu ||= Gws::Schedule.enum_menu_items(@cur_site, @cur_user).first
     raise "404" if menu.blank?
 
     redirect_to menu.path(calendar: { date: redirection_date })

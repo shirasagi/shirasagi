@@ -14,34 +14,9 @@ module Gws::Schedule
   module_function
 
   def enum_menu_items(cur_site, cur_user)
-    helpers = Rails.application.routes.url_helpers
-
     Enumerator.new do |y|
       # Personal Plans
       menu_item_gws_schedule_plans(cur_site, cur_user).try { y << _1 }
-
-      # # Group Plans
-      # if gws_schedule_group_plans?(cur_site, cur_user)
-      #   cur_user.schedule_tabs_visible_groups(cur_site).each do |group|
-      #     path_proc = ->(*args, **kwargs) do
-      #       helpers.gws_schedule_group_plans_path(*args, site: cur_site, group: group, **kwargs)
-      #     end
-      #     y << MenuItem.new(label: group.trailing_name, path_proc: path_proc, css_classes: %w(group))
-      #   end
-      # end
-      # if gws_schedule_custom_group_plans?(cur_site, cur_user)
-      #   cur_user.schedule_tabs_visible_custom_groups(cur_site).each do |g|
-      #     path_proc = ->(*args, **kwargs) do
-      #       helpers.gws_schedule_custom_group_plans_path(*args, site: cur_site, group: g, **kwargs)
-      #     end
-      #     y << MenuItem.new(label: g.name, path_proc: path_proc, css_classes: %w(custom-group))
-      #   end
-      # end
-      # if gws_schedule_all_groups?(cur_site, cur_user)
-      #   label = cur_site.schedule_group_all_tab_label || cur_site.schedule_group_all_tab_placeholder
-      #   path_proc = ->(*args, **kwargs) { helpers.gws_schedule_all_groups_path(*args, site: cur_site, **kwargs) }
-      #   y << MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(group-all))
-      # end
 
       # Facility Plans
       menu_item_gws_schedule_facilities(cur_site, cur_user).try { y << _1 }
@@ -62,6 +37,25 @@ module Gws::Schedule
     end
   end
 
+  def enum_tab_items(cur_site, cur_user)
+    Enumerator.new do |y|
+      # Personal Plans
+      menu_item_gws_schedule_plans(cur_site, cur_user).try { y << _1 }
+
+      # Group Plans
+      menu_items_gws_schedule_group_plans(cur_site, cur_user).try do |menu_items|
+        menu_items.each { y << _1 }
+      end
+      menu_item_gws_schedule_all_groups(cur_site, cur_user).try { y << _1 }
+      menu_items_gws_schedule_custom_group_plans(cur_site, cur_user).try do |menu_items|
+        menu_items.each { y << _1 }
+      end
+
+      # Facility Plans
+      menu_item_gws_schedule_facilities(cur_site, cur_user).try { y << _1 }
+    end
+  end
+
   def menu_item_gws_schedule_plans(cur_site, cur_user)
     return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
     return unless cur_site.schedule_personal_tab_visible?
@@ -72,22 +66,42 @@ module Gws::Schedule
     MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(personal))
   end
 
-  def gws_schedule_group_plans?(cur_site, cur_user)
-    return false unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
-    return false unless cur_site.schedule_group_tab_visible?
-    true
+  def menu_items_gws_schedule_group_plans(cur_site, cur_user)
+    return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
+    return unless cur_site.schedule_group_tab_visible?
+
+    helpers = Rails.application.routes.url_helpers
+    cur_user.schedule_tabs_visible_groups(cur_site).map do |group|
+      path_proc = ->(*args, **kwargs) do
+        helpers.gws_schedule_group_plans_path(*args, site: cur_site, group: group, **kwargs)
+      end
+      MenuItem.new(label: group.trailing_name, path_proc: path_proc, css_classes: %w(group))
+    end
   end
 
-  def gws_schedule_custom_group_plans?(cur_site, cur_user)
-    return false unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
-    return false unless cur_site.schedule_custom_group_tab_visible?
-    true
+  def menu_items_gws_schedule_custom_group_plans(cur_site, cur_user)
+    return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
+    return unless cur_site.schedule_custom_group_tab_visible?
+
+    helpers = Rails.application.routes.url_helpers
+    cur_user.schedule_tabs_visible_custom_groups(cur_site).filter_map do |g|
+      next if g.member_ids.blank?
+
+      path_proc = ->(*args, **kwargs) do
+        helpers.gws_schedule_custom_group_plans_path(*args, site: cur_site, group: g, **kwargs)
+      end
+      MenuItem.new(label: g.name, path_proc: path_proc, css_classes: %w(custom-group))
+    end
   end
 
-  def gws_schedule_all_groups?(cur_site, cur_user)
-    return false unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
-    return false unless cur_site.schedule_group_all_tab_visible?
-    true
+  def menu_item_gws_schedule_all_groups(cur_site, cur_user)
+    return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
+    return unless cur_site.schedule_group_all_tab_visible?
+
+    label = cur_site.schedule_group_all_tab_label || cur_site.schedule_group_all_tab_placeholder
+    helpers = Rails.application.routes.url_helpers
+    path_proc = ->(*args, **kwargs) { helpers.gws_schedule_all_groups_path(*args, site: cur_site, **kwargs) }
+    MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(group-all))
   end
 
   def menu_item_gws_schedule_facilities(cur_site, cur_user)
