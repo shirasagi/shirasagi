@@ -2,6 +2,8 @@ class Gws::Notice::TrashesController < ApplicationController
   include Gws::BaseFilter
   include Gws::CrudFilter
 
+  helper Gws::Notice::PlanHelper
+
   before_action :set_items
   before_action :set_item, only: [:show, :delete, :destroy, :undo_delete]
   before_action :set_selected_items, only: [:destroy_all, :soft_delete_all]
