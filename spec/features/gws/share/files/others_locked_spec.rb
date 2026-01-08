@@ -36,6 +36,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       within "form#item-form" do
         click_on I18n.t("ss.buttons.unlock_and_edit_forcibly")
       end
+      wait_for_notice I18n.t("ss.notice.unlocked")
 
       item.reload
       expect(item.locked?).to be_truthy
@@ -68,6 +69,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
           click_on I18n.t("ss.buttons.unlock_and_edit_forcibly")
         end
       end
+      wait_for_notice I18n.t("ss.notice.unlocked")
 
       item.reload
       expect(item.locked?).to be_truthy

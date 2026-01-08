@@ -20,6 +20,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         fill_in "item[in_basename]", with: folder_name1
         click_on I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within "#gws-share-file-folder-property" do
         expect(page).to have_css(".folder-name", text: folder_name1)
@@ -40,6 +41,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         fill_in "item[in_basename]", with: folder_name2
         click_on I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within "#gws-share-file-folder-property" do
         expect(page).to have_css(".folder-name", text: "#{folder_name1}/#{folder_name2}")
@@ -68,6 +70,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
         fill_in "item[in_basename]", with: folder_name3
         click_on I18n.t("ss.buttons.save")
       end
+      wait_for_notice I18n.t("ss.notice.saved")
 
       within "#gws-share-file-folder-property" do
         expect(page).to have_css(".folder-name", text: "#{folder_name1}/#{folder_name3}")
@@ -87,6 +90,7 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
       within_cbox do
         click_on I18n.t("ss.buttons.delete")
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       within "#gws-share-file-folder-list" do
         expect(page).to have_link(folder_name1)

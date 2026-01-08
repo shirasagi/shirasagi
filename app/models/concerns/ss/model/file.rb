@@ -385,8 +385,15 @@ module SS::Model::File
     item = owner_item rescue nil
     return item if item.present?
 
-    type = @item.model.camelize.constantize rescue nil
+    return if owner_item_type.blank?
+
+    # Rails 8.0 からクラスロードの仕組みが変わり、自動でロードされない場合が散見されるようになった
+    # そこで、owner_item_type.constantize にて明示的にクラスをロードした後に owner_item を取得してみる
+    type = owner_item_type.constantize rescue nil
     return if type.blank?
+
+    item = owner_item rescue nil
+    return item if item.present?
 
     conds = (type.fields.keys & %w(file_id file_ids)).map { |f| { f => id} }
     type.where("$and" => [{ "$or" => conds }]).first

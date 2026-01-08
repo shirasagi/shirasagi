@@ -263,7 +263,7 @@ class Gws::Share::FilesController < ApplicationController
 
     if @item.release_lock(force: params[:force].present?)
       respond_to do |format|
-        format.html { redirect_to(action: :edit) }
+        format.html { redirect_to url_for(action: :edit), notice: t("ss.notice.unlocked") }
         format.json { head :no_content }
       end
     else
