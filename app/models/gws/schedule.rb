@@ -60,7 +60,7 @@ module Gws::Schedule
     return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
     return unless cur_site.schedule_personal_tab_visible?
 
-    label = cur_site.schedule_personal_tab_label || cur_site.schedule_personal_tab_placeholder
+    label = cur_site.effective_schedule_personal_tab_label
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_plans_path(*args, site: cur_site, **kwargs) }
     MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(personal))
@@ -98,7 +98,7 @@ module Gws::Schedule
     return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
     return unless cur_site.schedule_group_all_tab_visible?
 
-    label = cur_site.schedule_group_all_tab_label || cur_site.schedule_group_all_tab_placeholder
+    label = cur_site.effective_schedule_group_all_tab_label
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_all_groups_path(*args, site: cur_site, **kwargs) }
     MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(group-all))
@@ -108,7 +108,7 @@ module Gws::Schedule
     return unless cur_site.schedule_facility_tab_visible?
     return unless cur_user.gws_role_permit_any?(cur_site, :use_private_gws_facility_plans)
 
-    label = cur_site.schedule_facility_tab_label || cur_site.schedule_facility_tab_placeholder
+    label = cur_site.effective_schedule_facility_tab_label
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_facilities_path(*args, site: cur_site, **kwargs) }
     MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(facility))

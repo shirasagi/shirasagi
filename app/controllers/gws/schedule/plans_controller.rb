@@ -12,7 +12,7 @@ class Gws::Schedule::PlansController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
-    @crumbs << [@cur_site.schedule_personal_tab_label || @cur_site.schedule_personal_tab_placeholder, gws_schedule_plans_path]
+    @crumbs << [@cur_site.effective_schedule_personal_tab_label, gws_schedule_plans_path]
   end
 
   def set_download_url
