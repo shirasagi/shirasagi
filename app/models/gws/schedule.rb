@@ -116,6 +116,8 @@ module Gws::Schedule
   end
 
   def menu_item_gws_schedule_facility_approval_plans(cur_site, cur_user)
+    return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
+    return unless Gws::Schedule::Plan.allowed?(:edit, cur_user, site: cur_site)
     return unless cur_site.schedule_facility_tab_visible?
     return unless cur_user.gws_role_permit_any?(cur_site, :use_private_gws_facility_plans)
 
