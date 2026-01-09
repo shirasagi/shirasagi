@@ -114,7 +114,7 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
       wait_for_all_turbo_frames
       within "form#item-form" do
         expect(page).to have_css("#addon-basic")
-        expect(page).to have_no_css("#addon-gws-agents-addons-schedule-facility")
+        expect(page).to have_css("#addon-gws-agents-addons-schedule-facility", text: facility.name)
       end
     end
   end
