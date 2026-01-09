@@ -138,6 +138,7 @@ module Gws::Schedule
 
   def menu_item_gws_schedule_csv(cur_site, cur_user)
     return unless Gws::Schedule::Plan.allowed?(:use, cur_user, site: cur_site)
+    return unless Gws::Schedule::Plan.allowed?(:edit, cur_user, site: cur_site)
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_csv_path(*args, site: cur_site, **kwargs) }
