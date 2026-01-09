@@ -187,7 +187,7 @@ module Gws::Schedule
   end
 
   def menu_item_gws_facility_usage_main(cur_site, cur_user)
-    return unless Gws::Facility::Item.allowed?(:read, cur_user, site: cur_site)
+    return unless Gws::Facility::Item.allowed?(:edit, cur_user, site: cur_site)
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_facility_usage_main_path(*args, site: cur_site, **kwargs) }
@@ -195,7 +195,7 @@ module Gws::Schedule
   end
 
   def menu_item_gws_facility_state_main(cur_site, cur_user)
-    return unless Gws::Facility::Item.allowed?(:read, cur_user, site: cur_site)
+    return unless Gws::Facility::Item.allowed?(:edit, cur_user, site: cur_site)
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_facility_state_main_path(*args, site: cur_site, **kwargs) }
