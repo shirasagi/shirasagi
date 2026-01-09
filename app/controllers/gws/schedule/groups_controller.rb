@@ -9,7 +9,7 @@ class Gws::Schedule::GroupsController < ApplicationController
 
   def set_crumbs
     @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
-    @crumbs << [t('gws/schedule.tabs.group'), action: :index]
+    @crumbs << [@cur_site.schedule_group_all_tab_label || @cur_site.schedule_group_all_tab_placeholder, action: :index]
   end
 
   public
