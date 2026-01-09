@@ -30,16 +30,16 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
       within ".current-navi" do
         expect(page).to have_link(I18n.t('gws/schedule.tabs.personal'), href: gws_schedule_plans_path(site: site))
         expect(page).to have_link(I18n.t('gws/schedule.tabs.facility'), href: gws_schedule_facilities_path(site: site))
-        expect(page).to have_link(I18n.t('gws/schedule.navi.approve_facility_plan'))
+        expect(page).to have_no_link(I18n.t('gws/schedule.navi.approve_facility_plan'))
         expect(page).to have_link(I18n.t('gws/schedule.tabs.search'), href: gws_schedule_search_path(site: site))
-        expect(page).to have_link(I18n.t('ss.links.import'))
+        expect(page).to have_no_link(I18n.t('ss.links.import'))
         expect(page).to have_no_link(I18n.t('ss.links.trash'))
         expect(page).to have_no_link(I18n.t('gws/schedule.navi.holiday'))
         expect(page).to have_no_link(I18n.t('gws/schedule.navi.category'))
         expect(page).to have_no_link(I18n.t('gws/facility.navi.category'))
         expect(page).to have_link(I18n.t('gws/facility.navi.item'), href: gws_facility_items_path(site: site))
-        expect(page).to have_link(I18n.t('gws/facility.navi.usage'))
-        expect(page).to have_link(I18n.t('gws/facility.navi.state'))
+        expect(page).to have_no_link(I18n.t('gws/facility.navi.usage'))
+        expect(page).to have_no_link(I18n.t('gws/facility.navi.state'))
       end
       within ".gws-schedule-tabs" do
         expect(page).to have_css('a.personal', text: I18n.t("gws/schedule.tabs.personal"))
@@ -134,8 +134,8 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
       login_user user, to: gws_schedule_main_path(site: site)
       within ".current-navi" do
         expect(page).to have_no_link(I18n.t('gws/schedule.tabs.personal'))
-        expect(page).to have_link(I18n.t('gws/schedule.tabs.facility'))
-        expect(page).to have_link(I18n.t('gws/schedule.navi.approve_facility_plan'))
+        expect(page).to have_no_link(I18n.t('gws/schedule.tabs.facility'))
+        expect(page).to have_no_link(I18n.t('gws/schedule.navi.approve_facility_plan'))
         expect(page).to have_no_link(I18n.t('gws/schedule.tabs.search'))
         expect(page).to have_no_link(I18n.t('ss.links.import'))
         expect(page).to have_no_link(I18n.t('ss.links.trash'))
@@ -143,8 +143,8 @@ describe "gws_schedule_facilities", type: :feature, dbscope: :example, js: true 
         expect(page).to have_no_link(I18n.t('gws/schedule.navi.category'))
         expect(page).to have_no_link(I18n.t('gws/facility.navi.category'))
         expect(page).to have_link(I18n.t('gws/facility.navi.item'), href: gws_facility_items_path(site: site))
-        expect(page).to have_link(I18n.t('gws/facility.navi.usage'))
-        expect(page).to have_link(I18n.t('gws/facility.navi.state'))
+        expect(page).to have_no_link(I18n.t('gws/facility.navi.usage'))
+        expect(page).to have_no_link(I18n.t('gws/facility.navi.state'))
       end
       expect(page).to have_no_css(".gws-schedule-tabs")
     end
