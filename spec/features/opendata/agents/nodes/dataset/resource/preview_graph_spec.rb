@@ -42,7 +42,7 @@ describe "opendata_agents_nodes_dataset_resource", type: :feature, dbscope: :exa
           click_on I18n.t("opendata.labels.graph_view")
         end
       end
-      wait_for_ajax
+      wait_for_js_ready
       within_cbox do
         within ".resource-content[data-graph-style='bar']" do
           expect(page).to have_css(".graph-types button", text: I18n.t("opendata.graph_types.bar"))
@@ -62,7 +62,7 @@ describe "opendata_agents_nodes_dataset_resource", type: :feature, dbscope: :exa
         end
       end
 
-      wait_for_ajax
+      wait_for_js_ready
 
       within_cbox do
         within ".resource-content[data-graph-style='line']" do
@@ -80,7 +80,7 @@ describe "opendata_agents_nodes_dataset_resource", type: :feature, dbscope: :exa
         end
       end
 
-      wait_for_ajax
+      wait_for_js_ready
 
       within_cbox do
         within ".resource-content[data-graph-style='pie']" do
@@ -97,7 +97,7 @@ describe "opendata_agents_nodes_dataset_resource", type: :feature, dbscope: :exa
           end
         end
       end
-      wait_for_ajax
+      wait_for_js_ready
       within_cbox do
         within ".resource-content[data-graph-style='bar']" do
           expect(page).to have_css(".graph-warp.loaded")

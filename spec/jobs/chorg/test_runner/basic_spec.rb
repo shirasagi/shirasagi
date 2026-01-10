@@ -13,8 +13,9 @@ describe Chorg::TestRunner, dbscope: :example, fragile: true do
     it do
       expect(revision).not_to be_nil
       expect(changeset).not_to be_nil
-      job = described_class.bind(site_id: site.id, task_id: task.id)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[新設] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site, task_id: task)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
+        output(include("[#{I18n.t("chorg.options.changeset_type.add")}] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
@@ -51,8 +52,9 @@ describe Chorg::TestRunner, dbscope: :example, fragile: true do
         expect(changeset).not_to be_nil
         expect(page).not_to be_nil
         # check for not changed
-        job = described_class.bind(site_id: site.id, task_id: task.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[移動] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.move")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -110,8 +112,9 @@ describe Chorg::TestRunner, dbscope: :example, fragile: true do
         expect(page).not_to be_nil
 
         # check for not changed
-        job = described_class.bind(site_id: site.id, task_id: task.id, user_id: user1.id)
-        expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[統合] 成功: 1, 失敗: 0\n")).to_stdout
+        job = described_class.bind(site_id: site, task_id: task, user_id: user1)
+        expect { ss_perform_now(job, revision.name, job_opts) }.to \
+          output(include("[#{I18n.t("chorg.options.changeset_type.unify")}] 成功: 1, 失敗: 0\n")).to_stdout
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
@@ -171,8 +174,9 @@ describe Chorg::TestRunner, dbscope: :example, fragile: true do
       # ensure create models
       expect(changeset).not_to be_nil
       # change group.
-      job = described_class.bind(site_id: site.id, task_id: task.id)
-      expect { ss_perform_now(job, revision.name, job_opts) }.to output(include("[廃止] 成功: 1, 失敗: 0\n")).to_stdout
+      job = described_class.bind(site_id: site, task_id: task)
+      expect { ss_perform_now(job, revision.name, job_opts) }.to \
+        output(include("[#{I18n.t("chorg.options.changeset_type.delete")}] 成功: 1, 失敗: 0\n")).to_stdout
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1

@@ -23,7 +23,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
   context "multiple" do
     it do
       visit user_portal_path
-      wait_for_ajax
+      wait_for_js_ready
 
       # destroy default portlet
       click_on I18n.t('gws/portal.links.manage_portlets')
@@ -65,7 +65,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
 
       # visit portal
       visit user_portal_path
-      wait_for_ajax
+      wait_for_js_ready
 
       within ".portlets" do
         expect(all(".portlet-model-schedule").size).to eq 2
@@ -91,7 +91,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         # next week
         within all(".portlet-model-schedule")[0] do
           first(".fc-icon-right-single-arrow").click
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_no_css(".fc-content", text: item1.name)
           expect(page).to have_css(".fc-content", text: item2.name)
@@ -100,7 +100,7 @@ describe "gws_portal_portlet", type: :feature, dbscope: :example, js: true do
         end
         within all(".portlet-model-schedule")[1] do
           first(".fc-icon-right-single-arrow").click
-          wait_for_ajax
+          wait_for_js_ready
 
           expect(page).to have_no_css(".fc-content", text: item1.name)
           expect(page).to have_no_css(".fc-content", text: item2.name)

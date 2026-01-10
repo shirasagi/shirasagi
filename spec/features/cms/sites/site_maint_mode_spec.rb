@@ -69,7 +69,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
       visit sns_login_path
       within "form" do
         fill_in "item[email]", with: site1_user2.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       within "#head" do
@@ -87,7 +87,7 @@ describe "maint mode", type: :feature, dbscope: :example, js: true do
       visit sns_login_path
       within "form" do
         fill_in "item[email]", with: site2_user1.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       within "#head" do

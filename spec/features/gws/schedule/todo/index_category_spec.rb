@@ -10,8 +10,12 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
     let!(:index_path) { gws_schedule_todo_readables_path site, "-" }
     let!(:categories_path) { gws_schedule_todo_categories_path site }
 
-    let!(:category1) { create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id) }
-    let!(:category2) { create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id, in_parent_id: category1.id) }
+    let!(:category1) do
+      create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id)
+    end
+    let!(:category2) do
+      create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id, in_parent_id: category1.id)
+    end
     let!(:category_root_path) { gws_schedule_todo_readables_path site, category1.id }
 
     let!(:item1) { create :gws_schedule_todo, cur_site: site, cur_user: user, category_ids: [category1.id] }
@@ -21,11 +25,21 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit index_path
 
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_css(".categories a[href=\"#{category_root_path}\"]", text: category1.name)
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link(item1.name)
+          expect(page).to have_css(".categories a", count: 1)
+          within ".categories" do
+            expect(page).to have_link(category1.name, href: category_root_path)
+          end
+        end
 
-        expect(page).to have_link item2.name
-        expect(page).to have_css(".categories a[href=\"#{category_root_path}\"]", text: category2.name)
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link(item2.name)
+          expect(page).to have_css(".categories a", count: 1)
+          within ".categories" do
+            expect(page).to have_link(category2.name, href: category_root_path)
+          end
+        end
       end
 
       # destroy category1
@@ -40,9 +54,17 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       visit index_path
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_link item2.name
-        expect(page).to have_css(".categories a[href=\"#{index_path}\"]", text: category2.name)
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link(item1.name)
+          expect(page).to have_css(".categories a", count: 0)
+        end
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link(item2.name)
+          expect(page).to have_css(".categories a", count: 1)
+          within ".categories" do
+            expect(page).to have_link(category2.name, href: index_path)
+          end
+        end
       end
 
       # destroy category2
@@ -57,9 +79,14 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       visit index_path
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_link item2.name
-        expect(page).to have_no_css(".categories a")
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link(item1.name)
+          expect(page).to have_css(".categories a", count: 0)
+        end
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link(item2.name)
+          expect(page).to have_css(".categories a", count: 0)
+        end
       end
     end
   end
@@ -70,8 +97,12 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
     let!(:index_path) { gws_schedule_todo_manageables_path site, "-" }
     let!(:categories_path) { gws_schedule_todo_categories_path site }
 
-    let!(:category1) { create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id) }
-    let!(:category2) { create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id, in_parent_id: category1.id) }
+    let!(:category1) do
+      create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id)
+    end
+    let!(:category2) do
+      create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id, in_parent_id: category1.id)
+    end
     let!(:category_root_path) { gws_schedule_todo_manageables_path site, category1.id }
 
     let!(:item1) do
@@ -87,11 +118,21 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
       visit index_path
 
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_css(".categories a[href=\"#{category_root_path}\"]", text: category1.name)
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link(item1.name)
+          expect(page).to have_css(".categories a", count: 1)
+          within ".categories" do
+            expect(page).to have_link(category1.name, href: category_root_path)
+          end
+        end
 
-        expect(page).to have_link item2.name
-        expect(page).to have_css(".categories a[href=\"#{category_root_path}\"]", text: category2.name)
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link(item2.name)
+          expect(page).to have_css(".categories a", count: 1)
+          within ".categories" do
+            expect(page).to have_link(category2.name, href: category_root_path)
+          end
+        end
       end
 
       # destroy category1
@@ -106,9 +147,17 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       visit index_path
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_link item2.name
-        expect(page).to have_css(".categories a[href=\"#{index_path}\"]", text: category2.name)
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link(item1.name)
+          expect(page).to have_css(".categories a", count: 0)
+        end
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link(item2.name)
+          expect(page).to have_css(".categories a", count: 1)
+          within ".categories" do
+            expect(page).to have_link(category2.name, href: index_path)
+          end
+        end
       end
 
       # destroy category2
@@ -123,9 +172,14 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       visit index_path
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_link item2.name
-        expect(page).to have_no_css(".categories a")
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link(item1.name)
+          expect(page).to have_css(".categories a", count: 0)
+        end
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link(item2.name)
+          expect(page).to have_css(".categories a", count: 0)
+        end
       end
     end
   end
@@ -135,8 +189,12 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
     let!(:trashes_path) { gws_schedule_todo_trashes_path site, "-" }
     let!(:categories_path) { gws_schedule_todo_categories_path site }
 
-    let!(:category1) { create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id) }
-    let!(:category2) { create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id, in_parent_id: category1.id) }
+    let!(:category1) do
+      create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id)
+    end
+    let!(:category2) do
+      create(:gws_schedule_todo_category, cur_site: site, in_basename: unique_id, in_parent_id: category1.id)
+    end
     let!(:category_root_path) { gws_schedule_todo_readables_path site, category1.id }
 
     let!(:item1) { create :gws_schedule_todo, cur_site: site, cur_user: user, category_ids: [category1.id] }
@@ -156,11 +214,15 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       visit trashes_path
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_css(".categories a", text: category1.name)
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link item1.name
+          expect(page).to have_css(".categories a", text: category1.name)
+        end
 
-        expect(page).to have_link item2.name
-        expect(page).to have_css(".categories a", text: category2.name)
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link item2.name
+          expect(page).to have_css(".categories a", text: category2.name)
+        end
       end
 
       # destroy category1
@@ -175,9 +237,14 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       visit trashes_path
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_link item2.name
-        expect(page).to have_css(".categories a", text: category2.name)
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link item1.name
+          expect(page).to have_css(".categories a", count: 0)
+        end
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link item2.name
+          expect(page).to have_css(".categories a", text: category2.name)
+        end
       end
 
       # destroy category2
@@ -192,9 +259,14 @@ describe "gws_schedule_todo_readables", type: :feature, dbscope: :example, js: t
 
       visit trashes_path
       within ".list-items" do
-        expect(page).to have_link item1.name
-        expect(page).to have_link item2.name
-        expect(page).to have_no_css(".categories a")
+        within "[data-id='#{item1.id}']" do
+          expect(page).to have_link item1.name
+          expect(page).to have_css(".categories a", count: 0)
+        end
+        within "[data-id='#{item2.id}']" do
+          expect(page).to have_link item2.name
+          expect(page).to have_css(".categories a", count: 0)
+        end
       end
     end
   end

@@ -26,16 +26,16 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
 
       within "\#cal-#{user.id} .fc-body" do
-        expect(page).to have_no_css(".fc-event-name")
+        expect(page).to have_no_css(".fc-event:not(.fc-holiday)")
       end
       within "\#cal-#{user1.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-absence .fc-event-name", text: item.name, visible: false)
+        expect(page).to have_css(".fc-event-user-attendance-absence.fc-event", text: item.name, visible: false)
       end
       within "\#cal-#{user2.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-attendance .fc-event-name", text: item.name, visible: true)
+        expect(page).to have_css(".fc-event-user-attendance-attendance.fc-event", text: item.name, visible: true)
       end
       within "\#cal-#{user3.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-unknown .fc-event-name", text: item.name, visible: true)
+        expect(page).to have_css(".fc-event-user-attendance-unknown.fc-event", text: item.name, visible: true)
       end
 
       # click button
@@ -45,13 +45,13 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
 
       within "\#cal-#{user1.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-absence .fc-event-name", text: item.name, visible: true)
+        expect(page).to have_css(".fc-event-user-attendance-absence.fc-event", text: item.name, visible: true)
       end
       within "\#cal-#{user2.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-attendance .fc-event-name", text: item.name, visible: true)
+        expect(page).to have_css(".fc-event-user-attendance-attendance.fc-event", text: item.name, visible: true)
       end
       within "\#cal-#{user3.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-unknown .fc-event-name", text: item.name, visible: true)
+        expect(page).to have_css(".fc-event-user-attendance-unknown.fc-event", text: item.name, visible: true)
       end
 
       # click button again
@@ -61,13 +61,13 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       wait_for_js_ready
 
       within "\#cal-#{user1.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-absence .fc-event-name", text: item.name, visible: false)
+        expect(page).to have_css(".fc-event-user-attendance-absence.fc-event", text: item.name, visible: false)
       end
       within "\#cal-#{user2.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-attendance .fc-event-name", text: item.name, visible: true)
+        expect(page).to have_css(".fc-event-user-attendance-attendance.fc-event", text: item.name)
       end
       within "\#cal-#{user3.id} .fc-body" do
-        expect(page).to have_css(".fc-event-user-attendance-unknown .fc-event-name", text: item.name, visible: true)
+        expect(page).to have_css(".fc-event-user-attendance-unknown.fc-event", text: item.name)
       end
     end
   end

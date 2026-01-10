@@ -39,11 +39,11 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[end_at]", with: format_picker(now)
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq index_path
       within "#errorExplanation" do
         expect(page).to have_text(datetime_message)
         expect(page).to have_no_text(date_message)
       end
+      expect(current_path).not_to eq index_path
     end
 
     it "# new" do
@@ -54,6 +54,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[end_at]", with: format_picker(day_later)
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq index_path
       expect(format_picker(start_at)).to eq format_picker(now)
       expect(format_picker(end_at)).to eq format_picker(day_later)
@@ -67,11 +68,11 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[end_at]", with: format_picker(day_ago)
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq index_path
       within "#errorExplanation" do
         expect(page).to have_text(datetime_message)
         expect(page).to have_no_text(date_message)
       end
+      expect(current_path).not_to eq index_path
     end
   end
 
@@ -95,6 +96,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[end_on]", with: format_picker(now)
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq index_path
       expect(format_picker(start_on)).to eq format_picker(now)
       expect(format_picker(end_on)).to eq format_picker(now)
@@ -109,6 +111,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[end_on]", with: format_picker(day_later)
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).to eq index_path
       expect(format_picker(start_on)).to eq format_picker(now)
       expect(format_picker(end_on)).to eq format_picker(day_later)
@@ -123,11 +126,11 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         fill_in "item[end_on]", with: format_picker(day_ago)
         click_button I18n.t('ss.buttons.save')
       end
-      expect(current_path).not_to eq index_path
       within "#errorExplanation" do
         expect(page).to have_no_text(datetime_message)
         expect(page).to have_text(date_message)
       end
+      expect(current_path).not_to eq index_path
     end
   end
 end

@@ -5,7 +5,7 @@ FactoryBot.define do
       role { nil }
     end
 
-    in_password { "pass" }
+    in_password { ss_pass }
     group_ids { group.present? ? [group.id] : nil }
     cms_role_ids { role.present? ? [role.id] : nil }
     type { SS::Model::User::TYPE_SNS }

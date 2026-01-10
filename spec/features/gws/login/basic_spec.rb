@@ -12,7 +12,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       visit login_path
       within "form" do
         fill_in "item[email]", with: unique_id
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
@@ -25,7 +25,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.uid
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       expect(page).to have_css('#head', text: user.name)
@@ -36,7 +36,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       expect(page).to have_css('#head', text: user.name)
@@ -47,7 +47,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.organization_uid
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       expect(page).to have_css('#head', text: user.name)
@@ -74,7 +74,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       visit gws_login_path(site: site, ref: gws_user_profile_path(site: site))
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
 
@@ -91,7 +91,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       visit gws_login_path(site: site, ref: ref)
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
 
@@ -116,7 +116,7 @@ describe "gws_login", type: :feature, dbscope: :example, js: true do
       visit gws_login_path(site: site, ref: "https://www.google.com/")
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
 

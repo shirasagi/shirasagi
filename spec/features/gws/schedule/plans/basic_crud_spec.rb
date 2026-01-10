@@ -117,7 +117,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       expect(Gws::Schedule::Plan.unscoped.count).to eq 1
       Gws::Schedule::Plan.unscoped.first.tap do |item|
         expect(item.name).to eq name2
-        expect(item.deleted).to be_present
+        expect(item.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
       end
     end
   end

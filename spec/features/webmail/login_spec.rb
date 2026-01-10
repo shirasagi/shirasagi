@@ -11,7 +11,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
       visit login_path
       within "form" do
         fill_in "item[email]", with: "wrong"
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
@@ -24,7 +24,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       within ".user-navigation" do
@@ -37,7 +37,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
       visit login_path
       within "form" do
         fill_in "item[email]", with: user.uid
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       within ".user-navigation" do
@@ -64,7 +64,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
       visit webmail_login_path(ref: webmail_addresses_path(group: "-"))
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       within ".user-navigation" do
@@ -83,7 +83,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
       visit webmail_login_path(ref: ref)
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       within ".user-navigation" do
@@ -110,7 +110,7 @@ describe "webmail_login", type: :feature, dbscope: :example, imap: true, js: tru
       visit webmail_login_path(ref: "https://www.google.com/")
       within "form" do
         fill_in "item[email]", with: user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
       within ".user-navigation" do

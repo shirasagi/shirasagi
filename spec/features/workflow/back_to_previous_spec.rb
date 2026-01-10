@@ -57,6 +57,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_notice I18n.t("workflow.notice.requested")
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
@@ -83,7 +84,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -112,7 +113,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -142,7 +143,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -171,7 +172,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -203,7 +204,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment4
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.approve"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -244,6 +245,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_notice I18n.t("workflow.notice.requested")
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
@@ -270,7 +272,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: approve_comment1)
@@ -298,7 +300,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -330,7 +332,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: remand_comment3
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         expect(page).to have_css(".mod-workflow-view dd", text: remand_comment3)
 
         item.reload
@@ -359,7 +361,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: remand_comment2
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -392,7 +394,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.remand"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -438,6 +440,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_notice I18n.t("workflow.notice.requested")
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
@@ -464,7 +467,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -493,7 +496,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -523,7 +526,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -552,7 +555,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment3
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -584,7 +587,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment4
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.approve"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -625,6 +628,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "workflow[comment]", with: workflow_comment
           click_on I18n.t("workflow.buttons.request")
         end
+        wait_for_notice I18n.t("workflow.notice.requested")
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t('workflow.state.request'))
 
         item.reload
@@ -648,7 +652,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment1
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -677,7 +681,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: approve_comment2
           click_on I18n.t("workflow.buttons.approve")
         end
-
+        wait_for_notice I18n.t("workflow.notice.approved")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -709,7 +713,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: remand_comment3
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -742,7 +746,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: remand_comment2
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.request"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)
@@ -775,7 +779,7 @@ describe "back_to_previous route", type: :feature, dbscope: :example, js: true d
           fill_in "remand[comment]", with: remand_comment1
           click_on I18n.t("workflow.buttons.remand")
         end
-
+        wait_for_notice I18n.t("workflow.notice.remanded")
         wait_for_all_turbo_frames
         expect(page).to have_css(".mod-workflow-view dd", text: I18n.t("workflow.state.remand"))
         expect(page).to have_css(".mod-workflow-view dd", text: workflow_comment)

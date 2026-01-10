@@ -22,153 +22,136 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         within ".main-navi" do
           click_on I18n.t("gws.site_config")
         end
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         #
         # メニュー設定の詳細画面の初期状態を確認
         #
-        expect(page).to have_css("span.ss-icon.ss-icon-portal")
-        expect(page).to have_css("span.ss-icon.ss-icon-notice")
-        expect(page).to have_css("span.ss-icon.ss-icon-schedule")
-        expect(page).to have_css("span.ss-icon.ss-icon-todo")
-        expect(page).to have_css("span.ss-icon.ss-icon-reminder")
-        expect(page).to have_css("span.ss-icon.ss-icon-presence")
-        expect(page).to have_css("span.ss-icon.ss-icon-attendance")
-        expect(page).to have_css("span.ss-icon.ss-icon-affair")
-        expect(page).to have_css("span.ss-icon.ss-icon-daily-report")
-        expect(page).to have_css("span.ss-icon.ss-icon-bookmark")
-        expect(page).to have_css("span.ss-icon.ss-icon-memo")
-        expect(page).to have_css("span.ss-icon.ss-icon-workload")
-        expect(page).to have_css("span.ss-icon.ss-icon-report")
-        expect(page).to have_css("span.ss-icon.ss-icon-workflow")
-        expect(page).to have_css("span.ss-icon.ss-icon-workflow2")
-        expect(page).to have_css("span.ss-icon.ss-icon-circular")
-        expect(page).to have_css("span.ss-icon.ss-icon-monitor")
-        expect(page).to have_css("span.ss-icon.ss-icon-survey")
-        expect(page).to have_css("span.ss-icon.ss-icon-board")
-        expect(page).to have_css("span.ss-icon.ss-icon-faq")
-        expect(page).to have_css("span.ss-icon.ss-icon-qna")
-        expect(page).to have_css("span.ss-icon.ss-icon-discussion")
-        expect(page).to have_css("span.ss-icon.ss-icon-share")
-        expect(page).to have_css("span.ss-icon.ss-icon-shared-address")
-        expect(page).to have_css("span.ss-icon.ss-icon-personal-address")
-        expect(page).to have_css("span.ss-icon.ss-icon-tabular")
-        expect(page).to have_css("span.ss-icon.ss-icon-elasticsearch")
-        expect(page).to have_css("span.ss-icon.ss-icon-conf")
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+        within "#addon-gws-agents-addons-system-menu_setting" do
+          expect(page).to have_css("span.ss-icon.ss-icon-portal")
+          expect(page).to have_css("span.ss-icon.ss-icon-notice")
+          expect(page).to have_css("span.ss-icon.ss-icon-schedule")
+          expect(page).to have_css("span.ss-icon.ss-icon-todo")
+          expect(page).to have_css("span.ss-icon.ss-icon-reminder")
+          expect(page).to have_css("span.ss-icon.ss-icon-presence")
+          expect(page).to have_css("span.ss-icon.ss-icon-attendance")
+          expect(page).to have_css("span.ss-icon.ss-icon-affair")
+          expect(page).to have_css("span.ss-icon.ss-icon-daily-report")
+          expect(page).to have_css("span.ss-icon.ss-icon-bookmark")
+          expect(page).to have_css("span.ss-icon.ss-icon-memo")
+          expect(page).to have_css("span.ss-icon.ss-icon-workload")
+          expect(page).to have_css("span.ss-icon.ss-icon-report")
+          expect(page).to have_css("span.ss-icon.ss-icon-workflow")
+          expect(page).to have_css("span.ss-icon.ss-icon-workflow2")
+          expect(page).to have_css("span.ss-icon.ss-icon-circular")
+          expect(page).to have_css("span.ss-icon.ss-icon-monitor")
+          expect(page).to have_css("span.ss-icon.ss-icon-survey")
+          expect(page).to have_css("span.ss-icon.ss-icon-board")
+          expect(page).to have_css("span.ss-icon.ss-icon-faq")
+          expect(page).to have_css("span.ss-icon.ss-icon-qna")
+          expect(page).to have_css("span.ss-icon.ss-icon-discussion")
+          expect(page).to have_css("span.ss-icon.ss-icon-share")
+          expect(page).to have_css("span.ss-icon.ss-icon-shared-address")
+          expect(page).to have_css("span.ss-icon.ss-icon-personal-address")
+          expect(page).to have_css("span.ss-icon.ss-icon-tabular")
+          expect(page).to have_css("span.ss-icon.ss-icon-elasticsearch")
+          expect(page).to have_css("span.ss-icon.ss-icon-conf")
+        end
 
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
-        #
-        # ポータルのアイコンを変更
-        #
-        within ".menu-setting-portal .menu-icon-field" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-        within_dialog do
-          wait_event_to_fire "ss:tempFile:addedWaitingList" do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          end
-          wait_for_cbox_closed do
-            within "form" do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
-        within ".menu-setting-portal" do
-          expect(page).to have_css(".file-view", text: /logo/)
-        end
-
         within "form#item-form" do
+          #
+          # ポータルのアイコンを変更
+          #
+          ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+          within "#addon-gws-agents-addons-system-menu_setting" do
+            upload_to_ss_file_field "item[menu_portal_icon_image_id]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          end
+
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
-        wait_for_js_ready
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
-        within all(".addon-gws-system-menu-setting").first do
-          expect(page).to have_css("img.icon-portal[src*='logo.png']")
+        within "#addon-gws-agents-addons-system-menu_setting" do
+          expect(page).to have_css(".addon-gws-system-menu-setting img.icon-portal[src*='logo.png']")
         end
 
         #
         # 変更後のアイコンの状態を確認
         #
         visit index_path
-        wait_for_js_ready
         within ".main-navi" do
-          expect(page).to have_no_css("span.ss-icon.ss-icon-portal")
           expect(page).to have_css(".icon-portal.has-custom-icon")
           expect(page).to have_css("img.nav-icon-img[src*='logo.png']")
+          expect(page).to have_no_css("span.ss-icon.ss-icon-portal")
+
+          image_element_info(first("img.nav-icon-img[src*='logo.png']")).tap do |image_info|
+            expect(image_info[:currentSrc]).to be_present
+            expect(image_info[:width]).to be > 10
+            expect(image_info[:height]).to be > 10
+          end
         end
       end
     end
 
     context "multiple menu icons" do
+      # ポータルとスケジュールのアイコンを変更
+      let(:menu_types) { %i[portal schedule] }
+
       it "changes multiple menu icons" do
         visit index_path
         within ".main-navi" do
           click_on I18n.t("gws.site_config")
         end
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
-        # ポータルとスケジュールのアイコンを変更
-        menu_types = [:portal, :schedule]
-        menu_types.each do |menu_type|
-          within ".menu-setting-#{menu_type} .menu-icon-field" do
-            wait_for_cbox_opened do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-          within_dialog do
-            wait_event_to_fire "ss:tempFile:addedWaitingList" do
-              attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
-            end
-            wait_for_cbox_closed do
-              within "form" do
-                click_on I18n.t("ss.buttons.upload")
-              end
-            end
-          end
-        end
-
         within "form#item-form" do
+          ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+          within "#addon-gws-agents-addons-system-menu_setting" do
+            menu_types.each do |menu_type|
+              upload_to_ss_file_field "item[menu_#{menu_type}_icon_image_id]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+            end
+          end
+
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
         # 複数のアイコンが変更されていることを確認
-        wait_for_js_ready
         ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
-        menu_types.each do |menu_type|
-          within ".menu-setting-#{menu_type}" do
-            expect(page).to have_css("img.icon-#{menu_type}[src*='logo.png']")
+        within "#addon-gws-agents-addons-system-menu_setting" do
+          menu_types.each do |menu_type|
+            within ".menu-setting-#{menu_type}" do
+              expect(page).to have_css("img.icon-#{menu_type}[src*='logo.png']")
+            end
           end
         end
+
         visit index_path
-        wait_for_js_ready
         within ".main-navi" do
           within ".icon-portal" do
-            expect(page).to have_no_css("icon-portal.has-font-icon")
             expect(page).to have_css("img.nav-icon-img[src*='logo.png']")
+            expect(page).to have_no_css("icon-portal.has-font-icon")
+
+            image_element_info(first("img.nav-icon-img[src*='logo.png']")).tap do |image_info|
+              expect(image_info[:currentSrc]).to be_present
+              expect(image_info[:width]).to be > 10
+              expect(image_info[:height]).to be > 10
+            end
           end
           within ".icon-schedule" do
-            expect(page).to have_no_css("icon-schedule.has-font-icon")
             expect(page).to have_css("img.nav-icon-img[src*='logo.png']")
+            expect(page).to have_no_css("icon-schedule.has-font-icon")
+
+            image_element_info(first("img.nav-icon-img[src*='logo.png']")).tap do |image_info|
+              expect(image_info[:currentSrc]).to be_present
+              expect(image_info[:width]).to be > 10
+              expect(image_info[:height]).to be > 10
+            end
           end
         end
       end
@@ -180,33 +163,16 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         within ".main-navi" do
           click_on I18n.t("gws.site_config")
         end
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
-        # アイコンをアップロード
-        within ".menu-setting-portal .menu-icon-field" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-        within_dialog do
-          wait_event_to_fire "ss:tempFile:addedWaitingList" do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/logo.png"
-          end
-          wait_for_cbox_closed do
-            within "form" do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
-
         within "form#item-form" do
+          # アイコンをアップロード
+          ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+          within "#addon-gws-agents-addons-system-menu_setting" do
+            upload_to_ss_file_field "item[menu_portal_icon_image_id]", "#{Rails.root}/spec/fixtures/ss/logo.png"
+          end
+
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
@@ -219,27 +185,29 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-        # アイコンを削除
-        within ".menu-setting-portal .menu-icon-field" do
-          click_on I18n.t("ss.buttons.delete")
-        end
-
         within "form#item-form" do
+          # アイコンを削除
+          ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+          within "#addon-gws-agents-addons-system-menu_setting" do
+            within ".menu-setting-portal" do
+              click_on I18n.t("ss.buttons.delete")
+            end
+          end
+
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
         # デフォルトアイコンに戻っていることを確認
-        within ".menu-setting-portal" do
-          expect(page).to have_css("span.ss-icon.ss-icon-portal")
-          expect(page).to have_no_css("img.icon-portal[src*='logo.png']")
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+        within "#addon-gws-agents-addons-system-menu_setting" do
+          within ".menu-setting-portal" do
+            expect(page).to have_css("span.ss-icon.ss-icon-portal")
+            expect(page).to have_no_css("img.icon-portal[src*='logo.png']")
+          end
         end
 
         visit index_path
-        wait_for_js_ready
         within ".main-navi" do
           expect(page).to have_css(".icon-portal.has-font-icon")
           expect(page).to have_no_css(".icon-portal.has-custom-icon")
@@ -258,74 +226,57 @@ describe "gws_menu_settings", type: :feature, dbscope: :example, js: true do
         within ".main-navi" do
           click_on I18n.t("gws.site_config")
         end
-        wait_for_js_ready
-        wait_for_all_ckeditors_ready
-        wait_for_all_turbo_frames
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
 
         within ".nav-menu" do
           click_on I18n.t("ss.links.edit")
         end
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
-        # SVGファイルをアップロード
-        within ".menu-setting-portal .menu-icon-field" do
-          wait_for_cbox_opened do
-            click_on I18n.t("ss.buttons.upload")
-          end
-        end
-        within_dialog do
-          wait_event_to_fire "ss:tempFile:addedWaitingList" do
-            attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/test_icon.svg"
-          end
-          wait_for_cbox_closed do
-            within "form" do
-              click_on I18n.t("ss.buttons.upload")
-            end
-          end
-        end
-
-        # SVGファイルが正常にアップロードされていることを確認
-        within ".menu-setting-portal" do
-          expect(page).to have_css(".file-view", text: /test_icon/)
-        end
-
         within "form#item-form" do
+          # SVGファイルをアップロード
+          ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+          within "#addon-gws-agents-addons-system-menu_setting" do
+            upload_to_ss_file_field "item[menu_portal_icon_image_id]", "#{Rails.root}/spec/fixtures/ss/test_icon.svg"
+          end
+
           click_on I18n.t("ss.buttons.save")
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
-        wait_for_js_ready
-        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
-
         # SVGアイコンが表示されていることを確認
-        within ".menu-setting-portal" do
-          expect(page).to have_css("img.icon-portal[src*='test_icon.svg']")
+        ensure_addon_opened("#addon-gws-agents-addons-system-menu_setting")
+        within "#addon-gws-agents-addons-system-menu_setting" do
+          within ".menu-setting-portal" do
+            expect(page).to have_css("img.icon-portal[src*='test_icon.svg']")
+          end
         end
 
         # ポータルページでSVGアイコンが表示されていることを確認
         visit index_path
-        wait_for_js_ready
         within ".main-navi" do
-          expect(page).to have_no_css("span.ss-icon.ss-icon-portal")
           expect(page).to have_css(".icon-portal.has-custom-icon")
           expect(page).to have_css("img.nav-icon-img[src*='test_icon.svg']")
+          expect(page).to have_no_css("span.ss-icon.ss-icon-portal")
+
+          image_element_info(first("img.nav-icon-img[src*='test_icon.svg']")).tap do |image_info|
+            expect(image_info[:currentSrc]).to be_present
+            expect(image_info[:width]).to be > 10
+            expect(image_info[:height]).to be > 10
+          end
         end
 
-        # user1をログアウトしてuser2でログイン
-        within ".user-navigation" do
-          wait_for_event_fired("turbo:frame-load") { click_on user1.name }
-          click_on I18n.t("ss.logout")
-        end
+        # user2でログインし、アイコンの閲覧に支障がないことを確認
         login_user user2, to: index_path
-        wait_for_js_ready
 
         # user2でもアップロードされたアイコンが表示されることを確認
         within ".main-navi" do
-          expect(page).to have_no_css("span.ss-icon.ss-icon-portal")
           expect(page).to have_css(".icon-portal.has-custom-icon")
           expect(page).to have_css("img.nav-icon-img[src*='test_icon.svg']")
+          expect(page).to have_no_css("span.ss-icon.ss-icon-portal")
+
+          image_element_info(first("img.nav-icon-img[src*='test_icon.svg']")).tap do |image_info|
+            expect(image_info[:currentSrc]).to be_present
+            expect(image_info[:width]).to be > 10
+            expect(image_info[:height]).to be > 10
+          end
         end
       end
     end

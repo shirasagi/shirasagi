@@ -63,6 +63,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
             select I18n.t("gws/circular.options.sort.due_date_desc"), from: "s[sort]"
             click_on I18n.t('ss.buttons.search')
           end
+          wait_for_all_turbo_frames
           within ".list-items" do
             within first(".list-item") do
               expect(page).to have_css(".title", text: post3.name)
@@ -84,6 +85,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
             select I18n.t("gws/circular.options.sort.due_date_asc"), from: "s[sort]"
             click_on I18n.t('ss.buttons.search')
           end
+          wait_for_all_turbo_frames
           within ".list-items" do
             within first(".list-item") do
               expect(page).to have_css(".title", text: post1.name)
@@ -105,6 +107,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
             select I18n.t("gws/circular.options.sort.updated_desc"), from: "s[sort]"
             click_on I18n.t('ss.buttons.search')
           end
+          wait_for_all_turbo_frames
           within ".list-items" do
             within first(".list-item") do
               expect(page).to have_css(".title", text: post1.name)
@@ -126,6 +129,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
             select I18n.t("gws/circular.options.sort.updated_asc"), from: "s[sort]"
             click_on I18n.t('ss.buttons.search')
           end
+          wait_for_all_turbo_frames
           within ".list-items" do
             within first(".list-item") do
               expect(page).to have_css(".title", text: post2.name)
@@ -147,6 +151,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
             select I18n.t("gws/circular.options.sort.created_desc"), from: "s[sort]"
             click_on I18n.t('ss.buttons.search')
           end
+          wait_for_all_turbo_frames
           within ".list-items" do
             within first(".list-item") do
               expect(page).to have_css(".title", text: post2.name)
@@ -168,6 +173,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
             select I18n.t("gws/circular.options.sort.created_asc"), from: "s[sort]"
             click_on I18n.t('ss.buttons.search')
           end
+          wait_for_all_turbo_frames
           within ".list-items" do
             within first(".list-item") do
               expect(page).to have_css(".title", text: post3.name)
@@ -190,6 +196,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           fill_in "s[keyword]", with: post1.name
           click_on I18n.t('ss.buttons.search')
         end
+        wait_for_all_turbo_frames
         within ".list-items" do
           expect(page).to have_css(".list-item .title", text: post1.name)
           expect(page).to have_no_css(".list-item .title", text: post2.name)
@@ -200,6 +207,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           fill_in "s[keyword]", with: unique_id
           click_on I18n.t('ss.buttons.search')
         end
+        wait_for_all_turbo_frames
         within ".list-items" do
           expect(page).to have_no_css(".list-item .title", text: post1.name)
           expect(page).to have_no_css(".list-item .title", text: post2.name)
@@ -221,6 +229,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           select I18n.t("gws/circular.options.article_state.both"), from: "s[article_state]"
           click_on I18n.t('ss.buttons.search')
         end
+        wait_for_all_turbo_frames
         within ".list-items" do
           expect(page).to have_css(".list-item .title", text: post1.name)
           expect(page).to have_css(".list-item .title", text: post2.name)
@@ -231,6 +240,7 @@ describe "gws_circular_posts", type: :feature, dbscope: :example, js: true do
           select I18n.t("gws/circular.options.article_state.unseen"), from: "s[article_state]"
           click_on I18n.t('ss.buttons.search')
         end
+        wait_for_all_turbo_frames
         within ".list-items" do
           expect(page).to have_no_css(".list-item .title", text: post1.name)
           expect(page).to have_css(".list-item .title", text: post2.name)

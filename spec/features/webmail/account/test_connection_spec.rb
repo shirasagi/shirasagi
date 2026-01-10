@@ -10,6 +10,7 @@ describe "webmail_account", type: :feature, dbscope: :example, imap: true, js: t
       wait_for_js_ready
 
       within "form#item-form" do
+        fill_in "item[in_imap_password]", with: "pass"
         click_on I18n.t('webmail.buttons.test_connection')
       end
 

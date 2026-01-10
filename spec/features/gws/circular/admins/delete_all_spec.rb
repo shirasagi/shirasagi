@@ -46,7 +46,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       post3.reload
       expect(post1.deleted).to be_blank
       expect(post2.deleted).to be_blank
-      expect(post3.deleted).to be_present
+      expect(post3.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
       visit gws_circular_admins_path(site)
       click_on I18n.t("ss.links.trash")

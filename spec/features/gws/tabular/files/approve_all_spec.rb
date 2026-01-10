@@ -39,7 +39,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
   let!(:column1) do
     create(
       :gws_tabular_column_text_field, cur_site: site, cur_form: form, order: 10, required: "required",
-      input_type: "single", validation_type: "none", i18n_state: "disabled")
+      input_type: "single", i18n_default_value_translations: nil, validation_type: "none", i18n_state: "disabled")
   end
   let!(:column2) do
     create(
@@ -101,13 +101,13 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       # 一括承認
       #
       login_user user2, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-', s: { act: "approver" })
-      wait_event_to_fire("ss:checked-all-list-items") do
+      wait_for_event_fired("ss:checked-all-list-items") do
         find('.list-head input[type="checkbox"]').set(true)
       end
       within ".list-head-action" do
         open_dialog I18n.t("workflow.buttons.approve")
       end
-      wait_event_to_fire "gws:tabular:approve-all" do
+      wait_for_event_fired "gws:tabular:approve-all" do
         within_dialog do
           within "form#workflow-inspection" do
             fill_in "comment", with: approve_comment1
@@ -195,13 +195,13 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
 
       # （誤って）承認済みの投稿を選択して承認を行った場合、（エラーにならず）承認済メッセージがでて、投稿者へ掲載開始通知が発信される
       login_user user2, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-', s: { act: "approver" })
-      wait_event_to_fire("ss:checked-all-list-items") do
+      wait_for_event_fired("ss:checked-all-list-items") do
         find('.list-head input[type="checkbox"]').set(true)
       end
       within ".list-head-action" do
         open_dialog I18n.t("workflow.buttons.approve")
       end
-      wait_event_to_fire "gws:tabular:approve-all" do
+      wait_for_event_fired "gws:tabular:approve-all" do
         within_dialog do
           within "form#workflow-inspection" do
             fill_in "comment", with: approve_comment1
@@ -247,6 +247,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
     before do
       # required な項目をクリアすることで、不備がある投稿をシミュレーションする
       file_item.unset("col_#{column1.id}")
+      expect(file_item.send("col_#{column1.id}")).to be_blank
     end
 
     it do
@@ -257,13 +258,13 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
       # 一括承認
       #
       login_user user2, to: gws_tabular_files_path(site: site, space: space, form: form, view: '-', s: { act: "approver" })
-      wait_event_to_fire("ss:checked-all-list-items") do
+      wait_for_event_fired("ss:checked-all-list-items") do
         find('.list-head input[type="checkbox"]').set(true)
       end
       within ".list-head-action" do
         open_dialog I18n.t("workflow.buttons.approve")
       end
-      wait_event_to_fire "gws:tabular:approve-all" do
+      wait_for_event_fired "gws:tabular:approve-all" do
         within_dialog do
           within "form#workflow-inspection" do
             fill_in "comment", with: approve_comment1

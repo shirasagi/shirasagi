@@ -97,7 +97,7 @@ describe "gws_circular_admins", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.deleted')
 
       topic.reload
-      expect(topic.deleted).to be_present
+      expect(topic.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
       expect(topic.updated).to eq save_updated
       expect(topic.created).to eq save_created
 

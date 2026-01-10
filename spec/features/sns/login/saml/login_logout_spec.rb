@@ -71,7 +71,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
           end
 
           # confirm a login form has been shown
-          expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
+          expect(page).to have_css(".login-box", text: I18n.t("ss.login", locale: I18n.default_locale))
           expect(page).to have_css("li", text: name)
         end
       end
@@ -120,7 +120,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
           end
 
           # confirm a login form has been shown
-          expect(page).to have_css(".login-box", text: I18n.t("ss.login"))
+          expect(page).to have_css(".login-box", text: I18n.t("ss.login", locale: I18n.default_locale))
           expect(page).to have_css("li", text: name)
         end
       end
@@ -198,7 +198,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
 
       # confirm a error message is shown
-      expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login"))
+      expect(page).to have_css(".error-message", text: I18n.t("sns.errors.invalid_login", locale: I18n.default_locale))
     end
   end
 
@@ -230,6 +230,7 @@ describe "sns/login/saml", type: :feature, dbscope: :example, js: true do
       #
 
       # confirm 404 error is shown
+      expect(page).to have_css("#addon-basic", text: I18n.t("ss.rescues.default.head", locale: I18n.default_locale))
       expect(page).to have_content("404")
     end
   end

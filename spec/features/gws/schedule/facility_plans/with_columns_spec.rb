@@ -73,7 +73,7 @@ describe "gws_schedule_facility_plans", type: :feature, dbscope: :example, js: t
 
       expect(Gws::Schedule::Plan.all.count).to eq 1
       plan.reload
-      expect(plan.deleted).to be_present
+      expect(plan.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
     end
   end
 end

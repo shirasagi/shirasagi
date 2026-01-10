@@ -84,7 +84,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         expect(find("input[type='checkbox'][value='#{branch_page.id}']")).to be_checked
       end
       find('.destroy-all').click
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_css("h2", text: I18n.t("ss.confirm.target_to_delete"))
 
       # master page

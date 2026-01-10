@@ -14,7 +14,7 @@ describe "cms_apis_reload_site_usages", type: :request, dbscope: :example do
     params = {
       'authenticity_token' => @auth_token,
       'item[email]' => user.email,
-      'item[password]' => "pass"
+      'item[password]' => ss_pass
     }
     post sns_login_path(format: :json), params: params
     expect(response.status).to eq 204

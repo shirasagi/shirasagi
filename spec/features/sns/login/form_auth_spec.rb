@@ -27,11 +27,12 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
       # valid login
       within "form" do
         fill_in "item[email]", with: sys_user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
-      expect(current_path).to eq sns_mypage_path
+      expect(page).to have_css("nav.user .user-name", text: sys_user.name)
       expect(page).to have_no_css(".login-box")
+      expect(current_path).to eq sns_mypage_path
     end
   end
 
@@ -66,11 +67,12 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
       # valid login
       within "form" do
         fill_in "item[email]", with: sys_user.email
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_button I18n.t("ss.login")
       end
-      expect(current_path).to eq sns_mypage_path
+      expect(page).to have_css("nav.user .user-name", text: sys_user.name)
       expect(page).to have_no_css(".login-box")
+      expect(current_path).to eq sns_mypage_path
     end
   end
 end

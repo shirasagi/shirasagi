@@ -26,7 +26,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
       visit show_path
 
       within "#addon-gws-agents-addons-member" do
-        first(".user-detail", text: user1.name).click
+        wait_for_cbox_opened { first(".user-detail", text: user1.name).click }
       end
       within_cbox do
         expect(page).to have_text(user1.name)
@@ -34,7 +34,7 @@ describe "gws_schedule_plans", type: :feature, dbscope: :example, js: true do
         click_on I18n.t("ss.buttons.close")
       end
       within "#addon-gws-agents-addons-member" do
-        first(".user-detail", text: user2.name).click
+        wait_for_cbox_opened { first(".user-detail", text: user2.name).click }
       end
       within_cbox do
         expect(page).to have_text(user2.name)

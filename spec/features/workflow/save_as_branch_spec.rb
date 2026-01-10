@@ -154,11 +154,11 @@ describe "close_confirmation", type: :feature, dbscope: :example, js: true do
               fill_in_ckeditor "item[column_values][][in_wrap][value]", with: unique_id
             end
 
-            wait_cbox_open do
+            wait_for_cbox_opened do
               click_on I18n.t('cms.buttons.save_as_branch')
             end
           end
-          wait_for_cbox do
+          within_cbox do
             expect(page).to have_css("#alertExplanation")
             click_on I18n.t("ss.buttons.ignore_alert")
           end

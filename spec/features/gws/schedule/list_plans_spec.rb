@@ -23,6 +23,7 @@ describe "gws_schedule_list_plans", type: :feature, dbscope: :example, js: true 
         fill_in "item[name]", with: "name"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).not_to eq new_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -38,6 +39,7 @@ describe "gws_schedule_list_plans", type: :feature, dbscope: :example, js: true 
         fill_in "item[name]", with: "modify"
         click_button I18n.t('ss.buttons.save')
       end
+      wait_for_notice I18n.t("ss.notice.saved")
       expect(current_path).not_to eq sns_login_path
       expect(page).to have_no_css("form#item-form")
     end
@@ -47,6 +49,7 @@ describe "gws_schedule_list_plans", type: :feature, dbscope: :example, js: true 
       within "form#item-form" do
         click_button I18n.t('ss.buttons.delete')
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
       expect(current_path).not_to eq delete_path
     end
   end

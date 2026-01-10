@@ -67,27 +67,35 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       context "on cms/addon/form/page" do
         let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
         let!(:column1) do
-          create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image")
+          create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image", required: "optional")
         end
         let!(:column2) do
-          create(:cms_column_free, cur_site: site, cur_form: form, order: 2)
+          create(:cms_column_free, cur_site: site, cur_form: form, order: 2, required: "optional")
         end
-        let!(:item) { create :article_page, cur_user: user, cur_site: site, cur_node: node }
+        let!(:item1) { create :article_page, cur_user: user, cur_site: site, cur_node: node }
+        let!(:item2) { create :article_page, cur_user: user, cur_site: site, cur_node: node }
 
         before do
           node.st_form_ids = [ form.id ]
           node.save!
 
-          item.form = form
-          item.column_values = [
+          item1.form = form
+          item1.column_values = [
             column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
+            # column2.value_type.new(column: column2, value: unique_id * 2, file_ids: [ file2.id ])
+          ]
+          item1.save!
+
+          item2.form = form
+          item2.column_values = [
+            # column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
             column2.value_type.new(column: column2, value: unique_id * 2, file_ids: [ file2.id ])
           ]
-          item.save!
+          item2.save!
         end
 
         it do
-          visit article_page_path(site: site, cid: node, id: item)
+          visit article_page_path(site: site, cid: node, id: item1)
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
 
@@ -106,7 +114,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
             end
           end
 
-          visit article_page_path(site: site, cid: node, id: item)
+          visit article_page_path(site: site, cid: node, id: item2)
           wait_for_all_ckeditors_ready
           wait_for_all_turbo_frames
           within "#addon-cms-agents-addons-form-page" do
@@ -188,28 +196,36 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       context "on cms/addon/form/page" do
         let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'static') }
         let!(:column1) do
-          create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image")
+          create(:cms_column_file_upload, cur_site: site, cur_form: form, order: 1, file_type: "image", required: "optional")
         end
         let!(:column2) do
-          create(:cms_column_free, cur_site: site, cur_form: form, order: 2)
+          create(:cms_column_free, cur_site: site, cur_form: form, order: 2, required: "optional")
         end
-        let!(:item) { create :article_page, cur_user: user, cur_site: site, cur_node: node }
+        let!(:item1) { create :article_page, cur_user: user, cur_site: site, cur_node: node }
+        let!(:item2) { create :article_page, cur_user: user, cur_site: site, cur_node: node }
 
         before do
           node.st_form_ids = [ form.id ]
           node.save!
 
-          item.form = form
-          item.column_values = [
+          item1.form = form
+          item1.column_values = [
             column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
+            # column2.value_type.new(column: column2, value: unique_id * 2, file_ids: [ file2.id ])
+          ]
+          item1.save!
+
+          item2.form = form
+          item2.column_values = [
+            # column1.value_type.new(column: column1, file_id: file1.id, file_label: file1.humanized_name),
             column2.value_type.new(column: column2, value: unique_id * 2, file_ids: [ file2.id ])
           ]
-          item.save!
+          item2.save!
         end
 
         context "with already bound file" do
           it do
-            visit edit_article_page_path(site: site, cid: node, id: item)
+            visit edit_article_page_path(site: site, cid: node, id: item1)
             wait_for_all_ckeditors_ready
             wait_for_all_turbo_frames
 
@@ -228,7 +244,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               end
             end
 
-            visit article_page_path(site: site, cid: node, id: item)
+            visit article_page_path(site: site, cid: node, id: item2)
             wait_for_all_ckeditors_ready
             wait_for_all_turbo_frames
             within "#addon-cms-agents-addons-form-page" do
@@ -253,7 +269,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           let!(:file4) { create :cms_temp_file, cur_user: user, site: site, node: node, name: unique_id }
 
           it do
-            visit edit_article_page_path(site: site, cid: node, id: item)
+            visit edit_article_page_path(site: site, cid: node, id: item1)
             wait_for_all_ckeditors_ready
             wait_for_all_turbo_frames
             within "#addon-cms-agents-addons-form-page" do
@@ -272,9 +288,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
               end
             end
 
-            page.dismiss_confirm(I18n.t("ss.confirm.resume_editing")) do
-              visit edit_article_page_path(site: site, cid: node, id: item)
-            end
+            visit edit_article_page_path(site: site, cid: node, id: item2)
             within "#addon-cms-agents-addons-form-page" do
               ss_select_file file4, addon: ".column-value-cms-column-free"
               expect(page).to have_css(".file-view[data-file-id='#{file4.id}']", text: file4.name)

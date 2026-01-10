@@ -62,7 +62,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
-      expect(item.deleted).to be_present
+      expect(item.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
       #
       # Hard Delete
@@ -89,7 +89,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
 
     it do
       visit gws_workflow2_files_path(site: site, state: "all")
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       within ".list-head-action" do
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")
@@ -98,7 +98,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       wait_for_notice I18n.t('ss.notice.deleted')
 
       item.reload
-      expect(item.deleted).to be_present
+      expect(item.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
     end
   end
 
@@ -109,7 +109,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
       item.save!
 
       visit gws_workflow2_files_path(site: site, state: "all")
-      wait_event_to_fire("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
+      wait_for_event_fired("ss:checked-all-list-items") { find('.list-head label.check input').set(true) }
       within ".list-head-action" do
         page.accept_confirm do
           click_on I18n.t("ss.links.delete")

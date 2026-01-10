@@ -65,7 +65,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
         end
         click_on I18n.t("ss.buttons.confirm")
       end
-      wait_for_ajax
+      wait_for_js_ready
 
       within_cbox do
         click_on I18n.t("ss.buttons.close")
@@ -78,7 +78,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
     it "when slash('/') is given" do
       visit index_path
       click_link(I18n.t("ss.links.move"))
-      wait_for_ajax
+      wait_for_js_ready
 
       within "form#item-form" do
         fill_in "item[destination_basename]", with: "#{node_1.filename}/#{unique_id}"
@@ -99,7 +99,7 @@ describe "cms_generate_pages", type: :feature, dbscope: :example, js: :true do
 
         visit index_path
         click_link(I18n.t("ss.links.move"))
-        wait_for_ajax
+        wait_for_js_ready
 
         within "form#item-form" do
           fill_in "item[destination_basename]", with: new_basename

@@ -180,26 +180,36 @@ module SS
       })(...arguments)
     SCRIPT
 
+    WAIT_FOR_DOCUMENT_READY_SCRIPT = <<~SCRIPT.freeze
+      (function(resolve) {
+        if (document.readyState === "complete") {
+          console.log(`document is already completed.`);
+          resolve(true);
+          return;
+        }
+
+        console.log(`wait for window load. document.readyState=${document.readyState}`);
+        window.addEventListener("load", function() {
+          console.log(`window is loaded. document.readyState=${document.readyState}`);
+          resolve(true);
+        });
+      })(...arguments)
+    SCRIPT
+
     WAIT_FOR_JS_READY_SCRIPT = <<~SCRIPT.freeze
       (function(resolve) {
         if ("SS" in window) {
-          SS.ready(function() { resolve(true); });
-          return;
+          SS.ready(function() { console.log("SS gets ready"); resolve(true); });
+          return
         }
 
-        if (document.readyState === "complete") {
-          // document が読み込まれているのに SS が存在しない場合、現在のところリカバリ方法が不明
-          resolve(false);
-          return;
+        if ("$" in window) {
+          $(function() { console.log("jQuery gets ready"); resolve(true); });
+          return
         }
 
-        window.addEventListener("load", function() {
-          if ("SS" in window) {
-            SS.ready(function() { resolve(true); });
-          } else {
-            resolve(false);
-          }
-        });
+        console.log("Both of SS and jQuery are unavailable. Anyway I think JS gets ready");
+        resolve(true);
       })(...arguments)
     SCRIPT
 
@@ -548,6 +558,10 @@ module SS
     rescue
     end
 
+    def scroll_to_bottom
+      page.execute_script('window.scrollTo(0, document.body.scrollHeight);')
+    end
+
     def jquery_migrate_warnings
       page.evaluate_script("jQuery.migrateWarnings") rescue nil
     end
@@ -569,12 +583,12 @@ module SS
       []
     end
 
-    def puts_console_logs
-      logs = capture_console_logs
+    def puts_console_logs(session = nil)
+      logs = capture_console_logs(session)
       return if logs.blank?
 
       puts
-      puts "==== console.log (#{caller(1, 1).try(:first)}) ===="
+      puts "==== console.log (#{caller(1, 1).try(:first) rescue nil}) ===="
       puts logs
       puts
     end
@@ -652,6 +666,7 @@ module SS
       wait_for_js_ready
       result = page.evaluate_async_script(ENSURE_ADDON_OPENED, addon_id)
       expect(result).to be_truthy
+      wait_for_js_ready
       true
     end
 
@@ -667,7 +682,7 @@ module SS
 
     #
     # Usage
-    #   wait_all_ckeditors_ready
+    #   wait_for_all_ckeditors_ready
     #
     def wait_for_all_ckeditors_ready
       wait_for_js_ready
@@ -785,19 +800,35 @@ module SS
       end
     end
 
-    def wait_for_js_ready(session = nil, &block)
-      return unless page.driver.is_a?(Capybara::Selenium::Driver)
-
+    def wait_for_document_ready!(session = nil)
       session ||= page
+      return unless session.driver.is_a?(Capybara::Selenium::Driver)
+
+      session.evaluate_async_script(WAIT_FOR_DOCUMENT_READY_SCRIPT)
+    end
+
+    def wait_for_document_ready(session = nil)
+      wait_for_document_ready!(session)
+    rescue Selenium::WebDriver::Error::WebDriverError => e
+      puts "#{e.class} (#{e.message})"
+      puts_console_logs(session)
+    end
+
+    def wait_for_js_ready(session = nil, &block)
+      session ||= page
+      return unless session.driver.is_a?(Capybara::Selenium::Driver)
+
+      wait_for_document_ready(session)
+
       unless session.evaluate_async_script(WAIT_FOR_JS_READY_SCRIPT)
-        puts_console_logs
+        puts_console_logs(session)
         raise "unable to be js ready"
       end
 
       yield if block
     rescue Selenium::WebDriver::Error::WebDriverError => e
-      puts_console_logs
-      Rails.logger.info { "#{e.class} (#{e.message})" }
+      puts "#{e.class} (#{e.message})"
+      puts_console_logs(session)
     end
     alias wait_for_ajax wait_for_js_ready
 
@@ -867,10 +898,16 @@ module SS
       expect(result).to be_truthy
     end
 
-    def wait_for_all_turbo_frames
-      wait_for_js_ready
-      result = page.evaluate_async_script(WAIT_FOR_ALL_TURBO_FRAMES_SCRIPT)
-      expect(result).to be_truthy
+    def wait_for_all_turbo_frames(session = nil)
+      session ||= page
+
+      wait_for_js_ready(session)
+      result = session.evaluate_async_script(WAIT_FOR_ALL_TURBO_FRAMES_SCRIPT)
+      if respond_to?(:expect)
+        expect(result).to be_truthy
+      else
+        raise "js timeout" unless result
+      end
     end
 
     def wait_for_tree_render(element)
@@ -942,7 +979,7 @@ module SS
         end
       end
       within_dialog do
-        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        wait_for_event_fired "ss:tempFile:addedWaitingList" do
           attach_file "in_files", file_paths
         end
       end
@@ -1035,7 +1072,7 @@ module SS
         end
       end
       within_dialog do
-        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        wait_for_event_fired "ss:tempFile:addedWaitingList" do
           attach_file "in_files", path
         end
       end
@@ -1154,6 +1191,10 @@ module Capybara
       run_callbacks :visit do
         visit_without_shirasagi(*args, **options)
       end
+    rescue => e
+      Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      puts "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}"
+      raise
     end
 
     alias visit_without_shirasagi visit

@@ -276,7 +276,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
     before { login_user(user) }
 
     context 'with logged in user belonged to group1' do
-      let(:user) { create(:cms_test_user, group: group1, role: role, in_password: "pass") }
+      let(:user) { create(:cms_test_user, group: group1, role: role, in_password: ss_pass) }
 
       it do
         visit show_path
@@ -304,7 +304,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
     end
 
     context 'with logged in user belonged to group2' do
-      let(:user) { create(:cms_test_user, group: group2, role: role, in_password: "pass") }
+      let(:user) { create(:cms_test_user, group: group2, role: role, in_password: ss_pass) }
 
       it do
         visit show_path
