@@ -58,3 +58,21 @@ ehthumbs.db
 
 # デバッグ用
 .rdbgrc.breakpoints
+
+# backup
+backup/
+
+# docker
+#  - backupスクリプト本体だけをバージョン管理し、実データ（ダンプ）は無視する
+docker/mongo-init/*
+!docker/mongo-init/restore-ss-malps.sh
+
+# Cursor
+.cursor/
+
+# Docs
+docs/
+,memo/
+
+# Coderabbit
+coderabbit.yml

@@ -1,19 +1,36 @@
 <%
   addon ||= local_assigns.fetch(:addon, {})
   snippet_select_id = "#{addon[:id]}_loop_snippet_selector"
+  loop_setting_select_id = "#{addon[:id]}_loop_setting_id"
 %>
 <%= code_editor "##{addon[:id]} .html", mode: :html %>
 
 <dl class="see">
+  <dt class="wide"><%= t("cms.labels.loop_html") %><%= tt("cms.labels.loop_html") %></dt>
+  <dd class="wide">
+    <%= ss_stimulus_tag "ss/select_with_description" do %>
+      <% loop_setting_options = ancestral_loop_settings("liquid") %>
+      <%= f.select :loop_setting_id,
+            options_with_optgroup_for_loop_settings(loop_setting_options),
+            {},
+            id: loop_setting_select_id,
+            class: 'loop-setting-selector'
+          %>
+      <span class="description hide"></span>
+    <% end %>
+  </dd>
   <dt class="wide"><%= t("cms.labels.snippets") %><%= tt("cms.labels.snippets") %></dt>
   <dd class="wide">
-    <% snippet_options = ancestral_html_settings_liquid %>
-    <%= select_tag(
-          'loop_snippet_selector',
-          options_with_optgroup_for_snippets(snippet_options),
-          id: snippet_select_id,
-          class: 'loop-snippet-selector'
-        ) %>
+    <%= ss_stimulus_tag "ss/select_with_description" do %>
+      <% snippet_options = ancestral_html_settings_liquid %>
+      <%= select_tag(
+            'loop_snippet_selector',
+            options_with_optgroup_for_snippets(snippet_options),
+            id: snippet_select_id,
+            class: 'loop-snippet-selector'
+          ) %>
+      <span class="description hide"></span>
+    <% end %>
   </dd>
   <dt class="wide">HTML<%= @model.tt :layout %></dt>
   <dd class="wide">
@@ -30,8 +47,199 @@
 
 <%= jquery do %>
   var $addon = $("<%= "##{addon[:id]}" %>");
+  var $loopSettingSelect = $addon.find('#<%= loop_setting_select_id %>');
+  var $layoutTextarea = $addon.find('textarea[name*="[layout]"]');
+  var $snippetSelect = $addon.find('.loop-snippet-selector');
+  var lockSelector = '#<%= loop_setting_select_id %>';
+  var lockTarget = '#<%= addon[:id] %> textarea[name*="[layout]"]';
+  var isDev = <%= Rails.env.development? ? "true" : "false" %>;
+
+  // ループHTML設定の選択時にテキストエリアをロック/アンロックし、HTMLを読み込む
+    // エラーメッセージを取得する関数（HTTPステータスコードに基づいて適切なメッセージを返す）
+    var getErrorMessage = function(xhr) {
+      if (xhr.status === 404) {
+        return <%= I18n.t("cms.notices.loop_html_not_found").to_json.html_safe %>;
+      } else if (xhr.status >= 500) {
+        return <%= I18n.t("cms.notices.loop_html_server_error").to_json.html_safe %>;
+      }
+      return <%= I18n.t("cms.notices.loop_html_load_error").to_json.html_safe %>;
+    };
+    
+    // エラーメッセージを表示する関数
+    var showLoopHtmlError = function(message, retryCallback) {
+      // 既存のエラーメッセージを削除
+      clearLoopHtmlError();
+      
+      // エラーメッセージコンテナを作成（シラサギの標準的なエラー表示構造に従う）
+      var $errorDiv = $('<div>', {
+        class: 'loop-html-error errorExplanation',
+        role: 'alert',
+        'aria-live': 'polite'
+      });
+      
+      // ヘッダー（シラサギの標準キーを使用）
+      var $errorHeader = $('<h2>').text(<%= I18n.t("errors.template.header.one").to_json.html_safe %>);
+      
+      // 本文（シラサギの標準キーを使用）
+      var $errorBody = $('<p>').text(<%= I18n.t("errors.template.body").to_json.html_safe %>);
+      
+      // エラーメッセージリスト
+      var $errorList = $('<ul>');
+      var $errorItem = $('<li>').text(message);
+      $errorList.append($errorItem);
+      
+      $errorDiv.append($errorHeader);
+      $errorDiv.append($errorBody);
+      $errorDiv.append($errorList);
+      
+      // リトライボタンを追加（エラー表示の後に配置）
+      if (retryCallback) {
+        var $retryButton = $('<button>', {
+          type: 'button',
+          class: 'btn btn-retry',
+          text: <%= I18n.t("ss.buttons.reload").to_json.html_safe %>
+        }).on('click', function() {
+          clearLoopHtmlError();
+          retryCallback();
+        });
+        $errorDiv.append($('<div>', { class: 'error-actions' }).append($retryButton));
+      }
+      
+      // テキストエリアの前に挿入
+      $layoutTextarea.before($errorDiv);
+    };
+    
+    // エラーメッセージを削除する関数
+    var clearLoopHtmlError = function() {
+      $layoutTextarea.closest('dd').find('.loop-html-error').remove();
+    };
+    
+    // テキストエリアをアンロックする関数
+    var unlockTextarea = function() {
+      $snippetSelect.prop('disabled', false);
+      Cms_Editor_CodeMirror.unlock(lockSelector, lockTarget);
+    };
+
+    // 機微情報を含み得る xhr 全体はログに出さず、表示してもよい情報だけを要約して返す
+    var sanitizeForConsole = function(value, maxLen) {
+      if (value === undefined || value === null) {
+        return null;
+      }
+
+      var s = String(value);
+      s = s.replace(/[\r\n\t]+/g, ' ').replace(/\s\s+/g, ' ').trim();
+      if (maxLen && s.length > maxLen) {
+        s = s.substring(0, maxLen) + '…';
+      }
+      return s;
+    };
+
+    var buildAjaxErrorLog = function(xhr, status, error) {
+      var httpStatus = xhr && typeof xhr.status !== 'undefined' ? xhr.status : null;
+      var statusText = xhr && xhr.statusText ? xhr.statusText : null;
+      var messageParts = [];
+      if (status) { messageParts.push(status); }
+      if (error) { messageParts.push(error); }
+      if (statusText) { messageParts.push(statusText); }
+
+      var log = {
+        status: httpStatus,
+        message: sanitizeForConsole(messageParts.filter(Boolean).join(' / '), 200)
+      };
+
+      // 開発時のみ、レスポンス本文の短い抜粋を出す（本番では内部情報を出さない）
+      if (isDev) {
+        var responseSnippet = sanitizeForConsole(xhr && xhr.responseText, 300);
+        if (responseSnippet) {
+          log.responseSnippet = responseSnippet;
+        }
+      }
+
+      return log;
+    };
+    
+    var updateLoopHtml = function() {
+      var loopSettingId = $loopSettingSelect.val();
+      
+      // エラーメッセージをクリア
+      clearLoopHtmlError();
+      
+      if (loopSettingId) {
+        // ループHTML設定が選択されている場合、スニペットのプルダウンを無効にする
+        $snippetSelect.prop('disabled', true);
+        
+        // AJAXでループHTML設定のHTMLを取得
+        $.ajax({
+          url: '<%= cms_apis_loop_setting_path(id: ":id", site: @cur_site) %>'.replace(':id', encodeURIComponent(loopSettingId)),
+          method: 'GET',
+          dataType: 'json',
+          success: function(data) {
+            if (data && data.html) {
+              var editor = $layoutTextarea.data('editor');
+              if (editor) {
+                editor.setValue(data.html);
+                editor.setOption('readOnly', true);
+              } else {
+                $layoutTextarea.val(data.html);
+                $layoutTextarea.prop('readonly', true);
+              }
+
+              // unlockTextarea() と対称に、成功時は CodeMirror/textarea 側もロックする
+              // lockSelector / lockTarget が未定義の場合は何もしない（エラーや二重ロック回避）
+              if (lockSelector && lockTarget && window.Cms_Editor_CodeMirror && typeof Cms_Editor_CodeMirror.lock === 'function') {
+                Cms_Editor_CodeMirror.lock(lockSelector, lockTarget);
+              }
+
+              // ループHTML設定が有効な間はスニペットのプルダウンを無効のままにする
+              $snippetSelect.prop('disabled', true);
+            }
+          },
+          error: function(xhr, status, error) {
+            var log = buildAjaxErrorLog(xhr, status, error);
+            if (isDev) {
+              console.error('Loop setting fetch error:', log);
+            } else {
+              console.error('Loop setting fetch error:', { status: log.status, message: log.message });
+            }
+            
+            // エラー時にテキストエリアをアンロック
+            unlockTextarea();
+            
+            // エラーメッセージを表示（リトライ機能付き）
+            showLoopHtmlError(getErrorMessage(xhr), function() {
+              updateLoopHtml();
+            });
+          }
+        });
+      } else {
+        // ループHTML設定が選択されていない場合、テキストエリアをアンロックし、スニペットのプルダウンを有効にする
+        unlockTextarea();
+      }
+    };
+    
+    // 初期状態を設定（既にloop_setting_idが設定されている場合）
+    if ($loopSettingSelect.val()) {
+      updateLoopHtml();
+    }
+    
+    // 選択変更時にHTMLを更新
+    $loopSettingSelect.on('change', updateLoopHtml);
+  
+  // スニペットセレクターの初期値を「直接入力」に設定
+  if ($snippetSelect.length && !$snippetSelect.val()) {
+    $snippetSelect.val('');
+  }
+  
+  // スニペットの選択処理
   $addon.find('.loop-snippet-selector').on('change', function() {
     var $select = $(this);
+    
+    // ループHTML設定が選択されている場合はスニペットの挿入を無効にする
+    if ($loopSettingSelect.length && $loopSettingSelect.val()) {
+      $select.val('');
+      return;
+    }
+    
     var $option = $select.find(':selected');
     
     if (!$option.val()) {

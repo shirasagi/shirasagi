@@ -155,7 +155,11 @@ class Cms::Column::Value::Base
   end
 
   def _to_html(options = {})
-    layout = column.layout
+    layout = if column.loop_setting.present? && column.loop_setting.html_format_liquid?
+               column.loop_setting.html
+             else
+               column.layout
+             end
     if layout.blank?
       return to_default_html
     end

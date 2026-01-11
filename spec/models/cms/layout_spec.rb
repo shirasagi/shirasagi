@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Cms::Layout do
   subject(:model) { Cms::Layout }
   subject(:factory) { :cms_layout }
+  let(:site) { cms_site }
 
   it_behaves_like "mongoid#save"
   it_behaves_like "mongoid#find"
@@ -35,6 +36,20 @@ describe Cms::Layout do
         expect{ entity1.save! }.not_to raise_error
         expect{ entity2.save! }.to raise_error Mongoid::Errors::Validations
       end
+    end
+  end
+
+  describe "loop_setting association" do
+    it "is optional" do
+      layout = build(:cms_layout, site: site, loop_setting: nil)
+      expect(layout).to be_valid
+    end
+
+    it "accepts assigned loop_setting" do
+      loop_setting = create(:cms_loop_setting, site: site)
+      layout = build(:cms_layout, site: site, loop_setting: loop_setting)
+      expect(layout).to be_valid
+      expect(layout.loop_setting).to eq loop_setting
     end
   end
 end

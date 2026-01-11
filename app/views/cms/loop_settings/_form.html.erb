@@ -13,4 +13,38 @@
 
   <dt><%= @model.t :html_format %><%= @model.tt :html_format %></dt>
   <dd><%= f.select :html_format, @item.html_format_options %></dd>
+
+  <dt><%= @model.t :loop_html_setting_type %><%= @model.tt :loop_html_setting_type %></dt>
+  <dd><%= f.select :loop_html_setting_type, @item.loop_html_setting_type_options %></dd>
 </dl>
+
+<%= javascript_tag do %>
+  SS.ready(function() {
+    var $htmlFormat = $("#item_html_format");
+    var $typeSelect = $("#item_loop_html_setting_type");
+    if ($htmlFormat.length === 0 || $typeSelect.length === 0) {
+      return;
+    }
+    // Turbolinks/Turbo等で複数回評価されても二重bindしない
+    if ($htmlFormat.data("loop-setting-form-bound")) {
+      return;
+    }
+    $htmlFormat.data("loop-setting-form-bound", true);
+
+    var sync = function() {
+      var isLiquid = ($htmlFormat.val() === "liquid");
+      var $snippetOption = $typeSelect.find("option[value='snippet']");
+      if ($snippetOption.length) {
+        $snippetOption.prop("disabled", !isLiquid);
+        // hidden属性は古いブラウザ対策でpropで付与
+        $snippetOption.prop("hidden", !isLiquid);
+      }
+      if (!isLiquid && $typeSelect.val() === "snippet") {
+        $typeSelect.val("template");
+      }
+    };
+
+    $htmlFormat.on("change", sync);
+    sync();
+  });
+<% end %>

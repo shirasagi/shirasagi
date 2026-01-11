@@ -13,12 +13,16 @@ class Cms::LoopSetting
   field :order, type: Integer
   field :html_format, type: String, default: "shirasagi"
   field :state, type: String, default: "public"
-  permit_params :name, :description, :order, :html_format, :state, :html
+  field :loop_html_setting_type, type: String, default: "template"
+  permit_params :name, :description, :order, :html_format, :state, :html, :loop_html_setting_type
   validates :name, presence: true, length: { maximum: 40 }
   validates :description, length: { maximum: 400 }
   validates :html_format, inclusion: { in: %w(shirasagi liquid), allow_blank: true }
   validates :state, inclusion: { in: %w(public closed), allow_blank: true }
+  validates :loop_html_setting_type, inclusion: { in: %w(template snippet), allow_blank: true }
   validates :html, liquid_format: true, if: ->{ html_format_liquid? }
+
+  before_validation :normalize_loop_html_setting_type
 
   default_scope -> { order_by(order: 1, name: 1) }
   scope :public_state, -> { where(:state.in => [nil, 'public']) }
@@ -35,6 +39,18 @@ class Cms::LoopSetting
       end
       if params[:keyword].present?
         criteria = criteria.keyword_in params[:keyword], :name, :html
+      end
+      if params[:html_format].present?
+        if params[:html_format] == "liquid"
+          criteria = criteria.liquid
+        elsif params[:html_format] == "shirasagi"
+          criteria = criteria.shirasagi
+        end
+      end
+      if params[:loop_html_setting_type].present?
+        # シラサギ形式では snippet は選べない（画面切替時にパラメータだけ残るケース対策）
+        return criteria if params[:html_format] == "shirasagi" && params[:loop_html_setting_type] == "snippet"
+        criteria = criteria.where(loop_html_setting_type: params[:loop_html_setting_type])
       end
       criteria
     end
@@ -58,5 +74,26 @@ class Cms::LoopSetting
     %w(shirasagi liquid).map do |v|
       [I18n.t("cms.options.loop_format.#{v}"), v]
     end
+  end
+
+  def loop_html_setting_type_template?
+    !loop_html_setting_type_snippet?
+  end
+
+  def loop_html_setting_type_snippet?
+    loop_html_setting_type == "snippet"
+  end
+
+  def loop_html_setting_type_options
+    %w(template snippet).map do |v|
+      [I18n.t("cms.options.loop_html_setting_type.#{v}"), v]
+    end
+  end
+
+  private
+
+  def normalize_loop_html_setting_type
+    # HTML種別がシラサギのときは「テンプレート」固定
+    self.loop_html_setting_type = "template" if html_format_shirasagi?
   end
 end
