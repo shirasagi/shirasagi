@@ -1,3 +1,13 @@
+module SS
+  module UserSupport
+    mattr_accessor :pass
+  end
+end
+
+def ss_pass
+  SS::UserSupport.pass ||= "p@ss-#{unique_id}"
+end
+
 def ss_user
   ss_user = SS::User.where(email: build(:ss_user).email).first
   ss_user ||= create(:ss_user)
@@ -21,7 +31,7 @@ def login_user(user, pass: nil, login_path: nil, to: nil)
   ref = to.presence || '/robots.txt'
   within "form" do
     fill_in "item[email]", with: user.email.presence || user.uid
-    fill_in "item[password]", with: pass.presence || user.in_password.presence || "pass"
+    fill_in "item[password]", with: pass.presence || user.in_password.presence || ss_pass
     set_value_to_hidden_input('input[name="ref"]', ref)
     click_button I18n.t("ss.login", locale: I18n.default_locale)
   end

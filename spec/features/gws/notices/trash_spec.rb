@@ -1,9 +1,14 @@
 require 'spec_helper'
 
 describe "gws_notices", type: :feature, dbscope: :example, js: true do
+  let(:now) { Time.zone.now.change(usec: 0) }
   let(:site) { gws_site }
   let(:folder) { create(:gws_notice_folder) }
-  let!(:item) { create :gws_notice_post, folder: folder, comment_state: "enabled", deleted: Time.zone.now }
+  let!(:item) do
+    create(
+      :gws_notice_post, folder: folder, comment_state: "enabled",
+      start_on: now - 1.day, end_on: now + 1.day, deleted: now)
+  end
 
   before { login_gws_user }
 

@@ -99,9 +99,6 @@ this.SS_SearchUI = (function () {
     var tr = $(item).closest("tr");
 
     tr.remove();
-    if (table.find("tbody tr").size() === 0) {
-      table.hide();
-    }
     table.trigger("change");
   };
 
@@ -224,9 +221,6 @@ this.SS_SearchUI = (function () {
       var $this = $(this);
       SS.justOnce(this, "searchUI", function() {
         $this.on("click", "a.deselect", SS_SearchUI.deselect);
-        if ($this.find("a.deselect").size() === 0) {
-          $this.hide();
-        }
       });
     });
   };

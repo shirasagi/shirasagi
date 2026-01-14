@@ -23,7 +23,7 @@ describe Webmail::HistoryArchiveJob, dbscope: :example, imap: true do
     end
 
     it do
-      job_class = Webmail::MailExportJob.bind(user_id: user, user_password: SS::Crypto.encrypt("pass"))
+      job_class = Webmail::MailExportJob.bind(user_id: user, user_password: SS::Crypto.encrypt(ss_pass))
       ss_perform_now(job_class, mail_ids: [], root_url: "#{%w(http https).sample}://#{unique_domain}/", account: "0")
 
       expect(Gws::Job::Log.count).to eq 1

@@ -46,7 +46,7 @@ describe Ldap::User, ldap: true do
 
   describe "#auth admin" do
     let(:username) { "uid=admin, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
-    let(:password) { "pass" }
+    let(:password) { ss_pass }
     subject do
       Ldap::Connection.connect(url: url, base_dn: base_dn, auth_method: auth_method,
         username: username.gsub(/\s+/, ""), password: password) rescue nil
@@ -66,7 +66,7 @@ describe Ldap::User, ldap: true do
 
   describe "#auth user1" do
     let(:username) { "uid=user1, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
-    let(:password) { "pass" }
+    let(:password) { ss_pass }
     subject do
       Ldap::Connection.connect(url: url, base_dn: base_dn, auth_method: auth_method,
         username: username, password: password) rescue nil

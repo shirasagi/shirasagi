@@ -17,7 +17,7 @@ FactoryBot.define do
   end
 
   factory :gws_user, class: Gws::User, traits: [:gws_user_base] do
-    in_password { "pass" }
+    in_password { ss_pass }
   end
 
   factory :gws_ldap_user2, class: Gws::User, traits: [:gws_user_base] do

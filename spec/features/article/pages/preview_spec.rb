@@ -120,7 +120,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         visit cms_preview_path(site: site, path: item.preview_path)
         within "form" do
           fill_in "item[email]", with: Cms::User.first.email
-          fill_in "item[password]", with: "pass"
+          fill_in "item[password]", with: ss_pass
           click_on I18n.t('ss.login')
         end
 
