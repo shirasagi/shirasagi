@@ -24,7 +24,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
             within "form" do
               fill_in "item[email]", with: sys_user.email
-              fill_in "item[password]", with: "pass"
+              fill_in "item[password]", with: ss_pass
               click_on I18n.t("ss.login")
             end
             expect(page).to have_css(".otp-setup")
@@ -66,7 +66,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
             within "form" do
               fill_in "item[email]", with: sys_user.email
-              fill_in "item[password]", with: "pass"
+              fill_in "item[password]", with: ss_pass
               click_on I18n.t("ss.login")
             end
             expect(page).to have_css(".otp-setup")
@@ -137,7 +137,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
             within "form" do
               fill_in "item[email]", with: sys_user.email
-              fill_in "item[password]", with: "pass"
+              fill_in "item[password]", with: ss_pass
               click_on I18n.t("ss.login")
             end
 
@@ -173,7 +173,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
               within "form" do
                 fill_in "item[email]", with: sys_user.email
-                fill_in "item[password]", with: "pass"
+                fill_in "item[password]", with: ss_pass
                 click_on I18n.t("ss.login")
               end
               expect(page).to have_css(".otp-setup")
@@ -215,7 +215,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
               within "form" do
                 fill_in "item[email]", with: sys_user.email
-                fill_in "item[password]", with: "pass"
+                fill_in "item[password]", with: ss_pass
                 click_on I18n.t("ss.login")
               end
               expect(page).to have_css(".otp-setup")
@@ -285,7 +285,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
             within "form" do
               fill_in "item[email]", with: sys_user.email
-              fill_in "item[password]", with: "pass"
+              fill_in "item[password]", with: ss_pass
               click_on I18n.t("ss.login")
             end
             expect(page).to have_css(".otp-login")
@@ -326,7 +326,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
             within "form" do
               fill_in "item[email]", with: sys_user.email
-              fill_in "item[password]", with: "pass"
+              fill_in "item[password]", with: ss_pass
               click_on I18n.t("ss.login")
             end
             expect(page).to have_css(".otp-login")
@@ -391,7 +391,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
             within "form" do
               fill_in "item[email]", with: sys_user.email
-              fill_in "item[password]", with: "pass"
+              fill_in "item[password]", with: ss_pass
               click_on I18n.t("ss.login")
             end
 
@@ -428,7 +428,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
               within "form" do
                 fill_in "item[email]", with: sys_user.email
-                fill_in "item[password]", with: "pass"
+                fill_in "item[password]", with: ss_pass
                 click_on I18n.t("ss.login")
               end
               expect(page).to have_css(".otp-login")
@@ -469,7 +469,7 @@ describe "sns_login", type: :feature, dbscope: :example, js: true do
 
               within "form" do
                 fill_in "item[email]", with: sys_user.email
-                fill_in "item[password]", with: "pass"
+                fill_in "item[password]", with: ss_pass
                 click_on I18n.t("ss.login")
               end
               expect(page).to have_css(".otp-login")

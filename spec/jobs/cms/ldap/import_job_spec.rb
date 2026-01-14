@@ -33,7 +33,7 @@ describe Cms::Ldap::ImportJob, dbscope: :example, ldap: true do
         create(:cms_role_admin, name: "ldap_user_role_#{unique_id}", site_id: site.id)
       end
       let(:user) do
-        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
+        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: ss_pass,
                group_ids: [group.id], cms_role_ids: [role.id])
       end
 

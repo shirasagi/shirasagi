@@ -116,11 +116,11 @@ RSpec.describe SS::EditorHelper, type: :helper do
       let(:role) { create(:cms_role, name: unique_id) }
       let(:admin_role) { create(:cms_role_admin, name: unique_id) }
       let(:user) do
-        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
+        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: ss_pass,
           group_ids: [group.id], cms_role_ids: [role.id])
       end
       let(:admin) do
-        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: "pass",
+        create(:cms_user, name: unique_id, email: "#{unique_id}@example.jp", in_password: ss_pass,
           group_ids: [group.id], cms_role_ids: [admin_role.id])
       end
 

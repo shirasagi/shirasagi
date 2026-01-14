@@ -21,7 +21,7 @@ describe "gws_user_profiles", type: :request, dbscope: :example do
     params = {
       'authenticity_token' => @auth_token,
       'item[email]' => user.email,
-      'item[password]' => "pass"
+      'item[password]' => ss_pass
     }
     post sns_login_path(format: :json), params: params
   end

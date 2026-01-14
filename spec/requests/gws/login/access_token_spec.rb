@@ -18,7 +18,7 @@ describe "Gws::LoginController#access_token", type: :request, dbscope: :example 
       params = {
         'authenticity_token' => @auth_token,
         'item[email]' => user.email,
-        'item[password]' => "pass"
+        'item[password]' => ss_pass
       }
       post sns_login_path(format: :json), params: params
     end
