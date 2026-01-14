@@ -11,12 +11,12 @@ describe "gws_user_profiles", type: :feature, dbscope: :example, ldap: true, js:
     let(:new_password) { unique_id }
 
     before do
-      expect(Ldap::Connection.authenticate(url: ldap_url, username: user.ldap_dn, password: "pass")).to be_truthy
+      expect(Ldap::Connection.authenticate(url: ldap_url, username: user.ldap_dn, password: ss_pass)).to be_truthy
 
       visit gws_login_path(site: site)
       within "form" do
         fill_in "item[email]", with: user.email.presence || user.uid
-        fill_in "item[password]", with: "pass"
+        fill_in "item[password]", with: ss_pass
         click_on I18n.t("ss.login", locale: I18n.default_locale)
       end
       expect(page).to have_css("nav.user .user-name", text: user.name)
@@ -37,14 +37,14 @@ describe "gws_user_profiles", type: :feature, dbscope: :example, ldap: true, js:
       visit gws_user_profile_path(site: site)
       click_on I18n.t("ss.links.edit_password")
       within "form#item-form" do
-        fill_in "item[old_password]", with: "pass"
+        fill_in "item[old_password]", with: ss_pass
         fill_in "item[new_password]", with: new_password
         fill_in "item[new_password_again]", with: new_password
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
 
-      expect(Ldap::Connection.authenticate(url: ldap_url, username: user.ldap_dn, password: "pass")).to be_falsey
+      expect(Ldap::Connection.authenticate(url: ldap_url, username: user.ldap_dn, password: ss_pass)).to be_falsey
       expect(Ldap::Connection.authenticate(url: ldap_url, username: user.ldap_dn, password: new_password)).to be_truthy
 
       # login with new password

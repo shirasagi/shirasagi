@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe SS::Notification, dbscope: :example do
   let(:group) { ss_group }
-  let(:user1) { SS::User.create(name: unique_id, uid: unique_id, in_password: "pass", group_ids: [group.id]) }
-  let(:user2) { SS::User.create(name: unique_id, uid: unique_id, in_password: "pass", group_ids: [group.id]) }
-  let(:user3) { SS::User.create(name: unique_id, uid: unique_id, in_password: "pass", group_ids: [group.id]) }
+  let(:user1) { SS::User.create(name: unique_id, uid: unique_id, in_password: ss_pass, group_ids: [group.id]) }
+  let(:user2) { SS::User.create(name: unique_id, uid: unique_id, in_password: ss_pass, group_ids: [group.id]) }
+  let(:user3) { SS::User.create(name: unique_id, uid: unique_id, in_password: ss_pass, group_ids: [group.id]) }
 
   describe "#user_setting" do
     let!(:notification) { create :ss_notification, member_ids: [ user1.id, user2.id, user3.id ] }

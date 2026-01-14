@@ -77,17 +77,17 @@ def create_webmail_users
   admin = gws_admin.webmail_user
   admin.update(webmail_role_ids: [admin_role.id])
 
-  user = Webmail::User.create! name: "webmail-user", uid: "user", email: "user@example.jp", in_password: "pass",
+  user = Webmail::User.create! name: "webmail-user", uid: "user", email: "user@example.jp", in_password: ss_pass,
     group_ids: [g11.id], webmail_role_ids: [user_role.id],
     organization_id: g00.id, organization_uid: "org-user"
 
-  admin.in_password = admin.decrypted_password = 'pass'
-  user.in_password = user.decrypted_password = 'pass'
+  admin.in_password = admin.decrypted_password = ss_pass
+  user.in_password = user.decrypted_password = ss_pass
 
   imap = nil
   if SS::WebmailSupport.test_by.present?
     imap = Webmail::User.create! name: "webmail-imap", uid: "imap",
-      email: "imap@example.jp", in_password: SS.config.webmail.test_pass || "pass",
+      email: "imap@example.jp", in_password: SS.config.webmail.test_pass || ss_pass,
       group_ids: [g11.id], webmail_role_ids: [user_role.id],
       organization_id: g00.id, organization_uid: "org-imap"
 
@@ -98,7 +98,7 @@ def create_webmail_users
       gws_user.update!(gws_role_ids: gws_admin.gws_role_ids)
     end
 
-    imap.in_password = imap.decrypted_password = SS.config.webmail.test_pass || 'pass'
+    imap.in_password = imap.decrypted_password = SS.config.webmail.test_pass || ss_pass
   end
 
   return Webmail::UserSupport.data = {
@@ -118,7 +118,7 @@ def webmail_imap_setting
   setting[:imap_ssl_use] = conf['imap_ssl_use'] if conf.key?('imap_ssl_use')
   setting[:imap_auth_type] = conf['imap_auth_type'] if conf.key?('imap_auth_type')
   setting[:imap_account] = conf['account'] || 'email'
-  setting[:in_imap_password] = conf['password'] || 'pass'
+  setting[:in_imap_password] = conf['password'] || "pass"
   setting.set_imap_password
   Webmail::Extensions::ImapSettings.new([setting])
 end

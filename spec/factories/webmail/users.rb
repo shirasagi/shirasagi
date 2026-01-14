@@ -6,7 +6,7 @@ FactoryBot.define do
       conf['email'] || 'webmail@example.jp'
     end
     uid { email.split("@")[0] }
-    in_password { 'pass' }
+    in_password { ss_pass }
     type { SS::Model::User::TYPE_SNS }
     group_ids { [ ss_group.id ] }
     imap_settings do
@@ -18,7 +18,7 @@ FactoryBot.define do
       setting[:imap_ssl_use] = conf['imap_ssl_use'] if conf.key?('imap_ssl_use')
       setting[:imap_auth_type] = conf['imap_auth_type'] if conf.key?('imap_auth_typed')
       setting[:imap_account] = conf['account'] || 'email'
-      setting[:in_imap_password] = conf['password'] || 'pass'
+      setting[:in_imap_password] = conf['password'] || "pass"
       setting.set_imap_password
 
       Webmail::Extensions::ImapSettings.new([setting])
@@ -28,7 +28,7 @@ FactoryBot.define do
   factory :webmail_user_without_imap, class: Webmail::User do
     name { "webmail-user-#{unique_id}" }
     email { "#{name}@example.jp" }
-    in_password { 'pass' }
+    in_password { ss_pass }
     type { SS::Model::User::TYPE_SNS }
     group_ids { [ ss_group.id ] }
   end

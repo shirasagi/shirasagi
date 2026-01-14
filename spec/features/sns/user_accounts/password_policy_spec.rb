@@ -133,7 +133,7 @@ describe "sns_cur_user_account", type: :feature, dbscope: :example, js: true, ld
 
       before do
         service = SS::PasswordUpdateService.new(cur_user: user, self_edit: true)
-        service.old_password = "pass"
+        service.old_password = ss_pass
         service.new_password = password1
         service.new_password_again = password1
         expect(service.update_password).to be_truthy

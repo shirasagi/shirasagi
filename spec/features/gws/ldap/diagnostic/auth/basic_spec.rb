@@ -14,7 +14,7 @@ describe "gws_ldap_diagnostic_auth", type: :feature, dbscope: :example, ldap: tr
 
   context "with valid dn / password" do
     let(:dn) { "uid=user1, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
-    let(:password) { "pass" }
+    let(:password) { ss_pass }
 
     it do
       visit gws_ldap_diagnostic_auth_path(site: site)
@@ -31,7 +31,7 @@ describe "gws_ldap_diagnostic_auth", type: :feature, dbscope: :example, ldap: tr
 
   context "with valid dn" do
     let(:dn) { "uid=user99, ou=001001政策課, ou=001企画政策部, dc=example, dc=jp" }
-    let(:password) { "pass" }
+    let(:password) { ss_pass }
 
     it do
       visit gws_ldap_diagnostic_auth_path(site: site)
