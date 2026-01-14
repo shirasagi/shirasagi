@@ -100,7 +100,6 @@ ja:
       unset: 解除
       add_item: 新しい要素を追加
       change_menu_icon: アイコン変更
-
     notice:
       delay_download_with_message: |-
         ファイル数が多い、またはファイル容量が大きいためバックグランドでファイルを準備します。

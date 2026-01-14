@@ -29,7 +29,9 @@ en:
     max_file_size: Maximum file size
     image_resize: Resize image
     site_copy: Duplicate site
-    site_copy/description: "* Folders, fixed pages, layouts, and parts are duplicated as required."
+    site_copy/description: |
+      "* Folders, fixed pages, layouts, and parts are duplicated as required."
+      "* If you do not select the items to duplicate (“Articles and Other Pages”), the settings for the summary page within the category folder will be disabled."
     site_copy/started_job: Site duplication started.
     site_copy/task_status: Execution status
     roles:

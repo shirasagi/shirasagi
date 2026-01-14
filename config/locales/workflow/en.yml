@@ -213,11 +213,12 @@ en:
 
   tooltip:
     workflow/approver:
-      workflow_kind: |-
-        Displays the kind of approval.
-        "Public" makes the target public.
-        "Closed" makes the target closed.
-        "Replace" will replace the target.
+      workflow_kind:
+        - Displays the kind of approval.
+        - "Public" makes the target public.
+        - "Closed" makes the target closed.
+        - "Replace" will replace the target.
+        - The replacement page will disappear when you overwrite it.
       workflow_comment:
         - Describe the reason for the application and other comments to the approver.
       workflow_approvers:

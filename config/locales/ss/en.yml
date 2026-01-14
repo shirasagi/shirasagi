@@ -1011,6 +1011,7 @@ en:
         max_height: Max Height
         size: Number of bytes
         quality: Quality
+        state: Status
       ss/model/postal_code:
         code: Postal code
         prefecture: Prefecture
@@ -1554,9 +1555,11 @@ en:
         - Enable or disable restrictions.
     ss/model/image_resize:
       max_width:
-        - The max width of the image to be uploaded can be set.
+        - Set the maximum width of the image.
+        - When uploading files, they will be resized to a size smaller than this setting value.
       max_height:
-        - The max height of the image to be uploaded can be set.
+        - Set the maximum vertical height of the image.
+        - When uploading files, they will be resized to a size smaller than this setting value.
       size:
         - If the number of bytes in the image file is greater than this setting, the image quality is reduced.
         - Even with reduced image quality, the number of bytes in the image may exceed this setting.
@@ -1601,6 +1604,7 @@ en:
       elasticsearch_outside:
         - Set external site searches.
         - A pull-down list appears in the search form, allowing you to search external sites.
+        - Fess installation is required.
 
     ss/addon/source_cleaner/site_setting:
       source_cleaner_unwrap_tag_state:
