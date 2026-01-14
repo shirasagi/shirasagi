@@ -4,8 +4,10 @@
   <dt><%= @model.t :term %></dt>
   <dd>
     <%= term(@item) %>
-    <%= link_to gws_notice_calendars_path(calendar: redirection_calendar_params), { class: "index-cleander-link" } do %>
-      <i class="material-icons calendar-month md-18">calendar_month</i>
+    <% if @item.class.public_states.include?(@item.state) && !@item.deleted? %>
+      <%= link_to gws_notice_calendars_path(calendar: redirection_calendar_params), { class: "index-cleander-link" } do %>
+        <i class="material-icons calendar-month md-18">calendar_month</i>
+      <% end %>
     <% end %>
   </dd>
 
