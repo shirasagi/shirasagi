@@ -124,11 +124,11 @@ ja:
 
   gws_role:
     edit_gws_groups: グループの管理
-    edit_gws_users: ユーザの管理
+    edit_gws_users: ユーザーの管理
     edit_gws_user_titles: 役職の管理
     edit_gws_user_occupations: 職種の管理
     edit_gws_roles: 権限/ロールの管理
-    edit_gws_user_forms: ユーザ拡張情報の管理
+    edit_gws_user_forms: ユーザー拡張情報の管理
     read_gws_histories: 操作履歴の閲覧
     delete_gws_histories: 操作履歴の削除
     read_other_gws_custom_groups: カスタムグループの閲覧（全て）
@@ -658,7 +658,7 @@ ja:
 
   activemodel:
     models:
-      gws/user_csv/importer: ユーザCSVインポート
+      gws/user_csv/importer: ユーザーCSVインポート
     attributes:
       gws/user_csv/importer:
         in_file: ファイル
