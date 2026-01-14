@@ -105,7 +105,9 @@ module SS::LdapSupport
       end
     end
 
-    container.store_file("/shirasagi.ldif", ::File.read(Rails.root.join("spec/fixtures/ldap/shirasagi.ldif")))
+    ldif = ::File.read(Rails.root.join("spec/fixtures/ldap/shirasagi.ldif"))
+    ldif.gsub!("pass", ss_pass)
+    container.store_file("/shirasagi.ldif", ldif)
     _stdout, _stderr, exit_code = container.exec(%w(ldapadd -D cn=admin,dc=example,dc=jp -w admin -f /shirasagi.ldif))
     if exit_code != 0
       puts "[Error] failed to execute 'ldapadd'"

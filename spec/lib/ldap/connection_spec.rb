@@ -18,7 +18,7 @@ describe Ldap::Connection, ldap: true do
 
       context "when user1 is given" do
         let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
-        let(:password) { "pass" }
+        let(:password) { ss_pass }
         it do
           expect(Ldap::Connection.connect(url: url, base_dn: base_dn, auth_method: auth_method,
             username: username, password: password)).not_to be_nil
@@ -27,7 +27,7 @@ describe Ldap::Connection, ldap: true do
 
       context "when unknown-user is given" do
         let(:username) { "uid=user-#{unique_id},ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
-        let(:password) { "pass" }
+        let(:password) { ss_pass }
         it do
           expect do
             Ldap::Connection.connect(url: url, base_dn: base_dn, auth_method: auth_method,
@@ -49,7 +49,7 @@ describe Ldap::Connection, ldap: true do
 
       context "when encrypted password is given" do
         let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
-        let(:password) { SS::Crypto.encrypt("pass") }
+        let(:password) { SS::Crypto.encrypt(ss_pass) }
         it do
           expect(Ldap::Connection.connect(url: url, base_dn: base_dn, auth_method: auth_method,
             username: username, password: password)).not_to be_nil
@@ -100,7 +100,7 @@ describe Ldap::Connection, ldap: true do
 
       context "when valid user1 is given" do
         let(:username) { "uid=user1,ou=001001政策課,ou=001企画政策部,dc=example,dc=jp" }
-        let(:password) { "pass" }
+        let(:password) { ss_pass }
         it { expect(Ldap::Connection.authenticate(url: url, username: username, password: password)).to be true }
       end
 

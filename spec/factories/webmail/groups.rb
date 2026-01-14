@@ -19,7 +19,7 @@ FactoryBot.define do
       setting[:imap_ssl_use] = conf['imap_ssl_use'] if conf.key?('imap_ssl_use')
       setting[:imap_auth_type] = conf['imap_auth_type'] if conf.key?('imap_auth_typed')
       setting[:imap_account] = conf['account'] || 'email'
-      setting[:in_imap_password] = conf['password'] || 'pass'
+      setting[:in_imap_password] = conf['password'] || "pass"
       setting.set_imap_password
 
       Webmail::Extensions::ImapSettings.new([setting])
