@@ -111,7 +111,7 @@ module Gws::CrudFilter
 
     @item.record_timestamps = false
     @item.deleted = Time.zone.now
-    render_destroy @item.save(context: :soft_delete)
+    render_destroy @item.save(context: :soft_delete), render: { template: "soft_delete" }
   end
 
   def undo_delete
