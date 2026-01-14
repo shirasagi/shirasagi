@@ -298,7 +298,7 @@ ja:
       restoring_share_file_from_trash: 共有ファイルに復元されます。
       generate_locked: 書き出しを停止しました。
       generate_unlocked: 書き出しの停止を解除しました。
-      over_content_quota: 使用容量を超過しているフォルダがあります。
+      over_content_quota: 使用容量を超過しているフォルダーがあります。
       check_links_report:
         - "%{time} 時点でのレポートです。"
         - "リンク切れを修正した場合、再度リンクチェックを実行し、新しいレポートを作成してください。"
@@ -411,7 +411,7 @@ ja:
       ruby_off: ふりがなをはずす
       back_to_contents: コンテンツへ戻る
       michecker: miChecker で確認する
-      download: フォルダ容量をCSVダウンロードする
+      download: フォルダー容量をCSVダウンロードする
       check_preview: プレビューで確認する
       open_remark: 詳細を開く
       page_expiration_setting: 公開期限ページ設定
@@ -889,7 +889,7 @@ ja:
     use_cms_michecker: micheckerの利用
     delete_cms_ignore_alert: リンクチェック警告を無視して削除する
     edit_cms_ignore_alert: リンクチェック警告を無視して非公開保存する
-    use_cms_sitemap: フォルダ容量のCSVダウンロード
+    use_cms_sitemap: フォルダー容量のCSVダウンロード
     use_cms_check_links: リンクチェックの利用
     run_cms_check_links: リンクチェックの実行
     read_other_cms_check_links_errors: エラーの閲覧（全て）
@@ -1103,7 +1103,7 @@ ja:
         name: タイトル
         keyword: キーワード
         index_name: 一覧用タイトル
-        depth: フォルダ階層
+        depth: フォルダー階層
         order: 並び順
         user: 作成者
         md5: ハッシュ値
@@ -2184,10 +2184,10 @@ ja:
           サイトマップを表示します。
         - |-
           アップローダー/アップローダー
-          ファイルをアップロードするためのフォルダです。
+          ファイルをアップロードするためのフォルダーです。
         - |-
           緊急災害レイアウト/緊急災害レイアウト
-          緊急災害時にレイアウトを切り替えるためのフォルダです。
+          緊急災害時にレイアウトを切り替えるためのフォルダーです。
       foldername:
         - フォルダー名はURLに利用します。
         - 半角英数字で入力します。
@@ -2196,7 +2196,7 @@ ja:
         - フォルダーのレイアウトを選択します。
       page_layout_id:
         - ページのレイアウトを選択します。
-        - 初期値は上位のフォルダの設定を継承しています。
+        - 初期値は上位のフォルダーの設定を継承しています。
       shortcut:
         - 表示を選択することで管理画面のサイトトップ「コンテンツ」に表示されます。
       view_route:
@@ -2225,7 +2225,7 @@ ja:
         - |-
           下記のように記述します。
           #{class}　リンク先のファイル名が表示されます。ファイル名に拡張子がある場合、拡張子を除いた部分が表示されます。
-          #{class_categories} リンク先ページ内がカテゴリに関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
+          #{class_categories} リンク先ページ内がカテゴリに関連付けられている場合、全てのカテゴリのフォルダー名が表示されます。
           #{date}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
           #{date.default}　リンク先のページの公開日時が「2015/4/1」の形式で表示されます。
           #{date.iso}　リンク先のページの公開日時が「2015-04-01」の形式で表示されます。
@@ -3562,7 +3562,7 @@ ja:
     index_name: 一覧用タイトル
     filename: フォルダー名
     layout: レイアウト
-    depth: フォルダ階層
+    depth: フォルダー階層
     order: 並び順
     keywords: キーワード
     description: 概要
