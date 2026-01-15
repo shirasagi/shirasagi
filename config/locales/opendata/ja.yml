@@ -1266,8 +1266,8 @@ ja:
           #{event_deadline.short} イベントの締切日が「15/04/01 12:34」の形式で表示されます。
           #{tags} リンク先ページのタグが表示されます。
 
-          #{class_categories} リンク先ページ内が分野に関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
-          #{class_estat_categories} リンク先ページ内がeStat分野に関連付けられている場合、全てのカテゴリのフォルダ名が表示されます。
+          #{class_categories} リンク先ページ内が分野に関連付けられている場合、全てのカテゴリのフォルダー名が表示されます。
+          #{class_estat_categories} リンク先ページ内がeStat分野に関連付けられている場合、全てのカテゴリのフォルダー名が表示されます。
           #{dataset_point} データセットのいいね！数が表示されます。
           #{dataset_downloaded} データセットのダウンロード数が表示されます。
     opendata/addon/site_setting:
