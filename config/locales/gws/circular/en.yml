@@ -90,6 +90,7 @@ en:
       text: ! '%{text}'
       mail_text: |
         %{subject}
+
         %{text}
 
     gws/circular/post/remove:
