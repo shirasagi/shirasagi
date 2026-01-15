@@ -12,6 +12,13 @@ class Gws::Schedule::FacilityPlansController < ApplicationController
 
   private
 
+  def set_crumbs
+    set_facility
+    @crumbs << [@cur_site.menu_schedule_label || t('modules.gws/schedule'), gws_schedule_main_path]
+    @crumbs << [@cur_site.effective_schedule_facility_tab_label, gws_schedule_facilities_path]
+    @crumbs << [@facility.name, gws_schedule_facility_plans_path(facility: @facility)]
+  end
+
   def set_facility
     @facility ||= Gws::Facility::Item.site(@cur_site).find(params[:facility])
     raise '403' unless @facility.readable?(@cur_user)

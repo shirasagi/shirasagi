@@ -147,12 +147,24 @@ module Gws::Addon::Schedule::GroupSetting
     I18n.t("gws/schedule.tabs.personal")
   end
 
+  def effective_schedule_personal_tab_label
+    schedule_personal_tab_label.presence || schedule_personal_tab_placeholder
+  end
+
   def schedule_group_all_tab_placeholder
     I18n.t("gws/schedule.tabs.group")
   end
 
+  def effective_schedule_group_all_tab_label
+    schedule_group_all_tab_label.presence || schedule_group_all_tab_placeholder
+  end
+
   def schedule_facility_tab_placeholder
     I18n.t("gws/schedule.tabs.facility")
+  end
+
+  def effective_schedule_facility_tab_label
+    schedule_facility_tab_label.presence || schedule_facility_tab_placeholder
   end
 
   def schedule_custom_group_extra_state_options

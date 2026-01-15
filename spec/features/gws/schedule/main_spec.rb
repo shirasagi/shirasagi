@@ -9,7 +9,7 @@ describe "gws_schedule_main", type: :feature, dbscope: :example, js: true do
   let(:index_path) { gws_schedule_main_path site }
 
   context "with auth" do
-    before { login_gws_user }
+    before { login_user user }
 
     it "#index" do
       site.update(
@@ -22,26 +22,41 @@ describe "gws_schedule_main", type: :feature, dbscope: :example, js: true do
       # if @cur_user.gws_role_permit_any?(@cur_site, :use_private_gws_facility_plans) && @cur_site.schedule_facility_tab_visible?
 
       visit index_path
-      expect(page).to have_title('404 Not Found')
+      wait_for_js_ready
+      within "#crumbs" do
+        expect(page).to have_css('.active', text: I18n.t('gws/schedule.tabs.search/users'))
+      end
 
       site.update(schedule_facility_tab_state: 'show')
       visit index_path
       wait_for_js_ready
+      within "#crumbs" do
+        expect(page).to have_css('.active', text: I18n.t("gws/schedule.tabs.facility"))
+      end
       expect(page).to have_css('.calendar-multiple-header', text: item.facilities.first.name)
-
-      site.update(schedule_group_all_tab_state: 'show')
-      visit index_path
-      wait_for_js_ready
-      expect(current_path).to include gws_schedule_all_groups_path(site: site)
 
       site.update(schedule_custom_group_tab_state: 'show')
       visit index_path
       wait_for_js_ready
+      within "#crumbs" do
+        expect(page).to have_css('.active', text: custom_group.name)
+      end
       expect(page).to have_css('.calendar.multiple', text: item.name)
+
+      site.update(schedule_group_all_tab_state: 'show')
+      visit index_path
+      wait_for_js_ready
+      within "#crumbs" do
+        expect(page).to have_css('.active', text: I18n.t("gws/schedule.tabs.group"))
+      end
+      expect(current_path).to include gws_schedule_all_groups_path(site: site)
 
       site.update(schedule_group_tab_state: 'show')
       visit index_path
       wait_for_js_ready
+      within "#crumbs" do
+        expect(page).to have_css('.active', text: user.gws_default_group.trailing_name)
+      end
       expect(page).to have_css('.calendar.multiple', text: item.name)
 
       sleep 1
@@ -49,12 +64,17 @@ describe "gws_schedule_main", type: :feature, dbscope: :example, js: true do
       site.update(schedule_personal_tab_state: 'show')
       visit index_path
       wait_for_js_ready
+      within "#crumbs" do
+        expect(page).to have_css('.active', text: I18n.t("gws/schedule.tabs.personal"))
+      end
       expect(page).to have_css('.calendar', text: item.name)
 
       visit "#{index_path}?calendar[path]=#{index_path}"
-      wait_for_js_ready do
-        expect(page).to have_css('.calendar', text: item.name)
+      wait_for_js_ready
+      within "#crumbs" do
+        expect(page).to have_css('.active', text: I18n.t("gws/schedule.tabs.personal"))
       end
+      expect(page).to have_css('.calendar', text: item.name)
     end
   end
 end
