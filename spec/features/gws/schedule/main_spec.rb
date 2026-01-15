@@ -24,7 +24,7 @@ describe "gws_schedule_main", type: :feature, dbscope: :example, js: true do
       visit index_path
       wait_for_js_ready
       within "#crumbs" do
-        expect(page).to have_css('.active', text: I18n.t('gws/schedule.tabs.search/users'))
+        expect(page).to have_css('.active', text: I18n.t('gws/schedule.navi.holiday'))
       end
 
       site.update(schedule_facility_tab_state: 'show')

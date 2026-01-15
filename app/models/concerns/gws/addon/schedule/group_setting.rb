@@ -4,8 +4,10 @@ module Gws::Addon::Schedule::GroupSetting
 
   set_addon_type :organization
 
+  SCHEDULE_TYPES = %w(personal group custom_group group_all facility).map(&:freeze).freeze
+
   included do
-    %w(personal group custom_group group_all facility).each do |name|
+    SCHEDULE_TYPES.each do |name|
       field "schedule_#{name}_tab_state", type: String, default: 'show'
       permit_params "schedule_#{name}_tab_state"
       alias_method("schedule_#{name}_tab_state_options", "schedule_tab_state_options")
@@ -171,6 +173,10 @@ module Gws::Addon::Schedule::GroupSetting
     %w(creator_name).map do |v|
       [ I18n.t("gws/schedule.options.schedule_custom_group_extra_state.#{v}"), v ]
     end
+  end
+
+  def schedule_any_tab_visible?
+    SCHEDULE_TYPES.any? { schedule_tab_visible?(_1) }
   end
 
   private
