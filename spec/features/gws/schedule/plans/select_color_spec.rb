@@ -23,7 +23,7 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example, js: true 
           fill_in 'item[name]', with: 'name'
           click_button I18n.t('ss.buttons.save')
         end
-        wait_for_js_ready
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(Gws::Schedule::Plan.count).to eq 1
         expect(Gws::Schedule::Plan.first.color).to eq '#dc143c'
       end
@@ -46,7 +46,7 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example, js: true 
         within 'form#item-form' do
           click_button I18n.t('ss.buttons.save')
         end
-        wait_for_js_ready
+        wait_for_notice I18n.t("ss.notice.saved")
         item.reload
         expect(item.color).to eq '#ff0000'
       end
@@ -70,7 +70,7 @@ describe 'gws_schedule_plans_form', type: :feature, dbscope: :example, js: true 
           fill_in 'item[name]', with: 'copied'
           click_button I18n.t('ss.buttons.save')
         end
-        wait_for_js_ready
+        wait_for_notice I18n.t("ss.notice.saved")
         expect(Gws::Schedule::Plan.find_by(name: 'copied').color).to eq '#ff0000'
       end
     end

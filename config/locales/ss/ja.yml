@@ -219,6 +219,7 @@ ja:
       cancel: キャンセル
       edit: 編集
       delete: 削除
+      delete_all: すべて削除
       deleting: 削除中
       search: 検索
       replace: 置換

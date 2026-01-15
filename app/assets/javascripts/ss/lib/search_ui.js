@@ -99,9 +99,6 @@ this.SS_SearchUI = (function () {
     var tr = $(item).closest("tr");
 
     tr.remove();
-    if (table.find("tbody tr").size() === 0) {
-      table.hide();
-    }
     table.trigger("change");
   };
 
@@ -192,6 +189,15 @@ this.SS_SearchUI = (function () {
     e.preventDefault();
   };
 
+  SS_SearchUI.deselectAll = function (ev) {
+    ev.preventDefault();
+
+    var $table = $(this).closest(".ajax-selected");
+    $table.find("tbody tr .deselect").each(function() {
+      SS_SearchUI.defaultDeselector($(this));
+    });
+  };
+
   SS_SearchUI.toggleSelectButton = function ($el) {
     if (!$el) {
       $el = $("#ajax-box");
@@ -224,9 +230,7 @@ this.SS_SearchUI = (function () {
       var $this = $(this);
       SS.justOnce(this, "searchUI", function() {
         $this.on("click", "a.deselect", SS_SearchUI.deselect);
-        if ($this.find("a.deselect").size() === 0) {
-          $this.hide();
-        }
+        $this.on("click", "[name='delete_all']", SS_SearchUI.deselectAll);
       });
     });
   };

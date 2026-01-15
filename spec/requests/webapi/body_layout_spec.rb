@@ -19,7 +19,7 @@ describe "webapi body_layout", dbscope: :example, type: :request do
     {
       :item => {
         :email => user.email,
-        :password => SS::Crypto.encrypt("pass", type: "AES-256-CBC"),
+        :password => SS::Crypto.encrypt(ss_pass, type: "AES-256-CBC"),
         :encryption_type => "AES-256-CBC"
       }
     }

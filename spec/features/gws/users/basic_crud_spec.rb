@@ -38,7 +38,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         expect(page).to have_css('#item_email_errors', text: '')
-        fill_in "item[in_password]", with: "pass"
+        fill_in "item[in_password]", with: ss_pass
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
@@ -154,7 +154,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in "item[name]", with: name
         fill_in "item[email]", with: "#{name}@example.jp"
         expect(page).to have_css('#item_email_errors', text: '')
-        fill_in "item[in_password]", with: "pass"
+        fill_in "item[in_password]", with: ss_pass
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
@@ -226,7 +226,7 @@ describe "gws_users", type: :feature, dbscope: :example, js: true do
         fill_in 'item[name]', with: name
         fill_in 'item[email]', with: "#{name}@example.jp"
         expect(page).to have_css('#item_email_errors', text: '')
-        fill_in 'item[in_password]', with: 'pass'
+        fill_in 'item[in_password]', with: ss_pass
         fill_in "custom[#{column1.id}]", with: unique_id
         click_on I18n.t('ss.buttons.save')
       end

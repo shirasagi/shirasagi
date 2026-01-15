@@ -173,5 +173,7 @@ en:
         - Set upper day leave minute.
       week_out_compensatory_file_limit:
         - Set week out compensatory expiration.
+        - Items that have passed their expiration date cannot be used for vacation requests.
       week_out_compensatory_file_notify_day:
         - Set week out compensatory notify day.
+        - If you set it to 7 days, you will be notified 7 days before the deadline expires.

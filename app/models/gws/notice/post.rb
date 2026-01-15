@@ -130,6 +130,7 @@ class Gws::Notice::Post
   def validate_body_size
     return if folder.blank?
     return if text.blank?
+    return if validation_context == :soft_delete
 
     if text.length > folder.notice_individual_body_size_limit
       options = {
@@ -150,6 +151,7 @@ class Gws::Notice::Post
 
   def validate_file_size
     return if folder.blank?
+    return if validation_context == :soft_delete
 
     self.total_file_size = 0
     return if files.blank?

@@ -86,6 +86,58 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
         end
       end
     end
+
+    it do
+      visit index_path
+
+      within ".gws-memo-notices" do
+        within ".list-items" do
+          find("input[name='ids[]'][value='#{item1.id}']", visible: false).set(true)
+        end
+        expect(page).to have_checked_field("ids[]", with: item1.id, visible: false)
+
+        within ".list-head" do
+          page.dismiss_confirm(I18n.t("gws/notice.confirm.set_seen")) do
+            click_on I18n.t("gws/notice.links.set_seen")
+          end
+
+          expect(page).to have_button(I18n.t("gws/notice.links.set_seen"), disabled: false)
+          expect(page).to have_button(I18n.t("ss.links.delete"), disabled: false)
+
+          page.accept_confirm(I18n.t("gws/notice.confirm.set_seen")) do
+            click_on I18n.t("gws/notice.links.set_seen")
+          end
+        end
+      end
+
+      wait_for_notice I18n.t("ss.notice.set_seen")
+    end
+
+    it do
+      visit index_path
+
+      within ".gws-memo-notices" do
+        within ".list-items" do
+          find("input[name='ids[]'][value='#{item1.id}']", visible: false).set(true)
+        end
+        expect(page).to have_checked_field("ids[]", with: item1.id, visible: false)
+
+        within ".list-head" do
+          page.dismiss_confirm(I18n.t("ss.confirm.delete")) do
+            click_on I18n.t("ss.links.delete")
+          end
+
+          expect(page).to have_button(I18n.t("gws/notice.links.set_seen"), disabled: false)
+          expect(page).to have_button(I18n.t("ss.links.delete"), disabled: false)
+
+          page.accept_confirm(I18n.t("ss.confirm.delete")) do
+            click_on I18n.t("ss.links.delete")
+          end
+        end
+      end
+
+      wait_for_notice I18n.t("ss.notice.deleted")
+    end
   end
 
   context "popup" do
@@ -94,8 +146,9 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
     it do
       visit portal_path
 
-      first(".gws-memo-notice.popup-notice-container").click
       within ".gws-memo-notice.popup-notice-container" do
+        wait_for_event_fired("ss:dropdownOpened") { first("a.ajax-popup-notice").click }
+
         within ".popup-notice-items" do
           expect(page).to have_css(".list-item", text: item1.subject)
           expect(page).to have_css(".list-item", text: item2.subject)
@@ -117,8 +170,9 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
     it do
       visit portal_path
 
-      first(".gws-memo-notice.popup-notice-container").click
       within ".gws-memo-notice.popup-notice-container" do
+        wait_for_event_fired("ss:dropdownOpened") { first("a.ajax-popup-notice").click }
+
         within ".popup-notice-items" do
           expect(page).to have_css(".list-item", text: item1.subject)
           expect(page).to have_css(".list-item", text: item2.subject)
@@ -130,9 +184,9 @@ describe 'gws/memo/notices', type: :feature, dbscope: :example, js: true do
       end
       wait_for_notice I18n.t("ss.notice.set_seen")
 
-      first(".gws-memo-notice.popup-notice-container").click
-      wait_for_js_ready
       within ".gws-memo-notice.popup-notice-container" do
+        wait_for_event_fired("ss:dropdownOpened") { first("a.ajax-popup-notice").click }
+
         within ".popup-notice-items" do
           expect(page).to have_css(".list-item.empty", text: I18n.t("gws/memo/message.notice.no_recents"))
         end

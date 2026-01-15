@@ -34,7 +34,7 @@ ja:
           group: グループ
           name: 名前
         user:
-          user: ユーザ
+          user: ユーザー
           name: 名前
           email: email
     options:
@@ -50,7 +50,7 @@ ja:
         whole_subtree: 全てのサブ階層
     messages:
       no_groups: グループが見つかりません。
-      no_users: ユーザが見つかりません。
+      no_users: ユーザーが見つかりません。
       import_started: インポート処理を開始しました。
       sync_started: 同期処理を開始しました。
       sync_already_started: 同期処理は開始されています。
@@ -97,7 +97,7 @@ ja:
         ldap_dn: DN
       cms/ldap/import:
         group_count: グループ数
-        user_count: ユーザ数
+        user_count: ユーザー数
         ldap: LDAPインポート結果
       ss/ldap/site_setting:
         ldap_use_state: 設定
@@ -106,7 +106,7 @@ ja:
       cms/ldap/import_setting:
         ldap_base_dn: ベースDN
         ldap_auth_method: 認証方法
-        ldap_user_dn: ユーザDN
+        ldap_user_dn: ユーザーDN
         ldap_user_password: パスワード
         ldap_exclude_groups: 除外グループ
 
