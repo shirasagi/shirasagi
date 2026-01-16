@@ -20,7 +20,7 @@ module SS::SweepBase
 
     now = Time.zone.now.beginning_of_day
     if keep_duration
-      duration = SS::Duration.parse(SS.config.ss.keep_tasks)
+      duration = SS::Duration.parse(keep_duration)
     else
       duration = DEFAULT_KEEP_TASKS
     end
