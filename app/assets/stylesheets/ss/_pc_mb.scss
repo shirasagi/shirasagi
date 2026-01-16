@@ -722,10 +722,10 @@ _:future,
       text-align: center;
     }
     &.opened::before {
-      content: "arrow_back";
+      content: "\e5c4";
     }
     &.closed::before {
-      content: "arrow_forward";
+      content: "\e5c8";
     }
   }
   @media only screen and (max-width: 768px) {
