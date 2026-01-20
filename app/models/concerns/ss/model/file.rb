@@ -14,6 +14,8 @@ module SS::Model::File
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
+  FILE_FIELD_NAMES = Set.new(%w(file_id file_ids)).freeze
+
   attr_accessor :in_file, :resizing, :quality, :image_resizes_disabled
 
   included do
@@ -395,7 +397,9 @@ module SS::Model::File
     item = owner_item rescue nil
     return item if item.present?
 
-    conds = (type.fields.keys & %w(file_id file_ids)).map { |f| { f => id} }
+    conds = type.fields.keys.filter_map { FILE_FIELD_NAMES.include?(_1) ? { _1 => id } : nil }
+    return if conds.blank?
+
     type.where("$and" => [{ "$or" => conds }]).first
   end
 
