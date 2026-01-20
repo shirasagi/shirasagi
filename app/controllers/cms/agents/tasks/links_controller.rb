@@ -12,7 +12,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   end
 
   def ignore_urls
-    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrl.site(@site).pluck(:name)
+    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrl.site(@site).to_a
   end
 
   def create_report
@@ -191,7 +191,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
     return false if url.match?(/\/https?:/) # b.hatena
     return false if url.match?(/\/\/twitter\.com/) # twitter.com
-    return false if ignore_urls.include?(url)
+    return false if ignore_urls.find { |ignore_url| ignore_url.match?(url) }
     true
   end
 
