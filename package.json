@@ -4,7 +4,7 @@
   "dependencies": {
     "@hotwired/stimulus": "^3.2.2",
     "@hotwired/stimulus-webpack-helpers": "^1.0.1",
-    "@hotwired/turbo": "^8.0.13",
+    "@hotwired/turbo": "^8.0.21",
     "animate.css": "^4.1.1",
     "chart.js": "4.5.0",
     "chartjs-plugin-colorschemes-v3": "^0.5.4",
