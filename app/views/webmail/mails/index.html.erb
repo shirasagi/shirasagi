@@ -70,7 +70,13 @@
     </li>
 
     <% @items.each do |item| %>
-    <li class="list-item <%= item.flags.map(&:downcase).join(' ') %> <%= 'unseen' if item.unseen? %> mail-draggable" data-uid="<%= item.uid %>">
+    <%
+      li_attrs = {
+        class: [ "list-item", *item.flags.map(&:downcase), item.unseen? ? 'unseen' : nil, pc_browser? ? "mail-draggable" : nil ],
+        data: { uid: item.uid }
+      }
+    %>
+    <%= tag.li(**li_attrs) do %>
       <nav class="tap-menu">
         <%= link_to t('ss.links.show'), url_for(action: :show, id: item.uid) %>
         <%= link_to_new_window t('ss.links.edit'), url_for(action: :edit, id: item.uid) if item.draft? %>
@@ -114,7 +120,7 @@
         <span class="field datetime"><%= ss_time_tag item.internal_date %></span>
         <span class="field size"><%= item.display_size %></span>
       </div>
-    </li>
+    <% end %>
     <% end %>
   </ul>
 </div>
