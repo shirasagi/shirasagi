@@ -1,5 +1,6 @@
 module SS::SweepBase
   extend ActiveSupport::Concern
+
   DEFAULT_KEEP_TASKS = 14.days
 
   def model
@@ -14,28 +15,28 @@ module SS::SweepBase
 
   def perform
     if keep_duration && keep_duration == '0'
-      Rails.logger.info("#{model_name}の保存期間が無期限に設定されています。")
+      Rails.logger.info { "#{model_name}の保存期間が無期限に設定されています。" }
       return
     end
 
     now = Time.zone.now.beginning_of_day
     if keep_duration
-      duration = SS::Duration.parse(SS.config.ss.keep_tasks)
+      duration = SS::Duration.parse(keep_duration)
     else
       duration = DEFAULT_KEEP_TASKS
     end
     updated = now - duration
-    Rails.logger.info("#{updated.iso8601} 以降更新されていない#{model_name}を削除します。")
+    Rails.logger.info { "#{updated.iso8601} 以降更新されていない#{model_name}を削除します。" }
 
     count = 0
     each_items(updated) do |item|
-      p item.id
+      # p item.id
       if item.destroy
         count += 1
       end
     end
 
-    Rails.logger.info("#{count.to_fs(:delimited)} 件の#{model_name}を削除しました。")
+    Rails.logger.info { "#{count.to_fs(:delimited)} 件の#{model_name}を削除しました。" }
   end
 
   private
