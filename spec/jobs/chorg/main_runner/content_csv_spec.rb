@@ -90,6 +90,7 @@ describe Chorg::MainRunner, dbscope: :example do
       Job::Log.all.each do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).not_to include(/ERROR -- :/)
       end
 
       Cms::Node.find(node.id).tap do |node2|
