@@ -280,6 +280,37 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           expect(item.backups.count).to eq 1
         end
       end
+
+      # CIワークフロー集約コメント機能のテスト用 - 意図的に失敗するテスト
+      it 'CI failure test - should fail intentionally for testing CI workflow comment aggregation' do
+        # このテストは意図的に失敗させて、CIワークフローの集約コメント機能をテストするためのものです
+        visit new_article_page_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        # 意図的に存在しない要素を探して失敗させる
+        expect(page).to have_selector('#non-existent-element', wait: 1)
+      end
+
+      it 'CI failure test - assertion failure for testing failure reporting' do
+        # アサーション失敗のテスト
+        visit new_article_page_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        # 意図的に間違った期待値を設定して失敗させる
+        expect(page).to have_content('This text should not exist on the page')
+      end
+
+      it 'CI failure test - timeout failure for testing different failure types' do
+        # タイムアウト失敗のテスト
+        visit new_article_page_path(site: site, cid: node)
+        wait_for_all_ckeditors_ready
+        wait_for_all_turbo_frames
+
+        # 意図的に短いタイムアウトで存在しない要素を待つ
+        expect(page).to have_selector('#another-non-existent-element', wait: 0.1)
+      end
     end
   end
 end

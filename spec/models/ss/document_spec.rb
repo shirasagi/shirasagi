@@ -314,4 +314,49 @@ RSpec.describe SS::Document, type: :model, dbscope: :example do
       expect(total_bsonsize3).to eq total_bsonsize1
     end
   end
+
+  # CIワークフロー集約コメント機能のテスト用 - 意図的に失敗するテスト
+  describe "CI failure tests for workflow comment aggregation" do
+    it "CI failure test - assertion failure for testing failure reporting" do
+      # このテストは意図的に失敗させて、CIワークフローの集約コメント機能をテストするためのものです
+      item = Klass.create!(name: "test_item")
+
+      # 意図的に間違った期待値を設定して失敗させる
+      expect(item.name).to eq "wrong_expected_name"
+    end
+
+    it "CI failure test - count assertion failure for testing different failure types" do
+      # カウントアサーション失敗のテスト
+      Klass.create!(name: "item1")
+      Klass.create!(name: "item2")
+
+      # 意図的に間違ったカウントを期待して失敗させる
+      expect(Klass.count).to eq 5
+    end
+
+    it "CI failure test - nil assertion failure for testing nil handling" do
+      # nilアサーション失敗のテスト
+      item = Klass.create!(name: "test_item")
+
+      # 意図的にnilでない値を期待して失敗させる
+      expect(item.name).to be_nil
+    end
+
+    it "CI failure test - boolean assertion failure for testing boolean logic" do
+      # ブール値アサーション失敗のテスト
+      item = Klass.create!(name: "test_item", bool1: true)
+
+      # 意図的に間違ったブール値を期待して失敗させる
+      expect(item.bool1).to be_falsey
+    end
+
+    it "CI failure test - array size assertion failure for testing collection logic" do
+      # 配列サイズアサーション失敗のテスト
+      items = []
+      3.times { |i| items << Klass.create!(name: "item#{i}") }
+
+      # 意図的に間違った配列サイズを期待して失敗させる
+      expect(items.size).to eq 10
+    end
+  end
 end
