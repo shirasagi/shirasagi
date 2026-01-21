@@ -19,6 +19,20 @@ class Event::Extensions::Recurrences
     values.map { |recurrence| recurrence.collect_event_dates }.flatten.uniq.sort
   end
 
+  def collect_event_date_specifics
+    all_days = {}
+    datetimes = {}
+    values.map { |recurrence| recurrence.collect_event_dates(formatter: :format_specific) }.flatten.uniq.each do |specific|
+      if specific.all_day?
+        all_days[specific.date] = [specific]
+      else
+        datetimes[specific.date] ||= []
+        datetimes[specific.date] << specific
+      end
+    end
+    datetimes.merge(all_days).sort_by { |k, _| k }.to_h
+  end
+
   def start_time_between(from_time, to_time)
     values.select { |recurrence| recurrence.start_time_between?(from_time, to_time) }
   end
