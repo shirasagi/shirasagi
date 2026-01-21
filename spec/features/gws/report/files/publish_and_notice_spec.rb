@@ -209,7 +209,7 @@ describe "gws_report_files", type: :feature, dbscope: :example, js: true do
       wait_for_notice I18n.t('ss.notice.deleted')
 
       subject.reload
-      expect(subject.deleted).to be_present
+      expect(subject.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
       expect(SS::Notification.all.count).to eq 0
       expect(ActionMailer::Base.deliveries.length).to eq 0

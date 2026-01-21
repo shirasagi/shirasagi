@@ -76,7 +76,7 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
       # Create with default setting
       #
       within ".gws-column-list-toolbar[data-placement='top']" do
-        wait_event_to_fire("gws:column:added") { click_on I18n.t("mongoid.models.gws/tabular/column/text_field") }
+        wait_for_event_fired("gws:column:added") { click_on I18n.t("mongoid.models.gws/tabular/column/text_field") }
       end
 
       form.reload
@@ -114,7 +114,7 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
           choose index_state_label1
         end
 
-        wait_event_to_fire("turbo:frame-load") { click_on I18n.t("ss.buttons.save") }
+        wait_for_event_fired("turbo:frame-load") { click_on I18n.t("ss.buttons.save") }
       end
       wait_for_notice I18n.t('ss.notice.saved')
       clear_notice
@@ -147,7 +147,7 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
       # Edit again
       #
       within first(".gws-column-item") do
-        wait_event_to_fire("turbo:frame-load") { click_on "edit" }
+        wait_for_event_fired("turbo:frame-load") { click_on "edit" }
       end
       within first(".gws-column-item") do
         # basic_info
@@ -178,7 +178,7 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
           choose index_state_label2
         end
 
-        wait_event_to_fire("turbo:frame-load") { click_on I18n.t("ss.buttons.save") }
+        wait_for_event_fired("turbo:frame-load") { click_on I18n.t("ss.buttons.save") }
       end
       wait_for_notice I18n.t('ss.notice.saved')
       clear_notice

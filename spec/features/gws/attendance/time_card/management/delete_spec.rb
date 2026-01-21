@@ -54,6 +54,7 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
       within "form#item-form" do
         click_on I18n.t("ss.buttons.delete")
       end
+      wait_for_notice I18n.t("ss.notice.deleted")
 
       expect { Gws::Attendance::TimeCard.find(user1_prev_month_time_card.id) }.to raise_error Mongoid::Errors::DocumentNotFound
     end
@@ -73,7 +74,6 @@ describe "gws_attendance_time_card", type: :feature, dbscope: :example, js: true
           click_on I18n.t("ss.buttons.delete")
         end
       end
-
       wait_for_notice I18n.t('ss.notice.deleted')
 
       expect { Gws::Attendance::TimeCard.find(user1_this_month_time_card.id) }.to raise_error Mongoid::Errors::DocumentNotFound

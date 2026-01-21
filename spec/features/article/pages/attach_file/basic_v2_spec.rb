@@ -50,7 +50,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
         end
 
         within_dialog do
-          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          wait_for_event_fired "ss:tempFile:addedWaitingList" do
             attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.jpg"
           end
           within first("form .index tbody tr") do
@@ -112,7 +112,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
           end
         end
         within_dialog do
-          wait_event_to_fire "ss:tempFile:addedWaitingList" do
+          wait_for_event_fired "ss:tempFile:addedWaitingList" do
             attach_file "in_files", "#{Rails.root}/spec/fixtures/ss/file/keyvisual.gif"
           end
           within first("form .index tbody tr") do
@@ -872,7 +872,7 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
       end
 
       within_dialog do
-        wait_event_to_fire "ss:tempFile:addedWaitingList" do
+        wait_for_event_fired "ss:tempFile:addedWaitingList" do
           attach_file "in_files", file_path
         end
       end

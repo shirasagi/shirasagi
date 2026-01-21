@@ -241,7 +241,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         expect(page).to have_css(".workflow_state", text: I18n.t("workflow.state.remand"))
 
         within ".route_id" do
-          wait_event_to_fire("turbo:frame-load") { click_on I18n.t("workflow.restart_workflow") }
+          wait_for_event_fired("turbo:frame-load") { click_on I18n.t("workflow.restart_workflow") }
         end
       end
       within ".mod-workflow-request" do

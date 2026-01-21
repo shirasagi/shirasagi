@@ -231,7 +231,9 @@ class Sys::SiteImportJob < SS::ApplicationJob
         item = effective_model.new
       end
 
-      data.each { |k, v| item[k] = v }
+      data.each do |k, v|
+        item.send("#{k}=", v) if item.respond_to?("#{k}=")
+      end
       yield(item, data) if block
 
       if save_document(item)

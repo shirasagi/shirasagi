@@ -112,6 +112,9 @@ module SS::Relation::File
         item.errors.add("#{name}_id", :blank)
       end
       if file && accepts.present? && item.send("rm_#{name}").to_s != "1"
+        accepts = accepts.map { |accept| accept.downcase }
+        accepts = accepts.map { |accept| accept.start_with?(".") ? accept : ".#{accept}" }
+
         filename = ""
         filename = file.filename if file.respond_to?(:filename)
         filename = file.original_filename if file.respond_to?(:original_filename)

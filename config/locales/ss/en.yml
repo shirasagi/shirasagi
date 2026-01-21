@@ -393,6 +393,7 @@ en:
       reset_mfa_otp: Reset OTP
       wait_to_upload: Waiting to upload.
       finished_uploading: Finished uploading.
+      unlocked: Unlocked.
 
     info:
       soft_delete: The data will not be completely deleted, but will instead be saved in an invalid state.

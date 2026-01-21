@@ -393,6 +393,7 @@ ja:
       reset_mfa_otp: ワンタイムパスワードを初期化しました。
       wait_to_upload: アップロードの待機中。
       finished_uploading: アップロードしました。
+      unlocked: ロックを解除しました。
 
     info:
       soft_delete: データの実削除ではなく無効状態として保存されます。

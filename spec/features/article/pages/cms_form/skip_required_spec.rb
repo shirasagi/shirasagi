@@ -57,11 +57,11 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
 
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       wait_for_turbo_frame "#workflow-branch-frame"
-      wait_event_to_fire "turbo:frame-load" do
+      wait_for_event_fired "turbo:frame-load" do
         click_on I18n.t("workflow.create_branch")
       end
 
-      wait_for_ajax
+      wait_for_js_ready
       msg = I18n.t("errors.messages.blank")
       msg = I18n.t("errors.format", attribute: column1.name, message: msg)
       wait_for_error msg
@@ -80,7 +80,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
       expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
       wait_for_turbo_frame "#workflow-branch-frame"
       click_link I18n.t("workflow.buttons.select")
-      wait_for_ajax
+      wait_for_js_ready
 
       expect(page).to have_css(".workflow-partial-section")
       within(".workflow-partial-section") do 
@@ -88,7 +88,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         wait_for_cbox_opened { click_link I18n.t("workflow.search_approvers.index") }
       end
 
-      wait_for_ajax
+      wait_for_js_ready
       expect(page).to have_css(".search-ui-form")
 
       within_cbox do
@@ -96,7 +96,7 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
           first('input[type="checkbox"][name="ids[]"]').click
         end
 
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_css(".search-ui-select")
 
         within(".search-ui-select") do
@@ -104,13 +104,13 @@ describe 'article_pages', type: :feature, dbscope: :example, js: true do
         end
       end
 
-      wait_for_ajax
+      wait_for_js_ready
 
       within(".workflow-partial-section") do 
         click_button I18n.t("workflow.buttons.request")
       end
 
-      wait_for_ajax
+      wait_for_js_ready
 
       msg = I18n.t("errors.messages.blank")
       msg = I18n.t("errors.format", attribute: column1.name, message: msg)

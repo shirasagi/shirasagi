@@ -28,7 +28,7 @@ describe Gws::NotifySetting, type: :model, dbscope: :example do
     end
 
     after do
-      SS.config.replace_value_at(:gws, 'memo', @save_config)
+      SS.config.replace_value_at(:gws, 'notify_setting', @save_config)
     end
 
     it do

@@ -237,7 +237,7 @@ describe Gws::Tabular::FilesController, type: :feature, dbscope: :example, js: t
             wait_for_cbox_opened { click_on I18n.t("ss.buttons.upload") }
           end
           within_dialog do
-            wait_event_to_fire "ss:tempFile:addedWaitingList" do
+            wait_for_event_fired "ss:tempFile:addedWaitingList" do
               attach_file "in_files", pdf_attachment_path
             end
           end

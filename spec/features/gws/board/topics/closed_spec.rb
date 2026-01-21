@@ -30,7 +30,9 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
         visit index_path
         click_on I18n.t("ss.navi.editable")
         click_on I18n.t("ss.links.new")
-        wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
+        within "form#item-form" do
+          wait_for_cbox_opened { click_on I18n.t("gws.apis.categories.index") }
+        end
         within_cbox do
           wait_for_cbox_closed { click_on category.name }
         end
@@ -129,7 +131,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example do
 
           item.reload
           expect(item.notification_noticed_at).to be_blank
-          expect(item.deleted).to be_present
+          expect(item.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
 
           expect(SS::Notification.all.count).to eq 0
           expect(ActionMailer::Base.deliveries.length).to eq 0

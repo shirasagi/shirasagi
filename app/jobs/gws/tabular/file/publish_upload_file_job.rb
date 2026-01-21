@@ -32,7 +32,7 @@ class Gws::Tabular::File::PublishUploadFileJob < Gws::ApplicationJob
       next unless upload_file_id
 
       ::SS::File.each_file([ upload_file_id ]) do |upload_file|
-        if upload_file.owner_item_id == file.id
+        if upload_file.owner_item_type == file.class.name && upload_file.owner_item_id == file.id
           ::Gws.publish_file(site, upload_file)
         end
       end
@@ -47,7 +47,7 @@ class Gws::Tabular::File::PublishUploadFileJob < Gws::ApplicationJob
       next unless upload_file_id
 
       ::SS::File.each_file([ upload_file_id ]) do |upload_file|
-        if upload_file.owner_item_id == file.id
+        if upload_file.owner_item_type == file.class.name && upload_file.owner_item_id == file.id
           ::Gws.depublish_file(site, upload_file)
         end
       end

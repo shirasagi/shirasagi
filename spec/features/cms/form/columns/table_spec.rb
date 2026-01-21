@@ -23,6 +23,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
         expect(item.required).to eq 'required'
@@ -34,6 +35,7 @@ describe Cms::Form::ColumnsController, type: :feature, dbscope: :example, js: tr
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t('ss.notice.saved')
+      expect(Cms::Column::Base.site(site).where(form_id: form.id).count).to eq 1
       Cms::Column::Base.site(site).where(form_id: form.id).first.tap do |item|
         expect(item.name).to eq name
         expect(item.place_holder).to eq place_holder

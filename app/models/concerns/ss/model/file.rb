@@ -14,6 +14,8 @@ module SS::Model::File
   include History::Addon::Trash
   include ActiveSupport::NumberHelper
 
+  FILE_FIELD_NAMES = Set.new(%w(file_id file_ids)).freeze
+
   attr_accessor :in_file, :resizing, :quality, :image_resizes_disabled
 
   included do
@@ -385,10 +387,19 @@ module SS::Model::File
     item = owner_item rescue nil
     return item if item.present?
 
-    type = @item.model.camelize.constantize rescue nil
+    return if owner_item_type.blank?
+
+    # Rails 8.0 からクラスロードの仕組みが変わり、自動でロードされない場合が散見されるようになった
+    # そこで、owner_item_type.constantize にて明示的にクラスをロードした後に owner_item を取得してみる
+    type = owner_item_type.constantize rescue nil
     return if type.blank?
 
-    conds = (type.fields.keys & %w(file_id file_ids)).map { |f| { f => id} }
+    item = owner_item rescue nil
+    return item if item.present?
+
+    conds = type.fields.keys.filter_map { FILE_FIELD_NAMES.include?(_1) ? { _1 => id } : nil }
+    return if conds.blank?
+
     type.where("$and" => [{ "$or" => conds }]).first
   end
 

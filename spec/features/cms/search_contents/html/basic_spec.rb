@@ -287,7 +287,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
           fill_in "keyword", with: contact_postal_code
           click_button I18n.t('ss.buttons.search')
         end
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
@@ -303,7 +303,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
           fill_in "keyword", with: page5.contact_address
           click_button I18n.t('ss.buttons.search')
         end
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
@@ -327,7 +327,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
           fill_in "keyword", with: contact_address
           click_button I18n.t('ss.buttons.search')
         end
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
@@ -343,7 +343,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
           fill_in "keyword", with: page5.contact_link_url
           click_button I18n.t('ss.buttons.search')
         end
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
@@ -367,7 +367,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
           fill_in "keyword", with: contact_link_url
           click_button I18n.t('ss.buttons.search')
         end
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
@@ -383,7 +383,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
           fill_in "keyword", with: page5.contact_link_name
           click_button I18n.t('ss.buttons.search')
         end
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")
@@ -407,7 +407,7 @@ describe "cms_search_contents_html", type: :feature, dbscope: :example, js: true
           fill_in "keyword", with: contact_link_name
           click_button I18n.t('ss.buttons.search')
         end
-        wait_for_ajax
+        wait_for_js_ready
         expect(page).to have_no_css(".result table a", text: "[TEST]top")
         expect(page).to have_no_css(".result table a", text: "[TEST]child")
         expect(page).to have_no_css(".result table a", text: "[TEST]1.html")

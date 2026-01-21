@@ -209,11 +209,11 @@ describe Opendata::ResourceDownloadReportJob, dbscope: :example do
 
       expect(report1.deleted).to be_blank
       report1.reload
-      expect(report1.deleted).to be_present
+      expect(report1.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.parse("2019/11/02"))
 
       expect(report2.deleted).to be_blank
       report2.reload
-      expect(report2.deleted).to be_present
+      expect(report2.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.parse("2019/11/02"))
 
       Timecop.travel("2019/12/01") do
         described_class.bind(site_id: site.id, node_id: node.id, user_id: user.id).perform_now

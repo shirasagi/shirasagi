@@ -4,8 +4,8 @@
   @s ||= OpenStruct.new params[:s]
 %>
 <div class="list-head-search">
-  <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
-    <%= f.text_field :keyword, style: "width: 300px;" %>
-    <input type="submit" value="<%= t('ss.buttons.search') %>" class="btn" />
+  <%= form_with scope: :s, url: "", class: "index-search", method: :get do |f| %>
+    <%= f.text_field :keyword, placeholder: t('ss.keyword'), style: "width: 300px;", id: nil %>
+    <%= f.submit t('ss.buttons.search'), class: "btn", name: nil %>
   <% end %>
 </div>

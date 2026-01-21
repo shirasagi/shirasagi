@@ -18,7 +18,7 @@ describe "sys_image_resizes", type: :feature, dbscope: :example, js: true do
     context "when SS.config.ss.quality_option['type'] is disabled" do
       before do
         quality_option = @save_ss_quality_option = SS.config.ss.quality_option.dup
-        quality_option['type'] = 'disabled'
+        quality_option['type'] = 'disable'
         SS.config.replace_value_at(:ss, :quality_option, quality_option)
       end
 

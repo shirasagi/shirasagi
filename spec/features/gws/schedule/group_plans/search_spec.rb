@@ -12,52 +12,78 @@ describe "gws_schedule_group_plans", type: :feature, dbscope: :example, js: true
   before { login_gws_user }
 
   context "when keyword is given" do
-    it do
-      visit gws_schedule_group_plans_path(site: site, group: gws_user.groups.first)
-      expect(page).to have_css(".fc-basic-view", text: plan1.name)
-      expect(page).to have_css(".fc-basic-view", text: plan2.name)
-      expect(page).to have_css(".fc-basic-view", text: plan3.name)
-
-      within ".gws-schedule-box .search" do
-        fill_in "s[keyword]", with: plan1.name
-        click_on I18n.t("ss.buttons.search")
+    context "without keywords" do
+      it do
+        visit gws_schedule_group_plans_path(site: site, group: gws_user.groups.first)
+        expect(page).to have_css(".fc-basic-view", text: plan1.name)
+        expect(page).to have_css(".fc-basic-view", text: plan2.name)
+        expect(page).to have_css(".fc-basic-view", text: plan3.name)
       end
-      expect(page).to have_css(".fc-basic-view", text: plan1.name)
-      expect(page).to have_no_css(".fc-basic-view", text: plan2.name)
-      expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
+    end
 
-      within ".gws-schedule-box .search" do
-        fill_in "s[keyword]", with: plan2.text
-        click_on I18n.t("ss.buttons.search")
+    context "plan1 name" do
+      it do
+        visit gws_schedule_group_plans_path(site: site, group: gws_user.groups.first, s: { keyword: unique_id })
+        within ".gws-schedule-box .search" do
+          fill_in "s[keyword]", with: plan1.name
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".fc-basic-view", text: plan1.name)
+        expect(page).to have_no_css(".fc-basic-view", text: plan2.name)
+        expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
       end
-      expect(page).to have_css(".fc-basic-view", text: plan2.name)
-      expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
-      expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
+    end
+
+    context "plan2 text" do
+      it do
+        visit gws_schedule_group_plans_path(site: site, group: gws_user.groups.first, s: { keyword: unique_id })
+        within ".gws-schedule-box .search" do
+          fill_in "s[keyword]", with: plan2.text
+          click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".fc-basic-view", text: plan2.name)
+        expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
+        expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
+      end
     end
   end
 
   context "when category is given" do
-    it do
-      visit gws_schedule_group_plans_path(site: site, group: gws_user.groups.first)
-      expect(page).to have_css(".fc-basic-view", text: plan1.name)
-      expect(page).to have_css(".fc-basic-view", text: plan2.name)
-      expect(page).to have_css(".fc-basic-view", text: plan3.name)
-
-      within ".gws-schedule-box .search" do
-        select category2.name, from: "s[category_id]"
-        click_on I18n.t("ss.buttons.search")
+    context "without categories" do
+      it do
+        visit gws_schedule_group_plans_path(site: site, group: gws_user.groups.first)
+        expect(page).to have_css(".fc-basic-view", text: plan1.name)
+        expect(page).to have_css(".fc-basic-view", text: plan2.name)
+        expect(page).to have_css(".fc-basic-view", text: plan3.name)
       end
-      expect(page).to have_css(".fc-basic-view", text: plan2.name)
-      expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
-      expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
+    end
 
-      within ".gws-schedule-box .search" do
-        select category3.name, from: "s[category_id]"
-        click_on I18n.t("ss.buttons.search")
+    context "with category2 name" do
+      it do
+        visit gws_schedule_group_plans_path(site: site, group: gws_user.groups.first, s: { keyword: unique_id })
+        within ".gws-schedule-box .search" do
+          fill_in "s[keyword]", with: ""
+          select category2.name, from: "s[category_id]"
+          # click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".fc-basic-view", text: plan2.name)
+        expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
+        expect(page).to have_no_css(".fc-basic-view", text: plan3.name)
       end
-      expect(page).to have_css(".fc-basic-view", text: plan3.name)
-      expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
-      expect(page).to have_no_css(".fc-basic-view", text: plan2.name)
+    end
+
+    context "with category3 name" do
+      it do
+        visit gws_schedule_group_plans_path(site: site, group: gws_user.groups.first, s: { keyword: unique_id })
+        within ".gws-schedule-box .search" do
+          fill_in "s[keyword]", with: ""
+          select category3.name, from: "s[category_id]"
+          # click_on I18n.t("ss.buttons.search")
+        end
+        expect(page).to have_css(".fc-basic-view", text: plan3.name)
+        expect(page).to have_no_css(".fc-basic-view", text: plan1.name)
+        expect(page).to have_no_css(".fc-basic-view", text: plan2.name)
+      end
     end
   end
 end

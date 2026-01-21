@@ -43,7 +43,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           click_on item.name
 
           within "form#gws-workflow-destination-states-form" do
-            wait_event_to_fire("turbo:frame-load") do
+            wait_for_event_fired("turbo:frame-load") do
               select I18n.t("gws/workflow2.options.destination_treat_state.treated"), from: "item[destination_treat_state]"
             end
           end
@@ -119,7 +119,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
           click_on item.name
 
           within "form#gws-workflow-destination-states-form" do
-            wait_event_to_fire("turbo:frame-load") do
+            wait_for_event_fired("turbo:frame-load") do
               select I18n.t("gws/workflow2.options.destination_treat_state.treated"), from: "item[destination_treat_state]"
             end
           end
@@ -240,7 +240,7 @@ describe Gws::Workflow2::FilesController, type: :feature, dbscope: :example, js:
         click_on item.name
 
         within "form#gws-workflow-destination-states-form" do
-          wait_event_to_fire("turbo:frame-load") do
+          wait_for_event_fired("turbo:frame-load") do
             select I18n.t("gws/workflow2.options.destination_treat_state.treated"), from: "item[destination_treat_state]"
           end
         end
