@@ -363,7 +363,7 @@ class Gws::Memo::Message
           end
         end
       else
-        message.user_id = nil
+        message.user_id = nil if message.respond_to?(:user_id)
         message.from_member_name = mail_header[:from].to_s
       end
     end
