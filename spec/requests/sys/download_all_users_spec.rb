@@ -6,6 +6,7 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
   let(:group) { create(:ss_group, name: "Test Group") }
   let(:role) { create(:sys_role, name: "Test Role") }
   let(:organization) { create(:ss_group, name: "Test Organization") }
+  let(:now) { Time.zone.now }
   let(:index_path) { sys_users_path(site.id) }
   let(:new_path) { new_sys_user_path(site.id) }
   let(:download_path) { download_all_sys_users_path(site.id) }
@@ -19,8 +20,10 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
            email: "johndoe@example.com",
            tel: "123-456-7890",
            tel_ext: "1234",
-           account_start_date: now.last_month,
-           account_expiration_date: now.next_month,
+           # download_all の既定条件(state未指定)は enabled(active) のため、
+           # 固定日付にするとテスト実行日によって期限切れになり CSV から除外される。
+           account_start_date: now - 1.day,
+           account_expiration_date: now + 1.year,
            initial_password_warning: 1,
            session_lifetime: 3600,
            restriction: "api_only",
