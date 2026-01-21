@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::Addon::List::Model do
+describe Cms::Addon::List::Model, dbscope: :example do
   let(:site) { cms_site }
   let(:layout) { create_cms_layout }
   let!(:root_node) { create :cms_node_node, cur_site: site, layout: layout }
