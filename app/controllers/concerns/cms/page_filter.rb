@@ -9,7 +9,6 @@ module Cms::PageFilter
     before_action :set_contains_urls_items, only: [:contains_urls, :edit, :update, :delete, :destroy]
     before_action :deny_update_with_contains_urls, only: [:update]
     before_action :deny_destroy_with_contains_urls, only: [:destroy]
-    helper Cms::SyntaxCheckableHelper
   end
 
   private

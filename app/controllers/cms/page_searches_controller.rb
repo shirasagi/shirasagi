@@ -1,7 +1,6 @@
 class Cms::PageSearchesController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
-  helper Cms::SyntaxCheckableHelper
 
   model Cms::PageSearch
   navi_view "cms/main/conf_navi"
