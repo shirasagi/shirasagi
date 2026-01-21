@@ -666,6 +666,11 @@ ja:
         start_with: 前方一致
         end_with: 後方一致
         all: 完全一致
+      ignore_url_kind:
+        all: 完全一致
+        start_with: 前方一致
+        end_with: 後方一致
+        include: 部分一致
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
@@ -1612,6 +1617,7 @@ ja:
         group_ids: 管理グループ
       cms/check_links/ignore_url:
         name: 除外URL
+        kind: 一致パターン
       cms/line/message:
         name: タイトル
         body: JSON
@@ -1870,7 +1876,7 @@ ja:
         average_sub_total_view: 平均子合計ビュー処理時間
         average_sub_total_elapsed: 平均子合計全処理時間
       cms/page_expiration_setting:
-        expiration_setting_type: 公開期限      
+        expiration_setting_type: 公開期限
       cms/syntax_check_result:
         syntax_check_result_checked: アクセシビリティチェック実施日時
         syntax_check_result_violation_count: アクセシビリティ違反件数
@@ -3280,6 +3286,8 @@ ja:
         - ・内部リンクでドメインを除いてURLを記述している場合
         - /kurashi/
         - /kurashi/xxxx.html
+      kind:
+        - 一致パターンを選択します。
 
     cms/addon/site_search/history:
       upper_html:
