@@ -2,7 +2,6 @@ class Cms::PartsController < ApplicationController
   include Cms::BaseFilter
   include Cms::PartFilter
   include Cms::SyntaxCheckable
-  helper Cms::SyntaxCheckableHelper
 
   model Cms::Part
 
