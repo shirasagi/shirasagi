@@ -652,6 +652,11 @@ ja:
         1_year: 1年以上更新なし
         2_years: 2年以上更新なし
         3_years: 3年以上更新なし
+      ignore_url_kind:
+        all: 完全一致
+        start_with: 前方一致
+        end_with: 後方一致
+        include: 部分一致
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
@@ -1588,6 +1593,7 @@ ja:
         group_ids: 管理グループ
       cms/check_links/ignore_url:
         name: 除外URL
+        kind: 一致パターン
       cms/line/message:
         name: タイトル
         body: JSON
@@ -3219,6 +3225,8 @@ ja:
         - ・内部リンクでドメインを除いてURLを記述している場合
         - /kurashi/
         - /kurashi/xxxx.html
+      kind:
+        - 一致パターンを選択します。
 
     cms/addon/site_search/history:
       upper_html:
