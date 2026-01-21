@@ -8,8 +8,8 @@
         <dl class="see">
           <dt><%= t "ss.file" %><%= @model.tt :in_file %></dt>
           <dd>
-            <%= f.hidden_field "item[in_file]", value: "" %>
-            <%= f.file_field :in_file %>
+            <%= f.hidden_field :in_file, value: "", id: nil %>
+            <%= f.file_field :in_file, id: nil %>
           </dd>
           <% download_template_path = url_for(action: :download_template) rescue nil %>
           <% if download_template_path.present? %>
