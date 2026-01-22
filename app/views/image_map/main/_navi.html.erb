@@ -1,4 +1,4 @@
-<% return node_navi unless params[:controller].starts_with?('image_map/') %>
+<% return node_navi unless params[:controller].start_with?('image_map/') %>
 
 <%= node_navi :image_map do %>
 
