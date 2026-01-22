@@ -37,6 +37,10 @@ describe "opendata_agents_nodes_dataset_map", type: :feature, dbscope: :example,
         item.resources = [resource]
         item.save!
       end
+
+      # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+      FileUtils.rm_rf site.path
+      FileUtils.mkdir_p site.path
     end
 
     it "#index" do

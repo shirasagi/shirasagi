@@ -36,7 +36,8 @@ describe "recommend_agents_parts_similarity", type: :feature, dbscope: :example,
 
   before do
     # delete all statically generated html files to dynamically respond contents.
-    Cms::Page.each { |page| ::FileUtils.rm_f(page.path) }
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
   end
 
   context "public" do

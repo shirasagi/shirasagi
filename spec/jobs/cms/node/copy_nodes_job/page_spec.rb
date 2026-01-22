@@ -8,20 +8,13 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let!(:file) { create :cms_file, site_id: site.id }
     let!(:node) { create :article_node_page, cur_site: site }
     let!(:article_page) do
-      create :article_page,
-        cur_site: site,
-        cur_node: node,
-        filename: "#{node.filename}/page",
-        file_ids: [file.id]
+      create(:article_page, cur_site: site, cur_node: node, basename: "page", file_ids: [ file.id ])
     end
 
     describe "copy page which is located under a node" do
-
       before do
-        perform_enqueued_jobs do
-          Cms::Node::CopyNodesJob.bind( {site_id: site.id, node_id: node.id} )
-          .perform_now( {target_node_name: target_node_name} )
-        end
+        job_class = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node.id)
+        ss_perform_now(job_class, target_node_name: target_node_name)
       end
 
       it "created new copied file under target node" do

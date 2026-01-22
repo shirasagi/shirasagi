@@ -74,9 +74,11 @@ describe "cms_generate_nodes", type: :feature, dbscope: :example, js: true do
       visit index_path
 
       expect(current_path).to eq web01_path
-      expect(page).to have_css("a[href=\"#{web01_path}\"]")
-      expect(page).to have_css("a[href=\"#{web02_path}\"]")
-      expect(page).to have_css("a[href=\"#{web03_path}\"]")
+      within ".cms-tabs" do
+        expect(page).to have_css("a[href=\"#{web01_path}\"]")
+        expect(page).to have_css("a[href=\"#{web02_path}\"]")
+        expect(page).to have_css("a[href=\"#{web03_path}\"]")
+      end
 
       task, task_web01, task_web02, task_web03 = find_tasks
       expect(task).to eq nil

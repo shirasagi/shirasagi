@@ -9,6 +9,12 @@ describe "mail_pages", type: :feature, dbscope: :example, js: true do
   let!(:cate_page1) { create :category_node_page, cur_site: site, cur_node: cate_node }
   let!(:cate_page2) { create :category_node_page, cur_site: site, cur_node: cate_node }
 
+  before do
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+  end
+
   context "basic crud" do
     before { login_cms_user }
 

@@ -7,19 +7,14 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let(:task) { create :copy_nodes_task, target_node_name: target_node_name, site_id: site.id, node_id: node.id }
     let!(:node) { create :cms_node, cur_site: site }
     let!(:part) do
-      create :article_part_page,
-        cur_site: site,
-        filename: "#{node.filename}/part",
-        lower_html: "<div class=\"feed\"><a class=\"rss\" href=\"/#{node.filename}/rss.xml\">RSS</a>"
+      lower_html = "<div class=\"feed\"><a class=\"rss\" href=\"/#{node.filename}/rss.xml\">RSS</a>"
+      create :article_part_page, cur_site: site, cur_node: node, basename: "part", lower_html: lower_html
     end
 
     describe "copy part which is located under a node" do
-
       before do
-        perform_enqueued_jobs do
-          Cms::Node::CopyNodesJob.bind( {site_id: site.id, node_id: node.id} )
-          .perform_now( {target_node_name: target_node_name} )
-        end
+        job_class = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node.id)
+        ss_perform_now(job_class, target_node_name: target_node_name)
       end
 
       it "html element which has original node name was overwritten" do

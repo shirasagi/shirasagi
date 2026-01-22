@@ -62,11 +62,11 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       visit site_search_node.url
 
       within '.search-form' do
-        expect(page).not_to have_css(".site-search-type")
-        expect(page).not_to have_css(".site-search-target")
-        expect(page).not_to have_css(".site-search-article-node")
-        expect(page).not_to have_css(".site-search-categories")
-        expect(page).not_to have_css(".site-search-organization")
+        expect(page).to have_no_css(".site-search-type")
+        expect(page).to have_no_css(".site-search-target")
+        expect(page).to have_no_css(".site-search-article-node")
+        expect(page).to have_no_css(".site-search-categories")
+        expect(page).to have_no_css(".site-search-organization")
       end
     end
   end
@@ -81,11 +81,11 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
       within '.search-form' do
         expect(page.all("select[name='s[article_node_ids][]'] option").count).to eq 2
         expect(page.all("select[name='s[category_names][]'] option").count).to eq 2
-        find("select[name='s[type]'] option[value='page']").select_option
+        select I18n.t("cms.options.site_search_type.page"), from: "s[type]"
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages .item:nth-child(1)' do
-        expect(page).not_to have_selector('img')
+        expect(page).to have_no_selector('img')
       end
       within '.pages .item:nth-child(2)' do
         expect(page).to have_css('.title')
@@ -149,7 +149,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
         click_button I18n.t('ss.buttons.search')
       end
       within '.pages .item:nth-child(1)' do
-        expect(page).not_to have_selector('img')
+        expect(page).to have_no_selector('img')
       end
       within '.pages .item:nth-child(2)' do
         expect(page).to have_css('.title')
@@ -248,13 +248,13 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
           expect(page).to have_css('.site-search-article-nodes.style-select', visible: true)
           expect(page).to have_css('.site-search-categories.style-select', visible: true)
           expect(page).to have_css('.site-search-organization.style-select', visible: true)
-          expect(page).not_to have_css('.site-search-categories.style-input', visible: true)
-          expect(page).not_to have_css('.site-search-organization.style-input', visible: true)
+          expect(page).to have_no_css('.site-search-categories.style-input', visible: true)
+          expect(page).to have_no_css('.site-search-organization.style-input', visible: true)
 
           find("select[name='target'] option[value='outside']").select_option
-          expect(page).not_to have_css('.site-search-article-nodes.style-select', visible: true)
-          expect(page).not_to have_css('.site-search-categories.style-select', visible: true)
-          expect(page).not_to have_css('.site-search-organization.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-article-nodes.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-categories.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-organization.style-select', visible: true)
           expect(page).to have_css('.site-search-categories.style-input', visible: true)
           expect(page).to have_css('.site-search-organization.style-input', visible: true)
         end
@@ -283,16 +283,16 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
         visit site_search_node.url
 
         within '.search-form' do
-          expect(page).not_to have_css('.site-search-article-nodes.style-select', visible: true)
-          expect(page).not_to have_css('.site-search-categories.style-select', visible: true)
-          expect(page).not_to have_css('.site-search-organization.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-article-nodes.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-categories.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-organization.style-select', visible: true)
           expect(page).to have_css('.site-search-categories.style-input', visible: true)
           expect(page).to have_css('.site-search-organization.style-input', visible: true)
 
           find("select[name='target'] option[value='outside']").select_option
-          expect(page).not_to have_css('.site-search-article-nodes.style-select', visible: true)
-          expect(page).not_to have_css('.site-search-categories.style-select', visible: true)
-          expect(page).not_to have_css('.site-search-organization.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-article-nodes.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-categories.style-select', visible: true)
+          expect(page).to have_no_css('.site-search-organization.style-select', visible: true)
           expect(page).to have_css('.site-search-categories.style-input', visible: true)
           expect(page).to have_css('.site-search-organization.style-input', visible: true)
         end
@@ -307,7 +307,7 @@ describe 'cms_agents_nodes_site_search', type: :feature, dbscope: :example, js: 
           click_button I18n.t('ss.buttons.search')
         end
         within '.pages .item:nth-child(1)' do
-          expect(page).not_to have_selector('img')
+          expect(page).to have_no_selector('img')
         end
         within '.pages .item:nth-child(2)' do
           expect(page).to have_css('.title')
