@@ -151,9 +151,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
-          Job::Log.first.tap do |log|
+          Job::Log.all.each do |log|
             expect(log.logs).to include(/INFO -- : .* Started Job/)
             expect(log.logs).to include(/INFO -- : .* Completed Job/)
+            expect(log.logs).not_to include(/ERROR -- :/)
           end
 
           # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
@@ -343,9 +344,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
           # check for job was succeeded
           expect(Job::Log.count).to eq 1
-          Job::Log.first.tap do |log|
+          Job::Log.all.each do |log|
             expect(log.logs).to include(/INFO -- : .* Started Job/)
             expect(log.logs).to include(/INFO -- : .* Completed Job/)
+            expect(log.logs).not_to include(/ERROR -- :/)
           end
 
           # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
@@ -440,9 +442,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR -- :/)
         end
 
         # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
@@ -539,9 +542,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR -- :/)
         end
 
         # check group
@@ -669,9 +673,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR -- :/)
         end
 
         # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
@@ -761,9 +766,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR -- :/)
         end
 
         # check group
@@ -862,9 +868,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
         # check for job was succeeded
         expect(Job::Log.count).to eq 1
-        Job::Log.first.tap do |log|
+        Job::Log.all.each do |log|
           expect(log.logs).to include(/INFO -- : .* Started Job/)
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).to include(/ERROR -- : .* #{::Regexp.escape(SS.format_error(Cms::Group.t(:name), :taken))}/)
         end
 
         # 無関係なノードとページ、他サイトのノードとページは組織変更の影響を受けない
@@ -1048,9 +1055,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
-      Job::Log.first.tap do |log|
+      Job::Log.all.each do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).not_to include(/ERROR -- :/)
       end
 
       # check group
