@@ -33,7 +33,6 @@ module Cms::FileRepair
       ids.each_with_index do |id, idx|
         item = Cms::Page.find(id) rescue nil
         next unless item
-        item = item.becomes_with_route
         puts "#{site.name} #{idx + 1}/#{ids.size}: #{item.name}"
 
         if item.respond_to?(:form) && item.form
