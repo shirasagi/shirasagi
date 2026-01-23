@@ -81,7 +81,7 @@ ja:
       send_mdn: 開封確認メッセージを送信しました。
       ignore_mdn: 開封確認を無視しました。
       start_export: エクスポートを開始しました。
-      start_import: インポートしました。
+      start_import: インポートを開始しました。
       start_backup: バックアップを開始しました。
       start_restore: 復元しました。
       no_recents: 新着はありません
@@ -103,6 +103,9 @@ ja:
       empty_messages: バックアップ対象のメッセージが見つかりませんでした。
     import:
       caution: "※差出人や送信者等は、メールアドレスが一致するユーザーが存在する場合に復元されます。"
+      subject: '[メッセージ] インポートが完了しました。'
+      notify_message: "%{count}件のメッセージをインポートしました。\n\n%{messages}"
+      start_message: "インポート処理を開始しました。\nインポート処理が完了次第、実行結果が通知されます。"
     restore:
       caution: "※差出人や送信者等のユーザー情報は、バックアップしたデータとID及び氏名が一致している場合のみ復元されます。"
     mdn:
@@ -288,6 +291,9 @@ ja:
         sender_name: 送信者名
         signature: 署名
         category_ids: カテゴリー
+      gws/memo/message_importer:
+        in_file: ファイル
+        file_id: ファイル
       gws/addon/memo/notify_setting:
         notify_state: 通知設定
       gws/addon/memo/message_sort:
@@ -328,11 +334,8 @@ ja:
 
   activemodel:
     models:
-      gws/memo/message_importer: インポート
       gws/memo/message_restorer: 復元
     attributes:
-      gws/memo/message_importer:
-        in_file: ファイル
       gws/memo/message_restorer:
         in_file: ファイル
   tooltip:
@@ -432,3 +435,4 @@ ja:
   job:
     models:
       gws/memo/message_export_job: メッセージ/エクスポート
+      gws/memo/message_import_job: メッセージ/インポート

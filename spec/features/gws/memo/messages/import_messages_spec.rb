@@ -16,7 +16,9 @@ describe "gws_memo_message_import_messages", type: :feature, dbscope: :example, 
         click_on I18n.t("ss.import")
       end
       wait_for_notice I18n.t("gws/memo/message.notice.start_import")
+      expect(page).to have_text(I18n.t("gws/memo/message.import.start_message")[0])
 
+      perform_enqueued_jobs
       visit gws_memo_messages_path(site)
 
       expect(page).to have_text("parent")
