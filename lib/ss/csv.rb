@@ -450,10 +450,16 @@ class SS::Csv
       UTF8_BOM.bytes == bom.bytes
     end
 
+    def utf16le_bom?(bom)
+      bytes = bom.bytes
+      bytes[0] == 0xff && bytes[1] == 0xfe
+    end
+
     def _detect_encoding(io)
       bom = io.read(3)
       return Encoding::ASCII_8BIT if bom.blank?
       return Encoding::UTF_8 if utf8_bom?(bom)
+      return Encoding::UTF_16LE if utf16le_bom?(bom)
 
       body = bom + io.read(997)
 
@@ -488,6 +494,10 @@ class SS::Csv
         pos = io.pos
         bom = io.read(3)
         io.pos = pos if !utf8_bom?(bom)
+      elsif encoding == Encoding::UTF_16LE
+        pos = io.pos
+        bom = io.read(2)
+        io.pos = pos if !utf16le_bom?(bom)
       end
 
       if io.is_a?(StringIO) && io.pos > 0
