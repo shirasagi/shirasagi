@@ -6,9 +6,7 @@ class Cms::Group
 
   set_permission_name "cms_groups", :edit
 
-  attr_accessor :cur_site, :cms_role_ids
-
-  permit_params :cms_role_ids
+  attr_accessor :cur_site
 
   default_scope -> { active }
   scope :site, ->(site) { self.in(name: site.groups.pluck(:name).map{ |name| /^#{::Regexp.escape(name)}(\/|$)/ }) }
