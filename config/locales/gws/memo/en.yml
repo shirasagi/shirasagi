@@ -433,3 +433,4 @@ en:
     models:
       gws/memo/message_export_job: GWS Message/Export
       gws/memo/message_backup_job: GWS Message/Backup
+      gws/memo/message_import_job: GWS Message/Import
