@@ -1,6 +1,8 @@
 <dl class="see">
   <dt><%= t("ss.group_users") %></dt>
-  <dd><%= @item.users.map(&:name).join(", ") %></dd>
+  <dd>
+    <%= @item.users.map { tag.span(_1.long_name, data: { user_id: _1.id }) }.join(", ").html_safe %>
+  </dd>
 
   <dt><%= t("ss.role") %></dt>
   <dd>
