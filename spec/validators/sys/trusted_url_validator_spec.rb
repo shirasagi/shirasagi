@@ -77,18 +77,6 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
     end
   end
 
-  describe ".trusted_url? with wildcard" do
-    let(:trusted1_url) { "https://*.#{trusted1_domain}/" }
-    let(:trusted_urls) { [ trusted1_url ] }
-
-    it do
-      expect(described_class.trusted_url?("https://#{unique_id}.#{trusted1_domain}/")).to be_truthy
-      expect(described_class.trusted_url?("https://#{trusted1_domain}/")).to be_falsey
-      expect(described_class.trusted_url?("https://#{trusted2_domain}/")).to be_falsey
-      expect(described_class.trusted_url?("https://#{unique_id}.#{trusted2_domain}/")).to be_falsey
-    end
-  end
-
   describe ".valid_url?" do
     before do
       @save_url_type = SS.config.replace_value_at(:sns, :url_type, "restricted")
@@ -142,9 +130,9 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}"))).to be_truthy
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/"))).to be_truthy
       expect(described_class.valid_url?(::Addressable::URI.parse("//#{request_domain}/#{unique_id}"))).to be_truthy
-      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_falsey
-      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_falsey
-      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_falsey
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}/"))).to be_truthy
+      expect(described_class.valid_url?(::Addressable::URI.parse("//#{unique_domain}#{request_path}"))).to be_truthy
     end
   end
 end

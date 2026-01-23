@@ -38,6 +38,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
     end
 
     def valid_url?(url, known_trusted_urls = nil)
+      return true if url_type == 'any'
       return true if myself_url?(url)
       return true if trusted_url?(url, known_trusted_urls)
 
@@ -102,6 +103,7 @@ class Sys::TrustedUrlValidator < ActiveModel::EachValidator
   end
 
   def validate_each(record, attribute, value)
+    return if self.class.url_type == 'any'
     return if value.blank?
 
     known_trusted_urls = []
