@@ -54,10 +54,10 @@ Rails.application.routes.draw do
     get :contains_urls, on: :member
   end
 
-  concern :role do
-    get "role/edit" => "groups#role_edit", on: :member
-    put "role" => "groups#role_update", on: :member
-  end
+  # concern :role do
+  #   get "role/edit" => "groups#role_edit", on: :member
+  #   put "role" => "groups#role_update", on: :member
+  # end
 
   concern :lock do
     get :lock, on: :member
@@ -121,9 +121,10 @@ Rails.application.routes.draw do
       post :unlock_all, on: :collection
       post :reset_mfa_otp, on: :member
     end
-    resources :groups, concerns: [:deletion, :role, :import] do
+    resources :groups, concerns: [:deletion, :import] do
       match :download_all, on: :collection, via: %i[get post]
       resources :pages, path: ":contact_id/pages", only: %i[index], controller: "group_pages"
+      resource :role, only: %i[edit update], controller: "role_edits"
     end
     resources :members, concerns: [:deletion, :download, :import] do
       get :verify, on: :member
