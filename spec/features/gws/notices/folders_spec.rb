@@ -376,4 +376,29 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       expect(Gws::Notice::Folder.all.count).to eq 0
     end
   end
+
+  describe "#download_all" do
+    let!(:folder1) { create(:gws_notice_folder, cur_site: site) }
+    let!(:folder2) { create(:gws_notice_folder, cur_site: site, name: "#{folder1.name}/#{unique_id}") }
+
+    it do
+      visit gws_notice_folders_path(site: site)
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.download")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.download")
+      end
+      wait_for_download
+
+      I18n.with_locale(I18n.default_locale) do
+        SS::Csv.open(downloads.first) do |csv|
+          csv_table = csv.read
+          expect(csv_table.length).to eq 2
+          expect(csv_table[0][Gws::Notice::Folder.t(:name)]).to be_present
+          expect(csv_table[1][Gws::Notice::Folder.t(:name)]).to be_present
+        end
+      end
+    end
+  end
 end
