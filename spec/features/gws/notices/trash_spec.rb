@@ -6,7 +6,7 @@ describe "gws_notices", type: :feature, dbscope: :example, js: true do
   let(:folder) { create(:gws_notice_folder) }
   let!(:item) do
     create(
-      :gws_notice_post, folder: folder, comment_state: "enabled",
+      :gws_notice_post, folder: folder, severity: "high", comment_state: "enabled",
       start_on: now - 1.day, end_on: now + 1.day, deleted: now)
   end
 
