@@ -2,7 +2,7 @@
   <div class="title marked">
     <% if item.severity.present? %>
       <%= md_icons.outlined "error_outline", tag: :i, size: 16, title: item.label(:severity), class: "severity-#{item.severity}", aria: { hidden: nil } %>
-  <% end %>
+    <% end %>
     <%= link_to item.name, { action: :show, id: item }, { class: "name" } %>
   </div>
 <% end %>
