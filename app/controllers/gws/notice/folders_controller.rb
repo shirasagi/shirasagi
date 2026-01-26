@@ -53,6 +53,23 @@ class Gws::Notice::FoldersController < ApplicationController
       page(params[:page]).per(50)
   end
 
+  def download_all
+    raise "403" unless @model.allowed?(:read, @cur_user, site: @cur_site)
+
+    return if request.get? || request.head?
+
+    @item = SS::DownloadParam.new
+    @item.attributes = params.require(:item).permit(:encoding)
+    if @item.invalid?
+      render
+      return
+    end
+
+    criteria = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
+    exporter = Gws::Notice::FolderExporter.new(site: @cur_site, criteria: criteria)
+    send_enum exporter.enum_csv(encoding: @item.encoding), filename: "gws_notice_folders_#{Time.zone.now.to_i}.csv"
+  end
+
   def move
     set_item
     raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site)

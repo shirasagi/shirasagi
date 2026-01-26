@@ -39,6 +39,7 @@ Rails.application.routes.draw do
       match :undo_delete, on: :member, via: [:get, :post]
     end
     resources :folders, concerns: [:deletion] do
+      match :download_all, on: :collection, via: %i[get post]
       match :move, on: :member, via: [:get, :post]
       post :reclaim, on: :member
     end
