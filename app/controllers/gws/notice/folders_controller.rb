@@ -66,7 +66,7 @@ class Gws::Notice::FoldersController < ApplicationController
     end
 
     criteria = @model.site(@cur_site).allow(:read, @cur_user, site: @cur_site)
-    exporter = Gws::Notice::FolderExporter.new(site: @cur_site, criteria: criteria)
+    exporter = Gws::Notice::FolderExporter.new(site: @cur_site, user: @cur_user, criteria: criteria, truncate: true)
     send_enum exporter.enum_csv(encoding: @item.encoding), filename: "gws_notice_folders_#{Time.zone.now.to_i}.csv"
   end
 
