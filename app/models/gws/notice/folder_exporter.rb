@@ -38,7 +38,7 @@ class Gws::Notice::FolderExporter
     if Gws::Notice::Folder.member_include_custom_groups?
       drawer.column :member_custom_group_ids do
         drawer.body do |item|
-          criteria = readable_custom_groups(item.member_custom_groups)
+          criteria = readable_custom_groups(item.member_custom_group_ids)
           names = criteria.pluck(:name)
           if truncate
             names = SS::Csv.truncate_overflows(names, "ss.overflow_custom_group")
@@ -49,7 +49,7 @@ class Gws::Notice::FolderExporter
     end
     drawer.column :member_group_ids do
       drawer.body do |item|
-        criteria = readable_groups(item.member_groups)
+        criteria = readable_groups(item.member_group_ids)
         names = criteria.pluck(:name)
         if truncate
           names = SS::Csv.truncate_overflows(names, "ss.overflow_group")
@@ -59,7 +59,7 @@ class Gws::Notice::FolderExporter
     end
     drawer.column :member_ids do
       drawer.body do |item|
-        criteria = readable_users(item.members)
+        criteria = readable_users(item.member_ids)
         # uid と email　のうち、最初の nil でないものを抽出
         user_ids = criteria.pluck(:uid, :email).map { |array| array.compact.first }
         if truncate
@@ -75,7 +75,7 @@ class Gws::Notice::FolderExporter
     if Gws::Notice::Folder.readable_setting_included_custom_groups?
       drawer.column :readable_custom_group_ids do
         drawer.body do |item|
-          criteria = readable_custom_groups(item.readable_custom_groups)
+          criteria = readable_custom_groups(item.readable_custom_group_ids)
           names = criteria.pluck(:name)
           if truncate
             names = SS::Csv.truncate_overflows(names, "ss.overflow_custom_group")
@@ -86,7 +86,7 @@ class Gws::Notice::FolderExporter
     end
     drawer.column :readable_group_ids do
       drawer.body do |item|
-        criteria = readable_groups(item.readable_groups)
+        criteria = readable_groups(item.readable_group_ids)
         names = criteria.pluck(:name)
         if truncate
           names = SS::Csv.truncate_overflows(names, "ss.overflow_group")
@@ -96,7 +96,7 @@ class Gws::Notice::FolderExporter
     end
     drawer.column :readable_member_ids do
       drawer.body do |item|
-        criteria = readable_users(item.readable_members)
+        criteria = readable_users(item.readable_member_ids)
 
         # uid と email　のうち、最初の nil でないものを抽出
         user_ids = criteria.pluck(:uid, :email).map { |array| array.compact.first }
@@ -112,7 +112,7 @@ class Gws::Notice::FolderExporter
     if Gws::Notice::Folder.permission_included_custom_groups?
       drawer.column :custom_group_ids do
         drawer.body do |item|
-          criteria = readable_custom_groups(item.custom_groups)
+          criteria = readable_custom_groups(item.custom_group_ids)
           names = criteria.pluck(:name)
           if truncate
             names = SS::Csv.truncate_overflows(names, "ss.overflow_custom_group")
@@ -123,7 +123,7 @@ class Gws::Notice::FolderExporter
     end
     drawer.column :group_ids do
       drawer.body do |item|
-        criteria = readable_groups(item.groups)
+        criteria = readable_groups(item.group_ids)
         names = criteria.pluck(:name)
         if truncate
           names = SS::Csv.truncate_overflows(names, "ss.overflow_group")
@@ -133,7 +133,7 @@ class Gws::Notice::FolderExporter
     end
     drawer.column :user_ids do
       drawer.body do |item|
-        criteria = readable_users(item.users)
+        criteria = readable_users(item.user_ids)
         # uid と email　のうち、最初の nil でないものを抽出
         user_ids = criteria.pluck(:uid, :email).map { |array| array.compact.first }
         if truncate
@@ -144,22 +144,54 @@ class Gws::Notice::FolderExporter
     end
   end
 
-  def readable_custom_groups(base_criteria)
-    criteria = base_criteria.site(site)
-    criteria = criteria.readable(user, site: site)
-    criteria
+  def all_custom_groups
+    @all_custom_groups ||= Gws::CustomGroup.site(site).readable(user, site: site).only(:id, :name, :order).to_a
   end
 
-  def readable_groups(base_criteria)
-    criteria = base_criteria.site(site)
-    # criteria = criteria.allow(:read, user, site: site)
-    criteria
+  def id_to_custom_group_map
+    @id_to_custom_group_map ||= all_custom_groups.index_by(&:id)
   end
 
-  def readable_users(base_criteria)
-    criteria = base_criteria.site(site)
-    criteria = criteria.active
-    criteria = criteria.readable_users(user, site: site)
-    criteria
+  def readable_custom_groups(custom_group_ids)
+    custom_groups = custom_group_ids.map { id_to_custom_group_map[_1] }
+    custom_groups.compact!
+    custom_groups.sort_by! { [ _1.order || 0, _1.name ] }
+    custom_groups
+  end
+
+  def all_groups
+    @all_groups ||= Gws::Group.site(site).only(:id, :name, :order).to_a
+  end
+
+  def id_to_group_map
+    @id_to_group_map ||= all_groups.index_by(&:id)
+  end
+
+  def readable_groups(group_ids)
+    groups = group_ids.map { id_to_group_map[_1] }
+    groups.compact!
+    groups.sort_by! { [ _1.order || 0, _1.name ] }
+    groups
+  end
+
+  def all_users
+    @all_users ||= begin
+      criteria = Gws::User.all
+      criteria = criteria.site(site)
+      criteria = criteria.active
+      criteria = criteria.readable_users(user, site: site)
+      criteria.only(:id, :uid, :email, :organization_uid, :title_orders).to_a
+    end
+  end
+
+  def id_to_user_map
+    @id_to_user_map ||= all_users.index_by(&:id)
+  end
+
+  def readable_users(user_ids)
+    users = user_ids.map { id_to_user_map[_1] }
+    users.compact!
+    users.sort_by! { [ _1.title_orders.try(:[], site.id.to_s) || 0, _1.organization_uid, _1.uid, _1.id ] }
+    users
   end
 end
