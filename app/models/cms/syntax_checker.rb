@@ -285,7 +285,10 @@ module Cms::SyntaxChecker
 
   def correct_page(cur_site:, cur_user:, page:, params:, **_unused_options)
     contents = build_contents(page, cur_site: cur_site)
+    return if contents.blank?
+
     target_content = contents.find { _1.id == params.id }
+    return unless target_content
 
     corrector_class = Cms::SyntaxChecker.html_checkers.find { |checker| checker.name == params.corrector }
     if target_content.column_value.present?
@@ -342,7 +345,11 @@ module Cms::SyntaxChecker
           resolve: "html", content: content.html, type: "string")
       ]
     else
-      raise "unknown content"
+      # 広告ページなど、一部のページでアクセシビリティのチェックができない（不要な）ものがある
+      # それらのページでは EMPTY_ARRAY を返す
+      # Rails.logger.info { "unable to check syntax" }
+      # nil
+      SS::EMPTY_ARRAY
     end
   end
 
