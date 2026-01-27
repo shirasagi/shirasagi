@@ -12,7 +12,24 @@ class Gws::Notice::FolderExporter
       draw_group_permission(drawer)
     end
 
-    drawer.enum(criteria, options)
+    folders = criteria.to_a
+    id_to_folder_map = folders.index_by(&:id)
+
+    builder = Gws::Notice::FoldersTreeComponent::Base::TreeBuilder.new(items: folders, item_url_p: ->(_) {})
+    root_nodes = builder.call
+
+    enum = Enumerator.new do |y|
+      traverse_p = ->(nodes) do
+        nodes.each do |node|
+          folder = id_to_folder_map[node.id]
+          y << folder
+          traverse_p.call(node.children)
+        end
+      end
+      traverse_p.call(root_nodes)
+    end
+
+    drawer.enum(enum, options.merge(model: Gws::Notice::Folder))
   end
 
   private
