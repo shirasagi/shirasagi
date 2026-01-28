@@ -1,11 +1,7 @@
 <nav class="mod-navi current-navi">
   <%= gws_menu_icon(:notice, 'modules.gws/notice', gws_notice_main_path) %>
 
-  <%
-    options = { folder_id: "-", category_id: "-" }
-    options[:folder_id] = params[:folder_id] if params[:folder_id].present?
-    options[:category_id] = params[:category_id] if params[:category_id].present?
-  %>
+  <% options = { folder_id: "-", category_id: "-" } %>
   <h3><%= link_to t('ss.navi.readable'), gws_notice_readables_path(options), class: 'readable' %></h3>
   <h3><%= link_to t('ss.navi.calendar'), gws_notice_calendars_path(options), class: 'readable' %></h3>
 
