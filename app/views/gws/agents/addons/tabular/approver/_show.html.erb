@@ -6,6 +6,6 @@
   return unless policy.show?
 %>
 
-<turbo-frame id="workflow-approver-frame" src="<%= gws_tabular_frames_approver_path(id: @item, ref: request.path) %>">
+<turbo-frame id="workflow-approver-frame" src="<%= gws_tabular_frames_approver_path(id: @item, ref: SS.request_path(request)) %>">
   <%= loading %>
 </turbo-frame>
