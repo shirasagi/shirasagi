@@ -722,9 +722,11 @@ _:future,
       text-align: center;
     }
     &.opened::before {
+      // Material Icons Outlined: arrow_back
       content: "\e5c4";
     }
     &.closed::before {
+      // Material Icons Outlined: arrow_forward
       content: "\e5c8";
     }
   }
@@ -1526,19 +1528,24 @@ _:future,
     font-size: 20px;
   }
   .icon-material-display::before {
-    content: "display_settings" !important;
+    // Material Icons Outlined: settings_display (was display_settings)
+    content: "\e8bd" !important;
   }
   .icon-material-import-node::before {
-    content: "drive_folder_upload" !important;
+    // Material Icons Outlined: drive_folder_upload
+    content: "\e9a3" !important;
   }
   .icon-material-more-horiz::before {
-    content: "more_horiz" !important;
+    // Material Icons Outlined: more_horiz
+    content: "\e5d3" !important;
   }
   .icon-material-settings::before {
-    content: "settings" !important;
+    // Material Icons Outlined: settings
+    content: "\e8b8" !important;
   }
   .icon-material-shortcut::before {
-    content: "shortcut" !important;
+    // Material Icons Outlined: shortcut
+    content: "\f060" !important;
   }
 }
 
@@ -2063,7 +2070,8 @@ footer.send {
     }
 
     &::before {
-      content: "pageview";
+      // Material Icons Outlined: pageview
+      content: "\e8a0";
       position: absolute;
       top: 5px;
       left: 10px;
