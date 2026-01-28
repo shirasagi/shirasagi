@@ -8,5 +8,6 @@ spec/fixtures/ldap/*.csv
 spec/fixtures/opendata/*.csv binary
 spec/fixtures/webmail/*.csv binary
 spec/fixtures/webmail/*.eml binary
+spec/fixtures/ss/csv/*.csv binary
 spec/fixtures/sys/auth/*.der binary
 spec/fixtures/sys/groups/*.csv binary

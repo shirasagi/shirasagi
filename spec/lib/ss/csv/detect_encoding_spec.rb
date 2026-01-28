@@ -112,4 +112,12 @@ describe SS::Csv do
       expect(described_class.detect_encoding(path)).to eq Encoding::SJIS
     end
   end
+
+  context "UTF-16LE (with BOM) csv is given" do
+    let(:path) { "#{Rails.root}/spec/fixtures/ss/csv/article_utf16le.csv" }
+
+    it do
+      expect(described_class.detect_encoding(path)).to eq Encoding::UTF_16LE
+    end
+  end
 end
