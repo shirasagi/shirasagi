@@ -2,9 +2,6 @@ class Gws::Schedule::PlanCsv::Exporter
   include ActiveModel::Model
 
   MAX_LENGTH = 1_024
-  MAX_COUNT = 10
-  OVERFLOW_THRESHOLD = 10
-  DEFAULT_TRUNCATE_MESSAGE = "...".freeze
 
   attr_accessor :site, :user, :model, :template, :criteria, :truncate
 
@@ -122,29 +119,13 @@ class Gws::Schedule::PlanCsv::Exporter
   def draw_schedule_reports(drawer)
   end
 
-  # 長すぎるとエクセルのセルからはみ出る。セルからはみ出てしまうと、見づらくなるし操作しずらくなる。
-  # そこで、所定の長さを超えた場合、切り詰める。
-  def truncate_overflows(items, message_template = nil)
-    overflow_length = items.length - MAX_COUNT
-    return items if overflow_length <= OVERFLOW_THRESHOLD
-
-    if message_template
-      truncate_message = I18n.t(message_template, count: overflow_length, default: DEFAULT_TRUNCATE_MESSAGE)
-    end
-    truncate_message ||= DEFAULT_TRUNCATE_MESSAGE
-
-    items = items[0, 10]
-    items.append(truncate_message)
-    items
-  end
-
   def draw_member(drawer)
     drawer.column :member_custom_group_ids do
       drawer.body do |item|
         criteria = readable_custom_groups(item.member_custom_groups)
         names = criteria.pluck(:name)
         if truncate
-          names = truncate_overflows(names, "ss.overflow_custom_group")
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_custom_group")
         end
         names.join("\n")
       end
@@ -154,7 +135,7 @@ class Gws::Schedule::PlanCsv::Exporter
         criteria = readable_groups(item.member_groups)
         names = criteria.pluck(:name)
         if truncate
-          names = truncate_overflows(names, "ss.overflow_group")
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_group")
         end
         names.join("\n")
       end
@@ -165,7 +146,7 @@ class Gws::Schedule::PlanCsv::Exporter
         # uid と email　のうち、最初の nil でないものを抽出
         user_ids = criteria.pluck(:uid, :email).map { |array| array.compact.first }
         if truncate
-          user_ids = truncate_overflows(user_ids, "ss.overflow_user")
+          user_ids = SS::Csv.truncate_overflows(user_ids, "ss.overflow_user")
         end
         user_ids.join("\n")
       end
@@ -182,7 +163,7 @@ class Gws::Schedule::PlanCsv::Exporter
         criteria = readable_facilities(item.facilities)
         names = criteria.pluck(:name)
         if truncate
-          names = truncate_overflows(names, "gws/facility.overflow_facility")
+          names = SS::Csv.truncate_overflows(names, "gws/facility.overflow_facility")
         end
         names.join("\n")
       end
@@ -230,7 +211,7 @@ class Gws::Schedule::PlanCsv::Exporter
         # uid と email　のうち、最初の nil でないものを抽出
         user_ids = criteria.pluck(:uid, :email).map { |array| array.compact.first }
         if truncate
-          user_ids = truncate_overflows(user_ids, "ss.overflow_user")
+          user_ids = SS::Csv.truncate_overflows(user_ids, "ss.overflow_user")
         end
         user_ids.join("\n")
       end
@@ -244,7 +225,7 @@ class Gws::Schedule::PlanCsv::Exporter
         criteria = readable_custom_groups(item.readable_custom_groups)
         names = criteria.pluck(:name)
         if truncate
-          names = truncate_overflows(names, "ss.overflow_custom_group")
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_custom_group")
         end
         names.join("\n")
       end
@@ -254,7 +235,7 @@ class Gws::Schedule::PlanCsv::Exporter
         criteria = readable_groups(item.readable_groups)
         names = criteria.pluck(:name)
         if truncate
-          names = truncate_overflows(names, "ss.overflow_group")
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_group")
         end
         names.join("\n")
       end
@@ -266,7 +247,7 @@ class Gws::Schedule::PlanCsv::Exporter
         # uid と email　のうち、最初の nil でないものを抽出
         user_ids = criteria.pluck(:uid, :email).map { |array| array.compact.first }
         if truncate
-          user_ids = truncate_overflows(user_ids, "ss.overflow_user")
+          user_ids = SS::Csv.truncate_overflows(user_ids, "ss.overflow_user")
         end
         user_ids.join("\n")
       end
@@ -279,7 +260,7 @@ class Gws::Schedule::PlanCsv::Exporter
         criteria = readable_custom_groups(item.custom_groups)
         names = criteria.pluck(:name)
         if truncate
-          names = truncate_overflows(names, "ss.overflow_custom_group")
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_custom_group")
         end
         names.join("\n")
       end
@@ -289,7 +270,7 @@ class Gws::Schedule::PlanCsv::Exporter
         criteria = readable_groups(item.groups)
         names = criteria.pluck(:name)
         if truncate
-          names = truncate_overflows(names, "ss.overflow_group")
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_group")
         end
         names.join("\n")
       end
@@ -300,7 +281,7 @@ class Gws::Schedule::PlanCsv::Exporter
         # uid と email　のうち、最初の nil でないものを抽出
         user_ids = criteria.pluck(:uid, :email).map { |array| array.compact.first }
         if truncate
-          user_ids = truncate_overflows(user_ids, "ss.overflow_user")
+          user_ids = SS::Csv.truncate_overflows(user_ids, "ss.overflow_user")
         end
         user_ids.join("\n")
       end
