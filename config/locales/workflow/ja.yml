@@ -97,6 +97,10 @@ ja:
       would_you_edit_branch: 差し替えページを編集しますか？
       unable_to_delete_master_page: 差し替えページが作成されているため処理を中断します。
     notice:
+      requested: 申請しました。
+      approved: 承認しました。
+      pulled_up: 引き上げ承認しました。
+      remanded: 差し戻しました。
       request_cancelled: 申請を取り消しました。
       approver_file_droppable: ファイル追加ボタンをクリックするか、ここにファイルをドロップしてください。
       created_branch_page: 差し替えページを作成しました。
