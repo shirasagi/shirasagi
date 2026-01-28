@@ -1,10 +1,13 @@
-<% return unless @cur_site.notice_back_number_menu_visible? %>
+<%
+  return unless @cur_site.notice_back_number_menu_visible?
+  request_path = SS.request_path(request)
+%>
 
 <div class="gws-tabs gws-notice-tabs">
-  <%= link_to gws_notice_readables_path, class: [ "readables", request.path.start_with?(gws_notice_readables_path) ? "current" : nil ] do %>
+  <%= link_to gws_notice_readables_path, class: [ "readables", request_path.start_with?(gws_notice_readables_path) ? "current" : nil ] do %>
     <span class="tab-name"><%= t('ss.navi.readable') %></span>
   <% end %>
-  <%= link_to gws_notice_back_numbers_path, class: [ "back_numbers", request.path.start_with?(gws_notice_back_numbers_path) ? "current" : nil ] do %>
+  <%= link_to gws_notice_back_numbers_path, class: [ "back_numbers", request_path.start_with?(gws_notice_back_numbers_path) ? "current" : nil ] do %>
     <span class="tab-name"><%= @cur_site.notice_back_number_menu_label.presence || t('gws/notice.back_number') %></span>
   <% end %>
 </div>

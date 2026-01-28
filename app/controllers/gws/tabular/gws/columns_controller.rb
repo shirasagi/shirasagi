@@ -65,12 +65,12 @@ class Gws::Tabular::Gws::ColumnsController < ApplicationController
 
   def show_component(item)
     Gws::Tabular::Gws::Columns::ShowComponent.new(
-      cur_site: @cur_site, cur_user: @cur_user, cur_form: cur_form, item: item, ref: request.path,
+      cur_site: @cur_site, cur_user: @cur_user, cur_form: cur_form, item: item, ref: SS.request_path(request),
       column_type_options: column_type_options)
   end
 
   def edit_component(item)
     Gws::Tabular::Gws::Columns::EditComponent.new(
-      cur_site: @cur_site, cur_user: @cur_user, cur_form: cur_form, item: item, ref: request.path, new_item: true)
+      cur_site: @cur_site, cur_user: @cur_user, cur_form: cur_form, item: item, ref: SS.request_path(request), new_item: true)
   end
 end

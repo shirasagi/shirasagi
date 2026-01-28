@@ -9,6 +9,6 @@
   addon[:location] = { before: "addon-basic" }
 %>
 
-<turbo-frame id="workflow-inspection-frame" src="<%= edit_gws_tabular_frames_inspection_path(ref: request.path) %>">
+<turbo-frame id="workflow-inspection-frame" src="<%= edit_gws_tabular_frames_inspection_path(ref: SS.request_path(request)) %>">
   <%= loading %>
 </turbo-frame>
