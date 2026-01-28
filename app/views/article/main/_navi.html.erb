@@ -1,4 +1,4 @@
-<% return node_navi unless params[:controller].starts_with?('article/') %>
+<% return node_navi unless params[:controller].start_with?('article/') %>
 
 <%= node_navi :article do %>
 
