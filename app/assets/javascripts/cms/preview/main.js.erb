@@ -246,6 +246,8 @@ SS_Preview = (function () {
   SS_Preview.prototype.initialize = function(opts) {
     this.$el = $(this.el);
     this.$datePicker = this.$el.find(".ss-preview-date");
+
+    SS_DateTimePicker.renderOnce();
     new SS_DateTimePicker(this.$datePicker, "datetime");
 
     var self = this;
