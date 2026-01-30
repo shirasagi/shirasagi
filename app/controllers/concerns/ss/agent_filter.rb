@@ -10,7 +10,7 @@ module SS::AgentFilter
     allowed_variables = %i[
       @csrf_token
       @cur_path @cur_main_path @filters @preview @translate_target @translate_source
-      @task @cur_site @cur_node @cur_page @cur_part
+      @task @cur_site @cur_node @cur_page @cur_part @cur_date
     ]
     Set.new(allowed_variables)
   end.freeze
