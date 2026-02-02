@@ -10,11 +10,5 @@ module Cms::Addon
     def full_url
       redirect_link.presence || super
     end
-
-    module ClassMethods
-      def redirect_link_enabled?
-        SS.config.cms.dig("disable_redirect_link") == false
-      end
-    end
   end
 end
