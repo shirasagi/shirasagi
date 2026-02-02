@@ -18,7 +18,7 @@ $("#ajax-box .pagination a").on("click", cboxLoad);
 $("#ajax-box .submitters a").on("click", cboxLoad);
 <% end %>
 <%
-  @s = OpenStruct.new params[:s]
+  @s ||= OpenStruct.new params[:s]
 %>
 <div class="search-ui-form">
   <%= form_for :s, url: "#{@cur_node.url}search.html", html: { method: "GET", class: :search } do |f| %>

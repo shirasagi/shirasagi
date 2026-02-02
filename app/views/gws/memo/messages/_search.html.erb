@@ -1,5 +1,5 @@
 <%
-  @s = OpenStruct.new params[:s]
+  @s ||= OpenStruct.new params[:s]
 %>
 
 <% if label = searched_label(@s.to_h) %>

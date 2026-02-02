@@ -1,5 +1,5 @@
 <%
-  @s = OpenStruct.new params[:s]
+  @s ||= OpenStruct.new params[:s]
 
   main_group = @cur_user.gws_main_group(@cur_site)
   user_options = Gws::User.in(group_ids: main_group.id).and_enabled.map { |user| [user.long_name, user.id] }
