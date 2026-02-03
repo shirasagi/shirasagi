@@ -3,8 +3,6 @@ class History::Trash
   include SS::Reference::Site
   include Cms::SitePermission
 
-  permit_params :basename, :parent, :children, :state
-
   after_destroy :remove_all
 
   def parent
@@ -50,7 +48,8 @@ class History::Trash
       end
     end
     data[:master_id] = nil if model.include?(Workflow::Addon::Branch)
-    data = restore_data(data, opts)
+    # 復元時の名前変更が依存データに波及しないように slice で厳選する
+    data = restore_data(data, opts.slice(:create_by_trash, :file_restore, :cur_user, :cur_group))
     if opts[:file_restore]
       item = Cms::File.new(site_id: data[:site_id])
     else
@@ -65,6 +64,8 @@ class History::Trash
       item[k] = v
     end
     item.apply_status('closed', workflow_reset: true) if model.include?(Workflow::Addon::Approver)
+    item.name = opts[:name] if opts[:name].present?
+    item.index_name = opts[:index_name] if opts[:index_name].present?
     if opts[:basename].present? && item.respond_to?(:filename=) && item.respond_to?(:basename=)
       item.filename = nil
       item.basename = opts[:basename]
