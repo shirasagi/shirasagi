@@ -14,8 +14,8 @@ describe History::Trash::RestoreJob, dbscope: :example do
       item
     end
     let!(:page_in_trash) do
-      History::Trash.create!(
-        cur_site: site, version: SS.version, ref_coll: page0.class.collection_name.to_s,
+      create(
+        :history_trash, cur_site: site, version: SS.version, ref_coll: page0.class.collection_name.to_s,
         ref_class: page0.class.name, data: page0.attributes, action: "save", state: nil)
     end
 
