@@ -90,9 +90,7 @@ module Gws::Workflow::WizardFilter
     criteria = criteria.search(params[:s])
     criteria = criteria.order_by_title(@cur_site)
 
-    @items = criteria.select do |user|
-      @item.allowed?(:read, user, site: @cur_site) && @item.allowed?(:approve, user, site: @cur_site)
-    end
+    @items = Workflow.approvable_users(cur_site: @cur_site, item: @item, criteria: criteria)
     @items = Kaminari.paginate_array(@items).page(params[:page]).per(50)
 
     render template: 'reroute', layout: false

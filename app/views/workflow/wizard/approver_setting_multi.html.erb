@@ -61,7 +61,7 @@
     <dd>
       <%
         users = @route.approver_users_at(level)
-        users = users.select(&:present?).select { |user| @item.allowed?(:approve, user, site: @cur_site) && user.enabled? }
+        users = Workflow.approvable_users(cur_site: @cur_site, item: @item, criteria: users.select(&:present?))
         names = users.map(&:long_name)
         emails = users.map(&:email)
       %>
