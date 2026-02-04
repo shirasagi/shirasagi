@@ -29,7 +29,7 @@ SHIRASAGI is Contents Management System.
 ## Installation (Auto)
 
 - AlmaLinux8 の環境で実行してください。<br />
-- 一般ユーザーで実行する場合はユーザーで実行する場合は、sudo が利用できることを確認してください。<br />
+- 一般ユーザーで実行する場合は、sudo が利用できることを確認してください。<br />
 - パラメーターの"example.jp"には、ブラウザでアクセスする際のドメイン名または、IPアドレスを指定してください。<br />
 
 ```
