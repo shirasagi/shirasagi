@@ -6,6 +6,12 @@ describe "cms_agents_parts_calendar_nav", type: :feature, dbscope: :example, js:
   let(:node) { create :cms_node_archive, cur_site: site, layout_id: layout.id, filename: "node" }
   let(:part)   { create :cms_part_calendar_nav, filename: "node/part" }
 
+  before do
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+  end
+
   context "public" do
     let!(:item) { create :article_page, filename: "node/item" }
     let(:cur_date) { Time.zone.now.to_date }

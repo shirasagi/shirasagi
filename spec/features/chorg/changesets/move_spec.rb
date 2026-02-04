@@ -246,7 +246,6 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
 
   context "unifies to main" do
     let(:new_name) { "name-#{unique_id}" }
-    let(:new_name2) { "name-#{unique_id}" }
     let(:new_order) { rand(1..10) }
     let(:new_ldap_dn) { "dc=#{new_name},dc=city,dc=example,dc=jp" }
     let(:new_contact_name1) { unique_id }
@@ -259,16 +258,6 @@ describe "chorg_changesets", type: :feature, dbscope: :example, js: true do
     let(:new_contact_address1) { unique_id }
     let(:new_contact_link_url1) { "/#{unique_id}/" }
     let(:new_contact_link_name1) { unique_id }
-    let(:new_contact_name2) { unique_id }
-    let(:new_contact_group_name2) { unique_id }
-    let(:new_contact_charge2) { unique_id }
-    let(:new_contact_tel2) { unique_tel }
-    let(:new_contact_fax2) { unique_tel }
-    let(:new_contact_email2) { unique_email }
-    let(:new_contact_postal_code2) { unique_id }
-    let(:new_contact_address2) { unique_id }
-    let(:new_contact_link_url2) { "/#{unique_id}/" }
-    let(:new_contact_link_name2) { unique_id }
 
     it do
       #

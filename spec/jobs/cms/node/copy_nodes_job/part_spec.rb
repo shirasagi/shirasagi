@@ -13,14 +13,11 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     end
     let!(:node) { create :cms_node, cur_site: site }
     let!(:part) do
-      create(
-        :article_part_page, cur_site: site, cur_node: node, basename: "part",
-        lower_html: "<div class=\"feed\"><a class=\"rss\" href=\"/#{node.filename}/rss.xml\">RSS</a>"
-      )
+      lower_html = "<div class=\"feed\"><a class=\"rss\" href=\"/#{node.filename}/rss.xml\">RSS</a>"
+      create :article_part_page, cur_site: site, cur_node: node, basename: "part", lower_html: lower_html
     end
 
     describe "copy part which is located under a node" do
-
       before do
         expect do
           job_class = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node.id)

@@ -1,6 +1,6 @@
 <%
 
-@s = OpenStruct.new params[:s]
+@s ||= OpenStruct.new params[:s]
 @s[:year]  ||= Time.zone.today.year
 @s[:month] ||= Time.zone.today.month
 

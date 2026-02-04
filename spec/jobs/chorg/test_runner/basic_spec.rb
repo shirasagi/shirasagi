@@ -40,12 +40,12 @@ describe Chorg::TestRunner, dbscope: :example, fragile: true do
   end
 
   context "with move" do
-    let(:group) { create(:revision_new_group) }
-    let(:revision) { create(:revision, site_id: site.id) }
-    let(:changeset) { create(:move_changeset, revision_id: revision.id, source: group) }
+    let!(:group) { create(:revision_new_group) }
+    let!(:revision) { create(:revision, site_id: site.id) }
+    let!(:changeset) { create(:move_changeset, revision_id: revision.id, source: group) }
 
     context "with Article::Page" do
-      let(:page) { create(:revision_page, cur_site: site, group: group) }
+      let!(:page) { create(:revision_page, cur_site: site, group: group) }
 
       it do
         # ensure create models
@@ -93,24 +93,17 @@ describe Chorg::TestRunner, dbscope: :example, fragile: true do
   end
 
   context "with unify" do
-    let(:group1) { create(:revision_new_group, order: 10) }
-    let(:group2) { create(:revision_new_group, order: 20) }
-    let(:user1) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
-    let(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
-    let(:revision) { create(:revision, site_id: site.id) }
-    let(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
+    let!(:group1) { create(:revision_new_group, order: 10) }
+    let!(:group2) { create(:revision_new_group, order: 20) }
+    let!(:user1) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group1.id]) }
+    let!(:user2) { create(:cms_user, name: unique_id.to_s, email: "#{unique_id}@example.jp", group_ids: [group2.id]) }
+    let!(:revision) { create(:revision, site_id: site.id) }
+    let!(:changeset) { create(:unify_changeset, revision_id: revision.id, sources: [group1, group2]) }
 
     context "with Article::Page" do
-      let(:page) { create(:revision_page, cur_site: site, group: group1) }
+      let!(:page) { create(:revision_page, cur_site: site, group: group1) }
 
       it do
-        # ensure create models
-        expect(user1).not_to be_nil
-        expect(user2).not_to be_nil
-        expect(revision).not_to be_nil
-        expect(changeset).not_to be_nil
-        expect(page).not_to be_nil
-
         # check for not changed
         job = described_class.bind(site_id: site, task_id: task, user_id: user1)
         expect { ss_perform_now(job, revision.name, job_opts) }.to \
@@ -136,6 +129,8 @@ describe Chorg::TestRunner, dbscope: :example, fragile: true do
         expect(page.contact_address).to eq group1.contact_address
         expect(page.contact_tel).to eq group1.contact_tel
         expect(page.contact_fax).to eq group1.contact_fax
+        expect(page.contact_postal_code).to eq group1.contact_postal_code
+        expect(page.contact_address).to eq group1.contact_address
         expect(page.contact_link_url).to eq group1.contact_link_url
         expect(page.contact_link_name).to eq group1.contact_link_name
 
@@ -166,13 +161,11 @@ describe Chorg::TestRunner, dbscope: :example, fragile: true do
   end
 
   context "with delete" do
-    let(:group) { create(:revision_new_group) }
-    let(:revision) { create(:revision, site_id: site.id) }
-    let(:changeset) { create(:delete_changeset, revision_id: revision.id, source: group) }
+    let!(:group) { create(:revision_new_group) }
+    let!(:revision) { create(:revision, site_id: site.id) }
+    let!(:changeset) { create(:delete_changeset, revision_id: revision.id, source: group) }
 
     it do
-      # ensure create models
-      expect(changeset).not_to be_nil
       # change group.
       job = described_class.bind(site_id: site, task_id: task)
       expect { ss_perform_now(job, revision.name, job_opts) }.to \

@@ -10,16 +10,12 @@ class Voice::ErrorFilesController < ApplicationController
   end
 
   def set_search
-    s = params[:s]
-    if s.present?
-      @s = s
-      if s[:keyword].present?
-        @keyword = s[:keyword]
-      end
+    @s ||= begin
+      s = OpenStruct.new(params[:s])
+      @keyword = s.keyword
+      s[:has_error] = 1
+      s
     end
-
-    @s = {} if @s.nil?
-    @s[:has_error] = 1
   end
 
   public

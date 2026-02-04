@@ -26,6 +26,12 @@ describe "event_agents_nodes_page", type: :feature, dbscope: :example do
   end
   let(:item) { create :event_page, cur_node: node }
 
+  before do
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+  end
+
   context "when access node" do
     it "index" do
       visit node.full_url

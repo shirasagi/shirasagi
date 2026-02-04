@@ -7,12 +7,16 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
   let!(:article_node) { create_once :article_node_page }
   let!(:article_page) { create :article_page, cur_site: site, cur_node: article_node }
 
+  before do
+    Capybara.app_host = "http://#{site.domain}"
+
+    # 書き出しテストの後に本テストが実行されると失敗する場合があるので、念のため書き出し済みのファイルを削除
+    FileUtils.rm_rf site.path
+    FileUtils.mkdir_p site.path
+  end
+
   context "when sitemap_page_state is hide" do
     let!(:item) { create :sitemap_page, cur_node: node, basename: "item" }
-
-    before do
-      Capybara.app_host = "http://#{site.domain}"
-    end
 
     it "#index" do
       visit node.url
@@ -61,10 +65,6 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
 
   context "when sitemap_page_state is show" do
     let!(:item) { create :sitemap_page, cur_node: node, basename: "item", sitemap_page_state: 'show' }
-
-    before do
-      Capybara.app_host = "http://#{site.domain}"
-    end
 
     it "#index" do
       visit node.url

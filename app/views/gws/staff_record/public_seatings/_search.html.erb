@@ -1,6 +1,6 @@
 <%
 
-@s = OpenStruct.new params[:s]
+@s ||= OpenStruct.new params[:s]
 year_options = Gws::StaffRecord::Year.site(@cur_site).map { |c| [c.name, c.id] }
 
 %>
