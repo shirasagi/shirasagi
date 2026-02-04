@@ -59,6 +59,8 @@ describe "node_generate_nodes", type: :feature, dbscope: :example, js: true do
       visit index_path
 
       expect(current_path).to eq index_path
+      # segments support is unavailable under node
+      expect(page).to have_no_css(".cms-tabs")
 
       task = find_task
       expect(task.state).to eq "stop"

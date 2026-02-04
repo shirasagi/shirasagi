@@ -97,6 +97,10 @@ en:
       would_you_edit_branch: Do you want to edit the replacement page?
       unable_to_delete_master_page: The process will be cancelled because a replacement page has been created.
     notice:
+      requested: Your application has been requested.
+      approved: Approved.
+      pulled_up: Pulled-up approval.
+      remanded: Remanded.
       request_cancelled: Your application has been cancelled.
       approver_file_droppable: Click the “Add file” button or drop the file here.
       created_branch_page: You have created a replacement page.

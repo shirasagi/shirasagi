@@ -13,7 +13,7 @@ describe Jmaxml::Filter, dbscope: :example do
   let(:event_id) { REXML::XPath.first(xmldoc, '/Report/Head/EventID/text()').to_s.strip }
   let(:rss_node) { create(:rss_node_weather_xml) }
   let!(:rss_page1) { create(:rss_weather_xml_page, cur_node: rss_node, event_id: event_id, in_xml: xml1) }
-  let!(:article_node) { create(:article_node_page) }
+  let!(:article_node) { create(:article_node_page, group_ids: [ group1.id ]) }
   let!(:category_node) { create(:category_node_page, cur_node: article_node) }
   let(:context) { OpenStruct.new(site: site, node: rss_node) }
   let(:trigger) { create(:jmaxml_trigger_quake_intensity_flash) }

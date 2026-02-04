@@ -41,7 +41,7 @@ end
 
 areas = Opendata::Node::Area.site(@cur_site).sort(order: 1).pluck(:name, :id)
 categories = transform_category(@cur_categories)
-@s = OpenStruct.new
+@s ||= OpenStruct.new
 
 %>
 <%= form_for :s, url: @cur_node.url, html: { class: "opendata-search-apps-form", method: :get } do |f| %>

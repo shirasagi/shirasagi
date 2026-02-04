@@ -23,7 +23,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
   context "when importing weather sample xml" do
     let(:site) { cms_site }
-    let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed') }
+    let(:user) { cms_user }
+    let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed', group_ids: user.group_ids) }
     let(:model) { Rss::WeatherXmlPage }
     let(:xml0) { File.read(Rails.root.join(*%w(spec fixtures jmaxml weather-sample.xml))) }
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml afeedc52-107a-3d1d-9196-b108234d6e0f.xml))) }
@@ -74,7 +75,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
   context "when importing sample and sample2" do
     let(:site) { cms_site }
-    let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed') }
+    let(:user) { cms_user }
+    let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed', group_ids: user.group_ids) }
     let(:model) { Rss::WeatherXmlPage }
     let(:xml0_1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml weather-sample.xml))) }
     let(:xml0_2) { File.read(Rails.root.join(*%w(spec fixtures jmaxml weather-sample2.xml))) }
@@ -147,6 +149,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
   context "when importing earthquake sample xml and sending anpi mail" do
     let(:site) { cms_site }
+    let(:user) { cms_user }
     let(:node) do
       create(
         :rss_node_weather_xml,
@@ -155,7 +158,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         title_mail_text: "\#{target_time} ころ地震がありました",
         upper_mail_text: "\#{target_time} ころ地震がありました。\n\n各地の震度は下記の通りです。\n",
         lower_mail_text: "下記のアドレスにアクセスし、安否情報を入力してください。\n\#{anpi_post_url}\n",
-        loop_mail_text: "\#{area_name}：\#{intensity_label}\n")
+        loop_mail_text: "\#{area_name}：\#{intensity_label}\n",
+        group_ids: user.group_ids)
     end
     let(:node_ezine_member_page) do
       create(
@@ -164,9 +168,10 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         sender_name: 'test',
         sender_email: 'test@example.jp',
         signature_html: '<br>--------<br>test@example.jp<br>',
-        signature_text: "\n--------\ntest@example.jp\n")
+        signature_text: "\n--------\ntest@example.jp\n",
+        group_ids: user.group_ids)
     end
-    let(:node_my_anpi_post) { create(:member_node_my_anpi_post, cur_site: site) }
+    let(:node_my_anpi_post) { create(:member_node_my_anpi_post, cur_site: site, group_ids: user.group_ids) }
     let(:model) { Rss::WeatherXmlPage }
     let(:xml0) { File.read(Rails.root.join(*%w(spec fixtures jmaxml earthquake-sample-1.xml))) }
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 9b43a982-fecf-3866-95e7-c375226a7c87.xml))) }
@@ -251,7 +256,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
   context "when triggered weather alert and filters are executed" do
     let(:site) { cms_site }
-    let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed') }
+    let(:user) { cms_user }
+    let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed', group_ids: user.group_ids) }
     let(:model) { Rss::WeatherXmlPage }
     let(:xml0) { File.read(Rails.root.join(*%w(spec fixtures jmaxml weather-sample3.xml))) }
     let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 56f95f66-546f-44e9-a678-3787fb4db41a.xml))) }
@@ -260,8 +266,10 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
     let(:article_node_layout) { create_cms_layout }
     let(:article_page_layout) { create_cms_layout }
-    let(:article_node) { create(:article_node_page, layout: article_node_layout, page_layout: article_page_layout) }
-    let(:category_node) { create(:category_node_page) }
+    let(:article_node) do
+      create(:article_node_page, layout: article_node_layout, page_layout: article_page_layout, group_ids: user.group_ids)
+    end
+    let(:category_node) { create(:category_node_page, group_ids: user.group_ids) }
     let(:action1) { create(:jmaxml_action_publish_page, publish_to_id: article_node.id, category_ids: [ category_node.id ]) }
 
     let(:group1) { create(:cms_group, name: "#{cms_group.name}/#{unique_id}") }
@@ -352,6 +360,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
   context "when 2011 tohoku earthquake is given" do
     context "when apni confirmation mails are sent" do
       let(:site) { cms_site }
+      let(:user) { cms_user }
       let(:node) do
         create(
           :rss_node_weather_xml,
@@ -360,7 +369,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           title_mail_text: "\#{target_time} ころ地震がありました",
           upper_mail_text: "\#{target_time} ころ地震がありました。\n\n各地の震度は下記の通りです。\n",
           lower_mail_text: "下記のアドレスにアクセスし、安否情報を入力してください。\n\#{anpi_post_url}\n",
-          loop_mail_text: "\#{area_name}：\#{intensity_label}\n")
+          loop_mail_text: "\#{area_name}：\#{intensity_label}\n",
+          group_ids: user.group_ids)
       end
       let(:node_ezine_member_page) do
         create(
@@ -369,9 +379,10 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           sender_name: 'test',
           sender_email: 'test@example.jp',
           signature_html: '<br>--------<br>test@example.jp<br>',
-          signature_text: "\n--------\ntest@example.jp\n")
+          signature_text: "\n--------\ntest@example.jp\n",
+          group_ids: user.group_ids)
       end
-      let(:node_my_anpi_post) { create(:member_node_my_anpi_post, cur_site: site) }
+      let(:node_my_anpi_post) { create(:member_node_my_anpi_post, cur_site: site, group_ids: user.group_ids) }
       let(:model) { Rss::WeatherXmlPage }
       let(:xml0) { File.read(Rails.root.join(*%w(spec fixtures jmaxml earthquake-sample-2.xml))) }
       let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
@@ -462,7 +473,8 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
 
     context "when filters are executed" do
       let(:site) { cms_site }
-      let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed') }
+      let(:user) { cms_user }
+      let(:node) { create(:rss_node_weather_xml, cur_site: site, page_state: 'closed', group_ids: user.group_ids) }
       let(:model) { Rss::WeatherXmlPage }
       let(:xml0) { File.read(Rails.root.join(*%w(spec fixtures jmaxml earthquake-sample-2.xml))) }
       let(:xml1) { File.read(Rails.root.join(*%w(spec fixtures jmaxml 70_32-39_11_120615_01shindosokuhou3.xml))) }
@@ -470,7 +482,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
       let(:trigger1) { create(:jmaxml_trigger_quake_intensity_flash) }
       let(:trigger2) { create(:jmaxml_trigger_quake_info) }
 
-      let(:category_node) { create(:category_node_page) }
+      let(:category_node) { create(:category_node_page, group_ids: user.group_ids) }
       let(:article_node1) { create(:article_node_page, group_ids: [ cms_group.id ]) }
       let(:action1) { create(:jmaxml_action_publish_page, publish_to_id: article_node1.id, category_ids: [ category_node.id ], publish_state: "draft") }
 

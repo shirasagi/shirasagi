@@ -25,8 +25,7 @@ class Cms::PageExpirationSettingsController < ApplicationController
   end
 
   def set_item
-    item = Cms::Page.site(@cur_site).find(params[:id])
-    @item = item.becomes_with_route
+    @item = Cms::Page.site(@cur_site).find(params[:id])
     # @item.attributes = fix_params
   rescue Mongoid::Errors::DocumentNotFound => e
     return render_destroy(true) if params[:action] == 'destroy'

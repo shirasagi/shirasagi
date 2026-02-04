@@ -1,5 +1,5 @@
 <%
-  @s = OpenStruct.new params[:s]
+  @s ||= OpenStruct.new params[:s]
 %>
 <div class="gws-attendance">
   <div class="attendance-box">

@@ -18,7 +18,7 @@ $("#ajax-box .pagination a").on("click", cboxLoad);
 $("#ajax-box .submitters a").on("click", cboxLoad);
 <% end %>
 <%
-  @s = OpenStruct.new params[:s]
+  @s ||= OpenStruct.new params[:s]
   @marker_options = map_marker_picker_images
 %>
 <div class="search-ui-form">

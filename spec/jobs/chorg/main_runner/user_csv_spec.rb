@@ -39,9 +39,10 @@ describe Chorg::MainRunner, dbscope: :example do
 
       # check for job was succeeded
       expect(Job::Log.count).to eq 1
-      Job::Log.first.tap do |log|
+      Job::Log.all.each do |log|
         expect(log.logs).to include(/INFO -- : .* Started Job/)
         expect(log.logs).to include(/INFO -- : .* Completed Job/)
+        expect(log.logs).not_to include(/ERROR -- :/)
       end
 
       g3 = Cms::Group.find_by(name: 'A/B/C')
@@ -71,6 +72,9 @@ describe Chorg::MainRunner, dbscope: :example do
         expect(u.group_ids).to include(g4.id)
         expect(u.cms_role_ids).to include(r2.id)
       end
+
+      revision.reload
+      expect(revision.user_csv_file).to be_present
     end
   end
 end

@@ -4,7 +4,7 @@ $(".select-submit").on("change", function() {
 });
 <% end %>
 
-<% @s = OpenStruct.new params[:s] %>
+<% @s ||= OpenStruct.new params[:s] %>
 <div class="list-head-search">
   <%= form_for :s, url: "", html: { class: "index-search", method: :get } do |f| %>
     <%= f.select :poster, @model.new.posted_by_options, { include_blank: t('opendata.poster') }, { class: "select-submit" } %>
