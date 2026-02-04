@@ -19,9 +19,7 @@ class Cms::Node::CopyNodesController < ApplicationController
   end
 
   def job_options
-    {
-      target_node_name: params[:item][:target_node_name]
-    }
+    params.require(:item).permit(:target_node_name, :target_node_filename)
   end
 
   def task_name
@@ -40,6 +38,9 @@ class Cms::Node::CopyNodesController < ApplicationController
 
   def index
     set_item
+
+    prefix = I18n.t("workflow.cloned_name_prefix")
+    @item.target_node_name = "[#{prefix}] #{@cur_node.name}"
 
     respond_to do |format|
       format.html { render }
