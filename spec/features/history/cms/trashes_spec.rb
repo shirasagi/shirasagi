@@ -5,10 +5,16 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
   let!(:user) { cms_user }
   let!(:node) { create :article_node_page }
   let!(:file) { tmp_ss_file(site: site, user: user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png") }
-  let!(:page_item) { create(:article_page, cur_site: site, cur_user: user, cur_node: node, file_ids: [file.id]) }
+  let!(:page_item) do
+    create(
+      :article_page, cur_site: site, cur_user: user, cur_node: node,
+      name: "name-#{unique_id}", index_name: "index-name-#{unique_id}", file_ids: [ file.id ], state: "public")
+  end
   let(:index_path) { history_cms_trashes_path(site: site.id) }
   let(:node_path) { article_pages_path(site: site.id, cid: node.id) }
   let(:page_path) { article_page_path(site: site.id, cid: node.id, id: page_item.id) }
+  let(:new_name) { "name-#{unique_id}" }
+  let(:new_index_name) { "index-name-#{unique_id}" }
   let(:new_filename) { "#{unique_id}.html" }
 
   context "with auth" do
@@ -150,10 +156,23 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
         expect(task.state).to eq "completed"
       end
 
+      page_item.class.find(page_item.id).tap do |page_after_restore|
+        expect(page_after_restore.name).to eq page_item.name
+        expect(page_after_restore.index_name).to eq page_item.index_name
+        expect(page_after_restore.state).to eq "closed"
+        expect(page_after_restore.files.count).to eq 1
+        page_after_restore.files.first.tap do |file_after_restore|
+          expect(file_after_restore).to be_present
+          expect(file_after_restore.name).to eq file.name
+          expect(file_after_restore.filename).to eq file.filename
+          expect(file_after_restore.content_type).to eq file.content_type
+          expect(file_after_restore.size).to eq file.size
+          expect(file_after_restore.thumb).to be_present
+
+          expect(Fs.compare_file_head(file.path, file_after_restore.path)).to be_truthy
+        end
+      end
       expect { page_item.reload }.not_to raise_error
-      expect(page_item.files.count).to eq 1
-      expect(page_item.files.first).to be_present
-      expect(page_item.files.first.thumb).to be_present
 
       visit node_path
       expect(page).to have_css('a.title', text: page_item.name)
@@ -265,7 +284,7 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
     #   expect(History::Trash.all.count).to eq 0
     # end
 
-    it "#undo_delete as another filename" do
+    it "#undo_delete with different filename" do
       visit page_path
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
@@ -293,11 +312,12 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page).to have_css('dd', text: page_item.name)
 
       click_link I18n.t('ss.buttons.restore')
+      within "form#item-form" do
+        wait_for_event_fired("change") { click_on I18n.t("ss.links.change") }
+        fill_in "item[basename]", with: new_filename
 
-      wait_for_event_fired("change") { click_on I18n.t("ss.links.change") }
-      fill_in "item[basename]", with: new_filename
-
-      click_button I18n.t('ss.buttons.restore')
+        click_button I18n.t('ss.buttons.restore')
+      end
       wait_for_notice I18n.t('ss.notice.restored')
       expect(current_path).to eq index_path
       expect(page).to have_no_css('a.title', text: page_item.name)
@@ -307,6 +327,65 @@ describe "history_cms_trashes", type: :feature, dbscope: :example, js: true do
       expect(page_item.files.first).to be_present
       expect(page_item.files.first.thumb).to be_present
       expect(page_item.filename).to end_with "/" + new_filename
+      expect(page_item.state).to eq "closed"
+
+      visit node_path
+      expect(page).to have_css('a.title', text: page_item.name)
+
+      visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+      expect(page).to have_css('div.file-view', text: file.name)
+
+      expect(History::Trash.all.count).to eq 0
+    end
+
+    it "#undo_delete with different name and index_name" do
+      visit page_path
+      wait_for_all_ckeditors_ready
+      wait_for_all_turbo_frames
+      expect(page).to have_css('div.file-view', text: file.name)
+
+      click_link I18n.t('ss.links.delete')
+      within "form" do
+        click_button I18n.t('ss.buttons.delete')
+      end
+      wait_for_notice I18n.t('ss.notice.deleted')
+      expect(page).to have_no_css('a.title', text: page_item.name)
+
+      expect { page_item.reload }.to raise_error Mongoid::Errors::DocumentNotFound
+      expect(History::Trash.all.count).to eq 2
+      trashes = History::Trash.all.to_a
+      expect(trashes[0].ref_coll).to eq "cms_pages"
+      expect(trashes[0].ref_class).to eq "Article::Page"
+      expect(trashes[1].ref_coll).to eq "ss_files"
+      expect(trashes[1].ref_class).to eq "SS::File"
+
+      visit index_path
+      expect(page).to have_css('a.title', text: page_item.name)
+
+      click_link page_item.name
+      expect(page).to have_css('dd', text: page_item.name)
+
+      click_link I18n.t('ss.buttons.restore')
+      within "form#item-form" do
+        fill_in "item[name]", with: new_name
+        fill_in "item[index_name]", with: new_index_name
+
+        click_button I18n.t('ss.buttons.restore')
+      end
+      wait_for_notice I18n.t('ss.notice.restored')
+      expect(current_path).to eq index_path
+      expect(page).to have_no_css('a.title', text: page_item.name)
+
+      expect { page_item.reload }.not_to raise_error
+      expect(page_item.name).to eq new_name
+      expect(page_item.index_name).to eq new_index_name
+      expect(page_item.state).to eq "closed"
+      expect(page_item.files.count).to eq 1
+      expect(page_item.files.first).to be_present
+      expect(page_item.files.first.thumb).to be_present
 
       visit node_path
       expect(page).to have_css('a.title', text: page_item.name)
