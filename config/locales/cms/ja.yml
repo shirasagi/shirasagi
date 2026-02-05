@@ -222,6 +222,7 @@ ja:
       download_head: 全コンテンツ一覧出力
       download_description: サイト内の全コンテンツを出力します。
       import_tab: 一括設定
+      moves_tab: 一括移動
       import_head: 全コンテンツ一括設定
       import_description_html: |-
         <p class="my-1">サイト内の全コンテンツを一括して設定します。</p>
@@ -254,6 +255,47 @@ ja:
           <li style="list-style-type: disc;">つまり本CSVを利用することで効率よく網羅的にサイト構築結果を確認することができます。</li>
         </ul>
       keep_updated: 更新日時を変更しない
+    all_contents_moves:
+      upload_head: ページ一括移動
+      upload_description_html: |-
+        <p class="my-1">CSVファイルをアップロードして、ページを一括移動します。</p>
+        <p class="my-1">雛形をダウンロードすると、全ページの情報が含まれたCSVファイルがダウンロードされます。ファイル名列（移動先ファイル名）を編集して、移動先のファイル名を指定してください。</p>
+        <p class="my-1"><strong>注意：</strong>雛形のファイル名列には現在のファイル名が入っています。移動先のファイル名に変更してください。</p>
+      check_result_head: チェック結果
+      execute_result_head: 実行結果
+      destination_filename: 移動先ファイル名
+      status_confirmation: 確認必要
+      status_error: エラー
+      confirmations: リンク影響
+      confirmation_reason: このページを参照しているコンテンツがあります。
+      confirmation_type_node: フォルダー
+      confirmation_type_page: ページ
+      confirmation_type_layout: レイアウト
+      confirmation_type_part: パーツ
+      confirmation_type_branch: 差し替えページ
+      success_count: 成功件数
+      error_count: エラー件数
+      confirm_reset: チェック結果を削除してよろしいですか？
+      reset_notice: チェック結果をリセットしました。
+      errors:
+        check_result_not_found: チェック結果が見つかりません。
+        no_selection: 移動対象が選択されていません。
+        invalid_selection: 無効な選択です。
+        task_base_dir_not_available: タスクのベースディレクトリが利用できません。チェック処理を再実行してください。
+        page_id_blank: ページIDが空白です。
+        invalid_page_id: 無効なページIDです。
+        page_not_found: ページが見つかりません。
+        destination_filename_blank: 移動先ファイル名が空白です。
+        same_filename: 移動元と移動先が同じです。
+        no_move_permission: 移動権限がありません。
+        branch_page_can_not_move: 差し替え用ページは移動できません。
+        page_locked: "ページがロックされています。（ロック者: %{user}）"
+        unknown_lock_owner: 不明
+        destination_folder_not_public: 公開中のページを非公開フォルダーに移動することはできません。
+        user_not_bound: ユーザーがジョブにバインドされていません。
+      status:
+        reading_csv: CSVファイルを読み込み中です。
+        executing: ページを移動しています。
     roles:
       admin: 管理者
       user: 編集者
@@ -1121,6 +1163,7 @@ ja:
         summary_html: Summary
         in_file: ファイル
       cms/model/page:
+        filename: ファイル名
         route: ページ属性
         summary_html: Summary
         html: 本文
@@ -3597,6 +3640,8 @@ ja:
       cms/role/import_job: CMS/権限インポート
       cms/form_db/import_url_job: CMS/定型DBインポート
       cms/all_contents_import_job: CMS/全コンテンツ一括設定
+      cms/all_contents_moves/check_job: CMS/ページ一括移動チェック
+      cms/all_contents_moves/execute_job: CMS/ページ一括移動実行
       cms/michecker_job: CMS/miChecker
       cms/sns_post/twitter_job: CMS/X(旧Twitter)ページ投稿
       cms/sns_post/line_job: LINE/ページ投稿

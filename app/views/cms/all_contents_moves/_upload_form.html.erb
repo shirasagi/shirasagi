@@ -1,0 +1,31 @@
+<%= form_tag({ action: :index }, { method: :post, multipart: true }) do %>
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "cms-all-contents-moves-upload", head: t("cms.all_contents_moves.upload_head") } do %>
+      <% if @errors %>
+      <div id="errorExplanation" class="errorExplanation">
+        <h2><%= t('errors.template.header', count: @errors.length) %></h2>
+        <p><%= t('errors.template.body', count: @errors.length) %></p>
+        <ul>
+          <% @errors.each do |error| %>
+            <li><%= error %></li>
+          <% end %>
+        </ul>
+      </div>
+      <% end %>
+
+      <dl class="see">
+        <dt><%= t("ss.file") %></dt>
+        <dd><%= file_field_tag "item[in_file]" %></dd>
+      </dl>
+      <p class="description"><%= t("cms.all_contents_moves.upload_description_html") %></p>
+      <p class="description">
+        <%= link_to t("ss.links.download_template"), { action: :template }, class: "btn" %>
+      </p>
+    <% end %>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= submit_tag t("ss.buttons.import"), name: 'check', class: :save, data: { confirm: t("ss.confirm.import"), disable_with: t("ss.buttons.importing") } %>
+  </footer>
+<% end %>
+

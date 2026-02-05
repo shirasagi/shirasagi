@@ -88,6 +88,7 @@ ja:
         contact_group_relation: 連絡先連動設定
         contact_sub_group_ids: 所属(組織一覧用)
       contact/addon/group:
+        contact_group: 所属
         contact_group_name: 表示用グループ名
         contact_charge: 担当部署・係
         contact_tel: 電話番号
