@@ -155,7 +155,7 @@ module Gws::Model::Folder
     if name.present? && dependant_scope.where(name: /^#{::Regexp.escape(name)}\//).exists?
       errors.add :base, :found_children
       throw :abort if flagged_for_destroy? # flagged_for_destroy? は削除中かどうかを判定する。削除を中断させるには throw :abort が必要。
-      false
+      return false
     end
     true
   end

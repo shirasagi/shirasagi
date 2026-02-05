@@ -73,7 +73,7 @@ module Cms::Addon::EditLock
 
   def validate_lock
     errors.add :base, :locked, user: lock_owner.long_name if locked? && !lock_owned?
-    throw :abort if flagged_for_destroy? # flagged_for_destroy? は削除中かどうかを判定する。削除を中断させるには throw :abort が必要。
+    throw :abort if flagged_for_destroy? && errors.present? # flagged_for_destroy? は削除中かどうかを判定する。削除を中断させるには throw :abort が必要。
     errors.blank?
   end
 end
