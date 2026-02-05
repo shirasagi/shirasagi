@@ -277,4 +277,27 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "deleting folder having files" do
+    let!(:folder) { create :gws_share_folder, cur_site: site }
+    let!(:category) { create :gws_share_category, cur_site: site }
+    let!(:file) { create :gws_share_file, cur_site: site, folder: folder, category_ids: [category.id] }
+
+    it do
+      login_gws_user to: gws_share_folders_path(site: site)
+      click_on folder.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      wait_for_notice I18n.t('ss.notice.deleted')
+
+      expect { Gws::Share::Folder.find(folder.id) }.to raise_error Mongoid::Errors::DocumentNotFound
+      Gws::Share::File.find(file.id).tap do |file_after_delete|
+        expect(file_after_delete.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+      end
+    end
+  end
 end
