@@ -300,4 +300,28 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "deleting folder having sub folders which is having files" do
+    let!(:folder0) { create :gws_share_folder, cur_site: site }
+    let!(:folder1) { create :gws_share_folder, cur_site: site, name: "#{folder0.name}/#{unique_id}" }
+    let!(:category) { create :gws_share_category, cur_site: site }
+    let!(:file) { create :gws_share_file, cur_site: site, folder: folder1, category_ids: [category.id] }
+
+    it do
+      login_gws_user to: gws_share_folders_path(site: site)
+      within "[data-id='#{folder0.id}']" do
+        click_on folder0.name
+      end
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      wait_for_error I18n.t('mongoid.errors.models.gws/model/folder.found_children')
+
+      expect { folder0.reload }.not_to raise_error
+      expect { folder1.reload }.not_to raise_error
+    end
+  end
 end
