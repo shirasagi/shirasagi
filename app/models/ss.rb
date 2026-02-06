@@ -30,14 +30,14 @@ module SS
   # 403
   class ForbiddenError < RuntimeError
     def initialize(msg = nil)
-      super(msg || HTTP_STATUS_CODE_FORBIDDEN)
+      super(msg || "forbidden")
     end
   end
 
   # 404
   class NotFoundError < RuntimeError
     def initialize(msg = nil)
-      super(msg || HTTP_STATUS_CODE_NOT_FOUND)
+      super(msg || "not found")
     end
   end
 
