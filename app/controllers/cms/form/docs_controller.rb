@@ -64,6 +64,7 @@ class Cms::Form::DocsController < ApplicationController
   def update
     @item.attributes = get_params
     @item.in_updated = params[:_updated] if @item.respond_to?(:in_updated)
+    raise "403" unless @item.allowed?(:edit, @cur_user, site: @cur_site, node: @db.node)
     render_update @db.save_page(@item, get_column_params)
   end
 

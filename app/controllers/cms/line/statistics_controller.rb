@@ -19,6 +19,7 @@ class Cms::Line::StatisticsController < ApplicationController
   public
 
   def update
+    raise "403" unless @model.allowed?(:edit, @cur_user, site: @cur_site)
     @item.update_statistics
     render_update true, notice: I18n.t('ss.notice.updated')
   end
