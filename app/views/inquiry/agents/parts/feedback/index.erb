@@ -1,6 +1,6 @@
 <%= jquery do %>
   Inquiry_Form.render({ confirm: false, requiredLabel: <%== t('inquiry.required_field').to_json %> });
-  new Inquiry_Column_RadioButton('.inquiry-form');
+  Inquiry_Column_RadioButton.render('.inquiry-form');
 <% end %>
 
 <%== @cur_part.upper_html %>
