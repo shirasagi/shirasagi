@@ -2,6 +2,7 @@ class Gws::Share::RecoverFileService
   include ActiveModel::Model
   include ActiveModel::Attributes
   include SS::PermitParams
+  include SS::HumanAttributeName
 
   attr_accessor :cur_site, :cur_user, :item
 
@@ -13,6 +14,12 @@ class Gws::Share::RecoverFileService
   validates :name, presence: true
   validates :folder_id, presence: true
   validate :validate_folder
+
+  def folder
+    id_to_folder_map[folder_id]
+  end
+
+  delegate :allowed?, :to_key, :to_param, to: :item
 
   def call
     return false if invalid?
@@ -51,7 +58,7 @@ class Gws::Share::RecoverFileService
     return if folder_id.blank?
     return if id_to_folder_map[folder_id].present?
 
-    errors.add :folder_id, :not_found
+    errors.add :base, :not_found_parent
   end
 
   def normalized_name

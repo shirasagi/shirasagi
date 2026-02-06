@@ -8,20 +8,24 @@
     <%= link_to t('gws/share.apis.folders.index'), gws_share_apis_folders_path(mode: 'manageable', single: true), class: 'ajax-box' %>
   </dd>
   <dd>
-    <table class="index ajax-selected">
-      <thead><tr><th class="name"><%= Gws::Share::Folder.t :name %></th><th class="deselect"></th></tr></thead>
+    <table class="index ajax-selected gws-share-management-files-recover-folder-table">
+      <thead>
+      <tr>
+        <th class="name"><%= Gws::Share::Folder.t :name %></th>
+        <th class="deselect"></th>
+      </tr>
+      </thead>
       <tbody>
       <% if @item.folder.present? %>
         <tr data-id="<%= @item.folder_id %>">
           <td><%= f.hidden_field :folder_id, value: @item.folder_id, id: nil %> <%= @item.folder.name %></td>
           <td><%= link_to t("ss.buttons.delete"), '#', class: 'deselect btn' %></td>
         </tr>
-      <% else %>
-        <tr data-id="not-found">
-          <td><%= "復元先のフォルダーが見つかりません。ボタン「フォルダーを選択する」をクリックし、復元先のファルダーを選択してください。" %></td>
-          <td></td>
-        </tr>
       <% end %>
+      <tr data-id="not-found">
+        <td><%= ss_input_guide :not_found_parent, model: Gws::Share::RecoverFileService %></td>
+        <td></td>
+      </tr>
       </tbody>
     </table>
   </dd>
