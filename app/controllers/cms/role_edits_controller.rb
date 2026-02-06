@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 class Cms::RoleEditsController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
@@ -27,12 +29,16 @@ class Cms::RoleEditsController < ApplicationController
   public
 
   def edit
-    return "404" if @item.users.blank?
+    raise SS::ForbiddenError, "insufficient permissions" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise SS::ForbiddenError, "insufficient permissions" unless Gws::User.allowed?(:edit, @cur_user, site: @cur_site)
+    raise SS::NotFoundError, "no users" if @item.users.blank?
     render
   end
 
   def update
-    return "404" if @item.users.blank?
+    raise SS::ForbiddenError, "insufficient permissions" unless @item.allowed?(:edit, @cur_user, site: @cur_site)
+    raise SS::ForbiddenError, "insufficient permissions" unless Gws::User.allowed?(:edit, @cur_user, site: @cur_site)
+    raise SS::NotFoundError, "no users" if @item.users.blank?
 
     safe_params = params.require(:item).permit(cms_role_ids: [])
     role_ids = safe_params[:cms_role_ids].select(&:numeric?).map(&:to_i)
