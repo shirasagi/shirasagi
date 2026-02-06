@@ -26,10 +26,19 @@ module SS::ExceptionFilter
       @ss_mode = nil
     end
 
-    render(
-      template: "ss/rescues/index", layout: @cur_user ? "ss/base" : "ss/login", status: status_code,
-      type: request.xhr? ? "text/plain" : "text/html", formats: request.xhr? ? :text : :html
-    )
+    respond_to do |format|
+      format.html do
+        render(
+          template: "ss/rescues/index", layout: @cur_user ? "ss/base" : "ss/login", status: status_code,
+          type: request.xhr? ? "text/plain" : "text/html", formats: request.xhr? ? :text : :html
+        )
+      end
+      format.json do
+        response = { status: wrapper.exception_name.underscore, error: wrapper.message }
+        render json: response, status: status_code, content_type: json_content_type
+      end
+    end
+
   rescue => e
     Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     raise exception
