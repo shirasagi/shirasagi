@@ -1,5 +1,6 @@
 class Garbage::K5374::BaseExporter
   include ActiveModel::Model
+  include SS::HumanAttributeName
 
   attr_accessor :site, :node, :task
 
@@ -7,15 +8,5 @@ class Garbage::K5374::BaseExporter
     @site = cur_node.site
     @node = cur_node
     @task = task
-  end
-
-  def t(name, opts = {})
-    self.class.t name, opts
-  end
-
-  class << self
-    def t(*args)
-      human_attribute_name *args
-    end
   end
 end
