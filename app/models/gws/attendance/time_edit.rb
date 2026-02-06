@@ -2,6 +2,7 @@ class Gws::Attendance::TimeEdit
   extend SS::Translation
   include ActiveModel::Model
   include SS::PermitParams
+  include SS::HumanAttributeName
 
   attr_accessor :cur_site, :cur_user,
     :in_day, :in_hour, :in_minute,
@@ -18,12 +19,6 @@ class Gws::Attendance::TimeEdit
 
   validates :in_reason_type, inclusion: { in: %w(today tomorrow mistake trip exemption other), allow_blank: true }
   validate :validate_in_reason
-
-  class << self
-    def t(*args)
-      human_attribute_name(*args)
-    end
-  end
 
   def calc_time(date)
     if in_hour.blank? || in_minute.blank?
