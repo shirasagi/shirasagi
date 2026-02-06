@@ -34,7 +34,7 @@ module SS::ExceptionFilter
         )
       end
       format.json do
-        response = { status: wrapper.exception_name.underscore, error: wrapper.message }
+        response = { status: wrapper.unwrapped_exception.class.name.underscore, error: wrapper.message }
         render json: response, status: status_code, content_type: json_content_type
       end
     end
