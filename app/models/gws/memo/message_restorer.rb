@@ -1,14 +1,9 @@
 class Gws::Memo::MessageRestorer
   include ActiveModel::Model
+  include SS::HumanAttributeName
   include Sys::SiteImport::File
 
   attr_accessor :cur_site, :cur_user, :in_file
-
-  class << self
-    def t(*args)
-      human_attribute_name(*args)
-    end
-  end
 
   def restore_messages
     @datetime = Time.zone.now
