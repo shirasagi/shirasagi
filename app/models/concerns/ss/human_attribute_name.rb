@@ -22,12 +22,12 @@ module SS::HumanAttributeName
 
     if scope
       Array(scope).flatten.each do |scope1|
-        msg = I18n.t(key, **opts.merge(default: '', scope: scope1))
+        msg = I18n.t(key, **opts, default: '', scope: scope1)
         break if msg.present?
       end
     end
 
-    msg = I18n.t(key, **opts.merge(default: '', scope: 'tooltip')) if msg.blank?
+    msg = I18n.t(key, **opts, default: '', scope: :tooltip) if msg.blank?
     msg
   end
 
