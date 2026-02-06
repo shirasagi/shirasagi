@@ -65,4 +65,23 @@ describe "gws_notices", type: :feature, dbscope: :example do
       expect(Gws::Notice::Category.all.count).to eq 0
     end
   end
+
+  context "delete parent" do
+    let!(:category0) { create :gws_notice_category, cur_site: site }
+    let!(:category1) { create :gws_notice_category, cur_site: site, name: "#{category0.name}/#{unique_id}" }
+
+    it do
+      login_gws_user to: gws_notice_categories_path(site: site)
+      within "[data-id='#{category0.id}']" do
+        click_on category0.name
+      end
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.delete')
+      end
+      within "form#item-form" do
+        click_on I18n.t('ss.buttons.delete')
+      end
+      wait_for_error I18n.t("mongoid.errors.models.gws/notice/category.found_children")
+    end
+  end
 end
