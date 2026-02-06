@@ -38,7 +38,6 @@ module SS::ExceptionFilter
         render json: response, status: status_code, content_type: json_content_type
       end
     end
-
   rescue => e
     Rails.logger.info("#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}")
     raise exception
