@@ -11,7 +11,10 @@ class Gws::Share::Folder
 
   store_in collection: :gws_share_folders
 
+  # rubocop:disable Rails/HasManyOrHasOneDependent
+  # dependent オプションは速度を優先するため付けない。
   has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, autosave: false
+  # rubocop:enable Rails/HasManyOrHasOneDependent
 
   after_destroy :move_files_to_trash
 
