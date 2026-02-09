@@ -5,7 +5,6 @@ class Inquiry::Column
   include Inquiry::Addon::InputSetting
   include Inquiry::Addon::KintoneApp::Column
   include Inquiry::Addon::ExpandColumn
-  include Cms::Addon::GroupPermission
 
   include SS::PluginRepository
 
