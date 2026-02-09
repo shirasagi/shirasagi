@@ -5,7 +5,6 @@ class Inquiry::Column
   include Inquiry::Addon::InputSetting
   include Inquiry::Addon::KintoneApp::Column
   include Inquiry::Addon::ExpandColumn
-
   include SS::PluginRepository
 
   plugin_class Inquiry::Plugin
@@ -22,7 +21,7 @@ class Inquiry::Column
     [ :upload_file, :validate_upload_file ].freeze,
   ].freeze
 
-  set_permission_name "inquiry_columns"
+  set_permission_name "other_inquiry_columns"
 
   seqid :id
   belongs_to :node, class_name: "Inquiry::Node::Form"

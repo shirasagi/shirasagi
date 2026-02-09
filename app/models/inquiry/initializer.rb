@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 module Inquiry
   class Initializer
     Cms::Node.plugin "inquiry/form"
