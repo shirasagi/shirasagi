@@ -141,6 +141,18 @@ ja:
     yearly_archive: 年別アーカイブ
     monthly_archive: 月別アーカイブ
     syntax_check_violation_count: "アクセシビリティ違反が%{total}件あります。"
+    overflow_keyword:
+      one: "他1件のキーワード"
+      other: "他%{count}キーワード"
+    overflow_category:
+      one: "他1件のカテゴリー"
+      other: "他%{count}カテゴリー"
+    overflow_page:
+      one: "他1件のページ"
+      other: "他%{count}ページ"
+    overflow_value:
+      one: "他1件の値"
+      other: "他%{count}件の値"
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'

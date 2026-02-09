@@ -83,6 +83,7 @@ en:
     upload_or_select_from_list: File upload or select file from list
     auto_resizing_label: "%{size} (System setting)"
     check: Check
+    truncate_long_csv_value: Omit long items to fit within the cell.
     overflow_user:
       one: "1 other user"
       other: "%{count} other users"
@@ -92,6 +93,9 @@ en:
     overflow_custom_group:
       one: "1 other custom group"
       other: "%{count} other custom groups"
+    overflow_file:
+      one: "1 other file"
+      other: "%{count} other files"
 
     views:
       login/login:

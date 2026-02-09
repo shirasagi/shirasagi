@@ -16,6 +16,9 @@ ja:
     layer: レイヤー
     longitude: 経度
     latitude: 緯度
+    overflow_map_point:
+      one: "他1件のマーカー設定"
+      other: "他%{count}のマーカー設定"
     views:
       header: 地図
     alert:
