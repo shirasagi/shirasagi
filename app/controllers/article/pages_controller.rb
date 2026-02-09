@@ -32,7 +32,7 @@ class Article::PagesController < ApplicationController
       return
     end
 
-    csv_params = params.require(:item).permit(:encoding, :form_id)
+    csv_params = params.require(:item).permit(:encoding, :form_id, :truncate)
     csv_params.merge!(fix_params)
 
     form = nil
@@ -53,7 +53,8 @@ class Article::PagesController < ApplicationController
       criteria = criteria.exists(form_id: false)
     end
 
-    exporter = Cms::PageExporter.new(mode: "article", site: @cur_site, criteria: criteria)
+    exporter = Cms::PageExporter.new(
+      mode: "article", site: @cur_site, truncate: csv_params.fetch(:truncate, 'yes') != 'no', criteria: criteria)
     enumerable = exporter.enum_csv(csv_params)
 
     filename = @model.to_s.tableize.tr("/", "_")
