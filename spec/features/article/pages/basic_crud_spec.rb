@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:item) { create(:article_page, cur_node: node) }
   let!(:item2) { create(:article_page, cur_node: node) }
   let!(:html) { "<p><a href=\"#{item2.url}\">関連記事リンク1</a></p>" }

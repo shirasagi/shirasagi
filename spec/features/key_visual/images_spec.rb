@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "key_visual_images", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
-  let!(:node) { create_once :key_visual_node_image, name: "key_visual" }
+  let!(:node) { create :key_visual_node_image, name: "key_visual" }
   let!(:item) { create :key_visual_image }
   let(:index_path) { key_visual_images_path site.id, node }
   let(:show_path) { key_visual_image_path site.id, node, item }

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Cms::Lgwan::Page, type: :model, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:item) { create(:article_page, cur_node: node) }
 
   let(:name) { unique_id }

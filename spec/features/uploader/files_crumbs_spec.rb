@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "uploader_files", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :uploader_node_file, name: "uploader" }
+  let(:node) { create :uploader_node_file, name: "uploader" }
   let(:index_path) { uploader_files_path site.id, node }
 
   context "crumbs" do

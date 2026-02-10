@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "event_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :event_node_page, filename: "event", name: "event" }
+  let(:node) { create :event_node_page, filename: "event", name: "event" }
   let(:index_path) { event_pages_path site.id, node }
   let(:released) { Time.zone.today }
 

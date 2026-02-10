@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "opendata_licenses", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
+  let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
   let(:index_path) { opendata_licenses_path site, node }
   let(:new_path) { new_opendata_license_path site, node }
 

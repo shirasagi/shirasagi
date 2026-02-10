@@ -8,7 +8,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
   let!(:user1) { create(:cms_test_user, group_ids: group_ids, cms_role_ids: role_ids) }
 
   let!(:layout) { create(:cms_layout, site: site, name: "blog") }
-  let!(:blogs_node) { create_once :member_node_blog, filename: "blogs", name: "blogs", layout: layout }
+  let!(:blogs_node) { create :member_node_blog, filename: "blogs", name: "blogs", layout: layout }
 
   let(:workflow_comment) { unique_id }
   let(:approve_comment1) { unique_id }
@@ -22,7 +22,7 @@ describe "my_group", type: :feature, dbscope: :example, js: true do
   end
 
   context "with member/blog_page" do
-    let!(:node) { create_once :member_node_blog_page, filename: "blogs/shirasagi-blog", name: "shirasagi-blog", layout: layout }
+    let!(:node) { create :member_node_blog_page, filename: "blogs/shirasagi-blog", name: "shirasagi-blog", layout: layout }
     let!(:item) do
       create(:member_blog_page, cur_site: site, cur_node: node, layout_id: layout.id, state: 'closed')
     end

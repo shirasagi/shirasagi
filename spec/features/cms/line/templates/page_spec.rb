@@ -5,7 +5,7 @@ describe "cms/line/templates text", type: :feature, dbscope: :example, js: true 
   let(:item) { create :cms_line_message }
   let(:show_path) { cms_line_message_path site, item }
 
-  let!(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let!(:node) { create :article_node_page, filename: "docs", name: "article" }
   let!(:page1) { create(:article_page, cur_node: node) }
   let!(:page2) { create(:article_page, cur_node: node) }
 

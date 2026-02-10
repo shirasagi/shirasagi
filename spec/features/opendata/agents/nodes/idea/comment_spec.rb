@@ -2,13 +2,13 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_comment", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let!(:node_idea) { create_once :opendata_node_idea, name: "opendata_idea" }
-  let!(:node_search) { create_once :opendata_node_search_idea }
-  let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
+  let!(:node_idea) { create :opendata_node_idea, name: "opendata_idea" }
+  let!(:node_search) { create :opendata_node_search_idea }
+  let!(:node_mypage) { create :opendata_node_mypage, filename: "mypage" }
   let!(:node_login) { create :member_node_login, redirect_url: node_idea.url }
 
-  let!(:category) { create_once :opendata_node_category }
-  let!(:area) { create_once :opendata_node_area }
+  let!(:category) { create :opendata_node_category }
+  let!(:area) { create :opendata_node_area }
   let!(:idea) do
     create :opendata_idea,
       cur_site: site,

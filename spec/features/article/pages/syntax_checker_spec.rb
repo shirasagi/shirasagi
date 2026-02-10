@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "syntax_checker", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:node) do
-    create_once :article_node_page, filename: "docs", name: "article",
+    create :article_node_page, filename: "docs", name: "article",
     group_ids: [cms_group.id], st_form_ids: [form.id]
   end
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry', group_ids: [cms_group.id]) }

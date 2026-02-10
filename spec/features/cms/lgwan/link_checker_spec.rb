@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "link_checker", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
-  let!(:node) { create_once :article_node_page, filename: unique_id, name: "article" }
+  let!(:node) { create :article_node_page, filename: unique_id, name: "article" }
   let!(:form) { create(:cms_form, cur_site: site, state: 'public', sub_type: 'entry') }
   let!(:column) { create(:cms_column_free, cur_site: site, cur_form: form, required: "optional", order: 1) }
 

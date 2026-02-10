@@ -17,7 +17,7 @@ describe Cms::TreeCategoryComponent, type: :component, dbscope: :example do
   end
 
   context 'with article page' do
-    let!(:node) { create_once :article_node_page, name: "article" }
+    let!(:node) { create :article_node_page, name: "article" }
     let!(:item) { create(:article_page, cur_node: node, category_ids: [cate1.id, cate2.id]) }
 
     it do
@@ -52,7 +52,7 @@ describe Cms::TreeCategoryComponent, type: :component, dbscope: :example do
   end
 
   context 'with ads page' do
-    let!(:node) { create_once :ads_node_banner, name: "ads" }
+    let!(:node) { create :ads_node_banner, name: "ads" }
     let!(:item) { create(:ads_banner, cur_node: node, ads_category_ids: [cate1.id, cate2.id]) }
 
     it do

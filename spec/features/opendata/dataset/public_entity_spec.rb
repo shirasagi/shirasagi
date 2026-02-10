@@ -3,28 +3,28 @@ require 'spec_helper'
 describe "public_entity", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let!(:node_search_dataset) { create(:opendata_node_search_dataset) }
-  let(:category_node) { create_once(:cms_node_node, filename: "category") }
+  let(:category_node) { create(:cms_node_node, filename: "category") }
   let(:category1) do
-    create_once(
+    create(
       :opendata_node_category, filename: "#{category_node.filename}/opendata_category1",
       depth: category_node.depth + 1
     )
   end
-  let(:estat_category_node) { create_once(:cms_node_node, filename: "estat_category") }
+  let(:estat_category_node) { create(:cms_node_node, filename: "estat_category") }
   let(:estat_category1) do
-    create_once(
+    create(
       :opendata_node_estat_category, filename: "#{estat_category_node.filename}/opendata_estat_category1",
       depth: estat_category_node.depth + 1
     )
   end
-  let(:area_node) { create_once(:cms_node_node, filename: "area") }
+  let(:area_node) { create(:cms_node_node, filename: "area") }
   let(:area1) do
-    create_once(
+    create(
       :opendata_node_area, filename: "#{area_node.filename}/opendata_area_1",
       depth: area_node.depth + 1
     )
   end
-  let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
+  let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
   let(:dataset) do
     create(
       :opendata_dataset, cur_node: node, metadata_dataset_id: unique_id,

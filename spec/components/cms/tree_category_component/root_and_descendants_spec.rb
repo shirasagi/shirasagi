@@ -52,7 +52,7 @@ describe Cms::TreeCategoryComponent, type: :component, dbscope: :example do
   end
 
   context 'root_and_descendants' do
-    let!(:node) { create_once :article_node_page, name: "article" }
+    let!(:node) { create :article_node_page, name: "article" }
     let!(:item) { create(:article_page, cur_node: node, category_ids: [cate1.id, cate2.id]) }
 
     it do

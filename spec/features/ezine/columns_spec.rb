@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "ezine_columns", type: :feature do
   subject(:site) { cms_site }
-  subject(:node) { create_once :ezine_node_page }
+  subject(:node) { create :ezine_node_page }
   subject(:item) { Ezine::Column.last }
   subject(:index_path) { ezine_columns_path site.id, node }
   subject(:new_path) { new_ezine_column_path site.id, node }

@@ -283,7 +283,7 @@ describe Sys::SiteCopyJob, dbscope: :example do
                category_ids: [ node_category.id ], area_ids: [ node_area.id ]
       end
 
-      let!(:node_idea) { create_once :opendata_node_idea }
+      let!(:node_idea) { create :opendata_node_idea }
 
       let(:member) { cms_member }
 

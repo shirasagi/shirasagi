@@ -8,8 +8,8 @@ describe "gws_monitor_management_admins", type: :feature, dbscope: :example do
   let(:g1) { create(:gws_group, name: "#{site.name}/g-#{unique_id}", order: 10) }
   let(:g2) { create(:gws_group, name: "#{site.name}/g-#{unique_id}", order: 20) }
 
-  let(:group_ss_file) { create_once(:ss_file, user: user, filename: "file1.png", name: "file1.png") }
-  let(:own_ss_file) { create_once(:ss_file, user: user, filename: "file2.png", name: "file2.png") }
+  let(:group_ss_file) { create(:ss_file, user: user, filename: "file1.png", name: "file1.png") }
+  let(:own_ss_file) { create(:ss_file, user: user, filename: "file2.png", name: "file2.png") }
 
   let(:topic1) do
     create(

@@ -2,12 +2,12 @@ require 'spec_helper'
 
 describe "opendata_agents_nodes_dataset", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  # let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
-  let!(:node_dataset) { create_once :opendata_node_dataset }
+  # let(:area) { create :opendata_node_area, filename: "opendata_area_1" }
+  let!(:node_dataset) { create :opendata_node_dataset }
   let!(:node_area) { create :opendata_node_area }
-  let!(:node_search_dataset) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
+  let!(:node_search_dataset) { create :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:page_dataset) { create(:opendata_dataset, cur_node: node_dataset, area_ids: [ node_area.id ]) }
-  let!(:node_dataset_category) { create_once :opendata_node_dataset_category }
+  let!(:node_dataset_category) { create :opendata_node_dataset_category }
   let!(:node_category) { create :opendata_node_category, filename: "bunya/kurashi" }
   let(:dataset_resource_file_path) { Rails.root.join("spec", "fixtures", "opendata", "shift_jis.csv") }
   let(:dataset_resource) { page_dataset.resources.new(attributes_for(:opendata_resource)) }

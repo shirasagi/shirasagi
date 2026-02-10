@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "faq_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :faq_node_page, filename: "faq", name: "faq" }
+  let(:node) { create :faq_node_page, filename: "faq", name: "faq" }
   let(:index_path) { faq_pages_path site.id, node }
   let(:released) { Time.zone.today }
 
