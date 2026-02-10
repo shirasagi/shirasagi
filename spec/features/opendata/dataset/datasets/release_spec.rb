@@ -2,9 +2,9 @@ require 'spec_helper'
 
 describe "opendata_datasets_release", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
+  let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
   let(:item) { create(:opendata_dataset, cur_node: node) }
-  let!(:node_search) { create_once :opendata_node_search_dataset }
+  let!(:node_search) { create :opendata_node_search_dataset }
   let(:index_path) { opendata_datasets_path site, node }
   let(:show_path) { opendata_dataset_path site, node, item }
   let(:edit_path) { edit_opendata_dataset_path site, node, item }

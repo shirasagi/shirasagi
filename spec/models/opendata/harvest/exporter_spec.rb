@@ -3,7 +3,7 @@ require 'spec_helper'
 describe Opendata::Harvest::Exporter, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
-  let!(:node_search) { create_once :opendata_node_search_dataset }
+  let!(:node_search) { create :opendata_node_search_dataset }
   let!(:dataset) { create(:opendata_dataset, cur_node: node) }
 
   let!(:license1) { create(:opendata_license, cur_site: site, uid: "cc-by") }

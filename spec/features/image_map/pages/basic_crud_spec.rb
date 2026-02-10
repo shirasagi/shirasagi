@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "image_map_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :image_map_node_page, filename: "image-map", name: "image-map" }
+  let(:node) { create :image_map_node_page, filename: "image-map", name: "image-map" }
   let(:item) { create(:image_map_page, cur_node: node) }
 
   let(:index_path) { image_map_pages_path site.id, node }

@@ -9,10 +9,10 @@ describe "opendata_agents_nodes_my_app_appfiles", type: :feature, dbscope: :exam
   end
 
   let(:site) { cms_site }
-  let!(:node) { create_once :opendata_node_app, name: "opendata_agents_nodes_my_app_appfiles" }
-  let!(:node_member) { create_once :opendata_node_member }
-  let!(:node_mypage) { create_once :opendata_node_mypage, filename: "mypage" }
-  let!(:node_myapp) { create_once :opendata_node_my_app, filename: "#{node_mypage.filename}/app" }
+  let!(:node) { create :opendata_node_app, name: "opendata_agents_nodes_my_app_appfiles" }
+  let!(:node_member) { create :opendata_node_member }
+  let!(:node_mypage) { create :opendata_node_mypage, filename: "mypage" }
+  let!(:node_myapp) { create :opendata_node_my_app, filename: "#{node_mypage.filename}/app" }
   let!(:node_login) { create :member_node_login, redirect_url: node_myapp.url }
 
   let!(:node_search) { create :opendata_node_search_app }
@@ -22,7 +22,7 @@ describe "opendata_agents_nodes_my_app_appfiles", type: :feature, dbscope: :exam
   let!(:file) { Fs::UploadedFile.create_from_file(file_path, basename: "spec") }
   let!(:appfile) { create_appfile(app, file, "CSV") }
 
-  let!(:node_auth) { create_once :opendata_node_mypage, filename: "opendata/mypage" }
+  let!(:node_auth) { create :opendata_node_mypage, filename: "opendata/mypage" }
 
   let(:index_path) { "#{node_myapp.url}#{app.id}/appfiles/" }
   let(:new_path) { "#{node_myapp.url}#{app.id}/appfiles/new" }

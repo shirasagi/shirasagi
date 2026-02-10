@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "history_cms_backups restore", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:file1) { create :ss_file, user_id: cms_user.id }
   let(:file2) { create :ss_file, user_id: cms_user.id }
   let(:file3) { create :ss_file, user_id: cms_user.id }

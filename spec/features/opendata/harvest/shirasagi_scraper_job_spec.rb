@@ -4,9 +4,9 @@ describe Opendata::Harvest::ImportJob, type: :feature, dbscope: :example do
   let!(:site) { cms_site }
   let!(:layout) { create(:cms_layout) }
 
-  let!(:node_area) { create_once :opendata_node_area }
-  let!(:node_category) { create_once :opendata_node_dataset_category }
-  let!(:node_search) { create_once :opendata_node_search_dataset, filename: "dataset/search" }
+  let!(:node_area) { create :opendata_node_area }
+  let!(:node_category) { create :opendata_node_dataset_category }
+  let!(:node_search) { create :opendata_node_search_dataset, filename: "dataset/search" }
   let!(:node) { create(:opendata_node_dataset, name: "datasets") }
 
   let!(:license) { create(:opendata_license, cur_site: site, uid: "cc-by", name: "表示（CC BY）") }

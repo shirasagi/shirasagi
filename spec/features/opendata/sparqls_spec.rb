@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "opendata_sparqls", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_sparql, name: "opendata_sparqls" }
+  let(:node) { create :opendata_node_sparql, name: "opendata_sparqls" }
 
   let(:index_path) { opendata_sparqls_path site, node }
 

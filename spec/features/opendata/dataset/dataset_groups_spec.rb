@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "opendata_dataset_groups", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
+  let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
   let(:index_path) { opendata_dataset_groups_path site, node }
   let(:new_path) { new_opendata_dataset_group_path site, node }
 
@@ -18,8 +18,8 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
 
     describe "#new" do
       it do
-        category_folder = create_once(:cms_node_node, filename: "category")
-        create_once(
+        category_folder = create(:cms_node_node, filename: "category")
+        create(
           :opendata_node_category,
           filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
@@ -37,9 +37,9 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
     end
 
     describe "#show" do
-      let(:category_folder) { create_once(:cms_node_node, filename: "category") }
+      let(:category_folder) { create(:cms_node_node, filename: "category") }
       let(:category) do
-        create_once(
+        create(
           :opendata_node_category,
           filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
@@ -55,9 +55,9 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
     end
 
     describe "#edit" do
-      let(:category_folder) { create_once(:cms_node_node, filename: "category") }
+      let(:category_folder) { create(:cms_node_node, filename: "category") }
       let(:category) do
-        create_once(
+        create(
           :opendata_node_category,
           filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
@@ -77,9 +77,9 @@ describe "opendata_dataset_groups", type: :feature, dbscope: :example do
     end
 
     describe "#delete" do
-      let(:category_folder) { create_once(:cms_node_node, filename: "category") }
+      let(:category_folder) { create(:cms_node_node, filename: "category") }
       let(:category) do
-        create_once(
+        create(
           :opendata_node_category,
           filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)

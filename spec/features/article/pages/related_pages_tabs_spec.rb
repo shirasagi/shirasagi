@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "cms_apis_pages", type: :feature, dbscope: :example, js: true do
   let(:partner_site) { cms_site }
   let(:master_site) { create(:cms_site, host: unique_id, domains: [unique_id]) }
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:html) { '<h2>見出し2</h2><p>内容が入ります。</p><h3>見出し3</h3><p>内容が入ります。内容が入ります。</p>' }
   let(:page_s1) { create(:article_page, cur_site: partner_site, cur_node: node) }
   let(:page_s2) { create(:article_page, cur_site: master_site, cur_node: node) }

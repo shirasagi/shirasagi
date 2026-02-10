@@ -4,7 +4,7 @@ describe "sitemap_agents_nodes_page", type: :feature, dbscope: :example do
   let(:site)   { cms_site }
   let(:layout) { create_cms_layout }
   let(:node)   { create :sitemap_node_page, layout_id: layout.id, filename: "node" }
-  let!(:article_node) { create_once :article_node_page }
+  let!(:article_node) { create :article_node_page }
   let!(:article_page) { create :article_page, cur_site: site, cur_node: article_node }
 
   before do

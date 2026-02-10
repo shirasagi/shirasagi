@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "board_posts", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :board_node_post, filename: "posts", name: "posts" }
+  let(:node) { create :board_node_post, filename: "posts", name: "posts" }
   let(:item) { create(:board_post, node: node) }
   let(:index_path) { board_posts_path site.id, node }
   let(:new_path) { new_board_post_path site.id, node }

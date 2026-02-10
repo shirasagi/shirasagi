@@ -46,7 +46,7 @@ describe "opendata_agents_nodes_my_app", type: :feature, dbscope: :example, js: 
   end
 
   describe "basic crud" do
-    let!(:node_search_dateset) { create_once :opendata_node_search_dataset }
+    let!(:node_search_dateset) { create :opendata_node_search_dataset }
     21.times do |i|
       let!(:"dataset#{i + 1}") { create :opendata_dataset, cur_node: node_dataset }
     end

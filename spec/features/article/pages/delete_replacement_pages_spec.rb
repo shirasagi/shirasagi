@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let(:node) { create :article_node_page, filename: "docs", name: "article" }
   let(:filename) { "#{Rails.root}/spec/fixtures/ss/logo.png" }
   let(:file) { tmp_ss_file(site: site, user: cms_user, contents: filename) }
   let!(:master_page) { create(:article_page, cur_site: site, cur_node: node, cur_user: cms_user) }

@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe Opendata::NotifyDatasetPlanJob, dbscope: :example do
   let(:site) { cms_site }
-  let!(:node_search) { create_once :opendata_node_search_dataset }
-  let!(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
+  let!(:node_search) { create :opendata_node_search_dataset }
+  let!(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
 
   describe "update_plan_date not set" do
     let(:today) { Date.parse("2019/2/25") }

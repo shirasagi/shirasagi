@@ -42,8 +42,8 @@ describe "cms/pages", type: :feature, dbscope: :example, js: true do
     end
 
     context 'with node' do
-      let(:node) { create_once :cms_node_page }
-      let!(:category) { create_once :category_node_page }
+      let(:node) { create :cms_node_page }
+      let!(:category) { create :category_node_page }
 
       it do
         visit new_node_page_path(site.id, node.id)

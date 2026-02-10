@@ -2,8 +2,8 @@ require 'spec_helper'
 
 describe "opendata_datasets", type: :feature, dbscope: :example do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
-  let!(:node_search) { create_once :opendata_node_search_dataset }
+  let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
+  let!(:node_search) { create :opendata_node_search_dataset }
   let(:index_path) { opendata_datasets_path site, node }
   let(:new_path) { new_opendata_dataset_path site, node }
 
@@ -19,18 +19,18 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
 
     describe "#new" do
       before do
-        category_folder = create_once(:cms_node_node, filename: "category")
-        create_once(
+        category_folder = create(:cms_node_node, filename: "category")
+        create(
           :opendata_node_category,
           filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
-        estat_category_folder = create_once(:cms_node_node, filename: "estat_category")
-        create_once(
+        estat_category_folder = create(:cms_node_node, filename: "estat_category")
+        create(
           :opendata_node_estat_category,
           filename: "#{estat_category_folder.filename}/opendata_estat_category1",
           depth: estat_category_folder.depth + 1)
-        area_folder = create_once(:cms_node_node, filename: "area")
-        create_once(
+        area_folder = create(:cms_node_node, filename: "area")
+        create(
           :opendata_node_area,
           filename: "#{area_folder.filename}/opendata_area_1",
           depth: area_folder.depth + 1)
@@ -53,29 +53,29 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
     end
 
     context "with item" do
-      let(:category_folder) { create_once(:cms_node_node, filename: "category") }
+      let(:category_folder) { create(:cms_node_node, filename: "category") }
       let(:category) do
-        create_once(
+        create(
           :opendata_node_category,
           filename: "#{category_folder.filename}/opendata_category1",
           depth: category_folder.depth + 1)
       end
-      let(:estat_category_folder) { create_once(:cms_node_node, filename: "estat-category") }
+      let(:estat_category_folder) { create(:cms_node_node, filename: "estat-category") }
       let(:estat_category) do
-        create_once(
+        create(
           :opendata_node_estat_category,
           filename: "#{estat_category_folder.filename}/opendata_estat_category1",
           depth: estat_category_folder.depth + 1)
       end
-      let(:area_folder) { create_once(:cms_node_node, filename: "area") }
+      let(:area_folder) { create(:cms_node_node, filename: "area") }
       let(:area) do
-        create_once(
+        create(
           :opendata_node_area,
           filename: "#{area_folder.filename}/opendata_area_1",
           depth: area_folder.depth + 1)
       end
       let(:item) do
-        create_once :opendata_dataset,
+        create :opendata_dataset,
           filename: "#{node.filename}/#{unique_id}.html",
           category_ids: [ category.id ],
           estat_category_ids: [estat_category.id],
@@ -187,11 +187,11 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
   end
 
   context "public side" do
-    let(:category) { create_once :opendata_node_category, filename: "opendata_category1" }
-    let(:estat_category) { create_once :opendata_node_estat_category, filename: "opendata_estat_category1" }
-    let(:area) { create_once :opendata_node_area, filename: "opendata_area_1" }
+    let(:category) { create :opendata_node_category, filename: "opendata_category1" }
+    let(:estat_category) { create :opendata_node_estat_category, filename: "opendata_estat_category1" }
+    let(:area) { create :opendata_node_area, filename: "opendata_area_1" }
     let(:item) do
-      create_once :opendata_dataset,
+      create :opendata_dataset,
         filename: "#{node.filename}/#{unique_id}.html",
         category_ids: [ category.id ],
         estat_category_ids: [estat_category.id],
@@ -220,7 +220,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
     let(:root_group) { cms_group }
     let(:group1) { create(:cms_group, name: "#{root_group.name}/group1") }
     let(:group2) { create(:cms_group, name: "#{root_group.name}/group2") }
-    let(:category_root) { create_once(:cms_node_node, filename: 'root_category', group_ids: [ group1.id, group2.id ]) }
+    let(:category_root) { create(:cms_node_node, filename: 'root_category', group_ids: [ group1.id, group2.id ]) }
     let(:category1) do
       create(
         :opendata_node_category,
@@ -235,7 +235,7 @@ describe "opendata_datasets", type: :feature, dbscope: :example do
         depth: category_root.depth + 1,
         group_ids: [group2.id])
     end
-    let(:area_root) { create_once(:cms_node_node, filename: 'root_area', group_ids: [ group1.id, group2.id ]) }
+    let(:area_root) { create(:cms_node_node, filename: 'root_area', group_ids: [ group1.id, group2.id ]) }
     let(:area1) do
       create(:opendata_node_area, cur_node: area_root, depth: area_root.depth + 1, group_ids: [ group1.id ])
     end

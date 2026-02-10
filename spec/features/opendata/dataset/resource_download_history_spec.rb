@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Opendata::Dataset::ResourceDownloadHistoriesController, type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :opendata_node_dataset, name: "opendata_dataset" }
+  let(:node) { create :opendata_node_dataset, name: "opendata_dataset" }
   let(:now) { Time.zone.now.beginning_of_minute }
   let!(:history1) { create(:opendata_resource_download_history, downloaded: now) }
   let!(:history2) { create(:opendata_resource_download_history, downloaded: now - 1.day) }
