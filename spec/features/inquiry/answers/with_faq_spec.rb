@@ -72,8 +72,8 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
 
-        expect(page).to have_css('#menu a', text: "FAQを新規作成")
-        click_on "FAQを新規作成"
+        expect(page).to have_css('#menu a', text: I18n.t('inquiry.links.faq'))
+        click_on I18n.t('inquiry.links.faq')
         expect(page).to have_css("#item_question", text: [name, email].join(','))
       end
     end
@@ -98,8 +98,8 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
 
-        expect(page).to have_css('#menu a', text: "FAQを新規作成")
-        click_on "FAQを新規作成"
+        expect(page).to have_css('#menu a', text: I18n.t('inquiry.links.faq'))
+        click_on I18n.t('inquiry.links.faq')
         expect(page).to have_css("#item_question", text: name)
       end
     end

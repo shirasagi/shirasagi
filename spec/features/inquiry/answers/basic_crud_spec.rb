@@ -1,14 +1,16 @@
 require 'spec_helper'
 
 describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
-  let(:faq_node) { create :faq_node_page, cur_site: site }
-  let(:node) { create :inquiry_node_form, cur_site: site, faq: faq_node }
-  let(:index_path) { inquiry_answers_path(site, node) }
+  let!(:site) { cms_site }
+  let!(:group) { cms_group }
+  let!(:node) { create :inquiry_node_form, cur_site: site, group_ids: [ group.id ] }
 
   let(:remote_addr) { "X.X.X.X" }
   let(:user_agent) { unique_id }
-  let(:answer) { Inquiry::Answer.new(cur_site: site, cur_node: node, remote_addr: remote_addr, user_agent: user_agent) }
+  let(:answer) do
+    Inquiry::Answer.new(
+      cur_site: site, cur_node: node, remote_addr: remote_addr, user_agent: user_agent, group_ids: node.group_ids)
+  end
 
   let(:name) { unique_id }
   let(:email) { "#{unique_id}@example.jp" }
@@ -49,12 +51,141 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
     answer.save!
   end
 
-  context "basic crud" do
-    before { login_cms_user }
+  context "basic crud with answer admin" do
+    let!(:role) do
+      permissions = %w(read_private_cms_nodes edit_private_cms_nodes read_private_inquiry_answers edit_private_inquiry_answers delete_private_inquiry_answers)
+      create :cms_role, cur_site: site, name: unique_id, permissions: permissions
+    end
+    let!(:user) { create :cms_test_user, cur_site: site, cms_role_ids: [ role.id ], group_ids: [ group.id ] }
+
+    before { login_user user, to: inquiry_forms_path(site: site, cid: node) }
 
     context "usual case" do
       it do
-        visit index_path
+        within first(".mod-navi") do
+          click_on I18n.t("inquiry.answer")
+        end
+        expect(page).to have_css(".list-item a", text: answer.data_summary)
+        click_on answer.data_summary
+
+        within '#menu' do
+          expect(page).to have_no_link(I18n.t('inquiry.links.faq'))
+        end
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: name)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: email_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: email)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: radio_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
+
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
+
+        click_on I18n.t("ss.links.delete")
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.delete")
+        end
+        wait_for_notice I18n.t("ss.notice.deleted")
+
+        expect(page).to have_no_css(".list-item a", text: answer.data_summary)
+        expect(Inquiry::Answer.count).to eq 0
+      end
+    end
+
+    context "when a column was destroyed after answers ware committed" do
+      before { email_column.destroy }
+
+      it do
+        within first(".mod-navi") do
+          click_on I18n.t("inquiry.answer")
+        end
+        expect(page).to have_css(".list-item a", text: answer.data_summary)
+        click_on answer.data_summary
+
+        within '#menu' do
+          expect(page).to have_no_link(I18n.t('inquiry.links.faq'))
+        end
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: name)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: radio_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
+        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
+
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
+        expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
+
+        click_on I18n.t("ss.links.delete")
+        within "form#item-form" do
+          click_on I18n.t("ss.buttons.delete")
+        end
+        wait_for_notice I18n.t("ss.notice.deleted")
+
+        expect(page).to have_no_css(".list-item a", text: answer.data_summary)
+        expect(Inquiry::Answer.count).to eq 0
+      end
+    end
+
+    context "edit answer state" do
+      it do
+        within first(".mod-navi") do
+          click_on I18n.t("inquiry.answer")
+        end
+        expect(page).to have_css(".list-item a", text: answer.data_summary)
+
+        within ".list-items" do
+          expect(page).to have_text((answer.label :state))
+        end
+
+        click_on answer.data_summary
+        expect(page).to have_text I18n.t("inquiry.options.answer_state.open")
+
+        click_on I18n.t("ss.links.edit")
+
+        within "form#item-form" do
+          select I18n.t("inquiry.options.answer_state.closed"), from: 'item[state]'
+          fill_in "item[comment]", with: "comment"
+          click_on I18n.t("ss.buttons.save")
+        end
+        wait_for_notice I18n.t("ss.notice.saved")
+
+        Inquiry::Answer.find(answer.id).tap do |answer_after_closed|
+          expect(answer_after_closed.state).to eq "closed"
+          expect(answer_after_closed.comment).to eq "comment"
+          expect(answer_after_closed.data_summary).to eq answer.data_summary
+        end
+
+        click_on I18n.t("ss.links.back_to_index")
+        expect(page).to have_text I18n.t("inquiry.options.answer_state.closed")
+
+        within ".list-items" do
+          expect(page).to have_css(".list-item[data-id]", count: 0)
+          expect(page).to have_no_text(I18n.t("inquiry.options.answer_state.closed"))
+        end
+      end
+    end
+  end
+
+  context "basic crud with answer charge" do
+    let!(:role) do
+      permissions = %w(read_private_cms_nodes read_private_inquiry_answers edit_private_inquiry_answers)
+      create :cms_role, cur_site: site, name: unique_id, permissions: permissions
+    end
+    let!(:user) { create :cms_test_user, cur_site: site, cms_role_ids: [ role.id ], group_ids: [ group.id ] }
+
+    before { login_user user, to: inquiry_forms_path(site: site, cid: node) }
+
+    context "usual case" do
+      it do
+        within first(".mod-navi") do
+          click_on I18n.t("inquiry.answer")
+        end
         expect(page).to have_css(".list-item a", text: answer.data_summary)
         click_on answer.data_summary
 
@@ -72,107 +203,22 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
         expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
 
-        click_on I18n.t("ss.links.delete")
-        click_on I18n.t("ss.buttons.delete")
-
-        expect(page).to have_no_css(".list-item a", text: answer.data_summary)
-        expect(Inquiry::Answer.count).to eq 0
-      end
-    end
-
-    context "when a column was destroyed after answers ware committed" do
-      before { email_column.destroy }
-
-      it do
-        visit index_path
-        expect(page).to have_css(".list-item a", text: answer.data_summary)
-        click_on answer.data_summary
-
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: name_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: name)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: radio_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
-
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
-
-        click_on I18n.t("ss.links.delete")
-        click_on I18n.t("ss.buttons.delete")
-
-        expect(page).to have_no_css(".list-item a", text: answer.data_summary)
-        expect(Inquiry::Answer.count).to eq 0
-      end
-    end
-
-    context "edit answer state" do
-      it do
-        visit index_path
-        expect(page).to have_css(".list-item a", text: answer.data_summary)
-
-        within ".list-items" do
-          expect(page).to have_text((answer.label :state))
+        within ".nav-menu" do
+          expect(page).to have_no_link(I18n.t("ss.links.delete"))
+          click_on I18n.t("ss.links.edit")
         end
-
-        click_on answer.data_summary
-        expect(page).to have_text I18n.t("inquiry.options.answer_state.open")
-
-        click_on I18n.t("ss.links.edit")
 
         within "form#item-form" do
           select I18n.t("inquiry.options.answer_state.closed"), from: 'item[state]'
           fill_in "item[comment]", with: "comment"
           click_on I18n.t("ss.buttons.save")
         end
+        wait_for_notice I18n.t("ss.notice.saved")
 
-        click_on I18n.t("ss.links.back_to_index")
-        expect(page).to have_text I18n.t("inquiry.options.answer_state.closed")
-
-        within ".list-items" do
-          expect(page).not_to have_text I18n.t("inquiry.options.answer_state.closed")
-        end
-
-        # unclosed
-        within "form.index-search" do
-          select I18n.t("inquiry.options.search_answer_state.unclosed"), from: 's[state]'
-          click_on I18n.t("ss.buttons.search")
-        end
-
-        within ".list-items" do
-          expect(page).not_to have_text I18n.t("inquiry.options.answer_state.closed")
-        end
-
-        # open
-        within "form.index-search" do
-          select I18n.t("inquiry.options.search_answer_state.open"), from: 's[state]'
-          click_on I18n.t("ss.buttons.search")
-        end
-
-        within ".list-items" do
-          expect(page).not_to have_text I18n.t("inquiry.options.answer_state.closed")
-        end
-
-        # closed
-        within "form.index-search" do
-          select I18n.t("inquiry.options.search_answer_state.closed"), from: 's[state]'
-          click_on I18n.t("ss.buttons.search")
-        end
-
-        within ".list-items" do
-          expect(page).to have_text I18n.t("inquiry.options.answer_state.closed")
-        end
-
-        # all
-        within "form.index-search" do
-          select I18n.t("inquiry.options.search_answer_state.all"), from: 's[state]'
-          click_on I18n.t("ss.buttons.search")
-        end
-
-        within ".list-items" do
-          expect(page).to have_text I18n.t("inquiry.options.answer_state.closed")
+        Inquiry::Answer.find(answer.id).tap do |answer_after_closed|
+          expect(answer_after_closed.state).to eq "closed"
+          expect(answer_after_closed.comment).to eq "comment"
+          expect(answer_after_closed.data_summary).to eq answer.data_summary
         end
       end
     end

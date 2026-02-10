@@ -5,6 +5,8 @@ class Inquiry::Answer
   include Inquiry::Addon::KintoneApp::Answer
   include Cms::Addon::GroupPermission
 
+  DEFAULT_STATE = "open".freeze
+
   attr_accessor :cur_node, :save_mode, :section_ids
 
   store_in_default_post
@@ -18,7 +20,7 @@ class Inquiry::Answer
   field :source_name, type: String
 
   field :closed, type: DateTime, default: nil
-  field :state, type: String, default: "open"
+  field :state, type: String, default: DEFAULT_STATE
   field :comment, type: String
   field :inquiry_page_url, type: String
   field :inquiry_page_name, type: String
