@@ -2,7 +2,7 @@ class Inquiry::FeedbacksController < ApplicationController
   include Cms::BaseFilter
   include Cms::CrudFilter
 
-  model Inquiry::Column
+  model Inquiry::Answer
 
   append_view_path "app/views/cms/pages"
   navi_view "inquiry/main/navi"
@@ -18,8 +18,9 @@ class Inquiry::FeedbacksController < ApplicationController
   end
 
   def check_permission
-    return if @cur_site.inquiry_form_id != @cur_node.id
+    raise "404" if @cur_node.route != "inquiry/form"
     raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+    raise "403" unless Inquiry::Answer.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
   end
 
   public
@@ -29,8 +30,6 @@ class Inquiry::FeedbacksController < ApplicationController
       redirect_to action: :index, s: { year: Time.zone.today.year, month: Time.zone.today.month }
       return
     end
-
-    raise "403" if @cur_node.route != "inquiry/form"
 
     options = params[:s] || {}
     options[:site] = @cur_site
