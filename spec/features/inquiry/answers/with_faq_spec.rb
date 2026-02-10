@@ -1,14 +1,19 @@
 require 'spec_helper'
 
 describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
-  let(:site) { cms_site }
-  let(:faq_node) { create :faq_node_page, cur_site: site }
-  let(:node) { create :inquiry_node_form, cur_site: site, faq: faq_node }
-  let(:index_path) { inquiry_answers_path(site, node) }
+  let!(:site) { cms_site }
+  let!(:group0) { cms_group }
+  let!(:group1) { create :cms_group, name: "#{group0.name}/#{unique_id}" }
+  let!(:group2) { create :cms_group, name: "#{group0.name}/#{unique_id}" }
+  let!(:faq_node) { create :faq_node_page, cur_site: site, group_ids: [ group2.id ] }
+  let!(:node) { create :inquiry_node_form, cur_site: site, faq: faq_node, group_ids: [ group1.id ] }
 
   let(:remote_addr) { "X.X.X.X" }
   let(:user_agent) { unique_id }
-  let(:answer) { Inquiry::Answer.new(cur_site: site, cur_node: node, remote_addr: remote_addr, user_agent: user_agent) }
+  let(:answer) do
+    Inquiry::Answer.new(
+      cur_site: site, cur_node: node, remote_addr: remote_addr, user_agent: user_agent, group_ids: [ group1.id ])
+  end
 
   let(:name) { unique_id }
   let(:email) { "#{unique_id}@example.jp" }
@@ -49,58 +54,103 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
     answer.save!
   end
 
-  context "when create faq/page that use inquiry/answer" do
-    before { login_cms_user }
+  context "when a site-admin creates faq/page from inquiry/answer" do
+    let!(:user) { cms_user }
+    let(:new_faq_name) { "faq-name-#{unique_id}" }
+    let(:new_faq_answer_html) { "<p>faq-answer-#{unique_id}</p>" }
 
-    context "usual case" do
-      it do
-        visit index_path
-        expect(page).to have_css(".list-item a", text: answer.data_summary)
+    before { login_user user, to: inquiry_answers_path(site: site, cid: node) }
+
+    it do
+      expect(page).to have_css(".list-item a", text: answer.data_summary)
+      within ".list-item[data-id]" do
         click_on answer.data_summary
-
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: name_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: name)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: email_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: email)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: radio_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
-
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
-
-        expect(page).to have_css('#menu a', text: I18n.t('inquiry.links.faq'))
+      end
+      within ".nav-menu" do
         click_on I18n.t('inquiry.links.faq')
-        expect(page).to have_css("#item_question", text: [name, email].join(','))
+      end
+      wait_for_all_ckeditors_ready
+      within "form#item-form" do
+        expect(page).to have_css('[name="item[question]"]', text: [name, email].join(','))
+
+        fill_in "item[name]", with: new_faq_name
+        fill_in_ckeditor "item[html]", with: new_faq_answer_html
+
+        click_on I18n.t("ss.buttons.draft_save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      expect(Faq::Page.all.count).to eq 1
+      Faq::Page.all.first.tap do |new_faq_page|
+        expect(new_faq_page.site_id).to eq site.id
+        expect(new_faq_page.name).to eq new_faq_name
+        expect(new_faq_page.question).to eq "<p>#{[name, email].join(',')}</p>"
+        expect(new_faq_page.html).to eq new_faq_answer_html
+        expect(new_faq_page.state).to eq "closed"
       end
     end
+  end
 
-    context "when a column was destroyed after answers ware committed" do
-      before { email_column.destroy }
+  context "when a user who is answer charge and faq editor creates faq/page from inquiry/answer" do
+    let!(:role) do
+      answer_charge_permissions = %w(read_private_cms_nodes read_private_inquiry_answers edit_private_inquiry_answers)
+      faq_editor_permissions = %w(edit_private_cms_nodes read_private_faq_pages edit_private_faq_pages)
+      create :cms_role, cur_site: site, name: unique_id, permissions: answer_charge_permissions + faq_editor_permissions
+    end
+    let!(:user) { create :cms_test_user, cur_site: site, cms_role_ids: [ role.id ], group_ids: [ group1.id, group2.id ] }
+    let(:new_faq_name) { "faq-name-#{unique_id}" }
+    let(:new_faq_answer_html) { "<p>faq-answer-#{unique_id}</p>" }
 
-      it do
-        visit index_path
-        expect(page).to have_css(".list-item a", text: answer.data_summary)
+    before { login_user user, to: inquiry_answers_path(site: site, cid: node) }
+
+    it do
+      expect(page).to have_css(".list-item a", text: answer.data_summary)
+      within ".list-item[data-id]" do
         click_on answer.data_summary
-
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: name_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: name)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: radio_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: radio_value)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: select_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: select_value)
-        expect(page).to have_css(".mod-inquiry-answer-body dt", text: same_as_name_column.name)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: same_as_name)
-
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: remote_addr)
-        expect(page).to have_css(".mod-inquiry-answer-body dd", text: user_agent)
-
-        expect(page).to have_css('#menu a', text: I18n.t('inquiry.links.faq'))
+      end
+      within ".nav-menu" do
         click_on I18n.t('inquiry.links.faq')
-        expect(page).to have_css("#item_question", text: name)
+      end
+      wait_for_all_ckeditors_ready
+      within "form#item-form" do
+        expect(page).to have_css('[name="item[question]"]', text: [name, email].join(','))
+
+        fill_in "item[name]", with: new_faq_name
+        fill_in_ckeditor "item[html]", with: new_faq_answer_html
+
+        click_on I18n.t("ss.buttons.save")
+      end
+      wait_for_notice I18n.t("ss.notice.saved")
+
+      expect(Faq::Page.all.count).to eq 1
+      Faq::Page.all.first.tap do |new_faq_page|
+        expect(new_faq_page.site_id).to eq site.id
+        expect(new_faq_page.name).to eq new_faq_name
+        expect(new_faq_page.question).to eq "<p>#{[name, email].join(',')}</p>"
+        expect(new_faq_page.html).to eq new_faq_answer_html
+        expect(new_faq_page.state).to eq "closed"
+      end
+    end
+  end
+
+  context "when a user who is just an answer charge tries to create faq/page from inquiry/answer" do
+    let!(:role) do
+      answer_charge_permissions = %w(read_private_cms_nodes read_private_inquiry_answers edit_private_inquiry_answers)
+      create :cms_role, cur_site: site, name: unique_id, permissions: answer_charge_permissions
+    end
+    let!(:user) { create :cms_test_user, cur_site: site, cms_role_ids: [ role.id ], group_ids: [ group1.id ] }
+    let(:new_faq_name) { "faq-name-#{unique_id}" }
+    let(:new_faq_answer_html) { "<p>faq-answer-#{unique_id}</p>" }
+
+    before { login_user user, to: inquiry_answers_path(site: site, cid: node) }
+
+    it do
+      expect(page).to have_css(".list-item a", text: answer.data_summary)
+      within ".list-item[data-id]" do
+        click_on answer.data_summary
+      end
+      within ".nav-menu" do
+        expect(page).to have_no_link(I18n.t('inquiry.links.faq'))
       end
     end
   end
