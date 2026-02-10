@@ -43,9 +43,12 @@ class Article::PagesController < ApplicationController
       end
     end
 
-    criteria = @model.site(@cur_site).
-      node(@cur_node).
-      allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+    criteria = @model.all
+    criteria = criteria.site(@cur_site)
+    criteria = criteria.node(@cur_node)
+    criteria = criteria.allow(:read, @cur_user, site: @cur_site, node: @cur_node)
+    # 効率を優先し id の降順に並べる
+    criteria = criteria.reorder(id: -1)
 
     if form.present?
       criteria = criteria.where(form_id: form)
