@@ -1,7 +1,9 @@
 class Cms::PageExporter
   include ActiveModel::Model
 
-  attr_accessor :mode, :site, :criteria
+  MAX_LENGTH = 1_024
+
+  attr_accessor :mode, :site, :truncate, :criteria
 
   class << self
     def name_and_filename(_item, criteria)
@@ -116,9 +118,29 @@ class Cms::PageExporter
   end
 
   def draw_meta(drawer)
-    drawer.column :keywords
-    drawer.column :description
-    drawer.column :summary_html
+    drawer.column :keywords do
+      drawer.body do |item|
+        keywords = item.try(:keywords)
+        if keywords && truncate
+          keywords = SS::Csv.truncate_overflows(keywords, "cms.overflow_keyword")
+        end
+        keywords.try(:join, ", ")
+      end
+    end
+    drawer.column :description do
+      drawer.body do |item|
+        text = item.try(:description)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
+    end
+    drawer.column :summary_html do
+      drawer.body do |item|
+        text = item.try(:summary_html)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
+    end
   end
 
   def draw_node_setting(drawer)
@@ -155,6 +177,11 @@ class Cms::PageExporter
     end
     drawer.column :upper_html do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.upper_html") }
+      drawer.body do |item|
+        text = item.try(:upper_html)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
     end
     drawer.column :loop_setting_id do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.loop_setting_id") }
@@ -162,18 +189,38 @@ class Cms::PageExporter
     end
     drawer.column :loop_html do
       drawer.head { I18n.t("all_content.loop_html") }
+      drawer.body do |item|
+        text = item.try(:loop_html)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
     end
     drawer.column :lower_html do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.lower_html") }
+      drawer.body do |item|
+        text = item.try(:lower_html)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
     end
     drawer.column :loop_liquid do
       drawer.head { I18n.t("all_content.loop_liquid") }
+      drawer.body do |item|
+        text = item.try(:loop_liquid)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
     end
     drawer.column :no_items_display_state, type: :label do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.no_items_display_state") }
     end
     drawer.column :substitute_html do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.substitute_html") }
+      drawer.body do |item|
+        text = item.try(:substitute_html)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
     end
     drawer.column :sort_column_name do
       drawer.head { I18n.t("mongoid.attributes.cms/addon/list/model.sort_column_name") }
@@ -188,12 +235,20 @@ class Cms::PageExporter
   end
 
   def draw_body(drawer)
-    drawer.column :html
+    drawer.column :html do
+      drawer.body do |item|
+        text = item.try(:html)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
+    end
     if mode_article?
       drawer.column :body_part do
         drawer.body do |item|
           next if !item.respond_to?(:body_parts) || item.body_parts.blank?
-          item.body_parts.map { |body| body.to_s.gsub("\t", '    ') }.join("\t")
+          text = item.body_parts.map { |body| body.to_s.gsub("\t", '    ') }.join("\t")
+          text = text.try(:truncate, MAX_LENGTH) if truncate
+          text
         end
       end
     end
@@ -205,10 +260,14 @@ class Cms::PageExporter
         names = []
         if item.try(:file_ids)
           SS::File.each_file(item.file_ids) do |file|
-            names << file.name
+            names << file.name.presence || file.filename.presence
           end
         end
-        names.compact.join("\n")
+        names.compact!
+        if truncate
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_file")
+        end
+        names.join("\n")
       end
     end
 
@@ -221,7 +280,11 @@ class Cms::PageExporter
             urls << file.try(:url)
           end
         end
-        urls.compact.join("\n")
+        urls.compact!
+        if truncate
+          urls = SS::Csv.truncate_overflows(urls, "ss.overflow_file")
+        end
+        urls.join("\n")
       end
     end
   end
@@ -241,7 +304,11 @@ class Cms::PageExporter
       drawer.body do |item|
         categories = item.try(:st_categories)
         if categories
-          self.class.name_and_filename(item, categories).join("\n")
+          names = self.class.name_and_filename(item, categories)
+          if truncate
+            names = SS::Csv.truncate_overflows(names, "cms.overflow_category")
+          end
+          names.join("\n")
         end
       end
     end
@@ -252,7 +319,11 @@ class Cms::PageExporter
       drawer.body do |item|
         categories = item.try(:categories)
         if categories
-          self.class.name_and_filename(item, categories).join("\n")
+          names = self.class.name_and_filename(item, categories)
+          if truncate
+            names = SS::Csv.truncate_overflows(names, "cms.overflow_category")
+          end
+          names.join("\n")
         end
       end
     end
@@ -298,9 +369,13 @@ class Cms::PageExporter
       drawer.body do |item|
         points = item.try(:map_points)
         if points.present?
-          points.map do |point|
+          points = points.map do |point|
             [ point[:name], point[:loc].join(","), point[:text], point[:image] ].to_csv.strip
-          end.join("\n")
+          end
+          if truncate
+            points = SS::Csv.truncate_overflows(points, "map.overflow_map_point")
+          end
+          points.join("\n")
         end
       end
     end
@@ -317,7 +392,11 @@ class Cms::PageExporter
     drawer.column :related_pages do
       drawer.body do |item|
         if item.respond_to?(:related_pages)
-          self.class.name_and_filename(item, item.related_pages).join("\n")
+          names = self.class.name_and_filename(item, item.related_pages)
+          if truncate
+            names = SS::Csv.truncate_overflows(names, "cms.overflow_page")
+          end
+          names.join("\n")
         end
       end
     end
@@ -372,7 +451,13 @@ class Cms::PageExporter
 
   def draw_groups(drawer)
     drawer.column :groups do
-      drawer.body { |item| item.try(:groups).try(:pluck, :name).join("\n") }
+      drawer.body do |item|
+        names = item.try(:groups).try(:pluck, :name)
+        if names && truncate
+          names = SS::Csv.truncate_overflows(names, "ss.overflow_group")
+        end
+        names.join("\n")
+      end
     end
   end
 
@@ -428,7 +513,15 @@ class Cms::PageExporter
   def draw_column_check_box(drawer, form, column, value_type)
     drawer.column "#{form.id}/#{column.id}/values" do
       drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:values)}" }
-      drawer.body { |item| find_column_value(item, form, column).try { |v| v.values.join(", ") } }
+      drawer.body do |item|
+        find_column_value(item, form, column).try do |v|
+          values = v.values
+          if truncate
+            values = SS::Csv.truncate_overflows(values, "cms.overflow_value")
+          end
+          values.join(", ")
+        end
+      end
     end
   end
 
@@ -479,7 +572,11 @@ class Cms::PageExporter
   def draw_column_free(drawer, form, column, value_type)
     drawer.column "#{form.id}/#{column.id}/value" do
       drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:value)}" }
-      drawer.body { |item| find_column_value(item, form, column).try(:value) }
+      drawer.body do |item|
+        text = find_column_value(item, form, column).try(:value)
+        text = text.try(:truncate, MAX_LENGTH) if truncate
+        text
+      end
     end
   end
 
@@ -497,7 +594,15 @@ class Cms::PageExporter
   def draw_column_list(drawer, form, column, value_type)
     drawer.column "#{form.id}/#{column.id}/lists" do
       drawer.head { "#{form.name}/#{column.name}/#{value_type.t(:lists)}" }
-      drawer.body { |item| find_column_value(item, form, column).try { |v| v.lists.join("\n") } }
+      drawer.body do |item|
+        find_column_value(item, form, column).try do |v|
+          lists = v.lists
+          if truncate
+            lists = SS::Csv.truncate_overflows(lists, "cms.overflow_value")
+          end
+          lists.join("\n")
+        end
+      end
     end
   end
 
@@ -624,7 +729,11 @@ class Cms::PageExporter
 
     event_recurrence = item.event_recurrences[index]
     return if event_recurrence.blank? || event_recurrence.exclude_dates.blank?
-    event_recurrence.exclude_dates.map { |date| I18n.l(date.to_date, format: :picker) }.join("\n")
+    exclude_dates = event_recurrence.exclude_dates.map { |date| I18n.l(date.to_date, format: :picker) }
+    if truncate
+      exclude_dates = SS::Csv.truncate_overflows(exclude_dates, "event.overflow_exclude_date")
+    end
+    exclude_dates.join("\n")
   end
 
   def calc_file_size(content)

@@ -21,6 +21,9 @@ ja:
     holiday_short: 祝
     all_day: 終日
     exclude_dates: 除外日
+    overflow_exclude_date:
+      one: "他1件の除外日"
+      other: "他%{count}件の除外日"
     dates:
       setting: 開催期間
       start_date: 開催期間開始
