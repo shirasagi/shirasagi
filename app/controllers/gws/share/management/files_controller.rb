@@ -136,8 +136,12 @@ class Gws::Share::Management::FilesController < ApplicationController
   def active
     raise '403' unless @item.allowed?(:edit, @cur_user, site: @cur_site)
 
+    @model = Gws::Share::RecoverFileService
+    @item = @model.new(cur_site: @cur_site, cur_user: @cur_user, item: @item)
+    @item.attributes = params.require(:item).permit(@model.permitted_fields)
+
     location = { action: :index, folder: params[:folder], category: params[:category] }
-    render_destroy @item.active, { location: location }
+    render_destroy @item.call, { location: location, render: { template: "recover" } }
   end
 
   # def active_all

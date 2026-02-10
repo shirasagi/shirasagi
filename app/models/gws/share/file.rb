@@ -87,10 +87,6 @@ class Gws::Share::File
     deleted.blank? || deleted > Time.zone.now
   end
 
-  def active
-    update(deleted: nil)
-  end
-
   def disable
     update(deleted: Time.zone.now) if deleted.blank? || deleted > Time.zone.now
   end

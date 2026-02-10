@@ -154,9 +154,8 @@ module Gws::Model::Folder
   def validate_children
     if name.present? && dependant_scope.where(name: /^#{::Regexp.escape(name)}\//).exists?
       errors.add :base, :found_children
-      return false
+      throw :abort
     end
-    true
   end
 
   def validate_folder_name
