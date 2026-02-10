@@ -45,7 +45,8 @@ module Inquiry
 
   def menu_item_inquiry_results(cur_site, cur_node, cur_user)
     return unless cur_node.route == "inquiry/form"
-    return unless cur_node.allowed?(:edit, cur_user, site: cur_site)
+    return unless cur_node.allowed?(:read, cur_user, site: cur_site)
+    return unless Inquiry::Answer.allowed?(:read, cur_user, site: cur_site, node: cur_node)
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.inquiry_results_path(*args, site: cur_site, cid: cur_node, **kwargs) }

@@ -58,10 +58,14 @@ describe Inquiry, dbscope: :example do
 
       it do
         menu_items = Inquiry.enum_menu_items(site, node, user).to_a
-        expect(menu_items.length).to eq 1
+        expect(menu_items.length).to eq 2
         menu_items[0].tap do |menu_item|
           expect(menu_item.label).to eq I18n.t("inquiry.answer")
           expect(menu_item.path).to eq helpers.inquiry_answers_path(site: site, cid: node)
+        end
+        menu_items[1].tap do |menu_item|
+          expect(menu_item.label).to eq I18n.t("inquiry.result")
+          expect(menu_item.path).to eq helpers.inquiry_results_path(site: site, cid: node)
         end
       end
     end
