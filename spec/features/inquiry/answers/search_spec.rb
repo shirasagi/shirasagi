@@ -349,7 +349,6 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
     end
   end
 
-
   context "search with site admin" do
     let!(:user) { cms_user }
     let(:initial_search_query) { nil }

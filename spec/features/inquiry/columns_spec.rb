@@ -8,7 +8,9 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
 
   context "with column editor" do
     let!(:role) do
-      permissions = %w(read_private_cms_nodes read_other_inquiry_columns edit_other_inquiry_columns delete_other_inquiry_columns)
+      permissions = %w(
+        read_private_cms_nodes
+        read_other_inquiry_columns edit_other_inquiry_columns delete_other_inquiry_columns)
       create :cms_role, cur_site: site, name: unique_id, permissions: permissions
     end
     let!(:user) { create :cms_test_user, cur_site: site, cms_role_ids: [ role.id ], group_ids: [ group1.id ] }

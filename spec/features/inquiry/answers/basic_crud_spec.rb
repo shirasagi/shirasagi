@@ -53,7 +53,9 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
 
   context "basic crud with answer admin" do
     let!(:role) do
-      permissions = %w(read_private_cms_nodes edit_private_cms_nodes read_private_inquiry_answers edit_private_inquiry_answers delete_private_inquiry_answers)
+      permissions = %w(
+        read_private_cms_nodes
+        read_private_inquiry_answers edit_private_inquiry_answers delete_private_inquiry_answers)
       create :cms_role, cur_site: site, name: unique_id, permissions: permissions
     end
     let!(:user) { create :cms_test_user, cur_site: site, cms_role_ids: [ role.id ], group_ids: [ group.id ] }
@@ -174,7 +176,9 @@ describe "inquiry_answers", type: :feature, dbscope: :example, js: true do
 
   context "basic crud with answer charge" do
     let!(:role) do
-      permissions = %w(read_private_cms_nodes read_private_inquiry_answers edit_private_inquiry_answers)
+      permissions = %w(
+        read_private_cms_nodes
+        read_private_inquiry_answers edit_private_inquiry_answers)
       create :cms_role, cur_site: site, name: unique_id, permissions: permissions
     end
     let!(:user) { create :cms_test_user, cur_site: site, cms_role_ids: [ role.id ], group_ids: [ group.id ] }
