@@ -139,7 +139,18 @@ jobs:
           if [ $? -ne 0 ]; then
             exit 1
           fi
-          echo $file_list | xargs bundle exec rspec --profile 10
+          set -o pipefail
+          set +e
+          echo $file_list | xargs bundle exec rspec --profile 10 2>&1 | tee rspec_output.txt
+          rspec_exit_code=${PIPESTATUS[1]}
+          set +o pipefail
+          set -e
+          # Always extract failures from RSpec output, even if RSpec failed
+          if [ -s rspec_output.txt ]; then
+            cat rspec_output.txt | bundle exec ruby .travis.d/extract_spec_failures.rb
+          fi
+          # Exit with the original RSpec exit code
+          exit $rspec_exit_code
         env:
           TZ: "Asia/Tokyo"
           LANG: ja_JP.UTF-8
@@ -157,3 +168,115 @@ jobs:
           # driver: random
           # RSPEC_LOCALE: en
           GOOGLE_MAPS_API_KEY: ${{ secrets.GOOGLE_MAPS_API_KEY }}
+      - name: Collect failure specs
+        if: ${{ failure() && github.event_name == 'pull_request' }}
+        run: |
+          if [ ! -s failures ]; then
+            exit 0
+          fi
+          mkdir -p ci_failures
+          cp failures "ci_failures/failures-${{ matrix.id }}.txt"
+      - name: Upload failure specs artifact
+        if: ${{ failure() && github.event_name == 'pull_request' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ci-failures-${{ matrix.id }}
+          path: ci_failures/
+          if-no-files-found: ignore
+
+  aggregate:
+    name: Aggregate CI Results
+    runs-on: ubuntu-22.04
+    needs: test
+    if: ${{ always() && github.event_name == 'pull_request' }}
+    permissions:
+      contents: read
+      pull-requests: write
+    steps:
+      - name: Download failure artifacts
+        uses: actions/download-artifact@v4
+        with:
+          pattern: ci-failures-*
+          merge-multiple: true
+          path: ./aggregated-failures
+        continue-on-error: true
+      - name: Debug failure artifacts
+        run: |
+          echo "=== Checking aggregated-failures ==="
+          ls -la aggregated-failures/ || echo "aggregated-failures directory does not exist"
+          find aggregated-failures -type f 2>/dev/null || echo "No files found in aggregated-failures"
+          echo "=== End debug ==="
+        continue-on-error: true
+      - name: Build comment body
+        id: summary
+        env:
+          TEST_RESULT: ${{ needs.test.result }}
+        run: |
+          set -euo pipefail
+          run_url="https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+          mkdir -p tmp
+          comment_file="tmp/comment.md"
+          status="${TEST_RESULT:-success}"
+          comment_status="success"
+          failures=""
+          if compgen -G "aggregated-failures/**/*.txt" > /dev/null; then
+            failures=$(find aggregated-failures -type f -name '*.txt' -print0 | xargs -0 cat | sed 's/\r$//' | awk 'NF' | sort -u)
+            if [ -n "$failures" ]; then
+              count=$(printf "%s\n" "$failures" | wc -l | tr -d ' ')
+              {
+                echo "## 🚨 CI Test Failures Summary (Unified)"
+                echo
+                echo "**Total failed files:** ${count}"
+                echo
+                echo "**Failed test files:**"
+                echo
+                printf '%s\n' "$failures" | sed 's/^/- /'
+                echo
+                echo "**CI Run:** ${run_url}"
+              } > "$comment_file"
+              comment_status="failure"
+            fi
+          fi
+
+          if [ "$comment_status" != "failure" ] && [ "$status" != "success" ]; then
+            comment_status="failure"
+            {
+              echo "## 🚨 CI Test Status (Unified)"
+              echo
+              echo "CIはステータス「${status}」で終了しましたが、失敗したテストの詳細を取得できませんでした。"
+              echo
+              echo "**CI Run:** ${run_url}"
+            } > "$comment_file"
+          elif [ "$status" = "success" ]; then
+            {
+              echo "## ✅ CI Test Status (Unified)"
+              echo
+              echo "すべて成功しました。"
+              echo
+              echo "**CI Run:** ${run_url}"
+            } > "$comment_file"
+            comment_status="success"
+          fi
+
+          if [ -s "$comment_file" ]; then
+            echo "comment_path=$comment_file" >> "$GITHUB_OUTPUT"
+          fi
+          echo "status=$comment_status" >> "$GITHUB_OUTPUT"
+      - name: Upsert pull request comment
+        if: ${{ steps.summary.outputs.comment_path != '' }}
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          COMMENT_FILE: ${{ steps.summary.outputs.comment_path }}
+          STATUS: ${{ steps.summary.outputs.status }}
+        run: |
+          set -euo pipefail
+          pr_number="${{ github.event.pull_request.number }}"
+          repo="${{ github.repository }}"
+          comment_selector='.user.login=="github-actions[bot]" and ((.body | startswith("## 🚨 CI Test Failures Summary (Unified)")) or (.body | startswith("## ✅ CI Test Status (Unified)")))'
+          existing_id=$(gh api repos/${repo}/issues/${pr_number}/comments --paginate --jq "[.[] | select(${comment_selector})] | last | .id // empty")
+
+          if [ -n "$existing_id" ]; then
+            gh api repos/${repo}/issues/comments/${existing_id} -X PATCH -F body=@"${COMMENT_FILE}"
+          else
+            gh pr comment ${pr_number} --repo "${repo}" --body-file "${COMMENT_FILE}"
+          fi
