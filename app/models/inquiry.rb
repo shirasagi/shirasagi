@@ -24,7 +24,8 @@ module Inquiry
   end
 
   def menu_item_inquiry_columns(cur_site, cur_node, cur_user)
-    return unless cur_node.route == "inquiry/form"
+    # article/page 配下でもモジュールを切り替えると質問項目を閲覧できるようにする
+    # return unless cur_node.route == "inquiry/form"
     return unless cur_node.allowed?(:read, cur_user, site: cur_site)
     return unless Inquiry::Column.allowed?(:read, cur_user, site: cur_site, node: cur_node)
 
@@ -34,7 +35,8 @@ module Inquiry
   end
 
   def menu_item_inquiry_answers(cur_site, cur_node, cur_user)
-    return unless cur_node.route == "inquiry/form"
+    # article/page 配下でもモジュールを切り替えると回答を閲覧できるようにする
+    # return unless cur_node.route == "inquiry/form"
     return unless cur_node.allowed?(:read, cur_user, site: cur_site)
     return unless Inquiry::Answer.allowed?(:read, cur_user, site: cur_site, node: cur_node)
 
@@ -44,7 +46,8 @@ module Inquiry
   end
 
   def menu_item_inquiry_results(cur_site, cur_node, cur_user)
-    return unless cur_node.route == "inquiry/form"
+    # article/page 配下でもモジュールを切り替えると集計結果を閲覧できるようにする
+    # return unless cur_node.route == "inquiry/form"
     return unless cur_node.allowed?(:read, cur_user, site: cur_site)
     return unless Inquiry::Answer.allowed?(:read, cur_user, site: cur_site, node: cur_node)
 
@@ -54,7 +57,8 @@ module Inquiry
   end
 
   def menu_item_inquiry_feedbacks(cur_site, cur_node, cur_user)
-    return unless cur_node.route == "inquiry/form"
+    # article/page 配下でもモジュールを切り替えるとフィードバックを閲覧できるようにする
+    # return unless cur_node.route == "inquiry/form"
     return unless cur_node.allowed?(:edit, cur_user, site: cur_site)
     return unless Inquiry::Answer.allowed?(:read, cur_user, site: cur_site, node: cur_node)
 
