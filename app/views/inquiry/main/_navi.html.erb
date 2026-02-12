@@ -1,12 +1,20 @@
-<%= node_navi :inquiry do %>
-  <% if @cur_node.route == "inquiry/form" %>
-    <h3><%= link_to t("inquiry.column"), inquiry_columns_path %></h3>
-    <h3><%= link_to t("inquiry.answer"), inquiry_answers_path %></h3>
-    <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-      <h3><%= link_to t("inquiry.result"), inquiry_results_path %></h3>
-      <h3><%= link_to t("inquiry.feedback"), inquiry_feedbacks_path %></h3>
+<nav class="mod-navi">
+  <% menus = Inquiry.enum_menu_items(@cur_site, @cur_node, @cur_user).to_a %>
+  <% if menus.present? %>
+    <h2><%= t("cms.nodes.inquiry/form") %></h2>
+    <% menus.each do |menu_item| %>
+      <h3><%= link_to menu_item.label, menu_item.path, class: menu_item.css_classes %></h3>
     <% end %>
-  <% else %>
-    <h3><%= link_to t("inquiry.nodes"), inquiry_nodes_path %></h3>
   <% end %>
-<% end %>
+
+  <h2><%= t("cms.nodes.inquiry/node") %></h2>
+  <h3><%= link_to t("inquiry.nodes"), inquiry_nodes_path %></h3>
+</nav>
+
+<nav class="mod-navi">
+  <% mod_navi do %>
+    <h2 class="icon-material icon-material-display"><%= t('cms.switch_module') %></h2>
+  <% end %>
+</nav>
+
+<%= render(partial: "cms/node/main/node_navi") %>

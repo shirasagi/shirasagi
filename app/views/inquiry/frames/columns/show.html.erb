@@ -1,12 +1,21 @@
+<%
+  editable = item.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+  deletable = item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
+%>
 <div class="gws-column-item" data-id="<%= item.id %>">
   <div class="main-box">
-    <div class="gws-column-item-drag-handle">
+    <% if editable %>
+      <div class="gws-column-item-drag-handle">
+        <h2 class="header"><%= item.label :input_type %></h2>
+        <%= md_icons.outlined "drag_handle", class: "gws-column-item-drag-handle-icon" %>
+      </div>
+    <% else %>
       <h2 class="header"><%= item.label :input_type %></h2>
-      <%= md_icons.outlined "drag_handle", class: "gws-column-item-drag-handle-icon" %>
-    </div>
+    <% end %>
 
     <%= error_messages_for :item %>
 
+    <%# preview form %>
     <div class="gws-column-item-preview" data-controller="ss--click-disabler">
       <dl class="see gws-column-see">
         <%= form_for :item, url: { action: :update, id: item.id } do |f| %>
@@ -14,36 +23,43 @@
         <% end %>
       </dl>
     </div>
-    <hr class="gws-column-item-divider">
-    <div class="gws-column-item-toolbar-list" data-controller="gws--column--item-toolbar">
-      <div class="gws-column-item-toolbar-item-group">
-        <div class="gws-column-item-toolbar-item gws-column-item-edit">
-          <%= link_to edit_inquiry_frames_column_path(id: item, ref: ref), class: "btn", title: t("ss.links.edit"), data: { turbo: true } do %>
-            <%= md_icons.outlined "edit", size: 15, style: "vertical-align: -3px" %>
-          <% end %>
-        </div>
-        <% if item.input_type != 'section'%>
-          <div class="gws-column-item-toolbar-item gws-column-item-detail">
-            <%= button_tag name: "detail", type: :button, class: "btn btn-gws-column-item-detail", title: t("gws/column.links.edit_in_detail"), data: { ref: edit_inquiry_apis_column_path(form_id: item.form, id: item, ref: ref) } do %>
-              <%= md_icons.outlined "open_in_new", size: 15, style: "vertical-align: -3px" %>
+
+    <% if editable || deletable %>
+      <hr class="gws-column-item-divider">
+      <div class="gws-column-item-toolbar-list" data-controller="gws--column--item-toolbar">
+        <% if editable %>
+          <div class="gws-column-item-toolbar-item-group">
+            <div class="gws-column-item-toolbar-item gws-column-item-edit">
+              <%= link_to edit_inquiry_frames_column_path(id: item, ref: ref), class: "btn", title: t("ss.links.edit"), data: { turbo: true } do %>
+                <%= md_icons.outlined "edit", size: 15, style: "vertical-align: -3px" %>
+              <% end %>
+            </div>
+            <% if item.input_type != 'section'%>
+              <div class="gws-column-item-toolbar-item gws-column-item-detail">
+                <%= button_tag name: "detail", type: :button, class: "btn btn-gws-column-item-detail", title: t("gws/column.links.edit_in_detail"), data: { ref: edit_inquiry_apis_column_path(form_id: item.form, id: item, ref: ref) } do %>
+                  <%= md_icons.outlined "open_in_new", size: 15, style: "vertical-align: -3px" %>
+                <% end %>
+              </div>
+            <% end %>
+            <% if item.input_type == 'radio_button' %>
+              <div class="gws-column-item-toolbar-item gws-column-item-edit">
+                <%= link_to edit_inquiry_frames_column_path(id: item, ref: ref, form: 'branch'), class: "btn", title: t("gws/column.links.edit_conditional_branch"), data: { turbo: true } do %>
+                  <span class="material-icons-outlined md-16" style="vertical-align: -3px">format_list_bulleted</span>
+                <% end %>
+              </div>
             <% end %>
           </div>
         <% end %>
-        <% if item.input_type == 'radio_button'%>
-          <div class="gws-column-item-toolbar-item gws-column-item-edit">
-            <%= link_to edit_inquiry_frames_column_path(id: item, ref: ref, form: 'branch'), class: "btn", title: t("gws/column.links.edit_conditional_branch"), data: { turbo: true } do %>
-              <span class="material-icons-outlined md-16" style="vertical-align: -3px">format_list_bulleted</span>
-            <% end %>
+        <% if deletable %>
+          <div class="gws-column-item-toolbar-item-group">
+            <div class="gws-column-item-toolbar-item gws-column-item-delete">
+              <%= button_tag name: "delete", type: :button, class: "btn btn-red btn-gws-column-item-delete", title: t("ss.links.delete"), data: { ref: inquiry_frames_column_path(id: item, ref: ref) } do %>
+                <%= md_icons.outlined "delete", size: 15, style: "vertical-align: -3px" %>
+              <% end %>
+            </div>
           </div>
         <% end %>
       </div>
-      <div class="gws-column-item-toolbar-item-group">
-        <div class="gws-column-item-toolbar-item gws-column-item-delete">
-          <%= button_tag name: "delete", type: :button, class: "btn btn-red btn-gws-column-item-delete", title: t("ss.links.delete"), data: { ref: inquiry_frames_column_path(id: item, ref: ref) } do %>
-            <%= md_icons.outlined "delete", size: 15, style: "vertical-align: -3px" %>
-          <% end %>
-        </div>
-      </div>
-    </div>
+    <% end %>
   </div>
 </div>
