@@ -16,6 +16,10 @@ RSpec.describe SS::Migration20210628000000, dbscope: :example do
     it do
       page.reload
       expect(page.size).to eq html.bytesize
+
+      # マイグレーション結果と page.new_size_input の結果が同じかを確認
+      page.new_size_input
+      expect(page.size).to eq html.bytesize
     end
   end
 
@@ -33,6 +37,10 @@ RSpec.describe SS::Migration20210628000000, dbscope: :example do
 
     it do
       page.reload
+      expect(page.size).to eq html.bytesize + file.size
+
+      # マイグレーション結果と page.new_size_input の結果が同じかを確認
+      page.new_size_input
       expect(page.size).to eq html.bytesize + file.size
     end
   end
@@ -71,6 +79,10 @@ RSpec.describe SS::Migration20210628000000, dbscope: :example do
       described_class.new.change
 
       Article::Page.find(page.id).tap do |page_after_migration|
+        expect(page_after_migration.size).to eq rendered_html.bytesize + file.size
+
+        # マイグレーション結果と page.new_size_input の結果が同じかを確認
+        page_after_migration.new_size_input
         expect(page_after_migration.size).to eq rendered_html.bytesize + file.size
       end
     end
