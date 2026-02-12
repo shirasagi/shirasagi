@@ -74,8 +74,8 @@ en:
       gws/elasticsearch/indexer/monitor_post_job: GWS Full-text search/Inquiry and response indexer
       gws/elasticsearch/indexer/memo_message_job: GWS Full-text search/Contact memo indexer
       gws/elasticsearch/indexer/report_file_job: GWS Full-text search/Report indexer
-      gws/elasticsearch/indexer/workflow_file_job: GWS Full-text search/Workflow indexer
-      gws/elasticsearch/indexer/workflow_form_job: GWS Full-text search/Workflow indexer
-      gws/elasticsearch/indexer/workflow2_file_job: GWS Full-text search/Workflow2 indexer
+      gws/elasticsearch/indexer/workflow_file_job: GWS Full-text search/Workflow application data indexer
+      gws/elasticsearch/indexer/workflow_form_job: GWS Full-text search/Workflow application form indexer
+      gws/elasticsearch/indexer/workflow2_file_job: GWS Full-text search/Workflow2 Application data indexer
       gws/elasticsearch/indexer/notice_post_job: GWS Full-text search/Announcements indexer
       gws/elasticsearch/indexer/workload_work_job: GWS Full-text search/Workload works indexer

@@ -74,8 +74,8 @@ ja:
       gws/elasticsearch/indexer/monitor_post_job: GWS全文検索/照会・回答インデクサー
       gws/elasticsearch/indexer/memo_message_job: GWS全文検索/連絡メモインデクサー
       gws/elasticsearch/indexer/report_file_job: GWS全文検索/レポートインデクサー
-      gws/elasticsearch/indexer/workflow_file_job: GWS全文検索/ワークフローインデクサー
-      gws/elasticsearch/indexer/workflow_form_job: GWS全文検索/ワークフローインデクサー
-      gws/elasticsearch/indexer/workflow2_file_job: GWS全文検索/ワークフロー2インデクサー
+      gws/elasticsearch/indexer/workflow_file_job: GWS全文検索/ワークフロー 申請データ インデクサー
+      gws/elasticsearch/indexer/workflow_form_job: GWS全文検索/ワークフロー 申請フォーム インデクサー
+      gws/elasticsearch/indexer/workflow2_file_job: GWS全文検索/ワークフロー2 申請データ インデクサー
       gws/elasticsearch/indexer/notice_post_job: GWS全文検索/お知らせインデクサー
       gws/elasticsearch/indexer/workload_work_job: GWS全文検索/担当業務インデクサー
