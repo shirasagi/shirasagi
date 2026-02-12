@@ -48,6 +48,7 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
           click_on input_type_label
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
 
         within first('.gws-column-item') do
           click_on I18n.t('ss.buttons.save')
@@ -55,25 +56,28 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         wait_for_notice I18n.t('ss.notice.saved')
 
         within first('.gws-column-item') do
-          find('.btn-gws-column-item-detail').click
+          # find('.btn-gws-column-item-detail').click
+          open_dialog "open_in_new"
         end
 
-        within "form#item-form" do
-          fill_in "item[name]", with: name
-          # fill_in_ckeditor "item[html]", with: html
-          select state_label, from: 'item[state]'
-          # fill_in "item[order]", with: order
-          select input_type_label, from: 'item[input_type]'
-          fill_in "item[select_options]", with: select_options.join("\n")
-          select required_label, from: 'item[required]'
-          fill_in "item[additional_attr]", with: additional_attr
-          select input_confirm_label, from: 'item[input_confirm]'
-          select question_label, from: 'item[question]'
-          fill_in "item[max_upload_file_size]", with: max_upload_file_size
-          fill_in "item[transfers][][keyword]", with: transfers_0_keyword
-          fill_in "item[transfers][][email]", with: transfers_0_email
+        within_dialog do
+          within "form#item-form" do
+            fill_in "item[name]", with: name
+            # fill_in_ckeditor "item[html]", with: html
+            select state_label, from: 'item[state]'
+            # fill_in "item[order]", with: order
+            select input_type_label, from: 'item[input_type]'
+            fill_in "item[select_options]", with: select_options.join("\n")
+            select required_label, from: 'item[required]'
+            fill_in "item[additional_attr]", with: additional_attr
+            select input_confirm_label, from: 'item[input_confirm]'
+            select question_label, from: 'item[question]'
+            fill_in "item[max_upload_file_size]", with: max_upload_file_size
+            fill_in "item[transfers][][keyword]", with: transfers_0_keyword
+            fill_in "item[transfers][][email]", with: transfers_0_email
 
-          click_on I18n.t('ss.buttons.save')
+            click_on I18n.t('ss.buttons.save')
+          end
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
@@ -96,9 +100,11 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         end
 
         within first('.gws-column-item') do
-          find('.gws-column-item-edit .btn').click
+          # find('.gws-column-item-edit .btn').click
+          wait_for_event_fired("turbo:frame-load") { click_on "edit" }
         end
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within first('.gws-column-item') do
           fill_in "item[name]", with: name2
@@ -112,8 +118,9 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         end
 
         within first('.gws-column-item') do
-          page.accept_confirm do
-            find('.btn-gws-column-item-delete').click
+          page.accept_confirm(I18n.t("ss.confirm.delete")) do
+            # find('.btn-gws-column-item-delete').click
+            click_on "delete"
           end
         end
         wait_for_notice I18n.t('ss.notice.deleted')
@@ -154,32 +161,38 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
           click_on input_type_label
         end
         wait_for_notice I18n.t('ss.notice.saved')
+        wait_for_all_ckeditors_ready
 
         within first('.gws-column-item') do
           click_on I18n.t('ss.buttons.save')
         end
         wait_for_notice I18n.t('ss.notice.saved')
 
-        within first('.gws-column-item') do
-          find('.btn-gws-column-item-detail').click
+        wait_for_cbox_opened do
+          within first('.gws-column-item') do
+            # find('.btn-gws-column-item-detail').click
+            open_dialog "open_in_new"
+          end
         end
 
-        within "form#item-form" do
-          fill_in "item[name]", with: name
-          # fill_in_ckeditor "item[html]", with: html
-          select state_label, from: 'item[state]'
-          # fill_in "item[order]", with: order
-          select input_type_label, from: 'item[input_type]'
-          fill_in "item[select_options]", with: select_options.join("\n")
-          select required_label, from: 'item[required]'
-          fill_in "item[additional_attr]", with: additional_attr
-          select input_confirm_label, from: 'item[input_confirm]'
-          select question_label, from: 'item[question]'
-          fill_in "item[max_upload_file_size]", with: max_upload_file_size
-          fill_in "item[transfers][][keyword]", with: transfers_0_keyword
-          fill_in "item[transfers][][email]", with: transfers_0_email
+        within_dialog do
+          within "form#item-form" do
+            fill_in "item[name]", with: name
+            # fill_in_ckeditor "item[html]", with: html
+            select state_label, from: 'item[state]'
+            # fill_in "item[order]", with: order
+            select input_type_label, from: 'item[input_type]'
+            fill_in "item[select_options]", with: select_options.join("\n")
+            select required_label, from: 'item[required]'
+            fill_in "item[additional_attr]", with: additional_attr
+            select input_confirm_label, from: 'item[input_confirm]'
+            select question_label, from: 'item[question]'
+            fill_in "item[max_upload_file_size]", with: max_upload_file_size
+            fill_in "item[transfers][][keyword]", with: transfers_0_keyword
+            fill_in "item[transfers][][email]", with: transfers_0_email
 
-          click_on I18n.t('ss.buttons.save')
+            click_on I18n.t('ss.buttons.save')
+          end
         end
         wait_for_notice I18n.t("ss.notice.saved")
 
@@ -202,9 +215,11 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         end
 
         within first('.gws-column-item') do
-          find('.gws-column-item-edit .btn').click
+          # find('.gws-column-item-edit .btn').click
+          wait_for_event_fired("turbo:frame-load") { click_on "edit" }
         end
         wait_for_all_turbo_frames
+        wait_for_all_ckeditors_ready
 
         within first('.gws-column-item') do
           fill_in "item[name]", with: name2
@@ -218,8 +233,9 @@ describe "inquiry_columns", type: :feature, dbscope: :example, js: true do
         end
 
         within first('.gws-column-item') do
-          page.accept_confirm do
-            find('.btn-gws-column-item-delete').click
+          page.accept_confirm(I18n.t("ss.confirm.delete")) do
+            # find('.btn-gws-column-item-delete').click
+            click_on "delete"
           end
         end
         wait_for_notice I18n.t('ss.notice.deleted')
