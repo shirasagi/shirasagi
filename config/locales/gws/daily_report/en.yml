@@ -139,4 +139,4 @@ en:
 
   job:
     models:
-      gws/daily_report/copy_year_job: Business daily report/Copy fiscal year
+      gws/daily_report/copy_year_job: GWS Business daily report/Copy fiscal year

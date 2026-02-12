@@ -340,5 +340,5 @@ ja:
           - <b>締め切り</b> - 設問を締め切り状態にします。
   job:
     models:
-      gws/monitor/trash_purge_job: 照会・回答/投稿ゴミ箱の掃除
-      gws/monitor/delete_job: 照会・回答/削除期間超過分の削除
+      gws/monitor/trash_purge_job: GWS照会・回答/投稿ゴミ箱の掃除
+      gws/monitor/delete_job: GWS照会・回答/削除期間超過分の削除

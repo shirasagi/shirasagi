@@ -305,10 +305,10 @@ ja:
 
   job:
     models:
-      gws/tabular/file/csv_import_job: 汎用DB/CSVインポート
-      gws/tabular/file/publish_upload_file_job: 汎用DB/アップロードファイル公開
-      gws/tabular/file/zip_export_job: 汎用DB/データのZIP化処理
-      gws/tabular/file/zip_import_job: 汎用DB/ZIPインポート
-      gws/tabular/form_publish_job: 汎用DB/定義の公開処理
-      gws/tabular/form_trash_purge_job: 汎用DB/定義ゴミ箱の掃除
-      gws/tabular/space_trash_purge_job: 汎用DB/スペースゴミ箱の掃除
+      gws/tabular/file/csv_import_job: GWS汎用DB/CSVインポート
+      gws/tabular/file/publish_upload_file_job: GWS汎用DB/アップロードファイル公開
+      gws/tabular/file/zip_export_job: GWS汎用DB/データのZIP化処理
+      gws/tabular/file/zip_import_job: GWS汎用DB/ZIPインポート
+      gws/tabular/form_publish_job: GWS汎用DB/定義の公開処理
+      gws/tabular/form_trash_purge_job: GWS汎用DB/定義ゴミ箱の掃除
+      gws/tabular/space_trash_purge_job: GWS汎用DB/スペースゴミ箱の掃除
