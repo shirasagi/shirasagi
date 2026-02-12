@@ -179,4 +179,5 @@ en:
 
   job:
     models:
-      gws/circular/trash_purge_job: Circular boards/Empty circular notice trash
+      gws/circular/trash_purge_job: GWS Circular boards/Empty circular notice trash
+      gws/circular/delete_job: GWS Circular boards/Deletion of boards beyond the retention period

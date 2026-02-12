@@ -142,4 +142,4 @@ ja:
 
   job:
     models:
-      gws/workflow/trash_purge_job: ワークフロー/申請ゴミ箱の掃除
+      gws/workflow/trash_purge_job: GWSワークフロー/申請ゴミ箱の掃除

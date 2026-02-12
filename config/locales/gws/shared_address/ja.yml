@@ -44,4 +44,4 @@ ja:
 
   job:
     models:
-      gws/shared_address/trash_purge_job: 共有アドレス/ゴミ箱の掃除
+      gws/shared_address/trash_purge_job: GWS共有アドレス/ゴミ箱の掃除

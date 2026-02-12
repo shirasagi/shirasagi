@@ -180,4 +180,4 @@ ja:
 
   job:
     models:
-      gws/qna/trash_purge_job: Ｑ＆Ａ/投稿ゴミ箱の掃除
+      gws/qna/trash_purge_job: GWS Ｑ＆Ａ/投稿ゴミ箱の掃除
