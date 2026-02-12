@@ -432,3 +432,4 @@ ja:
   job:
     models:
       gws/memo/message_export_job: メッセージ/エクスポート
+      gws/memo/message_backup_job: メッセージ/バックアップ

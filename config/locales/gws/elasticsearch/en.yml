@@ -60,21 +60,22 @@ en:
 
   job:
     models:
-      gws/elasticsearch/indexer/share_file_job: Full-text search/Shared file indexer
-      gws/elasticsearch/indexer/board_topic_job: Full-text search/Bulletin board indexer
-      gws/elasticsearch/indexer/board_post_job: Full-text search/Bulletin board post indexer
-      gws/elasticsearch/indexer/faq_topic_job: Full-text search/FAQ indexer
-      gws/elasticsearch/indexer/faq_post_job: Full-text search/FAQ indexer
-      gws/elasticsearch/indexer/qna_topic_job: Full-text search/Q&A indexer
-      gws/elasticsearch/indexer/qna_post_job: Full-text search/Q&A indexer
-      gws/elasticsearch/indexer/survey_form_job: Full-text search/Survey indexer
-      gws/elasticsearch/indexer/circular_post_job: Full-text search/Circular notice indexer
-      gws/elasticsearch/indexer/circular_comment_job: Full-text search/Circular notice indexer
-      gws/elasticsearch/indexer/monitor_topic_job: Full-text search/Inquiry and response indexer
-      gws/elasticsearch/indexer/monitor_post_job: Full-text search/Inquiry and response indexer
-      gws/elasticsearch/indexer/memo_message_job: Full-text search/Contact memo indexer
-      gws/elasticsearch/indexer/report_file_job: Full-text search/Report indexer
-      gws/elasticsearch/indexer/workflow_file_job: Full-text search/Workflow indexer
-      gws/elasticsearch/indexer/workflow_form_job: Full-text search/Workflow indexer
-      gws/elasticsearch/indexer/workflow2_file_job: Full-text search/Workflow2 indexer
-      gws/elasticsearch/indexer/notice_post_job: Full-text search/Announcements indexer
+      gws/elasticsearch/indexer/share_file_job: GWS Full-text search/Shared file indexer
+      gws/elasticsearch/indexer/board_topic_job: GWS Full-text search/Bulletin board indexer
+      gws/elasticsearch/indexer/board_post_job: GWS Full-text search/Bulletin board post indexer
+      gws/elasticsearch/indexer/faq_topic_job: GWS Full-text search/FAQ indexer
+      gws/elasticsearch/indexer/faq_post_job: GWS Full-text search/FAQ indexer
+      gws/elasticsearch/indexer/qna_topic_job: GWS Full-text search/Q&A indexer
+      gws/elasticsearch/indexer/qna_post_job: GWS Full-text search/Q&A indexer
+      gws/elasticsearch/indexer/survey_form_job: GWS Full-text search/Survey indexer
+      gws/elasticsearch/indexer/circular_post_job: GWS Full-text search/Circular notice indexer
+      gws/elasticsearch/indexer/circular_comment_job: GWS Full-text search/Circular notice indexer
+      gws/elasticsearch/indexer/monitor_topic_job: GWS Full-text search/Inquiry and response indexer
+      gws/elasticsearch/indexer/monitor_post_job: GWS Full-text search/Inquiry and response indexer
+      gws/elasticsearch/indexer/memo_message_job: GWS Full-text search/Contact memo indexer
+      gws/elasticsearch/indexer/report_file_job: GWS Full-text search/Report indexer
+      gws/elasticsearch/indexer/workflow_file_job: GWS Full-text search/Workflow indexer
+      gws/elasticsearch/indexer/workflow_form_job: GWS Full-text search/Workflow indexer
+      gws/elasticsearch/indexer/workflow2_file_job: GWS Full-text search/Workflow2 indexer
+      gws/elasticsearch/indexer/notice_post_job: GWS Full-text search/Announcements indexer
+      gws/elasticsearch/indexer/workload_work_job: GWS Full-text search/Workload works indexer
