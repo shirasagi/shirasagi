@@ -25,7 +25,7 @@ class Cms::ContentsController < ApplicationController
     @items = Cms::Node.site(@cur_site).
       allow(:read, @cur_user).
       where(cond).
-      where(shortcut: :show).
+      where(shortcuts: Cms::Node::SHORTCUT_SYSTEM).
       order_by(filename: 1).
       page(params[:page]).per(100)
   end

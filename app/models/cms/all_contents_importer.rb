@@ -19,10 +19,11 @@ class Cms::AllContentsImporter
         item.page_layout = value.present? ? self.class.find_with_name_filename_pair(value, Cms::Layout.site(site)).first : nil
       end
     end
-    importer.simple_column :shortcut, name: I18n.t("mongoid.attributes.ss/document.shortcut") do |row, item, head, value|
-      if item.respond_to?(:shortcut=)
-        shortcut = from_label(value, item.shortcut_options)
-        item.shortcut = shortcut.presence
+    importer.simple_column :shortcuts, name: I18n.t("mongoid.attributes.ss/document.shortcuts") do |row, item, head, value|
+      if item.respond_to?(:shortcuts=)
+        # values = to_array(value, delim: /[, 　、\r\n]+/)
+        values = SS::Extensions::Words.mongoize(value)
+        item.shortcuts = Cms.shortcut_labels_to_values(values, shortcut_options: shortcut_options)
       end
     end
     importer.simple_column :view_route, name: I18n.t("mongoid.attributes.cms/model/node.view_route") do |row, item, head, value|
@@ -109,5 +110,9 @@ class Cms::AllContentsImporter
     end
 
     user.cms_role_permit_any?(site, permits)
+  end
+
+  def shortcut_options
+    @shortcut_options ||= Cms.shortcut_options
   end
 end

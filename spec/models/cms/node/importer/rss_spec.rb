@@ -42,7 +42,15 @@ describe Cms::NodeImporter, dbscope: :example do
         expect(row["タイトル"]).to eq node.name
         expect(row["一覧用タイトル"]).to eq node.index_name
         expect(row["並び順"]).to eq node.order.to_s
-        expect(row["ショートカット"]).to eq node.label(:shortcut)
+        case row["ショートカット"]
+        when I18n.t("ss.options.state.show")
+          expect(node.shortcuts).to have(2).items
+          expect(node.shortcuts).to include(Cms::Node::SHORTCUT_SYSTEM, Cms::Node::SHORTCUT_QUOTA)
+        when I18n.t("ss.options.state.hide")
+          expect(node.shortcuts).to be_blank
+        else
+          expect(row["ショートカット"]).to eq Cms.shortcut_values_to_labels(node.shortcuts).join(",")
+        end
         expect(row["既定のモジュール"]).to eq node.label(:view_route)
 
         # meta addo
