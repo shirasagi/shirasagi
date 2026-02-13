@@ -22,7 +22,7 @@
     <div class="list-head"><%= t "cms.notice" %></div>
     <ul class="list-items">
       <% @cms_notices.each do |item| %>
-        <li class="list-item">
+        <li class="list-item" data-id="<%= item.id %>">
           <div class="info">
             <%= link_to item.name, cms_public_notice_path(id: item), class: "title notice-severity-#{item.notice_severity}" %>
             <span class="datetime"><%= ss_time_tag item.released %></span>
@@ -36,31 +36,67 @@
   </div>
 <% end %>
 
-<div class="index">
-  <div class="list-head"><%= t "cms.shortcut" %></div>
+<%
+  node_histories = session.dig(:cms, :node_histories)
+  if node_histories
+    recent_nodes = Cms::Node.all.site(@cur_site).allow(:read, @cur_user, site: @cur_site).in(id: node_histories).to_a
+    recent_nodes.sort_by! { node_histories.index(_1.id) }
+  end
+%>
+<% if recent_nodes %>
+  <div class="index recent-nodes">
+    <div class="list-head"><%= t("cms.recent_node") %></div>
 
-  <ul class="list-items">
-    <% @items.each do |item| %>
-      <li class="list-item">
-        <nav class="tap-menu">
-          <%= link_to t("cms.content"), contents_path(item) %>
-          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
-          <%= safe_join cms_preview_links(item) %>
-        </nav>
-        <div class="info">
-          <%= link_to item.name, contents_path(item), class: "title" %>
+    <ul class="list-items recent-nodes-list">
+      <% recent_nodes.each do |item| %>
+        <li class="list-item recent-nodes-list-item" data-id="<%= item.id %>">
+          <nav class="tap-menu">
+            <%= link_to t("cms.content"), contents_path(item) %>
+            <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
+            <%= safe_join cms_preview_links(item) %>
+          </nav>
+          <div class="info">
+            <%= link_to item.name, contents_path(item), class: "title" %>
 
-          <div class="meta">
-            <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= ss_time_tag item.updated %></span>
-            <span class="filename"><%= File.basename item.filename %></span>
-            <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
-            <%= colored_state_label(item) %>
+            <div class="meta">
+              <span class="filename"><%= File.basename item.filename %></span>
+              <span class="route"><%= t("modules.#{item.route.sub(/\/.*/, '')}") %></span>
+              <%= colored_state_label(item) %>
+            </div>
           </div>
-        </div>
-      </li>
-    <% end %>
-  </ul>
-</div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+<% end %>
 
-<%= paginate @items if @items.try(:current_page) %>
+<% if @items.present? %>
+  <div class="index system-recommends">
+    <div class="list-head"><%= t "cms.system_recommend" %></div>
+
+    <ul class="list-items">
+      <% @items.each do |item| %>
+        <li class="list-item" data-id="<%= item.id %>">
+          <nav class="tap-menu">
+            <%= link_to t("cms.content"), contents_path(item) %>
+            <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
+            <%= safe_join cms_preview_links(item) %>
+          </nav>
+          <div class="info">
+            <%= link_to item.name, contents_path(item), class: "title" %>
+
+            <div class="meta">
+              <span class="id">#<%= item.id %></span>
+              <span class="datetime"><%= ss_time_tag item.updated %></span>
+              <span class="filename"><%= File.basename item.filename %></span>
+              <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+              <%= colored_state_label(item) %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <%= paginate @items if @items.try(:current_page) %>
+<% end %>

@@ -267,3 +267,43 @@ i.calendar-month {
   color: red;
   text-align: left;
 }
+
+.recent-nodes-list {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.recent-nodes-list-item {
+  display: inline-flex;
+  width: 240px;
+
+  .info {
+    width: 100%;
+  }
+
+  .title {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .filename {
+    display: inline-block;
+    max-width: 50%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .route {
+    display: inline-block;
+    width: fit-content;
+  }
+
+  .state {
+    display: inline-block;
+    width: fit-content;
+  }
+}

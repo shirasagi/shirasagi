@@ -401,4 +401,41 @@ module Cms
 
     options
   end
+
+  def self.shortcut_options
+    Cms::Node::AVAILABLE_SHORTCUTS.map { [ I18n.t("cms.options.shortcut.#{_1}"), _1 ] }
+  end
+
+  def self.shortcut_labels_to_values(labels, shortcut_options: nil)
+    return SS::EMPTY_ARRAY if labels.blank?
+
+    shortcut_options ||= Cms.shortcut_options
+
+    labels.map!(&:strip)
+    labels.select!(&:present?)
+    labels.uniq!
+
+    label_to_value_map = shortcut_options.to_h
+    values = labels.filter_map do |label|
+      if label.present?
+        if label == I18n.t("ss.options.state.show")
+          # 過去との互換性を確保: 「表示」を「お勧め」と「使用量」との両方にマッピング
+          [ Cms::Node::SHORTCUT_SYSTEM, Cms::Node::SHORTCUT_QUOTA ]
+        elsif label == I18n.t("ss.options.state.hide")
+          # 非表示の場合は何もしない
+        else
+          label_to_value_map[label]
+        end
+      end
+    end
+    values.flatten!
+    values.uniq!
+    values.sort!
+    values
+  end
+
+  def self.shortcut_values_to_labels(values)
+    return SS::EMPTY_ARRAY if values.blank?
+    values.filter_map { _1.present? ? I18n.t("cms.options.shortcut.#{_1}") : nil }
+  end
 end
