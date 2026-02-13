@@ -1,6 +1,7 @@
 module Cms::BaseFilter
   extend ActiveSupport::Concern
   include SS::BaseFilter
+  include Cms::NodeHistoryFilter
 
   included do
     cattr_accessor(:user_class) { Cms::User }
