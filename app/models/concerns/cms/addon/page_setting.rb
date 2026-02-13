@@ -12,12 +12,14 @@ module Cms::Addon
       field :page_expiration_before, type: String, default: "2.years"
       field :page_expiration_mail_subject, type: String
       field :page_expiration_mail_upper_text, type: String
+      field :redirect_link_state, type: String, default: "disabled"
 
       permit_params :auto_keywords, :auto_description
       permit_params :keywords
       permit_params :max_name_length
       permit_params :page_expiration_state, :page_expiration_before, :page_expiration_mail_subject
       permit_params :page_expiration_mail_upper_text
+      permit_params :redirect_link_state
 
       validates :page_expiration_before, "ss/duration" => true
     end
@@ -76,6 +78,14 @@ module Cms::Addon
         expired_at = 2.years
       end
       now - expired_at
+    end
+
+    def redirect_link_state_options
+      %w(disabled enabled).map { |v| [ I18n.t("ss.options.state.#{v}"), v ] }
+    end
+
+    def redirect_link_enabled?
+      redirect_link_state == "enabled"
     end
   end
 end

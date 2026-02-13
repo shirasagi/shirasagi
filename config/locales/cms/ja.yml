@@ -1162,6 +1162,7 @@ ja:
         page_expiration_before: 公開期限
         page_expiration_mail_subject: 公開期限お知らせメール（件名）
         page_expiration_mail_upper_text: 公開期限お知らせメール（上部テキスト）
+        redirect_link_state: リンクページ機能
       cms/addon/site/node_setting:
         rss_recent_state: rss-recent.xml
       cms/model/member:
@@ -2422,6 +2423,8 @@ ja:
         - 公開期限が切れたページについて、そのページの管理グループ宛にお知らせメールを送ります。そのメールの件名を入力します。
       page_expiration_mail_upper_text:
         - 公開期限が切れたページについて、そのページの管理グループ宛にお知らせメールを送ります。そのメールの上部テキストを入力します。
+      redirect_link_state:
+        - リンクページ機能を有効にするかを選択します。
 
     cms/addon/site/node_setting:
       rss_recent_state:

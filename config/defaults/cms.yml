@@ -10,9 +10,6 @@ production: &production
   # disable post from left bar menu
   post_menu: false
 
-  # Disable page redirect link feature
-  disable_redirect_link: true
-
   ## Generate segments
   ## set segment as array when splitting node and page generation
   ## (node or page) - site host - segment

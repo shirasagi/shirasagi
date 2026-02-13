@@ -29,4 +29,7 @@
 
   <dt class="depth-2"><%= t("cms.page_expiration_mail.upper_text") %><%= @model.tt :page_expiration_mail_upper_text %></dt>
   <dd class="depth-2"><%= f.text_area :page_expiration_mail_upper_text, placeholder: t("cms.page_expiration_mail.default_upper_text").join("\n") %></dd>
+
+  <dt><%= @model.t :redirect_link_state %><%= @model.tt :redirect_link_state %></dt>
+  <dd><%= f.select :redirect_link_state, @item.redirect_link_state_options %></dd>
 </dl>
