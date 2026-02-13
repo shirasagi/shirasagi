@@ -141,6 +141,8 @@ ja:
     yearly_archive: 年別アーカイブ
     monthly_archive: 月別アーカイブ
     syntax_check_violation_count: "アクセシビリティ違反が%{total}件あります。"
+    recent_node: 最近使ったフォルダー
+    system_recommend: お勧め
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
