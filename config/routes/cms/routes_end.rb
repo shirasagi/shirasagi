@@ -130,7 +130,7 @@ Rails.application.routes.draw do
       get :verify, on: :member
       post :verify, on: :member
     end
-    resources :contents, path: "contents/(:mod)"
+    resources :contents, only: %i[index]
 
     resources :nodes, concerns: [:deletion, :command, :change_state, :import] do
       get :routes, on: :collection
