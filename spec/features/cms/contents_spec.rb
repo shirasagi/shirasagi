@@ -58,4 +58,42 @@ describe "cms_contents", type: :feature, dbscope: :example do
       end
     end
   end
+
+  context "when shortcuts include 'navi'" do
+    let!(:node1) { create :article_node_page, cur_site: site, shortcuts: [ Cms::Node::SHORTCUT_NAVI ] }
+    let!(:page1) { create :article_page, cur_site: site, cur_node: node1 }
+
+    it do
+      login_cms_user to: index_path
+      within first(".main-navi") do
+        expect(page).to have_css(".icon-material-folder", text: node1.name)
+      end
+      within ".system-recommends" do
+        expect(page).to have_css("[data-id]", count: 0)
+      end
+
+      within first(".main-navi") do
+        click_on node1.name
+      end
+      within first(".main-navi") do
+        expect(page).to have_css(".icon-material-folder", text: node1.name)
+      end
+      within ".breadcrumb" do
+        expect(page).to have_link(node1.name)
+      end
+      within ".list-items" do
+        expect(page).to have_css("[data-id='#{page1.id}']", text: page1.name)
+        click_on page1.name
+      end
+
+      wait_for_all_turbo_frames
+      wait_for_all_ckeditors_ready
+      expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
+
+      within first(".main-navi") do
+        expect(page).to have_css(".icon-material-folder", text: node1.name)
+      end
+      expect(page).to have_css("#addon-basic", text: page1.name)
+    end
+  end
 end

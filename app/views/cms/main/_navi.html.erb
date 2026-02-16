@@ -10,6 +10,17 @@
 <nav class="main-navi">
   <h2><%= link_to t("cms.shortcut"), cms_contents_path, class: "icon-material icon-material-shortcut" %></h2>
 
+  <%
+    shortcut_navi_nodes = Cms::Node.all.site(@cur_site)
+    shortcut_navi_nodes = shortcut_navi_nodes.where(shortcuts: Cms::Node::SHORTCUT_NAVI)
+    shortcut_navi_nodes = shortcut_navi_nodes.allow(:read, @cur_user, site: @cur_site)
+  %>
+  <% if shortcut_navi_nodes.present? %>
+    <% shortcut_navi_nodes.each do |node| %>
+      <h2><%= link_to node.name, contents_path(node), class: "icon-material icon-material-folder" %></h2>
+    <% end %>
+  <% end %>
+
   <% if Cms::Line::Message.allowed?(:read, @cur_user, site: @cur_site) %>
     <h2><%= link_to t("cms.line"), cms_line_messages_path, class: "icon-conv" %></h2>
   <% end %>
