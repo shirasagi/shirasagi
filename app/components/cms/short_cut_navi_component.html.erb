@@ -1,0 +1,5 @@
+<%= cache_component do %>
+  <% items.each do |node| %>
+    <h2><%= link_to node.name, contents_path(node), class: "icon-material icon-material-folder" %></h2>
+  <% end %>
+<% end %>

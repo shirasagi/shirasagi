@@ -10,16 +10,7 @@
 <nav class="main-navi">
   <h2><%= link_to t("cms.shortcut"), cms_contents_path, class: "icon-material icon-material-shortcut" %></h2>
 
-  <%
-    shortcut_navi_nodes = Cms::Node.all.site(@cur_site)
-    shortcut_navi_nodes = shortcut_navi_nodes.where(shortcuts: Cms::Node::SHORTCUT_NAVI)
-    shortcut_navi_nodes = shortcut_navi_nodes.allow(:read, @cur_user, site: @cur_site)
-  %>
-  <% if shortcut_navi_nodes.present? %>
-    <% shortcut_navi_nodes.each do |node| %>
-      <h2><%= link_to node.name, contents_path(node), class: "icon-material icon-material-folder" %></h2>
-    <% end %>
-  <% end %>
+  <%= render Cms::ShortCutNaviComponent.new(cur_site: @cur_site, cur_user: @cur_user, cur_node: @cur_node) %>
 
   <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
     <% if Cms::Command.allowed?(:use, @cur_user, site: @cur_site) %>
