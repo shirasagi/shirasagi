@@ -12,8 +12,6 @@ class Cms::ContentsController < ApplicationController
   public
 
   def index
-    @cms_notices = Cms::Notice.site(@cur_site).and_public.target_to(@cur_user).reorder(notice_severity: 1, released: -1).page(1).per(5)
-
     @model = Cms::Node
     self.menu_view_file = nil
 
