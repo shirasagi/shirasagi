@@ -1,31 +1,3 @@
 <%= render Cms::SysNoticeComponent.new(cur_site: @cur_site, cur_user: @cur_user) %>
 <%= render Cms::NoticeComponent.new(cur_site: @cur_site, cur_user: @cur_user) %>
-
-<div class="index">
-  <div class="list-head"><%= t "cms.shortcut" %></div>
-
-  <ul class="list-items">
-    <% @items.each do |item| %>
-      <li class="list-item">
-        <nav class="tap-menu">
-          <%= link_to t("cms.content"), contents_path(item) %>
-          <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
-          <%= safe_join cms_preview_links(item) %>
-        </nav>
-        <div class="info">
-          <%= link_to item.name, contents_path(item), class: "title" %>
-
-          <div class="meta">
-            <span class="id">#<%= item.id %></span>
-            <span class="datetime"><%= ss_time_tag item.updated %></span>
-            <span class="filename"><%= File.basename item.filename %></span>
-            <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
-            <%= colored_state_label(item) %>
-          </div>
-        </div>
-      </li>
-    <% end %>
-  </ul>
-</div>
-
-<%= paginate @items if @items.try(:current_page) %>
+<%= render Cms::ShortcutComponent.new(cur_site: @cur_site, cur_user: @cur_user, page: params[:page], s: @s) %>

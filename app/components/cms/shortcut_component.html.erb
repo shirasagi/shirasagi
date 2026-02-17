@@ -1,0 +1,42 @@
+<%= cache_component do %>
+  <div class="index cms-shortcut-nodes">
+    <div class="list-head flex-list-head">
+      <div class="list-head-left"><%= t "cms.shortcut" %></div>
+
+      <div class="list-head-right">
+        <div class="list-head-search">
+          <%= form_with scope: :s, url: "", method: :get, class: "index-search" do |f| %>
+            <%= f.text_field :keyword, placeholder: t("ss.keyword"), id: nil, style: "width: 250px;" %>
+            <%= f.submit t("ss.buttons.search"), name: nil, class: "btn" %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <ul class="list-items">
+      <% items.each do |item| %>
+        <% item.site = item.cur_site = cur_site %>
+        <li class="list-item" data-id="<%= item.id %>">
+          <nav class="tap-menu">
+            <%= link_to t("cms.content"), contents_path(item) %>
+            <%= link_to t('ss.links.view_site'), item.full_url, target: :_blank, rel: "noopener" %>
+            <%= safe_join cms_preview_links(item) %>
+          </nav>
+          <div class="info">
+            <%= link_to item.name, contents_path(item), class: "title" %>
+
+            <div class="meta">
+              <span class="id">#<%= item.id %></span>
+              <span class="datetime"><%= ss_time_tag item.updated %></span>
+              <span class="filename"><%= File.basename item.filename %></span>
+              <span class="route"><%= t "modules.#{item.route.sub(/\/.*/, '')}" %></span>
+              <%= colored_state_label(item) %>
+            </div>
+          </div>
+        </li>
+      <% end %>
+    </ul>
+  </div>
+
+  <%= paginate items if items.try(:current_page) %>
+<% end %>

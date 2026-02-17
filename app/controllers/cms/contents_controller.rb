@@ -15,15 +15,8 @@ class Cms::ContentsController < ApplicationController
     @model = Cms::Node
     self.menu_view_file = nil
 
-    @mod = params[:mod]
-    cond = {}
-    cond[:route] = /^#{::Regexp.escape(@mod)}\// if @mod.present?
-
-    @items = Cms::Node.site(@cur_site).
-      allow(:read, @cur_user).
-      where(cond).
-      where(shortcuts: Cms::Node::SHORTCUT_SYSTEM).
-      order_by(filename: 1).
-      page(params[:page]).per(100)
+    @s = Cms::ShortcutComponent::SearchParams.new
+    @s = @s.with(mod: params[:mod]) if params[:mod].present?
+    @s = @s.with(keyword: params.dig(:s, :keyword)) if params.dig(:s, :keyword).present?
   end
 end
