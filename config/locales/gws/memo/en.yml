@@ -81,7 +81,7 @@ en:
       send_mdn: You have sent a read confirmation message.
       ignore_mdn: You have ignored a read confirmation.
       start_export: Export started.
-      start_import: Imported.
+      start_import: Import started.
       start_backup: Backup started.
       start_restore: Restored.
       no_recents: No new messages
@@ -103,6 +103,9 @@ en:
       empty_messages: The messages to be backed up could not be found.
     import:
       caution: "*User information such as the sender, recipients, etc. will be restored only if the ID and name match the exported data."
+      subject: '[Message] Import complete..'
+      notify_message: "%{count} messages imported.\n\n%{messages}"
+      start_message: "The import process has started.\nOnce the import process is complete, you will be notified of the results."
     restore:
       caution: "*User information such as the sender, recipients, etc. will be restored only if the ID and name match the backed up data."
     mdn:
@@ -288,6 +291,9 @@ en:
         sender_name: Sender name
         signature: Signature
         category_ids: Category
+      gws/memo/message_importer:
+        in_file: File
+        file_id: File
       gws/addon/memo/notify_setting:
         notify_state: Notification settings
       gws/addon/memo/message_sort:
@@ -328,11 +334,8 @@ en:
 
   activemodel:
     models:
-      gws/memo/message_importer: Import
       gws/memo/message_restorer: Restore
     attributes:
-      gws/memo/message_importer:
-        in_file: File
       gws/memo/message_restorer:
         in_file: File
   tooltip:
@@ -432,3 +435,4 @@ en:
   job:
     models:
       gws/memo/message_export_job: Message/Export
+      gws/memo/message_import_job: Message/Import

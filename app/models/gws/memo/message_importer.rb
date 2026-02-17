@@ -1,31 +1,50 @@
 class Gws::Memo::MessageImporter
-  include ActiveModel::Model
+  include SS::Document
+  include Gws::Reference::User
+  include Gws::Reference::Site
   include Sys::SiteImport::File
+  include SS::Relation::File
 
-  attr_accessor :cur_site, :cur_user, :in_file
+  seqid :id
+  belongs_to_file :file, presence: true
+  embeds_ids :members, class_name: "Gws::User"
 
-  class << self
-    def t(*args)
-      human_attribute_name(*args)
-    end
-  end
+  validates :user_id, presence: true
 
   def import_messages
+    save! if new_record?
     I18n.with_locale(I18n.default_locale) do
       _import_messages
     end
+  end
+
+  def create_notify
+    @import_messages ||= []
+
+    item = SS::Notification.new
+    item.cur_group = site
+    item.cur_user = user
+    item.member_ids = member_ids.presence || [user.id]
+    item.format = "text"
+    item.send_date = Time.zone.now
+    item.subject = I18n.t("gws/memo/message.import.subject")
+    item.text = I18n.t("gws/memo/message.import.notify_message",
+      count: @import_messages.count,
+      messages: @import_messages.map { |item| path_and_subject(item) }.join("\n"))
+    item.save!
   end
 
   private
 
   def _import_messages
     @datetime = Time.zone.now
-    @zip_filename = File.basename(in_file.original_filename, ".zip")
+    @zip_filename = file.filename
     @ss_files_map = {}
     @gws_users_map = {}
     @restored_folders = {}
+    @import_messages = []
 
-    Zip::File.open(in_file.path) do |entries|
+    Zip::File.open(file.path) do |entries|
       entries.each do |entry|
         next if entry.directory? || entry.name.blank?
 
@@ -37,7 +56,11 @@ class Gws::Memo::MessageImporter
 
         Rails.logger.tagged(normalized) do
           path = ensure_to_have_folder(entry)
-          Gws::Memo::Message.create_from_eml(cur_user, path, entry.get_input_stream, site: cur_site)
+          message = Gws::Memo::Message.create_from_eml(user, path, entry.get_input_stream, site: site, imported_at: @datetime)
+          raise message.errors.full_messages if message.errors.present?
+
+          @import_messages << message
+          Rails.logger.info(path_and_subject(message))
         rescue => e
           Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
         end
@@ -79,8 +102,8 @@ class Gws::Memo::MessageImporter
     return if @restored_folders.key?(folder_name)
 
     folder = Gws::Memo::Folder.find_or_initialize_by(
-      user_uid: cur_user.uid, user_name: cur_user.name,
-      user_id: cur_user.id, site_id: @cur_site.id, name: folder_name
+      user_uid: user.uid, user_name: user.name,
+      user_id: user.id, site_id: site.id, name: folder_name
     )
     if !folder.save
       structure = []
@@ -89,13 +112,33 @@ class Gws::Memo::MessageImporter
 
         structure << parent_name
         parent_folder = Gws::Memo::Folder.find_or_initialize_by(
-          user_uid: cur_user.uid, user_name: cur_user.name,
-          user_id: cur_user.id, site_id: @cur_site.id, name: structure.join("/")
+          user_uid: user.uid, user_name: user.name,
+          user_id: user.id, site_id: site.id, name: structure.join("/")
         )
         parent_folder.save
       end
     end
     folder.save
     @restored_folders[folder_name] = folder.id.to_s
+  end
+
+  def path_and_subject(item)
+    path = item.path(user)
+    @folders ||= {}
+
+    case path
+    when 'INBOX'
+      name = I18n.t('gws/memo/folder.inbox')
+    when 'INBOX.Trash'
+      name = I18n.t('gws/memo/folder.inbox_trash')
+    when 'INBOX.Draft'
+      name = I18n.t('gws/memo/folder.inbox_draft')
+    when 'INBOX.Sent'
+      name = I18n.t('gws/memo/folder.inbox_sent')
+    else
+      @folders[path] ||= Gws::Memo::Folder.site(site).user(user).where(id: path.to_i).first
+      name = @folders[path].try(:name) || "?"
+    end
+    [name, item.subject].compact.join("/")
   end
 end

@@ -10,7 +10,9 @@ describe 'gws_memo_import_messages', type: :feature, dbscope: :example do
 
     within "form#item-form" do
       attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/memo/messages.zip"
-      click_on I18n.t("ss.import")
+      perform_enqueued_jobs do
+        click_on I18n.t("ss.import")
+      end
     end
 
     wait_for_notice I18n.t("gws/memo/message.notice.start_import")

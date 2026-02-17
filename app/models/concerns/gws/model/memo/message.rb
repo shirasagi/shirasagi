@@ -21,6 +21,7 @@ module Gws::Model
       field :state, type: String, default: 'public'
       field :send_date, type: DateTime
       field :user_settings, type: Array, default: []
+      field :imported_at, type: DateTime
 
       field :to_member_name, type: String, default: ''
       field :from_member_name, type: String, default: ''
@@ -459,10 +460,11 @@ module Gws::Model
     end
 
     module ClassMethods
-      def create_from_eml(user, path, io, site:)
+      def create_from_eml(user, path, io, site:, imported_at: nil)
         message = Gws::Memo::Message::Eml.read(user, io, site: site)
         # message.user_settings = [{ "user_id" => user.id, "path" => path }]
         message.move(user, path)
+        message.imported_at = imported_at
         message.save
         message
       end

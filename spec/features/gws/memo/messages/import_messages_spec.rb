@@ -10,13 +10,18 @@ describe "gws_memo_message_import_messages", type: :feature, dbscope: :example, 
 
     it do
       visit gws_memo_import_messages_path(site)
+      expect(Gws::Memo::MessageImporter.count).to eq 0
 
       within "form#item-form" do
         attach_file "item[in_file]", "#{Rails.root}/spec/fixtures/gws/memo/messages.zip"
         click_on I18n.t("ss.import")
       end
       wait_for_notice I18n.t("gws/memo/message.notice.start_import")
+      expect(page).to have_text(I18n.t("gws/memo/message.import.start_message")[0])
+      expect(Gws::Memo::MessageImporter.count).to eq 1
 
+      perform_enqueued_jobs
+      expect(Gws::Memo::MessageImporter.count).to eq 0
       visit gws_memo_messages_path(site)
 
       expect(page).to have_text("parent")
