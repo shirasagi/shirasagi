@@ -349,11 +349,11 @@ array = Category::Node::Base.where(site_id: @site._id).map { |m| [m.filename, m]
 categories = Hash[*array.flatten]
 
 ## article
-save_node route: "article/page", filename: "docs", name: "記事", shortcut: "show",
+save_node route: "article/page", filename: "docs", name: "記事", shortcuts: %w(system quota),
   layout_id: layouts["folder"].id, page_layout_id: layouts["docs"].id, order: 60, sort: "order", limit: 50
 
 ## faq
-save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", order: 110, shortcut: "show",
+save_node route: "faq/page", filename: "faq/docs", name: "よくある質問記事", order: 110, shortcuts: %w(system quota),
   st_category_ids: [categories["faq"].id], layout_id: layouts["folder"].id, limit: 50
 save_node route: "faq/search", filename: "faq/search", name: "よくある質問検索",
   st_category_ids: [categories["faq"].id], layout_id: layouts["folder"].id, limit: 100
@@ -443,7 +443,7 @@ save_node route: "facility/node", filename: "institution/list", name: "施設一
   st_category_ids: facility_categories.map(&:id),
   st_location_ids: facility_locations.map(&:id),
   st_service_ids: facility_services.map(&:id),
-  shortcut: "show"
+  shortcuts: %w(system quota)
 
 save_node route: "facility/page", filename: "institution/list/shirsagi", name: "シラサギ学園",
   layout_id: layouts["institution-page"].id,
@@ -470,7 +470,7 @@ inquiry_node = save_node route: "inquiry/form", filename: "inquiry", name: "お�
   reply_subject: "子育て支援サイトへのお問い合わせを受け付けました。",
   reply_upper_text: "お問い合わせを受け付けました。",
   aggregation_state: "disabled",
-  shortcut: "show", order: 90
+  shortcuts: %w(system quota), order: 90
 
 def save_inquiry_column(data)
   puts data[:name]
