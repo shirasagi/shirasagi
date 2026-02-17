@@ -106,12 +106,13 @@ save_node route: "cms/node", filename: "company", name: "会社案内", shortcut
 save_node route: "uploader/file", name: "CSS", filename: "css", shortcuts: %w(system quota)
 save_node route: "uploader/file", name: "画像", filename: "img", shortcuts: %w(system quota)
 save_node route: "uploader/file", name: "JavaScript", filename: "js", shortcuts: %w(system quota)
-save_node route: "article/page", name: "ニュース", filename: "news", shortcuts: %w(system quota), layout_id: layouts["news"].id, new_days: 1,
-  conditions: %w(product/solution product/software product/office product/marketing recruit)
+save_node route: "article/page", name: "ニュース", filename: "news", shortcuts: %w(system quota), layout_id: layouts["news"].id,
+  new_days: 1, conditions: %w(product/solution product/software product/office product/marketing recruit)
 save_node route: "cms/site_search", name: "サイト内検索", filename: "search", layout_id: layouts["one"].id
 save_node route: "category/page", name: "お知らせ", filename: "oshirase", shortcuts: %w(system quota), layout_id: layouts["news"].id
-save_node route: "category/page", name: "製品・サービス", filename: "product", shortcuts: %w(system quota), layout_id: layouts["product"].id,
-  sort: "order", new_days: 1, conditions: %w(product/solution product/software product/office product/marketing)
+save_node route: "category/page", name: "製品・サービス", filename: "product", shortcuts: %w(system quota),
+  layout_id: layouts["product"].id, sort: "order", new_days: 1,
+  conditions: %w(product/solution product/software product/office product/marketing)
 save_node route: "category/page", name: "採用情報", filename: "recruit", shortcuts: %w(system quota), layout_id: layouts["recruit"].id
 save_node route: "category/page", name: "マーケティング", filename: "product/marketing", order: 40, layout_id: layouts["product"].id
 save_node route: "category/page", name: "オフィス機器", filename: "product/office", order: 30, layout_id: layouts["product"].id
