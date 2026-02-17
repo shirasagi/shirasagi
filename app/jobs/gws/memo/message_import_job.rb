@@ -4,5 +4,6 @@ class Gws::Memo::MessageImportJob < Gws::ApplicationJob
     importer.import_messages
   ensure
     importer.create_notify
+    importer.destroy
   end
 end
