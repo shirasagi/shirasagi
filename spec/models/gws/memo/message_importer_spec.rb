@@ -234,7 +234,7 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
     end
 
-    context "with users having no email" do
+    context "with users having no email (and having ascii name)" do
       let!(:user1) do
         create :gws_user, email: nil, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
       end
@@ -246,6 +246,62 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
       end
       let!(:user4) do
         create :gws_user, email: nil, cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+      end
+      let(:user) { user3 }
+      let!(:source_message) do
+        build(
+          :gws_memo_message, cur_site: site, cur_user: user1,
+          in_to_members: [ user2.id ], in_cc_members: [ user3.id ], in_bcc_members: [ user4.id ]
+        )
+      end
+      let(:eml_entry_path) { "#{I18n.t('gws/memo/folder.inbox')}/message-1.eml" }
+
+      it do
+        expect(Gws::Memo::Message.all.count).to eq 1
+        Gws::Memo::Message.all.first.tap do |message|
+          expect(message.site_id).to eq site.id
+          expect(message.state).to eq "public"
+          expect(message.subject).to eq source_message.subject
+          expect(message.send_date).to eq source_message.created.in_time_zone.change(usec: 0)
+          expect(message.format).to eq "text"
+          expect(message.text).to include(source_message.text)
+          expect(message.from.id).to eq user1.id
+          expect(message.from_member_name).to eq user1.long_name
+          expect(message.to_member_ids).to have(1).items
+          expect(message.to_member_ids).to include(user2.id)
+          expect(message.to_webmail_address_group_ids).to be_blank
+          expect(message.to_shared_address_group_ids).to be_blank
+          expect(message.to_member_name).to eq user2.long_name
+          expect(message.cc_member_ids).to have(1).items
+          expect(message.cc_member_ids).to include(user3.id)
+          expect(message.cc_webmail_address_group_ids).to be_blank
+          expect(message.cc_shared_address_group_ids).to be_blank
+          expect(message.bcc_member_ids).to be_blank
+          expect(message.bcc_webmail_address_group_ids).to be_blank
+          expect(message.bcc_shared_address_group_ids).to be_blank
+          expect(message.member_ids).to have(1).items
+          expect(message.member_ids).to include(user3.id)
+          expect(message.user_settings).to have(1).items
+          expect(message.user_settings).to include("user_id" => user3.id, "path" => "INBOX")
+          expect(message.seen_at(user3)).to be_blank
+          expect(message.star?(user3)).to be_falsey
+          expect(message.list_message?).to be_falsey
+        end
+      end
+    end
+
+    context "with users having no email (and having multibyte name)" do
+      let!(:user1) do
+        create :gws_user, email: nil, name: "ユーザー1", cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+      end
+      let!(:user2) do
+        create :gws_user, email: nil, name: "ユーザー2", cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+      end
+      let!(:user3) do
+        create :gws_user, email: nil, name: "ユーザー3", cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+      end
+      let!(:user4) do
+        create :gws_user, email: nil, name: "ユーザー4", cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
       end
       let(:user) { user3 }
       let!(:source_message) do

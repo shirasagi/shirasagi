@@ -33,7 +33,7 @@ class Gws::Memo::Message
 
       decoded = Base64.strict_decode64(local_part) rescue nil
       if decoded
-        decoded = decoded.encode("UTF-8") rescue nil
+        decoded = decoded.force_encoding("UTF-8") rescue nil
       end
       if decoded
         local_part = decoded
