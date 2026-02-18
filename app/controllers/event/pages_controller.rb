@@ -30,7 +30,7 @@ class Event::PagesController < ApplicationController
     criteria = @model.site(@cur_site).node(@cur_node)
     criteria = criteria.allow(:read, @cur_user, site: @cur_site, node: @cur_node)
 
-    exporter = Cms::PageExporter.new(mode: "event", site: @cur_site, criteria: criteria)
+    exporter = Cms::PageExporter.new(mode: "event", site: @cur_site, truncate: true, criteria: criteria)
     enumerable = exporter.enum_csv(encoding: "Shift_JIS")
 
     filename = @model.to_s.tableize.tr("/", "_")

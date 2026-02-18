@@ -10,12 +10,35 @@
   <% end %>
 </div>
 
-<div class="addon-views">
-  <%= render "ss/crud/addon", addon: { id: "cms-all-contents-download-all", head: t("cms.all_content.download_head") } do %>
-    <p class="description"><%= t("cms.all_content.download_description") %></p>
-  <% end %>
-</div>
+<%= form_with scope: :item, url: cms_all_contents_download_path(format: :csv), id: "item-form", method: :get, autocomplete: :off do |f| %>
+  <%= error_messages_for :item %>
 
-<footer class="send ss-sticky ss-sticky-bottom">
-  <%= link_to t('ss.links.download'), cms_all_contents_download_path(format: :csv), class: "btn btn-primary" %>
-</footer>
+  <div class="addon-views">
+    <%= render "ss/crud/addon", addon: { id: "cms-all-contents-download-all", head: t("cms.all_content.download_description") } do %>
+      <dl class="see">
+        <dt><%= t('ss.encoding') %></dt>
+        <dd>
+          <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+            <label>
+              <%= radio_button_tag "#{f.object_name}[encoding]", encoding, encoding == 'UTF-8', { id: nil } %>
+              <%= t("ss.options.csv_encoding.#{encoding}") %>
+            </label>
+          <% end %>
+        </dd>
+
+        <dt><%= t("cms.apis.contents.option") %></dt>
+        <dd>
+          <label>
+            <%= hidden_field_tag "#{f.object_name}[truncate]", 'no', id: nil %>
+            <%= checkbox_tag "#{f.object_name}[truncate]", 'yes', true, { id: nil } %>
+            <%= t("ss.truncate_long_csv_value") %>
+          </label>
+        </dd>
+      </dl>
+    <% end %>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= f.submit t('ss.buttons.download'), name: :download, class: 'btn-primary save' %>
+  </footer>
+<% end %>
