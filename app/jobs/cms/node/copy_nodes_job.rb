@@ -12,10 +12,14 @@ class Cms::Node::CopyNodesJob < Cms::ApplicationJob
 
   self.task_name = "cms:copy_nodes"
 
-  def perform(target_node_name = {})
+  def perform(*args)
+    options = args.extract_options!
+    options = options.with_indifferent_access
+
     @cur_site = Cms::Site.find(site_id)
     @cur_node = Cms::Node.find(node_id)
-    @target_node_name = target_node_name.values.first
+    @target_node_name = options[:target_node_name]
+    @target_node_filename = options[:target_node_filename]
 
     copy_cms_nodes
     copy_cms_pages

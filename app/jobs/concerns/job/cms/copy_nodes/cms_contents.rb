@@ -5,7 +5,7 @@ module Job::Cms::CopyNodes::CmsContents
   def copy_cms_content(cache_id, src_content, options = {})
     klass = src_content.class
     dest_content = nil
-    dest_content_filename = src_content.filename.gsub(/#{@cur_node.filename}/, @target_node_name)
+    dest_content_filename = src_content.filename.gsub(/#{@cur_node.filename}/, @target_node_filename)
 
     id = cache(cache_id, src_content.id) do
       dest_content = klass.site(@cur_site).where(filename: dest_content_filename).first
@@ -16,6 +16,7 @@ module Job::Cms::CopyNodes::CmsContents
         # at first, copy non-reference values and references which have no possibility of circular reference
         dest_content = klass.new(cur_site: @cur_site)
         dest_content.attributes = copy_basic_attributes(src_content, klass)
+        dest_content.name = @target_node_name if @target_node_name.present? && @cur_node.filename == src_content.filename
         dest_content.filename = dest_content_filename
 
         options[:before].call(src_content, dest_content) if options[:before]
