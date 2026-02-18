@@ -434,7 +434,8 @@ ja:
       to: 複製先
       job_history: 実行ログ
       link_to_job_history: ジョブ実行履歴
-      target_node_name: フォルダー名
+      target_node_name: タイトル
+      target_node_filename: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
     download_nodes:
       messages:
@@ -1370,7 +1371,8 @@ ja:
         font_color: 文字色
         background_color: 背景色
       cms/copy_nodes_task:
-        target_node_name: 複製先フォルダー名
+        target_node_name: 複製先タイトル
+        target_node_filename: 複製先フォルダー名
       cms/addon/source_cleaner:
         target_type: 対象の種別
         target_value: 対象の名称
