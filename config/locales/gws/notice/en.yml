@@ -207,5 +207,5 @@ en:
 
   job:
     models:
-      gws/notice/notification_job: Announcements/Announcements Notifications
-      gws/notice/trash_purge_job: Announcements/Empty Announcements Trash
+      gws/notice/notification_job: GWS Announcements/Announcements Notifications
+      gws/notice/trash_purge_job: GWS Announcements/Empty Announcements Trash

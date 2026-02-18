@@ -353,3 +353,4 @@ ja:
       sys/postal_code/import_job: システム/郵便番号インポート
       sys/postal_code/official_csv_import_job: システム/日本郵便CSVインポート
       sys/prefecture_code/import_job: システム/市町村コードインポート
+      sys/mail_log_sweep_job: システム/メールログ掃除

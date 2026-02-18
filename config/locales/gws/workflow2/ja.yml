@@ -406,5 +406,5 @@ ja:
 
   job:
     models:
-      gws/workflow2/trash_purge_job: ワークフロー2/申請ゴミ箱の掃除
-      gws/workflow2/route_migration_job: ワークフロー2/承認ルート設定の移行
+      gws/workflow2/trash_purge_job: GWSワークフロー2/申請ゴミ箱の掃除
+      gws/workflow2/route_migration_job: GWSワークフロー2/承認ルート設定の移行
