@@ -153,4 +153,3 @@ describe "cms_members_import", type: :feature, dbscope: :example, js: true do
     end
   end
 end
-

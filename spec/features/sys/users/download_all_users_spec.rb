@@ -113,4 +113,3 @@ describe "sys_users_download_all", type: :feature, dbscope: :example, js: true d
     end
   end
 end
-
