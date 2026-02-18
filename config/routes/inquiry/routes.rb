@@ -25,8 +25,9 @@ Rails.application.routes.draw do
     resources :answers, concerns: [:deletion, :download], only: [:index, :show, :edit, :update, :destroy] do
       get :download_afile, on: :member, path: "/fileid/:fid/download"
     end
-    get "results" => "results#index", as: :results
-    get "results/download" => "results#download", as: :results_download
+    resources :results, only: [:index] do
+      get :download, on: :collection
+    end
     resources :feedbacks, only: [:index, :show]
 
     namespace :frames do
