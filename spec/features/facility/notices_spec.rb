@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "facility_notices", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
-  let(:node) { create_once :facility_node_page, name: "facility" }
+  let(:node) { create :facility_node_page, name: "facility" }
   let(:item) { create(:facility_notice, cur_node: node) }
 
   let(:index_path) { facility_notices_path site, node }

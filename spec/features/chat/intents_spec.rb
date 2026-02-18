@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "chat_intents", type: :feature, js: true do
   let(:site) { cms_site }
   let(:first_suggest) { [unique_id] }
-  let(:node) { create_once :chat_node_bot, first_suggest: first_suggest }
+  let(:node) { create :chat_node_bot, first_suggest: first_suggest }
   let(:suggest) { [unique_id] }
   let!(:item) { create :chat_intent, node_id: node.id, suggest: suggest }
   let(:index_path) { chat_intents_path site.id, node }

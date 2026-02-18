@@ -3,9 +3,9 @@ require 'spec_helper'
 describe "content_quota", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
-  let!(:node1) { create_once :article_node_page, shortcut: "show", group_ids: user.group_ids }
-  let!(:node2) { create_once :article_node_page, shortcut: "hide", group_ids: user.group_ids }
-  let!(:node3) { create_once :article_node_page, shortcut: "show", group_ids: [] }
+  let!(:node1) { create :article_node_page, shortcut: "show", group_ids: user.group_ids }
+  let!(:node2) { create :article_node_page, shortcut: "hide", group_ids: user.group_ids }
+  let!(:node3) { create :article_node_page, shortcut: "show", group_ids: [] }
 
   describe "basic crud" do
     before { login_cms_user }

@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe "article_pages", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
-  let!(:node) { create_once :article_node_page, filename: "docs", name: "article" }
+  let!(:node) { create :article_node_page, filename: "docs", name: "article" }
   let!(:contact_group1) { create(:contact_group, name: "#{cms_group.name}/#{unique_id}") }
   let!(:contact_group2) { create(:contact_group, name: "#{cms_group.name}/#{unique_id}") }
   let!(:user) { create :cms_test_user, group_ids: [ contact_group1.id ], cms_role_ids: cms_user.cms_role_ids }

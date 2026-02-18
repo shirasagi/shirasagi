@@ -12,7 +12,7 @@ describe "article_pages", type: :feature, dbscope: :example do
   let(:copy_path) { copy_article_page_path site.id, node, item }
 
   context "basic crud in category_node_node" do
-    let(:node) { create_once :category_node_node, filename: "category", name: "category" }
+    let(:node) { create :category_node_node, filename: "category", name: "category" }
     before { login_cms_user }
 
     it "#index" do
@@ -94,7 +94,7 @@ describe "article_pages", type: :feature, dbscope: :example do
   end
 
   context "basic crud in category_node_page" do
-    let(:node) { create_once :category_node_page, filename: "category", name: "category" }
+    let(:node) { create :category_node_page, filename: "category", name: "category" }
     before { login_cms_user }
 
     it "#index" do

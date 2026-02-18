@@ -3,7 +3,7 @@ require 'spec_helper'
 describe "image_map_agents_nodes_page", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:layout) { create_cms_layout }
-  let!(:node) { create_once :image_map_node_page, filename: "image-map", name: "image-map" }
+  let!(:node) { create :image_map_node_page, filename: "image-map", name: "image-map" }
 
   let(:usemap) { "image-map-#{node.id}" }
   let(:coords1) { [0, 0, 100, 100] }
