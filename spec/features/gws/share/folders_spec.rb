@@ -289,7 +289,7 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
     end
     let!(:file2) do
       Timecop.freeze(now - 2.days) do
-        create :gws_share_file, cur_site: site, folder: folder, category_ids: [category.id], deleted: now - 2.day
+        create :gws_share_file, cur_site: site, folder: folder, category_ids: [category.id], deleted: now - 2.days
       end
     end
 
