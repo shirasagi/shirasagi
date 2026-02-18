@@ -1,16 +1,13 @@
 require 'spec_helper'
 require 'csv'
 
-describe Sys::UsersController, type: :request, dbscope: :example, js: true do
-  let(:site) { create(:cms_site) }
+describe "sys_users_download_all", type: :feature, dbscope: :example, js: true do
   let(:group) { create(:ss_group, name: "Test Group") }
   let(:role) { create(:sys_role, name: "Test Role") }
   let(:organization) { create(:ss_group, name: "Test Organization") }
-  let(:now) { Time.zone.now }
-  let(:index_path) { sys_users_path(site.id) }
-  let(:new_path) { new_sys_user_path(site.id) }
-  let(:download_path) { download_all_sys_users_path(site.id) }
   let(:now) { Time.zone.now.change(usec: 0) }
+  let(:index_path) { sys_users_path }
+  let(:download_path) { download_all_sys_users_path }
   let(:user) do
     create(:sys_user_sample_2,
            name: "John Doe",
@@ -48,7 +45,6 @@ describe Sys::UsersController, type: :request, dbscope: :example, js: true do
   context "users download" do
     it do
       visit index_path
-      # #item-form > footer > input
 
       within "#menu" do
         within "nav" do
