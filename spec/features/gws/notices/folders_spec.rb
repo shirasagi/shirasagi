@@ -401,4 +401,24 @@ describe "gws_notice_folders", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "delete parent" do
+    let!(:folder0) { create :gws_notice_folder, cur_site: site }
+    let!(:folder1) { create :gws_notice_folder, cur_site: site, name: "#{folder0.name}/#{unique_id}" }
+    let!(:item1) { create :gws_notice_post, cur_site: site, folder: folder1, state: "closed" }
+
+    it do
+      visit gws_notice_folders_path(site: site)
+      within "[data-id='#{folder0.id}']" do
+        click_on folder0.name
+      end
+      within ".nav-menu" do
+        click_on I18n.t('ss.links.delete')
+      end
+      within "form#item-form" do
+        click_on I18n.t('ss.buttons.delete')
+      end
+      wait_for_error I18n.t("mongoid.errors.models.gws/model/folder.found_children")
+    end
+  end
 end
