@@ -22,26 +22,30 @@ describe "cms_all_contents", type: :feature, dbscope: :example do
       visit cms_all_contents_path(site: site)
       click_on I18n.t("ss.buttons.download")
 
-      csv = page.html
-      csv = csv.encode("UTF-8", "SJIS")
-      csv = ::CSV.parse(csv, headers: true)
+      csv_source = page.html
+      csv_source.force_encoding("UTF-8")
+      csv_source = csv_source[1..-1]
+      SS::Csv.open(StringIO.new(csv_source)) do |csv|
+        table = csv.read
 
-      expect(csv.length).to eq 3
-      expect(csv.headers).to include(I18n.t("all_content.page_id"), I18n.t("all_content.node_id"), I18n.t("all_content.route"))
-      csv[0].tap do |row|
-        expect(row[I18n.t("all_content.page_id")]).to be_present
-        expect(row[I18n.t("all_content.node_id")]).to be_blank
-        expect(row[I18n.t("all_content.route")]).to be_present
-      end
-      csv[1].tap do |row|
-        expect(row[I18n.t("all_content.page_id")]).to be_blank
-        expect(row[I18n.t("all_content.node_id")]).to be_present
-        expect(row[I18n.t("all_content.route")]).to be_present
-      end
-      csv[2].tap do |row|
-        expect(row[I18n.t("all_content.page_id")]).to be_blank
-        expect(row[I18n.t("all_content.node_id")]).to be_present
-        expect(row[I18n.t("all_content.route")]).to be_present
+        expect(table.length).to eq 3
+        expect(table.headers).to include(
+          I18n.t("all_content.page_id"), I18n.t("all_content.node_id"), I18n.t("all_content.route"))
+        table[0].tap do |row|
+          expect(row[I18n.t("all_content.page_id")]).to be_present
+          expect(row[I18n.t("all_content.node_id")]).to be_blank
+          expect(row[I18n.t("all_content.route")]).to be_present
+        end
+        table[1].tap do |row|
+          expect(row[I18n.t("all_content.page_id")]).to be_blank
+          expect(row[I18n.t("all_content.node_id")]).to be_present
+          expect(row[I18n.t("all_content.route")]).to be_present
+        end
+        table[2].tap do |row|
+          expect(row[I18n.t("all_content.page_id")]).to be_blank
+          expect(row[I18n.t("all_content.node_id")]).to be_present
+          expect(row[I18n.t("all_content.route")]).to be_present
+        end
       end
     end
   end

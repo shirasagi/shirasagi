@@ -98,29 +98,7 @@ module ApplicationHelper
 
   def tt(key, *args)
     opts = args.extract_options!
-    symbol = opts.delete(:symbol) || "?"
-
-    html_wrap = args.shift
-    html_wrap = opts.delete(:html_wrap) if html_wrap.nil?
-    html_wrap = true if html_wrap.nil?
-
-    msg = nil
-    Array(opts.delete(:scope)).flatten.each do |scope|
-      msg = I18n.t(key, **opts.merge(default: '', scope: scope))
-      break if msg.present?
-    end
-    msg = I18n.t(key, **opts.merge(default: '', scope: 'tooltip')) if msg.blank?
-    return msg if msg.blank? || !html_wrap
-    msg = [msg] if msg.class.to_s == "String"
-    list = msg.map { |d| "<li>" + d.gsub(/\r\n|\n/, "<br />") + "</li>" }
-
-    h = []
-    h << %(<div class="tooltip">#{symbol})
-    h << %(<ul class="tooltip-content">)
-    h << list
-    h << %(</ul>)
-    h << %(</div>)
-    h.join("\n").html_safe
+    SS::HumanAttributeName.tt(key, **opts)
   end
 
   def mail_to_entity(email_address, name = nil, html_options = {}, &block)

@@ -13,8 +13,11 @@
 
   <%= render "ss/crud/addon", addon: { id: "addon-basic", head: t("cms.copy_nodes.to"), toggle: true } do %>
     <dl class="see">
-      <dt><%= t "cms.copy_nodes.target_node_name" %><%= tt "cms/model/node.foldername" %></dt>
-      <dd><%= f.text_field :target_node_name, class: :filename %></dd>
+      <dt><%= t "cms.copy_nodes.target_node_name" %><%= tt "ss/document.title" %></dt>
+      <dd><%= f.text_field :target_node_name %></dd>
+
+      <dt><%= t "cms.copy_nodes.target_node_filename" %><%= tt "cms/model/node.foldername" %></dt>
+      <dd><%= f.text_field :target_node_filename %></dd>
 
       <% if Cms::Tool.allowed?(:edit, @cur_user, site: @cur_site) %>
         <dt><%= t "cms.copy_nodes.job_history" %></dt>

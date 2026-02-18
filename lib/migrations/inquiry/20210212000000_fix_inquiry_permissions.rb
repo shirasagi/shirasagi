@@ -6,11 +6,8 @@ class SS::Migration20210212000000
   def change
     inquiry_permissions = %w(
       read_other_inquiry_columns
-      read_private_inquiry_columns
       edit_other_inquiry_columns
-      edit_private_inquiry_columns
       delete_other_inquiry_columns
-      delete_private_inquiry_columns
       read_other_inquiry_answers
       read_private_inquiry_answers
       edit_other_inquiry_answers

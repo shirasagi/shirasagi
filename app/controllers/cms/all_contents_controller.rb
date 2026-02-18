@@ -30,11 +30,13 @@ class Cms::AllContentsController < ApplicationController
   public
 
   def download_all
+    csv_params = params.key?(:item) ? params.require(:item).permit(:encoding, :truncate) : SS::EMPTY_HASH
+
     respond_to do |format|
       format.html
       format.csv do
-        exporter = Cms::AllContent.new(site: @cur_site)
-        enumerable = exporter.enum_csv(encoding: "Shift_JIS")
+        exporter = Cms::AllContent.new(site: @cur_site, truncate: csv_params.fetch(:truncate, "yes") != "no")
+        enumerable = exporter.enum_csv(encoding: csv_params.fetch(:encoding, "UTF-8"))
 
         filename = "all_contents_#{Time.zone.now.to_i}.csv"
 

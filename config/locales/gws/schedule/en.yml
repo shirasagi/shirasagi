@@ -589,5 +589,6 @@ en:
 
   job:
     models:
-      gws/schedule/trash_purge_job: Schedule/Empty plan trash
-      gws/schedule/todo_trash_purge_job: ToDo/Empty to-do trash
+      gws/schedule/trash_purge_job: GWS Schedule/Empty plan trash
+      gws/schedule/todo_trash_purge_job: GWS ToDo/Empty to-do trash
+      gws/schedule/todo_job: GWS ToDo/Deletion of todos beyond the recoverable period

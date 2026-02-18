@@ -406,5 +406,5 @@ en:
 
   job:
     models:
-      gws/workflow2/trash_purge_job: Application2/Empty application trash
-      gws/workflow2/route_migration_job: Application2/Approval route setting migration
+      gws/workflow2/trash_purge_job: GWS Application2/Empty application trash
+      gws/workflow2/route_migration_job: GWS Application2/Approval route setting migration

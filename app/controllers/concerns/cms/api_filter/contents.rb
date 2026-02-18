@@ -71,8 +71,8 @@ module Cms::ApiFilter::Contents
   end
 
   def search_html_with_condition(cond)
-    @pages = Cms::Page.site(@cur_site).where(cond)
-    @parts = Cms::Part.site(@cur_site).where(cond)
-    @layouts = Cms::Layout.site(@cur_site).where(cond)
+    @pages = Cms::Page.site(@cur_site).allow(:read, @cur_user).where(cond)
+    @parts = Cms::Part.site(@cur_site).allow(:read, @cur_user).where(cond)
+    @layouts = Cms::Layout.site(@cur_site).allow(:read, @cur_user).where(cond)
   end
 end

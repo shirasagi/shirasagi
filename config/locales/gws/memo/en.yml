@@ -431,4 +431,5 @@ en:
 
   job:
     models:
-      gws/memo/message_export_job: Message/Export
+      gws/memo/message_export_job: GWS Message/Export
+      gws/memo/message_backup_job: GWS Message/Backup

@@ -1,9 +1,10 @@
 class Inquiry::FormsController < ApplicationController
   include Cms::BaseFilter
 
-  prepend_before_action ->{ redirect_to inquiry_columns_path }, only: :index
-
   def index
-    # redirect
+    menu = Inquiry.enum_menu_items(@cur_site, @cur_node, @cur_user).first
+    raise "404" if menu.blank?
+
+    redirect_to menu.path
   end
 end

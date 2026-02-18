@@ -4,7 +4,13 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
   describe "copy page" do
     let(:site) { cms_site }
     let(:target_node_name) { unique_id }
-    let(:task) { create :copy_nodes_task, target_node_name: target_node_name, site_id: site.id, node_id: node.id }
+    let(:target_node_filename) { unique_id }
+    let(:task) do
+      create(
+        :copy_nodes_task, site_id: site.id, node_id: node.id,
+        target_node_name: target_node_name, target_node_filename: target_node_filename
+      )
+    end
     let!(:file) { create :cms_file, site_id: site.id }
     let!(:node) { create :article_node_page, cur_site: site }
     let!(:article_page) do
@@ -13,8 +19,10 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
 
     describe "copy page which is located under a node" do
       before do
-        job_class = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node.id)
-        ss_perform_now(job_class, target_node_name: target_node_name)
+        expect do
+          job_class = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node.id)
+          ss_perform_now(job_class, target_node_name: target_node_name, target_node_filename: target_node_filename)
+        end.to output(include(article_page.filename)).to_stdout
       end
 
       it "created new copied file under target node" do
@@ -25,10 +33,11 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
           expect(log.logs).to include(/INFO -- : .* Completed Job/)
         end
 
-        copied_node = Cms::Node.site(site).find_by(filename: target_node_name)
-        copied_page = Cms::Page.site(site).where(filename: /^#{target_node_name}\//).first
-        expect(copied_node.filename).to eq target_node_name
-        expect(copied_page.filename).to eq "#{target_node_name}/page.html"
+        copied_node = Cms::Node.site(site).find_by(filename: target_node_filename)
+        copied_page = Cms::Page.site(site).where(filename: /^#{target_node_filename}\//).first
+        expect(copied_node.name).to eq target_node_name
+        expect(copied_node.filename).to eq target_node_filename
+        expect(copied_page.filename).to eq "#{target_node_filename}/page.html"
         expect(copied_page.file_ids).not_to include file.id
       end
     end

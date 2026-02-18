@@ -1,3 +1,5 @@
+#frozen_string_literal: true
+
 class Gws::Notice::FolderExporter
   include ActiveModel::Model
 
@@ -172,7 +174,9 @@ class Gws::Notice::FolderExporter
   def readable_custom_groups(custom_group_ids)
     custom_groups = custom_group_ids.map { id_to_custom_group_map[_1] }
     custom_groups.compact!
-    custom_groups.sort_by! { [ _1.order || 0, _1.name ] }
+    custom_groups.sort_by! do |custom_group|
+      [ guard_int_from_nil(custom_group), guard_str_from_nil(custom_group.name), custom_group.id ]
+    end
     custom_groups
   end
 
@@ -187,7 +191,9 @@ class Gws::Notice::FolderExporter
   def readable_groups(group_ids)
     groups = group_ids.map { id_to_group_map[_1] }
     groups.compact!
-    groups.sort_by! { [ _1.order || 0, _1.name ] }
+    groups.sort_by! do |group|
+      [ guard_int_from_nil(group.order), guard_str_from_nil(group.name), group.id ]
+    end
     groups
   end
 
@@ -208,7 +214,26 @@ class Gws::Notice::FolderExporter
   def readable_users(user_ids)
     users = user_ids.map { id_to_user_map[_1] }
     users.compact!
-    users.sort_by! { [ _1.title_orders.try(:[], site.id.to_s) || 0, _1.organization_uid, _1.uid, _1.id ] }
+    users.sort_by! do |user|
+      [
+        guard_int_from_nil(site_title_order(user)),
+        guard_str_from_nil(user.organization_uid),
+        guard_str_from_nil(user.uid),
+        user.id ]
+    end
     users
+  end
+
+  def site_title_order(user)
+    return if user.title_orders.blank?
+    user.title_orders[site.id.to_s]
+  end
+
+  def guard_int_from_nil(val)
+    val || 0
+  end
+
+  def guard_str_from_nil(val)
+    val || ""
   end
 end

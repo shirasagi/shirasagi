@@ -1,7 +1,6 @@
 require 'spec_helper'
-require "csv"
 
-RSpec.describe Cms::MembersController, type: :request, dbscope: :example, js: true do
+describe "cms_members_import", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:group) { create(:cms_group, name: "test_group") }
   let(:permissions) { %w(read_cms_members edit_cms_members delete_cms_members import_cms_members) }

@@ -11,43 +11,6 @@ describe "gws_share_files", type: :feature, dbscope: :example, js: true do
     login_gws_user
   end
 
-  describe "restore" do
-    it do
-      folder.reload
-      expect(folder.descendants_files_count).to eq 1
-      expect(folder.descendants_total_file_size).to eq item.size
-
-      visit gws_share_files_path(site: site)
-      within ".tree-navi" do
-        expect(page).to have_css(".item-name", text: folder.name)
-      end
-
-      click_on I18n.t('ss.navi.trash')
-      within ".tree-navi" do
-        expect(page).to have_css(".item-name", text: folder.name)
-      end
-
-      click_on item.name
-      click_on I18n.t('ss.links.restore')
-
-      within "form#item-form" do
-        click_on I18n.t('ss.buttons.restore')
-      end
-
-      wait_for_notice I18n.t('ss.notice.restored')
-      within ".tree-navi" do
-        expect(page).to have_css(".item-name", text: folder.name)
-      end
-
-      item.reload
-      expect(item.deleted).to be_blank
-
-      folder.reload
-      expect(folder.descendants_files_count).to eq 1
-      expect(folder.descendants_total_file_size).to eq item.size
-    end
-  end
-
   describe "hard delete" do
     it do
       folder.reload

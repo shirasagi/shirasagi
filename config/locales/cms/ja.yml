@@ -141,6 +141,18 @@ ja:
     yearly_archive: 年別アーカイブ
     monthly_archive: 月別アーカイブ
     syntax_check_violation_count: "アクセシビリティ違反が%{total}件あります。"
+    overflow_keyword:
+      one: "他1件のキーワード"
+      other: "他%{count}キーワード"
+    overflow_category:
+      one: "他1件のカテゴリー"
+      other: "他%{count}カテゴリー"
+    overflow_page:
+      one: "他1件のページ"
+      other: "他%{count}ページ"
+    overflow_value:
+      one: "他1件の値"
+      other: "他%{count}件の値"
     node_columns:
       filename: 'ファイル名'
       route: 'フォルダー属性'
@@ -434,7 +446,8 @@ ja:
       to: 複製先
       job_history: 実行ログ
       link_to_job_history: ジョブ実行履歴
-      target_node_name: フォルダー名
+      target_node_name: タイトル
+      target_node_filename: フォルダー名
       started_job: 処理を開始します。ジョブ実行履歴で結果をご確認下さい
     download_nodes:
       messages:
@@ -1370,7 +1383,8 @@ ja:
         font_color: 文字色
         background_color: 背景色
       cms/copy_nodes_task:
-        target_node_name: 複製先フォルダー名
+        target_node_name: 複製先タイトル
+        target_node_filename: 複製先フォルダー名
       cms/addon/source_cleaner:
         target_type: 対象の種別
         target_value: 対象の名称
@@ -3583,6 +3597,8 @@ ja:
   job:
     models:
       cms/node/generate_job: CMS/フォルダー書き出し
+      cms/node/import_job: CMS/フォルダーインポート
+      cms/node/release_job: CMS/フォルダー公開
       cms/page/generate_job: CMS/ページ書き出し
       cms/page/release_job: CMS/ページ公開
       cms/page/remove_job: CMS/ページ削除

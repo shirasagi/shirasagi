@@ -391,3 +391,5 @@ en:
     models:
       webmail/history_archive_job: ウェブメール/操作履歴アーカイブ作成
       webmail/role_import_job: ウェブメール/ロール・権限インポート
+      webmail/group_import_job: ウェブメール/グループインポート
+      webmail/mail_export_job: ウェブメール/エクスポート

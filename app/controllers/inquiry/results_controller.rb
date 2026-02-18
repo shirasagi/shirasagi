@@ -8,8 +8,8 @@ class Inquiry::ResultsController < ApplicationController
 
   append_view_path "app/views/cms/pages"
   navi_view "inquiry/main/navi"
-  before_action :set_aggregation
   before_action :check_permission
+  before_action :set_aggregation
 
   private
 
@@ -17,8 +17,13 @@ class Inquiry::ResultsController < ApplicationController
     { cur_site: @cur_site, node_id: @cur_node.id }
   end
 
+  def check_permission
+    raise "404" if @cur_node.route != "inquiry/form"
+    raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+    raise "403" unless Inquiry::Answer.allowed?(:read, @cur_user, site: @cur_site, node: @cur_node)
+  end
+
   def set_aggregation
-    raise "403" if @cur_node.route != "inquiry/form"
     @columns = @cur_node.columns.order_by(order: 1)
     @answer_count = @cur_node.answers.site(@cur_site).allow(:read, @cur_user).count
 
@@ -28,11 +33,6 @@ class Inquiry::ResultsController < ApplicationController
     options[:user] = @cur_user
     @answer_data_opts = options
     @aggregation = @cur_node.aggregate_select_columns(options)
-  end
-
-  def check_permission
-    return if @cur_site.inquiry_form_id != @cur_node.id
-    raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
   public

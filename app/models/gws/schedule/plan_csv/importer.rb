@@ -1,9 +1,8 @@
 class Gws::Schedule::PlanCsv::Importer
+  extend SS::Translation
   include ActiveModel::Model
   include SS::PermitParams
-  # import `t` and `tt`
-  extend SS::Document::ClassMethods
-  extend SS::Translation
+  include SS::HumanAttributeName
   include Cms::CsvImportBase
 
   attr_accessor :in_file, :cur_site, :cur_user

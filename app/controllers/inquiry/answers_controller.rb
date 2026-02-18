@@ -17,6 +17,10 @@ class Inquiry::AnswersController < ApplicationController
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
   end
 
+  def permit_fields
+    [ :state, :comment, group_ids: SS::EMPTY_ARRAY ]
+  end
+
   def set_items
     @state = params.dig(:s, :state).presence || "unclosed"
 

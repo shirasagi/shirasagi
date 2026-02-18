@@ -1,5 +1,6 @@
 class Webmail::ImapSetting < Hash
   include ActiveModel::Model
+  include SS::HumanAttributeName
 
   validates :name, presence: true
   validates :imap_port, numericality: { only_integer: true, greater_than: 0, allow_blank: true }
@@ -106,19 +107,5 @@ class Webmail::ImapSetting < Hash
     conf[:imap_trash_box] = imap_trash_box if imap_trash_box.present?
     conf[:imap_alias] = imap_alias if imap_alias.present?
     conf
-  end
-
-  def t(name, opts = {})
-    self.class.t name, opts
-  end
-
-  def tt(key, html_wrap = true)
-    self.class.tt key, html_wrap
-  end
-
-  class << self
-    def t(*args)
-      human_attribute_name *args
-    end
   end
 end

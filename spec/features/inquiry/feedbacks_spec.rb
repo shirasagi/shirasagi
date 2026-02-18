@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe "inquiry_feedbacks", type: :feature, dbscope: :example do
+describe "inquiry_feedbacks", type: :feature, dbscope: :example, js: true do
   let(:site) { cms_site }
   let(:node) { create :inquiry_node_form, cur_site: site }
   let(:index_path) { inquiry_feedbacks_path(site, node) }

@@ -43,4 +43,13 @@
       </dd>
     <% end %>
   <% end %>
+
+  <dt><%= t("cms.apis.contents.option") %></dt>
+  <dd>
+    <label>
+      <%= hidden_field_tag "#{f.object_name}[truncate]", 'no', id: nil %>
+      <%= checkbox_tag "#{f.object_name}[truncate]", 'yes', true, { id: nil } %>
+      <%= t("ss.truncate_long_csv_value") %>
+    </label>
+  </dd>
 </dl>

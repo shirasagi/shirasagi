@@ -73,7 +73,7 @@ module Inquiry::AnswersFilter
   public
 
   def index
-    if params[:s].present? && params[:s][:group].present?
+    if @cur_user.cms_role_permit_any?(@cur_site, "read_other_inquiry_answers") && params.dig(:s, :group).present?
       @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
     end
 

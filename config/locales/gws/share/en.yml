@@ -108,6 +108,19 @@ en:
         descendants_files_count: Total number of files
         descendants_total_file_size: Total file size
 
+  activemodel:
+    models:
+      gws/share/recover_file_service: Recover File Service
+    attributes:
+      gws/share/recover_file_service:
+        name: File name
+        folder: Folder
+        folder_id: Folder name
+    errors:
+      models:
+        gws/share/recover_file_service:
+          not_found_parent: The parent folder does not exist.
+
   tooltip:
     gws/share/category:
       name:
@@ -131,6 +144,11 @@ en:
       share_max_folder_size:
         - Enter the total capacity limit for the folder.
         - Top-level folder settings apply to all lower folders.
+
+  input_guide:
+    gws/share/recover_file_service:
+      not_found_parent: |-
+        Click the “Select Folder” button and choose the folder for the restoration.
 
   job:
     models:

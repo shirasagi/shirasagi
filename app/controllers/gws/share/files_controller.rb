@@ -84,8 +84,36 @@ class Gws::Share::FilesController < ApplicationController
   end
 
   def update_folder_file_info
-    @folder.update_folder_descendants_file_info if @folder
-    @item.folder.update_folder_descendants_file_info if @item.is_a?(Gws::Share::File) && @item.folder != @folder
+    return if @item.errors.present?
+
+    check = Set.new
+    if @item.is_a?(Gws::Share::File)
+      if @item.folder_id_previously_was.present?
+        if @folder && @item.folder_id_previously_was == @folder.id
+          @folder.update_folder_descendants_file_info
+          check.add(@folder.id)
+        else
+          folder_previously_was = Gws::Share::Folder.site(@cur_site).find(@item.folder_id_previously_was) rescue nil
+          folder_previously_was.update_folder_descendants_file_info
+          check.add(folder_previously_was.id)
+        end
+      end
+
+      if @item.folder_id.present? && @item.folder_id_previously_was != @item.folder_id
+        if @folder && @item.folder_id == @folder.id
+          @folder.update_folder_descendants_file_info
+          check.add(@folder.id)
+        else
+          folder = Gws::Share::Folder.site(@cur_site).find(@item.folder_id) rescue nil
+          folder.update_folder_descendants_file_info
+          check.add(folder.id)
+        end
+      end
+    end
+
+    if @folder && !check.include?(@folder.id)
+      @folder.update_folder_descendants_file_info
+    end
   end
 
   def render_update(result, opts = {})

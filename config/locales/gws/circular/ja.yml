@@ -179,4 +179,5 @@ ja:
 
   job:
     models:
-      gws/circular/trash_purge_job: 回覧板/ゴミ箱の掃除
+      gws/circular/trash_purge_job: GWS回覧板/ゴミ箱の掃除
+      gws/circular/delete_job: GWS回覧板/復旧可能期間超過分の削除
