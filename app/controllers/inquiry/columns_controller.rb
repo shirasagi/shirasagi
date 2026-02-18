@@ -56,9 +56,14 @@ class Inquiry::ColumnsController < ApplicationController
 
   public
 
+  def index
+    raise '403' unless @model.allowed?(:read, @cur_user, site: @cur_site)
+    render
+  end
+
   def create
     set_model
-    raise '403' unless cur_form.allowed?(:edit, @cur_user, site: @cur_site)
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
 
     @item = Inquiry::Column.new(cur_site: @cur_site, site: @cur_site, node: @cur_node)
     set_default_attributes
@@ -82,5 +87,12 @@ class Inquiry::ColumnsController < ApplicationController
     @frame_id = "item-#{@item.id}"
     locals = { ref: SS.request_path(request), model: @model, item: @item, new_item: true }
     render template: "inquiry/frames/columns/edit", locals: locals, layout: "ss/item_frame"
+  end
+
+  def reorder
+    set_model
+    raise '403' unless @model.allowed?(:edit, @cur_user, site: @cur_site)
+
+    super
   end
 end
