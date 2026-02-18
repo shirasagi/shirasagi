@@ -4,6 +4,7 @@ module SS::Document
   include Mongoid::Document
   include SS::Scope::Base
   include SS::PermitParams
+  include SS::HumanAttributeName
   include SS::Fields::Sequencer
   include SS::Fields::Normalizer
 
@@ -26,30 +27,6 @@ module SS::Document
   module ClassMethods
     def default_client?
       persistence_context.send(:client_name) == :default
-    end
-
-    def t(*args)
-      human_attribute_name *args
-    end
-
-    def tt(key, html_wrap = true)
-      modelnames = ancestors.select { |x| x.respond_to?(:model_name) }
-      msg = ""
-      modelnames.each do |modelname|
-        msg = I18n.t("tooltip.#{modelname.model_name.i18n_key}.#{key}", default: "")
-        break if msg.present?
-      end
-      return msg if msg.blank? || !html_wrap
-      msg = [msg] if msg.class.to_s == "String"
-      list = msg.map { |d| "<li>" + d.to_s.gsub(/\r\n|\n/, "<br />") + "<br /></li>" }
-
-      h = []
-      h << %(<div class="tooltip">?)
-      h << %(<ul class="tooltip-content">)
-      h << list
-      h << %(</ul>)
-      h << %(</div>)
-      h.join("\n").html_safe
     end
 
     def seqid(name = :id)
@@ -114,14 +91,6 @@ module SS::Document
   def assign_attributes_safe(attr)
     self.attributes = attr.slice(*self.class.fields.keys)
     self
-  end
-
-  def t(name, opts = {})
-    self.class.t name, opts
-  end
-
-  def tt(key, html_wrap = true)
-    self.class.tt key, html_wrap
   end
 
   def addons(addon_type = nil)

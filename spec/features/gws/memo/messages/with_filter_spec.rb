@@ -369,7 +369,7 @@ describe 'gws_memo_messages', type: :feature, dbscope: :example, js: true do
     end
 
     before do
-      folder.destroy
+      folder.delete # フィルターが使用中の場合は削除不可だけど、無理やり削除する
       login_gws_user
     end
 

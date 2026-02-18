@@ -1,8 +1,7 @@
 class Gws::UserCsv::Importer
   include ActiveModel::Model
   include SS::PermitParams
-  # import `t` and `tt`
-  extend SS::Document::ClassMethods
+  include SS::HumanAttributeName
 
   attr_accessor :in_file, :cur_site, :cur_user, :webmail_support
   attr_reader :imported
