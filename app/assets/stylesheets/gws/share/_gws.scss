@@ -48,3 +48,11 @@
     }
   }
 }
+
+.gws-share-management-files-recover-folder-table {
+  tbody:has(> :nth-child(2)) {
+    [data-id="not-found"] {
+      display: none;
+    }
+  }
+}
