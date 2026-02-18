@@ -3,6 +3,14 @@ class Gws::Memo::NoticeUserSettingsController < ApplicationController
   include Gws::CrudFilter
   include Gws::UserSettingFilter
 
+  before_action :check_permission
+
+  private
+
+  def check_permission
+    raise "403" unless @cur_user.gws_role_permit_any?(@cur_site, :edit_gws_memo_notice_user_setting)
+  end
+
   def permit_fields
     fields = []
     %w(schedule todo workload report workflow circular monitor board faq qna survey discussion announcement affair).each do |name|
@@ -12,6 +20,8 @@ class Gws::Memo::NoticeUserSettingsController < ApplicationController
     fields.map(&:to_sym)
     fields << :send_notice_mail_addresses
   end
+
+  public
 
   def show
     raise "403" if !@cur_user.gws_role_permit_any?(@cur_site, :edit_gws_memo_notice_user_setting)
