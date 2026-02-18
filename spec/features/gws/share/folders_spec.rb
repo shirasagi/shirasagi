@@ -277,4 +277,68 @@ describe "gws_share_folders", type: :feature, dbscope: :example, js: true do
       end
     end
   end
+
+  context "deleting folder having files" do
+    let(:now) { Time.zone.now.change(usec: 0) }
+    let!(:folder) { create :gws_share_folder, cur_site: site }
+    let!(:category) { create :gws_share_category, cur_site: site }
+    let!(:file1) do
+      Timecop.freeze(now - 1.day) do
+        create :gws_share_file, cur_site: site, folder: folder, category_ids: [category.id]
+      end
+    end
+    let!(:file2) do
+      Timecop.freeze(now - 2.days) do
+        create :gws_share_file, cur_site: site, folder: folder, category_ids: [category.id], deleted: now - 2.days
+      end
+    end
+
+    it do
+      login_gws_user to: gws_share_folders_path(site: site)
+      click_on folder.name
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      wait_for_notice I18n.t('ss.notice.deleted')
+
+      expect { Gws::Share::Folder.find(folder.id) }.to raise_error Mongoid::Errors::DocumentNotFound
+      Gws::Share::File.find(file1.id).tap do |file_after_delete|
+        expect(file_after_delete.deleted.in_time_zone).to be_within(30.seconds).of(Time.zone.now)
+        expect(file_after_delete.updated.in_time_zone).to eq file1.updated.in_time_zone
+        expect(file_after_delete.created.in_time_zone).to eq file1.created.in_time_zone
+      end
+      Gws::Share::File.find(file2.id).tap do |file_after_delete|
+        expect(file_after_delete.deleted.in_time_zone).to eq file2.deleted.in_time_zone
+        expect(file_after_delete.updated.in_time_zone).to eq file2.updated.in_time_zone
+        expect(file_after_delete.created.in_time_zone).to eq file2.created.in_time_zone
+      end
+    end
+  end
+
+  context "deleting folder having sub folders which is having files" do
+    let!(:folder0) { create :gws_share_folder, cur_site: site }
+    let!(:folder1) { create :gws_share_folder, cur_site: site, name: "#{folder0.name}/#{unique_id}" }
+    let!(:category) { create :gws_share_category, cur_site: site }
+    let!(:file) { create :gws_share_file, cur_site: site, folder: folder1, category_ids: [category.id] }
+
+    it do
+      login_gws_user to: gws_share_folders_path(site: site)
+      within "[data-id='#{folder0.id}']" do
+        click_on folder0.name
+      end
+      within ".nav-menu" do
+        click_on I18n.t("ss.links.delete")
+      end
+      within "form#item-form" do
+        click_on I18n.t("ss.buttons.delete")
+      end
+      wait_for_error I18n.t('mongoid.errors.models.gws/model/folder.found_children')
+
+      expect { folder0.reload }.not_to raise_error
+      expect { folder1.reload }.not_to raise_error
+    end
+  end
 end

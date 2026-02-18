@@ -11,9 +11,12 @@ class Gws::Share::Folder
 
   store_in collection: :gws_share_folders
 
-  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, dependent: :destroy, autosave: false
+  # rubocop:disable Rails/HasManyOrHasOneDependent
+  # dependent オプションは速度を優先するため付けない。
+  has_many :files, class_name: "Gws::Share::File", order: { created: -1 }, autosave: false
+  # rubocop:enable Rails/HasManyOrHasOneDependent
 
-  before_destroy :validate_files
+  after_destroy :move_files_to_trash
 
   def quota_bytes
     return @quota_bytes if @quota_bytes
@@ -49,12 +52,11 @@ class Gws::Share::Folder
 
   private
 
-  def validate_files
-    if files.present?
-      errors.add :base, :found_files
-      throw :abort if flagged_for_destroy? # flagged_for_destroy? は削除中かどうかを判定する。削除を中断させるには throw :abort が必要。
-      return false
-    end
-    true
+  def move_files_to_trash
+    criteria = files.without_deleted
+    return if criteria.blank?
+
+    # フォルダー配下に大量のファイルがある場合、タイムアウトを避けるため set を用いる
+    criteria.set(deleted: Time.zone.now)
   end
 end

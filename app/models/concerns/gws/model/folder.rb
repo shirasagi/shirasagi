@@ -157,7 +157,6 @@ module Gws::Model::Folder
       throw :abort if flagged_for_destroy? # flagged_for_destroy? は削除中かどうかを判定する。削除を中断させるには throw :abort が必要。
       return false
     end
-    true
   end
 
   def validate_folder_name
