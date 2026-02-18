@@ -51,6 +51,7 @@ class Gws::Workflow2::Form::Category
   def validate_children
     if name.present? && descendants_category.exists?
       errors.add :base, :found_children
+      throw :abort if flagged_for_destroy? # flagged_for_destroy? は削除中かどうかを判定する。削除を中断させるには throw :abort が必要。
       return false
     end
     true

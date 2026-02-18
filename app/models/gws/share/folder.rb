@@ -52,6 +52,7 @@ class Gws::Share::Folder
   def validate_files
     if files.present?
       errors.add :base, :found_files
+      throw :abort if flagged_for_destroy? # flagged_for_destroy? は削除中かどうかを判定する。削除を中断させるには throw :abort が必要。
       return false
     end
     true
