@@ -59,20 +59,20 @@ def save_node(data)
   item
 end
 
-save_node filename: "css", name: "CSS", route: "uploader/file", shortcut: "show"
+save_node filename: "css", name: "CSS", route: "uploader/file", shortcuts: %w(system quota)
 
-save_node filename: "docs", name: "記事", route: "article/page", shortcut: "show"
-save_node filename: "topics", name: "注目記事", route: "category/page", shortcut: "show", conditions: %w(product)
+save_node filename: "docs", name: "記事", route: "article/page", shortcuts: %w(system quota)
+save_node filename: "topics", name: "注目記事", route: "category/page", shortcuts: %w(system quota), conditions: %w(product)
 
-save_node filename: "product", name: "製品情報", route: "cms/node", shortcut: "show"
+save_node filename: "product", name: "製品情報", route: "cms/node", shortcuts: %w(system quota)
 save_node filename: "product/word", name: "文書管理", route: "cms/page"
 save_node filename: "product/calc", name: "表計算", route: "cms/page"
 
-save_node filename: "recruit", name: "採用情報", shortcut: "show", route: "category/node"
+save_node filename: "recruit", name: "採用情報", shortcuts: %w(system quota), route: "category/node"
 save_node filename: "recruit/sales", name: "営業部", route: "category/page"
 save_node filename: "recruit/devel", name: "開発部", route: "category/page"
 
-save_node route: "event/page", filename: "plan", name: "事業計画", shortcut: "show"
+save_node route: "event/page", filename: "plan", name: "事業計画", shortcuts: %w(system quota)
 
 ## layout
 Cms::Node.where(site_id: @site._id, filename: /^topics/).update_all(layout_id: layouts["page"].id)

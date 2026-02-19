@@ -5,8 +5,8 @@
   <dt><%= @model.t :order %></dt>
   <dd><%= @item.send :order %></dd>
 
-  <dt><%= @model.t :shortcut %></dt>
-  <dd><%= @item.label :shortcut %></dd>
+  <dt><%= @model.t :shortcuts %></dt>
+  <dd><%= Cms.shortcut_values_to_labels(@item.shortcuts).join(", ") %></dd>
 
   <dt><%= @model.t :view_route %></dt>
   <dd><%= Cms::Node.new.route_options.map(&:reverse).to_h[@item.view_route] if @item.view_route.present? %></dd>

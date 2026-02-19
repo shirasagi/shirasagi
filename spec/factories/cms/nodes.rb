@@ -8,7 +8,7 @@ FactoryBot.define do
   end
 
   factory :cms_node, class: Cms::Node, traits: [:cms_node] do
-    shortcut { :show }
+    shortcuts { [ Cms::Node::SHORTCUT_SYSTEM, Cms::Node::SHORTCUT_QUOTA ] }
   end
 
   factory :cms_node_base, class: Cms::Node::Base, traits: [:cms_node] do

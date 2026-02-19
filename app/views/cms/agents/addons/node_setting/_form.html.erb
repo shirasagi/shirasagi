@@ -14,8 +14,16 @@
   <dt><%= @model.t :order %><%= @model.tt :order %></dt>
   <dd><%= f.number_field :order %></dd>
 
-  <dt><%= @model.t :shortcut %><%= @model.tt :shortcut %></dt>
-  <dd><%= f.select :shortcut, @item.shortcut_options %></dd>
+  <dt><%= @model.t :shortcuts %><%= @model.tt :shortcuts %></dt>
+  <dd>
+    <%= hidden_field_tag "#{f.object_name}[shortcuts][]", nil, id: nil %>
+    <% Cms.shortcut_options.each do |label, value| %>
+      <label>
+        <%= checkbox_tag "#{f.object_name}[shortcuts][]", value, @item.shortcuts.include?(value), id: nil %>
+        <%= label %>
+      </label>
+    <% end %>
+  </dd>
 
   <dt><%= @model.t :view_route %><%= @model.tt :view_route %></dt>
   <dd><%= f.select :view_route, render(SS::OptionsForSelectComponent.new(options: Cms::Node.new.route_options, selected: view_route)), include_blank: " " %></dd>

@@ -679,7 +679,7 @@ _:future,
   border-bottom: 1px solid #dcdcdc;
   background: init.$white;
   .icon-material::before {
-    top: 6px;
+    top: 5px;
     left: 16px;
   }
   .icon-material-display {
@@ -1546,6 +1546,10 @@ _:future,
   .icon-material-shortcut::before {
     // Material Icons Outlined: shortcut
     content: "\f060" !important;
+  }
+  .icon-material-folder::before {
+    // Material Icons Outlined: folder
+    content: "\e2c7" !important;
   }
 }
 

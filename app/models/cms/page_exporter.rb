@@ -152,7 +152,11 @@ class Cms::PageExporter
         end
       end
     end
-    drawer.column :shortcut, type: :label
+    drawer.column :shortcuts do
+      drawer.body do |item|
+        Cms.shortcut_values_to_labels(item.try(:shortcuts)).join(",")
+      end
+    end
     drawer.column :view_route, type: :label do
       drawer.head { I18n.t("mongoid.attributes.cms/model/node.view_route") }
     end
