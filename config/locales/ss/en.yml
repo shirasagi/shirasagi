@@ -785,7 +785,7 @@ en:
         sort: Sort by
         limit: No. of items displayed
         layout_id: Layout
-        shortcut: Shortcut
+        shortcuts: Shortcuts
         view_state: Status
         text_index: Full-text search index (unused)
       ss/model/site:

@@ -8,7 +8,7 @@ class Cms::Apis::ContentQuotaNaviController < ApplicationController
     @items = Cms::Node.site(@cur_site).
       in(route: @routes).
       in(group_ids: @cur_user.group_ids).
-      where(shortcut: 'show').
+      where(shortcuts: Cms::Node::SHORTCUT_QUOTA).
       page(params[:page]).
       per(10)
   end

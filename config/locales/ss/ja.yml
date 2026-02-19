@@ -785,7 +785,7 @@ ja:
         sort: 並び順
         limit: 表示件数
         layout_id: レイアウト
-        shortcut: ショートカット
+        shortcuts: ショートカット
         view_state: 状態
         text_index: 全文検索インデックス(未使用)
       ss/model/site:

@@ -28,8 +28,10 @@ class Cms::NodeExporter
           when I18n.t('cms.node_columns.group_ids')
             drawer.body { |item| format_group(item) }
 
-          when I18n.t('cms.node_columns.shortcut')
-            drawer.body { |item| item.label(:shortcut) if item.respond_to?(:shortcut) && item.shortcut.present? }
+          when I18n.t('cms.node_columns.shortcuts')
+            drawer.body do |item|
+              Cms.shortcut_values_to_labels(item.try(:shortcuts)).join(",")
+            end
 
           when I18n.t('cms.node_columns.view_route')
             drawer.body { |item| item.label(:view_route) if item.respond_to?(:view_route) && item.view_route.present? }

@@ -8,7 +8,7 @@ describe Cms::NodeExporter, dbscope: :example do
   # nodes
   let!(:node1) do
     create(:article_node_page, order: 10,
-      shortcut: "show",
+      shortcuts: Cms::Node::AVAILABLE_SHORTCUTS.sample(2),
       view_route: "article/page",
       layout: layout,
       page_layout: page_layout,
@@ -110,7 +110,7 @@ describe Cms::NodeExporter, dbscope: :example do
       expect(row["並び順"]).to eq node1.order.to_s
       expect(row["レイアウト"]).to eq "#{layout.name} (#{layout.filename})"
       expect(row["ページレイアウト"]).to eq "#{page_layout.name} (#{page_layout.filename})"
-      expect(row["ショートカット"]).to eq node1.label(:shortcut)
+      expect(row["ショートカット"]).to eq Cms.shortcut_values_to_labels(node1.shortcuts).join(",")
       expect(row["既定のモジュール"]).to eq node1.label(:view_route)
 
       # meta addon

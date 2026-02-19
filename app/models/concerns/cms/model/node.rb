@@ -10,6 +10,11 @@ module Cms::Model::Node
   include Facility::Reference::Service
   include Facility::Reference::Location
 
+  SHORTCUT_SYSTEM = "system".freeze
+  SHORTCUT_QUOTA = "quota".freeze
+  SHORTCUT_NAVI = "navi".freeze
+  AVAILABLE_SHORTCUTS = [ SHORTCUT_SYSTEM, SHORTCUT_QUOTA, SHORTCUT_NAVI ].freeze
+
   included do
     include Cms::Model::NodeDiscriminatorRetrieval
 
@@ -20,11 +25,14 @@ module Cms::Model::Node
 
     field :route, type: String
     field :view_route, type: String
-    field :shortcut, type: String, default: "hide"
+    field :shortcuts, type: SS::Extensions::Words
 
-    permit_params :view_route, :shortcut
+    permit_params :view_route, shortcuts: []
+
+    before_validation :normalize_shortcuts
 
     validates :route, presence: true
+    validates :shortcuts, inclusion: { in: AVAILABLE_SHORTCUTS, allow_blank: true }
     validate :validate_invalid_filename
     validate :validate_ancestors
 
@@ -168,13 +176,6 @@ module Cms::Model::Node
     Cms::Node.plugins.find { |plugin| plugin.path == route }.try(:name)
   end
 
-  def shortcut_options
-    [
-      [I18n.t('ss.options.state.show'), 'show'],
-      [I18n.t('ss.options.state.hide'), 'hide'],
-    ]
-  end
-
   # returns admin side show path
   def private_show_path(*args)
     model = "node"
@@ -233,6 +234,20 @@ module Cms::Model::Node
   end
 
   private
+
+  def normalize_shortcuts
+    # SS::Extensions::Words だからから shortcuts_changed? は常に false になる
+    # return unless shortcuts_changed?
+    return if shortcuts.blank?
+
+    normalized = Array(shortcuts)
+    normalized.map!(&:strip)
+    normalized.select!(&:present?)
+
+    if self.shortcuts != normalized
+      self.shortcuts = normalized.dup
+    end
+  end
 
   def validate_invalid_filename
     if filename == "fs"

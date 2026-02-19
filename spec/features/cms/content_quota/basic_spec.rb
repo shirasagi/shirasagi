@@ -3,9 +3,12 @@ require 'spec_helper'
 describe "content_quota", type: :feature, dbscope: :example, js: true do
   let!(:site) { cms_site }
   let!(:user) { cms_user }
-  let!(:node1) { create :article_node_page, shortcut: "show", group_ids: user.group_ids }
-  let!(:node2) { create :article_node_page, shortcut: "hide", group_ids: user.group_ids }
-  let!(:node3) { create :article_node_page, shortcut: "show", group_ids: [] }
+  let!(:node1) { create :article_node_page, shortcuts: [ Cms::Node::SHORTCUT_QUOTA ], group_ids: user.group_ids }
+  let!(:node2) { create :article_node_page, shortcuts: [ Cms::Node::SHORTCUT_SYSTEM ], group_ids: user.group_ids }
+  let!(:node3) { create :article_node_page, shortcuts: [ Cms::Node::SHORTCUT_QUOTA ], group_ids: [] }
+  # ezine, inquiry などフォルダー容量の対象外のフォルダー
+  let!(:node4) { create :ezine_node_page, shortcuts: [ Cms::Node::SHORTCUT_QUOTA ], group_ids: user.group_ids }
+  let!(:node5) { create :inquiry_node_form, shortcuts: [ Cms::Node::SHORTCUT_QUOTA ], group_ids: user.group_ids }
 
   describe "basic crud" do
     before { login_cms_user }
@@ -26,6 +29,12 @@ describe "content_quota", type: :feature, dbscope: :example, js: true do
 
         expect(page).to have_no_text node3.name
         expect(page).to have_no_text node3.filename
+
+        expect(page).to have_no_text node4.name
+        expect(page).to have_no_text node4.filename
+
+        expect(page).to have_no_text node5.name
+        expect(page).to have_no_text node5.filename
       end
     end
   end

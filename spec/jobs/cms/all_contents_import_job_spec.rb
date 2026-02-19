@@ -82,13 +82,13 @@ describe Cms::AllContentsImportJob, dbscope: :example do
     context "with cms/addon/node_setting" do
       let!(:page_layout1) { create(:cms_layout, cur_site: site) }
       let(:order) { rand(10..20) }
-      let(:shortcut) { %w(show hide).sample }
+      let(:shortcuts) { Cms::Node::AVAILABLE_SHORTCUTS.sample(2).sort }
       let(:view_route) { %w(article/page category/node category/page cms/node cms/page event/page).sample }
       let(:criteria) do
         node2 = Cms::Node.find(node.id)
         node2.page_layout = page_layout1
         node2.order = order
-        node2.shortcut = shortcut
+        node2.shortcuts = shortcuts
         node2.view_route = view_route
         [ node2 ]
       end
@@ -104,7 +104,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
         Cms::Node.find(node.id).tap do |updated_node|
           expect(updated_node.page_layout).to eq page_layout1
           expect(updated_node.order).to eq order
-          expect(updated_node.shortcut).to eq shortcut
+          expect(updated_node.shortcuts).to eq shortcuts
           expect(updated_node.view_route).to eq view_route
           expect(updated_node.updated.in_time_zone).to eq node.updated.in_time_zone
 
@@ -114,7 +114,7 @@ describe Cms::AllContentsImportJob, dbscope: :example do
             expect(backup.state).to eq "current"
             expect(backup.data["page_layout_id"]).to eq page_layout1.id
             expect(backup.data["order"]).to eq order
-            expect(backup.data["shortcut"]).to eq shortcut
+            expect(backup.data["shortcuts"]).to eq shortcuts
             expect(backup.data["view_route"]).to eq view_route
             expect(backup.data["updated"].in_time_zone).to eq updated_node.updated.in_time_zone
           end

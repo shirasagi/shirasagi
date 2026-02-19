@@ -124,12 +124,15 @@ class Cms::NodeImporter
 
   # options
   def update_shortcut(row, item)
-    return if !item.respond_to?(:shortcut)
-    return if !item.respond_to?(:shortcut_options)
-    return if row[t_columns(:shortcut)].blank?
+    return unless item.respond_to?(:shortcuts=)
 
-    options = item.shortcut_options.to_h
-    item.shortcut = options[row[t_columns(:shortcut)]]
+    shortcut_csv_value = row[t_columns(:shortcuts)]
+    return if shortcut_csv_value.blank?
+
+    shortcut_labels = SS::Extensions::Words.mongoize(shortcut_csv_value)
+
+    @shortcut_options ||= Cms.shortcut_options
+    item.shortcuts = Cms.shortcut_labels_to_values(shortcut_labels, shortcut_options: @shortcut_options)
   end
 
   def update_view_route(row, item)
