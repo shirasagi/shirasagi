@@ -31,11 +31,13 @@ module Rss::Addon::Page
     end
 
     def url
-      rss_link.presence || super
+      ret = rss_link rescue nil
+      ret.presence || super
     end
 
     def full_url
-      rss_link.presence || super
+      ret = rss_link rescue nil
+      ret.presence || super
     end
 
     def json_path

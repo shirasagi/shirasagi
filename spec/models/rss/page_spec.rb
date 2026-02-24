@@ -121,4 +121,18 @@ describe Rss::Page, dbscope: :example do
       end
     end
   end
+
+  describe "#rss_link" do
+    let!(:item0) { create :rss_page, cur_site: site, cur_node: node, rss_link: unique_url }
+
+    it do
+      Rss::Page.all.first.tap do |item|
+        expect(item.url).to eq item0.rss_link
+      end
+      # if the rss_link is forgotten to load
+      Rss::Page.all.only(:_id, :route, :name, :filename, :site_id, :depth, :order).first.tap do |item|
+        expect(item.url).to eq "/#{item0.filename}"
+      end
+    end
+  end
 end
