@@ -185,4 +185,48 @@ describe Sitemap::RenderService do
       end
     end
   end
+
+  context "with ical event page" do
+    let!(:site) { cms_site }
+    let!(:user) { cms_user }
+    # let!(:cate) { create :category_node_page, cur_site: site }
+    let!(:event_node) do
+      create(
+        :event_node_page, cur_site: site, site: site, ical_refresh_method: 'auto',
+        ical_import_url: unique_url)
+    end
+    let!(:sitemap_node) { create :sitemap_node_page, cur_site: site }
+    let!(:sitemap_page) { create :sitemap_page, cur_site: site, cur_node: sitemap_node, sitemap_page_state: 'show' }
+
+    before do
+      WebMock.reset!
+
+      body = File.read("#{Rails.root}/spec/fixtures/event/ical/event-1.ics")
+      stub_request(:get, event_node.ical_import_url)
+        .to_return(status: 200, body: body, headers: {})
+    end
+
+    it do
+      expect do
+        ss_perform_now(Event::Ical::ImportJob.bind(site_id: site.id, node_id: event_node.id, user_id: user.id))
+      end.to output(include("there are 1 calendars.\n")).to_stdout
+
+      expect(Event::Page.all.count).to eq 2
+      event_pages = Event::Page.all.to_a
+      event_pages.each do |event_page|
+        expect(event_page.site_id).to eq site.id
+        expect(event_page.name).to be_present
+        expect(event_page.filename).to start_with("#{event_node.filename}/")
+        expect(event_page.ical_link).to be_present
+      end
+
+      service = Sitemap::RenderService.new(cur_site: site, cur_node: sitemap_node, page: sitemap_page)
+      service.load_whole_contents.tap do |load_whole_contents|
+        expect(load_whole_contents).to have(5).items
+
+        urls = load_whole_contents.map(&:url)
+        expect(urls).to include(event_pages[0].ical_link, event_pages[1].ical_link)
+      end
+    end
+  end
 end
