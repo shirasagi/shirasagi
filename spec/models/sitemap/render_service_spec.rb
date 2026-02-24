@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Sitemap::RenderService do
+describe Sitemap::RenderService, type: :model, dbscope: :example do
   context "initial setting" do
     let!(:node) { create :sitemap_node_page }
     let!(:item) { create :sitemap_page, cur_node: node }
