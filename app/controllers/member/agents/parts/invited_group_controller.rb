@@ -10,7 +10,7 @@ class Member::Agents::Parts::InvitedGroupController < ApplicationController
   private
 
   def set_member
-    logged_in? redirect: false
+    @cur_member = get_member_by_session
     if @cur_member.blank?
       render plain: ''
     end
