@@ -28,19 +28,23 @@ module Event::Addon
     end
 
     def url
-      ical_link || super
+      ret = ical_link rescue nil
+      ret.presence || super
     end
 
     def full_url
-      ical_link || super
+      ret = ical_link rescue nil
+      ret.presence || super
     end
 
     def json_path
-      ical_link.present? ? nil : super
+      ret = ical_link rescue nil
+      ret.present? ? nil : super
     end
 
     def json_url
-      ical_link.present? ? nil : super
+      ret = ical_link rescue nil
+      ret.present? ? nil : super
     end
   end
 end
