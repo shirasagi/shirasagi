@@ -154,7 +154,19 @@ describe Event::Page, dbscope: :example do
         expect(item.size).to eq html_size + file_size
       end
     end
-
   end
 
+  describe "#ical_link" do
+    let!(:item0) { create :event_page, cur_site: site, cur_node: node, ical_link: unique_url }
+
+    it do
+      Event::Page.all.first.tap do |item|
+        expect(item.url).to eq item0.ical_link
+      end
+      # if the ical_link is forgotten to load
+      Event::Page.all.only(:_id, :route, :name, :filename, :site_id, :depth, :order).first.tap do |item|
+        expect(item.url).to eq "/#{item0.filename}"
+      end
+    end
+  end
 end

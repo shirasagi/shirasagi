@@ -2,7 +2,7 @@ class Sitemap::RenderService
   include ActiveModel::Model
 
   SITEMAP_XMLNS = "http://www.sitemaps.org/schemas/sitemap/0.9".freeze
-  REQUIRED_FIELDS = %i[id _id route name filename site_id depth order redirect_link rss_link link_url].freeze
+  REQUIRED_FIELDS = %i[id _id route name filename site_id depth order redirect_link rss_link link_url ical_link].freeze
 
   attr_accessor :cur_site, :cur_node, :page
 

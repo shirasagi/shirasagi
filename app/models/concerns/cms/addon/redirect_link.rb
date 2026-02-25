@@ -4,11 +4,13 @@ module Cms::Addon
     extend SS::Addon
 
     def url
-      redirect_link.presence || super
+      ret = redirect_link rescue nil
+      ret.presence || super
     end
 
     def full_url
-      redirect_link.presence || super
+      ret = redirect_link rescue nil
+      ret.presence || super
     end
 
     module ClassMethods
