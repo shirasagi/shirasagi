@@ -4,6 +4,7 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node1) { create :cms_node_node, cur_site: site }
   let!(:node2) { create :cms_node_node, cur_site: site }
+  let!(:node3) { create :cms_node_node, cur_site: site }
 
   describe "#perform" do
     before do
@@ -11,12 +12,16 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
       Timecop.travel(10.days.ago) do
         node1.release_date = now
         node2.close_date = now
+        node3.release_date = now - 1.day
+        node3.close_date = now
         node1.save
         node2.save
+        node3.save
       end
 
       expect(node1.state).to eq "ready"
       expect(node2.state).to eq "public"
+      expect(node3.state).to eq "ready"
       expect { described_class.bind(site_id: site.id).perform_now }.to output(include(node1.name)).to_stdout
     end
 
@@ -27,8 +32,10 @@ describe Cms::Node::ReleaseJob, dbscope: :example do
 
       node1.reload
       node2.reload
+      node3.reload
       expect(node1.state).to eq "public"
       expect(node2.state).to eq "closed"
+      expect(node3.state).to eq "closed"
     end
   end
 end
