@@ -1,15 +1,6 @@
 #frozen_string_literal: true
 
 module Inquiry
-  MenuItem = Data.define(:label, :path_proc, :css_classes) do
-    def initialize(label:, path_proc:, css_classes: nil)
-      super
-    end
-
-    def path(*args, **kwargs)
-      path_proc.call(*args, **kwargs)
-    end
-  end
 
   module_function
 
@@ -31,7 +22,7 @@ module Inquiry
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.inquiry_columns_path(*args, site: cur_site, cid: cur_node, **kwargs) }
-    MenuItem.new(label: I18n.t("inquiry.column"), path_proc: path_proc)
+    SS::MenuItem.new(label: I18n.t("inquiry.column"), path_proc: path_proc)
   end
 
   def menu_item_inquiry_answers(cur_site, cur_node, cur_user)
@@ -42,7 +33,7 @@ module Inquiry
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.inquiry_answers_path(*args, site: cur_site, cid: cur_node, **kwargs) }
-    MenuItem.new(label: I18n.t("inquiry.answer"), path_proc: path_proc)
+    SS::MenuItem.new(label: I18n.t("inquiry.answer"), path_proc: path_proc)
   end
 
   def menu_item_inquiry_results(cur_site, cur_node, cur_user)
@@ -53,7 +44,7 @@ module Inquiry
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.inquiry_results_path(*args, site: cur_site, cid: cur_node, **kwargs) }
-    MenuItem.new(label: I18n.t("inquiry.result"), path_proc: path_proc)
+    SS::MenuItem.new(label: I18n.t("inquiry.result"), path_proc: path_proc)
   end
 
   def menu_item_inquiry_feedbacks(cur_site, cur_node, cur_user)
@@ -64,6 +55,6 @@ module Inquiry
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.inquiry_feedbacks_path(*args, site: cur_site, cid: cur_node, **kwargs) }
-    MenuItem.new(label: I18n.t("inquiry.feedback"), path_proc: path_proc)
+    SS::MenuItem.new(label: I18n.t("inquiry.feedback"), path_proc: path_proc)
   end
 end
