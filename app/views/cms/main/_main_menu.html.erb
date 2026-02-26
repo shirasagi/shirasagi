@@ -18,30 +18,42 @@
       <%= link_to t("cms.layout"), cms_layouts_path, class: "icon-ss icon-layout" %>
     <% end %>
 
-    <div class="dropdown dropdown-toggle">
-      <%= tag.span t("cms.etc"), class: "icon-ss icon-material icon-material-more-horiz" %>
-      <ul class="dropdown-menu dropdown-menu--white">
-        <% if Cms::Node.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true) %>
-          <% if @cur_node %>
-            <li><%= link_to t("cms.import_page"), node_import_path, class: "icon-material icon-material-import-node" %></li>
-          <% else %>
-            <li><%= link_to t("cms.import_node"), cms_import_path, class: "icon-material icon-material-import-node" %></li>
+    <%
+      etc_menus = []
+      if Cms::Node.allowed?(:import, @cur_user, site: @cur_site, node: @cur_node, owned: true)
+        if @cur_node
+          etc_menus << SS::MenuItem.new(label: t("cms.import_page"), path_proc: ->{ node_import_path }, css_classes: %w(icon-material icon-material-import-node))
+        else
+          etc_menus << SS::MenuItem.new(label: t("cms.import_node"), path_proc: ->{ cms_import_path }, css_classes: %w(icon-material icon-material-import-node))
+        end
+      end
+      if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+        etc_menus << SS::MenuItem.new(label: t("cms.generate_node"), path_proc: ->{ cms_generate_nodes_path }, css_classes: %w(icon-ss icon-write))
+      end
+      if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node)
+        etc_menus << SS::MenuItem.new(label: t("cms.generate_page"), path_proc: ->{ cms_generate_pages_path }, css_classes: %w(icon-ss icon-write))
+      end
+      if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site)
+        etc_menus << :batch_operation
+        etc_menus << SS::MenuItem.new(label: t("cms.csv_export_node"), path_proc: ->{ download_cms_nodes_path }, css_classes: %w(icon-ss icon-export indent))
+        etc_menus << SS::MenuItem.new(label: t("cms.csv_import_node"), path_proc: ->{ import_cms_nodes_path }, css_classes: %w(icon-ss icon-import indent))
+      end
+    %>
+    <% if etc_menus.present? %>
+      <div class="dropdown dropdown-toggle">
+        <%= tag.span t("cms.etc"), class: "icon-ss icon-material icon-material-more-horiz" %>
+        <ul class="dropdown-menu dropdown-menu--white">
+          <% etc_menus.each do |etc_menu| %>
+            <% if etc_menu == :batch_operation %>
+              <li><hr></li>
+              <li><span class="corner-name"><%= t("cms.batch_operation") %></span></li>
+            <% else %>
+              <li><%= link_to etc_menu.label, etc_menu.path, class: etc_menu.css_classes %></li>
+            <% end %>
           <% end %>
-        <% end %>
-        <% if Cms::Node.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-          <li><%= link_to t("cms.generate_node"), cms_generate_nodes_path, class: "icon-ss icon-write" %></li>
-        <% end %>
-        <% if Cms::Page.allowed?(:edit, @cur_user, site: @cur_site, node: @cur_node) %>
-          <li><%= link_to t("cms.generate_page"), cms_generate_pages_path, class: "icon-ss icon-write" %></li>
-        <% end %>
-        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
-          <li><hr></li>
-          <li><span class="corner-name"><%= t("cms.batch_operation") %></span></li>
-          <li><%= link_to t("cms.csv_export_node"), download_cms_nodes_path, class: "icon-ss icon-export indent" %></li>
-          <li><%= link_to t("cms.csv_import_node"), import_cms_nodes_path, class: "icon-ss icon-import indent" %></li>
-        <% end %>
-      </ul>
-    </div>
+        </ul>
+      </div>
+    <% end %>
   </nav>
 
 <% elsif controller.navi_view_file != 'cms/main/conf_navi' && @cur_node.present? %>
@@ -61,25 +73,35 @@
       <%= link_to t("cms.node_config"), node_conf_path, class: "icon-ss icon-material icon-material-settings" %>
     <% end %>
 
-    <div class="dropdown dropdown-toggle">
-      <%= tag.span t("cms.etc"), class: "icon-ss icon-material icon-material-more-horiz" %>
-      <ul class="dropdown-menu dropdown-menu--white">
-        <% if @cur_node.allowed?(:import, @cur_user, site: @cur_site, owned: true) %>
-          <li><%= link_to t("cms.import_node"), node_import_path, class: "icon-material icon-material-import-node" %></li>
-        <% end %>
-        <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <li><%= link_to t("cms.generate_node"), node_generate_nodes_path, class: "icon-ss icon-write" %></li>
-        <% end %>
-        <% if @cur_node.allowed?(:edit, @cur_user, site: @cur_site) %>
-          <li><%= link_to t("cms.generate_page"), node_generate_pages_path, class: "icon-ss icon-write" %></li>
-        <% end %>
-        <% if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site) %>
-          <li><hr></li>
-          <li><span class="corner-name"><%= t("cms.batch_operation") %></span></li>
-          <li><%= link_to t("cms.csv_export_node"), download_node_nodes_path, class: "icon-ss icon-export indent" %></li>
-          <li><%= link_to t("cms.csv_import_node"), import_node_nodes_path, class: "icon-ss icon-import indent" %></li>
-        <% end %>
-      </ul>
-    </div>
+    <%
+      etc_menus = []
+      if @cur_node.allowed?(:import, @cur_user, site: @cur_site, owned: true)
+        etc_menus << SS::MenuItem.new(label: t("cms.import_node"), path_proc: ->{ node_import_path }, css_classes: %w(icon-material icon-material-import-node))
+      end
+      if @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
+        etc_menus << SS::MenuItem.new(label: t("cms.generate_node"), path_proc: ->{ node_generate_nodes_path }, css_classes: %w(icon-ss icon-write))
+        etc_menus << SS::MenuItem.new(label: t("cms.generate_page"), path_proc: ->{ node_generate_pages_path }, css_classes: %w(icon-ss icon-write))
+      end
+      if Cms::Tool.allowed?(:read, @cur_user, site: @cur_site)
+        etc_menus << :batch_operation
+        etc_menus << SS::MenuItem.new(label: t("cms.csv_export_node"), path_proc: ->{ download_node_nodes_path }, css_classes: %w(icon-ss icon-export indent))
+        etc_menus << SS::MenuItem.new(label: t("cms.csv_import_node"), path_proc: ->{ import_node_nodes_path }, css_classes: %w(icon-ss icon-import indent))
+      end
+    %>
+    <% if etc_menus.present? %>
+      <div class="dropdown dropdown-toggle">
+        <%= tag.span t("cms.etc"), class: "icon-ss icon-material icon-material-more-horiz" %>
+        <ul class="dropdown-menu dropdown-menu--white">
+          <% etc_menus.each do |etc_menu| %>
+            <% if etc_menu == :batch_operation %>
+              <li><hr></li>
+              <li><span class="corner-name"><%= t("cms.batch_operation") %></span></li>
+            <% else %>
+              <li><%= link_to etc_menu.label, etc_menu.path, class: etc_menu.css_classes %></li>
+            <% end %>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
   </nav>
 <% end %>
