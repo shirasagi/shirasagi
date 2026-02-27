@@ -13,7 +13,7 @@ url = File.join(@cur_site.full_url, @cur_main_path)
   var js, fjs = d.getElementsByTagName(s)[0];
   if (d.getElementById(id)) return;
   js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/<%= t "cms.sns_share.fb_lang" %>/sdk.js#xfbml=1&version=v2.8";
+  js.src = "<%== SS.facebook_sdk_js_url(version: @cur_site.effective_facebook_api_version, app_id: @cur_site.facebook_app_id.presence) %>";
   fjs.parentNode.insertBefore(js, fjs);
 }(document, 'script', 'facebook-jssdk'));</script>
 <% end %>

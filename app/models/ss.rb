@@ -17,7 +17,8 @@ module SS
   HTTP_STATUS_CODE_FORBIDDEN = "403"
   HTTP_STATUS_CODE_NOT_FOUND = "404"
 
-  DEFAULT_FACEBOOK_API_VERSION = "v2.8.1"
+  DEFAULT_FACEBOOK_API_VERSION = "v2.8"
+  FACEBOOK_SDK_JS_URL = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1"
 
   mattr_accessor(:max_items_per_page) { 50 }
 
@@ -188,5 +189,11 @@ module SS
     return SS::EMPTY_ARRAY if SS.config.gws.disable
 
     cur_user.root_groups.select { |group| group.gws_use? }
+  end
+
+  def facebook_sdk_js_url(version:, app_id: nil)
+    params = { version: version }
+    params[:appId] = app_id if app_id
+    "#{SS::FACEBOOK_SDK_JS_URL}&#{params.to_query}"
   end
 end
