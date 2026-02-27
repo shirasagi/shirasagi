@@ -28,7 +28,7 @@
       </thead>
       <tbody>
         <% items.each do |item| %>
-          <tr>
+          <tr data-id="<%= item.id %>">
             <td><%= item.name %></td>
             <td><%= item.extensions %></td>
             <td><%= number_to_human_size(item.size) %></td>
