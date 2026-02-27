@@ -25,6 +25,11 @@ module SS::Model::MaxFileSize
     permit_params :in_size_mb
 
     before_validation :set_size, if: ->{ in_size_mb }
+
+    validates :name, presence: true, length: { maximum: 80 }
+    validates :extensions, presence: true
+    validates :state, inclusion: { in: STATES, allow_blank: true }
+
     before_save :normalize_extensions
   end
 
