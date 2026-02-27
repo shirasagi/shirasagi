@@ -17,6 +17,8 @@ module SS
   HTTP_STATUS_CODE_FORBIDDEN = "403"
   HTTP_STATUS_CODE_NOT_FOUND = "404"
 
+  DEFAULT_FACEBOOK_API_VERSION = "v2.8.1"
+
   mattr_accessor(:max_items_per_page) { 50 }
 
   mattr_accessor(:max_files_per_page) { 20 }
