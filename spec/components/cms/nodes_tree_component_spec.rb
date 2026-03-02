@@ -28,10 +28,15 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
     let!(:node3_1) { create :inquiry_node_form, cur_site: site, cur_node: node3 }
 
     context "cache disabled" do
-      let!(:component) { described_class.new(site: site, user: user, cache_mode: cache_mode) }
-
       it do
-        html = render_inline component
+        # テスト開始時点ではキャッシュは存在しない
+        described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
+          expect(component.cache_exist?).to be_falsey
+        end
+
+        before_mongodb_count = MongoAccessCounter.succeeded_count
+
+        html = render_inline described_class.new(site: site, user: user, cache_mode: cache_mode)
         # puts html
         html.css("a[href='/.s#{site.id}/article#{node1.id}/pages']").tap do |anchors|
           expect(anchors).to have(1).items
@@ -58,7 +63,14 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
           expect(anchors[0].text.strip).to eq node3_1.name
         end
 
-        expect(component.cache_exist?).to be_falsey
+        # キャッシュ無効時でも最小限のDBアクセスでキャッシュを利用可能なことを確認
+        after_mongodb_count = MongoAccessCounter.succeeded_count
+        expect(after_mongodb_count - before_mongodb_count).to eq 2
+
+        # キャッシュは無効なので、テスト終了時点でもキャッシュは存在しない
+        described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
+          expect(component.cache_exist?).to be_falsey
+        end
       end
     end
 
@@ -66,11 +78,23 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
       let(:perform_caching) { true }
 
       it do
+        # テスト開始時点ではキャッシュは存在しない
         described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
           expect(component.cache_exist?).to be_falsey
+        end
 
+        before_mongodb_count = MongoAccessCounter.succeeded_count
+
+        described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
           render_inline component
+        end
 
+        # キャッシュ無効時でも最小限のDBアクセスでキャッシュを利用可能なことを確認
+        after_mongodb_count = MongoAccessCounter.succeeded_count
+        expect(after_mongodb_count - before_mongodb_count).to eq 2
+
+        # キャッシュは有効なので、テスト終了時点でキャッシュが存在する
+        described_class.new(site: site, user: user, cache_mode: cache_mode).tap do |component|
           expect(component.cache_exist?).to be_truthy
         end
 
@@ -79,9 +103,9 @@ describe Cms::NodesTreeComponent, type: :component, dbscope: :example do
 
           render_inline component
 
-          # 最小限のDBアクセスでキャッシュを利用可能なことを確認
+          # キャッシュ存在時、最小限のDBアクセスでキャッシュを利用可能なことを確認
           after_mongodb_count = MongoAccessCounter.succeeded_count
-          expect(after_mongodb_count).to eq before_mongodb_count + 1
+          expect(after_mongodb_count - before_mongodb_count).to eq 1
         end
       end
     end
