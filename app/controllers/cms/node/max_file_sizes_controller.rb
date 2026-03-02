@@ -24,6 +24,7 @@ class Cms::Node::MaxFileSizesController < ApplicationController
     @deletable = @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
   end
 
+  # rubocop:disable Naming/PredicateMethod
   def destroy_items
     raise "400" if @selected_items.blank?
     raise "403" unless @cur_node.allowed?(:edit, @cur_user, site: @cur_site)
@@ -38,6 +39,7 @@ class Cms::Node::MaxFileSizesController < ApplicationController
     end
     entries.size != @items.size
   end
+  # rubocop:enable Naming/PredicateMethod
 
   public
 
