@@ -13,8 +13,8 @@
   }
 }
 .breadcrumb-item {
-  float: left;
   position: relative;
+  float: left;
   &:not(:first-child)::before {
     content: "";
     position: absolute;
