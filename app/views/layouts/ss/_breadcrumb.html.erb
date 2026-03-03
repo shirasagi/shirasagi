@@ -1,0 +1,30 @@
+<ol class="breadcrumb" id="crumbs">
+  <% if @crumbs.size > 0 && (!@ss_rescue || @ss_rescue && (@ss_mode == :cms || @ss_mode == :gws)) %>
+    <% @crumbs.each_with_index do |item, idx| %>
+      <%=
+        options = item.extract_options!
+        name, path = *item
+        name = tag.span(name, class: "breadcrumb-title") unless name.html_safe?
+        if path.blank? && options.present?
+          path = url_for(**options)
+          options = SS::EMPTY_HASH
+        end
+
+        if path
+          breadcrumb_content = link_to name, path, class: "breadcrumb-link", **options
+        else
+          breadcrumb_content = name
+        end
+        tag.li breadcrumb_content, class: [ "breadcrumb-item", @crumbs.size == idx + 1 ? "active" : nil ]
+      %>
+      <% break if @ss_rescue %><%# only one crumb in rescue mode %>
+    <% end %>
+
+    <% if @webmail_other_account_path && webmail_other_account?(@webmail_other_account_path) && !@ss_rescue %>
+      <li class="webmail-accounts">
+        <span><%= t('webmail.links.select_account') %></span>
+        <%= webmail_other_account_select(@webmail_other_account_path) %>
+      </li>
+    <% end %>
+  <% end %>
+</ol>
