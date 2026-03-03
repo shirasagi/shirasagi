@@ -781,6 +781,11 @@ buffer-from@^1.0.0:
   resolved "https://registry.yarnpkg.com/buffer-from/-/buffer-from-1.1.2.tgz#2b146a6fd72e80b4f55d255f35ed59a3a9a41bd5"
   integrity sha512-E+XQCRwSbaaiChtv6k6Dwgc+bx+Bs6vuKJHHl5kox/BaKbhiXzqQOwK4cO22yElGp2OCmjwVhT3HmxgyPGnJfQ==
 
+bxslider@^4.2.17:
+  version "4.2.17"
+  resolved "https://registry.yarnpkg.com/bxslider/-/bxslider-4.2.17.tgz#6fefeac19f3234fd0b728e47c0c20ebf81230e18"
+  integrity sha512-FaYRFl4vegopkChYJEfHS504VtIc+x+2r8i3oUvDkumgYqHTlNu0H1VPP9m8kFW447CXpp9RddLFxCy/qCWJhg==
+
 cacheable@^1.10.3:
   version "1.10.3"
   resolved "https://registry.yarnpkg.com/cacheable/-/cacheable-1.10.3.tgz#8dcb02081a10c4819a8d70e1251bcce0ee5afdd4"
