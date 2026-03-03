@@ -1,1 +1,7 @@
 <%= render partial: 'member/agents/addons/main/oauth_form', locals: { f: f, provider: Cms::Member::OAUTH_PROVIDER_FACEBOOK } %>
+
+<dl class="see">
+  <dt><%= Cms::Site.t :facebook_api_version %></dt>
+  <dd><%= @cur_site.effective_facebook_api_version %></dd>
+  <dd><%= ss_input_guide :facebook_api_version, model: @model %></dd>
+</dl>

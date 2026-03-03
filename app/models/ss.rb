@@ -17,7 +17,7 @@ module SS
   HTTP_STATUS_CODE_FORBIDDEN = "403"
   HTTP_STATUS_CODE_NOT_FOUND = "404"
 
-  DEFAULT_FACEBOOK_API_VERSION = "v2.8"
+  DEFAULT_FACEBOOK_API_VERSION = 'v17.0'
   FACEBOOK_SDK_JS_URL = "https://connect.facebook.net/ja_JP/sdk.js#xfbml=1"
   FACEBOOK_SHARER_URL = "https://www.facebook.com/sharer/sharer.php"
 
