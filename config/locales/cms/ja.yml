@@ -694,6 +694,7 @@ ja:
       max_item: 個まで選択できます。
     sns_share:
       fb_share: Facebook シェア
+      fb_share_button: シェアする
       twitter: X(旧Twitter)
       tweet: ツイート
       hatena: はてなブックマーク

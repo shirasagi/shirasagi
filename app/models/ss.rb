@@ -18,7 +18,8 @@ module SS
   HTTP_STATUS_CODE_NOT_FOUND = "404"
 
   DEFAULT_FACEBOOK_API_VERSION = "v2.8"
-  FACEBOOK_SDK_JS_URL = "//connect.facebook.net/ja_JP/sdk.js#xfbml=1"
+  FACEBOOK_SDK_JS_URL = "https://connect.facebook.net/ja_JP/sdk.js#xfbml=1"
+  FACEBOOK_SHARER_URL = "https://www.facebook.com/sharer/sharer.php"
 
   mattr_accessor(:max_items_per_page) { 50 }
 
@@ -195,5 +196,10 @@ module SS
     params = { version: version }
     params[:appId] = app_id if app_id
     "#{SS::FACEBOOK_SDK_JS_URL}&#{params.to_query}"
+  end
+
+  def facebook_sharer_url(u:, src: "sdkpreparse")
+    params = { u: u, src: src }
+    "#{FACEBOOK_SHARER_URL}?#{params.to_query}"
   end
 end
