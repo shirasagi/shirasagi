@@ -13,8 +13,8 @@
   }
 }
 .breadcrumb-item {
-  float: left;
   position: relative;
+  float: left;
   &:not(:first-child)::before {
     content: "";
     position: absolute;
@@ -46,7 +46,7 @@
 }
 .breadcrumb-title {
   display: inline-flex;
-  padding: 10px 28px;
   align-items: center;
   gap: 5px;
+  padding: 10px 28px;
 }
