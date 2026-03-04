@@ -94,3 +94,8 @@
 // others like image
 
 //= link opendata/icon-user.png
+
+// 3rd-party
+
+// from @claviska/jquery-minicolors
+//= link jquery.minicolors.png
