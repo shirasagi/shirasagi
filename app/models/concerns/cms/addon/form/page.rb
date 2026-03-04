@@ -67,6 +67,7 @@ module Cms::Addon::Form::Page
     registers ||= {
       cur_site: site,
       cur_path: url,
+      cur_main_path: url.sub(site.url, "/"),
       cur_page: self
     }
 
