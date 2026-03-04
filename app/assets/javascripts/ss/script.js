@@ -13,7 +13,6 @@
 //= require jquery.multi-select
 //= require jquery.minicolors
 //= require jquery.autosize
-//= require marked
 //= require mdn-polyfills/Array.from.js
 //= require mdn-polyfills/Array.prototype.find.js
 //= require mdn-polyfills/Array.prototype.findIndex.js
