@@ -12,7 +12,7 @@ module SS
   SAFE_IMAGE_SUB_TYPES = %w(gif jpeg png webp).freeze
 
   DEFAULT_TRASH_THRESHOLD = 1
-  DEFAULT_TRASH_THRESHOLD_UNIT = 'year'.freeze
+  DEFAULT_TRASH_THRESHOLD_UNIT = 'year'
 
   HTTP_STATUS_CODE_FORBIDDEN = "403"
   HTTP_STATUS_CODE_NOT_FOUND = "404"
@@ -198,8 +198,10 @@ module SS
     "#{SS::FACEBOOK_SDK_JS_URL}&#{params.to_query}"
   end
 
+  # rubocop:disable Naming/MethodParameterName
   def facebook_sharer_url(u:, src: "sdkpreparse")
     params = { u: u, src: src }
     "#{FACEBOOK_SHARER_URL}?#{params.to_query}"
   end
+  # rubocop:enable Naming/MethodParameterName
 end
