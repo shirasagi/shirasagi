@@ -578,7 +578,6 @@ this.Webmail_Mail_Form = (function () {
   }
 
   Webmail_Mail_Form.render = function () {
-    $('.js-autosize').autosize();
     $('.cc-bcc-label').on("click", function () {
       $('.webmail-mail-form-address.cc-bcc').animate({
         height: 'toggle'
