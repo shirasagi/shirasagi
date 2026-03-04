@@ -33,7 +33,6 @@ gem 'mongo_session_store'
 # Assets
 gem 'autosize-rails'
 gem 'bxslider-rails'
-gem 'js_cookie_rails'
 gem 'jquery-form-rails'
 gem 'jquery-minicolors-rails'
 gem 'jquery-rails'
