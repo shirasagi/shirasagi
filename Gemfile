@@ -31,7 +31,6 @@ gem 'mongoid'
 gem 'mongo_session_store'
 
 # Assets
-gem 'js_cookie_rails'
 gem 'jquery-form-rails'
 gem 'jquery-minicolors-rails'
 gem 'jquery-rails'
