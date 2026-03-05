@@ -98,7 +98,6 @@ GEM
     browser (6.2.0)
     bson (5.2.0)
     builder (3.3.0)
-    bxslider-rails (4.2.5.1)
     byebug (12.0.0)
     capybara (3.40.0)
       addressable
@@ -806,7 +805,6 @@ DEPENDENCIES
   bootsnap
   brakeman
   browser
-  bxslider-rails
   capybara
   clam_scan
   coffee-rails
