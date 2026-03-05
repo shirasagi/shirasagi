@@ -84,8 +84,6 @@ GEM
       public_suffix (>= 2.0.2, < 7.0)
     aes_key_wrap (1.1.0)
     ast (2.4.3)
-    autosize-rails (1.18.17)
-      rails (>= 3.1)
     base64 (0.3.0)
     bcp47_spec (0.2.1)
     benchmark (0.4.1)
@@ -100,7 +98,6 @@ GEM
     browser (6.2.0)
     bson (5.2.0)
     builder (3.3.0)
-    bxslider-rails (4.2.5.1)
     byebug (12.0.0)
     capybara (3.40.0)
       addressable
@@ -803,11 +800,9 @@ PLATFORMS
 
 DEPENDENCIES
   addressable
-  autosize-rails
   bootsnap
   brakeman
   browser
-  bxslider-rails
   capybara
   clam_scan
   coffee-rails

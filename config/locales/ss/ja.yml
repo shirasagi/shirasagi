@@ -957,7 +957,8 @@ ja:
         opengraph_type: OpenGraph
         opengraph_defaul_image_url: 既定の画像URL
       ss/addon/facebook_setting:
-        facebook_app_id: App ID
+        facebook_app_id: Facebook App ID
+        facebook_api_version: Facebook API Versin
       ss/addon/twitter_setting:
         twitter_poster_state: ページ連携
         twitter_card: カード形式
@@ -1453,8 +1454,13 @@ ja:
         - かな機能にて公開画面にふりがなを付与した際の表記形式を設定します。
     ss/addon/facebook_setting:
       facebook_app_id:
-        - Facebook の App Id を設定します。
+        - Meta for Developers でアプリ作成後に発行されるアプリIDを設定します。
         - 設定すると「Facebook インサイト」でアクセスを解析できるようになります。
+      facebook_api_version:
+        - Meta for Developers でアプリ作成時に選択したAPIバージョンを設定します。
+        - '先頭の "v" は省略できません。小数点以下まで正確に設定してください。'
+        - "例: v25.0"
+    ss/addon/open_graph_setting:
       facebook_page_url:
         - Facebook ページの URL を設定します。
         - 設定するとシェアされた記事を見た別のユーザーが「いいね！」をすることができます。

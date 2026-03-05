@@ -3,12 +3,20 @@
 
   <ul class="list-items">
     <% if @cur_node %>
-      <li class="list-item">
+      <%
+        if @cur_node.depth == 1
+          link = cms_nodes_path
+        elsif @cur_node.parent && @cur_node.parent.allowed?(:read, @cur_user, site: @cur_site)
+          link = url_for(cid: @cur_node.parent)
+        end
+      %>
+      <% if link %>
+      <li class="list-item list-item-parent-directory">
         <div class="info">
-          <% link = @cur_node.parent ? { cid: @cur_node.parent } : cms_nodes_path %>
           <%= link_to t('ss.links.parent_directory'), link, class: "up" %>
         </div>
       </li>
+      <% end %>
     <% end %>
 
     <% @items.each do |item| %>

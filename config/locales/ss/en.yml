@@ -957,7 +957,8 @@ en:
         opengraph_type: OpenGraph
         opengraph_defaul_image_url: Default image URL
       ss/addon/facebook_setting:
-        facebook_app_id: App ID
+        facebook_app_id: Facebook App ID
+        facebook_api_version: Facebook API Versin
       ss/addon/twitter_setting:
         twitter_poster_state: Posting to twitter
         twitter_card: Card format
@@ -1453,8 +1454,13 @@ en:
         - Set the notation format when adding furigana to the public screen with kana function.
     ss/addon/facebook_setting:
       facebook_app_id:
-        - Set your Facebook App ID.
+        - Set your Facebook App ID that will be issued after creating the app in Meta for Developers.
         - Once set, Facebook Insights will allow you to analyze access.
+      facebook_api_version:
+        - Set the API version that you selected when creating your ap in Meta for Developers.
+        - 'The leading "v" cannot be omitted. Please set it accurately, including decimal points.'
+        - "Example: v25.0"
+    ss/addon/open_graph_setting:
       facebook_page_url:
         - Set the URL of the Facebook page.
         - If set, another user who sees the shared article can "Like" it. to the shared article.

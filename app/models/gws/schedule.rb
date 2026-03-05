@@ -1,15 +1,6 @@
 #frozen_string_literal: true
 
 module Gws::Schedule
-  MenuItem = Data.define(:label, :path_proc, :css_classes) do
-    def initialize(label:, path_proc:, css_classes: nil)
-      super
-    end
-
-    def path(*args, **kwargs)
-      path_proc.call(*args, **kwargs)
-    end
-  end
 
   module_function
 
@@ -63,7 +54,7 @@ module Gws::Schedule
     label = cur_site.effective_schedule_personal_tab_label
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_plans_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(personal))
+    SS::MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(personal))
   end
 
   def menu_items_gws_schedule_group_plans(cur_site, cur_user)
@@ -75,7 +66,7 @@ module Gws::Schedule
       path_proc = ->(*args, **kwargs) do
         helpers.gws_schedule_group_plans_path(*args, site: cur_site, group: group, **kwargs)
       end
-      MenuItem.new(label: group.trailing_name, path_proc: path_proc, css_classes: %w(group))
+      SS::MenuItem.new(label: group.trailing_name, path_proc: path_proc, css_classes: %w(group))
     end
   end
 
@@ -90,7 +81,7 @@ module Gws::Schedule
       path_proc = ->(*args, **kwargs) do
         helpers.gws_schedule_custom_group_plans_path(*args, site: cur_site, group: g, **kwargs)
       end
-      MenuItem.new(label: g.name, path_proc: path_proc, css_classes: %w(custom-group))
+      SS::MenuItem.new(label: g.name, path_proc: path_proc, css_classes: %w(custom-group))
     end
   end
 
@@ -101,7 +92,7 @@ module Gws::Schedule
     label = cur_site.effective_schedule_group_all_tab_label
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_all_groups_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(group-all))
+    SS::MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(group-all))
   end
 
   def menu_item_gws_schedule_facilities(cur_site, cur_user)
@@ -112,7 +103,7 @@ module Gws::Schedule
     label = cur_site.effective_schedule_facility_tab_label
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_facilities_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(facility))
+    SS::MenuItem.new(label: label, path_proc: path_proc, css_classes: %w(facility))
   end
 
   def menu_item_gws_schedule_facility_approval_plans(cur_site, cur_user)
@@ -125,7 +116,7 @@ module Gws::Schedule
     path_proc = ->(*args, **kwargs) do
       helpers.gws_schedule_facility_approval_plans_path(*args, site: cur_site, **kwargs)
     end
-    MenuItem.new(label: I18n.t('gws/schedule.navi.approve_facility_plan'), path_proc: path_proc)
+    SS::MenuItem.new(label: I18n.t('gws/schedule.navi.approve_facility_plan'), path_proc: path_proc)
   end
 
   def menu_item_gws_schedule_search(cur_site, cur_user)
@@ -134,7 +125,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_search_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('gws/schedule.tabs.search'), path_proc: path_proc)
+    SS::MenuItem.new(label: I18n.t('gws/schedule.tabs.search'), path_proc: path_proc)
   end
 
   def menu_item_gws_schedule_csv(cur_site, cur_user)
@@ -144,7 +135,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_csv_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('ss.links.import'), path_proc: path_proc)
+    SS::MenuItem.new(label: I18n.t('ss.links.import'), path_proc: path_proc)
   end
 
   def menu_item_gws_schedule_trashes(cur_site, cur_user)
@@ -154,7 +145,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_trashes_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('ss.links.trash'), path_proc: path_proc, css_classes: %w(trash))
+    SS::MenuItem.new(label: I18n.t('ss.links.trash'), path_proc: path_proc, css_classes: %w(trash))
   end
 
   def menu_item_gws_schedule_holidays(cur_site, cur_user)
@@ -162,7 +153,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_holidays_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('gws/schedule.navi.holiday'), path_proc: path_proc, css_classes: %w(management))
+    SS::MenuItem.new(label: I18n.t('gws/schedule.navi.holiday'), path_proc: path_proc, css_classes: %w(management))
   end
 
   def menu_item_gws_schedule_categories(cur_site, cur_user)
@@ -170,7 +161,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_schedule_categories_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('gws/schedule.navi.category'), path_proc: path_proc, css_classes: %w(management))
+    SS::MenuItem.new(label: I18n.t('gws/schedule.navi.category'), path_proc: path_proc, css_classes: %w(management))
   end
 
   def menu_item_gws_facility_categories(cur_site, cur_user)
@@ -178,7 +169,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_facility_categories_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('gws/facility.navi.category'), path_proc: path_proc, css_classes: %w(management))
+    SS::MenuItem.new(label: I18n.t('gws/facility.navi.category'), path_proc: path_proc, css_classes: %w(management))
   end
 
   def menu_item_gws_facility_items(cur_site, cur_user)
@@ -186,7 +177,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_facility_items_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('gws/facility.navi.item'), path_proc: path_proc, css_classes: %w(management))
+    SS::MenuItem.new(label: I18n.t('gws/facility.navi.item'), path_proc: path_proc, css_classes: %w(management))
   end
 
   def menu_item_gws_facility_usage_main(cur_site, cur_user)
@@ -194,7 +185,7 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_facility_usage_main_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('gws/facility.navi.usage'), path_proc: path_proc, css_classes: %w(management))
+    SS::MenuItem.new(label: I18n.t('gws/facility.navi.usage'), path_proc: path_proc, css_classes: %w(management))
   end
 
   def menu_item_gws_facility_state_main(cur_site, cur_user)
@@ -202,6 +193,6 @@ module Gws::Schedule
 
     helpers = Rails.application.routes.url_helpers
     path_proc = ->(*args, **kwargs) { helpers.gws_facility_state_main_path(*args, site: cur_site, **kwargs) }
-    MenuItem.new(label: I18n.t('gws/facility.navi.state'), path_proc: path_proc, css_classes: %w(management))
+    SS::MenuItem.new(label: I18n.t('gws/facility.navi.state'), path_proc: path_proc, css_classes: %w(management))
   end
 end

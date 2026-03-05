@@ -56,4 +56,49 @@ describe Article::Page, dbscope: :example do
       end
     end
   end
+
+  Cms::Part.plugins.map(&:path).each do |path|
+    # opendata 機能は単体では動作せず、構成が大変
+    next if path.start_with?("opendata/")
+    # "ckan/reference" は opendata 機能と組み合わせて利用する必要があり、構成が大変
+    next if path == "ckan/reference"
+
+    # cms/layout や cms/form に組み込んだパーツをレンダリングできるかどうか確認する
+    # エラーになる場合、書き出し時にエラーが発生したり、ページが使用するサイズを正しく計算できなかったりする
+    context "when the part `#{path}` is integrated into cms/layout" do
+      it do
+        part = create(path.sub("/", "_part_").to_sym, cur_site: site)
+        layout = create_cms_layout(part, cur_site: site)
+        html = "html-#{unique_id}"
+        page = create(:article_page, cur_site: site, cur_node: node, layout: layout, state: "public", html: html)
+        page = Article::Page.find(page.id)
+        rendered_html = page.render_html
+        expect(rendered_html).to include(html)
+      end
+    end
+
+    context "when the part `#{path}` is integrated into cms/form" do
+      it do
+        part = create(path.sub("/", "_part_").to_sym, cur_site: site)
+        layout = create_cms_layout(cur_site: site)
+
+        mark = "mark-#{unique_id}"
+        html = <<~HTML
+          <div>#{mark}</div>
+          {{ parts["#{part.filename.sub(".part.html", "")}"].html }}
+        HTML
+        form = create(:cms_form, cur_site: site, state: 'public', sub_type: 'static', html: html)
+        column = create(
+          :cms_column_text_field, cur_site: site, cur_form: form, required: "optional", order: 10, input_type: 'text'
+        )
+
+        page = create(
+          :article_page, cur_site: site, cur_node: node, layout: layout, form: form, state: "public",
+          column_values: [ column.value_type.new(column: column, name: column.name, value: "text-#{unique_id}") ])
+        page = Article::Page.find(page.id)
+        rendered_html = page.render_html
+        expect(rendered_html).to include(mark)
+      end
+    end
+  end
 end
