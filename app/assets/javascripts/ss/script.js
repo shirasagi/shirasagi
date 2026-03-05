@@ -7,12 +7,11 @@
 //= require jquery-ui/widgets/droppable
 //= require jquery-ui/widgets/autocomplete
 //= require jquery-ui/widgets/tooltip
-//= require js.cookie
+//= require js-cookie/dist/js.cookie.js
 //= require jquery.form
 //= require jquery-datetimepicker/build/jquery.datetimepicker.full.js
 //= require jquery.multi-select
 //= require @claviska/jquery-minicolors/jquery.minicolors.js
-//= require jquery.autosize
 //= require marked
 //= require mdn-polyfills/Array.from.js
 //= require mdn-polyfills/Array.prototype.find.js
