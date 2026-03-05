@@ -1,0 +1,52 @@
+@use "init";
+
+// -------------------------------------------------------------------------------------------------
+// breadcrumb
+.breadcrumb {
+  @include init.clear;
+  margin: 0 0 10px -42px;
+  border-bottom: init.$border-gray4;
+  background: init.$gray5;
+  list-style: none;
+  @include init.mb {
+    display: none;
+  }
+}
+.breadcrumb-item {
+  position: relative;
+  float: left;
+  &:not(:first-child)::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 12px solid #c6c6c6;
+  }
+  &:not(:last-child)::after {
+    content: "";
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: -11px;
+    border-top: 20px solid transparent;
+    border-bottom: 20px solid transparent;
+    border-left: 12px solid init.$gray5;
+  }
+}
+.breadcrumb-link {
+  display: inline-block;
+  color: init.$black;
+  &:hover {
+    .breadcrumb-title {
+      text-decoration: underline;
+    }
+  }
+}
+.breadcrumb-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 10px 28px;
+}

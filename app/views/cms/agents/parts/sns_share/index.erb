@@ -9,19 +9,17 @@ url = File.join(@cur_site.full_url, @cur_main_path)
 
 <% if @cur_part.sort_sns_share_services.select { |v| v =~ /fb_/ }.present? %>
 <div id="fb-root"></div>
-<script>(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/<%= t "cms.sns_share.fb_lang" %>/sdk.js#xfbml=1&version=v2.8";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));</script>
+<script async defer crossorigin="anonymous" src="<%== SS.facebook_sdk_js_url(version: @cur_site.effective_facebook_api_version, app_id: @cur_site.facebook_app_id.presence) %>"></script>
 <% end %>
 
 <% @cur_part.sort_sns_share_services.each do |service| %>
   <% if service == "fb_share" %>
     <div class="site fb fb-share">
-      <div class="fb-share-button" data-href="<%= url %>" data-layout="button_count"></div>
+      <div class="fb-share-button" data-href="<%= url %>" data-layout="button_count" data-size="small">
+        <%=
+          link_to t("cms.sns_share.fb_share_button"), SS.facebook_sharer_url(u: url), class: "fb-xfbml-parse-ignore", target: "_blank", rel: "noopener"
+        %>
+      </div>
     </div>
 
   <% elsif service == "twitter" %>

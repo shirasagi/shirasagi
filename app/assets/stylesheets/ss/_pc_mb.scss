@@ -1593,49 +1593,6 @@ _:future,
   margin-top: 10px;
   @include init.btn;
 }
-// -------------------------------------------------------------------------------------------------
-// breadcrumb
-.breadcrumb {
-  @include init.clear;
-  margin: 0 0 10px -42px;
-  border-bottom: init.$border-gray4;
-  background: init.$gray5;
-  list-style: none;
-  @include init.mb {
-    display: none;
-  }
-  li {
-    float: left;
-    &:first-child a::before {
-      border: 0;
-    }
-  }
-  a {
-    display: block;
-    position: relative;
-    padding: 10px 28px;
-    color: init.$black;
-    &::before {
-      content: "";
-      position: absolute;
-      top: 0;
-      left: 0;
-      border-top: 20px solid transparent;
-      border-bottom: 20px solid transparent;
-      border-left: 12px solid #c6c6c6;
-    }
-    &::after {
-      content: "";
-      position: absolute;
-      z-index: 1;
-      top: 0;
-      right: -11px;
-      border-top: 20px solid transparent;
-      border-bottom: 20px solid transparent;
-      border-left: 12px solid init.$gray5;
-    }
-  }
-}
 
 // -------------------------------------------------------------------------------------------------
 // warning
