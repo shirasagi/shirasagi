@@ -735,3 +735,8 @@ ja:
         - パスワードを入力してください。
       in_password_again:
         - パスワードの確認として、上記と同じパスワードを入力してください。
+
+  input_guide:
+    member/addon/facebook_oauth:
+      facebook_api_version_html: |-
+        Facebook API Version はサイト情報のFacebook設定で変更可能です。
