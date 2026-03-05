@@ -11,7 +11,7 @@
 //= require jquery.form
 //= require jquery-datetimepicker/build/jquery.datetimepicker.full.js
 //= require jquery.multi-select
-//= require jquery.minicolors
+//= require @claviska/jquery-minicolors/jquery.minicolors.js
 //= require marked
 //= require mdn-polyfills/Array.from.js
 //= require mdn-polyfills/Array.prototype.find.js

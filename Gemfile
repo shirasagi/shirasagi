@@ -32,7 +32,6 @@ gem 'mongo_session_store'
 
 # Assets
 gem 'jquery-form-rails'
-gem 'jquery-minicolors-rails'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'marked-rails'
