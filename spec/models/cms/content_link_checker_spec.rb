@@ -122,6 +122,20 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
         expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_invalid_link")
         expect(result[:normalized_url]).to be_blank
       end
+
+      # success_url1 と success_url2 は自サイトの /fs/ なので自己解決する。よって WebMock の回数は 0 回となるはず
+      expect(a_request(:get, success_url1)).to have_been_made.times(0)
+      expect(a_request(:get, success_url2)).to have_been_made.times(0)
+      # success_url3 と success_url4 は外部サイト。よって WebMock の回数は 1 回となるはず
+      expect(a_request(:get, success_url3)).to have_been_made.times(1)
+      expect(a_request(:get, success_url4)).to have_been_made.times(1)
+      # failed_url1 と failed_url2 は自サイトの /fs/ なので自己解決する。よって WebMock の回数は 0 回となるはず
+      expect(a_request(:get, failed_url1)).to have_been_made.times(0)
+      expect(a_request(:get, failed_url2)).to have_been_made.times(0)
+      # failed_url3 は外部サイト。よって WebMock の回数は 1 回となるはず
+      expect(a_request(:get, failed_url3)).to have_been_made.times(1)
+      # invalid_url1 は URL が無効なのでアクセス自体発生しない
+      expect(a_request(:get, invalid_url1)).to have_been_made.times(0)
     end
   end
 
@@ -227,7 +241,7 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
         <a href="#{url4}">#{url4}</a>
       HTML
     end
-    let!(:article) { create :article_page, cur_node: node, layout: layout, html: html, state: "public" }
+    let!(:article) { create :article_page, cur_node: node, layout: layout, basename: "page381.html", html: html, state: "public" }
 
     before do
       WebMock.disable_net_connect!
@@ -257,7 +271,8 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
         expect(result[:normalized_url]).to eq url4
       end
 
-      expect(a_request(:get, url4)).to have_been_made.times(1)
+      # 自サイトのページは自己解決する。よって WebMock の回数は 0 回となるはず
+      expect(a_request(:get, url4)).to have_been_made.times(0)
     end
   end
 

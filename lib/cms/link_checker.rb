@@ -1,41 +1,103 @@
 class Cms::LinkChecker
-  def initialize(options = {})
-    @cur_user = options[:cur_user]
+  include ActiveModel::Model
 
-    if options[:root_url].present?
-      @root_url = options[:root_url]
-      @fs_url = ::File.join(@root_url, "/fs/")
+  DEFAULT_HEAD_REQUEST_TIMEOUT = 5
+
+  attr_accessor :cur_user, :root_url
+  attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
+
+  def fs_url
+    return @fs_url if instance_variable_defined?(:@fs_url)
+
+    if root_url
+      @fs_url = ::File.join(root_url, "/fs/")
+    else
+      @fs_url = nil
     end
-
-    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"]
-    @head_request_timeout = options[:head_request_timeout] if options[:head_request_timeout].present?
-
-    @max_redirection = SS.config.cms.check_links["max_redirection"].to_i
-    @max_redirection = options[:max_redirection].to_i if options[:max_redirection].present?
-
-    @http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-    @http_basic_authentication = options[:http_basic_authentication] if options[:http_basic_authentication].present?
   end
 
-  def check_url(url)
+  def head_request_timeout
+    return @head_request_timeout if instance_variable_defined?(:@head_request_timeout)
+
+    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"]
+    @head_request_timeout ||= DEFAULT_HEAD_REQUEST_TIMEOUT
+  end
+
+  def max_redirection
+    return @max_redirection if instance_variable_defined?(:@max_redirection)
+    @max_redirection = SS.config.cms.check_links["max_redirection"].to_i
+  end
+
+  def http_basic_authentication
+    return @http_basic_authentication if instance_variable_defined?(:@http_basic_authentication)
+    @http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
+  end
+
+  def check_url(full_url)
+    full_url = to_addressable(full_url)
+
+    site = find_site(full_url)
+    if site.blank?
+      return get_http(full_url)
+    end
+
+    # retrieve internal page
+    if fs_path?(full_url)
+      full_url = append_access_token_if_possible(full_url)
+    end
+
+    contents_env = {}
+    contents_env["REQUEST_URI"] = full_url.to_s
+    contents_env[::Rack::PATH_INFO] = full_url.path
+    contents_env[::Rack::REQUEST_METHOD] = ::Rack::GET
+    contents_env[::Rack::REQUEST_PATH] = full_url.path
+    contents_env[::Rack::QUERY_STRING] = full_url.query || ""
+    contents_env[::Rack::Request::HTTP_X_FORWARDED_HOST] = site.domain
+    contents_env["ss.site"] = site
+
+    contents_status, _contents_headers, _contents_body = Rails.application.call(contents_env)
+    case contents_status
+    when 200
+      {
+        code: 200,
+        redirection: 0
+      }
+    else
+      {
+        code: 0,
+        message: I18n.t("errors.messages.link_check_failed_not_found"),
+        redirection: 0
+      }
+    end
+  end
+
+  private
+
+  def to_addressable(full_url)
+    full_url = Addressable::URI.parse(full_url) unless full_url.is_a?(Addressable::URI)
+    full_url.normalize
+  end
+
+  def find_site(addressable_full_url)
+    Cms::Site.without_deleted.find_by_domain(addressable_full_url.authority, addressable_full_url.path)
+  end
+
+  def get_http(addressable_full_url)
     progress_data_size = nil
     redirection = 0
 
     begin
-      url = normalize_url(url)
-      proxy = ( url =~ /^https/ ) ? ENV['HTTPS_PROXY'] : ENV['HTTP_PROXY']
       opts = {
-        proxy: proxy,
         redirect: false,
-        http_basic_authentication: @http_basic_authentication,
+        http_basic_authentication: http_basic_authentication,
         progress_proc: ->(size) do
           progress_data_size = size
           raise "200"
         end
       }
 
-      Timeout.timeout(@head_request_timeout) do
-        URI.open(url, **opts) { |_f| }
+      Timeout.timeout(head_request_timeout) do
+        URI.open(addressable_full_url.to_s, **opts) { |_f| }
       end
 
       return {
@@ -43,7 +105,7 @@ class Cms::LinkChecker
         redirection: redirection
       }
     rescue OpenURI::HTTPRedirect => e
-      if redirection >= @max_redirection
+      if redirection >= max_redirection
         return {
           code: 0,
           message: I18n.t("errors.messages.link_check_failed_redirection"),
@@ -51,7 +113,7 @@ class Cms::LinkChecker
         }
       else
         redirection += 1
-        url = e.uri
+        addressable_full_url = to_addressable(e.uri)
         retry
       end
     rescue Addressable::URI::InvalidURIError
@@ -93,19 +155,22 @@ class Cms::LinkChecker
     end
   end
 
-  def normalize_url(url)
-    uri = ::Addressable::URI.parse(url)
-    url = uri.normalize.to_s
+  def fs_path?(addressable_full_url)
+    fs_url && addressable_full_url.to_s.start_with?(fs_url)
+  end
 
-    if @cur_user && @fs_url && url.start_with?(@fs_url)
-      token = SS::AccessToken.new(cur_user: @cur_user)
-      token.create_token
-      if token.save
-        url += uri.query.present? ? "&" : "?"
-        url += "access_token=#{token.token}"
-      end
-    end
+  def append_access_token_if_possible(addressable_full_url)
+    return addressable_full_url unless cur_user
 
-    url
+    token = SS::AccessToken.new(cur_user: cur_user)
+    token.create_token
+    return addressable_full_url unless token.save
+
+    query_values = addressable_full_url.query_values
+    query_values ||= {}
+    query_values["access_token"] = token.token
+
+    addressable_full_url.query_values = query_values
+    addressable_full_url
   end
 end
