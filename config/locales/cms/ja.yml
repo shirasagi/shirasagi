@@ -356,6 +356,7 @@ ja:
         - "対象のフォルダー属性: %{routes} "
       prevent_external_preview: 別サイトに遷移しようとしています。プレビュー時は別サイトへは遷移できません。
       prevent_external_submit: プレビューでフォームデータの送信(POST)はできません。
+      private_node: このフォルダーは非公開です。非公開フォルダー配下のフォルダー・ページは自身の状態が公開であっても公開されません。
     apis:
       categories:
         index: カテゴリーを選択する

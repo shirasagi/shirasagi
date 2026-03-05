@@ -45,6 +45,8 @@
   }
 }
 .breadcrumb-title {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
   padding: 10px 28px;
 }

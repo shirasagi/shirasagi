@@ -81,7 +81,13 @@ module Cms::BaseFilter
     @cur_node = Cms::Node.site(@cur_site).find params[:cid]
     @cur_node.parents.each do |node|
       if node.allowed?(:read, @cur_user, site: @cur_site)
-        @crumbs << [ node.name, view_context.contents_path(node) ]
+        if node.public?
+          @crumbs << [ node.name, view_context.contents_path(node) ]
+        else
+          title = view_context.tag.span(node.name) + view_context.md_icons.outlined("public_off", size: 13)
+          title = view_context.tag.span(title.html_safe, class: "breadcrumb-title", title: I18n.t("cms.notices.private_node"))
+          @crumbs << [ title, view_context.contents_path(node) ]
+        end
       else
         @crumbs << [ node.name, nil ]
       end
