@@ -79,6 +79,14 @@ class Cms::LinkChecker
   end
 
   def find_site(addressable_full_url)
+    @internal_domain_set ||= begin
+      domains = Cms::Site.without_deleted.pluck(:domains)
+      domains.flatten!
+      domains.select!(&:present?)
+      Set.new(domains)
+    end
+
+    return unless @internal_domain_set.include?(addressable_full_url.authority)
     Cms::Site.without_deleted.find_by_domain(addressable_full_url.authority, addressable_full_url.path)
   end
 
