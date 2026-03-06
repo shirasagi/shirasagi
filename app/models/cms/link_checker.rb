@@ -3,7 +3,7 @@ class Cms::LinkChecker
 
   DEFAULT_HEAD_REQUEST_TIMEOUT = 5
 
-  attr_accessor :cur_user, :root_url
+  attr_accessor :cur_user, :root_url, :fetch_content
   attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
 
   Redirection = Data.define(:count, :visited) do
@@ -16,13 +16,15 @@ class Cms::LinkChecker
     end
   end
 
-  Result = Data.define(:result, :error_code, :redirection_count) do
-    def self.success(redirection_count:)
-      new(result: :success, error_code: nil, redirection_count: redirection_count)
+  Result = Data.define(:result, :error_code, :redirection_count, :content_type, :content) do
+    def self.success(redirection_count:, content_type:, content:)
+      new(
+        result: :success, error_code: nil, redirection_count: redirection_count,
+        content_type: content_type, content: content)
     end
 
     def self.error(error_code:, redirection_count:)
-      new(result: :error, error_code: error_code, redirection_count: redirection_count)
+      new(result: :error, error_code: error_code, redirection_count: redirection_count, content_type: nil, content: nil)
     end
 
     def success?
@@ -36,6 +38,12 @@ class Cms::LinkChecker
     def message
       if error_code
         I18n.t("errors.messages.#{error_code}")
+      end
+    end
+
+    def content_mime_type
+      if content_type
+        Mime::Type.lookup(content_type.downcase)
       end
     end
   end
@@ -92,10 +100,17 @@ class Cms::LinkChecker
     contents_env[::Rack::Request::HTTP_X_FORWARDED_HOST] = site.domain
     contents_env["ss.site"] = site
 
-    contents_status, _contents_headers, _contents_body = Rails.application.call(contents_env)
+    contents_status, contents_headers, contents_body = Rails.application.call(contents_env)
     case contents_status
     when 200
-      Result.success(redirection_count: redirection.count)
+      if fetch_content
+        content_type = contents_headers["content-type"]
+
+        content = ""
+        contents_body.each { content += _1 }
+      end
+      Result.success(
+        redirection_count: redirection.count, content_type: content_type, content: content)
     else
       Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
     end
@@ -126,25 +141,30 @@ class Cms::LinkChecker
   end
 
   def get_http(addressable_full_url, redirection:)
-    data_received = false
-
     begin
       opts = {
         redirect: false,
-        http_basic_authentication: http_basic_authentication,
-        progress_proc: ->(size) do
-          data_received = true
-          raise "200"
-        end
+        http_basic_authentication: http_basic_authentication
       }
 
+      io = nil
       Timeout.timeout(head_request_timeout) do
-        OpenURI.open_uri(addressable_full_url.to_s, **opts) { |io| io.read }
+        io = OpenURI.open_uri(addressable_full_url.to_s, **opts)
       ensure
         redirection.visited.add(addressable_full_url.to_s)
       end
 
-      Result.success(redirection_count: redirection.count)
+      if fetch_content
+        content = io.read
+        content_type = io.content_type
+      else
+        io.read(1)
+        io.close
+        content = nil
+        content_type = nil
+      end
+
+      Result.success(redirection_count: redirection.count, content_type: content_type, content: content)
     rescue OpenURI::HTTPRedirect => e
       if redirection.count >= max_redirection
         return Result.error(error_code: :link_check_failed_redirection, redirection_count: redirection.count + 1)
@@ -165,8 +185,6 @@ class Cms::LinkChecker
     rescue Timeout::Error
       return Result.error(error_code: :link_check_failed_timeout, redirection_count: redirection.count)
     rescue => e
-      return Result.success(redirection_count: redirection.count) if data_received
-
       if e.to_s == "401 Unauthorized"
         error_code = :link_check_failed_unauthorized
       else
