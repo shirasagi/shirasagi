@@ -16,6 +16,30 @@ class Cms::LinkChecker
     end
   end
 
+  Result = Data.define(:result, :error_code, :redirection_count) do
+    def self.success(redirection_count:)
+      new(result: :success, error_code: nil, redirection_count: redirection_count)
+    end
+
+    def self.error(error_code:, redirection_count:)
+      new(result: :error, error_code: error_code, redirection_count: redirection_count)
+    end
+
+    def success?
+      result == :success
+    end
+
+    def error?
+      !success?
+    end
+
+    def message
+      if error_code
+        I18n.t("errors.messages.#{error_code}")
+      end
+    end
+  end
+
   def fs_url
     return @fs_url if instance_variable_defined?(:@fs_url)
 
@@ -69,16 +93,9 @@ class Cms::LinkChecker
     contents_status, _contents_headers, _contents_body = Rails.application.call(contents_env)
     case contents_status
     when 200
-      {
-        code: 200,
-        redirection: redirection.count
-      }
+      Result.success(redirection_count: redirection.count)
     else
-      {
-        code: 0,
-        message: I18n.t("errors.messages.link_check_failed_not_found"),
-        redirection: redirection.count
-      }
+      Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
     end
   end
 
@@ -100,14 +117,14 @@ class Cms::LinkChecker
   end
 
   def get_http(addressable_full_url, redirection:)
-    progress_data_size = nil
+    data_received = false
 
     begin
       opts = {
         redirect: false,
         http_basic_authentication: http_basic_authentication,
         progress_proc: ->(size) do
-          progress_data_size = size
+          data_received = true
           raise "200"
         end
       }
@@ -118,65 +135,35 @@ class Cms::LinkChecker
         redirection.visited.add(addressable_full_url.to_s)
       end
 
-      return {
-        code: 200,
-        redirection: redirection.count
-      }
+      Result.success(redirection_count: redirection.count)
     rescue OpenURI::HTTPRedirect => e
       if redirection.count >= max_redirection
-        return {
-          code: 0,
-          message: I18n.t("errors.messages.link_check_failed_redirection"),
-          redirection: redirection.count + 1
-        }
+        return Result.error(error_code: :link_check_failed_redirection, redirection_count: redirection.count + 1)
       else
         redirect_to = e.uri.to_s
         if redirection.visited.include?(redirect_to)
-          return {
-            code: 0,
-            message: I18n.t("errors.messages.link_check_failed_cyclic_redirection"),
-            redirection: redirection.count + 1
-          }
+          return Result.error(error_code: :link_check_failed_cyclic_redirection, redirection_count: redirection.count + 1)
         end
 
         check_url(redirect_to, redirection: redirection.increment)
       end
     rescue Addressable::URI::InvalidURIError
-      return {
-        code: 0,
-        message: I18n.t("errors.messages.link_check_failed_invalid_link"),
-        redirection: redirection.count
-      }
+      return Result.error(
+        error_code: :link_check_failed_invalid_link, redirection_count: redirection.count)
     rescue OpenSSL::SSL::SSLError => e
-      return {
-        code: 0,
-        message: I18n.t("errors.messages.link_check_failed_certificate_verify_failed"),
-        redirection: redirection.count
-      }
+      return Result.error(
+        error_code: :link_check_failed_certificate_verify_failed, redirection_count: redirection.count)
     rescue Timeout::Error
-      return {
-        code: 0,
-        message: I18n.t("errors.messages.link_check_failed_timeout"),
-        redirection: redirection.count
-      }
+      return Result.error(error_code: :link_check_failed_timeout, redirection_count: redirection.count)
     rescue => e
-      if progress_data_size
-        code = 200
-        message = nil
-      else
-        code = 0
-        if e.to_s == "401 Unauthorized"
-          message = I18n.t("errors.messages.link_check_failed_unauthorized")
-        else
-          message = I18n.t("errors.messages.link_check_failed_not_found")
-        end
-      end
+      return Result.success(redirection_count: redirection.count) if data_received
 
-      return {
-        code: code,
-        message: message,
-        redirection: redirection.count
-      }
+      if e.to_s == "401 Unauthorized"
+        error_code = :link_check_failed_unauthorized
+      else
+        error_code = :link_check_failed_not_found
+      end
+      Result.error(error_code: error_code, redirection_count: redirection.count)
     end
   end
 
