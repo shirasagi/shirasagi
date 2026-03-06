@@ -97,6 +97,10 @@ class Cms::LinkChecker
     else
       Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
     end
+  rescue SS::ForbiddenError
+    Result.error(error_code: :link_check_failed_unauthorized, redirection_count: redirection.count)
+  rescue SS::NotFoundError
+    Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
   end
 
   def to_addressable(full_url)
