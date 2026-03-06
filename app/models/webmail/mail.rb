@@ -124,7 +124,7 @@ class Webmail::Mail
     end
   end
 
-  def save_draft
+  def save_draft(time = Time.zone.now, extra_flags = [])
     msg = Webmail::Mailer.new_message(self)
 
     # save all headers
@@ -133,7 +133,7 @@ class Webmail::Mail
     end
 
     imap.select(imap.draft_box)
-    imap.conn.append(imap.draft_box, msg.to_s, [:Draft, :Seen], Time.zone.now)
+    imap.conn.append(imap.draft_box, msg.to_s, ([:Draft, :Seen] + extra_flags), time)
     if draft?
       imap.uids_delete([uid])
     end

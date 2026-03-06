@@ -21,6 +21,10 @@ module Webmail::Mail::Updater
     flags.to_a.include?(:Answered)
   end
 
+  def auto_save?
+    flags.to_a.map(&:to_s).include?(Webmail::AutoSave::AUTO_SAVE_KEYWORD)
+  end
+
   def set_seen
     imap.conn.uid_store uid, '+FLAGS', [:Seen]
   end

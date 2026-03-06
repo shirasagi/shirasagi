@@ -20,6 +20,10 @@ class Webmail::Apis::MailsController < ApplicationController
     @mailboxes.apply_recent_filters
   end
 
+  def skip_update_last_logged_in?
+    params[:action] == "auto_save"
+  end
+
   public
 
   def index
@@ -42,5 +46,20 @@ class Webmail::Apis::MailsController < ApplicationController
   end
 
   def imap_error
+  end
+
+  def auto_save
+    @model = Webmail::AutoSave
+    @auto_save = @model.user(@cur_user).find(params[:auto_save_id]) rescue nil
+    raise "404" if @auto_save.nil?
+
+    permit_fields = @model.permitted_fields
+    fix_params = { cur_user: @cur_user }
+    get_params = params.require(:item).permit(permit_fields).merge(fix_params)
+
+    @auto_save.attributes = get_params
+    @auto_save.update!
+    @auto_save.ready!
+    head :ok
   end
 end

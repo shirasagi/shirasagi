@@ -26,6 +26,19 @@ dd.address-select{vertical-align: middle;max-width: 100%;height: 2.4em;margin: 5
   <%= hidden_field_tag :dedicated, "1", id: nil %>
 <% end %>
 
+<% if @auto_save_conf && @auto_save %>
+  <%= hidden_field_tag :auto_save_id, @auto_save.id, id: nil,
+    data: {
+      "controller" => "webmail--auto-save",
+      "webmail--auto-save-url-value" => @auto_save_conf.url,
+      "webmail--auto-save-max-retry-value" => @auto_save_conf.max_retry,
+      "webmail--auto-save-first-interval-value" => @auto_save_conf.first_interval,
+      "webmail--auto-save-keep-interval-value" => @auto_save_conf.keep_interval
+    }
+  %>
+  <%= f.hidden_field :draft_uid, value: @item.uid, id: nil if @item.draft? %>
+<% end %>
+
 <% render_address_form = proc do |field, addresses, css_class, cc_blank | %>
   <dl class="webmail-mail-form-address <%= css_class %>"<% if cc_blank %> style="display: none;"<% end %>>
     <dt><%= @model.t field %></dt>

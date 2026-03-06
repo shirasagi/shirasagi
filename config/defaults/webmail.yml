@@ -69,6 +69,13 @@ production: &production
     severity: info
     severity_notice: disabled
 
+  # Automatically save draft mails periodically
+  auto_save:
+    disable: false
+    max_retry: 3
+    first_interval: 10000
+    keep_interval: 10000
+
   # HTML editor (only support ckeditor)
   html_editor: ckeditor
 
