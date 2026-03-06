@@ -327,4 +327,43 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       expect(a_request(:get, url2)).to have_been_made.times(0)
     end
   end
+
+  # 現在のシラサギの公開ページの動作は、リダイレクトページに対して 200 が応答される。
+  # このため本テストではリダイレクト先まで追跡しない。
+  context "with redirect pages" do
+    let!(:redirect_page) { create :article_page, cur_node: node, layout: layout, redirect_link: unique_url, state: "public" }
+    let!(:rss_page) { create :rss_page, cur_node: node, rss_link: unique_url }
+    let!(:event_page) { create :event_page, cur_node: node, ical_link: unique_url }
+    let!(:article) do
+      html = <<~HTML
+        <a href="/#{redirect_page.filename}">#{redirect_page.name}</a>
+        <a href="/#{rss_page.filename}">#{rss_page.name}</a>
+        <a href="/#{event_page.filename}">#{event_page.name}</a>
+      HTML
+      create :article_page, cur_node: node, layout: layout, html: html, state: "public"
+    end
+
+    before do
+      WebMock.disable_net_connect!
+    end
+
+    after do
+      WebMock.reset!
+      WebMock.allow_net_connect!
+    end
+
+    it do
+      checker = Cms::ContentLinkChecker.check(cur_site: site, cur_user: user, page: article, html: article.html)
+
+      expect(checker.extracted_urls.size).to eq 3
+      expect(checker.extracted_urls["/#{redirect_page.filename}"]).to be_present
+      expect(checker.extracted_urls["/#{rss_page.filename}"]).to be_present
+      expect(checker.extracted_urls["/#{event_page.filename}"]).to be_present
+      expect(checker.extracted_urls[redirect_page.redirect_link]).to be_blank
+      expect(checker.extracted_urls[rss_page.rss_link]).to be_blank
+      expect(checker.extracted_urls[event_page.ical_link]).to be_blank
+
+      expect(checker.results.size).to eq 3
+    end
+  end
 end
