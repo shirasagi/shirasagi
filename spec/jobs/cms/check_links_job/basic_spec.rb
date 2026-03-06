@@ -1,21 +1,22 @@
 require 'spec_helper'
 describe Cms::CheckLinksJob, dbscope: :example do
-  let!(:site) { cms_site }
-  let!(:site_url) { "http://#{site.domain}" }
-  let!(:layout) { create_cms_layout }
+  let!(:site0) { cms_site }
+  let!(:site) { create :cms_site_subdir, parent: site0 }
+  let!(:site_url) { "http://#{site.domain}/#{site.subdir}" }
+  let!(:layout) { create_cms_layout cur_site: site }
 
-  let!(:index) { create :cms_page, cur_site: site, layout_id: layout.id, filename: "index.html", html: html1 }
-  let!(:docs) { create :article_node_page, cur_site: site, layout_id: layout.id, filename: "docs" }
-  let!(:page1) { create :article_page, cur_site: site, layout_id: layout.id, filename: "docs/page1.html", html: html2 }
-  let!(:page2) { create :article_page, cur_site: site, layout_id: layout.id, filename: "docs/page2.html" }
-  let!(:page3) { create :article_page, cur_site: site, layout_id: layout.id, filename: "docs/page3.html" }
+  let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html", html: html1 }
+  let!(:docs) { create :article_node_page, cur_site: site, layout: layout, filename: "docs" }
+  let!(:page1) { create :article_page, cur_site: site, layout: layout, filename: "docs/page1.html", html: html2 }
+  let!(:page2) { create :article_page, cur_site: site, layout: layout, filename: "docs/page2.html" }
+  let!(:page3) { create :article_page, cur_site: site, layout: layout, filename: "docs/page3.html" }
 
   before do
     ActionMailer::Base.deliveries = []
 
     Fs.rm_rf site.path
-    Cms::Node::GenerateJob.bind(site_id: site.id).perform_now
-    Cms::Page::GenerateJob.bind(site_id: site.id).perform_now
+    expect { ss_perform_now Cms::Node::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+    expect { ss_perform_now Cms::Page::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
     Job::Log.destroy_all
   end
 
@@ -26,24 +27,24 @@ describe Cms::CheckLinksJob, dbscope: :example do
   end
 
   let!(:html1) do
-    h = []
-    h << '<a href="/docs/">docs</a>'
-    h << '<a href="/docs/page1.html">page1</a>'
-    h << '<a href="/docs/page2.html">page2</a>'
-    h << '<a href="/notfound1.html">notfound1</a>'
-    h << '<!-- <a href="/commentout1.html">commentout1</a> -->'
-    h << '<!--'
-    h << '  <a href="/commentout2.html">commentout2.html</a>'
-    h << '-->'
-    h.join("\n")
+    <<~HTML
+      <a href="#{docs.url}">#{docs.name}</a>
+      <a href="#{page1.url}">#{page1.name}</a>
+      <a href="#{page2.url}">#{page2.name}</a>
+      <a href="#{site.url}notfound1.html">notfound1</a>
+      <!-- <a href="#{site.url}commentout1.html">commentout1</a> -->
+      <!--
+        <a href="#{site.url}commentout2.html">commentout2.html</a>
+      -->
+    HTML
   end
 
   let!(:html2) do
-    h = []
-    h << '<a href="/index.html">index</a>'
-    h << '<a href="/docs/page3.html">page3</a>'
-    h << '<a href="/notfound2.html">notfound2</a>'
-    h.join("\n")
+    <<~HTML
+      <a href="#{site.url}index.html">#{site.name}</a>
+      <a href="#{page3.url}">#{page3.name}</a>
+      <a href="#{site.url}notfound2.html">notfound2</a>
+    HTML
   end
 
   context "normal case" do
@@ -65,6 +66,36 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(log.logs).to include(include("#{site_url}/docs/page1.html"))
         expect(log.logs).to include(include("  - #{site_url}/notfound2.html"))
         expect(log.logs).not_to include(include("  - #{site_url}/commentout2.html"))
+      end
+
+      expect(Cms::CheckLinks::Report.all.count).to eq 1
+      Cms::CheckLinks::Report.all.first.tap do |report|
+        expect(report.site_id).to eq site.id
+        expect(report.name).to include "実行結果"
+        expect(report.link_errors.count).to eq 2
+        expect(report.pages.count).to eq 2
+        expect(report.nodes.count).to eq 0
+        report.pages.to_a.tap do |page_reports|
+          expect(page_reports[0].site_id).to eq site.id
+          expect(page_reports[0].report_id).to eq report.id
+          expect(page_reports[0].ref).to eq index.url
+          expect(page_reports[0].ref_url).to eq index.full_url
+          expect(page_reports[0].name).to eq index.name
+          expect(page_reports[0].filename).to eq index.filename
+          expect(page_reports[0].urls).to have(1).items
+          expect(page_reports[0].urls).to include("#{site.url}notfound1.html")
+          expect(page_reports[0].page_id).to eq index.id
+
+          expect(page_reports[1].site_id).to eq site.id
+          expect(page_reports[1].report_id).to eq report.id
+          expect(page_reports[1].ref).to eq page1.url
+          expect(page_reports[1].ref_url).to eq page1.full_url
+          expect(page_reports[1].name).to eq page1.name
+          expect(page_reports[1].filename).to eq page1.filename
+          expect(page_reports[1].urls).to have(1).items
+          expect(page_reports[1].urls).to include("#{site.url}notfound2.html")
+          expect(page_reports[1].page_id).to eq page1.id
+        end
       end
 
       expect(ActionMailer::Base.deliveries.length).to eq 0
@@ -135,9 +166,9 @@ describe Cms::CheckLinksJob, dbscope: :example do
         csv = CSV.parse(csv)
 
         expect(csv[0]).to eq %w(reference url)
-        expect(csv[1]).to eq %w(/ /notfound1.html)
-        expect(csv[2]).to eq %w(/index.html /notfound1.html)
-        expect(csv[3]).to eq %w(/docs/page1.html /notfound2.html)
+        expect(csv[1]).to eq %W(#{site.url} #{site.url}notfound1.html)
+        expect(csv[2]).to eq %W(#{site.url}index.html #{site.url}notfound1.html)
+        expect(csv[3]).to eq %W(#{site.url}docs/page1.html #{site.url}notfound2.html)
       end
     end
 
