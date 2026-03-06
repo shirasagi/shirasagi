@@ -12,8 +12,8 @@
           <li data-status="<%= result_status(result) %>" data-url="<%= anchor_or_url %>" data-normalized-url="<%= normalized_url %>">
             <%= result_status_label(result) %>
             <span class="url"><%= anchor_or_url %></span>
-            <% if result[:message] %>
-              <div class="message detail"><%= br result[:message] %></div>
+            <% if result.message %>
+              <div class="message detail"><%= br result.message %></div>
             <% end %>
           </li>
         <% end %>

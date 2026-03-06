@@ -73,54 +73,54 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       expect(checker.extracted_urls.size).to eq 10
       expect(checker.results.size).to eq 10
       checker.results[checker.extracted_urls["##{success_anchor1}"]].tap do |result|
-        expect(result[:code]).to eq 200
-        expect(result[:message]).to be_blank
-        expect(result[:normalized_url]).to eq Addressable::URI.join(article.full_url, "##{success_anchor1}").to_s
+        expect(result.result).to eq :success
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq Addressable::URI.join(article.full_url, "##{success_anchor1}").to_s
       end
       checker.results[checker.extracted_urls["##{failed_anchor1}"]].tap do |result|
-        expect(result[:code]).to eq 0
-        expect(result[:message]).to eq I18n.t('errors.template.no_links')
-        expect(result[:normalized_url]).to eq Addressable::URI.join(article.full_url, "##{failed_anchor1}").to_s
+        expect(result.result).to eq :error
+        expect(result.message).to eq I18n.t('errors.template.no_links')
+        expect(result.normalized_url).to eq Addressable::URI.join(article.full_url, "##{failed_anchor1}").to_s
       end
       checker.results[checker.extracted_urls[success_url1]].tap do |result|
-        expect(result[:code]).to eq 200
-        expect(result[:message]).to be_blank
-        expect(result[:normalized_url]).to eq Addressable::URI.join(site.full_url, success_url1).to_s
+        expect(result.result).to eq :success
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq Addressable::URI.join(site.full_url, success_url1).to_s
       end
       checker.results[checker.extracted_urls[success_url2]].tap do |result|
-        expect(result[:code]).to eq 200
-        expect(result[:message]).to be_blank
-        expect(result[:normalized_url]).to eq success_url2
+        expect(result.result).to eq :success
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq success_url2
       end
       checker.results[checker.extracted_urls[success_url3]].tap do |result|
-        expect(result[:code]).to eq 200
-        expect(result[:message]).to be_blank
-        expect(result[:normalized_url]).to eq success_url3
+        expect(result.result).to eq :success
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq success_url3
       end
       checker.results[checker.extracted_urls[success_url4]].tap do |result|
-        expect(result[:code]).to eq 200
-        expect(result[:message]).to be_blank
-        expect(result[:normalized_url]).to eq success_url4
+        expect(result.result).to eq :success
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq success_url4
       end
       checker.results[checker.extracted_urls[failed_url1]].tap do |result|
-        expect(result[:code]).to eq 0
-        expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_not_found")
-        expect(result[:normalized_url]).to eq Addressable::URI.join(site.full_url, failed_url1).to_s
+        expect(result.result).to eq :error
+        expect(result.message).to eq I18n.t("errors.messages.link_check_failed_not_found")
+        expect(result.normalized_url).to eq Addressable::URI.join(site.full_url, failed_url1).to_s
       end
       checker.results[checker.extracted_urls[failed_url2]].tap do |result|
-        expect(result[:code]).to eq 0
-        expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_not_found")
-        expect(result[:normalized_url]).to eq failed_url2
+        expect(result.result).to eq :error
+        expect(result.message).to eq I18n.t("errors.messages.link_check_failed_not_found")
+        expect(result.normalized_url).to eq failed_url2
       end
       checker.results[checker.extracted_urls[failed_url3]].tap do |result|
-        expect(result[:code]).to eq 0
-        expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_not_found")
-        expect(result[:normalized_url]).to eq failed_url3
+        expect(result.result).to eq :error
+        expect(result.message).to eq I18n.t("errors.messages.link_check_failed_not_found")
+        expect(result.normalized_url).to eq failed_url3
       end
       checker.results[checker.extracted_urls[invalid_url1]].tap do |result|
-        expect(result[:code]).to eq 0
-        expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_invalid_link")
-        expect(result[:normalized_url]).to be_blank
+        expect(result.result).to eq :error
+        expect(result.message).to eq I18n.t("errors.messages.link_check_failed_invalid_link")
+        expect(result.normalized_url).to be_blank
       end
 
       # success_url1 と success_url2 は自サイトの /fs/ なので自己解決する。よって WebMock の回数は 0 回となるはず
@@ -199,28 +199,28 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       expect(checker.extracted_urls.size).to eq 4
       expect(checker.results.size).to eq 4
       checker.results[checker.extracted_urls[redirection_url5]].tap do |result|
-        expect(result[:code]).to eq 200
-        expect(result[:message]).to be_blank
-        expect(result[:redirection]).to eq 5
-        expect(result[:normalized_url]).to eq redirection_url5
+        expect(result.result).to eq :success
+        expect(result.message).to be_blank
+        expect(result.redirection_count).to eq 5
+        expect(result.normalized_url).to eq redirection_url5
       end
       checker.results[checker.extracted_urls[redirection_url6]].tap do |result|
-        expect(result[:code]).to eq 0
-        expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_redirection")
-        expect(result[:redirection]).to eq 6
-        expect(result[:normalized_url]).to eq redirection_url6
+        expect(result.result).to eq :error
+        expect(result.message).to eq I18n.t("errors.messages.link_check_failed_redirection")
+        expect(result.redirection_count).to eq 6
+        expect(result.normalized_url).to eq redirection_url6
       end
       checker.results[checker.extracted_urls[redirection_self_url]].tap do |result|
-        expect(result[:code]).to eq 0
-        expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_cyclic_redirection")
-        expect(result[:redirection]).to eq 1
-        expect(result[:normalized_url]).to eq redirection_self_url
+        expect(result.result).to eq :error
+        expect(result.message).to eq I18n.t("errors.messages.link_check_failed_cyclic_redirection")
+        expect(result.redirection_count).to eq 1
+        expect(result.normalized_url).to eq redirection_self_url
       end
       checker.results[checker.extracted_urls[redirection_page]].tap do |result|
-        expect(result[:code]).to eq 200
-        expect(result[:message]).to be_blank
-        expect(result[:redirection]).to eq 1
-        expect(result[:normalized_url]).to eq redirection_page
+        expect(result.result).to eq :success
+        expect(result.message).to be_blank
+        expect(result.redirection_count).to eq 1
+        expect(result.normalized_url).to eq redirection_page
       end
 
       expect(a_request(:get, redirection_url0)).to have_been_made.times(1)
@@ -263,9 +263,9 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       expect(checker.extracted_urls.size).to eq 1
       expect(checker.results.size).to eq 1
       checker.results[checker.extracted_urls["#/foo/bar.baz"]].tap do |result|
-        expect(result[:code]).to eq 0
-        expect(result[:message]).to eq I18n.t('errors.template.no_links')
-        expect(result[:normalized_url]).to eq Addressable::URI.join(article.full_url, "#/foo/bar.baz").to_s
+        expect(result.result).to eq :error
+        expect(result.message).to eq I18n.t('errors.template.no_links')
+        expect(result.normalized_url).to eq Addressable::URI.join(article.full_url, "#/foo/bar.baz").to_s
       end
     end
   end
@@ -308,9 +308,9 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
 
       expect(checker.results.size).to eq 1
       checker.results[url4].tap do |result|
-        expect(result[:code]).to eq 200
-        expect(result[:message]).to be_blank
-        expect(result[:normalized_url]).to eq url4
+        expect(result.result).to eq :success
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq url4
       end
 
       # 自サイトのページは自己解決する。よって WebMock の回数は 0 回となるはず
@@ -354,14 +354,14 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       expect(checker.results.size).to eq 2
       # nofollow がセットされているので、エラーとはせず、message に "nofollow" を応答する
       checker.results[url1].tap do |result|
-        expect(result[:code]).to eq "nofollow"
-        expect(result[:message]).to be_blank
-        expect(result[:normalized_url]).to eq url1
+        expect(result.result).to eq :nofollow
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq url1
       end
       checker.results[url2].tap do |result|
-        expect(result[:code]).to eq "nofollow"
-        expect(result[:message]).to be_blank
-        expect(result[:normalized_url]).to eq url2
+        expect(result.result).to eq :nofollow
+        expect(result.message).to be_blank
+        expect(result.normalized_url).to eq url2
       end
 
       # nofollow がセットされているので、リンクを辿らない
