@@ -32,7 +32,7 @@
     <%= render @cur_column.column_form_partial_path, f: g, column: @cur_column, value: @cur_column_value, controller: false %>
 
     <%= error_messages_for :cur_column_value %>
-    <%= render "cms/apis/preview/inplace_edit/main/link_errors", errors: @cur_column_value ? @cur_column_value.link_errors : [] %>
+    <%= render "cms/apis/preview/inplace_edit/main/link_errors", errors: @cur_column_value ? @cur_column_value.link_errors : SS::EMPTY_HASH %>
   <% end %>
 
   <footer class="send">
