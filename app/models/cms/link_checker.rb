@@ -97,7 +97,7 @@ class Cms::LinkChecker
       }
 
       Timeout.timeout(head_request_timeout) do
-        URI.open(addressable_full_url.to_s, **opts) { |_f| }
+        OpenURI.open_uri(addressable_full_url.to_s, **opts) { |io| io.read }
       end
 
       return {
