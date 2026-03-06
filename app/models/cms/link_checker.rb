@@ -6,6 +6,16 @@ class Cms::LinkChecker
   attr_accessor :cur_user, :root_url
   attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
 
+  Redirection = Data.define(:count, :visited) do
+    def initialize(count: 0, visited: Set.new)
+      super
+    end
+
+    def increment
+      with(count: count + 1)
+    end
+  end
+
   def fs_url
     return @fs_url if instance_variable_defined?(:@fs_url)
 
@@ -33,12 +43,13 @@ class Cms::LinkChecker
     @http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
   end
 
-  def check_url(full_url)
+  def check_url(full_url, redirection: nil)
     full_url = to_addressable(full_url)
+    redirection ||= Redirection.new
 
     site = find_site(full_url)
     if site.blank?
-      return get_http(full_url)
+      return get_http(full_url, redirection: redirection)
     end
 
     # retrieve internal page
@@ -60,18 +71,16 @@ class Cms::LinkChecker
     when 200
       {
         code: 200,
-        redirection: 0
+        redirection: redirection.count
       }
     else
       {
         code: 0,
         message: I18n.t("errors.messages.link_check_failed_not_found"),
-        redirection: 0
+        redirection: redirection.count
       }
     end
   end
-
-  private
 
   def to_addressable(full_url)
     full_url = Addressable::URI.parse(full_url) unless full_url.is_a?(Addressable::URI)
@@ -90,9 +99,8 @@ class Cms::LinkChecker
     Cms::Site.without_deleted.find_by_domain(addressable_full_url.authority, addressable_full_url.path)
   end
 
-  def get_http(addressable_full_url)
+  def get_http(addressable_full_url, redirection:)
     progress_data_size = nil
-    redirection = 0
 
     begin
       opts = {
@@ -106,41 +114,50 @@ class Cms::LinkChecker
 
       Timeout.timeout(head_request_timeout) do
         OpenURI.open_uri(addressable_full_url.to_s, **opts) { |io| io.read }
+      ensure
+        redirection.visited.add(addressable_full_url.to_s)
       end
 
       return {
         code: 200,
-        redirection: redirection
+        redirection: redirection.count
       }
     rescue OpenURI::HTTPRedirect => e
-      if redirection >= max_redirection
+      if redirection.count >= max_redirection
         return {
           code: 0,
           message: I18n.t("errors.messages.link_check_failed_redirection"),
-          redirection: redirection
+          redirection: redirection.count + 1
         }
       else
-        redirection += 1
-        addressable_full_url = to_addressable(e.uri)
-        retry
+        redirect_to = e.uri.to_s
+        if redirection.visited.include?(redirect_to)
+          return {
+            code: 0,
+            message: I18n.t("errors.messages.link_check_failed_cyclic_redirection"),
+            redirection: redirection.count + 1
+          }
+        end
+
+        check_url(redirect_to, redirection: redirection.increment)
       end
     rescue Addressable::URI::InvalidURIError
       return {
         code: 0,
         message: I18n.t("errors.messages.link_check_failed_invalid_link"),
-        redirection: redirection
+        redirection: redirection.count
       }
     rescue OpenSSL::SSL::SSLError => e
       return {
         code: 0,
         message: I18n.t("errors.messages.link_check_failed_certificate_verify_failed"),
-        redirection: redirection
+        redirection: redirection.count
       }
     rescue Timeout::Error
       return {
         code: 0,
         message: I18n.t("errors.messages.link_check_failed_timeout"),
-        redirection: redirection
+        redirection: redirection.count
       }
     rescue => e
       if progress_data_size
@@ -158,7 +175,7 @@ class Cms::LinkChecker
       return {
         code: code,
         message: message,
-        redirection: redirection
+        redirection: redirection.count
       }
     end
   end

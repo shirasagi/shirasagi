@@ -146,11 +146,15 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
     let(:redirection_url3) { "http://redirection-3.example.jp/" }
     let(:redirection_url4) { "https://redirection-4.example.jp/" }
     let(:redirection_url5) { "http://redirection-5.example.jp/" }
+    let(:redirection_url6) { "http://redirection-6.example.jp/" }
     let(:redirection_self_url) { "https://redirection-self.example.jp/" }
+    let(:redirection_page) { "https://redirection-page.example.jp/" }
     let(:html) do
       <<~HTML.freeze
         <a href="#{redirection_url5}">#{redirection_url5}</a>
+        <a href="#{redirection_url6}">#{redirection_url6}</a>
         <a href="#{redirection_self_url}">#{redirection_self_url}</a>
+        <a href="#{redirection_page}">#{redirection_page}</a>
       HTML
     end
     let!(:article) { create :article_page, cur_node: node, layout: layout, html: html, state: "public" }
@@ -170,31 +174,69 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
         .to_return(status: 302, headers: { 'Location' => redirection_url3, 'Content-Type' => 'text/html; charset=utf-8' })
       stub_request(:get, /^#{::Regexp.escape(redirection_url5)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_url4, 'Content-Type' => 'text/html; charset=utf-8' })
+      stub_request(:get, /^#{::Regexp.escape(redirection_url6)}/)
+        .to_return(status: 302, headers: { 'Location' => redirection_url5, 'Content-Type' => 'text/html; charset=utf-8' })
+
       stub_request(:get, /^#{::Regexp.escape(redirection_self_url)}/)
         .to_return(status: 302, headers: { 'Location' => redirection_self_url, 'Content-Type' => 'text/html; charset=utf-8' })
+
+      stub_request(:get, /^#{::Regexp.escape(redirection_page)}/)
+        .to_return(status: 302, headers: { 'Location' => article.full_url, 'Content-Type' => 'text/html; charset=utf-8' })
+
+      @save_check_links = SS.config.cms.check_links.dup
+      SS.config.replace_value_at(:cms, :check_links, { "max_redirection" => 5 })
     end
 
     after do
       WebMock.reset!
       WebMock.allow_net_connect!
+
+      SS.config.replace_value_at(:cms, :check_links, @save_check_links)
     end
 
     it do
       checker = Cms::ContentLinkChecker.check(cur_site: site, cur_user: user, page: article, html: html)
-      expect(checker.extracted_urls.size).to eq 2
-      expect(checker.results.size).to eq 2
+      expect(checker.extracted_urls.size).to eq 4
+      expect(checker.results.size).to eq 4
       checker.results[checker.extracted_urls[redirection_url5]].tap do |result|
         expect(result[:code]).to eq 200
         expect(result[:message]).to be_blank
         expect(result[:redirection]).to eq 5
         expect(result[:normalized_url]).to eq redirection_url5
       end
-      checker.results[checker.extracted_urls[redirection_self_url]].tap do |result|
+      checker.results[checker.extracted_urls[redirection_url6]].tap do |result|
         expect(result[:code]).to eq 0
         expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_redirection")
-        expect(result[:redirection]).to eq 20
+        expect(result[:redirection]).to eq 6
+        expect(result[:normalized_url]).to eq redirection_url6
+      end
+      checker.results[checker.extracted_urls[redirection_self_url]].tap do |result|
+        expect(result[:code]).to eq 0
+        expect(result[:message]).to eq I18n.t("errors.messages.link_check_failed_cyclic_redirection")
+        expect(result[:redirection]).to eq 1
         expect(result[:normalized_url]).to eq redirection_self_url
       end
+      checker.results[checker.extracted_urls[redirection_page]].tap do |result|
+        expect(result[:code]).to eq 200
+        expect(result[:message]).to be_blank
+        expect(result[:redirection]).to eq 1
+        expect(result[:normalized_url]).to eq redirection_page
+      end
+
+      expect(a_request(:get, redirection_url0)).to have_been_made.times(1)
+      expect(a_request(:get, redirection_url1)).to have_been_made.times(2)
+      expect(a_request(:get, redirection_url2)).to have_been_made.times(2)
+      expect(a_request(:get, redirection_url3)).to have_been_made.times(2)
+      expect(a_request(:get, redirection_url4)).to have_been_made.times(2)
+      expect(a_request(:get, redirection_url5)).to have_been_made.times(2)
+      expect(a_request(:get, redirection_url6)).to have_been_made.times(1)
+
+      # 循環参照防御機構の働きにより 1 回しかアクセスしない
+      expect(a_request(:get, redirection_self_url)).to have_been_made.times(1)
+
+      expect(a_request(:get, redirection_page)).to have_been_made.times(1)
+      # article.full_url は自サイトなので自己解決する；HTTPアクセスは発生しない。
+      expect(a_request(:get, article.full_url)).to have_been_made.times(0)
     end
   end
 
