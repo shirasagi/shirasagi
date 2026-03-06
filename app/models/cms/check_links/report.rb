@@ -36,44 +36,70 @@ class Cms::CheckLinks::Report
     Cms::CheckLinks::Error::Node.and_report(self)
   end
 
-  def save_error(ref, urls)
-    return true if urls.blank?
+  def save_errors(errors)
+    error_full_urs = Set.new
+    errors.each { error_full_urs.add(_1.full_url) }
 
-    ref_url = File.join(site.full_root_url, ref) if ref[0] == "/"
+    referrers = errors.map(&:referrers)
+    referrers.flatten!
+    referrers.uniq!
+    map = referrers.group_by { _1.full_url }
 
-    filename = ref.sub(/^#{::Regexp.escape(site.url)}/, "")
-    filename.sub!(/\?.*$/, "")
-    filename += "index.html" if ref.match?(/\/$/)
+    # 例えば "/" と "/index.html" は同じページを指している場合がある。
+    # URL で名寄せした後、ページ・フォルダーで再び名寄せする
+    page_map = {}
+    node_map = {}
+    map.each do |full_url, sources|
+      filename = full_url.path.sub(/^#{::Regexp.escape(site.url)}/, "")
+      filename += "index.html" if filename.end_with?("/")
 
-    page = find_page(filename)
-    if page
-      ref = ref.sub(/\/$/, "/index.html")
-      cond = { site_id: site.id, report_id: self.id, ref: ref }
-      item = Cms::CheckLinks::Error::Page.find_or_initialize_by(cond)
-      item.ref_url = ref_url
+      page = find_page(filename)
+      if page
+        page_map[page] ||= []
+        page_map[page] += sources
+        next
+      end
+
+      node = find_node(filename)
+      next unless node
+
+      node_map[node] ||= []
+      node_map[node] += sources
+    end
+
+    page_map.each do |page, sources|
+      item = Cms::CheckLinks::Error::Page.new(site_id: site.id, report_id: self.id)
+      item.ref = page.url
+      item.ref_url = page.full_url
       item.page = page
       item.name = page.name
       item.filename = page.filename
-      item.urls = (item.urls.to_a + urls).uniq
+
+      links = sources.map(&:links)
+      links.flatten!
+
+      error_links = links.select { error_full_urs.include?(_1.full_url) }
+      item.urls = (item.urls.to_a + error_links.map { _1.href }).uniq
       item.group_ids = (item.group_ids.to_a + page.group_ids.to_a).uniq
-      return item.save
+      item.save
     end
 
-    node = find_node(filename)
-    if node
-      ref = ref.sub(/\/index\.html$/, "/")
-      cond = { site_id: site.id, report_id: self.id, ref: ref }
-      item = Cms::CheckLinks::Error::Node.find_or_initialize_by(cond)
-      item.ref_url = ref_url
+    node_map.each do |node, referrers|
+      item = Cms::CheckLinks::Error::Node.new(site_id: site.id, report_id: self.id)
+      item.ref = node.url
+      item.ref_url = node.full_url
       item.node = node
       item.name = node.name
       item.filename = node.filename
-      item.urls = (item.urls.to_a + urls).uniq
-      item.group_ids = (item.group_ids.to_a + node.group_ids.to_a).uniq
-      return item.save
-    end
 
-    false
+      links = sources.map(&:links)
+      links.flatten!
+
+      error_links = links.select { error_full_urs.include?(_1.full_url) }
+      item.urls = (item.urls.to_a + error_links.map { _1.href }).uniq
+      item.group_ids = (item.group_ids.to_a + node.group_ids.to_a).uniq
+      item.save
+    end
   end
 
   private

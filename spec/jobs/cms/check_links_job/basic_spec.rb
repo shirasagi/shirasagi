@@ -49,7 +49,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
   context "normal case" do
     it do
-      ss_perform_now described_class.bind(site_id: site.id)
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/3 errors/).to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
@@ -116,7 +116,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
       let!(:message_format) { "text" }
 
       it do
-        ss_perform_now described_class.bind(site_id: site.id)
+        expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/3 errors/).to_stdout
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
@@ -143,7 +143,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
       let!(:message_format) { "csv" }
 
       it do
-        ss_perform_now described_class.bind(site_id: site.id)
+        expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/3 errors/).to_stdout
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
@@ -167,8 +167,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
         expect(csv[0]).to eq %w(reference url)
         expect(csv[1]).to eq %W(#{site.url} #{site.url}notfound1.html)
-        expect(csv[2]).to eq %W(#{site.url}index.html #{site.url}notfound1.html)
-        expect(csv[3]).to eq %W(#{site.url}docs/page1.html #{site.url}notfound2.html)
+        expect(csv[3]).to eq %W(#{site.url}index.html #{site.url}notfound1.html)
+        expect(csv[2]).to eq %W(#{site.url}docs/page1.html #{site.url}notfound2.html)
       end
     end
 
@@ -176,7 +176,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
       let!(:message_format) { "text" }
 
       it do
-        ss_perform_now described_class.bind(site_id: site.id), email: email2
+        expect { ss_perform_now described_class.bind(site_id: site.id), email: email2 }.to output(/3 errors/).to_stdout
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|

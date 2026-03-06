@@ -17,18 +17,18 @@ class Cms::CheckLinks::IgnoreUrl
     I18n.t("cms.options.ignore_url_kind").map { |k, v| [v, k] }
   end
 
-  def match?(url)
-    return false if url.blank?
+  def match?(full_url)
+    return false if full_url.blank?
 
     case kind
     when "start_with"
-      url.start_with?(name)
+      full_url.origin.start_with?(name) || full_url.request_uri.start_with?(name) || full_url.to_s.start_with?(name)
     when "end_with"
-      url.end_with?(name)
+      full_url.origin.end_with?(name) || full_url.path.end_with?(name) || full_url.request_uri.end_with?(name) || full_url.to_s.end_with?(name)
     when "include"
-      url.include?(name)
+      full_url.to_s.include?(name)
     else
-      url == name
+      full_url == Addressable::URI.join(site.full_url, name)
     end
   end
 

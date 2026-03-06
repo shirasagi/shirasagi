@@ -1,35 +1,23 @@
 class Cms::CheckLinks::Errors
   include ActiveModel::Model
-  include Enumerable
 
-  attr_reader :errors, :base_url
+  attr_accessor :errors, :display_meta
 
-  def initialize(base_url, options = {})
-    @base_url = base_url
-    @display_meta = (options[:display_meta] == true)
-    @errors = {}
-  end
+  delegate :present?, :blank?, :any?, :empty?, to: :errors
 
-  delegate :each, :size, :present?, :empty?, to: :errors
-
-  def add_error(ref, url)
-    @errors[ref] ||= []
-    @errors[ref] << url
-  end
-
-  def display_meta?
-    @display_meta
+  def error_count
+    error_referrers.size
   end
 
   def to_message
-    msg = ["[#{size} errors]"]
-    errors.map do |ref, urls|
-      ref = File.join(base_url, ref) if ref[0] == "/"
-      msg << ref
-      msg << urls.map do |url|
-        meta = display_meta? ? " #{url.meta}" : ""
-        url = File.join(@base_url, url) if url[0] == "/"
-        "  - #{url}#{meta}"
+    msg = ["[#{error_count} errors]"]
+    error_referrers.map do |source|
+      msg << source.full_url.to_s
+
+      error_links = source.links.select { _1.status == :error }
+      msg << error_links.map do |link|
+        meta = display_meta ? " #{link.meta}" : ""
+        "  - #{link.full_url}#{meta}"
       end
     end
     msg.join("\n")
@@ -38,12 +26,25 @@ class Cms::CheckLinks::Errors
   def to_csv
     csv = CSV.generate do |data|
       data << %w(reference url)
-      errors.each do |ref, urls|
-        urls.each do |url|
-          data << [ref, url]
+      error_referrers.each do |source|
+        error_links = source.links.select { _1.status == :error }
+        error_links.each do |link|
+          data << [source.full_url.request_uri, link.href]
         end
       end
     end
     SS::Csv::UTF8_BOM + csv
+  end
+
+  private
+
+  def error_referrers
+    @error_referrers ||= begin
+      error_referrers = errors.map(&:referrers)
+      error_referrers.flatten!
+      error_referrers.uniq!
+      error_referrers.sort_by!(&:sequence)
+      error_referrers
+    end
   end
 end

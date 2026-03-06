@@ -6,6 +6,43 @@ require 'nkf'
 class Cms::Agents::Tasks::LinksController < ApplicationController
   before_action :set_params
 
+  class Source
+    include ActiveModel::Model
+
+    attr_accessor :full_url, :links, :referrers, :status
+    attr_reader :sequence
+
+    def initialize(*args, **kwargs)
+      super
+
+      @sequence = self.class.next_sequence
+      @links ||= []
+      @referrers ||= []
+      @status ||= :to_be_examined
+    end
+
+    def self.next_sequence
+      @next_sequence ||= 1
+      ret = @next_sequence
+      @next_sequence += 1
+      ret
+    end
+
+    def self.new_from_site(site)
+      full_url = Addressable::URI.parse(site.full_url)
+      full_url = full_url.normalize
+      new(full_url: full_url)
+    end
+  end
+
+  Link = Data.define(:source, :href, :offset, :inner_yield) do
+    delegate :full_url, :status, to: :source
+
+    def meta
+      { offset: offset, inner_yield: inner_yield }
+    end
+  end
+
   private
 
   def set_params
@@ -15,7 +52,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     @_ignore_urls ||= Cms::CheckLinks::IgnoreUrl.site(@site).to_a
   end
 
-  def create_report
+  def create_report(errors)
     @report_max_age = (SS.config.cms.check_links["report_max_age"].presence || 5).to_i
     return if @report_max_age <= 0
 
@@ -28,10 +65,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
     @task.log "# #{@report.name} created"
 
-    @errors.map do |ref, urls|
-      next if @report.save_error(ref, urls.select(&:inner_yield))
-      @task.log "Error : Failed to save Cms::CheckLinks::Error ref:#{ref} (#{urls.join(",")})"
-    end
+    @report.save_errors(errors)
 
     # destroy old reports
     report_ids = Cms::CheckLinks::Report.site(@site).limit(@report_max_age).pluck(:id)
@@ -49,41 +83,57 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @base_url = @site.full_url.sub(/^(https?:\/\/.*?\/).*/, '\\1')
 
-    @urls    = { Cms::CheckLinks::RefString.new(@site.url) => %w(Site) }
-    @results = {}
-    @errors  = Cms::CheckLinks::Errors.new(@base_url, display_meta: @display_meta.present?)
+    @queue = [ Source.new_from_site(@site) ]
+    @full_url_to_source = @queue.index_by { _1.full_url.to_s }
 
     @html_request_timeout = SS.config.cms.check_links["html_request_timeout"] rescue 10
     @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
     @check_mobile = SS.config.cms.check_links["check_mobile_path"] != false
 
     (10*1000*1000).times do |i|
-      break if @urls.blank?
-      url, refs = @urls.shift
-      # @task.log url
-      check_url(url, refs)
+      break if @queue.blank?
+
+      source = @queue.shift
+      next if source.status != :to_be_examined
+
+      check_url(source)
       @task.count
     end
 
-    @task.log @errors.to_message
+    errors = @full_url_to_source.values.select { _1.status == :error }
+    error_formatter = Cms::CheckLinks::Errors.new(errors: errors, display_meta: @display_meta.present?)
+    @task.log error_formatter.to_message
 
     if to_email.present?
-      Cms::Mailer.link_errors(@site, to_email, @errors).deliver_now
+      Cms::Mailer.link_errors(@site, to_email, error_formatter).deliver_now
     end
 
-    create_report
+    create_report(errors)
     head :ok
   end
 
   # Checks the url.
-  def check_url(url, refs)
-    Rails.logger.info("#{url}: check by referer: #{refs.join(", ")}")
-    uri = ::Addressable::URI.parse(url)
-    if uri.path.match?(/(\/|\.html?)$/)
-      check_html(url, refs)
-    else
-      check_file(url, refs)
+  def check_url(source)
+    Rails.logger.info { "#{source.full_url}: check by referer: #{source.referrers.map { _1.full_url.to_s }.join(", ")}" }
+    result = checker.check_url(source.full_url)
+    unless result.success?
+      source.status = :error
+      return
     end
+
+    source.status = :success
+
+    # HTML 以外ではリンクを抽出しない
+    return unless result.content_mime_type.html?
+
+    # 他サイトの場合、HTMLからリンクを抽出しない
+    return unless same_domain_site_path?(source)
+
+    # モバイルページの場合、モバイルチェックが無効ならHTMLからリンクを抽出しない
+    return if !@check_mobile && mobile_url?(source)
+
+    # リンク抽出
+    extract_links(source, result.content)
   end
 
   def to_email
@@ -92,56 +142,29 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   private
 
-  # Adds the log with valid url
-  def add_valid_url(url, refs)
-    @results[url] = 1
+  def checker
+    @checker ||= Cms::LinkChecker.new(root_url: @base_url, fetch_content: true)
   end
 
-  # Add the log with invalid url
-  def add_invalid_url(url, refs)
-    @results[url] = 0
+  def same_domain_site_path?(source)
+    return false unless @site.domains.include?(source.full_url.authority)
 
-    refs.each do |ref|
-      @errors.add_error(ref, url)
-    end
+    site = @site.same_domain_site_from_path(source.full_url.path)
+    return false unless site
+
+    site.id == @site.id
   end
 
-  def same_domain_site_path?(path)
-    site = @site.same_domain_site_from_path(path)
-    site && site.id == @site.id
-  end
-
-  def mobile_url?(path)
+  def mobile_url?(source)
     return false if @site.mobile_disabled?
-    return false if !path.match?(/^#{@site.mobile_url}/)
+    return false if !source.full_url.path.match?(/^#{@site.mobile_url}/)
     true
   end
 
-  # Checks the html url.
-  def check_html(url, refs)
-    file = get_internal_file(url)
-    html = file ? Fs.read(file) : get_http(url)
-
-    if html.nil?
-      add_invalid_url(url, refs)
-      return
-    end
-
-    add_valid_url(url, refs)
-    return if url[0] != "/"
-
-    # self site path
-    if !same_domain_site_path?(url)
-      return
-    end
-
-    # self site and mobile path
-    if !@check_mobile && mobile_url?(url)
-      return
-    end
-
+  # リンク抽出
+  def extract_links(source, html)
     begin
-      html = NKF.nkf "-w", html
+      html = NKF.nkf("-w", html)
 
       # scan layout_yield offset
       html.scan(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/m)
@@ -157,126 +180,41 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         href_start, href_end = offset
         inner_yield = (href_start > yield_start && href_end < yield_end)
 
-        next_url = m[0]
-        next_url = next_url.sub(/^#{::Regexp.escape(@base_url)}/, "/")
-        next_url = next_url.sub(/#.*/, "")
+        extracted_href = m[0]
+        extracted_full_url = Addressable::URI.join(source.full_url, extracted_href)
+        extracted_full_url = extracted_full_url.normalize
+        next unless valid_url?(extracted_full_url)
 
-        next unless valid_url(next_url)
-
-        internal = (next_url[0] != "/" && next_url !~ /^https?:/)
-        next_url = File.expand_path next_url, url.sub(/[^\/]*?$/, "") if internal
-        next_url = Addressable::URI.encode(next_url) if next_url.match?(/[^-_.!~*'()\w;\/?:@&=+$,%#]/)
-        next_url = Cms::CheckLinks::RefString.new(next_url, offset: offset, inner_yield: inner_yield)
-
-        if @results[next_url] == 1
-          next
-        elsif @results[next_url] == 0
-          add_invalid_url(next_url, [url])
+        extracted_source = @full_url_to_source[extracted_full_url.to_s]
+        if extracted_source.present?
+          extracted_source.referrers << WeakRef.new(source)
         else
-          @urls[next_url] ||= []
-          @urls[next_url] << url
+          extracted_source = Source.new(full_url: extracted_full_url)
+          extracted_source.referrers << WeakRef.new(source)
+
+          @full_url_to_source[extracted_full_url.to_s] = extracted_source
+          @queue << extracted_source
         end
+
+        link = Link.new(source: WeakRef.new(extracted_source), href: extracted_href, offset: offset, inner_yield: inner_yield)
+        source.links << link
       end
     rescue => e
-      Rails.logger.error(e.message)
-      add_invalid_url(url, refs)
+      Rails.logger.error { e.message }
     end
   end
 
-  def valid_url(url)
-    return false if url.blank?
-    return false if url.match?(/\.(css|js|json)(\?\d+)?$/)
-    return false if url.match?(/\.p\d+\.html$/)
-    return false if url.match?(/\/2\d{7}\.html$/) # calendar
-    return false if url =~ /^\w+:/ && url !~ /^http/ # other scheme
-    return false if url.match?(/\/https?:/) # b.hatena
-    return false if url.match?(/\/\/twitter\.com/) # twitter.com
-    return false if ignore_urls.find { |ignore_url| ignore_url.match?(url) }
+  def valid_url?(full_url)
+    return false if full_url.blank?
+    return false if full_url.path.match?(/\.(css|js|json)$/i)
+    return false if full_url.path.match?(/\.p\d+\.html$/i)
+    return false if full_url.path.match?(/\/2\d{7}\.html$/i) # calendar
+    return false if %w(http https).none? { full_url.scheme.casecmp(_1) == 0 } # other scheme
+    str_url = full_url.to_s
+    return false if str_url.match?(/\/https?:/) # b.hatena
+    return false if str_url.match?(/\/\/twitter\.com/) # twitter.com
+
+    return false if ignore_urls.any? { |ignore_url| ignore_url.match?(full_url) }
     true
-  end
-
-  # Checks the file url.
-  def check_file(url, refs)
-    if get_internal_file(url)
-      add_valid_url(url, refs)
-    elsif check_head(url) == false
-      add_invalid_url(url, refs)
-    else
-      add_valid_url(url, refs)
-    end
-  end
-
-  # Returns the internal file.
-  def get_internal_file(url)
-    return nil if url.match?(/^https?:/)
-
-    url  = url.sub(/\?.*/, "")
-    url  = Addressable::URI.unencode(url)
-    file = "#{@site.root_path}#{url}"
-    file = File.join(file, "index.html") if Fs.directory?(file)
-    Fs.file?(file) ? file : nil
-  end
-
-  # Returns the HTML response with HTTP request.
-  def get_http(url)
-    http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-
-    redirection = 0
-    max_redirection = SS.config.cms.check_links["max_redirection"].to_i
-
-    if url.match?(/^\/\//)
-      url = @base_url.sub(/\/\/.*$/, url)
-    elsif url[0] == "/"
-      url = File.join(@base_url, url)
-    end
-
-    begin
-      Timeout.timeout(@html_request_timeout) do
-        data = []
-        ::URI.open(url, proxy: true, redirect: false, http_basic_authentication: http_basic_authentication) do |f|
-          f.each_line { |line| data << line }
-        end
-        return data.join
-      end
-    rescue OpenURI::HTTPRedirect => e
-      return if redirection >= max_redirection
-      redirection += 1
-      url = e.uri
-      retry
-    rescue Timeout::Error
-      nil
-    rescue => e
-      nil
-    end
-  end
-
-  # Checks the existence with HEAD request.
-  def check_head(url)
-    http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-
-    redirection = 0
-    max_redirection = SS.config.cms.check_links["max_redirection"].to_i
-
-    if url.match?(/^\/\//)
-      url = @base_url.sub(/\/\/.*$/, url)
-    elsif url[0] == "/"
-      url = File.join(@base_url, url)
-    end
-
-    begin
-      Timeout.timeout(@head_request_timeout) do
-        ::URI.open url, proxy: true, redirect: false, http_basic_authentication: http_basic_authentication, progress_proc: ->(size) { raise "200" }
-      end
-      false
-    rescue OpenURI::HTTPRedirect => e
-      return false if redirection >= max_redirection
-      redirection += 1
-      url = e.uri
-      retry
-    rescue Timeout::Error
-      return false
-    rescue => e
-      return e.to_s == "200"
-    end
   end
 end
