@@ -11,6 +11,8 @@ class Cms::ContentLinkCheckerComponent < ApplicationComponent
       "success"
     when :nofollow
       "nofollow"
+    when :skip
+      "skip"
     else
       "failure"
     end
@@ -22,6 +24,8 @@ class Cms::ContentLinkCheckerComponent < ApplicationComponent
       tag.span t("errors.messages.link_check_success"), class: "status-label success"
     when :nofollow
       tag.span "[nofollow]", class: "status-label nofollow"
+    when :skip
+      tag.span "[skip]", class: "status-label skip"
     else
       tag.span t("errors.messages.link_check_failure"), class: "status-label failure"
     end
