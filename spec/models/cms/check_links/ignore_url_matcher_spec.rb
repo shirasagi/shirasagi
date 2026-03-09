@@ -324,9 +324,11 @@ describe Cms::CheckLinks::IgnoreUrlMatcher, type: :model, dbscope: :example do
     subject! { described_class.new(cur_site: site) }
 
     it do
-      # expect(subject.match?(Addressable::URI.parse("https://twitter.com/share"))).to be_truthy
-      # expect(subject.match?(Addressable::URI.parse("https://b.hatena.ne.jp/entry/https://demo.ss-proj.org/docs/page30.html"))).to be_truthy
-      expect(subject.match?(Addressable::URI.parse("https://b.hatena.ne.jp/entry/#{CGI.escape("https://demo.ss-proj.org/docs/page30.html")}"))).to be_truthy
+      expect(subject.match?(Addressable::URI.parse("https://twitter.com/share"))).to be_truthy
+      url = "https://b.hatena.ne.jp/entry/https://demo.ss-proj.org/docs/page30.html"
+      expect(subject.match?(Addressable::URI.parse(url))).to be_truthy
+      url = "https://b.hatena.ne.jp/entry/#{CGI.escape("https://demo.ss-proj.org/docs/page30.html")}"
+      expect(subject.match?(Addressable::URI.parse(url))).to be_truthy
     end
   end
 end
