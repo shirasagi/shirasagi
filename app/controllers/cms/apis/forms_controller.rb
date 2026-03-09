@@ -103,11 +103,12 @@ class Cms::Apis::FormsController < ApplicationController
     end
 
     hash = {}
-    @page.column_link_errors.map do |url, result|
-      hash[url] = result.as_json.tap do
-        _1["code"] = result.success? ? 200 : 0
-        _1["message"] = result.message
-      end
+    @page.column_link_errors.each do |url, result|
+      json = result.as_json
+      json["code"] = result.success? ? 200 : 0
+      json["message"] = result.message
+
+      hash[url] = json
     end
     render json: hash.to_json, content_type: json_content_type
   end
