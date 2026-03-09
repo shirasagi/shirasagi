@@ -87,6 +87,8 @@ class Cms::LinkChecker
     contents_env[::Rack::REQUEST_METHOD] = ::Rack::GET
     contents_env[::Rack::REQUEST_PATH] = full_url.path
     contents_env[::Rack::QUERY_STRING] = full_url.query || ""
+    contents_env[::Rack::RACK_ERRORS] = $stderr
+    #contents_env[::Rack::RACK_INPUT] = StringIO.new("")
     contents_env[::Rack::Request::HTTP_X_FORWARDED_HOST] = site.domain
     contents_env["ss.site"] = site
 
@@ -101,6 +103,9 @@ class Cms::LinkChecker
     Result.error(error_code: :link_check_failed_unauthorized, redirection_count: redirection.count)
   rescue SS::NotFoundError
     Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
+  rescue => e
+    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    raise
   end
 
   def to_addressable(full_url)

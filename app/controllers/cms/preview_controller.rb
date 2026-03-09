@@ -141,6 +141,8 @@ class Cms::PreviewController < ApplicationController
     @contents_env[::Rack::PATH_INFO] = @cur_path
     @contents_env[::Rack::REQUEST_METHOD] = ::Rack::GET
     @contents_env[::Rack::REQUEST_PATH] = @cur_path
+    @contents_env[::Rack::RACK_ERRORS] = $stderr
+    #@contents_env[::Rack::RACK_INPUT] = StringIO.new("")
     @contents_env[::Rack::Request::HTTP_X_FORWARDED_HOST] = @cur_site.domain
     # @contents_env[::Rack::SCRIPT_NAME]
     # @contents_env[::Rack::QUERY_STRING]
