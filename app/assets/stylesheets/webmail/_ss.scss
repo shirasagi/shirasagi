@@ -186,10 +186,10 @@ li.webmail-accounts {
     visibility: visible;
   }
   position: sticky;
-  top: 0;
-  background: #f2f2f2;
-  padding: 5px;
   z-index: 10;
+  top: 0;
+  padding: 5px;
+  background: #f2f2f2;
 }
 
 @media print {
