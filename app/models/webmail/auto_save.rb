@@ -3,7 +3,7 @@ class Webmail::AutoSave
   include SS::Reference::User
   include Webmail::Addon::MailFile
 
-  MAX_RESTORABLE = 10.freeze
+  MAX_RESTORABLE = 10
   AUTO_SAVE_KEYWORD = "$SSautoSave".freeze
 
   attr_accessor :imap
@@ -40,11 +40,11 @@ class Webmail::AutoSave
   default_scope -> { order_by(update: -1) }
 
   def in_request_mdn
-    false
+    nil
   end
 
   def in_request_dsn
-    false
+    nil
   end
 
   def message_id

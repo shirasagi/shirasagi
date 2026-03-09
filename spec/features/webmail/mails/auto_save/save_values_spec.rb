@@ -98,7 +98,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[subject]", with: ""
           end
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"1\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"1\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -119,7 +119,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[subject]", with: ""
           end
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"2\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"2\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -139,7 +139,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[subject]", with: item_subject
           end
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"3\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"3\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -159,7 +159,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[text]", with: item_text
           end
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"4\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"4\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -177,7 +177,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           # auto save "file_ids"
           ss_select_file item_file, addon: "#addon-webmail-agents-addons-mail_file"
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"5\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"5\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -275,7 +275,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[subject]", with: ""
           end
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"1\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"1\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -296,7 +296,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[subject]", with: ""
           end
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"2\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"2\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -316,7 +316,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in "item[subject]", with: item_subject
           end
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"3\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"3\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -338,7 +338,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
             fill_in_ckeditor "item[html]", with: item_html
           end
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"4\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"4\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
@@ -356,7 +356,7 @@ describe "webmail_mails", type: :feature, dbscope: :example, imap: true, js: tru
           # auto save "file_ids"
           ss_select_file item_file, addon: "#addon-webmail-agents-addons-mail_file"
           page.execute_script("window.WEBMAIL_AutoSave();")
-          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"5\"]");
+          expect(page).to have_css(".webmail-auto-save-notice[data-count=\"5\"]")
 
           expect(Webmail::AutoSave.count).to eq 1
           auto_save = Webmail::AutoSave.first
