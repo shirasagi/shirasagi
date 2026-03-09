@@ -1,50 +1,74 @@
 <%
+services = @cur_part.sort_sns_share_services
+return "" if services.blank?
 
-return "" if @cur_part.sort_sns_share_services.blank?
 url = File.join(@cur_site.full_url, @cur_main_path)
-
+facebook_js_needed = false
 %>
 
 <div class="cms-sns_share">
 
-<% if @cur_part.sort_sns_share_services.select { |v| v =~ /fb_/ }.present? %>
-<div id="fb-root"></div>
-<script async defer crossorigin="anonymous" src="<%== SS.facebook_sdk_js_url(version: @cur_site.effective_facebook_api_version, app_id: @cur_site.facebook_app_id.presence) %>"></script>
-<% end %>
-
-<% @cur_part.sort_sns_share_services.each do |service| %>
-  <% if service == "fb_share" %>
+<% services.each do |service_name, service_type| %>
+  <% if service_name == "fb_share" %>
     <div class="site fb fb-share">
-      <div class="fb-share-button" data-href="<%= url %>" data-layout="button_count" data-size="small">
-        <%=
-          link_to t("cms.sns_share.fb_share_button"), SS.facebook_sharer_url(u: url), class: "fb-xfbml-parse-ignore", target: "_blank", rel: "noopener"
-        %>
-      </div>
+      <% if service_type == "link_only" %>
+        <%= link_to t("cms.sns_share.fb_share_button"), SS.facebook_sharer_url(u: url, src: nil), class: "#{service_name}_link", target: "_blank", rel: "noopener" %>
+      <% else %>
+        <% facebook_js_needed = true %>
+        <div class="fb-share-button" data-href="<%= url %>" data-layout="button_count" data-size="small">
+          <%=
+            link_to t("cms.sns_share.fb_share_button"), SS.facebook_sharer_url(u: url), class: "fb-xfbml-parse-ignore", target: "_blank", rel: "noopener"
+          %>
+        </div>
+      <% end %>
     </div>
 
-  <% elsif service == "twitter" %>
+  <% elsif service_name == "twitter" %>
     <div class="site twitter">
-      <a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= url %>"><%= t "cms.sns_share.tweet" %></a>
-      <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-      if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
-      fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      <% if service_type == "link_only" %>
+        <%=
+          params = { url: url, text: (@cur_page || @cur_node).try(:name) }
+          link_to t("cms.sns_share.tweet"), "https://x.com/intent/tweet?#{params.to_query}", class: "#{service_name}_link", target: "_blank", rel: "noopener"
+        %>
+      <% else %>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= url %>"><%= t "cms.sns_share.tweet" %></a>
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+        if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+        fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
+      <% end %>
     </div>
 
-  <% elsif service == "hatena" %>
+  <% elsif service_name == "hatena" %>
     <div class="site hatena">
-      <a href="https://b.hatena.ne.jp/entry/<%= url %>" class="hatena-bookmark-button"
-        data-hatena-bookmark-layout="standard-balloon"
-        data-hatena-bookmark-lang="ja" title="<%= t "cms.sns_share.hatena_add" %>">
-        <img src="//b.st-hatena.com/images/entry-button/button-only@2x.png"
-          alt="<%= t "cms.sns_share.hatena_add" %>" width="20" height="20" style="border: none;" /></a>
-      <script type="text/javascript" src="//b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+      <% if service_type == "link_only" %>
+        <%= link_to t("cms.sns_share.hatena"), "https://b.hatena.ne.jp/entry/#{CGI.escape(url)}", class: "#{service_name}_link", target: "_blank", rel: "noopener" %>
+      <% else %>
+        <a href="https://b.hatena.ne.jp/entry/<%= url %>" class="hatena-bookmark-button"
+          data-hatena-bookmark-layout="standard-balloon"
+          data-hatena-bookmark-lang="ja" title="<%= t "cms.sns_share.hatena_add" %>">
+          <img src="//b.st-hatena.com/images/entry-button/button-only@2x.png"
+            alt="<%= t "cms.sns_share.hatena_add" %>" width="20" height="20" style="border: none;" /></a>
+        <script type="text/javascript" src="//b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+      <% end %>
     </div>
 
-  <% elsif service == "line" %>
+  <% elsif service_name == "line" %>
     <div class="site line">
-      <div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja" data-url="<%= url %>"></div>
-      <script src="//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" async="async" defer="defer" ></script>
+      <% if service_type == "link_only" %>
+        <%=
+          params = [ (@cur_page || @cur_node).try(:name), url ].join("\r\n")
+          link_to t("cms.sns_share.line"), "https://line.me/R/msg/text/?#{CGI.escape(params)}", class: "#{service_name}_link", target: "_blank", rel: "noopener"
+        %>
+      <% else %>
+        <div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja" data-url="<%= url %>"></div>
+        <script src="//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" async="async" defer="defer" ></script>
+      <% end %>
     </div>
   <% end %>
+<% end %>
+
+<% if facebook_js_needed %>
+<div id="fb-root"></div>
+<script async defer crossorigin="anonymous" src="<%== SS.facebook_sdk_js_url(version: @cur_site.effective_facebook_api_version, app_id: @cur_site.facebook_app_id.presence) %>"></script>
 <% end %>
 </div>
