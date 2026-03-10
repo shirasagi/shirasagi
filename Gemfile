@@ -33,7 +33,6 @@ gem 'mongo_session_store'
 # Assets
 gem 'jquery-form-rails'
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
 
 # Additional (alphabetical order)
 gem 'addressable', require: 'addressable/uri'
