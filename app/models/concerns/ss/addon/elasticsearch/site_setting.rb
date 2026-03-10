@@ -75,7 +75,7 @@ module SS::Addon::Elasticsearch::SiteSetting
       path.slice!(0) if path.start_with?('/')
       begin
         es_client.delete(index: index_name, type: index_type, id: path)
-      rescue Elasticsearch::Transport::Transport::Errors::NotFound => e
+      rescue Elastic::Transport::Transport::Errors::NotFound => e
         Rails.logger.debug { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       end
     end
