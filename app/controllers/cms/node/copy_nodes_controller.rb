@@ -19,7 +19,7 @@ class Cms::Node::CopyNodesController < ApplicationController
   end
 
   def job_options
-    params.require(:item).permit(:target_node_name, :target_node_filename)
+    { target_node_name: @item.target_node_name, target_node_filename: @item.target_node_filename }
   end
 
   def task_name
@@ -31,7 +31,7 @@ class Cms::Node::CopyNodesController < ApplicationController
   end
 
   def get_params
-    params.require(:item).permit(@model.permitted_fields).merge({})
+    params.require(:item).permit(@model.permitted_fields)
   end
 
   public
