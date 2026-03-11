@@ -4,6 +4,32 @@ class Cms::ContentLinkChecker
   attr_accessor :cur_site, :cur_user, :page, :html
   attr_reader :extracted_urls, :results
 
+  Result = Data.define(:result, :message, :redirection_count, :normalized_url) do
+    def self.from(result)
+      case result
+      when Cms::LinkChecker::Result
+        new(
+          result: result.success? ? :success : :error,
+          message: result.message, redirection_count: result.redirection_count,
+          normalized_url: nil)
+      else
+        "Unsupported Type: #{result.class.name}"
+      end
+    end
+
+    def self.success(redirection_count: 0, normalized_url: nil)
+      new(result: :success, message: nil, redirection_count: redirection_count, normalized_url: normalized_url)
+    end
+
+    def self.nofollow(redirection_count: 0, normalized_url: nil)
+      new(result: :nofollow, message: nil, redirection_count: redirection_count, normalized_url: normalized_url)
+    end
+
+    def self.error(message:, redirection_count: 0, normalized_url: nil)
+      new(result: :error, message: message, redirection_count: redirection_count, normalized_url: normalized_url)
+    end
+  end
+
   def initialize(attributes = nil)
     super
     @extracted_urls = {}
@@ -28,24 +54,20 @@ class Cms::ContentLinkChecker
       next if results[full_url]
 
       if rel && rel.include?("nofollow") || ss_rel && ss_rel.include?("nofollow")
-        result = { code: "nofollow" }
+        result = Result.nofollow
       else
         if link.start_with?("#")
           result = check_fragment(link)
         else
-          result = check_url(full_url)
+          result = Result.from(check_url(full_url))
         end
       end
 
-      unless result.key?(:normalized_url)
-        result[:normalized_url] = full_url
-      end
+      result = result.with(normalized_url: full_url)
       results[full_url] = result
     rescue Addressable::URI::InvalidURIError
       extracted_urls[link] = link
-      results[link] = {
-        code: 0, message: I18n.t("errors.messages.link_check_failed_invalid_link")
-      }
+      results[link] = Result.error(message: I18n.t("errors.messages.link_check_failed_invalid_link"))
     end
   end
 
@@ -75,9 +97,9 @@ class Cms::ContentLinkChecker
   def check_fragment(fragment)
     # if document.css(fragment).present?
     if document.at_css("*[id='#{fragment[1..-1]}']").present?
-      { code: 200 }
+      Result.success
     else
-      { code: 0, message: I18n.t('errors.template.no_links') }
+      Result.error(message: I18n.t('errors.template.no_links'))
     end
   end
 

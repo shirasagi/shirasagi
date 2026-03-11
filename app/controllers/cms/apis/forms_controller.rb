@@ -102,6 +102,14 @@ class Cms::Apis::FormsController < ApplicationController
       return
     end
 
-    render json: @page.column_link_errors.to_json, content_type: json_content_type
+    hash = {}
+    @page.column_link_errors.each do |url, result|
+      json = result.as_json
+      json["code"] = result.success? ? 200 : 0
+      json["message"] = result.message
+
+      hash[url] = json
+    end
+    render json: hash.to_json, content_type: json_content_type
   end
 end

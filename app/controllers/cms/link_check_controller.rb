@@ -27,11 +27,13 @@ class Cms::LinkCheckController < ApplicationController
     url = url.values if url.is_a?(Hash)
     url.each do |link|
       next if results[link]
-      results[link] = checker.check_url(link)
+      result = checker.check_url(link)
+      results[link] = result.as_json
+      results[link]["code"] = result.success? ? 200 : 0
+      results[link]["message"] = result.message
     end
 
     respond_to do |format|
-      format.json { render json: results.to_json }
     end
   end
 end

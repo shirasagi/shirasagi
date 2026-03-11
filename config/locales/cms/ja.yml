@@ -1965,6 +1965,7 @@ ja:
       link_check_failed_unauthorized: リンク先の内容を取得できませんでした。（認証がかかっています）
       link_check_failed_not_found: リンク先の内容を取得できませんでした。
       link_check_failed_redirection: リンク先のリダイレクトが多すぎる為、内容を取得できませんでした。
+      link_check_failed_cyclic_redirection: リンク先のリダイレクトが循環しています。
       mobile_size_check_success: 成功
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。
