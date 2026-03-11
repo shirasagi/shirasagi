@@ -164,27 +164,37 @@ class Gws::StaffRecord::User
 
   def export_convert_item(item, data)
     # multi_section
-    data[export_field_index(:multi_section)] = item.label(:multi_section)
+    idx = export_field_index(:multi_section)
+    data[idx] = item.label(:multi_section)
     # title_ids
-    data[export_field_index(:title_ids)] = item.titles.pluck(:code).join("\n")
+    idx = export_field_index(:title_ids)
+    data[idx] = item.titles.pluck(:code).join("\n")
     # occupation_ids
-    data[export_field_index(:occupation_ids)] = item.occupations.pluck(:code).join("\n")
+    idx = export_field_index(:occupation_ids)
+    data[idx] = item.occupations.pluck(:code).join("\n")
     # staff_records_view
-    data[export_field_index(:staff_records_view)] = item.label(:staff_records_view)
+    idx = export_field_index(:staff_records_view)
+    data[idx] = item.label(:staff_records_view)
     # divide_duties_view
-    data[export_field_index(:divide_duties_view)] = item.label(:divide_duties_view)
+    idx = export_field_index(:divide_duties_view)
+    data[idx] = item.label(:divide_duties_view)
 
     # readable_setting_range
-    data[export_field_index(:readable_setting_range)] = item.label(:readable_setting_range)
+    idx = export_field_index(:readable_setting_range)
+    data[idx] = item.label(:readable_setting_range)
     # readable_group_ids
-    data[export_field_index(:readable_group_ids)] = Gws::Group.site(@cur_site).in(id: data[18]).active.pluck(:name).join("\n")
+    idx = export_field_index(:readable_group_ids)
+    data[idx] = Gws::Group.site(@cur_site).in(id: data[idx]).active.pluck(:name).join("\n")
     # readable_member_ids
-    data[export_field_index(:readable_member_ids)] = Gws::User.site(@cur_site).in(id: data[19]).active.pluck(:uid).join("\n")
+    idx = export_field_index(:readable_member_ids)
+    data[idx] = Gws::User.site(@cur_site).in(id: data[idx]).active.pluck(:uid).join("\n")
 
     # group_ids
-    data[export_field_index(:group_ids)] = Gws::Group.site(@cur_site).in(id: data[20]).active.pluck(:name).join("\n")
+    idx = export_field_index(:group_ids)
+    data[idx] = Gws::Group.site(@cur_site).in(id: data[idx]).active.pluck(:name).join("\n")
     # user_ids
-    data[export_field_index(:user_ids)] = Gws::User.site(@cur_site).in(id: data[21]).active.pluck(:uid).join("\n")
+    idx = export_field_index(:user_ids)
+    data[idx] = Gws::User.site(@cur_site).in(id: data[idx]).active.pluck(:uid).join("\n")
 
     data
   end
