@@ -2,11 +2,7 @@
 //= require jquery-migrate/src/migratemute.js
 //= require jquery-migrate/dist/jquery-migrate.js
 //= require jquery_ujs
-//= require jquery-ui/widgets/sortable
-//= require jquery-ui/widgets/draggable
-//= require jquery-ui/widgets/droppable
-//= require jquery-ui/widgets/autocomplete
-//= require jquery-ui/widgets/tooltip
+//= require jquery-ui/dist/jquery-ui.js
 //= require js-cookie/dist/js.cookie.js
 //= require jquery-form/src/jquery.form.js
 //= require jquery-datetimepicker/build/jquery.datetimepicker.full.js
@@ -109,7 +105,6 @@
 //= require cms/lib/michecker
 //= require cms/lib/condition_forms
 //= require ss/lib/usage
-//= require cms/preview/jquery-ui
 //= require datatables.net/js/jquery.dataTables.js
 
 //#
