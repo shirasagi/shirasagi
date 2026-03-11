@@ -28,8 +28,9 @@ class Cms::Elasticsearch::PageConverter
     doc[:state] = item.state
     doc[:category_ids] = item.category_ids
     doc[:categories] = item.categories.pluck(:name)
-    doc[:group_ids] = item.contact_sub_groups.pluck(:id).push(item.contact_group_id).uniq.compact
-    doc[:groups] = item.contact_sub_groups.pluck(:name).push(item.contact_group.try(:name)).uniq.compact
+    contact_sub_groups = item.try(:contact_sub_groups) || []
+    doc[:group_ids] = contact_sub_groups.pluck(:id).push(item.try(:contact_group_id)).uniq.compact
+    doc[:groups] = contact_sub_groups.pluck(:name).push(item.try(:contact_group).try(:name)).uniq.compact
     doc[:group_names] = doc[:groups].map { |n| n.split('/') }.flatten.uniq
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = item.updated.try(:iso8601)
@@ -128,8 +129,9 @@ class Cms::Elasticsearch::PageConverter
     doc[:state] = item.state
     doc[:category_ids] = item.category_ids
     doc[:categories] = item.categories.pluck(:name)
-    doc[:group_ids] = item.contact_sub_groups.pluck(:id).push(item.contact_group_id).uniq.compact
-    doc[:groups] = item.contact_sub_groups.pluck(:name).push(item.contact_group.try(:name)).uniq.compact
+    contact_sub_groups = item.try(:contact_sub_groups) || []
+    doc[:group_ids] = contact_sub_groups.pluck(:id).push(item.try(:contact_group_id)).uniq.compact
+    doc[:groups] = contact_sub_groups.pluck(:name).push(item.try(:contact_group).try(:name)).uniq.compact
     doc[:group_names] = doc[:groups].map { |n| n.split('/') }.flatten.uniq
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = file.updated.try(:iso8601)
