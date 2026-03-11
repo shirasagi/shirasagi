@@ -200,7 +200,8 @@ module SS
 
   # rubocop:disable Naming/MethodParameterName
   def facebook_sharer_url(u:, src: "sdkpreparse")
-    params = { u: u, src: src }
+    params = { u: u }
+    params[:src] = src if src
     "#{FACEBOOK_SHARER_URL}?#{params.to_query}"
   end
   # rubocop:enable Naming/MethodParameterName

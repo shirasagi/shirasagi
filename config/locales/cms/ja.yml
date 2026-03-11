@@ -688,6 +688,10 @@ ja:
         system: ショートカット
         quota: フォルダー使用量
         navi: 左メニュー
+      sns_share_state:
+        show: 公式プラグインで表示
+        link_only: リンク形式で表示
+        hide: 非表示
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
