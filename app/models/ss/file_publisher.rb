@@ -86,8 +86,6 @@ class SS::FilePublisher
   class << self
     delegate :publish, :depublish, to: :singleton
 
-    private
-
     def singleton
       @singleton ||= begin
         if SS.config.ss.publish_file_with == "ln_s"
@@ -95,6 +93,12 @@ class SS::FilePublisher
         else
           ByCopy.new
         end
+      end
+    end
+
+    if Rails.env.test?
+      def singleton=(value)
+        @singleton = value
       end
     end
   end
