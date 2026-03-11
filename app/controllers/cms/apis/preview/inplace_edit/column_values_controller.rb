@@ -431,7 +431,16 @@ class Cms::Apis::Preview::InplaceEdit::ColumnValuesController < ApplicationContr
 
     @cur_column_value.link_check_user = @cur_user
     @cur_column_value.valid?(%i[link])
-    render json: @cur_column_value.link_errors.to_json, content_type: json_content_type
+
+    hash = {}
+    @cur_column_value.link_errors.each do |url, result|
+      json = result.as_json
+      json["code"] = result.success? ? 200 : 0
+      json["message"] = result.message
+
+      hash[url] = json
+    end
+    render json: hash.to_json, content_type: json_content_type
   end
 
   def form_check

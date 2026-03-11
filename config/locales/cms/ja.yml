@@ -688,6 +688,10 @@ ja:
         system: ショートカット
         quota: フォルダー使用量
         navi: 左メニュー
+      sns_share_state:
+        show: 公式プラグインで表示
+        link_only: リンク形式で表示
+        hide: 非表示
     site_search:
       no_results: 選択候補がありません。
       no_choices: 選択候補がありません。
@@ -1965,6 +1969,7 @@ ja:
       link_check_failed_unauthorized: リンク先の内容を取得できませんでした。（認証がかかっています）
       link_check_failed_not_found: リンク先の内容を取得できませんでした。
       link_check_failed_redirection: リンク先のリダイレクトが多すぎる為、内容を取得できませんでした。
+      link_check_failed_cyclic_redirection: リンク先のリダイレクトが循環しています。
       mobile_size_check_success: 成功
       mobile_size_check_failure: 失敗
       mobile_size_check_disable: モバイルサイズが設定されていません。

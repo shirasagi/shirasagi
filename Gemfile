@@ -31,7 +31,6 @@ gem 'mongoid'
 gem 'mongo_session_store'
 
 # Assets
-gem 'jquery-form-rails'
 gem 'jquery-rails'
 
 # Additional (alphabetical order)
