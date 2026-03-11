@@ -133,10 +133,10 @@ group :development, :test do
   gem 'guard-rspec', '~> 4.3.1', require: false
   gem 'guard-rubocop', require: false
   gem 'mongoid-rspec', require: false
-  gem 'pry-byebug', require: false
+  gem 'pry-byebug'
   gem 'pry-doc', require: false
-  gem 'pry-rails', require: false
-  gem 'pry-stack_explorer', require: false
+  gem 'pry-rails'
+  gem 'pry-stack_explorer'
   gem 'rails-controller-testing', require: false
   gem 'rspec', require: false
   gem 'rspec-collection_matchers', require: false
