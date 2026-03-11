@@ -90,7 +90,7 @@ class SS::FilePublisher
 
     def singleton
       @singleton ||= begin
-        if SS.config.ss.publish_file_with == "ln_s" && SS.config.env.storage == "file"
+        if SS.config.ss.publish_file_with == "ln_s"
           BySymLink.new
         else
           ByCopy.new
