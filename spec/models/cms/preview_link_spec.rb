@@ -11,7 +11,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
   shared_examples "expand preview link" do
     it do
-      item = described_class.new(cur_site, preview_url, preview_path, url)
+      item = described_class.parse(cur_site, preview_url, preview_path, url)
       expect(item.expanded).to eq expanded
       expect(item.external?).to eq external
     end
