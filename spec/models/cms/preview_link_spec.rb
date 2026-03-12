@@ -816,6 +816,14 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
           it_behaves_like "expand preview link"
         end
+
+        context "href //scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" do
+          let(:url) { "//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" }
+          let(:expanded) { url }
+          let(:external) { true }
+
+          it_behaves_like "expand preview link"
+        end
       end
     end
   end
