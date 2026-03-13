@@ -17,7 +17,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
     SS.file_upload_dialog = @save_file_upload_dialog
   end
 
-  context "when a <img> tag is dropped into ckeditor" do
+  context "when a <img> element is dropped into ckeditor" do
     it do
       login_user user, to: edit_article_page_path(site: site, cid: node, id: item)
       wait_for_all_ckeditors_ready
@@ -50,7 +50,6 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      click_on I18n.t("ss.buttons.ignore_alert")
       wait_for_notice I18n.t("ss.notice.saved")
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
