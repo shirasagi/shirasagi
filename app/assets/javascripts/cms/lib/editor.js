@@ -147,12 +147,12 @@ this.Cms_Editor_CKEditor = (function () {
           innerEv.cancel();
         }
       });
-      // outerEv.editor.on("drop", function(innerEv) {
-      //   innerEv.stop();
-      // }, { priority: 'high' });
-      // outerEv.editor.on("dragover", function(innerEv) {
-      //   innerEv.stop();
-      // }, { priority: 'high' });
+      outerEv.editor.on("drop", function(innerEv) {
+        innerEv.stop();
+      }, { priority: 'high' });
+      outerEv.editor.on("dragover", function(innerEv) {
+        innerEv.stop();
+      }, { priority: 'high' });
     });
   }
 

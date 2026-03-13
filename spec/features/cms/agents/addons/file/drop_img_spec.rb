@@ -44,7 +44,7 @@ describe 'cms_agents_addons_file', type: :feature, dbscope: :example, js: true d
       within "form#item-form" do
         click_on I18n.t("ss.buttons.draft_save")
       end
-      click_on I18n.t("ss.buttons.ignore_alert")
+      # click_on I18n.t("ss.buttons.ignore_alert")
       wait_for_notice I18n.t("ss.notice.saved")
       wait_for_all_ckeditors_ready
       wait_for_all_turbo_frames
