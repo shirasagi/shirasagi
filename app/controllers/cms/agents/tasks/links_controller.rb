@@ -181,6 +181,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         inner_yield = (href_start > yield_start && href_end < yield_end)
 
         extracted_href = m[0]
+        next if extracted_href[0] == "#"
+
         extracted_full_url = Addressable::URI.join(source.full_url, extracted_href)
         extracted_full_url = extracted_full_url.normalize
         next if ignore_urls.match?(extracted_full_url)

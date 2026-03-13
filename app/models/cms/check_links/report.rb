@@ -50,7 +50,8 @@ class Cms::CheckLinks::Report
     page_map = {}
     node_map = {}
     map.each do |full_url, sources|
-      filename = full_url.path.sub(/^#{::Regexp.escape(site.url)}/, "")
+      filename = full_url.path
+      filename = filename.sub(/^#{::Regexp.escape(site.url)}/, "/") if site.url != "/"
       filename += "index.html" if filename.end_with?("/")
 
       page = find_page(filename)
