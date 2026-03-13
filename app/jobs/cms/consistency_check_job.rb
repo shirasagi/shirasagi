@@ -17,10 +17,12 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
     check_published_attachments
 
     if @deletable_fs_pathes.present?
-      task.log("these files cat delete:")
+      task.log("these #{@deletable_fs_pathes.length} files can delete:")
       @deletable_fs_pathes.each do |path|
         task.log("- #{path}")
       end
+    else
+      task.log("these are no files can delete")
     end
   end
 
@@ -47,11 +49,21 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
   end
 
   def all_fs_files
-    @all_fs_files ||= Dir.glob("#{fs_public_path}/**/*")
+    @all_fs_files ||= Dir.glob("#{fs_public_path}/**/*").select { FileTest.file?(_1) }
   end
 
   def file_id_to_fs_files_map
     @file_id_to_fs_files_map ||= all_fs_files.group_by { Utils.fs_path_to_id(_1) }
+  end
+
+  def find_owner_item(file)
+    file.owner_item
+  end
+
+  def content_contained?(path)
+    return true if Cms::Page.unscoped.where(contains_urls: /#{Regexp.escape(path)}/).exists?
+    return true if Cms::Page.unscoped.where(value_contains_urls: /#{Regexp.escape(path)}/).exists?
+    false
   end
 
   def check_published_attachments
@@ -111,7 +123,7 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
           path = old_thumb_fs_file.sub(/^.*\/fs\//, "")
           next if content_contained?(path)
 
-          task.log("there are no contents link to the file #{old_thumb_fs_file}. #{old_thumb_fs_file} can safely delete.")
+          task.log("there are no contents link to the url #{path}. #{old_thumb_fs_file} can safely delete.")
           @deletable_fs_pathes.append(old_thumb_fs_file)
         end
       end
