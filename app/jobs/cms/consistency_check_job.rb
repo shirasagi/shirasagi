@@ -11,19 +11,22 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
     options = args.extract_options!
     @repair = options.fetch(:repair, false)
 
-    @deletable_fs_pathes = []
+    deletable_fs_pathes_path = task.log_file_path.sub(".log", "") + "-deletable-fs-pathes.txt"
+    FileUtils.mkdir_p(File.dirname(deletable_fs_pathes_path))
+    @deletable_fs_pathes_file = File.open(deletable_fs_pathes_path, "wt")
+    @deletable_fs_pathes_count = 0
 
     check_published_contents
     check_published_attachments
 
-    if @deletable_fs_pathes.present?
-      task.log("these #{@deletable_fs_pathes.length} files can delete:")
-      @deletable_fs_pathes.each do |path|
-        task.log("- #{path}")
-      end
+    if @deletable_fs_pathes_count > 0
+      task.log("these #{@deletable_fs_pathes_count} files can delete")
+      task.log("check #{deletable_fs_pathes_path} to see the all lists")
     else
       task.log("these are no files can delete")
     end
+  ensure
+    @deletable_fs_pathes_file.close if @deletable_fs_pathes_file
   end
 
   module Utils
@@ -78,7 +81,7 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
         if file.blank?
           task.log("file #{id} was deleted from database. this file can safely delete.")
           deletable_file_ids.add(id)
-          @deletable_fs_pathes += file_id_to_fs_files_map[id]
+          file_id_to_fs_files_map[id].each { @deletable_fs_pathes_file.puts _1 }
           next
         end
 
@@ -86,7 +89,7 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
         if item.blank?
           task.log("file #{id} owner isn't found. this file can safely delete.")
           deletable_file_ids.add(id)
-          @deletable_fs_pathes += file_id_to_fs_files_map[id]
+          file_id_to_fs_files_map[id].each { @deletable_fs_pathes_file.puts _1 }
           next
         end
 
@@ -103,17 +106,11 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
         unless item.public?
           task.log("file #{id} owner isn't in public. this file can safely delete.")
           deletable_file_ids.add(id)
-          @deletable_fs_pathes += file_id_to_fs_files_map[id]
+          file_id_to_fs_files_map[id].each { @deletable_fs_pathes_file.puts _1 }
           next
         end
 
         task.log("file #{id} owner is in public. this file cannot delete.")
-      end
-    end
-
-    all_file_ids_in_fs.each_slice(100) do |ids|
-      ids.each do |id|
-        next if deletable_file_ids.include?(id)
 
         fs_files = file_id_to_fs_files_map[id]
         old_thumb_fs_files = fs_files.select { _1.include?("/thumb/") }
@@ -124,7 +121,7 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
           next if content_contained?(path)
 
           task.log("there are no contents link to the url #{path}. #{old_thumb_fs_file} can safely delete.")
-          @deletable_fs_pathes.append(old_thumb_fs_file)
+          @deletable_fs_pathes_file.puts(old_thumb_fs_file)
         end
       end
     end
