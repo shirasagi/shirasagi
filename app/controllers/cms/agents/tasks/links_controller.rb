@@ -49,7 +49,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   end
 
   def ignore_urls
-    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrl.site(@site).to_a
+    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrlMatcher.new(cur_site: @site)
   end
 
   def create_report(errors)
@@ -183,7 +183,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         extracted_href = m[0]
         extracted_full_url = Addressable::URI.join(source.full_url, extracted_href)
         extracted_full_url = extracted_full_url.normalize
-        next unless valid_url?(extracted_full_url)
+        next if ignore_urls.match?(extracted_full_url)
 
         extracted_source = @full_url_to_source[extracted_full_url.to_s]
         if extracted_source.present?
@@ -202,19 +202,5 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     rescue => e
       Rails.logger.error { e.message }
     end
-  end
-
-  def valid_url?(full_url)
-    return false if full_url.blank?
-    return false if full_url.path.match?(/\.(css|js|json)$/i)
-    return false if full_url.path.match?(/\.p\d+\.html$/i)
-    return false if full_url.path.match?(/\/2\d{7}\.html$/i) # calendar
-    return false if %w(http https).none? { full_url.scheme.casecmp(_1) == 0 } # other scheme
-    str_url = full_url.to_s
-    return false if str_url.match?(/\/https?:/) # b.hatena
-    return false if str_url.match?(/\/\/twitter\.com/) # twitter.com
-
-    return false if ignore_urls.any? { |ignore_url| ignore_url.match?(full_url) }
-    true
   end
 end
