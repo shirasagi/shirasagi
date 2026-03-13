@@ -27,7 +27,7 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
     end
 
     it do
-      expect { described_class.bind(site_id: site).perform_now }.to output.to_stdout
+      expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|
@@ -36,6 +36,8 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
         expect(log.logs).not_to include(/ERROR/)
         expect(log.logs).to include(/#{::Regexp.escape("file #{ss_file1.id} was deleted from database.")}/)
       end
+
+      expect(File.exist?("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be_falsey
     end
   end
 
@@ -58,7 +60,7 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
     end
 
     it do
-      expect { described_class.bind(site_id: site).perform_now }.to output.to_stdout
+      expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|
@@ -67,6 +69,8 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
         expect(log.logs).not_to include(/ERROR/)
         expect(log.logs).to include(/#{::Regexp.escape("file #{ss_file1.id} owner isn't found.")}/)
       end
+
+      expect(File.exist?("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be_falsey
     end
   end
 
@@ -94,15 +98,37 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
       expect(ss_file2.owner_item_id).to eq page2.id
     end
 
-    it do
-      expect { described_class.bind(site_id: site).perform_now }.to output.to_stdout
+    context "with parent site" do
+      it do
+        expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
 
-      expect(Job::Log.count).to eq 1
-      Job::Log.all.each do |log|
-        expect(log.logs).to include(/INFO -- : .* Started Job/)
-        expect(log.logs).to include(/INFO -- : .* Completed Job/)
-        expect(log.logs).not_to include(/ERROR/)
-        expect(log.logs).to include(/#{::Regexp.escape("file #{ss_file2.id} owner is in a other site.")}/)
+        expect(Job::Log.count).to eq 1
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR/)
+          expect(log.logs).to include(/#{::Regexp.escape("file #{ss_file2.id} owner is in a other site.")}/)
+        end
+
+        expect(File.size("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be > 0
+        expect(File.size("#{ss_file2.public_dir}/#{ss_file2.filename}")).to be > 0
+      end
+    end
+
+    context "with parent sub site" do
+      it do
+        expect { described_class.bind(site_id: sub_site).perform_now(repair: true) }.to output.to_stdout
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR/)
+          expect(log.logs).to include(/#{::Regexp.escape("file #{ss_file1.id} owner is in a other site.")}/)
+        end
+
+        expect(File.size("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be > 0
+        expect(File.size("#{ss_file2.public_dir}/#{ss_file2.filename}")).to be > 0
       end
     end
   end
@@ -120,10 +146,11 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
       expect(ss_file1.owner_item_id).to eq page1.id
 
       page1.set(state: "closed")
+      expect(File.size("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be > 0
     end
 
     it do
-      expect { described_class.bind(site_id: site).perform_now }.to output.to_stdout
+      expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.all.each do |log|
@@ -132,6 +159,8 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
         expect(log.logs).not_to include(/ERROR/)
         expect(log.logs).to include(/#{::Regexp.escape("file #{ss_file1.id} owner isn't in public.")}/)
       end
+
+      expect(File.exist?("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be_falsey
     end
   end
 end

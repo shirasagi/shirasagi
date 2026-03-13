@@ -25,6 +25,15 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
     else
       task.log("these are no files can delete")
     end
+
+    @deletable_fs_pathes_file.close
+
+    return unless @repair
+
+    @deletable_fs_pathes_file = File.open(deletable_fs_pathes_path, "rt")
+
+    repair_published_contents
+    repair_published_attachments
   ensure
     @deletable_fs_pathes_file.close if @deletable_fs_pathes_file
   end
@@ -44,6 +53,10 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
   private
 
   def check_published_contents
+    # TODO: implements here
+  end
+
+  def repair_published_contents
     # TODO: implements here
   end
 
@@ -124,6 +137,14 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
           @deletable_fs_pathes_file.puts(old_thumb_fs_file)
         end
       end
+    end
+  end
+
+  def repair_published_attachments
+    @deletable_fs_pathes_file.each_line do |path|
+      path.strip!
+      File.unlink(path)
+      task.log("#{path}: deleted")
     end
   end
 end
