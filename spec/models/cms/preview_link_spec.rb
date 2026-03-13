@@ -1015,6 +1015,14 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
           it_behaves_like "expand preview link"
         end
+
+        context "javascript:void(0);" do
+          let(:url) { "javascript:void(0);" }
+          let(:expanded) { url }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
       end
     end
   end
