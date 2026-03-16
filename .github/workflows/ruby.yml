@@ -54,8 +54,8 @@ jobs:
           docker tag ghcr.io/shirasagi/michecker:latest shirasagi/michecker:latest
       - name: Prepare Elasticsearch
         run: |
-          docker pull ghcr.io/shirasagi/elasticsearch:latest
-          docker tag ghcr.io/shirasagi/elasticsearch:latest shirasagi/elasticsearch:latest
+          docker pull ghcr.io/shirasagi/elasticsearch:8
+          docker tag ghcr.io/shirasagi/elasticsearch:8 shirasagi/elasticsearch:latest
       - name: Launch Elasticsearch
         id: elasticsearch
         run: |
