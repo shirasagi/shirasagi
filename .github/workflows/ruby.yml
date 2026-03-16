@@ -59,7 +59,7 @@ jobs:
       - name: Launch Elasticsearch
         id: elasticsearch
         run: |
-          container_id=$(docker run -d --name elasticsearch -p 9200:9200 -e discovery.type=single-node shirasagi/elasticsearch)
+          container_id=$(docker run -d --name elasticsearch -p 9200:9200 -e discovery.type=single-node -e xpack.security.enabled=false -e xpack.security.http.ssl.enabled=false shirasagi/elasticsearch)
           if [ $? -ne 0 ]; then
             exit $?
           fi
