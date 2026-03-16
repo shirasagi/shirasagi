@@ -48,12 +48,92 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
       raise unless path.numeric?
       path.to_i
     end
+
+    def recognize_node(site, node, path)
+      path = path.sub(/\.p\d+\.html$/, ".html") if path.match?(/\.p[1-9]\d*\.html$/)
+      action = path.sub(/^#{::Regexp.escape(node.filename)}/, "")
+
+      rest = action.delete_suffix("index.html")
+      rest = action if ::File.extname(rest).present?
+
+      path = "/.s#{site.id}/nodes/#{node.route}#{rest}"
+      recognize_agent path
+    end
+
+    def recognize_agent(path, env = {})
+      spec = recognize_path path, env
+      spec[:cell] ? spec : nil
+    end
+
+    def recognize_path(path, env = {})
+      env[:method] ||= request.request_method rescue "GET"
+      Rails.application.routes.recognize_path(path, env) rescue {}
+    end
   end
 
   private
 
   def check_published_contents
-    # TODO: implements here
+    if site.same_domain_sites.length == 1
+      html_files_in_site = all_html_files
+    else
+      # サブサイトのコンテンツを除外
+      html_files_in_site = all_html_files.select { site.same_domain_site_from_path("/#{_1}").try(:id) == site.id }
+    end
+    task.log("found #{html_files_in_site.length} html files in '#{site.path}'")
+    return if html_files_in_site.blank?
+
+    all_pages = Cms::Page.unscoped.site(site).in(filename: html_files_in_site).to_a
+    filenames_in_page = Set.new(all_pages.pluck(:filename))
+    html_files_page, html_files_not_page = html_files_in_site.partition { filenames_in_page.include?(_1) }
+
+    filename_to_page_map = all_pages.index_by(&:filename)
+    html_files_page.each do |path|
+      page = filename_to_page_map[path]
+      next if page.public?
+
+      task.log("'#{path}' is matched to page '#{page.filename}' which is not in public. this content can safely delete.")
+    end
+
+    html_files_not_page.each do |path|
+      node = find_node_in_path(path)
+      if node.blank?
+        task.log("'#{path}' doesn't match pages nor nodes. this content can safely delete.")
+        next
+      end
+
+      if node.route == 'uploader/file'
+        task.log("'#{path}' is just one of uploader contents. this means this content is unmanaged so I don't know anymore.")
+        next
+      end
+
+      spec = Utils.recognize_node(site, node, path)
+      next if spec.present?
+
+      task.log("'#{path}' is match to node '#{node.filename}' which is unable to serve. this content can safely delete.")
+    end
+  end
+
+  def all_html_files
+    @all_html_files ||= begin
+      paths = Dir.glob("#{site.path}/**/*.html").select { FileTest.file?(_1) }
+      paths.map { _1.sub("#{site.path}/", "") }
+    end
+  end
+
+  def all_nodes
+    @all_nodes ||= Cms::Node.unscoped.site(site).to_a
+  end
+
+  def filename_to_node_map
+    @filename_to_node_map ||= all_nodes.index_by(&:filename)
+  end
+
+  def find_node_in_path(path)
+    paths = Cms::Node.split_path(path.sub(/^\//, ""))
+    paths.pop if paths.last =~ /\./
+    paths = paths.sort_by { _1.count("/") }.reverse
+    paths.filter_map { filename_to_node_map[_1] }.first
   end
 
   def repair_published_contents
