@@ -34,7 +34,7 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         site.reload
         expect(site.elasticsearch_hosts).to eq [ elasticsearch_host ]
         expect(site.elasticsearch_user).to eq elasticsearch_user
-        expect(site.elasticsearch_password).to eq SS::Crypto.crypt(elasticsearch_password)
+        expect(SS::Crypto.decrypt(site.elasticsearch_password)).to eq elasticsearch_password
         expect(site.elasticsearch_ssl_verify_mode).to eq elasticsearch_ssl_verify_mode
 
         # edit again
@@ -47,7 +47,7 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         site.reload
         expect(site.elasticsearch_hosts).to eq [ elasticsearch_host ]
         expect(site.elasticsearch_user).to eq elasticsearch_user
-        expect(site.elasticsearch_password).to eq SS::Crypto.crypt(elasticsearch_password)
+        expect(SS::Crypto.decrypt(site.elasticsearch_password)).to eq elasticsearch_password
         expect(site.elasticsearch_ssl_verify_mode).to eq elasticsearch_ssl_verify_mode
 
         # delete password
@@ -99,7 +99,7 @@ describe "cms_sites", type: :feature, dbscope: :example, js: true do
         site.reload
         expect(site.elasticsearch_hosts).to eq elasticsearch_hosts
         expect(site.elasticsearch_user).to eq elasticsearch_user
-        expect(site.elasticsearch_password).to eq SS::Crypto.crypt(elasticsearch_password)
+        expect(SS::Crypto.decrypt(site.elasticsearch_password)).to eq elasticsearch_password
         expect(site.elasticsearch_ssl_verify_mode).to eq elasticsearch_ssl_verify_mode
       end
     end

@@ -27,7 +27,23 @@ module Gws::Addon::Elasticsearch::GroupSetting
 
   def elasticsearch_client
     return unless menu_elasticsearch_visible?
-    @elasticsearch_client ||= Elasticsearch::Client.new(hosts: elasticsearch_hosts, logger: Rails.logger)
+
+    @elasticsearch_client ||= begin
+      params = {
+        hosts: elasticsearch_hosts, logger: Rails.logger
+      }
+      if elasticsearch_user.present? && elasticsearch_password.present?
+        params[:user] = elasticsearch_user
+        params[:password] = SS::Crypto.decrypt(elasticsearch_password)
+      end
+      if elasticsearch_ssl_verify_mode == "none"
+        params[:transport_options] = { ssl: { verify: false } }
+      end
+      Elasticsearch::Client.new(params)
+    rescue => e
+      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      nil
+    end
   end
 
   def elasticsearch_ssl_verify_mode_options
@@ -45,6 +61,6 @@ module Gws::Addon::Elasticsearch::GroupSetting
     end
 
     return if in_elasticsearch_password.blank?
-    self.elasticsearch_password = SS::Crypto.crypt(in_elasticsearch_password)
+    self.elasticsearch_password = SS::Crypto.encrypt(in_elasticsearch_password)
   end
 end

@@ -59,7 +59,23 @@ module SS::Addon::Elasticsearch::SiteSetting
 
   def elasticsearch_client
     return unless elasticsearch_enabled?
-    @elasticsearch_client ||= Elasticsearch::Client.new(hosts: elasticsearch_hosts, logger: ESTransportLogger)
+
+    @elasticsearch_client ||= begin
+      params = {
+        hosts: elasticsearch_hosts, logger: ESTransportLogger
+      }
+      if elasticsearch_user.present? && elasticsearch_password.present?
+        params[:user] = elasticsearch_user
+        params[:password] = SS::Crypto.decrypt(elasticsearch_password)
+      end
+      if elasticsearch_ssl_verify_mode == "none"
+        params[:transport_options] = { ssl: { verify: false } }
+      end
+      Elasticsearch::Client.new(params)
+    rescue => e
+      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+      nil
+    end
   end
 
   def elasticsearch_outside_options
@@ -85,7 +101,7 @@ module SS::Addon::Elasticsearch::SiteSetting
     end
 
     return if in_elasticsearch_password.blank?
-    self.elasticsearch_password = SS::Crypto.crypt(in_elasticsearch_password)
+    self.elasticsearch_password = SS::Crypto.encrypt(in_elasticsearch_password)
   end
 
   def deny_elasticsearch_paths
