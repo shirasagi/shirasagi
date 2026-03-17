@@ -9,22 +9,38 @@ class Cms::CheckLinks::IgnoreUrlMatcher
       match_proc.call(*args, **kwargs)
     end
 
+    def self.match_path?(lhs, rhs)
+      case lhs
+      when NilClass, ""
+        # 右辺は何でもよい
+        true
+      else
+        lhs == rhs
+      end
+    end
+
     def self.exact(name:, template:, template_hash:)
       match_proc = proc do |cur_site, full_url|
         full_url_hash = full_url.to_hash
 
         # host だけ特別。未指定の場合、自ホスト内のパスが指定されていると見なす
-        if template_hash[:host].present?
+        if template_hash[:host]
           next false if template_hash[:host] != full_url_hash[:host]
         else
           next false unless cur_site.domains.include?(full_url_hash[:host])
         end
 
-        # host 以外は設定されていれば設定された通りにマッチする
-        %i[scheme port path query fragment].all? do |key|
-          next true if template_hash[key].blank?
-          template_hash[key] == full_url_hash[key]
-        end
+        # scheme と port は設定されていれば設定された通りにマッチする
+        next false if template_hash[:scheme] && template_hash[:scheme] != full_url_hash[:scheme]
+        next false if template_hash[:port] && template_hash[:port] != full_url_hash[:port]
+
+        next false unless match_path?(template_hash[:path], full_url_hash[:path])
+
+        # query と fragment は設定されていれば設定された通りにマッチする
+        next false if template_hash[:query] && template_hash[:query] != full_url_hash[:query]
+        next false if template_hash[:fragment] && template_hash[:fragment] != full_url_hash[:fragment]
+
+        true
       end
 
       new(name: name, match_proc: match_proc)
@@ -38,7 +54,7 @@ class Cms::CheckLinks::IgnoreUrlMatcher
         next false unless full_url_hash[:host].start_with?(template_hash[:host])
 
         %i[scheme port].all? do |key|
-          next true if template_hash[key].blank?
+          next true if template_hash[key].nil?
           template_hash[key] == full_url_hash[key]
         end
       end
@@ -65,7 +81,7 @@ class Cms::CheckLinks::IgnoreUrlMatcher
         next false unless full_url_hash[:host].end_with?(template_hash[:host])
 
         %i[scheme port].all? do |key|
-          next true if template_hash[key].blank?
+          next true if template_hash[key].nil?
           template_hash[key] == full_url_hash[key]
         end
       end
@@ -92,7 +108,7 @@ class Cms::CheckLinks::IgnoreUrlMatcher
         next false unless full_url_hash[:host].include?(template_hash[:host])
 
         %i[scheme port].all? do |key|
-          next true if template_hash[key].blank?
+          next true if template_hash[key].nil?
           template_hash[key] == full_url_hash[key]
         end
       end
@@ -113,7 +129,7 @@ class Cms::CheckLinks::IgnoreUrlMatcher
 
     def self.match_origin?(cur_site, template_hash, full_url_hash)
       # host だけ特別。未指定の場合、自ホスト内のパスが指定されていると見なす
-      if template_hash[:host].present?
+      if template_hash[:host]
         return false if template_hash[:host] != full_url_hash[:host]
       else
         return false unless cur_site.domains.include?(full_url_hash[:host])
@@ -121,7 +137,7 @@ class Cms::CheckLinks::IgnoreUrlMatcher
 
       # host 以外は設定されていれば設定された通りにマッチする
       %i[scheme port].all? do |key|
-        next true if template_hash[key].blank?
+        next true if template_hash[key].nil?
         template_hash[key] == full_url_hash[key]
       end
     end
@@ -173,7 +189,7 @@ class Cms::CheckLinks::IgnoreUrlMatcher
       template_hash = template.to_hash
       case ignore_url.kind
       when "start_with"
-        if %i[path query fragment].all? { template_hash[_1].blank? }
+        if blank_request?(template_hash)
           # request_uri は未指定のため origin（特に authority）が start_with かどうかをチェック
           Matcher.host_start_with(name: ignore_url.name, template: template, template_hash: template_hash)
         else
@@ -181,7 +197,7 @@ class Cms::CheckLinks::IgnoreUrlMatcher
           Matcher.request_start_with(name: ignore_url.name, template: template, template_hash: template_hash)
         end
       when "end_with"
-        if %i[path query fragment].all? { template_hash[_1].blank? }
+        if blank_request?(template_hash)
           # request_uri は未指定のため origin（特に authority）が end_with かどうかをチェック
           Matcher.host_end_with(name: ignore_url.name, template: template, template_hash: template_hash)
         else
@@ -189,7 +205,7 @@ class Cms::CheckLinks::IgnoreUrlMatcher
           Matcher.request_end_with(name: ignore_url.name, template: template, template_hash: template_hash)
         end
       when "include"
-        if %i[path query fragment].all? { template_hash[_1].blank? }
+        if blank_request?(template_hash)
           # request_uri は未指定のため origin（特に authority）が include かどうかをチェック
           Matcher.host_include(name: ignore_url.name, template: template, template_hash: template_hash)
         else
@@ -200,5 +216,11 @@ class Cms::CheckLinks::IgnoreUrlMatcher
         Matcher.exact(name: ignore_url.name, template: template, template_hash: template_hash)
       end
     end
+  end
+
+  def blank_request?(template_hash)
+    (template_hash[:path].blank? || template_hash[:path] == "/") &&
+      template_hash[:query].nil? &&
+      template_hash[:fragment].nil?
   end
 end

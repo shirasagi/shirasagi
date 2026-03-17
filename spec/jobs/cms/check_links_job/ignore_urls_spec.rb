@@ -77,7 +77,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
   context "ignore_urls all" do
     let!(:item1) { create :check_links_ignore_url, name: url1, kind: "all" }
-    let!(:item2) { create :check_links_ignore_url, name: "/inquiry/", kind: "all" }
+    let!(:item2) { create :check_links_ignore_url, name: "/inquiry/?", kind: "all" }
 
     it do
       ss_perform_now described_class.bind(site_id: site.id)
@@ -136,6 +136,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
   context "ignore_urls include" do
     let!(:item1) { create :check_links_ignore_url, name: "inquiry", kind: "include" }
     let!(:item2) { create :check_links_ignore_url, name: "sample", kind: "include" }
+    let!(:item3) { create :check_links_ignore_url, name: "//sample", kind: "include" }
 
     it do
       ss_perform_now described_class.bind(site_id: site.id)
