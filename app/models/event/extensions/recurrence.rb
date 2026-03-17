@@ -43,7 +43,7 @@ class Event::Extensions::Recurrence
         self.end_at = start_at + 1.day
       end
     end
-    if start_at > end_at
+    if start_at.present? && end_at.present? && start_at > end_at
       self.end_at = self.start_at
     end
   end
