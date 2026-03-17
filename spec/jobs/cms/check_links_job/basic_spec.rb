@@ -206,6 +206,63 @@ describe Cms::CheckLinksJob, dbscope: :example do
     end
   end
 
+  context "when a node include break links" do
+    let!(:index) { create :cms_page, cur_site: site, layout: layout, basename: "index.html" }
+    let!(:docs) { create(:article_node_page, cur_site: site, layout: layout, basename: "docs") }
+    let!(:docs_page1) { create(:article_page, cur_site: site, layout: layout, cur_node: docs, basename: "page1.html") }
+    let!(:docs_page2) { create(:article_page, cur_site: site, layout: layout, cur_node: docs, basename: "page2.html") }
+
+    before do
+      html = <<~HTML
+        <a href="#{docs.url}">"#{docs.name}"</a>
+      HTML
+      index.update!(html: html)
+
+      expect { ss_perform_now Cms::Node::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+      expect { ss_perform_now Cms::Page::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+
+      Job::Log.destroy_all
+      docs_page2.destroy!
+    end
+
+    context "check" do
+      it do
+        expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/1 errors/).to_stdout
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.first.tap do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+          expect(log.logs).to include(include("#{site_url}/docs/"))
+          expect(log.logs).to include(include("  - #{site_url}/docs/page2.html"))
+        end
+
+        expect(Cms::CheckLinks::Report.all.count).to eq 1
+        Cms::CheckLinks::Report.all.first.tap do |report|
+          expect(report.site_id).to eq site.id
+          expect(report.name).to include "実行結果"
+          expect(report.link_errors.count).to eq 1
+          expect(report.pages.count).to eq 0
+          expect(report.nodes.count).to eq 1
+          report.nodes.to_a.tap do |node_reports|
+            expect(node_reports[0].site_id).to eq site.id
+            expect(node_reports[0].report_id).to eq report.id
+            expect(node_reports[0].ref).to eq docs.url
+            expect(node_reports[0].ref_url).to eq docs.full_url
+            expect(node_reports[0].name).to eq docs.name
+            expect(node_reports[0].filename).to eq docs.filename
+            expect(node_reports[0].urls).to have(1).items
+            expect(node_reports[0].urls).to include(docs_page2.url)
+            expect(node_reports[0].node_id).to eq docs.id
+          end
+        end
+
+        expect(ActionMailer::Base.deliveries.length).to eq 0
+      end
+    end
+  end
+
   context "some other schemes" do
     let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html" }
 
