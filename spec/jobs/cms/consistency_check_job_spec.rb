@@ -13,9 +13,8 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
       tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, cur_user: user)
     end
     let!(:page1) do
-      create(
-        :cms_page, cur_site: site, cur_user: user, html: "<img src=\"#{ss_file1.url}\" />", file_ids: [ ss_file1.id ],
-        state: "public")
+      html = "<img src=\"#{ss_file1.url}\" />"
+      create(:cms_page, cur_site: site, cur_user: user, html: html, file_ids: [ ss_file1.id ], state: "public")
     end
 
     before do
@@ -46,9 +45,8 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
       tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, cur_user: user)
     end
     let!(:page1) do
-      create(
-        :cms_page, cur_site: site, cur_user: user, html: "<img src=\"#{ss_file1.url}\" />", file_ids: [ ss_file1.id ],
-        state: "public")
+      html = "<img src=\"#{ss_file1.url}\" />"
+      create(:cms_page, cur_site: site, cur_user: user, html: html, file_ids: [ ss_file1.id ], state: "public")
     end
 
     before do
@@ -79,15 +77,16 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
       tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, cur_user: user)
     end
     let!(:page1) do
-      create :cms_page, cur_site: site, cur_user: user, html: "<img src=\"#{ss_file1.url}\" />", file_ids: [ ss_file1.id ], state: "public"
+      html = "<img src=\"#{ss_file1.url}\" />"
+      create(:cms_page, cur_site: site, cur_user: user, html: html, file_ids: [ ss_file1.id ], state: "public")
     end
     let!(:sub_site) { create :cms_site_subdir, parent: site }
     let!(:ss_file2) do
       tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: sub_site, cur_user: user)
     end
     let!(:page2) do
-      create(
-        :cms_page, cur_site: sub_site, cur_user: user, html: "<img src=\"#{ss_file2.url}\" />", file_ids: [ ss_file2.id ], state: "public")
+      html = "<img src=\"#{ss_file2.url}\" />"
+      create(:cms_page, cur_site: sub_site, cur_user: user, html: html, file_ids: [ ss_file2.id ], state: "public")
     end
 
     before do
@@ -138,7 +137,8 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
       tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, cur_user: user)
     end
     let!(:page1) do
-      create :cms_page, cur_site: site, cur_user: user, html: "<img src=\"#{ss_file1.url}\" />", file_ids: [ ss_file1.id ], state: "public"
+      html = "<img src=\"#{ss_file1.url}\" />"
+      create(:cms_page, cur_site: site, cur_user: user, html: html, file_ids: [ ss_file1.id ], state: "public")
     end
 
     before do
