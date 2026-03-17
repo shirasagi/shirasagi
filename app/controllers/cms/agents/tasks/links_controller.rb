@@ -4,6 +4,8 @@ require 'resolv-replace'
 require 'nkf'
 
 class Cms::Agents::Tasks::LinksController < ApplicationController
+  include Cms::PublicFilter::Agent
+
   before_action :set_params
 
   class Source
@@ -58,20 +60,112 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     # create new report
     @report = Cms::CheckLinks::Report.new
-    @report.site = @site
+    @report.cur_site = @report.site = @site
     if !@report.save
       @task.log "Error : Failed to save Cms::CheckLinks::Report #{@report.errors.full_messages}"
       return
     end
     @task.log "# #{@report.name} created"
 
-    @report.save_errors(errors)
+    referrers = errors.map(&:referrers)
+    referrers.flatten!
+    referrers.uniq!
+
+    # 例えば "/" と "/index.html" は同じページを指している場合がある。
+    # DB アクセス数を減らす目的で、まずは URL で名寄せする。その後、ページ・フォルダーで再び名寄せする
+    page_map = {}
+    node_map = {}
+    referrers.group_by { _1.full_url }.each do |full_url, sources|
+      path = full_url.path
+      path = path.sub(/^#{::Regexp.escape(@site.url)}/, "/") if @site.url != "/"
+      path += "index.html" if path.end_with?("/")
+
+      page = find_page(path)
+      if page
+        page_map[page] ||= []
+        page_map[page] += sources
+        next
+      end
+
+      node = find_node(path)
+      next unless node
+
+      node_map[node] ||= []
+      node_map[node] += sources
+    end
+
+    error_full_urs = Set.new(errors.map(&:full_url))
+    create_report_pages(page_map, error_full_urs)
+    create_report_nodes(node_map, error_full_urs)
 
     # destroy old reports
     report_ids = Cms::CheckLinks::Report.site(@site).limit(@report_max_age).pluck(:id)
     Cms::CheckLinks::Report.site(@site).nin(id: report_ids).each do |report|
       @task.log "# #{report.name} destroyed"
       report.destroy
+    end
+  end
+
+  def find_page(path)
+    @all_pages ||= Cms::Page.site(@site).to_a
+    @filename_to_page_map ||= @all_pages.index_by(&:filename)
+    @filename_to_page_map[path.sub(/^\//, "")]
+  end
+
+  def find_node(path)
+    @all_nodes ||= Cms::Node.site(@site).to_a
+    @filename_to_node_map ||= @all_nodes.index_by(&:filename)
+
+    path = path.sub(/^\//, "")
+    filenames = Cms::Node.split_path(path)
+    filenames.sort_by { _1.count("/") }.reverse
+    node = filenames.filter_map { @filename_to_node_map[_1] }.first
+    return unless node
+
+    rest = path.delete_prefix(node.filename).sub(/\/index\.html$/, "")
+    path = "/.s#{@site.id}/nodes/#{node.route}#{rest}"
+
+    spec = recognize_agent path
+    return unless spec
+
+    node
+  end
+
+  def create_report_pages(page_map, error_full_urs)
+    page_map.each do |page, sources|
+      item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: @report)
+      item.ref = page.url
+      item.ref_url = page.full_url
+      item.page = page
+      item.name = page.name
+      item.filename = page.filename
+
+      links = sources.map(&:links)
+      links.flatten!
+
+      error_links = links.select { error_full_urs.include?(_1.full_url) }
+      item.urls = error_links.map(&:href).uniq
+      item.group_ids = page.group_ids
+      item.save
+    end
+  end
+
+  def create_report_nodes(node_map, error_full_urs)
+    node_map.each do |node, sources|
+      item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: @report)
+      item.ref = node.url
+      item.ref_url = node.full_url
+      item.node = node
+      item.name = node.name
+      item.filename = node.filename
+
+      links = sources.map(&:links)
+      links.flatten!
+
+      error_links = links.select { error_full_urs.include?(_1.full_url) }
+      item.urls = error_links.map(&:href).uniq
+      item.group_ids = node.group_ids
+      item.save
     end
   end
 
