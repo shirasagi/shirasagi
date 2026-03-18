@@ -14,8 +14,4 @@ module SS::Addon::CheckLinksSetting
   def check_links_message_format_options
     I18n.t("cms/check_links.options.message_format").map { |k, v| [v, k] }
   end
-
-  def check_links_default_sender_address
-    "shirasagi@" + domain.sub(/:.*/, "")
-  end
 end
