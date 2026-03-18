@@ -54,12 +54,12 @@ jobs:
           docker tag ghcr.io/shirasagi/michecker:latest shirasagi/michecker:latest
       - name: Prepare Elasticsearch
         run: |
-          docker pull ghcr.io/shirasagi/elasticsearch:latest
-          docker tag ghcr.io/shirasagi/elasticsearch:latest shirasagi/elasticsearch:latest
+          docker pull ghcr.io/shirasagi/elasticsearch:8
+          docker tag ghcr.io/shirasagi/elasticsearch:8 shirasagi/elasticsearch:latest
       - name: Launch Elasticsearch
         id: elasticsearch
         run: |
-          container_id=$(docker run -d --name elasticsearch -p 9200:9200 -e discovery.type=single-node shirasagi/elasticsearch)
+          container_id=$(docker run -d --name elasticsearch -p 9200:9200 -e discovery.type=single-node -e xpack.security.enabled=false -e xpack.security.http.ssl.enabled=false shirasagi/elasticsearch)
           if [ $? -ne 0 ]; then
             exit $?
           fi

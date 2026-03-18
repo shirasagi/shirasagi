@@ -113,7 +113,7 @@ gem 'unf'
 
 # elasticsearch
 gem 'faraday'
-gem 'elasticsearch', '~> 7'
+gem 'elasticsearch', '~> 8'
 
 # line
 gem 'line-bot-api', '~> 1.29'

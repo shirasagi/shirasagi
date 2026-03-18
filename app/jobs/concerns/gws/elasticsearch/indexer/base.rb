@@ -141,14 +141,14 @@ module Gws::Elasticsearch::Indexer::Base
         index: index_name, id: id, body: doc
       }
       index_params[:pipeline] = 'attachment' if id.start_with?('file-')
-      with_rescue(Elasticsearch::Transport::Transport::ServerError) do
+      with_rescue(Elastic::Transport::Transport::ServerError) do
         es_client.index(index_params)
       end
     end
 
     if remove_file_ids.present?
       remove_file_ids.each do |id|
-        with_rescue(Elasticsearch::Transport::Transport::ServerError) do
+        with_rescue(Elastic::Transport::Transport::ServerError) do
           es_client.delete(index: index_name, id: "file-#{id}")
         end
       end
@@ -162,13 +162,13 @@ module Gws::Elasticsearch::Indexer::Base
     es_client = self.site.elasticsearch_client
     return unless es_client
 
-    with_rescue(Elasticsearch::Transport::Transport::ServerError) do
+    with_rescue(Elastic::Transport::Transport::ServerError) do
       es_client.delete(index: index_name, id: index_item_id)
     end
 
     if remove_file_ids.present?
       remove_file_ids.uniq.each do |id|
-        with_rescue(Elasticsearch::Transport::Transport::ServerError) do
+        with_rescue(Elastic::Transport::Transport::ServerError) do
           es_client.delete(index: index_name, id: "file-#{id}")
         end
       end
