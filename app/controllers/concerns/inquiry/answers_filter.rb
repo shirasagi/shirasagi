@@ -108,17 +108,24 @@ module Inquiry::AnswersFilter
   def destroy_all
     raise "400" if @selected_items.blank?
 
-    entries = @selected_items
+    entries = @selected_items.to_a
     @items = []
 
     entries.each do |item|
-      if item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
-        next if item.destroy
-      else
+      unless item.allowed?(:delete, @cur_user, site: @cur_site, node: @cur_node)
         item.errors.add :base, :auth_error
+        @items << item
       end
+
+      result = item.destroy
+      next if result
+
+      @items << item
+    rescue => e
+      Rails.logger.warn { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
       @items << item
     end
+
     render_destroy_all(entries.size != @items.size)
   end
 
