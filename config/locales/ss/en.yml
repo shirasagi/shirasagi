@@ -22,6 +22,7 @@ en:
     operation: Operation
     organization: Organization
     qr_code: QR Code
+    qr_code_trademark_notice: QR Code is a registered trademark of DENSO WAVE INCORPORATED in Japan and in other countries.
     regexp: Regular expression
     resize_image: Resize image
     no_resize_image: No resize image
