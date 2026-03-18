@@ -28,6 +28,13 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
     user.update!
 
     Capybara.app_host = "http://#{site.domain}"
+
+    @save_external_block = Cms::PreviewController.external_block
+    Cms::PreviewController.external_block = "block"
+  end
+
+  after do
+    Cms::PreviewController.external_block = @save_external_block
   end
 
   context "preview in root site" do
@@ -205,6 +212,47 @@ describe "cms_preview", type: :feature, dbscope: :example, js: true do
         first("a.sub2-full-docs").click
       end
       expect(current_path).to eq cms_preview_path(site: subsite1, path: top_page2.preview_path)
+    end
+  end
+
+  context "when external_block is set to 'no_block'" do
+    let!(:top_page1) { create :cms_page, cur_site: site, filename: "index.html", layout: layout, html: html }
+    let!(:top_page2) { create :cms_page, cur_site: subsite1, filename: "index.html", layout: layout }
+    let!(:top_page3) { create :cms_page, cur_site: subsite2, filename: "index.html", layout: layout }
+
+    before do
+      Cms::PreviewController.external_block = "no_block"
+      login_cms_user
+    end
+
+    it do
+      visit cms_preview_path(site: site, path: top_page1.preview_path)
+      expect(page).to have_css(".sub1")
+      expect(page).to have_no_css("[data-external-preview]")
+
+      first("a.sub1").click
+      expect(current_path).to eq "/sub1/"
+    end
+  end
+
+  context "when external_block is set to 'block_if_untrusted'" do
+    let!(:top_page1) { create :cms_page, cur_site: site, filename: "index.html", layout: layout, html: html }
+    let!(:top_page2) { create :cms_page, cur_site: subsite1, filename: "index.html", layout: layout }
+    let!(:top_page3) { create :cms_page, cur_site: subsite2, filename: "index.html", layout: layout }
+
+    before do
+      Cms::PreviewController.external_block = "block_if_untrusted"
+      Cms::PreviewController.trusted_urls = [ "//sample.example.jp" ]
+      login_cms_user
+    end
+
+    it do
+      visit cms_preview_path(site: site, path: top_page1.preview_path)
+      expect(page).to have_css(".sub2-full")
+      expect(page).to have_no_css("[data-external-preview]")
+
+      first("a.sub2-full").click
+      expect(current_path).to eq "/sub2/"
     end
   end
 end
