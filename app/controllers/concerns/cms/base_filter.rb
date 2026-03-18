@@ -92,7 +92,14 @@ module Cms::BaseFilter
         @crumbs << [ node.name, nil ]
       end
     end
-    @crumbs << [@cur_node.name, view_context.contents_path(@cur_node)]
+
+    if @cur_node.public?
+      @crumbs << [ @cur_node.name, view_context.contents_path(@cur_node) ]
+    else
+      title = view_context.tag.span(@cur_node.name) + view_context.md_icons.outlined("public_off", size: 13)
+      title = view_context.tag.span(title.html_safe, class: "breadcrumb-title", title: I18n.t("cms.notices.private_node"))
+      @crumbs << [ title, view_context.contents_path(@cur_node) ]
+    end
   end
 
   def set_group
