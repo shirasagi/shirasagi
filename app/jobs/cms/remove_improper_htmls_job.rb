@@ -117,7 +117,7 @@ class Cms::RemoveImproperHtmlsJob < Cms::ApplicationJob
   def send_error_mail
     body = "[#{@errors.size} errors]\n" + @errors.join("\n")
     ActionMailer::Base.mail(
-      from: "shirasagi@" + site.domain.sub(/:.*/, ""),
+      from: site.sender_address,
       to: @email,
       subject: "[#{site.name}] Remove Improper Htmls: #{@errors.size} errors",
       body: body,
