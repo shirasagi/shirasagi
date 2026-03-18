@@ -11,7 +11,7 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
   shared_examples "expand preview link" do
     it do
-      item = described_class.new(cur_site, preview_url, preview_path, url)
+      item = described_class.parse(cur_site, preview_url, preview_path, url)
       expect(item.expanded).to eq expanded
       expect(item.external?).to eq external
     end
@@ -816,6 +816,14 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
           it_behaves_like "expand preview link"
         end
+
+        context "href //scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" do
+          let(:url) { "//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" }
+          let(:expanded) { url }
+          let(:external) { true }
+
+          it_behaves_like "expand preview link"
+        end
       end
     end
   end
@@ -1002,6 +1010,14 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "mailto:mail@sample.example.com" do
           let(:url) { "mailto:mail@sample.example.com" }
+          let(:expanded) { url }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "javascript:void(0);" do
+          let(:url) { "javascript:void(0);" }
           let(:expanded) { url }
           let(:external) { false }
 
