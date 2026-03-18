@@ -1,8 +1,15 @@
-<%
-  addon ||= local_assigns.fetch(:addon, {})
-  result = @cur_site.elasticsearch_client.indices.stats(index: "g#{@cur_site.id}") rescue nil
-  return unless result
-%>
-<%= tag.div id: "#{addon[:id]}-frame" do %>
-  <pre class="gws-elasticsearch-json-view"><%= JSON.pretty_generate(result) %></pre>
+<% begin %>
+  <%
+    addon ||= local_assigns.fetch(:addon, {})
+    result = @cur_site.elasticsearch_client.indices.stats(index: "g#{@cur_site.id}")
+    return unless result
+  %>
+  <%= tag.div id: "#{addon[:id]}-frame" do %>
+    <pre class="gws-elasticsearch-json-view"><%= JSON.pretty_generate(result) %></pre>
+  <% end %>
+<% rescue => e %>
+  <% Rails.logger.debug { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" } %>
+  <div>
+    <%= e.class.name %>: <%= e.to_s %>
+  </div>
 <% end %>

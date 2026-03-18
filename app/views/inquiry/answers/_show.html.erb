@@ -19,8 +19,6 @@
     <% if @item.closed %>(<%= ss_time_tag @item.closed %>)<% end %>
   </dd>
 
-  <% if @item.comment.present? %>
   <dt><%= @item.t :comment %></dt>
   <dd><%=br @item.comment %></dd>
-  <% end %>
 </dl>

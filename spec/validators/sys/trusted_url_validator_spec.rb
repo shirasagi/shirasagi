@@ -16,7 +16,7 @@ describe Sys::TrustedUrlValidator, type: :validator, dbscope: :example do
 
   around do |example|
     # Rails.application.current_request = request
-    SS::Current.set(env: request, request: request) do
+    SS::Current.with(env: request, request: request) do
       example.run
     end
   end

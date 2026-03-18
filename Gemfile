@@ -32,7 +32,6 @@ gem 'mongo_session_store'
 
 # Assets
 gem 'jquery-rails'
-gem 'jquery-ui-rails'
 
 # Additional (alphabetical order)
 gem 'addressable', require: 'addressable/uri'
@@ -114,7 +113,7 @@ gem 'unf'
 
 # elasticsearch
 gem 'faraday'
-gem 'elasticsearch', '~> 7'
+gem 'elasticsearch', '~> 8'
 
 # line
 gem 'line-bot-api', '~> 1.29'

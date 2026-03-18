@@ -12,7 +12,7 @@ class Cms::Mailer < ApplicationMailer
 
   def link_errors(site, to, errors)
     if site.check_links_message_format == "csv"
-      body = "[#{errors.size} errors]\n"
+      body = "[#{errors.error_count} errors]\n"
       if errors.present?
         body += "error details are in the attached csv\n"
         attachments["errors.csv"] = errors.to_csv
@@ -26,7 +26,7 @@ class Cms::Mailer < ApplicationMailer
     mail(
       from: sender_address,
       to: to,
-      subject: "[#{site.name}] Link Check: #{errors.size} errors",
+      subject: "[#{site.name}] Link Check: #{errors.error_count} errors",
       body: body,
       message_id: Cms.generate_message_id(site))
   end

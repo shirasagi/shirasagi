@@ -37,6 +37,7 @@ module Category::Node
     include Cms::Addon::Meta
     include Cms::Addon::Thumb
     include Event::Addon::PageList
+    include Cms::Addon::Form::Node
     include Category::Addon::SummaryPage
     include Category::Addon::MapSetting
     include Cms::Addon::Release

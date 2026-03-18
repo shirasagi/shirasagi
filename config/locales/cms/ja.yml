@@ -3643,3 +3643,4 @@ ja:
       cms/elasticsearch/indexer/page_release_job: CMS全文検索/ページの追加
       cms/form_db/import_urls_job: CMS/定型DBインポート（サイト全体）
       cms/syntax_check_job: CMS/アクセシビリティチェック
+      cms/consistency_check_job: CMS/一貫性チェック

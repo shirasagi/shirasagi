@@ -22,6 +22,7 @@ en:
     operation: Operation
     organization: Organization
     qr_code: QR Code
+    qr_code_trademark_notice: QR Code is a registered trademark of DENSO WAVE INCORPORATED in Japan and in other countries.
     regexp: Regular expression
     resize_image: Resize image
     no_resize_image: No resize image
@@ -1080,6 +1081,9 @@ en:
         elasticsearch_site_ids: Site
         elasticsearch_indexes: Index
         elasticsearch_outside: External site search (Fess)
+        elasticsearch_user: Full-text search server/User
+        elasticsearch_password: Full-text search server/Password
+        elasticsearch_ssl_verify_mode: Full-text search server/SSL certificate check method
       ss/addon/translate/site_setting:
         translate_state: Status
         translate_source_id: Source language code
@@ -1617,6 +1621,13 @@ en:
         - Set external site searches.
         - A pull-down list appears in the search form, allowing you to search external sites.
         - Fess installation is required.
+      elasticsearch_user:
+        - If the full-text search server is protected by a user ID and password, enter the user ID for the full-text search server.
+      elasticsearch_password:
+        - If the full-text search server is protected by a user ID and password, enter the password for the full-text search server.
+      elasticsearch_ssl_verify_mode:
+        - Select the certificate verification mode for the full-text search server.
+        - If the full-text search server uses a self-signed certificate and you are unable to verify the certificate, please select “none”.
 
     ss/addon/source_cleaner/site_setting:
       source_cleaner_unwrap_tag_state:

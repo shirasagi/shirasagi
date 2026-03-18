@@ -218,6 +218,15 @@ production: &production
       - "--source-map-urls=relative"
       - "--embed-source-map"
 
+  preview:
+    # プレビュー画面で外部サイトをクリックした際の動作
+    #
+    # - block: 外部サイトをクリックした際、アラートを表示し遷移できないようにする。
+    # - block_if_untrusted: 外部サイトが信頼できない場合のみアラートを表示し遷移できないようにする。
+    # - no_block: 一切のブロックをしない。
+    external_block: "block_if_untrusted"
+    trusted_urls: []
+
 test:
   <<: *production
 

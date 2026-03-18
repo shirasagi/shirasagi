@@ -25,6 +25,10 @@ class Cms::ContentLinkChecker
       new(result: :nofollow, message: nil, redirection_count: redirection_count, normalized_url: normalized_url)
     end
 
+    def self.skip(redirection_count: 0, normalized_url: nil)
+      new(result: :skip, message: nil, redirection_count: redirection_count, normalized_url: normalized_url)
+    end
+
     def self.error(message:, redirection_count: 0, normalized_url: nil)
       new(result: :error, message: message, redirection_count: redirection_count, normalized_url: normalized_url)
     end
@@ -49,22 +53,25 @@ class Cms::ContentLinkChecker
       next if link == "#"
       next if extracted_urls[link]
 
-      full_url = Addressable::URI.join(root_full_url, link).to_s
-      extracted_urls[link] = full_url
-      next if results[full_url]
+      full_url = Addressable::URI.join(root_full_url, link)
+      str_full_url = full_url.to_s
+      extracted_urls[link] = str_full_url
+      next if results[str_full_url]
 
       if rel && rel.include?("nofollow") || ss_rel && ss_rel.include?("nofollow")
         result = Result.nofollow
       else
         if link.start_with?("#")
           result = check_fragment(link)
+        elsif ignore?(full_url)
+          result = Result.skip
         else
           result = Result.from(check_url(full_url))
         end
       end
 
-      result = result.with(normalized_url: full_url)
-      results[full_url] = result
+      result = result.with(normalized_url: str_full_url)
+      results[str_full_url] = result
     rescue Addressable::URI::InvalidURIError
       extracted_urls[link] = link
       results[link] = Result.error(message: I18n.t("errors.messages.link_check_failed_invalid_link"))
@@ -109,5 +116,10 @@ class Cms::ContentLinkChecker
 
   def check_url(full_url)
     checker.check_url(full_url)
+  end
+
+  def ignore?(full_url)
+    @matcher ||= Cms::CheckLinks::IgnoreUrlMatcher.new(cur_site: cur_site)
+    @matcher.match?(full_url)
   end
 end

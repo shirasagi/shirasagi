@@ -1,6 +1,10 @@
 class Cms::PreviewController < ApplicationController
   include Cms::BaseFilter
 
+  cattr_accessor :external_block, :trusted_urls, instance_accessor: false
+  self.external_block = (SS.config.cms.preview["external_block"] rescue nil) || "block"
+  self.trusted_urls = (SS.config.cms.preview["trusted_urls"] rescue nil) || SS::EMPTY_ARRAY
+
   protect_from_forgery except: [:index]
 
   before_action :set_controller
@@ -153,14 +157,32 @@ class Cms::PreviewController < ApplicationController
     @contents_status, @contents_headers, @contents_body = Rails.application.call(@contents_env)
   end
 
+  def blocked?(url)
+    case self.class.external_block
+    when "no_block"
+      false
+    when "block_if_untrusted"
+      @trusted_urls ||= begin
+        trusted_urls = [ "//#{@cur_site.domain_with_subdir}" ]
+        trusted_urls += self.class.trusted_urls
+        trusted_urls
+      end
+
+      trusted = Sys::TrustedUrlValidator.valid_url?(Addressable::URI.parse(url.to_s), @trusted_urls)
+      !trusted
+    else # block
+      true
+    end
+  end
+
   def convert_html_to_preview(body, options)
     preview_url = cms_preview_path preview_date: params[:preview_date]
     body = String.new(body)
     body.gsub!(/(href|src)=".*?"/) do |m|
       url = m.match(/.*?="(.*?)"/)[1]
-      p_url = Cms::PreviewLink.new(@cur_site, preview_url, params[:path], url)
+      p_url = Cms::PreviewLink.parse(@cur_site, preview_url, params[:path], url)
       m.sub!(/=".*?"/, "=\"#{p_url.expanded}\"") if p_url.expanded != url
-      m += ' data-external-preview="true"' if p_url.external?
+      m += ' data-external-preview="true"' if p_url.external? && blocked?(url)
       m
     end
     body.gsub!(/<form.*?>/) do |m|
@@ -172,7 +194,7 @@ class Cms::PreviewController < ApplicationController
 
       case method
       when "get"
-        p_url = Cms::PreviewLink.new(@cur_site, preview_url, params[:path], url)
+        p_url = Cms::PreviewLink.parse(@cur_site, preview_url, params[:path], url)
         m.sub!(/action=".*?"/, "action=\"#{p_url.expanded}\"") if p_url.expanded != url
         m.sub!(/>$/, ' data-external-preview="true">') if p_url.external?
       when "post"

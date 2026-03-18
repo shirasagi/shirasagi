@@ -251,6 +251,18 @@ module Tasks
           end
         end
       end
+
+      def consistency_check
+        with_site(ENV['site']) do |site|
+          perform_job(::Cms::ConsistencyCheckJob, site: site)
+        end
+      end
+
+      def consistency_repair
+        with_site(ENV['site']) do |site|
+          perform_job(::Cms::ConsistencyCheckJob, site: site, repair: true)
+        end
+      end
     end
   end
 end
