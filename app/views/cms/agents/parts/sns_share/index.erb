@@ -32,8 +32,8 @@ facebook_js_needed = false
         %>
       <% else %>
         <a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= url %>"><%= t "cms.sns_share.tweet" %></a>
-        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-        if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+'://platform.twitter.com/widgets.js';
+        <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];
+        if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://platform.twitter.com/widgets.js';
         fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
       <% end %>
     </div>
@@ -46,9 +46,9 @@ facebook_js_needed = false
         <a href="https://b.hatena.ne.jp/entry/<%= url %>" class="hatena-bookmark-button"
           data-hatena-bookmark-layout="standard-balloon"
           data-hatena-bookmark-lang="ja" title="<%= t "cms.sns_share.hatena_add" %>">
-          <img src="//b.st-hatena.com/images/entry-button/button-only@2x.png"
+          <img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png"
             alt="<%= t "cms.sns_share.hatena_add" %>" width="20" height="20" style="border: none;" /></a>
-        <script type="text/javascript" src="//b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
+        <script type="text/javascript" src="https://b.st-hatena.com/js/bookmark_button.js" charset="utf-8" async="async"></script>
       <% end %>
     </div>
 
@@ -61,7 +61,7 @@ facebook_js_needed = false
         %>
       <% else %>
         <div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja" data-url="<%= url %>"></div>
-        <script src="//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" async="async" defer="defer" ></script>
+        <script src="https://scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" async="async" defer="defer" ></script>
       <% end %>
     </div>
   <% end %>
