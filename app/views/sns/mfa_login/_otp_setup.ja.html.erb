@@ -46,6 +46,8 @@
           セットアップ・キー（秘密キー）: <code><%= otp_secret %></code> <%= button_tag(t("ss.buttons.copy"), type: "button", class: "btn clipboard-copy-button", data: { text: otp_secret }) %>
         </div>
       </details>
+
+      <p class="otp-setup-qr-code-trademark-notice"><%= t("ss.qr_code_trademark_notice") %></p>
     </div>
   </div>
 

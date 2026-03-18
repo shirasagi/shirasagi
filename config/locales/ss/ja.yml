@@ -22,6 +22,7 @@ ja:
     operation: 操作
     organization: 組織
     qr_code: QRコード
+    qr_code_trademark_notice: QRコードは株式会社デンソーウェーブの登録商標です。
     regexp: 正規表現
     resize_image: 画像リサイズ
     no_resize_image: 画像リサイズしない
