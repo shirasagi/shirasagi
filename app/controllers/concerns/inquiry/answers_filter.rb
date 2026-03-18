@@ -5,7 +5,6 @@ module Inquiry::AnswersFilter
     model Inquiry::Answer
 
     append_view_path "app/views/inquiry/answers"
-    append_view_path "app/views/cms/pages"
 
     before_action :set_items, only: %i[index download]
   end
