@@ -4,11 +4,13 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
   describe "copy part" do
     let(:site) { cms_site }
     let(:target_node_name) { unique_id }
+    let(:target_node_index_name) { unique_id }
     let(:target_node_filename) { unique_id }
     let(:task) do
       create(
         :copy_nodes_task, site_id: site.id, node_id: node.id,
-        target_node_name: target_node_name, target_node_filename: target_node_filename
+        target_node_name: target_node_name, target_node_index_name: target_node_index_name,
+        target_node_filename: target_node_filename
       )
     end
     let!(:node) { create :cms_node, cur_site: site }
@@ -21,7 +23,10 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
       before do
         expect do
           job_class = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node.id)
-          ss_perform_now(job_class, target_node_name: target_node_name, target_node_filename: target_node_filename)
+          ss_perform_now(
+            job_class,
+            target_node_name: target_node_name, target_node_index_name: target_node_index_name,
+            target_node_filename: target_node_filename)
         end.to output(include(part.filename)).to_stdout
       end
 
