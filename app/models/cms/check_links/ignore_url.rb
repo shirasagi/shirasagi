@@ -17,21 +17,6 @@ class Cms::CheckLinks::IgnoreUrl
     I18n.t("cms.options.ignore_url_kind").map { |k, v| [v, k] }
   end
 
-  def match?(url)
-    return false if url.blank?
-
-    case kind
-    when "start_with"
-      url.start_with?(name)
-    when "end_with"
-      url.end_with?(name)
-    when "include"
-      url.include?(name)
-    else
-      url == name
-    end
-  end
-
   class << self
     def search(params = {})
       criteria = all
