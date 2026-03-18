@@ -50,7 +50,7 @@ class SS::FilePublisher
       src = file.path
       return unless ::File.exist?(src)
 
-      ::FileUtils.mkdir_p(dirname) unless ::Dir.exist?(dirname)
+      ::FileUtils.mkdir_p(dirname)
 
       # on some conditions, filename doesn't normalize. so it needs to be checked.
       if file.filename.ascii_only?
@@ -96,10 +96,12 @@ class SS::FilePublisher
       end
     end
 
+    # rubocop:disable Style/TrivialAccessors
     if Rails.env.test?
       def singleton=(value)
         @singleton = value
       end
     end
+    # rubocop:enable Style/TrivialAccessors
   end
 end
