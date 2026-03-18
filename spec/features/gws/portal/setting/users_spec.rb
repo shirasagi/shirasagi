@@ -279,9 +279,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.arrange_portlets')
@@ -350,9 +348,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.manage_portlets')
@@ -425,9 +421,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.settings')
@@ -519,9 +513,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.arrange_portlets')
@@ -636,9 +628,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.settings')
