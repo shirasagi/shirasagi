@@ -190,6 +190,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       cur_site: @site, base_url: source.full_url, html: result.content)
     links = extractor.call
     links.each do |link|
+      next if link.type == :ignore
+
       extracted_source = @full_url_to_source[link.full_url.to_s]
       if extracted_source.present?
         extracted_source.referrers << WeakRef.new(source)

@@ -8,32 +8,39 @@ class Cms::CheckLinks::LinkExtractor
     return SS::EMPTY_ARRAY if html.blank?
 
     ret = []
+    layout_yield = 0
+    document.traverse do |node|
+      if node.comment?
+        comment_text = node.text.strip
+        if comment_text == "layout_yield"
+          layout_yield += 1
+        elsif comment_text == "/layout_yield"
+          layout_yield -= 1
+        end
 
-    # scan layout_yield offset
-    normalized_html.scan(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/m)
-    yield_start, yield_end = Regexp.last_match.offset(0) if Regexp.last_match
-    yield_start ||= normalized_html.size
-    yield_end ||= 0
+        next
+      end
+      next unless node.element?
 
-    # remove href in comment
-    normalized_html.gsub!(/<!--.*?-->/m) { |m| " " * m.size }
-
-    normalized_html.scan(/\shref="([^"]+)"/i) do |m|
-      offset = Regexp.last_match.offset(0)
-      href_start, href_end = offset
-      inner_yield = (href_start > yield_start && href_end < yield_end)
-
-      extracted_href = m[0]
-      next if extracted_href[0] == "#"
+      extracted_href = node["href"]
+      next if extracted_href.blank? || extracted_href[0] == "#"
 
       extracted_full_url = Addressable::URI.join(base_url, extracted_href) rescue nil
       next unless extracted_full_url
 
       extracted_full_url = extracted_full_url.normalize
-      next if ignore_urls.match?(extracted_full_url)
+      if ignore_urls.match?(extracted_full_url)
+        type = :ignore
+      elsif layout_yield > 0
+        type = :inner_yield
+      else
+        type = :outer_yield
+      end
+      rel = node["rel"].presence
+      ss_rel = node["data-ss-rel"].presence
 
       link = Cms::CheckLinks::Link.new(
-        full_url: extracted_full_url, href: extracted_href, offset: offset, inner_yield: inner_yield)
+        full_url: extracted_full_url, href: extracted_href, line: node.line, type: type, rel: rel, ss_rel: ss_rel)
       ret << link
     end
 
@@ -51,5 +58,9 @@ class Cms::CheckLinks::LinkExtractor
 
   def normalized_html
     @normalized_html ||= NKF.nkf("-w", html)
+  end
+
+  def document
+    @document ||= Nokogiri::HTML5.fragment(normalized_html)
   end
 end
