@@ -12,12 +12,12 @@ facebook_js_needed = false
   <% if service_name == "fb_share" %>
     <div class="site fb fb-share">
       <% if service_type == "link_only" %>
-        <%= link_to tag.span(t("cms.sns_share.fb_share_button"), class: "#{service_name}_link_title"), SS.facebook_sharer_url(u: url, src: nil), class: "#{service_name}_link", target: "_blank", rel: "noopener" %>
+        <%= link_to tag.span(t("cms.sns_share.fb_share_button"), class: "#{service_name}_link_title"), SS.facebook_sharer_url(u: url, src: nil), class: "#{service_name}_link", target: "_blank", rel: "noopener nofollow" %>
       <% else %>
         <% facebook_js_needed = true %>
         <div class="fb-share-button" data-href="<%= url %>" data-layout="button_count" data-size="small">
           <%=
-            link_to t("cms.sns_share.fb_share_button"), SS.facebook_sharer_url(u: url), class: "fb-xfbml-parse-ignore", target: "_blank", rel: "noopener"
+            link_to t("cms.sns_share.fb_share_button"), SS.facebook_sharer_url(u: url), class: "fb-xfbml-parse-ignore", target: "_blank", rel: "noopener nofollow"
           %>
         </div>
       <% end %>
@@ -28,10 +28,10 @@ facebook_js_needed = false
       <% if service_type == "link_only" %>
         <%=
           params = { url: url, text: (@cur_page || @cur_node).try(:name) }
-          link_to tag.span(t("cms.sns_share.tweet"), class: "#{service_name}_link_title"), "https://x.com/intent/tweet?#{params.to_query}", class: "#{service_name}_link", target: "_blank", rel: "noopener"
+          link_to tag.span(t("cms.sns_share.tweet"), class: "#{service_name}_link_title"), "https://x.com/intent/tweet?#{params.to_query}", class: "#{service_name}_link", target: "_blank", rel: "noopener nofollow"
         %>
       <% else %>
-        <a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= url %>"><%= t "cms.sns_share.tweet" %></a>
+        <a href="https://twitter.com/share" class="twitter-share-button" data-url="<%= url %>" rel="nofollow"><%= t "cms.sns_share.tweet" %></a>
         <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];
         if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src='https://platform.twitter.com/widgets.js';
         fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');</script>
@@ -41,9 +41,9 @@ facebook_js_needed = false
   <% elsif service_name == "hatena" %>
     <div class="site hatena">
       <% if service_type == "link_only" %>
-        <%= link_to tag.span(t("cms.sns_share.hatena"), class: "#{service_name}_link_title"), "https://b.hatena.ne.jp/entry/#{CGI.escape(url)}", class: "#{service_name}_link", target: "_blank", rel: "noopener" %>
+        <%= link_to tag.span(t("cms.sns_share.hatena"), class: "#{service_name}_link_title"), "https://b.hatena.ne.jp/entry/#{CGI.escape(url)}", class: "#{service_name}_link", target: "_blank", rel: "noopener nofollow" %>
       <% else %>
-        <a href="https://b.hatena.ne.jp/entry/<%= url %>" class="hatena-bookmark-button"
+        <a href="https://b.hatena.ne.jp/entry/<%= url %>" class="hatena-bookmark-button" target="_blank" rel="noopener nofollow"
           data-hatena-bookmark-layout="standard-balloon"
           data-hatena-bookmark-lang="ja" title="<%= t "cms.sns_share.hatena_add" %>">
           <img src="https://b.st-hatena.com/images/entry-button/button-only@2x.png"
@@ -57,7 +57,7 @@ facebook_js_needed = false
       <% if service_type == "link_only" %>
         <%=
           params = [ (@cur_page || @cur_node).try(:name), url ].join("\r\n")
-          link_to tag.span(t("cms.sns_share.line"), class: "#{service_name}_link_title"), "https://line.me/R/msg/text/?#{CGI.escape(params)}", class: "#{service_name}_link", target: "_blank", rel: "noopener"
+          link_to tag.span(t("cms.sns_share.line"), class: "#{service_name}_link_title"), "https://line.me/R/msg/text/?#{CGI.escape(params)}", class: "#{service_name}_link", target: "_blank", rel: "noopener nofollow"
         %>
       <% else %>
         <div class="line-it-button" style="display: none;" data-type="share-a" data-lang="ja" data-url="<%= url %>"></div>
