@@ -9,6 +9,94 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
     Fs.rm_rf site.path
   end
 
+  context "with anchor" do
+    it do
+      html = <<~HTML
+        <a href="#anchor">Anchor</a>
+        <a href="#">My Self</a>
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.call
+      expect(links).to have(1).items
+
+      links[0].tap do |link|
+        expect(link.full_url).to be_a(Addressable::URI)
+        expect(link.full_url).to eq Addressable::URI.parse("#{site.full_url}#anchor")
+        expect(link.href).to eq "#anchor"
+        expect(link.line).to eq 1
+        expect(link.type).to eq :outer_yield
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+    end
+  end
+
+  context "with invalid url" do
+    it do
+      html = <<~HTML
+        <a href="https://invalid.example.jp /">Invalid URL</a>
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.call
+      expect(links).to have(1).items
+
+      links[0].tap do |link|
+        expect(link.full_url).to be_blank
+        expect(link.href).to eq "https://invalid.example.jp /"
+        expect(link.line).to eq 1
+        expect(link.type).to eq :broken
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+    end
+  end
+
+  context "with javascript:" do
+    it do
+      html = <<~HTML
+        <a href="javascript:void(0);">Nop</a>
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.call
+      expect(links).to have(1).items
+
+      links[0].tap do |link|
+        expect(link.full_url).to be_a(Addressable::URI)
+        expect(link.full_url).to eq Addressable::URI.parse("javascript:void(0);")
+        expect(link.href).to eq "javascript:void(0);"
+        expect(link.line).to eq 1
+        expect(link.type).to eq :ignore
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+    end
+  end
+
+  context "with /assets/cms/public.css" do
+    it do
+      html = <<~HTML
+        <link rel="stylesheet" href="/assets/cms/public.css" media="all" />
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.call
+      expect(links).to have(1).items
+
+      links[0].tap do |link|
+        expect(link.full_url).to be_a(Addressable::URI)
+        expect(link.full_url).to eq Addressable::URI.join(site.full_url, "/assets/cms/public.css")
+        expect(link.href).to eq "/assets/cms/public.css"
+        expect(link.line).to eq 1
+        expect(link.type).to eq :ignore
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+    end
+  end
+
   context "with node 'event/page'" do
     let(:today) { Time.zone.today }
     let!(:layout) { create_cms_layout cur_site: site }

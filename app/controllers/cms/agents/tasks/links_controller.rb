@@ -188,9 +188,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     # リンク抽出
     extractor = Cms::CheckLinks::LinkExtractor.new(
       cur_site: @site, base_url: source.full_url, html: result.content)
-    links = extractor.call
-    links.each do |link|
-      next if link.type == :ignore
+    extractor.each do |link|
+      next if link.type == :ignore || link.type == :broken
+      next if link.href[0] == "#"
 
       extracted_source = @full_url_to_source[link.full_url.to_s]
       if extracted_source.present?

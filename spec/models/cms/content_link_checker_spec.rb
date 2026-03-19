@@ -95,12 +95,12 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       checker.results[checker.extracted_urls[success_url3]].tap do |result|
         expect(result.result).to eq :success
         expect(result.message).to be_blank
-        expect(result.normalized_url).to eq success_url3
+        expect(result.normalized_url).to eq Addressable::URI.parse(success_url3).normalize.to_s
       end
       checker.results[checker.extracted_urls[success_url4]].tap do |result|
         expect(result.result).to eq :success
         expect(result.message).to be_blank
-        expect(result.normalized_url).to eq success_url4
+        expect(result.normalized_url).to eq Addressable::URI.parse(success_url4).normalize.to_s
       end
       checker.results[checker.extracted_urls[failed_url1]].tap do |result|
         expect(result.result).to eq :error
@@ -115,7 +115,7 @@ describe Cms::ContentLinkChecker, type: :model, dbscope: :example do
       checker.results[checker.extracted_urls[failed_url3]].tap do |result|
         expect(result.result).to eq :error
         expect(result.message).to eq I18n.t("errors.messages.link_check_failed_not_found")
-        expect(result.normalized_url).to eq failed_url3
+        expect(result.normalized_url).to eq Addressable::URI.parse(failed_url3).normalize.to_s
       end
       checker.results[checker.extracted_urls[invalid_url1]].tap do |result|
         expect(result.result).to eq :error
