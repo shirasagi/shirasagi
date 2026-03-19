@@ -48,6 +48,14 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
           it_behaves_like "expand preview link"
         end
+
+        context "invalid anchor: #/foo/bar.baz" do
+          let(:url) { "#/foo/bar.baz" }
+          let(:expanded) { url }
+          let(:external) { false }
+
+          it_behaves_like "expand preview link"
+        end
       end
     end
   end
@@ -477,6 +485,16 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
           it_behaves_like "expand preview link"
         end
       end
+
+      context "invalid path: ' /page .html '" do
+        let(:preview_path) { nil }
+        let(:url) { " /page .html " }
+        # let(:expanded) { cms_preview_path(site: cur_site, path: " /page .html ") }
+        let(:expanded) { "/.s#{cur_site.id}/preview/ /page .html " }
+        let(:external) { false }
+
+        it_behaves_like "expand preview link"
+      end
     end
 
     context "in subsite1" do
@@ -819,6 +837,14 @@ describe Cms::PreviewLink, type: :model, dbscope: :example do
 
         context "href //scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" do
           let(:url) { "//scdn.line-apps.com/n/line_it/thirdparty/loader.min.js" }
+          let(:expanded) { url }
+          let(:external) { true }
+
+          it_behaves_like "expand preview link"
+        end
+
+        context "invalid url: 'https://invalid.example.jp /'" do
+          let(:url) { "https://invalid.example.jp /" }
           let(:expanded) { url }
           let(:external) { true }
 

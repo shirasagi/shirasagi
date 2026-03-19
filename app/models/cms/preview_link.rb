@@ -12,7 +12,9 @@ module Cms
       def parse(site, preview_base, preview_path, url)
         preview_path = preview_path.to_s
 
-        full_url = Addressable::URI.parse(url)
+        full_url = Addressable::URI.parse(url) rescue nil
+        return new(internal: false, expanded: url) unless full_url
+
         if full_url.scheme && full_url.scheme != "http" && full_url.scheme != "https"
           return new(internal: true, expanded: url)
         end
