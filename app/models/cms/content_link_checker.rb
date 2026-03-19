@@ -65,7 +65,7 @@ class Cms::ContentLinkChecker
       extracted_urls[link.href] = str_full_url
       next if results[str_full_url]
 
-      if link.rel && link.rel.include?("nofollow") || link.ss_rel && link.ss_rel.include?("nofollow")
+      if link.nofollow?
         result = Result.nofollow
       else
         if link.href.start_with?("#")

@@ -191,6 +191,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     extractor.each do |link|
       next if link.type == :ignore || link.type == :broken
       next if link.href[0] == "#"
+      next if link.nofollow?
 
       extracted_source = @full_url_to_source[link.full_url.to_s]
       if extracted_source.present?
