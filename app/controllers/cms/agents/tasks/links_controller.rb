@@ -8,50 +8,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   before_action :set_params
 
-  class Source
-    include ActiveModel::Model
-
-    attr_accessor :full_url, :links, :referrers, :status
-    attr_reader :sequence
-
-    def initialize(*args, **kwargs)
-      super
-
-      @sequence = self.class.next_sequence
-      @links ||= []
-      @referrers ||= []
-      @status ||= :to_be_examined
-    end
-
-    def self.next_sequence
-      @next_sequence ||= 1
-      ret = @next_sequence
-      @next_sequence += 1
-      ret
-    end
-
-    def self.new_from_site(site)
-      full_url = Addressable::URI.parse(site.full_url)
-      full_url = full_url.normalize
-      new(full_url: full_url)
-    end
-  end
-
-  Link = Data.define(:source, :href, :offset, :inner_yield) do
-    delegate :full_url, :status, to: :source
-
-    def meta
-      { offset: offset, inner_yield: inner_yield }
-    end
-  end
-
   private
 
   def set_params
-  end
-
-  def ignore_urls
-    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrlMatcher.new(cur_site: @site)
   end
 
   def create_report(errors)
@@ -177,7 +136,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @base_url = @site.full_url.sub(/^(https?:\/\/.*?\/).*/, '\\1')
 
-    @queue = [ Source.new_from_site(@site) ]
+    @queue = [ Cms::CheckLinks::Source.new_from_site(@site) ]
     @full_url_to_source = @queue.index_by { _1.full_url.to_s }
 
     @html_request_timeout = SS.config.cms.check_links["html_request_timeout"] rescue 10
@@ -227,7 +186,24 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return if !@check_mobile && mobile_url?(source)
 
     # リンク抽出
-    extract_links(source, result.content)
+    extractor = Cms::CheckLinks::LinkExtractor.new(
+      cur_site: @site, base_url: source.full_url, html: result.content)
+    links = extractor.call
+    links.each do |link|
+      extracted_source = @full_url_to_source[link.full_url.to_s]
+      if extracted_source.present?
+        extracted_source.referrers << WeakRef.new(source)
+      else
+        extracted_source = Cms::CheckLinks::Source.new(full_url: link.full_url)
+        extracted_source.referrers << WeakRef.new(source)
+
+        @full_url_to_source[extracted_source.full_url.to_s] = extracted_source
+        @queue << extracted_source
+      end
+
+      link = Cms::CheckLinks::LinkWithSource.new(source: extracted_source, link: link)
+      source.links << link
+    end
   end
 
   def to_email
@@ -253,50 +229,5 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return false if @site.mobile_disabled?
     return false if !source.full_url.path.match?(/^#{@site.mobile_url}/)
     true
-  end
-
-  # リンク抽出
-  def extract_links(source, html)
-    begin
-      html = NKF.nkf("-w", html)
-
-      # scan layout_yield offset
-      html.scan(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/m)
-      yield_start, yield_end = Regexp.last_match.offset(0) if Regexp.last_match
-      yield_start ||= html.size
-      yield_end ||= 0
-
-      # remove href in comment
-      html.gsub!(/<!--.*?-->/m) { |m| " " * m.size }
-
-      html.scan(/\shref="([^"]+)"/i) do |m|
-        offset = Regexp.last_match.offset(0)
-        href_start, href_end = offset
-        inner_yield = (href_start > yield_start && href_end < yield_end)
-
-        extracted_href = m[0]
-        next if extracted_href[0] == "#"
-
-        extracted_full_url = Addressable::URI.join(source.full_url, extracted_href)
-        extracted_full_url = extracted_full_url.normalize
-        next if ignore_urls.match?(extracted_full_url)
-
-        extracted_source = @full_url_to_source[extracted_full_url.to_s]
-        if extracted_source.present?
-          extracted_source.referrers << WeakRef.new(source)
-        else
-          extracted_source = Source.new(full_url: extracted_full_url)
-          extracted_source.referrers << WeakRef.new(source)
-
-          @full_url_to_source[extracted_full_url.to_s] = extracted_source
-          @queue << extracted_source
-        end
-
-        link = Link.new(source: WeakRef.new(extracted_source), href: extracted_href, offset: offset, inner_yield: inner_yield)
-        source.links << link
-      end
-    rescue => e
-      Rails.logger.error { e.message }
-    end
   end
 end
