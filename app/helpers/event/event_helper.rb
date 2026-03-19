@@ -73,9 +73,13 @@ module Event::EventHelper
     path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
     enable = (opts[:enable] != nil) ? opts[:enable] : true
     display = opts[:display].present? ? opts[:display] : 'index'
+    data = {}
+    if opts[:nofollow]
+      data[:ss_rel] = "nofollow"
+    end
 
     if enable && within_one_year?(date) || opts[:style]
-      link_to name, sprintf("#{path}%04d%02d/#{display}.html", year, month)
+      link_to name, sprintf("#{path}%04d%02d/#{display}.html", year, month), data: data
     else
       name
     end
@@ -85,7 +89,7 @@ module Event::EventHelper
     year  = date.year
     month = date.month
 
-    link_to t("event.ics_file"), sprintf("#{@cur_node.try(:url)}%04d%02d/list.ics", year, month), class: opts[:class]
+    link_to t("event.ics_file"), sprintf("#{@cur_node.try(:url)}%04d%02d/list.ics", year, month), class: opts[:class], data: { ss_rel: "nofollow" }
   end
 
   def link_to_daily(date, opts = {})
@@ -95,9 +99,13 @@ module Event::EventHelper
     name = opts[:name].present? ? opts[:name] : "#{day}#{t_date('day')}"
     path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
     enable = (opts[:enable] != nil) ? opts[:enable] : true
+    data = {}
+    if opts[:nofollow]
+      data[:ss_rel] = "nofollow"
+    end
 
     if enable && within_one_year?(date)
-      link_to name, sprintf("#{path}%04d%02d%02d/", year, month, day)
+      link_to name, sprintf("#{path}%04d%02d%02d/", year, month, day), data: data
     else
       name
     end
