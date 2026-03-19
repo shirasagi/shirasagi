@@ -5,9 +5,13 @@ module Cms::ArchiveHelper
     name = opts[:name].present? ? opts[:name] : "#{month}#{t_date('month')}"
     path = opts[:path].present? ? opts[:path] : @cur_node.try(:url).to_s
     enable = (opts[:enable] != nil) ? opts[:enable] : true
+    data = {}
+    if opts[:nofollow]
+      data[:ss_rel] = "nofollow"
+    end
 
     if enable && within_one_year?(date)
-      link_to name, sprintf("#{path}%04d%02d", year, month)
+      link_to name, sprintf("#{path}%04d%02d", year, month), data: data
     else
       name
     end
