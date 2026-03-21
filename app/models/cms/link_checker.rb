@@ -84,6 +84,11 @@ class Cms::LinkChecker
       return get_http(full_url, redirection: redirection)
     end
 
+    if generated_file_path = get_generated_file_path(site, full_url)
+      return Result.success(
+        redirection_count: redirection.count, content_type: "text/html; charset=UTF-8", content: File.read(generated_file_path))
+    end
+
     # retrieve internal page
     if fs_path?(full_url)
       full_url = append_access_token_if_possible(full_url)
@@ -192,6 +197,12 @@ class Cms::LinkChecker
       end
       Result.error(error_code: error_code, redirection_count: redirection.count)
     end
+  end
+
+  def get_generated_file_path(site, addressable_full_url)
+    path = "#{site.root_path}#{addressable_full_url.path}"
+    path = File.join(path, "index.html") if Fs.directory?(path)
+    Fs.file?(path) ? path : nil
   end
 
   def fs_path?(addressable_full_url)
