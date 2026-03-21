@@ -28,36 +28,25 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
     @task.log "# #{@report.name} created"
 
-    referrers = errors.map(&:referrers)
-    referrers.flatten!
-    referrers.uniq!
-
-    # 例えば "/" と "/index.html" は同じページを指している場合がある。
-    # DB アクセス数を減らす目的で、まずは URL で名寄せする。その後、ページ・フォルダーで再び名寄せする
-    page_map = {}
-    node_map = {}
-    referrers.group_by { _1.full_url }.each do |full_url, sources|
+    sources_having_error_links = errors.map(&:referrers)
+    sources_having_error_links.flatten!
+    sources_having_error_links.uniq!
+    sources_having_error_links.group_by { _1.full_url }.each do |full_url, sources|
       path = full_url.path
       path = path.sub(/^#{::Regexp.escape(@site.url)}/, "/") if @site.url != "/"
       path += "index.html" if path.end_with?("/")
 
       page = find_page(path)
       if page
-        page_map[page] ||= []
-        page_map[page] += sources
+        create_report_page(full_url, sources, page)
         next
       end
 
       node = find_node(path)
       next unless node
 
-      node_map[node] ||= []
-      node_map[node] += sources
+      create_report_node(full_url, sources, node)
     end
-
-    error_full_urs = Set.new(errors.map(&:full_url))
-    create_report_pages(page_map, error_full_urs)
-    create_report_nodes(node_map, error_full_urs)
 
     # destroy old reports
     report_ids = Cms::CheckLinks::Report.site(@site).limit(@report_max_age).pluck(:id)
@@ -92,42 +81,38 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     node
   end
 
-  def create_report_pages(page_map, error_full_urs)
-    page_map.each do |page, sources|
-      item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: @report)
-      item.ref = page.url
-      item.ref_url = page.full_url
-      item.page = page
-      item.name = page.name
-      item.filename = page.filename
+  def create_report_page(full_url, sources, page)
+    item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: @report)
+    item.ref = full_url.request_uri
+    item.ref_url = full_url.to_s
+    item.page = page
+    item.name = page.name
+    item.filename = page.filename
 
-      links = sources.map(&:links)
-      links.flatten!
+    links = sources.map(&:links)
+    links.flatten!
 
-      error_links = links.select { error_full_urs.include?(_1.full_url) }
-      item.urls = error_links.map(&:href).uniq
-      item.group_ids = page.group_ids
-      item.save
-    end
+    error_links = links.select { _1.status == :error }
+    item.urls = error_links.map(&:href).uniq
+    item.group_ids = page.group_ids
+    item.save
   end
 
-  def create_report_nodes(node_map, error_full_urs)
-    node_map.each do |node, sources|
-      item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: @report)
-      item.ref = node.url
-      item.ref_url = node.full_url
-      item.node = node
-      item.name = node.name
-      item.filename = node.filename
+  def create_report_node(full_url, sources, node)
+    item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: @report)
+    item.ref = full_url.request_uri
+    item.ref_url = full_url.to_s
+    item.node = node
+    item.name = node.name
+    item.filename = node.filename
 
-      links = sources.map(&:links)
-      links.flatten!
+    links = sources.map(&:links)
+    links.flatten!
 
-      error_links = links.select { error_full_urs.include?(_1.full_url) }
-      item.urls = error_links.map(&:href).uniq
-      item.group_ids = node.group_ids
-      item.save
-    end
+    error_links = links.select { _1.status == :error }
+    item.urls = error_links.map(&:href).uniq
+    item.group_ids = node.group_ids
+    item.save
   end
 
   public

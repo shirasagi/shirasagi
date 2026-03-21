@@ -431,4 +431,116 @@ describe Cms::CheckLinksJob, dbscope: :example do
       expect(a_request(:get, url)).to have_been_made.times(1)
     end
   end
+
+  context "with complex contents like calendar" do
+    let!(:layout) do
+      html = <<~HTML
+        <html>
+          <body>
+            <br><br><br>
+            <a href="https://www.example.jp/notfound1.html">Not Found1</a>
+            <div id="main" class="page">
+              {{ yield }}
+            </div>
+            <a href="https://www.example.jp/notfound2.html">Not Found2</a>
+          </body>
+        </html>
+      HTML
+      create :cms_layout, cur_site: site, html: html
+    end
+
+    let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html", state: "public" }
+    let!(:calendar) { create :event_node_page, cur_site: site, layout: layout, state: "public" }
+    let!(:event_date) { Time.zone.today }
+    let!(:page1) do
+      event_recurrences = [ { kind: "date", start_at: event_date, frequency: "daily", until_on: event_date } ]
+      create(
+        :event_page, cur_site: site, layout: layout, cur_node: calendar, state: "public",
+        event_recurrences: event_recurrences, related_url: nil, ical_link: nil)
+    end
+
+    before do
+      html = <<~HTML
+        <a href="#{calendar.url}">#{calendar.name}</a>
+      HTML
+      index.update!(html: html)
+
+      stub_request(:get, "https://www.example.jp/notfound1.html").to_return(status: 404, body: "", headers: {})
+      stub_request(:get, "https://www.example.jp/notfound2.html").to_return(status: 404, body: "", headers: {})
+
+      expect { ss_perform_now Cms::Node::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+      expect { ss_perform_now Cms::Page::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+      Job::Log.destroy_all
+    end
+
+    it do
+      # expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/784 errors/).to_stdout
+      ss_perform_now described_class.bind(site_id: site.id)
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+        expect(log.logs).to include(include("#{site_url}/"))
+      end
+
+      expect(Cms::CheckLinks::Report.all.count).to eq 1
+      Cms::CheckLinks::Report.all.first.tap do |report|
+        expect(report.site_id).to eq site.id
+        expect(report.name).to include "実行結果"
+        expect(report.link_errors.count).to eq 784
+        expect(report.pages.count).to eq 2
+        expect(report.nodes.count).to eq 782
+        report.pages.to_a.tap do |page_reports|
+          expect(page_reports[0].site_id).to eq site.id
+          expect(page_reports[0].report_id).to eq report.id
+          expect(page_reports[0].ref).to eq site.url
+          expect(page_reports[0].ref_url).to eq site.full_url
+          expect(page_reports[0].page_id).to eq index.id
+          expect(page_reports[0].name).to eq index.name
+          expect(page_reports[0].filename).to eq index.filename
+          expect(page_reports[0].urls).to have(2).items
+          expect(page_reports[0].urls).to include("https://www.example.jp/notfound1.html")
+          expect(page_reports[0].urls).to include("https://www.example.jp/notfound2.html")
+
+          expect(page_reports[1].site_id).to eq site.id
+          expect(page_reports[1].report_id).to eq report.id
+          expect(page_reports[1].ref).to eq page1.url
+          expect(page_reports[1].ref_url).to eq page1.full_url
+          expect(page_reports[1].page_id).to eq page1.id
+          expect(page_reports[1].name).to eq page1.name
+          expect(page_reports[1].filename).to eq page1.filename
+          expect(page_reports[1].urls).to have(2).items
+          expect(page_reports[1].urls).to include("https://www.example.jp/notfound1.html")
+          expect(page_reports[1].urls).to include("https://www.example.jp/notfound2.html")
+        end
+        report.nodes.to_a.tap do |node_reports|
+          expect(node_reports[0].site_id).to eq site.id
+          expect(node_reports[0].report_id).to eq report.id
+          expect(node_reports[0].ref).to eq calendar.url
+          expect(node_reports[0].ref_url).to eq calendar.full_url
+          expect(node_reports[0].node_id).to eq calendar.id
+          expect(node_reports[0].name).to eq calendar.name
+          expect(node_reports[0].filename).to eq calendar.filename
+          expect(node_reports[0].urls).to have(2).items
+          expect(node_reports[0].urls).to include("https://www.example.jp/notfound1.html")
+          expect(node_reports[0].urls).to include("https://www.example.jp/notfound2.html")
+
+          expect(node_reports[5].site_id).to eq site.id
+          expect(node_reports[5].report_id).to eq report.id
+          expect(node_reports[5].ref).to eq "#{calendar.url}#{event_date.prev_month.strftime("%Y%m")}/list.html"
+          expect(node_reports[5].ref_url).to eq "#{calendar.full_url}#{event_date.prev_month.strftime("%Y%m")}/list.html"
+          expect(node_reports[5].node_id).to eq calendar.id
+          expect(node_reports[5].name).to eq calendar.name
+          expect(node_reports[5].filename).to eq calendar.filename
+          expect(node_reports[0].urls).to have(2).items
+          expect(node_reports[0].urls).to include("https://www.example.jp/notfound1.html")
+          expect(node_reports[0].urls).to include("https://www.example.jp/notfound2.html")
+        end
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 0
+    end
+  end
 end
