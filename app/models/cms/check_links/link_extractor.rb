@@ -9,34 +9,14 @@ class Cms::CheckLinks::LinkExtractor
   def each
     return SS::EMPTY_ARRAY if fragment.blank?
 
-    layout_yield = 0
-    fragment.traverse do |node|
-      if node.comment?
-        comment_text = node.text.strip
-        if comment_text == "layout_yield"
-          layout_yield += 1
-        elsif comment_text == "/layout_yield"
-          layout_yield -= 1
-        end
-
-        next
-      end
-      next unless node.element?
-
+    traverse_nodes do |node, layout_yield|
       href = node["href"]
       rel = node["rel"].presence
       ss_rel = node["data-ss-rel"].presence
       next if href.blank? || href == "#"
 
       extracted_full_url = Addressable::URI.join(base_url, href) rescue nil
-      unless extracted_full_url
-        link = Cms::CheckLinks::Link.new(
-          full_url: nil, href: href, line: node.line, type: :broken, rel: rel, ss_rel: ss_rel)
-        yield link
-        next
-      end
-
-      extracted_full_url = extracted_full_url.normalize rescue nil
+      extracted_full_url = extracted_full_url.normalize rescue nil if extracted_full_url
       unless extracted_full_url
         link = Cms::CheckLinks::Link.new(
           full_url: nil, href: href, line: node.line, type: :broken, rel: rel, ss_rel: ss_rel)
@@ -57,7 +37,7 @@ class Cms::CheckLinks::LinkExtractor
       yield link
     end
   rescue => e
-    Rails.logger.error { e.message }
+    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
   end
 
   private
@@ -71,6 +51,26 @@ class Cms::CheckLinks::LinkExtractor
       if html.present?
         Nokogiri::HTML5.fragment(NKF.nkf("-w", html))
       end
+    end
+  end
+
+  def traverse_nodes(&block)
+    layout_yield = 0
+
+    fragment.traverse do |node|
+      if node.comment?
+        comment_text = node.text.strip
+        if comment_text == "layout_yield"
+          layout_yield += 1
+        elsif comment_text == "/layout_yield"
+          layout_yield -= 1
+        end
+
+        next
+      end
+      next unless node.element?
+
+      yield node, layout_yield
     end
   end
 end

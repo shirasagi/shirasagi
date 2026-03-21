@@ -6,6 +6,8 @@ require 'nkf'
 class Cms::Agents::Tasks::LinksController < ApplicationController
   include Cms::PublicFilter::Agent
 
+  IGNORE_LINK_TYPES = Set.new(%i[ignore broken]).freeze
+
   before_action :set_params
 
   private
@@ -189,7 +191,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     extractor = Cms::CheckLinks::LinkExtractor.new(
       cur_site: @site, base_url: source.full_url, html: result.content)
     extractor.each do |link|
-      next if link.type == :ignore || link.type == :broken
+      next if IGNORE_LINK_TYPES.include?(link.type)
       next if link.href[0] == "#"
       next if link.nofollow?
 
