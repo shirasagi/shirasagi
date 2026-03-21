@@ -17,7 +17,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
       HTML
 
       extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
-      links = extractor.call
+      links = extractor.to_a
       expect(links).to have(1).items
 
       links[0].tap do |link|
@@ -39,7 +39,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
       HTML
 
       extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
-      links = extractor.call
+      links = extractor.to_a
       expect(links).to have(1).items
 
       links[0].tap do |link|
@@ -60,7 +60,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
       HTML
 
       extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
-      links = extractor.call
+      links = extractor.to_a
       expect(links).to have(1).items
 
       links[0].tap do |link|
@@ -82,7 +82,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
       HTML
 
       extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
-      links = extractor.call
+      links = extractor.to_a
       expect(links).to have(1).items
 
       links[0].tap do |link|
@@ -91,7 +91,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.href).to eq "/assets/cms/public.css"
         expect(link.line).to eq 1
         expect(link.type).to eq :ignore
-        expect(link.rel).to be_blank
+        expect(link.rel).to eq "stylesheet"
         expect(link.ss_rel).to be_blank
       end
     end
@@ -119,7 +119,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
       html = File.read(index_path)
 
       extractor = described_class.new(cur_site: site, base_url: node.full_url, html: html)
-      links = extractor.call
+      links = extractor.to_a
       puts links.map(&:href).join("\n")
       expect(links).to have(8).items
 
@@ -128,7 +128,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.href).to start_with("/assets")
         expect(link.line).to be > 0
         expect(link.type).to eq :ignore
-        expect(link.rel).to be_blank
+        expect(link.rel).to eq "stylesheet"
         expect(link.ss_rel).to be_blank
       end
       links[1].tap do |link|
@@ -136,7 +136,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.href).to start_with("/assets")
         expect(link.line).to be > 0
         expect(link.type).to eq :ignore
-        expect(link.rel).to be_blank
+        expect(link.rel).to eq "stylesheet"
         expect(link.ss_rel).to be_blank
       end
       links[2].tap do |link|
