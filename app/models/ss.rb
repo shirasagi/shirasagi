@@ -45,6 +45,7 @@ module SS
     end
   end
 
+  # この設定を利用する前に、環境変数 "HTTP_PROXY" や "HTTPS_PROXY" の利用を検討すること。
   ProxySetting = Data.define(:disable, :uri, :username, :password, :ssl_verify_mode) do
     def self.load
       disable = SS.config.proxy.disable
@@ -57,10 +58,14 @@ module SS
       new(disable: disable, uri: uri, username: username, password: password, ssl_verify_mode: ssl_verify_mode)
     end
 
-    cattr_writer :instance, instance_accessor: false
+    @@instance = nil
 
     def self.instance
       @@instance ||= self.load
+    end
+
+    def self.instance=(setting)
+      @@instance = setting
     end
 
     def disabled?
@@ -88,6 +93,20 @@ module SS
       case ssl_verify_mode
       when "VERIFY_NONE"
         { verify: false }
+      else
+        # nil means "verify: true"
+        nil
+      end
+    end
+
+    def ssl_verify_mode_constant
+      return if disabled? || ssl_verify_mode.blank?
+
+      case ssl_verify_mode
+      when "VERIFY_NONE"
+        OpenSSL::SSL::VERIFY_NONE
+      when "VERIFY_PEER"
+        OpenSSL::SSL::VERIFY_PEER
       else
         nil
       end
