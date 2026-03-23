@@ -1,4 +1,4 @@
-# 一貫性をチェックする。
+# 一貫性・整合性をチェックする。
 # 長年運用してくと公開されてはいけないファイルが公開状態になったりする。
 # このようなものをチェックし、可能であれば修復（このケースでは削除）する。
 class Cms::ConsistencyCheckJob < Cms::ApplicationJob
@@ -43,22 +43,22 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
     deletable_pathes_path = task.log_file_path.sub(".log", "") + "-deletable-pathes.txt"
     @list_file = ListFile.new(path: deletable_pathes_path)
 
+    task.log(site.name)
+
     check_published_contents
     check_published_attachments
 
     if @list_file.count > 0
-      task.log("these #{@list_file.count} files can delete")
+      task.log("these #{@list_file.count} files can remove")
       task.log("check #{deletable_pathes_path} to see the all lists")
     else
-      task.log("these are no files can delete")
+      task.log("these are no files can remove")
     end
 
     @list_file.close
 
-    return unless options.fetch(:repair, false)
-    return if @list_file.count == 0
-
-    repair_all(deletable_pathes_path)
+    repair_all(deletable_pathes_path) if options.fetch(:repair, false) && @list_file.count > 0
+    send_mail(deletable_pathes_path, options[:email]) if options[:email]
   ensure
     @list_file.close if @list_file
   end
@@ -115,9 +115,9 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
     filename_to_page_map = all_pages.index_by(&:filename)
     html_files_page.each do |path|
       page = filename_to_page_map[path]
-      next if page.public?
+      next if page.public? && public_node?(page)
 
-      task.log("'#{site.path}/#{path}' is matched page '#{page.filename}' which isn't in public. this file can delete.")
+        task.log("'#{site.path}/#{path}' is matched page '#{page.filename}' which isn't in public. this file can delete.")
       @list_file.append("#{site.path}/#{path}")
     end
 
@@ -135,9 +135,15 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
       end
 
       spec = Utils.recognize_node(site, node, path)
-      next if spec.present?
+      unless spec.present?
+        task.log("'#{site.path}/#{path}' is matched node '#{node.filename}' which cannot serve. this file can delete.")
+        @list_file.append("#{site.path}/#{path}")
+        next
+      end
 
-      task.log("'#{site.path}/#{path}' is matched node '#{node.filename}' which cannot serve. this file can delete.")
+      next if node.public? && public_node?(node) && node.serve_static_file?
+
+      task.log("'#{site.path}/#{path}' is matched node '#{node.filename}' which isn't in public. this file can delete.")
       @list_file.append("#{site.path}/#{path}")
     end
   end
@@ -145,6 +151,8 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
   def all_html_files
     @all_html_files ||= begin
       paths = Dir.glob("#{site.path}/**/*.html").select { FileTest.file?(_1) }
+      # /fs 以下の html ファイルを除外
+      paths.reject! { _1.start_with?("#{fs_public_path}/") }
       paths.map! { _1.sub("#{site.path}/", "") }
       paths.sort!
       paths
@@ -164,6 +172,15 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
     paths.pop if paths.last =~ /\./
     paths = paths.sort_by { _1.count("/") }.reverse
     paths.filter_map { filename_to_node_map[_1] }.first
+  end
+
+  def public_node?(page_or_node)
+    path = page_or_node.dirname
+    return true unless path
+
+    paths = Cms::Node.split_path(path)
+    paths.pop if paths.last =~ /\./
+    paths.filter_map { filename_to_node_map[_1] }.all? { _1.public? }
   end
 
   def fs_public_path
@@ -198,7 +215,7 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
       ids.each do |id|
         file = id_to_file_map[id]
         if file.blank?
-          task.log("file #{id} was deleted from database. this file can safely delete.")
+          task.log("file #{id} was deleted from database. this file can remove.")
           deletable_file_ids.add(id)
           file_id_to_fs_files_map[id].each { @list_file.append _1 }
           next
@@ -206,14 +223,14 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
 
         item = find_owner_item(file)
         if item.blank?
-          task.log("file #{id} owner isn't found. this file can safely delete.")
+          task.log("file #{id} owner isn't found. this file can remove.")
           deletable_file_ids.add(id)
           file_id_to_fs_files_map[id].each { @list_file.append _1 }
           next
         end
 
         unless item.is_a?(Cms::Content)
-          # task.log("file #{id} owner isn't a content. I don't now whether this file can delete or not.")
+          # task.log("file #{id} owner isn't a content. I don't now whether this file can remove or not.")
           next
         end
 
@@ -222,14 +239,21 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
           next
         end
 
-        unless item.public?
-          task.log("file #{id} owner isn't in public. this file can safely delete.")
+        if !item.public? || !item.public_node?
+          task.log("file #{id} owner isn't in public. this file can remove.")
           deletable_file_ids.add(id)
           file_id_to_fs_files_map[id].each { @list_file.append _1 }
           next
         end
 
-        # task.log("file #{id} owner is in public. this file cannot delete.")
+        if item.is_a?(Cms::Model::Node) && !item.serve_static_file?
+          task.log("file #{id} owner doesn't serve static file. this file can remove.")
+          deletable_file_ids.add(id)
+          file_id_to_fs_files_map[id].each { @list_file.append _1 }
+          next
+        end
+
+        # task.log("file #{id} owner is in public. this file cannot remove.")
 
         fs_files = file_id_to_fs_files_map[id]
         old_thumb_fs_files = fs_files.select { _1.include?("/thumb/") }
@@ -239,7 +263,7 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
           path = old_thumb_fs_file.sub(/^.*\/fs\//, "")
           next if content_contained?(path)
 
-          task.log("there are no contents link to the url #{path}. #{old_thumb_fs_file} can safely delete.")
+          task.log("there are no contents link to the url #{path}. #{old_thumb_fs_file} can remove.")
           @list_file.append(old_thumb_fs_file)
         end
       end
@@ -249,8 +273,35 @@ class Cms::ConsistencyCheckJob < Cms::ApplicationJob
   def repair_all(list_file_path)
     File.foreach(list_file_path) do |path|
       path.strip!
-      File.unlink(path)
-      task.log("#{path}: deleted")
+      if ignore_path?(path)
+        task.log("#{path}: skipped")
+        next
+      end
+      Fs.rm_rf(path)
+      task.log("#{path}: removed")
     end
+  end
+
+  def ignore_path?(path)
+    @ignore_paths ||= SS.config.remove_improper_htmls.ignore_paths
+    path = path.delete_prefix(site.root_path + "/")
+    @ignore_paths.find { |ignore_path| path == ignore_path || path.start_with?(ignore_path + "/") }.present?
+  end
+
+  def send_mail(list_file_path, email)
+    if File.exist?(list_file_path)
+      file_paths = IO.readlines(list_file_path, chomp: true)
+    else
+      file_paths = SS::EMPTY_ARRAY
+    end
+
+    body = "[#{@list_file.count} files]\n" + file_paths.join("\n")
+    ActionMailer::Base.mail(
+      from: site.sender_address,
+      to: email,
+      subject: "[#{site.name}] Removed #{@list_file.count} files, including html files and attachments",
+      body: body,
+      message_id: Cms.generate_message_id(site)
+    ).deliver_now
   end
 end

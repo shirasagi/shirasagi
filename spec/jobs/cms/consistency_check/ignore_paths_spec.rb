@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
+describe Cms::ConsistencyCheckJob, dbscope: :example do
   let!(:site) { cms_site }
 
   let!(:article_node) { create :article_node_page, cur_site: site }
@@ -24,8 +24,9 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   end
 
   def generate_htmls
-    Cms::Node::GenerateJob.bind(site_id: site).perform_now
-    Cms::Page::GenerateJob.bind(site_id: site).perform_now
+    expect { Cms::Node::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    expect { Cms::Page::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    Job::Log.all.destroy_all
 
     expect(File.exist?(article_node.path)).to be true
     expect(File.exist?(article_page1.path)).to be true
@@ -65,14 +66,14 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       generate_htmls
       set_improper_htmls
 
-      expectation = expect { described_class.bind(site_id: site).perform_now }
+      expectation = expect { described_class.bind(site_id: site).perform_now(repair: true) }
       expectation.to output(
         include(
           site.name,
-          "skip #{article_page1.path}",
-          "skip #{article_page2.path}",
-          "skip #{faq_page1.path}",
-          "remove #{faq_page2.path}"
+          "#{article_page1.path}: skipped",
+          "#{article_page2.path}: skipped",
+          "#{faq_page1.path}: skipped",
+          "#{faq_page2.path}: removed"
         )).to_stdout
 
       expect(File.exist?(article_page1.path)).to be true

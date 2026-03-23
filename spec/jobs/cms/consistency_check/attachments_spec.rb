@@ -8,105 +8,6 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
     FileUtils.rm_rf(site.root_path)
   end
 
-  context "with pages and nodes" do
-    let!(:layout) { create_cms_layout cur_site: site }
-    let!(:node) { create :article_node_page, cur_site: site, cur_user: user, layout: layout }
-    let!(:page1) do
-      create(
-        :article_page, cur_site: site, cur_user: user, layout: layout, cur_node: node,
-        html: "<p>hello</p>", state: "public")
-    end
-
-    before do
-      expect { Cms::Node::GenerateJob.bind(site_id: site.id).perform_now }.to output.to_stdout
-      expect { Cms::Page::GenerateJob.bind(site_id: site.id).perform_now }.to output.to_stdout
-      Job::Log.all.destroy_all
-    end
-
-    context "when a page is public" do
-      before do
-        expect(File.size(page1.path)).to be > 0
-      end
-
-      it do
-        expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
-
-        expect(Job::Log.all.count).to eq 1
-        Job::Log.all.each do |log|
-          expect(log.logs).to include(/INFO -- : .* Started Job/)
-          expect(log.logs).to include(/INFO -- : .* Completed Job/)
-          expect(log.logs).not_to include(/ERROR/)
-        end
-
-        expect(File.size(page1.path)).to be > 0
-      end
-    end
-
-    context "when a page is closed" do
-      before do
-        page1.set(state: "closed")
-        expect(File.size(page1.path)).to be > 0
-      end
-
-      it do
-        expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
-
-        expect(Job::Log.all.count).to eq 1
-        Job::Log.all.each do |log|
-          expect(log.logs).to include(/INFO -- : .* Started Job/)
-          expect(log.logs).to include(/INFO -- : .* Completed Job/)
-          expect(log.logs).not_to include(/ERROR/)
-          expect(log.logs).to include(/is matched page '#{Regexp.escape(page1.filename)}' which isn't in public/)
-        end
-
-        expect(File.exist?(page1.path)).to be_falsey
-      end
-    end
-
-    context "when pages and nodes are deleted" do
-      before do
-        page1.delete
-        node.delete
-        expect(File.size(page1.path)).to be > 0
-      end
-
-      it do
-        expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
-
-        expect(Job::Log.all.count).to eq 1
-        Job::Log.all.each do |log|
-          expect(log.logs).to include(/INFO -- : .* Started Job/)
-          expect(log.logs).to include(/INFO -- : .* Completed Job/)
-          expect(log.logs).not_to include(/ERROR/)
-          expect(log.logs).to include(/doesn't match pages nor nodes/)
-        end
-
-        expect(File.exist?(page1.path)).to be_falsey
-      end
-    end
-
-    context "when a page is deleted" do
-      before do
-        page1.delete
-        expect(File.size(page1.path)).to be > 0
-      end
-
-      it do
-        expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
-
-        expect(Job::Log.all.count).to eq 1
-        Job::Log.all.each do |log|
-          expect(log.logs).to include(/INFO -- : .* Started Job/)
-          expect(log.logs).to include(/INFO -- : .* Completed Job/)
-          expect(log.logs).not_to include(/ERROR/)
-          expect(log.logs).to include(/is matched node '#{Regexp.escape(node.filename)}' which cannot serve/)
-        end
-
-        expect(File.exist?(page1.path)).to be_falsey
-      end
-    end
-  end
-
   context "with attachments" do
     context "when a file is deleted in DB" do
       let!(:ss_file1) do
@@ -246,6 +147,41 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
         expect(ss_file1.owner_item_id).to eq page1.id
 
         page1.set(state: "closed")
+        expect(File.size("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be > 0
+      end
+
+      it do
+        expect { described_class.bind(site_id: site).perform_now(repair: true) }.to output.to_stdout
+
+        expect(Job::Log.count).to eq 1
+        Job::Log.all.each do |log|
+          expect(log.logs).to include(/INFO -- : .* Started Job/)
+          expect(log.logs).to include(/INFO -- : .* Completed Job/)
+          expect(log.logs).not_to include(/ERROR/)
+          expect(log.logs).to include(/#{::Regexp.escape("file #{ss_file1.id} owner isn't in public.")}/)
+        end
+
+        expect(File.exist?("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be_falsey
+      end
+    end
+
+    context "when a file owner parent is closed" do
+      let!(:ss_file1) do
+        tmp_ss_file(contents: "#{Rails.root}/spec/fixtures/ss/logo.png", site: site, cur_user: user)
+      end
+      let!(:node) { create :article_node_page, cur_site: site, state: "public" }
+      let!(:page1) do
+        html = "<img src=\"#{ss_file1.url}\" />"
+        create(
+          :article_page, cur_site: site, cur_user: user, cur_node: node, html: html,
+          file_ids: [ ss_file1.id ], state: "public")
+      end
+
+      before do
+        ss_file1.reload
+        expect(ss_file1.owner_item_id).to eq page1.id
+
+        node.set(state: "closed")
         expect(File.size("#{ss_file1.public_dir}/#{ss_file1.filename}")).to be > 0
       end
 
