@@ -4,7 +4,8 @@ class Cms::LinkChecker
   DEFAULT_HEAD_REQUEST_TIMEOUT = 5
 
   attr_accessor :cur_user, :root_url, :fetch_content
-  attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
+  # attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
+  attr_writer :fs_url, :head_request_timeout, :max_redirection
 
   Redirection = Data.define(:count, :visited) do
     def initialize(count: 0, visited: Set.new)
@@ -70,10 +71,11 @@ class Cms::LinkChecker
     @max_redirection = SS.config.cms.check_links["max_redirection"].to_i
   end
 
-  def http_basic_authentication
-    return @http_basic_authentication if instance_variable_defined?(:@http_basic_authentication)
-    @http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
-  end
+  # この設定は自サイトに向けてのもの。自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
+  # def http_basic_authentication
+  #   return @http_basic_authentication if instance_variable_defined?(:@http_basic_authentication)
+  #   @http_basic_authentication = SS::MessageEncryptor.http_basic_authentication
+  # end
 
   def check_url(full_url, redirection: nil)
     full_url = to_addressable(full_url)
@@ -150,9 +152,11 @@ class Cms::LinkChecker
     ssl_options = SS::ProxySetting.instance.faraday_ssl_options
     http_client = Faraday.new(url: addressable_full_url.origin, proxy: proxy_options, ssl: ssl_options) do |builder|
       builder.request :url_encoded
-      if http_basic_authentication.present?
-        builder.request :authorization, :basic, *http_basic_authentication
-      end
+      # Basic 認証設定は自サイトに向けてのもの。
+      # 自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
+      # if http_basic_authentication.present?
+      #   builder.request :authorization, :basic, *http_basic_authentication
+      # end
       builder.response :logger, Rails.logger
       builder.adapter Faraday.default_adapter
     end
