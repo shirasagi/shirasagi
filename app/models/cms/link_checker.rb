@@ -150,7 +150,10 @@ class Cms::LinkChecker
   def get_http(addressable_full_url, redirection:)
     proxy_options = SS::ProxySetting.instance.faraday_proxy_options
     ssl_options = SS::ProxySetting.instance.faraday_ssl_options
-    http_client = Faraday.new(url: addressable_full_url.origin, proxy: proxy_options, ssl: ssl_options) do |builder|
+    faraday_options = { url: addressable_full_url.origin, request: { timeout: head_request_timeout } }
+    faraday_options[:proxy] = proxy_options if proxy_options.present?
+    faraday_options[:ssl] = ssl_options if ssl_options.present?
+    http_client = Faraday.new(faraday_options) do |builder|
       builder.request :url_encoded
       # Basic 認証設定は自サイトに向けてのもの。
       # 自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
@@ -163,8 +166,8 @@ class Cms::LinkChecker
     http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
     http_client.headers[:accept_encoding] = "gzip"
 
-    resp = Timeout.timeout(head_request_timeout) do
-      http_client.head(addressable_full_url.request_uri)
+    begin
+      resp = http_client.head(addressable_full_url.request_uri)
     ensure
       redirection.visited.add(addressable_full_url.to_s)
     end
@@ -192,10 +195,10 @@ class Cms::LinkChecker
       error_code = :link_check_failed_not_found
     end
     Result.error(error_code: error_code, redirection_count: redirection.count)
-  rescue OpenSSL::SSL::SSLError => e
+  rescue OpenSSL::SSL::SSLError, Faraday::SSLError
     return Result.error(
       error_code: :link_check_failed_certificate_verify_failed, redirection_count: redirection.count)
-  rescue Timeout::Error
+  rescue Timeout::Error, Faraday::TimeoutError
     return Result.error(error_code: :link_check_failed_timeout, redirection_count: redirection.count)
   rescue => e
     Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
