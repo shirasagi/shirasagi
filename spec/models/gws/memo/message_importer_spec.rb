@@ -292,16 +292,20 @@ RSpec.describe Gws::Memo::MessageImporter, type: :model, dbscope: :example do
 
     context "with users having no email (and having multibyte name)" do
       let!(:user1) do
-        create :gws_user, email: nil, name: "ユーザー1", cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+        create :gws_user, email: nil, name: "ユーザー1", cur_site: site, group_ids: gws_user.group_ids,
+          gws_role_ids: gws_user.gws_role_ids
       end
       let!(:user2) do
-        create :gws_user, email: nil, name: "ユーザー2", cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+        create :gws_user, email: nil, name: "ユーザー2", cur_site: site, group_ids: gws_user.group_ids,
+          gws_role_ids: gws_user.gws_role_ids
       end
       let!(:user3) do
-        create :gws_user, email: nil, name: "ユーザー3", cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+        create :gws_user, email: nil, name: "ユーザー3", cur_site: site, group_ids: gws_user.group_ids,
+          gws_role_ids: gws_user.gws_role_ids
       end
       let!(:user4) do
-        create :gws_user, email: nil, name: "ユーザー4", cur_site: site, group_ids: gws_user.group_ids, gws_role_ids: gws_user.gws_role_ids
+        create :gws_user, email: nil, name: "ユーザー4", cur_site: site, group_ids: gws_user.group_ids,
+          gws_role_ids: gws_user.gws_role_ids
       end
       let(:user) { user3 }
       let!(:source_message) do
