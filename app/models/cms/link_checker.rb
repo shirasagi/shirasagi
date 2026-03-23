@@ -200,7 +200,12 @@ class Cms::LinkChecker
   def get_generated_file_path(site, addressable_full_url)
     path = "#{site.root_path}#{addressable_full_url.path}"
     path = File.join(path, "index.html") if Fs.directory?(path)
-    Fs.file?(path) ? path : nil
+    return path if Fs.file?(path)
+
+    path = Addressable::URI.unencode(path)
+    return path if Fs.file?(path)
+
+    nil
   end
 
   def fs_path?(addressable_full_url)
