@@ -5,7 +5,6 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
   let!(:site) { create :cms_site_unique, domains: %w(ss1.example.jp ss2.example.jp) }
 
   before do
-    WebMock.disable_net_connect!
     Fs.rm_rf site.path
   end
 
