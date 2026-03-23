@@ -1,9 +1,18 @@
 <%
-  filename = @cur_path.sub(@cur_site.url, "/").sub(/^\//, "")
-  @item = Cms::Page.site(@cur_site).where(filename: filename).first
+  if rendered
+    @item = rendered[:page]
+    @item ||= rendered[:node]
+  end
 
-  filename = filename.sub(/\/index\.html$/, "")
-  @item ||= Cms::Node.site(@cur_site).where(filename: filename).first
+  @item ||= begin
+    filename = @cur_path.sub(@cur_site.url, "/").sub(/^\//, "")
+    Cms::Page.site(@cur_site).where(filename: filename).first
+  end
+
+  @item ||= begin
+    filename = filename.sub(/\/index\.html$/, "")
+    Cms::Node.site(@cur_site).where(filename: filename).first
+  end
 
   if @item
     @check_links_error = @item.try(:check_links_error)
