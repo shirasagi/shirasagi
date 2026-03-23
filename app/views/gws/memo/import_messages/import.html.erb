@@ -7,7 +7,10 @@
       <div class="addon-body">
         <dl class="see">
           <dt><%= @model.t :in_file %></dt>
-          <dd><%= f.file_field :in_file, class: "file" %></dd>
+          <dd>
+            <%= f.hidden_field "item[in_file]", value: "" %>
+            <%= f.file_field :in_file %>
+          </dd>
 
           <dd class="wide" style="color: #b30; margin-top: 10px;">
             <%=br t("gws/memo/message.import.caution") %>
