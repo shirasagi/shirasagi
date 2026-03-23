@@ -32,20 +32,26 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     sources_having_error_links.flatten!
     sources_having_error_links.uniq!
     sources_having_error_links.group_by { _1.full_url }.each do |full_url, sources|
+      # yield 内のリンク切れを抽出
+      links = sources.map(&:links)
+      links.flatten!
+      error_links = links.select { _1.status == :error && _1.type == :inner_yield }
+      next if error_links.blank? # yield 内にリンク切れがない場合 report を作成しない
+
       path = full_url.path
       path = path.sub(/^#{::Regexp.escape(@site.url)}/, "/") if @site.url != "/"
       path += "index.html" if path.end_with?("/")
 
       page = find_page(path)
       if page
-        create_report_page(full_url, sources, page)
+        create_report_page(full_url, sources, page, error_links)
         next
       end
 
       node = find_node(path)
       next unless node
 
-      create_report_node(full_url, sources, node)
+      create_report_node(full_url, sources, node, error_links)
     end
 
     # destroy old reports
@@ -81,35 +87,25 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     node
   end
 
-  def create_report_page(full_url, sources, page)
+  def create_report_page(full_url, sources, page, error_links)
     item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: @report)
     item.ref = full_url.request_uri
     item.ref_url = full_url.to_s
     item.page = page
     item.name = page.name
     item.filename = page.filename
-
-    links = sources.map(&:links)
-    links.flatten!
-
-    error_links = links.select { _1.status == :error }
     item.urls = error_links.map(&:href).uniq
     item.group_ids = page.group_ids
     item.save
   end
 
-  def create_report_node(full_url, sources, node)
+  def create_report_node(full_url, sources, node, error_links)
     item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: @report)
     item.ref = full_url.request_uri
     item.ref_url = full_url.to_s
     item.node = node
     item.name = node.name
     item.filename = node.filename
-
-    links = sources.map(&:links)
-    links.flatten!
-
-    error_links = links.select { _1.status == :error }
     item.urls = error_links.map(&:href).uniq
     item.group_ids = node.group_ids
     item.save

@@ -4,10 +4,9 @@ describe Cms::CheckLinksJob, dbscope: :example do
   let!(:site0) { cms_site }
   let!(:site) { create :cms_site_subdir, parent: site0 }
   let!(:site_url) { "http://#{site.domain}/#{site.subdir}" }
-  let!(:layout) { create_cms_layout cur_site: site }
 
   before do
-    WebMock.disable_net_connect!
+    WebMock.disable_net_connect!(allow_localhost: true)
     ActionMailer::Base.deliveries = []
     Fs.rm_rf site.path
   end
@@ -20,6 +19,21 @@ describe Cms::CheckLinksJob, dbscope: :example do
   end
 
   context "normal case" do
+    let!(:layout) do
+      html = <<~HTML
+        <html>
+          <body>
+            <br><br><br>
+            <h1 id="ss-page-name">\#{page_name}</h1><br>
+            <div id="main" class="page">
+              {{ yield }}
+            </div>
+            <a href="https://www.example.jp/not_found_outer_yield.pdf" target="_blank">Not Found</a>
+          </body>
+        </html>
+      HTML
+      create :cms_layout, cur_site: site, html: html
+    end
     let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html" }
     let!(:docs) { create :article_node_page, cur_site: site, layout: layout, filename: "docs" }
     let!(:page1) { create :article_page, cur_site: site, layout: layout, filename: "docs/page1.html" }
@@ -27,6 +41,9 @@ describe Cms::CheckLinksJob, dbscope: :example do
     let!(:page3) { create :article_page, cur_site: site, layout: layout, filename: "docs/page3.html" }
 
     before do
+      stub_request(:any, "https://www.example.jp/not_found_outer_yield.pdf")
+        .to_return(status: 404, body: "", headers: SS::EMPTY_HASH)
+
       html1 = <<~HTML
         <a href="#{docs.url}">#{docs.name}</a>
         <a href="#{page1.url}">#{page1.name}</a>
@@ -54,7 +71,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
     context "check" do
       it do
-        expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/3 errors/).to_stdout
+        expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/6 errors/).to_stdout
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
@@ -71,35 +88,54 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(log.logs).to include(include("#{site_url}/docs/page1.html"))
           expect(log.logs).to include(include("  - #{site_url}/notfound2.html"))
           expect(log.logs).not_to include(include("  - #{site_url}/commentout2.html"))
+
+          # ログやコンソールには yield 外のリンク切れのみも報告される
+          expect(log.logs).to include(include("  - https://www.example.jp/not_found_outer_yield.pdf"))
         end
 
         expect(Cms::CheckLinks::Report.all.count).to eq 1
         Cms::CheckLinks::Report.all.first.tap do |report|
           expect(report.site_id).to eq site.id
           expect(report.name).to include "実行結果"
-          expect(report.link_errors.count).to eq 2
-          expect(report.pages.count).to eq 2
+          expect(report.link_errors.count).to eq 3
+          expect(report.pages.count).to eq 3
           expect(report.nodes.count).to eq 0
           report.pages.to_a.tap do |page_reports|
             expect(page_reports[0].site_id).to eq site.id
             expect(page_reports[0].report_id).to eq report.id
-            expect(page_reports[0].ref).to eq index.url
-            expect(page_reports[0].ref_url).to eq index.full_url
+            expect(page_reports[0].ref).to eq site.url
+            expect(page_reports[0].ref_url).to eq site.full_url
+            expect(page_reports[0].page_id).to eq index.id
             expect(page_reports[0].name).to eq index.name
             expect(page_reports[0].filename).to eq index.filename
+            # yield 内のリンク切れのみを記録する
             expect(page_reports[0].urls).to have(1).items
             expect(page_reports[0].urls).to include("#{site.url}notfound1.html")
-            expect(page_reports[0].page_id).to eq index.id
+            expect(page_reports[0].urls).not_to include("https://www.example.jp/not_found_outer_yield.pdf")
 
             expect(page_reports[1].site_id).to eq site.id
             expect(page_reports[1].report_id).to eq report.id
-            expect(page_reports[1].ref).to eq page1.url
-            expect(page_reports[1].ref_url).to eq page1.full_url
-            expect(page_reports[1].name).to eq page1.name
-            expect(page_reports[1].filename).to eq page1.filename
+            expect(page_reports[1].ref).to eq index.url
+            expect(page_reports[1].ref_url).to eq index.full_url
+            expect(page_reports[1].page_id).to eq index.id
+            expect(page_reports[1].name).to eq index.name
+            expect(page_reports[1].filename).to eq index.filename
+            # yield 内のリンク切れのみを記録する
             expect(page_reports[1].urls).to have(1).items
-            expect(page_reports[1].urls).to include("#{site.url}notfound2.html")
-            expect(page_reports[1].page_id).to eq page1.id
+            expect(page_reports[1].urls).to include("#{site.url}notfound1.html")
+            expect(page_reports[1].urls).not_to include("https://www.example.jp/not_found_outer_yield.pdf")
+
+            expect(page_reports[2].site_id).to eq site.id
+            expect(page_reports[2].report_id).to eq report.id
+            expect(page_reports[2].ref).to eq page1.url
+            expect(page_reports[2].ref_url).to eq page1.full_url
+            expect(page_reports[2].page_id).to eq page1.id
+            expect(page_reports[2].name).to eq page1.name
+            expect(page_reports[2].filename).to eq page1.filename
+            # yield 内のリンク切れのみを記録する
+            expect(page_reports[2].urls).to have(1).items
+            expect(page_reports[2].urls).to include("#{site.url}notfound2.html")
+            expect(page_reports[2].urls).not_to include("https://www.example.jp/not_found_outer_yield.pdf")
           end
         end
 
@@ -121,7 +157,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         let!(:message_format) { "text" }
 
         it do
-          expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/3 errors/).to_stdout
+          expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/6 errors/).to_stdout
 
           expect(Job::Log.count).to eq 1
           Job::Log.first.tap do |log|
@@ -133,14 +169,16 @@ describe Cms::CheckLinksJob, dbscope: :example do
           mail = ActionMailer::Base.deliveries.first
           expect(mail.from.first).to eq site.check_links_default_sender_address
           expect(mail.to.first).to eq email1
-          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
-          expect(mail_body(mail)).to include "[3 errors]"
+          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 6 errors"
+          expect(mail_body(mail)).to include "[6 errors]"
           expect(mail_body(mail)).to include "#{site_url}/"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
           expect(mail_body(mail)).to include "#{site_url}/index.html"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
           expect(mail_body(mail)).to include "#{site_url}/docs/page1.html"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound2.html"
+          # メールには yield 外のリンク切れも記載されている
+          expect(mail_body(mail)).to include "  - https://www.example.jp/not_found_outer_yield.pdf"
         end
       end
 
@@ -148,7 +186,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         let!(:message_format) { "csv" }
 
         it do
-          expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/3 errors/).to_stdout
+          expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/6 errors/).to_stdout
 
           expect(Job::Log.count).to eq 1
           Job::Log.first.tap do |log|
@@ -161,19 +199,26 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(mail.from.first).to eq site.check_links_default_sender_address
           expect(mail.to.first).to eq email1
 
-          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
+          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 6 errors"
           expect(mail.multipart?).to be_truthy
-          expect(mail.parts[0].body.raw_source).to include "[3 errors]"
+          expect(mail.parts[0].body.raw_source).to include "[6 errors]"
           expect(mail.parts[0].body.raw_source).to include "error details are in the attached csv"
 
           csv = mail.parts[1].body.raw_source
           csv = csv.delete_prefix(SS::Csv::UTF8_BOM)
           csv = CSV.parse(csv)
 
+          expect(csv.length).to eq 10
           expect(csv[0]).to eq %w(reference url)
           expect(csv[1]).to eq %W(#{site.url} #{site.url}notfound1.html)
-          expect(csv[3]).to eq %W(#{site.url}index.html #{site.url}notfound1.html)
-          expect(csv[2]).to eq %W(#{site.url}docs/page1.html #{site.url}notfound2.html)
+          expect(csv[2]).to eq %W(#{site.url} https://www.example.jp/not_found_outer_yield.pdf)
+          expect(csv[3]).to eq %W(#{site.url}docs/ https://www.example.jp/not_found_outer_yield.pdf)
+          expect(csv[4]).to eq %W(#{site.url}docs/page1.html #{site.url}notfound2.html)
+          expect(csv[5]).to eq %W(#{site.url}docs/page1.html https://www.example.jp/not_found_outer_yield.pdf)
+          expect(csv[6]).to eq %W(#{site.url}docs/page2.html https://www.example.jp/not_found_outer_yield.pdf)
+          expect(csv[7]).to eq %W(#{site.url}docs/page3.html https://www.example.jp/not_found_outer_yield.pdf)
+          expect(csv[8]).to eq %W(#{site.url}index.html #{site.url}notfound1.html)
+          expect(csv[9]).to eq %W(#{site.url}index.html https://www.example.jp/not_found_outer_yield.pdf)
         end
       end
 
@@ -181,7 +226,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         let!(:message_format) { "text" }
 
         it do
-          expect { ss_perform_now described_class.bind(site_id: site.id), email: email2 }.to output(/3 errors/).to_stdout
+          expect { ss_perform_now described_class.bind(site_id: site.id), email: email2 }.to output(/6 errors/).to_stdout
 
           expect(Job::Log.count).to eq 1
           Job::Log.first.tap do |log|
@@ -193,20 +238,23 @@ describe Cms::CheckLinksJob, dbscope: :example do
           mail = ActionMailer::Base.deliveries.first
           expect(mail.from.first).to eq site.check_links_default_sender_address
           expect(mail.to.first).to eq email2
-          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
-          expect(mail_body(mail)).to include "[3 errors]"
+          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 6 errors"
+          expect(mail_body(mail)).to include "[6 errors]"
           expect(mail_body(mail)).to include "#{site_url}/"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
           expect(mail_body(mail)).to include "#{site_url}/index.html"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
           expect(mail_body(mail)).to include "#{site_url}/docs/page1.html"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound2.html"
+          # メールには yield 外のリンク切れも記載されている
+          expect(mail_body(mail)).to include "  - https://www.example.jp/not_found_outer_yield.pdf"
         end
       end
     end
   end
 
-  context "when a node include break links" do
+  context "when a node include broken links" do
+    let!(:layout) { create_cms_layout cur_site: site }
     let!(:index) { create :cms_page, cur_site: site, layout: layout, basename: "index.html" }
     let!(:docs) { create(:article_node_page, cur_site: site, layout: layout, basename: "docs") }
     let!(:docs_page1) { create(:article_page, cur_site: site, layout: layout, cur_node: docs, basename: "page1.html") }
@@ -264,6 +312,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
   end
 
   context "some other schemes" do
+    let!(:layout) { create_cms_layout cur_site: site }
     let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html" }
 
     before do
@@ -302,6 +351,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
   end
 
   context "fragment" do
+    let!(:layout) { create_cms_layout cur_site: site }
     let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html" }
 
     before do
@@ -342,6 +392,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
   end
 
   context "recursive link" do
+    let!(:layout) { create_cms_layout cur_site: site }
     let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html" }
 
     before do
@@ -379,6 +430,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
   end
 
   context "relative scheme" do
+    let!(:layout) { create_cms_layout cur_site: site }
     let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html" }
     let(:url) { "//#{unique_domain}/#{unique_id}/#{unique_id}" }
 
@@ -417,13 +469,13 @@ describe Cms::CheckLinksJob, dbscope: :example do
         report.pages.to_a.tap do |page_reports|
           expect(page_reports[0].site_id).to eq site.id
           expect(page_reports[0].report_id).to eq report.id
-          expect(page_reports[0].ref).to eq index.url
-          expect(page_reports[0].ref_url).to eq index.full_url
+          expect(page_reports[0].ref).to eq site.url
+          expect(page_reports[0].ref_url).to eq site.full_url
+          expect(page_reports[0].page_id).to eq index.id
           expect(page_reports[0].name).to eq index.name
           expect(page_reports[0].filename).to eq index.filename
           expect(page_reports[0].urls).to have(1).items
           expect(page_reports[0].urls).to include(url)
-          expect(page_reports[0].page_id).to eq index.id
         end
         expect(report.nodes.count).to eq 0
       end
@@ -474,8 +526,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
     end
 
     it do
-      # expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/784 errors/).to_stdout
-      ss_perform_now described_class.bind(site_id: site.id)
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/784 errors/).to_stdout
 
       expect(Job::Log.count).to eq 1
       Job::Log.first.tap do |log|
@@ -489,55 +540,10 @@ describe Cms::CheckLinksJob, dbscope: :example do
       Cms::CheckLinks::Report.all.first.tap do |report|
         expect(report.site_id).to eq site.id
         expect(report.name).to include "実行結果"
-        expect(report.link_errors.count).to eq 784
-        expect(report.pages.count).to eq 2
-        expect(report.nodes.count).to eq 782
-        report.pages.to_a.tap do |page_reports|
-          expect(page_reports[0].site_id).to eq site.id
-          expect(page_reports[0].report_id).to eq report.id
-          expect(page_reports[0].ref).to eq site.url
-          expect(page_reports[0].ref_url).to eq site.full_url
-          expect(page_reports[0].page_id).to eq index.id
-          expect(page_reports[0].name).to eq index.name
-          expect(page_reports[0].filename).to eq index.filename
-          expect(page_reports[0].urls).to have(2).items
-          expect(page_reports[0].urls).to include("https://www.example.jp/notfound1.html")
-          expect(page_reports[0].urls).to include("https://www.example.jp/notfound2.html")
-
-          expect(page_reports[1].site_id).to eq site.id
-          expect(page_reports[1].report_id).to eq report.id
-          expect(page_reports[1].ref).to eq page1.url
-          expect(page_reports[1].ref_url).to eq page1.full_url
-          expect(page_reports[1].page_id).to eq page1.id
-          expect(page_reports[1].name).to eq page1.name
-          expect(page_reports[1].filename).to eq page1.filename
-          expect(page_reports[1].urls).to have(2).items
-          expect(page_reports[1].urls).to include("https://www.example.jp/notfound1.html")
-          expect(page_reports[1].urls).to include("https://www.example.jp/notfound2.html")
-        end
-        report.nodes.to_a.tap do |node_reports|
-          expect(node_reports[0].site_id).to eq site.id
-          expect(node_reports[0].report_id).to eq report.id
-          expect(node_reports[0].ref).to eq calendar.url
-          expect(node_reports[0].ref_url).to eq calendar.full_url
-          expect(node_reports[0].node_id).to eq calendar.id
-          expect(node_reports[0].name).to eq calendar.name
-          expect(node_reports[0].filename).to eq calendar.filename
-          expect(node_reports[0].urls).to have(2).items
-          expect(node_reports[0].urls).to include("https://www.example.jp/notfound1.html")
-          expect(node_reports[0].urls).to include("https://www.example.jp/notfound2.html")
-
-          expect(node_reports[5].site_id).to eq site.id
-          expect(node_reports[5].report_id).to eq report.id
-          expect(node_reports[5].ref).to eq "#{calendar.url}#{event_date.prev_month.strftime("%Y%m")}/list.html"
-          expect(node_reports[5].ref_url).to eq "#{calendar.full_url}#{event_date.prev_month.strftime("%Y%m")}/list.html"
-          expect(node_reports[5].node_id).to eq calendar.id
-          expect(node_reports[5].name).to eq calendar.name
-          expect(node_reports[5].filename).to eq calendar.filename
-          expect(node_reports[0].urls).to have(2).items
-          expect(node_reports[0].urls).to include("https://www.example.jp/notfound1.html")
-          expect(node_reports[0].urls).to include("https://www.example.jp/notfound2.html")
-        end
+        # yield 外のリンク切れからレポートは作成されない
+        expect(report.link_errors.count).to eq 0
+        expect(report.pages.count).to eq 0
+        expect(report.nodes.count).to eq 0
       end
 
       expect(ActionMailer::Base.deliveries.length).to eq 0
