@@ -146,57 +146,55 @@ class Cms::LinkChecker
   end
 
   def get_http(addressable_full_url, redirection:)
-    begin
-      opts = {
-        redirect: false,
-        http_basic_authentication: http_basic_authentication
-      }
+    opts = {
+      redirect: false,
+      http_basic_authentication: http_basic_authentication
+    }
 
-      io = nil
-      Timeout.timeout(head_request_timeout) do
-        io = OpenURI.open_uri(addressable_full_url.to_s, **opts)
-      ensure
-        redirection.visited.add(addressable_full_url.to_s)
-      end
-
-      if fetch_content
-        content = io.read
-        content_type = io.content_type
-      else
-        io.read(1)
-        io.close
-        content = nil
-        content_type = nil
-      end
-
-      Result.success(redirection_count: redirection.count, content_type: content_type, content: content)
-    rescue OpenURI::HTTPRedirect => e
-      if redirection.count >= max_redirection
-        return Result.error(error_code: :link_check_failed_redirection, redirection_count: redirection.count + 1)
-      else
-        redirect_to = e.uri.to_s
-        if redirection.visited.include?(redirect_to)
-          return Result.error(error_code: :link_check_failed_cyclic_redirection, redirection_count: redirection.count + 1)
-        end
-
-        check_url(redirect_to, redirection: redirection.increment)
-      end
-    rescue Addressable::URI::InvalidURIError
-      return Result.error(
-        error_code: :link_check_failed_invalid_link, redirection_count: redirection.count)
-    rescue OpenSSL::SSL::SSLError => e
-      return Result.error(
-        error_code: :link_check_failed_certificate_verify_failed, redirection_count: redirection.count)
-    rescue Timeout::Error
-      return Result.error(error_code: :link_check_failed_timeout, redirection_count: redirection.count)
-    rescue => e
-      if e.to_s == "401 Unauthorized"
-        error_code = :link_check_failed_unauthorized
-      else
-        error_code = :link_check_failed_not_found
-      end
-      Result.error(error_code: error_code, redirection_count: redirection.count)
+    io = nil
+    Timeout.timeout(head_request_timeout) do
+      io = OpenURI.open_uri(addressable_full_url.to_s, **opts)
+    ensure
+      redirection.visited.add(addressable_full_url.to_s)
     end
+
+    if fetch_content
+      content = io.read
+      content_type = io.content_type
+    else
+      io.read(1)
+      io.close
+      content = nil
+      content_type = nil
+    end
+
+    Result.success(redirection_count: redirection.count, content_type: content_type, content: content)
+  rescue OpenURI::HTTPRedirect => e
+    if redirection.count >= max_redirection
+      return Result.error(error_code: :link_check_failed_redirection, redirection_count: redirection.count + 1)
+    else
+      redirect_to = e.uri.to_s
+      if redirection.visited.include?(redirect_to)
+        return Result.error(error_code: :link_check_failed_cyclic_redirection, redirection_count: redirection.count + 1)
+      end
+
+      check_url(redirect_to, redirection: redirection.increment)
+    end
+  rescue Addressable::URI::InvalidURIError
+    return Result.error(
+      error_code: :link_check_failed_invalid_link, redirection_count: redirection.count)
+  rescue OpenSSL::SSL::SSLError => e
+    return Result.error(
+      error_code: :link_check_failed_certificate_verify_failed, redirection_count: redirection.count)
+  rescue Timeout::Error
+    return Result.error(error_code: :link_check_failed_timeout, redirection_count: redirection.count)
+  rescue => e
+    if e.to_s == "401 Unauthorized"
+      error_code = :link_check_failed_unauthorized
+    else
+      error_code = :link_check_failed_not_found
+    end
+    Result.error(error_code: error_code, redirection_count: redirection.count)
   end
 
   def get_generated_file_path(site, addressable_full_url)

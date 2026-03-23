@@ -176,18 +176,18 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       next if link.href[0] == "#"
       next if link.nofollow?
 
-      extracted_source = @full_url_to_source[link.full_url.to_s]
-      if extracted_source.present?
-        extracted_source.referrers << WeakRef.new(source)
+      link_source = @full_url_to_source[link.full_url.to_s]
+      if link_source.present?
+        link_source.referrers << WeakRef.new(source)
       else
-        extracted_source = Cms::CheckLinks::Source.new(full_url: link.full_url)
-        extracted_source.referrers << WeakRef.new(source)
+        link_source = Cms::CheckLinks::Source.new(full_url: link.full_url)
+        link_source.referrers << WeakRef.new(source)
 
-        @full_url_to_source[extracted_source.full_url.to_s] = extracted_source
-        @queue << extracted_source
+        @full_url_to_source[link_source.full_url.to_s] = link_source
+        @queue << link_source
       end
 
-      link = Cms::CheckLinks::LinkWithSource.new(source: extracted_source, link: link)
+      link = Cms::CheckLinks::LinkWithSource.new(source: WeakRef.new(link_source), link: link)
       source.links << link
     end
   end
