@@ -146,54 +146,56 @@ class Cms::LinkChecker
   end
 
   def get_http(addressable_full_url, redirection:)
-    opts = {
-      redirect: false,
-      http_basic_authentication: http_basic_authentication
-    }
+    proxy_options = SS::ProxySetting.instance.faraday_proxy_options
+    ssl_options = SS::ProxySetting.instance.faraday_ssl_options
+    http_client = Faraday.new(url: addressable_full_url.origin, proxy: proxy_options, ssl: ssl_options) do |builder|
+      builder.request :url_encoded
+      if http_basic_authentication.present?
+        builder.request :authorization, :basic, *http_basic_authentication
+      end
+      builder.response :logger, Rails.logger
+      builder.adapter Faraday.default_adapter
+    end
+    http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+    http_client.headers[:accept_encoding] = "gzip"
 
-    io = nil
-    Timeout.timeout(head_request_timeout) do
-      io = OpenURI.open_uri(addressable_full_url.to_s, **opts)
+    resp = Timeout.timeout(head_request_timeout) do
+      http_client.head(addressable_full_url.request_uri)
     ensure
       redirection.visited.add(addressable_full_url.to_s)
     end
-
-    if fetch_content
-      content = io.read
-      content_type = io.content_type
-    else
-      io.read(1)
-      io.close
-      content = nil
-      content_type = nil
+    if resp.success?
+      content_type = resp.headers['Content-Type']
+      return Result.success(redirection_count: redirection.count, content_type: content_type, content: nil)
     end
 
-    Result.success(redirection_count: redirection.count, content_type: content_type, content: content)
-  rescue OpenURI::HTTPRedirect => e
-    if redirection.count >= max_redirection
-      return Result.error(error_code: :link_check_failed_redirection, redirection_count: redirection.count + 1)
-    else
-      redirect_to = e.uri.to_s
-      if redirection.visited.include?(redirect_to)
-        return Result.error(error_code: :link_check_failed_cyclic_redirection, redirection_count: redirection.count + 1)
+    redirect_to = resp.headers['Location']
+    if redirect_to.present?
+      if redirection.count >= max_redirection
+        return Result.error(error_code: :link_check_failed_redirection, redirection_count: redirection.count + 1)
+      else
+        if redirection.visited.include?(redirect_to)
+          return Result.error(error_code: :link_check_failed_cyclic_redirection, redirection_count: redirection.count + 1)
+        end
+
+        return check_url(redirect_to, redirection: redirection.increment)
       end
-
-      check_url(redirect_to, redirection: redirection.increment)
     end
-  rescue Addressable::URI::InvalidURIError
-    return Result.error(
-      error_code: :link_check_failed_invalid_link, redirection_count: redirection.count)
+
+    if resp.status == 401
+      error_code = :link_check_failed_unauthorized
+    else
+      error_code = :link_check_failed_not_found
+    end
+    Result.error(error_code: error_code, redirection_count: redirection.count)
   rescue OpenSSL::SSL::SSLError => e
     return Result.error(
       error_code: :link_check_failed_certificate_verify_failed, redirection_count: redirection.count)
   rescue Timeout::Error
     return Result.error(error_code: :link_check_failed_timeout, redirection_count: redirection.count)
   rescue => e
-    if e.to_s == "401 Unauthorized"
-      error_code = :link_check_failed_unauthorized
-    else
-      error_code = :link_check_failed_not_found
-    end
+    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    error_code = :link_check_failed_not_found
     Result.error(error_code: error_code, redirection_count: redirection.count)
   end
 

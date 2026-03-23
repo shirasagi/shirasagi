@@ -140,6 +140,9 @@ describe Cms::CheckLinksJob, dbscope: :example do
         end
 
         expect(ActionMailer::Base.deliveries.length).to eq 0
+
+        # 外部サイトURLについては転送量を押さえる目的で HEAD でアクセスする
+        expect(a_request(:head, "https://www.example.jp/not_found_outer_yield.pdf")).to have_been_made.times(1)
       end
     end
 
@@ -436,7 +439,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
     before do
       not_found_return = { body: "", status: 404, headers: { 'Content-Type' => 'text/html; charset=utf-8' } }
-      stub_request(:get, url).to_return(not_found_return)
+      stub_request(:any, url).to_return(not_found_return)
 
       html1 = <<~HTML
         <a href="#{url}">External Page</a>
@@ -480,7 +483,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(report.nodes.count).to eq 0
       end
 
-      expect(a_request(:get, url)).to have_been_made.times(1)
+      # 外部サイトURLについては転送量を押さえる目的で HEAD でアクセスする
+      expect(a_request(:head, url)).to have_been_made.times(1)
     end
   end
 
@@ -517,8 +521,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
       HTML
       index.update!(html: html)
 
-      stub_request(:get, "https://www.example.jp/notfound1.html").to_return(status: 404, body: "", headers: {})
-      stub_request(:get, "https://www.example.jp/notfound2.html").to_return(status: 404, body: "", headers: {})
+      stub_request(:any, "https://www.example.jp/notfound1.html").to_return(status: 404, body: "", headers: {})
+      stub_request(:any, "https://www.example.jp/notfound2.html").to_return(status: 404, body: "", headers: {})
 
       expect { ss_perform_now Cms::Node::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
       expect { ss_perform_now Cms::Page::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
@@ -547,6 +551,10 @@ describe Cms::CheckLinksJob, dbscope: :example do
       end
 
       expect(ActionMailer::Base.deliveries.length).to eq 0
+
+      # 外部サイトURLについては転送量を押さえる目的で HEAD でアクセスする
+      expect(a_request(:head, "https://www.example.jp/notfound1.html")).to have_been_made.times(1)
+      expect(a_request(:head, "https://www.example.jp/notfound2.html")).to have_been_made.times(1)
     end
   end
 end

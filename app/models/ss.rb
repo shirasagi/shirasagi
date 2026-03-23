@@ -45,6 +45,55 @@ module SS
     end
   end
 
+  ProxySetting = Data.define(:disable, :uri, :username, :password, :ssl_verify_mode) do
+    def self.load
+      disable = SS.config.proxy.disable
+      uri = SS.config.proxy.proxy_http_basic_authentication["proxy_uri"]
+      username = SS.config.proxy.proxy_http_basic_authentication["proxy_username"]
+      password = SS.config.proxy.proxy_http_basic_authentication["proxy_password"]
+      password = SS::Crypto.decrypt(password) || password if password.present?
+      ssl_verify_mode = SS.config.proxy.ssl_verify_mode
+
+      new(disable: disable, uri: uri, username: username, password: password, ssl_verify_mode: ssl_verify_mode)
+    end
+
+    cattr_writer :instance, instance_accessor: false
+
+    def self.instance
+      @@instance ||= self.load
+    end
+
+    def disabled?
+      disable
+    end
+
+    def enabled?
+      !disabled?
+    end
+
+    def faraday_proxy_options
+      return nil if disabled? || uri.blank?
+
+      proxy_options = { uri: uri }
+      if username && password
+        proxy_options[:user] = username
+        proxy_options[:password] = password
+      end
+      proxy_options
+    end
+
+    def faraday_ssl_options
+      return nil if disabled? || ssl_verify_mode.blank?
+
+      case ssl_verify_mode
+      when "VERIFY_NONE"
+        { verify: false }
+      else
+        nil
+      end
+    end
+  end
+
   def change_locale_and_timezone(user)
     if user.nil?
       SS.reset_locale_and_timezone
