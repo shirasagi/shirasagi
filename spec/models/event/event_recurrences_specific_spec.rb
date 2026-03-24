@@ -4,7 +4,8 @@ describe Event::Page, dbscope: :example do
   let!(:site) { cms_site }
   let!(:node) { create :event_node_page, cur_site: site }
   let!(:item) do
-    page = create(:event_page, cur_site: site, cur_node: node, event_recurrences: [ recurr3, recurr2, recurr1, duplicated_recurr ])
+    page = create(:event_page, cur_site: site, cur_node: node,
+      event_recurrences: [ recurr3, recurr2, recurr1, duplicated_recurr ])
     Event::Page.find(page.id)
   end
   let!(:specifics) { item.collect_event_date_specifics }
@@ -18,16 +19,39 @@ describe Event::Page, dbscope: :example do
   # day3 allday (12:00 - 13:00, 14:00 - 15:00)
 
   let(:recurr1) do
-    { kind: "datetime", start_at: day1.in_time_zone.change(hour: 12), end_at: day1.in_time_zone.change(hour: 13), frequency: "daily", until_on: day3 }
+    {
+      kind: "datetime",
+      start_at: day1.in_time_zone.change(hour: 12),
+      end_at: day1.in_time_zone.change(hour: 13),
+      frequency: "daily",
+      until_on: day3
+    }
   end
   let(:recurr2) do
-    { kind: "datetime", start_at: day2.in_time_zone.change(hour: 14), end_at: day2.in_time_zone.change(hour: 15), frequency: "daily", until_on: day3 }
+    {
+      kind: "datetime",
+      start_at: day2.in_time_zone.change(hour: 14),
+      end_at: day2.in_time_zone.change(hour: 15),
+      frequency: "daily",
+      until_on: day3
+    }
   end
   let(:recurr3) do
-    { kind: "date", start_at: day3, frequency: "daily", until_on: day3 }
+    {
+      kind: "date",
+      start_at: day3,
+      frequency: "daily",
+      until_on: day3
+    }
   end
   let(:duplicated_recurr) do
-    { kind: "datetime", start_at: day1.in_time_zone.change(hour: 12), end_at: day1.in_time_zone.change(hour: 13), frequency: "daily", until_on: day1 }
+    {
+      kind: "datetime",
+      start_at: day1.in_time_zone.change(hour: 12),
+      end_at: day1.in_time_zone.change(hour: 13),
+      frequency: "daily",
+      until_on: day1
+    }
   end
 
   let(:specific1) do

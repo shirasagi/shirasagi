@@ -104,7 +104,7 @@ class Event::Extensions::Recurrence
 
     # rubocop:disable Style/YodaCondition
     def normalize_by_days(by_days)
-      Array(by_days).select(&:numeric?).map(&:to_i).select { |wday| 0 <= wday && wday <= 6 }.uniq
+      Array(by_days).select(&:numeric?).map(&:to_i).select { |wday| wday.between?(0, 6) }.uniq
     end
     # rubocop:enable Style/YodaCondition
 
@@ -175,16 +175,14 @@ class Event::Extensions::Recurrence
     attribute :start_at, :datetime
     attribute :end_at, :datetime
 
+    delegate :hash, to: :attributes
+
     def all_day?
       kind == "date"
     end
 
     def datetime?
       !all_day?
-    end
-
-    def hash
-      attributes.hash
     end
 
     def eql?(other)
@@ -307,7 +305,7 @@ class Event::Extensions::Recurrence
     self.by_days = by_days.select(&:numeric?).map(&:to_i).sort
 
     # rubocop:disable Style/YodaCondition
-    unless by_days.all? { |by_day| 0 <= by_day && by_day <= 6 }
+    unless by_days.all? { |by_day| by_day.between?(0, 6) }
       errors.add :by_days, :invalid
     end
     # rubocop:enable Style/YodaCondition
