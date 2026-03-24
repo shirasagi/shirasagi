@@ -18,16 +18,16 @@ class SS::Migration20260324000000
           end.join
         end
 
-        result = user.without_record_timestamps do
-          user.set(
-            organization_uid_type: type,
-            organization_uid_sort_key: sort_key
-          )
-        end
-
-        unless result
+        begin
+          user.without_record_timestamps do
+            user.set(
+              organization_uid_type: type,
+              organization_uid_sort_key: sort_key
+            )
+          end
+        rescue => e
           warn "ユーザー #{user.name}(#{user.id}) でエラーが発生しました。"
-          warn user.errors.full_messages.join("\n")
+          warn e.message
         end
       end
     end
