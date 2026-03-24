@@ -10,10 +10,13 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
   context "with cms_page and file" do
     let(:category) { create :category_node_page }
     let!(:file) { create :ss_file, site_id: site.id, user_id: user.id }
+    let(:keywords) { [unique_id, unique_id] }
+    let(:description) { unique_id }
     let(:cms_page) do
       create(
         :cms_page, cur_site: site, name: name, filename: filename, file_ids: [file.id],
         state: 'public', category_ids: [category.id], contact_group_id: group.id, contact_sub_group_ids: [group.id],
+        keywords: keywords, description: description,
         html: '<img src="' + file.url + '" alt="alt" title="title">'
       )
     end
@@ -34,6 +37,8 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       expect(item.enum_es_docs.to_a[0][1][:category_ids]).to eq [category.id]
       expect(item.enum_es_docs.to_a[0][1][:group_ids]).to eq [group.id]
       expect(item.enum_es_docs.to_a[0][1][:groups]).to eq [group.name]
+      expect(item.enum_es_docs.to_a[0][1][:keywords]).to eq keywords.join(" ")
+      expect(item.enum_es_docs.to_a[0][1][:description]).to eq description
       expect(item.enum_es_docs.to_a[0][1][:image_url]).to eq file.thumb.url
       expect(item.enum_es_docs.to_a[0][1][:image_full_url]).to eq file.thumb.full_url
       expect(item.enum_es_docs.to_a[0][1][:image_name]).to eq 'alt'
