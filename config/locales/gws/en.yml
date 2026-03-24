@@ -588,6 +588,12 @@ en:
         - "When sending an e-mail from the system, the URL in the e-mail will be the domain set here."
       trash_threshold:
         - You can set the retention period for the trash can.
+    gws/addon/system/user_setting:
+      organization_uid_sort_order:
+        - Select the sort order for staff numbers.
+        -
+        - "\"Alphanumeric IDs first\": A200, KB005, 5880, 10081"
+        - "\"Numeric IDs first\": 5880, 10081, A200, KB005"
     gws/addon/group_permission:
       custom_group_ids:
         - Select the custom group allowed to edit.

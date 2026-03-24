@@ -589,6 +589,12 @@ ja:
         - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
       trash_threshold:
         - ゴミ箱の保持期間を設定できます。
+    gws/addon/system/user_setting:
+      organization_uid_sort_order:
+        - 職員番号のソート順を選択します。
+        -
+        - "「英字を含む番号を先に表示」: A200, KB005, 5880, 10081 の順"
+        - "「数字のみの番号を先に表示」: 5880, 10081, A200, KB005 の順"
     gws/addon/group_permission:
       custom_group_ids:
         - 編集を許可するカスタムグループを選択します。
