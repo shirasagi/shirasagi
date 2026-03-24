@@ -32,7 +32,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, es: true
 
       omittable_fields = %i[
         id groups group_names member_group_ids text_index data
-        file site_id attachment
+        file site_id attachment keywords description
       ]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
       expect(unhandled_keys).to be_blank
@@ -62,7 +62,7 @@ describe Gws::Elasticsearch::Indexer::ReportFileJob, dbscope: :example, es: true
 
       omittable_fields = %i[
         id mode text categories user_name groups group_names member_group_ids text_index
-        site_id attachment
+        site_id attachment keywords description
       ]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
       expect(unhandled_keys).to be_blank
