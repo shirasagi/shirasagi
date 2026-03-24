@@ -25,7 +25,18 @@ module Event::CalendarListHelper
               </div>
             {% endif %}
             <div class="event">
-              <a href="{{ event.url }}">{{ event.name }}</a>
+              <a href="{{ event.url }}">
+                <span class="name">{{ event.name }}</span>
+                {% for specific in event.specifics %}
+                  {% if specific.datetime? %}
+                    <span class="{{ specific.kind }}">
+                      <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="start">{{ specific.start_at | ss_time: "h_mm" }}</time>
+                      <span class="unit">-</span>
+                      <time datetime="{{ specific.end_at | ss_time: "iso" }}" class="end">{{ specific.end_at | ss_time: "h_mm" }}</time>
+                    </span>
+                  {% endif %}
+                {% endfor %}
+              </a>
             </div>
           </div>
         {% endfor %}
@@ -63,7 +74,20 @@ module Event::CalendarListHelper
                 </div>
               {% endif %}
               <header>
-                <h2> <a href="{{ event.url }}">{{ event.name }}</a></h2>
+                <h2>
+                  <a href="{{ event.url }}">
+                    <span class="name">{{ event.name }}</span>
+                    {% for specific in event.specifics %}
+                      {% if specific.datetime? %}
+                        <span class="{{ specific.kind }}">
+                          <time datetime="{{ specific.start_at | ss_time: "iso" }}" class="start">{{ specific.start_at | ss_time: "h_mm" }}</time>
+                          <span class="unit">-</span>
+                          <time datetime="{{ specific.end_at | ss_time: "iso" }}" class="end">{{ specific.end_at | ss_time: "h_mm" }}</time>
+                        </span>
+                      {% endif %}
+                    {% endfor %}
+                  </a>
+                </h2>
               </header>
             </article>
           </dd>
