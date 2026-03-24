@@ -12,13 +12,13 @@ class SS::Migration20251126000000
         organization_uid_numeric = user.organization_uid.to_s.to_i
         next if organization_uid_numeric == 0 && user.organization_uid.to_s != "0"
 
-        result = user.without_record_timestamps do
-          user.set(organization_uid_numeric: organization_uid_numeric)
-        end
-
-        unless result
+        begin
+          user.without_record_timestamps do
+            user.set(organization_uid_numeric: organization_uid_numeric)
+          end
+        rescue => e
           warn "ユーザー #{user.name}(#{user.id}) でエラーが発生しました。"
-          warn user.errors.full_messages.join("\n")
+          warn e.message
         end
       end
     end
