@@ -11,7 +11,7 @@ class Gws::UserMainGroupOrderUpdateJob < Gws::ApplicationJob
     # 両方のユーザーIDを結合して重複を除去
     user_ids = (user_ids_from_groups + user_ids_with_orders).uniq
     user_ids.each do |user_id|
-      user = Gws::User.find(user_id) rescue nil
+      user = Gws::User.find_by(id: user_id)
       next if user.nil?
 
       orders = (user.gws_main_group_orders || {}).dup
