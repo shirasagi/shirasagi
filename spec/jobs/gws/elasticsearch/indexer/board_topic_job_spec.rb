@@ -71,7 +71,9 @@ describe Gws::Elasticsearch::Indexer::BoardTopicJob, dbscope: :example, es: true
         end
       end
 
-      omittable_fields = %i[id mode text user_name groups group_names member_group_ids text_index site_id attachment keywords description]
+      omittable_fields = %i[
+        id mode text user_name groups group_names member_group_ids text_index site_id attachment keywords description
+      ]
       unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
       expect(unhandled_keys).to be_blank
     end
