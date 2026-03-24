@@ -29,6 +29,9 @@ class Cms::Column::Value::Free < Cms::Column::Value::Base
 
   def remove_public_files
     SS::File.each_file(file_ids) do |file|
+      next if file.owner_item_id != _parent.id
+      next if file.owner_item_type != _parent.class.name
+
       file.remove_public_file
     end
   end
