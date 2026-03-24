@@ -91,6 +91,9 @@ en:
         user_occupation: Occupation
         email: E-mail address
         tel: Phone number
+      organization_uid_sort_order:
+        alpha_first: Alphanumeric IDs first
+        numeric_first: Numeric IDs first
 
     links:
       back_to_portal: Back to portal
@@ -348,6 +351,7 @@ en:
         trash_threshold_unit: Trash retention period unit
       gws/addon/system/user_setting:
         user_public_profiles: Public profile
+        organization_uid_sort_order: Staff number sort order
       gws/addon/system/menu_setting:
         menu_portal_label: Display portal
         menu_portal_state: Display portal

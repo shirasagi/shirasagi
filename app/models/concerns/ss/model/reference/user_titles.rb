@@ -9,7 +9,16 @@ module SS::Model::Reference
       before_save :update_title_order
 
       scope :order_by_title, ->(site) {
-        order_by "title_orders.#{site.id}" => -1, "gws_main_group_orders.#{site.id}" => 1, organization_uid_numeric: 1, uid: 1, id: 1
+        alpha_first = site.respond_to?(:organization_uid_alpha_first?) && site.organization_uid_alpha_first?
+        type_dir = alpha_first ? 1 : -1
+        order_by(
+          "title_orders.#{site.id}" => -1,
+          "gws_main_group_orders.#{site.id}" => 1,
+          organization_uid_type: type_dir,
+          organization_uid_sort_key: 1,
+          uid: 1,
+          id: 1
+        )
       }
     end
 
@@ -24,31 +33,37 @@ module SS::Model::Reference
       def order_users_by_title(users, cur_site:)
         return users.dup if users.blank? || users.length <= 1
 
+        alpha_first = cur_site.respond_to?(:organization_uid_alpha_first?) && cur_site.organization_uid_alpha_first?
+
         users.sort do |lhs_user, rhs_user|
-          # !!!be careful!!! title_order is descendant
+          # ① 役職（降順）
           lhs_title_order = lhs_user.title_orders ? lhs_user.title_orders[cur_site.id].to_i : 0
           rhs_title_order = rhs_user.title_orders ? rhs_user.title_orders[cur_site.id].to_i : 0
           diff = rhs_title_order <=> lhs_title_order
           next diff if diff != 0
 
+          # ② 主管課（昇順）
           lhs_main_group_order = lhs_user.gws_main_group_orders ? lhs_user.gws_main_group_orders[cur_site.id.to_s].to_i : 0
           rhs_main_group_order = rhs_user.gws_main_group_orders ? rhs_user.gws_main_group_orders[cur_site.id.to_s].to_i : 0
           diff = lhs_main_group_order <=> rhs_main_group_order
           next diff if diff != 0
 
-          # 職員番号を数値として比較（organization_uid_numericフィールドを使用）
-          lhs_organization_uid_numeric = lhs_user.organization_uid_numeric || 0
-          rhs_organization_uid_numeric = rhs_user.organization_uid_numeric || 0
-          diff = lhs_organization_uid_numeric <=> rhs_organization_uid_numeric
+          # ③ 職員番号の種別（alpha/numeric、サイト設定に応じて昇順or降順）
+          lhs_type = lhs_user.organization_uid_type.to_s
+          rhs_type = rhs_user.organization_uid_type.to_s
+          diff = alpha_first ? (lhs_type <=> rhs_type) : (rhs_type <=> lhs_type)
           next diff if diff != 0
 
-          diff = lhs_user.uid <=> rhs_user.uid
+          # ④ 職員番号のソートキー（昇順）
+          lhs_sort_key = lhs_user.organization_uid_sort_key.to_s
+          rhs_sort_key = rhs_user.organization_uid_sort_key.to_s
+          diff = lhs_sort_key <=> rhs_sort_key
           next diff if diff != 0
 
-          diff = lhs_user.id <=> rhs_user.id
+          diff = lhs_user.uid.to_s <=> rhs_user.uid.to_s
           next diff if diff != 0
 
-          0
+          lhs_user.id <=> rhs_user.id
         end
       end
     end

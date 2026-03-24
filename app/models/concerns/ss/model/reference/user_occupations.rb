@@ -9,7 +9,15 @@ module SS::Model::Reference
       before_save :update_occupation_order
 
       scope :order_by_occupation, ->(site) {
-        order_by "occupation_orders.#{site.id}" => -1, organization_uid: 1, uid: 1
+        alpha_first = site.respond_to?(:organization_uid_alpha_first?) && site.organization_uid_alpha_first?
+        type_dir = alpha_first ? 1 : -1
+        order_by(
+          "occupation_orders.#{site.id}" => -1,
+          organization_uid_type: type_dir,
+          organization_uid_sort_key: 1,
+          uid: 1,
+          id: 1
+        )
       }
     end
 

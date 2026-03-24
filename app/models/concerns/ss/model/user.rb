@@ -29,7 +29,7 @@ module SS::Model::User
     index({ email: 1 }, { sparse: true, unique: true })
     index({ uid: 1 }, { sparse: true, unique: true })
     index({ organization_uid: 1, organization_id: 1 }, { sparse: true })
-    index({ organization_uid_numeric: 1 }, { sparse: true })
+    index({ organization_uid_type: 1, organization_uid_sort_key: 1 }, { sparse: true })
     index({ group_ids: 1 })
 
     # Create indexes each site_ids.
@@ -52,7 +52,8 @@ module SS::Model::User
     field :account_expiration_date, type: DateTime
     field :remark, type: String
     field :organization_uid, type: String
-    field :organization_uid_numeric, type: Integer
+    field :organization_uid_type, type: String
+    field :organization_uid_sort_key, type: String
 
     # Session Lifetime in seconds
     field :session_lifetime, type: Integer
@@ -95,7 +96,7 @@ module SS::Model::User
     validate :validate_uid
     validate :validate_account_expiration_date
 
-    before_validation :set_organization_uid_numeric, if: ->{ organization_uid_changed? || organization_uid_numeric.blank? }
+    before_validation :set_organization_uid_sort_fields, if: ->{ organization_uid_changed? || organization_uid_sort_key.blank? }
     after_save :save_group_history, if: -> { group_ids_changed? || group_ids_previously_changed? }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
@@ -445,10 +446,17 @@ module SS::Model::User
     item.save
   end
 
-  def set_organization_uid_numeric
-    return self.organization_uid_numeric = nil if organization_uid.blank?
+  def set_organization_uid_sort_fields
+    if organization_uid.blank?
+      self.organization_uid_type = nil
+      self.organization_uid_sort_key = nil
+      return
+    end
 
     uid = organization_uid.to_s
-    self.organization_uid_numeric = uid.match?(/\A\d+\z/) ? uid.to_i : nil
+    self.organization_uid_type = uid.match?(/\A\d+\z/) ? 'numeric' : 'alpha'
+    self.organization_uid_sort_key = uid.scan(/[a-zA-Z]+|\d+/).map { |seg|
+      seg.match?(/\A\d+\z/) ? seg.rjust(10, '0') : seg
+    }.join
   end
 end

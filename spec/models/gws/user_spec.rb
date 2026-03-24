@@ -234,9 +234,9 @@ organization_uid: "100"
       expect(nil1_index).to be < nil2_index
     end
 
-    it "sorts users by organization_uid_numeric in numeric order, not string order" do
+    it "sorts users by organization_uid_sort_key in numeric order, not string order" do
       # 職員番号が数値として正しくソートされることを確認
-      # 文字列比較では "10081" < "5880" となるが、数値比較では 5880 < 10081 となる
+      # 文字列比較では "10081" < "5880" となるが、ソートキーでは 5880 < 10081 となる
       title_same = create :gws_user_title, order: 15
       group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
 
@@ -251,14 +251,14 @@ organization_uid: "100"
       user_10144 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
         group_ids: [group_same.id], organization_uid: "10144"
 
-      # organization_uid_numericが自動設定されていることを確認
-      expect(user_5880.reload.organization_uid_numeric).to eq 5880
-      expect(user_8885.reload.organization_uid_numeric).to eq 8885
-      expect(user_10081.reload.organization_uid_numeric).to eq 10_081
-      expect(user_10143.reload.organization_uid_numeric).to eq 10_143
-      expect(user_10144.reload.organization_uid_numeric).to eq 10_144
+      # organization_uid_sort_fieldsが自動設定されていることを確認
+      expect(user_5880.reload.organization_uid_type).to eq 'numeric'
+      expect(user_5880.organization_uid_sort_key).to eq '0000005880'
+      expect(user_8885.reload.organization_uid_type).to eq 'numeric'
+      expect(user_8885.organization_uid_sort_key).to eq '0000008885'
+      expect(user_10081.reload.organization_uid_type).to eq 'numeric'
+      expect(user_10081.organization_uid_sort_key).to eq '0000010081'
 
-      # ソートが正しく機能することを確認するため、IDの順番をランダムにする
       target_ids = [
         user_5880.id,
         user_8885.id,
@@ -266,10 +266,6 @@ organization_uid: "100"
         user_10143.id,
         user_10144.id
       ].shuffle
-
-      Rails.logger.debug do
-        "[Gws::UserSpec#sorts users by organization_uid_numeric in numeric order, not string order] target_ids: #{target_ids.inspect}"
-      end
 
       sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
 
@@ -284,28 +280,100 @@ organization_uid: "100"
       ]
     end
 
-    it "updates organization_uid_numeric when organization_uid changes" do
-      user = create :gws_user, organization_id: site.id, organization_uid: "100"
-      expect(user.organization_uid_numeric).to eq 100
+    it "sorts alphanumeric organization_uids correctly" do
+      # アルファベット混在の職員番号が自然順で正しくソートされることを確認
+      title_same = create :gws_user_title, order: 15
+      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
 
-      user.organization_uid = "200"
-      user.save
-      expect(user.reload.organization_uid_numeric).to eq 200
+      user_a1234 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A1234"
+      user_a200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A200"
+      user_kb005 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "KB005"
+
+      expect(user_a200.reload.organization_uid_type).to eq 'alpha'
+      expect(user_a200.organization_uid_sort_key).to eq 'A0000000200'
+      expect(user_a1234.reload.organization_uid_type).to eq 'alpha'
+      expect(user_a1234.organization_uid_sort_key).to eq 'A0000001234'
+      expect(user_kb005.reload.organization_uid_type).to eq 'alpha'
+      expect(user_kb005.organization_uid_sort_key).to eq 'KB0000000005'
+
+      target_ids = [user_a1234.id, user_a200.id, user_kb005.id].shuffle
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+      # alpha_first（デフォルト）: alpha同士はソートキーの辞書順
+      # A0000000200 < A0000001234 < KB0000000005
+      expect(sorted_users.map(&:id)).to eq [user_a200.id, user_a1234.id, user_kb005.id]
     end
 
-    it "sets organization_uid_numeric to nil when organization_uid is blank" do
+    it "sorts alpha before numeric when organization_uid_sort_order is alpha_first" do
+      # サイト設定がalpha_firstの場合、アルファベット混在が先に表示される
+      site.organization_uid_sort_order = 'alpha_first'
+      site.save!
+
+      title_same = create :gws_user_title, order: 15
+      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
+
+      user_alpha = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A100"
+      user_numeric = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "100"
+
+      target_ids = [user_alpha.id, user_numeric.id]
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+      # alpha("alpha") < numeric("numeric") の辞書順 → alphaが先
+      expect(sorted_users.map(&:id)).to eq [user_alpha.id, user_numeric.id]
+    end
+
+    it "sorts numeric before alpha when organization_uid_sort_order is numeric_first" do
+      # サイト設定がnumeric_firstの場合、数字のみが先に表示される
+      site.organization_uid_sort_order = 'numeric_first'
+      site.save!
+
+      title_same = create :gws_user_title, order: 15
+      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
+
+      user_alpha = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A100"
+      user_numeric = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "100"
+
+      target_ids = [user_alpha.id, user_numeric.id]
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+      # type降順: "numeric" > "alpha" → numericが先
+      expect(sorted_users.map(&:id)).to eq [user_numeric.id, user_alpha.id]
+    end
+
+    it "updates organization_uid_sort_fields when organization_uid changes" do
       user = create :gws_user, organization_id: site.id, organization_uid: "100"
-      expect(user.organization_uid_numeric).to eq 100
+      expect(user.organization_uid_type).to eq 'numeric'
+      expect(user.organization_uid_sort_key).to eq '0000000100'
+
+      user.organization_uid = "A200"
+      user.save
+      user.reload
+      expect(user.organization_uid_type).to eq 'alpha'
+      expect(user.organization_uid_sort_key).to eq 'A0000000200'
+    end
+
+    it "sets organization_uid_sort_fields to nil when organization_uid is blank" do
+      user = create :gws_user, organization_id: site.id, organization_uid: "100"
+      expect(user.organization_uid_type).to eq 'numeric'
 
       user.organization_uid = nil
       user.save
-      expect(user.reload.organization_uid_numeric).to be_nil
+      user.reload
+      expect(user.organization_uid_type).to be_nil
+      expect(user.organization_uid_sort_key).to be_nil
     end
 
-    it "handles non-numeric organization_uid by converting to nil" do
-      # 数値に変換できない職員番号の場合、nilに変換される
-      user = create :gws_user, organization_id: site.id, organization_uid: "abc"
-      expect(user.organization_uid_numeric).to be_nil
+    it "handles alphanumeric organization_uid correctly" do
+      user = create :gws_user, organization_id: site.id, organization_uid: "KB005"
+      expect(user.organization_uid_type).to eq 'alpha'
+      expect(user.organization_uid_sort_key).to eq 'KB0000000005'
     end
   end
 
@@ -472,7 +540,7 @@ organization_uid: "100"
       user.instance_variable_set(:@cur_site, nil)
 
       # @cur_siteがnilの場合、NoMethodErrorが発生することを確認
-      expect { user.set_gws_default_group_id(group1.id) }.to raise_error(NoMethodError, /undefined method `id' for nil:NilClass/)
+      expect { user.set_gws_default_group_id(group1.id) }.to raise_error(NoMethodError, /undefined method `id' for nil/)
     end
 
     it "handles order_by_title with empty user set" do

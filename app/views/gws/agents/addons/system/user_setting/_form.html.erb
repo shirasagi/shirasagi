@@ -14,3 +14,9 @@
     <% end %>
   </dd>
 </dl>
+<dl class="see">
+  <dt><%= @model.t :organization_uid_sort_order %></dt>
+  <dd>
+    <%= f.select :organization_uid_sort_order, @item.organization_uid_sort_order_options %>
+  </dd>
+</dl>
