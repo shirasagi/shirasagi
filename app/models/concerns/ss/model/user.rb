@@ -268,9 +268,7 @@ module SS::Model::User
     str
   end
 
-  def type_options
-    self.class.type_options
-  end
+  delegate :type_options, to: :class
 
   def type_sns?
     self.type == TYPE_SNS || self.type.blank?
@@ -455,8 +453,8 @@ module SS::Model::User
 
     uid = organization_uid.to_s
     self.organization_uid_type = uid.match?(/\A\d+\z/) ? 'numeric' : 'alpha'
-    self.organization_uid_sort_key = uid.scan(/[a-zA-Z]+|\d+/).map { |seg|
+    self.organization_uid_sort_key = uid.scan(/[a-zA-Z_\-\.]+|\d+/).map do |seg|
       seg.match?(/\A\d+\z/) ? seg.rjust(10, '0') : seg
-    }.join
+    end.join
   end
 end

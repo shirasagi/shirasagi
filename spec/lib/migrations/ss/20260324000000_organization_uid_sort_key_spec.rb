@@ -61,6 +61,29 @@ RSpec.describe SS::Migration20260324000000, dbscope: :example do
       end
     end
 
+    context "with users having special characters in organization_uid" do
+      let!(:user1) { create :gws_user, organization_id: organization.id, organization_uid: "user_001" }
+      let!(:user2) { create :gws_user, organization_id: organization.id, organization_uid: "user-002" }
+
+      before do
+        [user1, user2].each do |user|
+          user.without_record_timestamps do
+            user.set(organization_uid_type: nil, organization_uid_sort_key: nil)
+          end
+        end
+
+        described_class.new.change
+      end
+
+      it "preserves underscores and hyphens in sort key" do
+        expect(user1.reload.organization_uid_type).to eq 'alpha'
+        expect(user1.organization_uid_sort_key).to eq 'user_0000000001'
+
+        expect(user2.reload.organization_uid_type).to eq 'alpha'
+        expect(user2.organization_uid_sort_key).to eq 'user-0000000002'
+      end
+    end
+
     context "with users without organization_uid" do
       let!(:user1) { create :gws_user, organization_id: organization.id, organization_uid: nil }
       let!(:user2) { create :gws_user, organization_id: organization.id, organization_uid: "" }

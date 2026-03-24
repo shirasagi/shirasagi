@@ -375,6 +375,16 @@ organization_uid: "100"
       expect(user.organization_uid_type).to eq 'alpha'
       expect(user.organization_uid_sort_key).to eq 'KB0000000005'
     end
+
+    it "preserves underscores and hyphens in sort key" do
+      # user_001 と user001 が異なるソートキーになることを確認
+      user_with_underscore = create :gws_user, organization_id: site.id, organization_uid: "user_001"
+      user_without = create :gws_user, organization_id: site.id, organization_uid: "user001"
+
+      expect(user_with_underscore.organization_uid_sort_key).to eq 'user_0000000001'
+      expect(user_without.organization_uid_sort_key).to eq 'user0000000001'
+      expect(user_with_underscore.organization_uid_sort_key).not_to eq user_without.organization_uid_sort_key
+    end
   end
 
   context "#gws_main_group" do

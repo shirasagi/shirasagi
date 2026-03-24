@@ -13,9 +13,9 @@ class SS::Migration20260324000000
           sort_key = nil
         else
           type = uid.match?(/\A\d+\z/) ? 'numeric' : 'alpha'
-          sort_key = uid.scan(/[a-zA-Z]+|\d+/).map { |seg|
+          sort_key = uid.scan(/[a-zA-Z_\-\.]+|\d+/).map do |seg|
             seg.match?(/\A\d+\z/) ? seg.rjust(10, '0') : seg
-          }.join
+          end.join
         end
 
         result = user.without_record_timestamps do
