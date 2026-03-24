@@ -46,12 +46,18 @@ describe "link_checker", type: :feature, dbscope: :example, js: true do
     stub_request(:any, failed_url3).to_return(body: "", status: 404, headers: { 'Content-Type' => 'text/html' })
 
     stub_request(:any, redirection_url0).to_return(body: "", status: 200, headers: { 'Content-Type' => 'text/html' })
-    stub_request(:any, redirection_url1).to_return(status: 302, headers: { 'Location' => redirection_url0, 'Content-Type' => 'text/html' })
-    stub_request(:any, redirection_url2).to_return(status: 302, headers: { 'Location' => redirection_url1, 'Content-Type' => 'text/html' })
-    stub_request(:any, redirection_url3).to_return(status: 302, headers: { 'Location' => redirection_url2, 'Content-Type' => 'text/html' })
-    stub_request(:any, redirection_url4).to_return(status: 302, headers: { 'Location' => redirection_url3, 'Content-Type' => 'text/html' })
-    stub_request(:any, redirection_url5).to_return(status: 302, headers: { 'Location' => redirection_url4, 'Content-Type' => 'text/html' })
-    stub_request(:any, redirection_self_url).to_return(status: 302, headers: { 'Location' => redirection_self_url, 'Content-Type' => 'text/html' })
+    stub_request(:any, redirection_url1)
+      .to_return(status: 302, headers: { 'Location' => redirection_url0, 'Content-Type' => 'text/html' })
+    stub_request(:any, redirection_url2)
+      .to_return(status: 302, headers: { 'Location' => redirection_url1, 'Content-Type' => 'text/html' })
+    stub_request(:any, redirection_url3)
+      .to_return(status: 302, headers: { 'Location' => redirection_url2, 'Content-Type' => 'text/html' })
+    stub_request(:any, redirection_url4)
+      .to_return(status: 302, headers: { 'Location' => redirection_url3, 'Content-Type' => 'text/html' })
+    stub_request(:any, redirection_url5)
+      .to_return(status: 302, headers: { 'Location' => redirection_url4, 'Content-Type' => 'text/html' })
+    stub_request(:any, redirection_self_url)
+      .to_return(status: 302, headers: { 'Location' => redirection_self_url, 'Content-Type' => 'text/html' })
 
     Capybara.app_host = "http://#{site.domain}"
 
