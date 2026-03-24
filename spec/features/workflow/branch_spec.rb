@@ -156,7 +156,21 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect(item.state).to eq "public"
       if item.class.fields.key?("file_ids")
         expect(item.file_ids).to eq branch.file_ids
+        SS::File.each_file(item.file_ids) do |file|
+          expect(file.owner_item_id).to eq item.id
+          expect(file.owner_item_type).to eq item.class.name
+          expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+        end
       end
+      if item.class.fields.key?("thumb_id") && item.thumb_id.present?
+        expect(branch.thumb_id).to eq item.thumb_id
+        SS::File.each_file([ item.thumb_id ]) do |file|
+          expect(file.owner_item_id).to eq item.id
+          expect(file.owner_item_type).to eq item.class.name
+          expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+        end
+      end
+
       expect(item.backups.count).to eq 4
       expect(item.backups.where("data._id" => branch.id).count).to eq 2
       expect(item.class.all.size).to eq 1
