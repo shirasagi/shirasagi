@@ -1,4 +1,4 @@
-<% addon_options = { head: head, css_class: css_class, toggle: true } %>
+<% addon_options = { head: head, class: css_class, toggle: true } %>
 <%= render "ss/crud/addon", addon: addon_options do %>
   <% @grouped_members.each do |group, group_members| %>
     <div class="contributor-group <%= 'no-group-header' unless group&.section_name.present? %>">

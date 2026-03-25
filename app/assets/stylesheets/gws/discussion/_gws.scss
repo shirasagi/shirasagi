@@ -56,51 +56,6 @@
   }
   .discussion-contributor {
     padding-top: 10px;
-    .contributor-group {
-      margin-bottom: 0;
-      padding: 0;
-      &:not(:last-child) {
-        margin-bottom: 16px;
-        padding-bottom: 16px;
-        border-bottom: 1px solid #e0e0e0;
-      }
-      .contributor {
-        margin: 0 0 10px 0;
-        padding: 0;
-        border-bottom: none;
-        color: #333;
-        font-weight: 600;
-        line-height: 1.5;
-      }
-      p {
-        position: relative;
-        margin: 0;
-        padding: 0 0 0 1.25rem;
-        color: #333;
-        line-height: 1.7;
-        &::before {
-          content: "•";
-          position: absolute;
-          left: 0.5rem;
-          color: #999;
-          font-weight: normal;
-        }
-        &:first-of-type {
-          margin-top: 0;
-        }
-        &:last-of-type {
-          margin-bottom: 0;
-        }
-      }
-      // グループがない場合（nilグループ）のスタイル
-      // グループヘッダーがない場合、メンバーは左揃え
-      &.no-group-header p {
-        padding-left: 0;
-        &::before {
-          display: none;
-        }
-      }
-    }
   }
   .comment-files {
     margin-top: 5px;
