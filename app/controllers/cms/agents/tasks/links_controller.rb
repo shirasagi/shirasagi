@@ -122,8 +122,6 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     @queue = [ Cms::CheckLinks::Source.new_from_site(@site) ]
     @full_url_to_source = @queue.index_by { _1.full_url.to_s }
 
-    @html_request_timeout = SS.config.cms.check_links["html_request_timeout"] rescue 10
-    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
     @check_mobile = SS.config.cms.check_links["check_mobile_path"] != false
 
     (10*1000*1000).times do |i|
