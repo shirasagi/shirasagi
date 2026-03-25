@@ -49,6 +49,8 @@ class Cms::Column::Value::FileUpload < Cms::Column::Value::Base
 
   def remove_public_files
     return if file.blank?
+    return if file.owner_item_id != _parent.id
+    return if file.owner_item_type != _parent.class.name
     file.remove_public_file
   end
 
