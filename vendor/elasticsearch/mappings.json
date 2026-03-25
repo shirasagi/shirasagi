@@ -2,9 +2,9 @@
   "properties": {
     "id": { "type": "keyword" },
     "url": { "type": "keyword" },
-    "name": { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+    "name": { "type": "text", "copy_to": "text_index" },
     "mode": { "type": "keyword" },
-    "text": { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+    "text": { "type": "text", "copy_to": "text_index" },
     "keywords": { "type": "text", "copy_to": "text_index" },
     "description": { "type": "text", "copy_to": "text_index" },
     "categories": { "type": "keyword" },
@@ -12,7 +12,7 @@
     "close_date": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
     "released": { "type": "date", "format": "strict_date_optional_time||epoch_millis" },
     "state": { "type": "keyword" },
-    "user_name" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+    "user_name" : { "type": "text", "copy_to": "text_index" },
     "user_ids": { "type": "integer" },
     "group_ids": { "type": "integer" },
     "groups": { "type": "keyword" },
@@ -41,8 +41,8 @@
         "content_type" : { "type": "keyword" },
         "author" : { "type": "text", "analyzer": "my_ja_analyzer" },
         "language" : { "type": "keyword" },
-        "title" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
-        "content" : { "type": "text", "analyzer": "my_ja_analyzer", "copy_to": "text_index" },
+        "title" : { "type": "text", "copy_to": "text_index" },
+        "content" : { "type": "text", "copy_to": "text_index" },
         "content_length" : { "type": "integer" }
       }
     }
