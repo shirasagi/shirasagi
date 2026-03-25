@@ -119,7 +119,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
 
       extractor = described_class.new(cur_site: site, base_url: node.full_url, html: html)
       links = extractor.to_a
-      puts links.map(&:href).join("\n")
+      # puts links.map(&:href).join("\n")
       expect(links).to have(8).items
 
       links[0].tap do |link|
@@ -154,7 +154,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.line).to be > 30
         expect(link.type).to eq :inner_yield
         expect(link.rel).to be_blank
-        expect(link.ss_rel).to be_blank
+        expect(link.ss_rel).to eq "nofollow"
       end
       links[4].tap do |link|
         path = "#{today.prev_month.strftime("%Y%m")}/index.html"
@@ -163,7 +163,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.line).to be > 30
         expect(link.type).to eq :inner_yield
         expect(link.rel).to be_blank
-        expect(link.ss_rel).to be_blank
+        expect(link.ss_rel).to eq "nofollow"
       end
       links[5].tap do |link|
         path = "#{today.next_month.strftime("%Y%m")}/index.html"
@@ -172,7 +172,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.line).to be > 30
         expect(link.type).to eq :inner_yield
         expect(link.rel).to be_blank
-        expect(link.ss_rel).to be_blank
+        expect(link.ss_rel).to eq "nofollow"
       end
       links[6].tap do |link|
         path = "#{today.strftime("%Y%m%d")}/"
