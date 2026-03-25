@@ -88,8 +88,9 @@ module Event::EventHelper
   def download_ics(date, opts = {})
     year  = date.year
     month = date.month
+    path = sprintf("#{@cur_node.try(:url)}%04d%02d/list.ics", year, month)
 
-    link_to t("event.ics_file"), sprintf("#{@cur_node.try(:url)}%04d%02d/list.ics", year, month), class: opts[:class], data: { ss_rel: "nofollow" }
+    link_to t("event.ics_file"), path, class: opts[:class], data: { ss_rel: "nofollow" }
   end
 
   def link_to_daily(date, opts = {})
