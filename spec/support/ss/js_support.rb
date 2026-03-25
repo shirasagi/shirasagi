@@ -150,6 +150,24 @@ module SS
       })(...arguments)
     SCRIPT
 
+    INSERT_HTML_CKEDITOR_SCRIPT = <<~SCRIPT.freeze
+      (function(element, html, resolve) {
+        var ckeditor = CKEDITOR.instances[element.id];
+        if (!ckeditor) {
+          resolve(false);
+          return;
+        }
+
+        var callback = function() {
+          setTimeout(function() {
+            resolve(true);
+          }, 0);
+        };
+
+        ckeditor.setData(ckeditor.getData() + html, { callback: callback });
+      })(...arguments)
+    SCRIPT
+
     HOOK_CKEDITOR_EVENT_COMPLETION = <<~SCRIPT.freeze
       (function(promiseId, element, eventName) {
         var ckeditor = $(element).ckeditor().editor;
@@ -708,6 +726,18 @@ module SS
       expect(ret).to be_truthy
       ret = page.evaluate_async_script(FILL_CKEDITOR_SCRIPT, element, with)
       expect(ret).to be_truthy
+      ret
+    end
+
+    def insert_in_ckeditor(locator, **options)
+      html = options.delete(:html)
+      element = find(:fillable_field, locator, **options)
+
+      ret = wait_for_ckeditor_ready(element)
+      expect(ret).to be_truthy
+      ret = page.evaluate_async_script(INSERT_HTML_CKEDITOR_SCRIPT, element, html)
+      expect(ret).to be_truthy
+      ret
     end
 
     def fill_in_datetime(locator, **options)
