@@ -262,6 +262,7 @@ en:
       gws/user:
         gws_main_group_ids: Group (main)
         gws_default_group_ids: Group (default)
+        title_ids: Job title
       gws/custom_group:
         name: Group name
         order: Display order

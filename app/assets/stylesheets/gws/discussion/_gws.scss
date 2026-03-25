@@ -57,28 +57,28 @@
   .discussion-contributor {
     padding-top: 10px;
     .contributor-group {
-      padding: 0;
       margin-bottom: 0;
+      padding: 0;
       &:not(:last-child) {
         margin-bottom: 16px;
         padding-bottom: 16px;
         border-bottom: 1px solid #e0e0e0;
       }
       .contributor {
-        font-weight: 600;
-        color: #333;
         margin: 0 0 10px 0;
         padding: 0;
-        line-height: 1.5;
         border-bottom: none;
+        color: #333;
+        font-weight: 600;
+        line-height: 1.5;
       }
       p {
+        position: relative;
         margin: 0;
         padding: 0 0 0 1.25rem;
-        line-height: 1.7;
         color: #333;
-        position: relative;
-        &:before {
+        line-height: 1.7;
+        &::before {
           content: "•";
           position: absolute;
           left: 0.5rem;
@@ -96,7 +96,7 @@
       // グループヘッダーがない場合、メンバーは左揃え
       &.no-group-header p {
         padding-left: 0;
-        &:before {
+        &::before {
           display: none;
         }
       }
@@ -214,28 +214,28 @@
   }
 
   .contributor-group {
-    padding: 0;
     margin-bottom: 0;
+    padding: 0;
     &:not(:last-child) {
       margin-bottom: 16px;
       padding-bottom: 16px;
       border-bottom: 1px solid #e0e0e0;
     }
     .contributor {
-      font-weight: 600;
-      color: #333;
       margin: 0 0 10px 0;
       padding: 0;
-      line-height: 1.5;
       border-bottom: none;
+      color: #333;
+      font-weight: 600;
+      line-height: 1.5;
     }
     p {
+      position: relative;
       margin: 0;
       padding: 0 0 0 1.25rem;
-      line-height: 1.7;
       color: #333;
-      position: relative;
-      &:before {
+      line-height: 1.7;
+      &::before {
         content: "•";
         position: absolute;
         left: 0.5rem;
@@ -253,7 +253,7 @@
     // グループヘッダーがない場合、メンバーは左揃え
     &.no-group-header p {
       padding-left: 0;
-      &:before {
+      &::before {
         display: none;
       }
     }
