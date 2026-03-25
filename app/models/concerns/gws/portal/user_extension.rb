@@ -9,7 +9,6 @@ module Gws::Portal::UserExtension
   def find_portal_setting(overwrite_params = {})
     site = overwrite_params[:cur_site]
     portal = portal_setting.site(site).first_or_initialize(
-      name: long_name.truncate(20),
       readable_member_ids: [id],
       user_ids: [id]
     )

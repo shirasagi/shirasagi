@@ -46,10 +46,22 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
       # ポータルにスケジュールを表示するために必要
       permissions << 'use_private_gws_schedule_plans'
       permissions << 'read_private_gws_schedule_plans'
+      # 設定に照会回答の設定項目を表示するために必要
+      permissions << 'use_gws_monitor'
+      permissions << 'read_private_gws_monitor_posts'
       permissions
     end
     let(:role) { create(:gws_role, cur_site: site, permissions: permissions) }
     let(:default_portlets) { SS.config.gws['portal']['user_portlets'] }
+
+    let(:portal_notice_state) { %w(show hide).sample }
+    let(:portal_notice_state_label) { I18n.t("ss.options.state.#{portal_notice_state}") }
+    let(:portal_notice_browsed_state) { %w(both unread read).sample }
+    let(:portal_notice_browsed_state_label) { I18n.t("gws/board.options.browsed_state.#{portal_notice_browsed_state}") }
+    let(:portal_monitor_state) { %w(show hide).sample }
+    let(:portal_monitor_state_label) { I18n.t("ss.options.state.#{portal_monitor_state}") }
+    let(:portal_link_state) { %w(show hide).sample }
+    let(:portal_link_state_label) { I18n.t("ss.options.state.#{portal_link_state}") }
 
     before do
       user.gws_role_ids = [role.id]
@@ -145,7 +157,20 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
 
       click_on I18n.t('gws/portal.links.settings')
       click_on I18n.t('ss.links.edit')
-      within "form" do
+      within "form#item-form" do
+        # ユーザーポータルの場合、名前の変更が不可能
+        expect(page).to have_no_field("item[name]")
+
+        # gws/addon/portal/notice_setting
+        select portal_notice_state_label, from: "item[portal_notice_state]"
+        select portal_notice_browsed_state_label, from: "item[portal_notice_browsed_state]"
+
+        # gws/addon/portal/monitor_setting
+        select portal_monitor_state_label, from: "item[portal_monitor_state]"
+
+        # gws/addon/portal/link_setting
+        select portal_link_state_label, from: "item[portal_link_state]"
+
         click_on I18n.t('ss.buttons.save')
       end
       wait_for_notice I18n.t("ss.notice.saved")
@@ -158,10 +183,10 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         expect(portal.name).to include(user.uid)
         expect(portal.portal_user_id).to eq user.id
         expect(portal.portlets.count).to eq default_portlets.size
-        expect(portal.portal_notice_state).to eq "show"
-        expect(portal.portal_notice_browsed_state).to eq "both"
-        expect(portal.portal_monitor_state).to eq "show"
-        expect(portal.portal_link_state).to eq "show"
+        expect(portal.portal_notice_state).to eq portal_notice_state
+        expect(portal.portal_notice_browsed_state).to eq portal_notice_browsed_state
+        expect(portal.portal_monitor_state).to eq portal_monitor_state
+        expect(portal.portal_link_state).to eq portal_link_state
         expect(portal.readable_setting_range).to eq "select"
         expect(portal.readable_group_ids).to be_blank
         expect(portal.readable_member_ids).to eq [ user.id ]
@@ -279,9 +304,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.arrange_portlets')
@@ -350,9 +373,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.manage_portlets')
@@ -425,9 +446,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.settings')
@@ -519,9 +538,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.arrange_portlets')
@@ -636,9 +653,7 @@ describe "gws_portal_setting_users", type: :feature, dbscope: :example, js: true
         end
 
         # 氏名変更
-        Gws::User.find(user.id).tap do |user_work|
-          user_work.update!(name: "羽柴 秀吉")
-        end
+        user.update!(name: "羽柴 秀吉")
 
         within ".current-navi" do
           click_on I18n.t('gws/portal.links.settings')
