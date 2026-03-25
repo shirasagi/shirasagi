@@ -2,10 +2,11 @@ class Cms::CopyNodesTask
   include SS::Model::Task
 
   field :target_node_name, type: String
+  field :target_node_index_name, type: String
   field :target_node_filename, type: String
   belongs_to :node, class_name: "Cms::Node"
 
-  permit_params :target_node_name, :target_node_filename
+  permit_params :target_node_name, :target_node_index_name, :target_node_filename
 
   validates :target_node_name, presence: true
   validates :target_node_filename, presence: true

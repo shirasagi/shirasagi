@@ -10,7 +10,14 @@
   else
     window_name = yield(:title) if content_for?(:title)
     window_name ||= @item.try(:name).presence
-    window_name ||= @crumbs.last.try(:first)
+    window_name ||= @crumbs.last.then do |name, _path|
+      if name.try(:html_safe?)
+        name = sanitize(name, tags: SS::EMPTY_ARRAY)
+        name.sub!("public_off", "") # remove matrial-icons
+        name.strip!
+      end
+      name
+    end
   end
   if window_name.present?
     title = "#{window_name} | #{ss_application_name}"

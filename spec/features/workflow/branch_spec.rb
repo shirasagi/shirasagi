@@ -60,6 +60,26 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
         expect(branch.html).to include(branch.files.first.url)
         expect(branch.html).to include(item.files.first.url)
         expect(branch.html).to eq item.html
+
+        SS::File.each_file(item.file_ids) do |file|
+          expect(file.owner_item_id).to eq item.id
+          expect(file.owner_item_type).to eq item.class.name
+
+          if item.public? && item.public_node?
+            expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+          end
+        end
+      end
+      if item.class.fields.key?("thumb_id") && item.thumb_id.present?
+        expect(branch.thumb_id).to eq item.thumb_id
+        SS::File.each_file([ item.thumb_id ]) do |file|
+          expect(file.owner_item_id).to eq item.id
+          expect(file.owner_item_type).to eq item.class.name
+
+          if item.public? && item.public_node?
+            expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+          end
+        end
       end
 
       History::Log.unscoped.where(controller: "workflow/frames/branches", action: "create").first.tap do |history_log|
@@ -136,7 +156,21 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
       expect(item.state).to eq "public"
       if item.class.fields.key?("file_ids")
         expect(item.file_ids).to eq branch.file_ids
+        SS::File.each_file(item.file_ids) do |file|
+          expect(file.owner_item_id).to eq item.id
+          expect(file.owner_item_type).to eq item.class.name
+          expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+        end
       end
+      if item.class.fields.key?("thumb_id") && item.thumb_id.present?
+        expect(branch.thumb_id).to eq item.thumb_id
+        SS::File.each_file([ item.thumb_id ]) do |file|
+          expect(file.owner_item_id).to eq item.id
+          expect(file.owner_item_type).to eq item.class.name
+          expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+        end
+      end
+
       expect(item.backups.count).to eq 4
       expect(item.backups.where("data._id" => branch.id).count).to eq 2
       expect(item.class.all.size).to eq 1
@@ -157,6 +191,9 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
   end
 
   context "cms page" do
+    let(:thumb) do
+      tmp_ss_file(site: site, user: cms_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png")
+    end
     let(:file) do
       tmp_ss_file(site: site, user: cms_user, contents: "#{Rails.root}/spec/fixtures/ss/logo.png")
     end
@@ -169,10 +206,20 @@ describe "workflow_branch", type: :feature, dbscope: :example, js: true do
     let!(:item) do
       create(
         :cms_page, cur_user: cms_user, filename: "page.html", name: old_name, index_name: old_index_name,
-        html: html, file_ids: [ file.id ]
+        thumb: thumb, html: html, file_ids: [ file.id ]
       )
     end
     let(:show_path) { cms_page_path site, item }
+
+    before do
+      SS::File.each_file([ item.thumb_id ] + item.file_ids) do |file|
+        expect(file.owner_item_id).to eq item.id
+        expect(file.owner_item_type).to eq item.class.name
+
+        expect(File.size(file.path)).to be > 0
+        expect(File.size("#{file.public_dir}/#{file.filename}")).to be > 0
+      end
+    end
 
     it_behaves_like "create_branch"
   end

@@ -337,7 +337,10 @@ module Cms::PageFilter
   def copy
     if request.get? || request.head?
       prefix = I18n.t("workflow.cloned_name_prefix")
-      @item.name = "[#{prefix}] #{@item.name}" unless @item.cloned_name?
+      unless @item.cloned_name?
+        @item.name = "[#{prefix}] #{@item.name}"
+        @item.index_name = "[#{prefix}] #{@item.index_name}" if @item.index_name.present?
+      end
       return
     end
 
@@ -351,7 +354,7 @@ module Cms::PageFilter
     task.run_with(rejected: rejected) do
       task.log "# #{I18n.t("ss.links.copy")}"
 
-      @item.attributes = get_params
+      @item.attributes = params.require(:item).permit(%i[name index_name]).merge(fix_params)
       @copy = @item.new_clone
       result = @copy.save
       render_update result, location: { action: :index }, render: { template: "copy" }

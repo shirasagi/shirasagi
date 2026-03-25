@@ -21,10 +21,8 @@ class Cms::Mailer < ApplicationMailer
       body = errors.to_message
     end
 
-    sender_address = site.sender_address
-    sender_address = site.check_links_default_sender_address if sender_address == SS.config.mail.default_from
     mail(
-      from: sender_address,
+      from: site.sender_address,
       to: to,
       subject: "[#{site.name}] Link Check: #{errors.error_count} errors",
       body: body,

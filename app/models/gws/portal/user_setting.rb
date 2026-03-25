@@ -12,12 +12,15 @@ class Gws::Portal::UserSetting
 
   no_needs_read_permission_to_read
 
-  field :name, type: String
   belongs_to :portal_user, class_name: 'Gws::User', inverse_of: :portal_user_setting
   has_many :portlets, class_name: 'Gws::Portal::UserPortlet', dependent: :destroy
 
-  validates :name, presence: true
   validates :portal_user_id, presence: true, uniqueness: { scope: :site_id }
+
+  # 常に現況を応答することで氏名変更に追随できるようにする
+  def name
+    @name ||= portal_user.long_name.truncate(20)
+  end
 
   def portlet_models
     %w(free links reminder schedule todo bookmark report workflow circular monitor board faq qna share

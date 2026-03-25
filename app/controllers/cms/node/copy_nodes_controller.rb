@@ -19,7 +19,10 @@ class Cms::Node::CopyNodesController < ApplicationController
   end
 
   def job_options
-    { target_node_name: @item.target_node_name, target_node_filename: @item.target_node_filename }
+    {
+      target_node_name: @item.target_node_name, target_node_index_name: @item.target_node_index_name,
+      target_node_filename: @item.target_node_filename
+    }
   end
 
   def task_name
@@ -41,6 +44,7 @@ class Cms::Node::CopyNodesController < ApplicationController
 
     prefix = I18n.t("workflow.cloned_name_prefix")
     @item.target_node_name = "[#{prefix}] #{@cur_node.name}"
+    @item.target_node_index_name = "[#{prefix}] #{@cur_node.index_name}" if @cur_node.index_name.present?
 
     respond_to do |format|
       format.html { render }

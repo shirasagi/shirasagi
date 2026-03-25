@@ -177,14 +177,17 @@ Cms_Column_Table.prototype.editCell = function (ev, editable) {
 
 Cms_Column_Table.prototype.changeTh = function () {
   this.tableDom.replaceWith("<th>" + this.tableDom.html() + "</th>");
+  this.updateHidden();
 };
 
 Cms_Column_Table.prototype.changeTd = function () {
   this.tableDom.replaceWith("<td>" + this.tableDom.html() + "</td>");
+  this.updateHidden();
 };
 
 Cms_Column_Table.prototype.removeTr = function () {
   this.tableDom.parent().remove();
+  this.updateHidden();
 };
 
 Cms_Column_Table.prototype.removeTds = function () {
@@ -199,6 +202,7 @@ Cms_Column_Table.prototype.removeTds = function () {
       $(thead[0].rows[i].cells[cellIndex]).remove();
     }
   }
+  this.updateHidden();
 };
 
 Cms_Column_Table.prototype.appendTop = function () {
@@ -235,6 +239,7 @@ Cms_Column_Table.prototype.appendTop = function () {
   newTr = newTr + "</tr>";
   parent.before(newTr);
   this.addControlTable();
+  this.updateHidden();
 };
 
 Cms_Column_Table.prototype.appendBottom = function () {
@@ -292,6 +297,7 @@ Cms_Column_Table.prototype.appendBottom = function () {
     parent.after(newTr);
   }
   this.addControlTable();
+  this.updateHidden();
 };
 
 Cms_Column_Table.prototype.appendRight = function () {
@@ -330,6 +336,7 @@ Cms_Column_Table.prototype.appendRight = function () {
     }
   }
   this.addControlTable();
+  this.updateHidden();
 };
 
 Cms_Column_Table.prototype.appendLeft = function () {
@@ -390,6 +397,7 @@ Cms_Column_Table.prototype.appendLeft = function () {
     }
   }
   this.addControlTable();
+  this.updateHidden();
 };
 
 Cms_Column_Table.prototype.caption = function () {
@@ -401,6 +409,8 @@ Cms_Column_Table.prototype.caption = function () {
   // setter
   this.$el.find('.caption').val(arguments[0]);
   this.setCaptionToTableCaption();
+  this.updateHidden();
+
   return this;
 }
 
@@ -416,6 +426,7 @@ Cms_Column_Table.prototype.tableHtml = function () {
   this.$el.find('.hidden-value').val(html);
   this.$el.find('.table-editor').html(html);
   this.addControlTable();
+  this.updateHidden();
 
   return this;
 }

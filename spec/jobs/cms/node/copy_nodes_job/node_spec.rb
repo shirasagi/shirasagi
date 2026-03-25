@@ -7,7 +7,8 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let(:task) do
       create(
         :copy_nodes_task, site_id: site.id, node_id: node.id,
-        target_node_name: target_node_name, target_node_filename: target_node_filename
+        target_node_name: target_node_name, target_node_index_name: target_node_index_name,
+        target_node_filename: target_node_filename
       )
     end
     let!(:node1) { create :cms_node, cur_site: site, layout: layout }
@@ -17,12 +18,15 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
 
     describe "copy nodes on top level" do
       let(:target_node_name) { unique_id }
+      let(:target_node_index_name) { unique_id }
       let(:target_node_filename) { unique_id }
 
       before do
         expect do
           job = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node1.id)
-          job.perform_now(target_node_name: target_node_name, target_node_filename: target_node_filename)
+          job.perform_now(
+            target_node_name: target_node_name, target_node_index_name: target_node_index_name,
+            target_node_filename: target_node_filename)
         end.to output(include(node3.filename)).to_stdout
       end
 
@@ -42,12 +46,15 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
 
     describe "copy nodes under other node" do
       let(:target_node_name) { node1.name }
+      let(:target_node_index_name) { node1.name }
       let(:target_node_filename) { "#{other_node.filename}/node_name" }
 
       before do
         expect do
           job = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node1.id)
-          job.perform_now(target_node_name: target_node_name, target_node_filename: target_node_filename)
+          job.perform_now(
+            target_node_name: target_node_name, target_node_index_name: target_node_index_name,
+            target_node_filename: target_node_filename)
         end.to output(include(node3.filename)).to_stdout
       end
 

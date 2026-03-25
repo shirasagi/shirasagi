@@ -6,11 +6,13 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     let!(:layout) { create :cms_layout, cur_site: site }
     let!(:node1) { create :inquiry_node_form, cur_site: site, layout: layout }
     let(:target_node_name) { unique_id }
+    let(:target_node_index_name) { unique_id }
     let(:target_node_filename) { unique_id }
     let!(:task) do
       create(
         :copy_nodes_task, site_id: site.id, node_id: node1.id,
-        target_node_name: target_node_name, target_node_filename: target_node_filename
+        target_node_name: target_node_name, target_node_index_name: target_node_index_name,
+        target_node_filename: target_node_filename
       )
     end
 
@@ -28,7 +30,9 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
     it do
       expect do
         job = Cms::Node::CopyNodesJob.bind(site_id: site.id, node_id: node1.id)
-        job.perform_now(target_node_name: target_node_name, target_node_filename: target_node_filename)
+        job.perform_now(
+          target_node_name: target_node_name, target_node_index_name: target_node_index_name,
+          target_node_filename: target_node_filename)
       end.to output.to_stdout
 
       expect(Job::Log.count).to eq 1
@@ -42,6 +46,7 @@ describe Cms::Node::CopyNodesJob, dbscope: :example do
       expect(copied_node).to be_a(Inquiry::Node::Form)
       expect(copied_node.site_id).to eq site.id
       expect(copied_node.name).to eq target_node_name
+      expect(copied_node.index_name).to eq target_node_index_name
       expect(copied_node.filename).to eq target_node_filename
       expect(copied_node.layout_id).to eq layout.id
       copied_node.columns.to_a.tap do |copied_columns|

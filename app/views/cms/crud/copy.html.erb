@@ -8,6 +8,11 @@
   <dl class="see">
     <dt><%= @model.t :name %><%= @model.tt :title %></dt>
     <dd><%= f.text_field :name, class: :name %></dd>
+
+    <% if @item.respond_to?(:index_name=) %>
+      <dt><%= @model.t :index_name %><%= @model.tt :title_for_index %></dt>
+      <dd><%= f.text_field :index_name, class: :index_name %></dd>
+    <% end %>
   </dl>
 </section>
 

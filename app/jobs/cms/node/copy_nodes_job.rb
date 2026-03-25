@@ -19,6 +19,7 @@ class Cms::Node::CopyNodesJob < Cms::ApplicationJob
     @cur_site = Cms::Site.find(site_id)
     @cur_node = Cms::Node.find(node_id)
     @target_node_name = options[:target_node_name]
+    @target_node_index_name = options[:target_node_index_name]
     @target_node_filename = options[:target_node_filename]
 
     copy_cms_nodes
