@@ -104,7 +104,7 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
           expect(es_doc["_id"]).to eq page.filename
           source = es_doc["_source"]
           expect(source['url']).to eq page.url
-          expect(source['keywords']).to eq keywords.join(" ")
+          expect(source['keywords']).to eq keywords.join("\n")
           expect(source['description']).to eq description
         end
         es_docs["hits"]["hits"][1].tap do |es_doc|

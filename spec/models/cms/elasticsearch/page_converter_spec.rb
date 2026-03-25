@@ -37,7 +37,7 @@ describe Cms::Elasticsearch::PageConverter, type: :model, dbscope: :example do
       expect(item.enum_es_docs.to_a[0][1][:category_ids]).to eq [category.id]
       expect(item.enum_es_docs.to_a[0][1][:group_ids]).to eq [group.id]
       expect(item.enum_es_docs.to_a[0][1][:groups]).to eq [group.name]
-      expect(item.enum_es_docs.to_a[0][1][:keywords]).to eq keywords.join(" ")
+      expect(item.enum_es_docs.to_a[0][1][:keywords]).to eq keywords.join("\n")
       expect(item.enum_es_docs.to_a[0][1][:description]).to eq description
       expect(item.enum_es_docs.to_a[0][1][:image_url]).to eq file.thumb.url
       expect(item.enum_es_docs.to_a[0][1][:image_full_url]).to eq file.thumb.full_url

@@ -32,7 +32,7 @@ class Cms::Elasticsearch::PageConverter
     doc[:group_ids] = contact_sub_groups.pluck(:id).push(item.try(:contact_group_id)).uniq.compact
     doc[:groups] = contact_sub_groups.pluck(:name).push(item.try(:contact_group).try(:name)).uniq.compact
     doc[:group_names] = doc[:groups].map { |n| n.split('/') }.flatten.uniq
-    doc[:keywords] = item.try(:keywords).try(:join, " ")
+    doc[:keywords] = item.try(:keywords).try(:join, "\n")
     doc[:description] = item.try(:description)
     doc[:released] = item.released.try(:iso8601)
     doc[:updated] = item.updated.try(:iso8601)
