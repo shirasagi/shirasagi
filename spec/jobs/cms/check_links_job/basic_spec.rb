@@ -131,7 +131,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           mail = ActionMailer::Base.deliveries.first
-          expect(mail.from.first).to eq site.check_links_default_sender_address
+          expect(mail.from.first).to eq site.sender_address
           expect(mail.to.first).to eq email1
           expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
           expect(mail_body(mail)).to include "[3 errors]"
@@ -158,7 +158,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           mail = ActionMailer::Base.deliveries.first
-          expect(mail.from.first).to eq site.check_links_default_sender_address
+          expect(mail.from.first).to eq site.sender_address
           expect(mail.to.first).to eq email1
 
           expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
@@ -191,7 +191,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
           expect(ActionMailer::Base.deliveries.length).to eq 1
           mail = ActionMailer::Base.deliveries.first
-          expect(mail.from.first).to eq site.check_links_default_sender_address
+          expect(mail.from.first).to eq site.sender_address
           expect(mail.to.first).to eq email2
           expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 3 errors"
           expect(mail_body(mail)).to include "[3 errors]"
