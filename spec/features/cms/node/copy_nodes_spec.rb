@@ -8,6 +8,7 @@ describe "cms_copy_nodes", type: :feature, dbscope: :example, js: true do
 
   context 'run copy nodes' do
     let(:target_node_name) { ss_japanese_text }
+    let(:target_node_index_name) { ss_japanese_text }
     let(:target_node_filename) { unique_id }
 
     before do
@@ -19,6 +20,7 @@ describe "cms_copy_nodes", type: :feature, dbscope: :example, js: true do
 
       within "form#item-form" do
         fill_in 'item[target_node_name]', with: target_node_name
+        fill_in 'item[target_node_index_name]', with: target_node_index_name
         fill_in 'item[target_node_filename]', with: target_node_filename
         click_on I18n.t('ss.buttons.run')
       end
@@ -28,6 +30,7 @@ describe "cms_copy_nodes", type: :feature, dbscope: :example, js: true do
       expect(Cms::CopyNodesTask.all.count).to eq 1
       Cms::CopyNodesTask.all.first.tap do |task|
         expect(task.target_node_name).to eq target_node_name
+        expect(task.target_node_index_name).to eq target_node_index_name
         expect(task.target_node_filename).to eq target_node_filename
       end
       enqueued_jobs.first.tap do |enqueued_job|
@@ -37,6 +40,7 @@ describe "cms_copy_nodes", type: :feature, dbscope: :example, js: true do
           options = args.extract_options!
           options = options.with_indifferent_access
           expect(options[:target_node_name]).to eq target_node_name
+          expect(options[:target_node_index_name]).to eq target_node_index_name
           expect(options[:target_node_filename]).to eq target_node_filename
         end
       end
