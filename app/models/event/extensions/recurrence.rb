@@ -43,6 +43,9 @@ class Event::Extensions::Recurrence
         self.end_at = start_at + 1.day
       end
     end
+    if start_at.present? && end_at.present? && start_at > end_at
+      self.end_at = self.start_at
+    end
   end
   # rubocop:enable Style/IfInsideElse
 
@@ -101,7 +104,7 @@ class Event::Extensions::Recurrence
 
     # rubocop:disable Style/YodaCondition
     def normalize_by_days(by_days)
-      Array(by_days).select(&:numeric?).map(&:to_i).select { |wday| 0 <= wday && wday <= 6 }.uniq
+      Array(by_days).select(&:numeric?).map(&:to_i).select { |wday| wday.between?(0, 6) }.uniq
     end
     # rubocop:enable Style/YodaCondition
 
@@ -162,6 +165,58 @@ class Event::Extensions::Recurrence
     end
   end
 
+  class Specific
+    include ActiveModel::Model
+    include ActiveModel::Attributes
+    include SS::Liquidization
+
+    attribute :kind, :string
+    attribute :date, :date
+    attribute :start_at, :datetime
+    attribute :end_at, :datetime
+
+    delegate :hash, to: :attributes
+
+    def all_day?
+      kind == "date"
+    end
+
+    def datetime?
+      !all_day?
+    end
+
+    def eql?(other)
+      self == other
+    end
+
+    def ==(other)
+      hash == other.hash
+    end
+
+    def <=>(other)
+      return nil unless other.is_a?(Specific)
+
+      if all_day? && other.all_day?
+        0
+      elsif all_day? && other.datetime?
+        -1
+      elsif datetime? && other.all_day?
+        1
+      else
+        start_at <=> other.start_at
+      end
+    end
+
+    liquidize do
+      export :kind
+      export :date
+      export :start_at
+      export :end_at
+      export :all_day?
+      export :datetime?
+    end
+  end
+
   liquidize do
     export :start_date
     export :start_datetime
@@ -184,16 +239,16 @@ class Event::Extensions::Recurrence
     @event_dates ||= collect_event_dates
   end
 
-  def collect_event_dates(excludes: true)
+  def collect_event_dates(excludes: true, formatter: :format_date)
     case frequency
     when "daily"
-      collect_daily_event_dates(excludes: excludes)
+      collect_daily_event_dates(excludes: excludes, formatter: formatter)
     when "weekly"
-      collect_weekly_event_dates(excludes: excludes)
+      collect_weekly_event_dates(excludes: excludes, formatter: formatter)
     else # non-recurrence
       date = start_at.to_date
       if !excludes || exclude_dates.blank? || !exclude_dates.include?(date)
-        [ date ]
+        [ send(formatter, date) ]
       else
         []
       end
@@ -250,20 +305,20 @@ class Event::Extensions::Recurrence
     self.by_days = by_days.select(&:numeric?).map(&:to_i).sort
 
     # rubocop:disable Style/YodaCondition
-    unless by_days.all? { |by_day| 0 <= by_day && by_day <= 6 }
+    unless by_days.all? { |by_day| by_day.between?(0, 6) }
       errors.add :by_days, :invalid
     end
     # rubocop:enable Style/YodaCondition
   end
 
-  def collect_daily_event_dates(excludes:)
+  def collect_daily_event_dates(excludes:, formatter: :format_date)
     date = start_date
     to = until_on.try(:to_date) || date + TERM_LIMIT
     ret = []
     loop do
       next if excludes && excluded_date?(date)
 
-      ret << date
+      ret << send(formatter, date)
     ensure
       date += 1.day
       break if date > to
@@ -271,7 +326,7 @@ class Event::Extensions::Recurrence
     ret
   end
 
-  def collect_weekly_event_dates(excludes:)
+  def collect_weekly_event_dates(excludes:, formatter: :format_date)
     from = start_date
     to = until_on || from + TERM_LIMIT
 
@@ -281,15 +336,29 @@ class Event::Extensions::Recurrence
       next if excludes && excluded_date?(date)
 
       if by_days.present? && by_days.include?(date.wday)
-        ret << date
+        ret << send(formatter, date)
       end
       if includes_holiday && date.national_holiday?
-        ret << date
+        ret << send(formatter, date)
       end
     ensure
       date += 1.day
       break if  date > to
     end
     ret
+  end
+
+  def format_date(date)
+    date
+  end
+
+  def format_specific(date)
+    if kind == "date"
+      Specific.new(date: date, kind: kind)
+    else
+      start_at = date.in_time_zone.change(hour: start_datetime.hour, min: start_datetime.min)
+      end_at = date.in_time_zone.change(hour: end_datetime.hour, min: end_datetime.min)
+      Specific.new(date: date, start_at: start_at, end_at: end_at, kind: kind)
+    end
   end
 end

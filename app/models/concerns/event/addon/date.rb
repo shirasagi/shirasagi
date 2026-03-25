@@ -29,6 +29,10 @@ module Event::Addon
       end
     end
 
+    def collect_event_date_specifics
+      @event_dates_specifics ||= event_recurrences.collect_event_date_specifics
+    end
+
     module ClassMethods
       def search(params = {})
         params ||= {}
