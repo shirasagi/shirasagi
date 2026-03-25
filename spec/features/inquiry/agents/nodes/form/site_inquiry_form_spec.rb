@@ -88,6 +88,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
         )
         expect(mail_body(mail)).to include(answer_url)
         expect(mail_body(mail)).not_to include(name)
+        expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end
@@ -141,6 +142,7 @@ describe "inquiry_form", type: :feature, dbscope: :example, js: true do
         )
         expect(mail_body(mail)).to include(answer_url)
         expect(mail_body(mail)).not_to include(name)
+        expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end

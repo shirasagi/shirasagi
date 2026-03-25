@@ -81,7 +81,8 @@ class Sys::Diag::MailsController < ApplicationController
         cc: @item.cc,
         bcc: @item.bcc,
         subject: @item.subject,
-        body: @item.body
+        body: @item.body,
+        message_id: Gws.generate_message_id(nil)
       ).deliver_now
     end
 

@@ -70,6 +70,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
       expect(mail.to).to have(1).items
       expect(mail.cc).to be_blank
       expect(mail.bcc).to be_blank
+      expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
     ActionMailer::Base.deliveries[1].tap do |mail|
       expect(mail_subject(mail)).to eq page1.name
@@ -78,6 +79,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
       expect(mail.to).to have(1).items
       expect(mail.cc).to be_blank
       expect(mail.bcc).to be_blank
+      expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
 
     Timecop.freeze(deliver_date2) do
@@ -102,6 +104,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
       expect(mail.to).to have(1).items
       expect(mail.cc).to be_blank
       expect(mail.bcc).to be_blank
+      expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
     ActionMailer::Base.deliveries[3].tap do |mail|
       expect(mail_subject(mail)).to eq page2.name
@@ -110,6 +113,7 @@ describe Ezine::DeliverReservedJob, dbscope: :example do
       expect(mail.to).to have(1).items
       expect(mail.cc).to be_blank
       expect(mail.bcc).to be_blank
+      expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
   end
 end

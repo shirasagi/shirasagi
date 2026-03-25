@@ -180,7 +180,7 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
 
       expect(ActionMailer::Base.deliveries.length).to eq 1
       mail = ActionMailer::Base.deliveries.last
-      body = mail.body.decoded
+      body = mail_body(mail)
       expect(mail.to).to eq [email]
       expect(body).to include("[5 errors]")
       expect(body).to include("remove #{article_page1.path}")
@@ -188,6 +188,7 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       expect(body).to include("remove #{cms_page1.path}")
       expect(body).to include("remove #{cms_page2.path}")
       expect(body).to include("remove #{faq_page1.path}")
+      expect(mail.message_id).to end_with("@#{site.domain}.mail")
     end
   end
 end

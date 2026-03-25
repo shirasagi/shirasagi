@@ -105,6 +105,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
         expect(mail_body(mail)).to include "#{site_url}/docs/page1.html"
         expect(mail_body(mail)).to include "  - #{site_url}/notfound2.html"
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -129,6 +130,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(mail.multipart?).to be_truthy
         expect(mail.parts[0].body.raw_source).to include "[3 errors]"
         expect(mail.parts[0].body.raw_source).to include "error details are in the attached csv"
+
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
 
         csv = mail.parts[1].body.raw_source
         csv = csv.delete_prefix(SS::Csv::UTF8_BOM)
@@ -165,6 +168,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
         expect(mail_body(mail)).to include "#{site_url}/docs/page1.html"
         expect(mail_body(mail)).to include "  - #{site_url}/notfound2.html"
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end

@@ -250,6 +250,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail_body(mail)).to include('日高地方東部：3')
         expect(mail_body(mail)).to include(node_my_anpi_post.full_url)
         expect(mail_body(mail)).to end_with("\r\n--------\r\ntest@example.jp\r\n")
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end
@@ -353,6 +354,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
         expect(mail_subject(mail)).to eq '奈良県気象警報・注意報'
         expect(mail_body(mail)).to include('【特別警報（大雨）】')
         expect(mail_body(mail)).to end_with("\r\n#{action2.signature_text.gsub("\n", "\r\n")}\r\n")
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end
@@ -467,6 +469,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           expect(mail_body(mail)).to include('岩手県内陸北部：5強')
           expect(mail_body(mail)).to include(node_my_anpi_post.full_url)
           expect(mail_body(mail)).to end_with("\r\n--------\r\ntest@example.jp\r\n")
+          expect(mail.message_id).to end_with("@#{site.domain}.mail")
         end
       end
     end
@@ -599,6 +602,7 @@ describe Rss::ImportWeatherXmlJob, dbscope: :example do
           expect(mail_body(mail)).to include('岩手県沿岸北部：震度５強')
           expect(mail_body(mail)).to include('岩手県内陸北部：震度５強')
           expect(mail_body(mail)).to end_with("\r\n#{action3.signature_text.gsub("\n", "\r\n")}\r\n")
+          expect(mail.message_id).to end_with("@#{site.domain}.mail")
         end
       end
     end
