@@ -82,7 +82,7 @@ module Tasks
 
       def remove_improper_htmls
         each_sites do |site|
-          perform_job(::Cms::RemoveImproperHtmlsJob, site: site, email: ENV["email"], dry_run: ENV["dry_run"])
+          perform_job(::Cms::ConsistencyCheckJob, site: site, email: ENV["email"], repair: ENV["dry_run"].blank?)
         end
       end
 

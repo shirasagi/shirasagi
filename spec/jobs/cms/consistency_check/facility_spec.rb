@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
+describe Cms::ConsistencyCheckJob, dbscope: :example do
   let!(:site) { cms_site }
 
   let!(:facility_search) { create :facility_node_search }
@@ -13,13 +13,15 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
   after { Fs.rm_rf site.path }
 
   def generate_htmls
-    Cms::Node::GenerateJob.bind(site_id: site).perform_now
+    expect { Cms::Node::GenerateJob.bind(site_id: site).perform_now }.to output.to_stdout
+    Job::Log.all.destroy_all
 
     expect(File.exist?(facility_search.path)).to be true
     expect(File.exist?(facility_node.path)).to be true
-    #expect(File.exist?(facility_page1.path)).to be true
-    #expect(File.exist?(facility_page2.path)).to be true
-    #expect(File.exist?(facility_page3.path)).to be true
+    # facility_node_page は　serve_static_file? が false のため、書き出してもファイルは作成されない
+    expect(File.exist?(facility_page1.path)).to be_falsey
+    expect(File.exist?(facility_page2.path)).to be_falsey
+    expect(File.exist?(facility_page3.path)).to be_falsey
   end
 
   def set_improper_htmls
@@ -45,8 +47,8 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
     it "#perform" do
       generate_htmls
 
-      expectation = expect { described_class.bind(site_id: site).perform_now }
-      expectation.not_to output(include("remove")).to_stdout
+      expectation = expect { described_class.bind(site_id: site).perform_now(repair: true) }
+      expectation.not_to output(include("removed")).to_stdout
 
       log = Job::Log.first
       expect(log.logs).to include(/INFO -- : .* Started Job/)
@@ -59,13 +61,13 @@ describe Cms::RemoveImproperHtmlsJob, dbscope: :example do
       generate_htmls
       set_improper_htmls
 
-      expectation = expect { described_class.bind(site_id: site).perform_now }
+      expectation = expect { described_class.bind(site_id: site).perform_now(repair: true) }
       expectation.to output(
         include(
           site.name,
-          "remove #{facility_page1.path}",
-          "remove #{facility_page2.path}",
-          "remove #{facility_page3.path}"
+          "#{facility_page1.path}/index.html: removed",
+          "#{facility_page2.path}/index.html: removed",
+          "#{facility_page3.path}/index.html: removed"
         )).to_stdout
 
       expect(File.exist?("#{facility_page1.path}/index.html")).to be false
