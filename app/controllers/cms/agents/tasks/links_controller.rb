@@ -10,6 +10,38 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   before_action :set_params
 
+  class UrlLog
+    include ActiveModel::Model
+
+    attr_accessor :task, :path
+
+    private_class_method :new
+
+    def self.from_task(task)
+      path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+      new(task: task, path: path)
+    end
+
+    def add(full_url, status)
+      return unless full_url
+      io.puts({ full_url: full_url.to_s, status: status }.to_json)
+    end
+
+    def close
+      @io.close if @io
+      @io = nil
+    end
+
+    private
+
+    def io
+      @io ||= begin
+        FileUtils.mkdir_p(File.dirname(path))
+        Zlib::GzipWriter.open(path)
+      end
+    end
+  end
+
   private
 
   def set_params
@@ -124,6 +156,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @check_mobile = SS.config.cms.check_links["check_mobile_path"] != false
 
+    @url_log = UrlLog.from_task(@task)
+
     (10*1000*1000).times do |i|
       break if @queue.blank?
 
@@ -133,6 +167,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       check_url(source)
       @task.count
     end
+
+    @url_log.close
 
     errors = @full_url_to_source.values.select { _1.status == :error }
     error_formatter = Cms::CheckLinks::Errors.new(errors: errors, display_meta: @display_meta.present?)
@@ -152,10 +188,12 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     result = checker.check_url(source.full_url)
     unless result.success?
       source.status = :error
+      @url_log.add(source.full_url, :error)
       return
     end
 
     source.status = :success
+    @url_log.add(source.full_url, :success)
 
     # HTML 以外ではリンクを抽出しない
     return unless result.content_mime_type.html?
@@ -170,9 +208,18 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     extractor = Cms::CheckLinks::LinkExtractor.new(
       cur_site: @site, base_url: source.full_url, html: result.content)
     extractor.each do |link|
-      next if IGNORE_LINK_TYPES.include?(link.type)
-      next if link.href[0] == "#"
-      next if link.nofollow?
+      if IGNORE_LINK_TYPES.include?(link.type)
+        @url_log.add(link.full_url || link.href, link.type)
+        next
+      end
+      if link.href[0] == "#"
+        @url_log.add(link.full_url || link.href, :fragment)
+        next
+      end
+      if link.nofollow?
+        @url_log.add(link.full_url || link.href, :nofollow)
+        next
+      end
 
       link_source = @full_url_to_source[link.full_url.to_s]
       if link_source.present?

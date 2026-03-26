@@ -175,17 +175,6 @@ class Cms::CheckLinks::IgnoreUrlMatcher
       full_url.path.match?(/\.p\d+\.html$/i)
     end
 
-    # def match_event_calendar?(_cur_site, full_url)
-    #   full_url.path.match?(/\/2\d{7}\.html$/i) # calendar
-    # end
-
-    def match_sns_share?(_cur_site, full_url)
-      str_url = full_url.to_s
-      return true if str_url.match?(/\/https?(:|%3a)/i) # b.hatena
-      return true if str_url.match?(/\/\/twitter\.com/i) # twitter.com
-      false
-    end
-
     def blank_request?(template_hash)
       (template_hash[:path].blank? || template_hash[:path] == "/") &&
         template_hash[:query].nil? &&
@@ -197,8 +186,6 @@ class Cms::CheckLinks::IgnoreUrlMatcher
   self.systems << Matcher.new(name: :scheme, match_proc: self.method(:match_scheme?))
   self.systems << Matcher.new(name: :asset, match_proc: self.method(:match_asset?))
   self.systems << Matcher.new(name: :pagination, match_proc: self.method(:match_pagination?))
-  # self.systems << Matcher.new(name: :event_calendar, match_proc: self.method(:match_event_calendar?))
-  self.systems << Matcher.new(name: :sns_share, match_proc: self.method(:match_sns_share?))
 
   def match?(full_url)
     return true if self.class.systems.any? { _1.match?(cur_site, full_url) }

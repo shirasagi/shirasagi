@@ -7,7 +7,7 @@
           <% if num.zero? %>
             <span><%= body %></span>
           <% else %>
-            <%= link_to body, sprintf("#{@cur_part.parent.try(:url)}%04d%02d", date.year, date.month) %>
+            <%= link_to body, sprintf("#{@cur_part.parent.try(:url)}%04d%02d", date.year, date.month), data: { ss_rel: "nofollow" } %>
           <% end %>
         </li>
       <% end %>
