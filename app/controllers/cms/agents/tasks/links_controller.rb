@@ -6,52 +6,13 @@ require 'nkf'
 class Cms::Agents::Tasks::LinksController < ApplicationController
   include Cms::PublicFilter::Agent
 
+  IGNORE_LINK_TYPES = Set.new(%i[ignore broken]).freeze
+
   before_action :set_params
-
-  class Source
-    include ActiveModel::Model
-
-    attr_accessor :full_url, :links, :referrers, :status
-    attr_reader :sequence
-
-    def initialize(*args, **kwargs)
-      super
-
-      @sequence = self.class.next_sequence
-      @links ||= []
-      @referrers ||= []
-      @status ||= :to_be_examined
-    end
-
-    def self.next_sequence
-      @next_sequence ||= 1
-      ret = @next_sequence
-      @next_sequence += 1
-      ret
-    end
-
-    def self.new_from_site(site)
-      full_url = Addressable::URI.parse(site.full_url)
-      full_url = full_url.normalize
-      new(full_url: full_url)
-    end
-  end
-
-  Link = Data.define(:source, :href, :offset, :inner_yield) do
-    delegate :full_url, :status, to: :source
-
-    def meta
-      { offset: offset, inner_yield: inner_yield }
-    end
-  end
 
   private
 
   def set_params
-  end
-
-  def ignore_urls
-    @_ignore_urls ||= Cms::CheckLinks::IgnoreUrlMatcher.new(cur_site: @site)
   end
 
   def create_report(errors)
@@ -67,36 +28,31 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
     @task.log "# #{@report.name} created"
 
-    referrers = errors.map(&:referrers)
-    referrers.flatten!
-    referrers.uniq!
+    sources_having_error_links = errors.map(&:referrers)
+    sources_having_error_links.flatten!
+    sources_having_error_links.uniq!
+    sources_having_error_links.group_by { _1.full_url }.each do |full_url, sources|
+      # yield 内のリンク切れを抽出
+      links = sources.map(&:links)
+      links.flatten!
+      error_links = links.select { _1.status == :error && _1.type == :inner_yield }
+      next if error_links.blank? # yield 内にリンク切れがない場合 report を作成しない
 
-    # 例えば "/" と "/index.html" は同じページを指している場合がある。
-    # DB アクセス数を減らす目的で、まずは URL で名寄せする。その後、ページ・フォルダーで再び名寄せする
-    page_map = {}
-    node_map = {}
-    referrers.group_by { _1.full_url }.each do |full_url, sources|
       path = full_url.path
       path = path.sub(/^#{::Regexp.escape(@site.url)}/, "/") if @site.url != "/"
       path += "index.html" if path.end_with?("/")
 
       page = find_page(path)
       if page
-        page_map[page] ||= []
-        page_map[page] += sources
+        create_report_page(full_url, sources, page, error_links)
         next
       end
 
       node = find_node(path)
       next unless node
 
-      node_map[node] ||= []
-      node_map[node] += sources
+      create_report_node(full_url, sources, node, error_links)
     end
-
-    error_full_urs = Set.new(errors.map(&:full_url))
-    create_report_pages(page_map, error_full_urs)
-    create_report_nodes(node_map, error_full_urs)
 
     # destroy old reports
     report_ids = Cms::CheckLinks::Report.site(@site).limit(@report_max_age).pluck(:id)
@@ -131,42 +87,28 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     node
   end
 
-  def create_report_pages(page_map, error_full_urs)
-    page_map.each do |page, sources|
-      item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: @report)
-      item.ref = page.url
-      item.ref_url = page.full_url
-      item.page = page
-      item.name = page.name
-      item.filename = page.filename
-
-      links = sources.map(&:links)
-      links.flatten!
-
-      error_links = links.select { error_full_urs.include?(_1.full_url) }
-      item.urls = error_links.map(&:href).uniq
-      item.group_ids = page.group_ids
-      item.save
-    end
+  def create_report_page(full_url, sources, page, error_links)
+    item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: @report)
+    item.ref = full_url.request_uri
+    item.ref_url = full_url.to_s
+    item.page = page
+    item.name = page.name
+    item.filename = page.filename
+    item.urls = error_links.map(&:href).uniq
+    item.group_ids = page.group_ids
+    item.save
   end
 
-  def create_report_nodes(node_map, error_full_urs)
-    node_map.each do |node, sources|
-      item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: @report)
-      item.ref = node.url
-      item.ref_url = node.full_url
-      item.node = node
-      item.name = node.name
-      item.filename = node.filename
-
-      links = sources.map(&:links)
-      links.flatten!
-
-      error_links = links.select { error_full_urs.include?(_1.full_url) }
-      item.urls = error_links.map(&:href).uniq
-      item.group_ids = node.group_ids
-      item.save
-    end
+  def create_report_node(full_url, sources, node, error_links)
+    item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: @report)
+    item.ref = full_url.request_uri
+    item.ref_url = full_url.to_s
+    item.node = node
+    item.name = node.name
+    item.filename = node.filename
+    item.urls = error_links.map(&:href).uniq
+    item.group_ids = node.group_ids
+    item.save
   end
 
   public
@@ -177,11 +119,9 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @base_url = @site.full_url.sub(/^(https?:\/\/.*?\/).*/, '\\1')
 
-    @queue = [ Source.new_from_site(@site) ]
+    @queue = [ Cms::CheckLinks::Source.new_from_site(@site) ]
     @full_url_to_source = @queue.index_by { _1.full_url.to_s }
 
-    @html_request_timeout = SS.config.cms.check_links["html_request_timeout"] rescue 10
-    @head_request_timeout = SS.config.cms.check_links["head_request_timeout"] rescue 5
     @check_mobile = SS.config.cms.check_links["check_mobile_path"] != false
 
     (10*1000*1000).times do |i|
@@ -227,7 +167,27 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return if !@check_mobile && mobile_url?(source)
 
     # リンク抽出
-    extract_links(source, result.content)
+    extractor = Cms::CheckLinks::LinkExtractor.new(
+      cur_site: @site, base_url: source.full_url, html: result.content)
+    extractor.each do |link|
+      next if IGNORE_LINK_TYPES.include?(link.type)
+      next if link.href[0] == "#"
+      next if link.nofollow?
+
+      link_source = @full_url_to_source[link.full_url.to_s]
+      if link_source.present?
+        link_source.referrers << WeakRef.new(source)
+      else
+        link_source = Cms::CheckLinks::Source.new(full_url: link.full_url)
+        link_source.referrers << WeakRef.new(source)
+
+        @full_url_to_source[link_source.full_url.to_s] = link_source
+        @queue << link_source
+      end
+
+      link = Cms::CheckLinks::LinkWithSource.new(source: WeakRef.new(link_source), link: link)
+      source.links << link
+    end
   end
 
   def to_email
@@ -253,50 +213,5 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return false if @site.mobile_disabled?
     return false if !source.full_url.path.match?(/^#{@site.mobile_url}/)
     true
-  end
-
-  # リンク抽出
-  def extract_links(source, html)
-    begin
-      html = NKF.nkf("-w", html)
-
-      # scan layout_yield offset
-      html.scan(/<!-- layout_yield -->(.*?)<!-- \/layout_yield -->/m)
-      yield_start, yield_end = Regexp.last_match.offset(0) if Regexp.last_match
-      yield_start ||= html.size
-      yield_end ||= 0
-
-      # remove href in comment
-      html.gsub!(/<!--.*?-->/m) { |m| " " * m.size }
-
-      html.scan(/\shref="([^"]+)"/i) do |m|
-        offset = Regexp.last_match.offset(0)
-        href_start, href_end = offset
-        inner_yield = (href_start > yield_start && href_end < yield_end)
-
-        extracted_href = m[0]
-        next if extracted_href[0] == "#"
-
-        extracted_full_url = Addressable::URI.join(source.full_url, extracted_href)
-        extracted_full_url = extracted_full_url.normalize
-        next if ignore_urls.match?(extracted_full_url)
-
-        extracted_source = @full_url_to_source[extracted_full_url.to_s]
-        if extracted_source.present?
-          extracted_source.referrers << WeakRef.new(source)
-        else
-          extracted_source = Source.new(full_url: extracted_full_url)
-          extracted_source.referrers << WeakRef.new(source)
-
-          @full_url_to_source[extracted_full_url.to_s] = extracted_source
-          @queue << extracted_source
-        end
-
-        link = Link.new(source: WeakRef.new(extracted_source), href: extracted_href, offset: offset, inner_yield: inner_yield)
-        source.links << link
-      end
-    rescue => e
-      Rails.logger.error { e.message }
-    end
   end
 end

@@ -34,15 +34,11 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
   let(:page1_report_created) { docs_page1.latest_check_links_report.created }
 
   def execute_job
-    Cms::CheckLinksJob.bind(site_id: site.id).perform_now
+    expect { ss_perform_now Cms::CheckLinksJob.bind(site_id: site.id) }.to output(/2 errors/).to_stdout
   end
 
   def latest_report
     Cms::CheckLinks::Report.site(site).first
-  end
-
-  def report_label(time)
-    I18n.t("cms.notices.check_links_report_created", time: time.strftime("%Y/%m/%d %H:%M"))
   end
 
   def visit_latest_report_pages
@@ -54,10 +50,46 @@ describe "cms/check_links/pages", type: :feature, dbscope: :example, js: true, r
   end
 
   context "with auth" do
-    before { login_cms_user }
+    before do
+      expect { ss_perform_now Cms::Node::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+      expect { ss_perform_now Cms::Page::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+      Job::Log.destroy_all
+
+      login_cms_user
+    end
 
     it "#index" do
       execute_job
+
+      expect(Cms::CheckLinks::Report.all.count).to eq 1
+      Cms::CheckLinks::Report.all.first.tap do |report|
+        expect(report.site_id).to eq site.id
+        expect(report.name).to include "実行結果"
+        expect(report.link_errors.count).to eq 2
+        expect(report.pages.count).to eq 2
+        expect(report.nodes.count).to eq 0
+        report.pages.to_a.tap do |page_reports|
+          expect(page_reports[0].site_id).to eq site.id
+          expect(page_reports[0].report_id).to eq report.id
+          expect(page_reports[0].ref).to eq site.url
+          expect(page_reports[0].ref_url).to eq site.full_url
+          expect(page_reports[0].page_id).to eq index.id
+          expect(page_reports[0].name).to eq index.name
+          expect(page_reports[0].filename).to eq index.filename
+          expect(page_reports[0].urls).to have(2).items
+          expect(page_reports[0].urls).to include("/docs/notfound1.html", "/docs/notfound2.html")
+
+          expect(page_reports[1].site_id).to eq site.id
+          expect(page_reports[1].report_id).to eq report.id
+          expect(page_reports[1].ref).to eq docs_page1.url
+          expect(page_reports[1].ref_url).to eq docs_page1.full_url
+          expect(page_reports[1].page_id).to eq docs_page1.id
+          expect(page_reports[1].name).to eq docs_page1.name
+          expect(page_reports[1].filename).to eq docs_page1.filename
+          expect(page_reports[1].urls).to have(2).items
+          expect(page_reports[1].urls).to include("/docs/notfound1.html", "/docs/notfound2.html")
+        end
+      end
 
       visit_latest_report_pages
       within "#main" do

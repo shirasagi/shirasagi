@@ -133,7 +133,6 @@ production: &production
 
   # check_links settings
   check_links:
-    html_request_timeout: 10
     head_request_timeout: 5
     max_redirection: 20
     report_max_age: 5
