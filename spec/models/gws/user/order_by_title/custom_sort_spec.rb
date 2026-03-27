@@ -3,6 +3,16 @@ require 'spec_helper'
 describe Gws::User, type: :model, dbscope: :example do
   let(:site) { gws_site }
 
+  # 役職(降順) > 所属(昇順) > 職員番号 > uid > id
+  before do
+    @save_gws_order_by_title = SS.config.gws.order_by_title
+    SS.config.replace_value_at(:gws, :order_by_title, { "organization_uid" => "numeric", "main_group_order" => "use" })
+  end
+
+  after do
+    SS.config.replace_value_at(:gws, :order_by_title, @save_gws_order_by_title)
+  end
+
   context "#set_gws_main_group_order" do
     let!(:order1) { 10 }
     let!(:order2) { 20 }
@@ -56,7 +66,6 @@ describe Gws::User, type: :model, dbscope: :example do
   end
 
   context "#order_by_title" do
-    # 役職(降順) > 所属(昇順) > 職員番号 > uid > id
     let!(:title1) { create :gws_user_title, order: 10 }
     let!(:title2) { create :gws_user_title, order: 20 }
 
@@ -74,35 +83,35 @@ describe Gws::User, type: :model, dbscope: :example do
 
     let(:user_t1_g1_u1) do
       create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group1.id],
-organization_uid: organization_uid1
+        organization_uid: organization_uid1
     end
     let(:user_t1_g1_u2) do
       create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group1.id],
-organization_uid: organization_uid2
+        organization_uid: organization_uid2
     end
     let(:user_t1_g2_u3) do
       create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group2.id],
-organization_uid: organization_uid3
+        organization_uid: organization_uid3
     end
     let(:user_t1_g2_u4) do
       create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group2.id],
-organization_uid: organization_uid4
+        organization_uid: organization_uid4
     end
     let(:user_t2_g1_u5) do
       create :gws_user, organization_id: site.id, in_title_id: title2.id, group_ids: [group1.id],
-organization_uid: organization_uid5
+        organization_uid: organization_uid5
     end
     let(:user_t2_g1_u6) do
       create :gws_user, organization_id: site.id, in_title_id: title2.id, group_ids: [group1.id],
-organization_uid: organization_uid6
+        organization_uid: organization_uid6
     end
     let(:user_t2_g2_u7) do
       create :gws_user, organization_id: site.id, in_title_id: title2.id, group_ids: [group2.id],
-organization_uid: organization_uid7
+        organization_uid: organization_uid7
     end
     let(:user_t2_g2_u8) do
       create :gws_user, organization_id: site.id, in_title_id: title2.id, group_ids: [group2.id],
-organization_uid: organization_uid8
+        organization_uid: organization_uid8
     end
 
     it "sorts users by title order, main group order, organization uid, uid, and id" do
@@ -154,9 +163,9 @@ organization_uid: organization_uid8
       group_high = create :gws_group, name: "#{site.name}/#{unique_id}", order: 25
 
       user_low_group = create :gws_user, organization_id: site.id, in_title_id: title_same.id, group_ids: [group_low.id],
-organization_uid: "300"
+        organization_uid: "300"
       user_high_group = create :gws_user, organization_id: site.id, in_title_id: title_same.id, group_ids: [group_high.id],
-organization_uid: "301"
+        organization_uid: "301"
 
       sorted_users = Gws::User.site(site).order_by_title(site)
 
@@ -173,9 +182,9 @@ organization_uid: "301"
       group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
 
       user_uid_100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id, group_ids: [group_same.id],
-organization_uid: "100"
+        organization_uid: "100"
       user_uid_200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id, group_ids: [group_same.id],
-organization_uid: "200"
+        organization_uid: "200"
 
       sorted_users = Gws::User.site(site).order_by_title(site)
 
@@ -189,9 +198,9 @@ organization_uid: "200"
     it "handles users with empty organization uid" do
       # organization_uidが空のユーザーを作成
       user_empty_uid = create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group1.id],
-organization_uid: ""
+        organization_uid: ""
       user_with_uid = create :gws_user, organization_id: site.id, in_title_id: title1.id, group_ids: [group1.id],
-organization_uid: "100"
+        organization_uid: "100"
 
       sorted_users = Gws::User.site(site).order_by_title(site)
 
