@@ -8,9 +8,7 @@ module SS::Model::Reference
       field :title_orders, type: Hash
       before_save :update_title_order
 
-      scope :order_by_title, ->(site) {
-        order_by "title_orders.#{site.id}" => -1, "gws_main_group_orders.#{site.id}" => 1, organization_uid_numeric: 1, uid: 1, id: 1
-      }
+      scope :order_by_title, ->(site) { order_by(order_by_title_params(site)) }
     end
 
     class_methods do
@@ -50,6 +48,28 @@ module SS::Model::Reference
 
           0
         end
+      end
+
+      def order_by_title_params(site)
+        @@order_by_title_condition ||= SS.config.gws.order_by_title
+
+        params = {}
+        # 1.title_order
+        params["title_orders.#{site.id}"] = -1
+        # 2.main_group_order
+        if @@order_by_title_condition["main_group_order"] == "use"
+          params["gws_main_group_orders.#{site.id}"] = 1
+        end
+        # 3.organization_uid
+        if @@order_by_title_condition["organization_uid"] == "numeric"
+          params[:organization_uid_numeric] = 1
+        else
+          params[:organization_uid] = 1
+        end
+        # 4.uid
+        params[:uid] = 1
+        params[:id] = 1
+        params
       end
     end
 

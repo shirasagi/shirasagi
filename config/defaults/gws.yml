@@ -274,6 +274,17 @@ production: &production
       - sys
       #- admin
 
+  # グループウェアのユーザー並び順 order_by_title のソートキー設定
+  order_by_title:
+    # 職員番号 organization_uid
+    # default : organization_uid を 文字列でソートする（既定）
+    # numeric : organization_uid を 数値でソートする（職員番号が数値のみの運用になる場合）
+    organization_uid: default
+    # 所属グループ（主）の並び順 main_group_order
+    # default : main_group_order を含めない（既定）
+    # use : main_group_order を含める
+    main_group_order: default
+
 test:
   <<: *production
   disable: false
