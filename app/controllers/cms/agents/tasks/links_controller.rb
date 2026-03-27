@@ -196,6 +196,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     @url_log.add(source.full_url, :success)
 
     # HTML 以外ではリンクを抽出しない
+    return unless result.content_mime_type
     return unless result.content_mime_type.html?
 
     # 他サイトの場合、HTMLからリンクを抽出しない
