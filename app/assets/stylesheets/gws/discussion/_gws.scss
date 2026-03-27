@@ -56,51 +56,6 @@
   }
   .discussion-contributor {
     padding-top: 10px;
-    .contributor-group {
-      padding: 0;
-      margin-bottom: 0;
-      &:not(:last-child) {
-        margin-bottom: 16px;
-        padding-bottom: 16px;
-        border-bottom: 1px solid #e0e0e0;
-      }
-      .contributor {
-        font-weight: 600;
-        color: #333;
-        margin: 0 0 10px 0;
-        padding: 0;
-        line-height: 1.5;
-        border-bottom: none;
-      }
-      p {
-        margin: 0;
-        padding: 0 0 0 1.25rem;
-        line-height: 1.7;
-        color: #333;
-        position: relative;
-        &:before {
-          content: "•";
-          position: absolute;
-          left: 0.5rem;
-          color: #999;
-          font-weight: normal;
-        }
-        &:first-of-type {
-          margin-top: 0;
-        }
-        &:last-of-type {
-          margin-bottom: 0;
-        }
-      }
-      // グループがない場合（nilグループ）のスタイル
-      // グループヘッダーがない場合、メンバーは左揃え
-      &.no-group-header p {
-        padding-left: 0;
-        &:before {
-          display: none;
-        }
-      }
-    }
   }
   .comment-files {
     margin-top: 5px;
@@ -212,50 +167,31 @@
   .list-item {
     padding: 15px;
   }
-
-  .contributor-group {
-    padding: 0;
-    margin-bottom: 0;
-    &:not(:last-child) {
-      margin-bottom: 16px;
-      padding-bottom: 16px;
-      border-bottom: 1px solid #e0e0e0;
-    }
-    .contributor {
+  .gws-discussion-member {
+    display: block;
+    .group {
       font-weight: 600;
-      color: #333;
-      margin: 0 0 10px 0;
-      padding: 0;
-      line-height: 1.5;
-      border-bottom: none;
     }
-    p {
-      margin: 0;
-      padding: 0 0 0 1.25rem;
-      line-height: 1.7;
-      color: #333;
-      position: relative;
-      &:before {
-        content: "•";
-        position: absolute;
-        left: 0.5rem;
-        color: #999;
-        font-weight: normal;
-      }
-      &:first-of-type {
-        margin-top: 0;
-      }
-      &:last-of-type {
-        margin-bottom: 0;
-      }
-    }
-    // グループがない場合（nilグループ）のスタイル
-    // グループヘッダーがない場合、メンバーは左揃え
-    &.no-group-header p {
-      padding-left: 0;
-      &:before {
-        display: none;
+    .members {
+      padding-left: 10px;
+      li {
+        list-style: disc;
+        .user-title {
+          padding-left: 10px;
+        }
       }
     }
   }
 }
+.gws-contributor-group {
+  padding: 5px 0;
+  &:not(:last-child) {
+    border-bottom: 1px solid #dcdcdc;
+  }
+  .contributor {
+    display: inline-block;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
+
