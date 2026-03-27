@@ -17,8 +17,11 @@ class Cms::SitesController < ApplicationController
   end
 
   def set_item
-    @item = Cms::Site.find(@cur_site.id)
-    @item.attributes = fix_params
+    @item ||= begin
+      item = Cms::Site.find(@cur_site.id)
+      item.attributes = fix_params
+      item
+    end
   end
 
   def reload_nginx

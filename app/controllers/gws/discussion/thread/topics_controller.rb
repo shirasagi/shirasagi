@@ -31,6 +31,13 @@ class Gws::Discussion::Thread::TopicsController < ApplicationController
     index_path
   end
 
+  def set_items
+    @items ||= begin
+      set_forum
+      @model.all.site(@cur_site).where(parent_id: @forum)
+    end
+  end
+
   public
 
   def copy

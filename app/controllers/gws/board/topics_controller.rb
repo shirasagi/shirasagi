@@ -23,18 +23,21 @@ class Gws::Board::TopicsController < ApplicationController
     p
   end
 
-  def items
-    base_criteria = @model.site(@cur_site).topic
-    case @mode
-    when 'editable'
-      base_criteria.allow(:read, @cur_user, site: @cur_site).without_deleted
-    when 'trash'
-      base_criteria.allow(:trash, @cur_user, site: @cur_site).only_deleted
-    else
-      conditions = @model.member_conditions(@cur_user)
-      conditions += @model.readable_conditions(@cur_user, site: @cur_site)
-      conditions << @model.allow_condition(:read, @cur_user, site: @cur_site)
-      base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
+  def set_items
+    @items ||= begin
+      base_criteria = @model.site(@cur_site).topic
+      case @mode
+      when 'editable'
+        base_criteria.allow(:read, @cur_user, site: @cur_site).without_deleted
+      when 'trash'
+        base_criteria.allow(:trash, @cur_user, site: @cur_site).only_deleted
+      else
+        conditions = @model.member_conditions(@cur_user)
+        conditions += @model.readable_conditions(@cur_user, site: @cur_site)
+        conditions << @model.allow_condition(:read, @cur_user, site: @cur_site)
+        base_criteria.and_public.without_deleted.where("$and" => [{ "$or" => conditions }])
+      end
+      base_criteria
     end
   end
 
@@ -68,7 +71,8 @@ class Gws::Board::TopicsController < ApplicationController
       params[:s][:user] = @cur_user
     end
 
-    @items = items.search(params[:s]).
+    set_items
+    @items = @items.search(params[:s]).
       order(descendants_updated: -1).
       page(params[:page]).per(50)
   end

@@ -20,7 +20,7 @@ class Webmail::ImportMailsController < ApplicationController
   end
 
   def set_item
-    @item = @cur_user
+    @item ||= @cur_user
   end
 
   public

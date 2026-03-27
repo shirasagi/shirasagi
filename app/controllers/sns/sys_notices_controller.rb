@@ -12,11 +12,15 @@ class Sns::SysNoticesController < ApplicationController
     @crumbs << [t("mongoid.models.sys/notice"), action: :index]
   end
 
+  def set_items
+    @items ||= @model.and_public.sys_admin_notice
+  end
+
   public
 
   def index
-    @items = @model.and_public.
-      sys_admin_notice.
+    set_items
+    @items = @items.
       search(params[:s]).
       reorder(notice_severity: 1, released: -1).
       page(params[:page]).per(50)

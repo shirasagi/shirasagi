@@ -416,7 +416,7 @@ Rails.application.routes.draw do
       delete "delete_init_files" => "large_file_upload#delete_init_files"
       get "content_quota_navi" => "content_quota_navi#index"
 
-      resources :columns, only: %i[edit update]
+      resources :columns, path: ":form_id/columns", only: %i[edit update]
       resources :files, path: ":cid/files", concerns: [:deletion, :file_api] do
         get :contrast_ratio, on: :collection
       end

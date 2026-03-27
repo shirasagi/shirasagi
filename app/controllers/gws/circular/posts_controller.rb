@@ -18,10 +18,7 @@ class Gws::Circular::PostsController < ApplicationController
       topic.
       without_deleted.
       and_public.
-      member(@cur_user).
-      search(@s).
-      custom_order(@s.sort).
-      page(params[:page]).per(50)
+      member(@cur_user)
   end
 
   def check_member

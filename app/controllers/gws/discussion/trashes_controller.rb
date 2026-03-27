@@ -22,14 +22,23 @@ class Gws::Discussion::TrashesController < ApplicationController
     super.merge member_ids: [@cur_user.id]
   end
 
+  def set_items
+    @items ||= begin
+      items = @model.site(@cur_site)
+      items = items.forum
+      items = items.only_deleted
+      items = items.allow(:trash, @cur_user, site: @cur_site)
+      items
+    end
+  end
+
   public
 
   def index
     raise "403" unless @model.allowed?(:trash, @cur_user, site: @cur_site)
 
-    @items = @model.site(@cur_site).forum.only_deleted
-    @items = @items.allow(:trash, @cur_user, site: @cur_site)
-    @items.search(params[:s]).
+    set_items
+    @items = @items.search(params[:s]).
       reorder(order: 1, created: 1).
       page(params[:page]).per(50)
   end

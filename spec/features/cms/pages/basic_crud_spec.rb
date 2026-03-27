@@ -121,7 +121,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
 
       it "not permitted and contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(delete_private_cms_pages delete_other_cms_pages))
+        role.update(permissions: %w(read_private_cms_pages read_other_cms_pages delete_private_cms_pages delete_other_cms_pages))
         visit delete_path2
         expect(page).not_to have_css(".delete")
         expect(page).to have_css(".addon-head", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -129,7 +129,7 @@ describe "cms/pages", type: :feature, dbscope: :example do
 
       it "not permitted and not contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(delete_private_cms_pages delete_other_cms_pages))
+        role.update(permissions: %w(read_private_cms_pages read_other_cms_pages delete_private_cms_pages delete_other_cms_pages))
         visit delete_path3
         expect(page).to have_css(".delete")
         within "form" do
