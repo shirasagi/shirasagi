@@ -101,6 +101,7 @@ en:
         name: Staff member name
         code: Staff member number
         kana: Staff member name (kana)
+        email: Staff member name (email address)
         multi_section: Main and concurrent responsibilities
         section_name: Affiliation
         title_ids: Job title
@@ -149,6 +150,7 @@ en:
       name: Enter the full name of the staff member.
       code: Enter the staff member’s telephone number.
       kana: Enter the staff member’s name (kana).
+      email: Enter the staff member’s email address.
       multi_section: Select main and concurrent duties.
       section_name: Select an affiliation.
       title_ids: Select a job title.

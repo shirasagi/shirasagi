@@ -16,6 +16,7 @@ class Gws::StaffRecord::User
   field :code, type: String
   field :order, type: Integer, default: 0
   field :kana, type: String
+  field :email, type: String
   field :multi_section, type: String, default: 'regular'
   field :section_name, type: String
   field :section_order, type: Integer
@@ -33,7 +34,7 @@ class Gws::StaffRecord::User
 
   attr_accessor :in_title_id, :in_occupation_id
 
-  permit_params :name, :code, :order, :kana, :multi_section, :section_name,
+  permit_params :name, :code, :order, :kana, :email, :multi_section, :section_name,
     :tel_ext, :charge_name, :charge_address, :charge_tel,
     :divide_duties, :remark, :staff_records_view, :divide_duties_view,
     :in_title_id, :in_occupation_id
@@ -70,6 +71,7 @@ class Gws::StaffRecord::User
         :name,
         :code,
         :kana,
+        :email,
         :section_name,
         :charge_name,
         :charge_address,
@@ -147,36 +149,52 @@ class Gws::StaffRecord::User
 
   def export_fields
     %w(
-      id name code order kana multi_section section_name title_ids occupation_ids tel_ext
+      id name code order kana email multi_section section_name title_ids occupation_ids tel_ext
       charge_name charge_address charge_tel divide_duties remark staff_records_view divide_duties_view
       readable_setting_range readable_group_ids readable_member_ids
       group_ids user_ids
     )
   end
 
+  def export_field_index(name)
+    idx = export_fields.index(name.to_s)
+    raise "unknown field #{name}" if idx.nil?
+    idx
+  end
+
   def export_convert_item(item, data)
     # multi_section
-    data[5] = item.label(:multi_section)
+    idx = export_field_index(:multi_section)
+    data[idx] = item.label(:multi_section)
     # title_ids
-    data[7] = item.titles.pluck(:code).join("\n")
+    idx = export_field_index(:title_ids)
+    data[idx] = item.titles.pluck(:code).join("\n")
     # occupation_ids
-    data[8] = item.occupations.pluck(:code).join("\n")
+    idx = export_field_index(:occupation_ids)
+    data[idx] = item.occupations.pluck(:code).join("\n")
     # staff_records_view
-    data[15] = item.label(:staff_records_view)
-    # divide_duties_views
-    data[16] = item.label(:divide_duties_view)
+    idx = export_field_index(:staff_records_view)
+    data[idx] = item.label(:staff_records_view)
+    # divide_duties_view
+    idx = export_field_index(:divide_duties_view)
+    data[idx] = item.label(:divide_duties_view)
 
     # readable_setting_range
-    data[17] = item.label(:readable_setting_range)
+    idx = export_field_index(:readable_setting_range)
+    data[idx] = item.label(:readable_setting_range)
     # readable_group_ids
-    data[18] = Gws::Group.site(@cur_site).in(id: data[18]).active.pluck(:name).join("\n")
+    idx = export_field_index(:readable_group_ids)
+    data[idx] = Gws::Group.site(@cur_site).in(id: data[idx]).active.pluck(:name).join("\n")
     # readable_member_ids
-    data[19] = Gws::User.site(@cur_site).in(id: data[19]).active.pluck(:uid).join("\n")
+    idx = export_field_index(:readable_member_ids)
+    data[idx] = Gws::User.site(@cur_site).in(id: data[idx]).active.pluck(:uid).join("\n")
 
     # group_ids
-    data[20] = Gws::Group.site(@cur_site).in(id: data[20]).active.pluck(:name).join("\n")
+    idx = export_field_index(:group_ids)
+    data[idx] = Gws::Group.site(@cur_site).in(id: data[idx]).active.pluck(:name).join("\n")
     # user_ids
-    data[21] = Gws::User.site(@cur_site).in(id: data[21]).active.pluck(:uid).join("\n")
+    idx = export_field_index(:user_ids)
+    data[idx] = Gws::User.site(@cur_site).in(id: data[idx]).active.pluck(:uid).join("\n")
 
     data
   end

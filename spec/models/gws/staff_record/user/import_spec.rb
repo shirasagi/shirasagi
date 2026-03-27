@@ -73,6 +73,7 @@ describe Gws::StaffRecord::User, type: :model, dbscope: :example do
         expect(imported_user.code).to eq staff_record_user1.code
         expect(imported_user.order).to eq staff_record_user1.order
         expect(imported_user.kana).to eq staff_record_user1.kana
+        expect(imported_user.email).to eq staff_record_user1.email
         expect(imported_user.multi_section).to eq staff_record_user1.multi_section
         expect(imported_user.section_name).to eq staff_record_user1.section_name
         expect(imported_user.title_ids).to have(1).items
