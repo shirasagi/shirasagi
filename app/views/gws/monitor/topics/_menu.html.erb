@@ -5,14 +5,14 @@
     <% end %>
   <% elsif params[:action] =~ /new|create|lock|categories|destroy_all/ %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
-  <% elsif params[:action] =~ /edit|update|delete|move/ %>
+  <% elsif params[:action] =~ /edit|update|delete|move|forward/ %>
     <% if @item.allowed?(:read, @cur_user, site: @cur_site) %>
-      <%= link_to t('ss.links.back_to_show'), action: :show, id: @item %>
+      <%= link_to t('ss.links.back_to_show'), action: :show, id: @source || @item %>
     <% end %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>
   <% else %>
     <% if @model.allowed?(:edit, @cur_user, site: @cur_site) && params['action'] == 'show' %>
-      <%= link_to t('gws/monitor.links.forward'), forward_gws_monitor_admin_path(id: @item) %>
+      <%= link_to t('gws/monitor.links.forward'), url_for(action: :forward, id: @item) rescue nil %>
     <% end %>
     <%= link_to t('ss.links.print'), action: :print, id: @item %>
     <%= link_to t('ss.links.back_to_index'), action: :index %>

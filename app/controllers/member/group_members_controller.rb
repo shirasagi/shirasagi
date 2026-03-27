@@ -45,7 +45,7 @@ class Member::GroupMembersController < ApplicationController
     set_member_group
     raise "403" unless @cur_member_group.allowed?(:read, @cur_user, site: @cur_site)
 
-    set_item
+    set_items
     @items = @items.
       order_by(id: 1).
       page(params[:page]).per(50)

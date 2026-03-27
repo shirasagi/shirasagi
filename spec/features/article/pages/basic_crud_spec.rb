@@ -130,7 +130,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "not permitted and contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(delete_private_article_pages delete_other_article_pages))
+        role.update(permissions: %w(read_private_article_pages read_other_article_pages
+                                    delete_private_article_pages delete_other_article_pages))
         visit delete_path2
         expect(page).not_to have_css(".delete")
         expect(page).to have_css(".addon-head", text: I18n.t('ss.confirm.contains_url_expect'))
@@ -138,7 +139,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "not permitted and not contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(delete_private_article_pages delete_other_article_pages))
+        role.update(permissions: %w(read_private_article_pages read_other_article_pages
+                                    delete_private_article_pages delete_other_article_pages))
         visit delete_path
         expect(page).to have_css(".delete")
         within "form" do
@@ -231,7 +233,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "not permitted and contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
+        role.update(permissions: %w(read_private_article_pages read_other_article_pages
+                                    edit_private_article_pages edit_other_article_pages
                                     release_private_article_pages release_other_article_pages
                                     close_private_article_pages close_other_article_pages))
         visit edit_path2
@@ -244,7 +247,8 @@ describe "article_pages", type: :feature, dbscope: :example, js: true do
 
       it "not permitted and not contains_urls" do
         role = user.cms_roles[0]
-        role.update(permissions: %w(edit_private_article_pages edit_other_article_pages
+        role.update(permissions: %w(read_private_article_pages read_other_article_pages
+                                    edit_private_article_pages edit_other_article_pages
                                     release_private_article_pages release_other_article_pages
                                     close_private_article_pages close_other_article_pages))
         visit edit_path

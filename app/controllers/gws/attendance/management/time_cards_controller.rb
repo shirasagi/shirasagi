@@ -33,12 +33,14 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def set_groups
-    if @model.allowed?(:manage_all, @cur_user, site: @cur_site)
-      @groups = Gws::Group.in_group(@cur_site).active
-    elsif @model.allowed?(:manage_private, @cur_user, site: @cur_site)
-      @groups = Gws::Group.in_group(@cur_group).active
-    else
-      @groups = Gws::Group.none
+    @groups ||= begin
+      if @model.allowed?(:manage_all, @cur_user, site: @cur_site)
+        Gws::Group.in_group(@cur_site).active
+      elsif @model.allowed?(:manage_private, @cur_user, site: @cur_site)
+        Gws::Group.in_group(@cur_group).active
+      else
+        Gws::Group.none
+      end
     end
   end
 
@@ -47,14 +49,21 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def set_search_params
-    @s = OpenStruct.new(params[:s])
-    if @s.group_id.present?
-      @s.group = @groups.find(@s.group_id) rescue nil
+    @s ||= begin
+      s = OpenStruct.new(params[:s])
+      if s.group_id.present?
+        s.group = @groups.find(s.group_id) rescue nil
+      end
+      s
     end
   end
 
   def set_items
     @items ||= begin
+      set_cur_month
+      set_groups
+      set_search_params
+
       criteria = @model.site(@cur_site).where(date: @cur_month).search(@s)
       criteria = criteria.in_groups(@groups)
       criteria
@@ -62,8 +71,11 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   end
 
   def set_item
-    @item = @items.find(params[:id])
-    @item.attributes = fix_params
+    @item ||= begin
+      set_items
+      item = @items.find(params[:id])
+      item.attributes = fix_params
+    end
   end
 
   def set_record
@@ -102,6 +114,7 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
   public
 
   def index
+    set_items
     @items = @items.page(params[:page]).per(50)
   end
 

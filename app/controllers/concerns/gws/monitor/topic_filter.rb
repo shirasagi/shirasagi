@@ -55,6 +55,9 @@ module Gws::Monitor::TopicFilter
     end
 
     set_items
+    @items = @items.search(params[:s])
+    @items = @items.custom_order(params.dig(:s, :sort))
+    @items = @items.page(params[:page]).per(50)
   end
 
   def show
@@ -82,7 +85,15 @@ module Gws::Monitor::TopicFilter
     @item.user_ids = [@cur_user.id]
     @item.ref_file_ids = @source.file_ids
 
-    render template: "new"
+    if request.get? || request.head?
+      render
+      return
+    end
+
+    # create
+    @item.attributes = get_params
+    return render_create(false) unless @item.allowed?(:edit, @cur_user, site: @cur_site, strict: true)
+    render_create @item.save, render: { template: "forward" }, location: gws_monitor_admin_path(id: @item)
   end
 
   def copy

@@ -1,8 +1,7 @@
 require 'spec_helper'
 
 describe "move_cms_pages", type: :feature, dbscope: :example do
-  subject(:site) { cms_site }
-  subject(:index_path) { cms_pages_path site.id }
+  let!(:site) { cms_site }
 
   around do |example|
     save_config = SS.config.replace_value_at(:cms, 'replace_urls_after_move', true)
@@ -13,6 +12,10 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
   end
 
   context "with auth", js: true do
+    let!(:node_a) { create(:cms_node_page, site: site, filename: "A", name: "A") }
+    let!(:node_b) { create(:cms_node_page, site: site, filename: "A/B", name: "B" ) }
+    let!(:node_c) { create(:cms_node_page, site: site, filename: "A/B/C", name: "C" ) }
+    let!(:node_d) { create(:cms_node_page, site: site, filename: "D", name: "D" ) }
     let(:page_html) { '<a href="/A/B/C/">/A/B/C/</a>' }
     let(:page2_html) { '<a href="/page.html">page.html</a>' }
     let(:layout_layout_html) { "<a href='#{site.full_url}page.html'>page.html</a><a href='#{site.full_url}A/B/C/'>/A/B/C/</a>" }
@@ -24,10 +27,6 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       create(:cms_page, filename: "A/B/C/page2.html", name: "page2", html: page2_html)
       create(:cms_layout, filename: "layout.layout.html", name: "layout", html: layout_layout_html)
       create(:cms_part_free, filename: "part.part.html", name: "part", html: part_part_html)
-      create(:cms_node_page, site: site, filename: "A", name: "A")
-      create(:cms_node_page, site: site, filename: "A/B", name: "B" )
-      create(:cms_node_page, site: site, filename: "A/B/C", name: "C" )
-      create(:cms_node_page, site: site, filename: "D", name: "D" )
     end
     after(:each) do
       Fs.rm_rf "#{site.path}/A"
@@ -58,7 +57,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       end
 
       Cms::Page.where(filename: "A/B/C/page2.html").first.tap do |item|
-        visit cms_page_path(site.id, item)
+        visit node_page_path(site.id, node_c, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         within "#addon-history-agents-addons-backup" do
@@ -107,14 +106,14 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       end
 
       Cms::Page.where(filename: "A/page.html").first.tap do |item|
-        visit cms_page_path(site.id, item)
+        visit node_page_path(site.id, node_a, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         within "#addon-history-agents-addons-backup" do
           expect(page).to have_css('.history-backup-table', text: I18n.t('history.options.action.replace_urls'), count: 1)
         end
 
-        visit move_cms_page_path(site.id, item)
+        visit move_node_page_path(site.id, node_a, item)
         within "form" do
           fill_in "destination", with: "D/E/page"
           click_button I18n.t('ss.buttons.move')
@@ -133,7 +132,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       end
 
       Cms::Page.where(filename: "D/E/page2.html").first.tap do |item|
-        visit cms_page_path(site.id, item)
+        visit node_page_path(site.id, node_c, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         within "#addon-history-agents-addons-backup" do
@@ -182,7 +181,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       end
 
       Cms::Page.where(filename: "A/B/C/page.html").first.tap do |item|
-        visit cms_page_path(site.id, item)
+        visit node_page_path(site.id, node_c, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         within "#addon-history-agents-addons-backup" do
@@ -191,7 +190,7 @@ describe "move_cms_pages", type: :feature, dbscope: :example do
       end
 
       Cms::Page.where(filename: "A/B/C/page2.html").first.tap do |item|
-        visit cms_page_path(site.id, item)
+        visit node_page_path(site.id, node_c, item)
         wait_for_turbo_frame "#workflow-branch-frame"
         expect(page).to have_css("#workflow_route", text: I18n.t("mongoid.attributes.workflow/model/route.my_group"))
         within "#addon-history-agents-addons-backup" do
