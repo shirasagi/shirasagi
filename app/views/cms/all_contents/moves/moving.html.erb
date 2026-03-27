@@ -1,0 +1,29 @@
+<%= render "tabs" %>
+
+<div class="addon-views">
+  <div class="addon-view" id="cms-all-contents-move-settings">
+    <div class="addon-head">
+      <h2><%= t("cms.all_contents_moves.settings_head") %></h2>
+    </div>
+    <div class="addon-body">
+      <%= t("cms.all_contents_moves.moving_message") %>
+    </div>
+  </div>
+</div>
+
+<%= jquery do %>
+SS.ready(function() {
+  var timer = setInterval(function() {
+    $.ajax({
+      url: "<%= cms_all_contents_moves_path(format: :json) %>",
+      dataType: "json",
+      success: function(data) {
+        if (data && data.state === "completed") {
+          clearInterval(timer);
+          location.href = "<%= cms_all_contents_moves_path %>";
+        }
+      }
+    });
+  }, 5000);
+});
+<% end %>

@@ -1,0 +1,124 @@
+<%= render "tabs" %>
+
+<%= form_tag(cms_all_contents_moves_run_path, method: :post, id: "move-run-form") do %>
+  <%= hidden_field_tag "select_all", "0", id: "select-all-hidden" %>
+
+  <div class="addon-views">
+    <div class="addon-view" id="cms-all-contents-move-result">
+      <div class="addon-head">
+        <h2><%= t("cms.all_contents_moves.check_result_head") %></h2>
+      </div>
+      <div class="addon-body">
+        <% if @errors %>
+          <div id="errorExplanation" class="errorExplanation">
+            <h2><%= t('errors.template.header', count: @errors.length) %></h2>
+            <ul>
+              <% @errors.each do |error| %>
+                <li><%= error %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <% if @summary %>
+          <dl class="see">
+            <dt>合計</dt>
+            <dd><%= @summary[:total] %>件</dd>
+            <dt>OK</dt>
+            <dd><%= @summary[:ok] %>件</dd>
+            <dt>確認</dt>
+            <dd><%= @summary[:confirmation] %>件</dd>
+            <dt>エラー</dt>
+            <dd><%= @summary[:error] %>件</dd>
+          </dl>
+        <% end %>
+
+        <table class="index">
+          <thead>
+            <tr>
+              <th class="check"><input type="checkbox" class="check-all" id="check-all-header" /></th>
+              <th>行</th>
+              <th>ページID</th>
+              <th>タイトル</th>
+              <th>現在のファイル名</th>
+              <th>移動先ファイル名</th>
+              <th>ステータス</th>
+              <th>詳細</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @results.each do |result| %>
+              <tr class="<%= result['status'] %>">
+                <td class="check">
+                  <% if result["status"] != "error" %>
+                    <%= check_box_tag "ids[]", result["id"],
+                        result["status"] == "ok",
+                        class: "check-item" %>
+                  <% end %>
+                </td>
+                <td><%= result["row"] %></td>
+                <td><%= result["id"] %></td>
+                <td><%= result["name"] %></td>
+                <td><%= result["filename"] %></td>
+                <td><%= result["destination"] %></td>
+                <td>
+                  <% case result["status"] %>
+                  <% when "ok" %>
+                    <span class="status-ok">OK</span>
+                  <% when "confirmation" %>
+                    <span class="status-confirmation">確認</span>
+                  <% when "error" %>
+                    <span class="status-error">エラー</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if result["confirmations"].present? %>
+                    <p>このページのURLを参照しているコンテンツが<%= result["confirmations"].length %>件あります。</p>
+                    <ul>
+                      <% type_labels = { "page" => "ページ", "layout" => "レイアウト", "part" => "パーツ", "node" => "フォルダー" } %>
+                      <% result["confirmations"].each do |c| %>
+                        <li><%= type_labels[c["type"]] || c["type"] %>: <%= c["name"] %> (<%= c["filename"] %>)</li>
+                      <% end %>
+                    </ul>
+                  <% elsif result["errors"] %>
+                    <%= safe_join(result["errors"].map { |e| content_tag(:span, e) }, tag(:br)) %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <%= paginate @results, params: { controller: "cms/all_contents/moves", action: "index" } %>
+      </div>
+    </div>
+  </div>
+
+  <footer class="send ss-sticky ss-sticky-bottom">
+    <%= submit_tag t("cms.all_contents_moves.execute_move"),
+        class: :save,
+        data: { confirm: t("cms.all_contents_moves.confirm_move") } %>
+    <%= link_to t("cms.all_contents_moves.reset"),
+        cms_all_contents_moves_reset_path,
+        method: :delete, class: "btn btn-red" %>
+  </footer>
+<% end %>
+
+<%= jquery do %>
+SS.ready(function() {
+  var $checkAll = $("#check-all-header");
+  var $selectAllHidden = $("#select-all-hidden");
+
+  $checkAll.on("change", function() {
+    var checked = $(this).prop("checked");
+    $(".check-item").prop("checked", checked);
+    $selectAllHidden.val(checked ? "1" : "0");
+  });
+
+  $(".check-item").on("change", function() {
+    if (!$(this).prop("checked")) {
+      $checkAll.prop("checked", false);
+      $selectAllHidden.val("0");
+    }
+  });
+});
+<% end %>
