@@ -7,6 +7,17 @@ class Gws::Discussion::Apis::BookmarkController < ApplicationController
 
   before_action :set_item
 
+  private
+
+  def set_items
+    @items ||= begin
+      set_forum
+      @model.all.site(@cur_site).where(forum_id: @forum)
+    end
+  end
+
+  public
+
   def index
     @bookmarker.toggle(@item)
     @bookmarker.set_bookmarks

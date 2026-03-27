@@ -7,17 +7,17 @@ class Cms::Apis::ColumnsController < ApplicationController
 
   private
 
+  def cur_form
+    @cur_form ||= Cms::Form.site(@cur_site).find(params[:form_id])
+  end
+
+  def set_items
+    @items ||= cur_form.columns
+  end
+
   def set_item
     super
     @model = @item.try(:class)
-  end
-
-  def cur_form
-    if params[:form_id]
-      @cur_form ||= Cms::Form.site(@cur_site).find(params[:form_id])
-    else
-      @cur_form ||= @item.form
-    end
   end
 
   def ref

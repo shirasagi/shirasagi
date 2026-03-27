@@ -118,7 +118,7 @@ Rails.application.routes.draw do
       get "user_detail/:id" => "user_detail#index", as: :user_detail
 
       resources :files, concerns: [:deletion, :file_api]
-      resources :columns, only: %i[edit update]
+      resources :columns, path: ":form_id/columns", only: %i[edit update]
     end
     namespace :frames do
       resources :columns, only: %i[show edit update destroy] do

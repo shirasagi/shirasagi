@@ -12,12 +12,17 @@ class Ezine::TestMembersController < ApplicationController
     { cur_user: @cur_user, cur_site: @cur_site, node_id: @cur_node.id }
   end
 
+  def set_items
+    @items ||= @model.site(@cur_site).where(node_id: @cur_node.id)
+  end
+
   public
 
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-    @items = @model.site(@cur_site).
-      where(node_id: @cur_node.id).
+
+    set_items
+    @items = @items.
       search(params[:s]).
       order_by(updated: -1).
       page(params[:page]).per(50)

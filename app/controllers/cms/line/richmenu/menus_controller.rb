@@ -16,7 +16,7 @@ class Cms::Line::Richmenu::MenusController < ApplicationController
   end
 
   def set_richmenu_group
-    @richmenu_group = Cms::Line::Richmenu::Group.site(@cur_site).find(params[:group_id])
+    @richmenu_group ||= Cms::Line::Richmenu::Group.site(@cur_site).find(params[:group_id])
   end
 
   def fix_params
@@ -24,7 +24,8 @@ class Cms::Line::Richmenu::MenusController < ApplicationController
   end
 
   def set_items
-    @items = @richmenu_group.menus
+    set_richmenu_group
+    @items ||= @richmenu_group.menus
   end
 
   public

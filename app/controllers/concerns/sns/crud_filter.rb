@@ -15,7 +15,12 @@ module Sns::CrudFilter
   end
 
   def set_items
-    @items ||= @model.site(@cur_site).allow(:read, @cur_user)
+    @items ||= begin
+      items = @model.all
+      items = items.site(@cur_site) if @cur_site
+      items = items.allow(:read, @cur_user)
+      items
+    end
   end
 
   public

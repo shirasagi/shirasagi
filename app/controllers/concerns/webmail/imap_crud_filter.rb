@@ -14,8 +14,7 @@ module Webmail::ImapCrudFilter
   end
 
   def set_items
-    @items ||= @model.site(@cur_site).
-      allow(:read, @imap)
+    @items ||= @model.allow(:read, @imap)
   end
 
   public
