@@ -13,6 +13,11 @@ class Webmail::MailsController < ApplicationController
   before_action :set_mailbox
   before_action :set_item, only: [:show, :edit, :update, :delete, :destroy, :parts_batch_download, :print]
   before_action :set_view_name, only: [:new, :create, :edit, :update]
+  # auto save
+  before_action :set_auto_save_conf
+  before_action :create_auto_save, only: [:new, :edit, :reply, :reply_all, :forward, :edit_as_new], if: -> { @auto_save_conf }
+  before_action :restore_auto_save, only: [:index], if: -> { @auto_save_conf && @mailbox == @imap.draft_box }
+  after_action :remove_auto_save, only: [:create, :update], if: -> { @auto_save_conf }
 
   private
 
@@ -69,6 +74,26 @@ class Webmail::MailsController < ApplicationController
     else
       @imap.examine(@mailbox)
     end
+  end
+
+  def set_auto_save_conf
+    return if SS.config.webmail.auto_save["disable"] == true
+    @auto_save_conf = OpenStruct.new(SS.config.webmail.auto_save)
+    @auto_save_conf.url = webmail_apis_mails_auto_save_path(webmail_mode: params[:webmail_mode], account: params[:account])
+  end
+
+  def create_auto_save
+    @auto_save = Webmail::AutoSave.create_temporary(cur_user: @cur_user, account: @imap.conf[:account])
+  end
+
+  def restore_auto_save
+    Webmail::AutoSave.destroy_unused_items(cur_user: @cur_user, account: @imap.conf[:account])
+    Webmail::AutoSave.save_draft(cur_user: @cur_user, account: @imap.conf[:account], imap: @imap)
+  end
+
+  def remove_auto_save
+    @auto_save = Webmail::AutoSave.user_account(@cur_user, @imap.conf[:account]).find(params[:auto_save_id]) rescue nil
+    @auto_save.discard! if @auto_save
   end
 
   public
