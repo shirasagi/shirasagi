@@ -353,6 +353,7 @@ ja:
       approved: 承認しました。
       answered: 回答しました。
       started_import: インポートを開始しました。
+      started_move: 移動処理を開始しました。
       started_export: エクスポートを開始しました。
       started_upload: アップロードを開始しました。
       started_deliver: 配信を開始しました。

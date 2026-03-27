@@ -1,0 +1,95 @@
+<%= render "tabs" %>
+
+<div class="addon-views">
+  <div class="addon-view" id="cms-all-contents-move-completed">
+    <div class="addon-head">
+      <h2>移動結果</h2>
+    </div>
+    <div class="addon-body">
+      <div class="list-head-search">
+        <% %w(UTF-8 Shift_JIS).each do |encoding| %>
+          <label>
+            <%= radio_button_tag "result_encoding", encoding, encoding == 'UTF-8', id: nil %>
+            <%= t("ss.options.csv_encoding.#{encoding}") %>
+          </label>
+        <% end %>
+        <%= link_to t('ss.links.download'), cms_all_contents_moves_download_result_path(format: :csv),
+            class: "btn", id: "btn-download-result" %>
+      </div>
+      <% if @move_summary %>
+        <dl class="see">
+          <dt>合計</dt>
+          <dd><%= @move_summary[:total] %>件</dd>
+          <dt>OK</dt>
+          <dd><%= @move_summary[:ok] %>件</dd>
+          <dt>エラー</dt>
+          <dd><%= @move_summary[:error] %>件</dd>
+        </dl>
+      <% end %>
+
+      <% if @move_results.present? %>
+        <table class="index">
+          <thead>
+            <tr>
+              <th>行</th>
+              <th>ページID</th>
+              <th>移動先ファイル名</th>
+              <th>ステータス</th>
+              <th>詳細</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% type_labels = { "page" => "ページ", "layout" => "レイアウト", "part" => "パーツ", "node" => "フォルダー" } %>
+            <% @move_results.each do |result| %>
+              <tr class="<%= result['status'] %>">
+                <td><%= result["row"] %></td>
+                <td><%= result["id"] %></td>
+                <td><%= result["filename"] %></td>
+                <td>
+                  <% if result["status"] == "ok" %>
+                    <span class="status-ok">OK</span>
+                  <% else %>
+                    <span class="status-error">エラー</span>
+                  <% end %>
+                </td>
+                <td>
+                  <% if result["confirmations"].present? %>
+                    <p>以下のコンテンツにこのページへのリンクが含まれています。手動でリンクを修正してください。</p>
+                    <ul>
+                      <% result["confirmations"].each do |c| %>
+                        <li>
+                          <%= type_labels[c["type"]] || c["type"] %>:
+                          <%= c["name"] %> (<%= c["filename"] %>)
+                        </li>
+                      <% end %>
+                    </ul>
+                  <% end %>
+                  <% if result["errors"] %>
+                    <%= safe_join(result["errors"].map { |e| content_tag(:span, e) }, tag(:br)) %>
+                  <% end %>
+                </td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+        <%= paginate @move_results %>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<footer class="send ss-sticky ss-sticky-bottom">
+  <%= link_to "終了する", cms_all_contents_moves_reset_path, method: :delete, class: "btn btn-red" %>
+</footer>
+
+<%= jquery do %>
+SS.ready(function() {
+  $("#btn-download-result").on("click", function(ev) {
+    ev.preventDefault();
+    var encoding = $("input[name='result_encoding']:checked").val() || "UTF-8";
+    var url = $(this).attr("href");
+    url = url + (url.indexOf("?") >= 0 ? "&" : "?") + "encoding=" + encodeURIComponent(encoding);
+    location.href = url;
+  });
+});
+<% end %>

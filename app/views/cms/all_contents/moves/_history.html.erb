@@ -1,0 +1,28 @@
+<%= render "ss/crud/addon", addon: { id: "cms-all-contents-move-histories", head: t("cms.all_contents_moves.history_head"), toggle: true, display_body: "hide" } do %>
+  <table class="index">
+    <thead>
+      <tr>
+        <th>実行日時</th>
+        <th>実行ユーザー名</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% histories.each do |history| %>
+        <tr>
+          <td><%= I18n.l(Time.zone.parse(history["executed_at"]), format: :picker) %></td>
+          <td><%= history["user_name"] %></td>
+          <td>
+            <%= link_to t("cms.all_contents_moves.show_detail"),
+                cms_all_contents_moves_history_path(id: history["dir_name"]),
+                class: "btn" %>
+            <%= link_to t('ss.links.download'),
+                cms_all_contents_moves_history_download_path(id: history["dir_name"], format: :csv),
+                class: "btn" %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <p><%= t("cms.all_contents_moves.history_notice") %></p>
+<% end %>
