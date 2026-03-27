@@ -13,13 +13,18 @@ module Webmail::ImapCrudFilter
     append_view_path "app/views/ss/crud"
   end
 
+  def set_items
+    @items ||= @model.site(@cur_site).
+      allow(:read, @imap)
+  end
+
   public
 
   def index
     # raise "403" unless @model.allowed?(:read, @cur_user)
+    set_items
 
-    @items = @model.site(@cur_site).
-      allow(:read, @imap).
+    @items = @items.
       search(params[:s]).
       page(params[:page]).per(50)
   end

@@ -7,8 +7,17 @@ module Sys::CrudFilter
     before_action :set_selected_items, only: [:destroy_all, :disable_all]
   end
 
+  private
+
+  def set_items
+    @items ||= @model.allow(:read, @cur_user)
+  end
+
+  public
+
   def index
-    @items = @model.allow(:read, @cur_user).
+    set_items
+    @items = @items.
       order_by(_id: -1).
       page(params[:page]).per(100)
   end

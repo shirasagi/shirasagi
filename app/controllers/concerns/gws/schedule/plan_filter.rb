@@ -56,8 +56,8 @@ module Gws::Schedule::PlanFilter
 
   # override SS::CrudFilter#set_item
   def set_item
-    set_items
     @item ||= begin
+      set_items
       item = @items.find(params[:id])
       item.attributes = fix_params
       item
