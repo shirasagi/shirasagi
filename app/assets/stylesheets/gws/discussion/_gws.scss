@@ -167,4 +167,31 @@
   .list-item {
     padding: 15px;
   }
+  .gws-discussion-member {
+    display: block;
+    .group {
+      font-weight: 600;
+    }
+    .members {
+      padding-left: 10px;
+      li {
+        list-style: disc;
+        .user-title {
+          padding-left: 10px;
+        }
+      }
+    }
+  }
 }
+.gws-contributor-group {
+  padding: 5px 0;
+  &:not(:last-child) {
+    border-bottom: 1px solid #dcdcdc;
+  }
+  .contributor {
+    display: inline-block;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+}
+

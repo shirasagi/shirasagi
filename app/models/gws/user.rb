@@ -25,6 +25,7 @@ class Gws::User
 
   # 管理者がユーザ管理画面で設定した主グループ。ユーザーの主務を表しており、あまり変更はない。
   field :gws_main_group_ids, type: Hash, default: {}
+  field :gws_main_group_orders, type: Hash, default: {}
   # ユーザーがグループ切り替え機能を用いて設定したアクティブグループ。ユーザーの兼務を表しており、しょっちゅう変わる。
   field :gws_default_group_ids, type: Hash, default: {}
 
@@ -35,6 +36,7 @@ class Gws::User
   before_validation :set_title_ids, if: ->{ in_title_id }
   before_validation :set_occupation_ids, if: ->{ in_occupation_id }
   before_validation :set_gws_main_group_id, if: ->{ @cur_site && in_gws_main_group_id }
+  before_validation :set_gws_main_group_order, if: ->{ @cur_site }
   before_validation if: ->{ @cur_site && in_gws_default_group_id } do
     set_gws_default_group_id(in_gws_default_group_id)
   end
@@ -177,6 +179,17 @@ class Gws::User
     end
 
     self.gws_main_group_ids = group_ids
+  end
+
+  def set_gws_main_group_order
+    orders = (gws_main_group_orders || {}).dup
+    key = @cur_site.id.to_s
+    if (main_group = gws_main_group(@cur_site))
+      orders[key] = main_group.order
+    else
+      orders.delete(key)
+    end
+    self.gws_main_group_orders = orders
   end
 
   def validate_groups
