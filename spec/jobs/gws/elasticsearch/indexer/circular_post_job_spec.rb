@@ -53,7 +53,7 @@ describe Gws::Elasticsearch::Indexer::CircularPostJob, dbscope: :example, es: tr
         omittable_fields = %i[
           id mode release_date close_date released groups group_names
           readable_member_ids readable_group_ids readable_custom_group_ids
-          text_index data file site_id attachment]
+          text_index data file site_id attachment keywords description]
         unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
         expect(unhandled_keys).to be_blank
       end
@@ -100,7 +100,7 @@ describe Gws::Elasticsearch::Indexer::CircularPostJob, dbscope: :example, es: tr
         omittable_fields = %i[
           id mode release_date close_date released groups group_names
           readable_member_ids readable_group_ids readable_custom_group_ids
-          text_index data file site_id attachment]
+          text_index data file site_id attachment keywords description]
         unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
         expect(unhandled_keys).to be_blank
       end
@@ -148,7 +148,7 @@ describe Gws::Elasticsearch::Indexer::CircularPostJob, dbscope: :example, es: tr
         omittable_fields = %i[
           id mode release_date close_date released groups group_names
           readable_member_ids readable_group_ids readable_custom_group_ids
-          text_index data file site_id attachment]
+          text_index data file site_id attachment keywords description]
         unhandled_keys.reject! { |key| omittable_fields.include?(key.to_sym) }
         expect(unhandled_keys).to be_blank
       end

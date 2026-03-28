@@ -16,8 +16,15 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
   context "with regular page" do
     let(:file_path) { Rails.root.join('spec/fixtures/ss/shirasagi.pdf') }
     let(:file) { tmp_ss_file(user: user, contents: file_path, binary: true, content_type: 'image/png') }
+    let(:keywords) { [unique_id, unique_id] }
+    let(:description) { unique_id }
     let!(:node) { create(:article_node_page, cur_site: site) }
-    let!(:page) { create(:article_page, cur_site: site, cur_node: node, file_ids: [file.id], state: "closed") }
+    let!(:page) do
+      create(
+        :article_page, cur_site: site, cur_node: node, file_ids: [file.id], state: "closed",
+        keywords: keywords, description: description
+      )
+    end
 
     it do
       # 非公開ページを作成した直後
@@ -97,6 +104,8 @@ describe Cms::Elasticsearch::Indexer::FeedReleasesJob, dbscope: :example, es: tr
           expect(es_doc["_id"]).to eq page.filename
           source = es_doc["_source"]
           expect(source['url']).to eq page.url
+          expect(source['keywords']).to eq keywords.join("\n")
+          expect(source['description']).to eq description
         end
         es_docs["hits"]["hits"][1].tap do |es_doc|
           expect(es_doc["_id"]).to eq "file-#{file.id}"
