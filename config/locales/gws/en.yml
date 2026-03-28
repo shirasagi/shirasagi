@@ -91,6 +91,9 @@ en:
         user_occupation: Occupation
         email: E-mail address
         tel: Phone number
+      organization_uid_sort_order:
+        alpha_first: Alphanumeric IDs first
+        numeric_first: Numeric IDs first
 
     links:
       back_to_portal: Back to portal
@@ -259,6 +262,7 @@ en:
       gws/user:
         gws_main_group_ids: Group (main)
         gws_default_group_ids: Group (default)
+        title_ids: Job title
       gws/custom_group:
         name: Group name
         order: Display order
@@ -348,6 +352,7 @@ en:
         trash_threshold_unit: Trash retention period unit
       gws/addon/system/user_setting:
         user_public_profiles: Public profile
+        organization_uid_sort_order: Staff number sort order
       gws/addon/system/menu_setting:
         menu_portal_label: Display portal
         menu_portal_state: Display portal
@@ -584,6 +589,12 @@ en:
         - "When sending an e-mail from the system, the URL in the e-mail will be the domain set here."
       trash_threshold:
         - You can set the retention period for the trash can.
+    gws/addon/system/user_setting:
+      organization_uid_sort_order:
+        - Select the sort order for staff numbers.
+        -
+        - "\"Alphanumeric IDs first\": A200, KB005, 5880, 10081"
+        - "\"Numeric IDs first\": 5880, 10081, A200, KB005"
     gws/addon/group_permission:
       custom_group_ids:
         - Select the custom group allowed to edit.

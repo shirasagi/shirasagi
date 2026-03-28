@@ -23,7 +23,8 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(response.status).to eq 200
 
       json = JSON.parse(response.body)
-      gws_admin = json["items"][1]
+      gws_admin = json["items"].find { |item| item["id"] == gws_user.id }
+      expect(gws_admin).to be_present
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
     end
@@ -33,7 +34,8 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(response.status).to eq 200
 
       json = JSON.parse(response.body)
-      gws_admin = json["items"][1]
+      gws_admin = json["items"].find { |item| item["id"] == gws_user.id }
+      expect(gws_admin).to be_present
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
     end
@@ -43,7 +45,8 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(response.status).to eq 200
 
       json = JSON.parse(response.body)
-      gws_admin = json["items"][0]
+      gws_admin = json["items"].find { |item| item["id"] == gws_user.id }
+      expect(gws_admin).to be_present
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
     end
@@ -70,7 +73,8 @@ describe 'gws_presence_users', type: :request, dbscope: :example do
       expect(response.status).to eq 200
 
       json = JSON.parse(response.body)
-      gws_admin = json["items"][1]
+      gws_admin = json["items"].find { |item| item["id"] == gws_user.id }
+      expect(gws_admin).to be_present
       expect(gws_admin["id"]).to eq gws_user.id
       expect(gws_admin["name"]).to eq gws_user.name
       expect(gws_admin["presence_state"]).to eq "available"

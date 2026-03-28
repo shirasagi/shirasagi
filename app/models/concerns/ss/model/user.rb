@@ -29,6 +29,8 @@ module SS::Model::User
     index({ email: 1 }, { sparse: true, unique: true })
     index({ uid: 1 }, { sparse: true, unique: true })
     index({ organization_uid: 1, organization_id: 1 }, { sparse: true })
+    index({ organization_uid_type: 1, organization_uid_sort_key: 1 }, { sparse: true })
+    index({ group_ids: 1 })
 
     # Create indexes each site_ids.
     # > db.ss_users.ensureIndex({ "title_orders.1": -1, organization_uid: 1, uid: 1 });
@@ -50,6 +52,8 @@ module SS::Model::User
     field :account_expiration_date, type: DateTime
     field :remark, type: String
     field :organization_uid, type: String
+    field :organization_uid_type, type: String
+    field :organization_uid_sort_key, type: String
 
     # Session Lifetime in seconds
     field :session_lifetime, type: Integer
@@ -92,6 +96,7 @@ module SS::Model::User
     validate :validate_uid
     validate :validate_account_expiration_date
 
+    before_validation :set_organization_uid_sort_fields, if: ->{ organization_uid_changed? || organization_uid_sort_key.blank? }
     after_save :save_group_history, if: -> { group_ids_changed? || group_ids_previously_changed? }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
@@ -263,9 +268,7 @@ module SS::Model::User
     str
   end
 
-  def type_options
-    self.class.type_options
-  end
+  delegate :type_options, to: :class
 
   def type_sns?
     self.type == TYPE_SNS || self.type.blank?
@@ -439,5 +442,19 @@ module SS::Model::User
       dec_group_ids: (group_ids_changes[0].to_a - group_ids_changes[1].to_a)
     )
     item.save
+  end
+
+  def set_organization_uid_sort_fields
+    if organization_uid.blank?
+      self.organization_uid_type = nil
+      self.organization_uid_sort_key = nil
+      return
+    end
+
+    uid = organization_uid.to_s
+    self.organization_uid_type = uid.match?(/\A\d+\z/) ? 'numeric' : 'alpha'
+    self.organization_uid_sort_key = uid.scan(/[a-zA-Z_\-\.]+|\d+/).map do |seg|
+      seg.match?(/\A\d+\z/) ? seg.rjust(10, '0') : seg
+    end.join
   end
 end

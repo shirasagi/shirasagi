@@ -43,8 +43,10 @@ describe Gws::Workload::Graph::Aggregation, type: :model, dbscope: :example do
       aggregation.aggregate_overtime_datasets
       datasets = aggregation.overtime_datasets
 
-      expect(datasets[1][:label]).to eq user.name
-      expect(datasets[1][:data]).to eq [10, 20, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0]
+      target_dataset = datasets.find { |dataset| dataset[:label] == user.name }
+
+      expect(target_dataset).to be_present
+      expect(target_dataset[:data]).to eq [10, 20, 30, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     end
   end
 end
