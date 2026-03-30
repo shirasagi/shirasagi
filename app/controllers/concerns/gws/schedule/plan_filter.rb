@@ -3,6 +3,8 @@ module Gws::Schedule::PlanFilter
   include Gws::Schedule::CalendarFilter
   include Gws::Schedule::CalendarFilter::Transition
 
+  APPROVAL_ACTIONS = Set.new(%w(index events)).freeze
+
   included do
     model Gws::Schedule::Plan
     before_action :check_schedule_visible
@@ -74,7 +76,7 @@ module Gws::Schedule::PlanFilter
   def set_approvals
     @search_plan ||= begin
       search_plan = params[:s].to_unsafe_h rescue {}
-      if params[:action] == "index" || params[:action] == "events"
+      if APPROVAL_ACTIONS.include?(params[:action]) # index or events
         search_plan[:approvals] = %w(request approve)
       end
       search_plan
