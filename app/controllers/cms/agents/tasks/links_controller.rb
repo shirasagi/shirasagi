@@ -10,7 +10,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   before_action :set_params
 
-  class UrlLog
+  class ExtractionLog
     include ActiveModel::Model
 
     attr_accessor :task, :path
@@ -18,13 +18,13 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     private_class_method :new
 
     def self.from_task(task)
-      path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+      path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
       new(task: task, path: path)
     end
 
-    def add(full_url, status)
+    def add(source, full_url, status)
       return unless full_url
-      io.puts({ full_url: full_url.to_s, status: status }.to_json)
+      io.puts({ source: source.full_url.to_s, full_url: full_url.to_s, status: status }.to_json)
     end
 
     def close
@@ -156,7 +156,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @check_mobile = SS.config.cms.check_links["check_mobile_path"] != false
 
-    @url_log = UrlLog.from_task(@task)
+    @extraction_log = ExtractionLog.from_task(@task)
 
     (10*1000*1000).times do |i|
       break if @queue.blank?
@@ -164,11 +164,14 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       source = @queue.shift
       next if source.status != :to_be_examined
 
-      check_url(source)
+      elapsed = Benchmark.realtime do
+        check_url(source)
+      end
+      source.elapsed = elapsed
       @task.count
     end
 
-    @url_log.close
+    @extraction_log.close
 
     errors = @full_url_to_source.values.select { _1.status == :error }
     error_formatter = Cms::CheckLinks::Errors.new(errors: errors, display_meta: @display_meta.present?)
@@ -179,6 +182,14 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
 
     create_report(errors)
+
+    top_slowest_sources = @full_url_to_source.values.sort_by(&:elapsed).last(10).reverse
+    @task.log "Top #{top_slowest_sources.length} slowest sources of #{@full_url_to_source.values.length} sources"
+    top_slowest_sources.each do |source|
+      elapsed = ActiveSupport::Duration.build(source.elapsed)
+      @task.log "  - #{source.full_url} in #{elapsed}"
+    end
+
     head :ok
   end
 
@@ -188,12 +199,10 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     result = checker.check_url(source.full_url)
     unless result.success?
       source.status = :error
-      @url_log.add(source.full_url, :error)
       return
     end
 
     source.status = :success
-    @url_log.add(source.full_url, :success)
 
     # HTML 以外ではリンクを抽出しない
     return unless result.content_mime_type
@@ -210,17 +219,19 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       cur_site: @site, base_url: source.full_url, html: result.content)
     extractor.each do |link|
       if IGNORE_LINK_TYPES.include?(link.type)
-        @url_log.add(link.full_url || link.href, link.type)
+        @extraction_log.add(source, link.full_url || link.href, link.type)
         next
       end
       if link.href[0] == "#"
-        @url_log.add(link.full_url || link.href, :fragment)
+        @extraction_log.add(source, link.full_url || link.href, :fragment)
         next
       end
       if link.nofollow?
-        @url_log.add(link.full_url || link.href, :nofollow)
+        @extraction_log.add(source, link.full_url || link.href, :nofollow)
         next
       end
+
+      @extraction_log.add(source, link.full_url || link.href, link.type)
 
       link_source = @full_url_to_source[link.full_url.to_s]
       if link_source.present?

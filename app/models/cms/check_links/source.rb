@@ -1,7 +1,7 @@
 class Cms::CheckLinks::Source
   include ActiveModel::Model
 
-  attr_accessor :full_url, :links, :referrers, :status
+  attr_accessor :full_url, :links, :referrers, :status, :elapsed
   attr_reader :sequence
 
   def initialize(*args, **kwargs)
@@ -11,6 +11,7 @@ class Cms::CheckLinks::Source
     @links ||= []
     @referrers ||= []
     @status ||= :to_be_examined
+    @elapsed ||= 0
   end
 
   def self.next_sequence

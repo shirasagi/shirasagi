@@ -565,10 +565,10 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(task.closed.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
         expect(task.current_count).to eq 7
 
-        url_log_path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+        url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
         url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
         # puts url_logs.map { _1["full_url"] }.join("\n")
-        expect(url_logs.length).to eq 25
+        expect(url_logs.length).to eq 36
 
         next_month_url = "#{calendar.full_url}#{Time.zone.today.next_month.strftime("%Y%m")}/"
         expect(url_logs.select { _1["full_url"].start_with?(next_month_url) }.map { _1["status"] }.uniq).to eq %w(nofollow)
@@ -577,12 +577,12 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(url_logs.select { _1["full_url"].start_with?(prev_month_url) }.map { _1["status"] }.uniq).to eq %w(nofollow)
 
         event_url = "#{calendar.full_url}#{event_date.strftime("%Y%m%d")}/"
-        expect(url_logs.select { _1["full_url"] == event_url }.map { _1["status"] }.uniq).to eq %w(success)
+        expect(url_logs.select { _1["full_url"] == event_url }.map { _1["status"] }.uniq).to eq %w(inner_yield)
 
-        expect(url_logs.select { _1["full_url"] == page1.full_url }.map { _1["status"] }.uniq).to eq %w(success)
+        expect(url_logs.select { _1["full_url"] == page1.full_url }.map { _1["status"] }.uniq).to eq %w(inner_yield)
 
         list_url = "#{calendar.full_url}#{Time.zone.today.strftime("%Y%m")}/list.html"
-        expect(url_logs.select { _1["full_url"] == list_url }.map { _1["status"] }.uniq).to eq %w(success)
+        expect(url_logs.select { _1["full_url"] == list_url }.map { _1["status"] }.uniq).to eq %w(inner_yield)
 
         list_ics_url = "#{calendar.full_url}#{Time.zone.today.strftime("%Y%m")}/list.ics"
         expect(url_logs.select { _1["full_url"] == list_ics_url }.map { _1["status"] }.uniq).to eq %w(nofollow)
@@ -637,10 +637,10 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(task.closed.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
           expect(task.current_count).to eq 1
 
-          url_log_path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+          url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
           url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
           # puts url_logs.map { _1["full_url"] }.join("\n")
-          expect(url_logs.length).to eq 6
+          expect(url_logs.length).to eq 5
 
           statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["status"] }.uniq
           expect(statuses).to eq %w(nofollow)
@@ -698,10 +698,10 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(task.closed.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
           expect(task.current_count).to eq 1
 
-          url_log_path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+          url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
           url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
           # puts url_logs.map { _1["full_url"] }.join("\n")
-          expect(url_logs.length).to eq 7
+          expect(url_logs.length).to eq 6
 
           statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["status"] }.uniq
           expect(statuses).to eq %w(nofollow)
