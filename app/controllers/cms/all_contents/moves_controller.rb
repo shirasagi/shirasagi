@@ -149,6 +149,8 @@ class Cms::AllContents::MovesController < ApplicationController
       return render(template: "cms/all_contents/moves/result")
     end
 
+    create_moving_marker
+
     job = Cms::AllContents::MoveExecuteJob.bind(
       site_id: @cur_site, user_id: @cur_user
     )
@@ -212,8 +214,8 @@ class Cms::AllContents::MovesController < ApplicationController
     return :moving if params[:moving].present?
 
     @task.reload
-    if @task.running?
-      return move_result_file_exists? ? :moving : :checking
+    if @task.running? || @task.ready?
+      return moving_marker_exists? ? :moving : :checking
     end
     return :completed if move_result_file_exists?
     return :checked if intermediate_check_file_exists?
@@ -232,12 +234,25 @@ class Cms::AllContents::MovesController < ApplicationController
     ::File.join(intermediate_dir, "move_result.json")
   end
 
+  def moving_marker_path
+    ::File.join(intermediate_dir, ".moving")
+  end
+
   def intermediate_check_file_exists?
     ::File.exist?(intermediate_check_file_path)
   end
 
   def move_result_file_exists?
     ::File.exist?(move_result_file_path)
+  end
+
+  def moving_marker_exists?
+    ::File.exist?(moving_marker_path)
+  end
+
+  def create_moving_marker
+    FileUtils.mkdir_p(intermediate_dir)
+    ::File.write(moving_marker_path, Time.zone.now.iso8601)
   end
 
   def load_all_intermediate_results
@@ -292,6 +307,7 @@ class Cms::AllContents::MovesController < ApplicationController
   def cleanup_intermediate_files
     FileUtils.rm_f(intermediate_check_file_path)
     FileUtils.rm_f(move_result_file_path)
+    FileUtils.rm_f(moving_marker_path)
   end
 
   def send_result_csv(results, encoding:, filename:)

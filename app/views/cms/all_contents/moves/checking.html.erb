@@ -22,7 +22,7 @@ SS.ready(function() {
       timeout: 10000,
       success: function(data) {
         retries = 0;
-        if (data && (data.state === "checked" || data.state === "initial")) {
+        if (data && data.state !== "checking") {
           clearInterval(timer);
           location.href = "<%= cms_all_contents_moves_path %>";
         }
