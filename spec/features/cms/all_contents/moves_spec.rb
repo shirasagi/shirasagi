@@ -718,7 +718,7 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
       expect(page).to have_css("#cms-all-contents-move-completed", wait: 30)
     end
 
-    it "shows download button on completed page" do
+    it "shows download button and encoding options on completed page" do
       complete_move
 
       expect(page).to have_css("#btn-download-result")
@@ -758,25 +758,6 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
       expect(page).to have_css("#cms-all-contents-move-history-detail")
       expect(page).to have_content("OK")
       expect(page).to have_content(dst1)
-    end
-
-    it "downloads history result from history detail page" do
-      complete_move
-
-      accept_confirm do
-        click_on I18n.t("cms.all_contents_moves.finish")
-      end
-
-      expect(page).to have_css("#cms-all-contents-move-settings")
-
-      ensure_addon_opened("#cms-all-contents-move-histories")
-
-      within "#cms-all-contents-move-histories" do
-        click_on I18n.t("cms.all_contents_moves.show_detail")
-      end
-
-      expect(page).to have_css("#cms-all-contents-move-history-detail")
-      expect(page).to have_content("OK")
     end
 
     it "saves history with correct metadata" do
@@ -831,6 +812,76 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
 
       expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
       expect(page).to have_css(".status-ok")
+    end
+  end
+
+  describe "CSV download", js: false do
+    before { login_cms_user }
+
+    let(:task) do
+      Cms::Task.find_or_create_by(site_id: site.id, name: "cms:all_contents_moves")
+    end
+
+    let(:move_results) do
+      [{ "row" => 2, "id" => page1.id, "filename" => "#{node_dst.filename}/#{page1.basename}", "status" => "ok" }]
+    end
+
+    before do
+      FileUtils.mkdir_p(task.base_dir)
+      ::File.write(::File.join(task.base_dir, "move_result.json"), move_results.to_json)
+    end
+
+    after do
+      FileUtils.rm_rf(task.base_dir)
+    end
+
+    it "downloads move result as UTF-8 CSV" do
+      visit cms_all_contents_moves_download_result_path(site: site, format: :csv, encoding: "UTF-8")
+
+      csv_source = page.html
+      csv_source.force_encoding("UTF-8")
+      csv_source = csv_source[1..-1]
+      SS::Csv.open(StringIO.new(csv_source)) do |csv|
+        table = csv.read
+
+        expect(table.headers).to include("行", "ページID", "移動先ファイル名", "ステータス")
+        expect(table.length).to eq 1
+        expect(table[0]["ステータス"]).to eq "ok"
+        expect(table[0]["ページID"]).to eq page1.id.to_s
+      end
+    end
+
+    it "downloads move result as Shift_JIS CSV" do
+      visit cms_all_contents_moves_download_result_path(site: site, format: :csv, encoding: "Shift_JIS")
+
+      csv_source = page.html.encode("UTF-8", "Shift_JIS")
+      csv_lines = CSV.parse(csv_source, headers: true)
+
+      expect(csv_lines.headers).to include("行", "ページID", "移動先ファイル名", "ステータス")
+      expect(csv_lines.length).to eq 1
+      expect(csv_lines[0]["ステータス"]).to eq "ok"
+    end
+
+    it "downloads history result CSV" do
+      # 履歴を作成
+      history_dir = ::File.join(task.base_dir, "histories", "20260330_120000_admin")
+      FileUtils.mkdir_p(history_dir)
+      meta = { executed_at: Time.zone.now.iso8601, user_name: "admin", total: 1, ok: 1, error: 0 }
+      ::File.write(::File.join(history_dir, "meta.json"), meta.to_json)
+      ::File.write(::File.join(history_dir, "move_result.json"), move_results.to_json)
+
+      visit cms_all_contents_moves_history_download_path(site: site, id: "20260330_120000_admin", format: :csv)
+
+      csv_source = page.html
+      csv_source.force_encoding("UTF-8")
+      csv_source = csv_source[1..-1]
+      SS::Csv.open(StringIO.new(csv_source)) do |csv|
+        table = csv.read
+
+        expect(table.headers).to include("行", "ページID", "ステータス")
+        expect(table.length).to eq 1
+        expect(table[0]["ステータス"]).to eq "ok"
+      end
     end
   end
 end
