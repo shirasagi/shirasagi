@@ -46,6 +46,8 @@ reviews:
       enabled: false
     eslint:
       enabled: false
+    stylelint:
+      enabled: false
     # Biome/Markdownlintなど未使用ツールは無効化
     biome:
       enabled: false
