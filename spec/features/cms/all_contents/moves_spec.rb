@@ -345,6 +345,65 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
     end
   end
 
+  describe "branch page follows master page" do
+    let!(:branch_page) do
+      branch = page1.new_clone
+      branch.master = page1
+      branch.save!
+      branch
+    end
+    let(:dst1) { "#{node_dst.filename}/#{page1.basename}" }
+    let(:csv_data) { build_csv([page1, dst1]) }
+
+    around do |example|
+      save_config = SS.config.replace_value_at(:cms, 'replace_urls_after_move', false)
+      perform_enqueued_jobs { example.run }
+      SS.config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
+    end
+
+    it "moves branch page along with master page" do
+      branch_basename = branch_page.basename
+      csv_file = create_csv_file(csv_data)
+
+      visit cms_all_contents_moves_path(site: site)
+      within "form" do
+        attach_file "item[in_file]", csv_file
+        click_on I18n.t("cms.all_contents_moves.read_csv")
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+      expect(page).to have_css(".status-ok")
+
+      accept_confirm do
+        within "form" do
+          click_on I18n.t("cms.all_contents_moves.execute_move")
+        end
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-completed", wait: 30)
+
+      # master page moved
+      page1.reload
+      expect(page1.filename).to eq dst1
+
+      # branch page followed master
+      branch_page.reload
+      expect(branch_page.filename).to eq "#{node_dst.filename}/#{branch_basename}"
+    end
+
+    it "excludes branch page from template CSV" do
+      exporter = Cms::AllContentsMoveExporter.new(site: site)
+      csv_source = exporter.enum_csv(encoding: "UTF-8").to_a.join.force_encoding("UTF-8")
+      csv_source = csv_source[1..-1]
+      SS::Csv.open(StringIO.new(csv_source)) do |csv|
+        table = csv.read
+        ids = table.map { |row| row[csv_headers[:page_id]].to_i }
+        expect(ids).to include(page1.id)
+        expect(ids).not_to include(branch_page.id)
+      end
+    end
+  end
+
   describe "permission check" do
     let!(:limited_role) do
       create(:cms_role, cur_site: site, name: "limited-#{unique_id}",
