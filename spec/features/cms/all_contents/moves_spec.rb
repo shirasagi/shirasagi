@@ -150,6 +150,47 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
     end
   end
 
+  describe "partial move with mixed results" do
+    let(:dst1) { "#{node_dst.filename}/#{page1.basename}" }
+    let(:csv_data) { build_csv([page1, dst1], [page2, "nonexistent/page.html"]) }
+
+    around do |example|
+      save_config = SS.config.replace_value_at(:cms, 'replace_urls_after_move', false)
+      perform_enqueued_jobs { example.run }
+      SS.config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
+    end
+
+    it "moves only the valid page and leaves the error page unchanged" do
+      original_page2_filename = page2.filename
+      csv_file = create_csv_file(csv_data)
+
+      visit cms_all_contents_moves_path(site: site)
+      within "form" do
+        attach_file "item[in_file]", csv_file
+        click_on I18n.t("cms.all_contents_moves.read_csv")
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+
+      # only page1 (ok) should be checked, page2 (error) has no checkbox
+      expect(page).to have_css("input[name='ids[]']", count: 1)
+
+      accept_confirm do
+        within "form" do
+          click_on I18n.t("cms.all_contents_moves.execute_move")
+        end
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-completed", wait: 30)
+
+      page1.reload
+      expect(page1.filename).to eq dst1
+
+      page2.reload
+      expect(page2.filename).to eq original_page2_filename
+    end
+  end
+
   describe "check errors" do
     around do |example|
       perform_enqueued_jobs { example.run }
@@ -231,6 +272,79 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
         expect(page).to have_css(".status-error", count: 2)
         expect(page).to have_no_css(".status-ok")
         expect(page).to have_no_css("input[name='ids[]']")
+      end
+    end
+
+    context "when published page moves to closed folder" do
+      let!(:closed_node) { create(:cms_node_page, cur_site: site, state: 'closed') }
+      let!(:published_page) do
+        create(:article_page, cur_site: site, cur_node: node_src, state: 'public',
+          layout_id: layout.id, group_ids: [cms_group.id])
+      end
+      let(:csv_data) { build_csv([published_page, "#{closed_node.filename}/#{published_page.basename}"]) }
+
+      it "shows destination folder not public error" do
+        csv_file = create_csv_file(csv_data)
+
+        visit cms_all_contents_moves_path(site: site)
+        within "form" do
+          attach_file "item[in_file]", csv_file
+          click_on I18n.t("cms.all_contents_moves.read_csv")
+        end
+
+        expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+        expect(page).to have_css(".status-error")
+        expect(page).to have_content(I18n.t('cms.all_contents_moves.errors.destination_folder_not_public'))
+      end
+    end
+
+    context "when filename contains invalid characters" do
+      let(:csv_data) { build_csv([page1, "#{node_dst.filename}/テスト.html"]) }
+
+      it "shows invalid filename error" do
+        csv_file = create_csv_file(csv_data)
+
+        visit cms_all_contents_moves_path(site: site)
+        within "form" do
+          attach_file "item[in_file]", csv_file
+          click_on I18n.t("cms.all_contents_moves.read_csv")
+        end
+
+        expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+        expect(page).to have_css(".status-error")
+        expect(page).to have_content(I18n.t('cms.all_contents_moves.errors.invalid_filename_chars'))
+      end
+    end
+
+    context "when CSV has mix of ok and error rows" do
+      let(:dst1) { "#{node_dst.filename}/#{page1.basename}" }
+      let(:csv_data) { build_csv([page1, dst1], [page2, "nonexistent/page.html"]) }
+
+      it "shows both ok and error statuses" do
+        csv_file = create_csv_file(csv_data)
+
+        visit cms_all_contents_moves_path(site: site)
+        within "form" do
+          attach_file "item[in_file]", csv_file
+          click_on I18n.t("cms.all_contents_moves.read_csv")
+        end
+
+        expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+        expect(page).to have_css(".status-ok", count: 1)
+        expect(page).to have_css(".status-error", count: 1)
+        # only ok row should have checkbox
+        expect(page).to have_css("input[name='ids[]']", count: 1)
+      end
+    end
+
+    context "when no file is selected" do
+      it "shows invalid csv error" do
+        visit cms_all_contents_moves_path(site: site)
+        within "form" do
+          click_on I18n.t("cms.all_contents_moves.read_csv")
+        end
+
+        expect(page).to have_css("#errorExplanation", text: I18n.t("errors.messages.invalid_csv"))
       end
     end
   end
