@@ -87,8 +87,10 @@ class Cms::LinkChecker
     end
 
     if generated_file_path = get_generated_file_path(site, full_url)
+      content_type = SS::MimeType.find(File.extname(generated_file_path))
+      content = content_type.include?("text/html") ? File.read(generated_file_path) : nil
       return Result.success(
-        redirection_count: redirection.count, content_type: "text/html; charset=UTF-8", content: File.read(generated_file_path))
+        redirection_count: redirection.count, content_type: content_type, content: content)
     end
 
     # retrieve internal page
