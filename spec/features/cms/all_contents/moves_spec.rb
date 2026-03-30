@@ -236,10 +236,6 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
   end
 
   describe "confirmation status" do
-    let!(:referencing_page) do
-      create(:article_page, cur_site: site, cur_node: node_src,
-        html: "<a href=\"#{page1.url}\">link</a>", group_ids: [cms_group.id])
-    end
     let(:dst1) { "#{node_dst.filename}/#{page1.basename}" }
     let(:csv_data) { build_csv([page1, dst1]) }
 
@@ -247,18 +243,60 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
       perform_enqueued_jobs { example.run }
     end
 
-    it "shows confirmation status when page has referencing contents" do
-      csv_file = create_csv_file(csv_data)
-
-      visit cms_all_contents_moves_path(site: site)
-      within "form" do
-        attach_file "item[in_file]", csv_file
-        click_on I18n.t("cms.all_contents_moves.read_csv")
+    context "with single referencing page" do
+      let!(:referencing_page) do
+        create(:article_page, cur_site: site, cur_node: node_src,
+          html: "<a href=\"#{page1.url}\">link</a>", group_ids: [cms_group.id])
       end
 
-      expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
-      expect(page).to have_css(".status-confirmation")
-      expect(page).to have_content(referencing_page.name)
+      it "shows confirmation status with count and referencing content details" do
+        csv_file = create_csv_file(csv_data)
+
+        visit cms_all_contents_moves_path(site: site)
+        within "form" do
+          attach_file "item[in_file]", csv_file
+          click_on I18n.t("cms.all_contents_moves.read_csv")
+        end
+
+        expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+        expect(page).to have_css(".status-confirmation")
+        expect(page).to have_content("1件")
+        expect(page).to have_content("ページ")
+        expect(page).to have_content(referencing_page.name)
+        expect(page).to have_content(referencing_page.filename)
+      end
+    end
+
+    context "with multiple referencing contents" do
+      let!(:referencing_page1) do
+        create(:article_page, cur_site: site, cur_node: node_src,
+          html: "<a href=\"#{page1.url}\">link1</a>", group_ids: [cms_group.id])
+      end
+      let!(:referencing_page2) do
+        create(:article_page, cur_site: site, cur_node: node_src,
+          html: "<a href=\"#{page1.url}\">link2</a>", group_ids: [cms_group.id])
+      end
+      let!(:referencing_layout) do
+        create(:cms_layout, cur_site: site, html: "<a href=\"#{page1.url}\">link</a>")
+      end
+
+      it "shows confirmation with count and all referencing content details" do
+        csv_file = create_csv_file(csv_data)
+
+        visit cms_all_contents_moves_path(site: site)
+        within "form" do
+          attach_file "item[in_file]", csv_file
+          click_on I18n.t("cms.all_contents_moves.read_csv")
+        end
+
+        expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+        expect(page).to have_css(".status-confirmation")
+        expect(page).to have_content("3件")
+        expect(page).to have_content(referencing_page1.name)
+        expect(page).to have_content(referencing_page2.name)
+        expect(page).to have_content("レイアウト")
+        expect(page).to have_content(referencing_layout.name)
+      end
     end
   end
 
