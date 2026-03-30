@@ -687,4 +687,150 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
       expect(page).to have_content(I18n.t('cms.all_contents_moves.errors.not_have_move_permission'))
     end
   end
+
+  describe "download and history" do
+    let(:dst1) { "#{node_dst.filename}/#{page1.basename}" }
+    let(:csv_data) { build_csv([page1, dst1]) }
+
+    around do |example|
+      save_config = SS.config.replace_value_at(:cms, 'replace_urls_after_move', false)
+      perform_enqueued_jobs { example.run }
+      SS.config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
+    end
+
+    def complete_move
+      csv_file = create_csv_file(csv_data)
+
+      visit cms_all_contents_moves_path(site: site)
+      within "form" do
+        attach_file "item[in_file]", csv_file
+        click_on I18n.t("cms.all_contents_moves.read_csv")
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+
+      accept_confirm do
+        within "form" do
+          click_on I18n.t("cms.all_contents_moves.execute_move")
+        end
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-completed", wait: 30)
+    end
+
+    it "shows download button on completed page" do
+      complete_move
+
+      expect(page).to have_css("#btn-download-result")
+      expect(page).to have_css("input[name='result_encoding']")
+    end
+
+    it "verifies move result file contains correct data" do
+      complete_move
+
+      task = Cms::Task.where(site_id: site.id, name: "cms:all_contents_moves").first
+      result_path = ::File.join(task.base_dir, "move_result.json")
+      expect(::File.exist?(result_path)).to be_truthy
+
+      results = JSON.parse(::File.read(result_path))
+      expect(results.length).to eq 1
+      expect(results[0]["status"]).to eq "ok"
+      expect(results[0]["id"]).to eq page1.id
+      expect(results[0]["filename"]).to eq dst1
+    end
+
+    it "shows history after reset and allows viewing details" do
+      complete_move
+
+      accept_confirm do
+        click_on I18n.t("cms.all_contents_moves.finish")
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-settings")
+
+      ensure_addon_opened("#cms-all-contents-move-histories")
+
+      within "#cms-all-contents-move-histories" do
+        expect(page).to have_content(cms_user.long_name || cms_user.name)
+        click_on I18n.t("cms.all_contents_moves.show_detail")
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-history-detail")
+      expect(page).to have_content("OK")
+      expect(page).to have_content(dst1)
+    end
+
+    it "downloads history result from history detail page" do
+      complete_move
+
+      accept_confirm do
+        click_on I18n.t("cms.all_contents_moves.finish")
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-settings")
+
+      ensure_addon_opened("#cms-all-contents-move-histories")
+
+      within "#cms-all-contents-move-histories" do
+        click_on I18n.t("cms.all_contents_moves.show_detail")
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-history-detail")
+      expect(page).to have_content("OK")
+    end
+
+    it "saves history with correct metadata" do
+      complete_move
+
+      accept_confirm do
+        click_on I18n.t("cms.all_contents_moves.finish")
+      end
+
+      task = Cms::Task.where(site_id: site.id, name: "cms:all_contents_moves").first
+      history_dir = ::File.join(task.base_dir, "histories")
+      expect(::Dir.exist?(history_dir)).to be_truthy
+
+      entries = ::Dir.children(history_dir)
+      expect(entries.length).to eq 1
+
+      meta = JSON.parse(::File.read(::File.join(history_dir, entries.first, "meta.json")))
+      expect(meta["total"]).to eq 1
+      expect(meta["ok"]).to eq 1
+      expect(meta["error"]).to eq 0
+      expect(meta["user_name"]).to be_present
+
+      results = JSON.parse(::File.read(::File.join(history_dir, entries.first, "move_result.json")))
+      expect(results.length).to eq 1
+      expect(results[0]["status"]).to eq "ok"
+    end
+  end
+
+  describe "Shift_JIS CSV import" do
+    let(:dst1) { "#{node_dst.filename}/#{page1.basename}" }
+
+    around do |example|
+      perform_enqueued_jobs { example.run }
+    end
+
+    it "accepts Shift_JIS encoded CSV" do
+      csv = CSV.generate do |csv|
+        csv << [csv_headers[:page_id], csv_headers[:filename]]
+        csv << [page1.id, dst1]
+      end
+      sjis_csv = csv.encode("Shift_JIS")
+
+      csv_file = SS::TmpDir.tmpfile(extname: ".csv", binary: true) do |f|
+        f.write sjis_csv
+      end
+
+      visit cms_all_contents_moves_path(site: site)
+      within "form" do
+        attach_file "item[in_file]", csv_file
+        click_on I18n.t("cms.all_contents_moves.read_csv")
+      end
+
+      expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+      expect(page).to have_css(".status-ok")
+    end
+  end
 end
