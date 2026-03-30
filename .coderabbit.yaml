@@ -1,0 +1,73 @@
+# CodeRabbit Configuration for SHIRASAGI
+# https://docs.coderabbit.ai/guides/configure-coderabbit
+language: "ja"
+tone_instructions: >
+  丁寧かつ簡潔に指摘してください。
+  行政向けCMSであることを踏まえ、セキュリティとアクセシビリティに関する指摘は特に重視してください。
+  本プロジェクトはMongoDB（Mongoid）を使用しており、ActiveRecordベースの提案は不要です。
+
+early_access: true
+
+reviews:
+  # PRの要約を自動生成
+  request_changes_workflow: false
+  high_level_summary: true
+  high_level_summary_placeholder: "@coderabbitai summary"
+  poem: false
+  review_status: true
+  collapse_walkthrough: false
+  sequence_diagrams: true
+
+  # 自動レビューの対象設定
+  auto_review:
+    enabled: true
+    drafts: false
+    base_branches:
+      - master
+      - develop
+
+  # レビューで無視するパス（CI/lintで十分カバーされるもの・自動生成物）
+  path_filters:
+    - "!**/*.min.js"
+    - "!**/*.min.css"
+    - "!**/vendor/**"
+    - "!**/node_modules/**"
+    - "!app/assets/builds/**"
+    - "!app/assets/javascripts/cms/preview/datatables.js"
+    - "!public/**"
+    - "!db/seeds/**"
+    - "!spec/fixtures/**"
+    - "!config/locales/**/*.yml"
+
+  # ツール連携設定
+  tools:
+    # RuboCop・ESLint・Stylelintはreviewdogが実行するため無効化
+    rubocop:
+      enabled: false
+    eslint:
+      enabled: false
+    # Biome/Markdownlintなど未使用ツールは無効化
+    biome:
+      enabled: false
+    markdownlint:
+      enabled: false
+    # GitHub Actions の結果を活用
+    github-checks:
+      enabled: true
+      timeout_ms: 90000
+
+chat:
+  auto_reply: true
+
+knowledge_base:
+  # PRやissueのコンテキストを学習
+  learnings:
+    scope: auto
+  issues:
+    scope: auto
+  jira:
+    project_keys: []
+  linear:
+    team_keys: []
+  pull_requests:
+    scope: auto
