@@ -69,7 +69,9 @@ class Cms::AllContents::MoveExecuteJob < Cms::ApplicationJob
       changed = apply_contact_changes(page, item) || changed
       changed = apply_group_changes(page, item) || changed
 
-      page.save if changed
+      if changed && !page.save
+        task.log "属性変更の保存に失敗: id=#{page.id} #{page.errors.full_messages.join(', ')}"
+      end
     end
   end
 
@@ -210,6 +212,7 @@ class Cms::AllContents::MoveExecuteJob < Cms::ApplicationJob
 
   def apply_group_changes(page, item)
     return false unless item["group_names"].present?
+    return false unless page.respond_to?(:group_ids=)
 
     group_names = item["group_names"].split("\n").map(&:strip)
     groups = group_names.filter_map do |name|

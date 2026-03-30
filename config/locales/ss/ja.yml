@@ -371,6 +371,7 @@ ja:
       restored: 元に戻しました。
       run: 実行しました。
       already_job_started: 実行準備中であるか、実行中です。
+      failed_to_check_status: ステータスの確認に失敗しました。ページを再読み込みしてください。
       clipboard_copied: コピーしました。
       clipboard_copy_failed: コピーできませんでした。クリップボードがサポートされていません。
       published: 公開しました。

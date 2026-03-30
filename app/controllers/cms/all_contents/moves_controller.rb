@@ -3,6 +3,8 @@ class Cms::AllContents::MovesController < ApplicationController
 
   navi_view "cms/main/navi"
 
+  HISTORY_ID_PATTERN = /\A[\w\-]+\z/
+
   before_action :check_permission
   before_action :set_task
 
@@ -22,6 +24,27 @@ class Cms::AllContents::MovesController < ApplicationController
       site_id: @cur_site.id,
       name: "cms:all_contents_moves"
     )
+  end
+
+  def validate_history_id!
+    history_id = params[:id].to_s
+    raise '404' unless history_id.match?(HISTORY_ID_PATTERN)
+
+    history_dir = ::File.join(@task.base_dir, "histories", history_id)
+    resolved = ::Pathname.new(history_dir).cleanpath.to_s
+    allowed_base = ::Pathname.new(::File.join(@task.base_dir, "histories")).cleanpath.to_s
+    raise '404' unless resolved.start_with?(allowed_base + "/")
+    raise '404' unless ::Dir.exist?(resolved)
+
+    resolved
+  end
+
+  def safe_json_parse(path, default: nil)
+    return default unless ::File.exist?(path)
+
+    JSON.parse(::File.read(path))
+  rescue JSON::ParserError
+    default
   end
 
   public
@@ -152,91 +175,33 @@ class Cms::AllContents::MovesController < ApplicationController
     raise '404' unless move_result_file_exists?
 
     encoding = params[:encoding].presence || "UTF-8"
-    results = JSON.parse(::File.read(move_result_file_path))
-    type_labels = { "page" => "ページ", "layout" => "レイアウト", "part" => "パーツ", "node" => "フォルダー" }
-
-    rows = []
-    rows << %w[行 ページID 移動先ファイル名 ステータス エラー 参照元コンテンツ]
-    results.each do |r|
-      confirmations_text = ""
-      if r["confirmations"].present?
-        confirmations_text = r["confirmations"].map do |c|
-          "#{type_labels[c['type']] || c['type']}: #{c['name']} (#{c['filename']})"
-        end.join("\n")
-      end
-
-      rows << [
-        r["row"], r["id"], r["filename"], r["status"],
-        r["errors"]&.join("; "),
-        confirmations_text
-      ]
-    end
-
-    if encoding.casecmp("Shift_JIS") == 0
-      csv_data = CSV.generate { |csv| rows.each { |row| csv << row } }
-      csv_data = csv_data.encode("Shift_JIS", invalid: :replace, undef: :replace, replace: "?")
-      content_type = "text/csv; charset=Shift_JIS"
-    else
-      csv_data = "\uFEFF" + CSV.generate { |csv| rows.each { |row| csv << row } }
-      content_type = "text/csv; charset=UTF-8"
-    end
-
-    send_data csv_data, type: content_type,
-      filename: "move_result_#{Time.zone.now.to_i}.csv", disposition: :attachment
+    results = safe_json_parse(move_result_file_path, default: [])
+    send_result_csv(results, encoding: encoding, filename: "move_result_#{Time.zone.now.to_i}.csv")
   end
 
   def show_history
-    history_dir = ::File.join(@task.base_dir, "histories", params[:id])
-    raise '404' unless ::Dir.exist?(history_dir)
+    history_dir = validate_history_id!
 
     meta_path = ::File.join(history_dir, "meta.json")
-    raise '404' unless ::File.exist?(meta_path)
-
-    @history_meta = JSON.parse(::File.read(meta_path))
     result_path = ::File.join(history_dir, "move_result.json")
-    @history_results = ::File.exist?(result_path) ? JSON.parse(::File.read(result_path)) : []
-    render action: :show_history
+
+    @history_meta = safe_json_parse(meta_path, default: {})
+    @history_results = safe_json_parse(result_path, default: [])
+
+    respond_to do |format|
+      format.html { render action: :show_history }
+      format.json { render json: @history_results }
+    end
   end
 
   def download_history
-    history_dir = ::File.join(@task.base_dir, "histories", params[:id])
-    raise '404' unless ::Dir.exist?(history_dir)
+    history_dir = validate_history_id!
 
     result_path = ::File.join(history_dir, "move_result.json")
-    raise '404' unless ::File.exist?(result_path)
+    results = safe_json_parse(result_path, default: [])
 
     encoding = params[:encoding].presence || "UTF-8"
-    results = JSON.parse(::File.read(result_path))
-    type_labels = { "page" => "ページ", "layout" => "レイアウト", "part" => "パーツ", "node" => "フォルダー" }
-
-    rows = []
-    rows << %w[行 ページID 移動先ファイル名 ステータス エラー 参照元コンテンツ]
-    results.each do |r|
-      confirmations_text = ""
-      if r["confirmations"].present?
-        confirmations_text = r["confirmations"].map do |c|
-          "#{type_labels[c['type']] || c['type']}: #{c['name']} (#{c['filename']})"
-        end.join("\n")
-      end
-
-      rows << [
-        r["row"], r["id"], r["filename"], r["status"],
-        r["errors"]&.join("; "),
-        confirmations_text
-      ]
-    end
-
-    if encoding.casecmp("Shift_JIS") == 0
-      csv_data = CSV.generate { |csv| rows.each { |row| csv << row } }
-      csv_data = csv_data.encode("Shift_JIS", invalid: :replace, undef: :replace, replace: "?")
-      content_type = "text/csv; charset=Shift_JIS"
-    else
-      csv_data = "\uFEFF" + CSV.generate { |csv| rows.each { |row| csv << row } }
-      content_type = "text/csv; charset=UTF-8"
-    end
-
-    send_data csv_data, type: content_type,
-      filename: "move_result_#{params[:id]}.csv", disposition: :attachment
+    send_result_csv(results, encoding: encoding, filename: "move_result_#{params[:id]}.csv")
   end
 
   private
@@ -316,7 +281,9 @@ class Cms::AllContents::MovesController < ApplicationController
       meta_path = ::File.join(entry_path, "meta.json")
       next unless ::File.exist?(meta_path)
 
-      meta = JSON.parse(::File.read(meta_path))
+      meta = safe_json_parse(meta_path, default: nil)
+      next unless meta
+
       meta["dir_name"] = entry
       @histories << meta
     end
@@ -325,6 +292,38 @@ class Cms::AllContents::MovesController < ApplicationController
   def cleanup_intermediate_files
     FileUtils.rm_f(intermediate_check_file_path)
     FileUtils.rm_f(move_result_file_path)
+  end
+
+  def send_result_csv(results, encoding:, filename:)
+    type_labels = { "page" => "ページ", "layout" => "レイアウト", "part" => "パーツ", "node" => "フォルダー" }
+
+    rows = []
+    rows << %w[行 ページID 移動先ファイル名 ステータス エラー 参照元コンテンツ]
+    results.each do |r|
+      confirmations_text = ""
+      if r["confirmations"].present?
+        confirmations_text = r["confirmations"].map do |c|
+          "#{type_labels[c['type']] || c['type']}: #{c['name']} (#{c['filename']})"
+        end.join("\n")
+      end
+
+      rows << [
+        r["row"], r["id"], r["filename"], r["status"],
+        r["errors"]&.join("; "),
+        confirmations_text
+      ]
+    end
+
+    if encoding.casecmp("Shift_JIS") == 0
+      csv_data = CSV.generate { |csv| rows.each { |row| csv << row } }
+      csv_data = csv_data.encode("Shift_JIS", invalid: :replace, undef: :replace, replace: "?")
+      content_type = "text/csv; charset=Shift_JIS"
+    else
+      csv_data = "\uFEFF" + CSV.generate { |csv| rows.each { |row| csv << row } }
+      content_type = "text/csv; charset=UTF-8"
+    end
+
+    send_data csv_data, type: content_type, filename: filename, disposition: :attachment
   end
 
 end

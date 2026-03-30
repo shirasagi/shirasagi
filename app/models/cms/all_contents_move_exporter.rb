@@ -23,6 +23,10 @@ class Cms::AllContentsMoveExporter
 
   private
 
+  def layout_cache
+    @layout_cache ||= Cms::Layout.site(site).pluck(:id, :filename).to_h
+  end
+
   def page_criteria
     Enumerator.new do |y|
       criteria = Cms::Page.site(site).where(master_id: nil)
@@ -52,7 +56,7 @@ class Cms::AllContentsMoveExporter
     end
     drawer.column :layout do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.layout') }
-      drawer.body { |item| Cms::Layout.where(id: item.layout_id).pick(:filename) }
+      drawer.body { |item| layout_cache[item.layout_id] }
     end
     drawer.column :order do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.order') }

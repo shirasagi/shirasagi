@@ -7,9 +7,17 @@
     </div>
     <div class="addon-body">
       <dl class="see">
-        <dt>実行日時</dt>
-        <dd><%= I18n.l(Time.zone.parse(@history_meta["executed_at"]), format: :picker) %></dd>
-        <dt>実行ユーザー名</dt>
+        <dt><%= t("cms.all_contents_moves.history_executed_at") %></dt>
+        <dd>
+          <% if @history_meta["executed_at"].present? %>
+            <% begin %>
+              <%= I18n.l(Time.zone.parse(@history_meta["executed_at"]), format: :picker) %>
+            <% rescue ArgumentError, TypeError %>
+              <%= @history_meta["executed_at"] %>
+            <% end %>
+          <% end %>
+        </dd>
+        <dt><%= t("cms.all_contents_moves.history_user_name") %></dt>
         <dd><%= @history_meta["user_name"] %></dd>
         <dt>合計</dt>
         <dd><%= @history_meta["total"] %>件</dd>
@@ -55,7 +63,7 @@
                     <% end %>
                   </ul>
                 <% end %>
-                <% if result["errors"] %>
+                <% if result["errors"].present? %>
                   <%= safe_join(result["errors"].map { |e| content_tag(:span, e) }, tag(:br)) %>
                 <% end %>
               </td>

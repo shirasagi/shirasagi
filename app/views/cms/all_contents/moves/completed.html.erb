@@ -64,7 +64,7 @@
                       <% end %>
                     </ul>
                   <% end %>
-                  <% if result["errors"] %>
+                  <% if result["errors"].present? %>
                     <%= safe_join(result["errors"].map { |e| content_tag(:span, e) }, tag(:br)) %>
                   <% end %>
                 </td>
@@ -79,7 +79,9 @@
 </div>
 
 <footer class="send ss-sticky ss-sticky-bottom">
-  <%= link_to "終了する", cms_all_contents_moves_reset_path, method: :delete, class: "btn btn-red" %>
+  <%= link_to t("cms.all_contents_moves.finish"), cms_all_contents_moves_reset_path,
+      method: :delete, class: "btn btn-red",
+      data: { confirm: t("cms.all_contents_moves.confirm_reset") } %>
 </footer>
 
 <%= jquery do %>

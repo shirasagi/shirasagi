@@ -80,7 +80,7 @@
                         <li><%= type_labels[c["type"]] || c["type"] %>: <%= c["name"] %> (<%= c["filename"] %>)</li>
                       <% end %>
                     </ul>
-                  <% elsif result["errors"] %>
+                  <% elsif result["errors"].present? %>
                     <%= safe_join(result["errors"].map { |e| content_tag(:span, e) }, tag(:br)) %>
                   <% end %>
                 </td>
