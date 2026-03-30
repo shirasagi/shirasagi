@@ -104,7 +104,7 @@ class Cms::AllContents::MoveCheckJob < Cms::ApplicationJob
 
   def save_check_result(results)
     dir = task.base_dir
-    FileUtils.mkdir_p(dir) unless ::Dir.exist?(dir)
+    FileUtils.mkdir_p(dir)
     path = ::File.join(dir, "check_result.json")
     ::File.write(path, results.to_json)
   end

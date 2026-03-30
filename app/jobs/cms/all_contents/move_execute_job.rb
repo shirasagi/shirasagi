@@ -247,7 +247,7 @@ class Cms::AllContents::MoveExecuteJob < Cms::ApplicationJob
 
   def save_move_result(results)
     dir = task.base_dir
-    FileUtils.mkdir_p(dir) unless ::Dir.exist?(dir)
+    FileUtils.mkdir_p(dir)
     path = ::File.join(dir, "move_result.json")
     ::File.write(path, results.to_json)
   end

@@ -154,7 +154,7 @@ class Cms::Page::MoveService
 
       unless ancestor_node.public?
         errors.add :base, I18n.t('cms.all_contents_moves.errors.destination_folder_not_public')
-        return
+        break
       end
     end
   end

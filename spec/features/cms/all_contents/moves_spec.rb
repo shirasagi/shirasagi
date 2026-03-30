@@ -301,16 +301,20 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
   end
 
   describe "move with attribute changes" do
-    let(:new_name) { "new-title-#{unique_id}" }
     let(:dst1) { "#{node_dst.filename}/#{page1.basename}" }
+    let!(:layout2) { create(:cms_layout, cur_site: site) }
+    let!(:cate1) { create(:category_node_node, cur_site: site) }
+    let!(:cate2) { create(:category_node_node, cur_site: site) }
+    let!(:group2) { Cms::Group.create!(name: "#{cms_group.name}/#{unique_id}") }
 
-    let(:csv_data) do
-      csv = CSV.generate do |csv|
-        csv << [csv_headers[:page_id], csv_headers[:name], csv_headers[:filename]]
-        csv << [page1.id, new_name, dst1]
-      end
-      "\uFEFF" + csv
-    end
+    let(:new_name) { "new-title-#{unique_id}" }
+    let(:new_index_name) { "new-index-#{unique_id}" }
+    let(:new_order) { 10 }
+    let(:new_keywords) { "keyword1, keyword2" }
+    let(:new_description) { "new-description-#{unique_id}" }
+    let(:new_summary) { "<p>new-summary</p>" }
+    let(:new_contact_tel) { "03-1234-5678" }
+    let(:new_contact_email) { "test@example.jp" }
 
     around do |example|
       save_config = SS.config.replace_value_at(:cms, 'replace_urls_after_move', false)
@@ -318,9 +322,7 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
       SS.config.replace_value_at(:cms, 'replace_urls_after_move', save_config)
     end
 
-    it "moves page and changes title" do
-      csv_file = create_csv_file(csv_data)
-
+    def execute_move(csv_file)
       visit cms_all_contents_moves_path(site: site)
       within "form" do
         attach_file "item[in_file]", csv_file
@@ -336,10 +338,108 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
       end
 
       expect(page).to have_css("#cms-all-contents-move-completed", wait: 30)
+    end
 
-      page1.reload
-      expect(page1.filename).to eq dst1
-      expect(page1.name).to eq new_name
+    context "basic info changes" do
+      let(:csv_data) do
+        csv = CSV.generate do |csv|
+          csv << [csv_headers[:page_id], csv_headers[:filename], csv_headers[:name],
+                  csv_headers[:index_name], csv_headers[:layout], csv_headers[:order]]
+          csv << [page1.id, dst1, new_name, new_index_name, layout2.filename, new_order]
+        end
+        "\uFEFF" + csv
+      end
+
+      it "changes title, index name, layout, and order" do
+        execute_move(create_csv_file(csv_data))
+
+        page1.reload
+        expect(page1.filename).to eq dst1
+        expect(page1.name).to eq new_name
+        expect(page1.index_name).to eq new_index_name
+        expect(page1.layout_id).to eq layout2.id
+        expect(page1.order).to eq new_order
+      end
+    end
+
+    context "meta info changes" do
+      let(:csv_data) do
+        csv = CSV.generate do |csv|
+          csv << [csv_headers[:page_id], csv_headers[:filename],
+                  csv_headers[:keywords], csv_headers[:description], csv_headers[:summary_html]]
+          csv << [page1.id, dst1, new_keywords, new_description, new_summary]
+        end
+        "\uFEFF" + csv
+      end
+
+      it "changes keywords, description, and summary" do
+        execute_move(create_csv_file(csv_data))
+
+        page1.reload
+        expect(page1.filename).to eq dst1
+        expect(page1.keywords).to eq %w[keyword1 keyword2]
+        expect(page1.description).to eq new_description
+        expect(page1.summary_html).to eq new_summary
+      end
+    end
+
+    context "category changes" do
+      let(:csv_data) do
+        csv = CSV.generate do |csv|
+          csv << [csv_headers[:page_id], csv_headers[:filename], csv_headers[:category]]
+          csv << [page1.id, dst1, "#{cate1.filename}\n#{cate2.filename}"]
+        end
+        "\uFEFF" + csv
+      end
+
+      it "changes categories" do
+        execute_move(create_csv_file(csv_data))
+
+        page1.reload
+        expect(page1.filename).to eq dst1
+        expect(page1.category_ids).to match_array [cate1.id, cate2.id]
+      end
+    end
+
+    context "contact info changes" do
+      let(:csv_data) do
+        csv = CSV.generate do |csv|
+          csv << [csv_headers[:page_id], csv_headers[:filename],
+                  csv_headers[:contact_tel], csv_headers[:contact_email],
+                  csv_headers[:contact_group_name], csv_headers[:contact_charge]]
+          csv << [page1.id, dst1, new_contact_tel, new_contact_email, "新しい課", "担当者A"]
+        end
+        "\uFEFF" + csv
+      end
+
+      it "changes contact information" do
+        execute_move(create_csv_file(csv_data))
+
+        page1.reload
+        expect(page1.filename).to eq dst1
+        expect(page1.contact_tel).to eq new_contact_tel
+        expect(page1.contact_email).to eq new_contact_email
+        expect(page1.contact_group_name).to eq "新しい課"
+        expect(page1.contact_charge).to eq "担当者A"
+      end
+    end
+
+    context "group changes" do
+      let(:csv_data) do
+        csv = CSV.generate do |csv|
+          csv << [csv_headers[:page_id], csv_headers[:filename], csv_headers[:group_ids]]
+          csv << [page1.id, dst1, "#{cms_group.name}\n#{group2.name}"]
+        end
+        "\uFEFF" + csv
+      end
+
+      it "changes management groups" do
+        execute_move(create_csv_file(csv_data))
+
+        page1.reload
+        expect(page1.filename).to eq dst1
+        expect(page1.group_ids).to match_array [cms_group.id, group2.id]
+      end
     end
   end
 
