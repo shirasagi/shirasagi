@@ -231,6 +231,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
         next
       end
 
+      link = normalize_ss_node_variation(link)
       @extraction_log.add(source, link.full_url || link.href, link.type)
 
       link_source = @full_url_to_source[link.full_url.to_s]
@@ -272,5 +273,28 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return false if @site.mobile_disabled?
     return false if !source.full_url.path.match?(/^#{@site.mobile_url}/)
     true
+  end
+
+  def normalize_ss_node_variation(link)
+    return link unless link.full_url
+
+    site = @site.same_domain_site_from_path(link.full_url.path)
+    return link unless site # not shirasagi site
+
+    # シラサギのフォルダーへのリンクには次のバリエーションがある。これらを2に正規化する。
+    # 1. /docs
+    # 2. /docs/
+    # 3. /docs/index.html
+
+    if link.full_url.path.end_with?("/index.html")
+      link.full_url.path = link.full_url.path.sub("/index.html", "/")
+      return link
+    end
+    if !link.full_url.path.end_with?("/") && File.extname(link.full_url.path).blank?
+      link.full_url.path += "/"
+      return link
+    end
+
+    link
   end
 end
