@@ -22,10 +22,14 @@ class Gws::Monitor::AdminsController < ApplicationController
   def set_items
     @items ||= begin
       items = @model.site(@cur_site).topic
-      items = items.allow(:read, @cur_user, site: @cur_site, private_only: true)
       items = items.without_deleted
       items
     end
+  end
+
+  def set_index_items
+    set_items
+    @items = @items.allow(:read, @cur_user, site: @cur_site, private_only: true)
   end
 
   def check_readable

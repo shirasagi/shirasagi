@@ -42,12 +42,14 @@ class Gws::Affair::Attendance::Management::TimeCardsController < ApplicationCont
   end
 
   def set_groups
-    if @model.allowed?(:manage_all, @cur_user, site: @cur_site, permission_name: module_name)
-      @groups = Gws::Group.in_group(@cur_site).active
-    elsif @model.allowed?(:manage_private, @cur_user, site: @cur_site, permission_name: module_name)
-      @groups = Gws::Group.in_group(@cur_group).active
-    else
-      @groups = Gws::Group.none
+    @groups ||= begin
+      if @model.allowed?(:manage_all, @cur_user, site: @cur_site, permission_name: module_name)
+        Gws::Group.in_group(@cur_site).active
+      elsif @model.allowed?(:manage_private, @cur_user, site: @cur_site, permission_name: module_name)
+        Gws::Group.in_group(@cur_group).active
+      else
+        Gws::Group.none
+      end
     end
   end
 
@@ -56,14 +58,23 @@ class Gws::Affair::Attendance::Management::TimeCardsController < ApplicationCont
   end
 
   def set_search_params
-    @s = OpenStruct.new(params[:s])
-    if @s.group_id.present?
-      @s.group = @groups.find(@s.group_id) rescue nil
+    @s ||= begin
+      set_groups
+
+      s = OpenStruct.new(params[:s])
+      if s.group_id.present?
+        s.group = @groups.find(s.group_id) rescue nil
+      end
+      s
     end
   end
 
   def set_items
     @items ||= begin
+      set_cur_month
+      set_groups
+      set_search_params
+
       criteria = @model.site(@cur_site).where(date: @cur_month).search(@s)
       criteria = criteria.in_groups(@groups)
       criteria

@@ -53,6 +53,8 @@ class Gws::DailyReport::ReportsController < ApplicationController
     return @items if @items
 
     set_search_params
+    set_cur_month
+
     @items = @model.site(@cur_site).without_deleted.and_month(@cur_month).search(@s)
     @items = @items.where(daily_report_group_id: @s[:group]) if @s[:group].present?
     @items = @items.where(user_id: @s[:user]) if @s[:user].present?

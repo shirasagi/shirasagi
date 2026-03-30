@@ -73,8 +73,7 @@ class Gws::Notice::EditablesController < ApplicationController
   def set_items
     @items = @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
-      without_deleted.
-      search(@s)
+      without_deleted
   end
 
   def set_item
@@ -101,6 +100,8 @@ class Gws::Notice::EditablesController < ApplicationController
 
   def index
     @categories = @categories.tree_sort
+
+    @items = @items.search(@s)
     @items = @items.reorder(updated: -1, id: -1).page(params[:page]).per(50)
   end
 

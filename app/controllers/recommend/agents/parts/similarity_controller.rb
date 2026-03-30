@@ -10,6 +10,6 @@ class Recommend::Agents::Parts::SimilarityController < ApplicationController
     @contents = Recommend::SimilarityScore.site(@cur_site).similarity(path).
       where(@cur_part.condition_hash).
       limit(100)
-    set_items
+    set_content_items
   end
 end

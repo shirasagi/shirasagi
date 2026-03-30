@@ -127,6 +127,9 @@ module Gws::Workload::WorkFilter
     @s[:sort] ||= "due_date"
 
     set_items
+    @items = @items.search(@s).
+      custom_order(@s.sort).
+      page(params[:page]).per(50)
   end
 
   def create

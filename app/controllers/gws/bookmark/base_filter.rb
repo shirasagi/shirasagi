@@ -8,15 +8,17 @@ module Gws::Bookmark::BaseFilter
   end
 
   def set_root_folder
-    @root_folder = @cur_user.bookmark_root_folder(@cur_site)
+    @root_folder ||= @cur_user.bookmark_root_folder(@cur_site)
   end
 
   def set_folders
-    @folders = Gws::Bookmark::Folder.site(@cur_site).user(@cur_user)
+    @folders ||= Gws::Bookmark::Folder.site(@cur_site).user(@cur_user)
   end
 
   def set_folder
     return if params[:folder_id].blank? || params[:folder_id] == '-'
-    @folder = @folders.find(params[:folder_id])
+
+    set_folders
+    @folder ||= @folders.find(params[:folder_id])
   end
 end

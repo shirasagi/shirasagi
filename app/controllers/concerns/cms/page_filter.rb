@@ -50,7 +50,7 @@ module Cms::PageFilter
   end
 
   def set_items
-    @items = @model.site(@cur_site).node(@cur_node)
+    @items ||= @model.site(@cur_site).node(@cur_node)
       .allow(:read, @cur_user)
       .custom_order(params.dig(:s, :sort) || 'updated_desc')
   end

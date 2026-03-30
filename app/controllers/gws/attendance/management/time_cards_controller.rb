@@ -70,14 +70,6 @@ class Gws::Attendance::Management::TimeCardsController < ApplicationController
     end
   end
 
-  def set_item
-    @item ||= begin
-      set_items
-      item = @items.find(params[:id])
-      item.attributes = fix_params
-    end
-  end
-
   def set_record
     @cur_date = @cur_month.change(day: Integer(params[:day]))
     @record = @item.records.where(date: @cur_date).first_or_create

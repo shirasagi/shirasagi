@@ -12,10 +12,12 @@ class Cms::Node::MaxFileSizesController < ApplicationController
   end
 
   def set_items
-    if @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-      @items = @model.site(@cur_site).node(@cur_node)
-    else
-      @items = @model.none
+    @items ||= begin
+      if @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+        @model.site(@cur_site).node(@cur_node)
+      else
+        @model.none
+      end
     end
   end
 

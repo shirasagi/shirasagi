@@ -21,15 +21,7 @@ class Cms::PageExpirationSettingsController < ApplicationController
   end
 
   def set_items
-    @items = Cms::Page.all.site(@cur_site).allow(:edit, @cur_user, site: @cur_site)
-  end
-
-  def set_item
-    @item = Cms::Page.site(@cur_site).find(params[:id])
-    # @item.attributes = fix_params
-  rescue Mongoid::Errors::DocumentNotFound => e
-    return render_destroy(true) if params[:action] == 'destroy'
-    raise e
+    @items ||= Cms::Page.all.site(@cur_site).allow(:edit, @cur_user, site: @cur_site)
   end
 
   def updated_before_options

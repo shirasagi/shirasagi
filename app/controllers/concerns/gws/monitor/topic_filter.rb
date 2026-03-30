@@ -45,6 +45,10 @@ module Gws::Monitor::TopicFilter
     ret
   end
 
+  def set_index_items
+    set_items
+  end
+
   public
 
   def index
@@ -54,7 +58,7 @@ module Gws::Monitor::TopicFilter
       params[:s][:category] = @category.name
     end
 
-    set_items
+    set_index_items
     @items = @items.search(params[:s])
     @items = @items.custom_order(params.dig(:s, :sort))
     @items = @items.page(params[:page]).per(50)

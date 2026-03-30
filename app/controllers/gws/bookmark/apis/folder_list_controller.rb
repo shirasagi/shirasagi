@@ -7,12 +7,15 @@ class Gws::Bookmark::Apis::FolderListController < ApplicationController
   private
 
   def set_items
-    set_child_count
+    @items ||= begin
+      set_folder
+      set_child_count
 
-    if @folder && params[:only_children]
-      @items = @folder.children.tree_sort
-    else
-      @items = @model.site(@cur_site).user(@cur_user).tree_sort
+      if @folder && params[:only_children]
+        @folder.children.tree_sort
+      else
+        @model.site(@cur_site).user(@cur_user).tree_sort
+      end
     end
   end
 

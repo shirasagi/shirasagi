@@ -45,6 +45,8 @@ module Gws::Schedule::PlanFilter
 
   def set_items
     @items ||= begin
+      set_approvals
+
       #or_conds = Gws::Schedule::Plan.member_conditions(@cur_user)
       #or_conds << { approval_member_ids: @cur_user.id }
       Gws::Schedule::Plan.site(@cur_site).without_deleted.
@@ -52,20 +54,6 @@ module Gws::Schedule::PlanFilter
         #and([{ '$or' => or_conds }]).
         search(@search_plan)
     end
-  end
-
-  # override SS::CrudFilter#set_item
-  def set_item
-    @item ||= begin
-      set_items
-      item = @items.find(params[:id])
-      item.attributes = fix_params
-      item
-    end
-  rescue Mongoid::Errors::DocumentNotFound => e
-    return render_destroy(true) if params[:action] == 'destroy'
-
-    raise e
   end
 
   def redirection_url
@@ -84,9 +72,12 @@ module Gws::Schedule::PlanFilter
   end
 
   def set_approvals
-    @search_plan = params[:s].to_unsafe_h rescue {}
-    if params[:action] == "index" || params[:action] == "events"
-      @search_plan[:approvals] = %w(request approve)
+    @search_plan ||= begin
+      search_plan = params[:s].to_unsafe_h rescue {}
+      if params[:action] == "index" || params[:action] == "events"
+        search_plan[:approvals] = %w(request approve)
+      end
+      search_plan
     end
   end
 

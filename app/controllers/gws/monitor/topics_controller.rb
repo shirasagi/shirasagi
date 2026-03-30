@@ -24,9 +24,13 @@ class Gws::Monitor::TopicsController < ApplicationController
       items = @model.site(@cur_site).topic
       items = items.and_public
       items = items.and_attended(@cur_user, site: @cur_site, group: @cur_group)
-      items = items.and_unanswered(@cur_group)
       items
     end
+  end
+
+  def set_index_items
+    set_items
+    @items = @items.and_unanswered(@cur_group)
   end
 
   def check_attended

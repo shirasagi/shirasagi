@@ -23,7 +23,7 @@ class Webmail::HistoriesController < ApplicationController
   end
 
   def set_items
-    @items = @model.all.search(@s)
+    @items = @model.all
   end
 
   public
@@ -32,7 +32,7 @@ class Webmail::HistoriesController < ApplicationController
     raise '403' unless Webmail::History.allowed?(:read, @cur_user)
 
     set_items
-    @items = @items.page(params[:page]).per(50)
+    @items = @items.search(@s).page(params[:page]).per(50)
   end
 
   def download

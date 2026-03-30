@@ -41,6 +41,7 @@ Rails.application.routes.draw do
                 end
       resources :answers, concerns: [:state_change, :topic_comment, :topic_files],
                 except: [:new, :create, :edit, :update, :destroy] do
+                  match :forward, on: :member, via: %i[get post]
                   get :print, on: :member
                 end
 
