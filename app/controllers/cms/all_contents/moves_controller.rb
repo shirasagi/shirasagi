@@ -111,8 +111,6 @@ class Cms::AllContents::MovesController < ApplicationController
     temp_file.in_file = file
     temp_file.save!
 
-    @csv_filename = file.original_filename
-
     job = Cms::AllContents::MoveCheckJob.bind(
       site_id: @cur_site, user_id: @cur_user
     )
