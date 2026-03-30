@@ -214,6 +214,25 @@ describe "cms_all_contents_moves", type: :feature, dbscope: :example, js: true d
         expect(page).to have_content(I18n.t('cms.all_contents_moves.errors.same_filename'))
       end
     end
+
+    context "when template CSV is uploaded without changes" do
+      let(:csv_data) { build_csv([page1, page1.filename], [page2, page2.filename]) }
+
+      it "shows all rows as same filename error" do
+        csv_file = create_csv_file(csv_data)
+
+        visit cms_all_contents_moves_path(site: site)
+        within "form" do
+          attach_file "item[in_file]", csv_file
+          click_on I18n.t("cms.all_contents_moves.read_csv")
+        end
+
+        expect(page).to have_css("#cms-all-contents-move-result", wait: 30)
+        expect(page).to have_css(".status-error", count: 2)
+        expect(page).to have_no_css(".status-ok")
+        expect(page).to have_no_css("input[name='ids[]']")
+      end
+    end
   end
 
   describe "confirmation status" do
