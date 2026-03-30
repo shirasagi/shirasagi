@@ -38,6 +38,13 @@ class Cms::AllContentsMoveExporter
   end
 
   def draw_columns(drawer)
+    draw_basic_columns(drawer)
+    draw_meta_columns(drawer)
+    draw_contact_columns(drawer)
+    draw_group_columns(drawer)
+  end
+
+  def draw_basic_columns(drawer)
     drawer.column :page_id do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.page_id') }
       drawer.body { |item| item.id }
@@ -62,6 +69,9 @@ class Cms::AllContentsMoveExporter
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.order') }
       drawer.body { |item| item.order }
     end
+  end
+
+  def draw_meta_columns(drawer)
     drawer.column :keywords do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.keywords') }
       drawer.body { |item| item.try(:keywords).try(:join, ", ") }
@@ -77,14 +87,21 @@ class Cms::AllContentsMoveExporter
     drawer.column :category do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.category') }
       drawer.body do |item|
-        categories = item.try(:categories)
-        categories.try(:pluck, :filename).try(:join, "\n")
+        item.try(:categories).try(:pluck, :filename).try(:join, "\n")
       end
     end
     drawer.column :parent_crumb_urls do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.parent_crumb_urls') }
       drawer.body { |item| item.try(:parent_crumb_urls).try(:join, "\n") }
     end
+  end
+
+  def draw_contact_columns(drawer)
+    draw_contact_group_columns(drawer)
+    draw_contact_detail_columns(drawer)
+  end
+
+  def draw_contact_group_columns(drawer)
     drawer.column :contact_state do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.contact_state') }
       drawer.body { |item| item.try(:contact_state) }
@@ -120,6 +137,9 @@ class Cms::AllContentsMoveExporter
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.contact_charge') }
       drawer.body { |item| item.try(:contact_charge) }
     end
+  end
+
+  def draw_contact_detail_columns(drawer)
     drawer.column :contact_tel do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.contact_tel') }
       drawer.body { |item| item.try(:contact_tel) }
@@ -152,6 +172,9 @@ class Cms::AllContentsMoveExporter
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.contact_sub_groups') }
       drawer.body { |item| item.try(:contact_sub_groups).try(:pluck, :name).try(:join, "\n") }
     end
+  end
+
+  def draw_group_columns(drawer)
     drawer.column :group_ids do
       drawer.head { I18n.t('cms.all_contents_moves.csv_headers.group_ids') }
       drawer.body { |item| item.try(:groups).try(:pluck, :name).try(:join, "\n") }

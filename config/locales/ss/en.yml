@@ -370,6 +370,8 @@ en:
       restored: Restored.
       run: Executed.
       already_job_started: It is either preparing to run or currently running.
+      started_move: Move process started.
+      failed_to_check_status: Failed to check status. Please reload the page.
       clipboard_copied: Copied.
       clipboard_copy_failed: Could not be copied. Clipboard is not supported.
       published: Published.

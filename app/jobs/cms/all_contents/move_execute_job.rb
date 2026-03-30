@@ -62,169 +62,109 @@ class Cms::AllContents::MoveExecuteJob < Cms::ApplicationJob
       page = Cms::Page.site(site).where(id: item["id"]).first
       next unless page
 
-      changed = apply_basic_changes(page, item)
-      changed = apply_meta_changes(page, item) || changed
-      changed = apply_category_changes(page, item) || changed
-      changed = apply_crumb_changes(page, item) || changed
-      changed = apply_contact_changes(page, item) || changed
-      changed = apply_group_changes(page, item) || changed
+      apply_basic_changes(page, item)
+      apply_meta_changes(page, item)
+      update_categories(page, item)
+      update_crumbs(page, item)
+      update_contacts(page, item)
+      update_groups(page, item)
 
-      if changed && !page.save
+      if page.changed? && !page.save
         task.log "属性変更の保存に失敗: id=#{page.id} #{page.errors.full_messages.join(', ')}"
       end
     end
   end
 
   def apply_basic_changes(page, item)
-    changed = false
-
-    if item["name"].present? && item["name"] != page.name
-      page.name = item["name"]
-      changed = true
-    end
-
-    if item.key?("index_name") && item["index_name"] != page.index_name
-      page.index_name = item["index_name"]
-      changed = true
-    end
+    page.name = item["name"] if item["name"].present? && item["name"] != page.name
+    page.index_name = item["index_name"] if item.key?("index_name") && item["index_name"] != page.index_name
 
     if item["layout"].present?
       layout = Cms::Layout.site(site).where(filename: item["layout"]).first
-      if layout && layout.id != page.layout_id
-        page.layout_id = layout.id
-        changed = true
-      end
+      page.layout_id = layout.id if layout && layout.id != page.layout_id
     end
 
-    if item["order"].present? && item["order"].to_i != page.order
-      page.order = item["order"].to_i
-      changed = true
-    end
-
-    changed
+    page.order = item["order"].to_i if item["order"].present? && item["order"].to_i != page.order
   end
 
   def apply_meta_changes(page, item)
-    changed = false
-
     if item["keywords"].present?
       new_keywords = item["keywords"].split(/[,、]/).map(&:strip)
-      if new_keywords != page.try(:keywords)
-        page.keywords = new_keywords
-        changed = true
-      end
+      page.keywords = new_keywords if new_keywords != page.try(:keywords)
     end
 
-    if item.key?("description") && item["description"] != page.try(:description)
-      page.description = item["description"]
-      changed = true
-    end
-
-    if item.key?("summary_html") && item["summary_html"] != page.try(:summary_html)
-      page.summary_html = item["summary_html"]
-      changed = true
-    end
-
-    changed
+    page.description = item["description"] if item.key?("description") && item["description"] != page.try(:description)
+    page.summary_html = item["summary_html"] if item.key?("summary_html") && item["summary_html"] != page.try(:summary_html)
   end
 
-  def apply_category_changes(page, item)
-    return false unless item["category_names"].present?
-    return false unless page.respond_to?(:category_ids)
+  def update_categories(page, item)
+    return unless item["category_names"].present?
+    return unless page.respond_to?(:category_ids)
 
     filenames = item["category_names"].split("\n").map(&:strip)
-    nodes = filenames.filter_map do |fn|
-      Cms::Node.site(site).where(filename: fn).first
-    end
-
-    if nodes.map(&:id).sort != page.category_ids.sort
-      page.category_ids = nodes.map(&:id)
-      return true
-    end
-
-    false
+    ids = filenames.filter_map { |fn| Cms::Node.site(site).where(filename: fn).first }.map(&:id)
+    page.category_ids = ids if ids.sort != page.category_ids.sort
   end
 
-  def apply_crumb_changes(page, item)
-    return false unless item.key?("parent_crumb_urls")
-    return false unless page.respond_to?(:parent_crumb_urls)
+  def update_crumbs(page, item)
+    return unless item.key?("parent_crumb_urls")
+    return unless page.respond_to?(:parent_crumb_urls)
 
     new_urls = item["parent_crumb_urls"].to_s.split("\n").map(&:strip).reject(&:blank?)
-    if new_urls != page.parent_crumb_urls
-      page.parent_crumb_urls = new_urls
-      return true
-    end
-
-    false
+    page.parent_crumb_urls = new_urls if new_urls != page.parent_crumb_urls
   end
 
-  def apply_contact_changes(page, item)
-    return false unless page.respond_to?(:contact_state)
+  def update_contacts(page, item)
+    return unless page.respond_to?(:contact_state)
 
-    changed = false
+    update_contact_fields(page, item)
+    update_contact_group(page, item)
+    update_contact_sub_groups(page, item)
+  end
 
-    contact_fields = %w[
+  def update_contact_fields(page, item)
+    %w[
       contact_state contact_group_name contact_charge
       contact_tel contact_fax contact_email
       contact_postal_code contact_address
       contact_link_url contact_link_name
       contact_group_relation
-    ]
-
-    contact_fields.each do |field|
+    ].each do |field|
       next unless item.key?(field)
       next if item[field] == page.send(field)
 
       page.send("#{field}=", item[field])
-      changed = true
     end
-
-    # 所属グループ（contact_group）: グループ名からIDへ変換
-    if item["contact_group"].present?
-      group = Cms::Group.where(name: item["contact_group"]).first
-      if group && group.id != page.contact_group_id
-        page.contact_group_id = group.id
-        changed = true
-      end
-    end
-
-    # 連絡先窓口（contact_group_contact）: 所属グループ内の連絡先名からIDへ変換
-    if item["contact_group_contact"].present? && page.contact_group.present?
-      contact = page.contact_group.contact_groups.where(name: item["contact_group_contact"]).first
-      if contact && contact.id != page.contact_group_contact_id
-        page.contact_group_contact_id = contact.id
-        changed = true
-      end
-    end
-
-    # 所属（組織一覧用）: グループ名からIDへ変換
-    if item["contact_sub_group_names"].present? && page.respond_to?(:contact_sub_group_ids)
-      group_names = item["contact_sub_group_names"].split("\n").map(&:strip)
-      groups = group_names.filter_map { |name| Cms::Group.where(name: name).first }
-      if groups.map(&:id).sort != page.contact_sub_group_ids.sort
-        page.contact_sub_group_ids = groups.map(&:id)
-        changed = true
-      end
-    end
-
-    changed
   end
 
-  def apply_group_changes(page, item)
-    return false unless item["group_names"].present?
-    return false unless page.respond_to?(:group_ids=)
+  def update_contact_group(page, item)
+    if item["contact_group"].present?
+      group = Cms::Group.where(name: item["contact_group"]).first
+      page.contact_group_id = group.id if group && group.id != page.contact_group_id
+    end
+
+    return unless item["contact_group_contact"].present? && page.contact_group.present?
+
+    contact = page.contact_group.contact_groups.where(name: item["contact_group_contact"]).first
+    page.contact_group_contact_id = contact.id if contact && contact.id != page.contact_group_contact_id
+  end
+
+  def update_contact_sub_groups(page, item)
+    return unless item["contact_sub_group_names"].present?
+    return unless page.respond_to?(:contact_sub_group_ids)
+
+    group_names = item["contact_sub_group_names"].split("\n").map(&:strip)
+    ids = group_names.filter_map { |name| Cms::Group.where(name: name).first }.map(&:id)
+    page.contact_sub_group_ids = ids if ids.sort != page.contact_sub_group_ids.sort
+  end
+
+  def update_groups(page, item)
+    return unless item["group_names"].present?
+    return unless page.respond_to?(:group_ids=)
 
     group_names = item["group_names"].split("\n").map(&:strip)
-    groups = group_names.filter_map do |name|
-      Cms::Group.where(name: name).first
-    end
-
-    if groups.map(&:id).sort != page.group_ids.sort
-      page.group_ids = groups.map(&:id)
-      return true
-    end
-
-    false
+    ids = group_names.filter_map { |name| Cms::Group.where(name: name).first }.map(&:id)
+    page.group_ids = ids if ids.sort != page.group_ids.sort
   end
 
   # 全移動完了後にURL置換ジョブをまとめて実行する

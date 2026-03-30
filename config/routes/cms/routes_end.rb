@@ -346,7 +346,8 @@ Rails.application.routes.draw do
     get    "all_contents/moves/download_logs" => "all_contents/moves#download_logs", as: "all_contents_moves_download_logs"
     get    "all_contents/moves/download_result" => "all_contents/moves#download_result", as: "all_contents_moves_download_result"
     get    "all_contents/moves/histories/:id" => "all_contents/moves#show_history", as: "all_contents_moves_history"
-    get    "all_contents/moves/histories/:id/download" => "all_contents/moves#download_history", as: "all_contents_moves_history_download"
+    get "all_contents/moves/histories/:id/download" => "all_contents/moves#download_history",
+        as: "all_contents_moves_history_download"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]

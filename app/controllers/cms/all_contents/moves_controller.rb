@@ -163,8 +163,12 @@ class Cms::AllContents::MovesController < ApplicationController
   end
 
   def download_logs
-    if @task.log_file_path && ::File.exist?(@task.log_file_path)
-      send_file @task.log_file_path, type: "text/plain", filename: "move_logs_#{Time.zone.now.to_i}.log",
+    log_path = @task.log_file_path
+    if log_path && ::File.exist?(log_path)
+      resolved = ::Pathname.new(log_path).cleanpath.to_s
+      raise '404' unless resolved.start_with?(::Pathname.new(@task.base_dir).cleanpath.to_s + "/")
+
+      send_file resolved, type: "text/plain", filename: "move_logs_#{Time.zone.now.to_i}.log",
         disposition: :attachment
     else
       head :not_found
