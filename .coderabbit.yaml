@@ -2,10 +2,9 @@
 # https://docs.coderabbit.ai/guides/configure-coderabbit
 language: "ja"
 tone_instructions: >
-  丁寧かつ簡潔に指摘してください。
-  行政向けCMSであることを踏まえ、セキュリティとアクセシビリティに関する指摘は特に重視してください。
-  本プロジェクトはMongoDB（Mongoid）を使用しており、ActiveRecordベースの提案は不要です。
-
+  丁寧かつ簡潔に。セキュリティとアクセシビリティ重視。
+  MongoDB(Mongoid)使用、ActiveRecord前提の提案は不要。
+  標準APIと同名の独自実装が多数あるため、推測でなく実装確認の上で指摘すること。
 early_access: true
 
 reviews:
