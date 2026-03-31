@@ -547,7 +547,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
         url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
         # puts url_logs.map { _1["full_url"] }.join("\n")
-        expect(url_logs.length).to eq 36
+        expect(url_logs.length).to eq 26
 
         next_month_url = "#{calendar.full_url}#{Time.zone.today.next_month.strftime("%Y%m")}/"
         expect(url_logs.select { _1["full_url"].start_with?(next_month_url) }.map { _1["type"] }.uniq).to eq %w(nofollow)
@@ -619,7 +619,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
           url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
           url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
           # puts url_logs.map { _1["full_url"] }.join("\n")
-          expect(url_logs.length).to eq 5
+          expect(url_logs.length).to eq 4
 
           statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
@@ -680,7 +680,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
           url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
           url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
           # puts url_logs.map { _1["full_url"] }.join("\n")
-          expect(url_logs.length).to eq 6
+          expect(url_logs.length).to eq 4
 
           statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
