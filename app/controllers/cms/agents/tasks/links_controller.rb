@@ -48,6 +48,43 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
   end
 
+  class SourceLog
+    include ActiveModel::Model
+
+    attr_accessor :task, :path
+
+    private_class_method :new
+
+    def self.from_task(task)
+      path = task.log_file_path.sub(".log", "") + "-source-log.json.gz"
+      new(task: task, path: path)
+    end
+
+    def add(source)
+      json = {
+        sequence: source.sequence,
+        full_url: source.full_url.to_s,
+        status: source.status,
+        elapsed: source.elapsed
+      }
+      io.puts(json.to_json)
+    end
+
+    def close
+      @io.close if @io
+      @io = nil
+    end
+
+    private
+
+    def io
+      @io ||= begin
+        FileUtils.mkdir_p(File.dirname(path))
+        Zlib::GzipWriter.open(path)
+      end
+    end
+  end
+
   private
 
   def set_params
@@ -91,6 +128,10 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
       create_report_node(full_url, sources, node, error_links)
     end
+
+    FileUtils.mkdir_p(@report.base_dir) rescue nil
+    FileUtils.cp(@extraction_log.path, File.join(@report.base_dir, "extraction-log.json.gz")) rescue nil
+    FileUtils.cp(@source_log.path, File.join(@report.base_dir, "source-log.json.gz")) rescue nil
 
     # destroy old reports
     report_ids = Cms::CheckLinks::Report.site(@site).limit(@report_max_age).pluck(:id)
@@ -179,6 +220,10 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @extraction_log.close
 
+    @source_log = SourceLog.from_task(@task)
+    @full_url_to_source.values.each { @source_log.add(_1) }
+    @source_log.close
+
     errors = @full_url_to_source.values.select { _1.status == :error }
     error_formatter = Cms::CheckLinks::Errors.new(errors: errors, display_meta: @display_meta.present?)
     @task.log error_formatter.to_message
@@ -190,7 +235,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     create_report(errors)
 
     top_slowest_sources = @full_url_to_source.values.sort_by(&:elapsed).last(10).reverse
-    @task.log "Top #{top_slowest_sources.length} slowest sources of #{@full_url_to_source.values.length} sources"
+    @task.log "Top #{top_slowest_sources.length} slowest pages out of #{@full_url_to_source.values.length} pages"
     top_slowest_sources.each do |source|
       elapsed = ActiveSupport::Duration.build(source.elapsed)
       @task.log "  - #{source.full_url} in #{elapsed}"
