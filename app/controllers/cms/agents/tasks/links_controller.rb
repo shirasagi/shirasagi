@@ -22,9 +22,15 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       new(task: task, path: path)
     end
 
-    def add(source, full_url, status)
-      return unless full_url
-      io.puts({ source: source.full_url.to_s, full_url: full_url.to_s, status: status }.to_json)
+    def add(source, link, link_type = nil)
+      link_type ||= link.type
+
+      json = {
+        source: source.full_url.to_s,
+        full_url: link.full_url.try(:to_s), href: link.href, line: link.line, type: link_type,
+        rel: link.rel, ss_rel: link.ss_rel
+      }
+      io.puts(json.to_json)
     end
 
     def close
@@ -219,20 +225,20 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       cur_site: @site, base_url: source.full_url, html: result.content)
     extractor.each do |link|
       if IGNORE_LINK_TYPES.include?(link.type)
-        @extraction_log.add(source, link.full_url || link.href, link.type)
+        @extraction_log.add(source, link)
         next
       end
       if link.href[0] == "#"
-        @extraction_log.add(source, link.full_url || link.href, :fragment)
+        @extraction_log.add(source, link, :fragment)
         next
       end
       if link.nofollow?
-        @extraction_log.add(source, link.full_url || link.href, :nofollow)
+        @extraction_log.add(source, link, :nofollow)
         next
       end
 
       link = normalize_ss_node_variation(link)
-      @extraction_log.add(source, link.full_url || link.href, link.type)
+      @extraction_log.add(source, link)
 
       link_source = @full_url_to_source[link.full_url.to_s]
       if link_source.present?

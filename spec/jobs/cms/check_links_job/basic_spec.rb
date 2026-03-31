@@ -550,21 +550,21 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(url_logs.length).to eq 36
 
         next_month_url = "#{calendar.full_url}#{Time.zone.today.next_month.strftime("%Y%m")}/"
-        expect(url_logs.select { _1["full_url"].start_with?(next_month_url) }.map { _1["status"] }.uniq).to eq %w(nofollow)
+        expect(url_logs.select { _1["full_url"].start_with?(next_month_url) }.map { _1["type"] }.uniq).to eq %w(nofollow)
 
         prev_month_url = "#{calendar.full_url}#{Time.zone.today.prev_month.strftime("%Y%m")}/"
-        expect(url_logs.select { _1["full_url"].start_with?(prev_month_url) }.map { _1["status"] }.uniq).to eq %w(nofollow)
+        expect(url_logs.select { _1["full_url"].start_with?(prev_month_url) }.map { _1["type"] }.uniq).to eq %w(nofollow)
 
         event_url = "#{calendar.full_url}#{event_date.strftime("%Y%m%d")}/"
-        expect(url_logs.select { _1["full_url"] == event_url }.map { _1["status"] }.uniq).to eq %w(inner_yield)
+        expect(url_logs.select { _1["full_url"] == event_url }.map { _1["type"] }.uniq).to eq %w(inner_yield)
 
-        expect(url_logs.select { _1["full_url"] == page1.full_url }.map { _1["status"] }.uniq).to eq %w(inner_yield)
+        expect(url_logs.select { _1["full_url"] == page1.full_url }.map { _1["type"] }.uniq).to eq %w(inner_yield)
 
         list_url = "#{calendar.full_url}#{Time.zone.today.strftime("%Y%m")}/list.html"
-        expect(url_logs.select { _1["full_url"] == list_url }.map { _1["status"] }.uniq).to eq %w(inner_yield)
+        expect(url_logs.select { _1["full_url"] == list_url }.map { _1["type"] }.uniq).to eq %w(inner_yield)
 
         list_ics_url = "#{calendar.full_url}#{Time.zone.today.strftime("%Y%m")}/list.ics"
-        expect(url_logs.select { _1["full_url"] == list_ics_url }.map { _1["status"] }.uniq).to eq %w(nofollow)
+        expect(url_logs.select { _1["full_url"] == list_ics_url }.map { _1["type"] }.uniq).to eq %w(nofollow)
       end
     end
   end
@@ -621,11 +621,11 @@ describe Cms::CheckLinksJob, dbscope: :example do
           # puts url_logs.map { _1["full_url"] }.join("\n")
           expect(url_logs.length).to eq 5
 
-          statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://twitter.com/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://twitter.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
         end
       end
@@ -682,13 +682,13 @@ describe Cms::CheckLinksJob, dbscope: :example do
           # puts url_logs.map { _1["full_url"] }.join("\n")
           expect(url_logs.length).to eq 6
 
-          statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://x.com/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://x.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://line.me/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://line.me/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
         end
       end
