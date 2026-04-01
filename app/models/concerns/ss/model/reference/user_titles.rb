@@ -13,55 +13,70 @@ module SS::Model::Reference
 
     class_methods do
       def update_all_title_orders(title)
-        self.where(title_ids: title.id).find_each do |item|
+        self.where(title_ids: title.id).each do |item|
           item.send(:set_title_order, title.group_id, title.order)
           item.save
         end
+      end
+
+      def order_by_title_setting
+        SS.config.gws.order_by_title
+      end
+
+      def order_by_title_use_main_group_order?
+        order_by_title_setting["main_group_order"] == "use"
+      end
+
+      def order_by_title_organization_uid_numeric?
+        order_by_title_setting["organization_uid"] == "numeric"
       end
 
       def order_users_by_title(users, cur_site:)
         return users.dup if users.blank? || users.length <= 1
 
         users.sort do |lhs_user, rhs_user|
+          # 1.title_order
           # !!!be careful!!! title_order is descendant
           lhs_title_order = lhs_user.title_orders ? lhs_user.title_orders[cur_site.id].to_i : 0
           rhs_title_order = rhs_user.title_orders ? rhs_user.title_orders[cur_site.id].to_i : 0
           diff = rhs_title_order <=> lhs_title_order
           next diff if diff != 0
 
-          lhs_main_group_order = lhs_user.gws_main_group_orders ? lhs_user.gws_main_group_orders[cur_site.id.to_s].to_i : 0
-          rhs_main_group_order = rhs_user.gws_main_group_orders ? rhs_user.gws_main_group_orders[cur_site.id.to_s].to_i : 0
-          diff = lhs_main_group_order <=> rhs_main_group_order
-          next diff if diff != 0
+          # 2.main_group_order
+          if order_by_title_use_main_group_order?
+            lhs_main_group_order = lhs_user.gws_main_group_orders[cur_site.id.to_s].to_i
+            rhs_main_group_order = rhs_user.gws_main_group_orders[cur_site.id.to_s].to_i
+            diff = lhs_main_group_order <=> rhs_main_group_order
+            next diff if diff != 0
+          end
 
-          # 職員番号を数値として比較（organization_uid_numericフィールドを使用）
-          lhs_organization_uid_numeric = lhs_user.organization_uid_numeric || 0
-          rhs_organization_uid_numeric = rhs_user.organization_uid_numeric || 0
-          diff = lhs_organization_uid_numeric <=> rhs_organization_uid_numeric
-          next diff if diff != 0
+          # 3.organization_uid
+          if order_by_title_organization_uid_numeric?
+            lhs_organization_uid_numeric = lhs_user.organization_uid_numeric.to_i
+            rhs_organization_uid_numeric = rhs_user.organization_uid_numeric.to_i
+            diff = lhs_organization_uid_numeric <=> rhs_organization_uid_numeric
+            next diff if diff != 0
+          else
+            diff = lhs_user.organization_uid.to_s <=> rhs_user.organization_uid.to_s
+            next diff if diff != 0
+          end
 
-          diff = lhs_user.uid <=> rhs_user.uid
-          next diff if diff != 0
-
-          diff = lhs_user.id <=> rhs_user.id
-          next diff if diff != 0
-
-          0
+          # 4.uid
+          diff = lhs_user.uid.to_s <=> rhs_user.uid.to_s
+          diff
         end
       end
 
       def order_by_title_params(site)
-        @@order_by_title_condition ||= SS.config.gws.order_by_title
-
         params = {}
         # 1.title_order
         params["title_orders.#{site.id}"] = -1
         # 2.main_group_order
-        if @@order_by_title_condition["main_group_order"] == "use"
+        if order_by_title_use_main_group_order?
           params["gws_main_group_orders.#{site.id}"] = 1
         end
         # 3.organization_uid
-        if @@order_by_title_condition["organization_uid"] == "numeric"
+        if order_by_title_organization_uid_numeric?
           params[:organization_uid_numeric] = 1
         else
           params[:organization_uid] = 1
