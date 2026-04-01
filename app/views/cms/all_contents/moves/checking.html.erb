@@ -1,0 +1,42 @@
+<%= render "tabs" %>
+
+<div class="addon-views">
+  <div class="addon-view" id="cms-all-contents-move-settings">
+    <div class="addon-head">
+      <h2><%= t("cms.all_contents_moves.settings_head") %></h2>
+    </div>
+    <div class="addon-body">
+      <%= t("cms.all_contents_moves.checking_message") %>
+    </div>
+  </div>
+</div>
+
+<%= jquery do %>
+SS.ready(function() {
+  var maxRetries = 60;
+  var retries = 0;
+  var timer = setInterval(function() {
+    $.ajax({
+      url: "<%= cms_all_contents_moves_path(format: :json) %>",
+      dataType: "json",
+      timeout: 10000,
+      success: function(data) {
+        retries = 0;
+        if (data && data.state !== "checking") {
+          clearInterval(timer);
+          location.href = "<%= cms_all_contents_moves_path %>";
+        }
+      },
+      error: function() {
+        retries++;
+        if (retries >= maxRetries) {
+          clearInterval(timer);
+          SS.notice("<%= j t('ss.notice.failed_to_check_status') %>");
+        }
+      }
+    });
+  }, 5000);
+
+  $(window).on("beforeunload", function() { clearInterval(timer); });
+});
+<% end %>

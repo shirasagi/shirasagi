@@ -337,6 +337,17 @@ Rails.application.routes.draw do
     get "all_contents/download_all(.:format)" => "all_contents#download_all", as: "all_contents_download"
     match "all_contents/import(.:format)" => "all_contents#import", via: [:get, :post], as: "all_contents_import"
     get "all_contents/sampling_all(.:format)" => "all_contents#sampling_all", as: "all_contents_sampling"
+    get    "all_contents/moves"              => "all_contents/moves#index",        as: "all_contents_moves"
+    post   "all_contents/moves/import"       => "all_contents/moves#import",       as: "all_contents_moves_import"
+    get    "all_contents/moves/template"     => "all_contents/moves#template",     as: "all_contents_moves_template"
+    get    "all_contents/moves/result"       => "all_contents/moves#result",       as: "all_contents_moves_result"
+    post   "all_contents/moves/run"          => "all_contents/moves#run",          as: "all_contents_moves_run"
+    delete "all_contents/moves/reset"        => "all_contents/moves#reset",        as: "all_contents_moves_reset"
+    get    "all_contents/moves/download_logs" => "all_contents/moves#download_logs", as: "all_contents_moves_download_logs"
+    get    "all_contents/moves/download_result" => "all_contents/moves#download_result", as: "all_contents_moves_download_result"
+    get    "all_contents/moves/histories/:id" => "all_contents/moves#show_history", as: "all_contents_moves_history"
+    get "all_contents/moves/histories/:id/download" => "all_contents/moves#download_history",
+        as: "all_contents_moves_history_download"
     get "search_contents/html" => "search_contents/html#index"
     post "search_contents/html" => "search_contents/html#update"
     match "search_contents/pages" => "search_contents/pages#index", via: [:get, :post]
