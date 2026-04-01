@@ -52,41 +52,6 @@ class Cms::LinkChecker
     end
   end
 
-  # push_tags, :pop_tags, :clear_tags! から防御する。
-  # 防御することで Job Id のタギングが勝手に解除されてしまう問題を防ぐ
-  class MyLogger
-    attr_reader :base_logger
-
-    def initialize(site, full_url, base_logger)
-      @site = site
-      @full_url = full_url
-      @base_logger = base_logger
-    end
-
-    delegate :level, :progname, :datetime_format, :formatter, :sev_threshold, to: :base_logger
-    delegate :loggable?, :debug?, :info?, :warn?, :error?, :fatal?, to: :base_logger
-    delegate :add, :log, :debug, :info, :warn, :error, :fatal, :unknown, to: :base_logger
-
-    def tagged(*tags, &block)
-      if block_given?
-        base_logger.tagged(*tags, &block)
-      end
-    end
-
-    # push_tags, pop_tags, clear_tags! には応答しない方がうまく行く。
-    # def push_tags(*tags)
-    # end
-    #
-    # def pop_tags(count = 1)
-    # end
-    #
-    # def clear_tags!
-    # end
-
-    def close
-    end
-  end
-
   def fs_url
     return @fs_url if instance_variable_defined?(:@fs_url)
 
@@ -253,15 +218,11 @@ class Cms::LinkChecker
   end
 
   def get_with_routing(site, full_url, redirection: nil)
-    # Rails.logger を差し替えないと、ログが変になる。
-    # Job Id でタギングされているはずが、勝手に解除されてしまう。
-    save_logger = Rails.logger
-    Rails.logger = ActiveSupport::BroadcastLogger.new(MyLogger.new(site, full_url, Rails.logger))
-
+    # Rails.application.call を利用すると、ログのタギングが解除されてしまうので、Rails.application.routes.call を利用する。
+    # Rails.application.routes.call を利用すると Tempfile が自動で閉じられないので手動で閉じるようにする必要あり。
     contents_env = build_env(site, full_url)
-    contents_status, contents_headers, contents_body = Rails.application.call(contents_env)
+    contents_status, contents_headers, contents_body = Rails.application.routes.call(contents_env)
     if contents_status != 200
-      try_close(contents_body)
       return Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
     end
 
@@ -271,7 +232,6 @@ class Cms::LinkChecker
       content = ""
       contents_body.each { content += _1 }
     end
-    try_close(contents_body)
     Result.success(
       redirection_count: redirection.count, content_type: content_type, content: content)
   rescue SS::ForbiddenError
@@ -282,7 +242,7 @@ class Cms::LinkChecker
     Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
     raise
   ensure
-    Rails.logger = save_logger if save_logger
+    try_close_all(contents_env, contents_body)
   end
 
   def build_env(site, full_url)
@@ -299,14 +259,20 @@ class Cms::LinkChecker
     contents_env
   end
 
-  def try_close(closable)
-    return unless closable.respond_to?(:close)
+  def try_close_all(env, body)
+    if body && body.respond_to?(:close)
+      if body.method(:close).arity == 0
+        body.close rescue nil
+      else
+        # Tempfile support
+        body.close(true) rescue nil
+      end
+    end
 
-    if closable.method(:close).arity == 0
-      closable.close rescue nil
-    else
-      # Tempfile support
-      closable.close(true) rescue nil
+    # Rails.application.routes.call を利用すると Tempfile が自動で閉じられないので手動で閉じるようにする。
+    # see: Rack::TempfileReaper at https://github.com/rack/rack/blob/v3.2.5/lib/rack/tempfile_reaper.rb
+    if env
+      env[Rack::RACK_TEMPFILES]&.each(&:close!) rescue nil
     end
   end
 end
