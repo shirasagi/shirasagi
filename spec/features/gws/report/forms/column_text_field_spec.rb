@@ -17,8 +17,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
     let(:tooltip) { tooltips.join("\n") }
     let(:prefix_label) { unique_id[0, 10] }
     let(:postfix_label) { unique_id[0, 10] }
-    let(:prefix_explanation) { unique_id[0, 10] }
-    let(:postfix_explanation) { unique_id[0, 10] }
+    let(:prefix_explanation) { Array.new(2) { "<b class=\"bold-#{_1}\">#{unique_id}</b>" } }
+    let(:postfix_explanation) { Array.new(2) { "<i class=\"italic-#{_1}\">#{unique_id}</i>" } }
     let(:input_type) { %w(text email tel).sample }
     let(:input_type_label) { I18n.t("gws/column.options.column_input_type.#{input_type}") }
     let(:max_length) { rand(10) }
@@ -51,8 +51,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
           fill_in "item[tooltips]", with: tooltip
           fill_in "item[prefix_label]", with: prefix_label
           fill_in "item[postfix_label]", with: postfix_label
-          fill_in "item[prefix_explanation]", with: prefix_explanation
-          fill_in "item[postfix_explanation]", with: postfix_explanation
+          fill_in "item[prefix_explanation]", with: prefix_explanation.join("\n")
+          fill_in "item[postfix_explanation]", with: postfix_explanation.join("\n")
           select input_type_label, from: "item[input_type]"
           fill_in "item[max_length]", with: max_length
           fill_in "item[place_holder]", with: place_holder
@@ -74,12 +74,19 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       expect(column.tooltips).to eq tooltips
       expect(column.prefix_label).to eq prefix_label
       expect(column.postfix_label).to eq postfix_label
-      expect(column.prefix_explanation).to eq prefix_explanation
-      expect(column.postfix_explanation).to eq postfix_explanation
+      expect(column.prefix_explanation).to eq prefix_explanation.join("\n")
+      expect(column.postfix_explanation).to eq postfix_explanation.join("\n")
       expect(column.input_type).to eq input_type
       expect(column.max_length).to eq max_length
       expect(column.place_holder).to eq place_holder
       expect(column.additional_attr).to eq additional_attr
+
+      within ".gws-column-item[data-id='#{column.id}']" do
+        expect(page).to have_css(".bold-0")
+        expect(page).to have_css(".bold-1")
+        expect(page).to have_css(".italic-0")
+        expect(page).to have_css(".italic-1")
+      end
 
       #
       # Edit
@@ -106,8 +113,8 @@ describe "gws_report_forms", type: :feature, dbscope: :example, js: true do
       expect(column.tooltips).to eq tooltips
       expect(column.prefix_label).to eq prefix_label
       expect(column.postfix_label).to eq postfix_label
-      expect(column.prefix_explanation).to eq prefix_explanation
-      expect(column.postfix_explanation).to eq postfix_explanation
+      expect(column.prefix_explanation).to eq prefix_explanation.join("\n")
+      expect(column.postfix_explanation).to eq postfix_explanation.join("\n")
       expect(column.input_type).to eq input_type
       expect(column.max_length).to eq max_length
       expect(column.place_holder).to eq place_holder

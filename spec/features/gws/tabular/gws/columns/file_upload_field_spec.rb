@@ -36,8 +36,8 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
     let(:tooltips3) { "tooltip-#{unique_id}" }
     let(:prefix_label3) { "pre-#{unique_id}"[0, 10] }
     let(:postfix_label3) { "pos-#{unique_id}"[0, 10] }
-    let(:prefix_explanation3) { "<b>prefix-#{unique_id}</b>" }
-    let(:postfix_explanation3) { "<b>postfix-#{unique_id}</b>" }
+    let(:prefix_explanation3) { Array.new(2) { "<b class=\"bold-#{_1}\">prefix-#{unique_id}</b>" } }
+    let(:postfix_explanation3) { Array.new(2) { "<i class=\"italic-#{_1}\">postfix-#{unique_id}</i>" } }
     let(:export_state3) { %w(none public).sample }
     let(:export_state_label3) { I18n.t("gws/tabular.options.export_state.#{export_state3}") }
     let(:allowed_extensions3) { Array.new(rand(0..2)) { ".#{unique_id[0, rand(1..3)]}" }.uniq }
@@ -147,8 +147,8 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
           fill_in "item[tooltips]", with: tooltips3
           fill_in "item[prefix_label]", with: prefix_label3
           fill_in "item[postfix_label]", with: postfix_label3
-          fill_in "item[prefix_explanation]", with: prefix_explanation3
-          fill_in "item[postfix_explanation]", with: postfix_explanation3
+          fill_in "item[prefix_explanation]", with: prefix_explanation3.join("\n")
+          fill_in "item[postfix_explanation]", with: postfix_explanation3.join("\n")
           # file_upload_field
           select export_state_label3, from: "item[export_state]"
           fill_in "item[allowed_extensions]", with: allowed_extensions3.join(" ")
@@ -173,13 +173,20 @@ describe Gws::Tabular::Gws::ColumnsController, type: :feature, dbscope: :example
       expect(column.tooltips.first).to eq tooltips3
       expect(column.prefix_label).to eq prefix_label3
       expect(column.postfix_label).to eq postfix_label3
-      expect(column.prefix_explanation).to eq prefix_explanation3
-      expect(column.postfix_explanation).to eq postfix_explanation3
+      expect(column.prefix_explanation).to eq prefix_explanation3.join("\n")
+      expect(column.postfix_explanation).to eq postfix_explanation3.join("\n")
       # file_upload_field
       expect(column.export_state).to eq export_state3
       expect(column.allowed_extensions).to eq allowed_extensions3
       # tabular common
       expect(column.index_state).to eq index_state3
+
+      within ".gws-column-item[data-id='#{column.id}']" do
+        expect(page).to have_css(".bold-0")
+        expect(page).to have_css(".bold-1")
+        expect(page).to have_css(".italic-0")
+        expect(page).to have_css(".italic-1")
+      end
     end
   end
 end
