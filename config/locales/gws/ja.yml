@@ -91,6 +91,9 @@ ja:
         user_occupation: 職種
         email: メールアドレス
         tel: 電話番号
+      organization_uid_sort_order:
+        alpha_first: 英字を含む番号を先に表示
+        numeric_first: 数字のみの番号を先に表示
 
     links:
       back_to_portal: ポータルへ戻る
@@ -259,6 +262,7 @@ ja:
       gws/user:
         gws_main_group_ids: グループ（主）
         gws_default_group_ids: グループ（既定）
+        title_ids: 役職
       gws/custom_group:
         name: グループ名
         order: 表示順
@@ -348,6 +352,7 @@ ja:
         trash_threshold_unit: ゴミ箱保持期間単位
       gws/addon/system/user_setting:
         user_public_profiles: 公開プロフィール
+        organization_uid_sort_order: 職員番号ソート順
       gws/addon/system/menu_setting:
         menu_portal_label: ポータルの表示
         menu_portal_state: ポータルの表示
@@ -584,6 +589,12 @@ ja:
         - システムからメールを送信する際、メールに記載される URL がここで設定したドメインになります。
       trash_threshold:
         - ゴミ箱の保持期間を設定できます。
+    gws/addon/system/user_setting:
+      organization_uid_sort_order:
+        - 職員番号のソート順を選択します。
+        -
+        - "「英字を含む番号を先に表示」: A200, KB005, 5880, 10081 の順"
+        - "「数字のみの番号を先に表示」: 5880, 10081, A200, KB005 の順"
     gws/addon/group_permission:
       custom_group_ids:
         - 編集を許可するカスタムグループを選択します。
