@@ -376,6 +376,75 @@ organization_uid: "100"
       expect(user.organization_uid_sort_key).to eq 'KB0000000005'
     end
 
+    it "sorts same-prefix alphanumeric uids by numeric part within each prefix" do
+      # alpha_first設定で、同じアルファベットで始まる職員番号が数値部分で正しくソートされることを確認
+      # A200, A300, A499, B100, B400 のようなケース
+      site.organization_uid_sort_order = 'alpha_first'
+      site.save!
+
+      title_same = create :gws_user_title, order: 15
+      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
+
+      user_a200 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A200"
+      user_a300 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A300"
+      user_a499 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "A499"
+      user_b100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "B100"
+      user_b400 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "B400"
+
+      # ソートキーがプレフィックス+ゼロ埋め数値になっていることを確認
+      expect(user_a200.reload.organization_uid_sort_key).to eq 'A0000000200'
+      expect(user_a300.reload.organization_uid_sort_key).to eq 'A0000000300'
+      expect(user_a499.reload.organization_uid_sort_key).to eq 'A0000000499'
+      expect(user_b100.reload.organization_uid_sort_key).to eq 'B0000000100'
+      expect(user_b400.reload.organization_uid_sort_key).to eq 'B0000000400'
+
+      target_ids = [user_a200.id, user_a300.id, user_a499.id, user_b100.id, user_b400.id].shuffle
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+      # Aプレフィックスが先、その中で数値昇順。次にBプレフィックス、その中で数値昇順
+      expect(sorted_users.map(&:id)).to eq [
+        user_a200.id, user_a300.id, user_a499.id, user_b100.id, user_b400.id
+      ]
+    end
+
+    it "sorts year-serial format organization_uids correctly" do
+      # 西暦+連番形式（例: 2024001, 2024002, 2025001）の職員番号が正しくソートされることを確認
+      title_same = create :gws_user_title, order: 15
+      group_same = create :gws_group, name: "#{site.name}/#{unique_id}", order: 15
+
+      user_2024001 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "2024001"
+      user_2024002 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "2024002"
+      user_2024100 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "2024100"
+      user_2025001 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "2025001"
+      user_2025999 = create :gws_user, organization_id: site.id, in_title_id: title_same.id,
+        group_ids: [group_same.id], organization_uid: "2025999"
+
+      # 純粋な数値なのでnumeric型になることを確認
+      expect(user_2024001.reload.organization_uid_type).to eq 'numeric'
+      expect(user_2024001.organization_uid_sort_key).to eq '0002024001'
+      expect(user_2025999.reload.organization_uid_type).to eq 'numeric'
+      expect(user_2025999.organization_uid_sort_key).to eq '0002025999'
+
+      target_ids = [
+        user_2024001.id, user_2024002.id, user_2024100.id, user_2025001.id, user_2025999.id
+      ].shuffle
+      sorted_users = Gws::User.site(site).in(id: target_ids).order_by_title(site)
+
+      # 数値順でソートされることを確認
+      expect(sorted_users.map(&:id)).to eq [
+        user_2024001.id, user_2024002.id, user_2024100.id, user_2025001.id, user_2025999.id
+      ]
+    end
+
     it "preserves underscores and hyphens in sort key" do
       # user_001 と user001 が異なるソートキーになることを確認
       user_with_underscore = create :gws_user, organization_id: site.id, organization_uid: "user_001"
