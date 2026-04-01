@@ -67,19 +67,15 @@ class Gws::Discussion::PortalController < ApplicationController
   end
 
   def set_members
-    # 電子会議室のメンバー一覧では子グループを除外する
     members = @forum.overall_members.active.
       readable_users(@cur_user, site: @cur_site).
       order_by_title(@cur_site)
 
     grouped_members = members.group_by do |member|
-      member.gws_main_group(@cur_site)
+      member.gws_main_group(@cur_site) || @cur_site
     end
-
-    # orderがnilのグループを最後に配置するため、orderの最大値（999_999）を超える値として1_000_000を使用
-    # この値はデータベースに保存されないため、バリデーションエラーにはならない
-    @grouped_members = grouped_members.sort_by do |group, _members|
-      [group&.order || 1_000_000, group&.id || 0]
+    @grouped_members = grouped_members.sort_by do |group, _|
+      [(group.order.nil? ? 1 : 0), group.order.to_i, group.id]
     end
   end
 
