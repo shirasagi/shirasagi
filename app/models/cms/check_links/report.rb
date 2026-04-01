@@ -12,6 +12,7 @@ class Cms::CheckLinks::Report
     dependent: :destroy, inverse_of: :report
 
   before_save :set_name
+  after_destroy ->{ ::FileUtils.rm_rf(base_dir) }
 
   default_scope ->{ order_by(created: -1) }
 
@@ -33,6 +34,11 @@ class Cms::CheckLinks::Report
 
   def nodes
     Cms::CheckLinks::Error::Node.and_report(self)
+  end
+
+  def base_dir
+    return if new_record?
+    @base_dir ||= "#{SS::File.root}/cms_check_links_reports/#{id.to_s.chars.join("/")}/_"
   end
 
   class << self

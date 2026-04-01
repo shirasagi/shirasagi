@@ -8,12 +8,12 @@ describe Cms::CheckLinksJob, dbscope: :example do
   before do
     WebMock.disable_net_connect!(allow_localhost: true)
     ActionMailer::Base.deliveries = []
-    Fs.rm_rf site.path
+    Fs.rm_rf site0.path
   end
 
   after do
     ActionMailer::Base.deliveries = []
-    Fs.rm_rf site.path
+    Fs.rm_rf site0.path
     WebMock.reset!
     WebMock.allow_net_connect!
   end
@@ -71,7 +71,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
     context "check" do
       it do
-        expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/6 errors/).to_stdout
+        expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/5 errors/).to_stdout
 
         expect(Job::Log.count).to eq 1
         Job::Log.first.tap do |log|
@@ -81,9 +81,6 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(log.logs).to include(include("#{site_url}/"))
           expect(log.logs).to include(include("  - #{site_url}/notfound1.html"))
           expect(log.logs).not_to include(include("  - #{site_url}/commentout1.html"))
-
-          expect(log.logs).to include(include("#{site_url}/index.html"))
-          expect(log.logs).to include(include("  - #{site_url}/notfound1.html"))
 
           expect(log.logs).to include(include("#{site_url}/docs/page1.html"))
           expect(log.logs).to include(include("  - #{site_url}/notfound2.html"))
@@ -97,8 +94,8 @@ describe Cms::CheckLinksJob, dbscope: :example do
         Cms::CheckLinks::Report.all.first.tap do |report|
           expect(report.site_id).to eq site.id
           expect(report.name).to include "実行結果"
-          expect(report.link_errors.count).to eq 3
-          expect(report.pages.count).to eq 3
+          expect(report.link_errors.count).to eq 2
+          expect(report.pages.count).to eq 2
           expect(report.nodes.count).to eq 0
           report.pages.to_a.tap do |page_reports|
             expect(page_reports[0].site_id).to eq site.id
@@ -115,27 +112,15 @@ describe Cms::CheckLinksJob, dbscope: :example do
 
             expect(page_reports[1].site_id).to eq site.id
             expect(page_reports[1].report_id).to eq report.id
-            expect(page_reports[1].ref).to eq index.url
-            expect(page_reports[1].ref_url).to eq index.full_url
-            expect(page_reports[1].page_id).to eq index.id
-            expect(page_reports[1].name).to eq index.name
-            expect(page_reports[1].filename).to eq index.filename
+            expect(page_reports[1].ref).to eq page1.url
+            expect(page_reports[1].ref_url).to eq page1.full_url
+            expect(page_reports[1].page_id).to eq page1.id
+            expect(page_reports[1].name).to eq page1.name
+            expect(page_reports[1].filename).to eq page1.filename
             # yield 内のリンク切れのみを記録する
             expect(page_reports[1].urls).to have(1).items
-            expect(page_reports[1].urls).to include("#{site.url}notfound1.html")
+            expect(page_reports[1].urls).to include("#{site.url}notfound2.html")
             expect(page_reports[1].urls).not_to include("https://www.example.jp/not_found_outer_yield.pdf")
-
-            expect(page_reports[2].site_id).to eq site.id
-            expect(page_reports[2].report_id).to eq report.id
-            expect(page_reports[2].ref).to eq page1.url
-            expect(page_reports[2].ref_url).to eq page1.full_url
-            expect(page_reports[2].page_id).to eq page1.id
-            expect(page_reports[2].name).to eq page1.name
-            expect(page_reports[2].filename).to eq page1.filename
-            # yield 内のリンク切れのみを記録する
-            expect(page_reports[2].urls).to have(1).items
-            expect(page_reports[2].urls).to include("#{site.url}notfound2.html")
-            expect(page_reports[2].urls).not_to include("https://www.example.jp/not_found_outer_yield.pdf")
           end
         end
 
@@ -160,7 +145,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         let!(:message_format) { "text" }
 
         it do
-          expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/6 errors/).to_stdout
+          expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/5 errors/).to_stdout
 
           expect(Job::Log.count).to eq 1
           Job::Log.first.tap do |log|
@@ -172,11 +157,9 @@ describe Cms::CheckLinksJob, dbscope: :example do
           mail = ActionMailer::Base.deliveries.first
           expect(mail.from.first).to eq site.sender_address
           expect(mail.to.first).to eq email1
-          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 6 errors"
-          expect(mail_body(mail)).to include "[6 errors]"
+          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 5 errors"
+          expect(mail_body(mail)).to include "[5 errors]"
           expect(mail_body(mail)).to include "#{site_url}/"
-          expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
-          expect(mail_body(mail)).to include "#{site_url}/index.html"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
           expect(mail_body(mail)).to include "#{site_url}/docs/page1.html"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound2.html"
@@ -189,7 +172,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         let!(:message_format) { "csv" }
 
         it do
-          expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/6 errors/).to_stdout
+          expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/5 errors/).to_stdout
 
           expect(Job::Log.count).to eq 1
           Job::Log.first.tap do |log|
@@ -202,16 +185,16 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(mail.from.first).to eq site.sender_address
           expect(mail.to.first).to eq email1
 
-          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 6 errors"
+          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 5 errors"
           expect(mail.multipart?).to be_truthy
-          expect(mail.parts[0].body.raw_source).to include "[6 errors]"
+          expect(mail.parts[0].body.raw_source).to include "[5 errors]"
           expect(mail.parts[0].body.raw_source).to include "error details are in the attached csv"
 
           csv = mail.parts[1].body.raw_source
           csv = csv.delete_prefix(SS::Csv::UTF8_BOM)
           csv = CSV.parse(csv)
 
-          expect(csv.length).to eq 10
+          expect(csv.length).to eq 8
           expect(csv[0]).to eq %w(reference url)
           expect(csv[1]).to eq %W(#{site.url} #{site.url}notfound1.html)
           expect(csv[2]).to eq %W(#{site.url} https://www.example.jp/not_found_outer_yield.pdf)
@@ -220,8 +203,6 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(csv[5]).to eq %W(#{site.url}docs/page1.html https://www.example.jp/not_found_outer_yield.pdf)
           expect(csv[6]).to eq %W(#{site.url}docs/page2.html https://www.example.jp/not_found_outer_yield.pdf)
           expect(csv[7]).to eq %W(#{site.url}docs/page3.html https://www.example.jp/not_found_outer_yield.pdf)
-          expect(csv[8]).to eq %W(#{site.url}index.html #{site.url}notfound1.html)
-          expect(csv[9]).to eq %W(#{site.url}index.html https://www.example.jp/not_found_outer_yield.pdf)
         end
       end
 
@@ -229,7 +210,7 @@ describe Cms::CheckLinksJob, dbscope: :example do
         let!(:message_format) { "text" }
 
         it do
-          expect { ss_perform_now described_class.bind(site_id: site.id), email: email2 }.to output(/6 errors/).to_stdout
+          expect { ss_perform_now described_class.bind(site_id: site.id), email: email2 }.to output(/5 errors/).to_stdout
 
           expect(Job::Log.count).to eq 1
           Job::Log.first.tap do |log|
@@ -241,11 +222,9 @@ describe Cms::CheckLinksJob, dbscope: :example do
           mail = ActionMailer::Base.deliveries.first
           expect(mail.from.first).to eq site.sender_address
           expect(mail.to.first).to eq email2
-          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 6 errors"
-          expect(mail_body(mail)).to include "[6 errors]"
+          expect(mail_subject(mail)).to eq "[#{site.name}] Link Check: 5 errors"
+          expect(mail_body(mail)).to include "[5 errors]"
           expect(mail_body(mail)).to include "#{site_url}/"
-          expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
-          expect(mail_body(mail)).to include "#{site_url}/index.html"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound1.html"
           expect(mail_body(mail)).to include "#{site_url}/docs/page1.html"
           expect(mail_body(mail)).to include "  - #{site_url}/notfound2.html"
@@ -565,27 +544,27 @@ describe Cms::CheckLinksJob, dbscope: :example do
         expect(task.closed.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
         expect(task.current_count).to eq 7
 
-        url_log_path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+        url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
         url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
         # puts url_logs.map { _1["full_url"] }.join("\n")
-        expect(url_logs.length).to eq 25
+        expect(url_logs.length).to eq 26
 
         next_month_url = "#{calendar.full_url}#{Time.zone.today.next_month.strftime("%Y%m")}/"
-        expect(url_logs.select { _1["full_url"].start_with?(next_month_url) }.map { _1["status"] }.uniq).to eq %w(nofollow)
+        expect(url_logs.select { _1["full_url"].start_with?(next_month_url) }.map { _1["type"] }.uniq).to eq %w(nofollow)
 
         prev_month_url = "#{calendar.full_url}#{Time.zone.today.prev_month.strftime("%Y%m")}/"
-        expect(url_logs.select { _1["full_url"].start_with?(prev_month_url) }.map { _1["status"] }.uniq).to eq %w(nofollow)
+        expect(url_logs.select { _1["full_url"].start_with?(prev_month_url) }.map { _1["type"] }.uniq).to eq %w(nofollow)
 
         event_url = "#{calendar.full_url}#{event_date.strftime("%Y%m%d")}/"
-        expect(url_logs.select { _1["full_url"] == event_url }.map { _1["status"] }.uniq).to eq %w(success)
+        expect(url_logs.select { _1["full_url"] == event_url }.map { _1["type"] }.uniq).to eq %w(inner_yield)
 
-        expect(url_logs.select { _1["full_url"] == page1.full_url }.map { _1["status"] }.uniq).to eq %w(success)
+        expect(url_logs.select { _1["full_url"] == page1.full_url }.map { _1["type"] }.uniq).to eq %w(inner_yield)
 
         list_url = "#{calendar.full_url}#{Time.zone.today.strftime("%Y%m")}/list.html"
-        expect(url_logs.select { _1["full_url"] == list_url }.map { _1["status"] }.uniq).to eq %w(success)
+        expect(url_logs.select { _1["full_url"] == list_url }.map { _1["type"] }.uniq).to eq %w(inner_yield)
 
         list_ics_url = "#{calendar.full_url}#{Time.zone.today.strftime("%Y%m")}/list.ics"
-        expect(url_logs.select { _1["full_url"] == list_ics_url }.map { _1["status"] }.uniq).to eq %w(nofollow)
+        expect(url_logs.select { _1["full_url"] == list_ics_url }.map { _1["type"] }.uniq).to eq %w(nofollow)
       end
     end
   end
@@ -637,16 +616,16 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(task.closed.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
           expect(task.current_count).to eq 1
 
-          url_log_path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+          url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
           url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
           # puts url_logs.map { _1["full_url"] }.join("\n")
-          expect(url_logs.length).to eq 6
+          expect(url_logs.length).to eq 4
 
-          statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://twitter.com/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://twitter.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
         end
       end
@@ -698,21 +677,78 @@ describe Cms::CheckLinksJob, dbscope: :example do
           expect(task.closed.in_time_zone).to be_within(5.minutes).of(Time.zone.now)
           expect(task.current_count).to eq 1
 
-          url_log_path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+          url_log_path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
           url_logs = Zlib::GzipReader.open(url_log_path) { _1.readlines }.map { JSON.parse(_1.chomp) }
           # puts url_logs.map { _1["full_url"] }.join("\n")
-          expect(url_logs.length).to eq 7
+          expect(url_logs.length).to eq 4
 
-          statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://www.facebook.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://x.com/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://x.com/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://b.hatena.ne.jp/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
-          statuses = url_logs.select { _1["full_url"].start_with?("https://line.me/") }.map { _1["status"] }.uniq
+          statuses = url_logs.select { _1["full_url"].start_with?("https://line.me/") }.map { _1["type"] }.uniq
           expect(statuses).to eq %w(nofollow)
         end
       end
+    end
+  end
+
+  context "node url variations" do
+    let!(:layout) { create_cms_layout cur_site: site }
+    let!(:index) { create :cms_page, cur_site: site, layout: layout, filename: "index.html" }
+    let!(:docs) { create :article_node_page, cur_site: site, layout: layout }
+    let!(:page1) { create :article_page, cur_site: site, layout: layout, cur_node: docs }
+
+    before do
+      html1 = <<~HTML
+        <a href="#{site.url}#{docs.filename}">#{docs.name} 1</a>
+        <a href="#{site.url}#{docs.filename}/">#{docs.name} 2</a>
+        <a href="#{site.url}#{docs.filename}/index.html">#{docs.name} 3</a>
+      HTML
+      index.update!(html: html1)
+
+      expect { ss_perform_now Cms::Node::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+      expect { ss_perform_now Cms::Page::GenerateJob.bind(site_id: site.id) }.to output.to_stdout
+      Job::Log.destroy_all
+
+      page1.destroy
+    end
+
+    it do
+      expect { ss_perform_now described_class.bind(site_id: site.id) }.to output(/1 errors/).to_stdout
+
+      expect(Job::Log.count).to eq 1
+      Job::Log.first.tap do |log|
+        expect(log.logs).to include(/INFO -- : .* Started Job/)
+        expect(log.logs).to include(/INFO -- : .* Completed Job/)
+
+        expect(log.logs).to include(include("#{site_url}/"))
+      end
+
+      expect(Cms::CheckLinks::Report.all.count).to eq 1
+      Cms::CheckLinks::Report.all.first.tap do |report|
+        expect(report.site_id).to eq site.id
+        expect(report.name).to include "実行結果"
+        expect(report.link_errors.count).to eq 1
+        expect(report.pages.count).to eq 0
+        expect(report.nodes.count).to eq 1
+        report.nodes.to_a.tap do |node_reports|
+          expect(node_reports[0].site_id).to eq site.id
+          expect(node_reports[0].report_id).to eq report.id
+          expect(node_reports[0].ref).to eq docs.url
+          expect(node_reports[0].ref_url).to eq docs.full_url
+          expect(node_reports[0].node_id).to eq docs.id
+          expect(node_reports[0].name).to eq docs.name
+          expect(node_reports[0].filename).to eq docs.filename
+          # yield 内のリンク切れのみを記録する
+          expect(node_reports[0].urls).to have(1).items
+          expect(node_reports[0].urls).to include(page1.url)
+        end
+      end
+
+      expect(ActionMailer::Base.deliveries.length).to eq 0
     end
   end
 end

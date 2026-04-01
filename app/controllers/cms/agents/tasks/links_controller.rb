@@ -10,7 +10,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
   before_action :set_params
 
-  class UrlLog
+  class ExtractionLog
     include ActiveModel::Model
 
     attr_accessor :task, :path
@@ -18,13 +18,56 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     private_class_method :new
 
     def self.from_task(task)
-      path = task.log_file_path.sub(".log", "") + "-url-log.json.gz"
+      path = task.log_file_path.sub(".log", "") + "-extraction-log.json.gz"
       new(task: task, path: path)
     end
 
-    def add(full_url, status)
-      return unless full_url
-      io.puts({ full_url: full_url.to_s, status: status }.to_json)
+    def add(source, link, link_type = nil)
+      link_type ||= link.type
+
+      json = {
+        source: source.full_url.to_s,
+        full_url: link.full_url.try(:to_s), href: link.href, line: link.line, type: link_type,
+        rel: link.rel, ss_rel: link.ss_rel
+      }
+      io.puts(json.to_json)
+    end
+
+    def close
+      @io.close if @io
+      @io = nil
+    end
+
+    private
+
+    def io
+      @io ||= begin
+        FileUtils.mkdir_p(File.dirname(path))
+        Zlib::GzipWriter.open(path)
+      end
+    end
+  end
+
+  class SourceLog
+    include ActiveModel::Model
+
+    attr_accessor :task, :path
+
+    private_class_method :new
+
+    def self.from_task(task)
+      path = task.log_file_path.sub(".log", "") + "-source-log.json.gz"
+      new(task: task, path: path)
+    end
+
+    def add(source)
+      json = {
+        sequence: source.sequence,
+        full_url: source.full_url.to_s,
+        status: source.status,
+        elapsed: source.elapsed
+      }
+      io.puts(json.to_json)
     end
 
     def close
@@ -48,17 +91,17 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   end
 
   def create_report(errors)
-    @report_max_age = (SS.config.cms.check_links["report_max_age"].presence || 5).to_i
-    return if @report_max_age <= 0
+    report_max_age = (SS.config.cms.check_links["report_max_age"].presence || 5).to_i
+    return if report_max_age <= 0
 
     # create new report
-    @report = Cms::CheckLinks::Report.new
-    @report.cur_site = @report.site = @site
-    if !@report.save
-      @task.log "Error : Failed to save Cms::CheckLinks::Report #{@report.errors.full_messages}"
+    report = Cms::CheckLinks::Report.new
+    report.cur_site = report.site = @site
+    unless report.save
+      @task.log "Error : Failed to save Cms::CheckLinks::Report #{report.errors.full_messages}"
       return
     end
-    @task.log "# #{@report.name} created"
+    @task.log "# #{report.name} created"
 
     sources_having_error_links = errors.map(&:referrers)
     sources_having_error_links.flatten!
@@ -76,21 +119,23 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
       page = find_page(path)
       if page
-        create_report_page(full_url, sources, page, error_links)
+        create_report_page(report, full_url, sources, page, error_links)
         next
       end
 
       node = find_node(path)
       next unless node
 
-      create_report_node(full_url, sources, node, error_links)
+      create_report_node(report, full_url, sources, node, error_links)
     end
 
+    save_link_check_logs_to_report(report)
+
     # destroy old reports
-    report_ids = Cms::CheckLinks::Report.site(@site).limit(@report_max_age).pluck(:id)
-    Cms::CheckLinks::Report.site(@site).nin(id: report_ids).each do |report|
-      @task.log "# #{report.name} destroyed"
-      report.destroy
+    old_report_ids = Cms::CheckLinks::Report.site(@site).limit(report_max_age).pluck(:id)
+    Cms::CheckLinks::Report.site(@site).nin(id: old_report_ids).each do |old_report|
+      @task.log "# #{old_report.name} destroyed"
+      old_report.destroy
     end
   end
 
@@ -119,8 +164,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     node
   end
 
-  def create_report_page(full_url, sources, page, error_links)
-    item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: @report)
+  def create_report_page(report, full_url, sources, page, error_links)
+    item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: report)
     item.ref = full_url.request_uri
     item.ref_url = full_url.to_s
     item.page = page
@@ -131,8 +176,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     item.save
   end
 
-  def create_report_node(full_url, sources, node, error_links)
-    item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: @report)
+  def create_report_node(report, full_url, sources, node, error_links)
+    item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: report)
     item.ref = full_url.request_uri
     item.ref_url = full_url.to_s
     item.node = node
@@ -141,6 +186,12 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     item.urls = error_links.map(&:href).uniq
     item.group_ids = node.group_ids
     item.save
+  end
+
+  def save_link_check_logs_to_report(report)
+    FileUtils.mkdir_p(report.base_dir) rescue nil
+    FileUtils.cp(@extraction_log.path, File.join(report.base_dir, "extraction-log.json.gz")) rescue nil
+    FileUtils.cp(@source_log.path, File.join(report.base_dir, "source-log.json.gz")) rescue nil
   end
 
   public
@@ -156,7 +207,7 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
     @check_mobile = SS.config.cms.check_links["check_mobile_path"] != false
 
-    @url_log = UrlLog.from_task(@task)
+    @extraction_log = ExtractionLog.from_task(@task)
 
     (10*1000*1000).times do |i|
       break if @queue.blank?
@@ -164,11 +215,18 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       source = @queue.shift
       next if source.status != :to_be_examined
 
-      check_url(source)
+      elapsed = Benchmark.realtime do
+        check_url(source)
+      end
+      source.elapsed = elapsed
       @task.count
     end
 
-    @url_log.close
+    @extraction_log.close
+
+    @source_log = SourceLog.from_task(@task)
+    @full_url_to_source.values.each { @source_log.add(_1) }
+    @source_log.close
 
     errors = @full_url_to_source.values.select { _1.status == :error }
     error_formatter = Cms::CheckLinks::Errors.new(errors: errors, display_meta: @display_meta.present?)
@@ -179,6 +237,14 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     end
 
     create_report(errors)
+
+    top_slowest_sources = @full_url_to_source.values.sort_by(&:elapsed).last(10).reverse
+    @task.log "Top #{top_slowest_sources.length} slowest pages out of #{@full_url_to_source.values.length} pages"
+    top_slowest_sources.each do |source|
+      elapsed = ActiveSupport::Duration.build(source.elapsed)
+      @task.log "  - #{source.full_url} in #{elapsed}"
+    end
+
     head :ok
   end
 
@@ -188,14 +254,13 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     result = checker.check_url(source.full_url)
     unless result.success?
       source.status = :error
-      @url_log.add(source.full_url, :error)
       return
     end
 
     source.status = :success
-    @url_log.add(source.full_url, :success)
 
     # HTML 以外ではリンクを抽出しない
+    return unless result.content_mime_type
     return unless result.content_mime_type.html?
 
     # 他サイトの場合、HTMLからリンクを抽出しない
@@ -209,17 +274,20 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
       cur_site: @site, base_url: source.full_url, html: result.content)
     extractor.each do |link|
       if IGNORE_LINK_TYPES.include?(link.type)
-        @url_log.add(link.full_url || link.href, link.type)
+        @extraction_log.add(source, link)
         next
       end
       if link.href[0] == "#"
-        @url_log.add(link.full_url || link.href, :fragment)
+        @extraction_log.add(source, link, :fragment)
         next
       end
       if link.nofollow?
-        @url_log.add(link.full_url || link.href, :nofollow)
+        @extraction_log.add(source, link, :nofollow)
         next
       end
+
+      link = normalize_ss_node_variation(link)
+      @extraction_log.add(source, link)
 
       link_source = @full_url_to_source[link.full_url.to_s]
       if link_source.present?
@@ -260,5 +328,28 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     return false if @site.mobile_disabled?
     return false if !source.full_url.path.match?(/^#{@site.mobile_url}/)
     true
+  end
+
+  def normalize_ss_node_variation(link)
+    return link unless link.full_url
+
+    site = @site.same_domain_site_from_path(link.full_url.path)
+    return link unless site # not shirasagi site
+
+    # シラサギのフォルダーへのリンクには次のバリエーションがある。これらを2に正規化する。
+    # 1. /docs
+    # 2. /docs/
+    # 3. /docs/index.html
+
+    if link.full_url.path.end_with?("/index.html")
+      link.full_url.path = link.full_url.path.sub("/index.html", "/")
+      return link
+    end
+    if !link.full_url.path.end_with?("/") && File.extname(link.full_url.path).blank?
+      link.full_url.path += "/"
+      return link
+    end
+
+    link
   end
 end

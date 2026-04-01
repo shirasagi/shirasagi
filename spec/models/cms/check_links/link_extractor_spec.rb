@@ -82,15 +82,94 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
 
       extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
       links = extractor.to_a
+      # 昔は stylesheet のリンクをチェックしていたが、今はチェックしない
+      expect(links).to be_blank
+    end
+  end
+
+  context "with <img>" do
+    it do
+      html = <<~HTML
+        <img src="/assets/img/icon.png" />
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.to_a
       expect(links).to have(1).items
 
       links[0].tap do |link|
         expect(link.full_url).to be_a(Addressable::URI)
-        expect(link.full_url).to eq Addressable::URI.join(site.full_url, "/assets/cms/public.css")
-        expect(link.href).to eq "/assets/cms/public.css"
+        expect(link.full_url).to eq Addressable::URI.parse("#{site.full_url}assets/img/icon.png")
+        expect(link.href).to eq "/assets/img/icon.png"
         expect(link.line).to eq 1
-        expect(link.type).to eq :ignore
-        expect(link.rel).to eq "stylesheet"
+        expect(link.type).to eq :outer_yield
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+    end
+  end
+
+  context "with <audio>" do
+    it do
+      html = <<~HTML
+        <audio src="/assets/img/audio.wav" />
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.to_a
+      expect(links).to have(1).items
+
+      links[0].tap do |link|
+        expect(link.full_url).to be_a(Addressable::URI)
+        expect(link.full_url).to eq Addressable::URI.parse("#{site.full_url}assets/img/audio.wav")
+        expect(link.href).to eq "/assets/img/audio.wav"
+        expect(link.line).to eq 1
+        expect(link.type).to eq :outer_yield
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+    end
+  end
+
+  context "with <video>" do
+    it do
+      html = <<~HTML
+        <video src="/assets/img/video.mp4" />
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.to_a
+      expect(links).to have(1).items
+
+      links[0].tap do |link|
+        expect(link.full_url).to be_a(Addressable::URI)
+        expect(link.full_url).to eq Addressable::URI.parse("#{site.full_url}assets/img/video.mp4")
+        expect(link.href).to eq "/assets/img/video.mp4"
+        expect(link.line).to eq 1
+        expect(link.type).to eq :outer_yield
+        expect(link.rel).to be_blank
+        expect(link.ss_rel).to be_blank
+      end
+    end
+  end
+
+  context "with YouTube video" do
+    it do
+      html = <<~HTML
+        <iframe src="https://www.youtube.com/embed/syOwo2RSP58" width="640" height="360"></iframe>
+      HTML
+
+      extractor = described_class.new(cur_site: site, base_url: site.full_url, html: html)
+      links = extractor.to_a
+      expect(links).to have(1).items
+
+      links[0].tap do |link|
+        expect(link.full_url).to be_a(Addressable::URI)
+        expect(link.full_url).to eq Addressable::URI.parse("https://www.youtube.com/embed/syOwo2RSP58")
+        expect(link.href).to eq "https://www.youtube.com/embed/syOwo2RSP58"
+        expect(link.line).to eq 1
+        expect(link.type).to eq :outer_yield
+        expect(link.rel).to be_blank
         expect(link.ss_rel).to be_blank
       end
     end
@@ -120,25 +199,8 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
       extractor = described_class.new(cur_site: site, base_url: node.full_url, html: html)
       links = extractor.to_a
       # puts links.map(&:href).join("\n")
-      expect(links).to have(8).items
-
+      expect(links).to have(6).items
       links[0].tap do |link|
-        expect(link.full_url).to be_a(Addressable::URI)
-        expect(link.href).to start_with("/assets")
-        expect(link.line).to be > 0
-        expect(link.type).to eq :ignore
-        expect(link.rel).to eq "stylesheet"
-        expect(link.ss_rel).to be_blank
-      end
-      links[1].tap do |link|
-        expect(link.full_url).to be_a(Addressable::URI)
-        expect(link.href).to start_with("/assets")
-        expect(link.line).to be > 0
-        expect(link.type).to eq :ignore
-        expect(link.rel).to eq "stylesheet"
-        expect(link.ss_rel).to be_blank
-      end
-      links[2].tap do |link|
         path = "#{today.strftime("%Y%m")}/list.html"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
@@ -147,7 +209,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.rel).to be_blank
         expect(link.ss_rel).to be_blank
       end
-      links[3].tap do |link|
+      links[1].tap do |link|
         path = "#{today.strftime("%Y%m")}/list.ics"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
@@ -156,7 +218,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.rel).to be_blank
         expect(link.ss_rel).to eq "nofollow"
       end
-      links[4].tap do |link|
+      links[2].tap do |link|
         path = "#{today.prev_month.strftime("%Y%m")}/index.html"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
@@ -165,7 +227,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.rel).to be_blank
         expect(link.ss_rel).to eq "nofollow"
       end
-      links[5].tap do |link|
+      links[3].tap do |link|
         path = "#{today.next_month.strftime("%Y%m")}/index.html"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"
@@ -174,7 +236,7 @@ describe Cms::CheckLinks::LinkExtractor, type: :model, dbscope: :example do
         expect(link.rel).to be_blank
         expect(link.ss_rel).to eq "nofollow"
       end
-      links[6].tap do |link|
+      links[4].tap do |link|
         path = "#{today.strftime("%Y%m%d")}/"
         expect(link.full_url).to eq Addressable::URI.parse("#{node.full_url}#{path}")
         expect(link.href).to eq "#{node.url}#{path}"

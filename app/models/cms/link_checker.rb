@@ -1,7 +1,10 @@
+#frozen_string_literal: true
+
 class Cms::LinkChecker
   include ActiveModel::Model
 
   DEFAULT_HEAD_REQUEST_TIMEOUT = 5
+  TEXT_HTML_MIME_TYPE = "text/html"
 
   attr_accessor :cur_user, :root_url, :fetch_content
   # attr_writer :fs_url, :head_request_timeout, :max_redirection, :http_basic_authentication
@@ -83,51 +86,25 @@ class Cms::LinkChecker
 
     site = find_site(full_url)
     if site.blank?
-      return get_http(full_url, redirection: redirection)
+      return get_with_http(full_url, redirection: redirection)
     end
 
-    if generated_file_path = get_generated_file_path(site, full_url)
-      return Result.success(
-        redirection_count: redirection.count, content_type: "text/html; charset=UTF-8", content: File.read(generated_file_path))
-    end
-
-    # retrieve internal page
-    if fs_path?(full_url)
-      full_url = append_access_token_if_possible(full_url)
-    end
-
-    contents_env = {}
-    contents_env["REQUEST_URI"] = full_url.to_s
-    contents_env[::Rack::PATH_INFO] = full_url.path
-    contents_env[::Rack::REQUEST_METHOD] = ::Rack::GET
-    contents_env[::Rack::REQUEST_PATH] = full_url.path
-    contents_env[::Rack::QUERY_STRING] = full_url.query || ""
-    contents_env[::Rack::RACK_ERRORS] = $stderr
-    #contents_env[::Rack::RACK_INPUT] = StringIO.new("")
-    contents_env[::Rack::Request::HTTP_X_FORWARDED_HOST] = site.domain
-    contents_env["ss.site"] = site
-
-    contents_status, contents_headers, contents_body = Rails.application.call(contents_env)
-    case contents_status
-    when 200
-      if fetch_content
-        content_type = contents_headers["content-type"]
-
-        content = ""
-        contents_body.each { content += _1 }
+    Rails.logger.tagged(site.host) do
+      generated_file_path = get_generated_file_path(site, full_url)
+      if generated_file_path
+        content_type = SS::MimeType.find(File.extname(generated_file_path))
+        content = content_type.include?(TEXT_HTML_MIME_TYPE) ? File.read(generated_file_path) : nil
+        return Result.success(
+          redirection_count: redirection.count, content_type: content_type, content: content)
       end
-      Result.success(
-        redirection_count: redirection.count, content_type: content_type, content: content)
-    else
-      Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
+
+      # retrieve internal page
+      if fs_path?(full_url)
+        full_url = append_access_token_if_possible(full_url)
+      end
+
+      get_with_routing(site, full_url, redirection: redirection)
     end
-  rescue SS::ForbiddenError
-    Result.error(error_code: :link_check_failed_unauthorized, redirection_count: redirection.count)
-  rescue SS::NotFoundError
-    Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
-  rescue => e
-    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
-    raise
   end
 
   def to_addressable(full_url)
@@ -147,25 +124,8 @@ class Cms::LinkChecker
     Cms::Site.without_deleted.find_by_domain(addressable_full_url.authority, addressable_full_url.path)
   end
 
-  def get_http(addressable_full_url, redirection:)
-    proxy_options = SS::ProxySetting.instance.faraday_proxy_options
-    ssl_options = SS::ProxySetting.instance.faraday_ssl_options
-    faraday_options = { url: addressable_full_url.origin, request: { timeout: head_request_timeout } }
-    faraday_options[:proxy] = proxy_options if proxy_options.present?
-    faraday_options[:ssl] = ssl_options if ssl_options.present?
-    http_client = Faraday.new(faraday_options) do |builder|
-      builder.request :url_encoded
-      # Basic 認証設定は自サイトに向けてのもの。
-      # 自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
-      # if http_basic_authentication.present?
-      #   builder.request :authorization, :basic, *http_basic_authentication
-      # end
-      builder.response :logger, Rails.logger
-      builder.adapter Faraday.default_adapter
-    end
-    http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
-    http_client.headers[:accept_encoding] = "gzip"
-
+  def get_with_http(addressable_full_url, redirection:)
+    http_client = create_http_client(addressable_full_url)
     begin
       resp = http_client.head(addressable_full_url.request_uri)
     ensure
@@ -206,6 +166,27 @@ class Cms::LinkChecker
     Result.error(error_code: error_code, redirection_count: redirection.count)
   end
 
+  def create_http_client(addressable_full_url)
+    proxy_options = SS::ProxySetting.instance.faraday_proxy_options
+    ssl_options = SS::ProxySetting.instance.faraday_ssl_options
+    faraday_options = { url: addressable_full_url.origin, request: { timeout: head_request_timeout } }
+    faraday_options[:proxy] = proxy_options if proxy_options.present?
+    faraday_options[:ssl] = ssl_options if ssl_options.present?
+    http_client = Faraday.new(faraday_options) do |builder|
+      builder.request :url_encoded
+      # Basic 認証設定は自サイトに向けてのもの。
+      # 自サイトは Rails routing で解決するようにしたので HTTP アクセスは発生しないので不要となった
+      # if http_basic_authentication.present?
+      #   builder.request :authorization, :basic, *http_basic_authentication
+      # end
+      builder.response :logger, Rails.logger
+      builder.adapter Faraday.default_adapter
+    end
+    http_client.headers[:user_agent] += " (SHIRASAGI/#{SS.version}; PID/#{Process.pid})"
+    http_client.headers[:accept_encoding] = "gzip"
+    http_client
+  end
+
   def get_generated_file_path(site, addressable_full_url)
     path = "#{site.root_path}#{addressable_full_url.path}"
     path = File.join(path, "index.html") if Fs.directory?(path)
@@ -234,5 +215,64 @@ class Cms::LinkChecker
 
     addressable_full_url.query_values = query_values
     addressable_full_url
+  end
+
+  def get_with_routing(site, full_url, redirection: nil)
+    # Rails.application.call を利用すると、ログのタギングが解除されてしまうので、Rails.application.routes.call を利用する。
+    # Rails.application.routes.call を利用すると Tempfile が自動で閉じられないので手動で閉じるようにする必要あり。
+    contents_env = build_env(site, full_url)
+    contents_status, contents_headers, contents_body = Rails.application.routes.call(contents_env)
+    if contents_status != 200
+      return Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
+    end
+
+    content_type = contents_headers["content-type"]
+    content = nil
+    if fetch_content && content_type.include?(TEXT_HTML_MIME_TYPE)
+      content = ""
+      contents_body.each { content += _1 }
+    end
+    Result.success(
+      redirection_count: redirection.count, content_type: content_type, content: content)
+  rescue SS::ForbiddenError
+    Result.error(error_code: :link_check_failed_unauthorized, redirection_count: redirection.count)
+  rescue SS::NotFoundError
+    Result.error(error_code: :link_check_failed_not_found, redirection_count: redirection.count)
+  rescue => e
+    Rails.logger.error { "#{e.class} (#{e.message}):\n  #{e.backtrace.join("\n  ")}" }
+    raise
+  ensure
+    try_close_all(contents_env, contents_body)
+  end
+
+  def build_env(site, full_url)
+    contents_env = {}
+    contents_env["REQUEST_URI"] = full_url.to_s
+    contents_env[::Rack::PATH_INFO] = full_url.path
+    contents_env[::Rack::REQUEST_METHOD] = ::Rack::GET
+    contents_env[::Rack::REQUEST_PATH] = full_url.path
+    contents_env[::Rack::QUERY_STRING] = full_url.query || ""
+    contents_env[::Rack::RACK_ERRORS] = $stderr
+    #contents_env[::Rack::RACK_INPUT] = StringIO.new("")
+    contents_env[::Rack::Request::HTTP_X_FORWARDED_HOST] = site.domain
+    contents_env["ss.site"] = site
+    contents_env
+  end
+
+  def try_close_all(env, body)
+    if body && body.respond_to?(:close)
+      if body.method(:close).arity == 0
+        body.close rescue nil
+      else
+        # Tempfile support
+        body.close(true) rescue nil
+      end
+    end
+
+    # Rails.application.routes.call を利用すると Tempfile が自動で閉じられないので手動で閉じるようにする。
+    # see: Rack::TempfileReaper at https://github.com/rack/rack/blob/v3.2.5/lib/rack/tempfile_reaper.rb
+    if env
+      env[Rack::RACK_TEMPFILES]&.each(&:close!) rescue nil
+    end
   end
 end
