@@ -149,6 +149,7 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
           expect(mail_body).to include(
             article_page1.path, event_page1.path, cms_page1.path, cms_page2.path, faq_page1.path)
         end
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
 
@@ -180,6 +181,7 @@ describe Cms::ConsistencyCheckJob, dbscope: :example do
           expect(mail_body).to include(
             article_page1.path, event_page1.path, cms_page1.path, cms_page2.path, faq_page1.path)
         end
+        expect(mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end

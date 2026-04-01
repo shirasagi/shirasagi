@@ -80,6 +80,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(mail_subject(mail), url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
 
         #
         # Update
@@ -121,6 +122,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(mail_subject(mail), url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
 
         #
         # Delete
@@ -159,6 +161,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(mail_subject(mail), url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
       end
     end
 
@@ -218,6 +221,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(mail_subject(mail), url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
 
         #
         # Create (another way)
@@ -266,6 +270,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(mail_subject(mail), url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
 
         #
         # Update
@@ -307,6 +312,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(mail_subject(mail), url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
 
         #
         # Delete
@@ -345,6 +351,7 @@ describe "gws_qna_topics", type: :feature, dbscope: :example do
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(mail_subject(mail), url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
       end
     end
   end

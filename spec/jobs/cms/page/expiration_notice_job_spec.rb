@@ -86,6 +86,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
           expect(mail_subject(mail)).to eq I18n.t("cms.page_expiration_mail.default_subject")
           expect(mail_body(mail)).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
           expect(mail_body(mail)).to include(page2.name, page2.private_show_path)
+          expect(mail.message_id).to end_with("@#{site.domain}.mail")
         end
       end
     end
@@ -122,6 +123,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
           expect(mail_subject(mail)).to eq I18n.t("cms.page_expiration_mail.default_subject")
           expect(mail_body(mail)).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
           expect(mail_body(mail)).to include(page2.name, page2.private_show_path)
+          expect(mail.message_id).to end_with("@#{site.domain}.mail")
         end
       end
     end
@@ -158,6 +160,7 @@ describe Cms::Page::ExpirationNoticeJob, dbscope: :example do
           expect(mail_subject(mail)).to eq I18n.t("cms.page_expiration_mail.default_subject")
           expect(mail_body(mail)).to include(*I18n.t("cms.page_expiration_mail.default_upper_text"))
           expect(mail_body(mail)).to include(page2.name, page2.private_show_path)
+          expect(mail.message_id).to end_with("@#{site.domain}.mail")
         end
       end
     end

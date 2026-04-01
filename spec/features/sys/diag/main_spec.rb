@@ -33,6 +33,7 @@ describe "sys_test", type: :feature, dbscope: :example, js: true do
       expect(mail.to.first).to eq sys_user.email
       expect(mail_subject(mail)).to eq "TEST MAIL"
       expect(mail_body(mail)).to include("Message")
+      expect(mail.message_id).to end_with("@#{SS.config.gws.canonical_domain}.mail")
     end
   end
 end

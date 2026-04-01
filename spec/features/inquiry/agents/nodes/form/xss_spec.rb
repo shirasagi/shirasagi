@@ -123,6 +123,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         # no tags
         expect(mail_body(notify_mail)).not_to include('<script')
         expect(mail_body(notify_mail)).not_to include('<a')
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
 
       ActionMailer::Base.deliveries.last.tap do |reply_mail|
@@ -195,6 +196,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         # no tags
         expect(mail_body(notify_mail)).not_to include('<script')
         expect(mail_body(notify_mail)).not_to include('<a')
+        expect(notify_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
 
       ActionMailer::Base.deliveries.last.tap do |reply_mail|
@@ -205,6 +207,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example, js: tru
         # no tags
         expect(mail_body(reply_mail)).not_to include('<script')
         expect(mail_body(reply_mail)).not_to include('<a')
+        expect(reply_mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
       end
     end
   end

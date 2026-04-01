@@ -88,6 +88,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('岩手県沿岸北部：震度５強')
             expect(mail_body).to include('岩手県内陸北部：震度５強')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -131,6 +132,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('岩手県沿岸南部：震度４')
             expect(mail_body).to include('岩手県内陸北部：震度４')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -175,6 +177,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('地震発生時刻：　　2011年3月11日 14時46分ごろ')
             expect(mail_body).to include('震源地：　　　　　三陸沖 牡鹿半島の東南東１３０ｋｍ付近')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -219,6 +222,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('地震発生時刻：　　2010年2月27日 15時34分ごろ')
             expect(mail_body).to include('震源地：　　　　　南米西部')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -262,6 +266,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('＜大和郡山市＞')
             expect(mail_body).to include('＜天理市＞')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -307,6 +312,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('△△地区 △△地区 △△地区')
             expect(mail_body).to include('所により１時間に５０ミリの雨が降っています。')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -364,6 +370,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include("＜警戒（継続）＞\r\n直方市、飯塚市、田川市、行橋市、筑紫野市")
             expect(mail_body).to include("＜解除＞\r\n大牟田市、久留米市、八女市、中間市、小郡市")
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -401,6 +408,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('御嶽山で、平成２６年９月２７日１１時５３分頃、噴火が発生しました。')
             expect(mail_body).to include("長野県王滝村、長野県木曽町")
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -443,6 +451,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('６日０６時から０９時まで　南東（垂水・鹿屋方向）')
             expect(mail_body).to include('噴煙が高さ３０００ｍまで上がった場合の')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -482,6 +491,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include("東京地方では、竜巻発生のおそれがあります。")
             expect(mail_body).to include("千代田区、中央区、港区、新宿区")
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -532,6 +542,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('2011年3月11日 14時46分　気象庁発表')
             expect(mail_body).to include('緊急地震速報（警報）を取り消します。')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -571,6 +582,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('2008年6月14日 09時06分　気象庁発表')
             expect(mail_body).to include('震源・震度情報を取り消します。')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end
@@ -608,6 +620,7 @@ describe Jmaxml::Action::SendMail, dbscope: :example do
             expect(mail_body).to include('2014年9月27日 11時53分　気象庁地震火山部発表')
             expect(mail_body).to include('噴火速報を取り消します。')
             expect(mail_body).to end_with("\r\n#{subject.signature_text.gsub("\n", "\r\n")}\r\n")
+            expect(mail.message_id).to end_with("@#{site.domain}.mail")
           end
           expect(emails).to eq []
         end

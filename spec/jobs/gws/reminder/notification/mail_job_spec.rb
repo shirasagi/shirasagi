@@ -50,6 +50,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
           expect(mail_body).to include("[#{I18n.t("mongoid.attributes.gws/member.member_ids")}]\r\n")
           expect(mail_body).to include(schedule.members.first.long_name)
         end
+        expect(notify_mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
       end
     end
 
@@ -91,6 +92,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
           expect(mail_body).to include("[#{I18n.t("mongoid.attributes.gws/member.member_ids")}]\r\n")
           expect(mail_body).to include(schedule.members.first.long_name)
         end
+        expect(notify_mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
       end
 
       expect(Gws::Job::Log.count).to eq 2
@@ -133,6 +135,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
           expect(mail_body).to include("[#{I18n.t("mongoid.attributes.gws/member.member_ids")}]\r\n")
           expect(mail_body).to include(schedule.members.first.long_name)
         end
+        expect(notify_mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
       end
     end
   end
@@ -164,6 +167,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
           expect(mail_body).to include("[#{I18n.t("mongoid.attributes.gws/member.member_ids")}]\r\n")
           expect(mail_body).to include(schedule.members.first.long_name)
         end
+        expect(notify_mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
       end
     end
   end
@@ -200,6 +204,7 @@ describe Gws::Reminder::NotificationJob, dbscope: :example do
             expect(mail_body).to include("[#{I18n.t("mongoid.attributes.gws/member.member_ids")}]\r\n")
             expect(mail_body).to include(schedule.members.first.long_name)
           end
+          expect(notify_mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
         end
       end
     end

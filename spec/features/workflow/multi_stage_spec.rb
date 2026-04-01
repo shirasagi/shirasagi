@@ -100,6 +100,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -149,6 +150,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -199,6 +201,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -248,6 +251,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail_body(mail)).to include(item.name)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
       end
     end
@@ -390,6 +394,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -431,6 +436,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail_body(mail)).to include(item.name)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
       end
     end
@@ -499,6 +505,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -547,6 +554,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -596,6 +604,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -646,6 +655,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(user3.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(remand_comment3)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
       end
     end
@@ -759,6 +769,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_body(mail)).to include(cms_user.name)
           expect(mail_body(mail)).to include(item.name)
           expect(mail_body(mail)).to include(workflow_comment)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
 
         #
@@ -800,6 +811,7 @@ describe "multi_stage", type: :feature, dbscope: :example, js: true do
           expect(mail_subject(mail)).to eq "[#{I18n.t('workflow.mail.subject.approve')}]#{item.name} - #{site.name}"
           expect(mail.body.multipart?).to be_falsey
           expect(mail_body(mail)).to include(item.name)
+          expect(mail.message_id).to end_with("@#{site.domain.sub(/:.*$/, '')}.mail")
         end
       end
     end

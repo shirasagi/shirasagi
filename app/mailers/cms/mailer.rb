@@ -7,7 +7,8 @@ class Cms::Mailer < ApplicationMailer
     mail(
       from: site.sender_address,
       to: "#{group.section_name} <#{group.contact_email}>",
-      subject: site.page_expiration_mail_subject.presence || I18n.t("cms.page_expiration_mail.default_subject"))
+      subject: site.page_expiration_mail_subject.presence || I18n.t("cms.page_expiration_mail.default_subject"),
+      message_id: Cms.generate_message_id(site))
   end
 
   def link_errors(site, to, errors)

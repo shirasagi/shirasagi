@@ -112,6 +112,7 @@ describe "gws_board_topics", type: :feature, dbscope: :example, js: true do
         expect(mail_subject(mail)).to eq notice.subject
         url = "#{site.canonical_scheme}://#{site.canonical_domain}/.g#{site.id}/memo/notices/#{notice.id}"
         expect(mail_body(mail)).to include(mail_subject(mail), url)
+        expect(mail.message_id).to end_with("@#{site.canonical_domain || SS.config.gws.canonical_domain}.mail")
       end
     end
   end

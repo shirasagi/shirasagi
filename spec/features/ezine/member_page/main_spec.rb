@@ -207,6 +207,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         expect(mail_subject(mail)).to eq item.name
         expect(mail.body.multipart?).to be_falsey
         expect(mail_body(mail)).to include(item.text)
+        expect(mail.message_id).to end_with "@#{site.domain}.mail"
 
         expect(Ezine::SentLog.count).to eq 0
       end
@@ -256,6 +257,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
         expect(mail.body.parts.count).to eq 2
         expect(mail.body.parts[0].body).to include(item.text)
         expect(mail.body.parts[1].body).to include(item.html)
+        expect(mail.message_id).to end_with "@#{site.domain}.mail"
 
         expect(Ezine::SentLog.count).to eq 0
       end
@@ -306,6 +308,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(mail_subject(mail)).to eq item.name
           expect(mail.body.multipart?).to be_falsey
           expect(mail_body(mail)).to include(item.text)
+          expect(mail.message_id).to end_with "@#{site.domain}.mail"
 
           expect(Ezine::SentLog.count).to eq 1
           Ezine::SentLog.first.tap do |log|
@@ -351,6 +354,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(mail.body.parts.count).to eq 2
           expect(mail.body.parts[0].body).to include(item.text)
           expect(mail.body.parts[1].body).to include(item.html)
+          expect(mail.message_id).to end_with "@#{site.domain}.mail"
 
           expect(Ezine::SentLog.count).to eq 1
           Ezine::SentLog.first.tap do |log|
@@ -403,6 +407,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(mail_subject(first_mail)).to eq item0.name
           expect(first_mail.body.multipart?).to be_falsey
           expect(mail_body(first_mail)).to include(item0.text)
+          expect(first_mail.message_id).to end_with "@#{site.domain}.mail"
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil
@@ -412,6 +417,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(last_mail.body.parts.count).to eq 2
           expect(last_mail.body.parts[0].body).to include(item0.text)
           expect(last_mail.body.parts[1].body).to include(item0.html)
+          expect(last_mail.message_id).to end_with "@#{site.domain}.mail"
         end
 
         it "sends item1" do
@@ -431,6 +437,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(mail_subject(first_mail)).to eq item1.name
           expect(first_mail.body.multipart?).to be_falsey
           expect(mail_body(first_mail)).to include(item1.text)
+          expect(first_mail.message_id).to end_with "@#{site.domain}.mail"
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil
@@ -440,6 +447,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(last_mail.body.parts.count).to eq 2
           expect(last_mail.body.parts[0].body).to include(item1.text)
           expect(last_mail.body.parts[1].body).to include(item1.html)
+          expect(last_mail.message_id).to end_with "@#{site.domain}.mail"
         end
 
         it "sends item2" do
@@ -459,6 +467,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(mail_subject(first_mail)).to eq item2.name
           expect(first_mail.body.multipart?).to be_falsey
           expect(mail_body(first_mail)).to include(item2.text)
+          expect(first_mail.message_id).to end_with "@#{site.domain}.mail"
 
           last_mail = ActionMailer::Base.deliveries.last
           expect(last_mail).not_to be_nil
@@ -468,6 +477,7 @@ describe "ezine_member_page_main", type: :feature, dbscope: :example do
           expect(last_mail.body.parts.count).to eq 2
           expect(last_mail.body.parts[0].body).to include(item2.text)
           expect(last_mail.body.parts[1].body).to include(item2.html)
+          expect(last_mail.message_id).to end_with "@#{site.domain}.mail"
         end
       end
     end

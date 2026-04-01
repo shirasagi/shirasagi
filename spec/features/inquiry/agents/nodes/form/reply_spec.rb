@@ -143,6 +143,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(mail_body(reply_mail)).not_to include(I18n.t("inquiry.default_reply_content_static"))
         # lower
         expect(mail_body(reply_mail)).to include('下部テキスト')
+        expect(reply_mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end
@@ -248,6 +249,7 @@ describe "inquiry_agents_nodes_form", type: :feature, dbscope: :example do
         expect(mail_body(reply_mail)).to include(I18n.t("inquiry.default_reply_content_static").gsub("\n", "\r\n"))
         # lower
         expect(mail_body(reply_mail)).to include('下部テキスト')
+        expect(reply_mail.message_id).to end_with("@#{site.domain}.mail")
       end
     end
   end
