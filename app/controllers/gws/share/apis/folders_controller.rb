@@ -23,13 +23,11 @@ class Gws::Share::Apis::FoldersController < ApplicationController
       when 'manageable'
         @model.site(@cur_site).
           nin(id: @excepts).
-          allow(:read, @cur_user, site: @cur_site).
-          search(@s)
+          allow(:read, @cur_user, site: @cur_site)
       when 'readable'
         @model.site(@cur_site).
           nin(id: @excepts).
-          readable(@cur_user, site: @cur_site).
-          search(@s)
+          readable(@cur_user, site: @cur_site)
       else
         @model.none
       end
@@ -40,6 +38,6 @@ class Gws::Share::Apis::FoldersController < ApplicationController
 
   def index
     @multi = params[:single].blank?
-    @items = @items.tree_sort
+    @items = @items.search(@s).tree_sort
   end
 end

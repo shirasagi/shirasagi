@@ -30,8 +30,7 @@ class Gws::Schedule::GroupPlansController < ApplicationController
 
   def set_items
     @items ||= begin
-      Gws::Schedule::Plan.site(@cur_site).without_deleted.
-        search(params[:s])
+      Gws::Schedule::Plan.site(@cur_site).without_deleted
     end
   end
 
@@ -39,5 +38,6 @@ class Gws::Schedule::GroupPlansController < ApplicationController
 
   def index
     # show plans
+    @items = @items.search(params[:s])
   end
 end

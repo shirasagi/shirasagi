@@ -14,12 +14,12 @@ class Cms::Agents::Parts::CrumbController < ApplicationController
     path.sub!(/^\//, "")
 
     parent_crumb_urls = @cur_page.parent_crumb_urls.select(&:present?) rescue nil
-    set_items(path, parent_crumb_urls)
+    set_crumb_items(path, parent_crumb_urls)
   end
 
   private
 
-  def set_items(path, urls = nil)
+  def set_crumb_items(path, urls = nil)
     page = Cms::Page.site(@cur_site).filename(path).first
     urls = [path] if urls.blank?
 

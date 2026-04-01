@@ -17,6 +17,7 @@ class Cms::Apis::Line::DeliverMembersController < ApplicationController
   end
 
   def set_items
+    set_model
     @message = @model.site(@cur_site).find(params[:id])
     @items = @message.extract_deliver_members
   end

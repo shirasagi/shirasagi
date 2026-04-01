@@ -1,0 +1,30 @@
+<%
+  filename = "layout-#{item.id}.html"
+
+  preview_path = ::File.join((@cur_site.subdir ? @cur_site.subdir : ""), @cur_node.filename, filename)
+  preview_path.sub!(/^\//, "")
+
+  mobile_preview_path = ::File.join((@cur_site.subdir ? @cur_site.subdir : ""), @cur_site.mobile_location, @cur_node.filename, filename)
+  mobile_preview_path.sub!(/^\//, "")
+%>
+<tr class="list-item <%= default_layout?(item) ? 'default-layout' : '' %>">
+  <td>
+    <nav class="tap-menu">
+      <%= link_to t('ss.links.show'), action: :show, id: item %>
+    </nav>
+    <%= link_to item.name, { action: :show, id: item }, class: "icon-layout" %>
+  </td>
+  <td class="filename"><%= File.basename item.filename %></td>
+  <td class="datetime"><%= ss_time_tag item.updated %></td>
+  <% if selected_layout?(item) %>
+    <td><%= t 'urgency.selected_layout' %></td>
+  <% else %>
+    <td>
+      <%= link_to t('ss.links.pc'), cms_preview_path(path: preview_path), target: "_blank", rel: "noopener" %>
+      | <%= link_to t('ss.links.sp'), cms_preview_path(path: preview_path), class: 'cms-preview-sp', target: "_blank", rel: "noopener" %>
+      <% if @cur_site.mobile_enabled? %>
+        | <%= link_to t('ss.links.mobile'), cms_preview_path(path: mobile_preview_path), class: 'cms-preview-mb', target: "_blank", rel: "noopener" %>
+      <% end %>
+    </td>
+  <% end %>
+</tr>

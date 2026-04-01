@@ -23,10 +23,20 @@ class Member::GroupMembersController < ApplicationController
     @cur_member_group ||= Member::Group.site(@cur_site).find(params[:group_id])
   end
 
+  def set_items
+    @items ||= begin
+      set_member_group
+      @cur_member_group.members
+    end
+  end
+
   def set_item
-    set_member_group
-    @item = @cur_member_group.members.find params[:id]
-    @item.attributes = fix_params
+    @item ||= begin
+      set_items
+      item = @items.find params[:id]
+      item.attributes = fix_params
+      item
+    end
   end
 
   public
@@ -35,7 +45,8 @@ class Member::GroupMembersController < ApplicationController
     set_member_group
     raise "403" unless @cur_member_group.allowed?(:read, @cur_user, site: @cur_site)
 
-    @items = @cur_member_group.members.
+    set_items
+    @items = @items.
       order_by(id: 1).
       page(params[:page]).per(50)
   end

@@ -23,6 +23,13 @@ class Gws::Board::CommentsController < ApplicationController
     }
   end
 
+  def set_items
+    @items ||= begin
+      set_parent
+      @topic.descendants
+    end
+  end
+
   def editable?
     # admin?
     return true if @topic.allowed?(:edit, @cur_user, site: @cur_site, adds_error: false)

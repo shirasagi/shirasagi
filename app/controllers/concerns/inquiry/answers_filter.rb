@@ -11,10 +11,6 @@ module Inquiry::AnswersFilter
 
   private
 
-  def set_items
-    # must be overridden by sub-class
-  end
-
   def send_csv(items)
     require "csv"
 
@@ -76,11 +72,14 @@ module Inquiry::AnswersFilter
       @group = Cms::Group.site(@cur_site).active.find(params[:s][:group])
     end
 
+    @state = params.dig(:s, :state).presence || "unclosed"
+    @items = @items.search(params[:s]).state(@state)
     @items = @items.order_by(updated: -1).page(params[:page]).per(50)
   end
 
   def download
     @state = params.dig(:s, :state).presence || "unclosed"
+    @items = @items.search(params[:s]).state(@state)
     @items = @items.order_by(updated: -1)
     send_csv @items
   end

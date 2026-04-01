@@ -31,7 +31,20 @@ class Gws::Discussion::Portal::CommentsController < ApplicationController
   end
 
   def set_topic
-    @topic = Gws::Discussion::Topic.find(params[:topic_id])
+    @topic ||= begin
+      set_forum
+
+      topic = Gws::Discussion::Topic.site(@cur_site).find(params[:topic_id])
+      raise "404" if topic.parent_id != @forum.id
+      topic
+    end
+  end
+
+  def set_items
+    @items ||= begin
+      set_topic
+      @topic.descendants
+    end
   end
 
   def index_path

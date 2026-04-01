@@ -11,19 +11,6 @@ class Gws::Discussion::BookmarksController < ApplicationController
 
   private
 
-  def set_forum
-    raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
-    @forum = Gws::Discussion::Forum.find(params[:forum_id])
-
-    if @forum.state == "closed"
-      permitted = @forum.allowed?(:read, @cur_user, site: @cur_site)
-    else
-      permitted = @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member_include?(@cur_user)
-    end
-
-    raise "403" unless permitted
-  end
-
   def set_crumbs
     @crumbs << [ @cur_site.menu_discussion_label || I18n.t('modules.gws/discussion'), gws_discussion_forums_path ]
     @crumbs << [ @forum.name, gws_discussion_forum_portal_path ]

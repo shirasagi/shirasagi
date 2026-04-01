@@ -12,10 +12,19 @@ class Cms::Apis::ReplaceFilesController < ApplicationController
 
   private
 
+  def set_items
+    @items ||= @model.all
+  end
+
   def set_owner_item
     @owner_item = @item.owner_item
     raise "404" unless @owner_item
     raise "404" unless @owner_item.id.to_s == params[:owner_item_id].to_s
+    raise "404" unless @owner_item.is_a?(Cms::Content)
+    raise "404" unless @owner_item.site_id == @cur_site.id
+    if @cur_node
+      raise "404" unless @owner_item.parent.try(:id) == @cur_node.id
+    end
 
     raise "403" unless SS::ReplaceFile.replaceable?(@owner_item, user: @cur_user, site: @cur_site, node: @cur_node)
   end

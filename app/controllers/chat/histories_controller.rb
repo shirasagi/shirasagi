@@ -12,8 +12,8 @@ class Chat::HistoriesController < ApplicationController
     @crumbs << [@model.model_name.human, action: :index]
   end
 
-  def cond
-    { site_id: @cur_site.id, node_id: @cur_node.id }
+  def set_items
+    @items ||= @model.where(site_id: @cur_site.id, node_id: @cur_node.id)
   end
 
   def send_csv(items)
@@ -49,7 +49,9 @@ class Chat::HistoriesController < ApplicationController
 
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-    @items = @model.where(cond).
+
+    set_items
+    @items = @items.
       search(params[:s]).
       order_by(created: -1).
       page(params[:page]).per(50)
@@ -72,7 +74,9 @@ class Chat::HistoriesController < ApplicationController
 
   def download
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-    @items = @model.where(cond).
+
+    set_items
+    @items = @items.
       search(params[:s]).
       order_by(created: -1)
     send_csv @items

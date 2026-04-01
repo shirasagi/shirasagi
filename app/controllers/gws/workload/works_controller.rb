@@ -19,8 +19,5 @@ class Gws::Workload::WorksController < ApplicationController
   def set_items
     @items = @model.site(@cur_site).without_deleted
     @items = @items.member(@cur_user)
-    @items = @items.search(@s).
-      page(params[:page]).per(50).
-      custom_order(params.dig(:s, :sort) || 'due_date')
   end
 end

@@ -37,7 +37,10 @@ module Opendata::Dataset::ResourceHistoryFilter
   end
 
   def set_items
-    @items ||= @model.site(@cur_site).search(@s).order_by(site_id: 1, @model.issued_at_field => -1)
+    @items ||= begin
+      set_search_params
+      @model.site(@cur_site).search(@s).order_by(site_id: 1, @model.issued_at_field => -1)
+    end
   end
 
   public

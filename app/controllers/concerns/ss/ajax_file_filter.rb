@@ -12,6 +12,16 @@ module SS::AjaxFileFilter
     super
   end
 
+  def set_items
+    @items ||= begin
+      items = @model.all
+      items = items.site(@cur_site) if @cur_site
+      items = items.where(content_type: /^image\//) if self.class.only_image
+      items = items.allow(:read, @cur_user)
+      items
+    end
+  end
+
   def select_with_clone
     set_item
 
@@ -27,10 +37,8 @@ module SS::AjaxFileFilter
   public
 
   def index
-    @items = @model
-    @items = @items.site(@cur_site) if @cur_site
-    @items = @items.where(content_type: /^image\//) if self.class.only_image
-    @items = @items.allow(:read, @cur_user).
+    set_items
+    @items = @items.
       order_by(filename: 1).
       page(params[:page]).per(20)
   end
@@ -44,11 +52,12 @@ module SS::AjaxFileFilter
 
   def selected_files
     @select_ids = params[:select_ids].to_a
-    @items = @model
-    @items = @items.site(@cur_site) if @cur_site
-    @items = @items.allow(:read, @cur_user).
+
+    set_items
+    @items = @items.
       in(id: @select_ids).
       order_by(filename: 1)
+
     render template: "index"
   end
 end

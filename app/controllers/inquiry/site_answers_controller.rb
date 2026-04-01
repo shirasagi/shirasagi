@@ -32,13 +32,11 @@ class Inquiry::SiteAnswersController < ApplicationController
   end
 
   def set_items
-    set_inquiry_form
-    @state = params.dig(:s, :state).presence || "unclosed"
-
-    @items = @model.site(@cur_site).
-      allow(:read, @cur_user).
-      where(node_id: @cur_inquiry_form.id).
-      search(params[:s]).
-      state(@state)
+    @items ||= begin
+      set_inquiry_form
+      @model.site(@cur_site).
+        allow(:read, @cur_user).
+        where(node_id: @cur_inquiry_form.id)
+    end
   end
 end

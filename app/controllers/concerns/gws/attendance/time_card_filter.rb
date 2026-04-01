@@ -27,11 +27,13 @@ module Gws::Attendance::TimeCardFilter
   end
 
   def set_cur_month
-    raise '404' if params[:year_month].blank? || params[:year_month].length != 6
+    @cur_month ||= begin
+      raise '404' if params[:year_month].blank? || params[:year_month].length != 6
 
-    year = params[:year_month][0..3]
-    month = params[:year_month][4..5]
-    @cur_month = Time.zone.parse("#{year}/#{month}/01")
+      year = params[:year_month][0..3]
+      month = params[:year_month][4..5]
+      Time.zone.parse("#{year}/#{month}/01")
+    end
   end
 
   def format_time(date, time)

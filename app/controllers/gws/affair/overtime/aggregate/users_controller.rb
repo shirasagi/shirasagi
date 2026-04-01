@@ -36,6 +36,11 @@ class Gws::Affair::Overtime::Aggregate::UsersController < ApplicationController
   end
 
   def set_items
+    set_fiscal_year
+    set_month
+    set_result_groups
+    set_query
+
     @group = @result_groups.find_group(@group_id) || @result_groups.first
     @users = @group ? @group.users : []
     @items, = @model.site(@cur_site).and([

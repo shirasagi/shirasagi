@@ -51,12 +51,15 @@ class Gws::Workload::AdminsController < ApplicationController
   end
 
   def set_items
-    @items = @model.site(@cur_site).without_deleted
-    @items = @items.readable_or_manageable(@cur_user, site: @cur_site)
-    @items = @items.member(@user) if @user
-    @items = @items.member_group(@group) if @group
-    @items = @items.search(@s).
-      page(params[:page]).per(50).
-      custom_order(params.dig(:s, :sort) || 'due_date')
+    @items ||= begin
+      set_selected_group
+      set_selected_user
+
+      items = @model.site(@cur_site).without_deleted
+      items = items.readable_or_manageable(@cur_user, site: @cur_site)
+      items = items.member(@user) if @user
+      items = items.member_group(@group) if @group
+      items
+    end
   end
 end

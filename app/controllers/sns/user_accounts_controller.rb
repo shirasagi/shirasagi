@@ -23,7 +23,7 @@ class Sns::UserAccountsController < ApplicationController
   end
 
   def set_item
-    @item = @sns_user
+    @item ||= @sns_user
   end
 
   public

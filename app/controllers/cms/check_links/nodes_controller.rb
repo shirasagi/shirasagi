@@ -16,7 +16,7 @@ class Cms::CheckLinks::NodesController < ApplicationController
   end
 
   def set_items
-    @items = @model.site(@cur_site).and_report(@cur_report).
+    @items ||= @model.site(@cur_site).and_report(@cur_report).
       allow(:read, @cur_user, site: @cur_site).
       order_by(filename: 1)
   end

@@ -5,7 +5,7 @@
 
   <ul class="list-items">
     <% @items.each do |item| %>
-      <li class="list-item">
+      <li class="list-item" data-id="<%= item.id %>">
         <div class="info">
           <h3 class="text">
             <%= link_to chat_history_path(id: item.id) do %>

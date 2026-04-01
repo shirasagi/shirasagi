@@ -30,17 +30,16 @@ module Gws::Affair::FileFilter
   end
 
   def set_items
-    @items = @model.site(@cur_site).
+    @items ||= @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
-      and_state(params[:state], @cur_user).
-      search(params[:s]).
-      page(params[:page]).per(50)
+      and_state(params[:state], @cur_user)
   end
 
   public
 
   def index
     set_items
+    @items = @items.search(params[:s]).page(params[:page]).per(50)
   end
 
   def show

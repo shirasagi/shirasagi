@@ -41,6 +41,7 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def set_items
+    set_active_year_range
     @items ||= @model.site(@cur_site).
       user(@cur_user).
       allow(:use, @cur_user, site: @cur_site).
@@ -49,8 +50,13 @@ class Gws::Attendance::TimeCardsController < ApplicationController
   end
 
   def set_item
-    @item = @items.find_by(date: @cur_month)
-    @item.attributes = fix_params
+    @item ||= begin
+      set_items
+
+      item = @items.find_by(date: @cur_month)
+      item.attributes = fix_params
+      item
+    end
   end
 
   def set_record

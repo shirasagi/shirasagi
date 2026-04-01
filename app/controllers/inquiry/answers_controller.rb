@@ -22,12 +22,8 @@ class Inquiry::AnswersController < ApplicationController
   end
 
   def set_items
-    @state = params.dig(:s, :state).presence || "unclosed"
-
-    @items = @model.site(@cur_site).
+    @items ||= @model.site(@cur_site).
       allow(:read, @cur_user).
-      where(node_id: @cur_node.id).
-      search(params[:s]).
-      state(@state)
+      where(node_id: @cur_node.id)
   end
 end

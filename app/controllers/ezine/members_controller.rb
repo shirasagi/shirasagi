@@ -31,16 +31,21 @@ class Ezine::MembersController < ApplicationController
   end
 
   def set_columns
-    @columns = Ezine::Column.site(@cur_site).node(@cur_node).
+    @columns ||= Ezine::Column.site(@cur_site).node(@cur_node).
       where(state: "public").order_by(order: 1)
+  end
+
+  def set_items
+    @items ||= begin
+      raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
+      @model.site(@cur_site).where(node_id: @cur_node.id)
+    end
   end
 
   def export_csv
     require "csv"
 
-    items = @model.site(@cur_site).
-      where(node_id: @cur_node.id).
-      order_by(updated: -1)
+    items = @items.order_by(updated: -1)
 
     csv = I18n.with_locale(I18n.default_locale) do
       CSV.generate do |data|
@@ -65,14 +70,16 @@ class Ezine::MembersController < ApplicationController
 
   def index
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
-    @items = @model.site(@cur_site).
-      where(node_id: @cur_node.id).
+
+    set_items
+    @items = @items.
       search(params[:s]).
       order_by(updated: -1).
       page(params[:page]).per(50)
   end
 
   def download
+    set_items
     export_csv
   end
 end

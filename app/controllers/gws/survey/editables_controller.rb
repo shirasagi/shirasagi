@@ -73,10 +73,9 @@ class Gws::Survey::EditablesController < ApplicationController
   end
 
   def set_items
-    @items = @model.site(@cur_site).
+    @items ||= @model.site(@cur_site).
       allow(:read, @cur_user, site: @cur_site).
-      without_deleted.
-      search(@s)
+      without_deleted
   end
 
   def set_item
@@ -98,7 +97,7 @@ class Gws::Survey::EditablesController < ApplicationController
 
   def index
     @categories = @categories.tree_sort
-    @items = @items.order_by(updated: -1, id: 1).page(params[:page]).per(50)
+    @items = @items.search(@s).order_by(updated: -1, id: 1).page(params[:page]).per(50)
   end
 
   def create

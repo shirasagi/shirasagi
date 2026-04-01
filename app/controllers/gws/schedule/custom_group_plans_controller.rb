@@ -28,15 +28,13 @@ class Gws::Schedule::CustomGroupPlansController < ApplicationController
   end
 
   def set_items
-    @items ||= begin
-      Gws::Schedule::Plan.site(@cur_site).without_deleted.
-        search(params[:s])
-    end
+    @items ||= Gws::Schedule::Plan.site(@cur_site).without_deleted
   end
 
   public
 
   def index
     # show custom groups
+    @items = @items.search(params[:s])
   end
 end

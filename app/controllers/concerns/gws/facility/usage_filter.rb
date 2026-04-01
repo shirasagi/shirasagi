@@ -99,7 +99,6 @@ module Gws::Facility::UsageFilter
   def set_items
     @items = @model.site(@cur_site).
       state(params.dig(:s, :state)).
-      search(params[:s]).
       allow(:read, @cur_user, site: @cur_site)
   end
 
@@ -126,7 +125,8 @@ module Gws::Facility::UsageFilter
   public
 
   def index
-    @items = @items.page(params[:page]).per(50)
+    @items = @items.search(params[:s]).
+      page(params[:page]).per(50)
     aggregate
   end
 end

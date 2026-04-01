@@ -31,7 +31,7 @@ class Gws::Notice::Apis::FoldersController < ApplicationController
         items = @model.none
       end
 
-      items.nin(id: @excepts).search(@s)
+      items.nin(id: @excepts)
     end
   end
 
@@ -39,6 +39,8 @@ class Gws::Notice::Apis::FoldersController < ApplicationController
 
   def index
     @multi = params[:single].blank?
+
+    @items = @items.search(@s)
     @items = @items.tree_sort
   end
 end

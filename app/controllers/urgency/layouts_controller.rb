@@ -3,8 +3,8 @@ class Urgency::LayoutsController < ApplicationController
   include Cms::CrudFilter
 
   before_action :allowed?
-  before_action :set_items
-  before_action :set_item, only: [:show, :update]
+  before_action :set_default_layout
+  before_action :set_index_page
 
   helper_method :readable_layout?, :default_layout?, :selected_layout?
 
@@ -23,25 +23,25 @@ class Urgency::LayoutsController < ApplicationController
     raise "403" unless @cur_node.allowed?(:read, @cur_user, site: @cur_site)
   end
 
-  def set_items
+  def set_default_layout
     begin
-      @default_layout = @model.find(@cur_node.read_attribute(:urgency_default_layout_id).to_i)
+      @default_layout = @model.all.site(@cur_site).find(@cur_node.read_attribute(:urgency_default_layout_id).to_i)
     rescue
       redirect_to urgency_error_path(id: 1)
       return
     end
+  end
 
+  def set_index_page
     @index_page = @cur_node.find_index_page
     if @index_page.blank?
       redirect_to urgency_error_path(id: 2)
       return
     end
+  end
 
-    @items = [ @default_layout ]
-    @model.site(@cur_site).node(@cur_node).
-      ne(id: @default_layout.id).order_by(name: 1).each do |item|
-      @items << item
-    end
+  def set_items
+    @items ||= @model.all.site(@cur_site)
   end
 
   def set_item
@@ -67,6 +67,9 @@ class Urgency::LayoutsController < ApplicationController
   public
 
   def index
+    set_items
+    @items = @items.node(@cur_node)
+    @items = @items.order_by(name: 1)
   end
 
   def show

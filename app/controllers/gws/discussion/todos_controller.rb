@@ -21,13 +21,17 @@ class Gws::Discussion::TodosController < ApplicationController
   end
 
   def set_forum
-    raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
-    @forum = Gws::Discussion::Forum.find(params[:forum_id])
+    @forum ||= begin
+      raise "403" unless Gws::Discussion::Forum.allowed?(:read, @cur_user, site: @cur_site)
+      forum = Gws::Discussion::Forum.site(@cur_site).find(params[:forum_id])
 
-    raise "404" unless @forum.allowed?(:read, @cur_user, site: @cur_site) || @forum.member_include?(@cur_user)
+      raise "404" unless forum.allowed?(:read, @cur_user, site: @cur_site) || forum.member_include?(@cur_user)
+      forum
+    end
   end
 
   def set_crumbs
+    set_forum
     @crumbs << [ @cur_site.menu_discussion_label || t('modules.gws/discussion'), gws_discussion_forums_path ]
     @crumbs << [ @forum.name, gws_discussion_forum_portal_path ]
     @crumbs << [ t('modules.gws/schedule/todo'), gws_discussion_forum_todos_path ]
@@ -63,15 +67,19 @@ class Gws::Discussion::TodosController < ApplicationController
   end
 
   def set_items
-    or_conds = @model.member_conditions(@cur_user)
-    or_conds += @model.readable_conditions(@cur_user, site: @cur_site)
-    or_conds << @model.allow_condition(:read, @cur_user, site: @cur_site)
+    @items ||= begin
+      set_forum
 
-    @items = @model.site(@cur_site).
-      discussion_forum(@forum).
-      where("$and" =>[ "$or" => or_conds ]).
-      without_deleted.
-      search(params[:s])
+      or_conds = @model.member_conditions(@cur_user)
+      or_conds += @model.readable_conditions(@cur_user, site: @cur_site)
+      or_conds << @model.allow_condition(:read, @cur_user, site: @cur_site)
+
+      @model.site(@cur_site).
+        discussion_forum(@forum).
+        where("$and" =>[ "$or" => or_conds ]).
+        without_deleted.
+        search(params[:s])
+    end
   end
 
   public
