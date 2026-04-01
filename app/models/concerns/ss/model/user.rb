@@ -95,7 +95,7 @@ module SS::Model::User
     validate :validate_uid
     validate :validate_account_expiration_date
 
-    before_validation :set_organization_uid_numeric, if: ->{ organization_uid_changed? || organization_uid_numeric.blank? }
+    before_validation :set_organization_uid_numeric
     after_save :save_group_history, if: -> { group_ids_changed? || group_ids_previously_changed? }
     before_destroy :validate_cur_user, if: ->{ cur_user.present? }
 
@@ -446,9 +446,6 @@ module SS::Model::User
   end
 
   def set_organization_uid_numeric
-    return self.organization_uid_numeric = nil if organization_uid.blank?
-
-    uid = organization_uid.to_s
-    self.organization_uid_numeric = uid.match?(/\A\d+\z/) ? uid.to_i : nil
+    self.organization_uid_numeric = organization_uid.present? ? organization_uid.to_i : nil
   end
 end

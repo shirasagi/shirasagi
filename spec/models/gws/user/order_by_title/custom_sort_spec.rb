@@ -312,9 +312,9 @@ describe Gws::User, type: :model, dbscope: :example do
     end
 
     it "handles non-numeric organization_uid by converting to nil" do
-      # 数値に変換できない職員番号の場合、nilに変換される
+      # 数値に変換できない職員番号の場合 0 が入力される（単に string.to_i するだけ）
       user = create :gws_user, organization_id: site.id, organization_uid: "abc"
-      expect(user.organization_uid_numeric).to be_nil
+      expect(user.organization_uid_numeric).to eq 0
     end
   end
 
