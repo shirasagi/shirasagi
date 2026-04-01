@@ -91,17 +91,17 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
   end
 
   def create_report(errors)
-    @report_max_age = (SS.config.cms.check_links["report_max_age"].presence || 5).to_i
-    return if @report_max_age <= 0
+    report_max_age = (SS.config.cms.check_links["report_max_age"].presence || 5).to_i
+    return if report_max_age <= 0
 
     # create new report
-    @report = Cms::CheckLinks::Report.new
-    @report.cur_site = @report.site = @site
-    if !@report.save
-      @task.log "Error : Failed to save Cms::CheckLinks::Report #{@report.errors.full_messages}"
+    report = Cms::CheckLinks::Report.new
+    report.cur_site = report.site = @site
+    unless report.save
+      @task.log "Error : Failed to save Cms::CheckLinks::Report #{report.errors.full_messages}"
       return
     end
-    @task.log "# #{@report.name} created"
+    @task.log "# #{report.name} created"
 
     sources_having_error_links = errors.map(&:referrers)
     sources_having_error_links.flatten!
@@ -119,25 +119,23 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
 
       page = find_page(path)
       if page
-        create_report_page(full_url, sources, page, error_links)
+        create_report_page(report, full_url, sources, page, error_links)
         next
       end
 
       node = find_node(path)
       next unless node
 
-      create_report_node(full_url, sources, node, error_links)
+      create_report_node(report, full_url, sources, node, error_links)
     end
 
-    FileUtils.mkdir_p(@report.base_dir) rescue nil
-    FileUtils.cp(@extraction_log.path, File.join(@report.base_dir, "extraction-log.json.gz")) rescue nil
-    FileUtils.cp(@source_log.path, File.join(@report.base_dir, "source-log.json.gz")) rescue nil
+    save_link_check_logs_to_report(report)
 
     # destroy old reports
-    report_ids = Cms::CheckLinks::Report.site(@site).limit(@report_max_age).pluck(:id)
-    Cms::CheckLinks::Report.site(@site).nin(id: report_ids).each do |report|
-      @task.log "# #{report.name} destroyed"
-      report.destroy
+    old_report_ids = Cms::CheckLinks::Report.site(@site).limit(report_max_age).pluck(:id)
+    Cms::CheckLinks::Report.site(@site).nin(id: old_report_ids).each do |old_report|
+      @task.log "# #{old_report.name} destroyed"
+      old_report.destroy
     end
   end
 
@@ -166,8 +164,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     node
   end
 
-  def create_report_page(full_url, sources, page, error_links)
-    item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: @report)
+  def create_report_page(report, full_url, sources, page, error_links)
+    item = Cms::CheckLinks::Error::Page.new(cur_site: @site, site: @site, report: report)
     item.ref = full_url.request_uri
     item.ref_url = full_url.to_s
     item.page = page
@@ -178,8 +176,8 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     item.save
   end
 
-  def create_report_node(full_url, sources, node, error_links)
-    item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: @report)
+  def create_report_node(report, full_url, sources, node, error_links)
+    item = Cms::CheckLinks::Error::Node.new(cur_site: @site, site: @site, report: report)
     item.ref = full_url.request_uri
     item.ref_url = full_url.to_s
     item.node = node
@@ -188,6 +186,12 @@ class Cms::Agents::Tasks::LinksController < ApplicationController
     item.urls = error_links.map(&:href).uniq
     item.group_ids = node.group_ids
     item.save
+  end
+
+  def save_link_check_logs_to_report(report)
+    FileUtils.mkdir_p(report.base_dir) rescue nil
+    FileUtils.cp(@extraction_log.path, File.join(report.base_dir, "extraction-log.json.gz")) rescue nil
+    FileUtils.cp(@source_log.path, File.join(report.base_dir, "source-log.json.gz")) rescue nil
   end
 
   public
